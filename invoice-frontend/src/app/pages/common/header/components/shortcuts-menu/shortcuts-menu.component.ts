@@ -157,8 +157,8 @@ export class ShortcutsAddComponent implements OnInit {
     this.usertype = sessionStorage.getItem(localstorageconstants.USERTYPE) ? sessionStorage.getItem(localstorageconstants.USERTYPE) : "sponsor-portal";
     this.userrole = localStorage.getItem(localstorageconstants.USERROLE) ? localStorage.getItem(localstorageconstants.USERROLE) : 1;
     this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
-    this.translate.stream(["Sidebar-Dashboard", "Sidebar-TodayActivity", "Sidebar-Project", "Sidebar-Location",
-      "Sidebar-Team", "Sidebar-DailyReports", "Sidebar-Setting", "Sidebar-Sponsor-Vendors", "Sidebar-Sponsor-Contract", "Sidebar-Sponsor-EmailTemplate", "Sidebar-Sponsor-ChangeOrders"]).subscribe((textarray) => {
+    this.translate.stream(["Sidebar-Dashboard", "Sidebar-invoice", "Sidebar-Templates", "Sidebar-Report",
+      "Sidebar-Team", "Sidebar-Setting"]).subscribe((textarray) => {
         if (that.usertype == "sponsor-portal") {
           that.menuList = [
             {
@@ -171,41 +171,41 @@ export class ShortcutsAddComponent implements OnInit {
               color: "#89CFF0"
             },
             {
-              name: textarray['Sidebar-TodayActivity'],
+              name: textarray['Sidebar-invoice'],
               icon: 'fas fa-stopwatch',
-              image: './assets/sidemenu/todaysactivity_icon.png',
-              url: '/todayactivity',
-              tmp_name: "todayactivity",
-              language_tmp: "Sidebar-TodayActivity",
+              image: './assets/sidemenu/dailyreport_icon.png',
+              url: '/invoice',
+              tmp_name: "invoice",
+              language_tmp: "Sidebar-invoice",
               color: "#96DED1"
             },
             {
-              name: textarray['Sidebar-DailyReports'],
+              name: textarray['Sidebar-Templates'],
               icon: 'fas fa-file-pdf',
-              image: './assets/sidemenu/dailyreport_icon.png',
-              url: '/report',
-              tmp_name: "report",
-              language_tmp: "Sidebar-DailyReports",
+              image: './assets/diversityicon/template_white.png',
+              url: '/template',
+              tmp_name: "template",
+              language_tmp: "Sidebar-Templates",
               color: "#2F2F4F"
             },
             {
-              name: textarray['Sidebar-Location'],
+              name: textarray['Sidebar-Report'],
               icon: 'fas fa-file-pdf',
-              image: './assets/sidemenu/locationlight.png',
-              url: '/location',
-              tmp_name: "location",
-              language_tmp: "Sidebar-Location",
+              image: './assets/diversityicon/reports_white.png',
+              url: '/reports',
+              tmp_name: "reports",
+              language_tmp: "Sidebar-Report",
               color: "#33ccff"
             },
-            {
-              name: textarray['Sidebar-Project'],
-              icon: 'fas fa-paste',
-              image: './assets/sidemenu/projects_icon.png',
-              url: '/project-list',
-              tmp_name: "project-list",
-              language_tmp: "Sidebar-Project",
-              color: "#008080"
-            },
+            // {
+            //   name: textarray['Sidebar-Project'],
+            //   icon: 'fas fa-paste',
+            //   image: './assets/sidemenu/projects_icon.png',
+            //   url: '/project-list',
+            //   tmp_name: "project-list",
+            //   language_tmp: "Sidebar-Project",
+            //   color: "#008080"
+            // },
             {
               name: textarray['Sidebar-Team'],
               icon: 'fas fa-users',
@@ -215,42 +215,42 @@ export class ShortcutsAddComponent implements OnInit {
               language_tmp: "Sidebar-Team",
               color: "#FF7377"
             },
-            {
-              name: textarray['Sidebar-Sponsor-ChangeOrders'],
-              icon: 'fas fa-envelope',
-              image: './assets/sidemenu/changeorders_icon.png',
-              url: '/changeorder',
-              tmp_name: "sponsorchangeorders",
-              language_tmp: "Sidebar-Sponsor-ChangeOrders",
-              color: "#708090"
-            },
-            {
-              name: textarray['Sidebar-Sponsor-Vendors'],
-              icon: 'fas fa-user-friends',
-              image: './assets/sidemenu/vendors_icon.png',
-              url: '/vendors',
-              tmp_name: "sponsorvendors",
-              language_tmp: "Sidebar-Sponsor-Vendors",
-              color: "#DDA0DD"
-            },
-            {
-              name: textarray['Sidebar-Sponsor-Contract'],
-              icon: 'fas fa-envelope',
-              image: './assets/diversityicon/darkmode/vendorsicons/vendor_note_dark.png',
-              url: '/contractlisting',
-              tmp_name: "sponsorcontract",
-              language_tmp: "Sidebar-Sponsor-Contract",
-              color: "pink"
-            },
-            {
-              name: textarray['Sidebar-Sponsor-EmailTemplate'],
-              icon: 'fas fa-envelope',
-              image: './assets/sidemenu/mail_icon.png',
-              url: '/emailtemplates',
-              tmp_name: "sponsoremailtemplate",
-              language_tmp: "Sidebar-Sponsor-EmailTemplate",
-              color: "#A0522D"
-            },
+            // {
+            //   name: textarray['Sidebar-Sponsor-ChangeOrders'],
+            //   icon: 'fas fa-envelope',
+            //   image: './assets/sidemenu/changeorders_icon.png',
+            //   url: '/changeorder',
+            //   tmp_name: "sponsorchangeorders",
+            //   language_tmp: "Sidebar-Sponsor-ChangeOrders",
+            //   color: "#708090"
+            // },
+            // {
+            //   name: textarray['Sidebar-Sponsor-Vendors'],
+            //   icon: 'fas fa-user-friends',
+            //   image: './assets/sidemenu/vendors_icon.png',
+            //   url: '/vendors',
+            //   tmp_name: "sponsorvendors",
+            //   language_tmp: "Sidebar-Sponsor-Vendors",
+            //   color: "#DDA0DD"
+            // },
+            // {
+            //   name: textarray['Sidebar-Sponsor-Contract'],
+            //   icon: 'fas fa-envelope',
+            //   image: './assets/diversityicon/darkmode/vendorsicons/vendor_note_dark.png',
+            //   url: '/contractlisting',
+            //   tmp_name: "sponsorcontract",
+            //   language_tmp: "Sidebar-Sponsor-Contract",
+            //   color: "pink"
+            // },
+            // {
+            //   name: textarray['Sidebar-Sponsor-EmailTemplate'],
+            //   icon: 'fas fa-envelope',
+            //   image: './assets/sidemenu/mail_icon.png',
+            //   url: '/emailtemplates',
+            //   tmp_name: "sponsoremailtemplate",
+            //   language_tmp: "Sidebar-Sponsor-EmailTemplate",
+            //   color: "#A0522D"
+            // },
             {
               name: textarray['Sidebar-Setting'],
               icon: 'fas fa-cog',

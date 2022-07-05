@@ -75,172 +75,171 @@ export class LeftPanelComponent implements OnInit {
       this.company_logo = this.role_permission.companydata.companylogo;
     }
 
-    this.translate.stream(['Sidebar-Dashboard', 'Sidebar-TodayActivity', 'Sidebar-Project', 'Sidebar-Team', 'Sidebar-DailyReports', "Sidebar-Setting",
-      "Quotes_all", "Sidebar-Sponsor-Vendors", "Sidebar-Sponsor-Contract", "Sidebar-Sponsor-EmailTemplate", "Sidebar-Sponsor-ChangeOrders", "Sidebar-Location"]).subscribe((textarray) => {
+    this.translate.stream(['Sidebar-Dashboard', 'Sidebar-invoice', 'Sidebar-Templates', 'Sidebar-Report', 'Sidebar-Team', "Sidebar-Setting"]).subscribe((textarray) => {
 
-        that.menuList = [];
-        /* that.menuList = [
-          {
-            name: textarray['Sidebar-Project'],
-            icon: '',
-            image: './assets/sidemenu/projects_icon.png',
-            url: '/project-list',
-          },
-          {
-            name: textarray['Sidebar-Team'],
-            name_tmp: "Team",
-            icon: '',
-            image: './assets/sidemenu/users_icon.png',
-            url: '/employee-list',
-          },
-          {
-            name: textarray['Sidebar-Sponsor-ChangeOrders'],
-            icon: '',
-            image: './assets/sidemenu/changeorders_icon.png',
-            url: '/changeorder',
-          },
-          {
-            name: textarray['Sidebar-Sponsor-Vendors'],
-            icon: '',
-            image: './assets/sidemenu/vendors_icon.png',
-            url: '/vendors',
-          },
-          {
-            name: textarray['Sidebar-Sponsor-Contract'],
-            icon: '',
-            image: './assets/diversityicon/darkmode/vendorsicons/vendor_note_dark.png',
-            url: '/contractlisting',
-          },
-          {
-            name: textarray['Sidebar-Sponsor-EmailTemplate'],
-            icon: '',
-            image: './assets/sidemenu/mail_icon.png',
-            url: '/emailtemplates',
-          },
-        ]; */
-
-        let index = 0;
-        // Dashboard Menu
-        if (that.role_permission.role_permission.dashboard.View == true) {
-          let reqObj = {
-            name: textarray['Sidebar-Dashboard'],
-            icon: '',
-            image: './assets/sidemenu/dashboard_icon.png',
-            url: '/dashboard',
-          };
-          that.menuList.splice(index++, 0, reqObj);
-        }
-
-        // Today Activity Menu
-        if (that.role_permission.role_permission.todayActivity.View == true) {
-          let reqObj = {
-            name: textarray['Sidebar-TodayActivity'],
-            icon: '',
-            image: './assets/sidemenu/todaysactivity_icon.png',
-            url: '/todayactivity',
-          };
-          that.menuList.splice(index++, 0, reqObj);
-        }
-
-        // Daily Report Menu
-        if (that.role_permission.role_permission.dailyReports.View == true) {
-          let reqObj = {
-            name: textarray['Sidebar-DailyReports'],
-            icon: '',
-            image: './assets/sidemenu/dailyreport_icon.png',
-            url: '/report',
-          };
-          that.menuList.splice(index++, 0, reqObj);
-        }
-
-        // Location
-        if (that.role_permission.role_permission.dailyReports.View == true) {
-          let reqObj = {
-            name: textarray['Sidebar-Location'],
-            icon: '',
-            image: './assets/sidemenu/locationlight.png',
-            url: '/location',
-          };
-          that.menuList.splice(index++, 0, reqObj);
-        }
-
-        // Project Menu
-        if (that.role_permission.role_permission.projects.View == true) {
-          let reqObj = {
-            name: textarray['Sidebar-Project'],
-            icon: '',
-            image: './assets/sidemenu/projects_icon.png',
-            url: '/project-list',
-          };
-          that.menuList.splice(index++, 0, reqObj);
-        }
-
-        // User Menu
-        if (that.role_permission.role_permission.users.View == true) {
-          let reqObj = {
-            name: textarray['Sidebar-Team'],
-            icon: '',
-            image: './assets/sidemenu/users_icon.png',
-            url: '/employee-list',
-          };
-          that.menuList.splice(index++, 0, reqObj);
-        }
-
-        // Change Order Menu
-        if (that.role_permission.role_permission.changeOrders.View == true) {
-          let reqObj = {
-            name: textarray['Sidebar-Sponsor-ChangeOrders'],
-            icon: '',
-            image: './assets/sidemenu/changeorders_icon.png',
-            url: '/changeorder',
-          };
-          that.menuList.splice(index++, 0, reqObj);
-        }
-
-        // Vendor Menu
-        if (that.role_permission.role_permission.vendors.View == true) {
-          let reqObj = {
-            name: textarray['Sidebar-Sponsor-Vendors'],
-            icon: '',
-            image: './assets/sidemenu/vendors_icon.png',
-            url: '/vendors',
-          };
-          that.menuList.splice(index++, 0, reqObj);
-        }
-
-        // Contract Menu
-        // if (that.role_permission.role_permission.vendors.View == true) {
-        let reqObj = {
+      that.menuList = [];
+      /* that.menuList = [
+        {
+          name: textarray['Sidebar-Project'],
+          icon: '',
+          image: './assets/sidemenu/projects_icon.png',
+          url: '/project-list',
+        },
+        {
+          name: textarray['Sidebar-Team'],
+          name_tmp: "Team",
+          icon: '',
+          image: './assets/sidemenu/users_icon.png',
+          url: '/employee-list',
+        },
+        {
+          name: textarray['Sidebar-Sponsor-ChangeOrders'],
+          icon: '',
+          image: './assets/sidemenu/changeorders_icon.png',
+          url: '/changeorder',
+        },
+        {
+          name: textarray['Sidebar-Sponsor-Vendors'],
+          icon: '',
+          image: './assets/sidemenu/vendors_icon.png',
+          url: '/vendors',
+        },
+        {
           name: textarray['Sidebar-Sponsor-Contract'],
           icon: '',
           image: './assets/diversityicon/darkmode/vendorsicons/vendor_note_dark.png',
           url: '/contractlisting',
+        },
+        {
+          name: textarray['Sidebar-Sponsor-EmailTemplate'],
+          icon: '',
+          image: './assets/sidemenu/mail_icon.png',
+          url: '/emailtemplates',
+        },
+      ]; */
+
+      let index = 0;
+      // Dashboard Menu
+      if (that.role_permission.role_permission.dashboard.View == true) {
+        let reqObj = {
+          name: textarray['Sidebar-Dashboard'],
+          icon: '',
+          image: './assets/sidemenu/dashboard_icon.png',
+          url: '/dashboard',
         };
         that.menuList.splice(index++, 0, reqObj);
-        // }
+      }
 
-        // Email Template Menu
-        if (that.role_permission.role_permission.emailTemplates.View == true) {
-          let reqObj = {
-            name: textarray['Sidebar-Sponsor-EmailTemplate'],
-            icon: '',
-            image: './assets/sidemenu/mail_icon.png',
-            url: '/emailtemplates',
-          };
-          that.menuList.splice(index++, 0, reqObj);
-        }
+      // Today Activity Menu
+      if (that.role_permission.role_permission.todayActivity.View == true) {
+        let reqObj = {
+          name: textarray['Sidebar-invoice'],
+          icon: '',
+          image: './assets/sidemenu/dailyreport_icon.png',
+          url: '/invoice',
+        };
+        that.menuList.splice(index++, 0, reqObj);
+      }
 
-        // Setting Menu
-        if (that.role_permission.role_permission.settings.View == true) {
-          let reqObj = {
-            name: textarray['Sidebar-Setting'],
-            icon: '',
-            image: './assets/sidemenu/settings_icon.png',
-            url: '/setting',
-          };
-          that.menuList.splice(index, 0, reqObj);
-        }
-      });
+      // Daily Report Menu
+      if (that.role_permission.role_permission.dailyReports.View == true) {
+        let reqObj = {
+          name: textarray['Sidebar-Templates'],
+          icon: '',
+          image: './assets/diversityicon/template_white.png',
+          url: '/template',
+        };
+        that.menuList.splice(index++, 0, reqObj);
+      }
+
+      // Location
+      if (that.role_permission.role_permission.dailyReports.View == true) {
+        let reqObj = {
+          name: textarray['Sidebar-Report'],
+          icon: '',
+          image: './assets/diversityicon/reports_white.png',
+          url: '/reports',
+        };
+        that.menuList.splice(index++, 0, reqObj);
+      }
+
+      // Project Menu
+      // if (that.role_permission.role_permission.projects.View == true) {
+      //   let reqObj = {
+      //     name: textarray['Sidebar-Project'],
+      //     icon: '',
+      //     image: './assets/sidemenu/projects_icon.png',
+      //     url: '/project-list',
+      //   };
+      //   that.menuList.splice(index++, 0, reqObj);
+      // }
+
+      // User Menu
+      if (that.role_permission.role_permission.users.View == true) {
+        let reqObj = {
+          name: textarray['Sidebar-Team'],
+          icon: '',
+          image: './assets/sidemenu/users_icon.png',
+          url: '/employee-list',
+        };
+        that.menuList.splice(index++, 0, reqObj);
+      }
+
+      // Change Order Menu
+      // if (that.role_permission.role_permission.changeOrders.View == true) {
+      //   let reqObj = {
+      //     name: textarray['Sidebar-Sponsor-ChangeOrders'],
+      //     icon: '',
+      //     image: './assets/sidemenu/changeorders_icon.png',
+      //     url: '/changeorder',
+      //   };
+      //   that.menuList.splice(index++, 0, reqObj);
+      // }
+
+      // Vendor Menu
+      // if (that.role_permission.role_permission.vendors.View == true) {
+      //   let reqObj = {
+      //     name: textarray['Sidebar-Sponsor-Vendors'],
+      //     icon: '',
+      //     image: './assets/sidemenu/vendors_icon.png',
+      //     url: '/vendors',
+      //   };
+      //   that.menuList.splice(index++, 0, reqObj);
+      // }
+
+      // Contract Menu
+      // if (that.role_permission.role_permission.vendors.View == true) {
+      // let reqObj = {
+      //   name: textarray['Sidebar-Sponsor-Contract'],
+      //   icon: '',
+      //   image: './assets/diversityicon/darkmode/vendorsicons/vendor_note_dark.png',
+      //   url: '/contractlisting',
+      // };
+      // that.menuList.splice(index++, 0, reqObj);
+      // }
+
+      // Email Template Menu
+      // if (that.role_permission.role_permission.emailTemplates.View == true) {
+      //   let reqObj = {
+      //     name: textarray['Sidebar-Sponsor-EmailTemplate'],
+      //     icon: '',
+      //     image: './assets/sidemenu/mail_icon.png',
+      //     url: '/emailtemplates',
+      //   };
+      //   that.menuList.splice(index++, 0, reqObj);
+      // }
+
+      // Setting Menu
+      if (that.role_permission.role_permission.settings.View == true) {
+        let reqObj = {
+          name: textarray['Sidebar-Setting'],
+          icon: '',
+          image: './assets/sidemenu/settings_icon.png',
+          url: '/setting',
+        };
+        that.menuList.splice(index, 0, reqObj);
+      }
+    });
   }
 
   isActive(item: any) {

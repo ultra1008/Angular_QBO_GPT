@@ -34,6 +34,9 @@ import { EmployeeJobtypeComponent } from './components/setting/settings-employee
 import { EmployeePayrollgroupComponent } from './components/setting/settings-employee/employee-payrollgroup/employee-payrollgroup.component';
 import { EmployeeRelationshipComponent } from './components/setting/settings-employee/employee-relationship/employee-relationship.component';
 import { OcpsDashboardComponent } from './components/dashboard/ocps-dashboard.component';
+import { InvoiceComponent } from './components/invoice/invoice.component';
+import { TemplatesComponent } from './components/templates/templates.component';
+import { ReportsComponent } from './components/reports/reports.component';
 
 
 const routes: Routes = [
@@ -53,6 +56,24 @@ const routes: Routes = [
         pathMatch: 'full',
         canActivate: [PortalAuthGuard],
         component: OcpsDashboardComponent
+      },
+      {
+        path: 'invoice',
+        pathMatch: 'full',
+        canActivate: [PortalAuthGuard],
+        component: InvoiceComponent
+      },
+      {
+        path: 'template',
+        pathMatch: 'full',
+        canActivate: [PortalAuthGuard],
+        component: TemplatesComponent
+      },
+      {
+        path: 'reports',
+        pathMatch: 'full',
+        canActivate: [PortalAuthGuard],
+        component: ReportsComponent
       },
 
 

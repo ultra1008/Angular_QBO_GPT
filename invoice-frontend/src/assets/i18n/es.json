@@ -2359,5 +2359,8 @@
     "certification_iframe_message": "You did not added any certificates yet. Click Add Certification button to add for your company",
     "RequestPaymentFrom": "Request payment from",
     "RequestPaymentTo": "Request payment to",
-    "All-send": "Send"
+    "All-send": "Send",
+    "Sidebar-invoice": "Invoices",
+    "Sidebar-Templates": "Templates",
+    "Sidebar-Report": "Reports"
 }

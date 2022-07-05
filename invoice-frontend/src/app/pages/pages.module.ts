@@ -71,6 +71,9 @@ import { EmployeePayrollgroupComponent, EmployeePayRollGroupForm } from './compo
 import { EmployeeRelationshipComponent, EmployeeRelationshipForm } from './components/setting/settings-employee/employee-relationship/employee-relationship.component';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { OcpsDashboardComponent } from './components/dashboard/ocps-dashboard.component';
+import { InvoiceComponent } from './components/invoice/invoice.component';
+import { ReportsComponent } from './components/reports/reports.component';
+import { TemplatesComponent } from './components/templates/templates.component';
 
 
 
@@ -117,7 +120,10 @@ import { OcpsDashboardComponent } from './components/dashboard/ocps-dashboard.co
     EmployeePayRollGroupForm,
     EmployeeRelationshipForm,
     AddressBook,
-    OcpsDashboardComponent
+    OcpsDashboardComponent,
+    InvoiceComponent,
+    ReportsComponent,
+    TemplatesComponent
   ],
   imports: [
     PortalModule,
