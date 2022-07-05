@@ -11,20 +11,19 @@
 /node_modules
 
 
+/invoice-backend/node_modules
+/invoice-backend/config/config.js
+/invoice-backend/config/rovuk.json
+/invoice-backend/config/rovuk-hemin.json
+/invoice-backend/package.json
+/invoice-backend/package-lock.json
 
-/sponsor-backend/node_modules
-/sponsor-backend/config/config.js
-/sponsor-backend/config/rovuk.json
-/sponsor-backend/config/rovuk-hemin.json
-/sponsor-backend/package.json
-/sponsor-backend/package-lock.json
 
-
-/sponsor-frontend/node_modules
-/sponsor-frontend/dist
-/sponsor-frontend/src/environments
-/sponsor-frontend/package.json
-/sponsor-frontend/package-lock.json
+/invoice-frontend/node_modules
+/invoice-frontend/dist
+/invoice-frontend/src/environments
+/invoice-frontend/package.json
+/invoice-frontend/package-lock.json
 
 
 
