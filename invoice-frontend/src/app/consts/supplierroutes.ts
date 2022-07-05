@@ -1,0 +1,77 @@
+export enum supplierroutes {
+    VENDOR_LOGIN = "/webapi/v1/vendorlogin",
+    VENDOR_FORGET_PASSWORD = "/webapi/v1/forgetpassword",
+    OSPC_COMPNAY_SIZE_GET = "/webapi/v1/getcompanysizeocpr",
+    OSPC_COMPNAY_TYPE_GET = "/webapi/v1/getcompanytypeocpr",
+    OSPC_COMPNAY_CODE_GET = "/webapi/v1/getcompanycodeocpr",
+    OSPC_PRIME_WORK_PERFORMED_GET = "/webapi/v1/getsupplierprimeworkperformedocpr",
+    OSPC_CSI_DIVISION_GET = "/webapi/v1/getcsidivisionocpr",
+    OSPC_MINORITY_CODE_GET = "/webapi/v1/getcompanyminoritycodeocpr",
+    REGISTRATION_VENDOR = "/webapi/v1/savevendoruser",
+    OSPC_GET_ONE_VENDOR = "/webapi/v1/getvendoruser",
+    OSPC_GET_ALL_VENDOR = "/webapi/v1/getallvendoruser",
+    OSPC_COMPNAY_INFO = "/webapi/v1/sponsorcompnayinfo",
+    BANK_DETAILS_SAVE = "/webapi/v1/savebankdetails",
+    SAVE_SIGNATURE_V2 = "/webapi/v1/savesignaturewasabiv2",
+    SAVE_IMAGE_V2 = "/webapi/v1/saveimagesinwasabiv2",
+    SAVE_ATTACHEMENT_V2 = "/webapi/v1/saveAttechmentv2",
+    BANK_DETAILS_GET = "/webapi/v1/getbankdetails",
+    OCPS_MINORITY_GET = "/webapi/v1/getcompanyminoritycode",
+    SAVE_MINORITYOWNER = "/webapi/v1/savevendorminorityowners",
+    ONE_VENDOR_OCPR = "/webapi/v1/getonevendoruser",
+    OSPC_DOCUMENT_TYPE_GET = "/webapi/v1/getdocumenttypeocpr",
+    OSPC_CERTIFICATE_TYPE_GET = "/webapi/v1/getcertificationtypeocpr",
+    SAVE_CERTIFICATES = "/webapi/v1/savevendorcertifications",
+    SEND_CERTIFICATES = "/webapi/v1/sendcertificate",
+    DELETE_VENDOR_CERTIFICATE = "/webapi/v1/deletevendorvendorcertificate",
+    GET_CERTIFICATES_TYPE = "/webapi/v1/getcertificationtype",
+    GET_DOCUMENT_TYPE = "/webapi/v1/getdocumenttype",
+    SAVE_SPONSOR_VENDOR_CERTIFICATE = "/webapi/v1/savesponsorvendorcertifications",
+    SPONSOR_VENDOR_SEND_REPORT = "/webapi/v1/getvendorexcelreport",
+    UPDATE_SPONSOR_VENDOR_CERTIFICATE = "/webapi/v1/updatevendorcertificationsstatus",
+    OCPR_PASSWORD_CHANGE = "/webapi/v1/vendorchangepassword",
+    OCPS_SCHEDULE_OF_ITEM_GET = "/webapi/v1/getsupplierscheduleofvaluesitemocpr",
+
+    // Sponsor Email
+    SAVE_EMAIL_TEMPLATE = "/webapi/v1/saveemailtemplates",
+    GET_EMAIL_TEMPLATE_DATATABLES = "/webapi/v1/getemailtemplatedatatables",
+    GET_EMAIL_TEMPLATE_HISTORY_DATATABLES = "/webapi/v1/getemailtemplatehistorydatatable",
+    GET_ONE_EMAIL_TEMPLATE = "/webapi/v1/getoneemailtemplate",
+    UPDATE_EMAIL_TEMPLATE_STATUS = "/webapi/v1/changeemailtemplatestatus",
+    GET_EMAIL_TEMPLATE = "/webapi/v1/getemailtemplates",
+    SEND_MAIL_SPONSOR_TEMPLATE = "/webapi/v1/sendmailfromtemplete",
+    ARCHIVE_EMAIL_TEMPLATE = "/webapi/v1/deleteemailtemplates",
+
+    OCPR_DOCUMENT_TYPE_GET = "/webapi/v1/getdocumenttypeocpr",
+
+    // Vendor Change Order
+    VENDOR_CHANGE_ORDER_SAVE = "/webapi/v1/portal/savevendorchangeorder",
+    VENDOR_CHANGE_ORDER_GET_ALL_BY_VENDOR = "/webapi/v1/portal/getallvendorchangeordersbyvendor",
+    VENDOR_CHANGE_ORDER_GET_ONE = "/webapi/v1/portal/getonevendorchangeorder",
+    VENDOR_CHANGE_ORDER_GET_DATATABLES = "/webapi/v1/portal/getvendorchangeorderdatatables",
+    VENDOR_CHANGE_ORDER_EXCEL_REPORT = "/webapi/v1/portal/getvendorchangeorderexcelreport",
+    VENDOR_CHANGE_ORDER_SEND_PDF_REPORT = "/webapi/v1/portal/getvendorchangeorderpdfreport",
+
+    VENDOR_GET_FREQUENCY_OCPS = "/webapi/v1/getfrequencyocps",
+    VENDOR_GET_EQUIPMENT_TYPE_OCPS = "/webapi/v1/getequipmenttypeocps",
+    VENDOR_GET_UNIT_OF_MEASURE_OCPS = "/webapi/v1/getunitofmeasureocps",
+    VENDOR_GET_USER_LIST_OCPS = "/webapi/v1/portal/getalluserlistocps",
+
+    // Vendor Project Payments
+    VENDOR_PROJECT_PAYMENT_GET_ALL = "/webapi/v1/portal/getallvendorprojectpayments",
+    VENDOR_PROJECT_PAYMENT_SAVE = "/webapi/v1/portal/savevendorprojectpayment",
+    VENDOR_PROJECT_PAYMENT_GET_DATATABLES = "/webapi/v1/portal/getvendorprojectpaymentdatatables",
+    VENDOR_PROJECT_PAYMENT_GET_HISTORY_DATATABLES = "/webapi/v1/portal/getvendorprojectpaymenthistorydatatables",
+
+    // Vendor Certificate 
+    VENDOR_SAVE_VENDOR_CERTIFICATE = "/webapi/v1/portal/savevendorvendorcertificates",
+    VENDOR_DELETE_VENDOR_CERTIFICATE = "/webapi/v1/portal/deletevendorvendorcertificates",
+    VENDOR_GET_VENDOR_CERTIFICATE = "/webapi/v1/portal/getvendorvendorcertificates",
+    VENDOR_SAVE_VENDOR_CERTIFICATE_DOCUMENT = "/webapi/v1/portal/savevendorvendordocument",
+
+    // Vendor Payment
+    VENDOR_GET_PAYMENTDATA = "/webapi/v1/portal/getvendorpaymentdata",
+    VENDOR_GET_ONE_PAYMENT_CYCLE = "/webapi/v1/portal/getoneprojectpaymentcycle",
+    VENDOR_GET_PAYMENT_FORM_NUMBERS = "/webapi/v1/portal/getvendorpaymentrequestformamounts",
+    VENDOR_SAVE_PAYMENT_REQUEST = "/webapi/v1/portal/requestvendorpayment",
+}

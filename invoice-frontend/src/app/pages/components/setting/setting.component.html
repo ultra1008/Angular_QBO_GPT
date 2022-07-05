@@ -1,0 +1,95 @@
+<div class="wrapper-cust-admin" fxLayout style="height: 95%">
+    <div class="head-text">
+        <h3 class="editing">{{'Portal-Main-Settings' | translate}}</h3>
+    </div>
+    <!-- <button mat-stroked-button class="sign-button" (click)="routefun()">
+        {{'Settings-Other-Add-Item-Type'| translate}}
+    </button> -->
+    <mat-horizontal-stepper labelPosition="bottom" fxFlex="100" #stepper>
+        <ng-template matStepperIcon="edit" let-index="index">
+            <img *ngIf="index == 0" src="{{companyinfo_white}}" alt="" height="15px">
+            <img *ngIf="index == 1" src="{{userIcon_white}}" alt="" height="15px">
+            <img *ngIf="index == 2" src="{{roleicon_white}}" alt="" height="15px">
+            <img *ngIf="index == 3" src="{{smtp_white}}" alt="" height="15px">
+            <img *ngIf="index == 4" src="{{website_plugin_white}}" alt="" height="15px">
+            <img *ngIf="index == 5" src="{{other_settings_white}}" alt="" height="15px">
+        </ng-template>
+
+        <ng-template matStepperIcon="companyprofile">
+            <img src="{{companyinfo}}" alt="" height="15px">
+        </ng-template>
+
+        <ng-template matStepperIcon="employee">
+            <img src="{{userIcon}}" alt="" height="15px">
+        </ng-template>
+
+        <ng-template matStepperIcon="role">
+            <img src="{{roleIcon}}" alt="" height="15px">
+        </ng-template>
+
+        <ng-template matStepperIcon="smtp">
+
+            <img src="{{smtp}}" alt="" height="15px">
+        </ng-template>
+        <ng-template matStepperIcon="websiteplugin">
+
+            <img src="{{website_plugin}}" alt="" height="15px">
+        </ng-template>
+        <ng-template matStepperIcon="other">
+
+            <img src="{{other_settings}}" alt="" height="15px">
+        </ng-template>
+
+        <mat-step state="companyprofile" [completed]="false">
+            <form>
+                <ng-template matStepLabel>{{'Settings-CompanyInformation' | translate}}</ng-template>
+                <app-settings-companyinfo></app-settings-companyinfo>
+            </form>
+        </mat-step>
+
+        <mat-step state="employee" [completed]="false">
+            <form>
+                <ng-template matStepLabel>{{'settings_tab_employee' | translate}}</ng-template>
+                <app-settings-employee></app-settings-employee>
+            </form>
+        </mat-step>
+
+        <mat-step state="role" [completed]="false">
+            <form>
+                <ng-template matStepLabel>{{'settings_tab_role' | translate}}</ng-template>
+                <app-setting-role></app-setting-role>
+            </form>
+        </mat-step>
+
+
+
+        <mat-step state="smtp" [completed]="false">
+            <form>
+                <ng-template matStepLabel>{{'Settings-SMTP' | translate}}</ng-template>
+                <app-settings-smtp></app-settings-smtp>
+            </form>
+        </mat-step>
+
+        <mat-step state="websiteplugin" [completed]="false">
+            <form>
+                <ng-template matStepLabel>{{'settings_tab_Website_plugin' | translate}}</ng-template>
+                <app-websiteplugin></app-websiteplugin>
+            </form>
+        </mat-step>
+
+        <!-- <mat-step state="emailsetting" [completed]="false">
+            <form>
+                <ng-template matStepLabel>Email setting</ng-template>
+                <app-ocpsemail-settings></app-ocpsemail-settings>
+            </form>
+        </mat-step> -->
+
+        <mat-step state="other" [completed]="false">
+            <form>
+                <ng-template matStepLabel>{{'Settings-OtherSettings' | translate}}</ng-template>
+                <app-ocps-settings></app-ocps-settings>
+            </form>
+        </mat-step>
+
+    </mat-horizontal-stepper>
+</div>

@@ -1,0 +1,549 @@
+<div class="wrapper-cust-admin">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="screen-title-section cust-h1-inline button-margin">
+                <div class="inner-search-bar">
+                </div>
+                <input id="file-upload" type="file" style="display: none;" (click)="OpenFilebox.value = null"
+                    (change)="onFileChange($event)" #OpenFilebox />
+                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_IMPORT' | translate }}"
+                    (click)="importFileAction();">
+                    <img src="{{importIcon}}" alt="" height="20px">
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="">
+        <mat-tab-group mat-align-tabs="center" (selectedTabChange)="onTabChanged($event);">
+            <mat-tab label="{{'Company-Item-Type' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+                            <button mat-stroked-button class="sign-button"
+                                (click)="addOtherSetting({},'ItemType','Item Type' ,'Company-Item-Type') ;">{{'Settings-Other-Add-Item-Type'|
+                                translate}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'Item Type'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let itemtype of itemType">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{itemtype.item_type_name}}</mat-card-content>
+                                    <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(itemtype,'ItemType','Item Type','Company-Item-Type');"
+                                                class="button_shiftEditClass"><img src="{{editIcon}}" alt=""
+                                                    height="20px">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(itemtype)" class="button_shiftDeleteClass"><img
+                                                    src="{{deleteIcon}}" alt="" height="20px">{{'All-Delete' |
+                                                translate}}</a>
+                                        </div>
+                                    </div>
+                                </mat-card-title-group>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+            <mat-tab label="{{'Company-Item-Packaging' | translate }}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+                            <button mat-stroked-button class="sign-button"
+                                (click)="addOtherSetting({},'packaging','Packaging','Company-Item-Packaging');">{{'Settings-Other-Add-Packaging'
+                                | translate}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'Packaging'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let packag of packaging_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{packag.packaging_name}}</mat-card-content>
+                                    <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(packag,'packaging','Packaging','Company-Item-Packaging');"
+                                                class="button_shiftEditClass"><img src="./assets/diversityicon/edit.png"
+                                                    alt="" class="" height="15px"> {{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(packag)" class="button_shiftDeleteClass"><img
+                                                    src="./assets/diversityicon/delete.png" alt="" class=""
+                                                    height="15px"> {{'All-Delete' | translate}}</a>
+                                        </div>
+                                    </div>
+                                </mat-card-title-group>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+            <mat-tab label="{{'Company-Items-Report-Manufacturers' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+                            <button mat-stroked-button class="sign-button"
+                                (click)="addOtherSetting({},'Manufacturer','Manufacturer','Company-Items-Report-Manufacturers');">{{'Settings-Other-Add-Manufacturer'
+                                | translate}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'Manufacturer'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let manufacturer of manufacturer_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{manufacturer.name}}</mat-card-content>
+                                    <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(manufacturer,'Manufacturer','Manufacturer','Company-Items-Report-Manufacturers');"
+                                                class="button_shiftEditClass">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(manufacturer)"
+                                                class="button_shiftDeleteClass">{{'All-Delete' | translate}}</a>
+                                        </div>
+                                    </div>
+                                </mat-card-title-group>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+            <mat-tab label="{{'Daily_Report_Equipments' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+                            <button mat-stroked-button class="sign-button"
+                                (click)="addOtherSetting({},'Equipment','Equipment','Daily_Report_Equipments');">{{'Settings-Other-Add-Equipment'|
+                                translate}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'Equipment'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let equipment of equipment_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{equipment.equipment_type}}
+                                    </mat-card-content>
+                                    <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(equipment,'Equipment','Equipment','Daily_Report_Equipments');"
+                                                class="button_shiftEditClass">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(equipment)"
+                                                class="button_shiftDeleteClass">{{'All-Delete' | translate}}</a>
+                                        </div>
+                                    </div>
+                                </mat-card-title-group>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+            <!-- <mat-tab label="{{'Project-Equipment-Ownership' | translate }}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'Ownership'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let ownership of ownership_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{ownership.name}}</mat-card-content>
+                                    <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                    </div>
+                                </mat-card-title-group>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+            <mat-tab label="{{'other_setting_Equipment_Status' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+                            <button mat-stroked-button class="sign-button"
+                                (click)="addOtherSetting({},'Status','Status','other_setting_Equipment_Status');">{{'Settings-Other-Add-Status'|
+                                translate}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'Equipment Status'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let status of status_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{status.name}}</mat-card-content>
+                                    <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust"
+                                        *ngIf="status.name != STATUS_IDLE_SETTING && status.name != STATUS_In_Use_SETTING">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(status,'Status','Status','other_setting_Equipment_Status');"
+                                                class="button_shiftEditClass">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(status)"
+                                                class="button_shiftDeleteClass">{{'All-Delete' | translate}}</a>
+                                        </div>
+                                    </div>
+                                </mat-card-title-group>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab> -->
+            <mat-tab label="{{'Company-Equipment-RateFrequency' | translate }}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+
+                            <button mat-stroked-button class="sign-button"
+                                (click)="addOtherSetting({},'Frequency','Frequency','Company-Equipment-RateFrequency');">{{'Setting-Other-Add-Frequency'
+                                |
+                                translate }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'Frequency'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let frequency of frequency_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{frequency.name}}</mat-card-content>
+                                    <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(frequency,'Frequency','Frequency','Company-Equipment-RateFrequency');"
+                                                class="button_shiftEditClass">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(frequency)"
+                                                class="button_shiftDeleteClass">{{'All-Delete' | translate}}</a>
+                                        </div>
+                                    </div>
+                                </mat-card-title-group>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+            <mat-tab label="{{'Expenses_Module' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+
+                            <button mat-stroked-button class="sign-button"
+                                (click)="addOtherSetting({},'Expenses','Expenses','Expenses_Module');">{{'Settings-Other-Add-Expenses'|
+                                translate}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'Expenses'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let expenses_type of expenses_type_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{expenses_type.expensestype}}
+                                    </mat-card-content>
+                                    <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                        <i *ngIf="expenses_type.expensestype != GAS_SETTING"
+                                            class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(expenses_type,'Expenses','Expenses','Expenses_Module');"
+                                                class="button_shiftEditClass">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(expenses_type)"
+                                                class="button_shiftDeleteClass">{{'All-Delete' | translate}}</a>
+                                        </div>
+                                    </div>
+                                </mat-card-title-group>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+            <mat-tab label="{{'Project_Settings_Material_Weight' | translate }}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+
+                            <button mat-stroked-button class="sign-button"
+                                (click)="addOtherSetting({},'Weight','Weight','Project_Settings_Material_Weight' );">{{'Settings-Other-Add-Weight'
+                                |
+                                translate}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'Weight'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let weight_data of weight_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{weight_data.name}}</mat-card-content>
+                                    <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(weight_data,'Weight','Weight','Project_Settings_Material_Weight');"
+                                                class="button_shiftEditClass">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(weight_data)"
+                                                class="button_shiftDeleteClass">{{'All-Delete' | translate}}</a>
+                                        </div>
+                                    </div>
+                                </mat-card-title-group>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+            <mat-tab label="{{'other_setting_Project_Document' | translate }} ">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+
+                            <button mat-stroked-button class="sign-button"
+                                (click)="addOtherSetting({},'ProjectDocument','Project Document','other_setting_Project_Document');">{{'Settings-Other-Add-Project-Document'|
+                                translate}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'Project Document'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let projectdoc_data of projectdoc_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{projectdoc_data.project_document_type_name}}
+                                    </mat-card-content>
+                                    <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(projectdoc_data,'ProjectDocument','Project Document','other_setting_Project_Document' );"
+                                                class="button_shiftEditClass">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(projectdoc_data)"
+                                                class="button_shiftDeleteClass">{{'All-Delete' | translate}}</a>
+                                        </div>
+                                    </div>
+                                </mat-card-title-group>
+                                <mat-card-content>
+                                    <mat-slide-toggle [(ngModel)]="projectdoc_data.is_expiration" disabled="true"
+                                        color="primary">{{'Settings-Other-Expiration-Date'| translate}}
+                                    </mat-slide-toggle>
+                                </mat-card-content>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+            <mat-tab label="{{'Setting-Other-Credit-Card' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+
+                            <button mat-stroked-button class="sign-button"
+                                (click)="addOtherSetting({},'CreditCards','Credit Cards','Setting-Other-Credit-Card' );">{{'Settings-Other-Add-Credit-Card'|
+                                translate}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'Credit Cards'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let cc_data of creditCard">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{cc_data.name}}</mat-card-content>
+                                    <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(cc_data,'CreditCards','Credit Cards','Setting-Other-Credit-Card');"
+                                                class="button_shiftEditClass">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(cc_data)"
+                                                class="button_shiftDeleteClass">{{'All-Delete' | translate}}</a>
+                                        </div>
+                                    </div>
+                                </mat-card-title-group>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+            <mat-tab label="{{'project_color' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+
+                            <button mat-stroked-button class="sign-button"
+                                (click)="addOtherSetting({},'Color','Color','project_color');">{{'Rovuk_Managment_Setting_Add_Color'
+                                | translate}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'Color'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let color of color_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{color.name}}</mat-card-content>
+                                    <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(color,'Color','Color','project_color');"
+                                                class="button_shiftEditClass">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(color)"
+                                                class="button_shiftDeleteClass">{{'All-Delete' | translate}}</a>
+                                        </div>
+                                    </div>
+                                </mat-card-title-group>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+            <mat-tab label="{{'Settings_OtherSettings_Terms' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+
+                            <button mat-stroked-button class="sign-button"
+                                (click)="addOtherSetting({},'Terms','Terms','Settings_OtherSettings_Terms');">+{{'Settings_OtherSettings_Add_Terms'
+                                | translate }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'Terms'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let term of terms_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{term.name}}</mat-card-content>
+                                    <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(term,'Terms','Terms','Settings_OtherSettings_Terms');"
+                                                class="button_shiftEditClass">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(term)"
+                                                class="button_shiftDeleteClass">{{'All-Delete' | translate}}</a>
+                                        </div>
+                                    </div>
+                                </mat-card-title-group>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+            <mat-tab label="{{'Settings_OtherSettings_Language' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+                            <!-- <div class="resize">
+                                <mat-form-field appearance="outline" class="shift-input">
+                                    <mat-label>{{'Rovuk_Managment_Setting_Language' | translate}}</mat-label>
+                                    <mat-select [ngModel]="selectLanguage" (selectionChange)="onChange($event)"
+                                        class="dark-cust-color">
+                                        <mat-option *ngFor="let language of LANGUAGE_ARRAY" [value]="language.value">
+                                            {{language.name}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div> -->
+                            <div class="ml-2" style="margin-top: 3px;">
+                                <button mat-stroked-button class="sign-button" style="height: 48px;"
+                                    (click)="addOtherSetting({},'Language','Language','Settings_OtherSettings_Add_Language');">+
+                                    {{'Settings_OtherSettings_Add_Language' | translate}}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'Language'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let language of language_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{language.name}}</mat-card-content>
+                                    <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(language,'Language','Language','Settings_OtherSettings_Add_Language');"
+                                                class="button_shiftEditClass">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(language)"
+                                                class="button_shiftDeleteClass">{{'All-Delete' | translate}}</a>
+                                        </div>
+                                    </div>
+                                </mat-card-title-group>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>

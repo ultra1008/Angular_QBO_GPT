@@ -1,0 +1,57 @@
+<h2 mat-dialog-title>{{tmp_name | translate}}</h2>
+<form class="form" [formGroup]="othersetting" (ngSubmit)="saveData()">
+    <div class="container" *ngIf="!(data.SettingType == 'CreditCards'|| data.SettingType == 'ProjectDocument') ">
+        <div class="row">
+            <div class="col-sm-12">
+                <mat-form-field appearance="outline" class="shift-input">
+                    <mat-label>{{tmp_name | translate }} {{'Name_all' | translate }}</mat-label>
+                    <input matInput placeholder="{{tmp_name | translate }} {{'Name_all' | translate }}"
+                        formControlName="name" required>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" *ngIf="data.SettingType == 'CreditCards'">
+        <div class="row">
+            <div class="col-sm-12">
+                <mat-form-field appearance="outline" class="shift-input">
+                    <mat-label>{{'Setting-Other-Credit-Card' | translate}}</mat-label>
+                    <mat-select formControlName="name" class="dark-cust-color">
+                        <mat-option *ngFor="let card_type of credit_card_types" [value]="card_type">
+                            {{card_type}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="shift-input">
+                    <mat-label>{{'Settings-Other-Credit-Cards-number'| translate}}</mat-label>
+                    <input matInput onkeypress="return String.fromCharCode(event.charCode).match(/[^0-9]/g) === null"
+                        placeholder="{{'Settings-Other-Credit-Cards-number'| translate}}" formControlName="number"
+                        prefix="XXXX-XXXX-XX" mask="00-0000" required>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" *ngIf="data.SettingType == 'ProjectDocument'">
+        <div class="row">
+            <mat-form-field appearance="outline" class="shift-input">
+                <mat-label>{{'Settings-Other-Project-Document-Type' | translate}}</mat-label>
+                <input matInput placeholder="{{'Settings-Other-Project-Document-Type' | translate}}"
+                    formControlName="name" required>
+            </mat-form-field>
+        </div>
+        <div class="row">
+            <mat-slide-toggle formControlName="is_expiration" color="primary">{{'Settings-Other-Expiration-Date'|
+                translate}}</mat-slide-toggle>
+        </div>
+    </div>
+
+    <mat-dialog-actions align="center">
+        <button mat-raised-button mat-dialog-close><img src="{{backIcon}}" alt="" class="pr-1"
+                height="15px">{{'All-exit' | translate }}</button>
+        <button mat-raised-button type="submit" color="primary"><img src="{{saveIcon}}" alt=""
+                class="pr-1" height="15px">{{'All-save' | translate }}</button>
+    </mat-dialog-actions>
+
+</form>

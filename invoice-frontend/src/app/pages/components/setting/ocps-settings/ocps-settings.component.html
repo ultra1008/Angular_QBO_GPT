@@ -1,0 +1,1475 @@
+<div class="wrapper-cust-admin">
+    <div class="">
+        <mat-tab-group mat-align-tabs="center" (selectedTabChange)="onTabChanged($event);" color="white">
+            <mat-tab label="{{'CertificationTypes' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+                            <div class=" col-6 text-left cust-heght-textbox">
+                            </div>
+                            <div class=" col-6  text-right ml-3 cust-heght-textbox">
+                                <button mat-raised-button color="primary" class="sign-button"
+                                    (click)="addOtherSetting({},'CertificationTypes','CertificationTypes','CertificationTypes');">
+                                    <img src="{{add_my_self_Icon}}" alt="" height="20px">
+                                    {{'CertificationTypes' | translate }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'CertificationTypes'">
+                    <ul style="list-style-type: none;">
+                        <li *ngFor="let certificationtype of CertificationTypes_data">
+                            <mat-card class="document-card certificate-type-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{certificationtype.name}}</mat-card-content>
+                                    <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addCertificateType({},'CertificationTypes','CertificationTypes','CertificationTypes',certificationtype._id);"
+                                                class="button_shiftAddClass"><img src="{{addIcon}}" alt=""
+                                                    height="15px">
+                                                {{'Project-Document-Add-Button'| translate}}</a>
+                                            <a (click)="addOtherSetting(certificationtype,'CertificationTypes','CertificationTypes','CertificationTypes');"
+                                                class="button_shiftEditClass"><img src="{{editIcon}}" alt=""
+                                                    height="15px"> {{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(certificationtype)"
+                                                class="button_shiftDeleteClass"><img src="{{deleteIcon}}" alt=""
+                                                    height="15px"> {{'All-Delete' |
+                                                translate}}</a>
+                                        </div>
+                                    </div>
+                                </mat-card-title-group>
+                            </mat-card>
+                            <mat-grid-list class="document-type-container" cols="3" rowHeight="3:1">
+                                <mat-grid-tile *ngFor="let documentType of certificationtype.document_type">
+                                    <mat-card class="document-card">
+                                        <mat-card-title-group class="cust-card-title-group">
+                                            <mat-card-content style="width: 100%">{{documentType.name}}
+                                            </mat-card-content>
+                                            <!-- <div fxFlex style="width: 100%"></div>
+                                            <div class="dropdown zIndex-cust">
+                                                <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                                    aria-hidden="true"></i>
+                                                <div class="dropdown-content-cust">
+                                                    <a (click)="addCertificateType(documentType,'CertificationTypes','CertificationTypes','CertificationTypes',certificationtype._id);"
+                                                        class="button_shiftEditClass"><img src="{{editIcon}}" alt=""
+                                                            height="15px"> {{'All-Edit'| translate}}</a>
+                                                    <a (click)="deletesetting(documentType)"
+                                                        class="button_shiftDeleteClass"><img src="{{deleteIcon}}" alt=""
+                                                            height="15px"> {{'All-Delete' |
+                                                        translate}}</a>
+                                                </div>
+                                            </div> -->
+                                            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu">
+                                                <mat-icon>more_vert</mat-icon>
+                                            </button>
+                                            <mat-menu #menu="matMenu">
+                                                <button
+                                                    (click)="addCertificateType(documentType,'CertificationTypes','CertificationTypes','CertificationTypes',certificationtype._id);"
+                                                    mat-menu-item>
+                                                    <span><img src="{{editIcon}}" alt="" height="15px">
+                                                        {{'All-Edit' | translate}}</span>
+                                                </button>
+                                                <button (click)="deletesetting(documentType)" mat-menu-item>
+                                                    <span><img src="{{deleteIcon}}" alt="" height="15px">
+                                                        {{'All-Delete' | translate}}</span>
+                                                </button>
+                                            </mat-menu>
+                                        </mat-card-title-group>
+                                        <mat-card-content>
+                                            <mat-slide-toggle [(ngModel)]="documentType.is_expiration" disabled="true"
+                                                color="primary">
+                                                {{'Settings-Other-Expiration-Date'| translate}}
+                                            </mat-slide-toggle>
+                                        </mat-card-content>
+                                    </mat-card>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                        </li>
+                    </ul>
+                    <!-- <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let certificationtype of CertificationTypes_data">
+
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{certificationtype.name}}</mat-card-content>
+                                    <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addCertificateType({},'CertificationTypes','CertificationTypes','CertificationTypes',certificationtype._id);"
+                                                class="button_shiftAddClass"><img src="{{addIcon}}" alt=""
+                                                    height="15px">
+                                                {{'Project-Document-Add-Button'| translate}}</a>
+                                            <a (click)="addOtherSetting(certificationtype,'CertificationTypes','CertificationTypes','CertificationTypes');"
+                                                class="button_shiftEditClass"><img src="{{editIcon}}" alt=""
+                                                    height="15px"> {{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(certificationtype)"
+                                                class="button_shiftDeleteClass"><img src="{{deleteIcon}}" alt=""
+                                                    height="15px"> {{'All-Delete' |
+                                                translate}}</a>
+                                        </div>
+                                    </div>
+                                </mat-card-title-group> 
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list> -->
+                </div>
+            </mat-tab>
+
+
+            <mat-tab label="{{'Naics_Codes' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+                            <div class=" col-6 text-left cust-heght-textbox">
+
+
+                            </div>
+                            <div class=" col-6  text-right ml-3 cust-heght-textbox">
+
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_IMPORT' | translate }}"
+                                    (click)="importFileActionCompnayCodes();">
+                                    <img class="cust-all-import-icon" alt="" height="20px">
+                                </button>
+
+                                <input id="file-upload" type="file" style="display: none;"
+                                    (click)="OpenFilebox_CompnayCodes.value = null"
+                                    (change)="onFileChange($event,'CompnayCodes')" #OpenFilebox_CompnayCodes />
+
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_EXPORT' | translate }}"
+                                    (click)="exportFileAction('CompnayCodes');">
+                                    <img class="cust-all-export-icon" alt="" height="20px">
+                                </button>
+
+                                <button mat-raised-button color="primary" class="sign-button"
+                                    (click)="addOtherSetting({},'CompnayCodes','CompnayCodes','Naics_Codes');"><img
+                                        src="{{add_my_self_Icon}}" alt="" height="20px">
+                                    {{'opsc_setting_company_code' | translate }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'CompnayCodes'">
+                    <div *ngIf="show_hide_table " class="cust-padding">
+                        <table datatable [dtOptions]="dtOptions" class="row-border hover"></table>
+                    </div>
+
+                    <!-- <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let compnaycode of CompnayCodes_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{compnaycode.category_name}}
+                                    </mat-card-content>
+                                    <mat-card-content style="width: 100%">{{compnaycode.category_code}}
+                                    </mat-card-content>
+                                    <mat-card-content style="width: 100%">{{compnaycode.sub_category_code}}
+                                    </mat-card-content>
+                                    <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(compnaycode,'CompnayCodes','CompnayCodes','CompnayCodes');"
+                                                class="button_shiftEditClass">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(compnaycode)"
+                                                class="button_shiftDeleteClass">{{'All-Delete' | translate}}</a>
+                                        </div>
+                                    </div>
+                                </mat-card-title-group>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list> -->
+                </div>
+            </mat-tab>
+
+            <mat-tab label="{{'Sponsor_Vendor_Type' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+                            <div class=" col-6 text-left cust-heght-textbox">
+
+
+                            </div>
+                            <div class=" col-6  text-right ml-3 cust-heght-textbox">
+                                <!-- <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_IMPORT' | translate }}"
+                                    (click)="importFileActionCompnayTypes();">
+                                    <img class="cust-all-import-icon" alt="" height="20px">
+                                </button>
+                                <input id="file-upload" type="file" style="display: none;"
+                                    (click)="OpenFilebox_CompnayTypes.value = null"
+                                    (change)="onFileChange($event,'CompnayTypes')" #OpenFilebox_CompnayTypes />
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_EXPORT' | translate }}"
+                                    (click)="exportFileAction('CompnayTypes');">
+                                    <img class="cust-all-export-icon" alt="" height="20px">
+                                </button>
+
+                                <button mat-raised-button color="primary" class="sign-button"
+                                    (click)="addOtherSetting({},'CompnayTypes','Vendor Type','Vendor Type');"><img
+                                        src="{{add_my_self_Icon}}" alt="" height="20px">
+                                    {{'Sponsor_Vendor_Type' | translate }}
+                                </button> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'CompnayTypes'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let compnaytype of CompnayTypes_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{compnaytype.name}}</mat-card-content>
+                                    <div fxFlex style="width: 100%"></div>
+                                    <!-- <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(compnaytype,'CompnayTypes','Vendor Type','Vendor Type');"
+                                                class="button_shiftEditClass"><img src="{{editIcon}}" alt="" class=""
+                                                    height="15px">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(compnaytype)" class="button_shiftDeleteClass">
+                                                <img src="{{deleteIcon}}" alt="" class="" height="15px">{{'All-Delete' |
+                                                translate}}</a>
+                                        </div>
+                                    </div> -->
+                                </mat-card-title-group>
+
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+
+            <mat-tab label="{{'CompnaySizes' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+                            <div class=" col-6 text-left cust-heght-textbox">
+
+
+                            </div>
+                            <div class=" col-6  text-right ml-3 cust-heght-textbox">
+                                <!-- <mat-form-field class="main-one-input-field example-form-field" appearance="outline">
+                                    <input matInput placeholder="{{'Search_all' | translate}}" type="text"
+                                        [(ngModel)]="CompnaySizesValue" (ngModelChange)="datasearch('CompnaySizes')">
+                                </mat-form-field> &nbsp; -->
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_IMPORT' | translate }}"
+                                    (click)="importFileActionCompnaySizes();">
+                                    <img class="cust-all-import-icon" alt="" height="20px">
+                                </button>
+                                <input id="file-upload" type="file" style="display: none;"
+                                    (click)="OpenFilebox_CompnaySizes.value = null"
+                                    (change)="onFileChange($event,'CompnaySizes')" #OpenFilebox_CompnaySizes />
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_EXPORT' | translate }}"
+                                    (click)="exportFileAction('CompnaySizes');">
+                                    <img class="cust-all-export-icon" alt="" height="20px">
+                                </button>
+                                <button mat-raised-button color="primary" class="sign-button"
+                                    (click)="addOtherSetting({},'CompnaySizes','CompnaySizes','CompnaySizes');"><img
+                                        src="{{add_my_self_Icon}}" alt="" height="20px">
+                                    {{'CompnaySizes' | translate }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'CompnaySizes'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let compnaysize of CompnaySizes_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{compnaysize.name}}</mat-card-content>
+                                    <!-- <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(compnaysize,'CompnaySizes','CompnaySizes','CompnaySizes');"
+                                                class="button_shiftEditClass"><img src="{{editIcon}}" alt="" class=""
+                                                    height="15px">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(compnaysize)" class="button_shiftDeleteClass">
+                                                <img src="{{deleteIcon}}" alt="" class="" height="15px">{{'All-Delete' |
+                                                translate}}</a>
+                                        </div>
+                                    </div> -->
+                                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu="matMenu">
+                                        <button
+                                            (click)="addOtherSetting(compnaysize,'CompnaySizes','CompnaySizes','CompnaySizes');"
+                                            mat-menu-item>
+                                            <span><img src="{{editIcon}}" alt="" height="15px">
+                                                {{'All-Edit' | translate}}</span>
+                                        </button>
+                                        <button (click)="deletesetting(compnaysize)" mat-menu-item>
+                                            <span><img src="{{deleteIcon}}" alt="" height="15px">
+                                                {{'All-Delete' | translate}}</span>
+                                        </button>
+                                    </mat-menu>
+                                </mat-card-title-group>
+
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+
+            <mat-tab label="{{'MinorityCodes' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+                            <div class=" col-6 text-left cust-heght-textbox">
+
+
+                            </div>
+                            <div class=" col-6  text-right ml-3 cust-heght-textbox">
+                                <!-- <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_IMPORT' | translate }}"
+                                    (click)="importFileActionMinorityCodes();">
+                                    <img class="cust-all-import-icon" alt="" height="20px">
+                                </button>
+                                <input id="file-upload" type="file" style="display: none;"
+                                    (click)="OpenFilebox_MinorityCodes.value = null"
+                                    (change)="onFileChange($event,'MinorityCodes')" #OpenFilebox_MinorityCodes />
+
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_EXPORT' | translate }}"
+                                    (click)="exportFileAction('MinorityCodes');">
+                                    <img class="cust-all-export-icon" alt="" height="20px">
+                                </button>
+
+                                <button mat-raised-button color="primary" class="sign-button"
+                                    (click)="addOtherSetting({},'MinorityCodes','MinorityCodes','MinorityCodes');"><img
+                                        src="{{add_my_self_Icon}}" alt="" height="20px">
+                                    {{'MinorityCodes' | translate }}
+                                </button> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'MinorityCodes'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let minoritycode of MinorityCodes_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{minoritycode.name}}
+                                        <h4 class="mt-3">{{minoritycode.description}} </h4>
+                                    </mat-card-content>
+                                    <div fxFlex style="width: 100%"></div>
+                                    <!-- <div class="dropdown zIndex-cust">
+                                        <i *ngIf="minoritycode.name != NON_MINORITY_CODE"
+                                            class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(minoritycode,'MinorityCodes','MinorityCodes','MinorityCodes');"
+                                                class="button_shiftEditClass"><img src="{{editIcon}}" alt="" class=""
+                                                    height="15px">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(minoritycode)" class="button_shiftDeleteClass">
+                                                <img src="{{deleteIcon}}" alt="" class="" height="15px">{{'All-Delete' |
+                                                translate}}</a>
+                                        </div>
+                                    </div> -->
+                                </mat-card-title-group>
+
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+
+            <mat-tab label="{{'ProjectTypes' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+                            <div class=" col-6 text-left cust-heght-textbox">
+
+
+                            </div>
+                            <div class=" col-6  text-right ml-3 cust-heght-textbox">
+                                <!-- <mat-form-field class="main-one-input-field example-form-field" appearance="outline">
+                                    <input matInput placeholder="{{'Search_all' | translate}}" type="text"
+                                        [(ngModel)]="ProjectTypesValue" (ngModelChange)="datasearch('ProjectTypes')">
+                                </mat-form-field> &nbsp; -->
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_IMPORT' | translate }}"
+                                    (click)="importFileActionProjectTypes();">
+                                    <img class="cust-all-import-icon" alt="" height="20px">
+                                </button>
+                                <input id="file-upload" type="file" style="display: none;"
+                                    (click)="OpenFilebox_ProjectTypes.value = null"
+                                    (change)="onFileChange($event,'ProjectTypes')" #OpenFilebox_ProjectTypes />
+
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_EXPORT' | translate }}"
+                                    (click)="exportFileAction('ProjectTypes');">
+                                    <img class="cust-all-export-icon" alt="" height="20px">
+                                </button>
+
+                                <button mat-raised-button color="primary" class="sign-button"
+                                    (click)="addOtherSetting({},'ProjectTypes','ProjectTypes','ProjectTypes');"><img
+                                        src="{{add_my_self_Icon}}" alt="" height="20px">
+                                    {{'ProjectTypes' | translate }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'ProjectTypes'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let projecttype of ProjectTypes_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{projecttype.name}}</mat-card-content>
+                                    <!-- <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(projecttype,'ProjectTypes','ProjectTypes','ProjectTypes');"
+                                                class="button_shiftEditClass"><img src="{{editIcon}}" alt="" class=""
+                                                    height="15px">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(projecttype)" class="button_shiftDeleteClass">
+                                                <img src="{{deleteIcon}}" alt="" class="" height="15px"> {{'All-Delete'
+                                                | translate}}</a>
+                                        </div>
+                                    </div> -->
+                                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu="matMenu">
+                                        <button
+                                            (click)="addOtherSetting(projecttype,'ProjectTypes','ProjectTypes','ProjectTypes');"
+                                            mat-menu-item>
+                                            <span><img src="{{editIcon}}" alt="" height="15px">
+                                                {{'All-Edit' | translate}}</span>
+                                        </button>
+                                        <button (click)="deletesetting(projecttype)" mat-menu-item>
+                                            <span><img src="{{deleteIcon}}" alt="" height="15px">
+                                                {{'All-Delete' | translate}}</span>
+                                        </button>
+                                    </mat-menu>
+                                </mat-card-title-group>
+
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+
+            <mat-tab label="{{'DocumentTypes' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+                            <div class=" col-6 text-left cust-heght-textbox">
+
+
+                            </div>
+                            <div class=" col-6  text-right ml-3 cust-heght-textbox">
+                                <!-- <mat-form-field class="main-one-input-field example-form-field" appearance="outline">
+                                    <input matInput placeholder="{{'Search_all' | translate}}" type="text"
+                                        [(ngModel)]="DocumentTypesValue" (ngModelChange)="datasearch('DocumentTypes')">
+                                </mat-form-field> &nbsp; -->
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_IMPORT' | translate }}"
+                                    (click)="importFileActionDocumentTypes();">
+                                    <img class="cust-all-import-icon" alt="" height="20px">
+                                </button>
+                                <input id="file-upload" type="file" style="display: none;"
+                                    (click)="OpenFilebox_DocumentTypes.value = null"
+                                    (change)="onFileChange($event,'DocumentTypes')" #OpenFilebox_DocumentTypes />
+
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_EXPORT' | translate }}"
+                                    (click)="exportFileAction('DocumentTypes');">
+                                    <img class="cust-all-export-icon" alt="" height="20px">
+                                </button>
+
+                                <button mat-raised-button color="primary" class="sign-button"
+                                    (click)="addOtherSetting({},'DocumentTypes','DocumentTypes','DocumentTypes');"><img
+                                        src="{{add_my_self_Icon}}" alt="" height="20px">
+                                    {{'DocumentTypes' | translate }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'DocumentTypes'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let documenttype of DocumentTypes_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{documenttype.name}}</mat-card-content>
+                                    <!-- <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(documenttype,'DocumentTypes','DocumentTypes','DocumentTypes');"
+                                                class="button_shiftEditClass"><img src="{{editIcon}}" alt="" class=""
+                                                    height="15px">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(documenttype)" class="button_shiftDeleteClass">
+                                                <img src="{{deleteIcon}}" alt="" class="" height="15px">{{'All-Delete' |
+                                                translate}}</a>
+                                        </div>
+                                    </div> -->
+                                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu="matMenu">
+                                        <button
+                                            (click)="addOtherSetting(documenttype,'DocumentTypes','DocumentTypes','DocumentTypes');"
+                                            mat-menu-item>
+                                            <span><img src="{{editIcon}}" alt="" height="15px">
+                                                {{'All-Edit' | translate}}</span>
+                                        </button>
+                                        <button (click)="deletesetting(documenttype)" mat-menu-item>
+                                            <span><img src="{{deleteIcon}}" alt="" height="15px">
+                                                {{'All-Delete' | translate}}</span>
+                                        </button>
+                                    </mat-menu>
+                                </mat-card-title-group>
+                                <mat-card-content>
+                                    <mat-slide-toggle [(ngModel)]="documenttype.is_expiration" disabled="true"
+                                        color="primary">
+                                        {{'Settings-Other-Expiration-Date'| translate}}
+                                    </mat-slide-toggle>
+                                </mat-card-content>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+
+            <mat-tab label="{{'PrimeWorkPerformed' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+                            <div class=" col-6 text-left cust-heght-textbox">
+
+
+                            </div>
+                            <div class=" col-6  text-right ml-3 cust-heght-textbox">
+                                <!-- <mat-form-field class="main-one-input-field example-form-field" appearance="outline">
+                                    <input matInput placeholder="{{'Search_all' | translate}}" type="text"
+                                        [(ngModel)]="PrimeWorkPerformedValue"
+                                        (ngModelChange)="datasearch('PrimeWorkPerformed')">
+                                </mat-form-field> &nbsp; -->
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_IMPORT' | translate }}"
+                                    (click)="importFileActionPrimeWorkPerformed();">
+                                    <img class="cust-all-import-icon" alt="" height="20px">
+                                </button>
+                                <input id="file-upload" type="file" style="display: none;"
+                                    (click)="OpenFilebox_PrimeWorkPerformed.value = null"
+                                    (change)="onFileChange($event,'PrimeWorkPerformed')"
+                                    #OpenFilebox_PrimeWorkPerformed />
+
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_EXPORT' | translate }}"
+                                    (click)="exportFileAction('PrimeWorkPerformed');">
+                                    <img class="cust-all-export-icon" alt="" height="20px">
+                                </button>
+
+                                <button mat-raised-button color="primary" class="sign-button"
+                                    (click)="addOtherSetting({},'PrimeWorkPerformed','PrimeWorkPerformed','PrimeWorkPerformed');"><img
+                                        src="{{add_my_self_Icon}}" alt="" height="20px">
+                                    {{'PrimeWorkPerformed' | translate }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'PrimeWorkPerformed'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let primeWorkPerformed of PrimeWorkPerformed_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{primeWorkPerformed.name}}</mat-card-content>
+                                    <!-- <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(primeWorkPerformed,'PrimeWorkPerformed','PrimeWorkPerformed','PrimeWorkPerformed');"
+                                                class="button_shiftEditClass"><img src="{{editIcon}}" alt="" class=""
+                                                    height="15px">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(primeWorkPerformed)"
+                                                class="button_shiftDeleteClass">
+                                                <img src="{{deleteIcon}}" alt="" class="" height="15px">{{'All-Delete' |
+                                                translate}}</a>
+                                        </div>
+                                    </div> -->
+                                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu="matMenu">
+                                        <button
+                                            (click)="addOtherSetting(primeWorkPerformed,'PrimeWorkPerformed','PrimeWorkPerformed','PrimeWorkPerformed');"
+                                            mat-menu-item>
+                                            <span><img src="{{editIcon}}" alt="" height="15px">
+                                                {{'All-Edit' | translate}}</span>
+                                        </button>
+                                        <button (click)="deletesetting(primeWorkPerformed)" mat-menu-item>
+                                            <span><img src="{{deleteIcon}}" alt="" height="15px">
+                                                {{'All-Delete' | translate}}</span>
+                                        </button>
+                                    </mat-menu>
+                                </mat-card-title-group>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+
+            <mat-tab label="{{'CSIDivisionWorkPerformed' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+                            <div class=" col-6 text-left cust-heght-textbox">
+
+
+                            </div>
+                            <div class=" col-6  text-right ml-3 cust-heght-textbox">
+                                <!-- <mat-form-field class="main-one-input-field example-form-field" appearance="outline">
+                                    <input matInput placeholder="{{'Search_all' | translate}}" type="text"
+                                        [(ngModel)]="CSIDivisionWorkPerformedValue"
+                                        (ngModelChange)="datasearch('CSIDivisionWorkPerformed')">
+                                </mat-form-field> &nbsp; -->
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_IMPORT' | translate }}"
+                                    (click)="importFileActionCSIDivisionWorkPerformed();">
+                                    <img class="cust-all-import-icon" alt="" height="20px">
+                                </button>
+                                <input id="file-upload" type="file" style="display: none;"
+                                    (click)="OpenFilebox_CSIDivisionWorkPerformed.value = null"
+                                    (change)="onFileChange($event,'CSIDivisionWorkPerformed')"
+                                    #OpenFilebox_CSIDivisionWorkPerformed />
+
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_EXPORT' | translate }}"
+                                    (click)="exportFileAction('CSIDivisionWorkPerformed');">
+                                    <img class="cust-all-export-icon" alt="" height="20px">
+                                </button>
+
+                                <button mat-raised-button color="primary" class="sign-button"
+                                    (click)="addOtherSetting({},'CSIDivisionWorkPerformed','CSIDivisionWorkPerformed','CSIDivisionWorkPerformed');"><img
+                                        src="{{add_my_self_Icon}}" alt="" height="20px">
+                                    {{'CSIDivisionWorkPerformed' | translate }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'CSIDivisionWorkPerformed'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let csidivisionWorkPerformed of CSIDivisionWorkPerformed_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{csidivisionWorkPerformed.name}}
+                                    </mat-card-content>
+                                    <!-- <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(csidivisionWorkPerformed,'CSIDivisionWorkPerformed','CSIDivisionWorkPerformed','CSIDivisionWorkPerformed');"
+                                                class="button_shiftEditClass"><img src="{{editIcon}}" alt="" class=""
+                                                    height="15px">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(csidivisionWorkPerformed)"
+                                                class="button_shiftDeleteClass">
+                                                <img src="{{deleteIcon}}" alt="" class="" height="15px">{{'All-Delete' |
+                                                translate}}</a>
+                                        </div>
+                                    </div> -->
+                                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu="matMenu">
+                                        <button
+                                            (click)="addOtherSetting(csidivisionWorkPerformed,'CSIDivisionWorkPerformed','CSIDivisionWorkPerformed','CSIDivisionWorkPerformed');"
+                                            mat-menu-item>
+                                            <span><img src="{{editIcon}}" alt="" height="15px">
+                                                {{'All-Edit' | translate}}</span>
+                                        </button>
+                                        <button (click)="deletesetting(csidivisionWorkPerformed)" mat-menu-item>
+                                            <span><img src="{{deleteIcon}}" alt="" height="15px">
+                                                {{'All-Delete' | translate}}</span>
+                                        </button>
+                                    </mat-menu>
+                                </mat-card-title-group>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+
+            <mat-tab label="{{'ScheduleOfValueItem' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+                            <div class=" col-6 text-left cust-heght-textbox">
+
+
+                            </div>
+                            <div class=" col-6  text-right ml-3 cust-heght-textbox">
+                                <!-- <mat-form-field class="main-one-input-field example-form-field" appearance="outline">
+                                    <input matInput placeholder="{{'Search_all' | translate}}" type="text"
+                                        [(ngModel)]="ScheduleOfValueItemValue"
+                                        (ngModelChange)="datasearch('ScheduleOfValueItem')">
+                                </mat-form-field> &nbsp; -->
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_IMPORT' | translate }}"
+                                    (click)="importFileActionScheduleOfValueItem();">
+                                    <img class="cust-all-import-icon" alt="" height="20px">
+                                </button>
+                                <input id="file-upload" type="file" style="display: none;"
+                                    (click)="OpenFilebox_ScheduleOfValueItem.value = null"
+                                    (change)="onFileChange($event,'ScheduleOfValueItem')"
+                                    #OpenFilebox_ScheduleOfValueItem />
+
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_EXPORT' | translate }}"
+                                    (click)="exportFileAction('ScheduleOfValueItem');">
+                                    <img class="cust-all-export-icon" alt="" height="20px">
+                                </button>
+
+                                <button mat-raised-button color="primary" class="sign-button"
+                                    (click)="addOtherSetting({},'ScheduleOfValueItem','ScheduleOfValueItem','ScheduleOfValueItem');"><img
+                                        src="{{add_my_self_Icon}}" alt="" height="20px">
+                                    {{'ScheduleOfValueItem' | translate }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'ScheduleOfValueItem'">
+                    <div *ngIf="show_hide_table" class="cust-padding">
+                        <table datatable [dtOptions]="dtOptionsScheduleOfItem" class="row-border hover"></table>
+                    </div>
+                    <!-- <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let scheduleOfValueItem of ScheduleOfValueItem_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{scheduleOfValueItem.name}}
+                                    </mat-card-content>
+                                    <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(scheduleOfValueItem,'ScheduleOfValueItem','ScheduleOfValueItem','ScheduleOfValueItem');"
+                                                class="button_shiftEditClass">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(scheduleOfValueItem)"
+                                                class="button_shiftDeleteClass">
+                                                {{'All-Delete' | translate}}</a>
+                                        </div>
+                                    </div>
+                                </mat-card-title-group>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list> -->
+                </div>
+            </mat-tab>
+
+            <mat-tab label="{{'PerformanceReasons' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+                            <div class=" col-6 text-left cust-heght-textbox">
+
+
+                            </div>
+                            <div class=" col-6  text-right ml-3 cust-heght-textbox">
+                                <!-- <mat-form-field class="main-one-input-field example-form-field" appearance="outline">
+                                    <input matInput placeholder="{{'Search_all' | translate}}" type="text"
+                                        [(ngModel)]="PerformanceReasonsValue" (ngModelChange)="datasearch('PerformanceReasons')">
+                                </mat-form-field> &nbsp; -->
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_IMPORT' | translate }}"
+                                    (click)="importFileActionPerformanceReasons();">
+                                    <img class="cust-all-import-icon" alt="" height="20px">
+                                </button>
+                                <input id="file-upload" type="file" style="display: none;"
+                                    (click)="OpenFilebox_PerformanceReasons.value = null"
+                                    (change)="onFileChange($event,'PerformanceReasons')"
+                                    #OpenFilebox_PerformanceReasons />
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_EXPORT' | translate }}"
+                                    (click)="exportFileAction('PerformanceReasons');">
+                                    <img class="cust-all-export-icon" alt="" height="20px">
+                                </button>
+
+                                <button mat-raised-button color="primary" class="sign-button"
+                                    (click)="addOtherSetting({},'PerformanceReasons','PerformanceReasons','PerformanceReasons');"><img
+                                        src="{{add_my_self_Icon}}" alt="" height="20px">
+                                    {{'PerformanceReasons' | translate }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'PerformanceReasons'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let performanceReason of PerformanceReasons_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{performanceReason.name}}</mat-card-content>
+                                    <div fxFlex style="width: 100%"></div>
+                                    <!-- <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(performanceReason,'PerformanceReasons','PerformanceReasons','PerformanceReasons');"
+                                                class="button_shiftEditClass"><img src="{{editIcon}}" alt="" class=""
+                                                    height="15px">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(performanceReason)"
+                                                class="button_shiftDeleteClass">
+                                                <img src="{{deleteIcon}}" alt="" class="" height="15px">{{'All-Delete' |
+                                                translate}}</a>
+                                        </div>
+                                    </div> -->
+                                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu="matMenu">
+                                        <button
+                                            (click)="addOtherSetting(performanceReason,'PerformanceReasons','PerformanceReasons','PerformanceReasons');"
+                                            mat-menu-item>
+                                            <span><img src="{{editIcon}}" alt="" height="15px">
+                                                {{'All-Edit' | translate}}</span>
+                                        </button>
+                                        <button (click)="deletesetting(performanceData)" mat-menu-item>
+                                            <span><img src="{{deleteIcon}}" alt="" height="15px">
+                                                {{'All-Delete' | translate}}</span>
+                                        </button>
+                                    </mat-menu>
+                                </mat-card-title-group>
+
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+
+            <mat-tab label="{{'PaymentFor' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+                            <div class=" col-6 text-left cust-heght-textbox"> </div>
+                            <div class=" col-6  text-right ml-3 cust-heght-textbox">
+                                <!-- <mat-form-field class="main-one-input-field example-form-field" appearance="outline">
+                                    <input matInput placeholder="{{'Search_all' | translate}}" type="text"
+                                        [(ngModel)]="PaymentForValue" (ngModelChange)="datasearch('PaymentFor')">
+                                </mat-form-field> &nbsp; -->
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_IMPORT' | translate }}"
+                                    (click)="importFileActionPaymentFor();">
+                                    <img class="cust-all-import-icon" alt="" height="20px">
+                                </button>
+                                <input id="file-upload" type="file" style="display: none;"
+                                    (click)="OpenFilebox_PaymentFor.value = null"
+                                    (change)="onFileChange($event,'PaymentFor')" #OpenFilebox_PaymentFor />
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_EXPORT' | translate }}"
+                                    (click)="exportFileAction('PaymentFor');">
+                                    <img class="cust-all-export-icon" alt="" height="20px">
+                                </button>
+
+                                <button mat-raised-button color="primary" class="sign-button"
+                                    (click)="addOtherSetting({},'PaymentFor','PaymentFor','PaymentFor');"><img
+                                        src="{{add_my_self_Icon}}" alt="" height="20px">
+                                    {{'PaymentFor' | translate }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'PaymentFor'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let paymentFor of PaymentFor_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{paymentFor.name}}</mat-card-content>
+                                    <!-- <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(paymentFor,'PaymentFor','PaymentFor','PaymentFor');"
+                                                class="button_shiftEditClass"><img src="{{editIcon}}" alt="" class=""
+                                                    height="15px">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(paymentFor)" class="button_shiftDeleteClass">
+                                                <img src="{{deleteIcon}}" alt="" class="" height="15px">{{'All-Delete' |
+                                                translate}}</a>
+                                        </div>
+                                    </div> -->
+                                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu="matMenu">
+                                        <button
+                                            (click)="addOtherSetting(paymentFor,'PaymentFor','PaymentFor','PaymentFor');"
+                                            mat-menu-item>
+                                            <span><img src="{{editIcon}}" alt="" height="15px">
+                                                {{'All-Edit' | translate}}</span>
+                                        </button>
+                                        <button (click)="deletesetting(paymentData)" mat-menu-item>
+                                            <span><img src="{{deleteIcon}}" alt="" height="15px">
+                                                {{'All-Delete' | translate}}</span>
+                                        </button>
+                                    </mat-menu>
+                                </mat-card-title-group>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+
+            <mat-tab label="{{'PaymentType' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+                            <div class=" col-6 text-left cust-heght-textbox"> </div>
+                            <div class=" col-6  text-right ml-3 cust-heght-textbox">
+                                <!-- <mat-form-field class="main-one-input-field example-form-field" appearance="outline">
+                                    <input matInput placeholder="{{'Search_all' | translate}}" type="text"
+                                        [(ngModel)]="PaymentTypeValue" (ngModelChange)="datasearch('PaymentType')">
+                                </mat-form-field> &nbsp; -->
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_IMPORT' | translate }}"
+                                    (click)="importFileActionPaymentType();">
+                                    <img class="cust-all-import-icon" alt="" height="20px">
+                                </button>
+                                <input id="file-upload" type="file" style="display: none;"
+                                    (click)="OpenFilebox_PaymentType.value = null"
+                                    (change)="onFileChange($event,'PaymentType')" #OpenFilebox_PaymentType />
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_EXPORT' | translate }}"
+                                    (click)="exportFileAction('PaymentType');">
+                                    <img class="cust-all-export-icon" alt="" height="20px">
+                                </button>
+
+                                <button mat-raised-button color="primary" class="sign-button"
+                                    (click)="addOtherSetting({},'PaymentType','PaymentType','PaymentType');"><img
+                                        src="{{add_my_self_Icon}}" alt="" height="20px">
+                                    {{'PaymentType' | translate }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'PaymentType'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let paymentTypeData of PaymentType_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{paymentTypeData.name}}</mat-card-content>
+                                    <!-- <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(paymentTypeData,'PaymentType','PaymentType','PaymentType');"
+                                                class="button_shiftEditClass"><img src="{{editIcon}}" alt="" class=""
+                                                    height="15px">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(paymentTypeData)" class="button_shiftDeleteClass">
+                                                <img src="{{deleteIcon}}" alt="" class="" height="15px">{{'All-Delete' |
+                                                translate}}</a>
+                                        </div>
+                                    </div> -->
+                                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu="matMenu">
+                                        <button
+                                            (click)="addOtherSetting(paymentTypeData,'PaymentType','PaymentType','PaymentType');"
+                                            mat-menu-item>
+                                            <span><img src="{{editIcon}}" alt="" height="15px">
+                                                {{'All-Edit' | translate}}</span>
+                                        </button>
+                                        <button (click)="deletesetting(paymentTypeData)" mat-menu-item>
+                                            <span><img src="{{deleteIcon}}" alt="" height="15px">
+                                                {{'All-Delete' | translate}}</span>
+                                        </button>
+                                    </mat-menu>
+                                </mat-card-title-group>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+
+            <mat-tab label="{{'Frequency' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+                            <div class=" col-6 text-left cust-heght-textbox"> </div>
+                            <div class=" col-6  text-right ml-3 cust-heght-textbox">
+                                <!-- <mat-form-field class="main-one-input-field example-form-field" appearance="outline">
+                                    <input matInput placeholder="{{'Search_all' | translate}}" type="text"
+                                        [(ngModel)]="FrequencyValue" (ngModelChange)="datasearch('Frequency')">
+                                </mat-form-field> &nbsp; -->
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_IMPORT' | translate }}"
+                                    (click)="importFileActionFrequency();">
+                                    <img class="cust-all-import-icon" alt="" height="20px">
+                                </button>
+                                <input id="file-upload" type="file" style="display: none;"
+                                    (click)="OpenFilebox_Frequency.value = null"
+                                    (change)="onFileChange($event,'Frequency')" #OpenFilebox_Frequency />
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_EXPORT' | translate }}"
+                                    (click)="exportFileAction('Frequency');">
+                                    <img class="cust-all-export-icon" alt="" height="20px">
+                                </button>
+
+                                <button mat-raised-button color="primary" class="sign-button"
+                                    (click)="addOtherSetting({},'Frequency','Frequency','Frequency');"><img
+                                        src="{{add_my_self_Icon}}" alt="" height="20px">
+                                    {{'Frequency' | translate }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'Frequency'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let frequencyData of Frequency_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{frequencyData.name}}</mat-card-content>
+                                    <!-- <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(frequencyData,'Frequency','Frequency','Frequency');"
+                                                class="button_shiftEditClass"><img src="{{editIcon}}" alt="" class=""
+                                                    height="15px">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(frequencyData)" class="button_shiftDeleteClass">
+                                                <img src="{{deleteIcon}}" alt="" class="" height="15px">{{'All-Delete' |
+                                                translate}}</a>
+                                        </div>
+                                    </div> -->
+                                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu="matMenu">
+                                        <button
+                                            (click)="addOtherSetting(frequencyData,'Frequency','Frequency','Frequency');"
+                                            mat-menu-item>
+                                            <span><img src="{{editIcon}}" alt="" height="15px">
+                                                {{'All-Edit' | translate}}</span>
+                                        </button>
+                                        <button (click)="deletesetting(frequencyData)" mat-menu-item>
+                                            <span><img src="{{deleteIcon}}" alt="" height="15px">
+                                                {{'All-Delete' | translate}}</span>
+                                        </button>
+                                    </mat-menu>
+                                </mat-card-title-group>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+
+            <mat-tab label="{{'UnitOfMeasure' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+                            <div class=" col-6 text-left cust-heght-textbox"> </div>
+                            <div class=" col-6  text-right ml-3 cust-heght-textbox">
+                                <!-- <mat-form-field class="main-one-input-field example-form-field" appearance="outline">
+                                    <input matInput placeholder="{{'Search_all' | translate}}" type="text"
+                                        [(ngModel)]="UnitOfMeasureValue" (ngModelChange)="datasearch('UnitOfMeasure')">
+                                </mat-form-field> &nbsp; -->
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_IMPORT' | translate }}"
+                                    (click)="importFileActionUnitOfMeasure();">
+                                    <img class="cust-all-import-icon" alt="" height="20px">
+                                </button>
+                                <input id="file-upload" type="file" style="display: none;"
+                                    (click)="OpenFilebox_UnitOfMeasure.value = null"
+                                    (change)="onFileChange($event,'UnitOfMeasure')" #OpenFilebox_UnitOfMeasure />
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_EXPORT' | translate }}"
+                                    (click)="exportFileAction('UnitOfMeasure');">
+                                    <img class="cust-all-export-icon" alt="" height="20px">
+                                </button>
+
+                                <button mat-raised-button color="primary" class="sign-button"
+                                    (click)="addOtherSetting({},'UnitOfMeasure','UnitOfMeasure','UnitOfMeasure');"><img
+                                        src="{{add_my_self_Icon}}" alt="" height="20px">
+                                    {{'UnitOfMeasure' | translate }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'UnitOfMeasure'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let unitOfMeasureData of UnitOfMeasure_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{unitOfMeasureData.name}}</mat-card-content>
+                                    <!-- <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(unitOfMeasureData,'UnitOfMeasure','UnitOfMeasure','UnitOfMeasure');"
+                                                class="button_shiftEditClass"><img src="{{editIcon}}" alt="" class=""
+                                                    height="15px">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(unitOfMeasureData)"
+                                                class="button_shiftDeleteClass">
+                                                <img src="{{deleteIcon}}" alt="" class="" height="15px">{{'All-Delete' |
+                                                translate}}</a>
+                                        </div>
+                                    </div> -->
+                                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu="matMenu">
+                                        <button
+                                            (click)="addOtherSetting(unitOfMeasureData,'UnitOfMeasure','UnitOfMeasure','UnitOfMeasure');"
+                                            mat-menu-item>
+                                            <span><img src="{{editIcon}}" alt="" height="15px">
+                                                {{'All-Edit' | translate}}</span>
+                                        </button>
+                                        <button (click)="deletesetting(unitOfMeasureData)" mat-menu-item>
+                                            <span><img src="{{deleteIcon}}" alt="" height="15px">
+                                                {{'All-Delete' | translate}}</span>
+                                        </button>
+                                    </mat-menu>
+                                </mat-card-title-group>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+
+            <mat-tab label="{{'EquipmentType' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+                            <div class=" col-6 text-left cust-heght-textbox"> </div>
+                            <div class=" col-6  text-right ml-3 cust-heght-textbox">
+                                <!-- <mat-form-field class="main-one-input-field example-form-field" appearance="outline">
+                                    <input matInput placeholder="{{'Search_all' | translate}}" type="text"
+                                        [(ngModel)]="EquipmentTypeValue" (ngModelChange)="datasearch('EquipmentType')">
+                                </mat-form-field> &nbsp; -->
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_IMPORT' | translate }}"
+                                    (click)="importFileActionEquipmentType();">
+                                    <img class="cust-all-import-icon" alt="" height="20px">
+                                </button>
+                                <input id="file-upload" type="file" style="display: none;"
+                                    (click)="OpenFilebox_EquipmentType.value = null"
+                                    (change)="onFileChange($event,'EquipmentType')" #OpenFilebox_EquipmentType />
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_EXPORT' | translate }}"
+                                    (click)="exportFileAction('EquipmentType');">
+                                    <img class="cust-all-export-icon" alt="" height="20px">
+                                </button>
+
+                                <button mat-raised-button color="primary" class="sign-button"
+                                    (click)="addOtherSetting({},'EquipmentType','EquipmentType','EquipmentType');"><img
+                                        src="{{add_my_self_Icon}}" alt="" height="20px">
+                                    {{'EquipmentType' | translate }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'EquipmentType'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let equipmentTypeData of EquipmentType_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{equipmentTypeData.name}}</mat-card-content>
+                                    <!-- <div fxFlex style="width: 100%"></div>
+                                    <div class="dropdown zIndex-cust">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="addOtherSetting(equipmentTypeData,'EquipmentType','EquipmentType','EquipmentType');"
+                                                class="button_shiftEditClass"><img src="{{editIcon}}" alt="" class=""
+                                                    height="15px">{{'All-Edit'| translate}}</a>
+                                            <a (click)="deletesetting(equipmentTypeData)"
+                                                class="button_shiftDeleteClass">
+                                                <img src="{{deleteIcon}}" alt="" class="" height="15px">{{'All-Delete' |
+                                                translate}}</a>
+                                        </div>
+                                    </div> -->
+                                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu="matMenu">
+                                        <button
+                                            (click)="addOtherSetting(equipmentTypeData,'EquipmentType','EquipmentType','EquipmentType');"
+                                            mat-menu-item>
+                                            <span><img src="{{editIcon}}" alt="" height="15px">
+                                                {{'All-Edit' | translate}}</span>
+                                        </button>
+                                        <button (click)="deletesetting(equipmentTypeData)" mat-menu-item>
+                                            <span><img src="{{deleteIcon}}" alt="" height="15px">
+                                                {{'All-Delete' | translate}}</span>
+                                        </button>
+                                    </mat-menu>
+                                </mat-card-title-group>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+            <mat-tab label="Notes">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+                            <div class=" col-6 text-left cust-heght-textbox">
+                            </div>
+                            <div class=" col-6  text-right ml-3 cust-heght-textbox">
+                                <!-- <mat-form-field class="main-one-input-field example-form-field" appearance="outline">
+                                    <input matInput placeholder="{{'Search_all' | translate}}" type="text" [(ngModel)]="Notesvalue"
+                                        (ngModelChange)="datasearch('Notes')">
+                                </mat-form-field> &nbsp; -->
+                                <input id="file-upload" type="file" style="display: none;"
+                                    (click)="OpenFilebox_UnitOfMeasure.value = null"
+                                    (change)="onFileChange($event,'UnitOfMeasure')" #OpenFilebox_UnitOfMeasure />
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_EXPORT' | translate }}"
+                                    (click)="exportFileAction('UnitOfMeasure');">
+                                    <img class="cust-all-export-icon" alt="" height="20px">
+                                </button>
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_IMPORT' | translate }}"
+                                    (click)="importFileActionNotesType();">
+                                    <img class="cust-all-import-icon" alt="" height="20px">
+                                </button>
+                                <input id="file-upload" type="file" style="display: none;"
+                                    (click)="OpenFilebox_Notes.value = null" (change)="onFileChange($event,'Notes')"
+                                    #OpenFilebox_Notes />
+
+                                <button mat-raised-button color="primary"
+                                    (click)="addOtherSetting({},'Notes','Notes','Notes');">
+                                    <img src="{{add_my_self_Icon}}" alt="" height="20px"> {{'Settings_add_notes' | translate}}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'Notes'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let NotesData of Note_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{NotesData.name}}
+                                    </mat-card-content>
+                                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu="matMenu">
+                                        <button (click)="addOtherSetting(NotesData,'Notes','Notes','Notes');"
+                                            mat-menu-item>
+                                            <span><img src="{{editIcon}}" alt="" height="15px">
+                                                {{'All-Edit' | translate}}</span>
+                                        </button>
+                                        <button (click)="deletesetting(NotesData)" mat-menu-item>
+                                            <span><img src="{{deleteIcon}}" alt="" height="15px">
+                                                {{'All-Delete' | translate}}</span>
+                                        </button>
+                                    </mat-menu>
+                                </mat-card-title-group>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+            <mat-tab label="{{'settings_contract_type' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+                            <div class=" col-6 text-left cust-heght-textbox">
+                            </div>
+                            <div class=" col-6  text-right ml-3 cust-heght-textbox">
+                                <!-- <mat-form-field class="main-one-input-field example-form-field" appearance="outline">
+                                    <input matInput placeholder="{{'Search_all' | translate}}" type="text"
+                                        [(ngModel)]="Contractvalue">
+                                </mat-form-field> &nbsp; -->
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_EXPORT' | translate }}"
+                                    (click)="exportFileAction('ContractType');">
+                                    <img class="cust-all-export-icon" alt="" height="20px">
+                                </button>
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_IMPORT' | translate }}"
+                                    (click)="importFileActionContractType();">
+                                    <img src="{{importIcon}}" alt="" height="20px">
+                                </button>
+                                <input id="file-upload" type="file" style="display: none;"
+                                    (click)="OpenFilebox_ContractType.value = null"
+                                    (change)="onFileChange($event,'ContractType')" #OpenFilebox_ContractType />
+
+                                <button mat-raised-button class="sign-button" color="primary"
+                                    (click)="addOtherSetting({},'ContractType','ContractType','ContractType');">
+                                    <img src="{{add_my_self_Icon}}" alt="" height="20px">
+                                    {{'settings_contract_type' | translate}}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'ContractType'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let ContractData of Contract_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{ContractData.name}}
+                                    </mat-card-content>
+                                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu="matMenu">
+                                        <button
+                                            (click)="addOtherSetting(ContractData,'ContractType','ContractType','ContractType');"
+                                            mat-menu-item>
+                                            <span><img src="{{editIcon}}" alt="" height="15px">
+                                                {{'All-Edit' | translate}}</span>
+                                        </button>
+                                        <button (click)="deletesetting(ContractData)" mat-menu-item>
+                                            <span><img src="{{deleteIcon}}" alt="" height="15px">
+                                                {{'All-Delete' | translate}}</span>
+                                        </button>
+                                    </mat-menu>
+                                </mat-card-title-group>
+                                <mat-card-content>
+                                    <mat-slide-toggle [(ngModel)]="ContractData.is_expiration" disabled="true"
+                                        color="primary">
+                                        {{'Settings-Other-Expiration-Date'| translate}}
+                                    </mat-slide-toggle>
+                                </mat-card-content>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+            <mat-tab label="{{'settings_department' | translate}}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="screen-title-section cust-h1-inline button-margin">
+                            <div class="inner-search-bar">
+                            </div>
+                            <div class=" col-6 text-left cust-heght-textbox">
+                            </div>
+                            <div class=" col-6  text-right ml-3 cust-heght-textbox">
+                                <!-- <mat-form-field class="main-one-input-field example-form-field" appearance="outline">
+                                    <input matInput placeholder="{{'Search_all' | translate}}" type="text"
+                                        [(ngModel)]="Departmentvalue">
+                                </mat-form-field> &nbsp; -->
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_EXPORT' | translate }}"
+                                    (click)="exportFileAction('Department');">
+                                    <img class="cust-all-export-icon" alt="" height="20px">
+                                </button>
+                                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                                    aria-label="Left Align" matTooltip="{{ 'TOOLTIP_IMPORT' | translate }}"
+                                    (click)="importFileActionDepartment();">
+                                    <img src="{{importIcon}}" alt="" height="20px">
+                                </button>
+                                <input id="file-upload" type="file" style="display: none;"
+                                    (click)="OpenFilebox_Department.value = null"
+                                    (change)="onFileChange($event,'Department')" #OpenFilebox_Department />
+
+                                <button mat-raised-button class="sign-button" color="primary"
+                                    (click)="addOtherSetting({},'Department','Department','Department');">
+                                    <img src="{{add_my_self_Icon}}" alt="" height="20px">
+                                    {{'settings_department' | translate}}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="currrent_tab == 'Department'">
+                    <mat-grid-list cols="3" rowHeight="3:1">
+                        <mat-grid-tile *ngFor="let DeparmentData of Department_data">
+                            <mat-card class="document-card">
+                                <mat-card-title-group class="cust-card-title-group">
+                                    <mat-card-content style="width: 100%">{{DeparmentData.name}}
+                                    </mat-card-content>
+                                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu="matMenu">
+                                        <button
+                                            (click)="addOtherSetting(DeparmentData,'Department','Department','Department');"
+                                            mat-menu-item>
+                                            <span><img src="{{editIcon}}" alt="" height="15px">
+                                                {{'All-Edit' | translate}}</span>
+                                        </button>
+                                        <button (click)="deletesetting(DeparmentData)" mat-menu-item>
+                                            <span><img src="{{deleteIcon}}" alt="" height="15px">
+                                                {{'All-Delete' | translate}}</span>
+                                        </button>
+                                    </mat-menu>
+                                </mat-card-title-group>
+                            </mat-card>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+            </mat-tab>
+
+            <!-- PaymentType
+            Frequency
+            UnitOfMeasure
+            EquipmentType -->
+        </mat-tab-group>
+    </div>
+</div>

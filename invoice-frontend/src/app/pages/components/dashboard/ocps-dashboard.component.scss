@@ -1,0 +1,54 @@
+.action-more {
+    position: absolute;
+    top: 10px;
+    right: 5px;
+    width: 15px;
+    height: 20px;
+}
+
+.card {
+    height: 100%;
+}
+
+.card-header {
+    background: #fff;
+    border: none;
+    padding: 0.75rem .75rem;
+
+    .title {
+        font-size: 15px;
+        color: #707070;
+        font-weight: bold;
+        font-family: Roboto, "Helvetica Neue", sans-serif;
+
+        span {
+            font-size: 20px;
+            float: right;
+            padding-right: 10px;
+        }
+    }
+}
+
+.card-body {
+    padding: 0.75rem .75rem;
+
+}
+
+.col-12 {
+    margin-bottom: 10px;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    outline: none;
+    z-index: 1025;
+}
+
+@media print {
+    .card {
+        background-color: white;
+    }
+
+}
