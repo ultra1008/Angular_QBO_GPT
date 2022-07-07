@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { icon, localstorageconstants } from 'src/app/consts';
 
 @Component({
   selector: 'app-invoice',
@@ -6,8 +8,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./invoice.component.scss']
 })
 export class InvoiceComponent implements OnInit {
-
-  constructor() { }
+  mode: any;
+  add_my_self_icon = icon.ADD_MY_SELF_WHITE;
+  constructor() {
+    var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
+    this.mode = modeLocal === 'on' ? 'on' : 'off';
+  }
 
   ngOnInit(): void {
   }

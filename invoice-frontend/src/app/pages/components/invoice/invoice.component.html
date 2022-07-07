@@ -1,1 +1,86 @@
-<p>invoice works!</p>
+<div class="wrapper-cust-admin" fxLayout style="height: 95%">
+    <div class="display-inline-cust">
+        <div class="main-search-bar">
+            <div class="row d-flex justify-content-between m-3 py-3">
+                <div class="mt-2">
+                    <button mat-raised-button color="primary" class="sign-button cust-margin-div mr-1">
+                        <div class="row d-flex justify-content-between px-2">
+                            <div class="mr-4">Exported</div>
+                            <div>15</div>
+                        </div>
+                    </button>
+                    <button mat-raised-button color="primary" class="sign-button cust-margin-div mr-1">
+                        <div class="row d-flex justify-content-between px-2">
+                            <div class="mr-4">Not Exported</div>
+                            <div>2</div>
+                        </div>
+                    </button>
+                </div>
+                <div>
+                    <mat-form-field class="mr-2" appearance="outline">
+                        <mat-label>Due Date</mat-label>
+                        <input matInput>
+                        <mat-datepicker-toggle matSuffix></mat-datepicker-toggle>
+                        <mat-datepicker></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field class="mr-2" appearance="outline">
+                        <mat-label>Status</mat-label>
+                        <input matInput placeholder="Status" />
+                    </mat-form-field>
+
+                    <mat-form-field class="" appearance="outline">
+                        <mat-label>Serach</mat-label>
+                        <input matInput placeholder="Serach" />
+                    </mat-form-field>
+                    <button mat-raised-button color="primary" style="margin-right: 20px;" class="sign-button ml-2"><img
+                            src="{{add_my_self_icon}}" alt="" height="20px">
+                        Create an invoice
+                    </button>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+    <div class="pt-3" style="float: right;">
+
+    </div>
+    <div class="card mb-3 mr-4" style="margin-top: 5rem !important;">
+        <!-- <div class="dropdown menu-icon">
+            <i class="fas fa-ellipsis-v cust-fontsize-tmp" aria-hidden="true"></i>
+            <div class="dropdown-content-cust">
+                <a (click)="sendCertificate(certi)"><img src="{{sendIcon}}" alt="" class="pr-1" height="15px">Send</a>
+                <a (click)="downloadCertificate(certi.certificate_link)"><img src="{{downloadIcon}}" alt="" class="pr-1"
+                        height="15px">Download</a>
+                <a *ngIf="!isDisabled" (click)="openDialogDocument(certi)"><img src="{{status_change_Icon}}" alt=""
+                        class="pr-1" height="15px">Change status</a>
+                <a (click)="deleteDocument(certi)"><img src="{{trashIcon}}" alt="" class="pr-1" height="15px">Delete</a>
+            </div>
+        </div> -->
+        <div class="card-body" style="text-align: center; padding: 5px 10px !important;">
+            <div class="pt-2 pb-2">
+                <img src="assets\images\currentplaceholder.png" class="img-responsive cardsmall img-fluid"
+                    style="height: 100px; width: 100px; object-fit: contain;" alt="">
+            </div>
+
+            <div style="text-align: left;font-weight: 400;">
+                <b>Invoice #</b>
+                <br />
+                <b>P.O #</b>
+                <br />
+                <b>Packing Slip</b>
+                <br />
+                <b>Receiving Slip</b>
+                <br />
+                <b>Receiving Sheet</b>
+                <br />
+                <b>Files Attached #</b>
+                <br />
+                <b>Notes</b>
+                <br />
+                <b>Status</b>
+            </div>
+        </div>
+    </div>
+</div>
