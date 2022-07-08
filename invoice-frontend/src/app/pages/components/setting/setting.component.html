@@ -9,13 +9,20 @@
         <ng-template matStepperIcon="edit" let-index="index">
             <img *ngIf="index == 0" src="{{companyinfo_white}}" alt="" height="15px">
             <img *ngIf="index == 1" src="{{userIcon_white}}" alt="" height="15px">
-            <img *ngIf="index == 2" src="{{roleicon_white}}" alt="" height="15px">
-            <img *ngIf="index == 3" src="{{smtp_white}}" alt="" height="15px">
-            <img *ngIf="index == 4" src="{{website_plugin_white}}" alt="" height="15px">
-            <img *ngIf="index == 5" src="{{other_settings_white}}" alt="" height="15px">
+            <img *ngIf="index == 2" src="{{userIcon_white}}" alt="" height="15px">
+            <img *ngIf="index == 3" src="{{roleicon_white}}" alt="" height="15px">
+            <mat-icon *ngIf="index == 4">phonelink_ring</mat-icon>
+            <img *ngIf="index == 5" src="{{integration_whiteIcon}}" alt="" height="15px">
+            <img *ngIf="index == 6" src="{{smtp_white}}" alt="" height="15px">
+            <img *ngIf="index == 7" src="{{website_plugin_white}}" alt="" height="15px">
+            <img *ngIf="index == 8" src="{{other_settings_white}}" alt="" height="15px">
         </ng-template>
 
         <ng-template matStepperIcon="companyprofile">
+            <img src="{{companyinfo}}" alt="" height="15px">
+        </ng-template>
+
+        <ng-template matStepperIcon="mailbox">
             <img src="{{companyinfo}}" alt="" height="15px">
         </ng-template>
 
@@ -25,6 +32,14 @@
 
         <ng-template matStepperIcon="role">
             <img src="{{roleIcon}}" alt="" height="15px">
+        </ng-template>
+
+        <ng-template matStepperIcon="integrations">
+            <img src="{{integrationIcon}}" alt="" height="15px">
+        </ng-template>
+
+        <ng-template matStepperIcon="alert">
+            <mat-icon style="color: black;">phonelink_ring</mat-icon>
         </ng-template>
 
         <ng-template matStepperIcon="smtp">
@@ -47,6 +62,13 @@
             </form>
         </mat-step>
 
+        <mat-step state="mailbox" [completed]="false">
+            <form>
+                <ng-template matStepLabel>Mailboxes to Monitor</ng-template>
+                <app-mailbox-monitor></app-mailbox-monitor>
+            </form>
+        </mat-step>
+
         <mat-step state="employee" [completed]="false">
             <form>
                 <ng-template matStepLabel>{{'settings_tab_employee' | translate}}</ng-template>
@@ -61,6 +83,20 @@
             </form>
         </mat-step>
 
+
+        <mat-step state="alert" [completed]="false">
+            <form>
+                <ng-template matStepLabel>Alerts</ng-template>
+                <app-alerts></app-alerts>
+            </form>
+        </mat-step>
+
+        <mat-step state="integrations" [completed]="false">
+            <form>
+                <ng-template matStepLabel>Integrations</ng-template>
+                <app-integrations></app-integrations>
+            </form>
+        </mat-step>
 
 
         <mat-step state="smtp" [completed]="false">

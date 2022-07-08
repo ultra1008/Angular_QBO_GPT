@@ -2373,5 +2373,14 @@
     "All-send": "Send",
     "Sidebar-invoice": "Invoices",
     "Sidebar-Templates": "Templates",
-    "Sidebar-Report": "Reports"
+    "Sidebar-Report": "Reports",
+    "ALERT_SEND_REMINDER": "Send A reminder of pending items to an assigned person every",
+    "SEND_ALERT_EVERY": "Send alert every",
+    "WHEN_INVOICE_DUE": "when invoice due date is less then",
+    "WHEN_NEW_INVOICES": "Send alert when new invoices arrive to",
+    "BASED_ON_ROLE": "(based on role members)",
+    "INVOICE_MODIFIED": "Send alert when the invoice is modified",
+    "SEND_ALERT_TO": "Send an alert to",
+    "INVOICE_SENT": "when an invoice is sent to batch",
+    "DAILY_PRODUCTIVITY": "Send daily productivity report to"
 }

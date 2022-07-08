@@ -9,6 +9,8 @@
 
   &__login {
     margin-right: 10px;
+    color: white;
+    ;
   }
 
   &__logo-img {
@@ -19,6 +21,7 @@
     width: 100%;
     align-items: center;
     justify-content: center;
+    color: white;
   }
 }
 
@@ -31,7 +34,7 @@
 }
 
 .card-overlay {
-  background: rgba(0, 0, 0, 0.5);
+  // background: rgba(0, 0, 0, 0.5);
 
   height: 100%;
 
@@ -77,12 +80,12 @@
 
   &__content-wrapper {
     width: 85%;
-
     padding: 10px;
-    background-color: white;
+    background-color: rgba(85, 80, 80, 0.96);
     display: flex;
     justify-content: center;
     flex-direction: column;
+
 
     @media (max-width: $small) {
       width: 85%;
@@ -98,13 +101,13 @@
   }
 
   &__group-title {
-    font-size: 32px;
+    font-size: 20px;
     font-weight: $fw-normal;
     margin-top: 37px;
     letter-spacing: -0.7px;
     text-align: center;
     line-height: 37px;
-    color: $dark-grey;
+    color: white;
   }
 
   &__group-sub-title {
@@ -114,7 +117,7 @@
     letter-spacing: -0.5px;
     text-align: center;
     line-height: 24px;
-    color: $dark-grey;
+    color: white;
   }
 
   &__google-button-wrapper {
@@ -221,5 +224,17 @@
 }
 
 .login-link {
-  color: #007bff;
+  color: white;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  color: white !important;
+}
+
+::ng-deep .mat-form-field-label {
+  color: white !important;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-flex {
+  color: white !important;
 }

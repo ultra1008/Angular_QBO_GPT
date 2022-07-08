@@ -74,6 +74,9 @@ import { OcpsDashboardComponent } from './components/dashboard/ocps-dashboard.co
 import { InvoiceComponent } from './components/invoice/invoice.component';
 import { ReportsComponent } from './components/reports/reports.component';
 import { TemplatesComponent } from './components/templates/templates.component';
+import { MailboxMonitorComponent } from './components/setting/mailbox-monitor/mailbox-monitor.component';
+import { AlertsComponent } from './components/setting/alerts/alerts.component';
+import { IntegrationsComponent } from './components/setting/integrations/integrations.component';
 
 
 
@@ -123,7 +126,10 @@ import { TemplatesComponent } from './components/templates/templates.component';
     OcpsDashboardComponent,
     InvoiceComponent,
     ReportsComponent,
-    TemplatesComponent
+    TemplatesComponent,
+    MailboxMonitorComponent,
+    AlertsComponent,
+    IntegrationsComponent
   ],
   imports: [
     PortalModule,

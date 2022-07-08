@@ -1,0 +1,53 @@
+<div class="wrapper-cust-admin">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="container">
+                    <div class="row ml-2 mb-2">
+                        <b>Mailbox 1</b>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <mat-form-field appearance="outline" class="main-one-input-field">
+                                <mat-label>Email Address</mat-label>
+                                <input matInput formControlName="email" class="input-capitalized-textfield"
+                                    placeholder="Email Address">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <mat-form-field appearance="outline" class="main-one-input-field">
+                                <mat-label>Password</mat-label>
+                                <input matInput formControlName="tenant_smtp_username"
+                                    class="input-capitalized-textfield" placeholder="password">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <mat-form-field appearance="outline" class="main-one-input-field">
+                                <mat-label>Frequency
+                                </mat-label>
+                                <mat-select formControlName="frequency" class="dark-cust-color" required>
+                                    <mat-option>
+                                        ABC
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="container">
+                            <a class="btn  btn-action-lg btn-accent">
+                                <i class="material-icons">add</i>
+                            </a>
+
+                            <h5 class="mt-3" style="text-align: center;">Add Another Mailbox</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

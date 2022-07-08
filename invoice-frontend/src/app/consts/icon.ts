@@ -146,4 +146,8 @@ export enum icon {
     PDFWHITEICON = "./assets/diversityicon/pdficon.png",
     TODAYSACTIVITY_ICON = "./assets/sidemenu/todaysactivityicon.png",
     TODAYSACTIVITYLIGHT_ICON = "./assets/sidemenu/todaysactivity_icon.png",
+    INTEGRATION = "./assets/diversityicon/integration.png",
+    INTEGRATION_WHITE = "./assets/diversityicon/integration_white.png",
+    USAGE = "./assets/diversityicon/usage.png",
+    USAGE_WHITE = "./assets/diversityicon/usage_white.png",
 }

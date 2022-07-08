@@ -64,6 +64,9 @@ import { EmployeeJobtitleComponent } from './settings-employee/employee-jobtitle
 import { EmployeeJobtypeComponent } from './settings-employee/employee-jobtype/employee-jobtype.component';
 import { EmployeePayrollgroupComponent } from './settings-employee/employee-payrollgroup/employee-payrollgroup.component';
 import { EmployeeRelationshipComponent } from './settings-employee/employee-relationship/employee-relationship.component';
+import { MailboxMonitorComponent } from './mailbox-monitor/mailbox-monitor.component';
+import { AlertsComponent } from './alerts/alerts.component';
+import { IntegrationsComponent } from './integrations/integrations.component';
 
 const maskConfig: Partial<IConfig> = {
   validation: false,
@@ -105,6 +108,9 @@ const maskConfig: Partial<IConfig> = {
     EmployeeRelationshipComponent,
     ImportEmpSettingDownload,
     ImportDataErrorEmpSetting,
+    MailboxMonitorComponent,
+    AlertsComponent,
+    IntegrationsComponent,
   ],
 
   imports: [

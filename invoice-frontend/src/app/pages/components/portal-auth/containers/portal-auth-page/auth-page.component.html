@@ -69,8 +69,7 @@
     <div class="auth-page__content-block">
       <div class="auth-page__content-wrapper">
 
-        <h4 class="auth-page__group-title" *ngIf="showCompanyCode || showLogin">{{'Admin-Login-Welcome-text' |
-          translate}}
+        <h4 class="auth-page__group-title" *ngIf="showCompanyCode || showLogin">WELCOME TO ROVUK INVOICE
         </h4>
 
         <div class="cust-center" *ngIf="showLogin">
@@ -102,7 +101,7 @@
         <form [formGroup]="forgotpassword_form" (ngSubmit)="forgotPasswordPress()" *ngIf="showForgotPassword">
 
           <h4 class="auth-page__group-title">{{'Admin-Login-Forgot-Password-Title' | translate }}</h4>
-          <p style="text-align:center">{{'Admin-Login-Forgot-Password-SubTitle' | translate }}</p>
+          <p style="text-align:center; color: white;">{{'Admin-Login-Forgot-Password-SubTitle' | translate }}</p>
 
           <mat-form-field class="form_input_cust" appearance="outline">
             <mat-label>{{'Admin-Login-Email-Placeholder' | translate }}</mat-label>
@@ -118,12 +117,13 @@
           </div>
           <div class="form-actions">
             <button class="form-actions__forget" mat-button type="button" (click)="resetForgotPasswordPress()"
-              *ngIf="showForgotPassword"><span>{{'Admin-Login-Forgot-Password-AlreadyUser' | translate }}</span><span><a
-                  class="login-link" target="_blank">{{'Admin-Login-Forgot-Password-Login' |
+              *ngIf="showForgotPassword"><span>{{'Admin-Login-Forgot-Password-AlreadyUser' | translate
+                }}</span><span><a class="login-link" target="_blank">{{'Admin-Login-Forgot-Password-Login' |
                   translate}}</a></span></button>
           </div>
 
         </form>
+
       </div>
     </div>
   </div>

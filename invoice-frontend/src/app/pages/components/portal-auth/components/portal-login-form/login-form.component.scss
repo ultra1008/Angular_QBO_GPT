@@ -45,8 +45,8 @@
   background-color: #023e8a;
 }
 
-.term-condition{
-  color: #007bff;
+.term-condition {
+  color: white;
 }
 
 .placeholder {
@@ -56,4 +56,25 @@
   height: 24px;
   font-size: 25px;
   right: 5px;
+}
+
+.auth-page__group-title {
+  color: white;
+}
+
+::ng-deep .mat-checkbox {
+  .mat-checkbox-frame {
+    border-color: white !important;
+  }
+}
+
+::ng-deep .mat-checkbox-checked {
+  .mat-checkbox-checkmark {
+    background: #ffffff !important;
+
+    .mat-checkbox-checkmark-path {
+      stroke: rgba(2, 62, 138, 0.968627451) !important;
+      stroke-width: 5px;
+    }
+  }
 }

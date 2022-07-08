@@ -28,6 +28,10 @@ export class SettingComponent implements OnInit {
   other_settings_white = icon.OTHER_SETTINGS_WHITE;
   userIcon_white = icon.USERLIGHT_ICON;
   userIcon = icon.USER;
+  integrationIcon = icon.INTEGRATION;
+  integration_whiteIcon = icon.INTEGRATION_WHITE;
+  usageIcon = icon.USAGE;
+  usage_whiteIcon = icon.USAGE_WHITE;
 
 
 
