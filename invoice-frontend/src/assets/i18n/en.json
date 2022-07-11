@@ -499,7 +499,7 @@
     "Setting-smtp-active-transport-layer-security": "Active Transport Layer Security ( TLS )",
     "Setting-smtp-auto-email-reply-to-email": "Auto email reply to-email",
     "Project-Survey-Title": "Survey",
-    "Setting-CostCode-Add-Button": "+ Add Cost Code",
+    "Setting-CostCode-Add-Button": "Cost Code",
     "Setting-Other-Credit-Card": "Credit Cards",
     "Settings-Other-Credit-Cards-number": "Credit Cards Number (only last 6 digits)",
     "Settings-Other-Project-Document-Type": "Project Document Types",
@@ -2382,5 +2382,6 @@
     "INVOICE_MODIFIED": "Send alert when the invoice is modified",
     "SEND_ALERT_TO": "Send an alert to",
     "INVOICE_SENT": "when an invoice is sent to batch",
-    "DAILY_PRODUCTIVITY": "Send daily productivity report to"
+    "DAILY_PRODUCTIVITY": "Send daily productivity report to",
+    "USAGE_NUMBER_INVOICE": "Number of invoice per calendar month"
 }

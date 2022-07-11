@@ -49,7 +49,7 @@ export class IntegrationsComponent implements OnInit {
 
   ngOnInit(): void {
     let that = this;
-    let userData = JSON.parse(localStorage.getString("userdata"));
+    let userData = JSON.parse(localStorage.getItem("userdata")??'');
 
     this.httpCall.httpPostCall(httproutes.PORTAL_SETTING_SMTP, { _id: userData.companydata._id }).subscribe(function (params) {
       if (params.status) {

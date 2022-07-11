@@ -13,7 +13,7 @@ import { configdata } from 'src/environments/configData';
   styleUrls: ['./mailbox-monitor.component.scss']
 })
 export class MailboxMonitorComponent implements OnInit {
-  smtpinfo: FormGroup;
+  mailbpxform: FormGroup;
   compnay_id: any;
   LTS_ACTIVE: any = configdata.LTS_ACTIVE;
   saveIcon = icon.SAVE_WHITE;
@@ -21,7 +21,7 @@ export class MailboxMonitorComponent implements OnInit {
     public uiSpinner: UiSpinnerService,
     public translate: TranslateService) {
 
-    this.smtpinfo = this.formBuilder.group({
+    this.mailbpxform = this.formBuilder.group({
       password: ['', Validators.required],
       frequency: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],

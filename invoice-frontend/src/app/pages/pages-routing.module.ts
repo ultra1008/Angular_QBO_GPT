@@ -40,6 +40,11 @@ import { ReportsComponent } from './components/reports/reports.component';
 import { MailboxMonitorComponent } from './components/setting/mailbox-monitor/mailbox-monitor.component';
 import { AlertsComponent } from './components/setting/alerts/alerts.component';
 import { IntegrationsComponent } from './components/setting/integrations/integrations.component';
+import { UsageComponent } from './components/setting/usage/usage.component';
+import { CostCodeComponent } from './components/setting/cost-code/cost-code.component';
+import { TermsComponent } from './components/setting/ocps-settings/terms/terms.component';
+import { TaxRateComponent } from './components/setting/ocps-settings/tax-rate/tax-rate.component';
+import { DocumentsComponent } from './components/setting/ocps-settings/documents/documents.component';
 
 
 const routes: Routes = [
@@ -96,7 +101,36 @@ const routes: Routes = [
         canActivate: [PortalAuthGuard],
         component: IntegrationsComponent
       },
-
+      {
+        path: 'usage',
+        pathMatch: 'full',
+        canActivate: [PortalAuthGuard],
+        component: UsageComponent
+      },
+      {
+        path: 'cost-code',
+        pathMatch: 'full',
+        canActivate: [PortalAuthGuard],
+        component: CostCodeComponent
+      },
+      {
+        path: 'terms',
+        pathMatch: 'full',
+        canActivate: [PortalAuthGuard],
+        component: TermsComponent
+      },
+      {
+        path: 'taxrate',
+        pathMatch: 'full',
+        canActivate: [PortalAuthGuard],
+        component: TaxRateComponent
+      },
+      {
+        path: 'documents',
+        pathMatch: 'full',
+        canActivate: [PortalAuthGuard],
+        component: DocumentsComponent
+      },
 
 
 

@@ -499,7 +499,7 @@
     "Setting-smtp-active-transport-layer-security": "Tiempo de Espera del servidor SMTP",
     "Setting-smtp-auto-email-reply-to-email": "Respuesta automática de correo electrónico",
     "Project-Survey-Title": "Encuesta",
-    "Setting-CostCode-Add-Button": "+ Agregar Código de Costo",
+    "Setting-CostCode-Add-Button": "Agregar Código de Costo",
     "Setting-Other-Credit-Card": "Tarjetas de Crédito",
     "Settings-Other-Credit-Cards-number": "Número de Tarjetas de Crédito (solo los últimos 6 dígitos)",
     "Settings-Other-Project-Document-Type": "Tipo de Documentos del Proyecto",

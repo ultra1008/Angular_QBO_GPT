@@ -23,7 +23,7 @@ import { MaterialTimePickerModule } from '@candidosales/material-time-picker';
 import { SettingsCompanyinfoComponent } from './components/setting/settings-companyinfo/settings-companyinfo.component';
 import { SettingsSmtpComponent } from './components/setting/settings-smtp/settings-smtp.component';
 import { WebsitepluginComponent } from './components/setting/websiteplugin/websiteplugin.component';
-import { CertificateDocumentForm, OcpsSettingsComponent, Sponsorsettingform } from './components/setting/ocps-settings/ocps-settings.component';
+import { ImOtherDownload, ImportOther, OcpsSettingsComponent } from './components/setting/ocps-settings/ocps-settings.component';
 import { NgxMatColorPickerModule } from '@angular-material-components/color-picker';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { MatSelectFilterModule } from 'mat-select-filter';
@@ -77,6 +77,11 @@ import { TemplatesComponent } from './components/templates/templates.component';
 import { MailboxMonitorComponent } from './components/setting/mailbox-monitor/mailbox-monitor.component';
 import { AlertsComponent } from './components/setting/alerts/alerts.component';
 import { IntegrationsComponent } from './components/setting/integrations/integrations.component';
+import { UsageComponent } from './components/setting/usage/usage.component';
+import { CostCodeComponent } from './components/setting/cost-code/cost-code.component';
+import { TermsComponent, TermsForm } from './components/setting/ocps-settings/terms/terms.component';
+import { TaxRateComponent, TaxRateForm } from './components/setting/ocps-settings/tax-rate/tax-rate.component';
+import { DocumentForm, DocumentsComponent } from './components/setting/ocps-settings/documents/documents.component';
 
 
 
@@ -101,8 +106,6 @@ import { IntegrationsComponent } from './components/setting/integrations/integra
     ShortcutsMenuComponent,
     ShortcutsAddComponent,
     OcpsSettingsComponent,
-    Sponsorsettingform,
-    CertificateDocumentForm,
     ForcefullyResetpasswordComponent,
     IframeCustomepdfviewerComponent,
     SettingRoleComponent,
@@ -129,7 +132,17 @@ import { IntegrationsComponent } from './components/setting/integrations/integra
     TemplatesComponent,
     MailboxMonitorComponent,
     AlertsComponent,
-    IntegrationsComponent
+    IntegrationsComponent,
+    UsageComponent,
+    CostCodeComponent,
+    TermsComponent,
+    TaxRateComponent,
+    DocumentsComponent,
+    TermsForm,
+    TaxRateForm,
+    DocumentForm,
+    ImOtherDownload,
+    ImportOther
   ],
   imports: [
     PortalModule,

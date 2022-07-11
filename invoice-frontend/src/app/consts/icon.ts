@@ -150,4 +150,6 @@ export enum icon {
     INTEGRATION_WHITE = "./assets/diversityicon/integration_white.png",
     USAGE = "./assets/diversityicon/usage.png",
     USAGE_WHITE = "./assets/diversityicon/usage_white.png",
+    COSTCODE = "./assets/diversityicon/costcode.png",
+    COSTCODE_WHITE = "./assets/diversityicon/costcode_white.png"
 }

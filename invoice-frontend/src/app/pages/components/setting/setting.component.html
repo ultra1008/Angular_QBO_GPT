@@ -14,8 +14,9 @@
             <mat-icon *ngIf="index == 4">phonelink_ring</mat-icon>
             <img *ngIf="index == 5" src="{{integration_whiteIcon}}" alt="" height="15px">
             <img *ngIf="index == 6" src="{{smtp_white}}" alt="" height="15px">
-            <img *ngIf="index == 7" src="{{website_plugin_white}}" alt="" height="15px">
+            <img *ngIf="index == 7" src="{{usage_whiteIcon}}" alt="" height="15px">
             <img *ngIf="index == 8" src="{{other_settings_white}}" alt="" height="15px">
+            <img *ngIf="index == 9" src="{{costcode_white}}" alt="" height="15px">
         </ng-template>
 
         <ng-template matStepperIcon="companyprofile">
@@ -46,13 +47,18 @@
 
             <img src="{{smtp}}" alt="" height="15px">
         </ng-template>
-        <ng-template matStepperIcon="websiteplugin">
+        <ng-template matStepperIcon="Usage">
 
-            <img src="{{website_plugin}}" alt="" height="15px">
+            <img src="{{usageIcon}}" alt="" height="15px">
         </ng-template>
         <ng-template matStepperIcon="other">
 
             <img src="{{other_settings}}" alt="" height="15px">
+        </ng-template>
+
+        <ng-template matStepperIcon="costcode">
+
+            <img src="{{costcode}}" alt="" height="15px">
         </ng-template>
 
         <mat-step state="companyprofile" [completed]="false">
@@ -91,12 +97,7 @@
             </form>
         </mat-step>
 
-        <mat-step state="integrations" [completed]="false">
-            <form>
-                <ng-template matStepLabel>Integrations</ng-template>
-                <app-integrations></app-integrations>
-            </form>
-        </mat-step>
+
 
 
         <mat-step state="smtp" [completed]="false">
@@ -106,10 +107,17 @@
             </form>
         </mat-step>
 
-        <mat-step state="websiteplugin" [completed]="false">
+        <mat-step state="integrations" [completed]="false">
             <form>
-                <ng-template matStepLabel>{{'settings_tab_Website_plugin' | translate}}</ng-template>
-                <app-websiteplugin></app-websiteplugin>
+                <ng-template matStepLabel>Integrations</ng-template>
+                <app-integrations></app-integrations>
+            </form>
+        </mat-step>
+
+        <mat-step state="Usage" [completed]="false">
+            <form>
+                <ng-template matStepLabel>Usage</ng-template>
+                <app-usage></app-usage>
             </form>
         </mat-step>
 
@@ -124,6 +132,13 @@
             <form>
                 <ng-template matStepLabel>{{'Settings-OtherSettings' | translate}}</ng-template>
                 <app-ocps-settings></app-ocps-settings>
+            </form>
+        </mat-step>
+
+        <mat-step state="costcode" [completed]="false">
+            <form>
+                <ng-template matStepLabel>Cost Code</ng-template>
+                <app-cost-code></app-cost-code>
             </form>
         </mat-step>
 

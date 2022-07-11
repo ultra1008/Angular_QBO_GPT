@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>Terms</h2>
+<form class="form" [formGroup]="term">
+    <div class="container">
+        <div class="row">
+            <mat-form-field appearance="outline" class="shift-input">
+                <mat-label>Terms</mat-label>
+                <input matInput placeholder="Terms" formControlName="terms" required>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <mat-dialog-actions align="center">
+        <button mat-raised-button mat-dialog-close>
+            <img src="{{exitIcon}}" alt="" height="15px">
+            {{'All-exit' | translate }}</button>
+        <button mat-raised-button type="submit" (click)="saveData()" color="primary">
+            <img src="{{saveIcon}}" alt="" height="20px">
+            {{'All-save' | translate
+            }}</button>
+    </mat-dialog-actions>
+
+</form>

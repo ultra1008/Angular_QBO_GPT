@@ -67,6 +67,11 @@ import { EmployeeRelationshipComponent } from './settings-employee/employee-rela
 import { MailboxMonitorComponent } from './mailbox-monitor/mailbox-monitor.component';
 import { AlertsComponent } from './alerts/alerts.component';
 import { IntegrationsComponent } from './integrations/integrations.component';
+import { UsageComponent } from './usage/usage.component';
+import { CostCodeComponent } from './cost-code/cost-code.component';
+import { TermsComponent } from './ocps-settings/terms/terms.component';
+import { TaxRateComponent } from './ocps-settings/tax-rate/tax-rate.component';
+import { DocumentsComponent } from './ocps-settings/documents/documents.component';
 
 const maskConfig: Partial<IConfig> = {
   validation: false,
@@ -111,6 +116,11 @@ const maskConfig: Partial<IConfig> = {
     MailboxMonitorComponent,
     AlertsComponent,
     IntegrationsComponent,
+    UsageComponent,
+    CostCodeComponent,
+    TermsComponent,
+    TaxRateComponent,
+    DocumentsComponent,
   ],
 
   imports: [

@@ -32,6 +32,8 @@ export class SettingComponent implements OnInit {
   integration_whiteIcon = icon.INTEGRATION_WHITE;
   usageIcon = icon.USAGE;
   usage_whiteIcon = icon.USAGE_WHITE;
+  costcode = icon.COSTCODE;
+  costcode_white = icon.COSTCODE_WHITE
 
 
 
