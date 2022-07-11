@@ -66,8 +66,18 @@ export class UserComponent implements OnInit {
     this.mode = modeLocal === 'on' ? 'on' : 'off';
     if (this.mode == 'off') {
       this.usericon = icon.USER_ICON;
+      this.changePasswordIcon = "./assets/diversityicon/thememode/changepassword_icon.png";
+      this.helpIcon = "./assets/diversityicon/thememode/help_icon.png";
+      this.termsIcon = "./assets/diversityicon/thememode/terms_icon.png";
+      this.logoutIcon = "./assets/diversityicon/thememode/logout_icon.png";
+      this.themeModeIcon = "./assets/diversityicon/moon_icon.png";
     } else {
       this.usericon = icon.USERLIGHT_ICON;
+      this.changePasswordIcon = "./assets/diversityicon/darkmode/changepassword_icon_dark.png";
+      this.helpIcon = "./assets/diversityicon/darkmode/help_icon_dark.png";
+      this.termsIcon = "./assets/diversityicon/darkmode/terms_icon_dark.png";
+      this.logoutIcon = "./assets/diversityicon/darkmode/logout_icon_dark.png";
+      this.themeModeIcon = "./assets/diversityicon/sun_icon.png";
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
       if (mode) {
