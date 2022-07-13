@@ -9,8 +9,8 @@
     <mat-label>{{'Admin-Login-Password-Placeholder' | translate }}</mat-label>
     <input matInput placeholder="{{'Admin-Login-Password-Placeholder' | translate }}" class="dark-cust-color"
       type="password" [type]="hide ? 'password' : 'text'" formControlName="password">
-      <mat-icon matprefix class="placeholder" (click)="eyeButtonForPassword()">{{hide ? 'visibility_off' : 'visibility'}}
-      </mat-icon>
+    <mat-icon matprefix class="placeholder" (click)="eyeButtonForPassword()">{{hide ? 'visibility_off' : 'visibility'}}
+    </mat-icon>
   </mat-form-field>
 
 
@@ -25,7 +25,7 @@
     <button style="float: left;" class="form-actions__login" mat-raised-button color="primary"
       type="submit">{{'Admin-Login-Login-Button' |
       translate }}</button>
-    <img style="float: right;" class="form-actions__logo-img" width="30%" height="30%"
+    <img style="float: right;" class="form-actions__logo-img" width="14%" height="14%"
       src="./assets/images/powerby_auth.png" alt="logo">
   </div>
 </form>
