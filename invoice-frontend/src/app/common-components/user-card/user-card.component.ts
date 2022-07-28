@@ -27,6 +27,7 @@ import { httproutes, icon } from './../../consts';
 import { Subscription } from 'rxjs';
 import { ModeDetectService } from 'src/app/pages/components/map/mode-detect.service';
 import { localstorageconstants } from 'src/app/consts/localstorageconstants';
+import { UiSpinnerService } from 'src/app/service/spinner.service';
 
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
@@ -68,19 +69,23 @@ export class UserCardComponent implements OnInit {
     this.role_permission = userdata.role_permission.users;
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off') {
+    if (this.mode == 'off')
+    {
       this.trashIcon = "./assets/diversityicon/thememode/trash_icon.png";
       this.editIcon = "./assets/diversityicon/thememode/edit_icon.png";
-    } else {
+    } else
+    {
       this.trashIcon = "./assets/diversityicon/darkmode/trash_icon_dark.png";
       this.editIcon = "./assets/diversityicon/darkmode/edit_icon_dark.png";
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode) {
+      if (mode)
+      {
         this.mode = 'off';
         this.trashIcon = "./assets/diversityicon/thememode/trash_icon.png";
         this.editIcon = "./assets/diversityicon/thememode/edit_icon.png";
-      } else {
+      } else
+      {
         this.mode = 'on';
         this.trashIcon = "./assets/diversityicon/darkmode/trash_icon_dark.png";
         this.editIcon = "./assets/diversityicon/darkmode/edit_icon_dark.png";
@@ -114,7 +119,8 @@ export class UserCardComponent implements OnInit {
 
   deleteEmployeeAction() {
     let that = this;
-    if (that.role_permission.Delete) {
+    if (that.role_permission.Delete)
+    {
       swalWithBootstrapButtons.fire({
         title: this.User_Card_Do_Want_Delete,
         showDenyButton: true,
@@ -122,17 +128,81 @@ export class UserCardComponent implements OnInit {
         confirmButtonText: this.Compnay_Equipment_Delete_Yes,
         denyButtonText: this.Compnay_Equipment_Delete_No,
       }).then((result) => {
-        if (result.isConfirmed) {
+        if (result.isConfirmed)
+        {
           this.httpCall.httpPostCall(httproutes.TEAM_DELETE, this.UserData).subscribe(function (params) {
-            if (params.status) {
+            if (params.status)
+            {
               that.snackbarservice.openSnackBar(params.message, "success");
               that.mostusedservice.userdeleteEmit();
-            } else {
+            } else
+            {
               that.snackbarservice.openSnackBar(params.message, "error");
             }
           });
         }
       });
     }
+  }
+}
+@Component({
+  selector: 'app-team-archive-card',
+  templateUrl: './team-archive-card.html',
+  styleUrls: ['./user-card.component.scss']
+})
+export class TeamArchiveCradComponent implements OnInit {
+  @Input() UserData: any;
+  @Input() deleteTeamMember: any;
+  yesButton: string = '';
+  noButton: string = '';
+  recover_team_member: string = '';
+  restoreIcon = icon.RESTORE;
+  acticve_word: string = "";
+  inacticve_word: string = "";
+  constructor(public httpCall: HttpCall, public uiSpinner: UiSpinnerService,
+    public router: Router,
+
+    public translate: TranslateService, public snackbarservice: Snackbarservice) {
+    this.translate.stream(['']).subscribe((textarray) => {
+      this.recover_team_member = this.translate.instant("recover_team_member");
+      this.yesButton = this.translate.instant('Compnay_Equipment_Delete_Yes');
+      this.noButton = this.translate.instant('Compnay_Equipment_Delete_No');
+      this.acticve_word = this.translate.instant('Team-EmployeeList-Status-Active');
+      this.inacticve_word = this.translate.instant('project_setting_inactive');
+    });
+  }
+  ngOnInit(): void { }
+
+  phonenoFormat(data: any) {
+    return formatPhoneNumber(data);
+  }
+
+  recoverTeamMember(id: any) {
+    console.log(id);
+    let that = this;
+    swalWithBootstrapButtons.fire({
+      title: that.recover_team_member,
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: that.yesButton,
+      denyButtonText: that.noButton,
+    }).then((result) => {
+      if (result.isConfirmed)
+      {
+        this.uiSpinner.spin$.next(true);
+        this.httpCall.httpPostCall(httproutes.TEAM_RECOVER, { _id: id }).subscribe((params) => {
+          if (params.status)
+          {
+            that.snackbarservice.openSnackBar(params.message, "success");
+            that.router.navigateByUrl('/employee-list');
+            that.uiSpinner.spin$.next(false);
+          } else
+          {
+            that.snackbarservice.openSnackBar(params.message, "error");
+            that.uiSpinner.spin$.next(false);
+          }
+        });
+      }
+    });
   }
 }

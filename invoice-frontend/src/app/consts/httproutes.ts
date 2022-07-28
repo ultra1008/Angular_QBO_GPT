@@ -843,5 +843,8 @@ export enum httproutes {
     GET_CHART_LIST = "/webapi/v1/portal/getchartlist",
     SAVE_CHART_LIST = "/webapi/v1/portal/savechartlist",
 
-    GET_VENDORS_BASEDON_DROPDOWN = "/webapi/v1/portal/getvendorprojectcustomcontractor"
+    GET_VENDORS_BASEDON_DROPDOWN = "/webapi/v1/portal/getvendorprojectcustomcontractor",
+    TEAM_RECOVER = "/webapi/v1/portal/recoverteam",
+    TEAM_AECHIVE = "/webapi/v1/portal/getarchiveteams"
+
 }

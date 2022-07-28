@@ -2,13 +2,17 @@
   <div class="head-text" [ngClass]="mode == 'on'? 'carddark' : 'cardlight'">
     <h3 class="editing">{{'user_title' | translate}}</h3>
   </div>
-  <div class="row" >
+  <div class="row">
     <div class="col-md-12">
       <div class="screen-title-section cust-user-heading-inline">
         <!-- <h1 class="screen-title">{{'Employee-heading' | translate }}</h1> -->
         <div *ngIf="addTeamMember" class="inner-search-bar cust-heght-textbox">
           <div class="main-search-bar">
-
+            <button mat-stroked-button *ngIf="role_to == 'Admin'" style="margin-right: 2px;" class="sign-button"
+              mat-raised-button (click)="gotoArchive();">
+              <img src="{{archivelighticon}}" alt="" class="pr-1" height="19px">
+              {{'Archived_all' | translate }}
+            </button>
             <button mat-stroked-button color="primary" (click)="openForImportDownloadDialog();"
               matTooltip="{{ 'Employee-Import-Template' | translate }}" aria-label="Left Align">
               {{'Employee-Import-Template' | translate}}

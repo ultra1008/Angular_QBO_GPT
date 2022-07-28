@@ -51,6 +51,7 @@ import { registerLocaleData } from '@angular/common';
 // If using Moment
 import { AutosizeModule } from 'ngx-autosize';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ArchiveTeamListComponent } from './archive-team-list/archive-team-list.component';
 // import { ProjectTimeCardListForm, TimecardHistoryForm, TimecardManuallyForm, TimecardReportForm, TimecardsComponent, TimeCardViewList } from './timecards/timecards.component';
 // import { FormateMemberTimeCardPipe, FormateTimeCardPipe, FormateTimePipe, FilterPipe } from './timecards/filter.pipe';
 
@@ -73,7 +74,8 @@ registerLocaleData(localeFr);
     TeamHistory,
     EmpListFilterPipe,
     EmpListFilterStatusPipe,
-    TeamReportForm
+    TeamReportForm,
+    ArchiveTeamListComponent
   ],
 
   imports: [

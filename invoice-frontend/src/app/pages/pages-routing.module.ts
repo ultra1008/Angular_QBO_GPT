@@ -45,6 +45,7 @@ import { CostCodeComponent } from './components/setting/cost-code/cost-code.comp
 import { TermsComponent } from './components/setting/ocps-settings/terms/terms.component';
 import { TaxRateComponent } from './components/setting/ocps-settings/tax-rate/tax-rate.component';
 import { DocumentsComponent } from './components/setting/ocps-settings/documents/documents.component';
+import { ArchiveTeamListComponent } from './components/team/archive-team-list/archive-team-list.component';
 
 
 const routes: Routes = [
@@ -199,6 +200,12 @@ const routes: Routes = [
         pathMatch: 'full',
         canActivate: [PortalAuthGuard],
         component: SettingsEmployeeComponent,
+      },
+      {
+        path: 'archive-team-list',
+        pathMatch: 'full',
+        canActivate: [PortalAuthGuard],
+        component: ArchiveTeamListComponent
       },
       {
         path: 'employee-departments',

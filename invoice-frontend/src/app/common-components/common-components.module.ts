@@ -14,7 +14,7 @@ import { WeatherUiComponent, WeatherUiForDayComponent } from './weather-ui/weath
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { UserCardComponent } from './user-card/user-card.component';
+import { TeamArchiveCradComponent, UserCardComponent, } from './user-card/user-card.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -22,12 +22,16 @@ import { DataTablesModule } from "angular-datatables";
 import { NgxGalleryModule } from 'ngx-gallery-9';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ArchiveTeamListComponent } from '../pages/components/team/archive-team-list/archive-team-list.component';
 
 @NgModule({
   declarations: [
     WeatherUiComponent,
     WeatherUiForDayComponent,
     UserCardComponent,
+    TeamArchiveCradComponent,
+
+
   ],
   imports: [
     NgxGalleryModule,
@@ -59,6 +63,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   exports: [
     WeatherUiComponent,
     UserCardComponent,
+    TeamArchiveCradComponent
+
+
+
   ],
 })
 export class CommonComponentsModule { }
