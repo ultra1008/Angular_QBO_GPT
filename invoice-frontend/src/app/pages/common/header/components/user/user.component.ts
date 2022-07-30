@@ -22,8 +22,18 @@ import { ThemeService } from 'ng2-charts';
 import { Router } from '@angular/router';
 import { configdata } from 'src/environments/configData';
 import { Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
+import { TranslateService } from '@ngx-translate/core';
 
 type Theme = 'light-theme' | 'dark-theme';
+const swalWithBootstrapButtons = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-success margin-right-cust',
+    denyButton: 'btn btn-danger'
+  },
+  buttonsStyling: false,
+  allowOutsideClick: false
+});
 
 @Component({
   selector: 'app-user',
@@ -54,13 +64,25 @@ export class UserComponent implements OnInit {
   themeModeIcon: any;
   usericon: string;
   headerUserIcon = icon.USERLIGHT_ICON;
+  Do_Want_logout = "";
+  logut_button = "";
+  stay_button = "";
 
   /*
     Constructor
   */
-  constructor(private modeService: ModeDetectService, private layoutService: LayoutService, private themeService: ThemeService,
+  constructor(private modeService: ModeDetectService, private layoutService: LayoutService, public translate: TranslateService, private themeService: ThemeService,
     public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService,
     private router: Router, private deviceService: DeviceDetectorService, public httpCall: HttpCall) {
+
+    let that = this;
+    // this.uiSpinner.spin$.next(true);
+    that.translate.stream(['']).subscribe((textarray) => {
+      that.Do_Want_logout = that.translate.instant('Do_Want_logout');
+      that.logut_button = that.translate.instant('logut_button');
+      that.stay_button = that.translate.instant('stay_button');
+
+    });
     var tmp_local_mode = localStorage.getItem(localstorageconstants.DARKMODE);
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
@@ -241,23 +263,36 @@ export class UserComponent implements OnInit {
   */
   logout() {
     let that = this;
+    swalWithBootstrapButtons.fire({
+      title: this.Do_Want_logout,
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: this.logut_button,
+      denyButtonText: this.stay_button,
+    }).then((result) => {
+      if (result.isConfirmed) {
 
-    that.uiSpinner.spin$.next(true);
-    let usertype = sessionStorage.getItem(localstorageconstants.USERTYPE);
+        that.uiSpinner.spin$.next(true);
+        let usertype = sessionStorage.getItem(localstorageconstants.USERTYPE);
 
-    if (usertype == "superadmin") {
-      that.uiSpinner.spin$.next(false);
-      that.router.navigateByUrl('/superadmin/login');
-    }
-    else {
-      let userdata: any = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
-      if (userdata.UserData.role_name != configdata.EMPLOYEE) {
-        this.logoutHistory();
-      } else {
-        that.uiSpinner.spin$.next(false);
-        that.router.navigateByUrl('/login');
+        if (usertype == "superadmin") {
+          that.uiSpinner.spin$.next(false);
+          that.router.navigateByUrl('/superadmin/login');
+        }
+        else {
+          let userdata: any = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+          if (userdata.UserData.role_name != configdata.EMPLOYEE) {
+            this.logoutHistory();
+          } else {
+            that.uiSpinner.spin$.next(false);
+            that.router.navigateByUrl('/login');
+          }
+        }
       }
-    }
+      else {
+
+      }
+    });
   }
 
   /*  

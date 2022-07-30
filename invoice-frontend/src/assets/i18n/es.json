@@ -2362,5 +2362,8 @@
     "All-send": "Send",
     "Sidebar-invoice": "Invoices",
     "Sidebar-Templates": "Templates",
-    "Sidebar-Report": "Reports"
+    "Sidebar-Report": "Reports",
+    "Do_Want_logout": "Are you sure you want to logout?",
+    "logut_button": "Logout",
+    "stay_button": "Stay"
 }
