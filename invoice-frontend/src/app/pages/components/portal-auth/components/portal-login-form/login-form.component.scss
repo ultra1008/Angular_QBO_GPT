@@ -46,7 +46,7 @@
 }
 
 .term-condition {
-  color: white;
+  // color: white;
 }
 
 .placeholder {
@@ -59,21 +59,21 @@
 }
 
 .auth-page__group-title {
-  color: white;
+  // color: white;
 }
 
 ::ng-deep .mat-checkbox {
   .mat-checkbox-frame {
-    border-color: white !important;
+    // border-color: white !important;
   }
 }
 
 ::ng-deep .mat-checkbox-checked {
   .mat-checkbox-checkmark {
-    background: #ffffff !important;
+    // background: #ffffff !important;
 
     .mat-checkbox-checkmark-path {
-      stroke: rgba(2, 62, 138, 0.968627451) !important;
+      // stroke: rgba(2, 62, 138, 0.968627451) !important;
       stroke-width: 5px;
     }
   }

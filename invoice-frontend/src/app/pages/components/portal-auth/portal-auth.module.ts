@@ -21,6 +21,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ForcefullChangePasswordComponent } from './components/forcefull-change-password/forcefull-change-password.component';
 import { MatCardModule } from '@angular/material/card';
 import { CurrencyPipe } from '@angular/common';
+import { NgOtpInputModule } from 'ng-otp-input';
 const maskConfigFunction: () => Partial<IConfig> = () => {
   return {
     validation: false,
@@ -46,6 +47,7 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
     MatButtonModule,
     MatInputModule,
     ReactiveFormsModule,
+    NgOtpInputModule,
     FormsModule,
     NgxMaskModule.forRoot(maskConfigFunction),
     TranslateModule.forRoot({

@@ -123,7 +123,41 @@
           </div>
 
         </form>
+        <!-- Use OTP -->
+        <div *ngIf="showLogin && showOTPOption" class="otp-text" (click)="openOTPScreen()">Or use One time password
+          (OTP)
+        </div>
+        <form [formGroup]="otp_form" *ngIf="showOTP">
+          <mat-form-field class="form_input_cust mt-2" appearance="outline">
+            <mat-label>{{'Admin-Login-Email-Placeholder' | translate }}</mat-label>
+            <input matInput placeholder="{{ 'Admin-Login-Email-Placeholder' | translate}}" class="dark-cust-color"
+              type="email" formControlName="useremail">
+          </mat-form-field>
 
+          <div *ngIf="sentOTP">
+            <div class="text-center mb-4">
+              <ng-otp-input #ngOtpInput [config]="otpConfig" (onInputChange)="onOtpChange($event)"></ng-otp-input>
+            </div>
+            <div class="enter-otp-text">Please insert the one time password (OTP) we send to your e-mail to access the
+              platform</div>
+            <div class="text-center mt-2">
+              <label>Didn't get a verification code? </label>
+              <label class="resend-otp ml-2" (click)="sendOTP()">Send Again</label>
+              <!-- in <label class="otp-timer">{{displayTime()}}
+                </label> -->
+            </div>
+          </div>
+          <div class="form-actions">
+            <button *ngIf="sentOTP" class="form-actions__login" mat-raised-button color="primary"
+              (click)="submitOTP()">{{'All_Submit' | translate }}</button>
+            <button *ngIf="!sentOTP" class="form-actions__login" mat-raised-button color="primary"
+              (click)="sendOTP()">{{'Admin-Login-Forgot-Password-SendButton' | translate }}</button>
+            <img style="float: right;" class="form-actions__logo-img" width="30%" height="30%"
+              src="./assets/images/powerby_auth.png" alt="logo">
+          </div>
+
+          <div class="otp-text mt-2" (click)="openLoginScreen()">Or use Email Password</div>
+        </form>
       </div>
     </div>
   </div>

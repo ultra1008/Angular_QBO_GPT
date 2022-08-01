@@ -845,6 +845,9 @@ export enum httproutes {
 
     GET_VENDORS_BASEDON_DROPDOWN = "/webapi/v1/portal/getvendorprojectcustomcontractor",
     TEAM_RECOVER = "/webapi/v1/portal/recoverteam",
-    TEAM_AECHIVE = "/webapi/v1/portal/getarchiveteams"
+    TEAM_AECHIVE = "/webapi/v1/portal/getarchiveteams",
+    GET_COMPANY_SETTINGS = "/webapi/v1/getcompanysetting",
+    SEND_SUPPLIER_OTP_EMAIL = "/webapi/v1/sendsupplierotp",
+    SUBMITT_SUPPLIER_OTP = "/webapi/v1/submitemailotp",
 
 }

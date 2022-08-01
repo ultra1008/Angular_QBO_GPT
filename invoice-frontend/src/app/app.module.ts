@@ -44,6 +44,7 @@ import { ChartsModule } from 'ng2-charts';
 import { configdata } from 'src/environments/configData';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { NgOtpInputModule } from 'ng-otp-input';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { SettingsSecurityComponent } from './pages/components/setting/settings-security/settings-security.component';
 
@@ -103,6 +104,7 @@ import { SettingsSecurityComponent } from './pages/components/setting/settings-s
     MatTableModule,
     NgIdleKeepaliveModule.forRoot(),
     MomentModule,
+    NgOtpInputModule,
 
     // MatGridListModule,
 
