@@ -2386,5 +2386,6 @@
     "USAGE_NUMBER_INVOICE": "Number of invoice per calendar month",
     "Do_Want_logout": "Are you sure you want to logout?",
     "logut_button": "Logout",
-    "stay_button": "Stay"
+    "stay_button": "Stay",
+    "All_Submit": "Submit"
 }
