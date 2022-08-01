@@ -34,6 +34,8 @@ export class SettingComponent implements OnInit {
   usage_whiteIcon = icon.USAGE_WHITE;
   costcode = icon.COSTCODE;
   costcode_white = icon.COSTCODE_WHITE
+  security_settings = icon.SECURITY_SETTINGS;
+  security_settings_white = icon.SECURITY_SETTINGS_WHITE;
 
 
 

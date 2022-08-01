@@ -29,6 +29,8 @@ import { CapitalDirective } from './service/capital.directive';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { AutosizeModule } from 'ngx-autosize';
 import { LandingPageComponent } from './pages/components/landing-page/landing-page.component';
+import { NgIdleKeepaliveModule } from '@ng-idle/keepalive'; // this includes the core NgIdleModule but includes keepalive providers for easy wireup
+import { MomentModule } from 'angular2-moment'; // optional, provides moment-style pipes for date formatting
 
 import { CurrencyPipe } from '@angular/common';
 //import { DataTablesModule } from "angular-datatables";
@@ -43,6 +45,8 @@ import { configdata } from 'src/environments/configData';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { SettingsSecurityComponent } from './pages/components/setting/settings-security/settings-security.component';
+
 
 
 
@@ -59,6 +63,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
     AppComponent,
     CapitalDirective,
     LandingPageComponent,
+
 
 
 
@@ -96,6 +101,9 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MatInputModule,
     MatSortModule,
     MatTableModule,
+    NgIdleKeepaliveModule.forRoot(),
+    MomentModule,
+
     // MatGridListModule,
 
 
@@ -109,7 +117,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
     ChartsModule,
     CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })
   ],
-  providers: [CurrencyPipe, { provide: LocationStrategy, useClass: PathLocationStrategy }],
+  providers: [AppComponent, CurrencyPipe, { provide: LocationStrategy, useClass: PathLocationStrategy }],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

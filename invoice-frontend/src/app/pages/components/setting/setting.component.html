@@ -16,7 +16,9 @@
             <img *ngIf="index == 6" src="{{smtp_white}}" alt="" height="15px">
             <img *ngIf="index == 7" src="{{usage_whiteIcon}}" alt="" height="15px">
             <img *ngIf="index == 8" src="{{other_settings_white}}" alt="" height="15px">
-            <img *ngIf="index == 9" src="{{costcode_white}}" alt="" height="15px">
+            <img *ngIf="index == 9" src="{{security_settings_white}}" alt="" height="15px">
+            <img *ngIf="index == 10" src="{{costcode_white}}" alt="" height="15px">
+
         </ng-template>
 
         <ng-template matStepperIcon="companyprofile">
@@ -55,11 +57,14 @@
 
             <img src="{{other_settings}}" alt="" height="15px">
         </ng-template>
-
+        <ng-template matStepperIcon="security">
+            <img src="{{security_settings_white}}" alt="" height="15px">
+        </ng-template>
         <ng-template matStepperIcon="costcode">
 
             <img src="{{costcode}}" alt="" height="15px">
         </ng-template>
+
 
         <mat-step state="companyprofile" [completed]="false">
             <form>
@@ -132,6 +137,13 @@
             <form>
                 <ng-template matStepLabel>{{'Settings-OtherSettings' | translate}}</ng-template>
                 <app-ocps-settings></app-ocps-settings>
+            </form>
+        </mat-step>
+
+        <mat-step state="security" [completed]="false">
+            <form>
+                <ng-template matStepLabel>{{'Settings-Security' | translate}}</ng-template>
+                <app-settings-security></app-settings-security>
             </form>
         </mat-step>
 

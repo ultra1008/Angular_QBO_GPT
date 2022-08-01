@@ -77,14 +77,16 @@ export class PortalLoginFormComponent implements OnInit {
   }
 
   public login(): void {
-    if (!this.checked) {
+    if (!this.checked)
+    {
       this.snackbarservice.openSnackBar(this.Login_Form_Please_Agree, 'error');
       return;
     }
 
 
 
-    if (this.form.valid) {
+    if (this.form.valid)
+    {
       this.uiSpinner.spin$.next(true);
       let reqObject = {
         useremail: this.form.value.email,
@@ -93,51 +95,62 @@ export class PortalLoginFormComponent implements OnInit {
       };
       const that = this;
       this.authservice.login(reqObject).subscribe(function (data) {
-        if (data.status) {
+        if (data.status)
+        {
           localStorage.setItem(localstorageconstants.SUPPLIERTOKEN, data.data.token);
           localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.data));
           localStorage.setItem(localstorageconstants.SUPPLIERID, data.data.companydata._id);
+          localStorage.setItem('logout', 'false');
           sessionStorage.setItem(localstorageconstants.USERTYPE, "sponsor-portal");
           localStorage.setItem(localstorageconstants.USERTYPE, "sponsor-portal");
 
           that.uiSpinner.spin$.next(false);
-          if (that.returnUrl == null) {
+          if (that.returnUrl == null)
+          {
 
-            if (data.data.UserData.useris_password_temp == false) {
+            if (data.data.UserData.useris_password_temp == false)
+            {
               if (data.data.UserData.role_name != configdata.EMPLOYEE) { that.loginHistory(data.data.UserData); }
               that.snackbarservice.openSnackBar(that.Login_Form_Login_Successfully, 'success');
               //that.router.navigate(['/dashboard']).then();
               that.router.navigate([checkRoutePermission(data.data.role_permission)]).then();
             }
-            else {
+            else
+            {
               if (data.data.UserData.role_name != configdata.EMPLOYEE) { that.loginHistory(data.data.UserData); }
               that.snackbarservice.openSnackBar(that.Login_Form_Login_Success_Reset_Password, 'success');
               that.router.navigateByUrl('/forcefully-changepassword');
             }
 
-          } else {
+          } else
+          {
             let url_array = that.returnUrl.split('?');
             let queryParams_tmp = url_array[1];
             let query_params: any = {};
-            if (queryParams_tmp != null || queryParams_tmp != undefined) {
+            if (queryParams_tmp != null || queryParams_tmp != undefined)
+            {
               let queryParams_array: any = queryParams_tmp.split('&');
-              for (let m = 0; m < queryParams_array.length; m++) {
+              for (let m = 0; m < queryParams_array.length; m++)
+              {
                 let tmp_one_query = queryParams_array[m].split('=');
                 query_params[tmp_one_query[0]] = decodeURIComponent(tmp_one_query[1]);
               }
             }
-            if (data.data.UserData.useris_password_temp == false) {
+            if (data.data.UserData.useris_password_temp == false)
+            {
               if (data.data.UserData.role_name != configdata.EMPLOYEE) { that.loginHistory(data.data.UserData); }
               that.snackbarservice.openSnackBar(that.Login_Form_Login_Successfully, 'success');
               that.router.navigate([url_array[0]], { queryParams: query_params });
             }
-            else {
+            else
+            {
               if (data.data.UserData.role_name != configdata.EMPLOYEE) { that.loginHistory(data.data.UserData); }
               that.snackbarservice.openSnackBar(that.Login_Form_Login_Success_Reset_Password, 'success');
               that.router.navigateByUrl('/forcefully-changepassword');
             }
           }
-        } else {
+        } else
+        {
           that.snackbarservice.openSnackBar(data.message, 'error');
           that.uiSpinner.spin$.next(false);
         }
@@ -177,23 +190,28 @@ export class PortalLoginFormComponent implements OnInit {
   }
   langurl() {
     let portal_language = localStorage.getItem(localstorageconstants.LANGUAGE);
-    if (portal_language == 'en') {
+    if (portal_language == 'en')
+    {
       window.open('https://www.rovuk.us/mobile-terms-of-service-2', '_blank');
-    } else if (portal_language == 'es') {
+    } else if (portal_language == 'es')
+    {
       window.open('https://www.rovuk.us/mobile-terms-of-service-es', '_blank');
-    } else {
+    } else
+    {
       window.open('https://www.rovuk.us/mobile-terms-of-service-2', '_blank');
     }
   }
 
   somethingChanged(element: any) {
-    if (typeof element == "string") {
+    if (typeof element == "string")
+    {
       let tmp_formant = element;
       let split_string = tmp_formant.split(".");
       let find_number_only = split_string[0].replace(/[^0-9 ]/g, "");
       this.check_curr = this.currencyPipe.transform(find_number_only, '$');
       let tmp_solit = this.check_curr.split(".");
-      if (split_string[1]) {
+      if (split_string[1])
+      {
         tmp_solit[1] = split_string[1];
       }
       this.check_curr = tmp_solit.join(".");

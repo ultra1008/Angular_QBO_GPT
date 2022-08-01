@@ -72,6 +72,7 @@ import { CostCodeComponent } from './cost-code/cost-code.component';
 import { TermsComponent } from './ocps-settings/terms/terms.component';
 import { TaxRateComponent } from './ocps-settings/tax-rate/tax-rate.component';
 import { DocumentsComponent } from './ocps-settings/documents/documents.component';
+import { SettingsSecurityComponent } from './settings-security/settings-security.component';
 
 const maskConfig: Partial<IConfig> = {
   validation: false,
@@ -121,6 +122,7 @@ const maskConfig: Partial<IConfig> = {
     TermsComponent,
     TaxRateComponent,
     DocumentsComponent,
+    SettingsSecurityComponent,
   ],
 
   imports: [

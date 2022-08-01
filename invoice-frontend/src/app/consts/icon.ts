@@ -151,5 +151,8 @@ export enum icon {
     USAGE = "./assets/diversityicon/usage.png",
     USAGE_WHITE = "./assets/diversityicon/usage_white.png",
     COSTCODE = "./assets/diversityicon/costcode.png",
-    COSTCODE_WHITE = "./assets/diversityicon/costcode_white.png"
+    COSTCODE_WHITE = "./assets/diversityicon/costcode_white.png",
+    SECURITY_SETTINGS = "./assets/diversityicon/thememode/security_settings.png",
+    SECURITY_SETTINGS_WHITE = "./assets/diversityicon/darkmode/security_settings_white.png",
+
 }
