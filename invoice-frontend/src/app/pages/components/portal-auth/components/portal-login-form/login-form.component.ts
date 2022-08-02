@@ -12,6 +12,7 @@ import { UiSpinnerService } from 'src/app/service/spinner.service';
 import { HttpCall } from 'src/app/service/httpcall.service';
 import { CurrencyPipe } from '@angular/common';
 import { configdata } from 'src/environments/configData';
+import { AppComponent } from 'src/app/app.component';
 @Component({
   selector: 'app-login-form',
   templateUrl: './login-form.component.html',
@@ -36,7 +37,7 @@ export class PortalLoginFormComponent implements OnInit {
     this.hide = !this.hide;
   }
 
-  constructor(private deviceService: DeviceDetectorService, private metaService: Meta, private titleService: Title,
+  constructor(private deviceService: DeviceDetectorService, private metaService: Meta, public myapp: AppComponent, private titleService: Title,
     public translate: TranslateService, public authservice: PortalAuthService, private router: Router,
     public httpCall: HttpCall, private currencyPipe: CurrencyPipe,
     private route: ActivatedRoute, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService) {
@@ -101,6 +102,7 @@ export class PortalLoginFormComponent implements OnInit {
           localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.data));
           localStorage.setItem(localstorageconstants.SUPPLIERID, data.data.companydata._id);
           localStorage.setItem('logout', 'false');
+          that.myapp.updateIdealTimeout();
           sessionStorage.setItem(localstorageconstants.USERTYPE, "sponsor-portal");
           localStorage.setItem(localstorageconstants.USERTYPE, "sponsor-portal");
 

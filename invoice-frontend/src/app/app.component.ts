@@ -54,8 +54,8 @@ export class AppComponent implements OnInit {
             // sets an idle timeout of 1 min, for testing purposes.
             console.log('If 2');
             that.idle.setIdle(params.data.settings.Auto_Log_Off.setting_value); // Change this time from the settings
-            // sets a timeout period of 10 seconds. after 10 seconds of inactivity, the user will be considered timed out.
-            that.idle.setTimeout(10);
+            // sets a timeout period of 30 seconds. after 30 seconds of inactivity, the user will be considered timed out.
+            that.idle.setTimeout(30);
             // sets the default interrupts, in this case, things like clicks, scrolls, touches to the document
             that.idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
 
@@ -80,9 +80,11 @@ export class AppComponent implements OnInit {
               // });
               // that.dialogRef.afterClosed().subscribe(result => {
               // });
-
+              let val = params.data.settings.Auto_Log_Off.setting_value;
+              console.log('===== val ======', val);
+              let message = "You have been idle for more than " + val + " minute. You will be logged out in 30 seconds";
               swalWithBootstrapButtons.fire({
-                title: "Your screen has been idle for a while.",
+                title: message,
                 showDenyButton: true,
                 showCancelButton: false,
                 confirmButtonText: "Logout",
@@ -147,7 +149,9 @@ export class AppComponent implements OnInit {
     {
       that.uiSpinner.spin$.next(false);
       localStorage.setItem('logout', 'true');
-      that.router.navigateByUrl('/login');
+      setTimeout(() => {
+        that.router.navigateByUrl('/login');
+      }, 100);
     }
   }
 
@@ -181,7 +185,9 @@ export class AppComponent implements OnInit {
             that.snackbarservice.openSnackBar(params.message, "success");
             that.uiSpinner.spin$.next(false);
             localStorage.setItem('logout', 'true');
-            that.router.navigateByUrl('/login');
+            setTimeout(() => {
+              that.router.navigateByUrl('/login');
+            }, 100);
           }
           else
           {

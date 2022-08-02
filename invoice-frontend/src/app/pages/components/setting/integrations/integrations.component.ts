@@ -28,17 +28,21 @@ export class IntegrationsComponent implements OnInit {
 
     var modeLocal = localStorage.getItem('darkmood');
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off') {
+    if (this.mode == 'off')
+    {
       this.backIcon = icon.BACK;
-    } else {
+    } else
+    {
       this.backIcon = icon.BACK_WHITE;
     }
     let j = 0;
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode) {
+      if (mode)
+      {
         this.mode = 'off';
         this.backIcon = icon.BACK;
-      } else {
+      } else
+      {
         this.mode = 'on';
         this.backIcon = icon.BACK_WHITE;
       }
@@ -49,10 +53,11 @@ export class IntegrationsComponent implements OnInit {
 
   ngOnInit(): void {
     let that = this;
-    let userData = JSON.parse(localStorage.getItem("userdata")??'');
+    let userData = JSON.parse(localStorage.getItem("userdata") ?? '');
 
-    this.httpCall.httpPostCall(httproutes.PORTAL_SETTING_SMTP, { _id: userData.companydata._id }).subscribe(function (params) {
-      if (params.status) {
+    this.httpCall.httpGetCall(httproutes.PORTAL_SETTING_SMTP).subscribe(function (params) {
+      if (params.status)
+      {
         that.integrationinfo = that.formBuilder.group({
           quickbooks_client_id: [params.data.quickbooks_client_id, Validators.required],
           quickbooks_client_secret: [params.data.quickbooks_client_secret, Validators.required],
@@ -96,13 +101,16 @@ export class IntegrationsComponent implements OnInit {
     let that = this;
     let userData = JSON.parse(localStorage.getString("userdata"));
 
-    if (this.integrationinfo.valid) {
+    if (this.integrationinfo.valid)
+    {
       let reqObject = this.integrationinfo.value;
       reqObject._id = userData.companydata._id;
       this.httpCall.httpPostCall(httproutes.PORTAL_SETTING_QUICKBOOK_UPDATE, reqObject).subscribe(function (params) {
-        if (params.status) {
+        if (params.status)
+        {
           that.snackbarservice.openSnackBar(params.message, "success");
-        } else {
+        } else
+        {
           that.snackbarservice.openSnackBar(params.message, "error");
         }
       });
