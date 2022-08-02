@@ -1,16 +1,21 @@
 <div class="container-fluid">
-    <div class="row" cdkDropList (cdkDropListDropped)="drop($event)">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-4" *ngFor="let timePeriod of timePeriods" cdkDrag>
-            <!-- <app-totalprojectvalue *ngIf="timePeriod == 'app-totalprojectvalue'"></app-totalprojectvalue>
-            <app-dailyreport-by-status *ngIf="timePeriod == 'app-dailyreport-by-status'"></app-dailyreport-by-status>
-            <app-contractvalue-by-prime *ngIf="timePeriod == 'app-contractvalue-by-prime'"></app-contractvalue-by-prime>
-            <app-totalnumber-discipline *ngIf="timePeriod == 'app-totalnumber-discipline'"></app-totalnumber-discipline>
-            <app-totalContractvalueMinority *ngIf="timePeriod == 'app-totalContractvalueMinority'">
-            </app-totalContractvalueMinority>
-            <app-totalvalueby-minority *ngIf="timePeriod == 'app-totalvalueby-minority'"></app-totalvalueby-minority>
-            <app-totalminority-contract *ngIf="timePeriod == 'app-totalminority-contract'"></app-totalminority-contract>
-            <app-paymentperproject *ngIf="timePeriod == 'app-paymentperproject'"></app-paymentperproject> -->
-            <h1>Dashboard screen</h1>
+
+    <div class="row">
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="card">
+                <div class="card-body p-3">
+                    <div class="row">
+                        <div class="col-10">
+                            <div class="numbers mt-2">
+                                <p class="text-sm text-capitalize font-weight-bold">Today's Money</p>
+                            </div>
+                        </div>
+                        <div class="col-1 text-end">
+                            <div class="mrg">1</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
