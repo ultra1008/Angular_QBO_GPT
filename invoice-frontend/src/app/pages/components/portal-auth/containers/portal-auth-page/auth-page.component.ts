@@ -10,6 +10,7 @@ import { HttpCall } from 'src/app/service/httpcall.service';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
 import { Subscription, timer } from 'rxjs';
 import { checkRoutePermission, longDate } from 'src/app/service/utils';
+import { AppComponent } from 'src/app/app.component';
 
 @Component({
   selector: 'app-auth-page',
@@ -43,7 +44,8 @@ export class AuthPageComponent implements OnInit {
   otpTimer: any;
   subscription!: Subscription;
 
-  constructor(public httpCall: HttpCall, private service: PortalAuthService, private router: Router, public uiSpinner: UiSpinnerService,
+  constructor(public httpCall: HttpCall, private service: PortalAuthService, private router: Router,
+    public myapp: AppComponent, public uiSpinner: UiSpinnerService,
     public translate: TranslateService, public authservice: PortalAuthService, public snackbarservice: Snackbarservice) {
     this.translate.stream(['']).subscribe((textarray) => {
       this.Auth_Page_Reset_Successfully = this.translate.instant('Auth_Page_Reset_Successfully');
@@ -252,7 +254,10 @@ export class AuthPageComponent implements OnInit {
             localStorage.setItem(localstorageconstants.SUPPLIERID, params.data.companydata._id);
             sessionStorage.setItem(localstorageconstants.USERTYPE, "sponsor-portal");
             localStorage.setItem(localstorageconstants.USERTYPE, "sponsor-portal");
+
+
             localStorage.setItem('logout', 'false');
+            that.myapp.updateIdealTimeout();
 
             if (params.data.UserData.role_name != configdata.EMPLOYEE)
             {
