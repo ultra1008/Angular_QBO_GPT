@@ -82,13 +82,15 @@ export class AppComponent implements OnInit {
               // });
               let val = params.data.settings.Auto_Log_Off.setting_value;
               console.log('===== val ======', val);
-              let message = "You have been idle for more than " + val + " minute. You will be logged out in 30 seconds";
+              let message = "Your Rovuk session will end in " + val + " minutes due to inactivity.";
+              let htmlData = "As a security precaution, if there is no additional activity in your ROVUK session, the session will end and you will be brought to the login page.</br></br>If you are still working please click OK to continue.";
               swalWithBootstrapButtons.fire({
                 title: message,
+                html: htmlData,
                 showDenyButton: true,
                 showCancelButton: false,
                 confirmButtonText: "Logout",
-                denyButtonText: "Stay",
+                denyButtonText: "OK",
                 allowOutsideClick: false
               }).then((result) => {
                 if (result.isConfirmed)
@@ -144,6 +146,7 @@ export class AppComponent implements OnInit {
     let userdata = JSON.parse(localStorage.getItem('userdata') ?? '');
     if (userdata.UserData.role_name != configdata.EMPLOYEE)
     {
+      that.uiSpinner.spin$.next(false);
       that.logoutHistory();
     } else
     {

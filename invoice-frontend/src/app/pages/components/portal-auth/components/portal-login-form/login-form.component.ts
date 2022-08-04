@@ -102,9 +102,10 @@ export class PortalLoginFormComponent implements OnInit {
           localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.data));
           localStorage.setItem(localstorageconstants.SUPPLIERID, data.data.companydata._id);
           localStorage.setItem('logout', 'false');
-          that.myapp.updateIdealTimeout();
+
           sessionStorage.setItem(localstorageconstants.USERTYPE, "sponsor-portal");
           localStorage.setItem(localstorageconstants.USERTYPE, "sponsor-portal");
+          that.myapp.updateIdealTimeout();
 
           that.uiSpinner.spin$.next(false);
           if (that.returnUrl == null)
