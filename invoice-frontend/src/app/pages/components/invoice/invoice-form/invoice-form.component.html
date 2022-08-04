@@ -1,0 +1,79 @@
+<div class="wrapper-cust-admin">
+    <div class="row mb-2">
+        <div class="col-10 dialog-head-left">
+            <!-- <h2 mat-dialog-title> {{'Add-Category-Form-Header' | translate}}</h2> -->
+        </div>
+        <!-- <div class="col-8 dialog-head-center">
+                
+            </div> -->
+        <div class="col-2 dialog-head-right">
+            <button class="import-export-btn-datatable cust-margin-div" matTooltip="{{ 'All-exit' | translate }}">
+                <img src="{{exitIcon}}" alt="" class="far fa-paper-plane" height="20px">
+            </button>
+        </div>
+    </div>
+    <mat-card class="example-card">
+        <div class="head-text" [ngClass]="mode == 'on'? 'carddark' : 'cardlight'">
+            <h3 class="editing" *ngIf="showHeader">{{'Email_template_form_header' | translate}}
+            </h3>
+        </div>
+        <div class="container">
+            <!-- <div> -->
+            <form class="form" [formGroup]="emailTemplateInfo">
+                <div class="main-cust-image">
+                    <div>
+                        <mat-form-field class="main-one-input-field" appearance="outline">
+                            <mat-label>{{'Email_template_Name_Desc' | translate}}</mat-label>
+                            <input matInput required class="input-capitalized-textfield"
+                                placeholder="{{'Email_template_Name_Desc' | translate}}"
+                                formControlName="email_template_name" />
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-form-field class="main-one-input-field" appearance="outline">
+                            <mat-label>{{'Email_template_Header' | translate}}</mat-label>
+                            <input matInput required placeholder="{{'Email_template_Header' | translate}}"
+                                formControlName="email_header">
+                        </mat-form-field>
+                    </div>
+
+
+                    <div>
+                        <mat-form-field class="main-one-input-field" appearance="outline">
+                            <mat-label>{{'Sponsor_Email_Template_Subject' | translate}}</mat-label>
+                            <input matInput required class="input-capitalized-textfield"
+                                placeholder="{{'Sponsor_Email_Template_Subject' | translate}}"
+                                formControlName="email_subject" />
+                        </mat-form-field>
+                    </div>
+
+                    <div>
+                        <mat-form-field class="main-one-input-field" appearance="outline">
+                            <mat-label>{{'Email_template_Body' | translate}}</mat-label>
+                            <textarea matInput required appTextareaAutoresizeproject class="input-capitalized-textArea"
+                                placeholder="{{'Email_template_Body' | translate}}"
+                                formControlName="email_body"></textarea>
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-form-field class="main-one-input-field" appearance="outline">
+                            <mat-label>{{'Email_template_Footer' | translate}}</mat-label>
+                            <textarea matInput required appTextareaAutoresizeproject class="input-capitalized-textArea"
+                                placeholder="{{'Email_template_Footer' | translate}}"
+                                formControlName="email_footer"></textarea>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="cust-center-save pb-3">
+                    <button mat-raised-button class="cust-button-form"><img src="{{backIcon}}" alt="" class="pr-1"
+                            height="15px">{{'All-back' |
+                        translate}}</button>
+                    <button mat-raised-button color="primary" class="cust-button-form"><img src="{{saveIcon}}" alt=""
+                            class="pr-1" height="15px">{{'All-save' | translate
+                        }}</button>
+                </div>
+            </form>
+            <!-- </div> -->
+        </div>
+    </mat-card>
+</div>
