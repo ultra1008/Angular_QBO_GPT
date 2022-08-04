@@ -12,10 +12,21 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
+import { Label } from 'ng2-charts';
 import { httproutes, localstorageconstants } from 'src/app/consts';
 import { HttpCall } from 'src/app/service/httpcall.service';
 import { configdata } from 'src/environments/configData';
 
+var chartColors = {
+  red: '#f50000',
+  orange: 'rgb(255, 159, 64)',
+  yellow: '#dbdb06',
+  green: '#07b536',
+  blue: '#0735b5',
+  purple: 'rgb(153, 102, 255)',
+  grey: 'rgb(231,233,237)'
+};
 @Component({
   selector: 'app-ocps-dashboard',
   templateUrl: './ocps-dashboard.component.html',
@@ -32,6 +43,68 @@ export class OcpsDashboardComponent implements OnInit {
     "app-totalminority-contract",
     "app-totalContractvalueMinority",
     "app-paymentperproject"
+  ];
+
+
+  public barChartOptions: ChartOptions = {
+    responsive: true,
+    showLines: false,
+    plugins: {
+      //   legend: {
+      //     display: true,
+      //   },
+      //   datalabels: {
+      //     color: 'white',
+      //     anchor: 'center',
+      //     align: 'center',
+
+      //   }
+    },
+    // tooltips: {
+    //   callbacks: {
+    //     label: function (tooltipItem, data) {
+    //       let x = (parseFloat(tooltipItem.value ?? '')).toLocaleString('en-US', {
+    //         style: 'currency',
+    //         currency: 'USD',
+    //       });
+    //       return `Amount: ${x}`;
+    //     }
+    //   }
+    // },
+    scales: {
+      yAxes: [{
+        ticks: {
+          // stepSize: 10,
+          min: 0,
+        },
+      }],
+      xAxes: [{
+        ticks: {
+          autoSkip: false,
+          // callback: function (value, index, values) {
+          //   return (value).toLocaleString('en-US', {
+          //     style: 'currency',
+          //     currency: 'USD',
+          //   });
+          // }
+        }
+      }],
+    }
+  };
+
+  public barChartLabels: Label[] = [];
+  public barChartType: ChartType = 'horizontalBar';
+  public barChartLegend = false;
+  public barChartPlugins = [];
+
+  public barChartData: ChartDataSets[] = [
+    { data: [12, 10], label: 'Received', },
+    { data: [13, 12], label: 'Processed', },
+    { data: [14, 15], label: 'Cancelled', },
+    { data: [15, 16], label: 'Approved invoices', },
+    { data: [16, 17], label: 'Rejected invoices', },
+    { data: [17, 18], label: 'Late invoices', },
+    { data: [18, 19], label: 'Reports', },
   ];
 
   /*
