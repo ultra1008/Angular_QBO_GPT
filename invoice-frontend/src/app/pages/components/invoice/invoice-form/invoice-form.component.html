@@ -14,66 +14,74 @@
     </div>
     <mat-card class="example-card">
         <div class="head-text" [ngClass]="mode == 'on'? 'carddark' : 'cardlight'">
-            <h3 class="editing" *ngIf="showHeader">{{'Email_template_form_header' | translate}}
+            <h3 class="editing"> Invoice Details
             </h3>
         </div>
         <div class="container">
-            <!-- <div> -->
-            <form class="form" [formGroup]="emailTemplateInfo">
-                <div class="main-cust-image">
-                    <div>
-                        <mat-form-field class="main-one-input-field" appearance="outline">
-                            <mat-label>{{'Email_template_Name_Desc' | translate}}</mat-label>
-                            <input matInput required class="input-capitalized-textfield"
-                                placeholder="{{'Email_template_Name_Desc' | translate}}"
-                                formControlName="email_template_name" />
-                        </mat-form-field>
-                    </div>
-                    <div>
-                        <mat-form-field class="main-one-input-field" appearance="outline">
-                            <mat-label>{{'Email_template_Header' | translate}}</mat-label>
-                            <input matInput required placeholder="{{'Email_template_Header' | translate}}"
-                                formControlName="email_header">
-                        </mat-form-field>
-                    </div>
+            <div class="row">
+                <div class="col-6">
+                    <form class="form" [formGroup]="emailTemplateInfo">
+                        <div class="main-cust-image">
+                            <div>
+                                <mat-form-field class="main-one-input-field" appearance="outline">
+                                    <mat-label>Assign to</mat-label>
+                                    <input matInput required class="input-capitalized-textfield" placeholder="Assign to"
+                                        formControlName="assign_to" />
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field class="main-one-input-field" appearance="outline">
+                                    <mat-label>Vendor Name</mat-label>
+                                    <input matInput required placeholder="Vendor Name" formControlName="vendor_name">
+                                </mat-form-field>
+                            </div>
 
 
-                    <div>
-                        <mat-form-field class="main-one-input-field" appearance="outline">
-                            <mat-label>{{'Sponsor_Email_Template_Subject' | translate}}</mat-label>
-                            <input matInput required class="input-capitalized-textfield"
-                                placeholder="{{'Sponsor_Email_Template_Subject' | translate}}"
-                                formControlName="email_subject" />
-                        </mat-form-field>
-                    </div>
+                            <div>
+                                <mat-form-field class="main-one-input-field" appearance="outline">
+                                    <mat-label>Vendor ID</mat-label>
+                                    <input matInput required class="input-capitalized-textfield" placeholder="Vendor ID"
+                                        formControlName="vendor_id" />
+                                </mat-form-field>
+                            </div>
 
-                    <div>
-                        <mat-form-field class="main-one-input-field" appearance="outline">
-                            <mat-label>{{'Email_template_Body' | translate}}</mat-label>
-                            <textarea matInput required appTextareaAutoresizeproject class="input-capitalized-textArea"
-                                placeholder="{{'Email_template_Body' | translate}}"
-                                formControlName="email_body"></textarea>
-                        </mat-form-field>
-                    </div>
-                    <div>
-                        <mat-form-field class="main-one-input-field" appearance="outline">
-                            <mat-label>{{'Email_template_Footer' | translate}}</mat-label>
-                            <textarea matInput required appTextareaAutoresizeproject class="input-capitalized-textArea"
-                                placeholder="{{'Email_template_Footer' | translate}}"
-                                formControlName="email_footer"></textarea>
-                        </mat-form-field>
-                    </div>
+                            <div>
+                                <mat-form-field class="main-one-input-field" appearance="outline">
+                                    <mat-label>Customer ID</mat-label>
+                                    <input matInput required class="input-capitalized-textfield" placeholder="Customer ID"
+                                        formControlName="customer_id" />
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field class="main-one-input-field" appearance="outline">
+                                    <mat-label>Invoice #</mat-label>
+                                    <input matInput required class="input-capitalized-textfield" placeholder="Invoice #"
+                                        formControlName="Invoice_has" />
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field class="main-one-input-field" appearance="outline">
+                                    <mat-label>P.O #</mat-label>
+                                    <input matInput required class="input-capitalized-textfield" placeholder="P.O #"
+                                        formControlName="po_has" />
+                                </mat-form-field>
+                            </div>
+                            
+                            
+                            
+                        </div>
+                        <div class="cust-center-save pb-3">
+                            <button mat-raised-button class="cust-button-form"><img src="{{backIcon}}" alt=""
+                                    class="pr-1" height="15px">{{'All-back' |
+                                translate}}</button>
+                            <button mat-raised-button color="primary" class="cust-button-form"><img src="{{saveIcon}}"
+                                    alt="" class="pr-1" height="15px">{{'All-save' | translate
+                                }}</button>
+                        </div>
+                    </form>
+                    <!-- </div> -->
                 </div>
-                <div class="cust-center-save pb-3">
-                    <button mat-raised-button class="cust-button-form"><img src="{{backIcon}}" alt="" class="pr-1"
-                            height="15px">{{'All-back' |
-                        translate}}</button>
-                    <button mat-raised-button color="primary" class="cust-button-form"><img src="{{saveIcon}}" alt=""
-                            class="pr-1" height="15px">{{'All-save' | translate
-                        }}</button>
-                </div>
-            </form>
-            <!-- </div> -->
+            </div>
         </div>
     </mat-card>
 </div>

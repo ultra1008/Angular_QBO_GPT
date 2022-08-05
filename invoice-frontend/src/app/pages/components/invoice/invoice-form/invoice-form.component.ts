@@ -67,11 +67,13 @@ export class InvoiceFormComponent implements OnInit {
 
 
     this.emailTemplateInfo = this.formBuilder.group({
-      email_template_name: ["", [Validators.required, Validators.pattern('^[a-zA-Z0-9_-\\s]+$')]],
-      email_header: ["", Validators.required],
-      email_subject: ["", Validators.required],
-      email_body: ["", Validators.required],
-      email_footer: ["", Validators.required]
+      assign_to: ["", [Validators.required]],
+      vendor_name: ["", Validators.required],
+      vendor_id: ["", Validators.required],
+      customer_id: ["", Validators.required],
+      Invoice_has: ["", Validators.required],
+      po_has: ["", Validators.required],
+      invoice_ate: ["", Validators.required]
     });
 
 
