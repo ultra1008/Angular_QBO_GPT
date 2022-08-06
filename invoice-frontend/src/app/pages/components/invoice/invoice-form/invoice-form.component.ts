@@ -73,7 +73,21 @@ export class InvoiceFormComponent implements OnInit {
       customer_id: ["", Validators.required],
       Invoice_has: ["", Validators.required],
       po_has: ["", Validators.required],
-      invoice_ate: ["", Validators.required]
+      invoice_date: ["", Validators.required],
+      due_date: ["", Validators.required],
+      order_date: ["", Validators.required],
+      ship_date: ["", Validators.required],
+      terms: ["", Validators.required],
+      total_paid: ["", Validators.required],
+      tax_rate: ["", Validators.required],
+      tax_amount: ["", Validators.required],
+      tax_id: ["", Validators.required],
+      sub_total: ["", Validators.required],
+      amount_due: ["", Validators.required],
+      cost_code: ["", Validators.required],
+      gl_account: ["", Validators.required],
+      receiv_date: ["", Validators.required],
+      notes: ["", Validators.required]
     });
 
 
@@ -97,6 +111,10 @@ export class InvoiceFormComponent implements OnInit {
         this.exitIcon = icon.CANCLE_WHITE;
       }
     });
+  }
+
+  back() {
+    this.location.back();
   }
 
   ngOnInit(): void {
