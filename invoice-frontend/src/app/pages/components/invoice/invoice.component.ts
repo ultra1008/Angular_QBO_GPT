@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { icon, localstorageconstants } from 'src/app/consts';
 
@@ -10,7 +11,7 @@ import { icon, localstorageconstants } from 'src/app/consts';
 export class InvoiceComponent implements OnInit {
   mode: any;
   add_my_self_icon = icon.ADD_MY_SELF_WHITE;
-  constructor() {
+  constructor(private router: Router) {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
   }
@@ -18,4 +19,7 @@ export class InvoiceComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  openform() {
+    this.router.navigate(['/invoice-form']);
+  }
 }

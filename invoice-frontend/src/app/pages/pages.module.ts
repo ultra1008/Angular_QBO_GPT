@@ -83,6 +83,7 @@ import { TermsComponent, TermsForm } from './components/setting/ocps-settings/te
 import { TaxRateComponent, TaxRateForm } from './components/setting/ocps-settings/tax-rate/tax-rate.component';
 import { DocumentForm, DocumentsComponent } from './components/setting/ocps-settings/documents/documents.component';
 import { SettingsSecurityComponent } from './components/setting/settings-security/settings-security.component';
+import { InvoiceFormComponent } from './components/invoice/invoice-form/invoice-form.component';
 
 
 
@@ -145,7 +146,8 @@ import { SettingsSecurityComponent } from './components/setting/settings-securit
     DocumentForm,
     ImOtherDownload,
     ImportOther,
-    SettingsSecurityComponent
+    SettingsSecurityComponent,
+    InvoiceFormComponent
   ],
   imports: [
     PortalModule,
