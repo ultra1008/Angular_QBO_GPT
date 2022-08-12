@@ -220,7 +220,8 @@ export class EmployeeViewComponent implements OnInit {
       this.Action = this.translate.instant('All-Action');
       this.All_Remove = this.translate.instant('All_Remove');
 
-      if (i != 0) {
+      if (i != 0)
+      {
         setTimeout(() => {
           this.rerenderfunc();
         }, 1000);
@@ -230,7 +231,8 @@ export class EmployeeViewComponent implements OnInit {
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off') {
+    if (this.mode == 'off')
+    {
       this.historyIcon = icon.HISTORY;
       this.archivedIcon = icon.ARCHIVE;
       this.backIcon = icon.BACK;
@@ -241,7 +243,8 @@ export class EmployeeViewComponent implements OnInit {
       this.trashIcon = icon.TRASH;
       this.rerenderfunc();
 
-    } else {
+    } else
+    {
       this.historyIcon = icon.HISTORY_WHITE;
       this.archivedIcon = icon.ARCHIVE_WHITE;
       this.backIcon = icon.BACK_WHITE;
@@ -253,7 +256,8 @@ export class EmployeeViewComponent implements OnInit {
       this.rerenderfunc();
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode) {
+      if (mode)
+      {
         this.mode = 'off';
         this.historyIcon = icon.HISTORY;
         this.archivedIcon = icon.ARCHIVE;
@@ -264,7 +268,8 @@ export class EmployeeViewComponent implements OnInit {
         this.nextIcon = icon.NEXT;
         this.trashIcon = icon.TRASH;
         this.rerenderfunc();
-      } else {
+      } else
+      {
         this.mode = 'on';
         this.historyIcon = icon.HISTORY_WHITE;
         this.archivedIcon = icon.ARCHIVE_WHITE;
@@ -337,12 +342,14 @@ export class EmployeeViewComponent implements OnInit {
     var company_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
     this.company_logo = company_data.companydata.companylogo;
     //this.userfullName = company_data.UserData.userfullname;
-    if (this.router.getCurrentNavigation()!.extras.state) {
+    if (this.router.getCurrentNavigation()!.extras.state)
+    {
       this.step_index = Number(this.router.getCurrentNavigation()!.extras.state!.value);
     }
 
 
-    if (this.route.snapshot.queryParamMap.get('tab_index') != null) {
+    if (this.route.snapshot.queryParamMap.get('tab_index') != null)
+    {
       this.step_index = Number(this.route.snapshot.queryParamMap.get('tab_index'));
     }
   }
@@ -370,7 +377,8 @@ export class EmployeeViewComponent implements OnInit {
   getspokenLanguage() {
     let that = this;
     that.httpCall.httpGetCall(httproutes.OTHER_LANGUAGE_GET).subscribe(function (params) {
-      if (params.status) {
+      if (params.status)
+      {
         that.languageList = params.data;
       }
     });
@@ -382,14 +390,17 @@ export class EmployeeViewComponent implements OnInit {
 
   saveIDcard() {
     let that = this;
-    if (that.idcardinfo.valid) {
+    if (that.idcardinfo.valid)
+    {
       let req_temp = that.idcardinfo.value; req_temp._id = that.user_id;
       that.uiSpinner.spin$.next(true);
       that.httpCall.httpPostCall(httproutes.ID_CARD_SAVE, req_temp).subscribe(function (params_new) {
-        if (params_new.status) {
+        if (params_new.status)
+        {
           that.sb.openSnackBar(params_new.message, "success");
           that.uiSpinner.spin$.next(false);
-        } else {
+        } else
+        {
           that.sb.openSnackBar(params_new.message, "error");
           that.uiSpinner.spin$.next(false);
         }
@@ -471,24 +482,30 @@ export class EmployeeViewComponent implements OnInit {
     };
     let that = this;
     that.role_name = userdata.UserData.role_name;
-    if (this.route.snapshot.paramMap.get('idparms') != null) {
+    if (this.route.snapshot.paramMap.get('idparms') != null)
+    {
       this.user_id = this.route.snapshot.paramMap.get('idparms');
       this.mostusedservice.getOneUser({ _id: this.user_id }).subscribe(function (data) {
-        if (data.status) {
-          if (data.data != null) {
+        if (data.status)
+        {
+          if (data.data != null)
+          {
             that.user_data = data.data;
 
-            if (that.user_data.userpicture != "") {
+            if (that.user_data.userpicture != "")
+            {
               that.isUserImg = true;
               that.defalut_image = that.user_data.userpicture;
             }
 
-            if (that.user_data.usermobile_picture != "") {
+            if (that.user_data.usermobile_picture != "")
+            {
               that.defalut_image_mobile = that.user_data.usermobile_picture;
             }
 
             let complianceOfficer = "false";
-            if (that.user_data.compliance_officer) {
+            if (that.user_data.compliance_officer)
+            {
               complianceOfficer = that.user_data.compliance_officer.toString();
             }
 
@@ -511,13 +528,16 @@ export class EmployeeViewComponent implements OnInit {
               allow_for_projects: [that.user_data.allow_for_projects]
             });
 
-            if (that.role_name == configdata.ROLE_ADMIN) {
+            if (that.role_name == configdata.ROLE_ADMIN)
+            {
               that.userpersonalinfo.get('userroleId')!.setValidators([Validators.required]);
               that.userpersonalinfo.get('userroleId')!.updateValueAndValidity();
-            } else {
+            } else
+            {
               that.is_role_disabled = true;
             }
-            if (that.user_data.is_first) {
+            if (that.user_data.is_first)
+            {
               that.is_role_disabled = true;
             }
             that.usercontactinfo = that.formBuilder.group({
@@ -555,10 +575,12 @@ export class EmployeeViewComponent implements OnInit {
             });
 
 
-          } else {
+          } else
+          {
             that.router.navigateByUrl('/employee-list');
           }
-        } else {
+        } else
+        {
 
           that.router.navigateByUrl('/employee-list');
         }
@@ -602,7 +624,8 @@ export class EmployeeViewComponent implements OnInit {
 
       let userData = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
       this.httpCall.httpPostCall(httproutes.PORTAL_SETTING_COMPANY_GET, { _id: userData.companydata._id }).subscribe(function (params) {
-        if (params.status) {
+        if (params.status)
+        {
           that.companywebsite = params.data.companywebsite;
           that.companyname = params.data.companyname;
           that.companyaddress = params.data.companyaddress;
@@ -614,12 +637,14 @@ export class EmployeeViewComponent implements OnInit {
     }
 
     this.mostusedservice.getAllRoles().subscribe(function (data) {
-      if (data.status) {
+      if (data.status)
+      {
         that.db_roles = data.data;
         that.db_roles.forEach((element: any) => { });
         var reqObject = {};
         that.mostusedservice.getSpecificUsers(reqObject).subscribe(function (user_data) {
-          if (user_data.status) {
+          if (user_data.status)
+          {
             that.db_manager_users = user_data.data;
             that.db_supervisor_users = user_data.data;
           }
@@ -630,37 +655,43 @@ export class EmployeeViewComponent implements OnInit {
 
 
     this.mostusedservice.getAlljobtitle().subscribe(function (data) {
-      if (data.status) {
+      if (data.status)
+      {
         that.db_jobtitle = data.data;
       }
     });
 
     this.mostusedservice.getAlljobtype().subscribe(function (data) {
-      if (data.status) {
+      if (data.status)
+      {
         that.db_jobtype = data.data;
       }
     });
 
     this.mostusedservice.getAllpayroll_group().subscribe(function (data) {
-      if (data.status) {
+      if (data.status)
+      {
         that.db_payroll_group = data.data;
       }
     });
 
     this.mostusedservice.getAllDocumentType().subscribe(function (data) {
-      if (data.status) {
+      if (data.status)
+      {
         that.db_Doc_types = data.data;
       }
     });
 
     this.mostusedservice.getAllLocation().subscribe(function (data) {
-      if (data.status) {
+      if (data.status)
+      {
         that.db_locations = data.data;
       }
     });
 
     this.mostusedservice.getAllDepartment().subscribe(function (data) {
-      if (data.status) {
+      if (data.status)
+      {
         that.db_Departmaents = data.data;
       }
     });
@@ -677,7 +708,8 @@ export class EmployeeViewComponent implements OnInit {
     let that = this;
     that.uiSpinner.spin$.next(true);
     let data = await that.httpCall.httpPostCall(httproutes.PORTAL_SAVE_PROJECT_USER, requestObject).toPromise();
-    if (data.status) {
+    if (data.status)
+    {
       that.uiSpinner.spin$.next(false);
       that.snackbarservice.openSnackBar(data.message, "success");
       $('#dtOptions_UsersProject').DataTable().ajax.reload(() => { }, false);
@@ -686,7 +718,8 @@ export class EmployeeViewComponent implements OnInit {
       setTimeout(() => {
         this.showUserProjectTable = true;
       }, 100);
-    } else {
+    } else
+    {
       that.uiSpinner.spin$.next(false);
       that.snackbarservice.openSnackBar(data.message, "error");
     }
@@ -751,7 +784,8 @@ export class EmployeeViewComponent implements OnInit {
             created_at: full.created_at,
           };
           let edit = '';
-          if (that.role_permission_tab.employeeProjectAccess.Edit) {
+          if (that.role_permission_tab.employeeProjectAccess.Edit)
+          {
             edit = `<a edit_tmp_id=` + JSON.stringify(tmp_tmp) + ` class="button_removeProjectUserClass"><img src="` + that.deleteIcon + `" alt="" class="" height="15px">` + that.All_Remove + `</a>`;
           }
           return `
@@ -906,7 +940,8 @@ export class EmployeeViewComponent implements OnInit {
     let that = this;
     that.httpCall.httpPostCall(httproutes.PORTAL_COMPANY_COSTCODE_GET,
       { module: that.Employee }).subscribe(function (params) {
-        if (params.status) {
+        if (params.status)
+        {
           that.db_costcodes = params.data;
         }
       });
@@ -915,7 +950,8 @@ export class EmployeeViewComponent implements OnInit {
   getAllCreditCard() {
     let that = this;
     that.httpCall.httpGetCall(httproutes.OTHER_SETTING_CREDIT_CARD_GET).subscribe(function (params) {
-      if (params.status) {
+      if (params.status)
+      {
         that.credit_card_types = params.data;
       }
     });
@@ -925,9 +961,11 @@ export class EmployeeViewComponent implements OnInit {
     let that = this;
     this.load_table_Emergency = false;
     this.httpCall.httpPostCall(httproutes.EMERGENCY_CONTACT_USERS, { _id: this.user_id }).subscribe(function (params) {
-      if (params.status) {
+      if (params.status)
+      {
         let temp_data = [];
-        for (let i = 0; i < params.data.length; i++) {
+        for (let i = 0; i < params.data.length; i++)
+        {
           let temp_object = params.data[i];
           let currentDate = new Date(temp_object.updatedAt);
           let timestamp = currentDate.getTime();
@@ -947,15 +985,20 @@ export class EmployeeViewComponent implements OnInit {
     let that = this;
     this.load_table_userDocument = false;
     this.httpCall.httpPostCall(httproutes.EMPLOYEE_DOCUMENT, { user_id: that.user_id }).subscribe(function (params) {
-      if (params.status) {
+      if (params.status)
+      {
         that.load_table_userDocument = true;
-        if (params.data.length > 0) {
+        if (params.data.length > 0)
+        {
           that.user_documents = [];
-          for (var i = 0; i < params.data.length; i++) {
+          for (var i = 0; i < params.data.length; i++)
+          {
             var showonQR = "";
-            if (params.data[i].show_on_qrcode_scan) {
+            if (params.data[i].show_on_qrcode_scan)
+            {
               showonQR = that.Document_OnQRcode_Yes;
-            } else {
+            } else
+            {
               showonQR = that.Document_OnQRcode_No;
             }
             params.data[i].show_on_qrcode_scan_display = showonQR;
@@ -968,22 +1011,27 @@ export class EmployeeViewComponent implements OnInit {
 
   selectionChange(e: any) {
     this.step1Complete = false;
-    if (e.selectedIndex == 6) {
+    if (e.selectedIndex == 6)
+    {
       let that = this;
       this.showicard = false;
       this.user_id = this.route.snapshot.paramMap.get('idparms');
       this.mostusedservice.getOneUser({ _id: this.user_id }).subscribe(function (data) {
         that.showicard = true;
-        if (data.status) {
-          if (data.data != null) {
+        if (data.status)
+        {
+          if (data.data != null)
+          {
             that.user_data = data.data;
 
-            if (that.user_data.userpicture != "") {
+            if (that.user_data.userpicture != "")
+            {
               that.isUserImg = true;
               that.defalut_image = that.user_data.userpicture;
             }
 
-            if (that.user_data.usermobile_picture != "") {
+            if (that.user_data.usermobile_picture != "")
+            {
               that.defalut_image_mobile = that.user_data.usermobile_picture;
             }
 
@@ -999,11 +1047,13 @@ export class EmployeeViewComponent implements OnInit {
   fileChangeEvent(fileInput: any) {
     this.imageError = null;
     commonImageChangeEvent(fileInput, 'image').then((result: any) => {
-      if (result.status) {
+      if (result.status)
+      {
         this.filepath = result.filepath;
         this.cardImageBase64 = result.base64;
         this.isImageSaved = true;
-      } else {
+      } else
+      {
         this.imageError = result.message;
         this.snackbarservice.openSnackBar(result.message, "error");
       }
@@ -1048,11 +1098,13 @@ export class EmployeeViewComponent implements OnInit {
     this.imageError = null;
     this.change_mobile_pic = true;
     commonImageChangeEvent(fileInput, 'image').then((result: any) => {
-      if (result.status) {
+      if (result.status)
+      {
         this.filepath_mobile = result.filepath;
         this.cardImageBase64_mobile = result.base64;
         this.isImageSaved_mobile = true;
-      } else {
+      } else
+      {
         this.imageError = result.message;
         this.snackbarservice.openSnackBar(result.message, "error");
       }
@@ -1096,7 +1148,8 @@ export class EmployeeViewComponent implements OnInit {
   }
 
   documentChangeEvent(fileInput: any, index: any) {
-    if (fileInput.target.files && fileInput.target.files[0]) {
+    if (fileInput.target.files && fileInput.target.files[0])
+    {
       this.document_array[index] = fileInput.target.files[0];
     }
   }
@@ -1188,7 +1241,8 @@ export class EmployeeViewComponent implements OnInit {
   sendInvitation() {
     let that = this;
     that.usersendinvitation.markAllAsTouched();
-    if (that.usersendinvitation.valid) {
+    if (that.usersendinvitation.valid)
+    {
       that.uiSpinner.spin$.next(true);
       let req_temp = that.usersendinvitation.value;
 
@@ -1199,11 +1253,13 @@ export class EmployeeViewComponent implements OnInit {
       };
 
       that.httpCall.httpPostCall(httproutes.SEND_INVITATION, reqObject).subscribe(function (params_new) {
-        if (params_new.status) {
+        if (params_new.status)
+        {
           that.snackbarservice.openSnackBar(params_new.message, "success");
           that.uiSpinner.spin$.next(false);
           that.usersendinvitation.reset();
-        } else {
+        } else
+        {
           that.snackbarservice.openSnackBar(params_new.message, "error");
           that.uiSpinner.spin$.next(false);
         }
@@ -1212,11 +1268,13 @@ export class EmployeeViewComponent implements OnInit {
   }
 
   async saveAndNextPersonalInfo(stepper: MatStepper) {
-    if (this.userpersonalinfo.dirty) {
+    if (this.userpersonalinfo.dirty)
+    {
       this.savePersonalInfo();
       this.userpersonalinfo.markAsPristine();
       stepper.next();
-    } else {
+    } else
+    {
       stepper.next();
     }
   }
@@ -1230,13 +1288,15 @@ export class EmployeeViewComponent implements OnInit {
     //that.useremployeeinfo.markAllAsTouched();
 
 
-    if (this.userpersonalinfo.valid) {
+    if (this.userpersonalinfo.valid)
+    {
       this.uiSpinner.spin$.next(true);
       let reqObject = this.userpersonalinfo.value;
       let department_name = this.db_Departmaents.find((dpt: any) => { return dpt._id == tmp_data_emp_info.userdepartment_id; });
       let jobtitle_name = this.db_jobtitle.find((dpt: any) => { return dpt._id == tmp_data_emp_info.userjob_title_id; });
       let costcode_name = this.db_costcodes.find((dpt: any) => { return dpt._id == tmp_data_emp_info.usercostcode; });
-      if (reqObject.password == "" || reqObject.password == null || reqObject.password == undefined) {
+      if (reqObject.password == "" || reqObject.password == null || reqObject.password == undefined)
+      {
         delete reqObject.password;
       }
       reqObject.department_name = department_name != undefined ? department_name.department_name : " ";
@@ -1259,32 +1319,41 @@ export class EmployeeViewComponent implements OnInit {
 
       const formData = new FormData();
       let id = this.user_id.toString();
-      formData.append('file', this.filepath);
+      if (this.isImageSaved)
+      {
+        formData.append('file', this.filepath);
+      }
       formData.append("_id", id);
       formData.append('reqObject', JSON.stringify(reqObject));
 
 
       this.httpCall.httpPostCall(httproutes.EMPLOYEE_PERSONAL_EDIT, formData).subscribe(function (params) {
 
-        if (params.status) {
-          if (that.change_mobile_pic) {
+        if (params.status)
+        {
+          if (that.change_mobile_pic)
+          {
             const formData_new = new FormData();
             formData_new.append('file', that.filepath_mobile);
             formData_new.append("_id", id);
             that.httpCall.httpPostCall(httproutes.EMPLOYEE_PERSONAL_MOBILE_PIC_EDIT, formData_new).subscribe(function (params_new) {
-              if (params_new.status) {
+              if (params_new.status)
+              {
                 that.snackbarservice.openSnackBar(params_new.message, "success");
                 that.uiSpinner.spin$.next(false);
-              } else {
+              } else
+              {
                 that.snackbarservice.openSnackBar(params_new.message, "error");
                 that.uiSpinner.spin$.next(false);
               }
             });
-          } else {
+          } else
+          {
             that.snackbarservice.openSnackBar(params.message, "success");
             that.uiSpinner.spin$.next(false);
           }
-        } else {
+        } else
+        {
           that.snackbarservice.openSnackBar(params.message, "error");
           that.uiSpinner.spin$.next(false);
         }
@@ -1293,11 +1362,13 @@ export class EmployeeViewComponent implements OnInit {
   }
 
   async saveAndNextContactInfo(stepper: MatStepper) {
-    if (this.usercontactinfo.dirty) {
+    if (this.usercontactinfo.dirty)
+    {
       this.saveContactlInfo();
       this.usercontactinfo.markAsPristine();
       stepper.next();
-    } else {
+    } else
+    {
       stepper.next();
     }
   }
@@ -1307,14 +1378,17 @@ export class EmployeeViewComponent implements OnInit {
     let id = this.user_id.toString();
     let reqObject = this.usercontactinfo.value;
     this.usercontactinfo.markAllAsTouched();
-    if (this.usercontactinfo.valid) {
+    if (this.usercontactinfo.valid)
+    {
       reqObject._id = id;
       this.uiSpinner.spin$.next(true);
       this.httpCall.httpPostCall(httproutes.EMPLOYEE_CONTACT_EDIT, reqObject).subscribe(function (params) {
-        if (params.status) {
+        if (params.status)
+        {
           that.snackbarservice.openSnackBar(params.message, "success");
           that.uiSpinner.spin$.next(false);
-        } else {
+        } else
+        {
           that.snackbarservice.openSnackBar(params.message, "error");
           that.uiSpinner.spin$.next(false);
         }
@@ -1323,11 +1397,13 @@ export class EmployeeViewComponent implements OnInit {
   }
 
   async saveAndNextEmployeeInfo(stepper: MatStepper) {
-    if (this.useremployeeinfo.dirty) {
+    if (this.useremployeeinfo.dirty)
+    {
       this.saveEmployeeInfo();
       this.useremployeeinfo.markAsPristine();
       stepper.next();
-    } else {
+    } else
+    {
       stepper.next();
     }
   }
@@ -1336,7 +1412,8 @@ export class EmployeeViewComponent implements OnInit {
     console.log('saveEmployeeInfo');
     let that = this;
     this.useremployeeinfo.markAllAsTouched();
-    if (this.useremployeeinfo.valid) {
+    if (this.useremployeeinfo.valid)
+    {
       let id = this.user_id.toString();
       // let reqObject = this.useremployeeinfo.value;
       let reqObject = {
@@ -1366,10 +1443,12 @@ export class EmployeeViewComponent implements OnInit {
       console.log("daaata", reqObject);
       this.httpCall.httpPostCall(httproutes.EMPLOYEE_EMPLOYEE_EDIT, reqObject).subscribe(function (params) {
 
-        if (params.status) {
+        if (params.status)
+        {
           that.snackbarservice.openSnackBar(params.message, "success");
           that.uiSpinner.spin$.next(false);
-        } else {
+        } else
+        {
           that.snackbarservice.openSnackBar(params.message, "error");
           that.uiSpinner.spin$.next(false);
         }
@@ -1391,14 +1470,17 @@ export class EmployeeViewComponent implements OnInit {
       denyButtonText: this.Compnay_Equipment_Delete_No,
       allowOutsideClick: false
     }).then((result) => {
-      if (result.isConfirmed) {
+      if (result.isConfirmed)
+      {
         this.uiSpinner.spin$.next(true);
         this.httpCall.httpPostCall(httproutes.EMERGENCY_CONTACT_USERS_DELETE, { _id: emergency_id }).subscribe(function (params) {
           that.uiSpinner.spin$.next(false);
-          if (params.status) {
+          if (params.status)
+          {
             that.snackbarservice.openSnackBar(params.message, "success");
             that.load_emergencycontact();
-          } else {
+          } else
+          {
             that.snackbarservice.openSnackBar(params.message, "error");
           }
         });
@@ -1410,10 +1492,12 @@ export class EmployeeViewComponent implements OnInit {
     that.uiSpinner.spin$.next(true);
     that.httpCall.httpPostCall(httproutes.EMERGENCY_CONTACT_SEND_REMINDER, { _id: that.user_id }).subscribe(function (params) {
       that.uiSpinner.spin$.next(false);
-      if (params.status) {
+      if (params.status)
+      {
         that.snackbarservice.openSnackBar(params.message, "success");
         that.load_emergencycontact();
-      } else {
+      } else
+      {
         that.snackbarservice.openSnackBar(params.message, "error");
       }
     });
@@ -1428,12 +1512,15 @@ export class EmployeeViewComponent implements OnInit {
       denyButtonText: this.Compnay_Equipment_Delete_No,
       allowOutsideClick: false
     }).then((result) => {
-      if (result.isConfirmed) {
+      if (result.isConfirmed)
+      {
         this.httpCall.httpPostCall(httproutes.TEAM_DOCUMENT_DELETE, reqObject).subscribe(function (params) {
-          if (params.status) {
+          if (params.status)
+          {
             that.snackbarservice.openSnackBar(params.message, "success");
             that.load_User_document();
-          } else {
+          } else
+          {
             that.snackbarservice.openSnackBar(params.message, "error");
           }
         });
@@ -1454,10 +1541,12 @@ export class EmployeeViewComponent implements OnInit {
     };
 
     that.httpCall.httpPostCall(httproutes.PROJECT_DECUMENT_EXPIRATION_SEND, reqObject).subscribe(function (params_new) {
-      if (params_new.status) {
+      if (params_new.status)
+      {
         that.snackbarservice.openSnackBar(params_new.message, "success");
         that.uiSpinner.spin$.next(false);
-      } else {
+      } else
+      {
         that.snackbarservice.openSnackBar(params_new.message, "error");
         that.uiSpinner.spin$.next(false);
       }
@@ -1519,7 +1608,8 @@ export class EmergencycontactFrom {
     @Inject(MAT_DIALOG_DATA) public data: any, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService) {
 
     let that = this;
-    if (Object.keys(data.reqData).length === 0) {
+    if (Object.keys(data.reqData).length === 0)
+    {
       // Add Emergency Contact
       this.form = this.formBuilder.group({
         emergency_contact_name: ["", Validators.required],
@@ -1534,7 +1624,8 @@ export class EmergencycontactFrom {
         emergency_contact_zipcode: [""],
         emergency_contact_country: [""],
       });
-    } else {
+    } else
+    {
       // Edit Emergency Contact
       this.form = this.formBuilder.group({
         emergency_contact_name: [data.reqData.emergency_contact_name, Validators.required],
@@ -1552,7 +1643,8 @@ export class EmergencycontactFrom {
     }
 
     this.httpCall.httpGetCall(httproutes.REALTIONSHIP_GET_ALL).subscribe(function (params) {
-      if (params.status) {
+      if (params.status)
+      {
         that.relation_array = params.data;
       }
     });
@@ -1560,14 +1652,16 @@ export class EmergencycontactFrom {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
     console.log("this.mode main", this.mode);
-    if (this.mode == 'off') {
+    if (this.mode == 'off')
+    {
       console.log("this.mod", this.mode);
       this.backIcon = icon.CANCLE;
       this.saveIcon = icon.SAVE;
 
 
 
-    } else {
+    } else
+    {
       console.log("this.mod else", this.mode);
       this.backIcon = icon.CANCLE_WHITE;
       this.saveIcon = icon.SAVE_WHITE;
@@ -1575,12 +1669,14 @@ export class EmergencycontactFrom {
 
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode) {
+      if (mode)
+      {
         this.mode = 'off';
         this.backIcon = icon.CANCLE;
         this.saveIcon = icon.SAVE;
 
-      } else {
+      } else
+      {
         this.mode = 'on';
         this.backIcon = icon.CANCLE_WHITE;
         this.saveIcon = icon.SAVE_WHITE;
@@ -1594,20 +1690,24 @@ export class EmergencycontactFrom {
     EMERGENCY CONTACT SAVE Api call
   */
   saveData() {
-    if (this.form.valid) {
+    if (this.form.valid)
+    {
       let reqObject = this.form.value;
-      if (Object.keys(this.data.reqData).length !== 0) {
+      if (Object.keys(this.data.reqData).length !== 0)
+      {
         reqObject._id = this.data.reqData._id;
       }
       reqObject.emergency_contact_userid = this.data.user_id;
       let that = this;
       that.uiSpinner.spin$.next(true);
       this.httpCall.httpPostCall(httproutes.EMERGENCY_CONTACT_SAVE, reqObject).subscribe(function (params) {
-        if (params.status) {
+        if (params.status)
+        {
           that.snackbarservice.openSnackBar(params.message, "success");
           that.uiSpinner.spin$.next(false);
           that.dialogRef.close();
-        } else {
+        } else
+        {
           that.snackbarservice.openSnackBar(params.message, "error");
           that.uiSpinner.spin$.next(false);
         }
@@ -1646,16 +1746,20 @@ export class DocumentUpdateFrom {
     let that = this;
 
 
-    if (Object.keys(data.reqData).length === 0) {
+    if (Object.keys(data.reqData).length === 0)
+    {
       this.form = this.formBuilder.group({
         userdocument_type_id: ['', Validators.required],
         userdocument_expire_date: ['', Validators.required],
         show_on_qrcode_scan: [false]
       });
-    } else {
-      if (data.reqData.show_on_qrcode_scan) {
+    } else
+    {
+      if (data.reqData.show_on_qrcode_scan)
+      {
         that.isPublicDocument = true;
-      } else {
+      } else
+      {
         that.isPublicDocument = false;
       }
 
@@ -1669,9 +1773,11 @@ export class DocumentUpdateFrom {
 
 
     this.mostusedservice.getAllDocumentType().subscribe(function (data) {
-      if (data.status) {
+      if (data.status)
+      {
         that.db_Doc_types = data.data;
-        if (Object.keys(that.data.reqData).length !== 0) {
+        if (Object.keys(that.data.reqData).length !== 0)
+        {
           that.showHideExpirationDate(that.data.reqData.userdocument_type_id);
         }
       }
@@ -1680,13 +1786,15 @@ export class DocumentUpdateFrom {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
     console.log("this.mode main", this.mode);
-    if (this.mode == 'off') {
+    if (this.mode == 'off')
+    {
       console.log("this.mod", this.mode);
       this.backIcon = icon.CANCLE;
       this.saveIcon = icon.SAVE;
 
 
-    } else {
+    } else
+    {
       console.log("this.mod else", this.mode);
       this.backIcon = icon.CANCLE_WHITE;
       this.saveIcon = icon.SAVE_WHITE;
@@ -1694,12 +1802,14 @@ export class DocumentUpdateFrom {
 
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode) {
+      if (mode)
+      {
         this.mode = 'off';
         this.backIcon = icon.CANCLE;
         this.saveIcon = icon.SAVE;
 
-      } else {
+      } else
+      {
         this.mode = 'on';
         this.backIcon = icon.CANCLE_WHITE;
         this.saveIcon = icon.SAVE_WHITE;
@@ -1713,7 +1823,8 @@ export class DocumentUpdateFrom {
   showHideExpirationDate(event: any) {
     let found = this.db_Doc_types.find((element: any) => element._id == event);
     this.showHideDate = found.is_expiration;
-    if (this.showHideDate) {
+    if (this.showHideDate)
+    {
       this.form.get('userdocument_expire_date')!.setValidators([Validators.required]);
       this.form.get('userdocument_expire_date')!.updateValueAndValidity();
     }
@@ -1725,11 +1836,13 @@ export class DocumentUpdateFrom {
   fileChangeEvent(fileInput: any) {
     this.imageError = null;
     commonImageChangeEvent(fileInput, 'all').then((result: any) => {
-      if (result.status) {
+      if (result.status)
+      {
         this.filepath = result.filepath;
         this.cardImageBase64 = result.base64;
         this.isImageSaved = true;
-      } else {
+      } else
+      {
         this.imageError = result.message;
         this.snackbarservice.openSnackBar(result.message, "error");
       }
@@ -1774,9 +1887,11 @@ export class DocumentUpdateFrom {
   saveData() {
     let element = this.form.value;
     let switch_value: string;
-    if (element.show_on_qrcode_scan) {
+    if (element.show_on_qrcode_scan)
+    {
       switch_value = "true";
-    } else {
+    } else
+    {
       switch_value = "false";
     }
 
@@ -1791,25 +1906,31 @@ export class DocumentUpdateFrom {
     let that = this;
 
     that.uiSpinner.spin$.next(true);
-    if (Object.keys(that.data.reqData).length === 0) {
+    if (Object.keys(that.data.reqData).length === 0)
+    {
       this.employeeservice.employeeDocumentUpdate(formData).subscribe(function (data_doc) {
-        if (data_doc.status) {
+        if (data_doc.status)
+        {
           that.snackbarservice.openSnackBar(data_doc.message, "success");
           that.dialogRef.close();
           that.uiSpinner.spin$.next(false);
-        } else {
+        } else
+        {
           that.snackbarservice.openSnackBar(data_doc.message, "error");
           that.uiSpinner.spin$.next(false);
         }
       });
-    } else {
+    } else
+    {
       formData.append('_id', that.data.reqData._id);
       that.httpCall.httpPostCall(httproutes.TEAM_DOCUMENT_EDIT, formData).subscribe(function (params) {
-        if (params.status) {
+        if (params.status)
+        {
           that.snackbarservice.openSnackBar(params.message, "success");
           that.dialogRef.close();
           that.uiSpinner.spin$.next(false);
-        } else {
+        } else
+        {
           that.snackbarservice.openSnackBar(params.message, "error");
           that.uiSpinner.spin$.next(false);
         }
@@ -1899,23 +2020,27 @@ export class UserDocumentHistoryComponent implements OnInit {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
     console.log("this.mode main", this.mode);
-    if (this.mode == 'off') {
+    if (this.mode == 'off')
+    {
       console.log("this.mod", this.mode);
       this.backIcon = icon.CANCLE;
 
 
-    } else {
+    } else
+    {
       console.log("this.mod else", this.mode);
       this.backIcon = icon.CANCLE_WHITE;
 
 
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode) {
+      if (mode)
+      {
         this.mode = 'off';
         this.backIcon = icon.CANCLE;
 
-      } else {
+      } else
+      {
         this.mode = 'on';
         this.backIcon = icon.CANCLE_WHITE;
 
@@ -1951,13 +2076,17 @@ export class UserDocumentHistoryComponent implements OnInit {
         title: that.action_taken_from,
         defaultContent: "",
         render: function (data: any, type: any, full: any) {
-          if (full.taken_device == "Mobile") {
+          if (full.taken_device == "Mobile")
+          {
             return that.mobile_all;
-          } else if (full.taken_device == "Web") {
+          } else if (full.taken_device == "Web")
+          {
             return that.web_all;
-          } else if (full.taken_device == "iFrame") {
+          } else if (full.taken_device == "iFrame")
+          {
             return that.iframe_all;
-          } else {
+          } else
+          {
             return that.web_all;
           }
         }
