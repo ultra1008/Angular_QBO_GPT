@@ -42,7 +42,7 @@ export class AppComponent implements OnInit {
     console.log('updateIdealTimeout');
     let that = this;
 
-    if (localStorage.getItem('logout') == 'false')
+    if (localStorage.getItem('invoicelogout') == 'false')
     {
       that.httpCall.httpGetCall(httproutes.PORTAL_SETTING_GET).subscribe(function (params) {
         console.log(params)
@@ -151,7 +151,7 @@ export class AppComponent implements OnInit {
     } else
     {
       that.uiSpinner.spin$.next(false);
-      localStorage.setItem('logout', 'true');
+      localStorage.setItem('invoicelogout', 'true');
       setTimeout(() => {
         that.router.navigateByUrl('/login');
       }, 100);
@@ -187,7 +187,7 @@ export class AppComponent implements OnInit {
           {
             that.snackbarservice.openSnackBar(params.message, "success");
             that.uiSpinner.spin$.next(false);
-            localStorage.setItem('logout', 'true');
+            localStorage.setItem('invoicelogout', 'true');
             setTimeout(() => {
               that.router.navigateByUrl('/login');
             }, 100);

@@ -101,7 +101,7 @@ export class PortalLoginFormComponent implements OnInit {
           localStorage.setItem(localstorageconstants.SUPPLIERTOKEN, data.data.token);
           localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.data));
           localStorage.setItem(localstorageconstants.SUPPLIERID, data.data.companydata._id);
-          localStorage.setItem('logout', 'false');
+          localStorage.setItem('invoicelogout', 'false');
 
           sessionStorage.setItem(localstorageconstants.USERTYPE, "sponsor-portal");
           localStorage.setItem(localstorageconstants.USERTYPE, "sponsor-portal");
