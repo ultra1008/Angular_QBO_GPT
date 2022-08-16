@@ -33,7 +33,7 @@ module.exports.login = async function (req, res) {
                             if (result) {
                                 connection_db_api = await db_connection.connection_db_api(result);
                                 let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
-                                let roleConnection = connection_db_api.model(collectionConstant.SUPPLIER_ROLE, invoiceRoleSchema);
+                                let roleConnection = connection_db_api.model(collectionConstant.INVOICE_ROLES, invoiceRoleSchema);
                                 //let UserData = await userConnection.findOne({ "useremail": requestObject.useremail , is_delete : 0 , userstatus : 1 });
                                 let UserData = await userConnection.aggregate([
                                     {
@@ -314,7 +314,8 @@ module.exports.login = async function (req, res) {
                                 if (UserData == null) {
                                     res.send({ message: translator.getStr('UserNotFound'), status: false });
                                 } else {
-                                    //   let roles_tmp = await roleConnection.findOne({ _id: ObjectID(UserData.userroleId) });
+                                    let roles_tmp = await roleConnection.findOne({ role_name: "Admin" });
+                                    //  let roles_tmp = await roleConnection.findOne({ _id: ObjectID(UserData.userroleId) });
                                     var psss_tnp = await common.validPassword(requestObject.password, UserData.password);
                                     if (psss_tnp) {
                                         var resObject_db = {
@@ -341,7 +342,7 @@ module.exports.login = async function (req, res) {
                                         };
                                         var token = await common.generateJWT(resObject);
                                         resLast.token = token;
-                                        // resLast.role_permission = roles_tmp.role_permission;
+                                        resLast.role_permission = roles_tmp.role_permission;
                                         res.send({ message: translator.getStr('UserListing'), data: resLast, status: true });
 
                                     } else {
