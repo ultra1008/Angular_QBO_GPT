@@ -1,0 +1,3870 @@
+var userSchema = require('./../../../../../model/user');
+var rolesSchema = require('./../../../../../model/roles');
+var rolesandpermissionsSchema = require('./../../../../../model/rolesandpermissions');
+var supplierRoleSchema = require('./../../../../../model/diversity_roles');
+var userDocumentSchema = require('./../../../../../model/userdocument');
+//var projectDocumentSchema = require('./../../../../../model/project_document');
+var ObjectID = require('mongodb').ObjectID;
+var common = require("./../../../../../controller/common/common");
+let db_connection = require('./../../../../../controller/common/connectiondb');
+let collectionConstant = require('./../../../../../config/collectionConstant');
+var formidable = require('formidable');
+var fs = require('fs');
+var bucketOpration = require('../../../../../controller/common/s3-wasabi');
+var config = require('./../../../../../config/config');
+//let QRCODE = require('./../../../../../controller/common/qr_code');
+let sendEmail = require('./../../../../../controller/common/sendEmail');
+let rest_Api = require('./../../../../../config/db_rest_api');
+let db_rest_api = require('../../../../../config/db_rest_api');
+var handlebars = require('handlebars');
+var moment = require('moment');
+//let activityController = require("./../todaysActivity/todaysActivityController");
+//var projectSchema = require('./../../../../../model/project');
+//var projectSettingsSchema = require('./../../../../../model/project_settings');
+// var projectEmailRecipientSchema = require('../../../../../model/supplier_project_email_recipients');
+// var supplierProjectUsersSchema = require('./../../../../../model/supplier_project_users');
+const excel = require("exceljs");
+var StringMask = require('string-mask');
+var departmentSchema = require('./../../../../../model/departments');
+var jobtitleSchema = require('./../../../../../model/job_title');
+var jobtypeSchema = require('./../../../../../model/job_type');
+var payrollgroupSchema = require('../../../../../model/payroll_group');
+var creditcardsettingsSchema = require('../../../../../model/creditcardsettings');
+const reader = require('xlsx');
+var _ = require('lodash');
+let superadminCollection = require('../../../../../config/superadminCollection');
+let billingPlan = require('./../../../../../config/billing_plan');
+
+module.exports.getAllUserList = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+
+            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let match = {
+                is_delete: 0,
+                userstatus: 1,
+            };
+            let get_user = await userConnection.find(match);
+            res.send({ data: get_user, message: translator.getStr('UserListing'), status: true });
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.getAllUserListOcpr = async function (req, res) {
+    var requestObject = req.body;
+    var translator = new common.Language('en');
+    DB.findOne(superadminCollection.COMPANY, { _id: ObjectID(requestObject.sponsor_id) }, function (err, resultfind) {
+        if (err) {
+            res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
+        } else {
+            if (resultfind != null) {
+                DB.findOne(superadminCollection.TENANTS, { companycode: resultfind.companycode }, async function (err, resulttanent) {
+                    if (err) {
+                        res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
+                    } else {
+                        var translator = new common.Language('en');
+                        let connection_db_api = await db_connection.connection_db_api(resulttanent);
+                        try {
+                            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+                            let getData = await userConnection.find({ is_delete: 0, userstatus: 1, });
+                            res.send({ data: getData, status: true });
+                        } catch (e) {
+                            console.log("e", e);
+                            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                        } finally {
+                            connection_db_api.close();
+                        }
+                    }
+                });
+            } else {
+                res.send({ message: translator.getStr('SponsorNotExist'), error: err, status: false });
+            }
+        }
+    });
+};
+
+module.exports.getSpecificUsers = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        try {
+            req.body.is_delete = 0;
+            let connection_db_api = await db_connection.connection_db_api(decodedToken);
+            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let all_user = await userConnection.find(req.body);
+            res.send({ message: translator.getStr('EmployeeListing'), data: all_user, status: true });
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.saveEmployee = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    let history_object;
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+
+            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+
+            var form = new formidable.IncomingForm();
+            var fields = [];
+            var notFonud = 0;
+            var newOpenFile;
+            var fileName;
+            form.parse(req)
+                .on('file', function (name, file) {
+                    notFonud = 1;
+                    fileName = file;
+                })
+                .on('field', function (name, field) {
+
+                    fields[name] = field;
+                })
+                .on('error', function (err) {
+                    throw err;
+                }).on('end', async function () {
+
+                    newOpenFile = this.openedFiles;
+                    var body = await JSON.parse(fields.reqObject);
+                    jobtitle = body.jobtitle_name;
+                    department = body.department_name;
+                    costcode = body.costcode_name;
+                    body.allow_for_projects = body.allow_for_projects == "true" || body.allow_for_projects == true ? true : false;
+                    delete body['jobtitle_name'];
+                    delete body['department_name'];
+                    delete body['costcode_name'];
+
+                    let usercostcode = "";
+                    if (body.usercostcode != "") {
+                        usercostcode = ObjectID(body.usercostcode);
+                    }
+                    let tempLang = body.user_languages;
+
+                    let temp_user_languages = [];
+                    for (let i = 0; i < tempLang.length; i++) {
+                        temp_user_languages.push(ObjectID(tempLang[i]));
+                    }
+                    body.user_languages = temp_user_languages;
+
+                    password_tmp = body.password;
+                    body.usercreated_by = decodedToken.UserData._id;
+                    body.userupdated_by = decodedToken.UserData._id;
+                    if (body.password) {
+                        body.password = common.generateHash(body.password);
+                    }
+
+                    let checkEmailExist = await userConnection.findOne({ useremail: body.useremail });
+
+                    if (checkEmailExist) {
+                        res.send({ message: translator.getStr('EmailAlreadyExists'), status: false });
+                    } else {
+                        let compnay_collection = await db_rest_api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+                        let company_data = await db_rest_api.findOne(compnay_collection, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
+                        let selectedPlan = company_data.billingplan;
+
+                        let get_user_roles = connection_db_api.model(collectionConstant.SUPPLIER_ROLE, supplierRoleSchema);
+                        let onerole = await get_user_roles.findOne({ role_id: ObjectID(body.userroleId) });
+                        let allowed_count = billingPlan.BILLING_PLAN[selectedPlan]['ADMIN_ALL'];
+                        let current_count = await userConnection.find({}).count();
+                        console.log("count: ", current_count, allowed_count, ">=", current_count >= allowed_count);
+                        if (current_count >= allowed_count) {
+                            res.send({ message: translator.getStr('UserLimitExceed'), status: false });
+                        } else {
+                            const file_data = fs.readFileSync('./controller/emailtemplates/invitationuser.html', 'utf8');
+                            let add_user = new userConnection(body);
+                            history_object = body;
+
+                            let add = await add_user.save();
+                            if (add) {
+                                if (body.allow_for_projects) {
+                                    //await addUserAsAllProjectsWorker(add._id, decodedToken);
+                                }
+                                history_object.inserted_id = add._id;
+                                let emailTmp = {
+                                    HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
+                                    SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
+                                    ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                                    THANKS: translator.getStr('EmailTemplateThanks'),
+                                    ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                                    EMAILTITLE: `${translator.getStr('EmailInvitationUserTitle')} ${company_data.companyname} ${translator.getStr('EmailInvitationPortal')}`,
+                                    USERNAME: `${translator.getStr('EmailLoginHello')} ${body.username}`,
+                                    TEXT1: `${translator.getStr('EmailInvitationUserText1')}, ${company_data.companyname}.`,
+                                    TEXT2: translator.getStr('EmailInvitationUserText2'),
+                                    USEREMAIL: `${translator.getStr('EmailInvitationUserLoginEmail')} ${body.useremail}`,
+                                    USERPASSWORD: `${translator.getStr('EmailInvitationUserTemporaryPassword')} ${password_tmp}`,
+                                    COMPANYCODE: `${translator.getStr('EmailInvitationUserCompanyCode')} ${decodedToken.companycode}`,
+                                    DOWNLOAD_APP: translator.getStr('EmailInvitationUserDownloadApp'),
+                                    LOG_IN: translator.getStr('EmailInvitationLogIn'),
+                                    LOGIN_LINK: config.SITE_URL + "/login",
+
+                                    COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
+                                    COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
+                                };
+                                //translator.getStr('SomethingWrong')
+                                var template = handlebars.compile(file_data);
+                                var HtmlData = await template(emailTmp);
+                                body._id = add._id;
+
+                                // let qrcode_Object = {
+                                //     username: body.userfullname,
+                                //     _id: add._id,
+                                //     userrole: onerole.role_name,
+                                //     jobtitle: jobtitle,
+                                //     department: department,
+                                //     costcode: costcode
+                                // };
+                                //let qrcode_Object = config.SITE_URL + '/#/user-publicpage?_id=' + add._id + '&company_code=' + decodedToken.companycode;
+                                //let admin_qrCode = await QRCODE.generate_QR_Code(qrcode_Object);
+                                //let key_url = "employee/" + add._id + "/" + add._id + new Date().getTime() + "_QRCode.png";
+                                let LowerCase_bucket = decodedToken.companycode.toLowerCase();
+                                // let PARAMS = {
+                                //     Bucket: LowerCase_bucket,
+                                //     Key: key_url,
+                                //     Body: admin_qrCode,
+                                //     ACL: 'public-read-write'
+                                // };
+                                var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+                                let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
+                                // bucketOpration.uploadFile(PARAMS, async function (err, resultUpload)
+                                // {
+                                //     if (err)
+                                //     {
+                                //         res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
+                                //     } else
+                                //     {
+                                // userqrcode = config.wasabisys_url + "/" + LowerCase_bucket + "/" + key_url;
+                                // history_object.userqrcode = userqrcode;
+                                history_object.usercostcode = usercostcode;
+                                // let updateuser = await userConnection.updateOne({ _id: ObjectID(add._id) }, { userqrcode: userqrcode, usercostcode: usercostcode });
+                                // if (updateuser)
+                                // {
+                                //let mailsend = await sendEmail.sendEmail(config.tenants.tenant_smtp_username, body.useremail, "Rovuk Registration", HtmlData);
+                                let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, body.useremail, "Rovuk Registration", HtmlData,
+                                    talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
+                                    talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+
+                                if (notFonud == 1) {
+                                    var temp_path = newOpenFile[0].path;
+                                    var file_name = newOpenFile[0].name;
+                                    dirKeyName = config.SUPPLIER_DIVERSITY_WASABI_PATH + "/employee/profile_picture/" + file_name;
+                                    var fileBody = fs.readFileSync(temp_path);
+                                    params = { Bucket: LowerCase_bucket, Key: dirKeyName, Body: fileBody, ACL: 'public-read-write' };
+
+                                    bucketOpration.uploadFile(params, async function (err, resultUpload) {
+                                        if (err) {
+                                            res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
+                                        } else {
+
+                                            urlProfile = config.wasabisys_url + "/" + LowerCase_bucket + "/" + dirKeyName;
+                                            let update_user = await userConnection.updateOne({ _id: add._id }, { userpicture: urlProfile });
+                                            history_object.userpicture = urlProfile;
+                                            if (update_user) {
+                                                addUSER_History("Insert", history_object, decodedToken);
+                                                //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
+                                                res.send({ message: translator.getStr('UserCreationEmail'), data: body, status: true });
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    addUSER_History("Insert", history_object, decodedToken);
+                                    //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
+                                    res.send({ message: translator.getStr('UserAdded'), data: body, status: true });
+                                }
+                                // }
+                                //     }
+                                // });
+                            }
+                        }
+                    }
+                });
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            //connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+async function addUserAsAllProjectsWorker(userId, decodedToken) {
+    let connection_db_api = await db_connection.connection_db_api(decodedToken);
+    let projectCollection = connection_db_api.model(collectionConstant.PROJECT, projectSchema);
+    let get_all_projects = await projectCollection.aggregate([
+        {
+            $match:
+            {
+                is_delete: 0,
+                project_status: "Active",
+            },
+        },
+        {
+            $lookup: {
+                from: collectionConstant.PROJECT_SETTINGS,
+                localField: "_id",
+                foreignField: "project_id",
+                as: "project"
+            }
+        },
+        {
+            $project:
+            {
+                _id: 1,
+                project_settings: { $arrayElemAt: ["$project.settings.workers", 0] }
+            }
+        },
+    ]);
+    let projectSettingCollection = connection_db_api.model(collectionConstant.PROJECT_SETTINGS, projectSettingsSchema);
+    for (let i = 0; i < get_all_projects.length; i++) {
+        let temp_worker = get_all_projects[i]['project_settings'];
+        temp_worker.push(ObjectID(userId));
+        let project_worker = { 'settings.workers': temp_worker };
+        let updateSettingObject = await projectSettingCollection.updateOne({ project_id: ObjectID(get_all_projects[i]['_id']) }, { $set: project_worker });
+    }
+}
+
+module.exports.tempAddUserAsProjectProjectWorker = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        let projectCollection = connection_db_api.model(collectionConstant.PROJECT, projectSchema);
+        let get_all_projects = await projectCollection.aggregate([
+            {
+                $match:
+                {
+                    is_delete: 0,
+                    project_status: "Active",
+                },
+            },
+            {
+                $lookup: {
+                    from: collectionConstant.PROJECT_SETTINGS,
+                    localField: "_id",
+                    foreignField: "project_id",
+                    as: "project"
+                }
+            },
+            {
+                $project:
+                {
+                    _id: 1,
+                    project_settings: { $arrayElemAt: ["$project.settings.workers", 0] }
+                }
+            },
+        ]);
+        let projectSettingCollection = connection_db_api.model(collectionConstant.PROJECT_SETTINGS, projectSettingsSchema);
+        let userId = '6204959c21fd0bfd9521cbf4';
+        for (let i = 0; i < get_all_projects.length; i++) {
+            let temp_worker = get_all_projects[i]['project_settings'];
+            temp_worker.push(ObjectID(userId));
+            let project_worker = { 'settings.workers': temp_worker };
+            let updateSettingObject = await projectSettingCollection.updateOne({ project_id: ObjectID(get_all_projects[i]['_id']) }, { $set: project_worker });
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.saveUserDocument = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+
+            let userDocumentConnection = connection_db_api.model(collectionConstant.USERDOCUMENT, userDocumentSchema);
+            var form = new formidable.IncomingForm();
+            var fields = [];
+            var notFonud = 0;
+            var newOpenFile;
+            var fileName;
+            form.parse(req)
+                .on('file', function (name, file) {
+                    notFonud = 1;
+                    fileName = file;
+                })
+                .on('field', function (name, field) {
+
+                    fields[name] = field;
+                })
+                .on('error', function (err) {
+                    throw err;
+                }).on('end', async function () {
+                    newOpenFile = this.openedFiles;
+                    if (notFonud == 1) {
+                        var body = JSON.parse(fields.reqObject);
+
+                        let LowerCase_bucket = decodedToken.companycode.toLowerCase();
+                        body.userdocument_created_by = decodedToken.UserData._id;
+                        body.userdocument_updated_by = decodedToken.UserData._id;
+                        body.userdocument_created_at = Math.round(new Date().getTime() / 1000);
+                        body.userdocument_updated_at = Math.round(new Date().getTime() / 1000);
+                        body.userdocument_user_id = fields.user_id;
+                        body.show_on_qrcode_scan = fields.show_on_qrcode_scan == "true" || fields.show_on_qrcode_scan == true ? true : false;
+                        var temp_path = newOpenFile[0].path;
+                        var file_name = newOpenFile[0].name;
+                        let date = moment().format('D_MMM_YYYY_hh_mm_ss_SSS_A');
+                        let array_name = newOpenFile[0].name.split(".");
+                        var file_name_ext = array_name[array_name.length - 1];
+                        //var file_name_ext = newOpenFile[0].name.split(".")[1];
+                        var file_name = config.USER_DOCUMENT + "_" + date + "." + file_name_ext;
+                        dirKeyName = config.SUPPLIER_DIVERSITY_WASABI_PATH + "/employee/" + fields.user_id + "/document/" + file_name;
+                        var fileBody = fs.readFileSync(temp_path);
+                        params = { Bucket: LowerCase_bucket, Key: dirKeyName, Body: fileBody, ACL: 'public-read-write' };
+                        bucketOpration.uploadFile(params, async function (err, resultUpload) {
+                            if (err) {
+                                res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
+                            } else {
+                                urlProfile = config.wasabisys_url + "/" + LowerCase_bucket + "/" + dirKeyName;
+                                body.userdocument_url = urlProfile;
+                                let add_user = new userDocumentConnection(body);
+                                let user_add = await add_user.save();
+                                if (user_add) {
+                                    addUserDocumentHistory("Insert", body, decodedToken);
+                                    //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
+                                    res.send({ message: translator.getStr('UserDocumentAdded'), status: true });
+                                } else {
+                                    res.send({ message: translator.getStr('NoDataWithId'), status: false });
+                                }
+                            }
+                        });
+                    } else {
+                        res.send({ message: translator.getStr('UserDocumentNotFound'), status: false });
+                    }
+                });
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            //connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.getAllUser = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+
+            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let match = {};
+
+            if (decodedToken.UserData.role_name == "Employee") {
+                match = {
+                    is_delete: 0,
+                    _id: ObjectID(decodedToken.UserData._id),
+                };
+            } else {
+                match = {
+                    is_delete: 0
+                };
+            }
+            let user_by_id = await userConnection.aggregate([
+                {
+                    $match: match,
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.SUPPLIER_ROLE,
+                        localField: "userroleId",
+                        foreignField: "role_id",
+                        as: "role"
+                    }
+                },
+                /*  {
+                     $unwind: {
+                         path: "$role",
+                         preserveNullAndEmptyArrays: true
+                     },
+                 }, */
+                {
+                    $lookup: {
+                        from: collectionConstant.JOB_TITLE,
+                        localField: "userjob_title_id",
+                        foreignField: "_id",
+                        as: "jobtitle"
+                    }
+                },
+                /*   {
+                      $unwind: {
+                          path: "$jobtitle",
+                          preserveNullAndEmptyArrays: true
+                      },
+                  }, */
+                {
+                    $lookup: {
+                        from: collectionConstant.DEPARTMENTS,
+                        localField: "userdepartment_id",
+                        foreignField: "_id",
+                        as: "department"
+                    }
+                },
+                /*  {
+                     $unwind: {
+                         path: "$department",
+                         preserveNullAndEmptyArrays: true
+                     },
+                 }, */
+                {
+                    $lookup: {
+                        from: collectionConstant.PAYROLL_GROUP,
+                        localField: "user_id_payroll_group",
+                        foreignField: "_id",
+                        as: "payrollgroup"
+                    }
+                },
+                /*  {
+                     $unwind: {
+                         path: "$payrollgroup",
+                         preserveNullAndEmptyArrays: true
+                     },
+                 }, */
+                {
+                    $lookup: {
+                        from: collectionConstant.JOB_TYPE,
+                        localField: "userjob_type_id",
+                        foreignField: "_id",
+                        as: "jobtype"
+                    }
+                },
+                // {
+                //     $unwind: {
+                //         path:"$jobtype",
+                //         preserveNullAndEmptyArrays: true
+                //     },
+                // },
+                {
+                    $lookup: {
+                        from: collectionConstant.USER,
+                        localField: "usersupervisor_id",
+                        foreignField: "_id",
+                        as: "supervisor"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.LOCATIONS,
+                        localField: "userlocation_id",
+                        foreignField: "_id",
+                        as: "location"
+                    }
+                },
+                // {
+                //     $unwind: {
+                //         path:"$location",
+                //         preserveNullAndEmptyArrays: true
+                //     },
+                // },
+                {
+                    $lookup: {
+                        from: collectionConstant.USER,
+                        localField: "usermanager_id",
+                        foreignField: "_id",
+                        as: "manager"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "costcodes",
+                        localField: "usercostcode",
+                        foreignField: "_id",
+                        as: "costcode"
+                    }
+                },
+                {
+                    $project: {
+                        role_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$role.role_name" },
+                                        {
+                                            $arrayElemAt: ["$role.role_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        supervisor_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$supervisor.userfullname" },
+                                        {
+                                            $arrayElemAt: ["$supervisor.userfullname", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        manager_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$manager.userfullname" },
+                                        {
+                                            $arrayElemAt: ["$manager.userfullname", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        location_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$location.location_name" },
+                                        {
+                                            $arrayElemAt: ["$location.location_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        userjob_type_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$jobtype.job_type_name" },
+                                        {
+                                            $arrayElemAt: ["$jobtype.job_type_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        userjob_title_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$jobtitle.job_title_name" },
+                                        {
+                                            $arrayElemAt: ["$jobtitle.job_title_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        department_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$department.department_name" },
+                                        {
+                                            $arrayElemAt: ["$department.department_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        user_payroll_group_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$payrollgroup.payroll_group_name" },
+                                        {
+                                            $arrayElemAt: ["$payrollgroup.payroll_group_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },  /* role_name: "$role.role_name",
+                        supervisor_name: { $ifNull: [{ $arrayElemAt: ["$supervisor.userfullname", 0] }, ""] },
+                        manager_name: { $ifNull: [{ $arrayElemAt: ["$manager.userfullname", 0] }, ""] },
+                        location_name: { $ifNull: [{ $arrayElemAt: ["$location.location_name", 0] }, ""] },
+                        userjob_type_name: { $ifNull: [{ $arrayElemAt: ["$jobtype.job_type_name", 0] }, ""] },
+                        userjob_title_name: { $ifNull: ["$jobtitle.job_title_name", ""] },
+                        department_name: { $ifNull: ["$department.department_name", ""] },
+                        user_payroll_group_name: { $ifNull: ["$payrollgroup.payroll_group_name", 0]  }, */
+                        userroleId: 1,
+                        useremail: 1,
+                        username: 1,
+                        usermiddlename: 1,
+                        userlastname: 1,
+                        userfullname: 1,
+                        userssn: 1,
+                        userdevice_pin: 1,
+                        userphone: 1,
+                        usersecondary_email: 1,
+                        usergender: 1,
+                        userdob: 1,
+                        userstatus: 1,
+                        userpicture: 1,
+                        usermobile_picture: 1,
+                        userfulladdress: 1,
+                        userstreet1: 1,
+                        userstreet1: 1,
+                        usercity: 1,
+                        user_state: 1,
+                        userzipcode: 1,
+                        usercountry: 1,
+                        userstartdate: 1,
+                        usersalary: 1,
+                        usermanager_id: 1,
+                        usersupervisor_id: 1,
+                        userlocation_id: 1,
+                        userjob_title_id: 1,
+                        userdepartment_id: 1,
+                        userjob_type_id: 1,
+                        usernon_exempt: 1,
+                        usermedicalBenifits: 1,
+                        useradditionalBenifits: 1,
+                        useris_password_temp: 1,
+                        userterm_conditions: 1,
+                        userweb_security_code: 1,
+                        user_payroll_rules: 1,
+                        user_id_payroll_group: 1,
+                        usercostcode: 1,
+                        costcode: { $ifNull: [{ $arrayElemAt: ["$costcode.value", 0] }, ""] },
+                        userqrcode: 1,
+                        userfirebase_id: 1,
+                        user_no: 1,
+                        card_no: 1,
+                        card_type: 1,
+                        is_first: 1,
+                        allow_for_projects: 1,
+                        user_languages: 1,
+                        compliance_officer: 1,
+                    }
+                },
+                {
+                    $sort: { 'userstartdate': -1 }
+                }
+            ]);
+            res.send({ data: user_by_id, message: translator.getStr('UserListing'), status: true });
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.getOneUser = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+
+            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            //let user_by_id = await userConnection.findOne({ _id: ObjectID(req.body._id) });
+            let user_by_id = await userConnection.aggregate([
+                {
+                    $match:
+                    {
+                        _id: ObjectID(req.body._id),
+                        is_delete: 0
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.SUPPLIER_ROLE,
+                        localField: "userroleId",
+                        foreignField: "role_id",
+                        as: "role"
+                    }
+                },
+                /*  {
+                     $unwind: {
+                         path: "$role",
+                         preserveNullAndEmptyArrays: true
+                     },
+                 }, */
+                {
+                    $lookup: {
+                        from: collectionConstant.JOB_TITLE,
+                        localField: "userjob_title_id",
+                        foreignField: "_id",
+                        as: "jobtitle"
+                    }
+                },
+                /*   {
+                      $unwind: {
+                          path: "$jobtitle",
+                          preserveNullAndEmptyArrays: true
+                      },
+                  }, */
+                {
+                    $lookup: {
+                        from: collectionConstant.DEPARTMENTS,
+                        localField: "userdepartment_id",
+                        foreignField: "_id",
+                        as: "department"
+                    }
+                },
+                /*  {
+                     $unwind: {
+                         path: "$department",
+                         preserveNullAndEmptyArrays: true
+                     },
+                 }, */
+                {
+                    $lookup: {
+                        from: collectionConstant.PAYROLL_GROUP,
+                        localField: "user_id_payroll_group",
+                        foreignField: "_id",
+                        as: "payrollgroup"
+                    }
+                },
+                /*  {
+                     $unwind: {
+                         path: "$payrollgroup",
+                         preserveNullAndEmptyArrays: true
+                     },
+                 }, */
+                {
+                    $lookup: {
+                        from: collectionConstant.JOB_TYPE,
+                        localField: "userjob_type_id",
+                        foreignField: "_id",
+                        as: "jobtype"
+                    }
+                },
+                // {
+                //     $unwind: {
+                //         path:"$jobtype",
+                //         preserveNullAndEmptyArrays: true
+                //     },
+                // },
+                {
+                    $lookup: {
+                        from: collectionConstant.USER,
+                        localField: "usersupervisor_id",
+                        foreignField: "_id",
+                        as: "supervisor"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.LOCATIONS,
+                        localField: "userlocation_id",
+                        foreignField: "_id",
+                        as: "location"
+                    }
+                },
+                // {
+                //     $unwind: {
+                //         path:"$location",
+                //         preserveNullAndEmptyArrays: true
+                //     },
+                // },
+                {
+                    $lookup: {
+                        from: collectionConstant.USER,
+                        localField: "usermanager_id",
+                        foreignField: "_id",
+                        as: "manager"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "costcodes",
+                        localField: "usercostcode",
+                        foreignField: "_id",
+                        as: "costcode"
+                    }
+                },
+                {
+                    $project: {
+                        role_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$role.role_name" },
+                                        {
+                                            $arrayElemAt: ["$role.role_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        supervisor_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$supervisor.userfullname" },
+                                        {
+                                            $arrayElemAt: ["$supervisor.userfullname", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        manager_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$manager.userfullname" },
+                                        {
+                                            $arrayElemAt: ["$manager.userfullname", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        location_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$location.location_name" },
+                                        {
+                                            $arrayElemAt: ["$location.location_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        userjob_type_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$jobtype.job_type_name" },
+                                        {
+                                            $arrayElemAt: ["$jobtype.job_type_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        userjob_title_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$jobtitle.job_title_name" },
+                                        {
+                                            $arrayElemAt: ["$jobtitle.job_title_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        department_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$department.department_name" },
+                                        {
+                                            $arrayElemAt: ["$department.department_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        user_payroll_group_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$payrollgroup.payroll_group_name" },
+                                        {
+                                            $arrayElemAt: ["$payrollgroup.payroll_group_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },  /* role_name: "$role.role_name",
+                        supervisor_name: { $ifNull: [{ $arrayElemAt: ["$supervisor.userfullname", 0] }, ""] },
+                        manager_name: { $ifNull: [{ $arrayElemAt: ["$manager.userfullname", 0] }, ""] },
+                        location_name: { $ifNull: [{ $arrayElemAt: ["$location.location_name", 0] }, ""] },
+                        userjob_type_name: { $ifNull: [{ $arrayElemAt: ["$jobtype.job_type_name", 0] }, ""] },
+                        userjob_title_name: { $ifNull: ["$jobtitle.job_title_name", ""] },
+                        department_name: { $ifNull: ["$department.department_name", ""] },
+                        user_payroll_group_name: { $ifNull: ["$payrollgroup.payroll_group_name", 0]  }, */
+                        userroleId: 1,
+                        useremail: 1,
+                        username: 1,
+                        usermiddlename: 1,
+                        userlastname: 1,
+                        userfullname: 1,
+                        userssn: 1,
+                        userdevice_pin: 1,
+                        userphone: 1,
+                        usersecondary_email: 1,
+                        usergender: 1,
+                        userdob: 1,
+                        userstatus: 1,
+                        userpicture: 1,
+                        usermobile_picture: 1,
+                        userfulladdress: 1,
+                        userstreet1: 1,
+                        userstreet1: 1,
+                        usercity: 1,
+                        user_state: 1,
+                        userzipcode: 1,
+                        usercountry: 1,
+                        userstartdate: 1,
+                        usersalary: 1,
+                        usermanager_id: 1,
+                        usersupervisor_id: 1,
+                        userlocation_id: 1,
+                        userjob_title_id: 1,
+                        userdepartment_id: 1,
+                        userjob_type_id: 1,
+                        usernon_exempt: 1,
+                        usermedicalBenifits: 1,
+                        useradditionalBenifits: 1,
+                        useris_password_temp: 1,
+                        userterm_conditions: 1,
+                        userweb_security_code: 1,
+                        user_payroll_rules: 1,
+                        user_id_payroll_group: 1,
+                        usercostcode: 1,
+                        costcode: { $ifNull: [{ $arrayElemAt: ["$costcode.value", 0] }, ""] },
+                        userqrcode: 1,
+                        userfirebase_id: 1,
+                        user_no: 1,
+                        card_no: 1,
+                        card_type: 1,
+                        login_from: 1,
+                        is_first: 1,
+                        allow_for_projects: 1,
+                        user_languages: 1,
+                        show_id_card_on_qrcode_scan: 1,
+                        project_email_group: 1,
+                        compliance_officer: 1,
+                        vendors: 1,
+                    }
+                }
+            ]);
+            res.send({ data: user_by_id[0], message: translator.getStr('SingleUser'), status: true });
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.updateShowIDCardFlag = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+
+            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            requestObject.userupdated_at = Math.round(new Date().getTime() / 1000);
+            requestObject.userupdated_by = decodedToken.UserData._id;
+            let update_user = await userConnection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
+            if (update_user) {
+                res.send({ message: translator.getStr('UserProfileUpdated'), data: update_user, status: true });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.savePersonalInfo = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            let history_object;
+
+            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            var form = new formidable.IncomingForm();
+            var fields = [];
+            var notFonud = 0;
+            var newOpenFile;
+            var fileName;
+            form.parse(req)
+                .on('file', function (name, file) {
+                    notFonud = 1;
+                    fileName = file;
+                })
+                .on('field', function (name, field) {
+                    fields[name] = field;
+                })
+                .on('error', function (err) {
+                    throw err;
+                }).on('end', async function () {
+                    newOpenFile = this.openedFiles;
+                    var body = JSON.parse(fields.reqObject);
+
+                    jobtitle = body.jobtitle_name;
+                    department = body.department_name;
+                    costcode = body.costcode_name;
+                    body.allow_for_projects = body.allow_for_projects == "true" || body.allow_for_projects == true ? true : false;
+
+                    delete body['jobtitle_name'];
+                    delete body['department_name'];
+                    delete body['costcode_name'];
+
+                    let user_edit_id = fields._id;
+                    //let usercostcode = "013-0110002";
+                    //password_tmp = body.password;
+
+                    let temp_vendors = [];
+                    let tempVendor = body.vendors;
+                    if (tempVendor) {
+                        for (let i = 0; i < tempVendor.length; i++) {
+                            temp_vendors.push(ObjectID(tempVendor[i]));
+                        }
+                    }
+                    body.vendors = temp_vendors;
+
+                    body.userupdated_by = decodedToken.UserData._id;
+                    if (body.password) {
+                        body.password = common.generateHash(body.password);
+                    }
+                    let One_User = await userConnection.findOne({ _id: ObjectID(user_edit_id) });
+                    let checkEmailExist = await userConnection.findOne({ useremail: body.useremail });
+                    let flg_update = false;
+
+                    if (checkEmailExist) {
+                        if (checkEmailExist._id == user_edit_id) {
+                            let update_user_1 = await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, body);
+                            flg_update = true;
+                        } else {
+                            res.send({ message: translator.getStr('EmailAlreadyExists'), status: false });
+                            return;
+                        }
+                    } else {
+                        let update_user_1 = await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, body);
+                        flg_update = true;
+                    }
+                    // //update code
+                    history_object = body;
+                    history_object.updated_id = user_edit_id;
+                    //let update_user_1 = await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, body);
+                    // let get_user_roles = connection_db_api.model(collectionConstant.SUPPLIER_ROLE, supplierRoleSchema);
+                    // let onerole = await get_user_roles.findOne({ role_id: ObjectID(body.userroleId) });
+                    if (flg_update) {
+                        let LowerCase_bucket = decodedToken.companycode.toLowerCase();
+
+                        /* // Revalk Email Recipient from all projects
+                        let projectEmailRecipientsConnection = connection_db_api.model(collectionConstant.SUPPLIER_PROJECT_EMAIL_RECIPIENTS, projectEmailRecipientSchema);
+                        if (body.project_email_group == 'none') {
+                            let revokFromAllEmail = {
+                                sponsor_change_order: user_edit_id,
+                                prime_change_order: user_edit_id,
+                                sponsor_purchase_order: user_edit_id,
+                                sponsor_retaining_order: user_edit_id,
+                                prime_retaining_order: user_edit_id,
+                                sponsor_payment_order: user_edit_id,
+                                prime_payment_order: user_edit_id,
+                            };
+                            let update_object = await projectEmailRecipientsConnection.update({}, { $pull: revokFromAllEmail });
+                        } else if (body.project_email_group == 'prime_member') {
+                            let revokFromAllEmail = {
+                                prime_change_order: user_edit_id,
+                                prime_retaining_order: user_edit_id,
+                                prime_payment_order: user_edit_id,
+                            };
+                            let update_object = await projectEmailRecipientsConnection.update({}, { $pull: revokFromAllEmail });
+                        } else if (body.project_email_group == 'sponsor_member') {
+                            let revokFromAllEmail = {
+                                sponsor_change_order: user_edit_id,
+                                sponsor_purchase_order: user_edit_id,
+                                sponsor_retaining_order: user_edit_id,
+                                sponsor_payment_order: user_edit_id,
+                            };
+                            let update_object = await projectEmailRecipientsConnection.update({}, { $pull: revokFromAllEmail });
+                        } */
+
+
+                        //TODO-start
+                        /* let qrcode_Object = config.SITE_URL + '/#/user-publicpage?_id=' + user_edit_id + '&company_code=' + decodedToken.companycode;
+                        console.log("qrcode_Object", qrcode_Object);
+                        let admin_qrCode = await QRCODE.generate_QR_Code(qrcode_Object);
+                        console.log("admin_qrCode: ", admin_qrCode)
+                        let key_url = "employee/" + user_edit_id + "/" + user_edit_id + "_QRCode.png";
+                        let PARAMS = {
+                            Bucket: LowerCase_bucket,
+                            Key: key_url,
+                            Body: admin_qrCode,
+                            ACL: 'public-read-write'
+                        };
+                        if (One_User.userqrcode != undefined && One_User.userqrcode != "") {
+                            tmp_CodeArray = One_User.userqrcode.split("/");
+                            last_codearray = tmp_CodeArray.splice(0, 4);
+                            console.log(tmp_CodeArray.join("/"));
+                            let params_delete = {
+                                Bucket: last_codearray[last_codearray.length - 1],
+                                Key: tmp_CodeArray.join("/")
+                            };
+                            bucketOpration.deleteObject(params_delete, function (err, resultUpload) {
+                                console.log(err, resultUpload);
+                            });
+                        }
+                        bucketOpration.uploadFile(PARAMS, async function (err, resultUpload) {
+                            if (err) {
+                                res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
+                            } else {
+                                userqrcode = config.wasabisys_url + "/" + LowerCase_bucket + "/" + key_url;
+                                console.log("userqrcode: ", userqrcode);
+                                history_object.userqrcode = userqrcode;
+                                let updateuser = await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { userqrcode: userqrcode });
+                                if (updateuser) { */
+                        //TODO-end
+                        if (notFonud == 1) {
+                            var temp_path = newOpenFile[0].path;
+                            var file_name = newOpenFile[0].name;
+                            let extension = file_name.split(".")[1];
+                            dirKeyName = config.SUPPLIER_DIVERSITY_WASABI_PATH + "/employee/" + user_edit_id + "/" + config.PROFILE_PICTURE + "/user_picture." + extension;
+                            var fileBody = fs.readFileSync(temp_path);
+                            params = { Bucket: LowerCase_bucket, Key: dirKeyName, Body: fileBody, ACL: 'public-read-write' };
+                            //condition
+                            if (One_User.userpicture != undefined && One_User.userpicture != "") {
+                                tmp_picArray = One_User.userpicture.split("/");
+                                last_picarray = tmp_picArray.splice(0, 4);
+
+                                let params_delete_pic = {
+                                    Bucket: last_picarray[last_picarray.length - 1],
+                                    Key: tmp_picArray.join("/")
+                                };
+                                bucketOpration.deleteObject(params_delete_pic, function (err, resultUpload) {
+                                    // console.log(err, resultUpload);
+                                });
+                            }
+                            bucketOpration.uploadFile(params, async function (err, resultUpload) {
+                                if (err) {
+                                    res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
+                                } else {
+                                    // console.log(resultUpload);
+                                    urlProfile = config.wasabisys_url + "/" + LowerCase_bucket + "/" + dirKeyName;
+                                    history_object.userpicture = urlProfile;
+                                    let update_user = await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { userpicture: urlProfile });
+                                    if (update_user) {
+                                        addUSER_History("Update", history_object, decodedToken);
+                                        //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
+                                        res.send({ message: translator.getStr('UserUpdated'), data: body, status: true });
+                                    }
+                                }
+                            });
+                        } else {
+                            addUSER_History("Update", history_object, decodedToken);
+                            //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
+                            res.send({ message: translator.getStr('UserUpdated'), data: body, status: true });
+                        }
+                        //TODO-start
+                        /* }
+                    }
+                }); */
+                        //TODO-end
+                    } else {
+                        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    }
+                });
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            //connection_db_api.close()
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.saveMobilePhoto = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+
+            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            var form = new formidable.IncomingForm();
+            var fields = [];
+            var notFonud = 0;
+            var newOpenFile;
+            var fileName;
+            form.parse(req)
+                .on('file', function (name, file) {
+                    notFonud = 1;
+                    fileName = file;
+                })
+                .on('field', function (name, field) {
+                    // console.log(name, field);
+                    fields[name] = field;
+                })
+                .on('error', function (err) {
+                    throw err;
+                }).on('end', async function () {
+                    let LowerCase_bucket = decodedToken.companycode.toLowerCase();
+                    let user_edit_id = fields._id;
+                    let One_User = await userConnection.findOne({ _id: ObjectID(user_edit_id) });
+
+                    if (notFonud == 1) {
+                        newOpenFile = this.openedFiles;
+                        var temp_path = newOpenFile[0].path;
+                        var file_name = newOpenFile[0].name;
+                        let extension = file_name.split(".")[1];
+                        dirKeyName = config.SUPPLIER_DIVERSITY_WASABI_PATH + "/employee/" + user_edit_id + "/" + config.PROFILE_PICTURE + "/mobile_picture." + extension;
+                        var fileBody = fs.readFileSync(temp_path);
+                        params = { Bucket: LowerCase_bucket, Key: dirKeyName, Body: fileBody, ACL: 'public-read-write' };
+                        if (One_User.usermobile_picture != undefined && One_User.usermobile_picture != "") {
+                            tmp_picArray = One_User.usermobile_picture.split("/");
+                            last_picarray = tmp_picArray.splice(0, 4);
+                            // console.log(tmp_picArray.join("/"));
+                            let params_delete_pic = {
+                                Bucket: last_picarray[last_picarray.length - 1],
+                                Key: tmp_picArray.join("/")
+                            };
+                            bucketOpration.deleteObject(params_delete_pic, function (err, resultUpload) {
+                                // console.log(err, resultUpload);
+                            });
+                        }
+                        bucketOpration.uploadFile(params, async function (err, resultUpload) {
+                            if (err) {
+                                res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
+                            } else {
+                                // console.log(resultUpload);
+                                urlProfile = config.wasabisys_url + "/" + LowerCase_bucket + "/" + dirKeyName;
+                                let update_user = await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { usermobile_picture: urlProfile });
+                                // console.log(update_user);
+                                if (update_user) {
+                                    res.send({ message: translator.getStr('UserUpdated'), status: true });
+                                }
+                            }
+                        });
+                    } else {
+                        res.send({ message: translator.getStr('UserUpdated'), status: true });
+                    }
+                });
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            // connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.saveContactInfo = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+
+            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let _id = req.body._id;
+            delete req.body["_id"];
+            let body = req.body;
+            let updateuser = await userConnection.updateOne({ _id: ObjectID(_id) }, body);
+            if (updateuser) {
+                body.updated_id = _id;
+                addUSER_History("Update", body, decodedToken);
+                //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
+                res.send({ message: translator.getStr('ContactInfoUpdated'), status: true });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.saveEmployeeInfo = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+
+            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let _id = req.body._id;
+            delete req.body["_id"];
+            if (req.body.usercostcode != "") {
+                req.body.usercostcode = ObjectID(req.body.usercostcode);
+            }
+            let body = req.body;
+
+            jobtitle = body.jobtitle_name;
+            department = body.department_name,
+                costcode = body.costcode_name;
+            role_name = body.role_name;
+
+            delete body['jobtitle_name'];
+            delete body['department_name'];
+            delete body['costcode_name'];
+            delete body['role_name'];
+            let tempLang = body.user_languages;
+            // console.log("iddd: ", body.user_languages, tempLang);
+            let temp_user_languages = [];
+            for (let i = 0; i < tempLang.length; i++) {
+                temp_user_languages.push(ObjectID(tempLang[i]));
+            }
+            body.user_languages = temp_user_languages;
+            // console.log("afetr: ", body.user_languages, temp_user_languages);
+            // console.log("body: ", body);
+            let updateuser = await userConnection.updateOne({ _id: ObjectID(_id) }, body);
+            if (updateuser) {
+                body.updated_id = _id;
+                addUSER_History("Update", body, decodedToken);
+                //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
+                res.send({ message: translator.getStr('EmployeeInfoUpdated'), status: true });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.deleteTeamMember = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            let reqBody = req.body;
+
+            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let update_user_1 = await userConnection.updateOne({ _id: ObjectID(reqBody._id) }, { is_delete: 1 });
+            if (update_user_1) {
+
+                addUSER_History("Delete", { deleted_id: reqBody._id }, decodedToken);
+                //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
+                res.send({ message: translator.getStr('UserDeleted'), status: true });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.getallsupervisors = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            req.body.is_delete = 0;
+
+            let rolesConnection = connection_db_api.model(collectionConstant.SUPPLIER_ROLE, supplierRoleSchema);
+            let all_suprvisor = await rolesConnection.aggregate([
+                {
+                    $match:
+                    {
+                        role_name: "Supervisor"
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.USER,
+                        localField: "_id",
+                        foreignField: "userroleId",
+                        as: "user"
+                    }
+                },
+                {
+                    $unwind: "$user",
+                },
+                {
+                    $project: {
+                        _id: "$user._id",
+                        userfullname: "$user.userfullname",
+                    }
+                },
+            ]);
+            res.send({ message: translator.getStr('SupervisorListing'), data: all_suprvisor, status: true });
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.sendappinvitation = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        try {
+            var requestObject = req.body;
+            var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+            let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
+            let emailTmp = {
+                HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
+                SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
+                ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                THANKS: translator.getStr('EmailTemplateThanks'),
+                ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+
+                TITLE: translator.getStr('EmailAppInvitationTitle'),
+                USER_FULL_NAME: `${requestObject.name},`,
+                TEXT1: translator.getStr('EmailAppInvitationAppDownloadInvitation'),
+                TEXT2: translator.getStr('EmailAppInvitationDownloadApp'),
+                USEREMAIL: `${translator.getStr('EmailAppInvitationLoginEmail')} ${requestObject.login_email}`,
+                COMPANYCODE: `${translator.getStr('EmailAppInvitationCompanyCode')} ${decodedToken.companycode}`,
+            };
+
+            const file_data = fs.readFileSync('./controller/emailtemplates/appinvitation.html', 'utf8');
+            var template = handlebars.compile(file_data);
+            var HtmlData = await template(emailTmp);
+            let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, [requestObject.recipient], "App Download Invitation", HtmlData,
+                talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
+                talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+
+            // let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, [get_all_po[0]['vendor']['vendor_email']], "Rovuk Purchase Order Request", HtmlData,
+            //     config.tenants.tenant_smtp_server, config.tenants.tenant_smtp_port, config.tenants.tenant_smtp_reply_to_mail,
+            //     config.tenants.tenant_smtp_password, config.tenants.tenant_smtp_timeout, config.tenants.tenant_smtp_security);
+            console.log("send mail:", mailsend);
+            res.send({ message: translator.getStr('AppInvitationSent'), status: true });
+        }
+        catch (e) {
+            console.log("error:", e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        }
+    }
+    else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.senddocumentexpiration = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+
+    let tmp_local_offset = Number(req.headers.local_offset);
+    // console.log("tmp_local_offset", tmp_local_offset)
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+            let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
+            let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
+
+            let emailTmp = {};
+            let date = new Date();
+            let currentEpoch = Math.round(date.setHours(0, 0, 0, 0) / 1000);
+            currentEpoch = currentEpoch - tmp_local_offset;
+            let sendResponse = 0; // 0-error response, 1-user document mail, 2-project document mail
+            let recipients = [];
+            if (requestObject.type == "user") {
+                let userDocumentConnection = connection_db_api.model(collectionConstant.USERDOCUMENT, userDocumentSchema);
+                let user_document = await userDocumentConnection.aggregate([
+                    {
+                        $match: {
+                            is_delete: 0,
+                            _id: ObjectID(requestObject._id)
+                        },
+                    },
+                    {
+                        $lookup: {
+                            from: collectionConstant.USER,
+                            localField: "userdocument_user_id",
+                            foreignField: "_id",
+                            as: "user"
+                        }
+                    },
+                    {
+                        $unwind: "$user"
+                    },
+                    {
+                        $lookup: {
+                            from: collectionConstant.DOCUMENTTYPE,
+                            localField: "userdocument_type_id",
+                            foreignField: "_id",
+                            as: "document"
+                        }
+                    },
+                    {
+                        $unwind: "$document"
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            userdocument_user_id: 1,
+                            user_name: "$user.userfullname",
+                            user_email: "$user.useremail",
+                            type: "$document.document_type_name",
+                            userdocument_expire_date: 1,
+                            total_remain: {
+                                $cond: [
+                                    {
+                                        $and: [
+                                            { $ne: ["$userdocument_expire_date", 0] },
+                                            { $gte: ["$userdocument_expire_date", currentEpoch] },
+                                        ]
+                                    },
+                                    {
+                                        $floor: {
+                                            $divide: [{
+                                                $subtract:
+                                                    ["$userdocument_expire_date", currentEpoch]
+                                            }, 86400]
+                                        }
+                                    },
+                                    0
+                                ],
+                            }
+                        }
+                    }
+                ]);
+                // console.log("user_document:", user_document);
+                if (user_document[0]['total_remain'] == 0) {
+                    res.send({ message: translator.getStr('DocumentExpired'), status: true });
+                } else {
+                    recipients.push(user_document[0]['user_email']);
+                    emailTmp = {
+                        HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
+                        SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
+                        ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                        THANKS: translator.getStr('EmailTemplateThanks'),
+                        ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+
+                        TITLE: translator.getStr('EmailSingleDocExpireTitle'),
+                        HELLO_USERNAME: `${translator.getStr('EmailTemplateHello')} ${user_document[0]['user_name']}`,
+                        MESSAGE: `${translator.getStr('EmailSingleDocExpireYourDocument')}, ${user_document[0]['type']} ${translator.getStr('EmailSingleDocExpireExpireInNext')} ${user_document[0]['total_remain']} ${translator.getStr('EmailSingleDocExpireUpdateDocument')}`,
+
+                        COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
+                        COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
+                    };
+                    sendResponse = 1;
+                }
+            } else if (requestObject.type == "project") {
+                let projectDocumentConnection = connection_db_api.model(collectionConstant.PROJECTDOCUMENTS, projectDocumentSchema);
+                let project_document = await projectDocumentConnection.aggregate([
+                    {
+                        $match: {
+                            is_delete: 0,
+                            _id: ObjectID(requestObject._id)
+                        },
+                    },
+                    {
+                        $lookup: {
+                            from: collectionConstant.PROJECT,
+                            localField: "project_id",
+                            foreignField: "_id",
+                            as: "project"
+                        }
+                    },
+                    {
+                        $unwind: "$project"
+                    },
+                    {
+                        $lookup: {
+                            from: collectionConstant.PROJECT_SETTINGS,
+                            localField: "project_id",
+                            foreignField: "project_id",
+                            as: "settings"
+                        }
+                    },
+                    {
+                        $unwind: "$settings"
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            project_id: 1,
+                            project_name: "$project.project_name",
+                            project_emails: "$settings.settings",
+                            document_name: 1,
+                            expiry_date: 1,
+                            status: {
+                                $cond: [
+                                    {
+                                        $eq: ["$expiry_date", 0]
+                                    },
+                                    "N/A",
+                                    {
+                                        $cond: [
+                                            {
+                                                $lt: ["$expiry_date", currentEpoch]
+                                            },
+                                            "Expired",
+                                            "Current"
+                                        ]
+                                    }
+                                ]
+                            },
+                            total_remain: {
+                                $cond: [
+                                    {
+                                        $and: [
+                                            { $ne: ["$expiry_date", 0] },
+                                            { $gte: ["$expiry_date", currentEpoch] },
+                                        ]
+                                    },
+                                    {
+                                        $floor: {
+                                            $divide: [{
+                                                $subtract:
+                                                    ["$expiry_date", currentEpoch]
+                                            }, 86400]
+                                        }
+                                    },
+                                    0
+                                ],
+                            }
+                        }
+                    }
+                ]);
+                if (project_document.length > 0) {
+                    if (project_document[0]['status'] == "Expired") {
+                        res.send({ message: translator.getStr('DocumentExpired'), status: true });
+                    } else if (project_document[0]['status'] == "N/A") {
+                        res.send({ message: translator.getStr('DocumentCantExpired'), status: true });
+                    } else {
+                        // console.log("s:", project_document[0]['project_emails']['email_recipients']['internal']);
+                        recipients = project_document[0]['project_emails']['email_recipients']['internal'];
+                        // console.log("mail:", recipients);
+                        if (recipients == null || recipients.length == 0) {
+                            res.send({ message: translator.getStr('EmptyInternalEmail'), status: true });
+                        } else {
+                            emailTmp = {
+                                HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
+                                SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
+                                ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                                THANKS: translator.getStr('EmailTemplateThanks'),
+                                ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+
+                                TITLE: translator.getStr('EmailSingleDocExpireTitle'),
+                                HELLO_USERNAME: `${translator.getStr('EmailTemplateHello')} ${decodedToken.UserData.userfullname}`,
+                                MESSAGE: `${translator.getStr('EmailSingleDocExpireYourDocument')} ${project_document[0]['document_name']} ${translator.getStr('EmailSingleDocExpireExpireInNext')} ${project_document[0]['total_remain']} ${translator.getStr('EmailSingleDocExpireUpdateDocument')}`,
+
+                                COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
+                                COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
+                            };
+                            sendResponse = 2;
+                        }
+                    }
+                } else {
+                    res.send({ message: translator.getStr('NoDataWithId'), status: true });
+                }
+            }
+            if (sendResponse != 0) {
+                const file_data = fs.readFileSync('./controller/emailtemplates/singleDocumentExpiryAlert.html', 'utf8');
+                var template = handlebars.compile(file_data);
+                var HtmlData = await template(emailTmp);
+                let subject = "";
+                if (sendResponse == 1) {
+                    subject = "Contact admin: Documents about to expire";
+                } else if (sendResponse == 2) {
+                    subject = "Documents about to expire";
+                }
+
+                // let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, [requestObject.recipient], subject, HtmlData,
+                //     talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
+                //     talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+
+                let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, recipients, subject, HtmlData,
+                    config.tenants.tenant_smtp_server, config.tenants.tenant_smtp_port, config.tenants.tenant_smtp_reply_to_mail,
+                    config.tenants.tenant_smtp_password, config.tenants.tenant_smtp_timeout, config.tenants.tenant_smtp_security);
+                console.log("send mail:", mailsend);
+                res.send({ message: translator.getStr('DocumentExpirationWarningSent'), status: true });
+            }
+        }
+        catch (e) {
+            console.log("error:", e)
+                ; res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    }
+    else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.savesignature = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+
+            let userCollection = connection_db_api.model(collectionConstant.USER, userSchema);
+            requestObject.userupdated_at = Math.round(new Date().getTime() / 1000);
+            requestObject.userupdated_by = decodedToken.UserData._id;
+            let update_user = await userCollection.updateOne({ _id: ObjectID(requestObject.user_id) }, requestObject);
+            if (update_user) {
+                res.send({ message: translator.getStr('SaveUserSignature'), data: update_user, status: true });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+var usersdocument_historiesSchema = require('./../../../../../model/history/userdocument_history');
+let historyCollectionConstant = require('./../../../../../config/historyCollectionConstant');
+
+async function addUserDocumentHistory(action, data, decodedToken) {
+    try {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        let usersdocument_historiesConnection = connection_db_api.model(historyCollectionConstant.USERDOCUMENT_HISTORY, usersdocument_historiesSchema);
+        data.action = action;
+        data.created_at = Math.round(new Date().getTime() / 1000);
+        data.created_by = decodedToken.UserData._id;
+        let save_usersdocument_histories = new usersdocument_historiesConnection(data);
+        save_usersdocument_histories.save();
+    } catch (e) {
+        console.log("=====USER DOCUMENT HISTORY ERROR=========", e);
+    }
+}
+
+module.exports.getUserDocumentHistory = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            let col = [];
+            var requestObject = req.body;
+            col.push("document_name", "action", "created_by", "taken_device");
+            var start = parseInt(req.body.start);
+            var perpage = parseInt(req.body.length);
+            var columnData = (req.body.order != undefined && req.body.order != '') ? req.body.order[0].column : '';
+            var columntype = (req.body.order != undefined && req.body.order != '') ? req.body.order[0].dir : '';
+            var sort = {};
+            sort[col[columnData]] = (columntype == 'asc') ? 1 : -1;
+            let count_query = { is_delete: 0, userdocument_user_id: ObjectID(req.body.user_id) };
+            var query = {
+                $or: [
+                    { "document_name": new RegExp(req.body.search.value, 'i') },
+                ]
+            };
+
+            let usersdocument_historiesConnection = connection_db_api.model(historyCollectionConstant.USERDOCUMENT_HISTORY, usersdocument_historiesSchema);
+            let user_by_id = await usersdocument_historiesConnection.aggregate([
+                {
+                    $match: count_query
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.USER,
+                        localField: "created_by",
+                        foreignField: "_id",
+                        as: "user"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.DOCUMENTTYPE,
+                        localField: "userdocument_type_id",
+                        foreignField: "_id",
+                        as: "document"
+                    }
+                },
+                {
+                    $project: {
+                        userdocument_user_id: 1,
+                        userdocument_type_id: 1,
+                        document_name: "$document.document_type_name",
+                        userdocument_url: 1,
+                        show_on_qrcode_scan: 1,
+                        userdocument_expire_date: 1,
+                        userdocument_created_by: 1,
+                        userdocument_updated_by: 1,
+                        userdocument_created_at: 1,
+                        userdocument_updated_at: 1,
+                        is_delete: 1,
+
+                        created_at: 1,
+                        action: 1,
+                        created_by: { $ifNull: ["$user.userfullname", ""] },
+                        taken_device: 1,
+                    }
+                },
+                { $sort: sort },
+                { $match: query },
+                { $limit: perpage + start },
+                { $skip: start },
+            ]);
+            let count = 0;
+            count = await usersdocument_historiesConnection.countDocuments(count_query);
+            var dataResponce = {};
+            dataResponce.data = user_by_id;
+            dataResponce.draw = req.body.draw;
+            dataResponce.recordsTotal = count;
+            dataResponce.recordsFiltered = (req.body.search.value) ? user_by_id.length : count;
+            res.json(dataResponce);
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+var user_historySchema = require('./../../../../../model/history/user_history');
+
+async function addUSER_History(action, data, decodedToken) {
+    try {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        let user_historyCollection = connection_db_api.model(historyCollectionConstant.USER_HISTORY, user_historySchema);
+        data.action = action;
+        data.taken_device = config.WEB_ALL;
+        data.created_at = Math.round(new Date().getTime() / 1000);
+        data.created_by = decodedToken.UserData._id;
+        let save_user_histories = new user_historyCollection(data);
+        save_user_histories.save();
+    } catch (e) {
+        console.log("=====USER  History ERROR=========", e);
+    }
+}
+
+module.exports.getAllUserHistory = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            let col = [];
+            var requestObject = req.body;
+            col.push("created_at", "action", "created_by", "taken_device");
+            var start = parseInt(req.body.start);
+            var perpage = parseInt(req.body.length);
+            var columnData = (req.body.order != undefined && req.body.order != '') ? req.body.order[0].column : '';
+            var columntype = (req.body.order != undefined && req.body.order != '') ? req.body.order[0].dir : '';
+            var sort = {};
+            // if (req.body.draw == 1)
+            // {
+            //     sort = { "created_at": -1 };
+            // } else
+            // {
+
+            // }
+            sort[col[columnData]] = (columntype == 'asc') ? 1 : -1;
+            let count_query = { is_delete: 0 };
+            if (requestObject.employee_id != "") {
+                count_query = {
+                    $or: [
+                        { "deleted_id": ObjectID(requestObject.employee_id) },
+                        { "updated_id": ObjectID(requestObject.employee_id) },
+                        { "inserted_id": ObjectID(requestObject.employee_id) }
+                    ],
+                    "is_delete": 0
+                };
+            }
+            var query = {
+                $or: [{ "created_at": new RegExp(req.body.search.value, 'i') },
+                { "action": new RegExp(req.body.search.value, 'i') },
+                { "created_by": new RegExp(req.body.search.value, 'i') },
+                { "role_name": new RegExp(req.body.search.value, 'i') },
+                { "manager_name": new RegExp(req.body.search.value, 'i') },
+                { "location_name": new RegExp(req.body.search.value, 'i') },
+                { "userjob_type_name": new RegExp(req.body.search.value, 'i') },
+                { "userjob_title_name": new RegExp(req.body.search.value, 'i') },
+                { "department_name": new RegExp(req.body.search.value, 'i') },
+                { "user_payroll_group_name": new RegExp(req.body.search.value, 'i') },
+                { "useremail": new RegExp(req.body.search.value, 'i') },
+                { "username": new RegExp(req.body.search.value, 'i') },
+                { "usermiddlename": new RegExp(req.body.search.value, 'i') },
+                { "userlastname": new RegExp(req.body.search.value, 'i') },
+                { "userfullname": new RegExp(req.body.search.value, 'i') },
+                { "userssn": new RegExp(req.body.search.value, 'i') },
+                { "userdevice_pin": new RegExp(req.body.search.value, 'i') },
+                { "userphone": new RegExp(req.body.search.value, 'i') },
+                { "usersecondary_email": new RegExp(req.body.search.value, 'i') },
+                { "userfulladdress": new RegExp(req.body.search.value, 'i') },
+                { "userstreet1": new RegExp(req.body.search.value, 'i') },
+                { "userstreet2": new RegExp(req.body.search.value, 'i') },
+                { "city": new RegExp(req.body.search.value, 'i') },
+                { "user_state": new RegExp(req.body.search.value, 'i') },
+                { "userzipcode": new RegExp(req.body.search.value, 'i') },
+                { "usercountry": new RegExp(req.body.search.value, 'i') },
+                { "userstartdate": new RegExp(req.body.search.value, 'i') },
+                { "usersalary": new RegExp(req.body.search.value, 'i') },
+                { "usernon_exempt": new RegExp(req.body.search.value, 'i') },
+                { "usermedicalBenifits": new RegExp(req.body.search.value, 'i') },
+                { "useradditionalBenifits": new RegExp(req.body.search.value, 'i') },
+                { "userterm_conditions": new RegExp(req.body.search.value, 'i') },
+                { "user_payroll_rules": new RegExp(req.body.search.value, 'i') },
+                { "costcode": new RegExp(req.body.search.value, 'i') },
+                { "card_no": new RegExp(req.body.search.value, 'i') },
+                { "card_type": new RegExp(req.body.search.value, 'i') },
+                ]
+            };
+
+            let userConnection = connection_db_api.model(historyCollectionConstant.USER_HISTORY, user_historySchema);
+            let user_by_id = await userConnection.aggregate([
+                {
+                    $match: count_query
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.USER,
+                        let: { id: "$deleted_id" },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: { $and: [{ $eq: ["$_id", "$$id"] }, { $eq: ["$is_delete", 1] }] }
+                                },
+                            },
+                            {
+                                $lookup: {
+                                    from: collectionConstant.SUPPLIER_ROLE,
+                                    localField: "userroleId",
+                                    foreignField: "role_id",
+                                    as: "role"
+                                }
+                            },
+                            {
+                                $lookup: {
+                                    from: collectionConstant.USER,
+                                    localField: "created_by",
+                                    foreignField: "_id",
+                                    as: "user"
+                                }
+                            },
+                            {
+                                $lookup: {
+                                    from: collectionConstant.JOB_TITLE,
+                                    localField: "userjob_title_id",
+                                    foreignField: "_id",
+                                    as: "jobtitle"
+                                }
+                            },
+                            {
+                                $lookup: {
+                                    from: collectionConstant.DEPARTMENTS,
+                                    localField: "userdepartment_id",
+                                    foreignField: "_id",
+                                    as: "department"
+                                }
+                            },
+                            {
+                                $lookup: {
+                                    from: collectionConstant.PAYROLL_GROUP,
+                                    localField: "user_id_payroll_group",
+                                    foreignField: "_id",
+                                    as: "payrollgroup"
+                                }
+                            },
+                            {
+                                $lookup: {
+                                    from: collectionConstant.JOB_TYPE,
+                                    localField: "userjob_type_id",
+                                    foreignField: "_id",
+                                    as: "jobtype"
+                                }
+                            },
+                            {
+                                $lookup: {
+                                    from: collectionConstant.USER,
+                                    localField: "usersupervisor_id",
+                                    foreignField: "_id",
+                                    as: "supervisor"
+                                }
+                            },
+                            {
+                                $lookup: {
+                                    from: collectionConstant.LOCATIONS,
+                                    localField: "userlocation_id",
+                                    foreignField: "_id",
+                                    as: "location"
+                                }
+                            },
+                            {
+                                $lookup: {
+                                    from: collectionConstant.USER,
+                                    localField: "usermanager_id",
+                                    foreignField: "_id",
+                                    as: "manager"
+                                }
+                            },
+                            {
+                                $lookup: {
+                                    from: "costcodes",
+                                    localField: "usercostcode",
+                                    foreignField: "_id",
+                                    as: "costcode"
+                                }
+                            },
+                            {
+                                $lookup: {
+                                    from: collectionConstant.CREDITCARD,
+                                    localField: "card_type",
+                                    foreignField: "_id",
+                                    as: "card"
+                                }
+                            },
+                            {
+
+                                $project: {
+                                    role_name: {
+                                        $ifNull: [
+                                            {
+                                                $cond: [
+                                                    { $isArray: "$role.role_name" },
+                                                    {
+                                                        $arrayElemAt: ["$role.role_name", 0]
+                                                    }, ""
+                                                ]
+                                            }, ""
+                                        ]
+                                    },
+                                    supervisor_name: {
+                                        $ifNull: [
+                                            {
+                                                $cond: [
+                                                    { $isArray: "$supervisor.userfullname" },
+                                                    {
+                                                        $arrayElemAt: ["$supervisor.userfullname", 0]
+                                                    }, ""
+                                                ]
+                                            }, ""
+                                        ]
+                                    },
+                                    manager_name: {
+                                        $ifNull: [
+                                            {
+                                                $cond: [
+                                                    { $isArray: "$manager.userfullname" },
+                                                    {
+                                                        $arrayElemAt: ["$manager.userfullname", 0]
+                                                    }, ""
+                                                ]
+                                            }, ""
+                                        ]
+                                    },
+                                    location_name: {
+                                        $ifNull: [
+                                            {
+                                                $cond: [
+                                                    { $isArray: "$location.location_name" },
+                                                    {
+                                                        $arrayElemAt: ["$location.location_name", 0]
+                                                    }, ""
+                                                ]
+                                            }, ""
+                                        ]
+                                    },
+                                    userjob_type_name: {
+                                        $ifNull: [
+                                            {
+                                                $cond: [
+                                                    { $isArray: "$jobtype.job_type_name" },
+                                                    {
+                                                        $arrayElemAt: ["$jobtype.job_type_name", 0]
+                                                    }, ""
+                                                ]
+                                            }, ""
+                                        ]
+                                    },
+                                    userjob_title_name: {
+                                        $ifNull: [
+                                            {
+                                                $cond: [
+                                                    { $isArray: "$jobtitle.job_title_name" },
+                                                    {
+                                                        $arrayElemAt: ["$jobtitle.job_title_name", 0]
+                                                    }, ""
+                                                ]
+                                            }, ""
+                                        ]
+                                    },
+                                    department_name: {
+                                        $ifNull: [
+                                            {
+                                                $cond: [
+                                                    { $isArray: "$department.department_name" },
+                                                    {
+                                                        $arrayElemAt: ["$department.department_name", 0]
+                                                    }, ""
+                                                ]
+                                            }, ""
+                                        ]
+                                    },
+                                    user_payroll_group_name: {
+                                        $ifNull: [
+                                            {
+                                                $cond: [
+                                                    { $isArray: "$payrollgroup.payroll_group_name" },
+                                                    {
+                                                        $arrayElemAt: ["$payrollgroup.payroll_group_name", 0]
+                                                    }, ""
+                                                ]
+                                            }, ""
+                                        ]
+                                    },
+
+                                    userroleId: 1,
+                                    useremail: 1,
+                                    username: 1,
+                                    usermiddlename: 1,
+                                    userlastname: 1,
+                                    userfullname: 1,
+                                    userssn: 1,
+                                    userdevice_pin: 1,
+                                    userphone: 1,
+                                    usersecondary_email: 1,
+                                    usergender: 1,
+                                    userdob: 1,
+                                    userstatus: 1,
+                                    userpicture: 1,
+                                    usermobile_picture: 1,
+                                    userfulladdress: 1,
+                                    userstreet1: 1,
+                                    userstreet2: 1,
+                                    usercity: 1,
+                                    user_state: 1,
+                                    userzipcode: 1,
+                                    usercountry: 1,
+                                    userstartdate: 1,
+                                    usersalary: 1,
+                                    usermanager_id: 1,
+                                    usersupervisor_id: 1,
+                                    userlocation_id: 1,
+                                    userjob_title_id: 1,
+                                    userdepartment_id: 1,
+                                    userjob_type_id: 1,
+
+                                    usernon_exempt: 1,
+                                    usermedicalBenifits: 1,
+                                    useradditionalBenifits: 1,
+                                    useris_password_temp: 1,
+                                    userterm_conditions: 1,
+                                    userweb_security_code: 1,
+                                    user_payroll_rules: 1,
+                                    user_id_payroll_group: 1,
+                                    usercostcode: 1,
+                                    costcode: { $ifNull: [{ $arrayElemAt: ["$costcode.value", 0] }, ""] },
+                                    userqrcode: 1,
+                                    userfirebase_id: 1,
+                                    user_no: 1,
+                                    card_no: { $ifNull: ["$card.name", ""] },
+                                    card_type: 1,
+                                    created_at: 1,
+                                    action: 1,
+                                    created_by: { $ifNull: ["$user.userfullname", ""] },
+                                    allow_for_projects: 1,
+                                    user_languages: 1,
+                                    taken_device: 1,
+                                    project_email_group: 1,
+                                    //deleted_user: "$deleted_user",
+                                    compliance_officer: 1,
+                                }
+                            }
+                        ],
+                        as: "deleted_user"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$deleted_user",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.SUPPLIER_ROLE,
+                        localField: "userroleId",
+                        foreignField: "role_id",
+                        as: "role"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.USER,
+                        localField: "created_by",
+                        foreignField: "_id",
+                        as: "user"
+                    }
+                },
+                /*  {
+                     $unwind: {
+                         path: "$role",
+                         preserveNullAndEmptyArrays: true
+                     },
+                 }, */
+                {
+                    $lookup: {
+                        from: collectionConstant.JOB_TITLE,
+                        localField: "userjob_title_id",
+                        foreignField: "_id",
+                        as: "jobtitle"
+                    }
+                },
+                /*   {
+                      $unwind: {
+                          path: "$jobtitle",
+                          preserveNullAndEmptyArrays: true
+                      },
+                  }, */
+                {
+                    $lookup: {
+                        from: collectionConstant.DEPARTMENTS,
+                        localField: "userdepartment_id",
+                        foreignField: "_id",
+                        as: "department"
+                    }
+                },
+                /*  {
+                     $unwind: {
+                         path: "$department",
+                         preserveNullAndEmptyArrays: true
+                     },
+                 }, */
+                {
+                    $lookup: {
+                        from: collectionConstant.PAYROLL_GROUP,
+                        localField: "user_id_payroll_group",
+                        foreignField: "_id",
+                        as: "payrollgroup"
+                    }
+                },
+                /*  {
+                     $unwind: {
+                         path: "$payrollgroup",
+                         preserveNullAndEmptyArrays: true
+                     },
+                 }, */
+                {
+                    $lookup: {
+                        from: collectionConstant.JOB_TYPE,
+                        localField: "userjob_type_id",
+                        foreignField: "_id",
+                        as: "jobtype"
+                    }
+                },
+                // {
+                //     $unwind: {
+                //         path:"$jobtype",
+                //         preserveNullAndEmptyArrays: true
+                //     },
+                // },
+                {
+                    $lookup: {
+                        from: collectionConstant.USER,
+                        localField: "usersupervisor_id",
+                        foreignField: "_id",
+                        as: "supervisor"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.LOCATIONS,
+                        localField: "userlocation_id",
+                        foreignField: "_id",
+                        as: "location"
+                    }
+                },
+                // {
+                //     $unwind: {
+                //         path:"$location",
+                //         preserveNullAndEmptyArrays: true
+                //     },
+                // },
+                {
+                    $lookup: {
+                        from: collectionConstant.USER,
+                        localField: "usermanager_id",
+                        foreignField: "_id",
+                        as: "manager"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "costcodes",
+                        localField: "usercostcode",
+                        foreignField: "_id",
+                        as: "costcode"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.CREDITCARD,
+                        localField: "card_type",
+                        foreignField: "_id",
+                        as: "card"
+                    }
+                },
+                {
+
+                    $project: {
+                        role_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$role.role_name" },
+                                        {
+                                            $arrayElemAt: ["$role.role_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        supervisor_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$supervisor.userfullname" },
+                                        {
+                                            $arrayElemAt: ["$supervisor.userfullname", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        manager_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$manager.userfullname" },
+                                        {
+                                            $arrayElemAt: ["$manager.userfullname", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        location_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$location.location_name" },
+                                        {
+                                            $arrayElemAt: ["$location.location_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        userjob_type_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$jobtype.job_type_name" },
+                                        {
+                                            $arrayElemAt: ["$jobtype.job_type_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        userjob_title_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$jobtitle.job_title_name" },
+                                        {
+                                            $arrayElemAt: ["$jobtitle.job_title_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        department_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$department.department_name" },
+                                        {
+                                            $arrayElemAt: ["$department.department_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        user_payroll_group_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$payrollgroup.payroll_group_name" },
+                                        {
+                                            $arrayElemAt: ["$payrollgroup.payroll_group_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },  /* role_name: "$role.role_name",
+                        supervisor_name: { $ifNull: [{ $arrayElemAt: ["$supervisor.userfullname", 0] }, ""] },
+                        manager_name: { $ifNull: [{ $arrayElemAt: ["$manager.userfullname", 0] }, ""] },
+                        location_name: { $ifNull: [{ $arrayElemAt: ["$location.location_name", 0] }, ""] },
+                        userjob_type_name: { $ifNull: [{ $arrayElemAt: ["$jobtype.job_type_name", 0] }, ""] },
+                        userjob_title_name: { $ifNull: ["$jobtitle.job_title_name", ""] },
+                        department_name: { $ifNull: ["$department.department_name", ""] },
+                        user_payroll_group_name: { $ifNull: ["$payrollgroup.payroll_group_name", 0]  }, */
+
+                        userroleId: 1,
+                        useremail: 1,
+                        username: 1,
+                        usermiddlename: 1,
+                        userlastname: 1,
+                        userfullname: 1,
+                        userssn: 1,
+                        userdevice_pin: 1,
+                        userphone: 1,
+                        usersecondary_email: 1,
+                        usergender: 1,
+                        userdob: 1,
+                        userstatus: 1,
+                        userpicture: 1,
+                        usermobile_picture: 1,
+                        userfulladdress: 1,
+                        userstreet1: 1,
+                        userstreet2: 1,
+                        usercity: 1,
+                        user_state: 1,
+                        userzipcode: 1,
+                        usercountry: 1,
+                        userstartdate: 1,
+                        usersalary: 1,
+                        usermanager_id: 1,
+                        usersupervisor_id: 1,
+                        userlocation_id: 1,
+                        userjob_title_id: 1,
+                        userdepartment_id: 1,
+                        userjob_type_id: 1,
+
+                        usernon_exempt: 1,
+                        usermedicalBenifits: 1,
+                        useradditionalBenifits: 1,
+                        useris_password_temp: 1,
+                        userterm_conditions: 1,
+                        userweb_security_code: 1,
+                        user_payroll_rules: 1,
+                        user_id_payroll_group: 1,
+                        usercostcode: 1,
+                        costcode: { $ifNull: [{ $arrayElemAt: ["$costcode.value", 0] }, ""] },
+                        userqrcode: 1,
+                        userfirebase_id: 1,
+                        user_no: 1,
+                        card_no: { $ifNull: ["$card.name", ""] },
+                        card_type: 1,
+                        created_at: 1,
+                        action: 1,
+                        created_by: { $ifNull: ["$user.userfullname", ""] },
+                        allow_for_projects: 1,
+                        user_languages: 1,
+                        taken_device: 1,
+                        project_email_group: 1,
+                        deleted_user: "$deleted_user",
+                        compliance_officer: 1,
+                    }
+                },
+                { $sort: sort },
+                { $match: query },
+                { $limit: perpage + start },
+                { $skip: start },
+            ]);
+            let count = 0;
+            count = await userConnection.countDocuments(count_query);
+            var dataResponce = {};
+            dataResponce.data = user_by_id;
+            dataResponce.draw = req.body.draw;
+            dataResponce.recordsTotal = count;
+            dataResponce.recordsFiltered = (req.body.search.value) ? user_by_id.length : count;
+            res.json(dataResponce);
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.getAllEmployeeReport = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            let logo_url = requestObject.logo_url;
+            let email_list = requestObject.email_list;
+            var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+            let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
+            let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
+
+            let userCollection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let sort = { userfullname: 1 };
+            let roleQuery = [];
+            let query = [];
+            if (requestObject.role_ids.length != 0) {
+                let data_Query = [];
+                for (let i = 0; i < requestObject.role_ids.length; i++) {
+                    data_Query.push(ObjectID(requestObject.role_ids[i]));
+                }
+                roleQuery.push({ "role_id": { $in: data_Query } });
+                console.log("role: ", data_Query);
+                query.push({ "userroleId": { $in: data_Query } });
+            }
+
+            if (requestObject.status_ids.length != 0) {
+                console.log("status: ", requestObject.status_ids);
+                query.push({ "userstatus": { $in: requestObject.status_ids } });
+            }
+            query = query.length == 0 ? {} : { $and: query };
+            // let date_query = {};
+            console.log("requestObject:", requestObject);
+            // if (requestObject.start_date != 0 && requestObject.end_date != 0) {
+            //     date_query = { "timecard_clock_in": { $gte: requestObject.start_date, $lt: requestObject.end_date } };
+            // }
+            //date_query = date_query.length == 0 ? {} : { $or: date_query };
+            //query = query.length == 0 ? {} : { $or: query };
+            // console.log("date_query: ", date_query, query);
+            let get_user = await userCollection.aggregate([
+                {
+                    $match: { is_delete: 0 },
+                },
+                { $match: query },
+                {
+                    $lookup: {
+                        from: collectionConstant.SUPPLIER_ROLE,
+                        localField: "userroleId",
+                        foreignField: "role_id",
+                        as: "role"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.JOB_TITLE,
+                        localField: "userjob_title_id",
+                        foreignField: "_id",
+                        as: "jobtitle"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.DEPARTMENTS,
+                        localField: "userdepartment_id",
+                        foreignField: "_id",
+                        as: "department"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.PAYROLL_GROUP,
+                        localField: "user_id_payroll_group",
+                        foreignField: "_id",
+                        as: "payrollgroup"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.JOB_TYPE,
+                        localField: "userjob_type_id",
+                        foreignField: "_id",
+                        as: "jobtype"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.USER,
+                        localField: "usersupervisor_id",
+                        foreignField: "_id",
+                        as: "supervisor"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.LOCATIONS,
+                        localField: "userlocation_id",
+                        foreignField: "_id",
+                        as: "location"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.USER,
+                        localField: "usermanager_id",
+                        foreignField: "_id",
+                        as: "manager"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.CREDITCARD,
+                        localField: "card_type",
+                        foreignField: "_id",
+                        as: "card"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "costcodes",
+                        localField: "usercostcode",
+                        foreignField: "_id",
+                        as: "costcode"
+                    }
+                },
+                {
+                    $project: {
+                        role_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$role.role_name" },
+                                        {
+                                            $arrayElemAt: ["$role.role_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        supervisor_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$supervisor.userfullname" },
+                                        {
+                                            $arrayElemAt: ["$supervisor.userfullname", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        manager_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$manager.userfullname" },
+                                        {
+                                            $arrayElemAt: ["$manager.userfullname", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        location_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$location.location_name" },
+                                        {
+                                            $arrayElemAt: ["$location.location_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        userjob_type_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$jobtype.job_type_name" },
+                                        {
+                                            $arrayElemAt: ["$jobtype.job_type_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        userjob_title_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$jobtitle.job_title_name" },
+                                        {
+                                            $arrayElemAt: ["$jobtitle.job_title_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        department_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$department.department_name" },
+                                        {
+                                            $arrayElemAt: ["$department.department_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        user_payroll_group_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$payrollgroup.payroll_group_name" },
+                                        {
+                                            $arrayElemAt: ["$payrollgroup.payroll_group_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        card_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$card.name" },
+                                        {
+                                            $arrayElemAt: ["$card.name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        userroleId: 1,
+                        useremail: 1,
+                        username: 1,
+                        usermiddlename: 1,
+                        userlastname: 1,
+                        userfullname: 1,
+                        userssn: 1,
+                        userdevice_pin: 1,
+                        userphone: 1,
+                        usersecondary_email: 1,
+                        usergender: 1,
+                        userdob: 1,
+                        userstatus: 1,
+                        userpicture: 1,
+                        usermobile_picture: 1,
+                        userfulladdress: 1,
+                        userstreet1: 1,
+                        userstreet1: 1,
+                        usercity: 1,
+                        user_state: 1,
+                        userzipcode: 1,
+                        usercountry: 1,
+                        userstartdate: 1,
+                        usersalary: 1,
+                        usermanager_id: 1,
+                        usersupervisor_id: 1,
+                        userlocation_id: 1,
+                        userjob_title_id: 1,
+                        userdepartment_id: 1,
+                        userjob_type_id: 1,
+                        usernon_exempt: 1,
+                        usermedicalBenifits: 1,
+                        useradditionalBenifits: 1,
+                        useris_password_temp: 1,
+                        userterm_conditions: 1,
+                        userweb_security_code: 1,
+                        user_payroll_rules: 1,
+                        user_id_payroll_group: 1,
+                        usercostcode: 1,
+                        costcode: { $ifNull: [{ $arrayElemAt: ["$costcode.value", 0] }, ""] },
+                        userqrcode: 1,
+                        userfirebase_id: 1,
+                        user_no: 1,
+                        card_no: 1,
+                        card_type: 1,
+                        login_from: 1,
+                        is_first: 1,
+                        allow_for_projects: 1,
+                        user_languages: 1,
+                        show_id_card_on_qrcode_scan: 1,
+                        compliance_officer: 1,
+                    }
+                },
+                { $sort: sort }
+            ]);
+            console.log("get_user: ", get_user.length);
+            let workbook = new excel.Workbook();
+            let title_tmp = translator.getStr('EmployeeTitle');
+            let worksheet = workbook.addWorksheet(title_tmp);
+            let xlsx_data = [];
+            let result = await common.urlToBase64(logo_url);
+            let logo_rovuk = await common.urlToBase64(config.SUPPLIER_LOGO);
+            var languageSchema = require('./../../../../../model/language');
+            let languageCollection = connection_db_api.model(collectionConstant.LANGUAGE, languageSchema);
+            xlsx_data = await setUserData(get_user, languageCollection, translator);
+            let headers = [translator.getStr('Employee_First_Name'), translator.getStr('Employee_Middle_Name'), translator.getStr('Employee_Last_Name'), translator.getStr('Employee_Email'), translator.getStr('Employee_SSN'), translator.getStr('Employee_Employee_Number'), translator.getStr('Employee_User_Role'), translator.getStr('Employee_Login_From'), translator.getStr('Employee_Gender'), translator.getStr('Employee_Date_Of_Birth'), translator.getStr('Employee_Status'), translator.getStr('Employee_Phone'), translator.getStr('Employee_Secondary_Email'), translator.getStr('Employee_Street_1'), translator.getStr('Employee_Street_2'), translator.getStr('Employee_City'), translator.getStr('Employee_State'), translator.getStr('Employee_Zipcode'), translator.getStr('Employee_Country'), translator.getStr('Employee_Cost_Code'), translator.getStr('Employee_Card_Type'), translator.getStr('Employee_Salary_Hourly_Rate'), translator.getStr('Employee_Start_Date'), translator.getStr('Employee_Manager'), translator.getStr('Employee_Supervisor'), translator.getStr('Employee_Location'), translator.getStr('Employee_Department'), translator.getStr('Employee_Job_Title'), translator.getStr('Employee_Job_Type'), translator.getStr('Employee_Payroll_Cycle'), translator.getStr('Employee_Payroll_Group'), translator.getStr('Employee_Language_Spoken'),];
+
+
+            let d = new Date();
+            let date = common.fullDate_format();
+
+            //compnay logo
+            let myLogoImage = workbook.addImage({
+                base64: result,
+                extension: 'png',
+            });
+            worksheet.addImage(myLogoImage, "A1:A6");
+            worksheet.mergeCells('A1:A6');
+
+            //supplier logo
+            let rovukLogoImage = workbook.addImage({
+                base64: logo_rovuk,
+                extension: 'png',
+            });
+            worksheet.mergeCells('AF1:AF6');
+            worksheet.addImage(rovukLogoImage, 'AF1:AF6');
+
+            // Image between text 1
+            let titleRowValue1 = worksheet.getCell('B1');
+            titleRowValue1.value = `Team detailed report`;
+            titleRowValue1.font = {
+                name: 'Calibri',
+                size: 15,
+                bold: true,
+            };
+            titleRowValue1.alignment = { vertical: 'middle', horizontal: 'left' };
+            worksheet.mergeCells(`B1:AE3`);
+
+            // Image between text 2
+            let titleRowValue2 = worksheet.getCell('B4');
+            titleRowValue2.value = `Generated by: ${decodedToken.UserData.userfullname}`;
+            titleRowValue2.font = {
+                name: 'Calibri',
+                size: 15,
+                bold: true,
+            };
+            titleRowValue2.alignment = { vertical: 'middle', horizontal: 'left' };
+            worksheet.mergeCells(`B4:AE6`);
+
+            //header design
+            let headerRow = worksheet.addRow(headers);
+            headerRow.height = 40;
+            headerRow.alignment = { vertical: 'middle', horizontal: 'center' };
+            headerRow.eachCell((cell, number) => {
+                cell.font = {
+                    bold: true,
+                    size: 14,
+                    color: { argb: "FFFFFFF" }
+                };
+                cell.fill = {
+                    type: 'pattern',
+                    pattern: 'solid',
+                    fgColor: {
+                        argb: 'FF023E8A'
+                    }
+                };
+            });
+
+            console.log("xlsx_data: ", xlsx_data.length);
+            xlsx_data.forEach(d => {
+                let row = worksheet.addRow(d);
+            });
+            worksheet.getColumn(3).width = 20;
+            worksheet.addRow([]);
+            worksheet.columns.forEach(function (column, i) {
+                column.width = 20;
+            });
+
+            let footerRow = worksheet.addRow([translator.getStr('XlsxReportGeneratedAt') + date]);
+            footerRow.alignment = { vertical: 'middle', horizontal: 'center' };
+            worksheet.mergeCells(`A${footerRow.number}:AF${footerRow.number}`);
+            const tmpResultExcel = await workbook.xlsx.writeBuffer();
+
+            let status = `${translator.getStr('EmailExcelStatus')} `;
+            let roles = `${translator.getStr('EmailExcelRoles')} `;
+            let date_range = '';
+            let projects = '';
+            let vendors = '';
+            let cards = '';
+            let contacts = '';
+            let item_types = '';
+            let manufacturers = '';
+            let cost_codes = '';
+            let price_range = '';
+            /* let  = [];
+                        let  = []; */
+            if (requestObject.All_Status) {
+                status = `${translator.getStr('EmailExcelStatus')} ${translator.getStr('EmailExcelAllStatus')}`;
+            } else {
+                var tempStatus = requestObject.status_ids;
+                for (var i = 0; i < tempStatus.length; i++) {
+                    status += tempStatus[i] == 1 ? translator.getStr('Active_Status') : translator.getStr('Inactive_Status');
+                    if (i != tempStatus.length - 1) {
+                        status += ', ';
+                    }
+                }
+            }
+
+            if (requestObject.All_Roles) {
+                roles = `${translator.getStr('EmailExcelRoles')} ${translator.getStr('EmailExcelAllRoles')}`;
+            } else {
+                roleQuery = roleQuery.length == 0 ? {} : { $or: roleQuery };
+                let roleCollection = connection_db_api.model(collectionConstant.SUPPLIER_ROLE, supplierRoleSchema);
+                let all_role = await roleCollection.find(roleQuery, { role_name: 1 });
+                for (var i = 0; i < all_role.length; i++) {
+                    roles += all_role[i]['role_name'];
+                    if (i != all_role.length - 1) {
+                        roles += ', ';
+                    }
+                }
+            }
+
+            let companycode = decodedToken.companycode.toLowerCase();
+            let key_url = config.SUPPLIER_DIVERSITY_WASABI_PATH + "/employee/excel_report/employee_" + new Date().getTime() + ".xlsx";
+            let PARAMS = {
+                Bucket: companycode,
+                Key: key_url,
+                Body: tmpResultExcel,
+                ACL: 'public-read-write'
+            };
+            const file_data = fs.readFileSync('./controller/emailtemplates/excelReport.html', 'utf8');
+
+            bucketOpration.uploadFile(PARAMS, async function (err, resultUpload) {
+                if (err) {
+                    res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
+                } else {
+                    userqrcode = config.wasabisys_url + "/" + companycode + "/" + key_url;
+                    console.log("userqrcode", userqrcode);
+                    let emailTmp = {
+                        HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
+                        SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
+                        ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                        THANKS: translator.getStr('EmailTemplateThanks'),
+                        ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                        VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
+
+                        EMAILTITLE: `${translator.getStr('EmailTeamReportTitle')}`,
+                        TEXT1: translator.getStr('EmailTeamReportText1'),
+                        TEXT2: translator.getStr('EmailTeamReportText2'),
+
+                        FILE_LINK: userqrcode,
+                        LOGIN_LINK: config.SITE_URL + "/login",
+
+                        DOCUMENT_TYPE: roles,
+                        STATUS: status,
+
+                        COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
+                        COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
+                    };
+                    var template = handlebars.compile(file_data);
+                    var HtmlData = await template(emailTmp);
+                    let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, email_list, translator.getStr('EmailUserReportSubject'), HtmlData,
+                        talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
+                        talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                    console.log("mailsend: ", mailsend);
+                    res.send({ message: translator.getStr('Report_Sent_Successfully'), status: true });
+                }
+            });
+        } catch (e) {
+            console.log("error:", e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+function setUserData(get_user, languageCollection, translator) {
+    return new Promise(async function (resolve, reject) {
+        let temp_user = [];
+        if (get_user.length > 0) {
+            for (let i = 0; i < get_user.length; i++) {
+                let element = get_user[i];
+                let formatter = new StringMask("(000) 000-0000", { reverse: true });
+                let userPhone = formatter.apply(element.userphone);
+                let status = element.userstatus == 1 ? translator.getStr('Active_Status') : translator.getStr('Inactive_Status');
+                let payroll = config.PAYROLL_CYCLE.find(o => o.value == element.user_payroll_rules);
+                let language = await getLanguages(element.user_languages, languageCollection);
+                let userDOB = await common.MMDDYYYYFromStringDate(element.userdob);
+                let userStartDate = await common.MMDDYYYYFromStringDate(element.userstartdate);
+                temp_user.push([element.username, element.usermiddlename, element.userlastname, element.useremail, element.userssn,
+                element.user_no, element.role_name, element.login_from, element.usergender, userDOB, status,
+                    userPhone, element.usersecondary_email, element.userstreet1, element.userstreet2, element.usercity, element.user_state,
+                element.userzipcode, element.usercountry, element.costcode, element.card_name, `$${element.usersalary.toFixed(2)}`, userStartDate,
+                element.manager_name, element.supervisor_name, element.location_name, element.department_name, element.userjob_title_name, element.userjob_type_name,
+                payroll.viewValue, element.user_payroll_group_name, language.join(","),]);
+                if (i == get_user.length - 1) {
+                    resolve(temp_user);
+                }
+            }
+        } else {
+            resolve(temp_user);
+        }
+    });
+}
+
+function getLanguages(langauges, languageCollection) {
+    return new Promise(async function (resolve, reject) {
+        let temp_language = [];
+        if (langauges.length > 0) {
+            for (let i = 0; i < langauges.length; i++) {
+                let get_language = await languageCollection.findOne({ _id: ObjectID(langauges[i]) }, { name: 1 });
+                temp_language.push(get_language.name);
+                if (i == langauges.length - 1) {
+                    resolve(temp_language);
+                }
+            }
+        } else {
+            resolve(temp_language);
+        }
+    });
+}
+
+/**
+ * we added new function for import b'coz now correct data import in database after users persmission so create this function
+ * this API not call until user insert correct data in xlsx file so need to now create complete xlsx file
+ * 
+ * Date :28-05-2022 : 05: 06 PM
+ * By : Krunal T Tailor
+ * 
+ */
+module.exports.checkAndInsertImportData = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let requestObject = req.body;
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+            let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
+            let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
+            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            const file_data = fs.readFileSync('./controller/emailtemplates/invitationuser.html', 'utf8');
+            for (let m = 0; m < requestObject.data.length; m++) {
+                let check_user = await userConnection.findOne({
+                    useremail: requestObject.data[m].useremail
+                });
+                if (check_user == null) {
+                    //save
+                    //console.log("check_user", check_user)
+
+                    let tmp_password = requestObject.data[m].password;
+                    requestObject.data[m].password = await common.generateHash(tmp_password);
+
+                    let add_user = new userConnection(requestObject.data[m]);
+                    let add = await add_user.save();
+
+                    // let qrcode_Object = config.SITE_URL + '/user-publicpage?_id=' + add._id + '&company_code=' + company_data.companycode;
+                    // let admin_qrCode = await QRCODE.generate_QR_Code(qrcode_Object);
+                    // let key_url = "employee/" + add._id + "/" + add._id + new Date().getTime() + "_QRCode.png";
+                    // let LowerCase_bucket = company_data.companycode.toLowerCase();
+                    // let PARAMS = {
+                    //     Bucket: LowerCase_bucket,
+                    //     Key: key_url,
+                    //     Body: admin_qrCode,
+                    //     ACL: 'public-read-write'
+                    // };
+
+                    // bucketOpration.uploadFile(PARAMS, async function (err, resultUpload) {
+                    //     if (err) {
+                    //         //return { status: false, message: "Somthing Wrong with wasabi Qr Code upload" }
+                    //     } else {
+                    //         userqrcode = config.wasabisys_url + "/" + LowerCase_bucket + "/" + key_url;
+                    //         let updateuser = await userConnection.updateOne({ _id: ObjectID(add._id) }, { userqrcode: userqrcode });
+                    //     }
+
+                    // })
+
+                    let emailTmp = {
+                        HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
+                        SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
+                        ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                        THANKS: translator.getStr('EmailTemplateThanks'),
+                        ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                        EMAILTITLE: translator.getStr('EmailInvitationUserTitle'),
+                        USERNAME: `${translator.getStr('EmailLoginHello')} ${requestObject.data[m].userfirstname} ${requestObject.data[m].userlastname}`,
+                        TEXT1: `${translator.getStr('EmailInvitationUserText1')}, ${company_data.companyname}.`,
+                        TEXT2: translator.getStr('EmailInvitationUserText2'),
+                        USEREMAIL: `${translator.getStr('EmailInvitationUserLoginEmail')} ${requestObject.data[m].useremail}`,
+                        USERPASSWORD: `${translator.getStr('EmailInvitationUserTemporaryPassword')} ${tmp_password}`,
+                        COMPANYCODE: `${translator.getStr('EmailInvitationUserCompanyCode')} ${company_data.companycode}`,
+                        DOWNLOAD_APP: translator.getStr('EmailInvitationUserDownloadApp'),
+                        LOG_IN: translator.getStr('EmailInvitationLogIn'),
+                        LOGIN_LINK: config.SITE_URL + "/login",
+
+                        COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
+                        COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
+                    };
+                    //translator.getStr('SomethingWrong')
+                    var template = handlebars.compile(file_data);
+                    var HtmlData = await template(emailTmp);
+
+
+                    let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, requestObject.data[m].useremail, "Rovuk Registration", HtmlData,
+                        talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
+                        talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+
+                    //console.l
+                }
+                //console.log("mailsend", mailsend)
+
+            }
+            res.send({ status: true, message: translator.getStr('Data_Insert_message') });
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            //connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+
+};
+
+async function getalldepartment(decodedToken) {
+
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+
+            let departmentCollection = connection_db_api.model(collectionConstant.DEPARTMENTS, departmentSchema);
+            let all_department = await departmentCollection.find();
+            return all_department;
+        } catch (e) {
+            console.log(e);
+            //res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            //connection_db_api.close()
+        }
+    } else {
+        //res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+async function getAlljob_title(decodedToken) {
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+
+            let jobtitleCollection = connection_db_api.model(collectionConstant.JOB_TITLE, jobtitleSchema);
+            let all_jobtitle = await jobtitleCollection.find();
+            return all_jobtitle;
+            //res.send({ message: translator.getStr('JobTitleListing'), data: all_jobtitle, status: true });
+        } catch (e) {
+            console.log(e);
+            //res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            //connection_db_api.close()
+        }
+    } else {
+        //res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+async function getAlljob_type(decodedToken) {
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+
+            let jobtypeCollection = connection_db_api.model(collectionConstant.JOB_TYPE, jobtypeSchema);
+            let all_jobtype = await jobtypeCollection.find({});
+            return all_jobtype;
+        } catch (e) {
+            console.log(e);
+            //res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            //connection_db_api.close()
+        }
+    } else {
+        //res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+async function getAllpayroll_group(decodedToken) {
+
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            let payrollgroupCollection = connection_db_api.model(collectionConstant.PAYROLL_GROUP, payrollgroupSchema);
+            let all_payrollgroup = await payrollgroupCollection.find({});
+            return all_payrollgroup;
+        } catch (e) {
+            console.log(e);
+
+        } finally {
+            //connection_db_api.close();
+        }
+    } else {
+
+    }
+};
+
+async function getAllRoles(decodedToken) {
+
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            let rolesCollection = connection_db_api.model(collectionConstant.SUPPLIER_ROLE, supplierRoleSchema);
+            let all_roles = await rolesCollection.find({ is_delete: 0 });
+            return all_roles;
+        } catch (e) {
+            console.log(e);
+
+        } finally {
+
+        }
+    } else {
+
+    }
+};
+
+/**
+ * 
+ * Last Updated API : 28-05-2022
+ * BY:- Krunal T Tailor
+ * 
+ * To check only duplicate data or not no need to insert in database
+ * User need to import correct data in excel till we have to restrict it
+ * 
+ */
+module.exports.importEmployees = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+
+            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let creditcardsettingsCollection = connection_db_api.model(collectionConstant.CREDITCARD, creditcardsettingsSchema);
+            let none_creditcardsettings = await creditcardsettingsCollection.findOne({ name: "None" });
+            var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+
+            let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
+            let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode, companystatus: 1 });
+            let all_department = await getalldepartment(decodedToken);
+            let All_job_title = await getAlljob_title(decodedToken);
+            let All_job_type = await getAlljob_type(decodedToken);
+            let All_payroll_group = await getAllpayroll_group(decodedToken);
+            let AllRoles = await getAllRoles(decodedToken);
+            var form = new formidable.IncomingForm();
+            var fields = [];
+            var notFonud = 0;
+            var newOpenFile;
+            form.parse(req)
+                .on('file', function (name, file) {
+                    notFonud = 1;
+                    fileName = file;
+                })
+                .on('field', function (name, field) {
+                    console.log(name, field);
+                    fields[name] = field;
+                })
+                .on('error', function (err) {
+                    throw err;
+                }).on('end', async function () {
+                    newOpenFile = this.openedFiles;
+                    if (notFonud == 1) {
+                        const file = reader.readFile(newOpenFile[0].path);
+                        const sheets = file.SheetNames;
+                        let data = [];
+
+                        for (let i = 0; i < sheets.length; i++) {
+                            const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]], { header: 1 });
+                            temp.forEach((res) => {
+                                data.push(res);
+                            });
+                        }
+                        // Printing data
+                        header_ = data.shift();
+
+                        const keys_OLD = ["userfirstname", "userlastname", "useremail", "password", "user_role",
+                            "usergender", "userdepartment", "userjob_title", "userjob_type"];
+                        if (JSON.stringify(keys_OLD.sort()) == JSON.stringify(header_.sort())) {
+                            const file = reader.readFile(newOpenFile[0].path);
+                            const sheets = file.SheetNames;
+                            let data = [];
+                            let success_data = [], error_data = [];
+                            for (let i = 0; i < sheets.length; i++) {
+                                const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
+                                temp.forEach((res) => {
+                                    data.push(res);
+                                });
+                            }
+
+                            for (let m = 0; m < data.length; m++) {
+                                if (data[m].userdepartment != undefined && data[m].userdepartment != null && data[m].userdepartment != "") {
+                                    var Obj_department_name = _.find(all_department, function (o) { return o.department_name == data[m].userdepartment; });
+                                    if (Obj_department_name != null || Obj_department_name != undefined) {
+                                        data[m].userdepartment_id = Obj_department_name._id;
+                                        //delete data[m].userdepartment
+                                    }
+                                }
+
+                                if (data[m].userjob_title != undefined && data[m].userjob_title != null && data[m].userjob_title != "") {
+                                    var Obj_job_title_name = _.find(All_job_title, function (o) { return o.job_title_name == data[m].userjob_title; });
+                                    if (Obj_job_title_name != null || Obj_job_title_name != undefined) {
+                                        data[m].userjob_title_id = Obj_job_title_name._id;
+                                        //delete data[m].userjob_title
+                                    }
+                                }
+
+                                if (data[m].userjob_type != undefined && data[m].userjob_type != null && data[m].userjob_type != "") {
+                                    var Obj_job_type_name = _.find(All_job_type, function (o) { return o.job_type_name == data[m].userjob_type; });
+                                    if (Obj_job_type_name != null || Obj_job_type_name != undefined) {
+                                        data[m].userjob_type_id = Obj_job_type_name._id;
+                                        //delete data[m].userjob_type
+                                    }
+                                }
+
+                                /* if (data[m].payroll_group != undefined && data[m].payroll_group != null && data[m].payroll_group != "") {
+                                    var Obj_payroll_group_name = _.find(All_payroll_group, function (o) { return o.payroll_group_name == data[m].payroll_group; });
+                                    if (Obj_payroll_group_name != null || Obj_payroll_group_name != undefined) {
+                                        data[m].user_id_payroll_group = Obj_payroll_group_name._id
+                                        //delete data[m].payroll_group
+                                    }
+                                } */
+                                data[m].user_id_payroll_group = All_payroll_group[0]._id;
+
+                                if (data[m].user_role != undefined && data[m].user_role != null && data[m].user_role != "") {
+                                    var Obj_AllRoles = _.find(AllRoles, function (o) { return o.role_name == data[m].user_role; });
+                                    if (Obj_AllRoles != null || Obj_AllRoles != undefined) {
+                                        data[m].userroleId = Obj_AllRoles.role_id;
+                                        //delete data[m].user_role
+                                    }
+                                }
+
+                                /* var Obj_payroll_cycle = _.find(config.payroll_cycle, function (o) { return o.viewValue == data[m].payroll_rules; });
+                                if (Obj_payroll_cycle != null || Obj_payroll_cycle != undefined) {
+                                    data[m].user_payroll_rules = Obj_payroll_cycle.value
+                                    //delete data[m].payroll_rules
+                                } */
+                                data[m].user_payroll_rules = 1;
+
+                                data[m].userstatus = 1;
+                                data[m].login_from = "All";
+                                data[m].card_type = none_creditcardsettings._id;
+
+                                data[m].userfullname = `${data[m].userfirstname} ${data[m].userlastname}`;
+                                if (data[m].userdepartment_id == undefined || data[m].userjob_title_id == undefined || data[m].userjob_type_id == undefined ||
+                                    data[m].user_id_payroll_group == undefined || data[m].userroleId == undefined || data[m].user_payroll_rules == undefined) {
+                                    data[m].status = false;
+                                    console.log(" data[m].: ", data[m]);
+                                    data[m].message = translator.getStr('Data_Missing');
+                                    error_data.push({ data: data[m], message: translator.getStr('Data_Missing') });
+                                } else {
+                                    let objRes = await userInsertCheck(connection_db_api, data[m], talnate_data, company_data, translator);
+                                    if (objRes.status) {
+                                        data[m].status = objRes.status;
+                                        data[m].message = objRes.message;
+                                        success_data.push({ data: data[m], message: objRes.message });
+                                    } else {
+                                        data[m].status = objRes.status;
+                                        data[m].message = objRes.message;
+                                        error_data.push({ data: data[m], message: objRes.message });
+                                    }
+                                }
+
+                                if (m == (data.length - 1)) {
+                                    res.send({
+                                        message: translator.getStr('IMPORT_EMPLOYEE_MESSAGE'),
+                                        status: true,
+                                        data: data,
+                                        error_data: error_data,
+                                        success_data: success_data
+                                    });
+                                }
+                            }
+
+
+                            //console.log("-=-=-=-", data)
+                        }
+                    }
+                });
+
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            //connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+async function userInsertCheck(connection_db_api, onedata, talnate_data, company_data, translator) {
+
+    try {
+        onedata.username = onedata.userfirstname;
+        onedata.userfullname = onedata.userfirstname + " " + onedata.userlastname;
+        let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+        let check_user = await userConnection.findOne({
+            useremail: onedata.useremail
+        });
+        if (check_user == null) {
+            return {
+                status: true, message: translator.getStr('Data_Correct')
+            };
+        } else {
+            return { status: false, message: translator.getStr("EmailAlreadyExists") };
+        }
+
+    } catch (e) {
+        return { status: false, message: translator.getStr("Somthing_Wrong_with_connection") };
+    }
+}
+
+module.exports.getarchiveteams = async function (req, res) {
+    console.log('getarchiveteams');
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+
+            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let match = {};
+            if (decodedToken.UserData.role_name == "Employee") {
+                match = {
+                    is_delete: 1,
+                    _id: ObjectID(decodedToken.UserData._id),
+                };
+            } else {
+                match = {
+                    is_delete: 1
+                };
+            }
+            let user_by_id = await userConnection.aggregate([
+                {
+                    $match: match,
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.ROLEANDPERMISSION,
+                        localField: "userroleId",
+                        foreignField: "_id",
+                        as: "role"
+                    }
+                },
+                /*  {
+                     $unwind: {
+                         path: "$role",
+                         preserveNullAndEmptyArrays: true
+                     },
+                 }, */
+                {
+                    $lookup: {
+                        from: collectionConstant.JOB_TITLE,
+                        localField: "userjob_title_id",
+                        foreignField: "_id",
+                        as: "jobtitle"
+                    }
+                },
+                /*   {
+                      $unwind: {
+                          path: "$jobtitle",
+                          preserveNullAndEmptyArrays: true
+                      },
+                  }, */
+                {
+                    $lookup: {
+                        from: collectionConstant.DEPARTMENTS,
+                        localField: "userdepartment_id",
+                        foreignField: "_id",
+                        as: "department"
+                    }
+                },
+                /*  {
+                     $unwind: {
+                         path: "$department",
+                         preserveNullAndEmptyArrays: true
+                     },
+                 }, */
+                {
+                    $lookup: {
+                        from: collectionConstant.PAYROLL_GROUP,
+                        localField: "user_id_payroll_group",
+                        foreignField: "_id",
+                        as: "payrollgroup"
+                    }
+                },
+                /*  {
+                     $unwind: {
+                         path: "$payrollgroup",
+                         preserveNullAndEmptyArrays: true
+                     },
+                 }, */
+                {
+                    $lookup: {
+                        from: collectionConstant.JOB_TYPE,
+                        localField: "userjob_type_id",
+                        foreignField: "_id",
+                        as: "jobtype"
+                    }
+                },
+                // {
+                //     $unwind: {
+                //         path:"$jobtype",
+                //         preserveNullAndEmptyArrays: true
+                //     },
+                // },
+                {
+                    $lookup: {
+                        from: collectionConstant.USER,
+                        localField: "usersupervisor_id",
+                        foreignField: "_id",
+                        as: "supervisor"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.LOCATIONS,
+                        localField: "userlocation_id",
+                        foreignField: "_id",
+                        as: "location"
+                    }
+                },
+                // {
+                //     $unwind: {
+                //         path:"$location",
+                //         preserveNullAndEmptyArrays: true
+                //     },
+                // },
+                {
+                    $lookup: {
+                        from: collectionConstant.USER,
+                        localField: "usermanager_id",
+                        foreignField: "_id",
+                        as: "manager"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "costcodes",
+                        localField: "usercostcode",
+                        foreignField: "_id",
+                        as: "costcode"
+                    }
+                },
+                {
+                    $project: {
+                        role_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$role.role_name" },
+                                        {
+                                            $arrayElemAt: ["$role.role_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        supervisor_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$supervisor.userfullname" },
+                                        {
+                                            $arrayElemAt: ["$supervisor.userfullname", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        manager_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$manager.userfullname" },
+                                        {
+                                            $arrayElemAt: ["$manager.userfullname", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        location_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$location.location_name" },
+                                        {
+                                            $arrayElemAt: ["$location.location_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        userjob_type_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$jobtype.job_type_name" },
+                                        {
+                                            $arrayElemAt: ["$jobtype.job_type_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        userjob_title_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$jobtitle.job_title_name" },
+                                        {
+                                            $arrayElemAt: ["$jobtitle.job_title_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        department_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$department.department_name" },
+                                        {
+                                            $arrayElemAt: ["$department.department_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        user_payroll_group_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$payrollgroup.payroll_group_name" },
+                                        {
+                                            $arrayElemAt: ["$payrollgroup.payroll_group_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },  /* role_name: "$role.role_name",
+                        supervisor_name: { $ifNull: [{ $arrayElemAt: ["$supervisor.userfullname", 0] }, ""] },
+                        manager_name: { $ifNull: [{ $arrayElemAt: ["$manager.userfullname", 0] }, ""] },
+                        location_name: { $ifNull: [{ $arrayElemAt: ["$location.location_name", 0] }, ""] },
+                        userjob_type_name: { $ifNull: [{ $arrayElemAt: ["$jobtype.job_type_name", 0] }, ""] },
+                        userjob_title_name: { $ifNull: ["$jobtitle.job_title_name", ""] },
+                        department_name: { $ifNull: ["$department.department_name", ""] },
+                        user_payroll_group_name: { $ifNull: ["$payrollgroup.payroll_group_name", 0]  }, */
+                        userroleId: 1,
+                        useremail: 1,
+                        username: 1,
+                        usermiddlename: 1,
+                        userlastname: 1,
+                        userfullname: 1,
+                        userssn: 1,
+                        userdevice_pin: 1,
+                        userphone: 1,
+                        usersecondary_email: 1,
+                        usergender: 1,
+                        userdob: 1,
+                        userstatus: 1,
+                        userpicture: 1,
+                        usermobile_picture: 1,
+                        userfulladdress: 1,
+                        userstreet1: 1,
+                        userstreet1: 1,
+                        usercity: 1,
+                        user_state: 1,
+                        userzipcode: 1,
+                        usercountry: 1,
+                        userstartdate: 1,
+                        usersalary: 1,
+                        usermanager_id: 1,
+                        usersupervisor_id: 1,
+                        userlocation_id: 1,
+                        userjob_title_id: 1,
+                        userdepartment_id: 1,
+                        userjob_type_id: 1,
+                        usernon_exempt: 1,
+                        usermedicalBenifits: 1,
+                        useradditionalBenifits: 1,
+                        useris_password_temp: 1,
+                        userterm_conditions: 1,
+                        userweb_security_code: 1,
+                        user_payroll_rules: 1,
+                        user_id_payroll_group: 1,
+                        usercostcode: 1,
+                        costcode: { $ifNull: [{ $arrayElemAt: ["$costcode.value", 0] }, ""] },
+                        userqrcode: 1,
+                        userfirebase_id: 1,
+                        user_no: 1,
+                        card_no: 1,
+                        card_type: 1,
+                        is_first: 1,
+                        allow_for_projects: 1,
+                        user_languages: 1,
+                    }
+                },
+                {
+                    $sort: { 'userstartdate': -1 }
+                }
+            ]);
+            res.send({ data: user_by_id, message: translator.getStr('UserListing'), status: true });
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.recoverteam = async function (req, res) {
+    console.log('recoverteam');
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            let userCollection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let update_team = await userCollection.updateOne({ _id: ObjectID(requestObject._id) }, { is_delete: 0 });
+            if (update_team) {
+                //addProject_History("Recover", { deleted_id: requestObject._id }, decodedToken);
+                res.send({ message: translator.getStr('recoverTeamMember'), data: update_team, status: true });
+
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};

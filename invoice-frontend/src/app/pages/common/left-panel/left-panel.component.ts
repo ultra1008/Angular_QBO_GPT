@@ -120,7 +120,8 @@ export class LeftPanelComponent implements OnInit {
 
       let index = 0;
       // Dashboard Menu
-      if (that.role_permission.role_permission.dashboard.View == true) {
+      // if (that.role_permission.role_permission.dashboard.View == true) {
+      if (true) {
         let reqObj = {
           name: textarray['Sidebar-Dashboard'],
           icon: '',
@@ -131,7 +132,8 @@ export class LeftPanelComponent implements OnInit {
       }
 
       // Today Activity Menu
-      if (that.role_permission.role_permission.todayActivity.View == true) {
+      // if (that.role_permission.role_permission.todayActivity.View == true) {
+      if (true) {
         let reqObj = {
           name: textarray['Sidebar-invoice'],
           icon: '',
@@ -142,7 +144,8 @@ export class LeftPanelComponent implements OnInit {
       }
 
       // Daily Report Menu
-      if (that.role_permission.role_permission.dailyReports.View == true) {
+      // if (that.role_permission.role_permission.dailyReports.View == true) {
+      if (true) {
         let reqObj = {
           name: textarray['Sidebar-Templates'],
           icon: '',
@@ -153,7 +156,8 @@ export class LeftPanelComponent implements OnInit {
       }
 
       // Location
-      if (that.role_permission.role_permission.dailyReports.View == true) {
+      // if (that.role_permission.role_permission.dailyReports.View == true) {
+      if (true) {
         let reqObj = {
           name: textarray['Sidebar-Report'],
           icon: '',
@@ -175,7 +179,8 @@ export class LeftPanelComponent implements OnInit {
       // }
 
       // User Menu
-      if (that.role_permission.role_permission.users.View == true) {
+      // if (that.role_permission.role_permission.users.View == true) {
+      if (true) {
         let reqObj = {
           name: textarray['Sidebar-Team'],
           icon: '',
@@ -230,7 +235,8 @@ export class LeftPanelComponent implements OnInit {
       // }
 
       // Setting Menu
-      if (that.role_permission.role_permission.settings.View == true) {
+      // if (that.role_permission.role_permission.settings.View == true) {
+      if (true) {
         let reqObj = {
           name: textarray['Sidebar-Setting'],
           icon: '',

@@ -572,6 +572,7 @@ export function minutestohours(params: any) {
 }
 
 export function checkRoutePermission(role_permission_front: any) {
+  return "/dashboard";
   if (role_permission_front.dashboard.View) {
     return "/dashboard";
   } else if (role_permission_front.todayActivity.View) {
