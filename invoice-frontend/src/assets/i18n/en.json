@@ -2387,5 +2387,14 @@
     "Do_Want_logout": "Are you sure you want to logout?",
     "logut_button": "Logout",
     "stay_button": "Stay",
-    "All_Submit": "Submit"
+    "All_Submit": "Submit",
+    "Template_Name": "Template Name",
+    "date_created": "Date Created",
+    "template_notes": "Notes",
+    "invoice_no": "Invoice #",
+    "po_no": "P.O #",
+    "packing_slip_no": "Packing Slip #",
+    "Receiving_Slip":"Receiving Slip",
+    "Receiving_Sheet":"Receiving Sheet",
+    "Receiving_Attachment": "Attachments"
 }
