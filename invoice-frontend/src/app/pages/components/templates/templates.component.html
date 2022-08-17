@@ -15,18 +15,9 @@
                             <div>2</div>
                         </div>
                     </button> -->
-                </div> 
+                </div>
                 <div>
-                    <!-- <mat-form-field class="mr-2" appearance="outline">
-                        <mat-label>Due Date</mat-label>
-                        <input matInput>
-                        <mat-datepicker-toggle matSuffix></mat-datepicker-toggle>
-                        <mat-datepicker></mat-datepicker>
-                    </mat-form-field> -->
-                    <!-- <mat-form-field class="mr-2" appearance="outline">
-                        <mat-label>Status</mat-label>
-                        <input matInput placeholder="Status" />
-                    </mat-form-field> -->
+
 
                     <mat-form-field class="" appearance="outline">
                         <mat-label>Serach</mat-label>
@@ -43,3 +34,50 @@
         </div>
 
     </div>
+    <div>
+        <table *ngIf="isEmployeeData" datatable [dtOptions]="dtOptions" class="row-border hover  ">
+            <thead>
+                <tr>
+                    <th>{{"Template_Name" | translate}}</th>
+                    <th>{{"date_created" | translate}}</th>
+                    <th>{{"template_notes" | translate}}</th>
+                    <th>{{"Employee-form-Status" | translate}}</th>
+                    <th width="1%" data-orderable="false">{{"All-Action" | translate }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let userArray of usersArray">
+                    <td>{{ userArray.userfullname }}</td>
+                    <td>{{ userArray.useremail }}</td>
+                    <td>{{ userArray.userjob_title_name }}</td>
+                    <td width="1%">{{ userArray.userstatus == 1 ? acticve_word :inacticve_word }}</td>
+                    <td width="1%">
+                        <div *ngIf="deleteTeamMember">
+                            <div class="dropdown">
+                                <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust" aria-hidden="true"></i>
+                                <div class="dropdown-content-cust">
+                                    <a (click)="viewpageoprn(userArray._id);" class="button_shiftEditClass"><img
+                                            src="{{editIcon}}" alt="" height="20px"> {{'All-Edit' |
+                                        translate}}</a>
+                                    <a (click)="deleteTimecardButtonClick(userArray._id)"
+                                        class="button_shiftDeleteClass"><img src="{{trashIcon}}" alt="" height="20px">
+                                        {{'All-Delete' | translate}}</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="!deleteTeamMember">
+                            <div class="dropdown">
+                                <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust" aria-hidden="true"></i>
+                                <div class="dropdown-content-cust">
+                                    <a (click)="viewpageoprn(userArray._id);" class="button_shiftEditClass"><img
+                                            src="{{editIcon}}" alt="" height="20px"> {{'All-Edit' |
+                                        translate}}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

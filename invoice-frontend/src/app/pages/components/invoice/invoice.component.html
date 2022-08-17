@@ -9,21 +9,25 @@
                             <div>15</div>
                         </div>
                     </button>
-                    <button mat-raised-button color="primary" class="sign-button cust-margin-div mr-1">
+                    <button mat-raised-button class=" btn-success sign-button cust-margin-div mr-1">
                         <div class="row d-flex justify-content-between px-2">
                             <div class="mr-4">Not Exported</div>
                             <div>2</div>
                         </div>
                     </button>
+
                 </div>
                 <div>
-                    <mat-form-field class="mr-2" appearance="outline">
+
+                    <button mat-stroked-button class="mr-1" (click)="gridTolist();"> {{
+                        btn_grid_list_text }} </button>
+                    <mat-form-field class="mr-1" appearance="outline">
                         <mat-label>Due Date</mat-label>
                         <input matInput>
                         <mat-datepicker-toggle matSuffix></mat-datepicker-toggle>
                         <mat-datepicker></mat-datepicker>
                     </mat-form-field>
-                    <mat-form-field class="mr-2" appearance="outline">
+                    <mat-form-field class="mr-1" appearance="outline">
                         <mat-label>Status</mat-label>
                         <input matInput placeholder="Status" />
                     </mat-form-field>
@@ -32,8 +36,8 @@
                         <mat-label>Serach</mat-label>
                         <input matInput placeholder="Serach" />
                     </mat-form-field>
-                    <button mat-raised-button color="primary" style="margin-right: 20px;" (click)="openform()"
-                        class="sign-button ml-2"><img src="{{add_my_self_icon}}" alt="" height="20px">
+                    <button mat-raised-button color="primary" style="margin-right: 10px;" (click)="openform()"
+                        class="sign-button ml-1"><img src="{{add_my_self_icon}}" alt="" height="20px">
                         Create an invoice
                     </button>
                 </div>
@@ -46,7 +50,7 @@
     <div class="pt-3" style="float: right;">
 
     </div>
-    <div class="card mb-3 mr-4" style="margin-top: 5rem !important;">
+    <div class="card mb-3 mr-4" style="margin-top: 5rem !important;" *ngIf="gridtolist">
         <!-- <div class="dropdown menu-icon">
             <i class="fas fa-ellipsis-v cust-fontsize-tmp" aria-hidden="true"></i>
             <div class="dropdown-content-cust">
@@ -83,4 +87,65 @@
             </div>
         </div>
     </div>
+    <div class=" cust-padding-tmp">
+        <div *ngIf="!gridtolist" class="margin-cust-top table-responsive cust-padding-tmp">
+            <div>
+                <table *ngIf="isEmployeeData" datatable [dtOptions]="dtOptions" class="row-border hover  ">
+                    <thead>
+                        <tr>
+                            <th>{{"invoice_no" | translate}}</th>
+                            <th>{{"po_no" | translate}}</th>
+                            <th>{{"packing_slip_no" | translate}}</th>
+                            <th>{{"Receiving_Slip" | translate}}</th>
+                            <th>{{'Receiving_Sheet' | translate}}</th>
+                            <th>{{"template_notes" | translate}}</th>
+                            <th>{{"Receiving_Attachment" | translate}}</th>
+                            <th>{{"Employee-form-Status" | translate}}</th>
+                            <th width="1%" data-orderable="false">{{"All-Action" | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let userArray of usersArray">
+                            <td>{{ userArray.userfullname }}</td>
+                            <td>{{ userArray.useremail }}</td>
+                            <td>{{ userArray.useremail }}</td>
+                            <td>{{ userArray.useremail }}</td>
+                            <td>{{ phonenoFormat(userArray.userphone) }}</td>
+                            <td>{{ userArray.userjob_title_name }}</td>
+                            <td>{{ userArray.department_name }}</td>
+                            <td width="1%">{{ userArray.userstatus == 1 ? acticve_word :inacticve_word }}</td>
+                            <td width="1%">
+                                <div *ngIf="deleteTeamMember">
+                                    <div class="dropdown">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="viewpageoprn(userArray._id);" class="button_shiftEditClass"><img
+                                                    src="{{editIcon}}" alt="" height="20px"> {{'All-Edit' |
+                                                translate}}</a>
+                                            <a (click)="deleteTimecardButtonClick(userArray._id)"
+                                                class="button_shiftDeleteClass"><img src="{{trashIcon}}" alt=""
+                                                    height="20px"> {{'All-Delete' | translate}}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="!deleteTeamMember">
+                                    <div class="dropdown">
+                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust"
+                                            aria-hidden="true"></i>
+                                        <div class="dropdown-content-cust">
+                                            <a (click)="viewpageoprn(userArray._id);" class="button_shiftEditClass"><img
+                                                    src="{{editIcon}}" alt="" height="20px"> {{'All-Edit' |
+                                                translate}}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
 </div>
