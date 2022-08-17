@@ -715,7 +715,7 @@ module.exports.getAllUser = async function (req, res) {
                         usermobile_picture: 1,
                         userfulladdress: 1,
                         userstreet1: 1,
-                        userstreet1: 1,
+                        userstreet2: 1,
                         usercity: 1,
                         user_state: 1,
                         userzipcode: 1,
@@ -1012,7 +1012,7 @@ module.exports.getOneUser = async function (req, res) {
                         usermobile_picture: 1,
                         userfulladdress: 1,
                         userstreet1: 1,
-                        userstreet1: 1,
+                        userstreet2: 1,
                         usercity: 1,
                         user_state: 1,
                         userzipcode: 1,
@@ -1251,9 +1251,9 @@ module.exports.savePersonalInfo = async function (req, res) {
                                     Bucket: last_picarray[last_picarray.length - 1],
                                     Key: tmp_picArray.join("/")
                                 };
-                                bucketOpration.deleteObject(params_delete_pic, function (err, resultUpload) {
-                                    // console.log(err, resultUpload);
-                                });
+                                /*  bucketOpration.deleteObject(params_delete_pic, function (err, resultUpload) {
+                                     // console.log(err, resultUpload);
+                                 }); */
                             }
                             bucketOpration.uploadFile(params, async function (err, resultUpload) {
                                 if (err) {
@@ -1340,9 +1340,9 @@ module.exports.saveMobilePhoto = async function (req, res) {
                                 Bucket: last_picarray[last_picarray.length - 1],
                                 Key: tmp_picArray.join("/")
                             };
-                            bucketOpration.deleteObject(params_delete_pic, function (err, resultUpload) {
-                                // console.log(err, resultUpload);
-                            });
+                            /*  bucketOpration.deleteObject(params_delete_pic, function (err, resultUpload) {
+                                 // console.log(err, resultUpload);
+                             }); */
                         }
                         bucketOpration.uploadFile(params, async function (err, resultUpload) {
                             if (err) {
@@ -2875,7 +2875,7 @@ module.exports.getAllEmployeeReport = async function (req, res) {
                         usermobile_picture: 1,
                         userfulladdress: 1,
                         userstreet1: 1,
-                        userstreet1: 1,
+                        userstreet2: 1,
                         usercity: 1,
                         user_state: 1,
                         userzipcode: 1,
@@ -3792,7 +3792,7 @@ module.exports.getarchiveteams = async function (req, res) {
                         usermobile_picture: 1,
                         userfulladdress: 1,
                         userstreet1: 1,
-                        userstreet1: 1,
+                        userstreet2: 1,
                         usercity: 1,
                         user_state: 1,
                         userzipcode: 1,
