@@ -29,9 +29,9 @@ app.use('/', portal_api);
 https.createServer({
 	key: fs.readFileSync('./selfsigned/test-dev.rovuk.us_2021.key'),
 	cert: fs.readFileSync('./selfsigned/test-dev.rovuk.us_2021.crt')
-}, app).listen(4206, () => {
+}, app).listen(4207, () => {
 
-	console.log('Example App Listening on port 4206');
+	console.log('Example App Listening on port 4207');
 });
 DB = module.exports = new db();
 PROJECTROOT = module.exports = __dirname;

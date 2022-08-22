@@ -11,6 +11,8 @@ var formidable = require('formidable');
 var fs = require('fs');
 var companyCollection = "company";
 var tenantsCollection = "tenants";
+var userSchema = require('./../../../../../model/user');
+var rolesandpermissionsSchema = require('./../../../../../model/rolesandpermissions');
 
 var bucketOpration = require('./../../../../../controller/common/s3-wasabi');
 
@@ -123,7 +125,8 @@ module.exports.editCompany = function (req, res) {
     }
 };
 
-module.exports.compnaySmtp = async function (req, res) {
+module.exports.compnaysmtp = async function (req, res) {
+    console.log('compnaysmtp call');
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
     if (decodedToken) {

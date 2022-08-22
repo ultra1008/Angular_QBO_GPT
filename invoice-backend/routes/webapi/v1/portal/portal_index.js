@@ -87,7 +87,7 @@ router.get('/webapi/v1/exportdocumenttype', documentTypeController.exportDocumen
 var company_othersettingController = require("./company_othersetting/company_othersettingController");
 var company_othersettingValidation = require("./company_othersetting/company_othersettingValidation");
 router.get('/webapi/v1/compnayinformation', common.checkTokenExistOrNot, company_othersettingController.compnayinformation);
-router.get('/webapi/v1/compnaysmtp', common.checkTokenExistOrNot, company_othersettingController.compnaySmtp);
+router.get('/webapi/v1/portal/compnaysmtp', common.checkTokenExistOrNot, company_othersettingController.compnaysmtp);
 router.post('/webapi/v1/editcompany', common.checkTokenExistOrNot, company_othersettingController.editCompany);
 router.post('/webapi/v1/compnayupdatesmtp', common.checkTokenExistOrNot, company_othersettingValidation.smtpUpdateValidation, company_othersettingController.compnayupdatesmtp);
 router.post('/webapi/v1/sendiframecode', common.checkTokenExistOrNot, company_othersettingValidation.sendIframeCode, company_othersettingController.sendIframeCode);

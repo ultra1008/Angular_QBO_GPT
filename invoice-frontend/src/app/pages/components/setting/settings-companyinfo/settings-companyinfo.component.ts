@@ -226,7 +226,7 @@ export class SettingsCompanyinfoComponent implements OnInit {
         });
         let found = that.CompnayTypes_data.find((element: any) => element._id == params.data.companytype);
         that.selectedVendorType = found.name ? found.name : configdata.PRIME_VENDOR_TYPE;
-        that.getCISDivision(that.selectedVendorType == configdata.PRIME_VENDOR_TYPE);
+        //that.getCISDivision(that.selectedVendorType == configdata.PRIME_VENDOR_TYPE);
       }
     });
   }
@@ -244,22 +244,22 @@ export class SettingsCompanyinfoComponent implements OnInit {
     let found = this.CompnayTypes_data.find((element: any) => element._id == event);
     this.selectedVendorType = found.name ? found.name : configdata.PRIME_VENDOR_TYPE;
     this.compnayinfo.get('companydivision')!.setValue([]);
-    this.getCISDivision(this.selectedVendorType == configdata.PRIME_VENDOR_TYPE);
+    // this.getCISDivision(this.selectedVendorType == configdata.PRIME_VENDOR_TYPE);
   }
 
-  async getCISDivision(isPrimeVendor: any) {
-    let url = '';
-    if (isPrimeVendor) {
-      url = httproutesv2.PORTAL_ROVUK_SPONSOR_GET_PRIME_WORK_PERFORMED;
-    } else {
-      url = httproutesv2.PORTAL_ROVUK_SPONSOR_GET_CSIDIVISION_WORK_PERFORMED;
-    }
-    let data = await this.httpCall.httpGetCall(url).toPromise();
-    if (data.status) {
-      this.variablesCSIDivisions = data.data;
-      this.csiDivisions = this.variablesCSIDivisions.slice();
-    }
-  }
+  // async getCISDivision(isPrimeVendor: any) {
+  //   let url = '';
+  //   if (isPrimeVendor) {
+  //     url = httproutesv2.PORTAL_ROVUK_SPONSOR_GET_PRIME_WORK_PERFORMED;
+  //   } else {
+  //     url = httproutesv2.PORTAL_ROVUK_SPONSOR_GET_CSIDIVISION_WORK_PERFORMED;
+  //   }
+  //   let data = await this.httpCall.httpGetCall(url).toPromise();
+  //   if (data.status) {
+  //     this.variablesCSIDivisions = data.data;
+  //     this.csiDivisions = this.variablesCSIDivisions.slice();
+  //   }
+  // }
 
   saveData() {
     let that = this;

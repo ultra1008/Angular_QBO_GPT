@@ -1,4 +1,4 @@
-var CronJob = require('cron').CronJob;
+// var CronJob = require('cron').CronJob;
 var fs = require('fs');
 var handlebars = require('handlebars');
 let sendEmail = require('./../../../../../controller/common/sendEmail');
@@ -195,10 +195,10 @@ async function userDocumentExpiryAlertCronFunction() {
     }
 }
 
-var userDocumentExpiryAlertCron = new CronJob(config.CRON_JOB.USER_DOCUMENT, async function () {
-    userDocumentExpiryAlertCronFunction();
-});
-userDocumentExpiryAlertCron.start();
+// var userDocumentExpiryAlertCron = new CronJob(config.CRON_JOB.USER_DOCUMENT, async function () {
+//     userDocumentExpiryAlertCronFunction();
+// });
+// userDocumentExpiryAlertCron.start();
 
 
 module.exports.userEmergencyContactAlertCron = async function (req, res) {
@@ -268,7 +268,7 @@ async function userEmergencyContactAlertCronFunction() {
     }
 }
 
-var userEmergencyContactAlertCron = new CronJob(config.CRON_JOB.USER_EMERGENCY_CONTACT, async function () {
-    userEmergencyContactAlertCronFunction();
-});
-userEmergencyContactAlertCron.start();
+// var userEmergencyContactAlertCron = new CronJob(config.CRON_JOB.USER_EMERGENCY_CONTACT, async function () {
+//     userEmergencyContactAlertCronFunction();
+// });
+// userEmergencyContactAlertCron.start();

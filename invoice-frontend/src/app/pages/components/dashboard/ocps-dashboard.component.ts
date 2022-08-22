@@ -132,7 +132,7 @@ export class OcpsDashboardComponent implements OnInit {
     this.translate.stream(['']).subscribe((textarray) => {
       this.refreshPage();
     });
-    this.getChartList();
+    //this.getChartList();
   }
 
   refreshPage() {

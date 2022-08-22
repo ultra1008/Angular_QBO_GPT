@@ -686,7 +686,7 @@ export enum httproutes {
     COMPNAY_SCHEDULEOFITEM_GET_BY_CSI_DIVISION = "/webapi/v1/getscheduleofvaluesitembycsidivision",
 
     COMPNAY_INFO_OTHER_SETTING_GET = "/webapi/v1/compnayinformation",
-    COMPNAY_SMTP_OTHER_SETTING_GET = "/webapi/v1/compnaysmtp",
+    COMPNAY_SMTP_OTHER_SETTING_GET = "/webapi/v1/portal/compnaysmtp",
 
     COMPNAY_INFO_OTHER_SETTING_UPDATE = "/webapi/v1/editcompany",
     COMPNAY_SMTP_OTHER_SETTING_UPDATE = "/webapi/v1/compnayupdatesmtp",
