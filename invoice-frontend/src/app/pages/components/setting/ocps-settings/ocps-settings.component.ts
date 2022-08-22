@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { TranslateService } from '@ngx-translate/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { httproutes, httproutesv2, icon, localstorageconstants } from 'src/app/consts';
+import { httproutes, icon, localstorageconstants } from 'src/app/consts';
 import { HttpCall } from 'src/app/service/httpcall.service';
 import { DataTableDirective } from 'angular-datatables';
 import Swal from 'sweetalert2';

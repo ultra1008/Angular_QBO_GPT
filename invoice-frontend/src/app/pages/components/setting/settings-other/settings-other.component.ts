@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { TranslateService } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
-import { httproutes, httproutesv2, icon, localstorageconstants } from 'src/app/consts';
+import { httproutes, icon, localstorageconstants } from 'src/app/consts';
 import { HttpCall } from 'src/app/service/httpcall.service';
 import { DataTableDirective } from 'angular-datatables';
 import Swal from 'sweetalert2';
@@ -414,7 +414,7 @@ export class SettingsOtherComponent implements OnInit {
       } else {
         const formData_profle = new FormData();
         formData_profle.append("file", file);
-        that.httpCall.httpPostCall(httproutesv2.PORTAL_COMPANY_OTHER_SETTING, formData_profle).subscribe(function (params) {
+        that.httpCall.httpPostCall(httproutes.PORTAL_COMPANY_OTHER_SETTING, formData_profle).subscribe(function (params) {
           if (params.status) {
             that.sb.openSnackBar(params.message, "success");
             that.itemTypeData();

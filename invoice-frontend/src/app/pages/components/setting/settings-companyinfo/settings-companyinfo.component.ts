@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpCall } from 'src/app/service/httpcall.service';
-import { httproutes, httproutesv2, icon, localstorageconstants } from 'src/app/consts';
+import { httproutes, icon, localstorageconstants } from 'src/app/consts';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { Mostusedservice } from 'src/app/service/mostused.service';
 import { MatDatepicker } from '@angular/material/datepicker';
@@ -179,7 +179,7 @@ export class SettingsCompanyinfoComponent implements OnInit {
 
   AdminCompnayTypes() {
     let self = this;
-    this.httpCall.httpGetCall(httproutesv2.PORTAL_ROVUK_SPONSOR_GET_COMPNAY_TYPE).subscribe(function (params: any) {
+    this.httpCall.httpGetCall(httproutes.PORTAL_ROVUK_SPONSOR_GET_COMPNAY_TYPE).subscribe(function (params: any) {
       if (params.status) {
         self.CompnayTypes_data = params.data;
       }
@@ -189,7 +189,7 @@ export class SettingsCompanyinfoComponent implements OnInit {
 
   AdminCompnaySizes() {
     let self = this;
-    this.httpCall.httpGetCall(httproutesv2.PORTAL_ROVUK_SPONSOR_GET_COMPNAY_SIZE).subscribe(function (params: any) {
+    this.httpCall.httpGetCall(httproutes.PORTAL_ROVUK_SPONSOR_GET_COMPNAY_SIZE).subscribe(function (params: any) {
       if (params.status) {
         self.CompnaySizes_data = params.data;
       }
@@ -233,7 +233,7 @@ export class SettingsCompanyinfoComponent implements OnInit {
 
   /* AdminCSIDivisionWorkPerformed() {
     let self = this;
-    self.httpCall.httpGetCall(httproutesv2.PORTAL_ROVUK_SPONSOR_GET_CSIDIVISION_WORK_PERFORMED).subscribe(function (params: any) {
+    self.httpCall.httpGetCall(httproutes.PORTAL_ROVUK_SPONSOR_GET_CSIDIVISION_WORK_PERFORMED).subscribe(function (params: any) {
       if (params.status) {
         self.variablesCSIDivisions = params.data;
         self.csiDivisions = self.variablesCSIDivisions.slice();
@@ -250,9 +250,9 @@ export class SettingsCompanyinfoComponent implements OnInit {
   // async getCISDivision(isPrimeVendor: any) {
   //   let url = '';
   //   if (isPrimeVendor) {
-  //     url = httproutesv2.PORTAL_ROVUK_SPONSOR_GET_PRIME_WORK_PERFORMED;
+  //     url = httproutes.PORTAL_ROVUK_SPONSOR_GET_PRIME_WORK_PERFORMED;
   //   } else {
-  //     url = httproutesv2.PORTAL_ROVUK_SPONSOR_GET_CSIDIVISION_WORK_PERFORMED;
+  //     url = httproutes.PORTAL_ROVUK_SPONSOR_GET_CSIDIVISION_WORK_PERFORMED;
   //   }
   //   let data = await this.httpCall.httpGetCall(url).toPromise();
   //   if (data.status) {
