@@ -12,7 +12,7 @@ module.exports.getAllRoles = async function (req, res) {
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
-            let rolesCollection = connection_db_api.model(collectionConstant.SUPPLIER_ROLE, diversityRolesSchema);
+            let rolesCollection = connection_db_api.model(collectionConstant.INVOICE_ROLES, diversityRolesSchema);
             let all_roles = await rolesCollection.find({ is_delete: 0 }).sort({ sequence: 1 });
             res.send({ message: translator.getStr('RoleListing'), data: all_roles, status: true });
         } catch (e) {
@@ -34,7 +34,7 @@ module.exports.saveRoles = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-            let rolesCollection = connection_db_api.model(collectionConstant.SUPPLIER_ROLE, diversityRolesSchema);
+            let rolesCollection = connection_db_api.model(collectionConstant.INVOICE_ROLES, diversityRolesSchema);
             if (requestObject._id) {
                 let id = ObjectID(requestObject._id);
                 delete requestObject['_id'];

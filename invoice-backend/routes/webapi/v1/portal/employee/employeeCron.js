@@ -41,7 +41,7 @@ async function userDocumentExpiryAlertCronFunction() {
             // let projectCollection = connection_db_api.model(collectionConstant.PROJECT, projectSchema);
             let employeeCollection = connection_db_api.model(collectionConstant.USER, employeeSchema);
             //ROLEADMIN
-            let roleConnection = connection_db_api.model(collectionConstant.SUPPLIER_ROLE, diversityRoleSchema);
+            let roleConnection = connection_db_api.model(collectionConstant.INVOICE_ROLES, diversityRoleSchema);
             let admin_role = await roleConnection.findOne({ role_name: config.ROLEADMIN }, { role_id: 1 });
             let employee_list = await employeeCollection.find({ is_delete: 0, userroleId: ObjectID(admin_role.role_id) }, { useremail: 1 }).distinct("useremail");
             let employee_ids = await employeeCollection.find({ is_delete: 0, userroleId: ObjectID(admin_role.role_id) }, { _id: 1 }).distinct("_id");
