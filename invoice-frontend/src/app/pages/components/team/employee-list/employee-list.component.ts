@@ -76,6 +76,7 @@ export class EmployeeListComponent implements OnInit {
   editIcon: string;
   reportIcon: string;
   role_to: any;
+  archivedIcon!: string;
   allRoles = [];
   add_my_self_icon = icon.ADD_MY_SELF_WHITE;
 
@@ -93,30 +94,40 @@ export class EmployeeListComponent implements OnInit {
     this.role_permission = userdata.role_permission.users;
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off') {
+    if (this.mode == 'off')
+    {
       this.historyIcon = icon.HISTORY;
+      this.archivedIcon = icon.ARCHIVE;
+
       this.trashIcon = icon.DELETE;
       this.importIcon = icon.IMPORT;
+
       this.editIcon = icon.EDIT;
       this.reportIcon = icon.REPORT;
-    } else {
+    } else
+    {
       this.historyIcon = icon.HISTORY_WHITE;
+      this.archivedIcon = icon.ARCHIVE_WHITE;
       this.trashIcon = icon.DELETE_WHITE;
       this.importIcon = icon.IMPORT_WHITE;
       this.editIcon = icon.EDIT_WHITE;
       this.reportIcon = icon.REPORT_WHITE;
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode) {
+      if (mode)
+      {
         this.mode = 'off';
         this.historyIcon = icon.HISTORY;
+        this.archivedIcon = icon.ARCHIVE;
         this.trashIcon = icon.DELETE;
         this.importIcon = icon.IMPORT;
         this.editIcon = icon.EDIT;
         this.reportIcon = icon.REPORT;
-      } else {
+      } else
+      {
         this.mode = 'on';
         this.historyIcon = icon.HISTORY_WHITE;
+        this.archivedIcon = icon.ARCHIVE_WHITE;
         this.trashIcon = icon.DELETE_WHITE;
         this.importIcon = icon.IMPORT_WHITE;
         this.editIcon = icon.EDIT_WHITE;
@@ -163,12 +174,15 @@ export class EmployeeListComponent implements OnInit {
         that.gridtolist_text = text; that.btn_grid_list_text = text;
       });
 
-      if (this.locallanguage === 'en') {
+      if (this.locallanguage === 'en')
+      {
         this.locallanguage = 'es';
-      } else {
+      } else
+      {
         this.locallanguage = 'en';
       }
-      if (i != 0) {
+      if (i != 0)
+      {
         setTimeout(() => {
           that.rerenderfunc();
         }, 1000);
@@ -181,7 +195,8 @@ export class EmployeeListComponent implements OnInit {
     };
     this.employeeservice.getalluser().subscribe(function (data) {
       that.uiSpinner.spin$.next(false);
-      if (data.status) {
+      if (data.status)
+      {
         that.isEmployeeData = true;
         that.usersArray = data.data;
       }
@@ -189,7 +204,8 @@ export class EmployeeListComponent implements OnInit {
 
     this.mostusedservice.deleteUserEmit$.subscribe(function (editdata) {
       that.employeeservice.getalluser().subscribe(function (data) {
-        if (data.status) {
+        if (data.status)
+        {
           that.isEmployeeData = true;
           that.usersArray = data.data;
         }
@@ -229,29 +245,34 @@ export class EmployeeListComponent implements OnInit {
   }
 
   gridTolist() {
-    if (this.gridtolist) {
+    if (this.gridtolist)
+    {
       this.rerenderfunc();
       this.btn_grid_list_text = this.listtogrid_text;
       this.gridtolist = false;
-    } else {
+    } else
+    {
       this.btn_grid_list_text = this.gridtolist_text;
       this.gridtolist = true;
     }
   }
 
   sorting_name() {
-    if (this.sorting_desc) {
+    if (this.sorting_desc)
+    {
       this.sorting_desc = false;
       this.sorting_asc = true;
       this.soruing_all = false;
       this.usersArray = this.usersArray.sort((a: any, b: any) => a.username.localeCompare(b.username, 'en', { sensitivity: 'base' }));
-    } else if (this.sorting_asc) {
+    } else if (this.sorting_asc)
+    {
       this.sorting_desc = true;
       this.sorting_asc = false;
       this.soruing_all = false;
       this.usersArray = this.usersArray.reverse((a: any, b: any) => a.username.localeCompare(b.username, 'en', { sensitivity: 'base' }));
 
-    } else {
+    } else
+    {
       this.sorting_desc = false;
       this.sorting_asc = true;
       this.soruing_all = false;
@@ -275,12 +296,15 @@ export class EmployeeListComponent implements OnInit {
       confirmButtonText: this.Compnay_Equipment_Delete_Yes,
       denyButtonText: this.Compnay_Equipment_Delete_No,
     }).then((result) => {
-      if (result.isConfirmed) {
+      if (result.isConfirmed)
+      {
         this.httpCall.httpPostCall(httproutes.TEAM_DELETE, { _id: id }).subscribe(function (params) {
-          if (params.status) {
+          if (params.status)
+          {
             that.snackbarservice.openSnackBar(params.message, "success");
             that.mostusedservice.userdeleteEmit();
-          } else {
+          } else
+          {
             that.snackbarservice.openSnackBar(params.message, "error");
           }
         });
@@ -304,7 +328,8 @@ export class EmployeeListComponent implements OnInit {
   getAllRoles() {
     let that = this;
     this.httpCall.httpGetCall(httproutes.PORTAL_SETTING_ROLES_ALL).subscribe(function (params) {
-      if (params.status) {
+      if (params.status)
+      {
         that.allRoles = params.data;
       }
     });
@@ -370,21 +395,25 @@ export class EmployeeListComponent implements OnInit {
       const dataString = JSON.stringify(jsonData);
 
       const keys_OLD = ["userfirstname", "userlastname", "useremail", "password", "user_role", "usergender", "userdepartment", "userjob_title", "userjob_type"];
-      if (JSON.stringify(keys_OLD.sort()) != JSON.stringify(header_.sort())) {
+      if (JSON.stringify(keys_OLD.sort()) != JSON.stringify(header_.sort()))
+      {
         that.snackbarservice.openSnackBar(that.Company_Equipment_File_Not_Match, "error");
         return;
-      } else {
+      } else
+      {
         that.uiSpinner.spin$.next(true);
         const formData_profle = new FormData();
         formData_profle.append("file", file);
         that.httpCall.httpPostCall(httproutes.PORTAL_EMPLOYEE_IMPORT, formData_profle).subscribe(function (params) {
-          if (params.status) {
+          if (params.status)
+          {
             that.uiSpinner.spin$.next(false);
             that.openErrorDataDialog(params);
             that.mostusedservice.userdeleteEmit();
             //that.snackbarservice.openSnackBar(params.message, "success");
             //that.rerenderfunc();
-          } else {
+          } else
+          {
             that.uiSpinner.spin$.next(false);
             that.snackbarservice.openSnackBar(params.message, "error");
           }
@@ -518,23 +547,27 @@ export class TeamHistory {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
     console.log("this.mode main", this.mode);
-    if (this.mode == 'off') {
+    if (this.mode == 'off')
+    {
       console.log("this.mod", this.mode);
       this.backIcon = icon.CANCLE;
 
 
-    } else {
+    } else
+    {
       console.log("this.mod else", this.mode);
       this.backIcon = icon.CANCLE_WHITE;
 
 
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode) {
+      if (mode)
+      {
         this.mode = 'off';
         this.backIcon = icon.CANCLE;
 
-      } else {
+      } else
+      {
         this.mode = 'on';
         this.backIcon = icon.CANCLE_WHITE;
 
@@ -567,9 +600,11 @@ export class TeamHistory {
       title: that.action_taken_from,
       defaultContent: "",
       render: function (data: any, type: any, full: any) {
-        if (full.taken_device == "Mobile") {
+        if (full.taken_device == "Mobile")
+        {
           return that.mobile_all;
-        } else {
+        } else
+        {
           return that.web_all;
         }
       }
@@ -579,9 +614,11 @@ export class TeamHistory {
       class: "none",
       defaultContent: "",
       render: function (data: any, type: any, full: any) {
-        if (full.action == "Delete") {
+        if (full.action == "Delete")
+        {
           return that.userHistoryTable(full.deleted_user);
-        } else {
+        } else
+        {
           return that.userHistoryTable(full);
         }
       }
@@ -740,9 +777,11 @@ export class BulkUploadErrorData {
     this.Compnay_Equipment_Delete_Yes = this.translate.instant('Compnay_Equipment_Delete_Yes');
     this.Compnay_Equipment_Delete_No = this.translate.instant('Compnay_Equipment_Delete_No');
     dialogRef.disableClose = true;
-    if (data.error_data.length >= 1) {
+    if (data.error_data.length >= 1)
+    {
       this.failed_buttons = true;
-    } else {
+    } else
+    {
       this.success_buttons = true;
     }
   }
@@ -762,11 +801,13 @@ export class BulkUploadErrorData {
     };
     this.uiSpinner.spin$.next(true);
     this.httpCall.httpPostCall(httproutes.PORTAL_CHECK_AND_INSERT, requestObject).subscribe(function (params) {
-      if (params.status) {
+      if (params.status)
+      {
         that.uiSpinner.spin$.next(false);
         that.snackbarservice.openSnackBar(params.message, "success");
         that.dialogRef.close();
-      } else {
+      } else
+      {
         that.uiSpinner.spin$.next(false);
         that.snackbarservice.openSnackBar(params.message, "error");
       }
@@ -878,22 +919,26 @@ export class TeamReportForm {
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off') {
+    if (this.mode == 'off')
+    {
       this.exitIcon = icon.CANCLE;
       this.saveIcon = icon.SAVE_WHITE;
 
-    } else {
+    } else
+    {
       this.exitIcon = icon.CANCLE_WHITE;
       this.saveIcon = icon.SAVE_WHITE;
     }
 
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode) {
+      if (mode)
+      {
         this.mode = 'off';
         this.exitIcon = icon.CANCLE;
         this.saveIcon = icon.SAVE_WHITE;
 
-      } else {
+      } else
+      {
         this.mode = 'on';
         this.exitIcon = icon.CANCLE_WHITE;
         this.saveIcon = icon.SAVE_WHITE;
@@ -907,7 +952,8 @@ export class TeamReportForm {
 
   isValidMailFormat(value: any) {
     var EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
-    if (value != "" && (EMAIL_REGEXP.test(value))) {
+    if (value != "" && (EMAIL_REGEXP.test(value)))
+    {
       return { "Please provide a valid email": true };
     }
     return null;
@@ -916,13 +962,16 @@ export class TeamReportForm {
   addInternalEmail(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
     // Add email
-    if (value) {
+    if (value)
+    {
       var validEmail = this.isValidMailFormat(value);
-      if (validEmail) {
+      if (validEmail)
+      {
         this.emailsList.push(value);
         // Clear the input value
         event.chipInput!.clear();
-      } else {
+      } else
+      {
         // here error for valid email
       }
     }
@@ -933,10 +982,12 @@ export class TeamReportForm {
     let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
     //----
     const index = this.emailsList.indexOf(email);
-    if (index >= 0) {
+    if (index >= 0)
+    {
       this.emailsList.splice(index, 1);
       //----
-      if (email == user_data.UserData.useremail) {
+      if (email == user_data.UserData.useremail)
+      {
         this.is_oneOnly = true;
       }
       //----
@@ -946,39 +997,48 @@ export class TeamReportForm {
   ngOnInit(): void {
     let that = this;
     this.timecardinfo.get("role_ids")!.valueChanges.subscribe(function (params: any) {
-      if (params.length == that.rolesList.length) {
+      if (params.length == that.rolesList.length)
+      {
         that.timecardinfo.get("All_Roles")!.setValue(true);
-      } else {
+      } else
+      {
         that.timecardinfo.get("All_Roles")!.setValue(false);
       }
     });
     this.timecardinfo.get("status_ids")!.valueChanges.subscribe(function (params: any) {
-      if (params.length == that.statusList.length) {
+      if (params.length == that.statusList.length)
+      {
         that.timecardinfo.get("All_Status")!.setValue(true);
-      } else {
+      } else
+      {
         that.timecardinfo.get("All_Status")!.setValue(false);
       }
     });
   }
 
   onChangeValueAll_Roles(params: any) {
-    if (params.checked) {
+    if (params.checked)
+    {
       this.timecardinfo.get("role_ids")!.setValue(this.rolesList.map((el: any) => el.role_id));
-    } else {
+    } else
+    {
       this.timecardinfo.get("role_ids")!.setValue([]);
     }
   }
 
   onChangeValueAll_Status(params: any) {
-    if (params.checked) {
+    if (params.checked)
+    {
       this.timecardinfo.get("status_ids")!.setValue(this.statusList.map(el => el.value));
-    } else {
+    } else
+    {
       this.timecardinfo.get("status_ids")!.setValue([]);
     }
   }
 
   saveData() {
-    if (this.emailsList.length != 0) {
+    if (this.emailsList.length != 0)
+    {
       this.sb.openSnackBar(this.Report_File_Message, "success");
       let requestObject = this.timecardinfo.value;
       var company_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
@@ -989,12 +1049,14 @@ export class TeamReportForm {
       setTimeout(() => {
         this.dialogRef.close();
       }, 3000);
-    } else {
+    } else
+    {
       this.sb.openSnackBar(this.Report_File_Enter_Email, "error");
     }
   }
   addmyself() {
-    if (this.is_oneOnly) {
+    if (this.is_oneOnly)
+    {
       let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
       this.emailsList.push(user_data.UserData.useremail);
       this.is_oneOnly = false;

@@ -2394,7 +2394,8 @@
     "invoice_no": "Invoice #",
     "po_no": "P.O #",
     "packing_slip_no": "Packing Slip #",
-    "Receiving_Slip":"Receiving Slip",
-    "Receiving_Sheet":"Receiving Sheet",
-    "Receiving_Attachment": "Attachments"
+    "Receiving_Slip": "Receiving Slip",
+    "Receiving_Sheet": "Receiving Sheet",
+    "Receiving_Attachment": "Attachments",
+    "recover_team_member": "Are you sure you want to recover this team member?"
 }

@@ -99,8 +99,8 @@ var userSchema = new Schema({
     allow_for_projects: { type: Boolean, default: true },
     user_languages: { type: Array, default: [] },
     show_id_card_on_qrcode_scan: { type: Boolean, default: true },
-    project_email_group: { type: String, default: "none", enum: ['none', 'prime_member', 'sponsor_member'] },
-    compliance_officer: { type: Boolean, default: false },
+    // project_email_group: { type: String, default: "none", enum: ['none', 'prime_member', 'sponsor_member'] },
+    // compliance_officer: { type: Boolean, default: false },
     vendors: { type: [mongoose.ObjectId], default: [] },
 });
 
