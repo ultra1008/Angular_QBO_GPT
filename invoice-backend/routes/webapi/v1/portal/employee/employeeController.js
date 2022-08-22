@@ -178,7 +178,7 @@ module.exports.saveEmployee = async function (req, res) {
                         let company_data = await db_rest_api.findOne(compnay_collection, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
                         let selectedPlan = company_data.billingplan;
 
-                        let get_user_roles = connection_db_api.model(collectionConstant.SUPPLIER_ROLE, supplierRoleSchema);
+                        let get_user_roles = connection_db_api.model(collectionConstant.INVOICE_ROLES, supplierRoleSchema);
                         let onerole = await get_user_roles.findOne({ role_id: ObjectID(body.userroleId) });
                         let allowed_count = billingPlan.BILLING_PLAN[selectedPlan]['ADMIN_ALL'];
                         let current_count = await userConnection.find({}).count();
@@ -487,7 +487,7 @@ module.exports.getAllUser = async function (req, res) {
                 },
                 {
                     $lookup: {
-                        from: collectionConstant.SUPPLIER_ROLE,
+                        from: collectionConstant.INVOICE_ROLES,
                         localField: "userroleId",
                         foreignField: "role_id",
                         as: "role"
@@ -784,7 +784,7 @@ module.exports.getOneUser = async function (req, res) {
                 },
                 {
                     $lookup: {
-                        from: collectionConstant.SUPPLIER_ROLE,
+                        from: collectionConstant.INVOICE_ROLES,
                         localField: "userroleId",
                         foreignField: "role_id",
                         as: "role"
@@ -1165,7 +1165,7 @@ module.exports.savePersonalInfo = async function (req, res) {
                     history_object = body;
                     history_object.updated_id = user_edit_id;
                     //let update_user_1 = await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, body);
-                    // let get_user_roles = connection_db_api.model(collectionConstant.SUPPLIER_ROLE, supplierRoleSchema);
+                    // let get_user_roles = connection_db_api.model(collectionConstant.INVOICE_ROLES, supplierRoleSchema);
                     // let onerole = await get_user_roles.findOne({ role_id: ObjectID(body.userroleId) });
                     if (flg_update) {
                         let LowerCase_bucket = decodedToken.companycode.toLowerCase();
@@ -1489,7 +1489,7 @@ module.exports.getallsupervisors = async function (req, res) {
         try {
             req.body.is_delete = 0;
 
-            let rolesConnection = connection_db_api.model(collectionConstant.SUPPLIER_ROLE, supplierRoleSchema);
+            let rolesConnection = connection_db_api.model(collectionConstant.INVOICE_ROLES, supplierRoleSchema);
             let all_suprvisor = await rolesConnection.aggregate([
                 {
                     $match:
@@ -2058,7 +2058,7 @@ module.exports.getAllUserHistory = async function (req, res) {
                             },
                             {
                                 $lookup: {
-                                    from: collectionConstant.SUPPLIER_ROLE,
+                                    from: collectionConstant.INVOICE_ROLES,
                                     localField: "userroleId",
                                     foreignField: "role_id",
                                     as: "role"
@@ -2313,7 +2313,7 @@ module.exports.getAllUserHistory = async function (req, res) {
                 },
                 {
                     $lookup: {
-                        from: collectionConstant.SUPPLIER_ROLE,
+                        from: collectionConstant.INVOICE_ROLES,
                         localField: "userroleId",
                         foreignField: "role_id",
                         as: "role"
@@ -2670,7 +2670,7 @@ module.exports.getAllEmployeeReport = async function (req, res) {
                 { $match: query },
                 {
                     $lookup: {
-                        from: collectionConstant.SUPPLIER_ROLE,
+                        from: collectionConstant.INVOICE_ROLES,
                         localField: "userroleId",
                         foreignField: "role_id",
                         as: "role"
@@ -3030,7 +3030,7 @@ module.exports.getAllEmployeeReport = async function (req, res) {
                 roles = `${translator.getStr('EmailExcelRoles')} ${translator.getStr('EmailExcelAllRoles')}`;
             } else {
                 roleQuery = roleQuery.length == 0 ? {} : { $or: roleQuery };
-                let roleCollection = connection_db_api.model(collectionConstant.SUPPLIER_ROLE, supplierRoleSchema);
+                let roleCollection = connection_db_api.model(collectionConstant.INVOICE_ROLES, supplierRoleSchema);
                 let all_role = await roleCollection.find(roleQuery, { role_name: 1 });
                 for (var i = 0; i < all_role.length; i++) {
                     roles += all_role[i]['role_name'];
@@ -3328,7 +3328,7 @@ async function getAllRoles(decodedToken) {
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
-            let rolesCollection = connection_db_api.model(collectionConstant.SUPPLIER_ROLE, supplierRoleSchema);
+            let rolesCollection = connection_db_api.model(collectionConstant.INVOICE_ROLES, supplierRoleSchema);
             let all_roles = await rolesCollection.find({ is_delete: 0 });
             return all_roles;
         } catch (e) {

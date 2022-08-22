@@ -46,7 +46,7 @@ module.exports.login = async function (req, res) {
                                     },
                                     {
                                         $lookup: {
-                                            from: collectionConstant.SUPPLIER_ROLE,
+                                            from: collectionConstant.INVOICE_ROLES,
                                             localField: "userroleId",
                                             foreignField: "role_id",
                                             as: "role"
@@ -761,7 +761,7 @@ module.exports.submitEmailOTP = async function (req, res) {
         connection_db_api = await db_connection.connection_db_api(talnate_data);
 
         let emailOTPConnection = connection_db_api.model(collectionConstant.EMAIL_OTP, emailOTPSchema);
-        let roleConnection = connection_db_api.model(collectionConstant.SUPPLIER_ROLE, roleSchema);
+        let roleConnection = connection_db_api.model(collectionConstant.INVOICE_ROLES, roleSchema);
         let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
 
         let one_user = await userConnection.findOne({ useremail: requestObject.useremail });
@@ -783,7 +783,7 @@ module.exports.submitEmailOTP = async function (req, res) {
                         },
                         {
                             $lookup: {
-                                from: collectionConstant.SUPPLIER_ROLE,
+                                from: collectionConstant.INVOICE_ROLES,
                                 localField: "userroleId",
                                 foreignField: "role_id",
                                 as: "role"
