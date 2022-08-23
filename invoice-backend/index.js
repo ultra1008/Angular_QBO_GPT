@@ -27,8 +27,8 @@ app.use('/', portal_api);
 // });
 
 https.createServer({
-	key: fs.readFileSync('./selfsigned/test-dev.rovuk.us_2022.key'),
-	cert: fs.readFileSync('./selfsigned/test-dev.rovuk.us_2022.crt')
+	key: fs.readFileSync('./selfsigned/test-dev.rovuk.us_2021.key'),
+	cert: fs.readFileSync('./selfsigned/test-dev.rovuk.us_2021.crt')
 }, app).listen(4207, () => {
 
 	console.log('Example App Listening on port 4207');
