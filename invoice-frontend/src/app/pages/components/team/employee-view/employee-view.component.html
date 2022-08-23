@@ -195,8 +195,8 @@
                                     </mat-form-field>
                                 </div>
                             </div>
-                            <div class="main-first-row">
-                                <div class="main-second-col1">
+                            <!-- <div class="main-first-row"> -->
+                            <!-- <div class="main-second-col1">
                                     <mat-form-field class="main-one-input-field" appearance="outline">
                                         <mat-label>{{'project_email_group' | translate }}</mat-label>
                                         <mat-select formControlName="project_email_group" class="dark-cust-color">
@@ -216,8 +216,8 @@
                                             <mat-option value="false"> No </mat-option>
                                         </mat-select>
                                     </mat-form-field>
-                                </div>
-                            </div>
+                                </div> -->
+                            <!-- </div> -->
                         </div>
                     </div>
                 </form>
@@ -637,7 +637,7 @@
                 <h1>{{"Access_denied_all" | translate }}</h1>
             </div>
         </mat-step>
-        <mat-step state="projectAccess" [completed]="false">
+        <!-- <mat-step state="projectAccess" [completed]="false">
             <ng-template matStepLabel>{{'Employee-project-access' | translate }}</ng-template>
             <div *ngIf="role_permission_tab.employeeProjectAccess.View">
                 <div class="wrapper-cust-admin">
@@ -650,7 +650,7 @@
             <div *ngIf="!role_permission_tab.employeeProjectAccess.View" class="access_denied">
                 <h1>{{"Access_denied_all" | translate }}</h1>
             </div>
-        </mat-step>
+        </mat-step> -->
         <ng-template matStepperIcon="edit" let-index="index">
 
             <img *ngIf="index == 0" alt="" src="{{personalwhiteicon}}" height="15px">
@@ -661,7 +661,7 @@
 
             <img *ngIf="index == 3" alt="" src="{{emergencyicon_white}}" height="15px">
             <img *ngIf="index == 4" alt="" src="{{documentIcon_white}}" height="15px">
-            <img *ngIf="index == 5" alt="" src="{{projectAccessWhiteicon}}" height="15px">
+            <!-- <img *ngIf="index == 5" alt="" src="{{projectAccessWhiteicon}}" height="15px"> -->
 
         </ng-template>
 
@@ -680,8 +680,8 @@
         <ng-template matStepperIcon="assignment">
             <img alt="" src="{{documentIcon}}" height="15px">
         </ng-template>
-        <ng-template matStepperIcon="projectAccess">
+        <!-- <ng-template matStepperIcon="projectAccess">
             <img alt="" src="{{projectAccessIcon}}" height="15px">
-        </ng-template>
+        </ng-template> -->
     </mat-horizontal-stepper>
 </div>

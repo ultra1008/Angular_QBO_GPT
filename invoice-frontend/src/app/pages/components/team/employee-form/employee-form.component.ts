@@ -51,7 +51,7 @@ export class EmployeeFormComponent implements OnInit {
   db_costcodes: any = [];
   firstParam: any = "";
   doc_controller: number = 0;
-  project_email_groups: any = configdata.PROJECT_EMAIL_GROUP;
+  // project_email_groups: any = configdata.PROJECT_EMAIL_GROUP;
   public statuss: any = configdata.superAdminStatus;
   public gender_array: any = configdata.gender;
   public payroll_cycles: any = configdata.payroll_cycle;
@@ -99,13 +99,15 @@ export class EmployeeFormComponent implements OnInit {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
     console.log("this.mode main", this.mode);
-    if (this.mode == 'off') {
+    if (this.mode == 'off')
+    {
       console.log("this.mod", this.mode);
       this.backIcon = icon.BACK;
       this.nextIcon = icon.NEXT_WHITE;
 
 
-    } else {
+    } else
+    {
       console.log("this.mod else", this.mode);
       this.backIcon = icon.BACK_WHITE;
       this.nextIcon = icon.NEXT_WHITE;
@@ -113,12 +115,14 @@ export class EmployeeFormComponent implements OnInit {
 
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode) {
+      if (mode)
+      {
         this.mode = 'off';
         this.backIcon = icon.BACK;
         this.nextIcon = icon.NEXT_WHITE;
 
-      } else {
+      } else
+      {
         this.mode = 'on';
         this.backIcon = icon.BACK_WHITE;
         this.nextIcon = icon.NEXT_WHITE;
@@ -163,7 +167,8 @@ export class EmployeeFormComponent implements OnInit {
     let that = this;
     that.httpCall.httpPostCall(httproutes.PORTAL_COMPANY_COSTCODE_GET,
       { module: that.Employee }).subscribe(function (params) {
-        if (params.status) {
+        if (params.status)
+        {
           that.db_costcodes = params.data;
         }
       });
@@ -172,7 +177,8 @@ export class EmployeeFormComponent implements OnInit {
   getAllCreditCard() {
     let that = this;
     that.httpCall.httpGetCall(httproutes.OTHER_SETTING_CREDIT_CARD_GET).subscribe(function (params) {
-      if (params.status) {
+      if (params.status)
+      {
         that.credit_card_types = params.data;
         that.useremployeeinfo.get('card_type').setValue(that.credit_card_types[0]._id);
       }
@@ -185,13 +191,15 @@ export class EmployeeFormComponent implements OnInit {
     this.maxDate.setDate(this.maxDate.getDate() - 5114);
 
     this.mostusedservice.getAllRoles().subscribe(function (data) {
-      if (data.status) {
+      if (data.status)
+      {
         that.db_roles = data.data;
         that.db_roles.forEach((element: any) => {
         });
         var reqObject = {};
         that.mostusedservice.getSpecificUsers(reqObject).subscribe(function (user_data) {
-          if (user_data.status) {
+          if (user_data.status)
+          {
             that.db_manager_users = user_data.data;
             that.db_supervisor_users = user_data.data;
           }
@@ -200,37 +208,43 @@ export class EmployeeFormComponent implements OnInit {
     });
 
     this.mostusedservice.getAlljobtitle().subscribe(function (data) {
-      if (data.status) {
+      if (data.status)
+      {
         that.db_jobtitle = data.data;
       }
     });
 
     this.mostusedservice.getAlljobtype().subscribe(function (data) {
-      if (data.status) {
+      if (data.status)
+      {
         that.db_jobtype = data.data;
       }
     });
 
     this.mostusedservice.getAllpayroll_group().subscribe(function (data) {
-      if (data.status) {
+      if (data.status)
+      {
         that.db_payroll_group = data.data;
         that.useremployeeinfo.get('user_id_payroll_group').setValue(that.db_payroll_group[0]._id);
       }
     });
 
     this.mostusedservice.getAllDocumentType().subscribe(function (data) {
-      if (data.status) {
+      if (data.status)
+      {
         that.db_Doc_types = data.data;
       }
     });
 
     this.mostusedservice.getAllLocation().subscribe(function (data) {
-      if (data.status) {
+      if (data.status)
+      {
         that.db_locations = data.data;
       }
     });
     this.mostusedservice.getAllDepartment().subscribe(function (data) {
-      if (data.status) {
+      if (data.status)
+      {
         that.db_Departmaents = data.data;
       }
     });
@@ -249,8 +263,8 @@ export class EmployeeFormComponent implements OnInit {
       user_no: [""],
       userroleId: ["", Validators.required],
       usergender: [""],
-      project_email_group: [""],
-      compliance_officer: ["false"],
+      // project_email_group: [""],
+      // compliance_officer: ["false"],
       userdob: [""],
       userstatus: ["", Validators.required],
       login_from: ["All", Validators.required],
@@ -294,7 +308,8 @@ export class EmployeeFormComponent implements OnInit {
   getspokenLanguage() {
     let that = this;
     that.httpCall.httpGetCall(httproutes.OTHER_LANGUAGE_GET).subscribe(function (params) {
-      if (params.status) {
+      if (params.status)
+      {
         that.languageList = params.data;
       }
     });
@@ -311,11 +326,13 @@ export class EmployeeFormComponent implements OnInit {
   fileChangeEvent(fileInput: any) {
     this.imageError = null;
     commonImageChangeEvent(fileInput, 'image').then((result: any) => {
-      if (result.status) {
+      if (result.status)
+      {
         this.filepath = result.filepath;
         this.cardImageBase64 = result.base64;
         this.isImageSaved = true;
-      } else {
+      } else
+      {
         this.imageError = result.message;
         this.snackbarservice.openSnackBar(result.message, "error");
       }
@@ -357,7 +374,8 @@ export class EmployeeFormComponent implements OnInit {
 
   documentChangeEvent(fileInput: any, index: any) {
 
-    if (fileInput.target.files && fileInput.target.files[0]) {
+    if (fileInput.target.files && fileInput.target.files[0])
+    {
       this.document_array[index] = fileInput.target.files[0];
     }
   }
@@ -396,7 +414,8 @@ export class EmployeeFormComponent implements OnInit {
       denyButtonText: this.Compnay_Equipment_Delete_No,
       allowOutsideClick: false
     }).then((result) => {
-      if (result.isConfirmed) {
+      if (result.isConfirmed)
+      {
         // Move to the Users listing
         setTimeout(() => {
           that.router.navigate(['/employee-list']);
@@ -448,7 +467,8 @@ export class EmployeeFormComponent implements OnInit {
 
   async saveUserInDB(scheduleData: any) {
     let that = this;
-    if (that.userpersonalinfo.valid && that.useremployeeinfo.valid && that.usercontactinfo.valid) {
+    if (that.userpersonalinfo.valid && that.useremployeeinfo.valid && that.usercontactinfo.valid)
+    {
       let usersDocument = that.userpersonalinfo.value.usersDocument || [];
       delete that.userpersonalinfo.value.usersDocument;
       let reqObject = {
@@ -478,9 +498,11 @@ export class EmployeeFormComponent implements OnInit {
       console.log("1");
       that.employeeservice.saveEmaployee(formData).subscribe(function (Data) {
         console.log("3");
-        if (Data.status) {
+        if (Data.status)
+        {
           console.log("4");
-          if (scheduleData != null && scheduleData != undefined && scheduleData != "") {
+          if (scheduleData != null && scheduleData != undefined && scheduleData != "")
+          {
             var reqObjectschedule = scheduleData;
             reqObjectschedule.schedule_employee_ids = [Data.data._id];
 
@@ -488,7 +510,8 @@ export class EmployeeFormComponent implements OnInit {
 
             });
           }
-          if (usersDocument.length) {
+          if (usersDocument.length)
+          {
             usersDocument.forEach((element: any, i: any) => {
               element.userdocument_expire_date = element.userdocument_expire_date.getTime() / 1000;
               const formData_doc = new FormData();
@@ -496,24 +519,29 @@ export class EmployeeFormComponent implements OnInit {
               formData_doc.append('reqObject', JSON.stringify(element));
               formData_doc.append('user_id', Data.data._id);
               that.employeeservice.employeeDocumentUpdate(formData_doc).subscribe(function (data_doc) {
-                if (data_doc.status) {
-                } else {
+                if (data_doc.status)
+                {
+                } else
+                {
                   that.spinner.spin$.next(false);
                   that.snackbarservice.openSnackBar(data_doc.message, "error");
                 }
-                if (usersDocument.length == i + 1) {
+                if (usersDocument.length == i + 1)
+                {
                   that.spinner.spin$.next(false);
                   that.router.navigate(['/employee-list']);
                   that.snackbarservice.openSnackBar(Data.message, "success");
                 }
               });
             });
-          } else {
+          } else
+          {
             that.spinner.spin$.next(false);
             that.snackbarservice.openSnackBar(Data.message, "success");
             that.router.navigate(['/employee-list']);
           }
-        } else {
+        } else
+        {
           that.spinner.spin$.next(false);
           that.snackbarservice.openSnackBar(Data.message, "error");
         }
@@ -524,7 +552,8 @@ export class EmployeeFormComponent implements OnInit {
   sendInvitation() {
     let that = this;
     that.usersendinvitation.markAllAsTouched();
-    if (that.usersendinvitation.valid) {
+    if (that.usersendinvitation.valid)
+    {
       let req_temp = that.usersendinvitation.value;
 
       let reqObject = {
@@ -534,9 +563,11 @@ export class EmployeeFormComponent implements OnInit {
       this.spinner.spin$.next(true);
       that.httpCall.httpPostCall(httproutes.SEND_INVITATION, reqObject).subscribe(function (params_new) {
         that.spinner.spin$.next(false);
-        if (params_new.status) {
+        if (params_new.status)
+        {
           that.snackbarservice.openSnackBar(params_new.message, "success");
-        } else {
+        } else
+        {
           that.snackbarservice.openSnackBar(params_new.message, "error");
         }
       });
@@ -554,7 +585,8 @@ export class EmployeeFormComponent implements OnInit {
   getAllLoction() {
     let that = this;
     this.httpCall.httpGetCall(httproutes.PORTAL_LOCATION_GETDATA).subscribe(function (params) {
-      if (params.status) {
+      if (params.status)
+      {
         that.locationList = params.data;
       }
     });
@@ -604,23 +636,27 @@ export class ScheduleFormEmployee {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
     console.log("this.mode main", this.mode);
-    if (this.mode == 'off') {
+    if (this.mode == 'off')
+    {
       console.log("this.mod", this.mode);
       this.backIcon = icon.BACK;
 
 
-    } else {
+    } else
+    {
       console.log("this.mod else", this.mode);
       this.backIcon = icon.BACK_WHITE;
 
 
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode) {
+      if (mode)
+      {
         this.mode = 'off';
         this.backIcon = icon.BACK;
 
-      } else {
+      } else
+      {
         this.mode = 'on';
         this.backIcon = icon.BACK_WHITE;
 
@@ -632,7 +668,8 @@ export class ScheduleFormEmployee {
 
   saveData() {
     let that = this;
-    if (this.form.valid) {
+    if (this.form.valid)
+    {
       let reqObject = this.form.value;
       that.dialogRef.close(reqObject);
     }
