@@ -24,7 +24,9 @@
 
                 </div>
                 <div>
-                    <button class="import-export-btn-datatable button_workersEditClass cust-margin-div" (click)="invoiceReportDialog()" matTooltip="{{ 'TOOLTIP_REPORT' | translate }}" aria-label="Left Align">
+                    <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                        (click)="invoiceReportDialog()" matTooltip="{{ 'TOOLTIP_REPORT' | translate }}"
+                        aria-label="Left Align">
                         <img src="{{reportIcon}}" alt="" height="20px">
                     </button>
 
@@ -68,7 +70,7 @@
                 <a (click)="deleteDocument(certi)"><img src="{{trashIcon}}" alt="" class="pr-1" height="15px">Delete</a>
             </div>
         </div> -->
-        <div class="card-body" style="text-align: center; padding: 5px 10px !important;">
+        <div class="card-body" style="text-align: center; padding: 5px 10px !important;" (click)="detailpage()">
             <div class="pt-2 pb-2">
                 <img src="assets\images\currentplaceholder.png" class="img-responsive cardsmall img-fluid"
                     style="height: 100px; width: 100px; object-fit: contain;" alt="">

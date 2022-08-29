@@ -85,6 +85,7 @@ import { DocumentForm, DocumentsComponent } from './components/setting/ocps-sett
 import { SettingsSecurityComponent } from './components/setting/settings-security/settings-security.component';
 import { InvoiceFormComponent } from './components/invoice/invoice-form/invoice-form.component';
 import { TemplateFormComponent } from './components/templates/template-form/template-form.component';
+import { InvoiceDetailPageComponent } from './components/invoice/invoice-detail-page/invoice-detail-page.component';
 
 
 
@@ -152,7 +153,8 @@ import { TemplateFormComponent } from './components/templates/template-form/temp
     TemplateFormComponent,
     FileAttachment,
     InvoiceAttachment,
-    InvoiceReport
+    InvoiceReport,
+    InvoiceDetailPageComponent
   ],
   imports: [
     PortalModule,

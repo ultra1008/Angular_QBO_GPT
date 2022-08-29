@@ -303,6 +303,10 @@ export class InvoiceComponent implements OnInit {
     this.dtTrigger.next();
   }
 
+  detailpage() {
+    this.router.navigate(['/invoice-detail']);
+  }
+
   openform() {
     this.router.navigate(['/invoice-form']);
   }

@@ -48,6 +48,7 @@ import { DocumentsComponent } from './components/setting/ocps-settings/documents
 import { ArchiveTeamListComponent } from './components/team/archive-team-list/archive-team-list.component';
 import { InvoiceFormComponent } from './components/invoice/invoice-form/invoice-form.component';
 import { TemplateFormComponent } from './components/templates/template-form/template-form.component';
+import { InvoiceDetailPageComponent } from './components/invoice/invoice-detail-page/invoice-detail-page.component';
 
 
 const routes: Routes = [
@@ -62,6 +63,12 @@ const routes: Routes = [
     pathMatch: 'full',
     canActivate: [PortalAuthGuard],
     component: TemplateFormComponent
+  },
+  {
+    path: 'invoice-detail',
+    pathMatch: 'full',
+    canActivate: [PortalAuthGuard],
+    component: InvoiceDetailPageComponent
   },
   {
     path: '',
