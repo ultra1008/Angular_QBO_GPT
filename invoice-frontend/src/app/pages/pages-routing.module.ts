@@ -47,6 +47,7 @@ import { TaxRateComponent } from './components/setting/ocps-settings/tax-rate/ta
 import { DocumentsComponent } from './components/setting/ocps-settings/documents/documents.component';
 import { ArchiveTeamListComponent } from './components/team/archive-team-list/archive-team-list.component';
 import { InvoiceFormComponent } from './components/invoice/invoice-form/invoice-form.component';
+import { TemplateFormComponent } from './components/templates/template-form/template-form.component';
 
 
 const routes: Routes = [
@@ -55,6 +56,12 @@ const routes: Routes = [
     pathMatch: 'full',
     canActivate: [PortalAuthGuard],
     component: InvoiceFormComponent
+  },
+  {
+    path: 'template-form',
+    pathMatch: 'full',
+    canActivate: [PortalAuthGuard],
+    component: TemplateFormComponent
   },
   {
     path: '',

@@ -71,9 +71,9 @@ import { EmployeePayrollgroupComponent, EmployeePayRollGroupForm } from './compo
 import { EmployeeRelationshipComponent, EmployeeRelationshipForm } from './components/setting/settings-employee/employee-relationship/employee-relationship.component';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { OcpsDashboardComponent } from './components/dashboard/ocps-dashboard.component';
-import { InvoiceComponent } from './components/invoice/invoice.component';
+import { InvoiceAttachment, InvoiceComponent, InvoiceReport } from './components/invoice/invoice.component';
 import { ReportsComponent } from './components/reports/reports.component';
-import { TemplatesComponent } from './components/templates/templates.component';
+import { FileAttachment, TemplatesComponent } from './components/templates/templates.component';
 import { MailboxMonitorComponent } from './components/setting/mailbox-monitor/mailbox-monitor.component';
 import { AlertsComponent } from './components/setting/alerts/alerts.component';
 import { IntegrationsComponent } from './components/setting/integrations/integrations.component';
@@ -84,6 +84,7 @@ import { TaxRateComponent, TaxRateForm } from './components/setting/ocps-setting
 import { DocumentForm, DocumentsComponent } from './components/setting/ocps-settings/documents/documents.component';
 import { SettingsSecurityComponent } from './components/setting/settings-security/settings-security.component';
 import { InvoiceFormComponent } from './components/invoice/invoice-form/invoice-form.component';
+import { TemplateFormComponent } from './components/templates/template-form/template-form.component';
 
 
 
@@ -147,7 +148,11 @@ import { InvoiceFormComponent } from './components/invoice/invoice-form/invoice-
     ImOtherDownload,
     ImportOther,
     SettingsSecurityComponent,
-    InvoiceFormComponent
+    InvoiceFormComponent,
+    TemplateFormComponent,
+    FileAttachment,
+    InvoiceAttachment,
+    InvoiceReport
   ],
   imports: [
     PortalModule,

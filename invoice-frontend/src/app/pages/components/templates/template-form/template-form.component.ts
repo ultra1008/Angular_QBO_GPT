@@ -23,14 +23,11 @@ const swalWithBootstrapButtons = Swal.mixin({
 });
 
 @Component({
-  selector: 'app-invoice-form',
-  templateUrl: './invoice-form.component.html',
-  styleUrls: ['./invoice-form.component.scss']
+  selector: 'app-template-form',
+  templateUrl: './template-form.component.html',
+  styleUrls: ['./template-form.component.scss']
 })
-export class InvoiceFormComponent implements OnInit {
-
-
-
+export class TemplateFormComponent implements OnInit {
   filepath: any;
   item_image_url: String = "./assets/images/currentplaceholder.png";
 
@@ -49,7 +46,7 @@ export class InvoiceFormComponent implements OnInit {
   All_popup_Cancel = "";
   All_Save_Exit = "";
   Dont_Save = "";
-  invoiceform: FormGroup;
+  templateform: FormGroup;
   Email_Template_Form_Submitting = "";
   constructor(private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
@@ -66,28 +63,22 @@ export class InvoiceFormComponent implements OnInit {
     this.sponsor_id = localStorage.getItem(localstorageconstants.SUPPLIERID);
 
 
-    this.invoiceform = this.formBuilder.group({
-      assign_to: ["", [Validators.required]],
-      vendor_name: ["", Validators.required],
-      vendor_id: ["", Validators.required],
-      customer_id: ["", Validators.required],
-      Invoice_has: ["", Validators.required],
-      po_has: ["", Validators.required],
-      invoice_date: ["", Validators.required],
+    this.templateform = this.formBuilder.group({
+      template_name: ["", [Validators.required]],
+      note: ["", Validators.required],
+      status: ["", Validators.required],
+      company_name: ["", Validators.required],
+      company_address: ["", Validators.required],
+      bill_to: ["", Validators.required],
+      ship_to: ["", Validators.required],
+      invoice_has: ["", Validators.required],
       due_date: ["", Validators.required],
-      order_date: ["", Validators.required],
-      ship_date: ["", Validators.required],
-      terms: ["", Validators.required],
-      total_paid: ["", Validators.required],
-      tax_rate: ["", Validators.required],
-      tax_amount: ["", Validators.required],
-      tax_id: ["", Validators.required],
-      sub_total: ["", Validators.required],
-      amount_due: ["", Validators.required],
-      cost_code: ["", Validators.required],
+      description: ["", Validators.required],
+      po_has: ["", Validators.required],
       gl_account: ["", Validators.required],
-      receiv_date: ["", Validators.required],
-      notes: ["", Validators.required]
+      amount: ["", Validators.required],
+      sub_total: ["", Validators.required],
+      total: ["", Validators.required],
     });
 
 

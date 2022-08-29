@@ -1,4 +1,10 @@
 <div class="wrapper-cust-admin" fxLayout style="height: 95%">
+    <div class="row mr-2" style="justify-content: right;">
+        <button mat-raised-button color="primary" style="margin-right: 10px; " (click)="openReportDialog()"
+            class="sign-button ml-1"><img src="{{add_my_self_icon}}" alt="" height="20px">
+            Create an invoice
+        </button>
+    </div>
     <div class="display-inline-cust">
         <div class="main-search-bar">
             <div class="row d-flex justify-content-between m-3 py-3">
@@ -18,6 +24,9 @@
 
                 </div>
                 <div>
+                    <button class="import-export-btn-datatable button_workersEditClass cust-margin-div" (click)="invoiceReportDialog()" matTooltip="{{ 'TOOLTIP_REPORT' | translate }}" aria-label="Left Align">
+                        <img src="{{reportIcon}}" alt="" height="20px">
+                    </button>
 
                     <button mat-stroked-button class="mr-1" (click)="gridTolist();"> {{
                         btn_grid_list_text }} </button>
@@ -36,10 +45,7 @@
                         <mat-label>Serach</mat-label>
                         <input matInput placeholder="Serach" />
                     </mat-form-field>
-                    <button mat-raised-button color="primary" style="margin-right: 10px;" (click)="openform()"
-                        class="sign-button ml-1"><img src="{{add_my_self_icon}}" alt="" height="20px">
-                        Create an invoice
-                    </button>
+
                 </div>
             </div>
 

@@ -1,0 +1,163 @@
+<div class="wrapper-cust-admin">
+    <div class="row mb-2">
+        <div class="col-10 dialog-head-left">
+            <!-- <h2 mat-dialog-title> {{'Add-Category-Form-Header' | translate}}</h2> -->
+        </div>
+        <!-- <div class="col-8 dialog-head-center">
+                
+            </div> -->
+        <div class="col-2 dialog-head-right">
+            <button class="import-export-btn-datatable cust-margin-div" (click)="back()"
+                matTooltip="{{ 'All-exit' | translate }}">
+                <img src="{{exitIcon}}" alt="" class="far fa-paper-plane" height="20px">
+            </button>
+        </div>
+    </div>
+    <mat-card class="example-card">
+        <div class="head-text" [ngClass]="mode == 'on'? 'carddark' : 'cardlight'">
+            <h3 class="editing"> Template creation
+            </h3>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-6">
+                    <form class="form" [formGroup]="templateform">
+                        <div class="main-cust-image">
+                            <div>
+                                <mat-form-field class="main-one-input-field" appearance="outline">
+                                    <mat-label>Template Name</mat-label>
+                                    <input matInput required class="input-capitalized-textfield"
+                                        placeholder="Template Name" formControlName="template_name" />
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field class="main-one-input-field" appearance="outline">
+                                    <mat-label>Note</mat-label>
+                                    <input matInput required placeholder="Note" formControlName="note">
+                                </mat-form-field>
+                            </div>
+
+
+                            <div>
+                                <mat-form-field class="main-one-input-field" appearance="outline">
+                                    <mat-label>Status</mat-label>
+                                    <input matInput required class="input-capitalized-textfield" placeholder="Status"
+                                        formControlName="status" />
+                                </mat-form-field>
+                            </div>
+
+                            <div>
+                                <mat-form-field class="main-one-input-field" appearance="outline">
+                                    <mat-label>Company Name</mat-label>
+                                    <input matInput required class="input-capitalized-textfield"
+                                        placeholder="Company Name" formControlName="company_name" />
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field class="main-one-input-field" appearance="outline">
+                                    <mat-label>Company Address</mat-label>
+                                    <textarea matInput required class="input-capitalized-textArea"
+                                        placeholder="Company Address" formControlName="company_address"></textarea>
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field class="main-one-input-field" appearance="outline">
+                                    <mat-label>Bill to</mat-label>
+                                    <input matInput required class="input-capitalized-textfield" placeholder="Bill to"
+                                        formControlName="bill_to" />
+                                </mat-form-field>
+                            </div>
+
+                            <div>
+                                <mat-form-field class="main-one-input-field" appearance="outline">
+                                    <mat-label>Ship to</mat-label>
+                                    <input matInput required class="input-capitalized-textfield" placeholder="Ship to"
+                                        formControlName="ship_to" />
+                                </mat-form-field>
+                            </div>
+
+                            <div>
+                                <mat-form-field appearance="outline" class="main-one-input-field">
+                                    <mat-label>Invoice #</mat-label>
+                                    <input matInput required placeholder="Invoice #" formControlName="invoice_has">
+                                    <!-- input [matDatepicker]="picker" -->
+                                    <!-- <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker disabled="false"></mat-datepicker> -->
+                                </mat-form-field>
+                            </div>
+
+                            <div>
+                                <mat-form-field appearance="outline" class="main-one-input-field">
+                                    <mat-label>Due date</mat-label>
+                                    <input matInput required placeholder="Due date" formControlName="due_date">
+                                    <!--input [matDatepicker]="due" -->
+                                    <!-- <mat-datepicker-toggle matSuffix [for]="due"></mat-datepicker-toggle>
+                                    <mat-datepicker #due disabled="false"></mat-datepicker> -->
+                                </mat-form-field>
+                            </div>
+
+                            <div>
+                                <mat-form-field class="main-one-input-field" appearance="outline">
+                                    <mat-label>Description</mat-label>
+                                    <textarea matInput required class="input-capitalized-textArea"
+                                        placeholder="Description" formControlName="description"></textarea>
+                                </mat-form-field>
+                            </div>
+
+                            <div>
+                                <mat-form-field appearance="outline" class="main-one-input-field">
+                                    <mat-label>P.O #</mat-label>
+                                    <input matInput required placeholder="P.O #" formControlName="po_has">
+                                </mat-form-field>
+                            </div>
+
+                            <div>
+                                <mat-form-field class="main-one-input-field" appearance="outline">
+                                    <mat-label>GL Account</mat-label>
+                                    <input matInput required class="input-capitalized-textfield"
+                                        placeholder="GL Account" formControlName="gl_account" />
+                                </mat-form-field>
+                            </div>
+
+                            <div>
+                                <mat-form-field class="main-one-input-field" appearance="outline">
+                                    <mat-label>Amount</mat-label>
+                                    <input matInput required class="input-capitalized-textfield" placeholder="Amount"
+                                        formControlName="amount" />
+                                </mat-form-field>
+                            </div>
+
+                            <div>
+                                <mat-form-field class="main-one-input-field" appearance="outline">
+                                    <mat-label>Sub Total</mat-label>
+                                    <input matInput required class="input-capitalized-textfield" placeholder="Sub Total"
+                                        formControlName="sub_total" />
+                                </mat-form-field>
+                            </div>
+
+
+                            <div>
+                                <mat-form-field class="main-one-input-field" appearance="outline">
+                                    <mat-label>Total</mat-label>
+                                    <input matInput required class="input-capitalized-textfield" placeholder="Total"
+                                        formControlName="total" />
+                                </mat-form-field>
+                            </div>
+
+
+                        </div>
+                        <div class="cust-center-save pb-3">
+                            <button mat-raised-button class="cust-button-form"><img src="{{backIcon}}" alt=""
+                                    (click)="back()" class="pr-1" height="15px">{{'All-back' |
+                                translate}}</button>
+                            <button mat-raised-button color="primary" class="cust-button-form"><img src="{{saveIcon}}"
+                                    alt="" class="pr-1" height="15px">{{'All-save' | translate
+                                }}</button>
+                        </div>
+                    </form>
+                    <!-- </div> -->
+                </div>
+            </div>
+        </div>
+    </mat-card>
+</div>
