@@ -18,6 +18,7 @@ export class SettingsSmtpComponent implements OnInit {
   compnay_id: any;
   LTS_ACTIVE: any = configdata.LTS_ACTIVE;
   saveIcon = icon.SAVE_WHITE;
+  verifyIcon = icon.EMAIL_RECIPAINT;
   constructor(private formBuilder: FormBuilder, public httpCall: HttpCall, public snackbarservice: Snackbarservice,
     public uiSpinner: UiSpinnerService,
     public translate: TranslateService) {
@@ -55,6 +56,23 @@ export class SettingsSmtpComponent implements OnInit {
 
   back(): void {
 
+  }
+
+  verifyData(): void {
+    let that = this;
+    if (this.smtpinfo.valid) {
+      let reqObject = this.smtpinfo.value;
+      console.log(reqObject);
+      this.uiSpinner.spin$.next(true);
+      this.httpCall.httpPostCall(httproutes.COMPNAY_SMTP_OTHER_SETTING_VERIFY, reqObject).subscribe(function (params) {
+        that.uiSpinner.spin$.next(false);
+        if (params.status) {
+          that.snackbarservice.openSnackBar(params.message, "success");
+        } else {
+          that.snackbarservice.openSnackBar(params.message, "error");
+        }
+      });
+    }
   }
 
   saveData(): void {
