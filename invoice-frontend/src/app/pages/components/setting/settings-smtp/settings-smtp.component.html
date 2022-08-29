@@ -81,13 +81,12 @@
                         </div>
                     </div>
                     <div class="row cust-center-justify">
-                        <!-- <button mat-stroked-button style="margin-right: 10px;" class="sign-button" (click)="back();">
-                            <img src="./assets/diversityicon/backarrow.png" alt="" class="pr-1"
-                                height="15px">{{'All-back' | translate }}
-                        </button> -->
+                        <button style="margin-right: 10px;" mat-raised-button type="submit" (click)="verifyData()"
+                            color="primary"><img src="{{verifyIcon}}" alt="" class="pr-1" height="15px">Verify
+                        </button>
                         <button mat-raised-button type="submit" (click)="saveData()" color="primary"><img
                                 src="{{saveIcon}}" alt="" class="pr-1" height="15px">{{'All-save' |
-                               translate }}
+                            translate }}
                         </button>
                     </div>
                 </form>

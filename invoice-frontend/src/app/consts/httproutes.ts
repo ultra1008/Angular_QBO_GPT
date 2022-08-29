@@ -690,6 +690,7 @@ export enum httproutes {
 
     COMPNAY_INFO_OTHER_SETTING_UPDATE = "/webapi/v1/editcompany",
     COMPNAY_SMTP_OTHER_SETTING_UPDATE = "/webapi/v1/compnayupdatesmtp",
+    COMPNAY_SMTP_OTHER_SETTING_VERIFY = "/webapi/v1/compnayverifysmtp",
 
     COMPANY_SEDN_MAIL_IFRAME = "/webapi/v1/sendiframecode",
 

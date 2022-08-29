@@ -15,6 +15,7 @@ var userSchema = require('./../../../../../model/user');
 var rolesandpermissionsSchema = require('./../../../../../model/rolesandpermissions');
 
 var bucketOpration = require('./../../../../../controller/common/s3-wasabi');
+const nodemailer = require('nodemailer');
 
 module.exports.compnayinformation = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -142,6 +143,63 @@ module.exports.compnaysmtp = async function (req, res) {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
+
+module.exports.compnayverifysmtp = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        try {
+            let reqObject = req.body;
+
+            var mailerOptions = {
+                transport: "SMTP",
+                host: reqObject.tenant_smtp_server,
+                port: reqObject.tenant_smtp_port,
+                secure: false,
+                requireTLS: reqObject.tenant_smtp_security == "yes" ? true : false,
+                ignoreTLS: false,
+                requiresAuth: true,
+                auth: {
+                    user: reqObject.tenant_smtp_username,
+                    pass: reqObject.tenant_smtp_password
+                },
+                tls: { rejectUnauthorized: false },
+                debug: true
+            };
+            console.log(mailerOptions);
+
+            // create reusable transporter object using the default SMTP transport
+            var transporter = nodemailer.createTransport(mailerOptions);
+
+            // setup e-mail data with unicode symbols
+            var mailOptions = {
+                from: reqObject.tenant_smtp_reply_to_mail, // sender address
+                to: reqObject.tenant_smtp_reply_to_mail, // list of receivers
+                subject: 'SMTP Test', // Subject line
+                text: 'This email is ent for check SMTP credentials. Kindly ignore this email or do not reply to this email.', // plaintext body
+                html: '' // html body
+            };
+
+            // send mail with defined transport object
+            transporter.sendMail(mailOptions, function (error, info) {
+                if (error) {
+                    res.send({ message: 'SMTP credentials are not verified, kindly check the information is provided by you.', error: error, status: false });
+                    return console.log(error);
+                }
+                console.log('Message sent: ' + info.response);
+                res.send({ message: 'SMTP credentials verified successfully', data: info.response, status: true });
+            });
+
+
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+}
+
 
 module.exports.compnayupdatesmtp = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
