@@ -74,4 +74,6 @@ module.exports = {
     GIF_LOADER: "gif_loaders",
 
     INVOICE_ROLES: "invoice_roles",
+    INVOICE_PROJECTS: "invoice_projects",
+    INVOICE_LOCATION: "invoice_locations",
 };
