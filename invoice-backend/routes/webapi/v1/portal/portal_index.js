@@ -96,7 +96,6 @@ router.get('/webapi/v1/portal/compnayusage', common.checkTokenExistOrNot, compan
 
 var employeeController = require('./employee/employeeController');
 var employeeValidation = require('./employee/employeeValidation');
-router.post('/webapi/v1/portal/getalluserlistocps', common.checkTokenExistOrNot, employeeController.getAllUserListOcpr);
 router.get('/webapi/v1/portal/getalluserlist', common.checkTokenExistOrNot, employeeController.getAllUserList);
 router.post('/webapi/v1/portal/getspecificusers', common.checkTokenExistOrNot, employeeController.getSpecificUsers);
 router.post('/webapi/v1/portal/saveemployee', common.checkTokenExistOrNot, employeeController.saveEmployee);
