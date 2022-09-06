@@ -76,4 +76,5 @@ module.exports = {
     INVOICE_ROLES: "invoice_roles",
     INVOICE_PROJECTS: "invoice_projects",
     INVOICE_LOCATION: "invoice_locations",
+    TEST_EMAIL: "test_emails",
 };

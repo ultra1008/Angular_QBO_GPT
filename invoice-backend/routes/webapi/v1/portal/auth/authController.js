@@ -19,11 +19,13 @@ module.exports.login = async function (req, res) {
     var requestObject = req.body;
     var translator = new common.Language(req.headers.language);
     DB.findOne(superadminCollection.COMPANY, { companycode: requestObject.companycode }, function (err, resultfind) {
+
         if (err) {
             res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
         } else {
             if (resultfind != null) {
                 DB.findOne(superadminCollection.TENANTS, { companycode: requestObject.companycode }, async function (err, result) {
+
                     if (err) {
                         res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
                     } else {
@@ -33,7 +35,7 @@ module.exports.login = async function (req, res) {
                             if (result) {
                                 connection_db_api = await db_connection.connection_db_api(result);
                                 let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
-                                let roleConnection = connection_db_api.model(collectionConstant.INVOICE_ROLES, invoiceRoleSchema);
+                                let roleConnection = connection_db_api.model(collectionConstant.ROLEANDPERMISSION, invoiceRoleSchema);
                                 //let UserData = await userConnection.findOne({ "useremail": requestObject.useremail , is_delete : 0 , userstatus : 1 });
                                 let UserData = await userConnection.aggregate([
                                     {
@@ -311,6 +313,7 @@ module.exports.login = async function (req, res) {
                                     }
                                 ]);
                                 UserData = UserData[0];
+
                                 if (UserData == null) {
                                     res.send({ message: translator.getStr('UserNotFound'), status: false });
                                 } else {
@@ -372,6 +375,7 @@ module.exports.login = async function (req, res) {
 
 module.exports.changepassword = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
+
     var translator = new common.Language(req.headers.language);
     if (decodedToken) {
         var requestObject = req.body;

@@ -12,7 +12,7 @@ var formidable = require('formidable');
 var fs = require('fs');
 var bucketOpration = require('../../../../../controller/common/s3-wasabi');
 var config = require('./../../../../../config/config');
-//let QRCODE = require('./../../../../../controller/common/qr_code');
+let QRCODE = require('./../../../../../controller/common/qr_code');
 let sendEmail = require('./../../../../../controller/common/sendEmail');
 let rest_Api = require('./../../../../../config/db_rest_api');
 let db_rest_api = require('../../../../../config/db_rest_api');
@@ -58,39 +58,6 @@ module.exports.getAllUserList = async function (req, res) {
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
-};
-
-module.exports.getAllUserListOcpr = async function (req, res) {
-    var requestObject = req.body;
-    var translator = new common.Language('en');
-    DB.findOne(superadminCollection.COMPANY, { _id: ObjectID(requestObject.sponsor_id) }, function (err, resultfind) {
-        if (err) {
-            res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
-        } else {
-            if (resultfind != null) {
-                DB.findOne(superadminCollection.TENANTS, { companycode: resultfind.companycode }, async function (err, resulttanent) {
-                    if (err) {
-                        res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
-                    } else {
-                        var translator = new common.Language('en');
-                        let connection_db_api = await db_connection.connection_db_api(resulttanent);
-                        try {
-                            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
-                            let getData = await userConnection.find({ is_delete: 0, userstatus: 1, });
-                            res.send({ data: getData, status: true });
-                        } catch (e) {
-                            console.log("e", e);
-                            res.send({ message: translator.getStr('SomethingWrong'), status: false });
-                        } finally {
-                            connection_db_api.close();
-                        }
-                    }
-                });
-            } else {
-                res.send({ message: translator.getStr('SponsorNotExist'), error: err, status: false });
-            }
-        }
-    });
 };
 
 module.exports.getSpecificUsers = async function (req, res) {
@@ -221,74 +188,61 @@ module.exports.saveEmployee = async function (req, res) {
                                 var HtmlData = await template(emailTmp);
                                 body._id = add._id;
 
-                                // let qrcode_Object = {
-                                //     username: body.userfullname,
-                                //     _id: add._id,
-                                //     userrole: onerole.role_name,
-                                //     jobtitle: jobtitle,
-                                //     department: department,
-                                //     costcode: costcode
-                                // };
-                                //let qrcode_Object = config.SITE_URL + '/#/user-publicpage?_id=' + add._id + '&company_code=' + decodedToken.companycode;
-                                //let admin_qrCode = await QRCODE.generate_QR_Code(qrcode_Object);
-                                //let key_url = "employee/" + add._id + "/" + add._id + new Date().getTime() + "_QRCode.png";
+                                let qrcode_Object = config.SITE_URL + '/#/user-publicpage?_id=' + add._id + '&company_code=' + decodedToken.companycode;
+                                let admin_qrCode = await QRCODE.generate_QR_Code(qrcode_Object);
+                                let key_url = "employee/" + add._id + "/" + "QRCode.png";
                                 let LowerCase_bucket = decodedToken.companycode.toLowerCase();
-                                // let PARAMS = {
-                                //     Bucket: LowerCase_bucket,
-                                //     Key: key_url,
-                                //     Body: admin_qrCode,
-                                //     ACL: 'public-read-write'
-                                // };
+                                let PARAMS = {
+                                    Bucket: LowerCase_bucket,
+                                    Key: key_url,
+                                    Body: admin_qrCode,
+                                    ACL: 'public-read-write'
+                                };
                                 var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
                                 let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
-                                // bucketOpration.uploadFile(PARAMS, async function (err, resultUpload)
-                                // {
-                                //     if (err)
-                                //     {
-                                //         res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
-                                //     } else
-                                //     {
-                                // userqrcode = config.wasabisys_url + "/" + LowerCase_bucket + "/" + key_url;
-                                // history_object.userqrcode = userqrcode;
-                                history_object.usercostcode = usercostcode;
-                                // let updateuser = await userConnection.updateOne({ _id: ObjectID(add._id) }, { userqrcode: userqrcode, usercostcode: usercostcode });
-                                // if (updateuser)
-                                // {
-                                //let mailsend = await sendEmail.sendEmail(config.tenants.tenant_smtp_username, body.useremail, "Rovuk Registration", HtmlData);
-                                let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, body.useremail, "Rovuk Registration", HtmlData,
-                                    talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                                    talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                                bucketOpration.uploadFile(PARAMS, async function (err, resultUpload) {
+                                    if (err) {
+                                        res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
+                                    } else {
+                                        userqrcode = config.wasabisys_url + "/" + LowerCase_bucket + "/" + key_url;
+                                        history_object.userqrcode = userqrcode;
+                                        history_object.usercostcode = usercostcode;
+                                        let updateuser = await userConnection.updateOne({ _id: ObjectID(add._id) }, { userqrcode: userqrcode, usercostcode: usercostcode });
+                                        if (updateuser) {
+                                            let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, body.useremail, "Rovuk Registration", HtmlData,
+                                                talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
+                                                talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
 
-                                if (notFonud == 1) {
-                                    var temp_path = newOpenFile[0].path;
-                                    var file_name = newOpenFile[0].name;
-                                    dirKeyName = config.SUPPLIER_DIVERSITY_WASABI_PATH + "/employee/profile_picture/" + file_name;
-                                    var fileBody = fs.readFileSync(temp_path);
-                                    params = { Bucket: LowerCase_bucket, Key: dirKeyName, Body: fileBody, ACL: 'public-read-write' };
+                                            if (notFonud == 1) {
+                                                var temp_path = newOpenFile[0].path;
+                                                var file_name = newOpenFile[0].name;
+                                                dirKeyName = config.SUPPLIER_DIVERSITY_WASABI_PATH + "/employee/profile_picture/" + file_name;
+                                                var fileBody = fs.readFileSync(temp_path);
+                                                params = { Bucket: LowerCase_bucket, Key: dirKeyName, Body: fileBody, ACL: 'public-read-write' };
 
-                                    bucketOpration.uploadFile(params, async function (err, resultUpload) {
-                                        if (err) {
-                                            res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
-                                        } else {
+                                                bucketOpration.uploadFile(params, async function (err, resultUpload) {
+                                                    if (err) {
+                                                        res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
+                                                    } else {
 
-                                            urlProfile = config.wasabisys_url + "/" + LowerCase_bucket + "/" + dirKeyName;
-                                            let update_user = await userConnection.updateOne({ _id: add._id }, { userpicture: urlProfile });
-                                            history_object.userpicture = urlProfile;
-                                            if (update_user) {
+                                                        urlProfile = config.wasabisys_url + "/" + LowerCase_bucket + "/" + dirKeyName;
+                                                        let update_user = await userConnection.updateOne({ _id: add._id }, { userpicture: urlProfile });
+                                                        history_object.userpicture = urlProfile;
+                                                        if (update_user) {
+                                                            addUSER_History("Insert", history_object, decodedToken);
+                                                            //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
+                                                            res.send({ message: translator.getStr('UserCreationEmail'), data: body, status: true });
+                                                        }
+                                                    }
+                                                });
+                                            } else {
                                                 addUSER_History("Insert", history_object, decodedToken);
                                                 //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
-                                                res.send({ message: translator.getStr('UserCreationEmail'), data: body, status: true });
+                                                res.send({ message: translator.getStr('UserAdded'), data: body, status: true });
                                             }
                                         }
-                                    });
-                                } else {
-                                    addUSER_History("Insert", history_object, decodedToken);
-                                    //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
-                                    res.send({ message: translator.getStr('UserAdded'), data: body, status: true });
-                                }
-                                // }
-                                //     }
-                                // });
+                                    }
+                                });
                             }
                         }
                     }
@@ -1127,8 +1081,9 @@ module.exports.savePersonalInfo = async function (req, res) {
                     delete body['jobtitle_name'];
                     delete body['department_name'];
                     delete body['costcode_name'];
-
+                    delete body._id;
                     let user_edit_id = fields._id;
+                    delete fields._id;
                     //let usercostcode = "013-0110002";
                     //password_tmp = body.password;
 
@@ -1535,6 +1490,7 @@ module.exports.sendappinvitation = async function (req, res) {
             var requestObject = req.body;
             var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
             let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
+
             let emailTmp = {
                 HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
                 SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
@@ -1976,6 +1932,7 @@ module.exports.getAllUserHistory = async function (req, res) {
         try {
             let col = [];
             var requestObject = req.body;
+            console.log(requestObject);
             col.push("created_at", "action", "created_by", "taken_device");
             var start = parseInt(req.body.start);
             var perpage = parseInt(req.body.length);
@@ -3845,10 +3802,12 @@ module.exports.recoverteam = async function (req, res) {
     console.log('recoverteam');
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
+    console.log(decodedToken);
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
+            console.log(requestObject);
             let userCollection = connection_db_api.model(collectionConstant.USER, userSchema);
             let update_team = await userCollection.updateOne({ _id: ObjectID(requestObject._id) }, { is_delete: 0 });
             if (update_team) {

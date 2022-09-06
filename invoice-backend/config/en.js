@@ -785,4 +785,12 @@ module.exports = {
     EmailDocumentExpireSomeOfYour: 'Some of your',
     EmailDocumentExpireDocExpireIn: 'project documents will be expired in',
     EmailDocumentExpireTakeAction: 'days. Please take necessary action and update your project document',
+
+    // App Invitation
+    EmailAppInvitationTitle: 'App download invitation',
+    EmailAppInvitationAppDownloadInvitation: 'You have been invited to download an app',
+    EmailAppInvitationDownloadApp: 'Welcome to the team. An associate has invited you to download the compnay\'s app, ROVUK. Choose the version that works with your device(iOS/Android).',
+    EmailAppInvitationLoginEmail: 'Login email:',
+    EmailAppInvitationCompanyCode: 'Company code:',
+    EmailAppInvitationCompanyName: 'Company name:', 
 };

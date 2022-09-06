@@ -1,4 +1,3 @@
-const { AwesomeQR } = require("awesome-qr");
 const QRLogo = require('qr-with-logo');
 var common = require("./common");
 // var image = require("../../images/rovuck.png");
@@ -19,8 +18,8 @@ module.exports.generate_QR_Code = async function (data) {
             width: 1000,
             height: 1000,
         }, "Base64", "qrlogo.png", async function (b64) {
-            let blob = Buffer.from(b64, 'base64')
-            resolve(blob)
+            let blob = Buffer.from(b64, 'base64');
+            resolve(blob);
         });
     });
-}
+};
