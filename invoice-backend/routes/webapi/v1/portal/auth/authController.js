@@ -712,7 +712,6 @@ module.exports.sendSupplierOTP = async function (req, res) {
         if (one_user) {
             let emailOTPConnection = connection_db_api.model(collectionConstant.EMAIL_OTP, emailOTPSchema);
             let sixdidgitnumber = Math.floor(Math.random() * (9 * Math.pow(10, 6 - 1))) + Math.pow(10, 6 - 1);
-
             requestObject.sent_on = Math.round(new Date().getTime() / 1000);
             requestObject.user_id = one_user._id;
             requestObject.otp = sixdidgitnumber;

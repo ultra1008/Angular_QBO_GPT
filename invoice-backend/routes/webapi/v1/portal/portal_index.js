@@ -231,4 +231,16 @@ let gifLoaderController = require('./gif_loader/gifLoaderController');
 let gifLoaderValidation = require('./gif_loader/gifLoaderValidation');
 router.post('/webapi/v1/getgifloader', gifLoaderValidation.getGIFLoader, gifLoaderController.getGIFLoader);
 
+let taxRateController = require('./tax_rate/taxRateController');
+let taxRateValidation = require('./tax_rate/taxRateValidation');
+router.post('/webapi/v1/portal/savetaxrate', common.checkTokenExistOrNot, taxRateValidation.saveTaxRate, taxRateController.saveTaxRate);
+router.get('/webapi/v1/portal/gettaxrate', common.checkTokenExistOrNot, taxRateController.getTaxRate);
+router.post('/webapi/v1/portal/deletetaxrate', common.checkTokenExistOrNot, taxRateValidation.deleteTaxRate, taxRateController.deleteTaxRate);
+
+
+let invoice_documentCOntroller = require('./invoice_document/documentController');
+let invoice_documentValidation = require('./invoice_document/documentValidation');
+router.post('/webapi/v1/portal/saveinvoicedocument', common.checkTokenExistOrNot, invoice_documentValidation.saveInvoice_Document, invoice_documentCOntroller.saveInvoicedocument);
+router.get('/webapi/v1/portal/getinvoicedocument', common.checkTokenExistOrNot, invoice_documentCOntroller.getInvoiceDocument);
+router.post('/webapi/v1/portal/deleteInvoiceDocument', common.checkTokenExistOrNot, invoice_documentValidation.deleteInvoice_Document, invoice_documentCOntroller.deleteInvoiceDocument);
 module.exports = router;
