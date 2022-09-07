@@ -1927,6 +1927,7 @@ async function addUSER_History(action, data, decodedToken) {
 module.exports.getAllUserHistory = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
+
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
@@ -1939,6 +1940,7 @@ module.exports.getAllUserHistory = async function (req, res) {
             var columnData = (req.body.order != undefined && req.body.order != '') ? req.body.order[0].column : '';
             var columntype = (req.body.order != undefined && req.body.order != '') ? req.body.order[0].dir : '';
             var sort = {};
+
             // if (req.body.draw == 1)
             // {
             //     sort = { "created_at": -1 };
@@ -1948,7 +1950,7 @@ module.exports.getAllUserHistory = async function (req, res) {
             // }
             sort[col[columnData]] = (columntype == 'asc') ? 1 : -1;
             let count_query = { is_delete: 0 };
-            if (requestObject.employee_id != "") {
+            if (requestObject.employee_id != "" && requestObject.employee_id != undefined) {
                 count_query = {
                     $or: [
                         { "deleted_id": ObjectID(requestObject.employee_id) },
@@ -2620,6 +2622,7 @@ module.exports.getAllEmployeeReport = async function (req, res) {
             //date_query = date_query.length == 0 ? {} : { $or: date_query };
             //query = query.length == 0 ? {} : { $or: query };
             // console.log("date_query: ", date_query, query);
+
             let get_user = await userCollection.aggregate([
                 {
                     $match: { is_delete: 0 },
@@ -2870,6 +2873,7 @@ module.exports.getAllEmployeeReport = async function (req, res) {
                 },
                 { $sort: sort }
             ]);
+
             console.log("get_user: ", get_user.length);
             let workbook = new excel.Workbook();
             let title_tmp = translator.getStr('EmployeeTitle');
@@ -3311,12 +3315,14 @@ async function getAllRoles(decodedToken) {
 module.exports.importEmployees = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
+
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
 
             let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
             let creditcardsettingsCollection = connection_db_api.model(collectionConstant.CREDITCARD, creditcardsettingsSchema);
+
             let none_creditcardsettings = await creditcardsettingsCollection.findOne({ name: "None" });
             var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
 
