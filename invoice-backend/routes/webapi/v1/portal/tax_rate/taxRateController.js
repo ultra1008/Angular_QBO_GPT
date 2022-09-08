@@ -35,17 +35,45 @@ module.exports.saveTaxRate = async function (req, res) {
         try {
             var requestObject = req.body;
             let taxRateConnection = connection_db_api.model(collectionConstant.INVOICE_TAX_RATE, taxRateSchema);
+            var get_name = await taxRateConnection.findOne({ "name": requestObject.name, is_delete: 0 });
             let id = requestObject._id;
             delete requestObject._id;
             if (id) {
                 //Update
-                let update_data = await taxRateConnection.updateOne({ _id: ObjectID(id) }, requestObject);
-                res.send({ status: true, message: 'Tax rate updated successfully.', data: update_data });
+                if (get_name != null) {
+                    if (get_name._id == id) {
+                        let update_data = await taxRateConnection.updateOne({ _id: ObjectID(id) }, requestObject);
+                        if (update_data) {
+                            res.send({ status: true, message: 'Tax rate updated successfully.', data: update_data });
+                        } else {
+                            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                        }
+                    }
+                    else {
+                        res.send({ status: false, message: 'Tax rate allready exist.' });
+                    }
+                } else {
+                    let update_data = await taxRateConnection.updateOne({ _id: ObjectID(id) }, requestObject);
+                    if (update_data) {
+                        res.send({ status: true, message: 'Tax rate updated successfully.', data: update_data });
+                    } else {
+                        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    }
+                }
+
+
             } else {
                 //Insert 
-                let add_tax_rate = new taxRateConnection(requestObject);
-                let save_tax_rate = await add_tax_rate.save();
-                res.send({ status: true, message: 'Tax rate saved successfully.', data: save_tax_rate });
+                var nameexist = await taxRateConnection.findOne({ "name": requestObject.name });
+                if (nameexist) {
+                    res.send({ status: false, message: "Tax rate allready exist." });
+                }
+                else {
+                    let add_tax_rate = new taxRateConnection(requestObject);
+                    let save_tax_rate = await add_tax_rate.save();
+                    res.send({ status: true, message: 'Tax rate saved successfully.', data: save_tax_rate });
+                }
+
             }
         } catch (e) {
             console.log(e);

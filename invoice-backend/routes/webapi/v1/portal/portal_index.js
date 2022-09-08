@@ -238,9 +238,16 @@ router.get('/webapi/v1/portal/gettaxrate', common.checkTokenExistOrNot, taxRateC
 router.post('/webapi/v1/portal/deletetaxrate', common.checkTokenExistOrNot, taxRateValidation.deleteTaxRate, taxRateController.deleteTaxRate);
 
 
-let invoice_documentCOntroller = require('./invoice_document/documentController');
+let invoice_documentController = require('./invoice_document/documentController');
 let invoice_documentValidation = require('./invoice_document/documentValidation');
-router.post('/webapi/v1/portal/saveinvoicedocument', common.checkTokenExistOrNot, invoice_documentValidation.saveInvoice_Document, invoice_documentCOntroller.saveInvoicedocument);
-router.get('/webapi/v1/portal/getinvoicedocument', common.checkTokenExistOrNot, invoice_documentCOntroller.getInvoiceDocument);
-router.post('/webapi/v1/portal/deleteInvoiceDocument', common.checkTokenExistOrNot, invoice_documentValidation.deleteInvoice_Document, invoice_documentCOntroller.deleteInvoiceDocument);
+router.post('/webapi/v1/portal/saveinvoicedocument', common.checkTokenExistOrNot, invoice_documentValidation.saveInvoice_Document, invoice_documentController.saveInvoicedocument);
+router.get('/webapi/v1/portal/getinvoicedocument', common.checkTokenExistOrNot, invoice_documentController.getInvoiceDocument);
+router.post('/webapi/v1/portal/deleteInvoiceDocument', common.checkTokenExistOrNot, invoice_documentValidation.deleteInvoice_Document, invoice_documentController.deleteInvoiceDocument);
+
+let invoice_termController = require('./invoice_term/termController');
+let invoice_termValidation = require('./invoice_term/termValidation');
+router.post('/webapi/v1/portal/saveinvoiceterm', common.checkTokenExistOrNot, invoice_termValidation.saveterm, invoice_termController.saveterm);
+router.get('/webapi/v1/portal/getinvoiceterm', common.checkTokenExistOrNot, invoice_termController.getterm);
+router.post('/webapi/v1/portal/deleteInvoiceterm', common.checkTokenExistOrNot, invoice_termValidation.deleteterm, invoice_termController.deleteinvoiceterm);
+
 module.exports = router;

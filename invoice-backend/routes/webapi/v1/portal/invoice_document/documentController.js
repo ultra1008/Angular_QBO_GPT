@@ -27,14 +27,20 @@ module.exports.saveInvoicedocument = async function (req, res) {
                         if (updateDocument) {
                             res.send({ status: true, message: "document update successfully..!" });
                         } else {
-                            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+                            res.send({ message: translator.getStr('SomethingWrong'), status: false });
                         }
                     } else {
-                        res.send({ message: "document allready exist", error: e, status: false });
+                        res.send({ message: "document allready exist", status: false });
 
                     }
                 } else {
+                    let updateDocument = await documentConnection.updateOne({ _id: ObjectID(id) }, requestObject);
+                    if (updateDocument) {
+                        res.send({ status: true, message: "document update succesfully..!" });
+                    } else {
+                        res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
 
+                    }
                 }
 
             }
@@ -43,7 +49,7 @@ module.exports.saveInvoicedocument = async function (req, res) {
 
                 var nameexist = await documentConnection.findOne({ "name": requestObject.name });
                 if (nameexist) {
-                    res.send({ status: false, message: "name is all ready exist" });
+                    res.send({ status: false, message: "document allready exist" });
                 }
                 else {
                     var add_document = new documentConnection(requestObject);
@@ -109,7 +115,7 @@ module.exports.deleteInvoiceDocument = async function (req, res) {
             let updated_data = await invoiceDocumentConnection.updateOne({ _id: ObjectID(id) }, { is_delete: 1 });
             var is_delete = updated_data.nModified;
             if (is_delete == 0) {
-                res.send({ status: false, message: "There Is No Data With This Id" });
+                res.send({ status: false, message: "There is no data with this id" });
             }
             else {
                 res.send({ status: true, message: "Document deleted successfully..!", data: updated_data });
