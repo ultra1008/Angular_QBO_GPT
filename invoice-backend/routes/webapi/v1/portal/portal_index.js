@@ -250,4 +250,10 @@ router.post('/webapi/v1/portal/saveinvoiceterm', common.checkTokenExistOrNot, in
 router.get('/webapi/v1/portal/getinvoiceterm', common.checkTokenExistOrNot, invoice_termController.getterm);
 router.post('/webapi/v1/portal/deleteInvoiceterm', common.checkTokenExistOrNot, invoice_termValidation.deleteterm, invoice_termController.deleteinvoiceterm);
 
+let invoice_costcodeController = require('./invoice_cost_code/cost_code.Controller');
+let invoice_costcodeValidation = require('./invoice_cost_code/cost_codeValidation');
+router.post('/webapi/v1/portal/saveinvoicecostcode', common.checkTokenExistOrNot, invoice_costcodeValidation.savecostcode, invoice_costcodeController.savecostCode);
+router.get('/webapi/v1/portal/getinvoicecostcode', common.checkTokenExistOrNot, invoice_costcodeController.getcostCode);
+router.post('/webapi/v1/portal/deleteInvoicecostcode', common.checkTokenExistOrNot, invoice_costcodeValidation.deletecostCode, invoice_costcodeController.deleteinvoicecostCode);
+
 module.exports = router;
