@@ -71,7 +71,7 @@ module.exports.getcostCode = async function (req, res) {
     }
 };
 
-// dleete term
+// delete term
 
 module.exports.deleteinvoicecostCode = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
