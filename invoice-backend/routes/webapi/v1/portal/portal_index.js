@@ -256,4 +256,13 @@ router.post('/webapi/v1/portal/saveinvoicecostcode', common.checkTokenExistOrNot
 router.get('/webapi/v1/portal/getinvoicecostcode', common.checkTokenExistOrNot, invoice_costcodeController.getcostCode);
 router.post('/webapi/v1/portal/deleteInvoicecostcode', common.checkTokenExistOrNot, invoice_costcodeValidation.deletecostCode, invoice_costcodeController.deleteinvoicecostCode);
 
+let invoice_Controller = require('./invoices/invoice_Controller');
+let invoiceValidation = require('./invoices/invoiceValidation');
+router.post('/webapi/v1/portal/saveinvoice', common.checkTokenExistOrNot, invoice_Controller.saveinvoice);
+router.get('/webapi/v1/portal/getinvoice', common.checkTokenExistOrNot, invoice_Controller.getInvoice);
+router.get('/webapi/v1/portal/deleteinvoice', common.checkTokenExistOrNot, invoiceValidation.deleteinvoice, invoice_Controller.deleteInvoice);
+
+
+let invoiceDashboard = require('./dashboard/dashboardController');
+router.get('/webapi/v1/portal/getdashboardcount', common.checkTokenExistOrNot, invoiceDashboard.getdashboardcount);
 module.exports = router;
