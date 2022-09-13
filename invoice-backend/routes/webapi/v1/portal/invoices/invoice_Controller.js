@@ -1,7 +1,10 @@
 var invoice_Schema = require('./../../../../../model/invoice');
+var invoice_history_Schema = require('./../../../../../model/history/invoice_history');
 let db_connection = require('./../../../../../controller/common/connectiondb');
 let collectionConstant = require('./../../../../../config/collectionConstant');
+let config = require('./../../../../../config/config');
 let common = require('./../../../../../controller/common/common');
+const historyCollectionConstant = require('../../../../../config/historyCollectionConstant');
 var ObjectID = require('mongodb').ObjectID;
 
 
@@ -23,6 +26,9 @@ module.exports.saveinvoice = async function (req, res) {
                 requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                 let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(id) }, requestObject);
                 if (update_invoice) {
+                    requestObject.invoice_id = id;
+                    addchangeInvoice_History("Update", requestObject, decodedToken, requestObject.updated_at);
+
                     res.send({ status: true, message: "Invoice updated successfully..", data: update_invoice });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
@@ -36,6 +42,8 @@ module.exports.saveinvoice = async function (req, res) {
                 let add_invoice = new invoicesConnection(requestObject);
                 let save_invoice = await add_invoice.save();
                 if (save_invoice) {
+                    requestObject.invoice_id = save_invoice._id;
+                    addchangeInvoice_History("Insert", requestObject, decodedToken, requestObject.updated_at);
                     res.send({ status: true, message: "Invoice saved successfully.." });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
@@ -101,6 +109,11 @@ module.exports.deleteInvoice = async function (req, res) {
             if (isDelete == 0) {
                 res.send({ status: false, message: "There is no data with this id." });
             } else {
+                var get_one = await invoicesConnection.findOne({ _id: ObjectID(id) }, { _id: 0, __v: 0 });
+                let reqObj = { invoice_id: id, ...get_one._doc };
+
+                addchangeInvoice_History("Delete", reqObj, decodedToken, get_one.updated_at);
+
                 res.send({ message: "Invoice deleted successfully", status: true, data: update_data });
             }
 
@@ -117,3 +130,44 @@ module.exports.deleteInvoice = async function (req, res) {
     }
 };
 
+//invoice pending datatable
+
+module.exports.getpendingdatatable = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoice_Schema);
+            var col = [];
+            var userid = { is_delete: 0 };
+            col.push('invoice', 'p_o', 'Packing Slip');
+        } catch (e) {
+            console.log(e);
+            res.send({ status: false, message: translator.getStr('InvalidUser'), error: e });
+        } finally {
+
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+
+// history function
+async function addchangeInvoice_History(action, data, decodedToken, updatedAt) {
+    var connection_db_api = await db_connection.connection_db_api(decodedToken);
+    try {
+        let invoice_Histroy_Connection = connection_db_api.model(historyCollectionConstant.INVOICES_HISTORY, invoice_history_Schema);
+        data.action = action;
+        data.taken_device = config.WEB_ALL;
+        data.history_created_at = updatedAt;
+        data.history_created_by = decodedToken.UserData._id;
+        var add_invoice_history = new invoice_Histroy_Connection(data);
+        var save_invoice_history = await add_invoice_history.save();
+    } catch (e) {
+        console.log(e);
+    } finally {
+        connection_db_api.close();
+    }
+}

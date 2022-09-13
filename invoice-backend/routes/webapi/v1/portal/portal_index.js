@@ -265,4 +265,6 @@ router.get('/webapi/v1/portal/deleteinvoice', common.checkTokenExistOrNot, invoi
 
 let invoiceDashboard = require('./dashboard/dashboardController');
 router.get('/webapi/v1/portal/getdashboardcount', common.checkTokenExistOrNot, invoiceDashboard.getdashboardcount);
+router.get('/webapi/v1/portal/getdashboardpending', common.checkTokenExistOrNot, invoiceDashboard.pendinginvoice);
+
 module.exports = router;
