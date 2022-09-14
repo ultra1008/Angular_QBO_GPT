@@ -267,4 +267,11 @@ let invoiceDashboard = require('./dashboard/dashboardController');
 router.get('/webapi/v1/portal/getdashboardcount', common.checkTokenExistOrNot, invoiceDashboard.getdashboardcount);
 router.get('/webapi/v1/portal/getdashboardpending', common.checkTokenExistOrNot, invoiceDashboard.pendinginvoice);
 
+
+let invoice_vendorController = require('./vendor/vendorController');
+let invoice_vendorValidation = require('./vendor/vendorValidation');
+router.post('/webapi/v1/portal/savevendor', common.checkTokenExistOrNot, invoice_vendorValidation.savevendor, invoice_vendorController.savevendor);
+router.get('/webapi/v1/portal/getvendor', common.checkTokenExistOrNot, invoice_vendorController.getvendor);
+router.post('/webapi/v1/portal/deletevendor', common.checkTokenExistOrNot, invoice_vendorValidation.deletevendor, invoice_vendorController.deletevendor);
+
 module.exports = router;

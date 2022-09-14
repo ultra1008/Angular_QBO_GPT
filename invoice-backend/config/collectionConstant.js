@@ -79,6 +79,7 @@ module.exports = {
     INVOICE_TAX_RATE: "invoice_tax_rates",
     INVOICE_DOCUMENT: "invoice_documents",
     INVOICE_TERM: "invoice_terms",
-    INVOICE_COST_CODE: "invoice_cost_code",
+    INVOICE_COST_CODE: "invoice_cost_codes",
     INVOICE: "invoices",
+    INVOICE_VENDOR: "invoice_vendors",
 };
