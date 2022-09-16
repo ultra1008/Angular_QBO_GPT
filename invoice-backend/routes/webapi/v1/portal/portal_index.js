@@ -273,5 +273,13 @@ let invoice_vendorValidation = require('./vendor/vendorValidation');
 router.post('/webapi/v1/portal/savevendor', common.checkTokenExistOrNot, invoice_vendorValidation.savevendor, invoice_vendorController.savevendor);
 router.get('/webapi/v1/portal/getvendor', common.checkTokenExistOrNot, invoice_vendorController.getvendor);
 router.post('/webapi/v1/portal/deletevendor', common.checkTokenExistOrNot, invoice_vendorValidation.deletevendor, invoice_vendorController.deletevendor);
+router.get('/webapi/v1/portal/getvendordatatable', common.checkTokenExistOrNot, invoice_vendorValidation.vendordatatable, invoice_vendorController.getvendordatatable);
+router.post('/webapi/v1/portal/vendorStatusUpdate', common.checkTokenExistOrNot, invoice_vendorValidation.updateStatus, invoice_vendorController.vendorStatusUpdate);
+
+
+letinvoice_templateController = require('./template/templateController');
+letinvoice_templateValidation = require('./template/templateValidation');
+router.post('/webapi/v1/portal/savetemplate', common.checkTokenExistOrNot, letinvoice_templateValidation.saveTemplate, letinvoice_templateController.savetemplate);
+router.get('/webapi/v1/portal/gettemplate', common.checkTokenExistOrNot, letinvoice_templateController.gettemplate);
 
 module.exports = router;

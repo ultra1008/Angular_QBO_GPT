@@ -10,7 +10,7 @@ var ObjectID = require('mongodb').ObjectID;
 
 module.exports.saveterm = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
-    var translator = common.Language(req.headers.Language);
+    var translator = new common.Language(req.headers.Language);
 
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
@@ -67,7 +67,7 @@ module.exports.saveterm = async function (req, res) {
 
 module.exports.getterm = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
-    var translator = common.Language(req.headers.Language);
+    var translator = new common.Language(req.headers.Language);
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
@@ -90,7 +90,7 @@ module.exports.getterm = async function (req, res) {
 
 module.exports.deleteinvoiceterm = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
-    var translator = common.Language(req.headers.Language);
+    var translator = new common.Language(req.headers.Language);
 
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);

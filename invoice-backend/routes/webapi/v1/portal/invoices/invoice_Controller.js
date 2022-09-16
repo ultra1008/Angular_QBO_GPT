@@ -12,7 +12,7 @@ var ObjectID = require('mongodb').ObjectID;
 
 module.exports.saveinvoice = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
-    var translator = common.Language(req.headers.Language);
+    var translator = new common.Language(req.headers.Language);
     if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
@@ -64,7 +64,7 @@ module.exports.saveinvoice = async function (req, res) {
 
 module.exports.getInvoice = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
-    var translator = common.Language(req.headers.Language);
+    var translator = new common.Language(req.headers.Language);
 
     if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
@@ -91,7 +91,7 @@ module.exports.getInvoice = async function (req, res) {
 // delete invoice
 module.exports.deleteInvoice = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
-    var translator = common.Language(req.headers.Language);
+    var translator = new common.Language(req.headers.Language);
 
     if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
@@ -134,7 +134,7 @@ module.exports.deleteInvoice = async function (req, res) {
 
 module.exports.getpendingdatatable = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
-    var translator = common.Language(req.headers.Language);
+    var translator = new common.Language(req.headers.Language);
     if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
