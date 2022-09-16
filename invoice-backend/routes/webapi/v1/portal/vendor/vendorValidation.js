@@ -42,4 +42,35 @@ const deletevendor = (req, res, next) => {
     });
 };
 
-module.exports = { savevendor, deletevendor };
+const vendordatatable = (req, res, next) => {
+    const validationRule = {
+        "is_delete": "required|integer"
+
+    };
+    validator(req.body, validationRule, {}, (error, status) => {
+        if (!status) {
+            res.send({ status: false, error: error });
+        }
+        else {
+            next();
+        }
+    });
+};
+
+const updateStatus = (req, res, next) => {
+    const validationRule = {
+        "_id": "required",
+        "status": "required|string"
+
+    };
+    validator(req.body, validationRule, {}, (error, status) => {
+        if (!status) {
+            res.send({ status: false, error: error });
+        }
+        else {
+            next();
+        }
+    });
+};
+
+module.exports = { savevendor, deletevendor, vendordatatable, updateStatus };

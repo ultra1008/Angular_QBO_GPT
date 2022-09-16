@@ -2,18 +2,18 @@ var vendor_Schema = require('../../../../../model/vendor');
 var vendor_history_Schema = require('../../../../../model/history/vendor_history');
 let db_connection = require('../../../../../controller/common/connectiondb');
 let collectionConstant = require('../../../../../config/collectionConstant');
-
 let config = require('../../../../../config/config');
 let common = require('../../../../../controller/common/common');
 const historyCollectionConstant = require('../../../../../config/historyCollectionConstant');
 const { route } = require('../portal_index');
+const { ObjectId } = require('mongodb');
 var ObjectID = require('mongodb').ObjectID;
 
 // save vendor
 
 module.exports.savevendor = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
-    var translator = common.Language(req.headers.language);
+    var translator = new common.Language(req.headers.language);
 
     if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
@@ -66,7 +66,7 @@ module.exports.savevendor = async function (req, res) {
 
 module.exports.getvendor = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
-    var translator = common.Language(req.headers.language);
+    var translator = new common.Language(req.headers.language);
 
     if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
@@ -93,7 +93,7 @@ module.exports.getvendor = async function (req, res) {
 //delete vendor
 module.exports.deletevendor = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
-    var translator = common.Language(req.headers.language);
+    var translator = new common.Language(req.headers.language);
 
     if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
@@ -115,7 +115,7 @@ module.exports.deletevendor = async function (req, res) {
                         res.send({ message: "Archive successfully", status: true });
                     } else {
                         addChangevendorHistory("Restore", req_obj, decodedToken, requestObject.updated_at);
-                        res.send({ message: "Restore successfully", status: true });
+                        res.send({ message: "Vendor restore successfully", status: true });
                     }
                 } else {
                     res.send({ message: "No data with this id", status: false });
@@ -140,7 +140,7 @@ module.exports.deletevendor = async function (req, res) {
 
 module.exports.getvendordatatable = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
-    var translator = common.Language(req.headers.language);
+    var translator = new common.Language(req.headers.language);
 
     if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
@@ -148,7 +148,7 @@ module.exports.getvendordatatable = async function (req, res) {
         try {
             var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendor_Schema);
             var col = [];
-            var user_id = { is_delete: 0 };
+            var match_query = { is_delete: req.body.is_delete };
             col.push("vendor_name", "vendor_id", "customer_id", "phone", "email", "address", "attachment", "status");
 
             var start = parseInt(req.body.start) || 0;
@@ -180,20 +180,23 @@ module.exports.getvendordatatable = async function (req, res) {
                 };
             }
             var aggregateQuery = [
-                { $match: user_id },
+                { $match: match_query },
                 { $match: query },
                 { $sort: sort },
                 { $limit: start + perpage },
                 { $skip: start },
             ];
             let count = 0;
-            count = vendorConnection.countDocuments(user_id);
+            count = await vendorConnection.countDocuments(match_query);
             let all_vendors = await vendorConnection.aggregate(aggregateQuery);
+
             var dataResponce = {};
             dataResponce.data = all_vendors;
             dataResponce.draw = req.body.draw;
             dataResponce.recordsTotle = count;
-            dataResponce.recordsFiltered=(req.body.search.value) ? 
+            dataResponce.recordsFiltered = (req.body.search.value) ? all_vendors.length : count;
+            // console.log(dataResponce);
+            res.json(dataResponce);
         } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), status: false, error: e });
@@ -202,6 +205,42 @@ module.exports.getvendordatatable = async function (req, res) {
         }
     } else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+//vendor active or inactive
+module.exports.vendorStatusUpdate = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendor_Schema);
+            var requestObject = req.body;
+
+            var id = requestObject._id;
+            delete requestObject._id;
+            var updateStatus = await vendorConnection.updateOne({ _id: ObjectID(id) }, requestObject);
+            if (updateStatus) {
+                if (requestObject.status == 'Active') {
+                    res.send({ status: true, message: "Vendor status active successfully." });
+                } else {
+                    res.send({ status: true, message: "Vendor status inactive successfully." });
+                }
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false, error: e });
+
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+
     }
 };
 
@@ -220,6 +259,6 @@ async function addChangevendorHistory(action, data, decodedToken, updated_at) {
     } catch (e) {
         console.log(e);
     } finally {
-        // connection_db_api.close();
+        connection_db_api.close();
     }
 }
