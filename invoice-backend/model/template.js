@@ -5,7 +5,7 @@ var Schema = mongoose.Schema;
 var templateSchema = new Schema({
     template_name: { type: String, default: "" },
     note: { type: String, default: "" },
-    status: { type: String, default: "Draft", enum: ["Draft", "active", "Inactive"] },
+    status: { type: String, default: "Draft", enum: ["Draft", "Active", "Inactive"] },
     company_name: { type: String, default: "" },
     company_address: { type: String, default: "" },
     bill_to: { type: String, default: "" },
@@ -25,7 +25,6 @@ var templateSchema = new Schema({
     updated_by: { type: mongoose.ObjectId, default: "" },
     updated_at: { type: Number, default: 0 },
     is_delete: { type: Number, default: 0 }, 
-
 });
 
 module.exports = templateSchema;

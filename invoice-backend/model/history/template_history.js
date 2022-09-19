@@ -30,7 +30,7 @@ var templateSchema = new Schema({
     history_created_by: { type: mongoose.ObjectId, default: "" },
     action: { type: String, enum: ["Insert", "Update", "Archive", "Restore"] },
     taken_device: { type: String, default: "Web", enum: ["Mobile", "Web"] },
-    template_id: { type: mongoose.ObjectId, default: "" }
+    template_data_id: { type: mongoose.ObjectId, default: "" }
 
 });
 
