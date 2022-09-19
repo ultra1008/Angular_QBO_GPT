@@ -57,6 +57,21 @@ const vendordatatable = (req, res, next) => {
     });
 };
 
+const vendorhistorydatatable = (req, res, next) => {
+    const validationRule = {
+        "is_delete": "required|integer"
+
+    };
+    validator(req.body, validationRule, {}, (error, status) => {
+        if (!status) {
+            res.send({ status: false, error: error });
+        }
+        else {
+            next();
+        }
+    });
+};
+
 const updateStatus = (req, res, next) => {
     const validationRule = {
         "_id": "required",
@@ -73,4 +88,4 @@ const updateStatus = (req, res, next) => {
     });
 };
 
-module.exports = { savevendor, deletevendor, vendordatatable, updateStatus };
+module.exports = { savevendor, deletevendor, vendordatatable, updateStatus, vendorhistorydatatable };
