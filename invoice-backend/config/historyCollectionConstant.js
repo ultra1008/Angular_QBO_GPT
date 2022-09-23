@@ -22,5 +22,7 @@ module.exports = {
     INVOICES_HISTORY: "invoice_histories",
     VENDOR_HISTORY: "vendor_history",
     TEMPLATE_HISTORY: "template_history",
+    INVOICE_SETTINGS_HISTORY: "invoice_setting_histories",
+
 
 };

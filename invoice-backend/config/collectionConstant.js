@@ -83,5 +83,7 @@ module.exports = {
     INVOICE: "invoices",
     INVOICE_VENDOR: "invoice_vendors",
     INVOICE_TEMPLATE: "invoice_template",
+    INVOICE_SETTING: "invoice_settings",
+
 
 };
