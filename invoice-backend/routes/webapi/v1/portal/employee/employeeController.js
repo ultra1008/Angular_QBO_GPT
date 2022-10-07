@@ -12,7 +12,6 @@ var formidable = require('formidable');
 var fs = require('fs');
 var bucketOpration = require('../../../../../controller/common/s3-wasabi');
 var config = require('./../../../../../config/config');
-let QRCODE = require('./../../../../../controller/common/qr_code');
 let sendEmail = require('./../../../../../controller/common/sendEmail');
 let rest_Api = require('./../../../../../config/db_rest_api');
 let db_rest_api = require('../../../../../config/db_rest_api');
@@ -42,7 +41,7 @@ module.exports.getAllUserList = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
 
-            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             let match = {
                 is_delete: 0,
                 userstatus: 1,
@@ -67,7 +66,7 @@ module.exports.getSpecificUsers = async function (req, res) {
         try {
             req.body.is_delete = 0;
             let connection_db_api = await db_connection.connection_db_api(decodedToken);
-            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             let all_user = await userConnection.find(req.body);
             res.send({ message: translator.getStr('EmployeeListing'), data: all_user, status: true });
         } catch (e) {
@@ -87,7 +86,7 @@ module.exports.saveEmployee = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
 
-            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
 
             var form = new formidable.IncomingForm();
             var fields = [];
@@ -188,61 +187,61 @@ module.exports.saveEmployee = async function (req, res) {
                                 var HtmlData = await template(emailTmp);
                                 body._id = add._id;
 
-                                let qrcode_Object = config.SITE_URL + '/#/user-publicpage?_id=' + add._id + '&company_code=' + decodedToken.companycode;
-                                let admin_qrCode = await QRCODE.generate_QR_Code(qrcode_Object);
-                                let key_url = "employee/" + add._id + "/" + "QRCode.png";
-                                let LowerCase_bucket = decodedToken.companycode.toLowerCase();
-                                let PARAMS = {
-                                    Bucket: LowerCase_bucket,
-                                    Key: key_url,
-                                    Body: admin_qrCode,
-                                    ACL: 'public-read-write'
-                                };
-                                var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
-                                let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
-                                bucketOpration.uploadFile(PARAMS, async function (err, resultUpload) {
-                                    if (err) {
-                                        res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
-                                    } else {
-                                        userqrcode = config.wasabisys_url + "/" + LowerCase_bucket + "/" + key_url;
-                                        history_object.userqrcode = userqrcode;
-                                        history_object.usercostcode = usercostcode;
-                                        let updateuser = await userConnection.updateOne({ _id: ObjectID(add._id) }, { userqrcode: userqrcode, usercostcode: usercostcode });
-                                        if (updateuser) {
-                                            let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, body.useremail, "Rovuk Registration", HtmlData,
-                                                talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                                                talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                                // let qrcode_Object = config.SITE_URL + '/#/user-publicpage?_id=' + add._id + '&company_code=' + decodedToken.companycode;
+                                // let admin_qrCode = await QRCODE.generate_QR_Code(qrcode_Object);
+                                // let key_url = "employee/" + add._id + "/" + "QRCode.png";
+                                // let LowerCase_bucket = decodedToken.companycode.toLowerCase();
+                                // let PARAMS = {
+                                //     Bucket: LowerCase_bucket,
+                                //     Key: key_url,
+                                //     Body: admin_qrCode,
+                                //     ACL: 'public-read-write'
+                                // };
+                                // var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+                                // let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
+                                // bucketOpration.uploadFile(PARAMS, async function (err, resultUpload) {
+                                //     if (err) {
+                                //         res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
+                                //     } else {
+                                //         userqrcode = config.wasabisys_url + "/" + LowerCase_bucket + "/" + key_url;
+                                //         history_object.userqrcode = userqrcode;
+                                history_object.usercostcode = usercostcode;
+                                let updateuser = await userConnection.updateOne({ _id: ObjectID(add._id) }, { userqrcode: userqrcode, usercostcode: usercostcode });
+                                if (updateuser) {
+                                    let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, body.useremail, "Rovuk Registration", HtmlData,
+                                        talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
+                                        talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
 
-                                            if (notFonud == 1) {
-                                                var temp_path = newOpenFile[0].path;
-                                                var file_name = newOpenFile[0].name;
-                                                dirKeyName = config.SUPPLIER_DIVERSITY_WASABI_PATH + "/employee/profile_picture/" + file_name;
-                                                var fileBody = fs.readFileSync(temp_path);
-                                                params = { Bucket: LowerCase_bucket, Key: dirKeyName, Body: fileBody, ACL: 'public-read-write' };
+                                    if (notFonud == 1) {
+                                        var temp_path = newOpenFile[0].path;
+                                        var file_name = newOpenFile[0].name;
+                                        dirKeyName = config.SUPPLIER_DIVERSITY_WASABI_PATH + "/employee/profile_picture/" + file_name;
+                                        var fileBody = fs.readFileSync(temp_path);
+                                        params = { Bucket: LowerCase_bucket, Key: dirKeyName, Body: fileBody, ACL: 'public-read-write' };
 
-                                                bucketOpration.uploadFile(params, async function (err, resultUpload) {
-                                                    if (err) {
-                                                        res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
-                                                    } else {
-
-                                                        urlProfile = config.wasabisys_url + "/" + LowerCase_bucket + "/" + dirKeyName;
-                                                        let update_user = await userConnection.updateOne({ _id: add._id }, { userpicture: urlProfile });
-                                                        history_object.userpicture = urlProfile;
-                                                        if (update_user) {
-                                                            addUSER_History("Insert", history_object, decodedToken);
-                                                            //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
-                                                            res.send({ message: translator.getStr('UserCreationEmail'), data: body, status: true });
-                                                        }
-                                                    }
-                                                });
+                                        bucketOpration.uploadFile(params, async function (err, resultUpload) {
+                                            if (err) {
+                                                res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
                                             } else {
-                                                addUSER_History("Insert", history_object, decodedToken);
-                                                //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
-                                                res.send({ message: translator.getStr('UserAdded'), data: body, status: true });
+
+                                                urlProfile = config.wasabisys_url + "/" + LowerCase_bucket + "/" + dirKeyName;
+                                                let update_user = await userConnection.updateOne({ _id: add._id }, { userpicture: urlProfile });
+                                                history_object.userpicture = urlProfile;
+                                                if (update_user) {
+                                                    addUSER_History("Insert", history_object, decodedToken);
+                                                    //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
+                                                    res.send({ message: translator.getStr('UserCreationEmail'), data: body, status: true });
+                                                }
                                             }
-                                        }
+                                        });
+                                    } else {
+                                        addUSER_History("Insert", history_object, decodedToken);
+                                        //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
+                                        res.send({ message: translator.getStr('UserAdded'), data: body, status: true });
                                     }
-                                });
+                                }
+                                //     }
+                                // });
                             }
                         }
                     }
@@ -344,7 +343,7 @@ module.exports.saveUserDocument = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
 
-            let userDocumentConnection = connection_db_api.model(collectionConstant.USERDOCUMENT, userDocumentSchema);
+            let userDocumentConnection = connection_db_api.model(collectionConstant.INVOICE_USER_DOCUMENT, userDocumentSchema);
             var form = new formidable.IncomingForm();
             var fields = [];
             var notFonud = 0;
@@ -422,7 +421,7 @@ module.exports.getAllUser = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
 
-            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             let match = {};
 
             if (decodedToken.UserData.role_name == "Employee") {
@@ -511,7 +510,7 @@ module.exports.getAllUser = async function (req, res) {
                 // },
                 {
                     $lookup: {
-                        from: collectionConstant.USER,
+                        from: collectionConstant.INVOICE_USER,
                         localField: "usersupervisor_id",
                         foreignField: "_id",
                         as: "supervisor"
@@ -533,7 +532,7 @@ module.exports.getAllUser = async function (req, res) {
                 // },
                 {
                     $lookup: {
-                        from: collectionConstant.USER,
+                        from: collectionConstant.INVOICE_USER,
                         localField: "usermanager_id",
                         foreignField: "_id",
                         as: "manager"
@@ -726,7 +725,7 @@ module.exports.getOneUser = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
 
-            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             //let user_by_id = await userConnection.findOne({ _id: ObjectID(req.body._id) });
             let user_by_id = await userConnection.aggregate([
                 {
@@ -808,7 +807,7 @@ module.exports.getOneUser = async function (req, res) {
                 // },
                 {
                     $lookup: {
-                        from: collectionConstant.USER,
+                        from: collectionConstant.INVOICE_USER,
                         localField: "usersupervisor_id",
                         foreignField: "_id",
                         as: "supervisor"
@@ -830,7 +829,7 @@ module.exports.getOneUser = async function (req, res) {
                 // },
                 {
                     $lookup: {
-                        from: collectionConstant.USER,
+                        from: collectionConstant.INVOICE_USER,
                         localField: "usermanager_id",
                         foreignField: "_id",
                         as: "manager"
@@ -1025,7 +1024,7 @@ module.exports.updateShowIDCardFlag = async function (req, res) {
         try {
             var requestObject = req.body;
 
-            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             requestObject.userupdated_at = Math.round(new Date().getTime() / 1000);
             requestObject.userupdated_by = decodedToken.UserData._id;
             let update_user = await userConnection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
@@ -1053,7 +1052,7 @@ module.exports.savePersonalInfo = async function (req, res) {
         try {
             let history_object;
 
-            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             var form = new formidable.IncomingForm();
             var fields = [];
             var notFonud = 0;
@@ -1257,7 +1256,7 @@ module.exports.saveMobilePhoto = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
 
-            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             var form = new formidable.IncomingForm();
             var fields = [];
             var notFonud = 0;
@@ -1334,7 +1333,7 @@ module.exports.saveContactInfo = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
 
-            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             let _id = req.body._id;
             delete req.body["_id"];
             let body = req.body;
@@ -1363,7 +1362,7 @@ module.exports.saveEmployeeInfo = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
 
-            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             let _id = req.body._id;
             delete req.body["_id"];
             if (req.body.usercostcode != "") {
@@ -1417,7 +1416,7 @@ module.exports.deleteTeamMember = async function (req, res) {
         try {
             let reqBody = req.body;
 
-            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             let update_user_1 = await userConnection.updateOne({ _id: ObjectID(reqBody._id) }, { is_delete: 1 });
             if (update_user_1) {
 
@@ -1425,52 +1424,6 @@ module.exports.deleteTeamMember = async function (req, res) {
                 //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
                 res.send({ message: translator.getStr('UserDeleted'), status: true });
             }
-        } catch (e) {
-            console.log(e);
-            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
-        } finally {
-            connection_db_api.close();
-        }
-    } else {
-        res.send({ message: translator.getStr('InvalidUser'), status: false });
-    }
-};
-
-module.exports.getallsupervisors = async function (req, res) {
-    var decodedToken = common.decodedJWT(req.headers.authorization);
-    var translator = new common.Language(req.headers.language);
-    if (decodedToken) {
-        let connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try {
-            req.body.is_delete = 0;
-
-            let rolesConnection = connection_db_api.model(collectionConstant.INVOICE_ROLES, supplierRoleSchema);
-            let all_suprvisor = await rolesConnection.aggregate([
-                {
-                    $match:
-                    {
-                        role_name: "Supervisor"
-                    },
-                },
-                {
-                    $lookup: {
-                        from: collectionConstant.USER,
-                        localField: "_id",
-                        foreignField: "userroleId",
-                        as: "user"
-                    }
-                },
-                {
-                    $unwind: "$user",
-                },
-                {
-                    $project: {
-                        _id: "$user._id",
-                        userfullname: "$user.userfullname",
-                    }
-                },
-            ]);
-            res.send({ message: translator.getStr('SupervisorListing'), data: all_suprvisor, status: true });
         } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
@@ -1550,7 +1503,7 @@ module.exports.senddocumentexpiration = async function (req, res) {
             let sendResponse = 0; // 0-error response, 1-user document mail, 2-project document mail
             let recipients = [];
             if (requestObject.type == "user") {
-                let userDocumentConnection = connection_db_api.model(collectionConstant.USERDOCUMENT, userDocumentSchema);
+                let userDocumentConnection = connection_db_api.model(collectionConstant.INVOICE_USER_DOCUMENT, userDocumentSchema);
                 let user_document = await userDocumentConnection.aggregate([
                     {
                         $match: {
@@ -1560,7 +1513,7 @@ module.exports.senddocumentexpiration = async function (req, res) {
                     },
                     {
                         $lookup: {
-                            from: collectionConstant.USER,
+                            from: collectionConstant.INVOICE_USER,
                             localField: "userdocument_user_id",
                             foreignField: "_id",
                             as: "user"
@@ -1784,7 +1737,7 @@ module.exports.savesignature = async function (req, res) {
         try {
             var requestObject = req.body;
 
-            let userCollection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let userCollection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             requestObject.userupdated_at = Math.round(new Date().getTime() / 1000);
             requestObject.userupdated_by = decodedToken.UserData._id;
             let update_user = await userCollection.updateOne({ _id: ObjectID(requestObject.user_id) }, requestObject);
@@ -1809,7 +1762,7 @@ let historyCollectionConstant = require('./../../../../../config/historyCollecti
 async function addUserDocumentHistory(action, data, decodedToken) {
     try {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
-        let usersdocument_historiesConnection = connection_db_api.model(historyCollectionConstant.USERDOCUMENT_HISTORY, usersdocument_historiesSchema);
+        let usersdocument_historiesConnection = connection_db_api.model(historyCollectionConstant.INVOICE_USER_DOCUMENT_HISTORY, usersdocument_historiesSchema);
         data.action = action;
         data.created_at = Math.round(new Date().getTime() / 1000);
         data.created_by = decodedToken.UserData._id;
@@ -1842,14 +1795,14 @@ module.exports.getUserDocumentHistory = async function (req, res) {
                 ]
             };
 
-            let usersdocument_historiesConnection = connection_db_api.model(historyCollectionConstant.USERDOCUMENT_HISTORY, usersdocument_historiesSchema);
+            let usersdocument_historiesConnection = connection_db_api.model(historyCollectionConstant.INVOICE_USER_DOCUMENT_HISTORY, usersdocument_historiesSchema);
             let user_by_id = await usersdocument_historiesConnection.aggregate([
                 {
                     $match: count_query
                 },
                 {
                     $lookup: {
-                        from: collectionConstant.USER,
+                        from: collectionConstant.INVOICE_USER,
                         localField: "created_by",
                         foreignField: "_id",
                         as: "user"
@@ -1912,7 +1865,7 @@ var user_historySchema = require('./../../../../../model/history/user_history');
 async function addUSER_History(action, data, decodedToken) {
     try {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
-        let user_historyCollection = connection_db_api.model(historyCollectionConstant.USER_HISTORY, user_historySchema);
+        let user_historyCollection = connection_db_api.model(historyCollectionConstant.INVOICE_USER_HISTORY, user_historySchema);
         data.action = action;
         data.taken_device = config.WEB_ALL;
         data.created_at = Math.round(new Date().getTime() / 1000);
@@ -2000,14 +1953,14 @@ module.exports.getAllUserHistory = async function (req, res) {
                 ]
             };
 
-            let userConnection = connection_db_api.model(historyCollectionConstant.USER_HISTORY, user_historySchema);
+            let userConnection = connection_db_api.model(historyCollectionConstant.INVOICE_USER_HISTORY, user_historySchema);
             let user_by_id = await userConnection.aggregate([
                 {
                     $match: count_query
                 },
                 {
                     $lookup: {
-                        from: collectionConstant.USER,
+                        from: collectionConstant.INVOICE_USER,
                         let: { id: "$deleted_id" },
                         pipeline: [
                             {
@@ -2025,7 +1978,7 @@ module.exports.getAllUserHistory = async function (req, res) {
                             },
                             {
                                 $lookup: {
-                                    from: collectionConstant.USER,
+                                    from: collectionConstant.INVOICE_USER,
                                     localField: "created_by",
                                     foreignField: "_id",
                                     as: "user"
@@ -2065,7 +2018,7 @@ module.exports.getAllUserHistory = async function (req, res) {
                             },
                             {
                                 $lookup: {
-                                    from: collectionConstant.USER,
+                                    from: collectionConstant.INVOICE_USER,
                                     localField: "usersupervisor_id",
                                     foreignField: "_id",
                                     as: "supervisor"
@@ -2081,7 +2034,7 @@ module.exports.getAllUserHistory = async function (req, res) {
                             },
                             {
                                 $lookup: {
-                                    from: collectionConstant.USER,
+                                    from: collectionConstant.INVOICE_USER,
                                     localField: "usermanager_id",
                                     foreignField: "_id",
                                     as: "manager"
@@ -2280,7 +2233,7 @@ module.exports.getAllUserHistory = async function (req, res) {
                 },
                 {
                     $lookup: {
-                        from: collectionConstant.USER,
+                        from: collectionConstant.INVOICE_USER,
                         localField: "created_by",
                         foreignField: "_id",
                         as: "user"
@@ -2350,7 +2303,7 @@ module.exports.getAllUserHistory = async function (req, res) {
                 // },
                 {
                     $lookup: {
-                        from: collectionConstant.USER,
+                        from: collectionConstant.INVOICE_USER,
                         localField: "usersupervisor_id",
                         foreignField: "_id",
                         as: "supervisor"
@@ -2372,7 +2325,7 @@ module.exports.getAllUserHistory = async function (req, res) {
                 // },
                 {
                     $lookup: {
-                        from: collectionConstant.USER,
+                        from: collectionConstant.INVOICE_USER,
                         localField: "usermanager_id",
                         foreignField: "_id",
                         as: "manager"
@@ -2595,7 +2548,7 @@ module.exports.getAllEmployeeReport = async function (req, res) {
             let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
             let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
 
-            let userCollection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let userCollection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             let sort = { userfullname: 1 };
             let roleQuery = [];
             let query = [];
@@ -2670,7 +2623,7 @@ module.exports.getAllEmployeeReport = async function (req, res) {
                 },
                 {
                     $lookup: {
-                        from: collectionConstant.USER,
+                        from: collectionConstant.INVOICE_USER,
                         localField: "usersupervisor_id",
                         foreignField: "_id",
                         as: "supervisor"
@@ -2686,7 +2639,7 @@ module.exports.getAllEmployeeReport = async function (req, res) {
                 },
                 {
                     $lookup: {
-                        from: collectionConstant.USER,
+                        from: collectionConstant.INVOICE_USER,
                         localField: "usermanager_id",
                         foreignField: "_id",
                         as: "manager"
@@ -3122,7 +3075,7 @@ module.exports.checkAndInsertImportData = async function (req, res) {
             var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
             let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
             let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
-            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             const file_data = fs.readFileSync('./controller/emailtemplates/invitationuser.html', 'utf8');
             for (let m = 0; m < requestObject.data.length; m++) {
                 let check_user = await userConnection.findOne({
@@ -3320,7 +3273,7 @@ module.exports.importEmployees = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
 
-            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             let creditcardsettingsCollection = connection_db_api.model(collectionConstant.CREDITCARD, creditcardsettingsSchema);
 
             let none_creditcardsettings = await creditcardsettingsCollection.findOne({ name: "None" });
@@ -3484,7 +3437,7 @@ async function userInsertCheck(connection_db_api, onedata, talnate_data, company
     try {
         onedata.username = onedata.userfirstname;
         onedata.userfullname = onedata.userfirstname + " " + onedata.userlastname;
-        let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+        let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
         let check_user = await userConnection.findOne({
             useremail: onedata.useremail
         });
@@ -3509,7 +3462,7 @@ module.exports.getarchiveteams = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
 
-            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             let match = {};
             if (decodedToken.UserData.role_name == "Employee") {
                 match = {
@@ -3527,9 +3480,9 @@ module.exports.getarchiveteams = async function (req, res) {
                 },
                 {
                     $lookup: {
-                        from: collectionConstant.ROLEANDPERMISSION,
+                        from: collectionConstant.INVOICE_ROLES,
                         localField: "userroleId",
-                        foreignField: "_id",
+                        foreignField: "role_id",
                         as: "role"
                     }
                 },
@@ -3597,7 +3550,7 @@ module.exports.getarchiveteams = async function (req, res) {
                 // },
                 {
                     $lookup: {
-                        from: collectionConstant.USER,
+                        from: collectionConstant.INVOICE_USER,
                         localField: "usersupervisor_id",
                         foreignField: "_id",
                         as: "supervisor"
@@ -3619,7 +3572,7 @@ module.exports.getarchiveteams = async function (req, res) {
                 // },
                 {
                     $lookup: {
-                        from: collectionConstant.USER,
+                        from: collectionConstant.INVOICE_USER,
                         localField: "usermanager_id",
                         foreignField: "_id",
                         as: "manager"
@@ -3814,7 +3767,7 @@ module.exports.recoverteam = async function (req, res) {
         try {
             var requestObject = req.body;
             console.log(requestObject);
-            let userCollection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let userCollection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             let update_team = await userCollection.updateOne({ _id: ObjectID(requestObject._id) }, { is_delete: 0 });
             if (update_team) {
                 //addProject_History("Recover", { deleted_id: requestObject._id }, decodedToken);

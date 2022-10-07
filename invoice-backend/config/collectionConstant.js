@@ -85,5 +85,7 @@ module.exports = {
     INVOICE_TEMPLATE: "invoice_template",
     INVOICE_SETTING: "invoice_settings",
 
-
+    INVOICE_USER: "invoice_users",
+    INVOICE_USER_DOCUMENT: "invoice_user_documents",
+    INVOICE_LOGINHISTORY: "invoice_login_histories",
 };

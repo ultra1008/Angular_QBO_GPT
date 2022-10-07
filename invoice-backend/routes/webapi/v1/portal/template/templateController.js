@@ -237,7 +237,7 @@ module.exports.historydatatable = async function (req, res) {
                 { $match: match_query },
                 {
                     $lookup: {
-                        from: collectionConstant.USER,
+                        from: collectionConstant.INVOICE_USER,
                         localField: "history_created_by",
                         foreignField: "_id",
                         as: "history_created_by"

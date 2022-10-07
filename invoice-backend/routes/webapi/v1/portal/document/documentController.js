@@ -17,7 +17,7 @@ module.exports.getUserDocument = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
 
-            let userDocumentConnection = connection_db_api.model(collectionConstant.USERDOCUMENT, userDocumentSchema);
+            let userDocumentConnection = connection_db_api.model(collectionConstant.INVOICE_USER_DOCUMENT, userDocumentSchema);
             let users_document = await userDocumentConnection.aggregate([
                 {
                     $match: { userdocument_user_id: ObjectID(req.body.user_id), is_delete: 0 },
@@ -54,7 +54,7 @@ module.exports.getUserDocument = async function (req, res) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         } finally {
-            connection_db_api.close()
+            connection_db_api.close();
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
@@ -79,7 +79,7 @@ module.exports.deleteUserDocument = async function (req, res) {
                     res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
                 } else {
                     let connection_db_api = await db_connection.connection_db_api(decodedToken);
-                    let userDocumentConnection = connection_db_api.model(collectionConstant.USERDOCUMENT, userDocumentSchema);
+                    let userDocumentConnection = connection_db_api.model(collectionConstant.INVOICE_USER_DOCUMENT, userDocumentSchema);
                     let userDocumentremove = await userDocumentConnection.updateOne({ _id: ObjectID(req.body._id) }, { is_delete: 1 },);
 
                     if (userDocumentremove.nModified >= 1) {
@@ -103,7 +103,7 @@ module.exports.editUserDocument = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
 
-            let userDocumentConnection = connection_db_api.model(collectionConstant.USERDOCUMENT, userDocumentSchema);
+            let userDocumentConnection = connection_db_api.model(collectionConstant.INVOICE_USER_DOCUMENT, userDocumentSchema);
             var form = new formidable.IncomingForm();
             var fields = [];
             var notFonud = 0;
@@ -188,7 +188,7 @@ let historyCollectionConstant = require('./../../../../../config/historyCollecti
 async function addUserDocumentHistory(action, data, decodedToken) {
     try {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
-        let usersdocument_historiesConnection = connection_db_api.model(historyCollectionConstant.USERDOCUMENT_HISTORY, usersdocument_historiesSchema);
+        let usersdocument_historiesConnection = connection_db_api.model(historyCollectionConstant.INVOICE_USER_DOCUMENT_HISTORY, usersdocument_historiesSchema);
         data.action = action;
         data.created_at = Math.round(new Date().getTime() / 1000);
         data.created_by = decodedToken.UserData._id;

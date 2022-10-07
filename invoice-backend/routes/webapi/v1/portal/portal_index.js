@@ -109,7 +109,6 @@ router.post('/webapi/v1/portal/savemobilephoto', common.checkTokenExistOrNot, em
 router.post('/webapi/v1/portal/savecontactinfo', common.checkTokenExistOrNot, employeeController.saveContactInfo);
 router.post('/webapi/v1/portal/saveemployeeinfo', common.checkTokenExistOrNot, employeeController.saveEmployeeInfo);
 router.post('/webapi/v1/portal/deleteteammember', common.checkTokenExistOrNot, employeeController.deleteTeamMember);
-router.get('/webapi/v1/portal/getallsupervisors', common.checkTokenExistOrNot, employeeController.getallsupervisors);
 router.post('/webapi/v1/portal/sendappinvitation', common.checkTokenExistOrNot, employeeValidation.sendAppInvitationValidation, employeeController.sendappinvitation);
 router.post('/webapi/v1/portal/senddocumentexpiration', common.checkTokenExistOrNot, employeeValidation.sendDocumentExpirationValidation, employeeController.senddocumentexpiration);
 router.post('/webapi/v1/portal/saveusersignature', common.checkTokenExistOrNot, employeeValidation.saveSignatureValidation, employeeController.savesignature);
