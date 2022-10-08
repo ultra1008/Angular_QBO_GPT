@@ -14,9 +14,11 @@ import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
 import { Label } from 'ng2-charts';
+import { Subscription } from 'rxjs';
 import { httproutes, localstorageconstants } from 'src/app/consts';
 import { HttpCall } from 'src/app/service/httpcall.service';
 import { configdata } from 'src/environments/configData';
+import { ModeDetectService } from '../map/mode-detect.service';
 
 var chartColors = {
   red: '#f50000',
@@ -33,6 +35,8 @@ var chartColors = {
   styleUrls: ['./ocps-dashboard.component.scss']
 })
 export class OcpsDashboardComponent implements OnInit {
+  mode: any;
+  subscription!: Subscription;
   timePeriods: any = [
     "app-totalprojectvalue",
     // "app-minority-participations", // We commented this as per requirement
@@ -111,7 +115,19 @@ export class OcpsDashboardComponent implements OnInit {
     constructor
   */
 
-  constructor(public translate: TranslateService, public httpCall: HttpCall) { }
+  constructor(public translate: TranslateService, private modeService: ModeDetectService, public httpCall: HttpCall) {
+    var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
+    this.mode = modeLocal === 'on' ? 'on' : 'off';
+    var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
+    this.mode = modeLocal === 'on' ? 'on' : 'off';
+    this.subscription = this.modeService.onModeDetect().subscribe(mode => {
+      if (mode) {
+        this.mode = 'off';
+      } else {
+        this.mode = 'on';
+      }
+    });
+  }
   locallanguage: any;
   hideShow: boolean = true;
   local_user: any;

@@ -32,17 +32,17 @@
 
 /* CheckBox Light Theme */
 .mat-checkbox ::ng-deep .mat-checkbox-frame {
-  border-color: #023e8a;
+  border-color: #023e8a !important;
 }
 
 ::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-ripple .mat-ripple-element {
   opacity: 0.03 !important;
-  background-color: #023e8a;
+  background-color: #023e8a !important;
 }
 
 ::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background,
 .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
-  background-color: #023e8a;
+  background-color: #023e8a !important;
 }
 
 .term-condition {
@@ -77,4 +77,20 @@
       stroke-width: 5px;
     }
   }
+}
+
+mat-label {
+  color: rgb(0, 0, 0);
+}
+
+// mat-form-field {
+//   color: rgb(0, 0, 0) !important;
+// }
+
+:host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  color: rgb(5, 5, 5) !important;
+}
+
+:host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline:hover {
+  color: rgb(5, 5, 5) !important;
 }
