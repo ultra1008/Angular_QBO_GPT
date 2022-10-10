@@ -400,7 +400,7 @@ module.exports.gettimecardusingemployeepayrollgroup = async function (req, res) 
                     query_project.push(ObjectID(requestObject.project_id[m]));
                 }
             }
-            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             let projectConnection = connection_db_api.model(collectionConstant.PROJECT, projectSchema);
             let weekOTHHour = 40;
 
@@ -813,7 +813,7 @@ async function payrollAddOnBudget(save_payroll, requestObject, decodedToken, tra
     let connection_db_api = await db_connection.connection_db_api(decodedToken);
     try {
         let payrollCollection = connection_db_api.model(collectionConstant.PAYROLL, payrollSchema);
-        let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+        let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
         let timecardCollection = connection_db_api.model(collectionConstant.TIMECARDS, timecardSchema);
         let user_ids = [], query_project = [], timecard_ids = [];
         let weekOTHHour = 40;
@@ -925,7 +925,7 @@ async function payrollAddOnBudget(save_payroll, requestObject, decodedToken, tra
             },
             {
                 $lookup: {
-                    from: collectionConstant.USER,
+                    from: collectionConstant.INVOICE_USER,
                     localField: "timecard_employee_id",
                     foreignField: "_id",
                     as: "user"
@@ -1079,7 +1079,7 @@ module.exports.getPayrollDatabase = async function (req, res) {
             let payroll_data = await payrollCollection.aggregate([
                 {
                     $lookup: {
-                        from: collectionConstant.USER,
+                        from: collectionConstant.INVOICE_USER,
                         localField: "created_by",
                         foreignField: "_id",
                         as: "users"
@@ -1139,7 +1139,7 @@ module.exports.getpayrollinfo = async function (req, res) {
         try {
             var requestObject = req.body;
             let payrollCollection = connection_db_api.model(collectionConstant.PAYROLL, payrollSchema);
-            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             let user_ids = [], timecard_id = [];
             let weekOTHHour = 40;
             let dayWork = {

@@ -191,6 +191,8 @@
     margin-bottom: 1%;
     flex-direction: column;
     justify-content: space-between;
+
+
     // border-bottom: 3px #fff solid;
 
     @media (max-width: $normal) {
@@ -212,6 +214,7 @@
     padding: 1em 1em;
     font-size: 1.2em !important;
     font-weight: 500 !important;
+    // overflow-y: auto;
 }
 
 .number-cust {

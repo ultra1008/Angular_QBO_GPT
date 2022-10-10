@@ -39,7 +39,7 @@ async function userDocumentExpiryAlertCronFunction() {
 
             let connection_db_api = await db_connection.connection_db_api(item);
             // let projectCollection = connection_db_api.model(collectionConstant.PROJECT, projectSchema);
-            let employeeCollection = connection_db_api.model(collectionConstant.USER, employeeSchema);
+            let employeeCollection = connection_db_api.model(collectionConstant.INVOICE_USER, employeeSchema);
             //ROLEADMIN
             let roleConnection = connection_db_api.model(collectionConstant.INVOICE_ROLES, diversityRoleSchema);
             let admin_role = await roleConnection.findOne({ role_name: config.ROLEADMIN }, { role_id: 1 });
@@ -53,7 +53,7 @@ async function userDocumentExpiryAlertCronFunction() {
                 { $match: { "is_delete": 0, userstatus: 1 } },
                 {
                     $lookup: {
-                        from: collectionConstant.USERDOCUMENT,
+                        from: collectionConstant.INVOICE_USER_DOCUMENT,
                         let: { id: "$_id" },
                         pipeline: [
                             {
@@ -214,7 +214,7 @@ async function userEmergencyContactAlertCronFunction() {
             var translator = new common.Language(item_new.companylanguage);
             let item = await rest_Api.findOne(connection_MDM_main, tenantsCollection, { companycode: item_new.companycode });
             let connection_db_api = await db_connection.connection_db_api(item);
-            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             let all_user = await userConnection.find({ is_delete: 0 });
             const file_data = fs.readFileSync('./controller/emailtemplates/commonEmailTemplate.html', 'utf8');
             let emailTmp = {

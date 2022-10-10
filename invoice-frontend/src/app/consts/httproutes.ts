@@ -54,7 +54,7 @@ export enum httproutes {
     EMPLOYEE_PERSONAL_EDIT = "/webapi/v1/portal/savepersonalinfo",
     EMPLOYEE_PERSONAL_MOBILE_PIC_EDIT = "/webapi/v1/portal/savemobilephoto",
     EMPLOYEE_CONTACT_EDIT = "/webapi/v1/portal/savecontactinfo",
-    EMPLOYEE_EMPLOYEE_EDIT = "/webapi/v1/portal/saveemployeeinfo",
+    EMPLOYEE_EMPLOYEE_EDIT = "/webapi/v1/portal/saveemployee",
     EMPLOYEE_DOCUMENT = "/webapi/v1/portal/getuserdocument",
     EMPLOYEE_GET_SPECIFIC = "/webapi/v1/portal/getspecificusers",
     EMPLOYEE_SAVE_SIGNATURE = "/webapi/v1/portal/saveusersignature",
@@ -1082,5 +1082,8 @@ export enum httproutes {
     PORTAL_ROVUK_INVOICE_OTHER_SETTINGS_GET_DOCUMENT = "/webapi/v1/portal/getinvoicedocument",
     PORTAL_ROVUK_INVOICE_OTHER_SETTING_SAVE_DOCUMENT = "/webapi/v1/portal/saveinvoicedocument",
     PORTAL_ROVUK_INVOICE_OTHER_SETTING_DELETE_DOCUMENT = "/webapi/v1/portal/deleteInvoiceDocument",
+
+    PORTAL_DASHBOARD_COUNT_GETDATA = "/webapi/v1/portal/getdashboardcount",
+    PORTAL_DASHBOARD_CARD_COUNT_GETDATA = "/webapi/v1/portal/getdashboardpending",
 
 }

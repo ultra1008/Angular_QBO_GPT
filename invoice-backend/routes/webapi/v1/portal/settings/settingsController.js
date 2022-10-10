@@ -33,7 +33,7 @@ module.exports.getAllSetting = async function (req, res) {
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
-            let settingsConnection = connection_db_api.model(collectionConstant.SETTINGS, settingsSchema);
+            let settingsConnection = connection_db_api.model(collectionConstant.INVOICE_SETTING, settingsSchema);
             let OneSettig = await settingsConnection.findOne();
             res.send({ message: translator.getStr('CompanySetting'), data: OneSettig, status: true });
         } catch (e) {
@@ -56,7 +56,7 @@ module.exports.getUpdateSetting = async function (req, res) {
             let reqObject = req.body;
             let id = reqObject._id;
             delete reqObject["_id"];
-            let settingsConnection = connection_db_api.model(collectionConstant.SETTINGS, settingsSchema);
+            let settingsConnection = connection_db_api.model(collectionConstant.INVOICE_SETTING, settingsSchema);
             let updateSettingObject = await settingsConnection.updateOne({ _id: ObjectID(id) }, { $set: reqObject });
             let updated = updateSettingObject['n'];
             if (updated == 1) {
@@ -88,7 +88,7 @@ let historyCollectionConstant = require('./../../../../../config/historyCollecti
 async function addsettings_History(action, data, decodedToken) {
     let connection_db_api = await db_connection.connection_db_api(decodedToken);
     try {
-        let settings_historyCollection = connection_db_api.model(historyCollectionConstant.SETTINGS_HISTORY, settings_historySchema);
+        let settings_historyCollection = connection_db_api.model(historyCollectionConstant.INVOICE_SETTINGS_HISTORY, settings_historySchema);
         data.action = action;
         data.created_at = Math.round(new Date().getTime() / 1000);
         data.created_by = decodedToken.UserData._id;
