@@ -25,9 +25,9 @@
               matTooltip="{{ 'TOOLTIP_IMPORT' | translate }}" (click)="importFileAction();">
               <img src="{{importIcon}}" alt="" height="20px">
             </button>
-
-            <button *ngIf="role_permission.Add" mat-raised-button color="primary" class="sign-button"
-              (click)="btnClick();"><img src="{{add_my_self_icon}}" alt="" height="20px"> {{'Employee-Add-Team-Button' |
+            <!-- *ngIf="role_permission.Add"  -->
+            <button mat-raised-button color="primary" class="sign-button" (click)="btnClick();"><img
+                src="{{add_my_self_icon}}" alt="" height="20px"> {{'Employee-Add-Team-Button' |
               translate
               }}
             </button>

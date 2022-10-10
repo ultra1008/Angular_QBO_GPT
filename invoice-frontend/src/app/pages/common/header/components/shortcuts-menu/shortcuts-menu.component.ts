@@ -57,8 +57,10 @@ export class ShortcutsMenuComponent implements OnInit {
   getData() {
     let that = this;
     this.httpCall.httpGetCall(httproutes.SHORTCUTS_GET).subscribe(function (params) {
-      if (params.status) {
-        if (params.data) {
+      if (params.status)
+      {
+        if (params.data)
+        {
           that.selectedList = params.data.shortcusts;
         }
         that.otherAppObject = params.otherApp;
@@ -129,16 +131,20 @@ export class ShortcutsAddComponent implements OnInit {
     });
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off') {
+    if (this.mode == 'off')
+    {
       this.backIcon = icon.BACK;
-    } else {
+    } else
+    {
       this.backIcon = icon.BACK_WHITE;
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode) {
+      if (mode)
+      {
         this.mode = 'off';
         this.backIcon = icon.BACK;
-      } else {
+      } else
+      {
         this.mode = 'on';
         this.backIcon = icon.BACK_WHITE;
       }
@@ -154,12 +160,13 @@ export class ShortcutsAddComponent implements OnInit {
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     var locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configdata.fst_load_lang : tmp_locallanguage;
     this.translate.setDefaultLang(locallanguage);
-    this.usertype = sessionStorage.getItem(localstorageconstants.USERTYPE) ? sessionStorage.getItem(localstorageconstants.USERTYPE) : "sponsor-portal";
+    this.usertype = sessionStorage.getItem(localstorageconstants.USERTYPE) ? sessionStorage.getItem(localstorageconstants.USERTYPE) : "invoice-portal";
     this.userrole = localStorage.getItem(localstorageconstants.USERROLE) ? localStorage.getItem(localstorageconstants.USERROLE) : 1;
     this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
     this.translate.stream(["Sidebar-Dashboard", "Sidebar-invoice", "Sidebar-Templates", "Sidebar-Report",
       "Sidebar-Team", "Sidebar-Setting"]).subscribe((textarray) => {
-        if (that.usertype == "sponsor-portal") {
+        if (that.usertype == "invoice-portal")
+        {
           that.menuList = [
             {
               name: textarray['Sidebar-Dashboard'],
@@ -262,26 +269,32 @@ export class ShortcutsAddComponent implements OnInit {
             }
           ];
 
-          if (that.role_permission.role_permission.settings.View == false) {
+          if (that.role_permission.role_permission.settings.View == false)
+          {
             that.menuList = that.menuList.filter((person: any) => person.tmp_name != 'setting');
           }
 
-          if (that.role_permission.role_permission.dashboard.View == false) {
+          if (that.role_permission.role_permission.dashboard.View == false)
+          {
             that.menuList = that.menuList.filter((person: any) => person.tmp_name != 'dashboard');
           }
 
-          if (that.role_permission.role_permission.todayActivity.View == false) {
+          if (that.role_permission.role_permission.todayActivity.View == false)
+          {
             that.menuList = that.menuList.filter((person: any) => person.tmp_name != 'todayactivity');
           }
 
-          if (that.role_permission.role_permission.dailyReports.Add == false) {
+          if (that.role_permission.role_permission.dailyReports.Add == false)
+          {
             that.menuList = that.menuList.filter((person: any) => person.tmp_name != 'report');
           }
         }
       });
     this.httpCall.httpGetCall(httproutes.SHORTCUTS_GET).subscribe(function (params) {
-      if (params.status) {
-        if (params.data) {
+      if (params.status)
+      {
+        if (params.data)
+        {
           that.update_id = params.data._id;
           that.menuInfo = new FormGroup({
             menu_object: new FormControl(params.data.shortcusts.map((el: any) => el.tmp_name)),
@@ -296,7 +309,8 @@ export class ShortcutsAddComponent implements OnInit {
   menu_change(event: any) {
     let that = this;
     this.selectedList = [];
-    for (let m = 0; m < event.value.length; m++) {
+    for (let m = 0; m < event.value.length; m++)
+    {
       let obj = that.menuList.find((o: any) => o.tmp_name === event.value[m]);
       this.selectedList.push(obj);
     }
@@ -315,16 +329,19 @@ export class ShortcutsAddComponent implements OnInit {
       user_id: userData.UserData._id,
       shortcusts: this.selectedList
     };
-    if (this.update_id) {
+    if (this.update_id)
+    {
       reqObject['_id'] = this.update_id;
     }
     let that = this;
     this.httpCall.httpPostCall(httproutes.SHORTCUTS_SAVE, reqObject).subscribe(function (params) {
-      if (params.status) {
+      if (params.status)
+      {
         that.snackbarservice.openSnackBar(params.message, "success");
         that.dialogRef.close();
         that.selectedList = params.data.shortcusts;
-      } else {
+      } else
+      {
         that.snackbarservice.openSnackBar(params.message, "error");
       }
     });

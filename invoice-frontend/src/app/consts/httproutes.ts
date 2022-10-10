@@ -1070,4 +1070,17 @@ export enum httproutes {
     PORTAL_ROVUK_SPONSOR_IMPORT_DEPARTMENT = "/webapi/v1/importsupplierdepartment",
     PORTAL_ROVUK_SPONSOR_EXPORT_DEPARTMENT = "/webapi/v1/exportsupplierdepartment",
 
+    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ocps-setting-term>>>>>>>>>>>>>>>>>>>>>>>>
+    PORTAL_ROVUK_INVOICE_OTHER_SETTINGS_GET_TERMS = "/webapi/v1/portal/getinvoiceterm",
+    PORTAL_ROVUK_INVOICE_OTHER_SETTING_SAVE_TERMS = "/webapi/v1/portal/saveinvoiceterm",
+    PORTAL_ROVUK_INVOICE_OTHER_SETTING_DELETE_TERMS = "/webapi/v1/portal/deleteInvoiceterm",
+    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ocps-setting-Text-reat>>>>>>>>>>>>>>>>>>>>>>>>
+    PORTAL_ROVUK_INVOICE_OTHER_SETTINGS_GET_TEXT_RATE = "/webapi/v1/portal/gettaxrate",
+    PORTAL_ROVUK_INVOICE_OTHER_SETTING_SAVE_TEXT_RATE = "/webapi/v1/portal/savetaxrate",
+    PORTAL_ROVUK_INVOICE_OTHER_SETTING_DELETE_TEXT_RATE = "/webapi/v1/portal/deletetaxrate",
+    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ocps-setting-document>>>>>>>>>>>>>>>>>>>>>>>>
+    PORTAL_ROVUK_INVOICE_OTHER_SETTINGS_GET_DOCUMENT = "/webapi/v1/portal/getinvoicedocument",
+    PORTAL_ROVUK_INVOICE_OTHER_SETTING_SAVE_DOCUMENT = "/webapi/v1/portal/saveinvoicedocument",
+    PORTAL_ROVUK_INVOICE_OTHER_SETTING_DELETE_DOCUMENT = "/webapi/v1/portal/deleteInvoiceDocument",
+
 }

@@ -252,8 +252,8 @@ export class AuthPageComponent implements OnInit {
             localStorage.setItem(localstorageconstants.SUPPLIERTOKEN, params.data.token);
             localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(params.data));
             localStorage.setItem(localstorageconstants.SUPPLIERID, params.data.companydata._id);
-            sessionStorage.setItem(localstorageconstants.USERTYPE, "sponsor-portal");
-            localStorage.setItem(localstorageconstants.USERTYPE, "sponsor-portal");
+            sessionStorage.setItem(localstorageconstants.USERTYPE, "invoice-portal");
+            localStorage.setItem(localstorageconstants.USERTYPE, "invoice-portal");
 
 
             localStorage.setItem('invoicelogout', 'false');

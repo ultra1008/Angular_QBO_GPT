@@ -86,14 +86,16 @@ export class UserComponent implements OnInit {
     var tmp_local_mode = localStorage.getItem(localstorageconstants.DARKMODE);
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off') {
+    if (this.mode == 'off')
+    {
       this.usericon = icon.USER_ICON;
       this.changePasswordIcon = "./assets/diversityicon/thememode/changepassword_icon.png";
       this.helpIcon = "./assets/diversityicon/thememode/help_icon.png";
       this.termsIcon = "./assets/diversityicon/thememode/terms_icon.png";
       this.logoutIcon = "./assets/diversityicon/thememode/logout_icon.png";
       this.themeModeIcon = "./assets/diversityicon/moon_icon.png";
-    } else {
+    } else
+    {
       this.usericon = icon.USERLIGHT_ICON;
       this.changePasswordIcon = "./assets/diversityicon/darkmode/changepassword_icon_dark.png";
       this.helpIcon = "./assets/diversityicon/darkmode/help_icon_dark.png";
@@ -102,7 +104,8 @@ export class UserComponent implements OnInit {
       this.themeModeIcon = "./assets/diversityicon/sun_icon.png";
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode) {
+      if (mode)
+      {
         this.mode = 'off';
         this.usericon = icon.USER_ICON;
         this.changePasswordIcon = "./assets/diversityicon/thememode/changepassword_icon.png";
@@ -110,7 +113,8 @@ export class UserComponent implements OnInit {
         this.termsIcon = "./assets/diversityicon/thememode/terms_icon.png";
         this.logoutIcon = "./assets/diversityicon/thememode/logout_icon.png";
         this.themeModeIcon = "./assets/diversityicon/moon_icon.png";
-      } else {
+      } else
+      {
         this.mode = 'on';
         this.usericon = icon.USERLIGHT_ICON;
         this.changePasswordIcon = "./assets/diversityicon/darkmode/changepassword_icon_dark.png";
@@ -124,13 +128,15 @@ export class UserComponent implements OnInit {
     var locallanguage = tmp_local_mode == "" || tmp_local_mode == undefined || tmp_local_mode == null ? configdata.tmp_localmode : tmp_local_mode;
     var body = document.getElementsByTagName('body')[0];
     this.usertype = sessionStorage.getItem(localstorageconstants.USERTYPE) ? sessionStorage.getItem(localstorageconstants.USERTYPE) : "portal";
-    if (locallanguage === "on") {
+    if (locallanguage === "on")
+    {
       this.isChecked = true;
       body.classList.add("darkMode");
       this.layoutService.getLeftHeaderThemeOnChange("theme2");
       this.layoutService.getHeaderThemeOnChange("theme2");
       this.layoutService.getAsidebarThemeOnChange("theme2");
-    } else {
+    } else
+    {
       this.isChecked = false;
       localStorage.setItem(localstorageconstants.DARKMODE, "off");
       body.classList.remove('darkMode');
@@ -148,7 +154,8 @@ export class UserComponent implements OnInit {
   ngOnInit(): void {
     let that = this;
     const isPortal = sessionStorage.getItem(localstorageconstants.USERTYPE);
-    if (isPortal == 'sponsor-portal') {
+    if (isPortal == 'invoice-portal')
+    {
       const data: any = localStorage.getItem(localstorageconstants.USERDATA);
       var mapData = JSON.parse(data);
       that.user = ({
@@ -157,7 +164,8 @@ export class UserComponent implements OnInit {
         lastName: "",
         fullName: mapData.UserData.userfullname
       });
-    } else {
+    } else
+    {
       const data = localStorage.getItem('username');
       that.user = ({
         _id: "",
@@ -171,7 +179,8 @@ export class UserComponent implements OnInit {
       const darkClassName = 'darkMode';
       var tmp_className = darkMode ? darkClassName : '';
       var body = document.getElementsByTagName('body')[0];
-      if (tmp_className === "darkMode") {
+      if (tmp_className === "darkMode")
+      {
         localStorage.setItem(localstorageconstants.DARKMODE, "on");
         body.classList.add("darkMode");
         that.layoutService.getLeftHeaderThemeOnChange("theme2");
@@ -179,7 +188,8 @@ export class UserComponent implements OnInit {
         that.layoutService.getAsidebarThemeOnChange("theme2");
         this.modeService.clearModeDetects();
 
-      } else {
+      } else
+      {
         localStorage.setItem(localstorageconstants.DARKMODE, "off");
         body.classList.remove('darkMode');
         that.layoutService.getLeftHeaderThemeOnChange("theme1");
@@ -189,15 +199,18 @@ export class UserComponent implements OnInit {
 
       }
 
-      if (darkMode == false) {
+      if (darkMode == false)
+      {
         this.selectedTheme = "light-theme";
       }
-      else if (darkMode == true) {
+      else if (darkMode == true)
+      {
         this.selectedTheme = "dark-theme";
       }
 
       let overrides;
-      if (this.selectedTheme === 'dark-theme') {
+      if (this.selectedTheme === 'dark-theme')
+      {
         overrides = {
           legend: {
             labels: { fontColor: 'white' }
@@ -213,7 +226,8 @@ export class UserComponent implements OnInit {
             }]
           }
         };
-      } else {
+      } else
+      {
         overrides = {};
       }
       this.themeService.setColorschemesOptions(overrides);
@@ -270,26 +284,32 @@ export class UserComponent implements OnInit {
       confirmButtonText: this.logut_button,
       denyButtonText: this.stay_button,
     }).then((result) => {
-      if (result.isConfirmed) {
+      if (result.isConfirmed)
+      {
 
         that.uiSpinner.spin$.next(true);
         let usertype = sessionStorage.getItem(localstorageconstants.USERTYPE);
 
-        if (usertype == "superadmin") {
+        if (usertype == "superadmin")
+        {
           that.uiSpinner.spin$.next(false);
           that.router.navigateByUrl('/superadmin/login');
         }
-        else {
+        else
+        {
           let userdata: any = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
-          if (userdata.UserData.role_name != configdata.EMPLOYEE) {
+          if (userdata.UserData.role_name != configdata.EMPLOYEE)
+          {
             this.logoutHistory();
-          } else {
+          } else
+          {
             that.uiSpinner.spin$.next(false);
             that.router.navigateByUrl('/login');
           }
         }
       }
-      else {
+      else
+      {
 
       }
     });
@@ -320,12 +340,14 @@ export class UserComponent implements OnInit {
           location_lng: let_log[1]
         };
         that.httpCall.httpPostCall(httproutes.USER_LOGOUT, reqObject).subscribe(function (params) {
-          if (params.status) {
+          if (params.status)
+          {
             that.snackbarservice.openSnackBar(params.message, "success");
             that.uiSpinner.spin$.next(false);
             that.router.navigateByUrl('/login');
           }
-          else {
+          else
+          {
             that.snackbarservice.openSnackBar(params.message, 'error');
             that.uiSpinner.spin$.next(false);
           }

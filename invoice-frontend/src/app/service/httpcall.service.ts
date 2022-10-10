@@ -22,13 +22,17 @@ export class HttpCall {
     let token: any = "";
     let portal_type = sessionStorage.getItem(localstorageconstants.USERTYPE);
     let portal_language = localStorage.getItem(localstorageconstants.LANGUAGE);
-    if (portal_type == "superadmin") {
+    if (portal_type == "superadmin")
+    {
       token = localStorage.getItem('token_superadmin');
-    } else if (portal_type == "portal") {
+    } else if (portal_type == "portal")
+    {
       token = localStorage.getItem('token');
-    } else if (portal_type == "ocps-portal") {
+    } else if (portal_type == "ocps-portal")
+    {
       token = localStorage.getItem(localstorageconstants.IFRAMETOKEN);
-    } else if (portal_type == "sponsor-portal") {
+    } else if (portal_type == "invoice-portal")
+    {
       token = localStorage.getItem(localstorageconstants.SUPPLIERTOKEN);
     }
     let headers: any = new HttpHeaders();
@@ -47,14 +51,18 @@ export class HttpCall {
   public httpPostCall(userroute: any, userdata: any): Observable<any> {
     let token: any = "";
     let portal_type = sessionStorage.getItem(localstorageconstants.USERTYPE);
-    if (portal_type == "superadmin") {
+    if (portal_type == "superadmin")
+    {
       token = localStorage.getItem('token_superadmin');
-    } else if (portal_type == "portal") {
+    } else if (portal_type == "portal")
+    {
       token = localStorage.getItem('token');
-    } else if (portal_type == "ocps-portal") {
+    } else if (portal_type == "ocps-portal")
+    {
       // iFrame
       token = localStorage.getItem(localstorageconstants.IFRAMETOKEN);
-    } else if (portal_type == "sponsor-portal") {
+    } else if (portal_type == "invoice-portal")
+    {
       // Suppllier & Diversity
       token = localStorage.getItem(localstorageconstants.SUPPLIERTOKEN);
     }
@@ -105,7 +113,8 @@ export class HttpCall {
   }
 
   handleError(error: any) {
-    if (error.error instanceof Error) {
+    if (error.error instanceof Error)
+    {
       let errMessage = error.error.message;
       return throwError(errMessage);
     }

@@ -16,6 +16,11 @@
 
       <div class="flux-right-header clearfix">
         <ul>
+          <li *ngIf="usertype == 'invoice-portal'">
+            <div matTooltip="{{company_code}}" style="height: 40px;" (click)="moveToSettings()">
+              <img *ngIf="company_logo" src="{{ company_logo }}" alt="" class="bottom-image-cust" height="40" />
+            </div>
+          </li>
           <li>
             <button class="email-button" (click)="addressbookdialog()" mat-mini-fab>
               <img src="{{AddressbookIcon}}" alt="" height="25px">
@@ -25,11 +30,11 @@
           <!-- <li><button class="email-button " mat-mini-fab (click)="showWeatherUI()">
               <div class="">
                 <span [innerHtml]="weatherToday.iconFile" class="icon-cust-headr"></span> -->
-                <!-- <span class="cust-tmp-header">{{weatherToday.temp_max}}</span> -->
-              <!-- </div>
+          <!-- <span class="cust-tmp-header">{{weatherToday.temp_max}}</span> -->
+          <!-- </div>
             </button></li> -->
 
-          <li *ngIf="usertype == 'sponsor-portal'">
+          <li *ngIf="usertype == 'invoice-portal'">
             <app-shortcuts-menu></app-shortcuts-menu>
           </li>
 

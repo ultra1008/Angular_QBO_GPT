@@ -103,8 +103,8 @@ export class PortalLoginFormComponent implements OnInit {
           localStorage.setItem(localstorageconstants.SUPPLIERID, data.data.companydata._id);
           localStorage.setItem('invoicelogout', 'false');
 
-          sessionStorage.setItem(localstorageconstants.USERTYPE, "sponsor-portal");
-          localStorage.setItem(localstorageconstants.USERTYPE, "sponsor-portal");
+          sessionStorage.setItem(localstorageconstants.USERTYPE, "invoice-portal");
+          localStorage.setItem(localstorageconstants.USERTYPE, "invoice-portal");
           that.myapp.updateIdealTimeout();
 
           that.uiSpinner.spin$.next(false);

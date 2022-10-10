@@ -2374,5 +2374,10 @@
     "packing_slip_no": "Packing Slip #",
     "Receiving_Slip": "Receiving Slip",
     "Receiving_Sheet": "Receiving Sheet",
-    "Receiving_Attachment": "Attachments"
+    "Receiving_Attachment": "Attachments",
+    "Employee_Terms_Do_Want_Delete": "Do you want to delete this terms?",
+    "Employee_Tex_rate_Do_Want_Delete": "Do you want to delete this taxrate?",
+    "Employee_Documents_Do_Want_Delete": "Do you want to delete this document?",
+    "Amount_minutes": "Amount of minutes before auto log off",
+    "enable_otp": "Enable OTP"
 }

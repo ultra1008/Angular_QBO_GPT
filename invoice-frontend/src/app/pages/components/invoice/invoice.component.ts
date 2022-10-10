@@ -86,22 +86,26 @@ export class InvoiceComponent implements OnInit {
     public httpCall: HttpCall, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService) {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off') {
+    if (this.mode == 'off')
+    {
       this.trashIcon = icon.DELETE;
       this.editIcon = icon.EDIT;
       this.reportIcon = icon.REPORT;
-    } else {
+    } else
+    {
       this.trashIcon = icon.DELETE_WHITE;
       this.editIcon = icon.EDIT_WHITE;
       this.reportIcon = icon.REPORT_WHITE;
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode) {
+      if (mode)
+      {
         this.mode = 'off';
         this.trashIcon = icon.DELETE;
         this.editIcon = icon.EDIT;
         this.reportIcon = icon.REPORT;
-      } else {
+      } else
+      {
         this.mode = 'on';
         this.trashIcon = icon.DELETE_WHITE;
         this.editIcon = icon.EDIT_WHITE;
@@ -119,7 +123,7 @@ export class InvoiceComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    console.log("i am here")
     let role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA) ?? '');
     console.log("role", role_permission.UserData.role_name);
     this.role_to = role_permission.UserData.role_name;
@@ -149,12 +153,15 @@ export class InvoiceComponent implements OnInit {
         that.gridtolist_text = text; that.btn_grid_list_text = text;
       });
 
-      if (this.locallanguage === 'en') {
+      if (this.locallanguage === 'en')
+      {
         this.locallanguage = 'es';
-      } else {
+      } else
+      {
         this.locallanguage = 'en';
       }
-      if (i != 0) {
+      if (i != 0)
+      {
         setTimeout(() => {
           that.rerenderfunc();
         }, 1000);
@@ -167,7 +174,8 @@ export class InvoiceComponent implements OnInit {
     };
     this.employeeservice.getalluser().subscribe(function (data) {
       that.uiSpinner.spin$.next(false);
-      if (data.status) {
+      if (data.status)
+      {
         that.isEmployeeData = true;
         that.usersArray = data.data;
       }
@@ -175,7 +183,8 @@ export class InvoiceComponent implements OnInit {
 
     this.mostusedservice.deleteUserEmit$.subscribe(function (editdata) {
       that.employeeservice.getalluser().subscribe(function (data) {
-        if (data.status) {
+        if (data.status)
+        {
           that.isEmployeeData = true;
           that.usersArray = data.data;
         }
@@ -203,29 +212,34 @@ export class InvoiceComponent implements OnInit {
   }
 
   gridTolist() {
-    if (this.gridtolist) {
+    if (this.gridtolist)
+    {
       this.rerenderfunc();
       this.btn_grid_list_text = this.listtogrid_text;
       this.gridtolist = false;
-    } else {
+    } else
+    {
       this.btn_grid_list_text = this.gridtolist_text;
       this.gridtolist = true;
     }
   }
 
   sorting_name() {
-    if (this.sorting_desc) {
+    if (this.sorting_desc)
+    {
       this.sorting_desc = false;
       this.sorting_asc = true;
       this.soruing_all = false;
       this.usersArray = this.usersArray.sort((a: any, b: any) => a.username.localeCompare(b.username, 'en', { sensitivity: 'base' }));
-    } else if (this.sorting_asc) {
+    } else if (this.sorting_asc)
+    {
       this.sorting_desc = true;
       this.sorting_asc = false;
       this.soruing_all = false;
       this.usersArray = this.usersArray.reverse((a: any, b: any) => a.username.localeCompare(b.username, 'en', { sensitivity: 'base' }));
 
-    } else {
+    } else
+    {
       this.sorting_desc = false;
       this.sorting_asc = true;
       this.soruing_all = false;
@@ -249,12 +263,15 @@ export class InvoiceComponent implements OnInit {
       confirmButtonText: this.Compnay_Equipment_Delete_Yes,
       denyButtonText: this.Compnay_Equipment_Delete_No,
     }).then((result) => {
-      if (result.isConfirmed) {
+      if (result.isConfirmed)
+      {
         this.httpCall.httpPostCall(httproutes.TEAM_DELETE, { _id: id }).subscribe(function (params) {
-          if (params.status) {
+          if (params.status)
+          {
             that.snackbarservice.openSnackBar(params.message, "success");
             that.mostusedservice.userdeleteEmit();
-          } else {
+          } else
+          {
             that.snackbarservice.openSnackBar(params.message, "error");
           }
         });
@@ -265,7 +282,8 @@ export class InvoiceComponent implements OnInit {
   getAllRoles() {
     let that = this;
     this.httpCall.httpGetCall(httproutes.PORTAL_SETTING_ROLES_ALL).subscribe(function (params) {
-      if (params.status) {
+      if (params.status)
+      {
         that.allRoles = params.data;
       }
     });
@@ -362,25 +380,29 @@ export class InvoiceAttachment {
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off') {
+    if (this.mode == 'off')
+    {
       this.exitIcon = icon.CANCLE;
       this.saveIcon = icon.SAVE_WHITE;
       this.fileIcon = icon.REPORT;
 
-    } else {
+    } else
+    {
       this.exitIcon = icon.CANCLE_WHITE;
       this.saveIcon = icon.SAVE_WHITE;
       this.fileIcon = icon.REPORT_WHITE;
     }
 
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode) {
+      if (mode)
+      {
         this.mode = 'off';
         this.exitIcon = icon.CANCLE;
         this.saveIcon = icon.SAVE_WHITE;
         this.fileIcon = icon.REPORT;
 
-      } else {
+      } else
+      {
         this.mode = 'on';
         this.exitIcon = icon.CANCLE_WHITE;
         this.saveIcon = icon.SAVE_WHITE;
@@ -436,7 +458,8 @@ export class InvoiceAttachment {
    * @param files (Files List)
    */
   prepareFilesList(files: Array<any>) {
-    for (const item of files) {
+    for (const item of files)
+    {
       item.progress = 0;
       this.files.push(item);
     }
@@ -449,7 +472,8 @@ export class InvoiceAttachment {
     File/Image picker item is diplayed thmb based on file extensions.
   */
   thumbImage(file: any) {
-    switch (file.type) {
+    switch (file.type)
+    {
       case 'application/pdf':
         return '../../../../../../assets/images/pdf.png';
         break;
@@ -508,25 +532,35 @@ export class InvoiceAttachment {
   */
   thumbNetworkImage(index: any) {
     var extension = this.last_files_array[index].substring(this.last_files_array[index].lastIndexOf('.') + 1);
-    if (extension == "doc" || extension == "docx") {
+    if (extension == "doc" || extension == "docx")
+    {
       return 'https://s3.us-west-1.wasabisys.com/rovukdata/doc.png';
-    } else if (extension == "pdf") {
+    } else if (extension == "pdf")
+    {
       return 'https://s3.us-west-1.wasabisys.com/rovukdata/pdf.png';
-    } else if (extension == "xls" || extension == "xlsx" || extension == "csv") {
+    } else if (extension == "xls" || extension == "xlsx" || extension == "csv")
+    {
       return 'https://s3.us-west-1.wasabisys.com/rovukdata/xls.png';
-    } else if (extension == "zip") {
+    } else if (extension == "zip")
+    {
       return 'https://s3.us-west-1.wasabisys.com/rovukdata/zip.png';
-    } else if (extension == "ppt") {
+    } else if (extension == "ppt")
+    {
       return 'https://s3.us-west-1.wasabisys.com/rovukdata/ppt.png';
-    } else if (extension == "rtf") {
+    } else if (extension == "rtf")
+    {
       return 'https://s3.us-west-1.wasabisys.com/rovukdata/rtf.png';
-    } else if (extension == "odt") {
+    } else if (extension == "odt")
+    {
       return 'https://s3.us-west-1.wasabisys.com/rovukdata/odt.png';
-    } else if (extension == "txt") {
+    } else if (extension == "txt")
+    {
       return 'https://s3.us-west-1.wasabisys.com/rovukdata/txt.png';
-    } else if (extension == "jpg" || extension == "png" || extension == "jpeg" || extension == "gif" || extension == "webp") {
+    } else if (extension == "jpg" || extension == "png" || extension == "jpeg" || extension == "gif" || extension == "webp")
+    {
       return this.last_files_array[index];
-    } else {
+    } else
+    {
       return 'https://s3.us-west-1.wasabisys.com/rovukdata/no-preview.png';
     }
   }
@@ -536,65 +570,75 @@ export class InvoiceAttachment {
     now improved as an open the Full size preview.
   */
   imageNetworkPreview(allAttachment: any, index: any) {
-    for (let i = 0; i < allAttachment.length; i++) {
+    for (let i = 0; i < allAttachment.length; i++)
+    {
       var extension = allAttachment[i].substring(allAttachment[i].lastIndexOf('.') + 1);
-      if (extension == "jpg" || extension == "png" || extension == "jpeg" || extension == "gif" || extension == 'webp') {
+      if (extension == "jpg" || extension == "png" || extension == "jpeg" || extension == "gif" || extension == 'webp')
+      {
         var srctmp: any = {
           small: allAttachment[i],
           medium: allAttachment[i],
           big: allAttachment[i]
         };
         this.galleryImages.push(srctmp);
-      } else if (extension == "doc" || extension == "docx") {
+      } else if (extension == "doc" || extension == "docx")
+      {
         var srctmp: any = {
           small: 'https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png',
           medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png',
           big: 'https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png'
         };
         this.galleryImages.push(srctmp);
-      } else if (extension == "pdf") {
+      } else if (extension == "pdf")
+      {
         var srctmp: any = {
           small: 'https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png',
           medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png',
           big: 'https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png'
         };
         this.galleryImages.push(srctmp);
-      } else if (extension == "odt") {
+      } else if (extension == "odt")
+      {
         var srctmp: any = {
           small: 'https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png',
           medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png',
           big: 'https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png'
         };
         this.galleryImages.push(srctmp);
-      } else if (extension == "rtf") {
+      } else if (extension == "rtf")
+      {
         var srctmp: any = {
           small: 'https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png',
           medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png',
           big: 'https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png'
         };
         this.galleryImages.push(srctmp);
-      } else if (extension == "txt") {
+      } else if (extension == "txt")
+      {
         var srctmp: any = {
           small: 'https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png',
           medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png',
           big: 'https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png'
         };
         this.galleryImages.push(srctmp);
-      } else if (extension == "ppt") {
+      } else if (extension == "ppt")
+      {
         var srctmp: any = {
           small: 'https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png',
           medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png',
           big: 'https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png'
         };
         this.galleryImages.push(srctmp);
-      } else if (extension == "xls" || extension == "xlsx" || extension == "csv") {
+      } else if (extension == "xls" || extension == "xlsx" || extension == "csv")
+      {
         var srctmp: any = {
           small: 'https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png',
           medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png',
           big: 'https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png'
         };
         this.galleryImages.push(srctmp);
-      } else {
+      } else
+      {
         var srctmp: any = {
           small: 'https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png',
           medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png',
@@ -666,22 +710,26 @@ export class InvoiceReport {
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off') {
+    if (this.mode == 'off')
+    {
       this.exitIcon = icon.CANCLE;
       this.saveIcon = icon.SAVE_WHITE;
 
-    } else {
+    } else
+    {
       this.exitIcon = icon.CANCLE_WHITE;
       this.saveIcon = icon.SAVE_WHITE;
     }
 
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode) {
+      if (mode)
+      {
         this.mode = 'off';
         this.exitIcon = icon.CANCLE;
         this.saveIcon = icon.SAVE_WHITE;
 
-      } else {
+      } else
+      {
         this.mode = 'on';
         this.exitIcon = icon.CANCLE_WHITE;
         this.saveIcon = icon.SAVE_WHITE;
@@ -695,7 +743,8 @@ export class InvoiceReport {
 
   isValidMailFormat(value: any) {
     var EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
-    if (value != "" && (EMAIL_REGEXP.test(value))) {
+    if (value != "" && (EMAIL_REGEXP.test(value)))
+    {
       return { "Please provide a valid email": true };
     }
     return null;
@@ -704,13 +753,16 @@ export class InvoiceReport {
   addInternalEmail(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
     // Add email
-    if (value) {
+    if (value)
+    {
       var validEmail = this.isValidMailFormat(value);
-      if (validEmail) {
+      if (validEmail)
+      {
         this.emailsList.push(value);
         // Clear the input value
         event.chipInput!.clear();
-      } else {
+      } else
+      {
         // here error for valid email
       }
     }
@@ -721,10 +773,12 @@ export class InvoiceReport {
     let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
     //----
     const index = this.emailsList.indexOf(email);
-    if (index >= 0) {
+    if (index >= 0)
+    {
       this.emailsList.splice(index, 1);
       //----
-      if (email == user_data.UserData.useremail) {
+      if (email == user_data.UserData.useremail)
+      {
         this.is_oneOnly = true;
       }
       //----
@@ -734,39 +788,48 @@ export class InvoiceReport {
   ngOnInit(): void {
     let that = this;
     this.timecardinfo.get("role_ids")!.valueChanges.subscribe(function (params: any) {
-      if (params.length == that.rolesList.length) {
+      if (params.length == that.rolesList.length)
+      {
         that.timecardinfo.get("All_Roles")!.setValue(true);
-      } else {
+      } else
+      {
         that.timecardinfo.get("All_Roles")!.setValue(false);
       }
     });
     this.timecardinfo.get("status_ids")!.valueChanges.subscribe(function (params: any) {
-      if (params.length == that.statusList.length) {
+      if (params.length == that.statusList.length)
+      {
         that.timecardinfo.get("All_Status")!.setValue(true);
-      } else {
+      } else
+      {
         that.timecardinfo.get("All_Status")!.setValue(false);
       }
     });
   }
 
   onChangeValueAll_Roles(params: any) {
-    if (params.checked) {
+    if (params.checked)
+    {
       this.timecardinfo.get("role_ids")!.setValue(this.rolesList.map((el: any) => el.role_id));
-    } else {
+    } else
+    {
       this.timecardinfo.get("role_ids")!.setValue([]);
     }
   }
 
   onChangeValueAll_Status(params: any) {
-    if (params.checked) {
+    if (params.checked)
+    {
       this.timecardinfo.get("status_ids")!.setValue(this.statusList.map(el => el.value));
-    } else {
+    } else
+    {
       this.timecardinfo.get("status_ids")!.setValue([]);
     }
   }
 
   saveData() {
-    if (this.emailsList.length != 0) {
+    if (this.emailsList.length != 0)
+    {
       this.sb.openSnackBar(this.Report_File_Message, "success");
       let requestObject = this.timecardinfo.value;
       var company_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
@@ -777,12 +840,14 @@ export class InvoiceReport {
       setTimeout(() => {
         this.dialogRef.close();
       }, 3000);
-    } else {
+    } else
+    {
       this.sb.openSnackBar(this.Report_File_Enter_Email, "error");
     }
   }
   addmyself() {
-    if (this.is_oneOnly) {
+    if (this.is_oneOnly)
+    {
       let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
       this.emailsList.push(user_data.UserData.useremail);
       this.is_oneOnly = false;
