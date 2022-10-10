@@ -19,4 +19,10 @@ module.exports = {
     SUPPLIER_SCHEDULE_OF_ITEM_HISTORY: "supplier_schedule_of_item_histories",
     SUPPLIER_SCHEDULE_OF_ITEM_TASK_HISTORY: "supplier_schedule_of_item_task_histories",
     SETTINGS_HISTORY: "setting_histories",
-}
+    INVOICES_HISTORY: "invoice_histories",
+    VENDOR_HISTORY: "vendor_history",
+    TEMPLATE_HISTORY: "template_history",
+    INVOICE_SETTINGS_HISTORY: "invoice_setting_histories",
+    INVOICE_USER_HISTORY: "invoice_user_histories",
+    INVOICE_USER_DOCUMENT_HISTORY: "invoice_user_document_histories",
+};

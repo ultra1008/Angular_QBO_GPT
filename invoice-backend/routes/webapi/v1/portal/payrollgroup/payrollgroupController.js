@@ -68,7 +68,7 @@ module.exports.deletePayrollgroup = async function (req, res) {
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
-            let userCollection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let userCollection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             let userObject = await userCollection.find({ user_id_payroll_group: ObjectID(req.body._id) });
             if (userObject.length > 0) {
                 res.send({ message: translator.getStr('PayrollGroupHasData'), status: false });

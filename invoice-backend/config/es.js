@@ -8,7 +8,6 @@ module.exports = {
     VENDOR_UPDATE_MESSAGE: "Vendor update successfully.",
     VENDOR_SAVE_MINORITY_MESSAGE: "Vendor minority owners save successfully.",
     VENDOR_SAVE_CERTIFICATES_MESSAGE: "Vendor certificates save successfully.",
-    SomethingWrong: 'Something went wrong.!',
     EmailAlreadyExists: 'Email already exists.',
     EmailNotExists: 'Email does not match',
     PasswordNotExists: 'Password does not match',
@@ -785,4 +784,20 @@ module.exports = {
     EmailDocumentExpireSomeOfYour: 'Algunos de tus',
     EmailDocumentExpireDocExpireIn: 'Los documentos del proyecto vencerán en',
     EmailDocumentExpireTakeAction: 'día. Tome las medidas necesarias y actualice el documento de su proyecto.',
+
+
+    // App Invitation
+    EmailAppInvitationTitle: 'Invitación para descargar la aplicación',
+    EmailAppInvitationAppDownloadInvitation: 'Has sido invitado para descargar la aplicación',
+    EmailAppInvitationDownloadApp: 'Bienvenido al equipo. Un asociado le ha invitado a descargar la aplicación de la empresa, ROVUK. Elija la versión que funcione con su dispositivo (iOS/Android).',
+    EmailAppInvitationLoginEmail: 'Correo:',
+    EmailAppInvitationCompanyCode: 'Código de empresa:',
+    EmailAppInvitationCompanyName: 'Nombre de empresa:',
+
+    // Document Type
+    DocumentTypeListing: 'Document Type listing',
+    DocumentTypeAdded: 'Document Type added successfully.',
+    DocumentTypeUpdated: 'Document Type updated successfully.',
+    DocumentTypeDeleted: 'Document Type deleted successfully.',
+    DocumentTypeHasData: 'You can not delete this Document Type. There is data related to this Document Type.'
 };

@@ -76,4 +76,16 @@ module.exports = {
     INVOICE_ROLES: "invoice_roles",
     INVOICE_PROJECTS: "invoice_projects",
     INVOICE_LOCATION: "invoice_locations",
+    INVOICE_TAX_RATE: "invoice_tax_rates",
+    INVOICE_DOCUMENT: "invoice_documents",
+    INVOICE_TERM: "invoice_terms",
+    INVOICE_COST_CODE: "invoice_cost_codes",
+    INVOICE: "invoices",
+    INVOICE_VENDOR: "invoice_vendors",
+    INVOICE_TEMPLATE: "invoice_template",
+    INVOICE_SETTING: "invoice_settings",
+
+    INVOICE_USER: "invoice_users",
+    INVOICE_USER_DOCUMENT: "invoice_user_documents",
+    INVOICE_LOGINHISTORY: "invoice_login_histories",
 };

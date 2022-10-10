@@ -13,7 +13,7 @@ var companyCollection = "company";
 var tenantsCollection = "tenants";
 var userSchema = require('./../../../../../model/user');
 var rolesandpermissionsSchema = require('./../../../../../model/rolesandpermissions');
-
+var invoiceRoleSchema = require('./../../../../../model/invoice_roles');
 var bucketOpration = require('./../../../../../controller/common/s3-wasabi');
 const nodemailer = require('nodemailer');
 
@@ -198,7 +198,7 @@ module.exports.compnayverifysmtp = async function (req, res) {
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
-}
+};
 
 
 module.exports.compnayupdatesmtp = async function (req, res) {
@@ -279,8 +279,8 @@ module.exports.compnayUsage = async function (req, res) {
         try {
             let reqObject = req.body;
             let BucketName = decodedToken.companycode.toLowerCase();
-            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
-            let roleConnection = connection_db_api.model(collectionConstant.ROLEANDPERMISSION, rolesandpermissionsSchema);
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+            let roleConnection = connection_db_api.model(collectionConstant.INVOICE_ROLES, invoiceRoleSchema);
             let totalUserCount = await userConnection.countDocuments({ is_delete: 0 });
             let admin_role = await roleConnection.findOne({ role_name: config.ROLEADMIN }, { _id: 1 });
             let supervisor_role = await roleConnection.findOne({ role_name: config.ROLE_SUPERVISOR }, { _id: 1 });

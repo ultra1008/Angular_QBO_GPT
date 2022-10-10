@@ -44,7 +44,7 @@ module.exports.saveemergencycontact = async function (req, res) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         } finally {
-            connection_db_api.close()
+            connection_db_api.close();
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
@@ -72,7 +72,7 @@ module.exports.deleteemergencycontact = async function (req, res) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         } finally {
-            connection_db_api.close()
+            connection_db_api.close();
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
@@ -134,7 +134,7 @@ module.exports.getemergencycontact = async function (req, res) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         } finally {
-            connection_db_api.close()
+            connection_db_api.close();
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
@@ -148,7 +148,7 @@ module.exports.sendEmergencyContactReminder = async function (req, res) {
         try {
             var requestObject = req.body;
             let connection_db_api = await db_connection.connection_db_api(decodedToken);
-            let userCollection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let userCollection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             let tmp_user = await userCollection.findOne({ _id: ObjectID(requestObject._id) }, { _id: 1, useremail: 1, userfirebase_token: 1 });
             var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
             let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
