@@ -19,11 +19,13 @@ module.exports.login = async function (req, res) {
     var requestObject = req.body;
     var translator = new common.Language(req.headers.language);
     DB.findOne(superadminCollection.COMPANY, { companycode: requestObject.companycode }, function (err, resultfind) {
+
         if (err) {
             res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
         } else {
             if (resultfind != null) {
                 DB.findOne(superadminCollection.TENANTS, { companycode: requestObject.companycode }, async function (err, result) {
+
                     if (err) {
                         res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
                     } else {
@@ -32,7 +34,7 @@ module.exports.login = async function (req, res) {
 
                             if (result) {
                                 connection_db_api = await db_connection.connection_db_api(result);
-                                let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+                                let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
                                 let roleConnection = connection_db_api.model(collectionConstant.INVOICE_ROLES, invoiceRoleSchema);
                                 //let UserData = await userConnection.findOne({ "useremail": requestObject.useremail , is_delete : 0 , userstatus : 1 });
                                 let UserData = await userConnection.aggregate([
@@ -116,7 +118,7 @@ module.exports.login = async function (req, res) {
                                     // },
                                     {
                                         $lookup: {
-                                            from: collectionConstant.USER,
+                                            from: collectionConstant.INVOICE_USER,
                                             localField: "usersupervisor_id",
                                             foreignField: "_id",
                                             as: "supervisor"
@@ -138,7 +140,7 @@ module.exports.login = async function (req, res) {
                                     // },
                                     {
                                         $lookup: {
-                                            from: collectionConstant.USER,
+                                            from: collectionConstant.INVOICE_USER,
                                             localField: "usermanager_id",
                                             foreignField: "_id",
                                             as: "manager"
@@ -311,11 +313,12 @@ module.exports.login = async function (req, res) {
                                     }
                                 ]);
                                 UserData = UserData[0];
+
                                 if (UserData == null) {
                                     res.send({ message: translator.getStr('UserNotFound'), status: false });
                                 } else {
-                                    let roles_tmp = await roleConnection.findOne({ role_name: "Admin" });
-                                    //  let roles_tmp = await roleConnection.findOne({ _id: ObjectID(UserData.userroleId) });
+                                    let roles_tmp = await roleConnection.findOne({ role_name: 'Admin' });
+                                    // roles_tmp = await roleConnection.findOne({ role_id: ObjectID(UserData.userroleId) })
                                     var psss_tnp = await common.validPassword(requestObject.password, UserData.password);
                                     if (psss_tnp) {
                                         var resObject_db = {
@@ -372,6 +375,7 @@ module.exports.login = async function (req, res) {
 
 module.exports.changepassword = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
+
     var translator = new common.Language(req.headers.language);
     if (decodedToken) {
         var requestObject = req.body;
@@ -382,7 +386,7 @@ module.exports.changepassword = async function (req, res) {
                 let connection_db_api;
                 try {
                     connection_db_api = await db_connection.connection_db_api(result);
-                    let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+                    let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
                     let userOne = await userConnection.findOne({ _id: ObjectID(decodedToken.UserData._id), is_delete: 0, userstatus: 1 });
                     if (userOne == null) {
                         res.send({ message: translator.getStr('UserNotFound'), status: false });
@@ -424,7 +428,7 @@ module.exports.savelogindetails = async function (req, res) {
             let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
             let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
 
-            let loginHistoryConnection = connection_db_api.model(collectionConstant.LOGINHISTORY, loginHistorySchema);
+            let loginHistoryConnection = connection_db_api.model(collectionConstant.INVOICE_LOGINHISTORY, loginHistorySchema);
             requestObject.created_at = Math.round(new Date().getTime() / 1000);
             requestObject.updated_at = Math.round(new Date().getTime() / 1000);
             let add_login_history = new loginHistoryConnection(requestObject);
@@ -493,7 +497,7 @@ module.exports.userlogout = async function (req, res) {
         try {
             var requestObject = req.body;
 
-            let loginHistoryConnection = connection_db_api.model(collectionConstant.LOGINHISTORY, loginHistorySchema);
+            let loginHistoryConnection = connection_db_api.model(collectionConstant.INVOICE_LOGINHISTORY, loginHistorySchema);
             requestObject.user_id = decodedToken.UserData._id;
             requestObject.created_at = Math.round(new Date().getTime() / 1000);
             requestObject.updated_at = requestObject.created_at;
@@ -529,7 +533,7 @@ module.exports.sponsorforgetpassword = async function (req, res) {
                 var translator = new common.Language('en');
                 let connection_db_api = await db_connection.connection_db_api(resulttanent);
                 try {
-                    let supplierUserSchemaConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+                    let supplierUserSchemaConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
                     let find_one_vendor = await supplierUserSchemaConnection.findOne({ useremail: requestObject.useremail });
                     if (find_one_vendor == null) {
                         res.send({ message: translator.getStr('EmailNotExists'), status: false });
@@ -584,7 +588,7 @@ module.exports.sponsorforgetpassword = async function (req, res) {
         try {
             var requestObject = req.body;
 
-            let loginHistoryConnection = connection_db_api.model(collectionConstant.LOGINHISTORY, loginHistorySchema);
+            let loginHistoryConnection = connection_db_api.model(collectionConstant.INVOICE_LOGINHISTORY, loginHistorySchema);
             requestObject.user_id = decodedToken.UserData._id;
             requestObject.created_at = Math.round(new Date().getTime() / 1000);
             requestObject.updated_at = requestObject.created_at;
@@ -620,7 +624,7 @@ module.exports.sendUserPassword = async function (req, res) {
             var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
             let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
             let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
-            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             let UserData = await userConnection.findOne({ _id: decodedToken.UserData._id });
             if (UserData == null) {
                 res.send({ message: translator.getStr('UserNotFound'), status: false });
@@ -703,12 +707,11 @@ module.exports.sendSupplierOTP = async function (req, res) {
         let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: requestObject.companycode });
         connection_db_api = await db_connection.connection_db_api(talnate_data);
 
-        let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+        let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
         let one_user = await userConnection.findOne({ useremail: requestObject.useremail });
         if (one_user) {
             let emailOTPConnection = connection_db_api.model(collectionConstant.EMAIL_OTP, emailOTPSchema);
             let sixdidgitnumber = Math.floor(Math.random() * (9 * Math.pow(10, 6 - 1))) + Math.pow(10, 6 - 1);
-
             requestObject.sent_on = Math.round(new Date().getTime() / 1000);
             requestObject.user_id = one_user._id;
             requestObject.otp = sixdidgitnumber;
@@ -762,7 +765,7 @@ module.exports.submitEmailOTP = async function (req, res) {
 
         let emailOTPConnection = connection_db_api.model(collectionConstant.EMAIL_OTP, emailOTPSchema);
         let roleConnection = connection_db_api.model(collectionConstant.INVOICE_ROLES, roleSchema);
-        let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+        let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
 
         let one_user = await userConnection.findOne({ useremail: requestObject.useremail });
         if (one_user) {
@@ -823,7 +826,7 @@ module.exports.submitEmailOTP = async function (req, res) {
                         },
                         {
                             $lookup: {
-                                from: collectionConstant.USER,
+                                from: collectionConstant.INVOICE_USER,
                                 localField: "usersupervisor_id",
                                 foreignField: "_id",
                                 as: "supervisor"
@@ -839,7 +842,7 @@ module.exports.submitEmailOTP = async function (req, res) {
                         },
                         {
                             $lookup: {
-                                from: collectionConstant.USER,
+                                from: collectionConstant.INVOICE_USER,
                                 localField: "usermanager_id",
                                 foreignField: "_id",
                                 as: "manager"

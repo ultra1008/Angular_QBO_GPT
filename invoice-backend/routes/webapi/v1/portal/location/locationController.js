@@ -159,7 +159,7 @@ async function sendLocationUpdateMail(locationData, decodedToken, translator) {
     console.log("send mail and notification");
     let connection_db_api = await db_connection.connection_db_api(decodedToken);
     try {
-        let userCollection = connection_db_api.model(collectionConstant.USER, userSchema);
+        let userCollection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
         let all_user = await userCollection.find({ userlocation_id: ObjectID(locationData._id) }, { _id: 1, useremail: 1, userfirebase_token: 1, });
         let userEmailList = [];
         let firebaseTokenList = [];
@@ -254,7 +254,7 @@ module.exports.deleteLocation = async function (req, res) {
             // let poObject = await poCollection.find({ po_ship_to: ObjectID(req.body._id) });
             // let taskCollection = connection_db_api.model(collectionConstant.PROJECTTASK, taskSchema);
             // let taskObject = await taskCollection.find({ task_location: ObjectID(req.body._id) });
-            let userConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             let userObject = await userConnection.find({ userlocation_id: ObjectID(req.body._id) });
             if (userObject.length > 0) {
                 res.send({ message: translator.getStr('LocationHasData'), status: false });
@@ -416,7 +416,7 @@ module.exports.getAllLocationHistory = async function (req, res) {
                             {
 
                                 $lookup: {
-                                    from: collectionConstant.USER,
+                                    from: collectionConstant.INVOICE_USER,
                                     localField: "created_by",
                                     foreignField: "_id",
                                     as: "user"
@@ -454,7 +454,7 @@ module.exports.getAllLocationHistory = async function (req, res) {
                 {
 
                     $lookup: {
-                        from: collectionConstant.USER,
+                        from: collectionConstant.INVOICE_USER,
                         localField: "created_by",
                         foreignField: "_id",
                         as: "user"
