@@ -161,11 +161,11 @@ export class InvoiceComponent implements OnInit {
       }
       i++;
     });
-    this.dtOptions = {
+    that.dtOptions = {
       pagingType: 'full_numbers',
       language: tmp_locallanguage == "en" ? LanguageApp.english_datatables : LanguageApp.spanish_datatables
     };
-    this.employeeservice.getalluser().subscribe(function (data) {
+    that.employeeservice.getalluser().subscribe(function (data) {
       that.uiSpinner.spin$.next(false);
       if (data.status) {
         that.isEmployeeData = true;
@@ -173,7 +173,7 @@ export class InvoiceComponent implements OnInit {
       }
     });
 
-    this.mostusedservice.deleteUserEmit$.subscribe(function (editdata) {
+    that.mostusedservice.deleteUserEmit$.subscribe(function (editdata) {
       that.employeeservice.getalluser().subscribe(function (data) {
         if (data.status) {
           that.isEmployeeData = true;

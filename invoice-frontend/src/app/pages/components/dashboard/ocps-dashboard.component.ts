@@ -36,6 +36,18 @@ var chartColors = {
 })
 export class OcpsDashboardComponent implements OnInit {
   mode: any;
+  countlist: any = {
+    pending: [],
+    generated: [],
+    approved: [],
+    rejected: [],
+    late: [],
+  };
+  cardcountlist: any = {
+    pending: [],
+    process: [],
+    cancelled: [],
+  };;
   subscription!: Subscription;
   timePeriods: any = [
     "app-totalprojectvalue",
@@ -148,7 +160,8 @@ export class OcpsDashboardComponent implements OnInit {
     this.translate.stream(['']).subscribe((textarray) => {
       this.refreshPage();
     });
-    //this.getChartList();
+    that.getCount();
+    that.getcardcount();
   }
 
   refreshPage() {
@@ -178,6 +191,31 @@ export class OcpsDashboardComponent implements OnInit {
     });
   }
 
+
+  getCount() {
+    let that = this;
+    this.httpCall.httpGetCall(httproutes.PORTAL_DASHBOARD_COUNT_GETDATA).subscribe(function (params) {
+      if (params.status) {
+        that.countlist = params.data;
+        console.log("count", that.countlist);
+      }
+    });
+  }
+
+  getcardcount() {
+    /* let that = this;
+    this.httpCall.httpGetCall(httproutes.PORTAL_DASHBOARD_CARD_COUNT_GETDATA).subscribe(function (params) {
+      if (params.status) {
+        that.cardcountlist = params.data;
+        console.log("count", that.cardcountlist);
+      }
+    }); */
+    this.cardcountlist = {
+      pending: [1],
+      process: [1, 2],
+      cancelled: [1, 2, 3],
+    };
+  }
   // Save chart order list for Dashboard
   saveChartList(timePeriods: any) {
     let self = this;
