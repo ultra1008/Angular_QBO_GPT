@@ -792,5 +792,12 @@ module.exports = {
     EmailAppInvitationDownloadApp: 'Welcome to the team. An associate has invited you to download the compnay\'s app, ROVUK. Choose the version that works with your device(iOS/Android).',
     EmailAppInvitationLoginEmail: 'Login email:',
     EmailAppInvitationCompanyCode: 'Company code:',
-    EmailAppInvitationCompanyName: 'Company name:', 
+    EmailAppInvitationCompanyName: 'Company name:',
+
+    // Document Type
+    DocumentTypeListing: 'Document Type listing',
+    DocumentTypeAdded: 'Document Type added successfully.',
+    DocumentTypeUpdated: 'Document Type updated successfully.',
+    DocumentTypeDeleted: 'Document Type deleted successfully.',
+    DocumentTypeHasData: 'You can not delete this Document Type. There is data related to this Document Type.'
 };

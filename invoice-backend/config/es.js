@@ -793,4 +793,11 @@ module.exports = {
     EmailAppInvitationLoginEmail: 'Correo:',
     EmailAppInvitationCompanyCode: 'Código de empresa:',
     EmailAppInvitationCompanyName: 'Nombre de empresa:',
+
+    // Document Type
+    DocumentTypeListing: 'Document Type listing',
+    DocumentTypeAdded: 'Document Type added successfully.',
+    DocumentTypeUpdated: 'Document Type updated successfully.',
+    DocumentTypeDeleted: 'Document Type deleted successfully.',
+    DocumentTypeHasData: 'You can not delete this Document Type. There is data related to this Document Type.'
 };
