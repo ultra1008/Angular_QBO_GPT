@@ -105,7 +105,7 @@ module.exports.deleteinvoiceterm = async function (req, res) {
             if (isDelete == 0) {
                 res.send({ status: false, message: 'There is no data with this id.' });
             } else {
-                res.send({ status: true, message: 'Tax rate deleted successfully.', data: update_data });
+                res.send({ status: true, message: 'Term deleted successfully.', data: update_data });
             }
         } catch (e) {
             console.log(e);
