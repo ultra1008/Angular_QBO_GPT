@@ -1,968 +1,321 @@
 <div class="wrapper-cust-admin">
-    <div class="container cust-main-div">
+    <div class="container">
         <mat-tab-group mat-align-tabs="center">
             <mat-tab *ngFor="let role of allRoles; let index = index" [label]="role.role_name">
                 <div class="row cust-margin-top" *ngIf="role.hasOwnProperty('role_permission')">
-                    <!-- DASHBOARD -->
                     <div class="col" *ngIf="role.role_permission.hasOwnProperty('dashboard')">
-                        <div class="cust-header-text">{{'Sidebar-Superadmin-Dashboard' | translate}}</div>
+                        <div class="cust-header-text">{{'Rovuk_Invoice_Roles_Dashbord' | translate}}</div>
                         <mat-checkbox class="example-margin" [(ngModel)]="role.role_permission.dashboard.View"
-                            color="primary" [disabled]="role.role_name == 'Admin'">
-                            {{'Dashboard-View' | translate}}</mat-checkbox>
+                            color="primary">{{'Dashboard-View' | translate}}</mat-checkbox>
                         <br />
                         <mat-checkbox class="example-margin" [(ngModel)]="role.role_permission.permission_action.View"
-                            color="primary" [disabled]="role.role_name == 'Admin'">
-                            {{'Permission_Action' | translate}} <i style="color: gainsboro;"
+                            color="primary">{{'Permission_Action' | translate}} <i style="color: gainsboro;"
                                 matTooltip="{{'permisson_tooltip' | translate}}"
                                 class="fas fa-info-circle cust-fontsize-tmp"></i></mat-checkbox>
-                        <br />
                     </div>
-                    <!-- Today's Activity -->
                     <div class="col" *ngIf="role.role_permission.hasOwnProperty('todayActivity')">
                         <div class="cust-header-text">{{'Sidebar-TodaysActivity' | translate}}</div>
                         <mat-checkbox class="example-margin" [(ngModel)]="role.role_permission.todayActivity.View"
-                            color="primary" [disabled]="role.role_name == 'Admin'">
-                            {{'Dashboard-View' | translate}}</mat-checkbox>
+                            color="primary">{{'Dashboard-View' | translate}}</mat-checkbox>
                     </div>
-                    <!-- Daily Report -->
-                    <div class="col" *ngIf="role.role_permission.hasOwnProperty('dailyReports')">
-                        <div class="cust-header-text">{{'Sidebar-DailyReports' | translate }}</div>
-                        <mat-checkbox class="example-margin" [(ngModel)]="role.role_permission.dailyReports.Add"
-                            color="primary" [disabled]="role.role_name == 'Admin'">
-                            {{'Add_roles' | translate}}</mat-checkbox>
-                        <br />
-                        <mat-checkbox class="example-margin" [(ngModel)]="role.role_permission.dailyReports.View"
-                            color="primary" [disabled]="role.role_name == 'Admin'">
-                            {{'Dashboard-View' | translate}}</mat-checkbox>
+
+
+
+
+                    <div class="col" *ngIf="role.role_permission.hasOwnProperty('invoices')">
+                        <div class="cust-div-inner">
+                            <div class="cust-header-text">{{'Rovuk_Invoice_Roles_Invoice' | translate}}</div>
+                            <div class="cust-div-inner">
+                                <div>
+                                    <mat-checkbox class="example-margin"
+                                        (change)="oneAllSettingChange($event,index,'invoices')"
+                                        [(ngModel)]="role.role_permission.invoices.Add" color="primary">
+                                        {{'Add_roles' | translate}}</mat-checkbox>
+                                </div>
+                                <div>
+                                    <mat-checkbox class="example-margin"
+                                        (change)="oneAllSettingChange($event,index,'invoices')"
+                                        [(ngModel)]="role.role_permission.invoices.View" color="primary">
+                                        {{'Dashboard-View' | translate}}
+                                    </mat-checkbox>
+                                </div>
+                                <div>
+                                    <mat-checkbox class="example-margin"
+                                        (change)="oneAllSettingChange($event,index,'invoices')"
+                                        [(ngModel)]="role.role_permission.invoices.Edit" color="primary">
+                                        {{'Listing_Action_Edit' | translate }}
+                                    </mat-checkbox>
+                                </div>
+                                <div>
+                                    <mat-checkbox class="example-margin"
+                                        (change)="oneAllSettingChange($event,index,'invoices')"
+                                        [(ngModel)]="role.role_permission.invoices.Delete" color="primary">
+                                        {{'Listing_Action_Delete' | translate }}
+                                    </mat-checkbox>
+                                </div>
+                            </div>
+                        </div>
+
+
                     </div>
-                    <!-- Location -->
-                    <div class="col" *ngIf="role.role_permission.hasOwnProperty('locations')">
-                        <div class="cust-header-text">{{'role_location' | translate}}</div>
-                        <mat-checkbox class="example-margin" (change)="changeAllProject($event,index,'locations')"
-                            [(ngModel)]="role.role_permission.locations.All" color="primary"
-                            [disabled]="role.role_name == 'Admin'">
-                            {{'Add_all' |
-                            translate}}</mat-checkbox>
+
+
+
+
+
+                    <div class="col" *ngIf="role.role_permission.hasOwnProperty('reports')">
+
+                        <div class="cust-div-inner">
+                            <div class="cust-header-text">{{'Rovuk_Invoice_Roles_Report' | translate}}</div>
+                            <div class="cust-div-inner">
+                                <div>
+                                    <mat-checkbox class="example-margin"
+                                        (change)="oneAllSettingChange($event,index,'reports')"
+                                        [(ngModel)]="role.role_permission.reports.Add" color="primary">
+                                        {{'Add_roles' | translate}}</mat-checkbox>
+                                </div>
+                                <div>
+                                    <mat-checkbox class="example-margin"
+                                        (change)="oneAllSettingChange($event,index,'reports')"
+                                        [(ngModel)]="role.role_permission.reports.View" color="primary">
+                                        {{'Dashboard-View' | translate}}
+                                    </mat-checkbox>
+                                </div>
+                                <div>
+                                    <mat-checkbox class="example-margin"
+                                        (change)="oneAllSettingChange($event,index,'reports')"
+                                        [(ngModel)]="role.role_permission.reports.Edit" color="primary">
+                                        {{'Listing_Action_Edit' | translate }}
+                                    </mat-checkbox>
+                                </div>
+                                <div>
+                                    <mat-checkbox class="example-margin"
+                                        (change)="oneAllSettingChange($event,index,'reports')"
+                                        [(ngModel)]="role.role_permission.reports.Delete" color="primary">
+                                        {{'Listing_Action_Delete' | translate }}
+                                    </mat-checkbox>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+
+                    <div class="col" *ngIf="role.role_permission.hasOwnProperty('templates')">
+
+                        <div class="cust-header-text">{{'Rovuk_Invoice_Roles_Templates' | translate}}</div>
                         <div class="cust-div-inner">
                             <div>
                                 <mat-checkbox class="example-margin"
-                                    (change)="oneAllSettingChange($event,index,'locations')"
-                                    [(ngModel)]="role.role_permission.locations.Add" color="primary"
-                                    [disabled]="role.role_name == 'Admin'">
-                                    {{'Add_roles'
-                                    | translate}}
-                                </mat-checkbox>
+                                    (change)="oneAllSettingChange($event,index,'templates')"
+                                    [(ngModel)]="role.role_permission.templates.Add" color="primary">
+
+                                    {{'Add_roles' | translate}}</mat-checkbox>
                             </div>
                             <div>
                                 <mat-checkbox class="example-margin"
-                                    (change)="oneAllSettingChange($event,index,'locations')"
-                                    [(ngModel)]="role.role_permission.locations.View" color="primary"
-                                    [disabled]="role.role_name == 'Admin'">
+                                    (change)="oneAllSettingChange($event,index,'templates')"
+                                    [(ngModel)]="role.role_permission.templates.View" color="primary">
                                     {{'Dashboard-View' | translate}}
                                 </mat-checkbox>
                             </div>
                             <div>
                                 <mat-checkbox class="example-margin"
-                                    (change)="oneAllSettingChange($event,index,'locations')"
-                                    [(ngModel)]="role.role_permission.locations.Edit" color="primary"
-                                    [disabled]="role.role_name == 'Admin'">
+                                    (change)="oneAllSettingChange($event,index,'templates')"
+                                    [(ngModel)]="role.role_permission.templates.Edit" color="primary">
                                     {{'Listing_Action_Edit' | translate }}
                                 </mat-checkbox>
                             </div>
                             <div>
                                 <mat-checkbox class="example-margin"
-                                    (change)="oneAllSettingChange($event,index,'locations')"
-                                    [(ngModel)]="role.role_permission.locations.Delete" color="primary"
-                                    [disabled]="role.role_name == 'Admin'">
-                                    {{'All-Delete' | translate}}
+                                    (change)="oneAllSettingChange($event,index,'templates')"
+                                    [(ngModel)]="role.role_permission.templates.Delete" color="primary">
                                 </mat-checkbox>
+                                {{'Listing_Action_Delete' | translate }}
+
                             </div>
                         </div>
                     </div>
-                    <!-- Projects -->
-                    <div class="col" *ngIf="role.role_permission.hasOwnProperty('projects')">
-                        <div class="cust-header-text">{{'Company-Expenses-Projects' | translate }}</div>
-                        <mat-checkbox class="example-margin" [(ngModel)]="role.role_permission.projects.All"
-                            (change)="changeAllProject($event,index,'projects')" color="primary"
-                            [disabled]="role.role_name == 'Admin'">
-                            {{'Add_all' | translate}}</mat-checkbox>
-                        <div class="cust-div-inner">
-                            <div>
-                                <mat-checkbox class="example-margin"
-                                    (change)="oneAllSettingChange($event,index,'projects')"
-                                    [(ngModel)]="role.role_permission.projects.Add" color="primary"
-                                    [disabled]="role.role_name == 'Admin'">
-                                    {{'Add_roles' | translate}}
-                                </mat-checkbox>
-                            </div>
-                            <div>
-                                <mat-checkbox class="example-margin"
-                                    (change)="oneAllSettingChange($event,index,'projects')"
-                                    [(ngModel)]="role.role_permission.projects.View" color="primary"
-                                    [disabled]="role.role_name == 'Admin'">
-                                    {{'Dashboard-View' | translate}}
-                                </mat-checkbox>
-                            </div>
-                            <div>
-                                <mat-checkbox class="example-margin"
-                                    (change)="oneAllSettingChange($event,index,'projects')"
-                                    [(ngModel)]="role.role_permission.projects.Edit" color="primary"
-                                    [disabled]="role.role_name == 'Admin'">
-                                    {{'Listing_Action_Edit' | translate }}
-                                </mat-checkbox>
-                            </div>
-                            <div>
-                                <mat-checkbox class="example-margin"
-                                    (change)="oneAllSettingChange($event,index,'projects')"
-                                    [(ngModel)]="role.role_permission.projects.Settings" color="primary"
-                                    [disabled]="role.role_name == 'Admin'">
-                                    {{'Sidebar-Superadmin-Settings' | translate }}
-                                </mat-checkbox>
-                            </div>
-                            <div>
-                                <mat-checkbox class="example-margin"
-                                    (change)="oneAllSettingChange($event,index,'projects')"
-                                    [(ngModel)]="role.role_permission.projects.Delete" color="primary"
-                                    [disabled]="role.role_name == 'Admin'">
-                                    {{'Archive_all' | translate }}
-                                </mat-checkbox>
-                            </div>
-                            <div>
-                                <mat-checkbox class="example-margin"
-                                    (change)="oneAllSettingChange($event,index,'projects')"
-                                    [(ngModel)]="role.role_permission.projects.Restore" color="primary"
-                                    [disabled]="role.role_name == 'Admin'">
-                                    {{'Restore_all' | translate }}
-                                </mat-checkbox>
-                            </div>
-                        </div>
-                        <div class="cust-div-inner">
-                            <div class="cust-inner-text">{{'Project-Settings-Information-Tab1' | translate }}</div>
-                            <div class="cust-div-inner">
-                                <div>
-                                    <mat-checkbox class="example-margin"
-                                        (change)="oneAllSettingChange($event,index,'projects')"
-                                        [(ngModel)]="role.role_permission.projects.projectInformation.Add"
-                                        color="primary" [disabled]="role.role_name == 'Admin'">
-                                        {{'Add_roles' | translate}}
-                                    </mat-checkbox>
-                                </div>
-                                <div>
-                                    <mat-checkbox class="example-margin"
-                                        (change)="oneAllSettingChange($event,index,'projects')"
-                                        [(ngModel)]="role.role_permission.projects.projectInformation.View"
-                                        color="primary" [disabled]="role.role_name == 'Admin'">
-                                        {{'Dashboard-View' | translate}}
-                                    </mat-checkbox>
-                                </div>
-                                <div>
-                                    <mat-checkbox class="example-margin"
-                                        (change)="oneAllSettingChange($event,index,'projects')"
-                                        [(ngModel)]="role.role_permission.projects.projectInformation.Edit"
-                                        color="primary" [disabled]="role.role_name == 'Admin'">
-                                        {{'Listing_Action_Edit' | translate }}
-                                    </mat-checkbox>
-                                </div>
-                                <div>
-                                    <mat-checkbox class="example-margin"
-                                        (change)="oneAllSettingChange($event,index,'projects')"
-                                        [(ngModel)]="role.role_permission.projects.projectInformation.Delete"
-                                        color="primary" [disabled]="role.role_name == 'Admin'">
-                                        {{'Archive_all' | translate }}
-                                    </mat-checkbox>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="cust-div-inner">
-                            <div class="cust-inner-text">{{'Project_Contractor' | translate}}</div>
-                            <div class="cust-div-inner">
-                                <div>
-                                    <mat-checkbox class="example-margin"
-                                        (change)="oneAllSettingChange($event,index,'projects')"
-                                        [(ngModel)]="role.role_permission.projects.projectContractors.Add"
-                                        color="primary" [disabled]="role.role_name == 'Admin'">
-                                        {{'Add_roles' | translate}}</mat-checkbox>
-                                </div>
-                                <div>
-                                    <mat-checkbox class="example-margin"
-                                        (change)="oneAllSettingChange($event,index,'projects')"
-                                        [(ngModel)]="role.role_permission.projects.projectContractors.View"
-                                        color="primary" [disabled]="role.role_name == 'Admin'">
-                                        {{'Dashboard-View' | translate}}
-                                    </mat-checkbox>
-                                </div>
-                                <div>
-                                    <mat-checkbox class="example-margin"
-                                        (change)="oneAllSettingChange($event,index,'projects')"
-                                        [(ngModel)]="role.role_permission.projects.projectContractors.Edit"
-                                        color="primary" [disabled]="role.role_name == 'Admin'">
-                                        {{'Listing_Action_Edit' | translate }}
-                                    </mat-checkbox>
-                                </div>
-                                <div>
-                                    <mat-checkbox class="example-margin"
-                                        (change)="oneAllSettingChange($event,index,'projects')"
-                                        [(ngModel)]="role.role_permission.projects.projectContractors.Delete"
-                                        color="primary" [disabled]="role.role_name == 'Admin'">
-                                        {{'Archive_all' | translate }}
-                                    </mat-checkbox>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="cust-div-inner">
-                            <div class="cust-inner-text">{{'Email_Recipients' | translate}}</div>
-                            <div class="cust-div-inner">
-                                <div>
-                                    <mat-checkbox class="example-margin"
-                                        (change)="oneAllSettingChange($event,index,'projects')"
-                                        [(ngModel)]="role.role_permission.projects.projectEmailRecipients.Add"
-                                        color="primary" [disabled]="role.role_name == 'Admin'">
-                                        {{'Add_roles' | translate}}</mat-checkbox>
-                                </div>
-                                <div>
-                                    <mat-checkbox class="example-margin"
-                                        (change)="oneAllSettingChange($event,index,'projects')"
-                                        [(ngModel)]="role.role_permission.projects.projectEmailRecipients.View"
-                                        color="primary" [disabled]="role.role_name == 'Admin'">
-                                        {{'Dashboard-View' | translate}}
-                                    </mat-checkbox>
-                                </div>
-                                <div>
-                                    <mat-checkbox class="example-margin"
-                                        (change)="oneAllSettingChange($event,index,'projects')"
-                                        [(ngModel)]="role.role_permission.projects.projectEmailRecipients.Edit"
-                                        color="primary" [disabled]="role.role_name == 'Admin'">
-                                        {{'Listing_Action_Edit' | translate }}
-                                    </mat-checkbox>
-                                </div>
-                                <div>
-                                    <mat-checkbox class="example-margin"
-                                        (change)="oneAllSettingChange($event,index,'projects')"
-                                        [(ngModel)]="role.role_permission.projects.projectEmailRecipients.Delete"
-                                        color="primary" [disabled]="role.role_name == 'Admin'">
-                                        {{'Archive_all' | translate }}
-                                    </mat-checkbox>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="cust-div-inner">
-                            <div class="cust-inner-text">{{'Project_Documents' | translate }}</div>
-                            <div class="cust-div-inner">
-                                <div>
-                                    <mat-checkbox class="example-margin"
-                                        (change)="oneAllSettingChange($event,index,'projects')"
-                                        [(ngModel)]="role.role_permission.projects.projectDocuments.Add" color="primary"
-                                        [disabled]="role.role_name == 'Admin'">
-                                        {{'Add_roles' | translate}}</mat-checkbox>
-                                </div>
-                                <div>
-                                    <mat-checkbox class="example-margin"
-                                        (change)="oneAllSettingChange($event,index,'projects')"
-                                        [(ngModel)]="role.role_permission.projects.projectDocuments.View"
-                                        color="primary" [disabled]="role.role_name == 'Admin'">
-                                        {{'Dashboard-View' | translate}}
-                                    </mat-checkbox>
-                                </div>
-                                <div>
-                                    <mat-checkbox class="example-margin"
-                                        (change)="oneAllSettingChange($event,index,'projects')"
-                                        [(ngModel)]="role.role_permission.projects.projectDocuments.Edit"
-                                        color="primary" [disabled]="role.role_name == 'Admin'">
-                                        {{'Listing_Action_Edit' | translate }}
-                                    </mat-checkbox>
-                                </div>
-                                <div>
-                                    <mat-checkbox class="example-margin"
-                                        (change)="oneAllSettingChange($event,index,'projects')"
-                                        [(ngModel)]="role.role_permission.projects.projectDocuments.Delete"
-                                        color="primary" [disabled]="role.role_name == 'Admin'">
-                                        {{'Archive_all' | translate }}
-                                    </mat-checkbox>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="cust-div-inner">
-                            <div class="cust-inner-text">{{'Project_Users' | translate}}</div>
-                            <div class="cust-div-inner">
-                                <div>
-                                    <mat-checkbox class="example-margin"
-                                        (change)="oneAllSettingChange($event,index,'projects')"
-                                        [(ngModel)]="role.role_permission.projects.projectUsers.Add" color="primary"
-                                        [disabled]="role.role_name == 'Admin'">
-                                        {{'Add_roles' | translate}}</mat-checkbox>
-                                </div>
-                                <div>
-                                    <mat-checkbox class="example-margin"
-                                        (change)="oneAllSettingChange($event,index,'projects')"
-                                        [(ngModel)]="role.role_permission.projects.projectUsers.View" color="primary"
-                                        [disabled]="role.role_name == 'Admin'">
-                                        {{'Dashboard-View' | translate}}
-                                    </mat-checkbox>
-                                </div>
-                                <div>
-                                    <mat-checkbox class="example-margin"
-                                        (change)="oneAllSettingChange($event,index,'projects')"
-                                        [(ngModel)]="role.role_permission.projects.projectUsers.Edit" color="primary"
-                                        [disabled]="role.role_name == 'Admin'">
-                                        {{'Listing_Action_Edit' | translate }}
-                                    </mat-checkbox>
-                                </div>
-                                <div>
-                                    <mat-checkbox class="example-margin"
-                                        (change)="oneAllSettingChange($event,index,'projects')"
-                                        [(ngModel)]="role.role_permission.projects.projectUsers.Delete" color="primary"
-                                        [disabled]="role.role_name == 'Admin'">
-                                        {{'Archive_all' | translate }}
-                                    </mat-checkbox>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Change Orders -->
-                    <div class="col" *ngIf="role.role_permission.hasOwnProperty('changeOrders')">
-                        <div class="cust-header-text">{{'Change_Orders_Role_settings' | translate}}</div>
-                        <mat-checkbox class="example-margin" (change)="changeAllProject($event,index,'changeOrders')"
-                            [(ngModel)]="role.role_permission.changeOrders.All" color="primary"
-                            [disabled]="role.role_name == 'Admin'">{{'Add_all' |
-                            translate}}</mat-checkbox>
-                        <div>
-                            <div class="cust-div-inner">
-                                <div>
-                                    <mat-checkbox class="example-margin"
-                                        [(ngModel)]="role.role_permission.changeOrders.Add"
-                                        (change)="oneAllSettingChange($event,index,'changeOrders')" color="primary"
-                                        [disabled]="role.role_name == 'Admin'">
-                                        {{'Add_roles' |
-                                        translate}}
-                                    </mat-checkbox>
-                                </div>
-                                <div>
-                                    <mat-checkbox class="example-margin"
-                                        [(ngModel)]="role.role_permission.changeOrders.View"
-                                        (change)="oneAllSettingChange($event,index,'changeOrders')" color="primary"
-                                        [disabled]="role.role_name == 'Admin'">
-                                        {{'Dashboard-View' | translate}}</mat-checkbox>
-                                </div>
-                                <div>
-                                    <mat-checkbox class="example-margin"
-                                        [(ngModel)]="role.role_permission.changeOrders.Edit"
-                                        (change)="oneAllSettingChange($event,index,'changeOrders')" color="primary"
-                                        [disabled]="role.role_name == 'Admin'">
-                                        {{'Listing_Action_Edit' | translate }}</mat-checkbox>
-                                </div>
-                                <div>
-                                    <mat-checkbox class="example-margin"
-                                        [(ngModel)]="role.role_permission.changeOrders.Delete"
-                                        (change)="oneAllSettingChange($event,index,'changeOrders')" color="primary"
-                                        [disabled]="role.role_name == 'Admin'">
-                                        {{'Archive_all' | translate }}</mat-checkbox>
-                                </div>
-                                <div>
-                                    <mat-checkbox class="example-margin"
-                                        (change)="oneAllSettingChange($event,index,'changeOrders')"
-                                        [(ngModel)]="role.role_permission.changeOrders.Restore" color="primary"
-                                        [disabled]="role.role_name == 'Admin'">
-                                        {{'Restore_all' | translate }}
-                                    </mat-checkbox>
-                                </div>
-                            </div>
-                            <div class="col" *ngIf="role.role_permission.changeOrders.hasOwnProperty('postingPayment')">
-                                <div class="cust-inner-text">{{'Change_orders_posting_payment' | translate
-                                    }}</div>
-                                <div class="cust-div-inner">
-                                    <div>
-                                        <mat-checkbox class="example-margin"
-                                            [(ngModel)]="role.role_permission.changeOrders.postingPayment.View"
-                                            (change)="oneAllSettingChange($event,index,'changeOrders')" color="primary"
-                                            [disabled]="role.role_name == 'Admin'">
-                                            {{'Dashboard-View' | translate}}
-                                        </mat-checkbox>
-                                    </div>
-                                    <div>
-                                        <mat-checkbox class="example-margin"
-                                            [(ngModel)]="role.role_permission.changeOrders.postingPayment.Edit"
-                                            (change)="oneAllSettingChange($event,index,'changeOrders')" color="primary"
-                                            [disabled]="role.role_name == 'Admin'">
-                                            {{'Listing_Action_Edit' | translate }}
-                                        </mat-checkbox>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col"
-                                *ngIf="role.role_permission.changeOrders.hasOwnProperty('changeOrdersToDate')">
-                                <div class="cust-inner-text">{{'Change_orders_todate' | translate
-                                    }}</div>
-                                <div class="cust-div-inner">
-                                    <div>
-                                        <mat-checkbox class="example-margin"
-                                            [(ngModel)]="role.role_permission.changeOrders.changeOrdersToDate.View"
-                                            (change)="oneAllSettingChange($event,index,'changeOrders')" color="primary"
-                                            [disabled]="role.role_name == 'Admin'">
-                                            {{'Dashboard-View' | translate}}
-                                        </mat-checkbox>
-                                    </div>
-                                    <div>
-                                        <mat-checkbox class="example-margin"
-                                            [(ngModel)]="role.role_permission.changeOrders.changeOrdersToDate.Edit"
-                                            (change)="oneAllSettingChange($event,index,'changeOrders')" color="primary"
-                                            [disabled]="role.role_name == 'Admin'">
-                                            {{'Listing_Action_Edit' | translate }}
-                                        </mat-checkbox>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col" *ngIf="role.role_permission.changeOrders.hasOwnProperty('addPayment')">
-                                <div class="cust-inner-text">{{'Change_orders_add_payment' | translate
-                                    }}</div>
-                                <div class="cust-div-inner">
-                                    <div>
-                                        <mat-checkbox class="example-margin"
-                                            [(ngModel)]="role.role_permission.changeOrders.addPayment.View"
-                                            (change)="oneAllSettingChange($event,index,'changeOrders')" color="primary"
-                                            [disabled]="role.role_name == 'Admin'">
-                                            {{'Dashboard-View' | translate}}
-                                        </mat-checkbox>
-                                    </div>
-                                    <div>
-                                        <mat-checkbox class="example-margin"
-                                            [(ngModel)]="role.role_permission.changeOrders.addPayment.Edit"
-                                            (change)="oneAllSettingChange($event,index,'changeOrders')" color="primary"
-                                            [disabled]="role.role_name == 'Admin'">
-                                            {{'Listing_Action_Edit' | translate }}
-                                        </mat-checkbox>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- USERS -->
                     <div class="col" *ngIf="role.role_permission.hasOwnProperty('users')">
-                        <div class="cust-header-text">{{'Sidebar-Team' | translate }}</div>
-                        <mat-checkbox class="example-margin" (change)="changeAllProject($event,index,'users')"
-                            [(ngModel)]="role.role_permission.users.All" color="primary"
-                            [disabled]="role.role_name == 'Admin'">All</mat-checkbox>
-                        <div>
+                        <div class="cust-div-inner">
+                            <div class="cust-header-text">{{'Rovuk_Invoice_Roles_Users' | translate}}</div>
                             <div class="cust-div-inner">
                                 <div>
-                                    <mat-checkbox class="example-margin" [(ngModel)]="role.role_permission.users.Add"
-                                        (change)="oneAllSettingChange($event,index,'users')" color="primary"
-                                        [disabled]="role.role_name == 'Admin'">
-                                        {{'Add_roles' |
-                                        translate}}
-                                    </mat-checkbox>
+                                    <mat-checkbox class="example-margin"
+                                        (change)="oneAllSettingChange($event,index,'users')"
+                                        [(ngModel)]="role.role_permission.users.Add" color="primary">
+                                        {{'Rovuk_Grid_Roles_All' | translate}}</mat-checkbox>
                                 </div>
-                                <div>
-                                    <mat-checkbox class="example-margin" [(ngModel)]="role.role_permission.users.View"
-                                        (change)="oneAllSettingChange($event,index,'users')" color="primary"
-                                        [disabled]="role.role_name == 'Admin'">
-                                        {{'Dashboard-View' |
-                                        translate}}
-                                    </mat-checkbox>
-                                </div>
-                                <div>
-                                    <mat-checkbox class="example-margin" [(ngModel)]="role.role_permission.users.Edit"
-                                        (change)="oneAllSettingChange($event,index,'users')" color="primary"
-                                        [disabled]="role.role_name == 'Admin'">
-                                        {{'Listing_Action_Edit'
-                                        | translate }}
-                                    </mat-checkbox>
-                                </div>
-                                <div>
-                                    <mat-checkbox class="example-margin" [(ngModel)]="role.role_permission.users.Delete"
-                                        (change)="oneAllSettingChange($event,index,'users')" color="primary"
-                                        [disabled]="role.role_name == 'Admin'">
-                                        {{'Archive_all' | translate }}
-                                    </mat-checkbox>
-                                </div>
-                                <div *ngIf="role.role_permission.users.hasOwnProperty('personalInformation')">
-                                    <div class="cust-inner-text">{{'Employee-form-personal-heading' | translate
-                                        }}</div>
-                                    <div class="cust-div-inner">
-                                        <div>
-                                            <mat-checkbox class="example-margin"
-                                                [(ngModel)]="role.role_permission.users.personalInformation.View"
-                                                (change)="oneAllSettingChange($event,index,'users')" color="primary"
-                                                [disabled]="role.role_name == 'Admin'">
-                                                {{'Dashboard-View' | translate}}
-                                            </mat-checkbox>
-                                        </div>
-                                        <div>
-                                            <mat-checkbox class="example-margin"
-                                                [(ngModel)]="role.role_permission.users.personalInformation.Edit"
-                                                (change)="oneAllSettingChange($event,index,'users')" color="primary"
-                                                [disabled]="role.role_name == 'Admin'">
-                                                {{'Listing_Action_Edit' | translate }}
-                                            </mat-checkbox>
-                                        </div>
-                                    </div>
 
-                                </div>
-                                <div *ngIf="role.role_permission.users.hasOwnProperty('contactInformation')">
-                                    <div class="cust-inner-text">{{'Employee-form-contact-heading' | translate
-                                        }}</div>
-                                    <div class="cust-div-inner">
-                                        <div>
-                                            <mat-checkbox class="example-margin"
-                                                [(ngModel)]="role.role_permission.users.contactInformation.View"
-                                                (change)="oneAllSettingChange($event,index,'users')" color="primary"
-                                                [disabled]="role.role_name == 'Admin'">
-                                                {{'Dashboard-View' | translate}}
-                                            </mat-checkbox>
-                                        </div>
-                                        <div>
-                                            <mat-checkbox class="example-margin"
-                                                [(ngModel)]="role.role_permission.users.contactInformation.Edit"
-                                                (change)="oneAllSettingChange($event,index,'users')" color="primary"
-                                                [disabled]="role.role_name == 'Admin'">
-                                                {{'Listing_Action_Edit' | translate }}
-                                            </mat-checkbox>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div *ngIf="role.role_permission.users.hasOwnProperty('employeeInformation')">
-                                    <div class="cust-inner-text">{{'Employee-form-Employee-heading' | translate
-                                        }}</div>
-                                    <div class="cust-div-inner">
-                                        <div>
-                                            <mat-checkbox class="example-margin"
-                                                [(ngModel)]="role.role_permission.users.employeeInformation.View"
-                                                (change)="oneAllSettingChange($event,index,'users')" color="primary"
-                                                [disabled]="role.role_name == 'Admin'">
-                                                {{'Dashboard-View' | translate}}
-                                            </mat-checkbox>
-                                        </div>
-                                        <div>
-                                            <mat-checkbox class="example-margin"
-                                                [(ngModel)]="role.role_permission.users.employeeInformation.Edit"
-                                                (change)="oneAllSettingChange($event,index,'users')" color="primary"
-                                                [disabled]="role.role_name == 'Admin'">
-                                                {{'Listing_Action_Edit' | translate }}
-                                            </mat-checkbox>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div *ngIf="role.role_permission.users.hasOwnProperty('emergencyContact')">
-                                    <div class="cust-inner-text">{{'Employee-form-Emergency-contact' |
-                                        translate }}</div>
-                                    <div class="cust-div-inner">
-                                        <div>
-                                            <mat-checkbox class="example-margin"
-                                                [(ngModel)]="role.role_permission.users.emergencyContact.View"
-                                                (change)="oneAllSettingChange($event,index,'users')" color="primary"
-                                                [disabled]="role.role_name == 'Admin'">
-                                                {{'Dashboard-View' | translate}}
-                                            </mat-checkbox>
-                                        </div>
-                                        <div>
-                                            <mat-checkbox class="example-margin"
-                                                [(ngModel)]="role.role_permission.users.emergencyContact.Edit"
-                                                (change)="oneAllSettingChange($event,index,'users')" color="primary"
-                                                [disabled]="role.role_name == 'Admin'">
-                                                {{'Listing_Action_Edit' | translate }}
-                                            </mat-checkbox>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div *ngIf="role.role_permission.users.hasOwnProperty('employeeDocument')">
-                                    <div class="cust-inner-text">{{'Employee-form-Document' | translate }}
-                                    </div>
-                                    <div class="cust-div-inner">
-                                        <div>
-                                            <mat-checkbox class="example-margin"
-                                                [(ngModel)]="role.role_permission.users.employeeDocument.View"
-                                                (change)="oneAllSettingChange($event,index,'users')" color="primary"
-                                                [disabled]="role.role_name == 'Admin'">
-                                                {{'Dashboard-View' | translate}}
-                                            </mat-checkbox>
-                                        </div>
-                                        <div>
-                                            <mat-checkbox class="example-margin"
-                                                [(ngModel)]="role.role_permission.users.employeeDocument.Edit"
-                                                (change)="oneAllSettingChange($event,index,'users')" color="primary"
-                                                [disabled]="role.role_name == 'Admin'">
-                                                {{'Listing_Action_Edit' | translate }}
-                                            </mat-checkbox>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div *ngIf="role.role_permission.users.hasOwnProperty('employeeProjectAccess')">
-                                    <div class="cust-inner-text">{{'Employee-project-access' | translate }}
-                                    </div>
-                                    <div class="cust-div-inner">
-                                        <div>
-                                            <mat-checkbox class="example-margin"
-                                                [(ngModel)]="role.role_permission.users.employeeProjectAccess.View"
-                                                (change)="oneAllSettingChange($event,index,'users')" color="primary"
-                                                [disabled]="role.role_name == 'Admin'">
-                                                {{'Dashboard-View' | translate}}
-                                            </mat-checkbox>
-                                        </div>
-                                        <div>
-                                            <mat-checkbox class="example-margin"
-                                                [(ngModel)]="role.role_permission.users.employeeProjectAccess.Edit"
-                                                (change)="oneAllSettingChange($event,index,'users')" color="primary"
-                                                [disabled]="role.role_name == 'Admin'">
-                                                {{'Listing_Action_Edit' | translate }}
-                                            </mat-checkbox>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                    <!-- VENDORS -->
-                    <div class="col" *ngIf="role.role_permission.hasOwnProperty('vendors')">
-                        <div class="cust-header-text">{{'Sidebar-Sponsor-Vendors' | translate }}</div>
-                        <mat-checkbox class="example-margin" (change)="changeAllProject($event,index,'vendors')"
-                            [(ngModel)]="role.role_permission.vendors.All" color="primary"
-                            [disabled]="role.role_name == 'Admin'">
-                            All</mat-checkbox>
-                        <div>
-                            <div class="cust-div-inner">
                                 <div>
-                                    <mat-checkbox class="example-margin" [(ngModel)]="role.role_permission.vendors.Add"
-                                        (change)="oneAllSettingChange($event,index,'vendors')" color="primary"
-                                        [disabled]="role.role_name == 'Admin'">
-                                        {{'Add_roles' |
-                                        translate}}
-                                    </mat-checkbox>
+                                    <mat-checkbox class="example-margin"
+                                        (change)="oneAllSettingChange($event,index,'users')"
+                                        [(ngModel)]="role.role_permission.users.Add" color="primary">
+                                        {{'Add_roles' | translate}}</mat-checkbox>
                                 </div>
                                 <div>
-                                    <mat-checkbox class="example-margin" [(ngModel)]="role.role_permission.vendors.View"
-                                        (change)="oneAllSettingChange($event,index,'vendors')" color="primary"
-                                        [disabled]="role.role_name == 'Admin'">
-                                        {{'Dashboard-View' |
-                                        translate}}
-                                    </mat-checkbox>
-                                </div>
-                                <div>
-                                    <mat-checkbox class="example-margin" [(ngModel)]="role.role_permission.vendors.Edit"
-                                        (change)="oneAllSettingChange($event,index,'vendors')" color="primary"
-                                        [disabled]="role.role_name == 'Admin'">
-                                        {{'Listing_Action_Edit'
-                                        | translate }}
+                                    <mat-checkbox class="example-margin"
+                                        (change)="oneAllSettingChange($event,index,'users')"
+                                        [(ngModel)]="role.role_permission.users.View" color="primary">
+                                        {{'Dashboard-View' | translate}}
                                     </mat-checkbox>
                                 </div>
                                 <div>
                                     <mat-checkbox class="example-margin"
-                                        [(ngModel)]="role.role_permission.vendors.Delete"
-                                        (change)="oneAllSettingChange($event,index,'vendors')" color="primary"
-                                        [disabled]="role.role_name == 'Admin'">
-                                        {{'Archive_all' | translate }}
+                                        (change)="oneAllSettingChange($event,index,'users')"
+                                        [(ngModel)]="role.role_permission.users.Edit" color="primary">
+                                        {{'Listing_Action_Edit' | translate }}
                                     </mat-checkbox>
                                 </div>
                                 <div>
                                     <mat-checkbox class="example-margin"
-                                        (change)="oneAllSettingChange($event,index,'vendors')"
-                                        [(ngModel)]="role.role_permission.vendors.Restore" color="primary"
-                                        [disabled]="role.role_name == 'Admin'">
-                                        {{'Restore_all' | translate }}
+                                        (change)="oneAllSettingChange($event,index,'users')"
+                                        [(ngModel)]="role.role_permission.users.Delete" color="primary">
+                                        {{'Listing_Action_Delete' | translate }}
                                     </mat-checkbox>
-                                </div>
-                                <div *ngIf="role.role_permission.vendors.hasOwnProperty('vendorInformation')">
-                                    <div class="cust-inner-text">{{'VendorForm_Information' | translate
-                                        }}</div>
-                                    <div class="cust-div-inner">
-                                        <div>
-                                            <mat-checkbox class="example-margin"
-                                                [(ngModel)]="role.role_permission.vendors.vendorInformation.View"
-                                                (change)="oneAllSettingChange($event,index,'vendors')" color="primary"
-                                                [disabled]="role.role_name == 'Admin'">
-                                                {{'Dashboard-View' | translate}}
-                                            </mat-checkbox>
-                                        </div>
-                                        <div>
-                                            <mat-checkbox class="example-margin"
-                                                [(ngModel)]="role.role_permission.vendors.vendorInformation.Edit"
-                                                (change)="oneAllSettingChange($event,index,'vendors')" color="primary"
-                                                [disabled]="role.role_name == 'Admin'">
-                                                {{'Listing_Action_Edit' | translate }}
-                                            </mat-checkbox>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div *ngIf="role.role_permission.vendors.hasOwnProperty('contactInformation')">
-                                    <div class="cust-inner-text">{{'VendorForm_ContactInfo' | translate
-                                        }}</div>
-                                    <div class="cust-div-inner">
-                                        <div>
-                                            <mat-checkbox class="example-margin"
-                                                [(ngModel)]="role.role_permission.vendors.contactInformation.View"
-                                                (change)="oneAllSettingChange($event,index,'vendors')" color="primary"
-                                                [disabled]="role.role_name == 'Admin'">
-                                                {{'Dashboard-View' | translate}}
-                                            </mat-checkbox>
-                                        </div>
-                                        <div>
-                                            <mat-checkbox class="example-margin"
-                                                [(ngModel)]="role.role_permission.vendors.contactInformation.Edit"
-                                                (change)="oneAllSettingChange($event,index,'vendors')" color="primary"
-                                                [disabled]="role.role_name == 'Admin'">
-                                                {{'Listing_Action_Edit' | translate }}
-                                            </mat-checkbox>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div *ngIf="role.role_permission.vendors.hasOwnProperty('vendorPerformace')">
-                                    <div class="cust-inner-text">{{'Vendor_Performance' | translate
-                                        }}</div>
-                                    <div class="cust-div-inner">
-                                        <div>
-                                            <mat-checkbox class="example-margin"
-                                                [(ngModel)]="role.role_permission.vendors.vendorPerformace.View"
-                                                (change)="oneAllSettingChange($event,index,'vendors')" color="primary"
-                                                [disabled]="role.role_name == 'Admin'">
-                                                {{'Dashboard-View' | translate}}
-                                            </mat-checkbox>
-                                        </div>
-                                        <div>
-                                            <mat-checkbox class="example-margin"
-                                                [(ngModel)]="role.role_permission.vendors.vendorPerformace.Edit"
-                                                (change)="oneAllSettingChange($event,index,'vendors')" color="primary"
-                                                [disabled]="role.role_name == 'Admin'">
-                                                {{'Listing_Action_Edit' | translate }}
-                                            </mat-checkbox>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div *ngIf="role.role_permission.vendors.hasOwnProperty('demographicalInformation')">
-                                    <div class="cust-inner-text">{{'VendorForm_Demographical_Info' | translate
-                                        }}</div>
-                                    <div class="cust-div-inner">
-                                        <div>
-                                            <mat-checkbox class="example-margin"
-                                                [(ngModel)]="role.role_permission.vendors.demographicalInformation.View"
-                                                (change)="oneAllSettingChange($event,index,'vendors')" color="primary"
-                                                [disabled]="role.role_name == 'Admin'">
-                                                {{'Dashboard-View' | translate}}
-                                            </mat-checkbox>
-                                        </div>
-                                        <div>
-                                            <mat-checkbox class="example-margin"
-                                                [(ngModel)]="role.role_permission.vendors.demographicalInformation.Edit"
-                                                (change)="oneAllSettingChange($event,index,'vendors')" color="primary"
-                                                [disabled]="role.role_name == 'Admin'">
-                                                {{'Listing_Action_Edit' | translate }}
-                                            </mat-checkbox>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div *ngIf="role.role_permission.vendors.hasOwnProperty('vendorNotes')">
-                                    <div class="cust-inner-text">{{'Vendor_Notes' | translate }}
-                                    </div>
-                                    <div class="cust-div-inner">
-                                        <div>
-                                            <mat-checkbox class="example-margin"
-                                                [(ngModel)]="role.role_permission.vendors.vendorNotes.View"
-                                                (change)="oneAllSettingChange($event,index,'vendors')" color="primary"
-                                                [disabled]="role.role_name == 'Admin'">
-                                                {{'Dashboard-View' | translate}}
-                                            </mat-checkbox>
-                                        </div>
-                                        <div>
-                                            <mat-checkbox class="example-margin"
-                                                [(ngModel)]="role.role_permission.vendors.vendorNotes.Edit"
-                                                (change)="oneAllSettingChange($event,index,'vendors')" color="primary"
-                                                [disabled]="role.role_name == 'Admin'">
-                                                {{'Listing_Action_Edit' | translate }}
-                                            </mat-checkbox>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div *ngIf="role.role_permission.vendors.hasOwnProperty('vendorDocument')">
-                                    <div class="cust-inner-text">{{'Employee-form-Document' | translate }}
-                                    </div>
-                                    <div class="cust-div-inner">
-                                        <div>
-                                            <mat-checkbox class="example-margin"
-                                                [(ngModel)]="role.role_permission.vendors.vendorDocument.View"
-                                                (change)="oneAllSettingChange($event,index,'vendors')" color="primary"
-                                                [disabled]="role.role_name == 'Admin'">
-                                                {{'Dashboard-View' | translate}}
-                                            </mat-checkbox>
-                                        </div>
-                                        <div>
-                                            <mat-checkbox class="example-margin"
-                                                [(ngModel)]="role.role_permission.vendors.vendorDocument.Edit"
-                                                (change)="oneAllSettingChange($event,index,'vendors')" color="primary"
-                                                [disabled]="role.role_name == 'Admin'">
-                                                {{'Listing_Action_Edit' | translate }}
-                                            </mat-checkbox>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div *ngIf="role.role_permission.vendors.hasOwnProperty('vendorCertificate')">
-                                    <div class="cust-inner-text">{{'Vendor_Certificate' | translate }}
-                                    </div>
-                                    <div class="cust-div-inner">
-                                        <div>
-                                            <mat-checkbox class="example-margin"
-                                                [(ngModel)]="role.role_permission.vendors.vendorCertificate.View"
-                                                (change)="oneAllSettingChange($event,index,'vendors')" color="primary"
-                                                [disabled]="role.role_name == 'Admin'">
-                                                {{'Dashboard-View' | translate}}
-                                            </mat-checkbox>
-                                        </div>
-                                        <div>
-                                            <mat-checkbox class="example-margin"
-                                                [(ngModel)]="role.role_permission.vendors.vendorCertificate.Edit"
-                                                (change)="oneAllSettingChange($event,index,'vendors')" color="primary"
-                                                [disabled]="role.role_name == 'Admin'">
-                                                {{'Listing_Action_Edit' | translate }}
-                                            </mat-checkbox>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- Contracts -->
-                    <div class="col" *ngIf="role.role_permission.hasOwnProperty('contracts')">
-                        <div class="cust-header-text">{{'Contracts' | translate }}</div>
-                        <mat-checkbox class="example-margin" (change)="changeAllProject($event,index,'contracts')"
-                            [(ngModel)]="role.role_permission.contracts.All" color="primary"
-                            [disabled]="role.role_name == 'Admin'">
-                            {{'Add_all' |
-                            translate}}</mat-checkbox>
+
+
+
+                    <!-- <div class="col" *ngIf="role.role_permission.hasOwnProperty('survyes')">
+                        <div class="cust-div-inner">
+                            <div class="cust-header-text">{{'Rovuk_Grid_Roles_Surveyes' | translate}}</div>
+                            <div class="cust-div-inner">
+
+                                <div>
+                                    <mat-checkbox class="example-margin"
+                                        (change)="oneAllSettingChange($event,index,'survyes')"
+                                        [(ngModel)]="role.role_permission.survyes.Add" color="primary">
+                                        {{'Add_roles' | translate}}</mat-checkbox>
+                                </div>
+                                <div>
+                                    <mat-checkbox class="example-margin"
+                                        (change)="oneAllSettingChange($event,index,'survyes')"
+                                        [(ngModel)]="role.role_permission.survyes.View" color="primary">
+                                        {{'Dashboard-View' | translate}}
+                                    </mat-checkbox>
+                                </div>
+                                <div>
+                                    <mat-checkbox class="example-margin"
+                                        (change)="oneAllSettingChange($event,index,'survyes')"
+                                        [(ngModel)]="role.role_permission.survyes.Edit" color="primary">
+                                        {{'Listing_Action_Edit' | translate }}
+                                    </mat-checkbox>
+                                </div>
+                                <div>
+                                    <mat-checkbox class="example-margin"
+                                        (change)="oneAllSettingChange($event,index,'survyes')"
+                                        [(ngModel)]="role.role_permission.survyes.Delete" color="primary">
+                                        {{'Listing_Action_Delete' | translate }}
+                                    </mat-checkbox>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+
+                    <div class="col" *ngIf="role.role_permission.hasOwnProperty('files')">
+                        <div class="cust-header-text">{{'Rovuk_Grid_Roles_Files' | translate}}</div>
+
                         <div class="cust-div-inner">
                             <div>
                                 <mat-checkbox class="example-margin"
-                                    (change)="oneAllSettingChange($event,index,'contracts')"
-                                    [(ngModel)]="role.role_permission.contracts.Add" color="primary"
-                                    [disabled]="role.role_name == 'Admin'">
-                                    {{'Add_roles' | translate}}
+                                    (change)="oneAllSettingChange($event,index,'files')"
+                                    [(ngModel)]="role.role_permission.files.Add" color="primary">{{'Add_roles'
+                                                        | translate}}
                                 </mat-checkbox>
                             </div>
                             <div>
                                 <mat-checkbox class="example-margin"
-                                    (change)="oneAllSettingChange($event,index,'contracts')"
-                                    [(ngModel)]="role.role_permission.contracts.View" color="primary"
-                                    [disabled]="role.role_name == 'Admin'">
+                                    (change)="oneAllSettingChange($event,index,'files')"
+                                    [(ngModel)]="role.role_permission.files.View" color="primary">
                                     {{'Dashboard-View' | translate}}
                                 </mat-checkbox>
                             </div>
                             <div>
                                 <mat-checkbox class="example-margin"
-                                    (change)="oneAllSettingChange($event,index,'contracts')"
-                                    [(ngModel)]="role.role_permission.contracts.Edit" color="primary"
-                                    [disabled]="role.role_name == 'Admin'">
+                                    (change)="oneAllSettingChange($event,index,'files')"
+                                    [(ngModel)]="role.role_permission.files.Edit" color="primary">
                                     {{'Listing_Action_Edit' | translate }}
                                 </mat-checkbox>
                             </div>
                             <div>
                                 <mat-checkbox class="example-margin"
-                                    (change)="oneAllSettingChange($event,index,'contracts')"
-                                    [(ngModel)]="role.role_permission.contracts.Delete" color="primary"
-                                    [disabled]="role.role_name == 'Admin'">
-                                    {{'Archive_all' | translate }}
+                                    (change)="oneAllSettingChange($event,index,'files')"
+                                    [(ngModel)]="role.role_permission.files.Delete" color="primary">
+                                    {{'Listing_Action_Delete' | translate }}
                                 </mat-checkbox>
                             </div>
+
                         </div>
                     </div>
-                    <!-- Email Templates -->
-                    <div class="col" *ngIf="role.role_permission.hasOwnProperty('emailTemplates')">
-                        <div class="cust-header-text">{{'Sidebar-Sponsor-EmailTemplate' | translate }}</div>
-                        <mat-checkbox class="example-margin" (change)="changeAllProject($event,index,'emailTemplates')"
-                            [(ngModel)]="role.role_permission.emailTemplates.All" color="primary"
-                            [disabled]="role.role_name == 'Admin'">
-                            {{'Add_all' |
-                            translate}}</mat-checkbox>
-                        <div class="cust-div-inner">
-                            <div>
-                                <mat-checkbox class="example-margin"
-                                    (change)="oneAllSettingChange($event,index,'emailTemplates')"
-                                    [(ngModel)]="role.role_permission.emailTemplates.Add" color="primary"
-                                    [disabled]="role.role_name == 'Admin'">
-                                    {{'Add_roles' | translate}}
-                                </mat-checkbox>
-                            </div>
-                            <div>
-                                <mat-checkbox class="example-margin"
-                                    (change)="oneAllSettingChange($event,index,'emailTemplates')"
-                                    [(ngModel)]="role.role_permission.emailTemplates.View" color="primary"
-                                    [disabled]="role.role_name == 'Admin'">
-                                    {{'Dashboard-View' | translate}}
-                                </mat-checkbox>
-                            </div>
-                            <div>
-                                <mat-checkbox class="example-margin"
-                                    (change)="oneAllSettingChange($event,index,'emailTemplates')"
-                                    [(ngModel)]="role.role_permission.emailTemplates.Edit" color="primary"
-                                    [disabled]="role.role_name == 'Admin'">
-                                    {{'Listing_Action_Edit' | translate }}
-                                </mat-checkbox>
-                            </div>
-                            <div>
-                                <mat-checkbox class="example-margin"
-                                    (change)="oneAllSettingChange($event,index,'emailTemplates')"
-                                    [(ngModel)]="role.role_permission.emailTemplates.Delete" color="primary"
-                                    [disabled]="role.role_name == 'Admin'">
-                                    {{'Archive_all' | translate }}
-                                </mat-checkbox>
-                            </div>
-                            <div>
-                                <mat-checkbox class="example-margin"
-                                    (change)="oneAllSettingChange($event,index,'emailTemplates')"
-                                    [(ngModel)]="role.role_permission.emailTemplates.Restore" color="primary"
-                                    [disabled]="role.role_name == 'Admin'">
-                                    {{'Restore_all' | translate }}
-                                </mat-checkbox>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Settings -->
+
+ -->
+
+
                     <div class="col" *ngIf="role.role_permission.hasOwnProperty('settings')">
-                        <div class="cust-header-text">{{'Sidebar-Setting' | translate }}</div>
-                        <mat-checkbox class="example-margin" (change)="changeAllProject($event,index,'settings')"
-                            [(ngModel)]="role.role_permission.settings.All" color="primary"
-                            [disabled]="role.role_name == 'Admin'">
-                            {{'Add_all' |
-                            translate}}</mat-checkbox>
                         <div class="cust-div-inner">
-                            <div>
-                                <mat-checkbox class="example-margin"
-                                    (change)="oneAllSettingChange($event,index,'settings')"
-                                    [(ngModel)]="role.role_permission.settings.Add" color="primary"
-                                    [disabled]="role.role_name == 'Admin'">
-                                    {{'Add_roles'
-                                    | translate}}
-                                </mat-checkbox>
-                            </div>
-                            <div>
-                                <mat-checkbox class="example-margin"
-                                    (change)="oneAllSettingChange($event,index,'settings')"
-                                    [(ngModel)]="role.role_permission.settings.View" color="primary"
-                                    [disabled]="role.role_name == 'Admin'">
-                                    {{'Dashboard-View' | translate}}
-                                </mat-checkbox>
-                            </div>
-                            <div>
-                                <mat-checkbox class="example-margin"
-                                    (change)="oneAllSettingChange($event,index,'settings')"
-                                    [(ngModel)]="role.role_permission.settings.Edit" color="primary"
-                                    [disabled]="role.role_name == 'Admin'">
-                                    {{'Listing_Action_Edit' | translate }}
-                                </mat-checkbox>
-                            </div>
-                            <div>
-                                <mat-checkbox class="example-margin"
-                                    (change)="oneAllSettingChange($event,index,'settings')"
-                                    [(ngModel)]="role.role_permission.settings.Delete" color="primary"
-                                    [disabled]="role.role_name == 'Admin'">
-                                    {{'Archive_all' | translate }}
-                                </mat-checkbox>
+                            <div class="cust-header-text">{{'Rovuk_Invoice_Roles_Setting' | translate}}</div>
+                            <div class="cust-div-inner">
+                                <div>
+                                    <mat-checkbox class="example-margin"
+                                        (change)="oneAllSettingChange($event,index,'settings')"
+                                        [(ngModel)]="role.role_permission.settings.All" color="primary">
+                                        {{'Rovuk_Grid_Roles_All' | translate}}</mat-checkbox>
+                                </div>
+                                <div>
+                                    <mat-checkbox class="example-margin"
+                                        (change)="oneAllSettingChange($event,index,'settings')"
+                                        [(ngModel)]="role.role_permission.settings.Add" color="primary">
+                                        {{'Add_roles' | translate}}</mat-checkbox>
+                                </div>
+                                <div>
+                                    <mat-checkbox class="example-margin"
+                                        (change)="oneAllSettingChange($event,index,'settings')"
+                                        [(ngModel)]="role.role_permission.settings.View" color="primary">
+                                        {{'Dashboard-View' | translate}}
+                                    </mat-checkbox>
+                                </div>
+                                <div>
+                                    <mat-checkbox class="example-margin"
+                                        (change)="oneAllSettingChange($event,index,'settings')"
+                                        [(ngModel)]="role.role_permission.settings.Edit" color="primary">
+                                        {{'Listing_Action_Edit' | translate }}
+                                    </mat-checkbox>
+                                </div>
+                                <div>
+                                    <mat-checkbox class="example-margin"
+                                        (change)="oneAllSettingChange($event,index,'settings')"
+                                        [(ngModel)]="role.role_permission.settings.Delete" color="primary">
+                                        {{'Listing_Action_Delete' | translate }}
+                                    </mat-checkbox>
+                                </div>
                             </div>
                         </div>
                     </div>
+
+
+
+
                 </div>
+
                 <div class="cust-center-justify">
                     <button mat-raised-button (click)="saveData(role)" color="primary">
                         <img src="{{saveIcon}}" alt="" height="20px">
                         {{'All-save' |
                         translate}}</button>
                 </div>
+
             </mat-tab>
         </mat-tab-group>
     </div>
-</div>

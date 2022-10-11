@@ -57,7 +57,8 @@ export class LeftPanelComponent implements OnInit {
     var tmpurl = this.router.url.split("?");
     this.publicrroute = tmpurl[0];
     let that = this;
-    if (this.route.snapshot.paramMap.get('idparms') != null) {
+    if (this.route.snapshot.paramMap.get('idparms') != null)
+    {
       let newtmp_url = tmpurl[0].split("/");
       this.publicrroute = newtmp_url[1];
     }
@@ -70,7 +71,8 @@ export class LeftPanelComponent implements OnInit {
 
     this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
 
-    if (this.usertype == "sponsor-portal") {
+    if (this.usertype == "invoice-portal")
+    {
       this.company_code = this.role_permission.companydata.companycode;
       this.company_logo = this.role_permission.companydata.companylogo;
     }
@@ -121,7 +123,8 @@ export class LeftPanelComponent implements OnInit {
       let index = 0;
       // Dashboard Menu
       // if (that.role_permission.role_permission.dashboard.View == true) {
-      if (true) {
+      if (true)
+      {
         let reqObj = {
           name: textarray['Sidebar-Dashboard'],
           icon: '',
@@ -133,7 +136,8 @@ export class LeftPanelComponent implements OnInit {
 
       // Today Activity Menu
       // if (that.role_permission.role_permission.todayActivity.View == true) {
-      if (true) {
+      if (true)
+      {
         let reqObj = {
           name: textarray['Sidebar-invoice'],
           icon: '',
@@ -145,7 +149,8 @@ export class LeftPanelComponent implements OnInit {
 
       // Daily Report Menu
       // if (that.role_permission.role_permission.dailyReports.View == true) {
-      if (true) {
+      if (true)
+      {
         let reqObj = {
           name: textarray['Sidebar-Templates'],
           icon: '',
@@ -157,7 +162,8 @@ export class LeftPanelComponent implements OnInit {
 
       // Location
       // if (that.role_permission.role_permission.dailyReports.View == true) {
-      if (true) {
+      if (true)
+      {
         let reqObj = {
           name: textarray['Sidebar-Report'],
           icon: '',
@@ -180,7 +186,8 @@ export class LeftPanelComponent implements OnInit {
 
       // User Menu
       // if (that.role_permission.role_permission.users.View == true) {
-      if (true) {
+      if (true)
+      {
         let reqObj = {
           name: textarray['Sidebar-Team'],
           icon: '',
@@ -236,7 +243,8 @@ export class LeftPanelComponent implements OnInit {
 
       // Setting Menu
       // if (that.role_permission.role_permission.settings.View == true) {
-      if (true) {
+      if (true)
+      {
         let reqObj = {
           name: textarray['Sidebar-Setting'],
           icon: '',
@@ -269,21 +277,26 @@ export class LeftPanelComponent implements OnInit {
     var tmpurl = this.router.url.split("?");
     this.publicrroute = tmpurl[0];
 
-    if (this.route.snapshot.paramMap.get('idparms') != null) {
+    if (this.route.snapshot.paramMap.get('idparms') != null)
+    {
       let newtmp_url = tmpurl[0].split("/");
       this.publicrroute = newtmp_url[1];
 
     }
-    if (value.url == "/superadmin/company" && this.publicrroute == "/superadmin/companyform") {
+    if (value.url == "/superadmin/company" && this.publicrroute == "/superadmin/companyform")
+    {
       return true;
     }
-    if (value.url == "/superadmin/safetytalks" && this.publicrroute == "/superadmin/safetytalks-form") {
+    if (value.url == "/superadmin/safetytalks" && this.publicrroute == "/superadmin/safetytalks-form")
+    {
       return true;
     }
-    if (value.url == "/superadmin/safetytalks" && this.publicrroute == "/superadmin/checklist-form") {
+    if (value.url == "/superadmin/safetytalks" && this.publicrroute == "/superadmin/checklist-form")
+    {
       return true;
     }
-    if (value.url == "/location" && this.publicrroute == "/location-form") {
+    if (value.url == "/location" && this.publicrroute == "/location-form")
+    {
       return true;
     }
     return false;

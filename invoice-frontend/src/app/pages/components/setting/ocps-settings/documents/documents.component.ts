@@ -25,7 +25,7 @@ const swalWithBootstrapButtons = Swal.mixin({
   styleUrls: ['./documents.component.scss']
 })
 export class DocumentsComponent implements OnInit {
-  Employee_Department_Do_Want_Delete: string = "";
+  Employee_Documents_Do_Want_Delete: string = "";
   Compnay_Equipment_Delete_Yes: string = "";
   Compnay_Equipment_Delete_No: string = "";
 
@@ -41,7 +41,7 @@ export class DocumentsComponent implements OnInit {
   constructor(private modeService: ModeDetectService, public dialog: MatDialog, public httpCall: HttpCall, public snackbarservice: Snackbarservice,
     public translate: TranslateService) {
     this.translate.stream(['']).subscribe((textarray) => {
-      this.Employee_Department_Do_Want_Delete = this.translate.instant('Employee_Department_Do_Want_Delete');
+      this.Employee_Documents_Do_Want_Delete = this.translate.instant('Employee_Documents_Do_Want_Delete');
       this.Compnay_Equipment_Delete_Yes = this.translate.instant('Compnay_Equipment_Delete_Yes');
       this.Compnay_Equipment_Delete_No = this.translate.instant('Compnay_Equipment_Delete_No');
       this.copyDataFromProject = this.translate.instant('Copy_Data_From_Project');
@@ -51,23 +51,27 @@ export class DocumentsComponent implements OnInit {
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off') {
+    if (this.mode == 'off')
+    {
       this.editIcon = icon.EDIT;
       this.deleteIcon = icon.DELETE;
 
-    } else {
+    } else
+    {
       this.editIcon = icon.EDIT_WHITE;
       this.deleteIcon = icon.DELETE_WHITE;
 
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode) {
+      if (mode)
+      {
         this.mode = 'off';
         this.editIcon = icon.EDIT;
         this.deleteIcon = icon.DELETE;
 
 
-      } else {
+      } else
+      {
         this.mode = 'on';
         this.editIcon = icon.EDIT_WHITE;
         this.deleteIcon = icon.DELETE_WHITE;
@@ -77,52 +81,56 @@ export class DocumentsComponent implements OnInit {
     });
   }
 
-  public allDepartments: any;
+  public allDocuments: any;
   ngOnInit(): void {
-    this.getDataDepartments();
+    this.getDataDocutments();
   }
 
-  addDepartment() {
+  addDocument(docutments: any) {
     const dialogRef = this.dialog.open(DocumentForm, {
-      // data: reqData,
+      data: docutments,
       disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.getDataDepartments();
+      this.getDataDocutments();
     });
   }
 
-  getDataDepartments() {
+  getDataDocutments() {
     let that = this;
-    this.httpCall.httpGetCall(httproutes.PORTAL_SETTING_DEPARTMENTS_GET).subscribe(function (params) {
-      if (params.status) {
-        that.allDepartments = params.data;
+    this.httpCall.httpGetCall(httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTINGS_GET_DOCUMENT).subscribe(function (params) {
+      if (params.status)
+      {
+        that.allDocuments = params.data;
       }
     });
   }
 
-  deleteDocumentType() {
-    // let that = this;
-    // swalWithBootstrapButtons.fire({
-    //   title: this.Employee_Department_Do_Want_Delete,
-    //   showDenyButton: true,
-    //   showCancelButton: false,
-    //   confirmButtonText: this.Compnay_Equipment_Delete_Yes,
-    //   denyButtonText: this.Compnay_Equipment_Delete_No,
-    //   allowOutsideClick: false
-    // }).then((result) => {
-    //   if (result.isConfirmed) {
-    //     that.httpCall.httpPostCall(httproutes.PORTAL_SETTING_DEPARTMENTS_DELETE, { _id: department_data._id }).subscribe(function (params) {
-    //       if (params.status) {
-    //         that.snackbarservice.openSnackBar(params.message, "success");
-    //         that.getDataDepartments();
-    //       } else {
-    //         that.snackbarservice.openSnackBar(params.message, "error");
-    //       }
-    //     });
-    //   }
-    // });
+  deleteDocumentType(docutments: any) {
+    let that = this;
+    swalWithBootstrapButtons.fire({
+      title: this.Employee_Documents_Do_Want_Delete,
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: this.Compnay_Equipment_Delete_Yes,
+      denyButtonText: this.Compnay_Equipment_Delete_No,
+      allowOutsideClick: false
+    }).then((result) => {
+      if (result.isConfirmed)
+      {
+        that.httpCall.httpPostCall(httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTING_DELETE_DOCUMENT, { _id: docutments._id }).subscribe(function (params) {
+          if (params.status)
+          {
+            that.snackbarservice.openSnackBar(params.message, "success");
+            that.getDataDocutments();
+          } else
+          {
+            that.snackbarservice.openSnackBar(params.message, "error");
+          }
+        });
+      }
+    });
   }
 }
 
@@ -145,29 +153,34 @@ export class DocumentForm implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any, public httpCall: HttpCall, public snackbarservice: Snackbarservice) {
 
     this.documentform = new FormGroup({
-      document: new FormControl("", [Validators.required]),
+      name: new FormControl("", [Validators.required]),
     });
-    if (this.data) {
+    if (this.data)
+    {
       this.documentform = new FormGroup({
-        document: new FormControl(this.data.document, [Validators.required]),
+        name: new FormControl(this.data.name, [Validators.required]),
       });
     }
 
     var modeLocal = localStorage.getItem('');
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off') {
+    if (this.mode == 'off')
+    {
       this.exitIcon = icon.BACK;
 
-    } else {
+    } else
+    {
       this.exitIcon = icon.BACK_WHITE;
     }
 
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode) {
+      if (mode)
+      {
         this.mode = 'off';
         this.exitIcon = icon.BACK;
 
-      } else {
+      } else
+      {
         this.mode = 'on';
         this.exitIcon = icon.BACK_WHITE;
 
@@ -191,16 +204,22 @@ export class DocumentForm implements OnInit {
 
   saveData() {
     let that = this;
-    if (this.documentform.valid) {
-      let reqData = this.documentform.value;
-      if (this.data) {
-        reqData._id = this.data._id;
+    console.log("valid", that.documentform.valid)
+    if (that.documentform.valid)
+    {
+      console.log("if1")
+      let reqData = that.documentform.value;
+      if (that.data)
+      {
+        reqData._id = that.data._id;
       }
-      this.httpCall.httpPostCall(httproutes.PORTAL_SETTING_DEPARTMENTS_SAVE, reqData).subscribe(function (params) {
-        if (params.status) {
+      that.httpCall.httpPostCall(httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTING_SAVE_DOCUMENT, reqData).subscribe(function (params) {
+        if (params.status)
+        {
           that.snackbarservice.openSnackBar(params.message, "success");
           that.dialogRef.close();
-        } else {
+        } else
+        {
           that.snackbarservice.openSnackBar(params.message, "error");
         }
       });

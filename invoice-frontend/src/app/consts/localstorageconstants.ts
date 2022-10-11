@@ -9,5 +9,5 @@ export enum localstorageconstants {
     COMPANYCODE = "companycode",
     VENDORINFO = "vendor-userinfo",
     IFRAMETOKEN = "ocps-token",
-    VENDORCOMPANYINFO = "vendor-compnayinfo"
+    VENDORCOMPANYINFO = "vendor-compnayinfo",
 }

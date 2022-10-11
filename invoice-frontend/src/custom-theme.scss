@@ -1049,11 +1049,11 @@ $angular-dark-theme: mat-dark-theme((color: (primary: $angular-primary,
   }
 
   .layout-content {
-    background-color: $dark-bg-color  !important;
+    background-color: $dark-bg-color !important;
   }
 
   .flux-container {
-    background-color: $dark-bg-color  !important;
+    background-color: $dark-bg-color !important;
     color: white !important;
   }
 
@@ -1065,8 +1065,8 @@ $angular-dark-theme: mat-dark-theme((color: (primary: $angular-primary,
   .mat-list-item:hover,
   .background-active,
   .user-button .user-button:hover {
-    color: $white-for-dark  !important;
-    background-color: $dark-bg-color  !important;
+    color: $white-for-dark !important;
+    background-color: $dark-bg-color !important;
     outline: none !important;
   }
 
@@ -1077,15 +1077,13 @@ $angular-dark-theme: mat-dark-theme((color: (primary: $angular-primary,
   .mail-content__user,
   .user-menu__item-title,
   .user-menu-icon,
-  .sign-button,
-  .auth-page__group-title,
-  .dark-cust-color {
-    color: $white-for-dark  !important;
+  .sign-button {
+    color: $white-for-dark !important;
   }
 
-  .auth-page__content-block {
-    background-color: $dark-bg-color  !important;
-  }
+  // .auth-page__content-block {
+  //   background-color: $dark-bg-color  !important;
+  // }
 
   .mail-wrapper:hover {
     background: hsla(0, 0%, 100%, 0.04) !important;
@@ -1095,12 +1093,12 @@ $angular-dark-theme: mat-dark-theme((color: (primary: $angular-primary,
   .mat-list-base {
     & .mat-list-item {
       &:hover {
-        color: $white-for-dark  !important;
-        background-color: $dark-bg-color  !important;
+        color: $white-for-dark !important;
+        background-color: $dark-bg-color !important;
         outline: none !important;
 
         .mat-icon {
-          color: $white-for-dark  !important;
+          color: $white-for-dark !important;
         }
       }
     }
@@ -1111,7 +1109,7 @@ $angular-dark-theme: mat-dark-theme((color: (primary: $angular-primary,
   }
 
   .user-menu-title__name {
-    color: $white-for-dark  !important;
+    color: $white-for-dark !important;
   }
 
   .main-day {
@@ -1119,7 +1117,7 @@ $angular-dark-theme: mat-dark-theme((color: (primary: $angular-primary,
   }
 
   .mat-list-base .mat-list-item.active .mat-icon {
-    color: $white-for-dark  !important;
+    color: $white-for-dark !important;
   }
 
   .header,
@@ -1128,7 +1126,7 @@ $angular-dark-theme: mat-dark-theme((color: (primary: $angular-primary,
   .appropriateClass,
   .bottomStick,
   .heading-cust-div {
-    background-color: $dark_accent_header  !important;
+    background-color: $dark_accent_header !important;
   }
 
   mat-toolbar {
@@ -1139,12 +1137,12 @@ $angular-dark-theme: mat-dark-theme((color: (primary: $angular-primary,
   .notification-button,
   .email-button,
   .user-button {
-    background-color: $dark_accent_header  !important;
+    background-color: $dark_accent_header !important;
     box-shadow: none !important;
   }
 
   .cust-color-border {
-    border-bottom: 5px solid $dark_accent_header_dark  !important;
+    border-bottom: 5px solid $dark_accent_header_dark !important;
   }
 
   .header__title-button:hover,
@@ -1152,12 +1150,12 @@ $angular-dark-theme: mat-dark-theme((color: (primary: $angular-primary,
   .email-button:hover,
   .user-button:hover,
   .bg-color-cust {
-    background-color: $dark_accent_header_dark  !important;
+    background-color: $dark_accent_header_dark !important;
     box-shadow: none !important;
   }
 
   ::-webkit-scrollbar-track-piece {
-    background-color: $dark_accent_header  !important;
+    background-color: $dark_accent_header !important;
   }
 
   ::-webkit-scrollbar-thumb {
@@ -1167,15 +1165,15 @@ $angular-dark-theme: mat-dark-theme((color: (primary: $angular-primary,
   }
 
   .visits-chart__header {
-    color: $dark-white  !important;
+    color: $dark-white !important;
   }
 
   .cust-activity-input-search {
-    background-color: $bg-dark-card  !important;
+    background-color: $bg-dark-card !important;
   }
 
   .inside-polygon-hexagon {
-    background-color: $dark-bg-color  !important;
+    background-color: $dark-bg-color !important;
   }
 
   :root {
@@ -1196,7 +1194,7 @@ $angular-dark-theme: mat-dark-theme((color: (primary: $angular-primary,
 
   table.dataTable {
     border: 1px solid #000;
-    background-color: $dark_accent_header  !important;
+    background-color: $dark_accent_header !important;
   }
 
   table.dataTable.no-footer {
@@ -1264,7 +1262,7 @@ $angular-dark-theme: mat-dark-theme((color: (primary: $angular-primary,
   }
 
   table.dataTable thead tr {
-    background-color: $dark_accent_header  !important;
+    background-color: $dark_accent_header !important;
     color: white !important;
   }
 
@@ -1321,11 +1319,11 @@ $angular-dark-theme: mat-dark-theme((color: (primary: $angular-primary,
   //const Color SUB_DARK_BACKGROUND = Color.fromRGBO(35, 37, 43, 1);
 
   .mat-focused .mat-form-field-label {
-    color: $white-for-dark  !important;
+    color: $white-for-dark !important;
   }
 
   .mat-form-field-appearance-outline .mat-form-field-outline-thick {
-    color: $white-for-dark  !important;
+    color: $white-for-dark !important;
   }
 
   .mat-form-field.mat-form-field-invalid {
@@ -1397,15 +1395,15 @@ $angular-dark-theme: mat-dark-theme((color: (primary: $angular-primary,
   }
 
   .cust-backgroud-color {
-    background-color: $dark_accent_header  !important;
+    background-color: $dark_accent_header !important;
   }
 
   .header-text-cust {
-    background-color: $dark_accent_header  !important;
+    background-color: $dark_accent_header !important;
   }
 
   .custlike-card {
-    background-color: $bg-dark-card  !important;
+    background-color: $bg-dark-card !important;
   }
 
   .one-div-cust-user {
@@ -1413,14 +1411,14 @@ $angular-dark-theme: mat-dark-theme((color: (primary: $angular-primary,
     border-radius: 10px !important;
     min-width: 100px !important;
     border-bottom: 3px $dark_accent_header solid !important;
-    background-color: $bg-dark-card  !important;
+    background-color: $bg-dark-card !important;
   }
 
   .one-div-cust-user-width-small {
     border-radius: 10px !important;
     min-width: 100px !important;
     border-bottom: 3px $dark_accent_header solid !important;
-    background-color: $bg-dark-card  !important;
+    background-color: $bg-dark-card !important;
   }
 
   .number-cust {
@@ -1438,7 +1436,7 @@ $angular-dark-theme: mat-dark-theme((color: (primary: $angular-primary,
 
   .flux-left-panel {
     ul.menu-list>li.menu-item.active:after {
-      border-right: 10px solid $dark-bg-color  !important;
+      border-right: 10px solid $dark-bg-color !important;
     }
   }
 
@@ -1452,11 +1450,11 @@ $angular-dark-theme: mat-dark-theme((color: (primary: $angular-primary,
 
   .faq-accordion-item-header:hover {
     cursor: pointer;
-    background-color: $dark_accent_header  !important;
+    background-color: $dark_accent_header !important;
   }
 
   .faq-accordion-item-header-active {
-    background-color: $dark_accent_header  !important;
+    background-color: $dark_accent_header !important;
   }
 
   .nav-link {
@@ -1480,32 +1478,32 @@ $angular-dark-theme: mat-dark-theme((color: (primary: $angular-primary,
 
   /* Project Settings Radio Button Dark Theme */
   .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element {
-    background-color: $dark_accent_header  !important;
+    background-color: $dark_accent_header !important;
   }
 
   .mat-radio-button.mat-accent .mat-radio-inner-circle {
-    background-color: $white-for-dark  !important;
+    background-color: $white-for-dark !important;
     /*inner circle color change*/
   }
 
   .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
-    border-color: $white-for-dark  !important;
+    border-color: $white-for-dark !important;
     /*outer ring color change*/
   }
 
   /* Project Settings CheckBox Dark Theme */
   .mat-checkbox .mat-checkbox-frame {
-    border-color: $white-for-dark  !important;
+    border-color: $white-for-dark !important;
   }
 
   .mat-checkbox-checked .mat-checkbox-ripple .mat-ripple-element {
     opacity: 0.03 !important;
-    background-color: $white-for-dark  !important;
+    background-color: $white-for-dark !important;
   }
 
   .mat-checkbox-checked .mat-checkbox-background,
   .mat-checkbox-indeterminate .mat-checkbox-background {
-    background-color: $white-for-dark  !important;
+    background-color: $white-for-dark !important;
   }
 
   .subnotetitle {
@@ -1595,7 +1593,7 @@ $angular-dark-theme: mat-dark-theme((color: (primary: $angular-primary,
   }
 
   p {
-    color: #b4bcc898 !important;
+    color: #fff !important;
   }
 
   .table-bordered {

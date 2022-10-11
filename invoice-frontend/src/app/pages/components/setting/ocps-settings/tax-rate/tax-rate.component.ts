@@ -24,7 +24,7 @@ const swalWithBootstrapButtons = Swal.mixin({
   styleUrls: ['./tax-rate.component.scss']
 })
 export class TaxRateComponent implements OnInit {
-  Employee_Department_Do_Want_Delete: string = "";
+  Employee_Tex_rate_Do_Want_Delete: string = "";
   Compnay_Equipment_Delete_Yes: string = "";
   Compnay_Equipment_Delete_No: string = "";
 
@@ -36,11 +36,12 @@ export class TaxRateComponent implements OnInit {
   copyDataFromProject: string = '';
   yesButton: string = '';
   noButton: string = '';
+  public allTaxrate: any;
 
   constructor(private modeService: ModeDetectService, public dialog: MatDialog, public httpCall: HttpCall, public snackbarservice: Snackbarservice,
     public translate: TranslateService) {
     this.translate.stream(['']).subscribe((textarray) => {
-      this.Employee_Department_Do_Want_Delete = this.translate.instant('Employee_Department_Do_Want_Delete');
+      this.Employee_Tex_rate_Do_Want_Delete = this.translate.instant('Employee_Tex_rate_Do_Want_Delete');
       this.Compnay_Equipment_Delete_Yes = this.translate.instant('Compnay_Equipment_Delete_Yes');
       this.Compnay_Equipment_Delete_No = this.translate.instant('Compnay_Equipment_Delete_No');
       this.copyDataFromProject = this.translate.instant('Copy_Data_From_Project');
@@ -50,23 +51,27 @@ export class TaxRateComponent implements OnInit {
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off') {
+    if (this.mode == 'off')
+    {
       this.editIcon = icon.EDIT;
       this.deleteIcon = icon.DELETE;
 
-    } else {
+    } else
+    {
       this.editIcon = icon.EDIT_WHITE;
       this.deleteIcon = icon.DELETE_WHITE;
 
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode) {
+      if (mode)
+      {
         this.mode = 'off';
         this.editIcon = icon.EDIT;
         this.deleteIcon = icon.DELETE;
 
 
-      } else {
+      } else
+      {
         this.mode = 'on';
         this.editIcon = icon.EDIT_WHITE;
         this.deleteIcon = icon.DELETE_WHITE;
@@ -76,52 +81,57 @@ export class TaxRateComponent implements OnInit {
     });
   }
 
-  public allDepartments: any;
+
   ngOnInit(): void {
-    this.getDataDepartments();
+    this.getTaxrate();
   }
 
-  addDepartment() {
+  addTaxrate(taxrate: any) {
     const dialogRef = this.dialog.open(TaxRateForm, {
-      // data: reqData,
+      data: taxrate,
       disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.getDataDepartments();
+      this.getTaxrate();
     });
   }
 
-  getDataDepartments() {
+  getTaxrate() {
     let that = this;
-    this.httpCall.httpGetCall(httproutes.PORTAL_SETTING_DEPARTMENTS_GET).subscribe(function (params) {
-      if (params.status) {
-        that.allDepartments = params.data;
+    this.httpCall.httpGetCall(httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTINGS_GET_TEXT_RATE).subscribe(function (params) {
+      if (params.status)
+      {
+        that.allTaxrate = params.data;
+        console.log("att text rate", that.allTaxrate);
       }
     });
   }
 
-  deleteDocumentType() {
-    // let that = this;
-    // swalWithBootstrapButtons.fire({
-    //   title: this.Employee_Department_Do_Want_Delete,
-    //   showDenyButton: true,
-    //   showCancelButton: false,
-    //   confirmButtonText: this.Compnay_Equipment_Delete_Yes,
-    //   denyButtonText: this.Compnay_Equipment_Delete_No,
-    //   allowOutsideClick: false
-    // }).then((result) => {
-    //   if (result.isConfirmed) {
-    //     that.httpCall.httpPostCall(httproutes.PORTAL_SETTING_DEPARTMENTS_DELETE, { _id: department_data._id }).subscribe(function (params) {
-    //       if (params.status) {
-    //         that.snackbarservice.openSnackBar(params.message, "success");
-    //         that.getDataDepartments();
-    //       } else {
-    //         that.snackbarservice.openSnackBar(params.message, "error");
-    //       }
-    //     });
-    //   }
-    // });
+  deleteTaxrate(taxrate: any) {
+    let that = this;
+    swalWithBootstrapButtons.fire({
+      title: this.Employee_Tex_rate_Do_Want_Delete,
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: this.Compnay_Equipment_Delete_Yes,
+      denyButtonText: this.Compnay_Equipment_Delete_No,
+      allowOutsideClick: false
+    }).then((result) => {
+      if (result.isConfirmed)
+      {
+        that.httpCall.httpPostCall(httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTING_DELETE_TEXT_RATE, { _id: taxrate._id }).subscribe(function (params) {
+          if (params.status)
+          {
+            that.snackbarservice.openSnackBar(params.message, "success");
+            that.getTaxrate();
+          } else
+          {
+            that.snackbarservice.openSnackBar(params.message, "error");
+          }
+        });
+      }
+    });
   }
 }
 
@@ -131,7 +141,7 @@ export class TaxRateComponent implements OnInit {
   styleUrls: ['./tax-rate.component.scss']
 })
 export class TaxRateForm implements OnInit {
-  public textrate: FormGroup;
+  public taxrate: FormGroup;
   saveIcon = icon.SAVE_WHITE;
   exitIcon: string;
   yesButton: string = '';
@@ -143,30 +153,35 @@ export class TaxRateForm implements OnInit {
   constructor(private modeService: ModeDetectService, public dialogRef: MatDialogRef<TaxRateForm>, public translate: TranslateService,
     @Inject(MAT_DIALOG_DATA) public data: any, public httpCall: HttpCall, public snackbarservice: Snackbarservice) {
 
-    this.textrate = new FormGroup({
-      textrate: new FormControl("", [Validators.required]),
+    this.taxrate = new FormGroup({
+      name: new FormControl("", [Validators.required]),
     });
-    if (this.data) {
-      this.textrate = new FormGroup({
-        textrate: new FormControl(this.data.textrate, [Validators.required]),
+    if (this.data)
+    {
+      this.taxrate = new FormGroup({
+        name: new FormControl(this.data.name, [Validators.required]),
       });
     }
 
     var modeLocal = localStorage.getItem('');
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off') {
+    if (this.mode == 'off')
+    {
       this.exitIcon = icon.BACK;
 
-    } else {
+    } else
+    {
       this.exitIcon = icon.BACK_WHITE;
     }
 
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode) {
+      if (mode)
+      {
         this.mode = 'off';
         this.exitIcon = icon.BACK;
 
-      } else {
+      } else
+      {
         this.mode = 'on';
         this.exitIcon = icon.BACK_WHITE;
 
@@ -190,16 +205,20 @@ export class TaxRateForm implements OnInit {
 
   saveData() {
     let that = this;
-    if (this.textrate.valid) {
-      let reqData = this.textrate.value;
-      if (this.data) {
+    if (this.taxrate.valid)
+    {
+      let reqData = this.taxrate.value;
+      if (this.data)
+      {
         reqData._id = this.data._id;
       }
-      this.httpCall.httpPostCall(httproutes.PORTAL_SETTING_DEPARTMENTS_SAVE, reqData).subscribe(function (params) {
-        if (params.status) {
+      this.httpCall.httpPostCall(httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTING_SAVE_TEXT_RATE, reqData).subscribe(function (params) {
+        if (params.status)
+        {
           that.snackbarservice.openSnackBar(params.message, "success");
           that.dialogRef.close();
-        } else {
+        } else
+        {
           that.snackbarservice.openSnackBar(params.message, "error");
         }
       });

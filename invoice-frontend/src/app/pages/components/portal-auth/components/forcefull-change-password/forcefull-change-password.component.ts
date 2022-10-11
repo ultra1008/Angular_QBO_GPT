@@ -51,9 +51,11 @@ export class ForcefullChangePasswordComponent implements OnInit {
     });
 
     let useris_password_temp = this.route.snapshot.queryParamMap.get('useris_password_temp');
-    if (useris_password_temp) {
+    if (useris_password_temp)
+    {
     }
-    else {
+    else
+    {
     }
 
   }
@@ -63,34 +65,41 @@ export class ForcefullChangePasswordComponent implements OnInit {
     if (
       this.change_password_form &&
       (control.value !== this.change_password_form.controls.password.value)
-    ) {
+    )
+    {
       return { passwordNotMatch: true };
     }
     return { passwordNotMatch: false };
   }
 
   changePasswordPress(): void {
-    if (this.change_password_form.controls.password.value !== this.change_password_form.controls.password_confirmation.value) {
+    if (this.change_password_form.controls.password.value !== this.change_password_form.controls.password_confirmation.value)
+    {
       this.snackbarservice.openSnackBar(this.Forcefull_Change_Password_Not_Matched, 'error');
       return;
     }
-    if (this.change_password_form.valid) {
+    if (this.change_password_form.valid)
+    {
       const that = this;
       let url = "";
       let reqObject = that.change_password_form.value;
       let portal_type = sessionStorage.getItem(localstorageconstants.USERTYPE);
 
-      if (portal_type == "superadmin") {
+      if (portal_type == "superadmin")
+      {
         reqObject.userrole = localStorage.getItem(localstorageconstants.USERROLE);
         url = httproutes.ADMIN_CHANGEPASSWORD;
-      } else if (portal_type == "sponsor-portal") {
+      } else if (portal_type == "invoice-portal")
+      {
         url = httproutes.EMPLOYEE_CHANGEPASSWORD;
-      } else {
+      } else
+      {
         return;
       }
 
       this.httpCall.httpPostCall(url, reqObject).subscribe(function (data) {
-        if (data.status) {
+        if (data.status)
+        {
           that.snackbarservice.openSnackBar(that.Forcefull_Change_Password_Reset, 'success');
           that.change_password_form.reset();
           let role_permission_front = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
@@ -100,7 +109,8 @@ export class ForcefullChangePasswordComponent implements OnInit {
           Object.keys(that.change_password_form.controls).forEach(key => {
             that.change_password_form.get(key).setErrors(null);
           });
-        } else {
+        } else
+        {
           that.snackbarservice.openSnackBar(data.message, 'error');
         }
       });

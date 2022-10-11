@@ -22,7 +22,7 @@ const swalWithBootstrapButtons = Swal.mixin({
   styleUrls: ['./terms.component.scss']
 })
 export class TermsComponent implements OnInit {
-  Employee_Department_Do_Want_Delete: string = "";
+  Employee_Terms_Do_Want_Delete: string = "";
   Compnay_Equipment_Delete_Yes: string = "";
   Compnay_Equipment_Delete_No: string = "";
 
@@ -34,11 +34,12 @@ export class TermsComponent implements OnInit {
   copyDataFromProject: string = '';
   yesButton: string = '';
   noButton: string = '';
+  public allTerms: any;
 
   constructor(private modeService: ModeDetectService, public dialog: MatDialog, public httpCall: HttpCall, public snackbarservice: Snackbarservice,
     public translate: TranslateService) {
     this.translate.stream(['']).subscribe((textarray) => {
-      this.Employee_Department_Do_Want_Delete = this.translate.instant('Employee_Department_Do_Want_Delete');
+      this.Employee_Terms_Do_Want_Delete = this.translate.instant('Employee_Terms_Do_Want_Delete');
       this.Compnay_Equipment_Delete_Yes = this.translate.instant('Compnay_Equipment_Delete_Yes');
       this.Compnay_Equipment_Delete_No = this.translate.instant('Compnay_Equipment_Delete_No');
       this.copyDataFromProject = this.translate.instant('Copy_Data_From_Project');
@@ -48,23 +49,27 @@ export class TermsComponent implements OnInit {
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off') {
+    if (this.mode == 'off')
+    {
       this.editIcon = icon.EDIT;
       this.deleteIcon = icon.DELETE;
 
-    } else {
+    } else
+    {
       this.editIcon = icon.EDIT_WHITE;
       this.deleteIcon = icon.DELETE_WHITE;
 
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode) {
+      if (mode)
+      {
         this.mode = 'off';
         this.editIcon = icon.EDIT;
         this.deleteIcon = icon.DELETE;
 
 
-      } else {
+      } else
+      {
         this.mode = 'on';
         this.editIcon = icon.EDIT_WHITE;
         this.deleteIcon = icon.DELETE_WHITE;
@@ -74,52 +79,58 @@ export class TermsComponent implements OnInit {
     });
   }
 
-  public allDepartments: any;
+
   ngOnInit(): void {
-    this.getDataDepartments();
+    this.getDataTerms();
   }
 
-  addDepartment() {
+  addTerms(term: any) {
     const dialogRef = this.dialog.open(TermsForm, {
-      // data: reqData,
+      data: term,
       disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.getDataDepartments();
+      this.getDataTerms();
     });
   }
 
-  getDataDepartments() {
+  getDataTerms() {
     let that = this;
-    this.httpCall.httpGetCall(httproutes.PORTAL_SETTING_DEPARTMENTS_GET).subscribe(function (params) {
-      if (params.status) {
-        that.allDepartments = params.data;
+    this.httpCall.httpGetCall(httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTINGS_GET_TERMS).subscribe(function (params) {
+      if (params.status)
+      {
+        that.allTerms = params.data;
+        console.log("allterms", that.allTerms)
       }
     });
   }
 
-  deleteDocumentType() {
-    // let that = this;
-    // swalWithBootstrapButtons.fire({
-    //   title: this.Employee_Department_Do_Want_Delete,
-    //   showDenyButton: true,
-    //   showCancelButton: false,
-    //   confirmButtonText: this.Compnay_Equipment_Delete_Yes,
-    //   denyButtonText: this.Compnay_Equipment_Delete_No,
-    //   allowOutsideClick: false
-    // }).then((result) => {
-    //   if (result.isConfirmed) {
-    //     that.httpCall.httpPostCall(httproutes.PORTAL_SETTING_DEPARTMENTS_DELETE, { _id: department_data._id }).subscribe(function (params) {
-    //       if (params.status) {
-    //         that.snackbarservice.openSnackBar(params.message, "success");
-    //         that.getDataDepartments();
-    //       } else {
-    //         that.snackbarservice.openSnackBar(params.message, "error");
-    //       }
-    //     });
-    //   }
-    // });
+
+  deleteTerms(terms: any) {
+    let that = this;
+    swalWithBootstrapButtons.fire({
+      title: this.Employee_Terms_Do_Want_Delete,
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: this.Compnay_Equipment_Delete_Yes,
+      denyButtonText: this.Compnay_Equipment_Delete_No,
+      allowOutsideClick: false
+    }).then((result) => {
+      if (result.isConfirmed)
+      {
+        that.httpCall.httpPostCall(httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTING_DELETE_TERMS, { _id: terms._id }).subscribe(function (params) {
+          if (params.status)
+          {
+            that.snackbarservice.openSnackBar(params.message, "success");
+            that.getDataTerms();
+          } else
+          {
+            that.snackbarservice.openSnackBar(params.message, "error");
+          }
+        });
+      }
+    });
   }
 }
 
@@ -142,29 +153,35 @@ export class TermsForm implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any, public httpCall: HttpCall, public snackbarservice: Snackbarservice) {
 
     this.term = new FormGroup({
-      terms: new FormControl("", [Validators.required]),
+      name: new FormControl("", [Validators.required]),
     });
-    if (this.data) {
+    if (this.data)
+    {
+      console.log("data", this.data)
       this.term = new FormGroup({
-        terms: new FormControl(this.data.color_code, [Validators.required]),
+        name: new FormControl(this.data.name, [Validators.required]),
       });
     }
 
     var modeLocal = localStorage.getItem('');
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off') {
+    if (this.mode == 'off')
+    {
       this.exitIcon = icon.BACK;
 
-    } else {
+    } else
+    {
       this.exitIcon = icon.BACK_WHITE;
     }
 
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode) {
+      if (mode)
+      {
         this.mode = 'off';
         this.exitIcon = icon.BACK;
 
-      } else {
+      } else
+      {
         this.mode = 'on';
         this.exitIcon = icon.BACK_WHITE;
 
@@ -188,16 +205,20 @@ export class TermsForm implements OnInit {
 
   saveData() {
     let that = this;
-    if (this.term.valid) {
+    if (this.term.valid)
+    {
       let reqData = this.term.value;
-      if (this.data) {
+      if (this.data)
+      {
         reqData._id = this.data._id;
       }
-      this.httpCall.httpPostCall(httproutes.PORTAL_SETTING_DEPARTMENTS_SAVE, reqData).subscribe(function (params) {
-        if (params.status) {
+      this.httpCall.httpPostCall(httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTING_SAVE_TERMS, reqData).subscribe(function (params) {
+        if (params.status)
+        {
           that.snackbarservice.openSnackBar(params.message, "success");
           that.dialogRef.close();
-        } else {
+        } else
+        {
           that.snackbarservice.openSnackBar(params.message, "error");
         }
       });

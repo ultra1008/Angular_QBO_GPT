@@ -57,15 +57,21 @@ export class HeaderComponent implements OnInit {
   public weatherToday: any = {
     iconFile: `<img src="${this.weatherIcon}" alt="" height="20px">`
   };
-  company_logo: any;
+
   public routers: typeof routes = routes;
   public usertype: any;
   AddressbookIcon = icon.CONTACTINFORMATION_WHITE;
+  company_code: any = "";
+  company_logo: any = "../assets/images/placeholder_logo.png";
+  asidebarHeight: any;
+  title: any;
+
+
 
   constructor(private router: Router, private layoutService: LayoutService,
     public servicefoeweatherui: Servicefoeweatherui, public dialog: MatDialog,
     public mostusedservice: Mostusedservice) {
-    this.usertype = sessionStorage.getItem(localstorageconstants.USERTYPE) ? sessionStorage.getItem(localstorageconstants.USERTYPE) : "sponsor-portal";
+    this.usertype = sessionStorage.getItem(localstorageconstants.USERTYPE) ? sessionStorage.getItem(localstorageconstants.USERTYPE) : "invoice-portal";
     // This code is commented out since we are reaching the daily weather requestes. 
     // For localhost we are not call this weather apis first.
     // Now updated that no need to change icon dynamic on header the fixed icon will fine 
@@ -137,7 +143,27 @@ export class HeaderComponent implements OnInit {
 
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.layoutService.setAsidebarHeightCast.subscribe(
+      (setSidebarHeight) => (this.asidebarHeight = setSidebarHeight)
+    );
+    let self = this;
+    var company_data = JSON.parse(
+      localStorage.getItem(localstorageconstants.USERDATA) ?? ''
+    );
+    this.company_logo = company_data.companydata.companylogo;
+    this.company_code = company_data.companydata.companycode;
+    this.title = "Navigation";
+    this.mostusedservice.updatecompnayUserEmit$.subscribe(function (
+      params: any
+    ) {
+      var company_data = JSON.parse(
+        localStorage.getItem(localstorageconstants.USERDATA) ?? ''
+      );
+      self.company_logo = company_data.companydata.companylogo;
+      self.company_code = company_data.companydata.companycode;
+    });
+  }
 
   /*
     Side menu button action to Hide/show Side menu.
@@ -148,9 +174,11 @@ export class HeaderComponent implements OnInit {
 
   moveToDashboard() {
     this.usertype = sessionStorage.getItem(localstorageconstants.USERTYPE) ? sessionStorage.getItem(localstorageconstants.USERTYPE) : "portal";
-    if (this.usertype == "portal") {
+    if (this.usertype == "portal")
+    {
       this.router.navigate([this.routers.DASHBOARD]).then();
-    } else {
+    } else
+    {
       this.router.navigate([this.routers.SUERADMINDASHBOARD]).then();
     }
   }
@@ -194,28 +222,33 @@ export class AddressBook implements OnInit {
   exitIcon: string;
 
 
+
   constructor(
     public dialogRef: MatDialogRef<AddressBook>,
     @Inject(MAT_DIALOG_DATA) public data: any, private modeService: ModeDetectService, public translate: TranslateService, public httpCall: HttpCall,) {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off') {
+    if (this.mode == 'off')
+    {
       this.emailIcon = icon.EMAIL;
       this.callIcon = icon.EMERGENCY_CONTACT;
       this.exitIcon = icon.CANCLE;
 
-    } else {
+    } else
+    {
       this.emailIcon = icon.EMAIL;
       this.callIcon = icon.EMERGENCY_CONTACT;
       this.exitIcon = icon.CANCLE_WHITE;
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode) {
+      if (mode)
+      {
         this.mode = 'off';
         this.emailIcon = icon.EMAIL;
         this.callIcon = icon.EMERGENCY_CONTACT;
         this.exitIcon = icon.CANCLE;
-      } else {
+      } else
+      {
         this.mode = 'on';
         this.emailIcon = icon.EMAIL;
         this.callIcon = icon.EMERGENCY_CONTACT;
@@ -225,6 +258,7 @@ export class AddressBook implements OnInit {
     });
   }
   ngOnInit(): void {
+
     const that = this;
     const token = localStorage.getItem('token');
     let headers: any = new HttpHeaders();
@@ -257,13 +291,14 @@ export class AddressBook implements OnInit {
         }
       ]
     };
-    this.getAllUserList();
-    this.getAllVendorList();
+    // this.getAllUserList();
+    // this.getAllVendorList();
 
   }
   async getAllUserList() {
     let data = await this.httpCall.httpGetCall(httproutes.PORTAL_GET_ALL_USERS).toPromise();
-    if (data.status) {
+    if (data.status)
+    {
       this.userList = data.data;
       this.showTable = false;
       setTimeout(() => {
@@ -275,7 +310,8 @@ export class AddressBook implements OnInit {
 
   async getAllVendorList() {
     let data = await this.httpCall.httpGetCall(httproutes.SPONSOR_GET_ALL_VENDOR).toPromise();
-    if (data.status) {
+    if (data.status)
+    {
       this.vendorList = data.data;
       this.showTableTwo = false;
       setTimeout(() => {

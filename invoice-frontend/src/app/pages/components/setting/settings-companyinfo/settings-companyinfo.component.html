@@ -6,19 +6,21 @@
                     <div class="container">
                         <div class="row">
                             <div class="col">
-                                <div class="flux-brand">
-                                    <input type="file" class="fileInputProfile" #OpenFilebox
-                                        (change)="fileChangeEvent($event)">
-                                    <div class="inner-image-cust" (click)="openfilebox()">
-                                        <ng-container *ngIf="!isImageSaved">
-                                            <img src="{{company_logo}}" class="flux-brand-logo" alt="" />
-                                        </ng-container>
-                                        <ng-container *ngIf="isImageSaved">
-                                            <img class="flux-brand-logo" [src]="cardImageBase64" alt="logo" />
-                                        </ng-container>
+                                <div class="logo-div">
+                                    <div>
+                                        <input type="file" class="fileInputProfile" #OpenFilebox
+                                            (change)="fileChangeEvent($event)">
+                                        <div class="inner-image-cust" (click)="openfilebox()">
+                                            <ng-container *ngIf="!isImageSaved">
+                                                <img src="{{company_logo}}" class="flux-brand-logo" alt="" />
+                                            </ng-container>
+                                            <ng-container *ngIf="isImageSaved">
+                                                <img class="flux-brand-logo" [src]="cardImageBase64" alt="logo" />
+                                            </ng-container>
 
-                                        <div class="middle">
-                                            <i class="fa fa-pencil-alt cust-fontsize-tmp" aria-hidden="true"></i>
+                                            <div class="middle">
+                                                <i class="fa fa-pencil-alt cust-fontsize-tmp" aria-hidden="true"></i>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
