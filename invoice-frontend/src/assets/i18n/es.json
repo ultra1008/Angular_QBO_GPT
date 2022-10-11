@@ -2379,5 +2379,12 @@
     "Employee_Tex_rate_Do_Want_Delete": "Do you want to delete this taxrate?",
     "Employee_Documents_Do_Want_Delete": "Do you want to delete this document?",
     "Amount_minutes": "Amount of minutes before auto log off",
-    "enable_otp": "Enable OTP"
+    "enable_otp": "Enable OTP",
+    "Rovuk_Invoice_Roles_Dashbord": "Dashboard",
+    "Rovuk_Invoice_Roles_Invoice": "Invoice",
+    "Rovuk_Invoice_Roles_Report": "Report",
+    "Rovuk_Invoice_Roles_Templates": "Templates",
+    "Rovuk_Invoice_Roles_Users": "Users",
+    "Rovuk_Invoice_Roles_Setting": "Setting",
+    "Rovuk_Grid_Roles_All": "All"
 }
