@@ -124,7 +124,8 @@
 
         </form>
         <!-- Use OTP -->
-        <div *ngIf="showLogin && showOTPOption" class="otp-text" (click)="openOTPScreen()">Or use One time password
+        <!--  && showOTPOption -->
+        <div *ngIf="showLogin" class="otp-text" (click)="openOTPScreen()">Or use One time password
           (OTP)
         </div>
         <form [formGroup]="otp_form" *ngIf="showOTP">
