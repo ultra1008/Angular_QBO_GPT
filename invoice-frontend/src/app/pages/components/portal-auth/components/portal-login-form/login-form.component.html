@@ -13,8 +13,6 @@
     </mat-icon>
   </mat-form-field>
 
-
-
   <mat-checkbox labelPosition="after" #saveUserNameCheckBox (change)="onSaveUsernameChanged($event.checked)"
     [(ngModel)]="checked" formControlName="terms" class="auth-page__group-title">
     {{'Portal-LogIn-IAgreeToThe' | translate}} <span><a (click)="langurl()" class="term-condition"

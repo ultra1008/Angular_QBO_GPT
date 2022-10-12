@@ -68,7 +68,7 @@ export class SettingsCompanyinfoComponent implements OnInit {
 
   selectedVendorType = '';
   year: number = new Date().getFullYear();
-  range = [];
+  range: any = [];
 
   constructor(private location: Location, private formBuilder: FormBuilder, public httpCall: HttpCall, public translate: TranslateService,
     public uiSpinner: UiSpinnerService,
@@ -95,9 +95,9 @@ export class SettingsCompanyinfoComponent implements OnInit {
       companyaddressstate: [''],
       companyaddresszip: [''],
     });
-    // for (var i = 0; i < 100; i++) {
-    //   this.range.push(this.year - i);
-    // }
+    for (var i = 0; i < 100; i++) {
+      this.range.push(this.year - i);
+    }
   }
 
   @ViewChild('OpenFilebox') OpenFilebox: any;
@@ -126,13 +126,11 @@ export class SettingsCompanyinfoComponent implements OnInit {
   fileChangeEvent(fileInput: any) {
     this.imageError = null;
     commonImageChangeEvent(fileInput, 'image').then((result: any) => {
-      if (result.status)
-      {
+      if (result.status) {
         this.filepath = result.filepath;
         this.cardImageBase64 = result.base64;
         this.isImageSaved = true;
-      } else
-      {
+      } else {
         this.imageError = result.message;
         this.snackbarservice.openSnackBar(result.message, "error");
       }
@@ -182,8 +180,7 @@ export class SettingsCompanyinfoComponent implements OnInit {
   AdminCompnayTypes() {
     let self = this;
     this.httpCall.httpGetCall(httproutes.PORTAL_ROVUK_SPONSOR_GET_COMPNAY_TYPE).subscribe(function (params: any) {
-      if (params.status)
-      {
+      if (params.status) {
         self.CompnayTypes_data = params.data;
       }
       self.getCompanyInfo();
@@ -193,8 +190,7 @@ export class SettingsCompanyinfoComponent implements OnInit {
   AdminCompnaySizes() {
     let self = this;
     this.httpCall.httpGetCall(httproutes.PORTAL_ROVUK_SPONSOR_GET_COMPNAY_SIZE).subscribe(function (params: any) {
-      if (params.status)
-      {
+      if (params.status) {
         self.CompnaySizes_data = params.data;
       }
     });
@@ -203,15 +199,12 @@ export class SettingsCompanyinfoComponent implements OnInit {
   getCompanyInfo() {
     let that = this;
     this.httpCall.httpGetCall(httproutes.COMPNAY_INFO_OTHER_SETTING_GET).subscribe(function (params) {
-      if (params.status)
-      {
+      if (params.status) {
         that.compnay_code = params.data.companycode;
         that.compnay_id = params.data._id;
-        if (params.data.companylogo == undefined || params.data.companylogo == null || params.data.companylogo == "")
-        {
+        if (params.data.companylogo == undefined || params.data.companylogo == null || params.data.companylogo == "") {
           that.company_logo = "../assets/images/placeholder_logo.png";
-        } else
-        {
+        } else {
           that.company_logo = params.data.companylogo;
         }
 
@@ -256,16 +249,13 @@ export class SettingsCompanyinfoComponent implements OnInit {
 
   async getCISDivision(isPrimeVendor: any) {
     let url = '';
-    if (isPrimeVendor)
-    {
+    if (isPrimeVendor) {
       url = httproutes.PORTAL_ROVUK_SPONSOR_GET_PRIME_WORK_PERFORMED;
-    } else
-    {
+    } else {
       url = httproutes.PORTAL_ROVUK_SPONSOR_GET_CSIDIVISION_WORK_PERFORMED;
     }
     let data = await this.httpCall.httpGetCall(url).toPromise();
-    if (data.status)
-    {
+    if (data.status) {
       this.variablesCSIDivisions = data.data;
       this.csiDivisions = this.variablesCSIDivisions.slice();
     }
@@ -273,8 +263,7 @@ export class SettingsCompanyinfoComponent implements OnInit {
 
   saveData() {
     let that = this;
-    if (this.compnayinfo.valid)
-    {
+    if (this.compnayinfo.valid) {
       let reqObject = this.compnayinfo.value;
       let userData = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
       const formData = new FormData();
@@ -285,20 +274,17 @@ export class SettingsCompanyinfoComponent implements OnInit {
       this.uiSpinner.spin$.next(true);
       this.httpCall.httpPostCall(httproutes.COMPNAY_INFO_OTHER_SETTING_UPDATE, formData).subscribe(function (params) {
         that.uiSpinner.spin$.next(false);
-        if (params.status)
-        {
+        if (params.status) {
 
           that.snackbarservice.openSnackBar(params.message, "success");
           that.httpCall.httpGetCall(httproutes.COMPNAY_INFO_OTHER_SETTING_GET).subscribe(function (compnayData: any) {
-            if (compnayData.status)
-            {
+            if (compnayData.status) {
               userData.companydata = compnayData.data;
               localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(userData));
               that.mostusedservice.userupdatecompnayEmit();
             }
           });
-        } else
-        {
+        } else {
           that.snackbarservice.openSnackBar(params.message, "error");
         }
       });

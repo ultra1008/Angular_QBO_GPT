@@ -61,34 +61,31 @@ export class SettingsSecurityComponent implements OnInit {
       .httpGetCall(httproutes.PORTAL_SETTING_GET)
       .subscribe(function (params) {
         console.log(params);
-        if (params.status)
-        {
-          that.settingObject = params.data.settings;
-          that.setting_id = params.data._id;
-          if (params.data.settings.Auto_Log_Off.setting_status == "Active")
-          {
-            that.timeoutSwitch = true;
-          } else
-          {
-            that.timeoutSwitch = false;
+        if (params.status) {
+          if (params.data) {
+            that.settingObject = params.data.settings;
+            that.setting_id = params.data._id;
+            if (params.data.settings.Auto_Log_Off.setting_status == "Active") {
+              that.timeoutSwitch = true;
+            } else {
+              that.timeoutSwitch = false;
+            }
+            console.log(that.timeoutSwitch);
+            if (params.data.settings.Enable_OTP.setting_status == "Active") {
+              that.otpSwitch = true;
+            } else {
+              that.otpSwitch = false;
+            }
+            that.timer =
+              params.data.settings.Auto_Log_Off.setting_value.toString();
+            that.tempTimer =
+              params.data.settings.Auto_Log_Off.setting_value.toString();
+            that.otp = params.data.settings.Enable_OTP.setting_value.toString();
+            that.tempTimerSwitch =
+              params.data.settings.Auto_Log_Off.setting_status.toString();
+            that.tempOtpSwitch =
+              params.data.settings.Enable_OTP.setting_status.toString();
           }
-          console.log(that.timeoutSwitch);
-          if (params.data.settings.Enable_OTP.setting_status == "Active")
-          {
-            that.otpSwitch = true;
-          } else
-          {
-            that.otpSwitch = false;
-          }
-          that.timer =
-            params.data.settings.Auto_Log_Off.setting_value.toString();
-          that.tempTimer =
-            params.data.settings.Auto_Log_Off.setting_value.toString();
-          that.otp = params.data.settings.Enable_OTP.setting_value.toString();
-          that.tempTimerSwitch =
-            params.data.settings.Auto_Log_Off.setting_status.toString();
-          that.tempOtpSwitch =
-            params.data.settings.Enable_OTP.setting_status.toString();
         }
       });
   }
@@ -112,19 +109,15 @@ export class SettingsSecurityComponent implements OnInit {
         denyButtonText: this.Compnay_Equipment_Delete_No,
       })
       .then((result) => {
-        if (result.isConfirmed)
-        {
+        if (result.isConfirmed) {
           that.timeoutSwitch = event;
           that.updateSetting(reqObject);
-        } else
-        {
+        } else {
           console.log("I am here");
-          if (that.tempTimerSwitch == "Active")
-          {
+          if (that.tempTimerSwitch == "Active") {
             console.log("I am here 1");
             that.timeoutSwitch = true;
-          } else
-          {
+          } else {
             console.log("I am here 2");
             that.timeoutSwitch = false;
           }
@@ -152,12 +145,10 @@ export class SettingsSecurityComponent implements OnInit {
         denyButtonText: this.Compnay_Equipment_Delete_No,
       })
       .then((result) => {
-        if (result.isConfirmed)
-        {
+        if (result.isConfirmed) {
           that.timer = event;
           that.updateSetting(reqObject);
-        } else
-        {
+        } else {
           console.log(this.timer);
           that.timer = that.tempTimer;
         }
@@ -171,12 +162,10 @@ export class SettingsSecurityComponent implements OnInit {
     this.httpCall
       .httpPostCall(httproutes.PORTAL_SETTING_UPDATE, objectForEdit)
       .subscribe(function (params) {
-        if (params.status)
-        {
+        if (params.status) {
           that.snackbarservice.openSnackBar(params.message, "success");
           that.myapp.updateIdealTimeout();
-        } else
-        {
+        } else {
           that.snackbarservice.openSnackBar(params.message, "error");
         }
       });
@@ -202,12 +191,10 @@ export class SettingsSecurityComponent implements OnInit {
         denyButtonText: this.Compnay_Equipment_Delete_No,
       })
       .then((result) => {
-        if (result.isConfirmed)
-        {
+        if (result.isConfirmed) {
           that.otp = event;
           that.updateSetting(reqObject);
-        } else
-        {
+        } else {
           console.log(this.timer);
           that.otp = that.tempOtpSwitch;
         }
@@ -233,19 +220,15 @@ export class SettingsSecurityComponent implements OnInit {
         denyButtonText: this.Compnay_Equipment_Delete_No,
       })
       .then((result) => {
-        if (result.isConfirmed)
-        {
+        if (result.isConfirmed) {
           that.otpSwitch = event;
           that.updateSetting(reqObject);
-        } else
-        {
+        } else {
           console.log("I am here");
-          if (that.tempOtpSwitch == "Active")
-          {
+          if (that.tempOtpSwitch == "Active") {
             console.log("I am here 1");
             that.otpSwitch = true;
-          } else
-          {
+          } else {
             console.log("I am here 2");
             that.otpSwitch = false;
           }

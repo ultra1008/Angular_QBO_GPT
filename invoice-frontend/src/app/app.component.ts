@@ -42,82 +42,76 @@ export class AppComponent implements OnInit {
     console.log('updateIdealTimeout');
     let that = this;
 
-    if (localStorage.getItem('invoicelogout') == 'false')
-    {
+    if (localStorage.getItem('invoicelogout') == 'false') {
       that.httpCall.httpGetCall(httproutes.PORTAL_SETTING_GET).subscribe(function (params) {
-        console.log(params)
-        if (params.status)
-        {
-          console.log('If 1');
-          if (params.data.settings.Auto_Log_Off.setting_status == "Active")
-          {
-            // sets an idle timeout of 1 min, for testing purposes.
-            console.log('If 2');
-            that.idle.setIdle(params.data.settings.Auto_Log_Off.setting_value); // Change this time from the settings
-            // sets a timeout period of 30 seconds. after 30 seconds of inactivity, the user will be considered timed out.
-            that.idle.setTimeout(30);
-            // sets the default interrupts, in this case, things like clicks, scrolls, touches to the document
-            that.idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
+        console.log(params);
+        if (params.status) {
+          if (params.data) {
+            if (params.data.settings.Auto_Log_Off.setting_status == "Active") {
+              // sets an idle timeout of 1 min, for testing purposes. 
+              that.idle.setIdle(params.data.settings.Auto_Log_Off.setting_value); // Change this time from the settings
+              // sets a timeout period of 30 seconds. after 30 seconds of inactivity, the user will be considered timed out.
+              that.idle.setTimeout(30);
+              // sets the default interrupts, in this case, things like clicks, scrolls, touches to the document
+              that.idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
 
-            that.idle.onIdleEnd.subscribe(() => {
-              that.idleState = 'No longer idle.'
-              console.log(that.idleState);
-              that.reset();
-            });
-
-            that.idle.onTimeout.subscribe(() => {
-              that.mainLogout();
-            });
-
-            that.idle.onIdleStart.subscribe(() => {
-              that.idleState = 'You\'ve gone idle!'
-              console.log(that.idleState);
-              //display diaglog here
-              // that.dialogRef = that.dialog.open(TimerDialogComponent, {
-              //   height: '280px',
-              //   width: '600px',
-              //   data: {},
-              // });
-              // that.dialogRef.afterClosed().subscribe(result => {
-              // });
-              let val = params.data.settings.Auto_Log_Off.setting_value;
-              console.log('===== val ======', val);
-              let message = "Your Rovuk session will end in " + val + " minutes due to inactivity.";
-              let htmlData = "As a security precaution, if there is no additional activity in your ROVUK session, the session will end and you will be brought to the login page.</br></br>If you are still working please click OK to continue.";
-              swalWithBootstrapButtons.fire({
-                title: message,
-                html: htmlData,
-                showDenyButton: true,
-                showCancelButton: false,
-                confirmButtonText: "Logout",
-                denyButtonText: "OK",
-                allowOutsideClick: false
-              }).then((result) => {
-                if (result.isConfirmed)
-                {
-                  that.reset();
-                  that.mainLogout();
-                } else if (
-                  /* Read more about handling dismissals below */
-                  result.dismiss === Swal.DismissReason.cancel
-                )
-                {
-                  that.reset();
-                }
+              that.idle.onIdleEnd.subscribe(() => {
+                that.idleState = 'No longer idle.';
+                console.log(that.idleState);
+                that.reset();
               });
-            });
 
-            that.idle.onTimeoutWarning.subscribe((countdown) => {
-              that.idleState = 'You will time out in ' + countdown + ' seconds!'
-              console.log(that.idleState);
-            });
+              that.idle.onTimeout.subscribe(() => {
+                that.mainLogout();
+              });
 
-            // sets the ping interval to 15 seconds
-            that.keepalive.interval(15);
+              that.idle.onIdleStart.subscribe(() => {
+                that.idleState = 'You\'ve gone idle!';
+                console.log(that.idleState);
+                //display diaglog here
+                // that.dialogRef = that.dialog.open(TimerDialogComponent, {
+                //   height: '280px',
+                //   width: '600px',
+                //   data: {},
+                // });
+                // that.dialogRef.afterClosed().subscribe(result => {
+                // });
+                let val = params.data.settings.Auto_Log_Off.setting_value;
+                let message = "Your Rovuk session will end in " + val + " minutes due to inactivity.";
+                let htmlData = "As a security precaution, if there is no additional activity in your ROVUK session, the session will end and you will be brought to the login page.</br></br>If you are still working please click OK to continue.";
+                swalWithBootstrapButtons.fire({
+                  title: message,
+                  html: htmlData,
+                  showDenyButton: true,
+                  showCancelButton: false,
+                  confirmButtonText: "Logout",
+                  denyButtonText: "OK",
+                  allowOutsideClick: false
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    that.reset();
+                    that.mainLogout();
+                  } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                  ) {
+                    that.reset();
+                  }
+                });
+              });
 
-            that.keepalive.onPing.subscribe(() => that.lastPing = new Date());
+              that.idle.onTimeoutWarning.subscribe((countdown) => {
+                that.idleState = 'You will time out in ' + countdown + ' seconds!';
+                console.log(that.idleState);
+              });
 
-            that.reset();
+              // sets the ping interval to 15 seconds
+              that.keepalive.interval(15);
+
+              that.keepalive.onPing.subscribe(() => that.lastPing = new Date());
+
+              that.reset();
+            }
           }
         }
       });
@@ -144,12 +138,10 @@ export class AppComponent implements OnInit {
     // Ideal Timeout so Logout.
     that.uiSpinner.spin$.next(true);
     let userdata = JSON.parse(localStorage.getItem('userdata') ?? '');
-    if (userdata.UserData.role_name != configdata.EMPLOYEE)
-    {
+    if (userdata.UserData.role_name != configdata.EMPLOYEE) {
       that.uiSpinner.spin$.next(false);
       that.logoutHistory();
-    } else
-    {
+    } else {
       that.uiSpinner.spin$.next(false);
       localStorage.setItem('invoicelogout', 'true');
       setTimeout(() => {
@@ -183,8 +175,7 @@ export class AppComponent implements OnInit {
           location_lng: let_log[1]
         };
         that.httpCall.httpPostCall(httproutes.USER_LOGOUT, reqObject).subscribe(function (params) {
-          if (params.status)
-          {
+          if (params.status) {
             that.snackbarservice.openSnackBar(params.message, "success");
             that.uiSpinner.spin$.next(false);
             localStorage.setItem('invoicelogout', 'true');
@@ -192,8 +183,7 @@ export class AppComponent implements OnInit {
               that.router.navigateByUrl('/login');
             }, 100);
           }
-          else
-          {
+          else {
             that.snackbarservice.openSnackBar(params.message, 'error');
             that.uiSpinner.spin$.next(false);
           }

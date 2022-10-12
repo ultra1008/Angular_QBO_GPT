@@ -24,18 +24,26 @@ export class AlertsComponent implements OnInit {
   settingObject: any;
   setting_id!: string;
   clockinradius_value!: string;
+
   Pending_items: boolean = false;
   Pending_items_value!: string;
+
   Invoice_due_date: boolean = false;
-  Invoice_due_date_value!: string;
+  Invoice_due_time_value!: string;
+  Invoice_due_day_value!: string;
+
   Invoice_arrive: boolean = false;
   Invoice_arrive_value!: string;
+
   Invoice_modified: boolean = false;
   Invoice_modified_value!: string;
+
   Invoice_sent_to_batch: boolean = false;
   Invoice_sent_to_batch_value!: string;
+
   daily_productivity_report: boolean = false;
   daily_productivity_report_value!: string;
+
   pendingdata: any = configdata.PENDINGITEM_ALERT;
   duetime: any = configdata.INVOICE_DUE_TIME_ALERT;
   duedate: any = configdata.INVOICE_DUE_DAY_ALERT;
@@ -75,84 +83,65 @@ export class AlertsComponent implements OnInit {
     this.httpCall
       .httpGetCall(httproutes.PORTAL_ROVUK_INVOICE__SETTINGS_GET_ALL_ALERTS)
       .subscribe(function (params) {
-        if (params.status)
-        {
-          that.settingObject = params.data.settings;
-          that.setting_id = params.data._id;
-          that.Pending_items =
-            params.data.settings.Pending_items.setting_value;
-          if (
-            params.data.settings.Pending_items.setting_status ==
-            "Active"
-          )
-          {
-            that.Pending_items = true;
-          } else
-          {
-            that.Pending_items = false;
-          }
-          that.Invoice_due_date_value =
-            params.data.settings.Invoice_due_date_value.setting_value;
-          if (
-            params.data.settings.Invoice_due_date_value.setting_status ==
-            "Active"
-          )
-          {
-            that.Invoice_due_date = true;
-          } else
-          {
-            that.Invoice_due_date = false;
-          }
-          that.Invoice_arrive_value =
-            params.data.settings.Invoice_arrive_value.setting_value;
-          if (
-            params.data.settings.Invoice_arrive_value.setting_status ==
-            "Active"
-          )
-          {
-            that.Invoice_arrive = true;
-          } else
-          {
-            that.Invoice_arrive = false;
-          }
-          that.Invoice_modified =
-            params.data.settings.Invoice_modified.setting_value;
-          if (
-            params.data.settings.Invoice_modified.setting_status ==
-            "Active"
-          )
-          {
-            that.Invoice_modified = true;
-          } else
-          {
-            that.Invoice_modified = false;
-          }
-          if (
-            params.data.settings.daily_productivity_report.setting_status == "Active"
-          )
-          {
-            that.daily_productivity_report = true;
-          } else
-          {
-            that.daily_productivity_report = false;
-          }
-          if (
-            params.data.settings.Invoice_sent_to_batch.setting_status ==
-            "Active"
-          )
-          {
-            that.Invoice_sent_to_batch = true;
-          } else
-          {
-            that.Invoice_sent_to_batch = false;
-          }
+        if (params.status) {
+          if (params.data) {
+            that.settingObject = params.data.settings;
+            that.setting_id = params.data._id;
 
+            that.Pending_items_value =
+              params.data.settings.Pending_items.setting_value;
+            if (params.data.settings.Pending_items.setting_status == "Active") {
+              that.Pending_items = true;
+            } else {
+              that.Pending_items = false;
+            }
+
+            that.Invoice_due_time_value =
+              params.data.settings.Invoice_due_date.setting_value;
+            that.Invoice_due_day_value =
+              params.data.settings.Invoice_due_date.setting_value2;
+            if (params.data.settings.Invoice_due_date.setting_status == "Active") {
+              that.Invoice_due_date = true;
+            } else {
+              that.Invoice_due_date = false;
+            }
+
+            that.Invoice_arrive_value =
+              params.data.settings.Invoice_arrive.setting_value;
+            if (params.data.settings.Invoice_arrive.setting_status == "Active") {
+              that.Invoice_arrive = true;
+            } else {
+              that.Invoice_arrive = false;
+            }
+
+            that.Invoice_modified_value =
+              params.data.settings.Invoice_modified.setting_value;
+            if (params.data.settings.Invoice_modified.setting_status == "Active") {
+              that.Invoice_modified = true;
+            } else {
+              that.Invoice_modified = false;
+            }
+            that.daily_productivity_report_value =
+              params.data.settings.daily_productivity_report.setting_value;
+            if (params.data.settings.daily_productivity_report.setting_status == "Active") {
+              that.daily_productivity_report = true;
+            } else {
+              that.daily_productivity_report = false;
+            }
+            that.Invoice_sent_to_batch_value =
+              params.data.settings.Invoice_sent_to_batch.setting_value;
+            if (params.data.settings.Invoice_sent_to_batch.setting_status == "Active") {
+              that.Invoice_sent_to_batch = true;
+            } else {
+              that.Invoice_sent_to_batch = false;
+            }
+          }
         }
       });
   }
 
-  modelChangeLocation(event: any, checkoption: any) {
-    console.log("hello", this.settingObject)
+  modelChangeSwitch(event: any, checkoption: any) {
+    console.log("hello", this.settingObject);
     let settingKey = "settings." + checkoption;
     let obj = this.settingObject[checkoption];
     obj.setting_status = event ? "Active" : "Inactive";
@@ -169,41 +158,40 @@ export class AlertsComponent implements OnInit {
         denyButtonText: this.Compnay_Equipment_Delete_No,
       })
       .then((result) => {
-        if (result.isConfirmed)
-        {
+        if (result.isConfirmed) {
           that.updateSetting(reqObject);
-        } else
-        {
-          if (checkoption == "Pending_items")
-          {
+        } else {
+          if (checkoption == "Pending_items") {
             that.Pending_items = !event;
-          } else if (checkoption == "Invoice_due_date")
-          {
+          } else if (checkoption == "Invoice_due_date") {
             that.Invoice_due_date = !event;
-          } else if (checkoption == "daily_productivity_report")
-          {
+          } else if (checkoption == "daily_productivity_report") {
             that.daily_productivity_report = !event;
-          } else if (checkoption == "Invoice_sent_to_batch")
-          {
+          } else if (checkoption == "Invoice_sent_to_batch") {
             that.Invoice_sent_to_batch = !event;
-          } else if (checkoption == "Invoice_arrive")
-          {
+          } else if (checkoption == "Invoice_arrive") {
             that.Invoice_arrive = !event;
-          } else if (checkoption == "Invoice_modified")
-          {
+          } else if (checkoption == "Invoice_modified") {
             that.Invoice_modified = !event;
           }
         }
       });
   }
 
-  modelChangeLocationText(event: any, checkoption: any) {
+  modelChangeDropdown(event: any, checkoption: any, firstSetting: boolean) {
+    console.log(event);
+    // this.timer = event;
     let settingKey = "settings." + checkoption;
     let obj = this.settingObject[checkoption];
-    obj.setting_value = event;
+    if (firstSetting) {
+      obj.setting_value = event;
+    } else {
+      obj.setting_value2 = event;
+    }
     let reqObject = {
       [settingKey]: obj,
     };
+    console.log(reqObject);
     let that = this;
     swalWithBootstrapButtons
       .fire({
@@ -214,46 +202,40 @@ export class AlertsComponent implements OnInit {
         denyButtonText: this.Compnay_Equipment_Delete_No,
       })
       .then((result) => {
-        if (result.isConfirmed)
-        {
+        if (result.isConfirmed) {
           that.updateSetting(reqObject);
-        } else
-        {
-          if (checkoption == "Pending_items")
-          {
+        } else {
+          if (checkoption == "Pending_items") {
             that.Pending_items_value =
               that.settingObject.Pending_items.setting_value;
-          } else if (checkoption == "Invoice_due_date_value")
-          {
-            that.Invoice_due_date_value =
-              that.settingObject.Invoice_due_date_value.setting_value;
-          } else if (checkoption == "Invoice_arrive_value")
-          {
+          } else if (checkoption == "Invoice_due_date_value") {
+            that.Invoice_due_time_value =
+              that.settingObject.Invoice_due_date.setting_value;
+            that.Invoice_due_day_value =
+              that.settingObject.Invoice_due_date.setting_value2;
+          } else if (checkoption == "Invoice_arrive") {
             that.Invoice_arrive_value =
-              that.settingObject.Invoice_arrive_value.setting_value;
-          } else if (checkoption == "Invoice_modified")
-          {
+              that.settingObject.Invoice_arrive.setting_value;
+          } else if (checkoption == "Invoice_modified") {
             that.Invoice_modified =
               that.settingObject.Invoice_modified.setting_value;
-          } else if (checkoption == "Invoice_sent_to_batch_value")
-          {
+          } else if (checkoption == "Invoice_sent_to_batch_value") {
             that.Invoice_sent_to_batch_value =
               that.settingObject.Invoice_sent_to_batch_value.setting_value;
-          } else if (checkoption == "daily_productivity_report_value")
-          {
+          } else if (checkoption == "daily_productivity_report_value") {
             that.daily_productivity_report_value =
               that.settingObject.daily_productivity_report_value.setting_value;
           }
         }
       });
   }
+
   getAllRoles() {
     let that = this;
     this.httpCall.httpGetCall(httproutes.PORTAL_SETTING_ROLES_ALL).subscribe(function (params) {
-      if (params.status)
-      {
+      if (params.status) {
         that.allRoles = params.data;
-        console.log("role", that.allRoles)
+        console.log("role", that.allRoles);
       }
     });
   }
@@ -261,45 +243,12 @@ export class AlertsComponent implements OnInit {
   getAllUser() {
     let that = this;
     this.httpCall.httpGetCall(httproutes.PORTAL_GET_ALL_USERS).subscribe(function (params) {
-      if (params.status)
-      {
+      if (params.status) {
         that.allUser = params.data;
-        console.log("role", that.allUser)
+        console.log("role", that.allUser);
       }
     });
   }
-  // modelChangeTimeout(event: any) {
-  //   console.log(event);
-  //   this.pendingitems = event;
-  //   let settingKey = "settings." + "Auto_Log_Off";
-  //   let obj = this.settingObject["Auto_Log_Off"];
-  //   obj.setting_value = event;
-  //   let reqObject = {
-  //     [settingKey]: obj,
-  //   };
-  //   console.log(reqObject);
-  //   let that = this;
-  //   swalWithBootstrapButtons
-  //     .fire({
-  //       title: this.Project_Settings_Alert_Sure_Want_Change,
-  //       showDenyButton: true,
-  //       showCancelButton: false,
-  //       confirmButtonText: this.Compnay_Equipment_Delete_Yes,
-  //       denyButtonText: this.Compnay_Equipment_Delete_No,
-  //     })
-  //     .then((result) => {
-  //       if (result.isConfirmed)
-  //       {
-  //         that.pendingitems = event;
-  //         that.updateSetting(reqObject);
-  //       } else
-  //       {
-  //         console.log(this.pendingitems);
-  //         that.pendingitems = that.temppendingitems;
-  //       }
-  //     });
-  // }
-
 
   updateSetting(objectForEdit: any) {
     let userData = JSON.parse(localStorage.getItem("userdata") ?? "");
@@ -308,11 +257,9 @@ export class AlertsComponent implements OnInit {
     this.httpCall
       .httpPostCall(httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTING_UPDATE_ALERTS, objectForEdit)
       .subscribe(function (params) {
-        if (params.status)
-        {
+        if (params.status) {
           that.snackbarservice.openSnackBar(params.message, "success");
-        } else
-        {
+        } else {
           that.snackbarservice.openSnackBar(params.message, "error");
         }
       });
