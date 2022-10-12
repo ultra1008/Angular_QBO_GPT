@@ -8,8 +8,8 @@
         <!-- <h1 class="screen-title">{{'Employee-heading' | translate }}</h1> -->
         <div *ngIf="addTeamMember" class="inner-search-bar cust-heght-textbox">
           <div class="main-search-bar">
-            <button mat-stroked-button *ngIf="role_to == 'Admin'" style="margin-right: 2px;" class="sign-button"
-              mat-raised-button (click)="gotoArchive();">
+            <button mat-stroked-button style="margin-right: 2px;" class="sign-button" mat-raised-button
+              (click)="gotoArchive();">
               <img src="{{archivedIcon}}" alt="" class="pr-1" height="19px">
               {{'Archived_all' | translate }}
             </button>
