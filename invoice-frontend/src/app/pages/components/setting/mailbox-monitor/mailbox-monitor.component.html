@@ -20,8 +20,8 @@
                             <div class="col">
                                 <mat-form-field appearance="outline" class="main-one-input-field">
                                     <mat-label>Password</mat-label>
-                                    <input matInput formControlName="password"
-                                        class="input-capitalized-textfield" placeholder="password">
+                                    <input matInput formControlName="password" class="input-capitalized-textfield"
+                                        placeholder="password">
                                 </mat-form-field>
                             </div>
                         </div>
@@ -31,8 +31,8 @@
                                     <mat-label>Frequency
                                     </mat-label>
                                     <mat-select formControlName="frequency" class="dark-cust-color" required>
-                                        <mat-option>
-                                            ABC
+                                        <mat-option *ngFor="let f of frequency" [value]="f.key">
+                                            {{f.name}}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>

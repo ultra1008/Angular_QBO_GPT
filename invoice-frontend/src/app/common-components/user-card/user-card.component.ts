@@ -75,8 +75,8 @@ export class UserCardComponent implements OnInit {
       this.editIcon = "./assets/diversityicon/thememode/edit_icon.png";
     } else
     {
-      this.trashIcon = "./assets/diversityicon/darkmode/trash_icon_dark.png";
-      this.editIcon = "./assets/diversityicon/darkmode/edit_icon_dark.png";
+      this.trashIcon = "./assets/diversityicon/thememode/trash_icon.png";
+      this.editIcon = "./assets/diversityicon/thememode/edit_icon.png";
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
       if (mode)
@@ -87,8 +87,8 @@ export class UserCardComponent implements OnInit {
       } else
       {
         this.mode = 'on';
-        this.trashIcon = "./assets/diversityicon/darkmode/trash_icon_dark.png";
-        this.editIcon = "./assets/diversityicon/darkmode/edit_icon_dark.png";
+        this.trashIcon = "./assets/diversityicon/thememode/trash_icon.png";
+        this.editIcon = "./assets/diversityicon/thememode/edit_icon.png";
       }
     });
     this.translate.stream(['']).subscribe((textarray) => {

@@ -17,6 +17,7 @@ export class MailboxMonitorComponent implements OnInit {
   compnay_id: any;
   LTS_ACTIVE: any = configdata.LTS_ACTIVE;
   saveIcon = icon.SAVE_WHITE;
+  frequency = configdata.TIMEROPTIONS;
   constructor(private formBuilder: FormBuilder, public httpCall: HttpCall, public snackbarservice: Snackbarservice,
     public uiSpinner: UiSpinnerService,
     public translate: TranslateService) {
