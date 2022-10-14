@@ -197,8 +197,8 @@ module.exports.saveEmployee = async function (req, res) {
                                 //     Body: admin_qrCode,
                                 //     ACL: 'public-read-write'
                                 // };
-                                // var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
-                                // let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
+                                var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+                                let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
                                 // bucketOpration.uploadFile(PARAMS, async function (err, resultUpload) {
                                 //     if (err) {
                                 //         res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
@@ -206,7 +206,7 @@ module.exports.saveEmployee = async function (req, res) {
                                 //         userqrcode = config.wasabisys_url + "/" + LowerCase_bucket + "/" + key_url;
                                 //         history_object.userqrcode = userqrcode;
                                 history_object.usercostcode = usercostcode;
-                                let updateuser = await userConnection.updateOne({ _id: ObjectID(add._id) }, { userqrcode: userqrcode, usercostcode: usercostcode });
+                                let updateuser = await userConnection.updateOne({ _id: ObjectID(add._id) }, { usercostcode: usercostcode });
                                 if (updateuser) {
                                     let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, body.useremail, "Rovuk Registration", HtmlData,
                                         talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
@@ -2968,8 +2968,8 @@ module.exports.getAllEmployeeReport = async function (req, res) {
                 if (err) {
                     res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
                 } else {
-                    userqrcode = config.wasabisys_url + "/" + companycode + "/" + key_url;
-                    console.log("userqrcode", userqrcode);
+                    let excelUrl = config.wasabisys_url + "/" + companycode + "/" + key_url;
+                    console.log("excelUrl", excelUrl);
                     let emailTmp = {
                         HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
                         SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
@@ -2982,7 +2982,7 @@ module.exports.getAllEmployeeReport = async function (req, res) {
                         TEXT1: translator.getStr('EmailTeamReportText1'),
                         TEXT2: translator.getStr('EmailTeamReportText2'),
 
-                        FILE_LINK: userqrcode,
+                        FILE_LINK: excelUrl,
                         LOGIN_LINK: config.SITE_URL + "/login",
 
                         DOCUMENT_TYPE: roles,
