@@ -24,6 +24,7 @@ import { configdata } from 'src/environments/configData';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
+import { AuthService } from 'src/app/pages/superadmin/auth/services';
 
 type Theme = 'light-theme' | 'dark-theme';
 const swalWithBootstrapButtons = Swal.mixin({
@@ -72,7 +73,7 @@ export class UserComponent implements OnInit {
     Constructor
   */
   constructor(private modeService: ModeDetectService, private layoutService: LayoutService, public translate: TranslateService, private themeService: ThemeService,
-    public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService,
+    public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService, private authservice: AuthService,
     private router: Router, private deviceService: DeviceDetectorService, public httpCall: HttpCall) {
 
     let that = this;
@@ -304,7 +305,9 @@ export class UserComponent implements OnInit {
           } else
           {
             that.uiSpinner.spin$.next(false);
+            localStorage.setItem("invocelogout", "true");
             that.router.navigateByUrl('/login');
+            that.authservice.signPortalOut();
           }
         }
       }
@@ -345,11 +348,13 @@ export class UserComponent implements OnInit {
             that.snackbarservice.openSnackBar(params.message, "success");
             that.uiSpinner.spin$.next(false);
             that.router.navigateByUrl('/login');
+            that.authservice.signPortalOut();
           }
           else
           {
             that.snackbarservice.openSnackBar(params.message, 'error');
             that.uiSpinner.spin$.next(false);
+            that.authservice.signPortalOut();
           }
         });
       })
