@@ -17,11 +17,11 @@ import { UserpublicDatatableComponent } from './components/userpublic-datatable/
 
 
 
-import { OcpsSettingsComponent } from './components/setting/ocps-settings/ocps-settings.component';
+
 
 
 import { ForcefullyResetpasswordComponent } from './components/forcefully-resetpassword/forcefully-resetpassword.component';
-import { WebsitepluginComponent } from './components/setting/websiteplugin/websiteplugin.component';
+
 import { EmployeeListComponent } from './components/team/employee-list/employee-list.component';
 import { EmployeeFormComponent } from './components/team/employee-form/employee-form.component';
 import { EmployeeViewComponent } from './components/team/employee-view/employee-view.component';
@@ -33,7 +33,7 @@ import { EmployeeJobtitleComponent } from './components/setting/settings-employe
 import { EmployeeJobtypeComponent } from './components/setting/settings-employee/employee-jobtype/employee-jobtype.component';
 import { EmployeePayrollgroupComponent } from './components/setting/settings-employee/employee-payrollgroup/employee-payrollgroup.component';
 import { EmployeeRelationshipComponent } from './components/setting/settings-employee/employee-relationship/employee-relationship.component';
-import { OcpsDashboardComponent } from './components/dashboard/ocps-dashboard.component';
+
 import { InvoiceComponent } from './components/invoice/invoice.component';
 import { TemplatesComponent } from './components/templates/templates.component';
 import { ReportsComponent } from './components/reports/reports.component';
@@ -42,13 +42,15 @@ import { AlertsComponent } from './components/setting/alerts/alerts.component';
 import { IntegrationsComponent } from './components/setting/integrations/integrations.component';
 import { UsageComponent } from './components/setting/usage/usage.component';
 import { CostCodeComponent } from './components/setting/cost-code/cost-code.component';
-import { TermsComponent } from './components/setting/ocps-settings/terms/terms.component';
-import { TaxRateComponent } from './components/setting/ocps-settings/tax-rate/tax-rate.component';
-import { DocumentsComponent } from './components/setting/ocps-settings/documents/documents.component';
+import { TermsComponent } from './components/setting/invoice-other-settings/terms/terms.component';
+import { TaxRateComponent } from './components/setting/invoice-other-settings/tax-rate/tax-rate.component';
+import { DocumentsComponent } from './components/setting/invoice-other-settings/documents/documents.component';
 import { ArchiveTeamListComponent } from './components/team/archive-team-list/archive-team-list.component';
 import { InvoiceFormComponent } from './components/invoice/invoice-form/invoice-form.component';
 import { TemplateFormComponent } from './components/templates/template-form/template-form.component';
 import { InvoiceDetailPageComponent } from './components/invoice/invoice-detail-page/invoice-detail-page.component';
+import { InvoiceOtherSettingsComponent } from './components/setting/invoice-other-settings/invoice-other-settings.component';
+import { InvoiceDashboardComponent } from './components/dashboard/invoice-dashboard.component';
 
 
 const routes: Routes = [
@@ -85,7 +87,7 @@ const routes: Routes = [
         path: 'dashboard',
         pathMatch: 'full',
         canActivate: [PortalAuthGuard],
-        component: OcpsDashboardComponent
+        component: InvoiceDashboardComponent
       },
       {
         path: 'invoice',
@@ -214,7 +216,7 @@ const routes: Routes = [
         path: 'settings',
         pathMatch: 'full',
         canActivate: [PortalAuthGuard],
-        component: OcpsSettingsComponent,
+        component: InvoiceOtherSettingsComponent,
       },
       {
         path: 'settings-employee',
@@ -299,11 +301,7 @@ const routes: Routes = [
         pathMatch: 'full',
         component: ForcefullyResetpasswordComponent
       },
-      {
-        path: 'websiteplugin',
-        pathMatch: 'full',
-        component: WebsitepluginComponent
-      },
+
 
 
 

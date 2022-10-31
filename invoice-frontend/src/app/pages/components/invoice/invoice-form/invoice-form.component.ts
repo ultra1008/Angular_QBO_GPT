@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { Location } from '@angular/common';
-import { icon, localstorageconstants, supplierroutes, wasabiImagePath } from 'src/app/consts';
+import { icon, localstorageconstants, wasabiImagePath } from 'src/app/consts';
 import { HttpCall } from 'src/app/service/httpcall.service';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -93,19 +93,23 @@ export class InvoiceFormComponent implements OnInit {
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off') {
+    if (this.mode == 'off')
+    {
       this.backIcon = icon.BACK;
       this.exitIcon = icon.CANCLE;
-    } else {
+    } else
+    {
       this.backIcon = icon.BACK_WHITE;
       this.exitIcon = icon.CANCLE_WHITE;
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode) {
+      if (mode)
+      {
         this.mode = 'off';
         this.backIcon = icon.BACK;
         this.exitIcon = icon.CANCLE;
-      } else {
+      } else
+      {
         this.mode = 'on';
         this.backIcon = icon.BACK_WHITE;
         this.exitIcon = icon.CANCLE_WHITE;

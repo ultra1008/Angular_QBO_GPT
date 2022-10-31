@@ -657,8 +657,7 @@ export enum httproutes {
     PUBLIC_PAGE_PAST_SAFETY_TALK_DOCUMENT = "/webapi/v1/portal/getpastsafetytalkpublicuserdatatable",
 
 
-    //OCPS-Vendor register companycode(NAISC)
-    OCPS_VENDOR_REGISTER_NAISCCODE = "/webapi/v2/superadmin/supplier_diversity/getcompanycode",
+
 
     SPONSOR_GET_ALL_VENDOR = "/webapi/v1/getallsponsorvendor",
     SPONSOR_GET_VENDOR_FOR_CONTRACT = "/webapi/v1/getsponsorvendorforcontract",
@@ -1070,22 +1069,22 @@ export enum httproutes {
     PORTAL_ROVUK_SPONSOR_IMPORT_DEPARTMENT = "/webapi/v1/importsupplierdepartment",
     PORTAL_ROVUK_SPONSOR_EXPORT_DEPARTMENT = "/webapi/v1/exportsupplierdepartment",
 
-    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ocps-setting-term>>>>>>>>>>>>>>>>>>>>>>>>
+    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<invoice-other-setting-term>>>>>>>>>>>>>>>>>>>>>>>>
     PORTAL_ROVUK_INVOICE_OTHER_SETTINGS_GET_TERMS = "/webapi/v1/portal/getinvoiceterm",
     PORTAL_ROVUK_INVOICE_OTHER_SETTING_SAVE_TERMS = "/webapi/v1/portal/saveinvoiceterm",
     PORTAL_ROVUK_INVOICE_OTHER_SETTING_DELETE_TERMS = "/webapi/v1/portal/deleteInvoiceterm",
-    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ocps-setting-Text-reat>>>>>>>>>>>>>>>>>>>>>>>>
+    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<invoice-other-setting-Text-reat>>>>>>>>>>>>>>>>>>>>>>>>
     PORTAL_ROVUK_INVOICE_OTHER_SETTINGS_GET_TEXT_RATE = "/webapi/v1/portal/gettaxrate",
     PORTAL_ROVUK_INVOICE_OTHER_SETTING_SAVE_TEXT_RATE = "/webapi/v1/portal/savetaxrate",
     PORTAL_ROVUK_INVOICE_OTHER_SETTING_DELETE_TEXT_RATE = "/webapi/v1/portal/deletetaxrate",
-    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ocps-setting-document>>>>>>>>>>>>>>>>>>>>>>>>
+    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<invoice-other-setting-document>>>>>>>>>>>>>>>>>>>>>>>>
     PORTAL_ROVUK_INVOICE_OTHER_SETTINGS_GET_DOCUMENT = "/webapi/v1/portal/getinvoicedocument",
     PORTAL_ROVUK_INVOICE_OTHER_SETTING_SAVE_DOCUMENT = "/webapi/v1/portal/saveinvoicedocument",
     PORTAL_ROVUK_INVOICE_OTHER_SETTING_DELETE_DOCUMENT = "/webapi/v1/portal/deleteInvoiceDocument",
 
     PORTAL_DASHBOARD_COUNT_GETDATA = "/webapi/v1/portal/getdashboardcount",
     PORTAL_DASHBOARD_CARD_COUNT_GETDATA = "/webapi/v1/portal/getdashboardpending",
-    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ocps-setting-Alerta>>>>>>>>>>>>>>>>>>>>>>>>
+    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<invoice-other-setting-Alerta>>>>>>>>>>>>>>>>>>>>>>>>
     PORTAL_ROVUK_INVOICE__SETTINGS_GET_ALL_ALERTS = "/webapi/v1/portal/getallsetting",
     PORTAL_ROVUK_INVOICE_OTHER_SETTING_UPDATE_ALERTS = "/webapi/v1/portal/getupdatesetting",
 

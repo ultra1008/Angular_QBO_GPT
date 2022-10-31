@@ -22,8 +22,8 @@ import { EmployeePortalModule } from './components/team/employee.module';
 import { MaterialTimePickerModule } from '@candidosales/material-time-picker';
 import { SettingsCompanyinfoComponent } from './components/setting/settings-companyinfo/settings-companyinfo.component';
 import { SettingsSmtpComponent } from './components/setting/settings-smtp/settings-smtp.component';
-import { WebsitepluginComponent } from './components/setting/websiteplugin/websiteplugin.component';
-import { ImOtherDownload, ImportOther, OcpsSettingsComponent } from './components/setting/ocps-settings/ocps-settings.component';
+
+import { ImOtherDownload, ImportOther, InvoiceOtherSettingsComponent } from './components/setting/invoice-other-settings/invoice-other-settings.component';
 import { NgxMatColorPickerModule } from '@angular-material-components/color-picker';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { MatSelectFilterModule } from 'mat-select-filter';
@@ -70,7 +70,7 @@ import { EmployeeJobtypeComponent, EmployeeJobTypeForm } from './components/sett
 import { EmployeePayrollgroupComponent, EmployeePayRollGroupForm } from './components/setting/settings-employee/employee-payrollgroup/employee-payrollgroup.component';
 import { EmployeeRelationshipComponent, EmployeeRelationshipForm } from './components/setting/settings-employee/employee-relationship/employee-relationship.component';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
-import { OcpsDashboardComponent } from './components/dashboard/ocps-dashboard.component';
+
 import { InvoiceAttachment, InvoiceComponent, InvoiceReport } from './components/invoice/invoice.component';
 import { ReportsComponent } from './components/reports/reports.component';
 import { FileAttachment, TemplatesComponent } from './components/templates/templates.component';
@@ -79,13 +79,14 @@ import { AlertsComponent } from './components/setting/alerts/alerts.component';
 import { IntegrationsComponent } from './components/setting/integrations/integrations.component';
 import { UsageComponent } from './components/setting/usage/usage.component';
 import { CostCodeComponent } from './components/setting/cost-code/cost-code.component';
-import { TermsComponent, TermsForm } from './components/setting/ocps-settings/terms/terms.component';
-import { TaxRateComponent, TaxRateForm } from './components/setting/ocps-settings/tax-rate/tax-rate.component';
-import { DocumentForm, DocumentsComponent } from './components/setting/ocps-settings/documents/documents.component';
+import { TermsComponent, TermsForm } from './components/setting/invoice-other-settings/terms/terms.component';
+import { TaxRateComponent, TaxRateForm } from './components/setting/invoice-other-settings/tax-rate/tax-rate.component';
+import { DocumentForm, DocumentsComponent } from './components/setting/invoice-other-settings/documents/documents.component';
 import { SettingsSecurityComponent } from './components/setting/settings-security/settings-security.component';
 import { InvoiceFormComponent } from './components/invoice/invoice-form/invoice-form.component';
 import { TemplateFormComponent } from './components/templates/template-form/template-form.component';
 import { InvoiceDetailPageComponent } from './components/invoice/invoice-detail-page/invoice-detail-page.component';
+import { InvoiceDashboardComponent } from './components/dashboard/invoice-dashboard.component';
 
 
 
@@ -102,7 +103,6 @@ import { InvoiceDetailPageComponent } from './components/invoice/invoice-detail-
     SettingComponent,
     SettingsCompanyinfoComponent,
     SettingsSmtpComponent,
-    WebsitepluginComponent,
     SettingsOtherComponent,
     UserpublicDatatableComponent,
     otherSettingManually,
@@ -110,7 +110,7 @@ import { InvoiceDetailPageComponent } from './components/invoice/invoice-detail-
     CustomimageviewerComponent,
     ShortcutsMenuComponent,
     ShortcutsAddComponent,
-    OcpsSettingsComponent,
+    InvoiceOtherSettingsComponent,
     ForcefullyResetpasswordComponent,
     IframeCustomepdfviewerComponent,
     SettingRoleComponent,
@@ -131,7 +131,7 @@ import { InvoiceDetailPageComponent } from './components/invoice/invoice-detail-
     EmployeePayRollGroupForm,
     EmployeeRelationshipForm,
     AddressBook,
-    OcpsDashboardComponent,
+    InvoiceDashboardComponent,
     InvoiceComponent,
     ReportsComponent,
     TemplatesComponent,

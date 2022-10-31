@@ -29,12 +29,12 @@ class DataTablesResponse {
 }
 
 @Component({
-  selector: 'app-ocps-settings',
-  templateUrl: './ocps-settings.component.html',
-  styleUrls: ['./ocps-settings.component.scss'],
+  selector: 'app-invoice-other-settings',
+  templateUrl: './invoice-other-settings.component.html',
+  styleUrls: ['./invoice-other-settings.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class OcpsSettingsComponent implements OnInit {
+export class InvoiceOtherSettingsComponent implements OnInit {
 
   Company_Equipment_File_Not_Match: any;
   archivedIcon: any;
@@ -57,20 +57,24 @@ export class OcpsSettingsComponent implements OnInit {
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off') {
+    if (this.mode == 'off')
+    {
       this.importIcon = icon.IMPORT;
 
-    } else {
+    } else
+    {
       this.importIcon = icon.IMPORT_WHITE;
 
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
 
-      if (mode) {
+      if (mode)
+      {
         this.mode = 'off';
         this.importIcon = icon.IMPORT;
 
-      } else {
+      } else
+      {
         this.mode = 'on';
         this.importIcon = icon.IMPORT_WHITE;
 
@@ -125,7 +129,7 @@ export class OcpsSettingsComponent implements OnInit {
 @Component({
   selector: 'importdataerrorothsetting',
   templateUrl: './importdataerrorothsetting.html',
-  styleUrls: ['./ocps-settings.component.scss'],
+  styleUrls: ['./invoice-other-settings.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
 export class ImportOther implements OnInit {
@@ -139,7 +143,7 @@ export class ImportOther implements OnInit {
 @Component({
   selector: 'importothSetting-download',
   templateUrl: './importothSetting-download.html',
-  styleUrls: ['./ocps-settings.component.scss'],
+  styleUrls: ['./invoice-other-settings.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
 export class ImOtherDownload implements OnInit {

@@ -47,8 +47,5 @@ export class SettingComponent implements OnInit {
     this.router.navigate(['/settings'])
   }
 
-  temp_ocpsdashboard() {
-    this.router.navigate(['/dashboard'])
-  }
 
 }

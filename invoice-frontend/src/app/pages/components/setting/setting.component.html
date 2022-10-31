@@ -126,17 +126,10 @@
             </form>
         </mat-step>
 
-        <!-- <mat-step state="emailsetting" [completed]="false">
-            <form>
-                <ng-template matStepLabel>Email setting</ng-template>
-                <app-ocpsemail-settings></app-ocpsemail-settings>
-            </form>
-        </mat-step> -->
-
         <mat-step state="other" [completed]="false">
             <form>
                 <ng-template matStepLabel>{{'Settings-OtherSettings' | translate}}</ng-template>
-                <app-ocps-settings></app-ocps-settings>
+                <app-invoice-other-settings></app-invoice-other-settings>
             </form>
         </mat-step>
 

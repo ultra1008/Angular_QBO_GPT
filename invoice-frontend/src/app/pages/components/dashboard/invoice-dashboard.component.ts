@@ -30,11 +30,11 @@ var chartColors = {
   grey: 'rgb(231,233,237)'
 };
 @Component({
-  selector: 'app-ocps-dashboard',
-  templateUrl: './ocps-dashboard.component.html',
-  styleUrls: ['./ocps-dashboard.component.scss']
+  selector: 'app-invoice-dashboard',
+  templateUrl: './invoice-dashboard.component.html',
+  styleUrls: ['./invoice-dashboard.component.scss']
 })
-export class OcpsDashboardComponent implements OnInit {
+export class InvoiceDashboardComponent implements OnInit {
   mode: any;
   countlist: any = {
     pending: [],
@@ -133,9 +133,11 @@ export class OcpsDashboardComponent implements OnInit {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode) {
+      if (mode)
+      {
         this.mode = 'off';
-      } else {
+      } else
+      {
         this.mode = 'on';
       }
     });
@@ -181,9 +183,11 @@ export class OcpsDashboardComponent implements OnInit {
   getChartList() {
     let self = this;
     this.httpCall.httpPostCall(httproutes.GET_CHART_LIST, { user_id: this.local_user._id }).subscribe(params => {
-      if (params.status) {
+      if (params.status)
+      {
 
-        if (params.data != null) {
+        if (params.data != null)
+        {
           self.list_id = params.data._id;
           self.timePeriods = params.data.chart_list;
         }
@@ -195,7 +199,8 @@ export class OcpsDashboardComponent implements OnInit {
   getCount() {
     let that = this;
     this.httpCall.httpGetCall(httproutes.PORTAL_DASHBOARD_COUNT_GETDATA).subscribe(function (params) {
-      if (params.status) {
+      if (params.status)
+      {
         that.countlist = params.data;
         console.log("count", that.countlist);
       }
