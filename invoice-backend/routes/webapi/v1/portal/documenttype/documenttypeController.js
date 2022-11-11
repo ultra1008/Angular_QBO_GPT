@@ -11,9 +11,8 @@ module.exports.getalldoctype = async function (req, res) {
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
-
             let documenttypeCollection = connection_db_api.model(collectionConstant.DOCUMENTTYPE, documenttypeSchema);
-            let all_documenttype = await documenttypeCollection.find();
+            let all_documenttype = await documenttypeCollection.find({ is_delete: 0 });
             res.send({ message: translator.getStr('DocumentTypeListing'), data: all_documenttype, status: true });
         } catch (e) {
             console.log(e);
@@ -33,23 +32,41 @@ module.exports.saveDocType = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-
             let documenttypeCollection = connection_db_api.model(collectionConstant.DOCUMENTTYPE, documenttypeSchema);
+            let get_one = await documenttypeCollection.findOne({ document_type_name: requestObject.document_type_name, is_delete: 0 });
             if (requestObject._id) {
-                let update_doc_type = await documenttypeCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
-                console.log(update_doc_type);
-                if (update_doc_type) {
-                    res.send({ message: translator.getStr('DocumentTypeUpdated'), data: update_doc_type, status: true });
+                if (get_one != null) {
+                    if (get_one._id == requestObject._id) {
+                        let update_doc_type = await documenttypeCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
+                        console.log(update_doc_type);
+                        if (update_doc_type) {
+                            res.send({ message: translator.getStr('DocumentTypeUpdated'), data: update_doc_type, status: true });
+                        } else {
+                            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                        }
+                    } else {
+                        res.send({ message: translator.getStr('DocumentTypeAlreadyExist'), status: false });
+                    }
                 } else {
-                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    let update_doc_type = await documenttypeCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
+                    console.log(update_doc_type);
+                    if (update_doc_type) {
+                        res.send({ message: translator.getStr('DocumentTypeUpdated'), data: update_doc_type, status: true });
+                    } else {
+                        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    }
                 }
             } else {
-                let add_doc_type = new documenttypeCollection(requestObject);
-                let save_doc_type = await add_doc_type.save();
-                if (save_doc_type) {
-                    res.send({ message: translator.getStr('DocumentTypeAdded'), data: save_doc_type, status: true });
+                if (get_one == null) {
+                    let add_doc_type = new documenttypeCollection(requestObject);
+                    let save_doc_type = await add_doc_type.save();
+                    if (save_doc_type) {
+                        res.send({ message: translator.getStr('DocumentTypeAdded'), data: save_doc_type, status: true });
+                    } else {
+                        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    }
                 } else {
-                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    res.send({ message: translator.getStr('DocumentTypeAlreadyExist'), status: false });
                 }
             }
         } catch (e) {
@@ -70,14 +87,14 @@ module.exports.deleteDocType = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             let connection_db_api = await db_connection.connection_db_api(decodedToken);
-            let userdocCollection = connection_db_api.model(collectionConstant.INVOICE_USER_DOCUMENT, userdocSchema);
+            let userdocCollection = connection_db_api.model(collectionConstant.USERDOCUMENT, userdocSchema);
             let userdocObject = await userdocCollection.find({ userdocument_type_id: ObjectID(req.body._id) });
             if (userdocObject.length > 0) {
                 res.send({ message: translator.getStr('DocumentTypeHasData'), status: false });
             } else {
                 let documenttypeCollection = connection_db_api.model(collectionConstant.DOCUMENTTYPE, documenttypeSchema);
-                let taskObject = await documenttypeCollection.remove({ _id: ObjectID(req.body._id) });
-                if (taskObject) {
+                let documentTypeObject = await documenttypeCollection.updateOne({ _id: ObjectID(req.body._id) }, { is_delete: 1 });
+                if (documentTypeObject) {
                     res.send({ message: translator.getStr('DocumentTypeDeleted'), status: true });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });

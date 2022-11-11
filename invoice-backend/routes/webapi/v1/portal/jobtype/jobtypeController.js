@@ -12,9 +12,8 @@ module.exports.getAlljob_type = async function (req, res) {
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
-
             let jobtypeCollection = connection_db_api.model(collectionConstant.JOB_TYPE, jobtypeSchema);
-            let all_jobtype = await jobtypeCollection.find({});
+            let all_jobtype = await jobtypeCollection.find({ is_delete: 0 });
             res.send({ message: translator.getStr('JobTypeListing'), data: all_jobtype, status: true });
         } catch (e) {
             console.log(e);
@@ -34,23 +33,39 @@ module.exports.savejobtype = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-
             let jobtypeCollection = connection_db_api.model(collectionConstant.JOB_TYPE, jobtypeSchema);
+            let get_one = await jobtypeCollection.findOne({ job_type_name: requestObject.job_type_name, is_delete: 0 });
             if (requestObject._id) {
-                let update_job_type = await jobtypeCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
-                console.log(update_job_type);
-                if (update_job_type) {
-                    res.send({ message: translator.getStr('JobTypeUpdated'), data: update_job_type, status: true });
+                if (get_one != null) {
+                    if (get_one._id == requestObject._id) {
+                        let update_job_type = await jobtypeCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
+                        if (update_job_type) {
+                            res.send({ message: translator.getStr('JobTypeUpdated'), data: update_job_type, status: true });
+                        } else {
+                            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                        }
+                    } else {
+                        res.send({ message: translator.getStr('JobTypeAlreadyExist'), status: false });
+                    }
                 } else {
-                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    let update_job_type = await jobtypeCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
+                    if (update_job_type) {
+                        res.send({ message: translator.getStr('JobTypeUpdated'), data: update_job_type, status: true });
+                    } else {
+                        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    }
                 }
             } else {
-                let add_job_type = new jobtypeCollection(requestObject);
-                let save_job_type = await add_job_type.save();
-                if (save_job_type) {
-                    res.send({ message: translator.getStr('JobTypeAdded'), data: save_job_type, status: true });
+                if (get_one == null) {
+                    let add_job_type = new jobtypeCollection(requestObject);
+                    let save_job_type = await add_job_type.save();
+                    if (save_job_type) {
+                        res.send({ message: translator.getStr('JobTypeAdded'), data: save_job_type, status: true });
+                    } else {
+                        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    }
                 } else {
-                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    res.send({ message: translator.getStr('JobTypeAlreadyExist'), status: false });
                 }
             }
         } catch (e) {
@@ -71,13 +86,13 @@ module.exports.deletejobtype = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
 
-            let userCollection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+            let userCollection = connection_db_api.model(collectionConstant.USER, userSchema);
             let userObject = await userCollection.find({ userjob_type_id: ObjectID(req.body._id) });
             if (userObject.length > 0) {
                 res.send({ message: translator.getStr('JobTypeHasData'), status: false });
             } else {
                 let jobtypeCollection = connection_db_api.model(collectionConstant.JOB_TYPE, jobtypeSchema);
-                let jobTypeObject = await jobtypeCollection.remove({ _id: ObjectID(req.body._id) });
+                let jobTypeObject = await jobtypeCollection.updateOne({ _id: ObjectID(req.body._id) }, { is_delete: 1 });
                 if (jobTypeObject) {
                     res.send({ message: translator.getStr('JobTypeDeleted'), status: true });
                 } else {

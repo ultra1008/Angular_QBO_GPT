@@ -602,6 +602,7 @@ module.exports = {
     PayrollGroupUpdated: 'Grupo de nómina actualizado exitosamente.',
     PayrollGroupDeleted: 'Grupo de nómina eliminado exitosamente.',
     PayrollGroupHasData: 'No puede eliminar este grupo de nómina. Hay datos relacionados con este grupo de nómina.',
+    PayrollGroupAlreadyExist: 'Payroll group already exist.',
 
     // Job Type
     JobTypeListing: 'Lista de tipos de puesto',
@@ -609,6 +610,7 @@ module.exports = {
     JobTypeUpdated: 'Tipo de puesto actualizado exitosamente.',
     JobTypeDeleted: 'Tipo de puesto eliminado exitosamente.',
     JobTypeHasData: 'No puede eliminar este tipo de puesto. Hay datos relacionados con este tipo de puesto.',
+    JobTypeAlreadyExist: 'Job type already exist.',
 
     // Job Title
     JobTitleListing: 'Listado de títulos de trabajo',
@@ -616,19 +618,14 @@ module.exports = {
     JobTitleUpdated: 'Título de trabajo actualizado exitosamente.',
     JobTitleDeleted: 'Título de trabajo eliminado exitosamente.',
     JobTitleHasData: 'No puede eliminar este título de trabajo. Hay datos relacionados con este título de trabajo.',
-
-    // Department
-    DepartmentListing: 'Listado de departamentos',
-    DepartmentAdded: 'Departamento añadido exitosamente.',
-    DepartmentUpdated: 'Departamento actualizado exitosamente.',
-    DepartmentDeleted: 'Departamento eliminado exitosamente.',
-    DepartmentHasData: 'No puede eliminar este departamento. Hay datos relacionados con este departamento.',
+    JobTitleAlreadyExist: 'Job title already exist.',
 
     // Relationship
     RelationshipListing: 'Listado de relaciones',
     RelationshipAdded: 'Relación añadida exitosamente.',
     RelationshipUpdated: 'Relación actualizada exitosamente.',
     RelationshipDeleted: 'Relación eliminada exitosamente.',
+    RelationshipAlreadyExist: 'Relationship already exist.',
 
     // Department
     DepartmentListing: 'Listado de departamentos',
@@ -636,6 +633,8 @@ module.exports = {
     DepartmentUpdated: 'Departamento actualizado exitosamente.',
     DepartmentDeleted: 'Departamento eliminado exitosamente.',
     DepartmentHasData: 'No puede eliminar este departamento. Hay datos relacionados con este departamento.',
+    DepartmentAlreadyExist: 'Department already exist.',
+
     // Supplier Contract
     ContractListing: "Contract Listing",
     ContractUpdated: "Contract updated successfully",
@@ -799,5 +798,6 @@ module.exports = {
     DocumentTypeAdded: 'Document Type added successfully.',
     DocumentTypeUpdated: 'Document Type updated successfully.',
     DocumentTypeDeleted: 'Document Type deleted successfully.',
-    DocumentTypeHasData: 'You can not delete this Document Type. There is data related to this Document Type.'
+    DocumentTypeHasData: 'You can not delete this Document Type. There is data related to this Document Type.',
+    DocumentTypeAlreadyExist: 'Document type already exist.',
 };

@@ -12,9 +12,8 @@ module.exports.getAlljob_title = async function (req, res) {
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
-
             let jobtitleCollection = connection_db_api.model(collectionConstant.JOB_TITLE, jobtitleSchema);
-            let all_jobtitle = await jobtitleCollection.find();
+            let all_jobtitle = await jobtitleCollection.find({ is_delete: 0 });
             res.send({ message: translator.getStr('JobTitleListing'), data: all_jobtitle, status: true });
         } catch (e) {
             console.log(e);
@@ -34,23 +33,39 @@ module.exports.saveJobTitle = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-
             let jobtitleCollection = connection_db_api.model(collectionConstant.JOB_TITLE, jobtitleSchema);
+            let get_one = await jobtitleCollection.findOne({ job_title_name: requestObject.job_title_name, is_delete: 0 });
             if (requestObject._id) {
-                let update_doc_type = await jobtitleCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
-                console.log(update_doc_type);
-                if (update_doc_type) {
-                    res.send({ message: translator.getStr('JobTitleUpdated'), data: update_doc_type, status: true });
+                if (get_one != null) {
+                    if (get_one._id == requestObject._id) {
+                        let update_doc_type = await jobtitleCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
+                        if (update_doc_type) {
+                            res.send({ message: translator.getStr('JobTitleUpdated'), data: update_doc_type, status: true });
+                        } else {
+                            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                        }
+                    } else {
+                        res.send({ message: translator.getStr('JobTitleAlreadyExist'), status: false });
+                    }
                 } else {
-                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    let update_doc_type = await jobtitleCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
+                    if (update_doc_type) {
+                        res.send({ message: translator.getStr('JobTitleUpdated'), data: update_doc_type, status: true });
+                    } else {
+                        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    }
                 }
             } else {
-                let add_job_title = new jobtitleCollection(requestObject);
-                let save_job_title = await add_job_title.save();
-                if (save_job_title) {
-                    res.send({ message: translator.getStr('JobTitleAdded'), data: save_job_title, status: true });
+                if (get_one == null) {
+                    let add_job_title = new jobtitleCollection(requestObject);
+                    let save_job_title = await add_job_title.save();
+                    if (save_job_title) {
+                        res.send({ message: translator.getStr('JobTitleAdded'), data: save_job_title, status: true });
+                    } else {
+                        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    }
                 } else {
-                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    res.send({ message: translator.getStr('JobTitleAlreadyExist'), status: false });
                 }
             }
         } catch (e) {
@@ -70,14 +85,13 @@ module.exports.deleteJobTitle = async function (req, res) {
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
-
-            let userCollection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+            let userCollection = connection_db_api.model(collectionConstant.USER, userSchema);
             let userObject = await userCollection.find({ userjob_title_id: ObjectID(req.body._id) });
             if (userObject.length > 0) {
                 res.send({ message: translator.getStr('JobTitleHasData'), status: false });
             } else {
                 let jobtitleCollection = connection_db_api.model(collectionConstant.JOB_TITLE, jobtitleSchema);
-                let jobTitleObject = await jobtitleCollection.remove({ _id: ObjectID(req.body._id) });
+                let jobTitleObject = await jobtitleCollection.updateOne({ _id: ObjectID(req.body._id) }, { is_delete: 1 });
                 if (jobTitleObject) {
                     res.send({ message: translator.getStr('JobTitleDeleted'), status: true });
                 } else {

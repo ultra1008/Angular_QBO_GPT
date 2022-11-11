@@ -12,9 +12,8 @@ module.exports.getalldepartment = async function (req, res) {
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
-
             let departmentCollection = connection_db_api.model(collectionConstant.DEPARTMENTS, departmentSchema);
-            let all_department = await departmentCollection.find();
+            let all_department = await departmentCollection.find({ is_delete: 0 });
             res.send({ message: translator.getStr('DepartmentListing'), data: all_department, status: true });
         } catch (e) {
             console.log(e);
@@ -34,23 +33,41 @@ module.exports.savedepartment = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-
             let departmentCollection = connection_db_api.model(collectionConstant.DEPARTMENTS, departmentSchema);
+            let get_one = await departmentCollection.findOne({ department_name: requestObject.department_name, is_delete: 0 });
             if (requestObject._id) {
-                let update_doc_type = await departmentCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
-                console.log(update_doc_type);
-                if (update_doc_type) {
-                    res.send({ message: translator.getStr('DepartmentUpdated'), data: update_doc_type, status: true });
+                if (get_one != null) {
+                    if (get_one._id == requestObject._id) {
+                        let update_doc_type = await departmentCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
+                        console.log(update_doc_type);
+                        if (update_doc_type) {
+                            res.send({ message: translator.getStr('DepartmentUpdated'), data: update_doc_type, status: true });
+                        } else {
+                            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                        }
+                    } else {
+                        res.send({ message: translator.getStr('DepartmentAlreadyExist'), status: false });
+                    }
                 } else {
-                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    let update_doc_type = await departmentCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
+                    console.log(update_doc_type);
+                    if (update_doc_type) {
+                        res.send({ message: translator.getStr('DepartmentUpdated'), data: update_doc_type, status: true });
+                    } else {
+                        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    }
                 }
             } else {
-                let add_doc_type = new departmentCollection(requestObject);
-                let save_doc_type = await add_doc_type.save();
-                if (save_doc_type) {
-                    res.send({ message: translator.getStr('DepartmentAdded'), data: save_doc_type, status: true });
+                if (get_one == null) {
+                    let add_doc_type = new departmentCollection(requestObject);
+                    let save_doc_type = await add_doc_type.save();
+                    if (save_doc_type) {
+                        res.send({ message: translator.getStr('DepartmentAdded'), data: save_doc_type, status: true });
+                    } else {
+                        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    }
                 } else {
-                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    res.send({ message: translator.getStr('DepartmentAlreadyExist'), status: false });
                 }
             }
         } catch (e) {
@@ -70,14 +87,13 @@ module.exports.deleteDepartment = async function (req, res) {
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
-
-            let userCollection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+            let userCollection = connection_db_api.model(collectionConstant.USER, userSchema);
             let userObject = await userCollection.find({ userdepartment_id: ObjectID(req.body._id) });
             if (userObject.length > 0) {
                 res.send({ message: translator.getStr('DepartmentHasData'), status: false });
             } else {
-                let documenttypeCollection = connection_db_api.model(collectionConstant.DEPARTMENTS, departmentSchema);
-                let departmentObject = await documenttypeCollection.remove({ _id: ObjectID(req.body._id) });
+                let departmentCollection = connection_db_api.model(collectionConstant.DEPARTMENTS, departmentSchema);
+                let departmentObject = await departmentCollection.updateOne({ _id: ObjectID(req.body._id) }, { is_delete: 1 });
                 if (departmentObject) {
                     res.send({ message: translator.getStr('DepartmentDeleted'), status: true });
                 } else {

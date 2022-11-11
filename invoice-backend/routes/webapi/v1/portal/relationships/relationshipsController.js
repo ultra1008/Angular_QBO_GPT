@@ -32,27 +32,44 @@ module.exports.saveRelationship = async function (req, res) {
         try {
             var requestObject = req.body;
             let relationshipsCollection = connection_db_api.model(collectionConstant.RELATIONSHIP, relationshipSchema);
+            let get_one = await relationshipsCollection.findOne({ relationship_name: requestObject.relationship_name, is_delete: 0 });
             if (requestObject._id) {
                 requestObject.relationship_updated_at = Math.round(new Date().getTime() / 1000);
                 requestObject.relationship_updated_by = decodedToken.UserData._id;
-                let update_relationship = await relationshipsCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
-                console.log(update_relationship);
-                if (update_relationship) {
-                    res.send({ message: translator.getStr('RelationshipUpdated'), data: update_relationship, status: true });
+                if (get_one != null) {
+                    if (get_one._id == requestObject._id) {
+                        let update_relationship = await relationshipsCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
+                        if (update_relationship) {
+                            res.send({ message: translator.getStr('RelationshipUpdated'), data: update_relationship, status: true });
+                        } else {
+                            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                        }
+                    } else {
+                        res.send({ message: translator.getStr('RelationshipAlreadyExist'), status: false });
+                    }
                 } else {
-                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    let update_relationship = await relationshipsCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
+                    if (update_relationship) {
+                        res.send({ message: translator.getStr('RelationshipUpdated'), data: update_relationship, status: true });
+                    } else {
+                        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    }
                 }
             } else {
-                requestObject.relationship_created_at = Math.round(new Date().getTime() / 1000);
-                requestObject.relationship_created_by = decodedToken.UserData._id;
-                requestObject.relationship_updated_at = Math.round(new Date().getTime() / 1000);
-                requestObject.relationship_updated_by = decodedToken.UserData._id;
-                let add_relationship = new relationshipsCollection(requestObject);
-                let save_relationship = await add_relationship.save();
-                if (save_relationship) {
-                    res.send({ message: translator.getStr('RelationshipAdded'), data: save_relationship, status: true });
+                if (get_one == null) {
+                    requestObject.relationship_created_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.relationship_created_by = decodedToken.UserData._id;
+                    requestObject.relationship_updated_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.relationship_updated_by = decodedToken.UserData._id;
+                    let add_relationship = new relationshipsCollection(requestObject);
+                    let save_relationship = await add_relationship.save();
+                    if (save_relationship) {
+                        res.send({ message: translator.getStr('RelationshipAdded'), data: save_relationship, status: true });
+                    } else {
+                        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    }
                 } else {
-                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    res.send({ message: translator.getStr('RelationshipAlreadyExist'), status: false });
                 }
             }
         } catch (e) {
@@ -80,6 +97,7 @@ module.exports.deleteRelationship = async function (req, res) {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
             }
         } catch (e) {
+            console.log("e: ", e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         } finally {
             connection_db_api.close();
