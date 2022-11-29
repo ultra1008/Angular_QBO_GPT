@@ -40,7 +40,7 @@ import { SettingsCompanyinfoComponent } from './settings-companyinfo/settings-co
 // import { SettingsAlertsComponent } from './settings-alerts/settings-alerts.component';
 // import { SettingsLocationsComponent } from './settings-locations/settings-locations.component';
 import { SettingsSmtpComponent } from './settings-smtp/settings-smtp.component';
-import { WebsitepluginComponent } from './websiteplugin/websiteplugin.component';
+// import { WebsitepluginComponent } from './websiteplugin/websiteplugin.component';
 // import { SettingsIntegrationsComponent } from './settings-integrations/settings-integrations.component';
 // import { SettingsUsageComponent } from './settings-usage/settings-usage.component';
 // import { EmployeeDocumentTypeComponent } from './settings-employee/employee-document-type/employee-document-type.component';
@@ -88,7 +88,7 @@ const maskConfig: Partial<IConfig> = {
     // SettingsAlertsComponent,
     // SettingsLocationsComponent,
     SettingsSmtpComponent,
-    WebsitepluginComponent,
+    //WebsitepluginComponent,
     // SettingsIntegrationsComponent,
     // SettingsUsageComponent,
     // EmployeeDocumentTypeComponent,
