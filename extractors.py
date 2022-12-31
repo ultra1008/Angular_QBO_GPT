@@ -2,6 +2,7 @@ from collections import namedtuple
 import json
 import boto3
 import time
+from database import Database
 
 
 class ExpensesCreator:
@@ -371,8 +372,15 @@ class PurchaseOrderExtractor(Extractor):
         }
 
 
-class Indexator:
-    pass
+class Indexer:
+    def __init__(self, customer_id, documents):
+        self.customer_id = customer_id
+        self.documents = documents
+
+    def index(self):
+        db = Database()
+        for doc in self.documents:
+            db.index_document(self.customer_id, doc)
 
 
 if __name__ == '__main__':
