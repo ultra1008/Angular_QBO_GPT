@@ -1,11 +1,72 @@
-from pymongo import MongoClient
+import pymongo
+from pymongo import MongoClient, ASCENDING
 from uuid import uuid4
 
 
-class Database:
+
+class Indexer:
     def __init__(self):
-        client = MongoClient()
+        client = MongoClient('mongodb://mongo:27017')
         self.db = client.rovuk_db
+
+        # If the index already exists, MongoDB will not recreate the index
+        self.db.documents.create_index([('searchable', pymongo.TEXT)], name='document_fields')
+        self.db.relations.create_index([('relation_id', ASCENDING)], name='relation_id')
+
+
+    def index(self, customer_id, s3_docs_bundle_url, documents):
+        for doc in documents:
+            self._index_document(customer_id, s3_docs_bundle_url, doc)
+
+    def search(self, customer_id, query):
+        documents = list(self.db.documents.find({'customer_id': customer_id, '$text': {'$search': query}}))
+
+        relation_ids = list({doc['relation_id'] for doc in documents})
+        relations = list(self.db.relations.find({"relation_id": {'$in': relation_ids}}))
+        related_document_ids = []
+        for relation in relations:
+            related_document_ids.extend(relation['related'])
+        all_related_documents_ids = list(set(related_document_ids))
+        all_related_documents = list(self.db.documents.find({"_id": {'$in': all_related_documents_ids}}))
+        all_related_documents_map = {document['_id']: document for document in all_related_documents}
+        all_relations_map = {relation['relation_id']: relation for relation in relations}
+
+        results = []
+        for doc_set in documents:
+            doc_set_result = {
+                'document_type': doc_set['document_type'],
+                'document_url': doc_set['url'],
+                'document_pages': [doc['fields'] for doc in doc_set['documents']]
+            }
+
+            related = all_relations_map[doc_set['relation_id']]['related']
+            related = [rel for rel in related if rel != doc_set['_id']]
+            doc_set_result['related_documents'] = [{
+                'document_type': all_related_documents_map[rel]['document_type'],
+                'document_url': all_related_documents_map[rel]['url'],
+                'document_pages': [doc['fields'] for doc in all_related_documents_map[rel]['documents']]}
+                for rel in related
+            ]
+
+            results.append(doc_set_result)
+
+        return results
+
+
+    def _index_document(self, customer_id, s3_docs_bundle_url, document):
+        if document['document_type'] == 'PURCHASE_ORDER':
+            self._index_purchase_order_document(customer_id, s3_docs_bundle_url, document)
+        elif document['document_type'] == 'PACKING_SLIP':
+            self._index_packing_slip_document(customer_id, s3_docs_bundle_url, document)
+        elif document['document_type'] == 'QUOTE':
+            self._index_quote_document(customer_id, s3_docs_bundle_url, document)
+        elif document['document_type'] == 'INVOICE':
+            self._index_invoice_document(customer_id, s3_docs_bundle_url, document)
+
+# class Database:
+#     def __init__(self):
+#         client = MongoClient()
+#         self.db = client.rovuk_db
 
     @staticmethod
     def _generate_uuid():
@@ -43,7 +104,7 @@ class Database:
 
         return new_relation_id
 
-    def _index_quote_document(self, customer_id, document):
+    def _index_quote_document(self, customer_id, s3_docs_bundle_url, document):
         n_docs = self.db.documents.count_documents({
             'customer_id': customer_id,
             'document_type': 'QUOTE',
@@ -60,7 +121,9 @@ class Database:
                 'documents': [
                     document
                 ],
-                'relation_id': relation_id
+                'relation_id': relation_id,
+                'searchable': list(document['fields'].values()),
+                'url': s3_docs_bundle_url
             })
             # Add Relation
             self.db.relations.insert_one({
@@ -80,16 +143,20 @@ class Database:
                     relation_id = self._relate_to_matched(customer_id, matched_po, relation_id)
 
         else:
+            # 'searchable': list(document['fields'].values())
             self.db.documents.update_one({
                 'customer_id': customer_id,
                 'document_type': 'QUOTE',
                 'quote_number': document['fields']['QUOTE_NUMBER'],
             }, {
-                '$push': {'documents': document}
+                '$push': {
+                    'documents': document,
+                    'searchable': {'$each': list(document['fields'].values())}
+                }
             })
 
 
-    def _index_purchase_order_document(self, customer_id, document):
+    def _index_purchase_order_document(self, customer_id, s3_docs_bundle_url, document):
         n_docs = self.db.documents.count_documents({
             'customer_id': customer_id,
             'document_type': 'PURCHASE_ORDER',
@@ -107,7 +174,9 @@ class Database:
                 'documents': [
                     document
                 ],
-                'relation_id': relation_id
+                'relation_id': relation_id,
+                'searchable': list(document['fields'].values()),
+                'url': s3_docs_bundle_url
             })
             # Add Relation
             self.db.relations.insert_one({
@@ -152,10 +221,13 @@ class Database:
                 'document_type': 'PURCHASE_ORDER',
                 'po_number': document['fields']['PO_NUMBER']
             }, {
-                '$push': {'documents': document}
+                '$push': {
+                    'documents': document,
+                    'searchable': {'$each': list(document['fields'].values())}
+                },
             })
 
-    def _index_invoice_document(self, customer_id, document):
+    def _index_invoice_document(self, customer_id, s3_docs_bundle_url, document):
         n_docs = self.db.documents.count_documents({
             'customer_id': customer_id,
             'document_type': 'INVOICE',
@@ -172,7 +244,9 @@ class Database:
                 'documents': [
                     document
                 ],
-                'relation_id': relation_id
+                'relation_id': relation_id,
+                'searchable': list(document['fields'].values()),
+                'url': s3_docs_bundle_url
             })
             # Add Relation
             self.db.relations.insert_one({
@@ -207,11 +281,14 @@ class Database:
                 'document_type': 'INVOICE',
                 'invoice_number': document['fields']['INVOICE_NUMBER'],
             }, {
-                '$push': {'documents': document}
+                '$push': {
+                    'documents': document,
+                    'searchable': {'$each': list(document['fields'].values())}
+                }
             })
 
 
-    def _index_packing_slip_document(self, customer_id, document):
+    def _index_packing_slip_document(self, customer_id, s3_docs_bundle_url, document):
         n_docs = self.db.documents.count_documents({
             'customer_id': customer_id,
             'document_type': 'PACKING_SLIP',
@@ -230,7 +307,9 @@ class Database:
                 'documents': [
                     document
                 ],
-                'relation_id': relation_id
+                'relation_id': relation_id,
+                'searchable': list(document['fields'].values()),
+                'url': s3_docs_bundle_url
             })
             # Add Relation
             self.db.relations.insert_one({
@@ -267,34 +346,30 @@ class Database:
                 'invoice_number': document['fields']['INVOICE_NUMBER'],
                 'po_number': document['fields']['PO_NUMBER'],
             }, {
-                '$push': {'documents': document}
+                '$push': {
+                    'documents': document,
+                    'searchable': {'$each': list(document['fields'].values())}
+                }
             })
 
-    def index_document(self, customer_id, document):
-        if document['document_type'] == 'PURCHASE_ORDER':
-            self._index_purchase_order_document(customer_id, document)
-        elif document['document_type'] == 'PACKING_SLIP':
-            self._index_packing_slip_document(customer_id, document)
-        elif document['document_type'] == 'QUOTE':
-            self._index_quote_document(customer_id, document)
-        elif document['document_type'] == 'INVOICE':
-            self._index_invoice_document(customer_id, document)
 
 
 
 
 
 if __name__ == '__main__':
+    import json
+
     # -----------------------------------------------------------------------------------------
     def case_1():
-        Database()._index_quote_document('cust_1', {
+        Indexer()._index_quote_document('cust_1', {
             'fields': {
                 'document_type': 'QUOTE',
                 'QUOTE_NUMBER': 'q1'
             }
         })
 
-        Database()._index_invoice_document('cust_1', {
+        Indexer()._index_invoice_document('cust_1', {
             'fields': {
                 'document_type': 'INVOICE',
                 'INVOICE_NUMBER': 'in1',
@@ -302,7 +377,7 @@ if __name__ == '__main__':
             }
         })
 
-        Database()._index_purchase_order_document('cust_1', {
+        Indexer()._index_purchase_order_document('cust_1', {
             'fields': {
                 'document_type': 'PURCHASE_ORDER',
                 'PO_NUMBER': 'po1',
@@ -346,17 +421,18 @@ if __name__ == '__main__':
 
         for doc_type in case:
             if doc_type == 'quote':
-                Database()._index_quote_document(customer_id, documents['QUOTE'])
+                Indexer()._index_quote_document(customer_id, 'my-s3_docs_bundle_url', documents['QUOTE'])
             elif doc_type == 'invoice':
-                Database()._index_invoice_document(customer_id, documents['INVOICE'])
+                Indexer()._index_invoice_document(customer_id, 'my-s3_docs_bundle_url', documents['INVOICE'])
             elif doc_type == 'po':
-                Database()._index_purchase_order_document(customer_id, documents['PURCHASE_ORDER'])
+                Indexer()._index_purchase_order_document(customer_id, 'my-s3_docs_bundle_url',
+                                                         documents['PURCHASE_ORDER'])
             elif doc_type == 'ps':
-                Database()._index_packing_slip_document(customer_id, documents['PACKING_SLIP'])
+                Indexer()._index_packing_slip_document(customer_id, 'my-s3_docs_bundle_url', documents['PACKING_SLIP'])
             else:
                 raise Exception(f'Wrong input document type: {doc_type}')
 
-
+    """Test Relations"""
     # test_relation_case(['quote', 'invoice', 'po'], 'cust_1')
     # test_relation_case(['quote', 'po', 'invoice'], 'cust_1')
     # test_relation_case(['po', 'quote', 'invoice'], 'cust_1')
@@ -381,10 +457,81 @@ if __name__ == '__main__':
 
     # test_relation_case(['ps', 'invoice', 'quote', 'po'], 'cust_1')
     # test_relation_case(['po', 'ps', 'invoice', 'quote'], 'cust_1')
-    test_relation_case(['quote', 'invoice', 'ps', 'po'], 'cust_1')
+    # test_relation_case(['quote', 'invoice', 'ps', 'po'], 'cust_1')
+
+    # --
+    # test_relation_case(['quote', 'invoice', 'ps', 'po'], 'cust_1')
+    # test_relation_case(['quote', 'invoice', 'ps', 'po'], 'cust_2', drop_db=False)
+    # --
+    # test_relation_case(['quote', 'invoice', 'ps', 'po'], 'cust_1')
+    # test_relation_case(['quote', 'invoice', 'ps', 'po'], 'cust_1', drop_db=False)
+    # --
+
+    """Test Search"""
+    # test_relation_case(['quote', 'invoice', 'ps', 'po'], 'cust_1')
+    # test_relation_case(['quote', 'invoice', 'ps', 'po'], 'cust_1', drop_db=False)
+    # print(json.dumps({'search': Indexer().search('cust_1', 'in1')}, indent=2))
+    # # --
+    # test_relation_case(['quote'], 'cust_1')
+    # print(json.dumps({'search': Indexer().search('cust_1', 'q1')}, indent=2))
+    # --
+    # test_relation_case(['invoice', 'ps'], 'cust_1')
+    # test_relation_case(['quote'], 'cust_2', drop_db=False)
+    # print(json.dumps({'search': Indexer().search('cust_2', 'q1')}, indent=2))
+    # --
+    print(json.dumps({'search': Indexer().search('cust_1', '899')}, indent=2))
 
 
+    def test_index_search():
+        MongoClient().drop_database('rovuk_db')
 
+        Indexer()._index_quote_document('cust_1', 'my_s3_url', {
+            'document_type': 'QUOTE',
+            'fields': {
+                'QUOTE_NUMBER': 'q1',
+                'FIELD_1': 'value_1'
+            }
+        })  # , searchable=['aaa1a', 'aaa1b']
+
+        Indexer()._index_quote_document('cust_1', 'my_s3_url', {
+            'document_type': 'QUOTE',
+            'fields': {
+                'QUOTE_NUMBER': 'q1',
+                'FIELD_2': 'value_2'
+            }
+        })  # searchable=['aaa1a', 'aaa2b']
+
+        Indexer()._index_quote_document('cust_1', 'my_s3_url', {
+            'document_type': 'QUOTE',
+            'fields': {
+                'QUOTE_NUMBER': 'q2',
+                'FIELD_3': 'value_3'
+            }
+        })  # searchable=['aaa1a', 'aaa3b']
+
+        Indexer()._index_quote_document('cust_2', 'my_s3_url', {
+            'document_type': 'QUOTE',
+            'fields': {
+                'QUOTE_NUMBER': 'q2',
+                'FIELD_3': 'value_3'
+            }
+        })  # searchable=['aaa1a', 'aaa3b']
+
+
+        #https://www.mongodb.com/docs/manual/tutorial/limit-number-of-items-scanned-for-text-search/
+        # MongoClient().rovuk_db.documents.create_index([("$**", pymongo.TEXT)])  # {$text: {$search: 'value_3'}}
+        # MongoClient().rovuk_db.documents.create_index("fields.$**")  # {"documents.fields.FIELD_3": "value_3"}
+        #{"documents.fields": "value_1"}
+        #
+
+        # https://stackoverflow.com/questions/10610131/checking-if-a-field-contains-a-string
+
+
+        # MongoClient().rovuk_db.documents.create_index([('searchable', pymongo.TEXT)], name='search_document_fields')  # {$text: {$search: 'value_3'}}
+        print(json.dumps({'results': Indexer().search('cust_1', 'value_2')}, indent=2))
+
+
+    # test_index_search()
 
 
     # -----------------------------------------------------------------------------------------
@@ -396,32 +543,31 @@ if __name__ == '__main__':
         return response
 
     from extractors import ExtractorsManager
-    import json
 
     def test_index_quote():
         fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_QUOTEs_aws_analyze_api/quote_1.pdf.json'
         results_ = ExtractorsManager(load_resp(fn)['ExpenseDocuments']).extract()
         # print(json.dumps(results_, indent=2))
-        Database()._index_quote_document('cust_1', results_[0])
+        Indexer()._index_quote_document('cust_1', results_[0])
 
     def test_index_po():
         # fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_POs_aws_analyze_api/po_PO FNC for Anil.pdf.json'
         fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_POs_aws_analyze_api/po_61cc7994d2045c72475f9ed4po1646925766302.pdf.json'
         results_ = ExtractorsManager(load_resp(fn)['ExpenseDocuments']).extract()
-        Database()._index_purchase_order_document('cust_1', results_[0])
+        Indexer()._index_purchase_order_document('cust_1', results_[0])
 
     def test_index_invoice():
         fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_analyze_api/' \
              'Invoice,8042209225,38077982,PJ WG Renewal 1 year.PDF.json'
         results_ = ExtractorsManager(load_resp(fn)['ExpenseDocuments']).extract()
         print(results_)
-        Database()._index_invoice_document('cust_1', results_[0])
+        Indexer()._index_invoice_document('cust_1', results_[0])
 
     def test_index_ps():
         fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_PSs_aws_analyze_api/ps_packingslip.pdf.json'
         results_ = ExtractorsManager(load_resp(fn)['ExpenseDocuments']).extract()
         print(results_)
-        Database()._index_packing_slip_document('cust_1', results_[0])
+        Indexer()._index_packing_slip_document('cust_1', results_[0])
 
 
     # test_index_quote()

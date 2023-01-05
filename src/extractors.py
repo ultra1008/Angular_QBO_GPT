@@ -2,7 +2,9 @@ from collections import namedtuple
 import json
 import boto3
 import time
-from database import Database
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 
 class ExpensesCreator:
@@ -24,20 +26,20 @@ class ExpensesCreator:
         input_s3 = boto3.client(
             's3',
             endpoint_url=endpoint_url,
-            aws_access_key_id='',
-            aws_secret_access_key=''
+            aws_access_key_id=os.getenv('INPUT_AWS_ACCESS_KEY_ID'),
+            aws_secret_access_key=os.getenv('INPUT_AWS_SECRET_ACCESS_KEY')
         )
 
         # Get bucket object
         result = input_s3.get_object(Bucket=bucket, Key=key)
 
         # Copy
-        textract_s3_bucket = 'temp-v2'
+        # textract_s3_bucket = 'temp-v2'
+        textract_s3_bucket = 'rovuk-analysis-input'
         s3 = boto3.client('s3')
         s3.put_object(Body=result['Body'].read(), Bucket=textract_s3_bucket, Key=key)
 
         # Analyze
-        # textract_s3_bucket, key = 'temp-v2', f'folder1/quote_1.pdf'
         return self._start_job(textract_s3_bucket, key)
 
     @staticmethod
@@ -372,15 +374,6 @@ class PurchaseOrderExtractor(Extractor):
         }
 
 
-class Indexer:
-    def __init__(self, customer_id, documents):
-        self.customer_id = customer_id
-        self.documents = documents
-
-    def index(self):
-        db = Database()
-        for doc in self.documents:
-            db.index_document(self.customer_id, doc)
 
 
 if __name__ == '__main__':

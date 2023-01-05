@@ -1,0 +1,63 @@
+version: "3.1"
+
+services:
+  api:
+    image: api
+    build:
+      context: .
+      dockerfile: ./api/Dockerfile
+    ports:
+#      - 80:80
+      - 8000:8000
+    depends_on:
+      - worker
+
+  worker:
+    image: worker
+    build:
+      context: .
+      dockerfile: ./worker/Dockerfile
+    depends_on:
+      - rabbitmq
+      - mongo
+      - cache
+
+  rabbitmq:
+    image: bitnami/rabbitmq:3.8.27
+    ports:
+      - 5673:5672
+
+  mongo:
+    image: mongo:latest
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: root
+#      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo:/data/db
+
+  cache:
+    image: redis:6.2-alpine
+#    restart: always
+    ports:
+      - 6379:6379
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - cache:/data
+
+#  flower:
+#    image: mher/flower
+#    environment:
+#      - CELERY_BROKER_URL=amqp://user:bitnami@rabbitmq
+#      - FLOWER_PORT=8888
+#    ports:
+#      - 8889:8888
+#    depends_on:
+#      - rabbitmq
+
+
+
+volumes:
+  mongo:
+  cache:
