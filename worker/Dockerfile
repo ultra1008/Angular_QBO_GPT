@@ -9,4 +9,4 @@ COPY ./worker/worker.py .
 COPY ./src .
 COPY ./.env .
 
-ENTRYPOINT celery -A worker worker --autoscale 10 --loglevel=info
+ENTRYPOINT rq worker --url redis://cache:6379/0

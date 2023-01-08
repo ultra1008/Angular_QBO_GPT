@@ -11,6 +11,8 @@ services:
       - 8000:8000
     depends_on:
       - worker
+    environment:
+      - PYTHONUNBUFFERED=1
 
   worker:
     image: worker
@@ -18,14 +20,10 @@ services:
       context: .
       dockerfile: ./worker/Dockerfile
     depends_on:
-      - rabbitmq
       - mongo
       - cache
-
-  rabbitmq:
-    image: bitnami/rabbitmq:3.8.27
-    ports:
-      - 5673:5672
+    environment:
+      - PYTHONUNBUFFERED=1
 
   mongo:
     image: mongo:latest
@@ -45,17 +43,6 @@ services:
     command: redis-server --save 20 1 --loglevel warning
     volumes:
       - cache:/data
-
-#  flower:
-#    image: mher/flower
-#    environment:
-#      - CELERY_BROKER_URL=amqp://user:bitnami@rabbitmq
-#      - FLOWER_PORT=8888
-#    ports:
-#      - 8889:8888
-#    depends_on:
-#      - rabbitmq
-
 
 
 volumes:
