@@ -105,11 +105,13 @@ class Indexer:
         return new_relation_id
 
     def _index_quote_document(self, customer_id, s3_docs_bundle_url, document):
-        n_docs = self.db.documents.count_documents({
-            'customer_id': customer_id,
-            'document_type': 'QUOTE',
-            'quote_number': document['fields']['QUOTE_NUMBER']
-        })
+        n_docs = 0
+        if document['fields']['QUOTE_NUMBER']:
+            n_docs = self.db.documents.count_documents({
+                'customer_id': customer_id,
+                'document_type': 'QUOTE',
+                'quote_number': document['fields']['QUOTE_NUMBER']
+            })
 
         if n_docs == 0:
             # Add document
@@ -157,11 +159,13 @@ class Indexer:
 
 
     def _index_purchase_order_document(self, customer_id, s3_docs_bundle_url, document):
-        n_docs = self.db.documents.count_documents({
-            'customer_id': customer_id,
-            'document_type': 'PURCHASE_ORDER',
-            'po_number': document['fields']['PO_NUMBER'],
-        })
+        n_docs = 0
+        if document['fields']['PO_NUMBER']:
+            n_docs = self.db.documents.count_documents({
+                'customer_id': customer_id,
+                'document_type': 'PURCHASE_ORDER',
+                'po_number': document['fields']['PO_NUMBER'],
+            })
 
         if n_docs == 0:
             # Add document
@@ -228,11 +232,13 @@ class Indexer:
             })
 
     def _index_invoice_document(self, customer_id, s3_docs_bundle_url, document):
-        n_docs = self.db.documents.count_documents({
-            'customer_id': customer_id,
-            'document_type': 'INVOICE',
-            'invoice_number': document['fields']['INVOICE_NUMBER']
-        })
+        n_docs = 0
+        if document['fields']['INVOICE_NUMBER']:
+            n_docs = self.db.documents.count_documents({
+                'customer_id': customer_id,
+                'document_type': 'INVOICE',
+                'invoice_number': document['fields']['INVOICE_NUMBER']
+            })
 
         if n_docs == 0:
             relation_id = self._generate_uuid()
@@ -289,12 +295,14 @@ class Indexer:
 
 
     def _index_packing_slip_document(self, customer_id, s3_docs_bundle_url, document):
-        n_docs = self.db.documents.count_documents({
-            'customer_id': customer_id,
-            'document_type': 'PACKING_SLIP',
-            'invoice_number': document['fields']['INVOICE_NUMBER'],
-            'po_number': document['fields']['PO_NUMBER']
-        })
+        n_docs = 0
+        if document['fields']['INVOICE_NUMBER'] and document['fields']['PO_NUMBER']:
+            n_docs = self.db.documents.count_documents({
+                'customer_id': customer_id,
+                'document_type': 'PACKING_SLIP',
+                'invoice_number': document['fields']['INVOICE_NUMBER'],
+                'po_number': document['fields']['PO_NUMBER']
+            })
 
         if n_docs == 0:
             # Add document

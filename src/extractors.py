@@ -57,17 +57,17 @@ class ExpensesCreator:
 
     @staticmethod
     def _wait_and_get_analysis_result(job_id):
-        print(f'job_id: {job_id}')
+        print(f'expense_job_id: {job_id}')
         sleep_sec = 1
         time.sleep(sleep_sec)
         client = boto3.client('textract')
         response = client.get_expense_analysis(JobId=job_id)
-        print(f'job_status: {response["JobStatus"]}')
+        print(f'expense_job_status: {response["JobStatus"]}')
 
         while response["JobStatus"] == "IN_PROGRESS":
             time.sleep(sleep_sec)
             response = client.get_expense_analysis(JobId=job_id)
-            print(f'job_status: {response["JobStatus"]}')
+            print(f'expense_job_status: {response["JobStatus"]}')
 
         return response
 
@@ -171,7 +171,7 @@ class FormsParser:
         return fields
 
     def get_field_value(self, key_name: str):
-        if not self.fields:
+        if self.fields is None:
             job_id = self._start_job(self.s3_or_json_page[0], self.s3_or_json_page[1])
             cont = self._wait_and_get_analysis_result(job_id)
             self.fields = self._parse_response(cont)
@@ -371,9 +371,9 @@ class InvoiceExtractor(Extractor):
 
     def extract(self):
         fields = {
-            'INVOICE_NUMBER': self.extract_invoice_number(),
+            'INVOICE_NUMBER': self._extract_invoice_number(),
             'INVOICE_DATE': self.get_clf_field_value('INVOICE_RECEIPT_DATE'),
-            'PO_NUMBER': self.extract_po(),
+            'PO_NUMBER': self._extract_po(),
             'INVOICE_TO': self.get_clf_field_value('RECEIVER_NAME'),
             'ADDRESS': self.get_clf_field_value('RECEIVER_ADDRESS'),
             'SUBTOTAL': self.get_clf_field_value('SUBTOTAL'),
@@ -385,7 +385,7 @@ class InvoiceExtractor(Extractor):
             'CONTRACT_NUMBER': self.get_clf_field_value('VENDOR_PHONE'),
             'JOB_NUMBER': self.get_other_field_value('JOB NUMBER'),
             'DELIVERY_ADDRESS': self.get_clf_field_value('RECEIVER_ADDRESS'),
-            'TERMS': self.extract_terms(),
+            'TERMS': self._extract_terms(),
             'DUE_DATE': self.get_clf_field_value('DUE_DATE'),
             'SHIP_DATE': self.get_other_field_value('DATE SHIPPED'),
         }
@@ -399,21 +399,21 @@ class InvoiceExtractor(Extractor):
         }
 
 
-    def extract_po(self):
+    def _extract_po(self):
         po = self.expense_parser.get_clf_field_value('PO_NUMBER')
         if po is not None:
             return po
         else:
             return self.get_other_field_value('ORDER #')
 
-    def extract_terms(self):
+    def _extract_terms(self):
         terms = self.get_clf_field_value('PAYMENT_TERMS')
         if terms is not None:
             return terms
         else:
             return self.get_other_field_value('Gateway')
 
-    def extract_invoice_number(self):
+    def _extract_invoice_number(self):
         value = self.get_clf_field_value('INVOICE_RECEIPT_ID')
         if value is None:
             value = self.get_forms_field_value('Invoice')
