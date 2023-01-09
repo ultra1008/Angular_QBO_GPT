@@ -3,6 +3,7 @@ import json
 import boto3
 import time
 import os
+import trp
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -22,7 +23,7 @@ class ExpensesCreator:
         bucket = self.s3_docs_bundle_url[indices[2] + 1: indices[3]]
         key = self.s3_docs_bundle_url[indices[3] + 1:]
 
-        # Connect to input s3
+        # Connect to source s3
         input_s3 = boto3.client(
             's3',
             endpoint_url=endpoint_url,
@@ -33,8 +34,7 @@ class ExpensesCreator:
         # Get bucket object
         result = input_s3.get_object(Bucket=bucket, Key=key)
 
-        # Copy
-        # textract_s3_bucket = 'temp-v2'
+        # Copy to destination s3
         textract_s3_bucket = 'rovuk-analysis-input'
         s3 = boto3.client('s3')
         s3.put_object(Body=result['Body'].read(), Bucket=textract_s3_bucket, Key=key)
@@ -87,6 +87,8 @@ class ExpenseParser:
         (self.classified_fields,
          self.other_fields,
          self.expense_groups) = self._parse_document()
+
+        return self
 
     def _parse_document(self):
         classified = {}
@@ -151,20 +153,96 @@ class ExpenseParser:
 
 
 
-
-class ExtractorsManager:
-    def __init__(self, expense_documents_bundle):
-        self.expense_documents_bundle = expense_documents_bundle
+class FormsParser:
+    def __init__(self, s3_or_json_page):
+        self.s3_or_json_page = s3_or_json_page
+        self.fields = None
+        if not isinstance(s3_or_json_page, tuple):
+            self.fields = self._parse_response(s3_or_json_page)
 
     @staticmethod
-    def _contains_text(expense_doc, text):
-        text = text.lower()
-        for block in expense_doc['Blocks']:
-            if block['BlockType'] == 'LINE':
-                if block['Text'].lower() == text:
-                    return True
+    def _parse_response(json_page):
+        fields = {}
 
-        return False
+        doc = trp.Document(json_page)
+        for field in doc.pages[0].form.fields:
+            fields[str(field.key).lower()] = str(field.value)
+
+        return fields
+
+    def get_field_value(self, key_name: str):
+        if not self.fields:
+            job_id = self._start_job(self.s3_or_json_page[0], self.s3_or_json_page[1])
+            cont = self._wait_and_get_analysis_result(job_id)
+            self.fields = self._parse_response(cont)
+
+        return self.fields.get(key_name.lower())
+
+    @staticmethod
+    def _start_job(bucket_name, object_name):
+        client = boto3.client('textract')
+        response = client.start_document_analysis(
+            DocumentLocation={
+                'S3Object': {
+                    'Bucket': bucket_name,
+                    'Name': object_name
+                }
+            },
+            FeatureTypes=["FORMS"]
+        )
+        return response["JobId"]
+
+    @staticmethod
+    def _wait_and_get_analysis_result(job_id):
+        print(f'forms_job_id: {job_id}')
+        sleep_sec = 1
+        time.sleep(sleep_sec)
+        client = boto3.client('textract')
+        response = client.get_document_analysis(JobId=job_id)
+        print(f'forms_job_status: {response["JobStatus"]}')
+
+        while response["JobStatus"] == "IN_PROGRESS":
+            time.sleep(sleep_sec)
+            response = client.get_document_analysis(JobId=job_id)
+            print(f'forms_job_status: {response["JobStatus"]}')
+
+        return response
+
+
+
+
+
+class ExtractorsManager:
+    def __init__(self, documents_bundle_expenses, documents_bundle_pages):
+        self.documents_bundle_expenses = documents_bundle_expenses
+        self.documents_bundle_pages = documents_bundle_pages
+
+    def extract(self):
+        results = []
+        for expense_json, s3_document_page in zip(
+                self.documents_bundle_expenses,
+                self.documents_bundle_pages
+        ):
+            doc_type = self._detect_doc_type(expense_json)
+            expense_parser = ExpenseParser(expense_json).parse()
+            forms_parser = FormsParser(s3_document_page)
+
+            if doc_type == 'PURCHASE_ORDER':
+                extractor = PurchaseOrderExtractor(expense_parser, forms_parser)
+            elif doc_type == 'PACKING_SLIP':
+                extractor = PackingSlipExtractor(expense_parser, forms_parser)
+            elif doc_type == 'QUOTE':
+                extractor = QuoteExtractor(expense_parser, forms_parser)
+            elif doc_type == 'INVOICE':
+                extractor = InvoiceExtractor(expense_parser, forms_parser)
+            else:
+                extractor = None
+
+            if extractor:
+                result = extractor.extract()
+                results.append(result)
+
+        return results
 
     def _detect_doc_type(self, expense_doc):
         if self._contains_text(expense_doc, 'Purchase Order'):
@@ -178,33 +256,21 @@ class ExtractorsManager:
         else:
             return None
 
+    @staticmethod
+    def _contains_text(expense_doc, text):
+        text = text.lower()
+        for block in expense_doc['Blocks']:
+            if block['BlockType'] == 'LINE':
+                if block['Text'].lower() == text:
+                    return True
 
-    def extract(self):
-        results = []
-        for document in self.expense_documents_bundle:
-            doc_type = self._detect_doc_type(document)
-            if doc_type == 'PURCHASE_ORDER':
-                result = PurchaseOrderExtractor(document).extract()
-            elif doc_type == 'PACKING_SLIP':
-                result = PackingSlipExtractor(document).extract()
-            elif doc_type == 'QUOTE':
-                result = QuoteExtractor(document).extract()
-            elif doc_type == 'INVOICE':
-                result = InvoiceExtractor(document).extract()
-            else:
-                result = None
-
-            if result is not None:
-                results.append(result)
-
-        return results
-
+        return False
 
 
 class Extractor:
-    def __init__(self, document):
-        self.expense_parser = ExpenseParser(document)
-        self.expense_parser.parse()
+    def __init__(self, expense_parser, forms_parser):
+        self.expense_parser = expense_parser
+        self.forms_parser = forms_parser
 
     def extract(self):
         pass
@@ -214,6 +280,9 @@ class Extractor:
 
     def get_other_field_value(self, label: str):
         return self.expense_parser.get_other_field_value(label)
+
+    def get_forms_field_value(self, key_name: str):
+        return self.forms_parser.get_field_value(key_name)
 
     def get_expense_groups(self):
         groups = []
@@ -302,7 +371,7 @@ class InvoiceExtractor(Extractor):
 
     def extract(self):
         fields = {
-            'INVOICE_NUMBER': self.get_clf_field_value('INVOICE_RECEIPT_ID'),
+            'INVOICE_NUMBER': self.extract_invoice_number(),
             'INVOICE_DATE': self.get_clf_field_value('INVOICE_RECEIPT_DATE'),
             'PO_NUMBER': self.extract_po(),
             'INVOICE_TO': self.get_clf_field_value('RECEIVER_NAME'),
@@ -343,6 +412,15 @@ class InvoiceExtractor(Extractor):
             return terms
         else:
             return self.get_other_field_value('Gateway')
+
+    def extract_invoice_number(self):
+        value = self.get_clf_field_value('INVOICE_RECEIPT_ID')
+        if value is None:
+            value = self.get_forms_field_value('Invoice')
+            value = ''.join([ch for ch in value if ch.isdigit()])  # to eliminate case "#00121"
+
+        return value
+
 
 
 class PurchaseOrderExtractor(Extractor):
@@ -407,3 +485,15 @@ if __name__ == '__main__':
     # print(json.dumps(results_, indent=2))
 
     # ExpensesCreator('https://s3.us-west-1.wasabisys.com/bicket1/folder1/invoice_page-1.pdf')._start_job()
+
+    #
+    #
+    #
+    inv_fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_analyze_api/invoice_page-1.pdf.json'
+    frm_fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_forms_and_tables_api/' \
+             'invoice_page-1.pdf.json'
+    print(json.dumps(
+        InvoiceExtractor(
+            ExpenseParser(load_resp(inv_fn)['ExpenseDocuments'][0]).parse(),
+            FormsParser(load_resp(frm_fn))
+        ).extract(), indent=2))
