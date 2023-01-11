@@ -19,6 +19,9 @@ class Indexer:
             self._index_document(customer_id, s3_docs_bundle_url, doc)
 
     def search(self, customer_id, query):
+        if 'documents' not in self.db.list_collection_names():
+            return []
+
         documents = list(self.db.documents.find({'customer_id': customer_id, '$text': {'$search': query}}))
 
         relation_ids = list({doc['relation_id'] for doc in documents})
@@ -36,15 +39,26 @@ class Indexer:
             doc_set_result = {
                 'document_type': doc_set['document_type'],
                 'document_url': doc_set['url'],
-                'document_pages': [doc['fields'] for doc in doc_set['documents']]
+                'document_pages': [{
+                        'fields': doc['fields'],
+                        'expense_groups': doc.get('expense_groups')
+                    }
+                    for doc in doc_set['documents']
+                ]
             }
 
             related = all_relations_map[doc_set['relation_id']]['related']
             related = [rel for rel in related if rel != doc_set['_id']]
             doc_set_result['related_documents'] = [{
-                'document_type': all_related_documents_map[rel]['document_type'],
-                'document_url': all_related_documents_map[rel]['url'],
-                'document_pages': [doc['fields'] for doc in all_related_documents_map[rel]['documents']]}
+                    'document_type': all_related_documents_map[rel]['document_type'],
+                    'document_url': all_related_documents_map[rel]['url'],
+                    'document_pages': [{
+                            'fields': doc['fields'],
+                            'expense_groups': doc.get('expense_groups')
+                        }
+                        for doc in all_related_documents_map[rel]['documents']
+                    ]
+                }
                 for rel in related
             ]
 

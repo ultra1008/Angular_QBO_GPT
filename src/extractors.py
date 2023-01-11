@@ -77,6 +77,11 @@ ExpenseAnalysisLineItem = namedtuple("ExpenseAnalysisLineItem", "item unit_price
 
 
 class ExpenseParser:
+    """
+    List of Expense Analysis Standard Fields:
+    https://docs.aws.amazon.com/textract/latest/dg/invoices-receipts.html
+    """
+
     def __init__(self, document):
         self.document = document
         self.classified_fields = None
@@ -404,7 +409,9 @@ class QuoteExtractor(Extractor):
             'SHIPPING_METHOD': shipping_method,
             'SUB_TOTAL': sub_total,
             'TAX': tax,
-            'QUOTE_ORDER_TOTAL': quote_order_total
+            'QUOTE_ORDER_TOTAL': quote_order_total,
+            'RECEIVER_PHONE': self.get_clf_field_value('RECEIVER_PHONE'),
+            'VENDOR_PHONE': self.get_clf_field_value('VENDOR_PHONE')
         }
 
         groups = self.get_expense_groups()
@@ -424,6 +431,7 @@ class InvoiceExtractor(Extractor):
         fields = {
             'INVOICE_NUMBER': self._extract_invoice_number(),
             'INVOICE_DATE': self.get_clf_field_value('INVOICE_RECEIPT_DATE'),
+            'ORDER_DATE': self.get_clf_field_value('ORDER_DATE'),
             'PO_NUMBER': self._extract_po(),
             'INVOICE_TO': self.get_clf_field_value('RECEIVER_NAME'),
             'ADDRESS': self.get_clf_field_value('RECEIVER_ADDRESS'),
@@ -433,12 +441,15 @@ class InvoiceExtractor(Extractor):
             'INVOICE_TOTAL': self.get_clf_field_value('TOTAL'),
             'VENDOR_NAME': self.get_clf_field_value('VENDOR_NAME'),
             'VENDOR_ADDRESS': self.get_clf_field_value('VENDOR_ADDRESS'),
-            'CONTRACT_NUMBER': self.get_clf_field_value('VENDOR_PHONE'),
+            'VENDOR_PHONE': self.get_clf_field_value('VENDOR_PHONE'),
             'JOB_NUMBER': self.get_other_field_value('JOB NUMBER'),
             'DELIVERY_ADDRESS': self.get_clf_field_value('RECEIVER_ADDRESS'),
             'TERMS': self._extract_terms(),
             'DUE_DATE': self.get_clf_field_value('DUE_DATE'),
             'SHIP_DATE': self.get_other_field_value('DATE SHIPPED'),
+            'CONTRACT_NUMBER': self._extract_contract_number(),
+            'DISCOUNT': self.get_clf_field_value('DISCOUNT'),
+            'ACCOUNT_NUMBER': self._extract_account_number()
         }
 
         groups = self.get_expense_groups()
@@ -468,7 +479,22 @@ class InvoiceExtractor(Extractor):
         value = self.get_clf_field_value('INVOICE_RECEIPT_ID')
         if value is None:
             value = self.get_forms_field_value('Invoice')
-            value = ''.join([ch for ch in value if ch.isdigit()])  # to eliminate case "#00121"
+            if value is not None:
+                value = ''.join([ch for ch in value if ch.isdigit()])  # to eliminate case "#00121"
+
+        return value
+
+    def _extract_contract_number(self):
+        value = self.get_other_field_value('CONTRACT NUMBER')
+        if value is not None:
+            value = ''.join([ch for ch in value if ch.isdigit()])  # to eliminate case "'121010925"
+
+        return value
+
+    def _extract_account_number(self):
+        value = self.get_clf_field_value('ACCOUNT_NUMBER')
+        if value is not None:
+            value = ''.join([ch for ch in value if ch.isdigit()])  # to eliminate case "'501527"
 
         return value
 
@@ -542,25 +568,41 @@ if __name__ == '__main__':
     #
     #
     #
-    inv_fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_analyze_api/invoice_page-1.pdf.json'
-    frm_fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_forms_and_tables_api/' \
-             'invoice_page-1.pdf.json'
+    # inv_fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_analyze_api/invoice_page-1.pdf.json'
+    # frm_fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_forms_and_tables_api/' \
+    #          'invoice_page-1.pdf.json'
+    #
+    # """Test custom fields"""
+    # print(json.dumps(
+    #     InvoiceExtractor(
+    #         ExpenseParser(load_resp(inv_fn)['ExpenseDocuments'][0]).parse(),
+    #         FormsParser(load_resp(frm_fn)),  {
+    #             'INVOICE_DATE_2': {
+    #                 'EXPENSES': {
+    #                     'SRC_KEY': 'XXX___INVOICE_RECEIPT_DATE'
+    #                 },
+    #                 'FORMS': {
+    #                     'SRC_KEY': 'voice Dat'
+    #                 }
+    #             }
+    #         }
+    #     ).extract(), indent=2))
 
-    """Test custom fields"""
-    print(json.dumps(
-        InvoiceExtractor(
-            ExpenseParser(load_resp(inv_fn)['ExpenseDocuments'][0]).parse(),
-            FormsParser(load_resp(frm_fn)),  {
-                'INVOICE_DATE_2': {
-                    'EXPENSES': {
-                        'SRC_KEY': 'XXX___INVOICE_RECEIPT_DATE'
-                    },
-                    'FORMS': {
-                        'SRC_KEY': 'voice Dat'
-                    }
-                }
-            }
-        ).extract(), indent=2))
+
+
+    # inv_fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_analyze_api/invoice_adrian@vmgconstructioninc10.com8a83e28d7dc522e9017e253dfe203d5b21458d07f1c756ee4ad62d25a33dbd1e07bbb.pdf.json'
+    # frm_fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_forms_and_tables_api/invoice_adrian@vmgconstructioninc10.com8a83e28d7dc522e9017e253dfe203d5b21458d07f1c756ee4ad62d25a33dbd1e07bbb.pdf.json'
+    #
+    # """Test fields"""
+    # print(json.dumps(
+    #     InvoiceExtractor(
+    #         ExpenseParser(load_resp(inv_fn)['ExpenseDocuments'][0]).parse(),
+    #         FormsParser(load_resp(frm_fn)), None
+    #     ).extract(), indent=2))
+
+
+
+
 
 # self.conf = {
 # 'DUE_DATE_2': {
