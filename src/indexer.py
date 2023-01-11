@@ -145,7 +145,6 @@ class Indexer:
                     relation_id = self._relate_to_matched(customer_id, matched_po, relation_id)
 
         else:
-            # 'searchable': list(document['fields'].values())
             self.db.documents.update_one({
                 'customer_id': customer_id,
                 'document_type': 'QUOTE',

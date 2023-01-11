@@ -24,6 +24,8 @@ services:
       - cache
     environment:
       - PYTHONUNBUFFERED=1
+    volumes:
+      - ~/rovuk_data:/data
 
   mongo:
     image: mongo:latest

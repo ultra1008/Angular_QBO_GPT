@@ -170,13 +170,20 @@ class FormsParser:
 
         return fields
 
-    def get_field_value(self, key_name: str):
+    def get_field_value(self, key_name: str, equals: bool):
+        key_name = key_name.lower()
         if self.fields is None:
             job_id = self._start_job(self.s3_or_json_page[0], self.s3_or_json_page[1])
             cont = self._wait_and_get_analysis_result(job_id)
             self.fields = self._parse_response(cont)
 
-        return self.fields.get(key_name.lower())
+        if equals:
+            return self.fields.get(key_name)
+        else:
+            for key, value in self.fields.items():
+                if key_name in key:
+                    return value
+            return None
 
     @staticmethod
     def _start_job(bucket_name, object_name):
@@ -213,9 +220,10 @@ class FormsParser:
 
 
 class ExtractorsManager:
-    def __init__(self, documents_bundle_expenses, documents_bundle_pages):
+    def __init__(self, documents_bundle_expenses, documents_bundle_pages, custom_fields_conf):
         self.documents_bundle_expenses = documents_bundle_expenses
         self.documents_bundle_pages = documents_bundle_pages
+        self.custom_fields_conf = custom_fields_conf
 
     def extract(self):
         results = []
@@ -228,13 +236,17 @@ class ExtractorsManager:
             forms_parser = FormsParser(s3_document_page)
 
             if doc_type == 'PURCHASE_ORDER':
-                extractor = PurchaseOrderExtractor(expense_parser, forms_parser)
+                extractor = PurchaseOrderExtractor(expense_parser, forms_parser,
+                                                   self.custom_fields_conf.get('PURCHASE_ORDER'))
             elif doc_type == 'PACKING_SLIP':
-                extractor = PackingSlipExtractor(expense_parser, forms_parser)
+                extractor = PackingSlipExtractor(expense_parser, forms_parser,
+                                                 self.custom_fields_conf.get('PACKING_SLIP'))
             elif doc_type == 'QUOTE':
-                extractor = QuoteExtractor(expense_parser, forms_parser)
+                extractor = QuoteExtractor(expense_parser, forms_parser,
+                                           self.custom_fields_conf.get('QUOTE'))
             elif doc_type == 'INVOICE':
-                extractor = InvoiceExtractor(expense_parser, forms_parser)
+                extractor = InvoiceExtractor(expense_parser, forms_parser,
+                                             self.custom_fields_conf.get('INVOICE'))
             else:
                 extractor = None
 
@@ -268,11 +280,46 @@ class ExtractorsManager:
 
 
 class Extractor:
-    def __init__(self, expense_parser, forms_parser):
+    def __init__(self, document_type, expense_parser, forms_parser, conf):
+        self.document_type = document_type
         self.expense_parser = expense_parser
         self.forms_parser = forms_parser
+        self.conf = conf
 
     def extract(self):
+        result = self._extract()
+        if self.conf:
+            try:
+                custom_fields = self._extract_custom()
+                result['fields'].update(custom_fields)
+            except Exception as e:
+                print(f'Exception occurred while parsing custom_fields_conf for doctype: {self.document_type}, '
+                      f'exception: {e}')
+
+        return result
+
+    def _extract_custom(self):
+        fields = {}
+        for dst_key, sources in self.conf.items():
+            value = None
+            for src, act in sources.items():
+                if src == 'EXPENSES':
+                    value = self.get_clf_field_value(act['SRC_KEY'])
+                    if value:
+                        break
+
+                if src == 'FORMS':
+                    value = self.get_forms_field_value(act['SRC_KEY'], equals=False)
+                    if value:
+                        break
+
+            fields[dst_key] = value
+
+
+        print('custom_fields:', fields)
+        return fields
+
+    def _extract(self) -> dict:
         pass
 
     def get_clf_field_value(self, key_name: str):
@@ -281,8 +328,8 @@ class Extractor:
     def get_other_field_value(self, label: str):
         return self.expense_parser.get_other_field_value(label)
 
-    def get_forms_field_value(self, key_name: str):
-        return self.forms_parser.get_field_value(key_name)
+    def get_forms_field_value(self, key_name: str, equals=True):
+        return self.forms_parser.get_field_value(key_name, equals)
 
     def get_expense_groups(self):
         groups = []
@@ -303,9 +350,10 @@ class Extractor:
 
 
 class PackingSlipExtractor(Extractor):
+    def __init__(self, expense_parser, forms_parser, conf):
+        super().__init__('PACKING_SLIP', expense_parser, forms_parser, conf)
 
-    def extract(self):
-        # Construct fields
+    def _extract(self):
         date = self.get_clf_field_value('INVOICE_RECEIPT_DATE')
         invoice_number = self.get_clf_field_value('INVOICE_RECEIPT_ID')
         ship_to_address = self.get_clf_field_value('RECEIVER_ADDRESS')
@@ -331,9 +379,10 @@ class PackingSlipExtractor(Extractor):
 
 
 class QuoteExtractor(Extractor):
+    def __init__(self, expense_parser, forms_parser, conf):
+        super().__init__('QUOTE', expense_parser, forms_parser, conf)
 
-    def extract(self):
-        # Construct fields
+    def _extract(self):
         quote_number = self.get_clf_field_value('INVOICE_RECEIPT_ID')
         quote_date = self.get_clf_field_value('INVOICE_RECEIPT_DATE')
         terms = self.get_clf_field_value('PAYMENT_TERMS')
@@ -368,8 +417,10 @@ class QuoteExtractor(Extractor):
 
 
 class InvoiceExtractor(Extractor):
+    def __init__(self, expense_parser, forms_parser, conf):
+        super().__init__('INVOICE', expense_parser, forms_parser, conf)
 
-    def extract(self):
+    def _extract(self):
         fields = {
             'INVOICE_NUMBER': self._extract_invoice_number(),
             'INVOICE_DATE': self.get_clf_field_value('INVOICE_RECEIPT_DATE'),
@@ -424,8 +475,10 @@ class InvoiceExtractor(Extractor):
 
 
 class PurchaseOrderExtractor(Extractor):
+    def __init__(self, expense_parser, forms_parser, conf):
+        super().__init__('PURCHASE_ORDER', expense_parser, forms_parser, conf)
 
-    def extract(self):
+    def _extract(self):
         fields = {
             'PO_CREATE_DATE': self.get_clf_field_value('INVOICE_RECEIPT_DATE'),
             'PO_NUMBER': self.get_clf_field_value('PO_NUMBER'),
@@ -492,8 +545,62 @@ if __name__ == '__main__':
     inv_fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_analyze_api/invoice_page-1.pdf.json'
     frm_fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_forms_and_tables_api/' \
              'invoice_page-1.pdf.json'
+
+    """Test custom fields"""
     print(json.dumps(
         InvoiceExtractor(
             ExpenseParser(load_resp(inv_fn)['ExpenseDocuments'][0]).parse(),
-            FormsParser(load_resp(frm_fn))
+            FormsParser(load_resp(frm_fn)),  {
+                'INVOICE_DATE_2': {
+                    'EXPENSES': {
+                        'SRC_KEY': 'XXX___INVOICE_RECEIPT_DATE'
+                    },
+                    'FORMS': {
+                        'SRC_KEY': 'voice Dat'
+                    }
+                }
+            }
         ).extract(), indent=2))
+
+# self.conf = {
+# 'DUE_DATE_2': {
+#     'FORMS': {
+#         'SRC_KEY': 'Due Date'
+#     }
+# },
+# 'INVOICE_DATE_2': {
+#     'EXPENSES': {
+#         'SRC_KEY': 'INVOICE_RECEIPT_DATE'
+#     },
+#     'FORMS': {
+#         'SRC_KEY': 'voice Dat'
+#     }
+# },
+# 'INVOICE_DATE_2': {
+#     'FORMS': {
+#         'SRC_KEY': 'voice Dat'
+#     },
+#     'EXPENSES': {
+#         'SRC_KEY': 'INVOICE_RECEIPT_DATE'
+#     }
+# }
+
+# 'INVOICE_DATE_2': {
+#     'FORMS': {
+#         'SRC_KEY': 'XXXvoice Dat'
+#     },
+#     'EXPENSES': {
+#         'SRC_KEY': 'INVOICE_RECEIPT_DATE'
+#     }
+# }
+
+# 'INVOICE_DATE_2': {
+#     'EXPENSES': {
+#         'SRC_KEY': 'XXX___INVOICE_RECEIPT_DATE'
+#     },
+#     'FORMS': {
+#         'SRC_KEY': 'voice Dat'
+#     }
+# },
+
+# }

@@ -8,6 +8,7 @@ import os
 from PyPDF2 import PdfReader, PdfWriter
 from io import BytesIO
 import boto3
+import json
 
 from extractors import ExpensesCreator, ExtractorsManager
 from indexer import Indexer
@@ -23,7 +24,9 @@ def process_document_bundle(documents_bundle_url):
 
     expenses = ExpensesCreator(documents_bundle_url).create()
     pages_on_s3 = _extract_documents_bundle_pages(documents_bundle_url)
-    extracted_documents = ExtractorsManager(expenses['ExpenseDocuments'], pages_on_s3).extract()
+    custom_fields_conf = _load_custom_fields_conf()
+
+    extracted_documents = ExtractorsManager(expenses['ExpenseDocuments'], pages_on_s3, custom_fields_conf).extract()
 
     redis = Redis.from_url('redis://cache:6379/0')
     customer_lock = Redlock(key=customer_id, masters={redis}, auto_release_time=5*60)
@@ -35,6 +38,21 @@ def process_document_bundle(documents_bundle_url):
         print(f'Released unlocked lock for key: {customer_id} of url: {documents_bundle_url}')
 
     print(f'ended process_document_bundle: {documents_bundle_url}')
+
+
+def _load_custom_fields_conf():
+    conf = {}
+    for conf_name in ['PURCHASE_ORDER', 'PACKING_SLIP', 'QUOTE', 'INVOICE']:
+        try:
+            with open(f'/data/custom_fields/{conf_name}.json') as f:
+                conf_cont = f.read()
+                conf[conf_name] = json.loads(conf_cont)
+
+        except Exception as e:
+            print(f'Exception occurred while loading custom_fields_conf for doctype: {conf_name}, exception: {e}')
+
+    print(f'Final custom_fields_conf: {conf}')
+    return conf
 
 
 def _extract_documents_bundle_pages(documents_bundle_url):

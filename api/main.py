@@ -51,7 +51,7 @@ class Documents(BaseModel):
 async def process(data: Documents, _=Depends(auth)):
     print('process_post_data:', data)
     for document in data.documents:
-        r = q.enqueue('worker.process_document_bundle', document.document_url)
+        r = q.enqueue('worker.process_document_bundle', document.document_url, job_timeout=600)  # 10min
         print('send_task:', r)
 
     return {
