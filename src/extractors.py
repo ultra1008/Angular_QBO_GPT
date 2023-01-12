@@ -310,11 +310,21 @@ class Extractor:
             for src, act in sources.items():
                 if src == 'EXPENSES':
                     value = self.get_clf_field_value(act['SRC_KEY'])
+
+                    if value:
+                        if act.get('ONLY_DIGITS', False):
+                            value = ''.join([ch for ch in value if ch.isdigit()])
+
                     if value:
                         break
 
                 if src == 'FORMS':
                     value = self.get_forms_field_value(act['SRC_KEY'], equals=False)
+
+                    if value:
+                        if act.get('ONLY_DIGITS', False):
+                            value = ''.join([ch for ch in value if ch.isdigit()])
+
                     if value:
                         break
 
@@ -582,7 +592,8 @@ if __name__ == '__main__':
     #                     'SRC_KEY': 'XXX___INVOICE_RECEIPT_DATE'
     #                 },
     #                 'FORMS': {
-    #                     'SRC_KEY': 'voice Dat'
+    #                     'SRC_KEY': 'voice Dat',
+    #                     'ONLY_DIGITS': True
     #                 }
     #             }
     #         }
