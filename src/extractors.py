@@ -4,6 +4,9 @@ import boto3
 import time
 import os
 import trp
+from PyPDF2 import PdfReader, PdfWriter
+from io import BytesIO
+
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -159,7 +162,9 @@ class ExpenseParser:
 
 
 class FormsParser:
-    def __init__(self, s3_or_json_page):
+    def __init__(self, s3_or_json_page, i_page, documents_bundle_url):
+        self.i_page = i_page
+        self.documents_bundle_url = documents_bundle_url
         self.s3_or_json_page = s3_or_json_page
         self.fields = None
         if not isinstance(s3_or_json_page, tuple):
@@ -178,9 +183,24 @@ class FormsParser:
     def get_field_value(self, key_name: str, equals: bool):
         key_name = key_name.lower()
         if self.fields is None:
+            # Get
             job_id = self._start_job(self.s3_or_json_page[0], self.s3_or_json_page[1])
             cont = self._wait_and_get_analysis_result(job_id)
             self.fields = self._parse_response(cont)
+
+            # Save
+            indices = [i for i in range(len(self.documents_bundle_url)) if self.documents_bundle_url[i] == '/']
+            endpoint_url = self.documents_bundle_url[:indices[2]]
+            key = self.documents_bundle_url[indices[2] + 1:]
+            key = f'forms/{key}.{self.i_page}.json'
+            bucket_name = 'rovuk-textract'
+            s3 = boto3.client(
+                's3',
+                endpoint_url=endpoint_url,
+                aws_access_key_id=os.getenv('INPUT_AWS_ACCESS_KEY_ID'),
+                aws_secret_access_key=os.getenv('INPUT_AWS_SECRET_ACCESS_KEY')
+            )
+            s3.put_object(Body=json.dumps(cont), Bucket=bucket_name, Key=key)
 
         if equals:
             return self.fields.get(key_name)
@@ -221,24 +241,82 @@ class FormsParser:
         return response
 
 
-
-
-
 class ExtractorsManager:
-    def __init__(self, documents_bundle_expenses, documents_bundle_pages, custom_fields_conf):
-        self.documents_bundle_expenses = documents_bundle_expenses
-        self.documents_bundle_pages = documents_bundle_pages
+    def __init__(self, documents_bundle_url, custom_fields_conf):
+        # Get expenses
+        expenses = ExpensesCreator(documents_bundle_url).create()
+
+        # Save expenses
+        indices = [i for i in range(len(documents_bundle_url)) if documents_bundle_url[i] == '/']
+        endpoint_url = documents_bundle_url[:indices[2]]
+        key = documents_bundle_url[indices[2] + 1:]
+        key = f'expenses/{key}.json'
+        bucket_name = 'rovuk-textract'
+        s3 = boto3.client(
+            's3',
+            endpoint_url=endpoint_url,
+            aws_access_key_id=os.getenv('INPUT_AWS_ACCESS_KEY_ID'),
+            aws_secret_access_key=os.getenv('INPUT_AWS_SECRET_ACCESS_KEY')
+        )
+        s3.put_object(Body=json.dumps(expenses), Bucket=bucket_name, Key=key)
+
+        # Extract pages
+        pages_on_s3 = self._extract_documents_bundle_pages(documents_bundle_url)
+
+        # Init instance
+        self.documents_bundle_expenses = expenses['ExpenseDocuments']
+        self.documents_bundle_pages = pages_on_s3
         self.custom_fields_conf = custom_fields_conf
+        self.documents_bundle_url = documents_bundle_url
+
+    @staticmethod
+    def _extract_documents_bundle_pages(documents_bundle_url):
+        indices = [i for i in range(len(documents_bundle_url)) if documents_bundle_url[i] == '/']
+        endpoint_url = documents_bundle_url[:indices[2]]
+        bucket = documents_bundle_url[indices[2] + 1: indices[3]]
+        key = documents_bundle_url[indices[3] + 1:]
+
+        # Connect to source s3
+        input_s3 = boto3.client(
+            's3',
+            endpoint_url=endpoint_url,
+            aws_access_key_id=os.getenv('INPUT_AWS_ACCESS_KEY_ID'),
+            aws_secret_access_key=os.getenv('INPUT_AWS_SECRET_ACCESS_KEY')
+        )
+
+        # Get bucket object
+        result = input_s3.get_object(Bucket=bucket, Key=key)
+        raw_bytes_data = result['Body'].read()
+        reader = PdfReader(BytesIO(raw_bytes_data))
+
+        results = []
+        for i in range(reader.numPages):
+            writer = PdfWriter()
+            writer.addPage(reader.getPage(i))
+
+            with BytesIO() as bytes_stream:
+                writer.write(bytes_stream)
+                bytes_stream.seek(0)
+
+                # Copy to destination s3
+                textract_s3_bucket = 'rovuk-analysis-input'
+                s3 = boto3.client('s3')
+                key_i = f'{key}_{i}.pdf'
+                s3.put_object(Body=bytes_stream, Bucket=textract_s3_bucket, Key=key_i)
+
+                results.append((textract_s3_bucket, key_i))
+
+        return results
 
     def extract(self):
         results = []
-        for expense_json, s3_document_page in zip(
+        for i_page, (expense_json, s3_document_page) in enumerate(zip(
                 self.documents_bundle_expenses,
                 self.documents_bundle_pages
-        ):
+        )):
             doc_type = self._detect_doc_type(expense_json)
             expense_parser = ExpenseParser(expense_json).parse()
-            forms_parser = FormsParser(s3_document_page)
+            forms_parser = FormsParser(s3_document_page, i_page, self.documents_bundle_url)
 
             if doc_type == 'PURCHASE_ORDER':
                 extractor = PurchaseOrderExtractor(expense_parser, forms_parser,

@@ -49,9 +49,9 @@ class Documents(BaseModel):
 
 @app.post("/process")
 async def process(data: Documents, _=Depends(auth)):
-    print('process_post_data:', data)
+    print(f'process: {data=}')
     for document in data.documents:
-        r = q.enqueue('worker.process_document_bundle', document.document_url, job_timeout=600)  # 10min
+        r = q.enqueue('worker.process_documents_bundle', document.document_url, job_timeout=600)  # 10min
         print('send_task:', r)
 
     return {
@@ -61,4 +61,5 @@ async def process(data: Documents, _=Depends(auth)):
 
 @app.get("/search")
 async def search(customer_id: str, query: str, _=Depends(auth)):
+    print(f'search: {customer_id=}, {query=}')
     return indexer.search(customer_id, query)
