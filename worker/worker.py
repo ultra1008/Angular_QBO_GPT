@@ -23,6 +23,18 @@ def process_document_bundle(documents_bundle_url):
     customer_id = documents_bundle_url[indices[2] + 1: indices[3]]
 
     expenses = ExpensesCreator(documents_bundle_url).create()
+    endpoint_url = documents_bundle_url[:indices[2]]
+    key = documents_bundle_url[indices[2] + 1:]
+    key = f'expenses/{key}.json'
+    bucket_name = 'rovuk-textract'
+    s3 = boto3.client(
+        's3',
+        endpoint_url=endpoint_url,
+        aws_access_key_id=os.getenv('INPUT_AWS_ACCESS_KEY_ID'),
+        aws_secret_access_key=os.getenv('INPUT_AWS_SECRET_ACCESS_KEY')
+    )
+    s3.put_object(Body=json.dumps(expenses), Bucket=bucket_name, Key=key)
+
     pages_on_s3 = _extract_documents_bundle_pages(documents_bundle_url)
     custom_fields_conf = _load_custom_fields_conf()
 
