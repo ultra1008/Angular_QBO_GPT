@@ -228,6 +228,7 @@ export enum httproutes {
     PORTAL_COMPANY_COSTCODE_GET = "/webapi/v1/portal/getcostcode",
     PORTAL_COMPANY_STATUS_GET = "/webapi/v1/portal/getstatussetting",
     PORTAL_COMPANY_COSTCODE_XLSX_SAVE = "/webapi/v1/portal/savexlsxcostcode",
+    PORTAL_CHECK_AND_INSERT_COSTCODE = "/webapi/v1/portal/savecostcodeindb",
 
     //company equipment module -portal
     PORTAL_COMPANY_EQUIPMENT_GET = "/webapi/v1/portal/getAllEquipments",
@@ -1090,5 +1091,6 @@ export enum httproutes {
     PORTAL_ROVUK_INVOICE_OTHER_SETTING_UPDATE_ALERTS = "/webapi/v1/portal/getupdatesetting",
 
     PORTAL_ROVUK_INVOICE_TEAM_NEW_HISTORY = "/webapi/v1/portal/getuserhistory",
+    GET_GIF_LOADER = "/webapi/v1/getgifloader",
 
 }

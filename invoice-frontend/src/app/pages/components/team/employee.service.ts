@@ -10,24 +10,24 @@ import { localstorageconstants } from 'src/app/consts';
 @Injectable({ providedIn: 'root' })
 export class EmployeeService {
   observer = new Subject();
-  constructor(private http: HttpClient, public snackbar: Snackbarservice) { }
+  constructor (private http: HttpClient, public snackbar: Snackbarservice) { }
   saveEmaployee(userobject: any): Observable<any> {
-    const token = localStorage.getItem(localstorageconstants.SUPPLIERTOKEN);
+    const token = localStorage.getItem(localstorageconstants.INVOICE_TOKEN);
     let portal_language = localStorage.getItem(localstorageconstants.LANGUAGE);
     let headers: any = new HttpHeaders();
     headers = headers.set('Authorization', token);
     headers = headers.set('language', portal_language);
     var url = configdata.apiurl;
-    console.log("2")
+    console.log("2");
     return this.http.post(url + "/webapi/v1/portal/saveemployee", userobject, { headers: headers }).pipe(
       map((res) => {
-        console.log("res", res)
+        console.log("res", res);
         return res;
       }),
       catchError(this.handleError));
   }
   employeeDocumentUpdate(userobject: any): Observable<any> {
-    const token = localStorage.getItem(localstorageconstants.SUPPLIERTOKEN);
+    const token = localStorage.getItem(localstorageconstants.INVOICE_TOKEN);
     let portal_language = localStorage.getItem(localstorageconstants.LANGUAGE);
     let headers: any = new HttpHeaders();
     headers = headers.set('Authorization', token);
@@ -41,7 +41,7 @@ export class EmployeeService {
       catchError(this.handleError));
   }
   getalluser(): Observable<any> {
-    const token = localStorage.getItem(localstorageconstants.SUPPLIERTOKEN);
+    const token = localStorage.getItem(localstorageconstants.INVOICE_TOKEN);
     let portal_language = localStorage.getItem(localstorageconstants.LANGUAGE);
     let headers: any = new HttpHeaders();
     headers = headers.set('Authorization', token);

@@ -7,7 +7,7 @@ import { localstorageconstants, routes } from '../../../../consts';
 export class PortalAuthGuard implements CanActivate {
   public routers: typeof routes = routes;
   role_permission_front: any;
-  constructor(private router: Router) {
+  constructor (private router: Router) {
   }
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): any {
     /* const token = localStorage.getItem('token');
@@ -28,69 +28,50 @@ export class PortalAuthGuard implements CanActivate {
         return true
       }
     } */
-    const token = localStorage.getItem(localstorageconstants.SUPPLIERTOKEN);
+    const token = localStorage.getItem(localstorageconstants.INVOICE_TOKEN);
     const sponsor_id = localStorage.getItem(localstorageconstants.SUPPLIERID);
-    if (token)
-    {
+    if (token) {
       sessionStorage.setItem(localstorageconstants.USERTYPE, "invoice-portal");
       return true;
-    } else
-    {
+    } else {
       this.router.navigate(['/', sponsor_id]);
     }
   }
 
   checkRoutePermission(url: any) {
-    if (url == "/dashboard")
-    {
+    if (url == "/dashboard") {
       return this.role_permission_front.dashboard.View;
-    } else if (url == "/todayactivity")
-    {
+    } else if (url == "/todayactivity") {
       return this.role_permission_front.todayActivity.View;
-    } else if (url == "/report")
-    {
+    } else if (url == "/report") {
       return this.role_permission_front.dailyReports.View;
-    } else if (url == "/project-list")
-    {
+    } else if (url == "/project-list") {
       return this.role_permission_front.projects.View;
-    } else if (url == "/employee-list")
-    {
+    } else if (url == "/employee-list") {
       return this.role_permission_front.team.team.View;
-    } else if (url == "/location")
-    {
+    } else if (url == "/location") {
       return this.role_permission_front.team.locations.View;
-    } else if (url == "/employee-schedule")
-    {
+    } else if (url == "/employee-schedule") {
       return this.role_permission_front.team.schedules.View;
-    } else if (url == "/employee-timecard")
-    {
+    } else if (url == "/employee-timecard") {
       return this.role_permission_front.team.timecard.View;
-    } else if (url == "/company-items")
-    {
+    } else if (url == "/company-items") {
       return this.role_permission_front.company.item.View;
-    } else if (url == "/company-materials")
-    {
+    } else if (url == "/company-materials") {
       return this.role_permission_front.company.material.View;
-    } else if (url == "/company-extramaterial")
-    {
+    } else if (url == "/company-extramaterial") {
       return this.role_permission_front.company.extra_material.View;
-    } else if (url == "/company-equipment")
-    {
+    } else if (url == "/company-equipment") {
       return this.role_permission_front.company.equipment.View;
-    } else if (url == "/company-vendor")
-    {
+    } else if (url == "/company-vendor") {
       return this.role_permission_front.company.vendor.View;
-    } else if (url == "/company-gasexpenses")
-    {
+    } else if (url == "/company-gasexpenses") {
       return this.role_permission_front.company.gasExpenses.View;
-    } else if (url == "/company-purchaseorders")
-    {
+    } else if (url == "/company-purchaseorders") {
       return this.role_permission_front.company.PO.View;
-    } else if (url == "/setting")
-    {
+    } else if (url == "/setting") {
       return this.role_permission_front.settings.All;
-    } else
-    {
+    } else {
       return true;
     }
   }

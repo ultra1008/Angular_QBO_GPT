@@ -44,7 +44,7 @@ export class AuthPageComponent implements OnInit {
   otpTimer: any;
   subscription!: Subscription;
 
-  constructor(public httpCall: HttpCall, private service: PortalAuthService, private router: Router,
+  constructor (public httpCall: HttpCall, private service: PortalAuthService, private router: Router,
     public myapp: AppComponent, public uiSpinner: UiSpinnerService,
     public translate: TranslateService, public authservice: PortalAuthService, public snackbarservice: Snackbarservice) {
     this.translate.stream(['']).subscribe((textarray) => {
@@ -53,17 +53,14 @@ export class AuthPageComponent implements OnInit {
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     var locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configdata.fst_load_lang : tmp_locallanguage;
     this.translate.use(locallanguage);
-    if (localStorage.getItem(localstorageconstants.COMPANYCODE))
-    {
+    if (localStorage.getItem(localstorageconstants.COMPANYCODE)) {
       let that = this;
       that.c_code = localStorage.getItem(localstorageconstants.COMPANYCODE);
       that.httpCall.httpPostCallWithoutToken(httproutes.GET_COMPANY_SETTINGS, { companycode: this.c_code }).subscribe((params) => {
         let temp_show = false;
-        if (params.status)
-        {
+        if (params.status) {
           let otp_setting = params.data.Enable_OTP;
-          if (otp_setting.setting_status == 'Active' && otp_setting.setting_value == 'Yes')
-          {
+          if (otp_setting.setting_status == 'Active' && otp_setting.setting_value == 'Yes') {
             temp_show = true;
           }
         }
@@ -102,18 +99,15 @@ export class AuthPageComponent implements OnInit {
 
   public savecompnaycode(): void {
     let that = this;
-    if (that.form.valid)
-    {
+    if (that.form.valid) {
       /*   */
       that.httpCall.httpPostCallWithoutToken(httproutes.GET_COMPANY_SETTINGS, { companycode: "R-" + that.form.value.companycode }).subscribe((params) => {
         let temp_show = false;
-        if (params.status)
-        {
+        if (params.status) {
           //showOTPOption
           let otp_setting = params.data.Enable_OTP;
           console.log("otp_setting ", otp_setting);
-          if (otp_setting.setting_status == 'Active' && otp_setting.setting_value == 'Yes')
-          {
+          if (otp_setting.setting_status == 'Active' && otp_setting.setting_value == 'Yes') {
             temp_show = true;
           }
         }
@@ -141,8 +135,7 @@ export class AuthPageComponent implements OnInit {
   }
 
   public forgotPasswordPress(): void {
-    if (this.forgotpassword_form.valid)
-    {
+    if (this.forgotpassword_form.valid) {
       let reqObject = {
         useremail: this.forgotpassword_form.value.useremail,
         companycode: localStorage.getItem(localstorageconstants.COMPANYCODE)
@@ -150,16 +143,14 @@ export class AuthPageComponent implements OnInit {
       const that = this;
       that.uiSpinner.spin$.next(true);
       this.httpCall.httpPostCallWithoutToken(httproutes.USER_FORGET_PASSWORD, reqObject).subscribe((params) => {
-        if (params.status)
-        {
+        if (params.status) {
           that.uiSpinner.spin$.next(false);
           that.snackbarservice.openSnackBar(params.message, 'success');
           that.showCompanyCode = false;
           that.showLogin = true;
           that.showForgotPassword = false;
           that.showOTP = false;
-        } else
-        {
+        } else {
           that.uiSpinner.spin$.next(false);
           that.snackbarservice.openSnackBar(params.message, 'error');
         }
@@ -194,17 +185,14 @@ export class AuthPageComponent implements OnInit {
 
   sendOTP() {
     let that = this;
-    if (that.otp_form.valid)
-    {
+    if (that.otp_form.valid) {
       that.uiSpinner.spin$.next(true);
       that.httpCall.httpPostCallWithoutToken(httproutes.SEND_SUPPLIER_OTP_EMAIL, { companycode: that.c_code, useremail: that.otp_form.value.useremail }).subscribe((params) => {
-        if (params.status)
-        {
+        if (params.status) {
           that.uiSpinner.spin$.next(false);
           that.sentOTP = true;
           that.snackbarservice.openSnackBar(params.message, 'success');
-        } else
-        {
+        } else {
           that.uiSpinner.spin$.next(false);
           that.snackbarservice.openSnackBar(params.message, 'error');
         }
@@ -216,11 +204,9 @@ export class AuthPageComponent implements OnInit {
     let that = this;
     let source = timer(0, 1000);
     this.subscription = source.subscribe(val => {
-      if (that.otpTimer == 0)
-      {
+      if (that.otpTimer == 0) {
         this.subscription.unsubscribe();
-      } else
-      {
+      } else {
         that.otpTimer = that.otpTimer - 1;
       }
     });
@@ -236,20 +222,16 @@ export class AuthPageComponent implements OnInit {
 
   submitOTP() {
     let that = this;
-    if (that.otp_form.valid)
-    {
-      if (that.otp.length != 6)
-      {
+    if (that.otp_form.valid) {
+      if (that.otp.length != 6) {
         that.snackbarservice.openSnackBar('Please enter 6 digit of One Time Password (OTP).', 'error');
-      } else
-      {
+      } else {
         that.uiSpinner.spin$.next(true);
         that.httpCall.httpPostCallWithoutToken(httproutes.SUBMITT_SUPPLIER_OTP, { companycode: that.c_code, useremail: that.otp_form.value.useremail, otp: that.otp }).subscribe((params) => {
-          if (params.status)
-          {
+          if (params.status) {
             that.uiSpinner.spin$.next(false);
             that.snackbarservice.openSnackBar(params.message, 'success');
-            localStorage.setItem(localstorageconstants.SUPPLIERTOKEN, params.data.token);
+            localStorage.setItem(localstorageconstants.INVOICE_TOKEN, params.data.token);
             localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(params.data));
             localStorage.setItem(localstorageconstants.SUPPLIERID, params.data.companydata._id);
             sessionStorage.setItem(localstorageconstants.USERTYPE, "invoice-portal");
@@ -259,14 +241,12 @@ export class AuthPageComponent implements OnInit {
             localStorage.setItem('invoicelogout', 'false');
             that.myapp.updateIdealTimeout();
 
-            if (params.data.UserData.role_name != configdata.EMPLOYEE)
-            {
+            if (params.data.UserData.role_name != configdata.EMPLOYEE) {
               that.loginHistory(params.data.UserData);
             }
             // that.snackbarservice.openSnackBar(that.Login_Form_Login_Successfully, 'success'); 
             that.router.navigate([checkRoutePermission(params.data.role_permission)]).then();
-          } else
-          {
+          } else {
             that.uiSpinner.spin$.next(false);
             that.snackbarservice.openSnackBar(params.message, 'error');
           }

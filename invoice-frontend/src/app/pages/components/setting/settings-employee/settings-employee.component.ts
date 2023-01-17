@@ -12,6 +12,7 @@ import { LanguageApp } from 'src/app/service/utils';
 import Swal from 'sweetalert2';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
 import { httproutes, icon, localstorageconstants } from 'src/app/consts';
+import { saveAs } from "file-saver";
 
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
@@ -41,7 +42,7 @@ export class SettingsEmployeeComponent implements OnInit {
   noButton: string = '';
   show_tabs: boolean = true;
 
-  constructor(private modeService: ModeDetectService, public httpCall: HttpCall, public dialog: MatDialog,
+  constructor (private modeService: ModeDetectService, public httpCall: HttpCall, public dialog: MatDialog,
     public sb: Snackbarservice, public translate: TranslateService) {
     let that = this;
     this.translate.stream(['']).subscribe((textarray) => {
@@ -157,19 +158,6 @@ export class SettingsEmployeeComponent implements OnInit {
 
 }
 
-/**
- * Dialog created by Hemin S Patel
- * Date 23-05-2022
- * 
- * Import file button click 
- * open dialog and display instruction for download button for file
- * 
- * last update by Hemin patel
- * last update at 23-05-2022 : 02:42AM
- * 
- * need to put only download button  dialog for text instruction need to wait for client (21-05-2022 03:25AM)
- */
-
 @Component({
   selector: 'importEmpSetting-download',
   templateUrl: './importEmpSetting-download.html',
@@ -178,14 +166,36 @@ export class SettingsEmployeeComponent implements OnInit {
 
 export class ImportEmpSettingDownload {
   dtOptions: DataTables.Settings = {};
-  constructor(
-    public dialogRef: MatDialogRef<ImportEmpSettingDownload>,
-    @Inject(MAT_DIALOG_DATA) public data: any, public translate: TranslateService) {
+  mode: any;
+  subscription: Subscription;
+  exitIcon: string;
 
+  constructor (
+    public dialogRef: MatDialogRef<ImportEmpSettingDownload>, private modeService: ModeDetectService,
+    @Inject(MAT_DIALOG_DATA) public data: any, public translate: TranslateService) {
+    var modeLocal = localStorage.getItem("darkmode");
+    this.mode = modeLocal === "on" ? "on" : "off";
+    if (this.mode == "off") {
+      this.exitIcon = icon.CANCLE;
+    } else {
+      this.exitIcon = icon.CANCLE_WHITE;
+    }
+    this.subscription = this.modeService.onModeDetect().subscribe((mode) => {
+      if (mode) {
+        this.mode = "off";
+        this.exitIcon = icon.CANCLE;
+      } else {
+        this.mode = "on";
+        this.exitIcon = icon.CANCLE_WHITE;
+      }
+    });
   }
 
   downloadImportTemplate() {
     this.dialogRef.close();
+    if (this.data == "costcode-setting") {
+      return saveAs('./assets/files/Costcode.xlsx', "Costcode.xlsx");
+    }
     // if (this.data == "employee-setting") {
     //   return saveAs('./assets/files/employee_setting.xlsx', "employee_setting.xlsx");
     // } else if (this.data == "other-setting") {
@@ -196,23 +206,6 @@ export class ImportEmpSettingDownload {
 
   }
 }
-
-/**
- * Dialog created by Hemin S Patel
- * Date 24-05-2022
- * 
- * as per task and discussion need to display error data in dialog and
- * need give skip and correct button
- * 
- * last update by Hemin patel
- * last update at 24-05-2022 : 12:12AM
- * 
- * we did't get Edit and correct data solution and which solution we get this 
- * solution needs R & D  time so not implemented this(21-05-2022 11:58AM)
- * 
- *  In this function need to create TAB for each module and save as per which TAB is curratnt active 
- * as per  discussed with krunal bhai(time 23-05-2022 05:00PM)
- */
 
 @Component({
   selector: 'importdataerrorempsetting',
@@ -230,7 +223,7 @@ export class ImportDataErrorEmpSetting {
   import_cancel_error: any;
   Compnay_Equipment_Delete_Yes: any;
   Compnay_Equipment_Delete_No: any;
-  constructor(
+  constructor (
     public dialogRef: MatDialogRef<ImportDataErrorEmpSetting>, public httpCall: HttpCall, public uiSpinner: UiSpinnerService,
     @Inject(MAT_DIALOG_DATA) public data: any, public translate: TranslateService, public sb: Snackbarservice) {
     this.import_cancel_error = this.translate.instant('import_cancel_error');

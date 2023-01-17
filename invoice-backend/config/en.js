@@ -455,6 +455,7 @@ module.exports = {
     EmailTeamReportText2: 'To modify these preferences please go into the settings tab located in your user portal.',
 
     Data_Correct: "Data Correct",
+    costcode_alrady_exists: "Cost code alrady exists",
 
     // Supplier Payment Retainage
     PaymentRetainageAdd: "Payment retainage added successfully.",
@@ -835,4 +836,10 @@ module.exports = {
         allow_for_projects: "Allow for Projects",
         user_languages: "Language",
     },
+
+    // Cost Code
+    CostCodeListing: 'Cost Code listing',
+    CostCodeAdded: 'Cost Code added successfully.',
+    CostCodeUpdated: 'Cost Code updated successfully.',
+    CostCodeDeleted: 'Cost Code deleted successfully.',
 };

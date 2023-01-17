@@ -415,7 +415,7 @@ export class EmployeeViewComponent implements OnInit {
     var userdata = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
 
     this.role_permission_tab = userdata.role_permission.users;
-    const token = localStorage.getItem(localstorageconstants.SUPPLIERTOKEN);
+    const token = localStorage.getItem(localstorageconstants.INVOICE_TOKEN);
     this.user_id = this.route.snapshot.paramMap.get('idparms');
     let headers: any = new HttpHeaders();
     headers = headers.set('Authorization', token);
@@ -1868,7 +1868,7 @@ export class UserDocumentHistoryComponent implements OnInit {
       that.web_all = that.translate.instant('web_all');
       that.iframe_all = that.translate.instant('iframe_all');
     });
-    const token = localStorage.getItem(localstorageconstants.SUPPLIERTOKEN);
+    const token = localStorage.getItem(localstorageconstants.INVOICE_TOKEN);
     let headers: any = new HttpHeaders();
     headers = headers.set('Authorization', token);
 

@@ -11,7 +11,7 @@ import { localstorageconstants } from 'src/app/consts';
 })
 export class PortalAuthService {
 
-  constructor(private http: HttpClient) {
+  constructor (private http: HttpClient) {
 
   }
   public login(userobject: any): Observable<any> {
@@ -56,7 +56,7 @@ export class PortalAuthService {
 
   public changePassword(userobject: any): Observable<any> {
     var url = configdata.apiurl;
-    const token = localStorage.getItem(localstorageconstants.SUPPLIERTOKEN);
+    const token = localStorage.getItem(localstorageconstants.INVOICE_TOKEN);
     let portal_language = localStorage.getItem(localstorageconstants.LANGUAGE);
     let headers: any = new HttpHeaders();
     headers = headers.set('Authorization', token);

@@ -68,7 +68,7 @@ import { MailboxMonitorComponent } from './mailbox-monitor/mailbox-monitor.compo
 import { AlertsComponent } from './alerts/alerts.component';
 import { IntegrationsComponent } from './integrations/integrations.component';
 import { UsageComponent } from './usage/usage.component';
-import { CostCodeComponent } from './cost-code/cost-code.component';
+import { CostCodeComponent, CostCodeFormComponent, CostcodeImportData } from './cost-code/cost-code.component';
 import { TermsComponent } from './invoice-other-settings/terms/terms.component';
 import { TaxRateComponent } from './invoice-other-settings/tax-rate/tax-rate.component';
 import { DocumentsComponent } from './invoice-other-settings/documents/documents.component';
@@ -119,6 +119,8 @@ const maskConfig: Partial<IConfig> = {
     IntegrationsComponent,
     UsageComponent,
     CostCodeComponent,
+    CostCodeFormComponent,
+    CostcodeImportData,
     TermsComponent,
     TaxRateComponent,
     DocumentsComponent,

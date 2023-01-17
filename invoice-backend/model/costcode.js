@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 var costCodeSchema = new Schema({
     cost_code: { type: String },
     division: { type: String },
-    module: { type: String, enum: ["Projects", "Team", "Employee", "PO", "Equipment", "Expense", "Material", "Task", "Location", "SafetyTalks", "Note", "SmallTools", "POCreation", "Vendor", "Receiving", "UsedMaterial", "ExtraMaterial", "Item", "Timecard"] },
+    module: { type: String, enum: ["Invoice"] },
     description: { type: String, default: "" },
     value: { type: String },
     cost_code_created_at: { type: Number },

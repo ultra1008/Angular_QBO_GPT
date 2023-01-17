@@ -7,24 +7,16 @@ let db_connection = require('../../../../../controller/common/connectiondb');
 let collectionConstant = require('../../../../../config/collectionConstant');
 //let activityController = require("./../todaysActivity/todaysActivityController");
 
-module.exports.getallcostcode = async function (req, res)
-{
+module.exports.getallcostcode = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
-    if (decodedToken)
-    {
+    if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
 
             let costcodeCollection = connection_db_api.model(collectionConstant.COSTCODES, costcodeSchema);
             let all_costcode = await costcodeCollection.aggregate([
-                {
-                    $match:
-                    {
-                        is_delete: 0
-                    }
-                },
+                { $match: { is_delete: 0, module: 'Invoice' } },
                 {
                     $project: {
                         _id: 1,
@@ -36,29 +28,23 @@ module.exports.getallcostcode = async function (req, res)
                 }
             ]);
             res.send({ message: translator.getStr('CostCodeListing'), data: all_costcode, status: true });
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
-        } finally
-        {
-            connection_db_api.close()
+        } finally {
+            connection_db_api.close();
         }
-    } else
-    {
+    } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
 
-module.exports.getcostcode = async function (req, res)
-{
+module.exports.getcostcode = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
-    if (decodedToken)
-    {
+    if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             var requestObject = req.body;
 
             let costcodeCollection = connection_db_api.model(collectionConstant.COSTCODES, costcodeSchema);
@@ -81,35 +67,29 @@ module.exports.getcostcode = async function (req, res)
                 }
             ]);
             res.send({ message: translator.getStr('CostCodeListing'), data: all_costcode, status: true });
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
-        } finally
-        {
-            connection_db_api.close()
+        } finally {
+            connection_db_api.close();
         }
-    } else
-    {
+    } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
 
 
-module.exports.getCostCodeForDatatable = async function (req, res)
-{
+module.exports.getCostCodeForDatatable = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
-    if (decodedToken)
-    {
+    if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             var requestObject = req.body;
 
             let costcodeCollection = connection_db_api.model(collectionConstant.COSTCODES, costcodeSchema);
             var col = [];
-            userid = { is_delete: 0, module: requestObject.module };
+            match = { is_delete: 0, module: requestObject.module };
             col.push("division", "value", "description");
             var start = parseInt(req.body.start);
             var perpage = parseInt(req.body.length);
@@ -123,14 +103,14 @@ module.exports.getCostCodeForDatatable = async function (req, res)
                 { "description": new RegExp(req.body.search.value, 'i') }]
             };
             var aggregateQuery = [
-                { $match: userid },
+                { $match: match },
                 { $match: query },
                 { $limit: perpage },
                 { $skip: start },
                 { $sort: sort },
             ];
             let count = 0;
-            count = await costcodeCollection.countDocuments(userid);
+            count = await costcodeCollection.countDocuments(match);
             let get_shift = await costcodeCollection.aggregate(aggregateQuery);
             var dataResponce = {};
             dataResponce.data = get_shift;
@@ -138,137 +118,102 @@ module.exports.getCostCodeForDatatable = async function (req, res)
             dataResponce.recordsTotal = count;
             dataResponce.recordsFiltered = (req.body.search.value) ? get_shift.length : count;
             res.json(dataResponce);
-        } catch (e)
-        {
+        } catch (e) {
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
-        } finally
-        {
-            connection_db_api.close()
+        } finally {
+            connection_db_api.close();
         }
-    } else
-    {
+    } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
 
-module.exports.savecostcode = async function (req, res)
-{
+module.exports.savecostcode = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
-    if (decodedToken)
-    {
+    if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             var requestObject = req.body;
 
             let costcodeCollection = connection_db_api.model(collectionConstant.COSTCODES, costcodeSchema);
-            if (requestObject._id)
-            {
+            if (requestObject._id) {
                 requestObject.value = requestObject.module + "-" + requestObject.division + "-" + requestObject.cost_code;
                 let update_doc_type = await costcodeCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
-                if (update_doc_type)
-                {
-                    //activityController.updateAllUser({ "api_setting.costcode": true }, decodedToken);
+                if (update_doc_type) {
                     res.send({ message: translator.getStr('CostCodeUpdated'), data: update_doc_type, status: true });
-                } else
-                {
+                } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
                 }
-            } else
-            {
+            } else {
                 requestObject.value = requestObject.module + "-" + requestObject.division + "-" + requestObject.cost_code;
                 let check_cost_code = await costcodeCollection.findOne({ is_delete: 0, module: requestObject.module, value: requestObject.value });
-                if (check_cost_code == null)
-                {
+                if (check_cost_code == null) {
                     let add_doc_type = new costcodeCollection(requestObject);
                     let save_doc_type = await add_doc_type.save();
-                    if (save_doc_type)
-                    {
-                        //activityController.updateAllUser({ "api_setting.costcode": true }, decodedToken);
+                    if (save_doc_type) {
                         res.send({ message: translator.getStr('CostCodeAdded'), data: save_doc_type, status: true });
-                    } else
-                    {
+                    } else {
                         res.send({ message: translator.getStr('SomethingWrong'), status: false });
                     }
-                } else
-                {
+                } else {
                     res.send({ message: "CostCode alrady exists.", status: false });
                 }
             }
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
-        } finally
-        {
-            connection_db_api.close()
+        } finally {
+            connection_db_api.close();
         }
-    } else
-    {
+    } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
 
-module.exports.deletecostcode = async function (req, res)
-{
+module.exports.deletecostcode = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
-    if (decodedToken)
-    {
+    if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
 
             let costcodeCollection = connection_db_api.model(collectionConstant.COSTCODES, costcodeSchema);
             let deleteObject = await costcodeCollection.updateOne({ _id: ObjectID(req.body._id) }, { is_delete: 1 });
             let isDelete = deleteObject.nModified;
-            if (deleteObject)
-            {
-                if (isDelete == 0)
-                {
+            if (deleteObject) {
+                if (isDelete == 0) {
                     res.send({ message: translator.getStr('NoDataWithId'), status: false });
-                } else
-                {
-                    //activityController.updateAllUser({ "api_setting.costcode": true }, decodedToken);
+                } else {
                     res.send({ message: translator.getStr('CostCodeDeleted'), status: true });
                 }
-            } else
-            {
+            } else {
                 console.log(e);
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
             }
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
-        } finally
-        {
-            connection_db_api.close()
+        } finally {
+            connection_db_api.close();
         }
-    } else
-    {
+    } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
 
-module.exports.savexlsxcostcode = async function (req, res)
-{
+module.exports.savexlsxcostcode = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
-    if (decodedToken)
-    {
+    if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             let errormsg = "", successmsg = "", flg = 0;
             let requestData = req.body;
-
+            let success_data = [], error_data = [], data = [];
             let costcodeCollection = connection_db_api.model(collectionConstant.COSTCODES, costcodeSchema);
-            if (requestData.data.length != 0)
-            {
-                for (let i = 0; i < requestData.data.length; i++)
-                {
+            if (requestData.data.length != 0) {
+                for (let i = 0; i < requestData.data.length; i++) {
                     let requestObject = {
                         description: requestData.data[i].description,
                         cost_code: requestData.data[i].cost_code,
@@ -277,41 +222,72 @@ module.exports.savexlsxcostcode = async function (req, res)
                     };
                     requestObject.value = requestObject.module + "-" + requestObject.division + "-" + requestObject.cost_code;
                     let check_cost_code = await costcodeCollection.findOne({ is_delete: 0, module: requestObject.module, value: requestObject.value });
-                    if (check_cost_code == null)
-                    {
-                        let add_doc_type = new costcodeCollection(requestObject);
-                        let save_doc_type = await add_doc_type.save();
-                        if (save_doc_type)
-                        {
-                            flg++;
-                        } else
-                        {
-                            errormsg += "something wrong with " + requestObject.cost_code + " costcode\n";
-                        }
-                    } else
-                    {
-                        errormsg += "Costcode " + requestObject.cost_code + " alrady exists.\n";
+                    if (check_cost_code == null) {
+                        requestObject.status = true;
+                        requestObject.message = translator.getStr('Data_Correct');
+                        success_data.push(requestObject);
+                        data.push(requestObject);
+                    } else {
+                        requestObject.status = false;
+                        requestObject.message = translator.getStr('costcode_alrady_exists');
+                        error_data.push(requestObject);
+                        data.push(requestObject);
                     }
                 }
-                if (flg != 0)
-                {
-                    successmsg += translator.getStr('CostCodeAdded');
-                }
-                res.send({ errormsg: errormsg, successmsg: successmsg, status: true });
-            } else
-            {
+                res.send({ status: true, data: data, error_data: error_data, success_data: success_data });
+            } else {
                 res.send({ message: translator.getStr('NoDataUploadedFile'), status: false });
             }
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
-        } finally
-        {
-            connection_db_api.close()
+        } finally {
+            connection_db_api.close();
         }
-    } else
-    {
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.savecostcodeindb = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            let requestData = req.body;
+            let costcodeCollection = connection_db_api.model(collectionConstant.COSTCODES, costcodeSchema);
+            if (requestData.data.length != 0) {
+                for (let i = 0; i < requestData.data.length; i++) {
+                    let requestObject = {
+                        description: requestData.data[i].description,
+                        cost_code: requestData.data[i].cost_code,
+                        division: requestData.data[i].division,
+                        module: requestData.module,
+                    };
+                    requestObject.value = requestObject.module + "-" + requestObject.division + "-" + requestObject.cost_code;
+                    let check_cost_code = await costcodeCollection.findOne({ is_delete: 0, module: requestObject.module, value: requestObject.value });
+                    if (check_cost_code == null) {
+                        requestObject.status = true;
+                        requestObject.message = translator.getStr('Data_Correct');
+
+                        let add_doc_type = new costcodeCollection(requestObject);
+                        let save_doc_type = await add_doc_type.save();
+                    }
+                }
+                res.send({
+                    status: true, message: translator.getStr('CostCodeAdded')
+                });
+            } else {
+                res.send({ message: translator.getStr('NoDataUploadedFile'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };

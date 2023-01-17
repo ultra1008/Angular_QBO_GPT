@@ -9,32 +9,31 @@ import { localstorageconstants } from '../consts';
 
 @Injectable({ providedIn: 'root' })
 export class HttpCall {
+  gif = configdata.DEFAULT_LOADER_GIF;
+  temp_gif = localStorage.getItem(localstorageconstants.INVOICE_GIF);
+
   observer_distributor = new Subject();
   public openmodeledit_distributor$ = this.observer_distributor.asObservable();
   saveEmit = new Subject();
   public saveEmit_$ = this.saveEmit.asObservable();
   LOCAL_OFFSET: any;
-  constructor(private http: HttpClient, public uiSpinner: UiSpinnerService) {
+  constructor (private http: HttpClient, public uiSpinner: UiSpinnerService) {
     this.LOCAL_OFFSET = moment().utcOffset() * 60;
   }
 
+  getLoader(): string {
+    return this.temp_gif != null &&
+      this.temp_gif != undefined &&
+      this.temp_gif != ""
+      ? this.temp_gif
+      : this.gif;
+  }
+
   public httpGetCall(userroute: any): Observable<any> {
-    let token: any = "";
     let portal_type = sessionStorage.getItem(localstorageconstants.USERTYPE);
+    let token = localStorage.getItem(localstorageconstants.INVOICE_TOKEN);
     let portal_language = localStorage.getItem(localstorageconstants.LANGUAGE);
-    if (portal_type == "superadmin")
-    {
-      token = localStorage.getItem('token_superadmin');
-    } else if (portal_type == "portal")
-    {
-      token = localStorage.getItem('token');
-    } else if (portal_type == "ocps-portal")
-    {
-      token = localStorage.getItem(localstorageconstants.IFRAMETOKEN);
-    } else if (portal_type == "invoice-portal")
-    {
-      token = localStorage.getItem(localstorageconstants.SUPPLIERTOKEN);
-    }
+
     let headers: any = new HttpHeaders();
     headers = headers.set('Authorization', token);
     headers = headers.set('local_offset', "" + moment().utcOffset() * 60);
@@ -49,23 +48,8 @@ export class HttpCall {
   }
 
   public httpPostCall(userroute: any, userdata: any): Observable<any> {
-    let token: any = "";
     let portal_type = sessionStorage.getItem(localstorageconstants.USERTYPE);
-    if (portal_type == "superadmin")
-    {
-      token = localStorage.getItem('token_superadmin');
-    } else if (portal_type == "portal")
-    {
-      token = localStorage.getItem('token');
-    } else if (portal_type == "ocps-portal")
-    {
-      // iFrame
-      token = localStorage.getItem(localstorageconstants.IFRAMETOKEN);
-    } else if (portal_type == "invoice-portal")
-    {
-      // Suppllier & Diversity
-      token = localStorage.getItem(localstorageconstants.SUPPLIERTOKEN);
-    }
+    let token = localStorage.getItem(localstorageconstants.INVOICE_TOKEN);
 
     let portal_language = localStorage.getItem(localstorageconstants.LANGUAGE);
     let headers: any = new HttpHeaders();
@@ -113,8 +97,7 @@ export class HttpCall {
   }
 
   handleError(error: any) {
-    if (error.error instanceof Error)
-    {
+    if (error.error instanceof Error) {
       let errMessage = error.error.message;
       return throwError(errMessage);
     }

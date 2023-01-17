@@ -5,8 +5,8 @@ import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 
 //rxjs
-import { Subject } from 'rxjs'
-import { scan, map } from 'rxjs/operators'
+import { Subject } from 'rxjs';
+import { scan, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -14,9 +14,9 @@ import { scan, map } from 'rxjs/operators'
 
 export class UiSpinnerService {
   private spinnerTopRef = this.cdkSpinnerCreate();
-  spin$: Subject<boolean> = new Subject()
+  spin$: Subject<boolean> = new Subject();
 
-  constructor(private overlay: Overlay) {
+  constructor (private overlay: Overlay) {
     this.spin$
       .asObservable()
       .pipe(
@@ -25,12 +25,12 @@ export class UiSpinnerService {
       )
       .subscribe(
         (res) => {
-          if (res === 1) { this.showSpinner() }
+          if (res === 1) { this.showSpinner(); }
           else if (res == 0) {
             this.spinnerTopRef.hasAttached() ? this.stopSpinner() : null;
           }
         }
-      )
+      );
   }
 
   private cdkSpinnerCreate() {
@@ -41,11 +41,11 @@ export class UiSpinnerService {
         .global()
         .centerHorizontally()
         .centerVertically()
-    })
+    });
   }
 
   private showSpinner() {
-    this.spinnerTopRef.attach(new ComponentPortal(AlertComponent))
+    this.spinnerTopRef.attach(new ComponentPortal(AlertComponent));
   }
 
   private stopSpinner() {
@@ -55,11 +55,12 @@ export class UiSpinnerService {
 
 import { Component, Input, EventEmitter, Output, ElementRef } from '@angular/core';
 import { trigger, style, animate, transition, state } from '@angular/animations';
+import { configdata } from 'src/environments/configData';
 
 @Component({
   selector: "alert",
   template: `
-    <img src="../assets/images/rovuk-gif.gif" width="100px" height="110px" />
+    <img src="{{gif}}" width="100px" height="110px" />
   `,
   animations: [
     trigger('state', [
@@ -76,6 +77,7 @@ export class AlertComponent {
   @Output() output = new EventEmitter();
   @Output() end = new EventEmitter();
   visibility = 'visible';
+  gif = configdata.DEFAULT_LOADER_GIF;
 
   animationDone(e: any) {
     if (e.toState === 'hidden') {
@@ -83,7 +85,12 @@ export class AlertComponent {
     }
   }
 
-  constructor(private host: ElementRef<HTMLElement>) { }
+  constructor (private host: ElementRef<HTMLElement>) {
+    let temp_gif = localStorage.getItem('gif_loader');
+    if (temp_gif != null && temp_gif != undefined && temp_gif != '') {
+      this.gif = temp_gif;
+    }
+  }
 
   close() {
     this.visibility = 'hidden';

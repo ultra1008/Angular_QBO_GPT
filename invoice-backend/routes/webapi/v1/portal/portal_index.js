@@ -198,6 +198,7 @@ router.post('/webapi/v1/portal/savecostcode', common.checkTokenExistOrNot, costC
 router.post('/webapi/v1/portal/deletecostcode', common.checkTokenExistOrNot, costCodeValidation.costCodeDeleteValidation, costCodeController.deletecostcode);
 router.post('/webapi/v1/portal/getcostcodefordatatable', common.checkTokenExistOrNot, costCodeController.getCostCodeForDatatable);
 router.post('/webapi/v1/portal/savexlsxcostcode', common.checkTokenExistOrNot, costCodeController.savexlsxcostcode);
+router.post('/webapi/v1/portal/savecostcodeindb', common.checkTokenExistOrNot, costCodeController.savecostcodeindb);
 
 let creditcardsettingsController = require("./creditcardsettings/creditcardsettingsController");
 let creditcardsettingsValidation = require('./creditcardsettings/creditcardsettingsValidation');
@@ -285,5 +286,7 @@ router.get('/webapi/v1/portal/gettemplate', common.checkTokenExistOrNot, invoice
 router.post('/webapi/v1/portal/deletetemplate', common.checkTokenExistOrNot, invoice_templateValidation.deleteTemplate, invoice_templateController.deleteTemplate);
 router.post('/webapi/v1/portal/datatabletemplate', common.checkTokenExistOrNot, invoice_templateValidation.datatableTemplate, invoice_templateController.datatabletemplate);
 router.post('/webapi/v1/portal/datatablehistorytemplate', common.checkTokenExistOrNot, invoice_templateValidation.datatablehistoryTemplate, invoice_templateController.historydatatable);
+
+router.post('/webapi/v1/portal/urlToBase64api', common.urlToBase64Api);
 
 module.exports = router;

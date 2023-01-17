@@ -118,7 +118,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  constructor(public dialog: MatDialog, private deviceService: DeviceDetectorService, public snackbarservice: Snackbarservice, public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public idle: Idle, public keepalive: Keepalive, public translate: TranslateService, private metaService: Meta, private titleService: Title
+  constructor (public dialog: MatDialog, private deviceService: DeviceDetectorService, public snackbarservice: Snackbarservice, public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public idle: Idle, public keepalive: Keepalive, public translate: TranslateService, private metaService: Meta, private titleService: Title
   ) {
     console.log('====== Constructor call ==========');
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
@@ -127,6 +127,25 @@ export class AppComponent implements OnInit {
     localStorage.setItem(localstorageconstants.LANGUAGE, locallanguage);
     this.translate.use(locallanguage);
     this.updateIdealTimeout();
+    this.getGIFLoader();
+  }
+
+  getGIFLoader() {
+    let that = this;
+    that.httpCall
+      .httpPostCallWithoutToken(httproutes.GET_GIF_LOADER, {
+        module_name: "Rovuk Invoicing",
+      })
+      .subscribe(function (params) {
+        if (params.status) {
+          if (params.data != null) {
+            localStorage.setItem(localstorageconstants.INVOICE_GIF, params.data.gif_url);
+          }
+        } else {
+          that.snackbarservice.openSnackBar(params.message, "error");
+          that.uiSpinner.spin$.next(false);
+        }
+      });
   }
 
   mainLogout() {

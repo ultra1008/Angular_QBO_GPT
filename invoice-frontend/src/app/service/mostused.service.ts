@@ -11,7 +11,7 @@ import { localstorageconstants } from '../consts';
 @Injectable({ providedIn: 'root' })
 export class Mostusedservice {
 
-  constructor(private http: HttpClient) { }
+  constructor (private http: HttpClient) { }
 
   deleteUserEmit = new Subject();
   public deleteUserEmit$ = this.deleteUserEmit.asObservable();
@@ -34,7 +34,7 @@ export class Mostusedservice {
 
   public getAllRoles(): Observable<any> {
     let portal_language = localStorage.getItem(localstorageconstants.LANGUAGE);
-    const token = localStorage.getItem(localstorageconstants.SUPPLIERTOKEN);
+    const token = localStorage.getItem(localstorageconstants.INVOICE_TOKEN);
     let headers: any = new HttpHeaders();
     headers = headers.set('Authorization', token);
     headers = headers.set('language', portal_language);
@@ -47,7 +47,7 @@ export class Mostusedservice {
   }
 
   public getAllpayroll_group(): Observable<any> {
-    const token = localStorage.getItem(localstorageconstants.SUPPLIERTOKEN);
+    const token = localStorage.getItem(localstorageconstants.INVOICE_TOKEN);
     let portal_language = localStorage.getItem(localstorageconstants.LANGUAGE);
     let headers: any = new HttpHeaders();
     headers = headers.set('Authorization', token);
@@ -61,7 +61,7 @@ export class Mostusedservice {
   }
 
   public getAlljobtype(): Observable<any> {
-    const token = localStorage.getItem(localstorageconstants.SUPPLIERTOKEN);
+    const token = localStorage.getItem(localstorageconstants.INVOICE_TOKEN);
     let portal_language = localStorage.getItem(localstorageconstants.LANGUAGE);
     let headers: any = new HttpHeaders();
     headers = headers.set('Authorization', token);
@@ -75,7 +75,7 @@ export class Mostusedservice {
   }
 
   public getAlljobtitle(): Observable<any> {
-    const token = localStorage.getItem(localstorageconstants.SUPPLIERTOKEN);
+    const token = localStorage.getItem(localstorageconstants.INVOICE_TOKEN);
     let portal_language = localStorage.getItem(localstorageconstants.LANGUAGE);
     let headers: any = new HttpHeaders();
     headers = headers.set('Authorization', token);
@@ -89,7 +89,7 @@ export class Mostusedservice {
   }
 
   public getAllDocumentType(): Observable<any> {
-    const token = localStorage.getItem(localstorageconstants.SUPPLIERTOKEN);
+    const token = localStorage.getItem(localstorageconstants.INVOICE_TOKEN);
     let portal_language = localStorage.getItem(localstorageconstants.LANGUAGE);
     let headers: any = new HttpHeaders();
     headers = headers.set('Authorization', token);
@@ -103,7 +103,7 @@ export class Mostusedservice {
   }
 
   public getAllDepartment(): Observable<any> {
-    const token = localStorage.getItem(localstorageconstants.SUPPLIERTOKEN);
+    const token = localStorage.getItem(localstorageconstants.INVOICE_TOKEN);
     let portal_language = localStorage.getItem(localstorageconstants.LANGUAGE);
     let headers: any = new HttpHeaders();
     headers = headers.set('Authorization', token);
@@ -117,7 +117,7 @@ export class Mostusedservice {
   }
 
   public getAllLocation(): Observable<any> {
-    const token = localStorage.getItem(localstorageconstants.SUPPLIERTOKEN);
+    const token = localStorage.getItem(localstorageconstants.INVOICE_TOKEN);
     let portal_language = localStorage.getItem(localstorageconstants.LANGUAGE);
     let headers: any = new HttpHeaders();
     headers = headers.set('Authorization', token);
@@ -131,7 +131,7 @@ export class Mostusedservice {
   }
 
   public getSpecificUsers(userdata: any): Observable<any> {
-    const token = localStorage.getItem(localstorageconstants.SUPPLIERTOKEN);
+    const token = localStorage.getItem(localstorageconstants.INVOICE_TOKEN);
     let portal_language = localStorage.getItem(localstorageconstants.LANGUAGE);
     let headers: any = new HttpHeaders();
     headers = headers.set('Authorization', token);
@@ -144,7 +144,7 @@ export class Mostusedservice {
       catchError(this.handleError));
   }
   public getOneUser(userdata: any): Observable<any> {
-    const token = localStorage.getItem(localstorageconstants.SUPPLIERTOKEN);
+    const token = localStorage.getItem(localstorageconstants.INVOICE_TOKEN);
     let portal_language = localStorage.getItem(localstorageconstants.LANGUAGE);
     let headers: any = new HttpHeaders();
     headers = headers.set('Authorization', token);
@@ -169,7 +169,7 @@ export class Mostusedservice {
   }
 
   public async imageToBase_async(url: any) {
-    const token = localStorage.getItem(localstorageconstants.SUPPLIERTOKEN);
+    const token = localStorage.getItem(localstorageconstants.INVOICE_TOKEN);
     let portal_language = localStorage.getItem(localstorageconstants.LANGUAGE);
     let headers: any = new HttpHeaders();
     headers = headers.set('Authorization', token);

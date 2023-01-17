@@ -4,25 +4,23 @@
             <div class="screen-title-section cust-h1-inline button-margin">
                 <div class="inner-search-bar">
                 </div>
-
                 <button mat-stroked-button color="primary" matTooltip="{{ 'Employee-Import-Template' | translate }}"
-                    aria-label="Left Align" class="pr-5 pl-2">
+                    (click)="downloadImportTemplate()" aria-label="Left Align" class="pr-5 pl-2">
                     {{'Employee-Import-Template' | translate}}
                 </button>
-
-                <!-- <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
-                    matTooltip="{{ 'TOOLTIP_IMPORT' | translate }}" aria-label="Left Align">
-                    <img src="{{importIcon}}" alt="" height="20px">
-                </button> -->
-
-                <input id="file-upload" type="file" style="display: none;" #OpenFilebox />
-
+                <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+                    (click)="importFunction('Client')" matTooltip="{{ 'TOOLTIP_IMPORT' | translate }}"
+                    aria-label="Left Align">
+                    <img src="{{ importIcon }}" alt="" height="20px" />
+                </button>
+                <input id="file-upload" type="file" style="display: none" (click)="OpenFilebox.value = null"
+                    (change)="onFileChange($event)" #OpenFilebox />
                 <button class="import-export-btn-datatable button_workersDeleteClass cust-margin-div"
-                    matTooltip="{{ 'TOOLTIP_EXPORT' | translate }}" aria-label="Left Align">
+                    (click)="exportFunction()" matTooltip="{{ 'TOOLTIP_EXPORT' | translate }}" aria-label="Left Align">
                     <img src="{{exportIcon}}" alt="" height="20px">
                 </button>
-
-                <button mat-stroked-button class="sign-button" mat-raised-button color="primary" class="pr-4 pl-2">
+                <button mat-stroked-button class="sign-button" mat-raised-button color="primary" class="pr-4 pl-2"
+                    (click)="addCostCode({})">
                     <img src="{{addIcon}}" alt="" height="20px">
                     {{'Setting-CostCode-Add-Button' | translate}}
                 </button>
@@ -30,8 +28,7 @@
         </div>
     </div>
     <div style="padding-bottom: 50px; width:99.50%">
-        <table datatable style="width: 100%;" [dtOptions]="dtOptions_project" id="dtOptions_project" [dtTrigger]="dtTrigger"
-            class="row-border hover">
+        <table datatable style="width: 100%;" [dtOptions]="dtOptions" class="row-border hover" *ngIf="showTable">
         </table>
     </div>
 </div>

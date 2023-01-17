@@ -78,7 +78,7 @@ import { MailboxMonitorComponent } from './components/setting/mailbox-monitor/ma
 import { AlertsComponent } from './components/setting/alerts/alerts.component';
 import { IntegrationsComponent } from './components/setting/integrations/integrations.component';
 import { UsageComponent } from './components/setting/usage/usage.component';
-import { CostCodeComponent } from './components/setting/cost-code/cost-code.component';
+import { CostCodeComponent, CostCodeFormComponent, CostcodeImportData } from './components/setting/cost-code/cost-code.component';
 import { TermsComponent, TermsForm } from './components/setting/invoice-other-settings/terms/terms.component';
 import { TaxRateComponent, TaxRateForm } from './components/setting/invoice-other-settings/tax-rate/tax-rate.component';
 import { DocumentForm, DocumentsComponent } from './components/setting/invoice-other-settings/documents/documents.component';
@@ -154,7 +154,9 @@ import { InvoiceDashboardComponent } from './components/dashboard/invoice-dashbo
     FileAttachment,
     InvoiceAttachment,
     InvoiceReport,
-    InvoiceDetailPageComponent
+    InvoiceDetailPageComponent,
+    CostCodeFormComponent,
+    CostcodeImportData,
   ],
   imports: [
     PortalModule,

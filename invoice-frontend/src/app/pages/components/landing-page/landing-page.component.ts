@@ -17,7 +17,7 @@ export class LandingPageComponent implements OnInit {
 
   ngOnInit(): void {
 
-    const token = localStorage.getItem(localstorageconstants.SUPPLIERTOKEN);
+    const token = localStorage.getItem(localstorageconstants.INVOICE_TOKEN);
     const user_type = localStorage.getItem(localstorageconstants.USERTYPE);
     const userdata = localStorage.getItem(localstorageconstants.USERDATA);
     if (token && userdata) {
