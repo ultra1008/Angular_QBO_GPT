@@ -44,7 +44,7 @@ export class AlertsComponent implements OnInit {
   daily_productivity_report: boolean = false;
   daily_productivity_report_value!: string;
 
-  pendingdata: any = configdata.PENDINGITEM_ALERT;
+  pendingdata: any = configdata.PENDING_ITEM_ALERT;
   duetime: any = configdata.INVOICE_DUE_TIME_ALERT;
   duedate: any = configdata.INVOICE_DUE_DAY_ALERT;
 
@@ -57,7 +57,7 @@ export class AlertsComponent implements OnInit {
   temppendingitems: string = "";
 
 
-  constructor(
+  constructor (
     public httpCall: HttpCall,
     public snackbarservice: Snackbarservice,
     public translate: TranslateService
