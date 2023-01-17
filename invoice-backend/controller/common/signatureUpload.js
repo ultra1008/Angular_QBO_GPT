@@ -11,7 +11,7 @@ module.exports.saveSignature = async function (req, res) {
     if (decodedToken) {
         try {
             let LowerCase_bucket = decodedToken.companycode.toLowerCase();
-            dirKeyName = config.SUPPLIER_DIVERSITY_WASABI_PATH + "/" + "company/" + req.body.foldername + "/signature/" + req.body._id + "/signature" + new Date().getTime() + ".png";
+            dirKeyName = config.INVOICE_WASABI_PATH + "/" + "company/" + req.body.foldername + "/signature/" + req.body._id + "/signature" + new Date().getTime() + ".png";
             buf = Buffer.from(req.body.fileBody.replace(/^data:image\/\w+;base64,/, ""), 'base64');
             params = { Bucket: LowerCase_bucket, Key: dirKeyName, Body: buf, ACL: 'public-read-write' };
             var urlProfile = config.wasabisys_url + "/" + LowerCase_bucket + "/" + dirKeyName;
@@ -38,7 +38,7 @@ module.exports.saveSignatureWasabiv2 = async function (req, res) {
     if (decodedToken) {
         try {
             let LowerCase_bucket = decodedToken.companycode.toLowerCase();
-            dirKeyName = config.SUPPLIER_DIVERSITY_WASABI_PATH + "/" + req.body.dirkeyname + "/signature_" + new Date().getTime() + ".png";
+            dirKeyName = config.INVOICE_WASABI_PATH + "/" + req.body.dirkeyname + "/signature_" + new Date().getTime() + ".png";
             buf = Buffer.from(req.body.fileBody.replace(/^data:image\/\w+;base64,/, ""), 'base64');
             params = { Bucket: LowerCase_bucket, Key: dirKeyName, Body: buf, ACL: 'public-read-write' };
             var urlProfile = config.wasabisys_url + "/" + LowerCase_bucket + "/" + dirKeyName;

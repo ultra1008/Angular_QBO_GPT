@@ -27,6 +27,7 @@ const {
     ShadingType,
     PageNumber
 } = docx;
+const _ = require("lodash");
 
 module.exports.generateHash = function (password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
@@ -1877,4 +1878,37 @@ module.exports.updateCompanyLogoOfiFrameVendor = async function (ocpsVendorSchem
         let update_vendor_company_logo = await db_rest_api.update(main_db, collectionConstant.SUPER_ADMIN_COMPANY, { _id: ObjectID(find_one_vendor.company_id) }, { companylogo: find_one_vendor.vendor_profile });
         console.log("update_vendor_company_logo: ", update_vendor_company_logo);
     }
+};
+
+module.exports.setInsertedFieldHistory = async function (requestObject) {
+    return new Promise(function (resolve, reject) {
+        let newObj = {};
+        Object.keys(requestObject)
+            .sort()
+            .forEach(function (key, i) {
+                newObj[key] = requestObject[key];
+            });
+        const arr = Object.entries(newObj).map(([key, value]) => ({ key, value }));
+        resolve(arr);
+    });
+};
+
+module.exports.findUpdatedFieldHistory = async function (requestObject, dbData) {
+    return new Promise(function (resolve, reject) {
+        let newObj = {};
+        let newData = {};
+        Object.keys(requestObject)
+            .sort()
+            .forEach(function (key, i) {
+                newObj[key] = requestObject[key];
+            });
+        Object.keys(dbData)
+            .sort()
+            .forEach(function (key, i) {
+                newData[key] = dbData[key];
+            });
+        const result = _.pickBy(newObj, (request, database) => !_.isEqual(newData[database], request));
+        const arr = Object.entries(result).map(([key, value]) => ({ key, value }));
+        resolve(arr);
+    });
 };

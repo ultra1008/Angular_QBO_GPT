@@ -9,6 +9,10 @@
                         aria-label="Left Align">
                         <img src="{{historyIcon}}" alt="" height="20px">
                     </button>
+                    <button class="import-export-btn-datatable cust-margin-div" (click)="back()"
+                        matTooltip="{{ 'All-exit' | translate }}">
+                        <img src="{{exitIcon}}" alt="" class="far fa-paper-plane" height="20px">
+                    </button>
                 </div>
             </div>
         </div>
@@ -532,7 +536,8 @@
                                     {{ emergency_contact.emergency_contact_city == "" ? "" :
                                     emergency_contact.emergency_contact_city + "," }}
                                     {{ emergency_contact.emergency_contact_state == "" ? "" :
-                                    emergency_contact.emergency_contact_state}}</td>
+                                    emergency_contact.emergency_contact_state}}
+                                </td>
                                 <td>{{emergency_contact.last_validate_date}}</td>
                                 <td>
                                     <div class="dropdown">

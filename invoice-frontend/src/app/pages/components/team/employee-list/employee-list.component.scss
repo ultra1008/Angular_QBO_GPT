@@ -112,3 +112,34 @@
   padding: 10px 12px;
   float: right;
 }
+
+.userimg {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  border: 1px solid black;
+}
+
+.history-table {
+  th {
+    background-color: rgb(196, 196, 196);
+    height: 100%;
+    width: 50%;
+  }
+
+  td {
+    background-color: rgb(236, 236, 236);
+    height: 100%;
+    width: 50%;
+  }
+}
+
+.display-inline-cust {
+  justify-self: flex-end;
+  height: 40px;
+}
+
+/* Solid border */
+hr.solid {
+  border-top: 3px solid #bbb;
+}

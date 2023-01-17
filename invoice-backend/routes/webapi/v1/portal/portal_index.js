@@ -103,6 +103,7 @@ router.post('/webapi/v1/portal/saveuserdocument', common.checkTokenExistOrNot, e
 router.post('/webapi/v1/portal/getuserdocumenthistory', common.checkTokenExistOrNot, employeeController.getUserDocumentHistory);
 router.get('/webapi/v1/portal/getalluser', common.checkTokenExistOrNot, employeeController.getAllUser);
 router.post('/webapi/v1/portal/getalluserhistory', common.checkTokenExistOrNot, employeeController.getAllUserHistory);
+router.post('/webapi/v1/portal/getuserhistory', common.checkTokenExistOrNot, employeeController.getUserHistory);
 router.post('/webapi/v1/portal/getoneuser', common.checkTokenExistOrNot, employeeController.getOneUser);
 router.post('/webapi/v1/portal/savepersonalinfo', common.checkTokenExistOrNot, employeeController.savePersonalInfo);
 router.post('/webapi/v1/portal/savemobilephoto', common.checkTokenExistOrNot, employeeController.saveMobilePhoto);

@@ -1,7 +1,5 @@
 var userSchema = require('./../../../../../model/user');
-var rolesSchema = require('./../../../../../model/roles');
-var rolesandpermissionsSchema = require('./../../../../../model/rolesandpermissions');
-var supplierRoleSchema = require('./../../../../../model/diversity_roles');
+var invoiceRoleSchema = require('./../../../../../model/invoice_roles');
 var userDocumentSchema = require('./../../../../../model/userdocument');
 //var projectDocumentSchema = require('./../../../../../model/project_document');
 var ObjectID = require('mongodb').ObjectID;
@@ -17,6 +15,11 @@ let rest_Api = require('./../../../../../config/db_rest_api');
 let db_rest_api = require('../../../../../config/db_rest_api');
 var handlebars = require('handlebars');
 var moment = require('moment');
+var departmentSchema = require('./../../../../../model/departments');
+var jobTitleSchema = require('./../../../../../model/job_title');
+var jobTypeSchema = require('./../../../../../model/job_type');
+var invoiceLocationSchema = require('./../../../../../model/locations');
+var languageSchema = require('./../../../../../model/language');
 //let activityController = require("./../todaysActivity/todaysActivityController");
 //var projectSchema = require('./../../../../../model/project');
 //var projectSettingsSchema = require('./../../../../../model/project_settings');
@@ -24,7 +27,6 @@ var moment = require('moment');
 // var supplierProjectUsersSchema = require('./../../../../../model/supplier_project_users');
 const excel = require("exceljs");
 var StringMask = require('string-mask');
-var departmentSchema = require('./../../../../../model/departments');
 var jobtitleSchema = require('./../../../../../model/job_title');
 var jobtypeSchema = require('./../../../../../model/job_type');
 var payrollgroupSchema = require('../../../../../model/payroll_group');
@@ -144,7 +146,7 @@ module.exports.saveEmployee = async function (req, res) {
                         let company_data = await db_rest_api.findOne(compnay_collection, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
                         let selectedPlan = company_data.billingplan;
 
-                        // let get_user_roles = connection_db_api.model(collectionConstant.INVOICE_ROLES, supplierRoleSchema);
+                        // let get_user_roles = connection_db_api.model(collectionConstant.INVOICE_ROLES, invoiceRoleSchema);
                         // let onerole = await get_user_roles.findOne({ role_id: ObjectID(body.userroleId) });
                         // let allowed_count = billingPlan.BILLING_PLAN[selectedPlan]['ADMIN_ALL'];
                         // let current_count = await userConnection.find({}).count();
@@ -215,7 +217,7 @@ module.exports.saveEmployee = async function (req, res) {
                                 if (notFonud == 1) {
                                     var temp_path = newOpenFile[0].path;
                                     var file_name = newOpenFile[0].name;
-                                    dirKeyName = config.SUPPLIER_DIVERSITY_WASABI_PATH + "/employee/profile_picture/" + file_name;
+                                    dirKeyName = config.INVOICE_WASABI_PATH + "/employee/profile_picture/" + file_name;
                                     var fileBody = fs.readFileSync(temp_path);
                                     params = { Bucket: LowerCase_bucket, Key: dirKeyName, Body: fileBody, ACL: 'public-read-write' };
 
@@ -294,9 +296,9 @@ async function addInsertHistory(id, requestObject, decodedToken, translator, con
     delete requestObject._id;
     delete requestObject.login_from;
 
-    let roleCollection = connection_db_api.model(collectionConstant.INVOICE_ROLES, gridRolesSchema);
+    let roleCollection = connection_db_api.model(collectionConstant.INVOICE_ROLES, invoiceRoleSchema);
     let userCollection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
-    let locationCollection = connection_db_api.model(collectionConstant.INVOICE_LOCATION, gridLocationSchema);
+    let locationCollection = connection_db_api.model(collectionConstant.INVOICE_LOCATION, invoiceLocationSchema);
     let departmentCollection = connection_db_api.model(collectionConstant.DEPARTMENTS, departmentSchema);
     let jobTitleCollection = connection_db_api.model(collectionConstant.JOB_TITLE, jobTitleSchema);
     let jobTypeCollection = connection_db_api.model(collectionConstant.JOB_TYPE, jobTypeSchema);
@@ -416,10 +418,13 @@ async function addInsertHistory(id, requestObject, decodedToken, translator, con
 async function addPersonalInfoHistory(id, requestObject, one_user, decodedToken, translator) {
     delete one_user._id;
     let connection_db_api = await db_connection.connection_db_api(decodedToken);
-    let roleCollection = connection_db_api.model(collectionConstant.INVOICE_ROLES, gridRolesSchema);
+    let roleCollection = connection_db_api.model(collectionConstant.INVOICE_ROLES, invoiceRoleSchema);
 
     // find difference of object 
     let updatedData = await common.findUpdatedFieldHistory(requestObject, one_user);
+    console.log("requestObject", requestObject);
+    console.log("one_user", one_user);
+    console.log("updatedData", updatedData);
     // Check for object id fields and if it changed then replace id with specific value
     let found_role = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'userroleId'; });
     if (found_role != -1) {
@@ -533,7 +538,7 @@ module.exports.saveUserDocument = async function (req, res) {
                         var file_name_ext = array_name[array_name.length - 1];
                         //var file_name_ext = newOpenFile[0].name.split(".")[1];
                         var file_name = config.USER_DOCUMENT + "_" + date + "." + file_name_ext;
-                        dirKeyName = config.SUPPLIER_DIVERSITY_WASABI_PATH + "/employee/" + fields.user_id + "/document/" + file_name;
+                        dirKeyName = config.INVOICE_WASABI_PATH + "/employee/" + fields.user_id + "/document/" + file_name;
                         var fileBody = fs.readFileSync(temp_path);
                         params = { Bucket: LowerCase_bucket, Key: dirKeyName, Body: fileBody, ACL: 'public-read-write' };
                         bucketOpration.uploadFile(params, async function (err, resultUpload) {
@@ -1253,7 +1258,7 @@ module.exports.savePersonalInfo = async function (req, res) {
                     if (body.password) {
                         body.password = common.generateHash(body.password);
                     }
-                    let One_User = await userConnection.findOne({ _id: ObjectID(user_edit_id) });
+                    let one_user = await userConnection.findOne({ _id: ObjectID(user_edit_id) }, { userroleId: 1, useremail: 1, username: 1, usermiddlename: 1, userlastname: 1, userfullname: 1, userssn: 1, usergender: 1, userdob1: 1, userstatus: 1, user_no: 1, allow_for_projects: 1, });
                     let checkEmailExist = await userConnection.findOne({ useremail: body.useremail });
                     let flg_update = false;
 
@@ -1273,7 +1278,7 @@ module.exports.savePersonalInfo = async function (req, res) {
                     history_object = body;
                     history_object.updated_id = user_edit_id;
                     //let update_user_1 = await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, body);
-                    // let get_user_roles = connection_db_api.model(collectionConstant.INVOICE_ROLES, supplierRoleSchema);
+                    // let get_user_roles = connection_db_api.model(collectionConstant.INVOICE_ROLES, invoiceRoleSchema);
                     // let onerole = await get_user_roles.findOne({ role_id: ObjectID(body.userroleId) });
                     if (flg_update) {
                         let LowerCase_bucket = decodedToken.companycode.toLowerCase();
@@ -1344,7 +1349,7 @@ module.exports.savePersonalInfo = async function (req, res) {
                                 if (updateuser) { */
                         //TODO-end
                         let tempReqObj = {
-                            userroleId: body.userroleId,
+                            userroleId: ObjectID(body.userroleId),
                             useremail: body.useremail,
                             username: body.username,
                             usermiddlename: body.usermiddlename,
@@ -1361,7 +1366,7 @@ module.exports.savePersonalInfo = async function (req, res) {
                             var temp_path = newOpenFile[0].path;
                             var file_name = newOpenFile[0].name;
                             let extension = file_name.split(".")[1];
-                            dirKeyName = config.SUPPLIER_DIVERSITY_WASABI_PATH + "/employee/" + user_edit_id + "/" + config.PROFILE_PICTURE + "/user_picture." + extension;
+                            dirKeyName = config.INVOICE_WASABI_PATH + "/employee/" + user_edit_id + "/" + config.PROFILE_PICTURE + "/user_picture." + extension;
                             var fileBody = fs.readFileSync(temp_path);
                             params = { Bucket: LowerCase_bucket, Key: dirKeyName, Body: fileBody, ACL: 'public-read-write' };
                             //condition
@@ -1451,7 +1456,7 @@ module.exports.saveMobilePhoto = async function (req, res) {
                         var temp_path = newOpenFile[0].path;
                         var file_name = newOpenFile[0].name;
                         let extension = file_name.split(".")[1];
-                        dirKeyName = config.SUPPLIER_DIVERSITY_WASABI_PATH + "/employee/" + user_edit_id + "/" + config.PROFILE_PICTURE + "/mobile_picture." + extension;
+                        dirKeyName = config.INVOICE_WASABI_PATH + "/employee/" + user_edit_id + "/" + config.PROFILE_PICTURE + "/mobile_picture." + extension;
                         var fileBody = fs.readFileSync(temp_path);
                         params = { Bucket: LowerCase_bucket, Key: dirKeyName, Body: fileBody, ACL: 'public-read-write' };
                         if (One_User.usermobile_picture != undefined && One_User.usermobile_picture != "") {
@@ -1536,6 +1541,24 @@ module.exports.saveEmployeeInfo = async function (req, res) {
             if (req.body.usercostcode != "") {
                 req.body.usercostcode = ObjectID(req.body.usercostcode);
             }
+            if (req.body.usermanager_id != "") {
+                req.body.usermanager_id = ObjectID(req.body.usermanager_id);
+            }
+            if (req.body.usersupervisor_id != "") {
+                req.body.usersupervisor_id = ObjectID(req.body.usersupervisor_id);
+            }
+            if (req.body.userlocation_id != "") {
+                req.body.userlocation_id = ObjectID(req.body.userlocation_id);
+            }
+            if (req.body.userjob_title_id != "") {
+                req.body.userjob_title_id = ObjectID(req.body.userjob_title_id);
+            }
+            if (req.body.userdepartment_id != "") {
+                req.body.userdepartment_id = ObjectID(req.body.userdepartment_id);
+            }
+            if (req.body.userjob_type_id != "") {
+                req.body.userjob_type_id = ObjectID(req.body.userjob_type_id);
+            }
             let body = req.body;
 
             jobtitle = body.jobtitle_name;
@@ -1554,12 +1577,106 @@ module.exports.saveEmployeeInfo = async function (req, res) {
                 temp_user_languages.push(ObjectID(tempLang[i]));
             }
             body.user_languages = temp_user_languages;
-            // console.log("afetr: ", body.user_languages, temp_user_languages);
-            // console.log("body: ", body);
+            let one_user = await userConnection.findOne({ _id: ObjectID(_id) }, { usersalary: 1, userstartdate: 1, usermanager_id: 1, usersupervisor_id: 1, userlocation_id: 1, userjob_title_id: 1, userdepartment_id: 1, userjob_type_id: 1, user_languages: 1 });
             let updateuser = await userConnection.updateOne({ _id: ObjectID(_id) }, body);
             if (updateuser) {
-                body.updated_id = _id;
-                addUSER_History("Update", body, decodedToken);
+                delete body['card_no'];
+                delete body['card_type'];
+                delete body['user_id_payroll_group'];
+                delete body['user_payroll_rules'];
+                delete body['usercostcode'];
+                delete body['userqrcode'];
+                delete body['userfullname'];
+                body.usersalary = Number(body.usersalary);
+
+                let userCollection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+                let locationCollection = connection_db_api.model(collectionConstant.INVOICE_LOCATION, invoiceLocationSchema);
+                let departmentCollection = connection_db_api.model(collectionConstant.DEPARTMENTS, departmentSchema);
+                let jobTitleCollection = connection_db_api.model(collectionConstant.JOB_TITLE, jobTitleSchema);
+                let jobTypeCollection = connection_db_api.model(collectionConstant.JOB_TYPE, jobTypeSchema);
+                let languageCollection = connection_db_api.model(collectionConstant.LANGUAGE, languageSchema);
+
+                // find difference of object 
+                let updatedData = await common.findUpdatedFieldHistory(body, one_user._doc);
+                // Check for object id fields and if it changed then replace id with specific value
+                let found_manager = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'usermanager_id'; });
+                if (found_manager != -1) {
+                    if (updatedData[found_manager].value != null && updatedData[found_manager].value != '' && updatedData[found_manager].value != undefined) {
+                        let user = await userCollection.findOne({ _id: ObjectID(updatedData[found_manager].value) });
+                        updatedData[found_manager].value = user.userfullname;
+                    } else {
+                        updatedData[found_manager].value = '';
+                    }
+                }
+
+                let found_supervisor = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'usersupervisor_id'; });
+                if (found_supervisor != -1) {
+                    if (updatedData[found_supervisor].value != null && updatedData[found_supervisor].value != '' && updatedData[found_supervisor].value != undefined) {
+                        let user = await userCollection.findOne({ _id: ObjectID(updatedData[found_supervisor].value) });
+                        updatedData[found_supervisor].value = user.userfullname;
+                    } else {
+                        updatedData[found_supervisor].value = '';
+                    }
+                }
+
+                let found_location = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'userlocation_id'; });
+                if (found_location != -1) {
+                    let location = await locationCollection.findOne({ _id: ObjectID(updatedData[found_location].value) });
+                    updatedData[found_location].value = location.location_name;
+                }
+
+                let found_job_title = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'userjob_title_id'; });
+                if (found_job_title != -1) {
+                    let jobTitle = await jobTitleCollection.findOne({ _id: ObjectID(updatedData[found_job_title].value) });
+                    updatedData[found_job_title].value = jobTitle.job_title_name;
+                }
+
+                let found_department = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'userdepartment_id'; });
+                if (found_department != -1) {
+                    let department = await departmentCollection.findOne({ _id: ObjectID(updatedData[found_department].value) });
+                    updatedData[found_department].value = department.department_name;
+                }
+
+                let found_job_type = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'userjob_type_id'; });
+                if (found_job_type != -1) {
+                    let jobType = await jobTypeCollection.findOne({ _id: ObjectID(updatedData[found_job_type].value) });
+                    updatedData[found_job_type].value = jobType.job_type_name;
+                }
+
+                let found_language = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'user_languages'; });
+                if (found_language != -1) {
+                    let tempId = [];
+                    if (updatedData[found_language].value) {
+                        updatedData[found_language].value.forEach((language) => {
+                            tempId.push(ObjectID(language));
+                        });
+                    }
+                    let languages = await languageCollection.find({ _id: { $in: tempId } });
+                    let tempLanaguges = [];
+                    languages.forEach((language) => {
+                        tempLanaguges.push(language.name);
+                    });
+                    updatedData[found_language].value = tempLanaguges.join(", ");
+                }
+
+                let found_start_date = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'userstartdate'; });
+                if (found_start_date != -1) {
+                    updatedData[found_start_date].value = updatedData[found_start_date].value.split("T")[0];
+                }
+
+                let found_salary = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'usersalary'; });
+                if (found_salary != -1) {
+                    updatedData[found_salary].value = common.amount_field(updatedData[found_salary].value);
+                }
+
+                for (let i = 0; i < updatedData.length; i++) {
+                    updatedData[i]['key'] = translator.getStr(`User_History.${updatedData[i]['key']}`);
+                }
+                let histioryObject = {
+                    data: updatedData,
+                    user_id: _id,
+                };
+                addUSER_History("Update", histioryObject, decodedToken);
                 //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
                 res.send({ message: translator.getStr('EmployeeInfoUpdated'), status: true });
             } else {
@@ -2704,6 +2821,54 @@ module.exports.getAllUserHistory = async function (req, res) {
     }
 };
 
+module.exports.getUserHistory = async function (req, res) {
+    var translator = new common.Language('en');
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            let perpage = 10;
+            if (requestObject.start) { } else {
+                requestObject.start = 0;
+            }
+            let start = requestObject.start == 0 ? 0 : perpage * requestObject.start;
+            let userConnection = connection_db_api.model(historyCollectionConstant.INVOICE_USER_HISTORY, user_historySchema);
+            let get_data = await userConnection.aggregate([
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "user_id",
+                        foreignField: "_id",
+                        as: "user"
+                    }
+                },
+                { $unwind: "$user" },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "history_created_by",
+                        foreignField: "_id",
+                        as: "history_created_by"
+                    }
+                },
+                { $unwind: "$history_created_by" },
+                { $sort: { history_created_at: -1 } },
+                { $limit: perpage + start },
+                { $skip: start }
+            ]);
+            res.send({ data: get_data, status: true });
+        } catch (e) {
+            console.log("e", e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
 module.exports.getAllEmployeeReport = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
@@ -3113,7 +3278,7 @@ module.exports.getAllEmployeeReport = async function (req, res) {
                 roles = `${translator.getStr('EmailExcelRoles')} ${translator.getStr('EmailExcelAllRoles')}`;
             } else {
                 roleQuery = roleQuery.length == 0 ? {} : { $or: roleQuery };
-                let roleCollection = connection_db_api.model(collectionConstant.INVOICE_ROLES, supplierRoleSchema);
+                let roleCollection = connection_db_api.model(collectionConstant.INVOICE_ROLES, invoiceRoleSchema);
                 let all_role = await roleCollection.find(roleQuery, { role_name: 1 });
                 for (var i = 0; i < all_role.length; i++) {
                     roles += all_role[i]['role_name'];
@@ -3124,7 +3289,7 @@ module.exports.getAllEmployeeReport = async function (req, res) {
             }
 
             let companycode = decodedToken.companycode.toLowerCase();
-            let key_url = config.SUPPLIER_DIVERSITY_WASABI_PATH + "/employee/excel_report/employee_" + new Date().getTime() + ".xlsx";
+            let key_url = config.INVOICE_WASABI_PATH + "/employee/excel_report/employee_" + new Date().getTime() + ".xlsx";
             let PARAMS = {
                 Bucket: companycode,
                 Key: key_url,
@@ -3411,7 +3576,7 @@ async function getAllRoles(decodedToken) {
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
-            let rolesCollection = connection_db_api.model(collectionConstant.INVOICE_ROLES, supplierRoleSchema);
+            let rolesCollection = connection_db_api.model(collectionConstant.INVOICE_ROLES, invoiceRoleSchema);
             let all_roles = await rolesCollection.find({ is_delete: 0 });
             return all_roles;
         } catch (e) {
@@ -3942,7 +4107,7 @@ module.exports.recoverteam = async function (req, res) {
             if (checkEmailExist) {
                 res.send({ message: translator.getStr('EmailAlreadyExists'), status: false });
             } else {
-                /* let get_user_roles = connection_db_api.model(collectionConstant.INVOICE_ROLES, gridRolesSchema);
+                /* let get_user_roles = connection_db_api.model(collectionConstant.INVOICE_ROLES, invoiceRoleSchema);
                 let onerole = await get_user_roles.findOne({ role_id: ObjectID(requestObject.userroleId) });
                 let allowed_count = 0;
                 if (onerole.role_name == config.ROLE_VIEWER) {

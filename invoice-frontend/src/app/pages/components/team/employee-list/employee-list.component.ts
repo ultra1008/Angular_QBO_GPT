@@ -87,15 +87,14 @@ export class EmployeeListComponent implements OnInit {
   dtTrigger: Subject<any> = new Subject<any>();
   @ViewChild('OpenFilebox') OpenFilebox: any;
   Company_Equipment_File_Not_Match: any;
-  constructor(private modeService: ModeDetectService, private router: Router, public mostusedservice: Mostusedservice,
+  constructor (private modeService: ModeDetectService, private router: Router, public mostusedservice: Mostusedservice,
     public employeeservice: EmployeeService, public translate: TranslateService, public dialog: MatDialog,
     public httpCall: HttpCall, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService,) {
     var userdata = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
     this.role_permission = userdata.role_permission.users;
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off')
-    {
+    if (this.mode == 'off') {
       this.historyIcon = icon.HISTORY;
       this.archivedIcon = icon.ARCHIVE;
 
@@ -104,8 +103,7 @@ export class EmployeeListComponent implements OnInit {
 
       this.editIcon = icon.EDIT;
       this.reportIcon = icon.REPORT;
-    } else
-    {
+    } else {
       this.historyIcon = icon.HISTORY_WHITE;
       this.archivedIcon = icon.ARCHIVE_WHITE;
       this.trashIcon = icon.DELETE_WHITE;
@@ -114,8 +112,7 @@ export class EmployeeListComponent implements OnInit {
       this.reportIcon = icon.REPORT_WHITE;
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode)
-      {
+      if (mode) {
         this.mode = 'off';
         this.historyIcon = icon.HISTORY;
         this.archivedIcon = icon.ARCHIVE;
@@ -123,8 +120,7 @@ export class EmployeeListComponent implements OnInit {
         this.importIcon = icon.IMPORT;
         this.editIcon = icon.EDIT;
         this.reportIcon = icon.REPORT;
-      } else
-      {
+      } else {
         this.mode = 'on';
         this.historyIcon = icon.HISTORY_WHITE;
         this.archivedIcon = icon.ARCHIVE_WHITE;
@@ -174,15 +170,12 @@ export class EmployeeListComponent implements OnInit {
         that.gridtolist_text = text; that.btn_grid_list_text = text;
       });
 
-      if (this.locallanguage === 'en')
-      {
+      if (this.locallanguage === 'en') {
         this.locallanguage = 'es';
-      } else
-      {
+      } else {
         this.locallanguage = 'en';
       }
-      if (i != 0)
-      {
+      if (i != 0) {
         setTimeout(() => {
           that.rerenderfunc();
         }, 1000);
@@ -195,8 +188,7 @@ export class EmployeeListComponent implements OnInit {
     };
     this.employeeservice.getalluser().subscribe(function (data) {
       that.uiSpinner.spin$.next(false);
-      if (data.status)
-      {
+      if (data.status) {
         that.isEmployeeData = true;
         that.usersArray = data.data;
       }
@@ -204,8 +196,7 @@ export class EmployeeListComponent implements OnInit {
 
     this.mostusedservice.deleteUserEmit$.subscribe(function (editdata) {
       that.employeeservice.getalluser().subscribe(function (data) {
-        if (data.status)
-        {
+        if (data.status) {
           that.isEmployeeData = true;
           that.usersArray = data.data;
         }
@@ -245,34 +236,29 @@ export class EmployeeListComponent implements OnInit {
   }
 
   gridTolist() {
-    if (this.gridtolist)
-    {
+    if (this.gridtolist) {
       this.rerenderfunc();
       this.btn_grid_list_text = this.listtogrid_text;
       this.gridtolist = false;
-    } else
-    {
+    } else {
       this.btn_grid_list_text = this.gridtolist_text;
       this.gridtolist = true;
     }
   }
 
   sorting_name() {
-    if (this.sorting_desc)
-    {
+    if (this.sorting_desc) {
       this.sorting_desc = false;
       this.sorting_asc = true;
       this.soruing_all = false;
       this.usersArray = this.usersArray.sort((a: any, b: any) => a.username.localeCompare(b.username, 'en', { sensitivity: 'base' }));
-    } else if (this.sorting_asc)
-    {
+    } else if (this.sorting_asc) {
       this.sorting_desc = true;
       this.sorting_asc = false;
       this.soruing_all = false;
       this.usersArray = this.usersArray.reverse((a: any, b: any) => a.username.localeCompare(b.username, 'en', { sensitivity: 'base' }));
 
-    } else
-    {
+    } else {
       this.sorting_desc = false;
       this.sorting_asc = true;
       this.soruing_all = false;
@@ -296,15 +282,12 @@ export class EmployeeListComponent implements OnInit {
       confirmButtonText: this.Compnay_Equipment_Delete_Yes,
       denyButtonText: this.Compnay_Equipment_Delete_No,
     }).then((result) => {
-      if (result.isConfirmed)
-      {
+      if (result.isConfirmed) {
         this.httpCall.httpPostCall(httproutes.TEAM_DELETE, { _id: id }).subscribe(function (params) {
-          if (params.status)
-          {
+          if (params.status) {
             that.snackbarservice.openSnackBar(params.message, "success");
             that.mostusedservice.userdeleteEmit();
-          } else
-          {
+          } else {
             that.snackbarservice.openSnackBar(params.message, "error");
           }
         });
@@ -328,8 +311,7 @@ export class EmployeeListComponent implements OnInit {
   getAllRoles() {
     let that = this;
     this.httpCall.httpGetCall(httproutes.PORTAL_SETTING_ROLES_ALL).subscribe(function (params) {
-      if (params.status)
-      {
+      if (params.status) {
         that.allRoles = params.data;
       }
     });
@@ -395,25 +377,21 @@ export class EmployeeListComponent implements OnInit {
       const dataString = JSON.stringify(jsonData);
 
       const keys_OLD = ["userfirstname", "userlastname", "useremail", "password", "user_role", "usergender", "userdepartment", "userjob_title", "userjob_type"];
-      if (JSON.stringify(keys_OLD.sort()) != JSON.stringify(header_.sort()))
-      {
+      if (JSON.stringify(keys_OLD.sort()) != JSON.stringify(header_.sort())) {
         that.snackbarservice.openSnackBar(that.Company_Equipment_File_Not_Match, "error");
         return;
-      } else
-      {
+      } else {
         that.uiSpinner.spin$.next(true);
         const formData_profle = new FormData();
         formData_profle.append("file", file);
         that.httpCall.httpPostCall(httproutes.PORTAL_EMPLOYEE_IMPORT, formData_profle).subscribe(function (params) {
-          if (params.status)
-          {
+          if (params.status) {
             that.uiSpinner.spin$.next(false);
             that.openErrorDataDialog(params);
             that.mostusedservice.userdeleteEmit();
             //that.snackbarservice.openSnackBar(params.message, "success");
             //that.rerenderfunc();
-          } else
-          {
+          } else {
             that.uiSpinner.spin$.next(false);
             that.snackbarservice.openSnackBar(params.message, "error");
           }
@@ -433,317 +411,152 @@ export class EmployeeListComponent implements OnInit {
 })
 
 export class TeamHistory {
-  dtOptions: any = {};
-  @ViewChild(DataTableDirective, { static: false }) datatableElement: any;
-  tmp_Location_History_Listing_Date: any;
-  tmp_Location_History_Listing_Name: any;
-  tmp_Location_History_Listing_Action: any;
-  useremail: any;
-  username: any;
-  usermiddlename: any;
-  lastname: any;
-  role_name: any;
-  manager_name: any;
-  location_name: any;
-  userjob_type_name: any;
-  userjob_title_name: any;
-  department_name: any;
-  user_payroll_group_name: any;
-  userssn: any;
-  userphone: any;
-  usersecondary_email: any;
-  userstreet1: any;
-  userstreet2: any;
-  city: any;
-  user_state: any;
-  userzipcode: any;
-  usercountry: any;
-  userstartdate: any;
-  usersalary: any;
-  costcode: any;
-  card_no: any;
-  action_taken_from: any;
-  mobile_all: any;
-  web_all: any;
-  project_email_group: any;
-  project_email_groups: any = configdata.PROJECT_EMAIL_GROUP;
-  compliance_officer: any;
-  subscription: any;
+  id!: string;
+  taskHistory = [];
+  SearchIcon = icon.SEARCH_WHITE;
+  start: number = 0;
   mode: any;
-  backIcon: any;
-  constructor(public httpCall: HttpCall, private modeService: ModeDetectService, public translate: TranslateService, public dialogRef: MatDialogRef<TeamHistory>, private http: HttpClient,
-    @Inject(MAT_DIALOG_DATA) public data: any, public sb: Snackbarservice) {
+  exitIcon: string = "";
+  search: string = "";
+  is_httpCall: boolean = false;
+  todayactivity_search!: String;
 
-  }
-  ngOnInit() {
-    const that = this;
-
-    const token = localStorage.getItem(localstorageconstants.SUPPLIERTOKEN);
-    let headers: any = new HttpHeaders();
-    headers = headers.set('Authorization', token);
-    var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
-    tmp_locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configdata.fst_load_lang : tmp_locallanguage;
-    this.translate.use(tmp_locallanguage);
-    this.translate.stream(['']).subscribe((textarray) => {
-      that.tmp_Location_History_Listing_Date = that.translate.instant('Location_History_Listing_Date');
-      that.tmp_Location_History_Listing_Action = that.translate.instant('Location_History_Listing_Action');
-      that.tmp_Location_History_Listing_Name = that.translate.instant('Location_History_Listing_Name');
-      that.username = that.translate.instant("Agent-username");
-      that.useremail = that.translate.instant("Employee-form-Email");
-      this.usermiddlename = that.translate.instant("Employee-form-Middle-Name");
-      that.role_name = that.translate.instant("Employee-form-User-Role");
-      that.manager_name = that.translate.instant("Employee-form-Manager");
-      that.location_name = that.translate.instant("Employee-form-Location");
-      that.userjob_type_name = that.translate.instant("Employee-form-Job-Type");
-      that.userjob_title_name = that.translate.instant("Employee-form-Job-Title");
-      that.department_name = that.translate.instant("Employee-form-Department");
-      that.user_payroll_group_name = that.translate.instant("Employee-form-Payroll-Group");
-      that.userssn = that.translate.instant("Employee-form-SSN");
-      that.userphone = that.translate.instant("Emergency-Contact-Form-Phone");
-      that.usersecondary_email = that.translate.instant("Employee-form-Secondary-Email");
-      that.userstreet1 = that.translate.instant("Employee-form-Street-1");
-      that.userstreet2 = that.translate.instant("Employee-form-Street-2");
-      that.city = that.translate.instant("Employee-form-City");
-      that.user_state = that.translate.instant("Employee-form-State");
-      that.userzipcode = that.translate.instant("Employee-form-Zipcode");
-      that.usercountry = that.translate.instant("Employee-form-Country");
-      that.userstartdate = that.translate.instant("Employee-form-Start-Date");
-      that.usersalary = that.translate.instant("Employee-form-Salary-Hourly-Rate");
-      that.costcode = that.translate.instant("Employee-form-Cost-Code");
-      that.card_no = that.translate.instant("Employee-form-Card-Number");
-      that.lastname = that.translate.instant("Employee-form-Last-Name");
-      that.action_taken_from = that.translate.instant('action_taken_from');
-      that.mobile_all = that.translate.instant('mobile_all');
-      that.web_all = that.translate.instant('web_all');
-      that.project_email_group = that.translate.instant('project_email_group');
-      that.compliance_officer = that.translate.instant('compliance_officer');
-    });
-
-    this.dtOptions = {
-      pagingType: 'full_numbers',
-      pageLength: 10,
-      serverSide: true,
-      processing: true,
-      responsive: true,
-      "order": [[0, "desc"]],
-      language: tmp_locallanguage == "en" ? LanguageApp.english_datatables : LanguageApp.spanish_datatables,
-      ajax: (dataTablesParameters: any, callback: any) => {
-        dataTablesParameters.employee_id = this.data.employee_id;
-        that.http
-          .post<DataTablesResponse>(
-            configdata.apiurl + httproutes.TEAMS_HISTORY,
-            dataTablesParameters, { headers: headers }
-          ).subscribe(resp => {
-            callback({
-              recordsTotal: resp.recordsTotal,
-              recordsFiltered: resp.recordsFiltered,
-              data: resp.data
-            });
-          });
-      },
-      columns: this.getColumn()
-    };
-
+  activityIcon!: string;
+  isSearch: boolean = false;
+  subscription: Subscription;
+  constructor (
+    public httpCall: HttpCall,
+    public snackbarservice: Snackbarservice,
+    private modeService: ModeDetectService
+  ) {
+    console.log("history call");
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
-    this.mode = modeLocal === 'on' ? 'on' : 'off';
-    console.log("this.mode main", this.mode);
-    if (this.mode == 'off')
-    {
-      console.log("this.mod", this.mode);
-      this.backIcon = icon.CANCLE;
-
-
-    } else
-    {
-      console.log("this.mod else", this.mode);
-      this.backIcon = icon.CANCLE_WHITE;
-
-
+    this.mode = modeLocal === "on" ? "on" : "off";
+    if (this.mode == "off") {
+      this.exitIcon = icon.CANCLE;
+    } else {
+      this.exitIcon = icon.CANCLE_WHITE;
     }
-    this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode)
-      {
-        this.mode = 'off';
-        this.backIcon = icon.CANCLE;
 
-      } else
-      {
-        this.mode = 'on';
-        this.backIcon = icon.CANCLE_WHITE;
-
+    this.subscription = this.modeService.onModeDetect().subscribe((mode) => {
+      if (mode) {
+        this.mode = "off";
+        this.exitIcon = icon.CANCLE;
+      } else {
+        this.mode = "on";
+        this.exitIcon = icon.CANCLE_WHITE;
       }
-      console.log("DARK MODE: " + this.mode);
     });
   }
 
-  getColumn() {
-    let that = this;
-    return [{
-      title: that.tmp_Location_History_Listing_Date,
-      defaultContent: "",
-      render: function (data: any, type: any, full: any) {
-        return MMDDYYYY_formet(full.created_at);
-      },
-
-    },
-    {
-      title: that.tmp_Location_History_Listing_Action,
-      data: 'action',
-      defaultContent: ""
-    },
-    {
-      title: that.tmp_Location_History_Listing_Name,
-      data: 'created_by',
-      defaultContent: ""
-    },
-    {
-      title: that.action_taken_from,
-      defaultContent: "",
-      render: function (data: any, type: any, full: any) {
-        if (full.taken_device == "Mobile")
-        {
-          return that.mobile_all;
-        } else
-        {
-          return that.web_all;
-        }
-      }
-    },
-    {
-      title: '',
-      class: "none",
-      defaultContent: "",
-      render: function (data: any, type: any, full: any) {
-        if (full.action == "Delete")
-        {
-          return that.userHistoryTable(full.deleted_user);
-        } else
-        {
-          return that.userHistoryTable(full);
-        }
-      }
-    },
-    ];
+  ngOnInit(): void {
+    // this.getAllHistory();
+    this.getTodaysActivity();
   }
 
-  userHistoryTable(full: any) {
-    let that = this;
-    let usersalary = full.usersalary != null || full.usersalary != undefined ? full.usersalary : "";
-    let city = full.city != null || full.city != undefined ? full.city : "";
-    let userstartdate = full.userstartdate != null && full.userstartdate != "" && full.userstartdate != undefined ? full.userstartdate : "";
-    var match = _.find(that.project_email_groups, { 'key': full.project_email_group });
-    match = match != undefined ? match.value : "";
-    let userstreet2 = full.userstreet2 != null || full.userstreet2 != undefined ? full.userstreet2 : "";
-    let compilanceOfficer = full.compliance_officer != null || full.compliance_officer != undefined ? (full.compliance_officer == true ? "Yes" : "No") : "No";
-    let html = `<table class="cust-table" >
-                    <tr>
-                      <th class="cust-backgroud-color">`+ that.useremail + `</th>
-                      <td>`+ full.useremail + `</td>
-                    </tr>
-                    <tr> 
-                      <th class="cust-backgroud-color">`+ that.username + `</th>
-                      <td>`+ full.username + `</td>
-                    </tr>
-                    <tr>
-                      <th class="cust-backgroud-color">`+ that.usermiddlename + `</th>
-                      <td>`+ full.usermiddlename + `</td>
-                    </tr>
-                    <tr>
-                      <th class="cust-backgroud-color">`+ that.lastname + `</th>
-                      <td>`+ full.userlastname + `</td>
-                    </tr>
-                    <tr>
-                      <th class="cust-backgroud-color">`+ that.role_name + `</th>
-                      <td>`+ full.role_name + `</td>
-                    </tr>
-                    <tr>
-                      <th class="cust-backgroud-color">`+ that.project_email_group + `</th>
-                      <td>`+ match + `</td>
-                    </tr>
-                    <tr>
-                      <th class="cust-backgroud-color">`+ that.compliance_officer + `</th>
-                      <td>`+ compilanceOfficer + `</td>
-                    </tr>
-                    <tr>
-                      <th class="cust-backgroud-color">`+ that.manager_name + `</th>
-                      <td>`+ full.manager_name + `</td>
-                    </tr>
-                    <tr>
-                      <th class="cust-backgroud-color">`+ that.location_name + `</th>
-                      <td>`+ full.location_name + `</td>
-                    </tr>
-                    <tr>
-                      <th class="cust-backgroud-color">`+ that.userjob_type_name + `</th>
-                      <td>`+ full.userjob_type_name + `</td>
-                    </tr>
-                    <tr>
-                      <th class="cust-backgroud-color">`+ that.userjob_title_name + `</th>
-                      <td>`+ full.userjob_title_name + `</td>
-                    </tr>
-                    <tr>
-                      <th class="cust-backgroud-color">`+ that.department_name + ` </th>
-                      <td>`+ full.department_name + `</td>
-                    </tr>
-                    <tr>
-                      <th class="cust-backgroud-color">`+ that.user_payroll_group_name + `</th>
-                      <td>`+ full.user_payroll_group_name + `</td>
-                    </tr>
-                    
-                    <tr>
-                      <th class="cust-backgroud-color">`+ that.userssn + `</th>
-                      <td>`+ full.userssn + `</td>
-                    </tr>
-                    <tr>
-                      <th class="cust-backgroud-color">`+ that.userphone + `</th>
-                      <td>`+ full.userphone + `</td>
-                    </tr>
-                    <tr>
-                      <th class="cust-backgroud-color">`+ that.usersecondary_email + `</th>
-                      <td>`+ full.usersecondary_email + `</td>
-                    </tr>
-                    <tr>
-                      <th class="cust-backgroud-color">`+ that.userstreet1 + `</th>
-                      <td>`+ full.userstreet1 + `</td>
-                    </tr>
-                    <tr>
-                      <th class="cust-backgroud-color">`+ that.userstreet2 + `</th>
-                      <td>`+ userstreet2 + `</td>
-                    </tr>
-                    <tr>
-                      <th class="cust-backgroud-color">`+ that.city + `</th>
-                      <td>`+ city + `</td>
-                    </tr>
-                    <tr>
-                      <th class="cust-backgroud-color">`+ that.user_state + `</th>
-                      <td>`+ full.user_state + `</td>
-                    </tr>
-                    <tr>
-                      <th class="cust-backgroud-color">`+ that.userzipcode + `</th>
-                      <td>`+ full.userzipcode + `</td>
-                    </tr>
-                    <tr>
-                      <th class="cust-backgroud-color">`+ that.usercountry + `</th>
-                      <td>`+ full.usercountry + `</td>
-                    </tr>
-                    <tr>
-                      <th class="cust-backgroud-color">`+ that.userstartdate + `</th>
-                      <td>`+ userstartdate + `</td>
-                    </tr>
-                    <tr>
-                      <th class="cust-backgroud-color">`+ that.usersalary + `</th>
-                      <td>`+ usersalary + `</td>
-                    </tr>
-                    <tr>
-                      <th class="cust-backgroud-color">`+ that.costcode + `</th>
-                      <td>`+ full.costcode + `</td>
-                    </tr>
-                    <tr>
-                      <th class="cust-backgroud-color">`+ that.card_no + `</th>
-                      <td>`+ full.card_no + `</td>
-                    </tr>
-            </table>`;
-    return html;
+  onKey(event: any) {
+    console.log(event.target.value);
+    if (event.target.value.length == 0) {
+      console.log("emprty string");
+      this.taskHistory = [];
+      this.start = 0;
+      this.getTodaysActivity();
+    }
   }
+
+
+  // searchActivity() {
+  //   this.allHistory = [];
+  //   this.start = 0;
+  //   this.getAllHistory();
+  // }
+
+  // onKey(event: any) {
+  //   if (event.target.value.length == 0)
+  //   {
+  //     this.allHistory = [];
+  //     this.start = 0;
+  //     this.getAllHistory();
+  //   }
+  // }
+
+  // async getAllHistory() {
+  //   console.log("caall api. ((((((((((((((((((((((9");
+  //   let data = await this.httpCall
+  //     .httpPostCall(httproutes.PORTAL_ROVUK_GRID_PROJECT_NEW_HISTORY, {
+  //       start: this.start,
+  //       search: this.search,
+  //     })
+  //     .toPromise();
+  //   if (data.status)
+  //   {
+  //     this.allHistory = this.allHistory.concat(data.data);
+  //   }
+  // }
+
+  // onScroll() {
+  //   console.log("onScroll call");
+  //   this.start++;
+  //   this.getAllHistory();
+  // }
+  searchActivity() {
+    console.log("searchTodayActivity");
+    console.log("Entered email:", this.todayactivity_search);
+    let that = this;
+    that.isSearch = true;
+    that.taskHistory = [];
+    that.start = 0;
+    this.getTodaysActivity();
+  }
+
+  onScroll() {
+    this.start++;
+    this.getTodaysActivity();
+  }
+  getTodaysActivity() {
+    let self = this;
+    this.is_httpCall = true;
+
+    //this.uiSpinner.spin$.next(true)
+    this.httpCall
+      .httpPostCall(httproutes.PORTAL_ROVUK_INVOICE_TEAM_NEW_HISTORY, {
+        start: this.start,
+        search: this.todayactivity_search,
+      })
+      .subscribe(function (params) {
+        if (params.status) {
+          if (self.start == 0)
+            //self.uiSpinner.spin$.next(false)
+            self.is_httpCall = false;
+          self.taskHistory = self.taskHistory.concat(params.data);
+        }
+      });
+  }
+
+  // userDetails(history:any): HistoryUser {
+  //   let user: HistoryUser = {
+  //     history_created_by: history?.history_created_by?._id,
+  //     history_created_by_name: history?.history_created_by?.userfullname,
+  //     history_created_at: history?.history_created_at,
+  //     userpicture: history?.history_created_by?.userpicture,
+  //   };
+  //   return user;
+  // }
+
+  tmp_date(epoch: any) {
+    return MMDDYYYY_formet(epoch);
+  }
+
+  setHeightStyles() {
+    let styles = {
+      height: window.screen.height + "px",
+      "overflow-y": "scroll",
+    };
+    return styles;
+  }
+  // back() {
+  //   this.location.back();
+  // }
 }
 
 /**
@@ -769,7 +582,7 @@ export class BulkUploadErrorData {
   import_cancel_error: string;
   Compnay_Equipment_Delete_Yes: string = "";
   Compnay_Equipment_Delete_No: string = "";
-  constructor(
+  constructor (
     public dialogRef: MatDialogRef<BulkUploadErrorData>, public httpCall: HttpCall, public snackbarservice: Snackbarservice,
     public uiSpinner: UiSpinnerService,
     @Inject(MAT_DIALOG_DATA) public data: any, public translate: TranslateService) {
@@ -777,11 +590,9 @@ export class BulkUploadErrorData {
     this.Compnay_Equipment_Delete_Yes = this.translate.instant('Compnay_Equipment_Delete_Yes');
     this.Compnay_Equipment_Delete_No = this.translate.instant('Compnay_Equipment_Delete_No');
     dialogRef.disableClose = true;
-    if (data.error_data.length >= 1)
-    {
+    if (data.error_data.length >= 1) {
       this.failed_buttons = true;
-    } else
-    {
+    } else {
       this.success_buttons = true;
     }
   }
@@ -801,13 +612,11 @@ export class BulkUploadErrorData {
     };
     this.uiSpinner.spin$.next(true);
     this.httpCall.httpPostCall(httproutes.PORTAL_CHECK_AND_INSERT, requestObject).subscribe(function (params) {
-      if (params.status)
-      {
+      if (params.status) {
         that.uiSpinner.spin$.next(false);
         that.snackbarservice.openSnackBar(params.message, "success");
         that.dialogRef.close();
-      } else
-      {
+      } else {
         that.uiSpinner.spin$.next(false);
         that.snackbarservice.openSnackBar(params.message, "error");
       }
@@ -847,7 +656,7 @@ export class BulkUploadErrorData {
 export class ImportButtonDownload {
   dtOptions: DataTables.Settings = {};
 
-  constructor(
+  constructor (
     public dialogRef: MatDialogRef<ImportButtonDownload>,
     @Inject(MAT_DIALOG_DATA) public data: any, public translate: TranslateService) {
   }
@@ -902,7 +711,7 @@ export class TeamReportForm {
   copyDataFromProject: string = '';
   add_my_self_icon = icon.ADD_MY_SELF_WHITE;
 
-  constructor(private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
+  constructor (private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
     public dialogRef: MatDialogRef<TeamReportForm>,
     @Inject(MAT_DIALOG_DATA) public data: any, public sb: Snackbarservice, public translate: TranslateService) {
 
@@ -919,26 +728,22 @@ export class TeamReportForm {
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off')
-    {
+    if (this.mode == 'off') {
       this.exitIcon = icon.CANCLE;
       this.saveIcon = icon.SAVE_WHITE;
 
-    } else
-    {
+    } else {
       this.exitIcon = icon.CANCLE_WHITE;
       this.saveIcon = icon.SAVE_WHITE;
     }
 
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode)
-      {
+      if (mode) {
         this.mode = 'off';
         this.exitIcon = icon.CANCLE;
         this.saveIcon = icon.SAVE_WHITE;
 
-      } else
-      {
+      } else {
         this.mode = 'on';
         this.exitIcon = icon.CANCLE_WHITE;
         this.saveIcon = icon.SAVE_WHITE;
@@ -952,8 +757,7 @@ export class TeamReportForm {
 
   isValidMailFormat(value: any) {
     var EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
-    if (value != "" && (EMAIL_REGEXP.test(value)))
-    {
+    if (value != "" && (EMAIL_REGEXP.test(value))) {
       return { "Please provide a valid email": true };
     }
     return null;
@@ -962,16 +766,13 @@ export class TeamReportForm {
   addInternalEmail(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
     // Add email
-    if (value)
-    {
+    if (value) {
       var validEmail = this.isValidMailFormat(value);
-      if (validEmail)
-      {
+      if (validEmail) {
         this.emailsList.push(value);
         // Clear the input value
         event.chipInput!.clear();
-      } else
-      {
+      } else {
         // here error for valid email
       }
     }
@@ -982,12 +783,10 @@ export class TeamReportForm {
     let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
     //----
     const index = this.emailsList.indexOf(email);
-    if (index >= 0)
-    {
+    if (index >= 0) {
       this.emailsList.splice(index, 1);
       //----
-      if (email == user_data.UserData.useremail)
-      {
+      if (email == user_data.UserData.useremail) {
         this.is_oneOnly = true;
       }
       //----
@@ -997,48 +796,39 @@ export class TeamReportForm {
   ngOnInit(): void {
     let that = this;
     this.timecardinfo.get("role_ids")!.valueChanges.subscribe(function (params: any) {
-      if (params.length == that.rolesList.length)
-      {
+      if (params.length == that.rolesList.length) {
         that.timecardinfo.get("All_Roles")!.setValue(true);
-      } else
-      {
+      } else {
         that.timecardinfo.get("All_Roles")!.setValue(false);
       }
     });
     this.timecardinfo.get("status_ids")!.valueChanges.subscribe(function (params: any) {
-      if (params.length == that.statusList.length)
-      {
+      if (params.length == that.statusList.length) {
         that.timecardinfo.get("All_Status")!.setValue(true);
-      } else
-      {
+      } else {
         that.timecardinfo.get("All_Status")!.setValue(false);
       }
     });
   }
 
   onChangeValueAll_Roles(params: any) {
-    if (params.checked)
-    {
+    if (params.checked) {
       this.timecardinfo.get("role_ids")!.setValue(this.rolesList.map((el: any) => el.role_id));
-    } else
-    {
+    } else {
       this.timecardinfo.get("role_ids")!.setValue([]);
     }
   }
 
   onChangeValueAll_Status(params: any) {
-    if (params.checked)
-    {
+    if (params.checked) {
       this.timecardinfo.get("status_ids")!.setValue(this.statusList.map(el => el.value));
-    } else
-    {
+    } else {
       this.timecardinfo.get("status_ids")!.setValue([]);
     }
   }
 
   saveData() {
-    if (this.emailsList.length != 0)
-    {
+    if (this.emailsList.length != 0) {
       this.sb.openSnackBar(this.Report_File_Message, "success");
       let requestObject = this.timecardinfo.value;
       var company_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
@@ -1049,14 +839,12 @@ export class TeamReportForm {
       setTimeout(() => {
         this.dialogRef.close();
       }, 3000);
-    } else
-    {
+    } else {
       this.sb.openSnackBar(this.Report_File_Enter_Email, "error");
     }
   }
   addmyself() {
-    if (this.is_oneOnly)
-    {
+    if (this.is_oneOnly) {
       let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
       this.emailsList.push(user_data.UserData.useremail);
       this.is_oneOnly = false;

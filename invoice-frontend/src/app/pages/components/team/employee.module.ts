@@ -52,6 +52,7 @@ import { registerLocaleData } from '@angular/common';
 import { AutosizeModule } from 'ngx-autosize';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ArchiveTeamListComponent } from './archive-team-list/archive-team-list.component';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 // import { ProjectTimeCardListForm, TimecardHistoryForm, TimecardManuallyForm, TimecardReportForm, TimecardsComponent, TimeCardViewList } from './timecards/timecards.component';
 // import { FormateMemberTimeCardPipe, FormateTimeCardPipe, FormateTimePipe, FilterPipe } from './timecards/filter.pipe';
 
@@ -113,6 +114,7 @@ registerLocaleData(localeFr);
     MatDatepickerModule,
     MatNativeDateModule,
     NgbModalModule,
+    InfiniteScrollModule,
     NgxMaskModule.forRoot(maskConfig),
     FlatpickrModule.forRoot(),
     CalendarModule.forRoot({
