@@ -245,7 +245,7 @@ async function userEmergencyContactAlertCronFunction() {
                 };
                 // supplierAlertController.saveSupplierAlert(alertObject, connection_db_api);
 
-                let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, [all_user[i]['useremail']], `Important message about contact information`, HtmlData,
+                let mailsend = await sendEmail.sendEmail_client(item.tenant_smtp_username, [all_user[i]['useremail']], `Important message about contact information`, HtmlData,
                     item.tenant_smtp_server, item.tenant_smtp_port, item.tenant_smtp_reply_to_mail,
                     item.tenant_smtp_password, item.tenant_smtp_timeout, item.tenant_smtp_security);
                 console.log("mailsend: ", mailsend);

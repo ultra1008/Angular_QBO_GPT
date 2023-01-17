@@ -210,7 +210,7 @@ module.exports.saveEmployee = async function (req, res) {
                             history_object.usercostcode = usercostcode;
                             let updateuser = await userConnection.updateOne({ _id: ObjectID(add._id) }, { usercostcode: usercostcode });
                             if (updateuser) {
-                                let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, body.useremail, "Rovuk Registration", HtmlData,
+                                let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, body.useremail, "Rovuk Registration", HtmlData,
                                     talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
                                     talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
 
@@ -1748,13 +1748,9 @@ module.exports.sendappinvitation = async function (req, res) {
             const file_data = fs.readFileSync('./controller/emailtemplates/appinvitation.html', 'utf8');
             var template = handlebars.compile(file_data);
             var HtmlData = await template(emailTmp);
-            let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, [requestObject.recipient], "App Download Invitation", HtmlData,
+            let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [requestObject.recipient], "App Download Invitation", HtmlData,
                 talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
                 talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
-
-            // let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, [get_all_po[0]['vendor']['vendor_email']], "Rovuk Purchase Order Request", HtmlData,
-            //     config.tenants.tenant_smtp_server, config.tenants.tenant_smtp_port, config.tenants.tenant_smtp_reply_to_mail,
-            //     config.tenants.tenant_smtp_password, config.tenants.tenant_smtp_timeout, config.tenants.tenant_smtp_security);
             console.log("send mail:", mailsend);
             res.send({ message: translator.getStr('AppInvitationSent'), status: true });
         }
@@ -1991,14 +1987,9 @@ module.exports.senddocumentexpiration = async function (req, res) {
                 } else if (sendResponse == 2) {
                     subject = "Documents about to expire";
                 }
-
-                // let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, [requestObject.recipient], subject, HtmlData,
-                //     talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                //     talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
-
-                let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, recipients, subject, HtmlData,
-                    config.tenants.tenant_smtp_server, config.tenants.tenant_smtp_port, config.tenants.tenant_smtp_reply_to_mail,
-                    config.tenants.tenant_smtp_password, config.tenants.tenant_smtp_timeout, config.tenants.tenant_smtp_security);
+                let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, recipients, subject, HtmlData,
+                    talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
+                    talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
                 console.log("send mail:", mailsend);
                 res.send({ message: translator.getStr('DocumentExpirationWarningSent'), status: true });
             }
@@ -3327,7 +3318,7 @@ module.exports.getAllEmployeeReport = async function (req, res) {
                     };
                     var template = handlebars.compile(file_data);
                     var HtmlData = await template(emailTmp);
-                    let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, email_list, translator.getStr('EmailUserReportSubject'), HtmlData,
+                    let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, email_list, translator.getStr('EmailUserReportSubject'), HtmlData,
                         talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
                         talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
                     console.log("mailsend: ", mailsend);
@@ -3471,7 +3462,7 @@ module.exports.checkAndInsertImportData = async function (req, res) {
                     var HtmlData = await template(emailTmp);
 
 
-                    let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, requestObject.data[m].useremail, "Rovuk Registration", HtmlData,
+                    let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, requestObject.data[m].useremail, "Rovuk Registration", HtmlData,
                         talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
                         talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
 

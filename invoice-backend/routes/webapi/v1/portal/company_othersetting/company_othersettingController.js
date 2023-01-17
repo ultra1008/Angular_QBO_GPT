@@ -255,7 +255,7 @@ module.exports.sendIframeCode = async function (req, res) {
             const file_data = fs.readFileSync('./controller/emailtemplates/sendIfameCode.html', 'utf8');
             var template = handlebars.compile(file_data);
             var HtmlData = await template(emailTmp);
-            let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, requestObject.emailsList, "Iframe Code", HtmlData,
+            let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, requestObject.emailsList, "Iframe Code", HtmlData,
                 talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
                 talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
             console.log("mailsend: ", mailsend);

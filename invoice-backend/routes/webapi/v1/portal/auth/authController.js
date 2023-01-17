@@ -466,13 +466,9 @@ module.exports.savelogindetails = async function (req, res) {
                 const file_data = fs.readFileSync('./controller/emailtemplates/loginFromNewDevice.html', 'utf8');
                 var template = handlebars.compile(file_data);
                 var HtmlData = await template(emailTmp);
-                let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, [decodedToken.UserData.useremail], "Login from a new device", HtmlData,
+                let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [decodedToken.UserData.useremail], "Login from a new device", HtmlData,
                     talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
                     talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
-
-                // let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, [get_all_po[0]['vendor']['vendor_email']], "Rovuk Purchase Order Request", HtmlData,
-                //     config.tenants.tenant_smtp_server, config.tenants.tenant_smtp_port, config.tenants.tenant_smtp_reply_to_mail,
-                //     config.tenants.tenant_smtp_password, config.tenants.tenant_smtp_timeout, config.tenants.tenant_smtp_security);
                 res.send({ message: translator.getStr('LoginDetails'), status: true });
             } else {
                 console.log("Something went wrong.!", e);
@@ -735,7 +731,7 @@ module.exports.sendSupplierOTP = async function (req, res) {
                 const file_data = fs.readFileSync('./controller/emailtemplates/emailOTP.html', 'utf8');
                 var template = handlebars.compile(file_data);
                 var HtmlData = await template(emailTmp);
-                let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, [requestObject.useremail], "OTP Verification", HtmlData,
+                let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [requestObject.useremail], "OTP Verification", HtmlData,
                     talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
                     talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
                 res.send({ message: 'One Time Password (OTP) sent successfully.', status: true });
