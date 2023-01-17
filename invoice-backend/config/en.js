@@ -769,6 +769,7 @@ module.exports = {
     ScheduleOfItemPhaseAlreadyExist: "Schedule of item phase already exist.",
 
     recoverTeamMember: "Team member recover successfully.",
+    recoverInactiveTeamMember: "User has been recovered successfully. Please changed the status to active before start using it.",
 
     CompanySetting: 'Company Settings',
     CompanySettingUpdated: 'Company Setting updated successfully.',

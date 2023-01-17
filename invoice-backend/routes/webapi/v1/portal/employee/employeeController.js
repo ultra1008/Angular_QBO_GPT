@@ -144,106 +144,108 @@ module.exports.saveEmployee = async function (req, res) {
                         let company_data = await db_rest_api.findOne(compnay_collection, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
                         let selectedPlan = company_data.billingplan;
 
-                        let get_user_roles = connection_db_api.model(collectionConstant.INVOICE_ROLES, supplierRoleSchema);
-                        let onerole = await get_user_roles.findOne({ role_id: ObjectID(body.userroleId) });
-                        let allowed_count = billingPlan.BILLING_PLAN[selectedPlan]['ADMIN_ALL'];
-                        let current_count = await userConnection.find({}).count();
-                        console.log("count: ", current_count, allowed_count, ">=", current_count >= allowed_count);
-                        if (current_count >= allowed_count) {
-                            res.send({ message: translator.getStr('UserLimitExceed'), status: false });
-                        } else {
-                            const file_data = fs.readFileSync('./controller/emailtemplates/invitationuser.html', 'utf8');
-                            let add_user = new userConnection(body);
-                            history_object = body;
+                        // let get_user_roles = connection_db_api.model(collectionConstant.INVOICE_ROLES, supplierRoleSchema);
+                        // let onerole = await get_user_roles.findOne({ role_id: ObjectID(body.userroleId) });
+                        // let allowed_count = billingPlan.BILLING_PLAN[selectedPlan]['ADMIN_ALL'];
+                        // let current_count = await userConnection.find({}).count();
+                        // console.log("count: ", current_count, allowed_count, ">=", current_count >= allowed_count);
+                        // if (current_count >= allowed_count) {
+                        //     res.send({ message: translator.getStr('UserLimitExceed'), status: false });
+                        // } else {
+                        const file_data = fs.readFileSync('./controller/emailtemplates/invitationuser.html', 'utf8');
+                        let add_user = new userConnection(body);
+                        history_object = body;
 
-                            let add = await add_user.save();
-                            if (add) {
-                                if (body.allow_for_projects) {
-                                    //await addUserAsAllProjectsWorker(add._id, decodedToken);
-                                }
-                                history_object.inserted_id = add._id;
-                                let emailTmp = {
-                                    HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
-                                    SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
-                                    ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
-                                    THANKS: translator.getStr('EmailTemplateThanks'),
-                                    ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
-                                    EMAILTITLE: `${translator.getStr('EmailInvitationUserTitle')} ${company_data.companyname} ${translator.getStr('EmailInvitationPortal')}`,
-                                    USERNAME: `${translator.getStr('EmailLoginHello')} ${body.username}`,
-                                    TEXT1: `${translator.getStr('EmailInvitationUserText1')}, ${company_data.companyname}.`,
-                                    TEXT2: translator.getStr('EmailInvitationUserText2'),
-                                    USEREMAIL: `${translator.getStr('EmailInvitationUserLoginEmail')} ${body.useremail}`,
-                                    USERPASSWORD: `${translator.getStr('EmailInvitationUserTemporaryPassword')} ${password_tmp}`,
-                                    COMPANYCODE: `${translator.getStr('EmailInvitationUserCompanyCode')} ${decodedToken.companycode}`,
-                                    DOWNLOAD_APP: translator.getStr('EmailInvitationUserDownloadApp'),
-                                    LOG_IN: translator.getStr('EmailInvitationLogIn'),
-                                    LOGIN_LINK: config.SITE_URL + "/login",
-
-                                    COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
-                                    COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
-                                };
-                                //translator.getStr('SomethingWrong')
-                                var template = handlebars.compile(file_data);
-                                var HtmlData = await template(emailTmp);
-                                body._id = add._id;
-
-                                // let qrcode_Object = config.SITE_URL + '/#/user-publicpage?_id=' + add._id + '&company_code=' + decodedToken.companycode;
-                                // let admin_qrCode = await QRCODE.generate_QR_Code(qrcode_Object);
-                                // let key_url = "employee/" + add._id + "/" + "QRCode.png";
-                                // let LowerCase_bucket = decodedToken.companycode.toLowerCase();
-                                // let PARAMS = {
-                                //     Bucket: LowerCase_bucket,
-                                //     Key: key_url,
-                                //     Body: admin_qrCode,
-                                //     ACL: 'public-read-write'
-                                // };
-                                var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
-                                let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
-                                // bucketOpration.uploadFile(PARAMS, async function (err, resultUpload) {
-                                //     if (err) {
-                                //         res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
-                                //     } else {
-                                //         userqrcode = config.wasabisys_url + "/" + LowerCase_bucket + "/" + key_url;
-                                //         history_object.userqrcode = userqrcode;
-                                history_object.usercostcode = usercostcode;
-                                let updateuser = await userConnection.updateOne({ _id: ObjectID(add._id) }, { usercostcode: usercostcode });
-                                if (updateuser) {
-                                    let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, body.useremail, "Rovuk Registration", HtmlData,
-                                        talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                                        talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
-
-                                    if (notFonud == 1) {
-                                        var temp_path = newOpenFile[0].path;
-                                        var file_name = newOpenFile[0].name;
-                                        dirKeyName = config.SUPPLIER_DIVERSITY_WASABI_PATH + "/employee/profile_picture/" + file_name;
-                                        var fileBody = fs.readFileSync(temp_path);
-                                        params = { Bucket: LowerCase_bucket, Key: dirKeyName, Body: fileBody, ACL: 'public-read-write' };
-
-                                        bucketOpration.uploadFile(params, async function (err, resultUpload) {
-                                            if (err) {
-                                                res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
-                                            } else {
-
-                                                urlProfile = config.wasabisys_url + "/" + LowerCase_bucket + "/" + dirKeyName;
-                                                let update_user = await userConnection.updateOne({ _id: add._id }, { userpicture: urlProfile });
-                                                history_object.userpicture = urlProfile;
-                                                if (update_user) {
-                                                    addUSER_History("Insert", history_object, decodedToken);
-                                                    //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
-                                                    res.send({ message: translator.getStr('UserCreationEmail'), data: body, status: true });
-                                                }
-                                            }
-                                        });
-                                    } else {
-                                        addUSER_History("Insert", history_object, decodedToken);
-                                        //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
-                                        res.send({ message: translator.getStr('UserAdded'), data: body, status: true });
-                                    }
-                                }
-                                //     }
-                                // });
+                        let add = await add_user.save();
+                        if (add) {
+                            if (body.allow_for_projects) {
+                                //await addUserAsAllProjectsWorker(add._id, decodedToken);
                             }
+                            history_object.inserted_id = add._id;
+                            let emailTmp = {
+                                HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
+                                SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
+                                ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                                THANKS: translator.getStr('EmailTemplateThanks'),
+                                ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                                EMAILTITLE: `${translator.getStr('EmailInvitationUserTitle')} ${company_data.companyname} ${translator.getStr('EmailInvitationPortal')}`,
+                                USERNAME: `${translator.getStr('EmailLoginHello')} ${body.username}`,
+                                TEXT1: `${translator.getStr('EmailInvitationUserText1')}, ${company_data.companyname}.`,
+                                TEXT2: translator.getStr('EmailInvitationUserText2'),
+                                USEREMAIL: `${translator.getStr('EmailInvitationUserLoginEmail')} ${body.useremail}`,
+                                USERPASSWORD: `${translator.getStr('EmailInvitationUserTemporaryPassword')} ${password_tmp}`,
+                                COMPANYCODE: `${translator.getStr('EmailInvitationUserCompanyCode')} ${decodedToken.companycode}`,
+                                DOWNLOAD_APP: translator.getStr('EmailInvitationUserDownloadApp'),
+                                LOG_IN: translator.getStr('EmailInvitationLogIn'),
+                                LOGIN_LINK: config.SITE_URL + "/login",
+
+                                COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
+                                COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
+                            };
+                            //translator.getStr('SomethingWrong')
+                            var template = handlebars.compile(file_data);
+                            var HtmlData = await template(emailTmp);
+                            body._id = add._id;
+
+                            // let qrcode_Object = config.SITE_URL + '/#/user-publicpage?_id=' + add._id + '&company_code=' + decodedToken.companycode;
+                            // let admin_qrCode = await QRCODE.generate_QR_Code(qrcode_Object);
+                            // let key_url = "employee/" + add._id + "/" + "QRCode.png";
+                            // let LowerCase_bucket = decodedToken.companycode.toLowerCase();
+                            // let PARAMS = {
+                            //     Bucket: LowerCase_bucket,
+                            //     Key: key_url,
+                            //     Body: admin_qrCode,
+                            //     ACL: 'public-read-write'
+                            // };
+                            var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+                            let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
+                            // bucketOpration.uploadFile(PARAMS, async function (err, resultUpload) {
+                            //     if (err) {
+                            //         res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
+                            //     } else {
+                            //         userqrcode = config.wasabisys_url + "/" + LowerCase_bucket + "/" + key_url;
+                            //         history_object.userqrcode = userqrcode;
+                            history_object.usercostcode = usercostcode;
+                            let updateuser = await userConnection.updateOne({ _id: ObjectID(add._id) }, { usercostcode: usercostcode });
+                            if (updateuser) {
+                                let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, body.useremail, "Rovuk Registration", HtmlData,
+                                    talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
+                                    talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+
+                                if (notFonud == 1) {
+                                    var temp_path = newOpenFile[0].path;
+                                    var file_name = newOpenFile[0].name;
+                                    dirKeyName = config.SUPPLIER_DIVERSITY_WASABI_PATH + "/employee/profile_picture/" + file_name;
+                                    var fileBody = fs.readFileSync(temp_path);
+                                    params = { Bucket: LowerCase_bucket, Key: dirKeyName, Body: fileBody, ACL: 'public-read-write' };
+
+                                    bucketOpration.uploadFile(params, async function (err, resultUpload) {
+                                        if (err) {
+                                            res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
+                                        } else {
+
+                                            urlProfile = config.wasabisys_url + "/" + LowerCase_bucket + "/" + dirKeyName;
+                                            let update_user = await userConnection.updateOne({ _id: add._id }, { userpicture: urlProfile });
+                                            history_object.userpicture = urlProfile;
+                                            if (update_user) {
+                                                addInsertHistory(add._id, body, decodedToken, translator, connection_db_api);
+                                                //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
+                                                res.send({ message: translator.getStr('UserCreationEmail'), data: body, status: true });
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    addInsertHistory(add._id, body, decodedToken, translator, connection_db_api);
+                                    //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
+                                    res.send({ message: translator.getStr('UserAdded'), data: body, status: true });
+                                }
+                            }
+                            //     }
+                            // });
+                        } else {
+                            res.send({ message: translator.getStr('SomethingWrong'), status: false });
                         }
+                        // }
                     }
                 });
         } catch (e) {
@@ -257,40 +259,192 @@ module.exports.saveEmployee = async function (req, res) {
     }
 };
 
-async function addUserAsAllProjectsWorker(userId, decodedToken) {
-    let connection_db_api = await db_connection.connection_db_api(decodedToken);
-    let projectCollection = connection_db_api.model(collectionConstant.PROJECT, projectSchema);
-    let get_all_projects = await projectCollection.aggregate([
-        {
-            $match:
-            {
-                is_delete: 0,
-                project_status: "Active",
-            },
-        },
-        {
-            $lookup: {
-                from: collectionConstant.PROJECT_SETTINGS,
-                localField: "_id",
-                foreignField: "project_id",
-                as: "project"
-            }
-        },
-        {
-            $project:
-            {
-                _id: 1,
-                project_settings: { $arrayElemAt: ["$project.settings.workers", 0] }
-            }
-        },
-    ]);
-    let projectSettingCollection = connection_db_api.model(collectionConstant.PROJECT_SETTINGS, projectSettingsSchema);
-    for (let i = 0; i < get_all_projects.length; i++) {
-        let temp_worker = get_all_projects[i]['project_settings'];
-        temp_worker.push(ObjectID(userId));
-        let project_worker = { 'settings.workers': temp_worker };
-        let updateSettingObject = await projectSettingCollection.updateOne({ project_id: ObjectID(get_all_projects[i]['_id']) }, { $set: project_worker });
+async function addInsertHistory(id, requestObject, decodedToken, translator, connection_db_api) {
+    delete requestObject.password;
+    delete requestObject.userdevice_pin;
+    delete requestObject.userpicture;
+    delete requestObject.usermobile_picture;
+    delete requestObject.usernon_exempt;
+    delete requestObject.usermedicalBenifits;
+    delete requestObject.useradditionalBenifits;
+    delete requestObject.useris_password_temp;
+    delete requestObject.userterm_conditions;
+    delete requestObject.userweb_security_code;
+    delete requestObject.userfirebase_token;
+    delete requestObject.usersmalltool_firebase_token;
+    delete requestObject.usercreated_at;
+    delete requestObject.userupdated_at;
+    delete requestObject.usercreated_by;
+    delete requestObject.userupdated_by;
+    delete requestObject.usercostcode;
+    delete requestObject.userqrcode;
+    delete requestObject.userfirebase_id;
+    delete requestObject.card_no;
+    delete requestObject.card_type;
+    delete requestObject.is_delete;
+    delete requestObject.api_setting;
+    delete requestObject.show_id_card_on_qrcode_scan;
+    delete requestObject.project_email_group;
+    delete requestObject.compliance_officer;
+    delete requestObject.vendors;
+    delete requestObject.grid_firebase_token;
+    delete requestObject.user_id_payroll_group;
+    delete requestObject.user_payroll_rules;
+    delete requestObject.userfulladdress;
+    delete requestObject._id;
+    delete requestObject.login_from;
+
+    let roleCollection = connection_db_api.model(collectionConstant.INVOICE_ROLES, gridRolesSchema);
+    let userCollection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+    let locationCollection = connection_db_api.model(collectionConstant.INVOICE_LOCATION, gridLocationSchema);
+    let departmentCollection = connection_db_api.model(collectionConstant.DEPARTMENTS, departmentSchema);
+    let jobTitleCollection = connection_db_api.model(collectionConstant.JOB_TITLE, jobTitleSchema);
+    let jobTypeCollection = connection_db_api.model(collectionConstant.JOB_TYPE, jobTypeSchema);
+    let languageCollection = connection_db_api.model(collectionConstant.LANGUAGE, languageSchema);
+
+    // find difference of object 
+    let insertedData = await common.setInsertedFieldHistory(requestObject);
+    // Check for object id fields and if it changed then replace id with specific value
+    let found_role = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'userroleId'; });
+    if (found_role != -1) {
+        let role = await roleCollection.findOne({ role_id: ObjectID(insertedData[found_role].value) });
+        insertedData[found_role].value = role.role_name;
     }
+
+    let found_manager = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'usermanager_id'; });
+    if (found_manager != -1) {
+        if (insertedData[found_manager].value != null && insertedData[found_manager].value != '' && insertedData[found_manager].value != undefined) {
+            let user = await userCollection.findOne({ _id: ObjectID(insertedData[found_manager].value) });
+            insertedData[found_manager].value = user.userfullname;
+        } else {
+            insertedData[found_manager].value = '';
+        }
+    }
+
+    let found_supervisor = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'usersupervisor_id'; });
+    if (found_supervisor != -1) {
+        if (insertedData[found_supervisor].value != null && insertedData[found_supervisor].value != '' && insertedData[found_supervisor].value != undefined) {
+            let user = await userCollection.findOne({ _id: ObjectID(insertedData[found_supervisor].value) });
+            insertedData[found_supervisor].value = user.userfullname;
+        } else {
+            insertedData[found_supervisor].value = '';
+        }
+    }
+
+    let found_location = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'userlocation_id'; });
+    if (found_location != -1) {
+        let location = await locationCollection.findOne({ _id: ObjectID(insertedData[found_location].value) });
+        insertedData[found_location].value = location.location_name;
+    }
+
+    let found_job_title = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'userjob_title_id'; });
+    if (found_job_title != -1) {
+        let jobTitle = await jobTitleCollection.findOne({ _id: ObjectID(insertedData[found_job_title].value) });
+        insertedData[found_job_title].value = jobTitle.job_title_name;
+    }
+
+    let found_department = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'userdepartment_id'; });
+    if (found_department != -1) {
+        let department = await departmentCollection.findOne({ _id: ObjectID(insertedData[found_department].value) });
+        insertedData[found_department].value = department.department_name;
+    }
+
+    let found_job_type = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'userjob_type_id'; });
+    if (found_job_type != -1) {
+        let jobType = await jobTypeCollection.findOne({ _id: ObjectID(insertedData[found_job_type].value) });
+        insertedData[found_job_type].value = jobType.job_type_name;
+    }
+
+    let found_language = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'user_languages'; });
+    if (found_language != -1) {
+        let tempId = [];
+        if (insertedData[found_language].value) {
+            insertedData[found_language].value.forEach((language) => {
+                tempId.push(ObjectID(language));
+            });
+        }
+        let tempLanaguges = [];
+        let languages = await languageCollection.find({ _id: { $in: tempId } });
+        if (languages) {
+            languages.forEach((language) => {
+                tempLanaguges.push(language.name);
+            });
+        }
+        insertedData[found_language].value = tempLanaguges.join(", ");
+    }
+
+    let found_dob = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'userdob'; });
+    if (found_dob != -1) {
+        insertedData[found_dob].value = insertedData[found_dob].value.split("T")[0];
+    }
+
+    let found_start_date = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'userstartdate'; });
+    if (found_start_date != -1) {
+        insertedData[found_start_date].value = insertedData[found_start_date].value.split("T")[0];
+    }
+
+    let found_salary = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'usersalary'; });
+    if (found_salary != -1) {
+        insertedData[found_salary].value = common.amount_field(insertedData[found_salary].value);
+    }
+
+    let found_status = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'userstatus'; });
+    if (found_status != -1) {
+        insertedData[found_status].value = insertedData[found_status].value == 2 ? translator.getStr(`Inactive_Status`) : translator.getStr(`Active_Status`);
+    }
+
+    let found_allow_for_project = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'allow_for_projects'; });
+    if (found_allow_for_project != -1) {
+        insertedData[found_allow_for_project].value = insertedData[found_allow_for_project].value ? 'Yes' : 'No';
+    }
+
+    let found_id = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == '_id'; });
+    if (found_id != -1) {
+        insertedData.splice(found_id, 1);
+    }
+
+    for (let i = 0; i < insertedData.length; i++) {
+        insertedData[i]['key'] = translator.getStr(`User_History.${insertedData[i]['key']}`);
+    }
+    let histioryObject = {
+        data: insertedData,
+        user_id: id,
+    };
+    addUSER_History("Insert", histioryObject, decodedToken);
+}
+
+async function addPersonalInfoHistory(id, requestObject, one_user, decodedToken, translator) {
+    delete one_user._id;
+    let connection_db_api = await db_connection.connection_db_api(decodedToken);
+    let roleCollection = connection_db_api.model(collectionConstant.INVOICE_ROLES, gridRolesSchema);
+
+    // find difference of object 
+    let updatedData = await common.findUpdatedFieldHistory(requestObject, one_user);
+    // Check for object id fields and if it changed then replace id with specific value
+    let found_role = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'userroleId'; });
+    if (found_role != -1) {
+        let role = await roleCollection.findOne({ role_id: ObjectID(updatedData[found_role].value) });
+        updatedData[found_role].value = role.role_name;
+    }
+
+    let found_allow_for_project = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'allow_for_projects'; });
+    if (found_allow_for_project != -1) {
+        updatedData[found_allow_for_project].value = updatedData[found_allow_for_project].value ? 'Yes' : 'No';
+    }
+
+    let found_status = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'userstatus'; });
+    if (found_status != -1) {
+        updatedData[found_status].value = updatedData[found_status].value == 2 ? translator.getStr(`Inactive_Status`) : translator.getStr(`Active_Status`);
+    }
+
+    for (let i = 0; i < updatedData.length; i++) {
+        updatedData[i]['key'] = translator.getStr(`User_History.${updatedData[i]['key']}`);
+    }
+    let histioryObject = {
+        data: updatedData,
+        user_id: id,
+    };
+    addUSER_History("Update", histioryObject, decodedToken);
 }
 
 module.exports.tempAddUserAsProjectProjectWorker = async function (req, res) {
@@ -1189,6 +1343,20 @@ module.exports.savePersonalInfo = async function (req, res) {
                                 let updateuser = await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { userqrcode: userqrcode });
                                 if (updateuser) { */
                         //TODO-end
+                        let tempReqObj = {
+                            userroleId: body.userroleId,
+                            useremail: body.useremail,
+                            username: body.username,
+                            usermiddlename: body.usermiddlename,
+                            userlastname: body.userlastname,
+                            userfullname: body.userfullname,
+                            userssn: body.userssn,
+                            usergender: body.usergender,
+                            userdob1: body.userdob1,
+                            userstatus: body.userstatus,
+                            user_no: body.user_no,
+                            allow_for_projects: body.allow_for_projects,
+                        };
                         if (notFonud == 1) {
                             var temp_path = newOpenFile[0].path;
                             var file_name = newOpenFile[0].name;
@@ -1218,14 +1386,14 @@ module.exports.savePersonalInfo = async function (req, res) {
                                     history_object.userpicture = urlProfile;
                                     let update_user = await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { userpicture: urlProfile });
                                     if (update_user) {
-                                        addUSER_History("Update", history_object, decodedToken);
+                                        addPersonalInfoHistory(user_edit_id, tempReqObj, one_user._doc, decodedToken, translator);
                                         //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
                                         res.send({ message: translator.getStr('UserUpdated'), data: body, status: true });
                                     }
                                 }
                             });
                         } else {
-                            addUSER_History("Update", history_object, decodedToken);
+                            addPersonalInfoHistory(user_edit_id, tempReqObj, one_user._doc, decodedToken, translator);
                             //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
                             res.send({ message: translator.getStr('UserUpdated'), data: body, status: true });
                         }
@@ -1414,14 +1582,15 @@ module.exports.deleteTeamMember = async function (req, res) {
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
-            let reqBody = req.body;
-
+            let requestObject = req.body;
             let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
-            let update_user_1 = await userConnection.updateOne({ _id: ObjectID(reqBody._id) }, { is_delete: 1 });
+            let update_user_1 = await userConnection.updateOne({ _id: ObjectID(requestObject._id) }, { is_delete: 1, userstatus: 2, userroleId: '' });
             if (update_user_1) {
-
-                addUSER_History("Delete", { deleted_id: reqBody._id }, decodedToken);
-                //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
+                let histioryObject = {
+                    data: [],
+                    user_id: ObjectID(requestObject._id),
+                };
+                addUSER_History("Archive", histioryObject, decodedToken);
                 res.send({ message: translator.getStr('UserDeleted'), status: true });
             }
         } catch (e) {
@@ -1868,8 +2037,8 @@ async function addUSER_History(action, data, decodedToken) {
         let user_historyCollection = connection_db_api.model(historyCollectionConstant.INVOICE_USER_HISTORY, user_historySchema);
         data.action = action;
         data.taken_device = config.WEB_ALL;
-        data.created_at = Math.round(new Date().getTime() / 1000);
-        data.created_by = decodedToken.UserData._id;
+        data.history_created_at = Math.round(new Date().getTime() / 1000);
+        data.history_created_by = decodedToken.UserData._id;
         let save_user_histories = new user_historyCollection(data);
         save_user_histories.save();
     } catch (e) {
@@ -3758,24 +3927,62 @@ module.exports.getarchiveteams = async function (req, res) {
 };
 
 module.exports.recoverteam = async function (req, res) {
-    console.log('recoverteam');
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
-    console.log(decodedToken);
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-            console.log(requestObject);
             let userCollection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
-            let update_team = await userCollection.updateOne({ _id: ObjectID(requestObject._id) }, { is_delete: 0 });
-            if (update_team) {
-                //addProject_History("Recover", { deleted_id: requestObject._id }, decodedToken);
-                res.send({ message: translator.getStr('recoverTeamMember'), data: update_team, status: true });
-
+            let compnay_collection = await db_rest_api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+            let company_data = await db_rest_api.findOne(compnay_collection, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
+            let selectedPlan = company_data.billingplan;
+            let one_user = await userCollection.findOne({ _id: ObjectID(requestObject._id) });
+            let checkEmailExist = await userCollection.findOne({ useremail: one_user.useremail, is_delete: 0 });
+            if (checkEmailExist) {
+                res.send({ message: translator.getStr('EmailAlreadyExists'), status: false });
             } else {
-                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                /* let get_user_roles = connection_db_api.model(collectionConstant.INVOICE_ROLES, gridRolesSchema);
+                let onerole = await get_user_roles.findOne({ role_id: ObjectID(requestObject.userroleId) });
+                let allowed_count = 0;
+                if (onerole.role_name == config.ROLE_VIEWER) {
+                    allowed_count = billingPlan.BILLING_PLAN[selectedPlan]['VIEWER'];
+                    current_count = await userCollection.find({ userroleId: ObjectID(requestObject.userroleId), _id: { $ne: ObjectID(requestObject._id) } }).count();
+                } else {
+                    allowed_count = billingPlan.BILLING_PLAN[selectedPlan]['ADMIN_ALL'];
+                    let temp_role_ids = await get_user_roles.find({});
+                    let role_ids = [];
+                    temp_role_ids.forEach((element) => {
+                        if (element.role_name != config.ROLE_VIEWER) {
+                            role_ids.push(ObjectID(element.role_id));
+                        }
+                    });
+                    current_count = await userCollection.find({ userroleId: { $in: role_ids }, _id: { $ne: ObjectID(requestObject._id) } }).count();
+                }
+                console.log("allowed_count: ", allowed_count, " current_count:", current_count);
+                if (current_count >= allowed_count) {
+                    res.send({ message: translator.getStr('UserLimitExceed'), status: false });
+                } else { */
+                let update_team = await userCollection.updateOne({ _id: ObjectID(requestObject._id) }, { is_delete: 0, userstatus: requestObject.userstatus, userroleId: ObjectID(requestObject.userroleId) });
+                if (update_team) {
+                    let histioryObject = {
+                        data: [],
+                        user_id: ObjectID(requestObject._id),
+                    };
+                    addUSER_History("Restore", histioryObject, decodedToken);
+                    let one_user = await userCollection.findOne({ _id: ObjectID(requestObject._id) });
+                    if (one_user.userstatus == 1) {
+                        res.send({ message: translator.getStr('recoverTeamMember'), data: update_team, status: true });
+                    } else if (one_user.userstatus == 2) {
+                        res.send({ message: translator.getStr('recoverInactiveTeamMember'), data: update_team, status: true });
+                    } else {
+                        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    }
+                } else {
+                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                }
             }
+            // }
         } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });

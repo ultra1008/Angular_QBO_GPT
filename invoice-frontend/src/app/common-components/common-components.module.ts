@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -14,7 +14,7 @@ import { WeatherUiComponent, WeatherUiForDayComponent } from './weather-ui/weath
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { TeamArchiveCradComponent, UserCardComponent, } from './user-card/user-card.component';
+import { SelectUserRoleForm, TeamArchiveCradComponent, UserCardComponent, } from './user-card/user-card.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -23,6 +23,7 @@ import { NgxGalleryModule } from 'ngx-gallery-9';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ArchiveTeamListComponent } from '../pages/components/team/archive-team-list/archive-team-list.component';
+import { MatSelectFilterModule } from 'mat-select-filter';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,7 @@ import { ArchiveTeamListComponent } from '../pages/components/team/archive-team-
     WeatherUiForDayComponent,
     UserCardComponent,
     TeamArchiveCradComponent,
-
+    SelectUserRoleForm,
 
   ],
   imports: [
@@ -52,6 +53,8 @@ import { ArchiveTeamListComponent } from '../pages/components/team/archive-team-
     MatSelectModule,
     FormsModule,
     MatSidenavModule,
+    MatSelectFilterModule,
+    ReactiveFormsModule,
     HttpClientModule, TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -63,8 +66,8 @@ import { ArchiveTeamListComponent } from '../pages/components/team/archive-team-
   exports: [
     WeatherUiComponent,
     UserCardComponent,
-    TeamArchiveCradComponent
-
+    TeamArchiveCradComponent,
+    SelectUserRoleForm,
 
 
   ],

@@ -40,7 +40,7 @@ var dvalue = {
     vendor: false
 };
 var userSchema = new Schema({
-    userroleId: { type: mongoose.ObjectId, default: "", ref: "roles" },
+    /* userroleId: { type: mongoose.ObjectId, default: "", ref: "roles" },
     useremail: { type: String, default: "" },
     username: { type: String, default: "" },
     password: { type: String, default: "" },
@@ -65,8 +65,8 @@ var userSchema = new Schema({
     usercountry: { type: String, default: "" },
     userstartdate: { type: String, default: "" },
     usersalary: { type: Number, default: "" },
-    usermanager_id: { type: mongoose.ObjectId, default: "", ref: collectionConstant.INVOICE_USER },
-    usersupervisor_id: { type: mongoose.ObjectId, default: "", ref: collectionConstant.INVOICE_USER },
+    usermanager_id: { type: mongoose.ObjectId, default: "", ref: collectionConstant.GRID_USER },
+    usersupervisor_id: { type: mongoose.ObjectId, default: "", ref: collectionConstant.GRID_USER },
     userlocation_id: { type: mongoose.ObjectId, default: "" },
     userjob_title_id: { type: mongoose.ObjectId, default: "", ref: collectionConstant.JOB_TITLE },
     userdepartment_id: { type: mongoose.ObjectId, default: "", ref: collectionConstant.DEPARTMENTS },
@@ -81,8 +81,8 @@ var userSchema = new Schema({
     usersmalltool_firebase_token: { type: String, default: "" },
     usercreated_at: { type: String, default: "" },
     userupdated_at: { type: String, default: "" },
-    usercreated_by: { type: mongoose.ObjectId, default: "", ref: collectionConstant.INVOICE_USER },
-    userupdated_by: { type: mongoose.ObjectId, default: "", ref: collectionConstant.INVOICE_USER },
+    usercreated_by: { type: mongoose.ObjectId, default: "", ref: collectionConstant.GRID_USER },
+    userupdated_by: { type: mongoose.ObjectId, default: "", ref: collectionConstant.GRID_USER },
     user_payroll_rules: { type: String, default: "" },
     user_id_payroll_group: { type: mongoose.ObjectId, default: "", ref: collectionConstant.PAYROLL_GROUP },
     usercostcode: { type: mongoose.ObjectId, default: "" },
@@ -92,24 +92,22 @@ var userSchema = new Schema({
     card_no: { type: String, default: "" },
     card_type: { type: mongoose.ObjectId, default: "" },
     is_delete: { type: Number, default: 0 },
-    deleted_id: { type: mongoose.ObjectId, default: "" },
-    updated_id: { type: mongoose.ObjectId, default: "" },
-    inserted_id: { type: mongoose.ObjectId, default: "" },
-    created_at: { type: Number },
-    created_by: { type: mongoose.ObjectId },
-    action: { type: String, enum: ["Insert", "Update", "Delete"] },
     api_setting: { type: api_setting, default: dvalue },
     allow_for_projects: { type: Boolean, default: true },
     user_languages: { type: Array, default: [] },
     show_id_card_on_qrcode_scan: { type: Boolean, default: true },
-    taken_device: { type: String, enum: ["Mobile", "Web"] },
     project_email_group: { type: String, default: "none", enum: ['none', 'prime_member', 'sponsor_member'] },
     compliance_officer: { type: Boolean, default: false },
     vendors: { type: [mongoose.ObjectId], default: [] },
+    grid_firebase_token: { type: String, default: "" }, */
+
+    data: { type: Array, default: [] },
+
+    user_id: { type: mongoose.ObjectId, default: "" },
+    history_created_at: { type: Number },
+    history_created_by: { type: mongoose.ObjectId },
+    action: { type: String, enum: ["Insert", "Update", "Archive", "Restore"] },
+    taken_device: { type: String, enum: ["Mobile", "Web"] },
 });
 
-module.exports = userSchema;;
-
-
-
-// ref: "<<Collection>>" add in type mongoose.ObjectId  when donw with it
+module.exports = userSchema;

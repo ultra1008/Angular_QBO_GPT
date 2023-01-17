@@ -15,7 +15,7 @@
  *
  */
 
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
@@ -28,6 +28,9 @@ import { Subscription } from 'rxjs';
 import { ModeDetectService } from 'src/app/pages/components/map/mode-detect.service';
 import { localstorageconstants } from 'src/app/consts/localstorageconstants';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { configdata } from 'src/environments/configData';
 
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
@@ -63,29 +66,25 @@ export class UserCardComponent implements OnInit {
   /*
     Constructor
   */
-  constructor(private modeService: ModeDetectService, public translate: TranslateService, public mostusedservice: Mostusedservice,
+  constructor (private modeService: ModeDetectService, public translate: TranslateService, public mostusedservice: Mostusedservice,
     public httpCall: HttpCall, public snackbarservice: Snackbarservice, public router: Router) {
     var userdata = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
     this.role_permission = userdata.role_permission.users;
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off')
-    {
+    if (this.mode == 'off') {
       this.trashIcon = "./assets/diversityicon/thememode/trash_icon.png";
       this.editIcon = "./assets/diversityicon/thememode/edit_icon.png";
-    } else
-    {
+    } else {
       this.trashIcon = "./assets/diversityicon/thememode/trash_icon.png";
       this.editIcon = "./assets/diversityicon/thememode/edit_icon.png";
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode)
-      {
+      if (mode) {
         this.mode = 'off';
         this.trashIcon = "./assets/diversityicon/thememode/trash_icon.png";
         this.editIcon = "./assets/diversityicon/thememode/edit_icon.png";
-      } else
-      {
+      } else {
         this.mode = 'on';
         this.trashIcon = "./assets/diversityicon/thememode/trash_icon.png";
         this.editIcon = "./assets/diversityicon/thememode/edit_icon.png";
@@ -119,8 +118,7 @@ export class UserCardComponent implements OnInit {
 
   deleteEmployeeAction() {
     let that = this;
-    if (that.role_permission.Delete)
-    {
+    if (that.role_permission.Delete) {
       swalWithBootstrapButtons.fire({
         title: this.User_Card_Do_Want_Delete,
         showDenyButton: true,
@@ -128,15 +126,12 @@ export class UserCardComponent implements OnInit {
         confirmButtonText: this.Compnay_Equipment_Delete_Yes,
         denyButtonText: this.Compnay_Equipment_Delete_No,
       }).then((result) => {
-        if (result.isConfirmed)
-        {
+        if (result.isConfirmed) {
           this.httpCall.httpPostCall(httproutes.TEAM_DELETE, this.UserData).subscribe(function (params) {
-            if (params.status)
-            {
+            if (params.status) {
               that.snackbarservice.openSnackBar(params.message, "success");
               that.mostusedservice.userdeleteEmit();
-            } else
-            {
+            } else {
               that.snackbarservice.openSnackBar(params.message, "error");
             }
           });
@@ -159,9 +154,8 @@ export class TeamArchiveCradComponent implements OnInit {
   restoreIcon = icon.RESTORE;
   acticve_word: string = "";
   inacticve_word: string = "";
-  constructor(public httpCall: HttpCall, public uiSpinner: UiSpinnerService,
-    public router: Router,
-
+  constructor (public httpCall: HttpCall, public uiSpinner: UiSpinnerService,
+    public router: Router, public dialog: MatDialog,
     public translate: TranslateService, public snackbarservice: Snackbarservice) {
     this.translate.stream(['']).subscribe((textarray) => {
       this.recover_team_member = this.translate.instant("recover_team_member");
@@ -187,9 +181,15 @@ export class TeamArchiveCradComponent implements OnInit {
       confirmButtonText: that.yesButton,
       denyButtonText: that.noButton,
     }).then((result) => {
-      if (result.isConfirmed)
-      {
-        this.uiSpinner.spin$.next(true);
+      if (result.isConfirmed) {
+        const dialogRef = that.dialog.open(SelectUserRoleForm, {
+          height: "350px",
+          width: "600px",
+          data: { user_id: id },
+          disableClose: true,
+        });
+        dialogRef.afterClosed().subscribe((result) => { });
+        /* this.uiSpinner.spin$.next(true);
         this.httpCall.httpPostCall(httproutes.TEAM_RECOVER, { _id: id }).subscribe((params) => {
           if (params.status)
           {
@@ -201,8 +201,110 @@ export class TeamArchiveCradComponent implements OnInit {
             that.snackbarservice.openSnackBar(params.message, "error");
             that.uiSpinner.spin$.next(false);
           }
-        });
+        }); */
       }
     });
+  }
+}
+
+@Component({
+  selector: "select-user-role-form",
+  templateUrl: "./select-user-role-form.html",
+  styleUrls: ["./user-card.component.scss"],
+})
+export class SelectUserRoleForm implements OnInit {
+  variablesRoleList: any = [];
+  roleList: any = this.variablesRoleList.slice();
+  public statuss: any = configdata.superAdminStatus;
+  userRoleInfo: FormGroup;
+  exitIcon: string;
+  yesButton: string = "";
+  noButton: string = "";
+  mode: any;
+  subscription: Subscription;
+  copyDataFromProject: string = "";
+  saveIcon = icon.SAVE_WHITE;
+
+  constructor (
+    private modeService: ModeDetectService,
+    private formBuilder: FormBuilder,
+    public httpCall: HttpCall,
+    public dialogRef: MatDialogRef<SelectUserRoleForm>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public snackbarservice: Snackbarservice,
+    public translate: TranslateService,
+    public uiSpinner: UiSpinnerService,
+    public router: Router
+  ) {
+    this.translate.stream([""]).subscribe((textarray) => { });
+
+    var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
+    this.mode = modeLocal === "on" ? "on" : "off";
+    if (this.mode == "off") {
+      this.exitIcon = icon.CANCLE;
+
+    } else {
+      this.exitIcon = icon.CANCLE_WHITE;
+    }
+
+    this.subscription = this.modeService.onModeDetect().subscribe((mode) => {
+      if (mode) {
+        this.mode = "off";
+        this.exitIcon = icon.CANCLE;
+      } else {
+        this.mode = "on";
+        this.exitIcon = icon.CANCLE_WHITE;
+      }
+    });
+    //let that = this;
+    // this.uiSpinner.spin$.next(true);
+    this.translate.stream([""]).subscribe((textarray) => {
+      this.copyDataFromProject = this.translate.instant("Copy_Data_From_Project");
+      this.yesButton = this.translate.instant("Compnay_Equipment_Delete_Yes");
+      this.noButton = this.translate.instant("Compnay_Equipment_Delete_No");
+    });
+  }
+
+  ngOnInit(): void {
+    this.userRoleInfo = this.formBuilder.group({
+      userroleId: ["", Validators.required],
+      userstatus: ["", Validators.required],
+    });
+    this.getAllRoles();
+  }
+
+  getAllRoles() {
+    let that = this;
+    that.httpCall
+      .httpGetCall(httproutes.PORTAL_SETTING_ROLES_ALL)
+      .subscribe(function (params) {
+        if (params.status) {
+          that.variablesRoleList = params.data;
+          that.roleList = that.variablesRoleList.slice();
+
+        }
+      });
+  }
+
+  restoreUser() {
+    let that = this;
+    if (that.userRoleInfo.valid) {
+      let requestObject = that.userRoleInfo.value;
+      requestObject._id = that.data.user_id;
+      that.uiSpinner.spin$.next(true);
+      that.httpCall
+        .httpPostCall(httproutes.TEAM_RECOVER, requestObject)
+        .subscribe((params) => {
+          if (params.status) {
+            that.dialogRef.close();
+            that.snackbarservice.openSnackBar(params.message, "success");
+            that.router.navigateByUrl("/employee-list");
+            that.uiSpinner.spin$.next(false);
+          } else {
+            that.snackbarservice.openSnackBar(params.message, "error");
+            that.uiSpinner.spin$.next(false);
+          }
+        });
+    }
   }
 }
