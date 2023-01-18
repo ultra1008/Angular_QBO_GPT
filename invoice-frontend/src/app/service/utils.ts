@@ -299,7 +299,7 @@ export function longDate(date_tmp_: any) {
 
   let date = new Date(date_tmp_);
   let day = configdata.WEEK_ARRAY[date.getDay()];
-  let month = configdata.MONTH_NAME[date.getMonth()];
+  let month = configdata.MONTHS_ARRAY[date.getMonth()];
   var hours = date.getHours();
   var minutes = date.getMinutes();
   var ampm = hours >= 12 ? 'PM' : 'AM';

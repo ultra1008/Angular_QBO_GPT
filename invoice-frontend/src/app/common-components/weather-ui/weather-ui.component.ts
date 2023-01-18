@@ -28,7 +28,7 @@ export class WeatherUiComponent implements OnInit {
   hourly_array: any = [];
   daily_array: any = [];
   locallanguage: any;
-  constructor(private http: HttpClient, public dialog: MatDialog, public snackbarservice: Snackbarservice,
+  constructor (private http: HttpClient, public dialog: MatDialog, public snackbarservice: Snackbarservice,
     public servicefoeweatherui: Servicefoeweatherui, public translate: TranslateService) {
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     this.locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configdata.fst_load_lang : tmp_locallanguage;
@@ -235,7 +235,7 @@ export class WeatherUiComponent implements OnInit {
 export class WeatherUiForDayComponent implements OnInit {
   bg_image: any = "./assets/new_weather/forpopup/raincopy.jpg";
   weatherReport: any = [];
-  constructor(public dialogRef: MatDialogRef<WeatherUiForDayComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
+  constructor (public dialogRef: MatDialogRef<WeatherUiForDayComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
 
     for (let m = 0; m < data.hourly_array.length; m++) {
       if (data.hourly_array[0].weather[0].id >= 200 && data.hourly_array[0].weather[0].id <= 232) {
@@ -321,7 +321,7 @@ export class WeatherUiForDayComponent implements OnInit {
     let portal_language = localStorage.getItem(localstorageconstants.LANGUAGE);
     var temp: string;
     if (portal_language == 'en') {
-      temp = configdata.WEEK_ARRAY[tmp_data.getDay()] + " - " + configdata.MONTH_NAME[tmp_data.getMonth()] + " " + tmp_data.getDate();
+      temp = configdata.WEEK_ARRAY[tmp_data.getDay()] + " - " + configdata.MONTHS_ARRAY[tmp_data.getMonth()] + " " + tmp_data.getDate();
     } else {
       temp = configdata.WEEK_ARRAY_ES[tmp_data.getDay()] + " - " + configdata.MONTH_ARRAY_ES[tmp_data.getMonth()] + " " + tmp_data.getDate();
     }

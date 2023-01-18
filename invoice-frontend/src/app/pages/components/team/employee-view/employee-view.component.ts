@@ -61,7 +61,6 @@ export class EmployeeViewComponent implements OnInit {
   company_logo: any;
   userfullName: any;
   login_from: any = configdata.LOGIN_FROM;
-  project_email_groups: any = configdata.PROJECT_EMAIL_GROUP;
   companywebsite: any;
   companyname: any;
   companyaddress: any;

@@ -46,7 +46,6 @@ export class SettingsOtherComponent implements OnInit {
   creditCard: any = [];
   projectdoc_data: any = [];
   currrent_tab: string = "Item Type";
-  GAS_SETTING: string = configdata.GAS_SETTING;
   STATUS_IDLE_SETTING: string = configdata.STATUS_IDLE_SETTING;
   STATUS_In_Use_SETTING: string = configdata.STATUS_In_Use_SETTING;
   Settings_Other_Do_Want_Delete: string = "";
@@ -61,7 +60,7 @@ export class SettingsOtherComponent implements OnInit {
   importIcon: string;
   mode: any;
   subscription: Subscription;
-  constructor(private modeService: ModeDetectService, public dialog: MatDialog, public http: HttpClient, public httpCall: HttpCall, public sb: Snackbarservice,
+  constructor (private modeService: ModeDetectService, public dialog: MatDialog, public http: HttpClient, public httpCall: HttpCall, public sb: Snackbarservice,
     public translate: TranslateService) {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
@@ -440,7 +439,6 @@ export class SettingsOtherComponent implements OnInit {
 })
 
 export class otherSettingManually implements OnInit {
-  costcode_module: any = configdata.COSTCODE_MODULE_ARRAY;
   public credit_card_types: any = configdata.CREDIT_CARD_TYPES;
   public othersetting: FormGroup;
   name: any;
@@ -449,7 +447,7 @@ export class otherSettingManually implements OnInit {
   mode: any;
   backIcon: string;
   saveIcon = icon.SAVE_WHITE;
-  constructor(public dialogRef: MatDialogRef<otherSettingManually>, private modeService: ModeDetectService, public translate: TranslateService, public sb: Snackbarservice,
+  constructor (public dialogRef: MatDialogRef<otherSettingManually>, private modeService: ModeDetectService, public translate: TranslateService, public sb: Snackbarservice,
     public formBuilder: FormBuilder, @Inject(MAT_DIALOG_DATA) public data: any, public httpCall: HttpCall) {
     let new_name;
     let new_number;
