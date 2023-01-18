@@ -272,7 +272,9 @@ router.get('/webapi/v1/portal/getdashboardpending', common.checkTokenExistOrNot,
 let invoice_vendorController = require('./vendor/vendorController');
 let invoice_vendorValidation = require('./vendor/vendorValidation');
 router.post('/webapi/v1/portal/savevendor', common.checkTokenExistOrNot, invoice_vendorValidation.saveVendor, invoice_vendorController.saveVendor);
+router.get('/webapi/v1/portal/getvendorstatuscount', common.checkTokenExistOrNot, invoice_vendorController.getVendorStatusCount);
 router.get('/webapi/v1/portal/getvendor', common.checkTokenExistOrNot, invoice_vendorController.getVendor);
+router.post('/webapi/v1/portal/getonevendor', common.checkTokenExistOrNot, invoice_vendorValidation.getOneVendor, invoice_vendorController.getOneVendor);
 router.post('/webapi/v1/portal/deletevendor', common.checkTokenExistOrNot, invoice_vendorValidation.deleteVendor, invoice_vendorController.deleteVendor);
 router.post('/webapi/v1/portal/getvendordatatable', common.checkTokenExistOrNot, invoice_vendorController.getVendorDatatable);
 router.post('/webapi/v1/portal/vendorStatusUpdate', common.checkTokenExistOrNot, invoice_vendorValidation.updateVendorStatus, invoice_vendorController.updateVendorStatus);

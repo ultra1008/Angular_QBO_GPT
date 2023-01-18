@@ -57,6 +57,15 @@ module.exports.saveVendor = async function (req, res) {
                         updatedData[found_term].value = one_term.name;
                     }
 
+                    let found_status = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'status'; });
+                    if (found_status != -1) {
+                        if (updatedData[found_status].value == 1) {
+                            updatedData[found_status].value = 'Active';
+                        } else {
+                            updatedData[found_status].value = 'Inactive';
+                        }
+                    }
+
                     for (let i = 0; i < updatedData.length; i++) {
                         updatedData[i]['key'] = translator.getStr(`Vendor_History.${updatedData[i]['key']}`);
                     }
@@ -95,6 +104,15 @@ module.exports.saveVendor = async function (req, res) {
                         insertedData[found_term].value = one_term.name;
                     }
 
+                    let found_status = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'status'; });
+                    if (found_status != -1) {
+                        if (insertedData[found_status].value == 1) {
+                            insertedData[found_status].value = 'Active';
+                        } else {
+                            insertedData[found_status].value = 'Inactive';
+                        }
+                    }
+
                     for (let i = 0; i < insertedData.length; i++) {
                         insertedData[i]['key'] = translator.getStr(`Vendor_History.${insertedData[i]['key']}`);
                     }
@@ -120,6 +138,51 @@ module.exports.saveVendor = async function (req, res) {
     }
 };
 
+//get invoice vendor status count
+module.exports.getVendorStatusCount = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
+            var getdata = await vendorConnection.aggregate([
+                { $match: { is_delete: 0 } },
+                {
+                    $project: {
+                        active: { $cond: [{ $eq: ["$status", 1] }, 1, 0] },
+                        inactive: { $cond: [{ $eq: ["$status", 2] }, 1, 0] },
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        active: { $sum: "$active" },
+                        inactive: { $sum: "$inactive" },
+                    }
+                }
+            ]);
+            if (getdata) {
+                if (getdata.length > 0) {
+                    getdata = getdata[0];
+                } else {
+
+                }
+                res.send({ status: true, message: "Vendor count", data: getdata });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false, error: e });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
 //get invoice vendor
 module.exports.getVendor = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -129,6 +192,32 @@ module.exports.getVendor = async function (req, res) {
         try {
             var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
             var getdata = await vendorConnection.find({ is_delete: 0 });
+            if (getdata) {
+                res.send({ status: true, message: "Vendor data", data: getdata });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false, error: e });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+//get one invoice vendor
+module.exports.getOneVendor = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
+            var getdata = await vendorConnection.findOne({ _id: ObjectID(requestObject._id) });
             if (getdata) {
                 res.send({ status: true, message: "Vendor data", data: getdata });
             } else {

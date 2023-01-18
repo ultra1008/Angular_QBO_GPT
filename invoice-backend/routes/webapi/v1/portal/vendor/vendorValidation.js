@@ -1,5 +1,18 @@
 var validator = require('./../../../../../controller/common/validationforrequest');
 
+const getOneVendor = (req, res, next) => {
+    const validationRule = {
+        "_id": "required",
+    };
+    validator(req.body, validationRule, {}, (error, status) => {
+        if (!status) {
+            res.send({ status: false, error: error });
+        }
+        else {
+            next();
+        }
+    });
+};
 
 const saveVendor = (req, res, next) => {
     const validationRule = {
@@ -11,7 +24,6 @@ const saveVendor = (req, res, next) => {
         "state": "required",
         "zipcode": "required",
         "terms_id": "required",
-        "status": "required",
         "image": "required",
     };
     validator(req.body, validationRule, {}, (error, status) => {
@@ -55,6 +67,7 @@ const updateVendorStatus = (req, res, next) => {
 };
 
 module.exports = {
+    getOneVendor,
     saveVendor,
     deleteVendor,
     updateVendorStatus
