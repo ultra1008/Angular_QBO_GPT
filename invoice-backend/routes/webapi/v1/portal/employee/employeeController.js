@@ -3158,7 +3158,7 @@ module.exports.getAllEmployeeReport = async function (req, res) {
             let worksheet = workbook.addWorksheet(title_tmp);
             let xlsx_data = [];
             let result = await common.urlToBase64(logo_url);
-            let logo_rovuk = await common.urlToBase64(config.SUPPLIER_LOGO);
+            let logo_rovuk = await common.urlToBase64(config.INVOICE_LOGO);
             var languageSchema = require('./../../../../../model/language');
             let languageCollection = connection_db_api.model(collectionConstant.LANGUAGE, languageSchema);
             xlsx_data = await setUserData(get_user, languageCollection, translator);
@@ -3308,10 +3308,8 @@ module.exports.getAllEmployeeReport = async function (req, res) {
                         TEXT2: translator.getStr('EmailTeamReportText2'),
 
                         FILE_LINK: excelUrl,
-                        LOGIN_LINK: config.SITE_URL + "/login",
 
-                        DOCUMENT_TYPE: roles,
-                        STATUS: status,
+                        SELECTION: new handlebars.SafeString(`<h4>${roles}</h4><h4>${status}</h4>`),
 
                         COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
                         COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,

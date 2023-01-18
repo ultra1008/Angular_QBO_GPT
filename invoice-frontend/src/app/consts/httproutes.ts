@@ -1074,7 +1074,7 @@ export enum httproutes {
     // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<invoice-other-setting-term>>>>>>>>>>>>>>>>>>>>>>>>
     PORTAL_ROVUK_INVOICE_OTHER_SETTINGS_GET_TERMS = "/webapi/v1/portal/getinvoiceterm",
     PORTAL_ROVUK_INVOICE_OTHER_SETTING_SAVE_TERMS = "/webapi/v1/portal/saveinvoiceterm",
-    PORTAL_ROVUK_INVOICE_OTHER_SETTING_DELETE_TERMS = "/webapi/v1/portal/deleteInvoiceterm",
+    PORTAL_ROVUK_INVOICE_OTHER_SETTING_DELETE_TERMS = "/webapi/v1/portal/deleteinvoiceterm",
     // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<invoice-other-setting-Text-reat>>>>>>>>>>>>>>>>>>>>>>>>
     PORTAL_ROVUK_INVOICE_OTHER_SETTINGS_GET_TEXT_RATE = "/webapi/v1/portal/gettaxrate",
     PORTAL_ROVUK_INVOICE_OTHER_SETTING_SAVE_TEXT_RATE = "/webapi/v1/portal/savetaxrate",

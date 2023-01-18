@@ -1,8 +1,10 @@
 var validator = require('./../../../../../controller/common/validationforrequest');
 
-const saveterm = (req, res, next) => {
+const saveTerm = (req, res, next) => {
     const validationRule = {
-        "name": "required"
+        "name": "required",
+        "due_days": "required|integer",
+        "is_discount": "required|boolean",
     };
     validator(req.body, validationRule, {}, (err, status) => {
         if (!status) {
@@ -13,7 +15,7 @@ const saveterm = (req, res, next) => {
     });
 };
 
-const deleteterm = (req, res, next) => {
+const deleteTerm = (req, res, next) => {
     const validationRule = {
         "_id": "required"
     };
@@ -27,4 +29,4 @@ const deleteterm = (req, res, next) => {
     });
 };
 
-module.exports = { saveterm, deleteterm };
+module.exports = { saveTerm, deleteTerm };

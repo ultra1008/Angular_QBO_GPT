@@ -3,9 +3,9 @@ var Schema = mongoose.Schema;
 
 var vendorSchema = new Schema({
     vendor_name: { type: String, default: "" },
-    phone: { type: Number, default: "" },
+    phone: { type: String, default: "" },
     email: { type: String, default: "" },
-    gl: { type: String, default: "" },
+    gl_account: { type: String, default: "" },
     address: { type: String, default: "" },
     address2: { type: String, default: "" },
     city: { type: String, default: "" },
@@ -13,7 +13,7 @@ var vendorSchema = new Schema({
     zipcode: { type: String, default: "" },
     country: { type: String, default: "" },
     terms_id: { type: mongoose.ObjectId, default: "" },
-    status: { type: String, default: "Active", enum: ['Active', 'Inactive'] },
+    status: { type: Number, default: 1, enum: [1, 2] }, // 1- Active, 2- Inactive
     description: { type: String, default: "" },
     image: { type: String, default: "" },
     attachment: { type: Array, default: [] },

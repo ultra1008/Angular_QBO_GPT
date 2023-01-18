@@ -1,7 +1,7 @@
 var validator = require('./../../../../../controller/common/validationforrequest');
 
 
-const savevendor = (req, res, next) => {
+const saveVendor = (req, res, next) => {
     const validationRule = {
         "vendor_name": "required",
         "phone": "required",
@@ -13,8 +13,6 @@ const savevendor = (req, res, next) => {
         "terms_id": "required",
         "status": "required",
         "image": "required",
-        "vendor_id": "required",
-        "customer_id": "required",
     };
     validator(req.body, validationRule, {}, (error, status) => {
         if (!status) {
@@ -26,11 +24,10 @@ const savevendor = (req, res, next) => {
     });
 };
 
-const deletevendor = (req, res, next) => {
+const deleteVendor = (req, res, next) => {
     const validationRule = {
         "_id": "required",
         "is_delete": "required|integer"
-
     };
     validator(req.body, validationRule, {}, (error, status) => {
         if (!status) {
@@ -42,41 +39,10 @@ const deletevendor = (req, res, next) => {
     });
 };
 
-const vendordatatable = (req, res, next) => {
-    const validationRule = {
-        "is_delete": "required|integer"
-
-    };
-    validator(req.body, validationRule, {}, (error, status) => {
-        if (!status) {
-            res.send({ status: false, error: error });
-        }
-        else {
-            next();
-        }
-    });
-};
-
-const vendorhistorydatatable = (req, res, next) => {
-    const validationRule = {
-        "is_delete": "required|integer"
-
-    };
-    validator(req.body, validationRule, {}, (error, status) => {
-        if (!status) {
-            res.send({ status: false, error: error });
-        }
-        else {
-            next();
-        }
-    });
-};
-
-const updateStatus = (req, res, next) => {
+const updateVendorStatus = (req, res, next) => {
     const validationRule = {
         "_id": "required",
-        "status": "required|string"
-
+        "status": "required"
     };
     validator(req.body, validationRule, {}, (error, status) => {
         if (!status) {
@@ -88,4 +54,8 @@ const updateStatus = (req, res, next) => {
     });
 };
 
-module.exports = { savevendor, deletevendor, vendordatatable, updateStatus, vendorhistorydatatable };
+module.exports = {
+    saveVendor,
+    deleteVendor,
+    updateVendorStatus
+};

@@ -247,9 +247,9 @@ router.post('/webapi/v1/portal/deleteInvoiceDocument', common.checkTokenExistOrN
 
 let invoice_termController = require('./invoice_term/termController');
 let invoice_termValidation = require('./invoice_term/termValidation');
-router.post('/webapi/v1/portal/saveinvoiceterm', common.checkTokenExistOrNot, invoice_termValidation.saveterm, invoice_termController.saveterm);
-router.get('/webapi/v1/portal/getinvoiceterm', common.checkTokenExistOrNot, invoice_termController.getterm);
-router.post('/webapi/v1/portal/deleteInvoiceterm', common.checkTokenExistOrNot, invoice_termValidation.deleteterm, invoice_termController.deleteinvoiceterm);
+router.post('/webapi/v1/portal/saveinvoiceterm', common.checkTokenExistOrNot, invoice_termValidation.saveTerm, invoice_termController.saveTerm);
+router.get('/webapi/v1/portal/getinvoiceterm', common.checkTokenExistOrNot, invoice_termController.getTerm);
+router.post('/webapi/v1/portal/deleteinvoiceterm', common.checkTokenExistOrNot, invoice_termValidation.deleteTerm, invoice_termController.deleteTerm);
 
 let invoice_costcodeController = require('./invoice_cost_code/cost_code.Controller');
 let invoice_costcodeValidation = require('./invoice_cost_code/cost_codeValidation');
@@ -271,13 +271,13 @@ router.get('/webapi/v1/portal/getdashboardpending', common.checkTokenExistOrNot,
 
 let invoice_vendorController = require('./vendor/vendorController');
 let invoice_vendorValidation = require('./vendor/vendorValidation');
-router.post('/webapi/v1/portal/savevendor', common.checkTokenExistOrNot, invoice_vendorValidation.savevendor, invoice_vendorController.savevendor);
-router.get('/webapi/v1/portal/getvendor', common.checkTokenExistOrNot, invoice_vendorController.getvendor);
-router.post('/webapi/v1/portal/deletevendor', common.checkTokenExistOrNot, invoice_vendorValidation.deletevendor, invoice_vendorController.deletevendor);
-router.post('/webapi/v1/portal/getvendordatatable', common.checkTokenExistOrNot, invoice_vendorValidation.vendordatatable, invoice_vendorController.getvendordatatable);
-router.post('/webapi/v1/portal/vendorStatusUpdate', common.checkTokenExistOrNot, invoice_vendorValidation.updateStatus, invoice_vendorController.vendorStatusUpdate);
-router.post('/webapi/v1/portal/gethistoryvendordatatable', common.checkTokenExistOrNot, invoice_vendorValidation.vendorhistorydatatable, invoice_vendorController.gethistoryvendordatatable);
-
+router.post('/webapi/v1/portal/savevendor', common.checkTokenExistOrNot, invoice_vendorValidation.saveVendor, invoice_vendorController.saveVendor);
+router.get('/webapi/v1/portal/getvendor', common.checkTokenExistOrNot, invoice_vendorController.getVendor);
+router.post('/webapi/v1/portal/deletevendor', common.checkTokenExistOrNot, invoice_vendorValidation.deleteVendor, invoice_vendorController.deleteVendor);
+router.post('/webapi/v1/portal/getvendordatatable', common.checkTokenExistOrNot, invoice_vendorController.getVendorDatatable);
+router.post('/webapi/v1/portal/vendorStatusUpdate', common.checkTokenExistOrNot, invoice_vendorValidation.updateVendorStatus, invoice_vendorController.updateVendorStatus);
+router.post('/webapi/v1/portal/getvendorhistory', common.checkTokenExistOrNot, invoice_vendorController.getVendorHistory);
+router.post('/webapi/v1/portal/getvendorreport', common.checkTokenExistOrNot, invoice_vendorController.getVendorExcelReport);
 
 let invoice_templateController = require('./template/templateController');
 let invoice_templateValidation = require('./template/templateValidation');

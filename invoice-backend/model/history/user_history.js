@@ -107,7 +107,7 @@ var userSchema = new Schema({
     history_created_at: { type: Number },
     history_created_by: { type: mongoose.ObjectId },
     action: { type: String, enum: ["Insert", "Update", "Archive", "Restore"] },
-    taken_device: { type: String, enum: ["Mobile", "Web"] },
+    taken_device: { type: String, enum: ["Mobile", "Web", "iFrame"] },
 });
 
 module.exports = userSchema;
