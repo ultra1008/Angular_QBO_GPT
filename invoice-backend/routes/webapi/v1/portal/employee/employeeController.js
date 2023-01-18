@@ -35,6 +35,7 @@ const reader = require('xlsx');
 var _ = require('lodash');
 let superadminCollection = require('../../../../../config/superadminCollection');
 let billingPlan = require('./../../../../../config/billing_plan');
+let attachmentLocations = require('./../../../../../config/attachmentLocations');
 
 module.exports.getAllUserList = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -537,7 +538,7 @@ module.exports.saveUserDocument = async function (req, res) {
                         let array_name = newOpenFile[0].name.split(".");
                         var file_name_ext = array_name[array_name.length - 1];
                         //var file_name_ext = newOpenFile[0].name.split(".")[1];
-                        var file_name = config.USER_DOCUMENT + "_" + date + "." + file_name_ext;
+                        var file_name = attachmentLocations.USER_DOCUMENT + "_" + date + "." + file_name_ext;
                         dirKeyName = config.INVOICE_WASABI_PATH + "/employee/" + fields.user_id + "/document/" + file_name;
                         var fileBody = fs.readFileSync(temp_path);
                         params = { Bucket: LowerCase_bucket, Key: dirKeyName, Body: fileBody, ACL: 'public-read-write' };
@@ -1366,7 +1367,7 @@ module.exports.savePersonalInfo = async function (req, res) {
                             var temp_path = newOpenFile[0].path;
                             var file_name = newOpenFile[0].name;
                             let extension = file_name.split(".")[1];
-                            dirKeyName = config.INVOICE_WASABI_PATH + "/employee/" + user_edit_id + "/" + config.PROFILE_PICTURE + "/user_picture." + extension;
+                            dirKeyName = config.INVOICE_WASABI_PATH + "/employee/" + user_edit_id + "/" + attachmentLocations.PROFILE_PICTURE + "/user_picture." + extension;
                             var fileBody = fs.readFileSync(temp_path);
                             params = { Bucket: LowerCase_bucket, Key: dirKeyName, Body: fileBody, ACL: 'public-read-write' };
                             //condition
@@ -1456,7 +1457,7 @@ module.exports.saveMobilePhoto = async function (req, res) {
                         var temp_path = newOpenFile[0].path;
                         var file_name = newOpenFile[0].name;
                         let extension = file_name.split(".")[1];
-                        dirKeyName = config.INVOICE_WASABI_PATH + "/employee/" + user_edit_id + "/" + config.PROFILE_PICTURE + "/mobile_picture." + extension;
+                        dirKeyName = config.INVOICE_WASABI_PATH + "/employee/" + user_edit_id + "/" + attachmentLocations.PROFILE_PICTURE + "/mobile_picture." + extension;
                         var fileBody = fs.readFileSync(temp_path);
                         params = { Bucket: LowerCase_bucket, Key: dirKeyName, Body: fileBody, ACL: 'public-read-write' };
                         if (One_User.usermobile_picture != undefined && One_User.usermobile_picture != "") {

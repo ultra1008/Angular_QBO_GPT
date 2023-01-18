@@ -9,6 +9,7 @@ var formidable = require('formidable');
 var config = require('./../../../../../config/config');
 var fs = require('fs');
 var moment = require('moment');
+let attachmentLocations = require('./../../../../../config/attachmentLocations');
 
 module.exports.getUserDocument = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -136,7 +137,7 @@ module.exports.editUserDocument = async function (req, res) {
                         let array_name = newOpenFile[0].name.split(".");
                         var file_name_ext = array_name[array_name.length - 1];
                         //var file_name_ext = newOpenFile[0].name.split(".")[1];
-                        var file_name = config.USER_DOCUMENT + "_" + date + "." + file_name_ext;
+                        var file_name = attachmentLocations.USER_DOCUMENT + "_" + date + "." + file_name_ext;
                         dirKeyName = "employee/" + fields.user_id + "/document/" + file_name;
                         var fileBody = fs.readFileSync(temp_path);
                         params = { Bucket: LowerCase_bucket, Key: dirKeyName, Body: fileBody, ACL: 'public-read-write' };
