@@ -1860,7 +1860,7 @@
     "ChangeOrder_Signature": "Signature",
     "OCPS_VendorREGISTER": "Registro de proveedor",
     "OCPS_Vendor-forget-password": "Proveedor olvida contraseña",
-    "Sidebar-Sponsor-Vendors": "Proveedores",
+    "Sidebar-Vendors": "Proveedores",
     "Sidebar-Sponsor-Contract": "Contracts",
     "Sidebar-Sponsor-EmailTemplate": "Plantillas de correo electrónico",
     "use_signature_new": "Nueva firma",
@@ -2386,5 +2386,15 @@
     "Rovuk_Invoice_Roles_Templates": "Templates",
     "Rovuk_Invoice_Roles_Users": "Users",
     "Rovuk_Invoice_Roles_Setting": "Setting",
-    "Rovuk_Grid_Roles_All": "All"
+    "Rovuk_Grid_Roles_All": "All",
+    "Add-Vendor": "Vendor",
+    "All_popup_Cancel": "Cancelar",
+    "All_Save_Exit": "Guardar y Salir",
+    "Dont_Save": "No Guardar",
+    "Customer_Id": "Customer id",
+    "GCL_Accounts": "GCL Accounts",
+    "Email_Assigned": "Email Assigned",
+    "Add_Discount": "Añadir descuento",
+    "Trems_Discount": "Descuento",
+    "due_days": "Días de Vencimiento"
 }

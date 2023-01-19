@@ -49,27 +49,23 @@ export class TermsComponent implements OnInit {
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off')
-    {
+    if (this.mode == 'off') {
       this.editIcon = icon.EDIT;
       this.deleteIcon = icon.DELETE;
 
-    } else
-    {
+    } else {
       this.editIcon = icon.EDIT_WHITE;
       this.deleteIcon = icon.DELETE_WHITE;
 
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode)
-      {
+      if (mode) {
         this.mode = 'off';
         this.editIcon = icon.EDIT;
         this.deleteIcon = icon.DELETE;
 
 
-      } else
-      {
+      } else {
         this.mode = 'on';
         this.editIcon = icon.EDIT_WHITE;
         this.deleteIcon = icon.DELETE_WHITE;
@@ -98,10 +94,9 @@ export class TermsComponent implements OnInit {
   getDataTerms() {
     let that = this;
     this.httpCall.httpGetCall(httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTINGS_GET_TERMS).subscribe(function (params) {
-      if (params.status)
-      {
+      if (params.status) {
         that.allTerms = params.data;
-        console.log("allterms", that.allTerms)
+        console.log("allterms", that.allTerms);
       }
     });
   }
@@ -117,15 +112,12 @@ export class TermsComponent implements OnInit {
       denyButtonText: this.Compnay_Equipment_Delete_No,
       allowOutsideClick: false
     }).then((result) => {
-      if (result.isConfirmed)
-      {
+      if (result.isConfirmed) {
         that.httpCall.httpPostCall(httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTING_DELETE_TERMS, { _id: terms._id }).subscribe(function (params) {
-          if (params.status)
-          {
+          if (params.status) {
             that.snackbarservice.openSnackBar(params.message, "success");
             that.getDataTerms();
-          } else
-          {
+          } else {
             that.snackbarservice.openSnackBar(params.message, "error");
           }
         });
@@ -154,34 +146,42 @@ export class TermsForm implements OnInit {
 
     this.term = new FormGroup({
       name: new FormControl("", [Validators.required]),
+      due_days: new FormControl('', [Validators.required]),
+      is_discount: new FormControl(false, []),
+      discount: new FormControl('', []),
     });
-    if (this.data)
-    {
-      console.log("data", this.data)
+    if (this.data) {
+      console.log("data", this.data);
       this.term = new FormGroup({
         name: new FormControl(this.data.name, [Validators.required]),
+        due_days: new FormControl(this.data.due_days, [Validators.required]),
+        is_discount: new FormControl(this.data.is_discount, []),
+        discount: new FormControl(this.data.discount, []),
       });
+      if (this.data.is_discount) {
+        this.term.get("discount").setValidators([Validators.required]);
+      } else {
+        this.term.get("discount").clearValidators();
+      }
+      this.term.get("discount").updateValueAndValidity();
     }
+
 
     var modeLocal = localStorage.getItem('');
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off')
-    {
+    if (this.mode == 'off') {
       this.exitIcon = icon.BACK;
 
-    } else
-    {
+    } else {
       this.exitIcon = icon.BACK_WHITE;
     }
 
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode)
-      {
+      if (mode) {
         this.mode = 'off';
         this.exitIcon = icon.BACK;
 
-      } else
-      {
+      } else {
         this.mode = 'on';
         this.exitIcon = icon.BACK_WHITE;
 
@@ -189,8 +189,7 @@ export class TermsForm implements OnInit {
       console.log("DARK MODE: " + this.mode);
 
     });
-    //let that = this;
-    // this.uiSpinner.spin$.next(true);
+
     this.translate.stream(['']).subscribe((textarray) => {
       this.copyDataFromProject = this.translate.instant('Copy_Data_From_Project');
       this.yesButton = this.translate.instant('Compnay_Equipment_Delete_Yes');
@@ -202,23 +201,40 @@ export class TermsForm implements OnInit {
   ngOnInit() {
 
   }
+  retainagePercentageChange(event) {
+    let values = this.term.value;
+    let pattern = /[^0-9.]/g;
+    let digit = String.fromCharCode(event.charCode);
+    let check_digit = digit.match(pattern);
+    let check = check_digit === null;
+    if (check) {
+      let percentage = Number(
+        `${values.discount}${digit}`
+      );
+      if (percentage > 100) {
+        check = false;
+        this.snackbarservice.openSnackBar(
+          "Percentage must be less then 100.",
+          "error"
+        );
+      }
+    }
+    return check;
+  }
+
 
   saveData() {
     let that = this;
-    if (this.term.valid)
-    {
+    if (this.term.valid) {
       let reqData = this.term.value;
-      if (this.data)
-      {
+      if (this.data) {
         reqData._id = this.data._id;
       }
       this.httpCall.httpPostCall(httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTING_SAVE_TERMS, reqData).subscribe(function (params) {
-        if (params.status)
-        {
+        if (params.status) {
           that.snackbarservice.openSnackBar(params.message, "success");
           that.dialogRef.close();
-        } else
-        {
+        } else {
           that.snackbarservice.openSnackBar(params.message, "error");
         }
       });

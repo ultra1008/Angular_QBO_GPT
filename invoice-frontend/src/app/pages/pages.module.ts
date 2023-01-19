@@ -87,6 +87,8 @@ import { InvoiceFormComponent } from './components/invoice/invoice-form/invoice-
 import { TemplateFormComponent } from './components/templates/template-form/template-form.component';
 import { InvoiceDetailPageComponent } from './components/invoice/invoice-detail-page/invoice-detail-page.component';
 import { InvoiceDashboardComponent } from './components/dashboard/invoice-dashboard.component';
+import { VendorsComponent } from './components/vendors/vendors.component';
+import { VendorFormComponent } from './components/vendors/vendor-form/vendor-form.component';
 
 
 
@@ -157,6 +159,8 @@ import { InvoiceDashboardComponent } from './components/dashboard/invoice-dashbo
     InvoiceDetailPageComponent,
     CostCodeFormComponent,
     CostcodeImportData,
+    VendorsComponent,
+    VendorFormComponent,
   ],
   imports: [
     PortalModule,

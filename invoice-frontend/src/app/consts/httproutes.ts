@@ -411,9 +411,9 @@ export enum httproutes {
     OTHER_COLOR_DELETE = "/webapi/v1/portal/deletecolor",
 
     //other setting term module -portal
-    OTHER_TERM_GET = "/webapi/v1/portal/getterm",
-    OTHER_TERM_SAVE = "/webapi/v1/portal/saveterm",
-    OTHER_TERM_DELETE = "/webapi/v1/portal/deleteterm",
+    OTHER_TERM_GET = "/webapi/v1/portal/getinvoiceterm",
+    OTHER_TERM_SAVE = "/webapi/v1/portal/saveinvoiceterm",
+    OTHER_TERM_DELETE = "/webapi/v1/portal/deleteInvoiceterm",
 
     //ID CARD SAVE 
     ID_CARD_SAVE = "/webapi/v1/portal/updateshowidcardflag",
@@ -1092,5 +1092,11 @@ export enum httproutes {
 
     PORTAL_ROVUK_INVOICE_TEAM_NEW_HISTORY = "/webapi/v1/portal/getuserhistory",
     GET_GIF_LOADER = "/webapi/v1/getgifloader",
+    // vendor module
+    INVOICE_SAVE_VENDOR_FORM = "/webapi/v1/portal/savevendor",
+    INVOICE_GET_ONE_VENDOR = "/webapi/v1/portal/getonevendor",
+    INVOICE_GET_VENDOR_DATATABLES = "/webapi/v1/portal/getvendordatatable",
+    INVOICE_ARCHIVE_VENDOR = "/webapi/v1/portal/deletevendor",
+    INVOICE_GET_VENDOR_HISTORY = "/webapi/v1/portal/getvendorhistory",
 
 }
