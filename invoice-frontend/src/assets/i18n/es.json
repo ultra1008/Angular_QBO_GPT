@@ -2397,5 +2397,8 @@
     "Add_Discount": "Añadir descuento",
     "Trems_Discount": "Descuento",
     "due_days": "Días de Vencimiento",
-    "Vendor_ID": "Vendor ID"
+    "Vendor_ID": "Vendor ID",
+    "Archived_Vendor": "Archived Vendor",
+    "Vendor_Do_Want_Archive": "Do you want to archive this vendor?",
+    "History_Vendor": "Vendor History"
 }

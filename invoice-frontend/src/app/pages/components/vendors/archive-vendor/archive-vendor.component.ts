@@ -1,9 +1,6 @@
-import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { DataTableDirective } from 'angular-datatables';
@@ -14,11 +11,12 @@ import { HttpCall } from 'src/app/service/httpcall.service';
 import { Mostusedservice } from 'src/app/service/mostused.service';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
-import { formatPhoneNumber, gallery_options, LanguageApp, MMDDYYYY_formet } from 'src/app/service/utils';
+import { formatPhoneNumber, gallery_options, LanguageApp } from 'src/app/service/utils';
 import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
-import { ModeDetectService } from '../map/mode-detect.service';
-import { Email } from '../portal-auth/models';
+import { ModeDetectService } from '../../map/mode-detect.service';
+import { Location } from '@angular/common';
+
 class DataTablesResponse {
   data: any[];
   draw: number;
@@ -35,21 +33,19 @@ const swalWithBootstrapButtons = Swal.mixin({
 });
 
 @Component({
-  selector: 'app-vendors',
-  templateUrl: './vendors.component.html',
-  styleUrls: ['./vendors.component.scss']
+  selector: 'app-archive-vendor',
+  templateUrl: './archive-vendor.component.html',
+  styleUrls: ['./archive-vendor.component.scss']
 })
-export class VendorsComponent implements OnInit {
+export class ArchiveVendorComponent implements OnInit {
   @ViewChild(DataTableDirective, { static: false })
   datatableElement: DataTableDirective;
   @ViewChild("OpenFilebox") OpenFilebox: ElementRef<HTMLElement>;
   @ViewChild("gallery") gallery: NgxGalleryComponent;
   dtOptions: any = {};
   imageObject: any;
-  add_my_self_icon = icon.ADD_MY_SELF_WHITE;
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[] = [];
-  termList = [];
   locallanguage: string;
   Vendor_VendorName: string;
   showTable: boolean = true;
@@ -65,33 +61,21 @@ export class VendorsComponent implements OnInit {
   Vendor_ZipCode: string;
   Customer_Id: string;
   Vendor_ID: string;
-  Vendor_Do_Want_Archive: string = "";
+  confirmation_vendor_restore: string = "";
   Compnay_Equipment_Delete_Yes: string = "";
   Compnay_Equipment_Delete_No: string = "";
-  Data_Not_Found: string = "";
-  Compnay_Vendor_Report_Download: string = "";
-  Company_Equipment_File_Not_Match: string = "";
-  Listing_Action_Edit: string = "";
-  Archived_all: string = "";
+  Restore_all: string = "";
   acticve_word: string = "";
   inacticve_word: string = "";
-  archivedIcon: string;
-  importIcon: string;
   mode: any;
-  historyIcon: string;
-  reportIcon: string;
-  exportIcon: string;
   subscription: Subscription;
-  copyDataFromProject: string = "";
   yesButton: string = "";
   noButton: string = "";
-  editIcon: string;
-  deleteIcon: string;
-  count = {
-    active: 0, inactive: 0
-  };
+  backIcon: string;
+  restoreIcon: string;
 
   constructor(private modeService: ModeDetectService,
+    private location: Location,
     public dialog: MatDialog,
     private router: Router,
     private http: HttpClient,
@@ -103,38 +87,22 @@ export class VendorsComponent implements OnInit {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === "on" ? "on" : "off";
     if (this.mode == "off") {
-      this.reportIcon = icon.REPORT;
-      this.historyIcon = icon.HISTORY;
-      this.archivedIcon = icon.ARCHIVE;
-      this.importIcon = icon.IMPORT;
-      this.editIcon = icon.EDIT;
-      this.deleteIcon = icon.DELETE;
+      this.restoreIcon = icon.RESTORE;
+      this.backIcon = icon.BACK;
     } else {
-      this.reportIcon = icon.REPORT_WHITE;
-      this.historyIcon = icon.HISTORY_WHITE;
-      this.archivedIcon = icon.ARCHIVE_WHITE;
-      this.importIcon = icon.IMPORT_WHITE;
-      this.editIcon = icon.EDIT_WHITE;
-      this.deleteIcon = icon.DELETE_WHITE;
+      this.restoreIcon = icon.RESTORE_WHITE;
+      this.backIcon = icon.BACK_WHITE;
     }
     let j = 0;
     this.subscription = this.modeService.onModeDetect().subscribe((mode) => {
       if (mode) {
         this.mode = "off";
-        this.reportIcon = icon.REPORT;
-        this.historyIcon = icon.HISTORY;
-        this.archivedIcon = icon.ARCHIVE;
-        this.importIcon = icon.IMPORT;
-        this.editIcon = icon.EDIT;
-        this.deleteIcon = icon.DELETE;
+        this.restoreIcon = icon.RESTORE;
+        this.backIcon = icon.BACK;
       } else {
         this.mode = "on";
-        this.reportIcon = icon.REPORT_WHITE;
-        this.historyIcon = icon.HISTORY_WHITE;
-        this.archivedIcon = icon.ARCHIVE_WHITE;
-        this.importIcon = icon.IMPORT_WHITE;
-        this.editIcon = icon.EDIT_WHITE;
-        this.deleteIcon = icon.DELETE_WHITE;
+        this.restoreIcon = icon.RESTORE_WHITE;
+        this.backIcon = icon.BACK_WHITE;
       }
 
       if (j != 0) {
@@ -147,19 +115,14 @@ export class VendorsComponent implements OnInit {
     let that = this;
     // this.uiSpinner.spin$.next(true);
     this.translate.stream([""]).subscribe((textarray) => {
-      this.copyDataFromProject = this.translate.instant(
-        "Copy_Data_From_Project"
-      );
       this.yesButton = this.translate.instant("Compnay_Equipment_Delete_Yes");
       this.noButton = this.translate.instant("Compnay_Equipment_Delete_No");
     });
   }
 
   ngOnInit(): void {
-    const that = this;
-    that.statusCount();
     let role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
-
+    const that = this;
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     this.locallanguage =
       tmp_locallanguage == "" ||
@@ -185,8 +148,8 @@ export class VendorsComponent implements OnInit {
       that.Vendor_Terms = that.translate.instant("Vendor_Terms");
       that.Customer_Id = that.translate.instant("Customer_Id");
       that.Vendor_ID = that.translate.instant("Vendor_ID");
-      that.Vendor_Do_Want_Archive = that.translate.instant(
-        "Vendor_Do_Want_Archive"
+      that.confirmation_vendor_restore = that.translate.instant(
+        "confirmation_vendor_restore"
       );
       that.Compnay_Equipment_Delete_Yes = that.translate.instant(
         "Compnay_Equipment_Delete_Yes"
@@ -194,16 +157,10 @@ export class VendorsComponent implements OnInit {
       that.Compnay_Equipment_Delete_No = that.translate.instant(
         "Compnay_Equipment_Delete_No"
       );
-      that.Data_Not_Found = that.translate.instant("Data_Not_Found");
-      that.Compnay_Vendor_Report_Download = that.translate.instant(
-        "Compnay_Vendor_Report_Download"
-      );
-      that.Company_Equipment_File_Not_Match = that.translate.instant(
-        "Company_Equipment_File_Not_Match"
-      );
-      that.Listing_Action_Edit = that.translate.instant("Listing_Action_Edit");
-      that.Archived_all = that.translate.instant(
-        "Archived_all"
+
+
+      that.Restore_all = that.translate.instant(
+        "Restore_all"
       );
       if (this.locallanguage === "en") {
         this.locallanguage = "es";
@@ -245,7 +202,7 @@ export class VendorsComponent implements OnInit {
         $(".dataTables_processing").html(
           "<img  src=" + this.httpCall.getLoader() + ">"
         );
-        dataTablesParameters.is_delete = 0;
+        dataTablesParameters.is_delete = 1;
         that.http
           .post<DataTablesResponse>(
             configdata.apiurl + httproutes.INVOICE_GET_VENDOR_DATATABLES,
@@ -369,33 +326,11 @@ export class VendorsComponent implements OnInit {
             this.gallery.openPreview(0);
           }, 0);
         });
-        $(".button_shiftEditClass").on("click", (event) => {
-          // Edit Vendor here
-          let data = JSON.parse(event.target.getAttribute("edit_tmp_id"));
-          this.router.navigate(["/vendor-form"], {
-            queryParams: { _id: data._id },
-          });
-        });
+
         $(".button_shiftDeleteClass").on("click", (event) => {
           // Delete Vendor here
           let data = JSON.parse(event.target.getAttribute("edit_tmp_id"));
-          this.deleteVendor(data._id);
-        });
-
-        $(".call-active-inactive-api").on("click", (event) => {
-          //Inactive vendor status  here
-          this.changeStatus({
-            _id: event.target.getAttribute("edit_tmp_id"),
-            status: 2,
-          });
-        });
-
-        $(".call-active-active-api").on("click", (event) => {
-          //Active vendor status  here
-          this.changeStatus({
-            _id: event.target.getAttribute("edit_tmp_id"),
-            status: 1,
-          });
+          this.restoreVendor(data._id);
         });
       },
     };
@@ -492,7 +427,7 @@ export class VendorsComponent implements OnInit {
           <div class="dropdown">
             <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust"  aria-haspopup="true" aria-expanded="false"  edit_tmp_id='` + JSON.stringify(full) + `' aria-hidden="true"></i>
             <div class= "dropdown-content-cust" aria-labelledby="dropdownMenuButton">
-              <a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_shiftEditClass" >` + '<img src="' + that.editIcon + '" alt="" height="15px">' + that.Listing_Action_Edit + `</a>
+           
             </div>
         </div>`
             );
@@ -504,8 +439,8 @@ export class VendorsComponent implements OnInit {
               JSON.stringify(full) +
               `' aria-hidden="true"></i>
             <div class= "dropdown-content-cust" aria-labelledby="dropdownMenuButton">
-              <a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_shiftEditClass" >` + '<img src="' + that.editIcon + '" alt="" height="15px">' + that.Listing_Action_Edit + `</a>
-              <a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_shiftDeleteClass" >` + '<img src="' + that.deleteIcon + '" alt="" height="15px">' + that.Archived_all + `</a>
+             
+              <a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_shiftDeleteClass" >` + '<img src="' + that.restoreIcon + '" alt="" height="15px">' + that.Restore_all + `</a>
             </div>
         </div>`
             );
@@ -517,11 +452,11 @@ export class VendorsComponent implements OnInit {
     ];
   }
   // implement delete vendor api call
-  deleteVendor(_id) {
+  restoreVendor(_id) {
     let that = this;
     swalWithBootstrapButtons
       .fire({
-        title: that.Vendor_Do_Want_Archive,
+        title: that.confirmation_vendor_restore,
         showDenyButton: true,
         showCancelButton: false,
         confirmButtonText: that.Compnay_Equipment_Delete_Yes,
@@ -530,7 +465,7 @@ export class VendorsComponent implements OnInit {
       .then((result) => {
         if (result.isConfirmed) {
           that.httpCall
-            .httpPostCall(httproutes.INVOICE_ARCHIVE_VENDOR, { _id: _id, is_delete: 1 })
+            .httpPostCall(httproutes.INVOICE_ARCHIVE_VENDOR, { _id: _id, is_delete: 0 })
             .subscribe(function (params) {
               if (params.status) {
                 that.snackbarservice.openSnackBar(params.message, "success");
@@ -542,80 +477,25 @@ export class VendorsComponent implements OnInit {
         }
       });
   }
-  openVendorForm() {
-    this.router.navigateByUrl('vendor-form');
-  }
-  openArchived() {
-    this.router.navigateByUrl('vendor-archive');
-  }
+
   downloadButtonPress(event, index): void {
     window.location.href = this.imageObject[index];
   }
-  statusCount() {
+  statusChange(reqObject) {
     var that = this;
     that.httpCall
-      .httpGetCall(httproutes.INVOICE_VENDOR_STATUS_COUNT,)
-      .subscribe(function (data) {
-        if (data.status) {
-          that.count = data.data;
-        }
-      });
-  }
-  changeStatus(reqObject) {
-    var that = this;
-    that.uiSpinner.spin$.next(true);
-    that.httpCall
-      .httpPostCall(httproutes.INVOICE_CHANGE_VENDOR_STATUS, reqObject)
+      .httpPostCall(httproutes.PORTAL_COMPANY_VENDOR_STATUS_CHANGE, reqObject)
       .subscribe(function (data) {
         if (data) {
-          that.uiSpinner.spin$.next(false);
-          that.snackbarservice.openSnackBar(data.message, "success");
           that.rerenderfunc();
-        } else {
-          that.uiSpinner.spin$.next(false);
-          that.snackbarservice.openSnackBar(data.message, "error");
         }
       });
   }
-  openHistoryDialog() {
-    const dialogRef = this.dialog.open(VendorHistoryComponent, {
-      height: "550px",
-      width: "1000px",
-      data: {
-        // project_id: this.projectId,
-      },
-      disableClose: true,
-    });
-    dialogRef.afterClosed().subscribe((result) => { });
-  }
-  openChangeVendorReportDialog() {
-    const dialogRef = this.dialog.open(VendorReportComponent, {
-      height: '500px',
-      width: '800px',
-      data: {
-        termList: this.termList,
-      },
-      disableClose: true
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-
-    });
-  }
-  getAllTerms() {
-    let that = this;
-    this.httpCall
-      .httpGetCall(httproutes.OTHER_TERM_GET)
-      .subscribe(function (params: any) {
-        if (params.status) {
-          that.termList = params.data;
-        }
-        console.log("termList", that.termList);
-      });
+  back() {
+    this.location.back();
   }
 
   rerenderfunc() {
-    this.statusCount();
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     let that = this;
     that.showTable = false;
@@ -627,302 +507,3 @@ export class VendorsComponent implements OnInit {
   }
 }
 
-
-@Component({
-  selector: 'vendor-history',
-  templateUrl: './vendor-history.html',
-  styleUrls: ['./vendors.component.scss']
-})
-export class VendorHistoryComponent implements OnInit {
-  id!: string;
-  taskHistory = [];
-  SearchIcon = icon.SEARCH_WHITE;
-  start: number = 0;
-  mode: any;
-  exitIcon: string = "";
-  search: string = "";
-  is_httpCall: boolean = false;
-  todayactivity_search!: String;
-
-  activityIcon!: string;
-  isSearch: boolean = false;
-  subscription: Subscription;
-  constructor(
-    public httpCall: HttpCall,
-    public snackbarservice: Snackbarservice,
-    private modeService: ModeDetectService,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-  ) {
-    console.log("history call");
-    var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
-    this.mode = modeLocal === "on" ? "on" : "off";
-    if (this.mode == "off") {
-      this.exitIcon = icon.CANCLE;
-    } else {
-      this.exitIcon = icon.CANCLE_WHITE;
-    }
-
-    this.subscription = this.modeService.onModeDetect().subscribe((mode) => {
-      if (mode) {
-        this.mode = "off";
-        this.exitIcon = icon.CANCLE;
-      } else {
-        this.mode = "on";
-        this.exitIcon = icon.CANCLE_WHITE;
-      }
-    });
-  }
-
-  ngOnInit(): void {
-    this.getTodaysActivity();
-  }
-
-  onKey(event: any) {
-    console.log(event.target.value);
-    if (event.target.value.length == 0) {
-      console.log("emprty string");
-      this.taskHistory = [];
-      this.start = 0;
-      this.getTodaysActivity();
-    }
-  }
-  searchActivity() {
-    console.log("searchTodayActivity");
-    console.log("Entered email:", this.todayactivity_search);
-    let that = this;
-    that.isSearch = true;
-    that.taskHistory = [];
-    that.start = 0;
-    this.getTodaysActivity();
-  }
-
-  onScroll() {
-    this.start++;
-    this.getTodaysActivity();
-  }
-  getTodaysActivity() {
-    let self = this;
-    this.is_httpCall = true;
-    let requestObject = {};
-    if (this.data.project_id) {
-      requestObject = {
-        start: this.start,
-        search: this.todayactivity_search,
-        project_id: this.data.project_id
-      };
-    } else {
-      requestObject = {
-        start: this.start,
-        search: this.todayactivity_search,
-      };
-    }
-    this.httpCall
-      .httpPostCall(httproutes.INVOICE_GET_VENDOR_HISTORY, requestObject)
-      .subscribe(function (params) {
-        if (params.status) {
-          if (self.start == 0)
-            self.is_httpCall = false;
-          self.taskHistory = self.taskHistory.concat(params.data);
-        }
-      });
-  }
-
-  tmp_date(epoch: any) {
-    return MMDDYYYY_formet(epoch);
-  }
-
-  setHeightStyles() {
-    let styles = {
-      height: window.screen.height + "px",
-      "overflow-y": "scroll",
-    };
-    return styles;
-  }
-
-}
-
-@Component({
-  selector: 'vendor-report',
-  templateUrl: './vendor-report.html',
-  styleUrls: ['./vendors.component.scss']
-})
-export class VendorReportComponent implements OnInit {
-  public form: FormGroup;
-
-  VENDORSTATUS: any = configdata.VENDOR_STATUS;
-  selectable = true;
-  removable = true;
-  addOnBlur = true;
-  readonly separatorKeysCodes = [ENTER, COMMA] as const;
-  emailsList: any[] = [];
-  vendorInfo: FormGroup;
-  Report_File_Message: string = "";
-  Report_File_Enter_Email: string = "";
-  is_oneOnly: boolean = true;
-  saveIcon = icon.SAVE_WHITE;
-  exitIcon: string;
-  yesButton: string = "";
-  noButton: string = "";
-  mode: any;
-  subscription: Subscription;
-  copyDataFromProject: string = "";
-  termList: [];
-
-  /*Constructor*/
-  constructor(
-    private formBuilder: FormBuilder,
-    public httpCall: HttpCall,
-    private modeService: ModeDetectService,
-    public dialogRef: MatDialogRef<VendorReportComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    public sb: Snackbarservice,
-    public uiSpinner: UiSpinnerService,
-    public translate: TranslateService
-  ) {
-    this.Report_File_Message = this.translate.instant("Report_File_Message");
-    this.Report_File_Enter_Email = this.translate.instant(
-      "Report_File_Enter_Email"
-    );
-    this.vendorInfo = this.formBuilder.group({
-      All_Status: [true],
-      terms_id: [this.VENDORSTATUS.map((el) => el.value)],
-      All_Contact: [true],
-    });
-
-    var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
-    this.mode = modeLocal === "on" ? "on" : "off";
-    if (this.mode == "off") {
-      this.exitIcon = icon.CANCLE;
-    } else {
-      this.exitIcon = icon.CANCLE_WHITE;
-    }
-
-    this.subscription = this.modeService.onModeDetect().subscribe((mode) => {
-      if (mode) {
-        this.mode = "off";
-        this.exitIcon = icon.CANCLE;
-      } else {
-        this.mode = "on";
-        this.exitIcon = icon.CANCLE_WHITE;
-      }
-    });
-    //let that = this;
-    // this.uiSpinner.spin$.next(true);
-    this.translate.stream([""]).subscribe((textarray) => {
-      this.copyDataFromProject = this.translate.instant(
-        "Copy_Data_From_Project"
-      );
-      this.yesButton = this.translate.instant("Compnay_Equipment_Delete_Yes");
-      this.noButton = this.translate.instant("Compnay_Equipment_Delete_No");
-    });
-  }
-
-  isValidMailFormat(value): any {
-    var EMAIL_REGEXP =
-      /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
-    if (value != "" && EMAIL_REGEXP.test(value)) {
-      return { "Please provide a valid email": true };
-    }
-    return null;
-  }
-
-  addInternalEmail(event: MatChipInputEvent): void {
-    const value = (event.value || "").trim();
-    // Add email
-    if (value) {
-      var validEmail = this.isValidMailFormat(value);
-      if (validEmail) {
-        this.emailsList.push(value);
-        // Clear the input value
-        event.chipInput!.clear();
-      } else {
-        // here error for valid email
-      }
-    }
-  }
-
-  internalEmailremove(email: Email): void {
-    //----
-    let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
-    //----
-    const index = this.emailsList.indexOf(email);
-    if (index >= 0) {
-      this.emailsList.splice(index, 1);
-      //----
-      if (email == user_data.UserData.useremail) {
-        this.is_oneOnly = true;
-      }
-      //----
-    }
-  }
-
-  onChangeValueAll_Status(params) {
-    if (params.checked) {
-      this.vendorInfo
-        .get("vendor_status")
-        .setValue(this.VENDORSTATUS.map((el) => el.value));
-    } else {
-      this.vendorInfo.get("vendor_status").setValue([]);
-    }
-  }
-
-  onChangeValueAll_Contact(params) {
-    if (params.checked) {
-    } else {
-    }
-  }
-
-  /*
-ngOnInit
-*/
-  ngOnInit(): void {
-    let that = this;
-    this.vendorInfo
-      .get("vendor_status")
-      .valueChanges.subscribe(function (params: any) {
-        if (params.length == that.VENDORSTATUS.length) {
-          that.vendorInfo.get("All_Status").setValue(true);
-        } else {
-          that.vendorInfo.get("All_Status").setValue(false);
-        }
-      });
-  }
-
-  /*
-   *
-   * save button action
-   */
-  saveData() {
-    if (this.emailsList.length != 0) {
-      this.uiSpinner.spin$.next(true);
-      let requestObject = this.vendorInfo.value;
-      var company_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
-      requestObject.email_list = this.emailsList;
-      requestObject.logo_url = company_data.companydata.companylogo;
-      this.httpCall
-        .httpPostCall(
-          httproutes.INVOICE_GET_VENDOR_REPORT,
-          requestObject
-        )
-        .subscribe(function (params: any) { });
-      setTimeout(() => {
-        this.uiSpinner.spin$.next(false);
-        this.sb.openSnackBar(this.Report_File_Message, "success");
-        this.dialogRef.close();
-      }, 3000);
-    } else {
-      this.sb.openSnackBar(this.Report_File_Enter_Email, "error");
-    }
-  }
-
-  /*
-  Add my self button action
-  */
-  ADD_MY_SELF() {
-    if (this.is_oneOnly) {
-      let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
-      this.emailsList.push(user_data.UserData.useremail);
-      this.is_oneOnly = false;
-    }
-  }
-}

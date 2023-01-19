@@ -155,4 +155,5 @@ export enum icon {
     SECURITY_SETTINGS = "./assets/diversityicon/thememode/security_settings.png",
     SECURITY_SETTINGS_WHITE = "./assets/diversityicon/darkmode/security_settings_white.png",
 
+
 }
