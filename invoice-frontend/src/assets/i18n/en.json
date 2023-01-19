@@ -2414,10 +2414,11 @@
     "All_popup_Cancel": "Cancel",
     "All_Save_Exit": "Save & Exit",
     "Dont_Save": "Don't Save",
-    "Customer_Id": "Customer id",
+    "Customer_Id": "Customer ID",
     "GCL_Accounts": "GCL Accounts",
     "Email_Assigned": "Email Assigned",
     "Add_Discount": "Add Discount",
     "Trems_Discount": "Discount",
-    "due_days": "Due Days"
+    "due_days": "Due Days",
+    "Vendor_ID": "Vendor ID"
 }

@@ -15,7 +15,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { ModeDetectService } from '../../map/mode-detect.service';
-import { amountChange, commonImageChangeEvent } from 'src/app/service/utils';
+import { amountChange, commonFileChangeEvent } from 'src/app/service/utils';
 
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
@@ -84,7 +84,7 @@ export class EmployeeFormComponent implements OnInit {
   personalwhiteicon = icon.PERSONAL_INFO_WHITE;
   close_this_window: string = "";
 
-  constructor (private location: Location, private modeService: ModeDetectService, public mostusedservice: Mostusedservice, private formBuilder: FormBuilder,
+  constructor(private location: Location, private modeService: ModeDetectService, public mostusedservice: Mostusedservice, private formBuilder: FormBuilder,
     public spinner: UiSpinnerService, public employeeservice: EmployeeService, public snackbarservice: Snackbarservice,
     private router: Router, public httpCall: HttpCall, public translate: TranslateService, public dialog: MatDialog,) {
     let that = this;
@@ -309,7 +309,7 @@ export class EmployeeFormComponent implements OnInit {
 
   fileChangeEvent(fileInput: any) {
     this.imageError = null;
-    commonImageChangeEvent(fileInput, 'image').then((result: any) => {
+    commonFileChangeEvent(fileInput, 'image').then((result: any) => {
       if (result.status) {
         this.filepath = result.filepath;
         this.cardImageBase64 = result.base64;
@@ -586,7 +586,7 @@ export class ScheduleFormEmployee {
   mode: any;
   backIcon: string;
   saveIcon = icon.SAVE_WHITE;
-  constructor (public dialogRef: MatDialogRef<ScheduleFormEmployee>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
+  constructor(public dialogRef: MatDialogRef<ScheduleFormEmployee>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
     private formBuilder: FormBuilder, public httpCall: HttpCall, public route: ActivatedRoute,
     @Inject(MAT_DIALOG_DATA) public data: any, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService) {
 

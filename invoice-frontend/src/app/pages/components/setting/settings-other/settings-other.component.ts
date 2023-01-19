@@ -125,6 +125,7 @@ export class SettingsOtherComponent implements OnInit {
 
 
   addOtherSetting(reqData: any, SettingType: any, name: any, tmp_name: any): void {
+    console.log("SettingType", SettingType);
     const dialogRef = this.dialog.open(otherSettingManually, {
       data: {
         reqData: reqData,

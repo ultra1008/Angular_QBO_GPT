@@ -8,7 +8,7 @@ import { UiSpinnerService } from 'src/app/service/spinner.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModeDetectService } from '../../map/mode-detect.service';
 import { Subscription } from 'rxjs';
-import { commonImageChangeEvent } from 'src/app/service/utils';
+import { commonFileChangeEvent } from 'src/app/service/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
@@ -93,23 +93,19 @@ export class InvoiceFormComponent implements OnInit {
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off')
-    {
+    if (this.mode == 'off') {
       this.backIcon = icon.BACK;
       this.exitIcon = icon.CANCLE;
-    } else
-    {
+    } else {
       this.backIcon = icon.BACK_WHITE;
       this.exitIcon = icon.CANCLE_WHITE;
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode)
-      {
+      if (mode) {
         this.mode = 'off';
         this.backIcon = icon.BACK;
         this.exitIcon = icon.CANCLE;
-      } else
-      {
+      } else {
         this.mode = 'on';
         this.backIcon = icon.BACK_WHITE;
         this.exitIcon = icon.CANCLE_WHITE;

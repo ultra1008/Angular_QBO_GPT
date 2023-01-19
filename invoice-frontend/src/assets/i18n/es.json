@@ -2391,10 +2391,11 @@
     "All_popup_Cancel": "Cancelar",
     "All_Save_Exit": "Guardar y Salir",
     "Dont_Save": "No Guardar",
-    "Customer_Id": "Customer id",
+    "Customer_Id": "Customer ID",
     "GCL_Accounts": "GCL Accounts",
     "Email_Assigned": "Email Assigned",
     "Add_Discount": "Añadir descuento",
     "Trems_Discount": "Descuento",
-    "due_days": "Días de Vencimiento"
+    "due_days": "Días de Vencimiento",
+    "Vendor_ID": "Vendor ID"
 }

@@ -502,7 +502,7 @@ export class VendorFormComponent implements OnInit {
   getOneVendor(_id): void {
     let that = this;
     this.httpCall
-      .httpPostCall(httproutes.PORTAL_COMPANY_VENDOR_GET_BY_ID, { _id: _id })
+      .httpPostCall(httproutes.INVOICE_GET_ONE_VENDOR, { _id: _id })
       .subscribe(function (params) {
         if (params.status) {
           that.vendorData = params.data;
@@ -524,23 +524,14 @@ export class VendorFormComponent implements OnInit {
           that.vendorinfo = that.formBuilder.group({
             vendor_name: [that.vendorData.vendor_name, Validators.required],
             phone: [that.vendorData.phone, Validators.required],
-            email: [
-              that.vendorData.email,
-              [Validators.required, Validators.email],
-            ],
+            email: [that.vendorData.email, [Validators.required, Validators.email],],
             gl_account: [that.vendorData.gl_account],
-            address: [
-              that.vendorData.address,
-              Validators.required,
-            ],
+            address: [that.vendorData.address, Validators.required,],
             city: [that.vendorData.city, Validators.required],
             address2: [that.vendorData.address2],
             state: [that.vendorData.state, Validators.required],
-            zipcode: [
-              that.vendorData.zipcode,
-              Validators.required,
-            ],
-            vendor_terms: [that.vendorData.vendor_terms, Validators.required],
+            zipcode: [that.vendorData.zipcode, Validators.required,],
+            terms_id: [that.vendorData.terms_id, Validators.required],
             status: [that.vendorData.status, Validators.required],
             country: [that.vendorData.country],
             description: [that.vendorData.description],

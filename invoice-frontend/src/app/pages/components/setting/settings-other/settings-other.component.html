@@ -477,7 +477,13 @@
                         <mat-grid-tile *ngFor="let term of terms_data">
                             <mat-card class="document-card">
                                 <mat-card-title-group class="cust-card-title-group">
-                                    <mat-card-content style="width: 100%">{{term.name}}</mat-card-content>
+                                    <mat-card-content style="width: 100%">
+                                        <div>{{term.name}}</div>
+                                        <div>{{term.due_days}} {{'due_days' | translate | lowercase}}</div>
+                                        <div *ngIf="term.is_discount">{{term.discount}}%
+                                            {{'Trems_Discount' | translate | lowercase}}
+                                        </div>
+                                    </mat-card-content>
                                     <div fxFlex style="width: 100%"></div>
                                     <div class="dropdown zIndex-cust">
                                         <i class="fas fa-ellipsis-v cust-fontsize-tmp dropdown-float-right-cust"

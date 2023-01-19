@@ -14,7 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
 import { Location } from '@angular/common';
 import { configdata } from 'src/environments/configData';
-import { commonImageChangeEvent } from 'src/app/service/utils';
+import { commonFileChangeEvent } from 'src/app/service/utils';
 
 const moment = _rollupMoment || _moment;
 
@@ -125,7 +125,7 @@ export class SettingsCompanyinfoComponent implements OnInit {
 
   fileChangeEvent(fileInput: any) {
     this.imageError = null;
-    commonImageChangeEvent(fileInput, 'image').then((result: any) => {
+    commonFileChangeEvent(fileInput, 'image').then((result: any) => {
       if (result.status) {
         this.filepath = result.filepath;
         this.cardImageBase64 = result.base64;

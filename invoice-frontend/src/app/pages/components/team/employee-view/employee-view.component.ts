@@ -13,7 +13,7 @@ import { UiSpinnerService } from 'src/app/service/spinner.service';
 import { HttpCall } from "src/app/service/httpcall.service";
 import { httproutes, icon, localstorageconstants } from "src/app/consts";
 import { Location } from '@angular/common';
-import { amountChange, commonImageChangeEvent, epochToDateTime, formatPhoneNumber, LanguageApp, MMDDYYYY, MMDDYYYY_formet, numberWithCommas, percentage_field, timeDateToepoch } from 'src/app/service/utils';
+import { amountChange, commonFileChangeEvent, epochToDateTime, formatPhoneNumber, LanguageApp, MMDDYYYY, MMDDYYYY_formet, numberWithCommas, percentage_field, timeDateToepoch } from 'src/app/service/utils';
 import { TeamHistory } from '../employee-list/employee-list.component';
 import { MatStepper } from '@angular/material/stepper';
 //import { SendProjectDocumentExpiration } from '../../project/project-documents/project-documents.component';
@@ -185,7 +185,7 @@ export class EmployeeViewComponent implements OnInit {
   All_Remove: any;
 
 
-  constructor (private modeService: ModeDetectService, public sb: Snackbarservice, private location: Location, public dialog: MatDialog, public translate: TranslateService, public mostusedservice: Mostusedservice,
+  constructor(private modeService: ModeDetectService, public sb: Snackbarservice, private location: Location, public dialog: MatDialog, public translate: TranslateService, public mostusedservice: Mostusedservice,
     private formBuilder: FormBuilder, private http: HttpClient, public employeeservice: EmployeeService, public snackbarservice: Snackbarservice,
     private router: Router, public route: ActivatedRoute, public httpCall: HttpCall, public uiSpinner: UiSpinnerService) {
 
@@ -998,7 +998,7 @@ export class EmployeeViewComponent implements OnInit {
   get U_D() { return this.u_from.usersDocument as FormArray; }
   fileChangeEvent(fileInput: any) {
     this.imageError = null;
-    commonImageChangeEvent(fileInput, 'image').then((result: any) => {
+    commonFileChangeEvent(fileInput, 'image').then((result: any) => {
       if (result.status) {
         this.filepath = result.filepath;
         this.cardImageBase64 = result.base64;
@@ -1047,7 +1047,7 @@ export class EmployeeViewComponent implements OnInit {
   fileChangeEvent_mobile(fileInput: any) {
     this.imageError = null;
     this.change_mobile_pic = true;
-    commonImageChangeEvent(fileInput, 'image').then((result: any) => {
+    commonFileChangeEvent(fileInput, 'image').then((result: any) => {
       if (result.status) {
         this.filepath_mobile = result.filepath;
         this.cardImageBase64_mobile = result.base64;
@@ -1516,7 +1516,7 @@ export class EmergencycontactFrom {
   saveIcon: string;
 
 
-  constructor (public dialogRef: MatDialogRef<EmergencycontactFrom>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
+  constructor(public dialogRef: MatDialogRef<EmergencycontactFrom>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
     private formBuilder: FormBuilder, public httpCall: HttpCall, public route: ActivatedRoute,
     @Inject(MAT_DIALOG_DATA) public data: any, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService) {
 
@@ -1641,7 +1641,7 @@ export class DocumentUpdateFrom {
   mode: any;
   backIcon: string;
   saveIcon: string;
-  constructor (public dialogRef: MatDialogRef<DocumentUpdateFrom>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
+  constructor(public dialogRef: MatDialogRef<DocumentUpdateFrom>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
     private formBuilder: FormBuilder, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService,
     public employeeservice: EmployeeService, public httpCall: HttpCall, @Inject(MAT_DIALOG_DATA) public data: any) {
 
@@ -1726,7 +1726,7 @@ export class DocumentUpdateFrom {
   */
   fileChangeEvent(fileInput: any) {
     this.imageError = null;
-    commonImageChangeEvent(fileInput, 'all').then((result: any) => {
+    commonFileChangeEvent(fileInput, 'all').then((result: any) => {
       if (result.status) {
         this.filepath = result.filepath;
         this.cardImageBase64 = result.base64;
@@ -1846,7 +1846,7 @@ export class UserDocumentHistoryComponent implements OnInit {
   backIcon: string;
   subscription: Subscription;
 
-  constructor (public httpCall: HttpCall, private modeService: ModeDetectService, public dialogRef: MatDialogRef<UserDocumentHistoryComponent>, private http: HttpClient,
+  constructor(public httpCall: HttpCall, private modeService: ModeDetectService, public dialogRef: MatDialogRef<UserDocumentHistoryComponent>, private http: HttpClient,
     @Inject(MAT_DIALOG_DATA) public data: any, public translate: TranslateService, public sb: Snackbarservice) {
     let that = this;
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);

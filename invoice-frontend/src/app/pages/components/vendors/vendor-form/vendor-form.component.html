@@ -1,20 +1,11 @@
-<!-- <div class="row">
-    <div class="col-md-12">
-        <div *ngIf="isheader" class="screen-title-section cust-h1-inline">
-            <h1 class="screen-title">{{'Sidebar-Company-Vendor' | translate }}</h1>
-        </div>
-    </div>
-</div> -->
-
 <div class="wrapper-cust-admin">
-    <div class="row" *ngIf="_id == null">
+    <div class="row">
         <div class="col-10 dialog-head-left">
-            <!-- <h2 mat-dialog-title> {{'Add-Category-Form-Header' | translate}}</h2> -->
-        </div>
-        <!-- <div class="col-8 dialog-head-center">
 
-                    </div> -->
+        </div>
+
         <div class="col-2 dialog-head-right">
+            <!-- *ngIf="_id == null" -->
             <button class="import-export-btn-datatable cust-margin-div" (click)="confirmexit()"
                 matTooltip="{{ 'All-exit' | translate }}">
                 <img src="{{exitIcon}}" alt="" class="far fa-paper-plane" height="20px">
@@ -22,7 +13,8 @@
         </div>
     </div>
     <mat-card class="example-card">
-        <div class="head-text" *ngIf="_id == null">
+        <!-- *ngIf="_id == null" -->
+        <div class="head-text">
             <h3 class="editing">{{'Sidebar-Company-Vendor' | translate }}</h3>
         </div>
         <div class="container">
@@ -87,10 +79,10 @@
                             <div class="row">
                                 <div class="col">
                                     <mat-form-field appearance="outline" class="main-one-input-field">
-                                        <mat-label>{{'Settings-Integration-Client-Id' | translate }}</mat-label>
+                                        <mat-label>{{'Vendor_ID' | translate }}</mat-label>
                                         <input matInput formControlName="customer_id"
                                             class="input-capitalized-textfield"
-                                            placeholder="{{'Settings-Integration-Client-Id' | translate }}">
+                                            placeholder="{{'Vendor_ID' | translate }}">
                                     </mat-form-field>
                                 </div>
                                 <div class="col">
