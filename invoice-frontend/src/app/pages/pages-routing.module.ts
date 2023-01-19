@@ -51,6 +51,8 @@ import { TemplateFormComponent } from './components/templates/template-form/temp
 import { InvoiceDetailPageComponent } from './components/invoice/invoice-detail-page/invoice-detail-page.component';
 import { InvoiceOtherSettingsComponent } from './components/setting/invoice-other-settings/invoice-other-settings.component';
 import { InvoiceDashboardComponent } from './components/dashboard/invoice-dashboard.component';
+import { VendorsComponent } from './components/vendors/vendors.component';
+import { VendorFormComponent } from './components/vendors/vendor-form/vendor-form.component';
 
 
 const routes: Routes = [
@@ -65,6 +67,12 @@ const routes: Routes = [
     pathMatch: 'full',
     canActivate: [PortalAuthGuard],
     component: TemplateFormComponent
+  },
+  {
+    path: 'vendor-form',
+    pathMatch: 'full',
+    canActivate: [PortalAuthGuard],
+    component: VendorFormComponent
   },
   {
     path: 'invoice-detail',
@@ -94,6 +102,12 @@ const routes: Routes = [
         pathMatch: 'full',
         canActivate: [PortalAuthGuard],
         component: InvoiceComponent
+      },
+      {
+        path: 'vendors',
+        pathMatch: 'full',
+        canActivate: [PortalAuthGuard],
+        component: VendorsComponent
       },
       {
         path: 'template',
