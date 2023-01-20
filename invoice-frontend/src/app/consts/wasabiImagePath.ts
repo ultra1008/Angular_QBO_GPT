@@ -20,4 +20,7 @@ export enum wasabiImagePath {
     VENDOR_PROJECT_PAYMENT_THUMBNAIL_ATTACHEMENTS = "payment/thumbnail_attachments",
     VENDOR_CERTIFICATE_DOCUMENT_ATTACHEMENTS = "vendor_certificate/attachments",
     CONTRACT_DOCUMENT_ATTACHEMENTS = "contract_documents/attachments",
+
+
+    VENDOR_ATTECHMENT = 'vendor'
 }

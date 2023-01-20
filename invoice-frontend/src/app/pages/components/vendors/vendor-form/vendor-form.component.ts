@@ -3,7 +3,7 @@ import { configdata } from "src/environments/configData";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Location } from "@angular/common";
 import { HttpCall } from "src/app/service/httpcall.service";
-import { httproutes, icon, localstorageconstants } from "src/app/consts";
+import { httproutes, icon, localstorageconstants, wasabiImagePath } from "src/app/consts";
 import { Snackbarservice } from "src/app/service/snack-bar-service";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
@@ -57,10 +57,9 @@ export class VendorFormComponent implements OnInit {
   projectListing: any;
   _id: string;
   vendorinfo: FormGroup;
-  Vendor: any = configdata.VENDOR;
   vendorData: any;
   isheader: boolean = true;
-  VENDORSTATUS: any = configdata.VENDOR_STATUS;
+  VENDORSTATUS: any = configdata.superAdminStatus;
   vendor_image_url = "./assets/img/vendor.png";
   files_old: any = [];
   last_files_array: any = [];
@@ -383,7 +382,7 @@ export class VendorFormComponent implements OnInit {
         that.uiSpinner.spin$.next(true);
         const formData_profle = new FormData();
         formData_profle.append("file", this.filepath);
-        formData_profle.append("folder_name", configdata.VENDOR_ATTECHMENT);
+        formData_profle.append("folder_name", wasabiImagePath.VENDOR_ATTECHMENT);
         that.httpCall
           .httpPostCall(
             httproutes.PORTAL_COMMON_COMPANY_SAVE_PROFILE,
@@ -398,7 +397,7 @@ export class VendorFormComponent implements OnInit {
               for (var i = 0; i < that.files.length; i++) {
                 formData.append("file[]", that.files[i]);
               }
-              formData.append("folder_name", configdata.VENDOR_ATTECHMENT);
+              formData.append("folder_name", wasabiImagePath.VENDOR_ATTECHMENT);
               that.httpCall
                 .httpPostCall(httproutes.PORTAL_ATTECHMENT, formData)
                 .subscribe(function (params) {
@@ -439,7 +438,7 @@ export class VendorFormComponent implements OnInit {
         const formData = new FormData();
         const formData_profle = new FormData();
         formData_profle.append("file", this.filepath);
-        formData_profle.append("folder_name", configdata.VENDOR_ATTECHMENT);
+        formData_profle.append("folder_name", wasabiImagePath.VENDOR_ATTECHMENT);
         that.httpCall
           .httpPostCall(
             httproutes.PORTAL_COMMON_COMPANY_SAVE_PROFILE,
@@ -453,7 +452,7 @@ export class VendorFormComponent implements OnInit {
               for (var i = 0; i < that.files.length; i++) {
                 formData.append("file[]", that.files[i]);
               }
-              formData.append("folder_name", configdata.VENDOR_ATTECHMENT);
+              formData.append("folder_name", wasabiImagePath.VENDOR_ATTECHMENT);
               that.httpCall
                 .httpPostCall(httproutes.PORTAL_ATTECHMENT, formData)
                 .subscribe(function (params) {

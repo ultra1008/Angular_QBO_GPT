@@ -749,7 +749,7 @@ export class VendorHistoryComponent implements OnInit {
 export class VendorReportComponent implements OnInit {
   public form: FormGroup;
 
-  VENDORSTATUS: any = configdata.VENDOR_STATUS;
+  VENDORSTATUS: any = configdata.superAdminStatus;
   selectable = true;
   removable = true;
   addOnBlur = true;
