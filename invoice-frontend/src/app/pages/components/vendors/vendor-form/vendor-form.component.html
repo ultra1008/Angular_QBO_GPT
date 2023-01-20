@@ -228,17 +228,19 @@
                                     }}</button>
                             </div>
                             <div class="mt-3">
-                                <div class="container-cust" [ngClass]="mode == 'on'? 'button_dark' : 'button_light'"
+                                <div class="container-cust" [ngClass]="mode == 'on'? 'button-dark' : 'button-light'"
                                     appDnd (fileDropped)="onFileDropped($event)">
                                     <input type="file" #fileDropRef id="fileDropRef" multiple
                                         (change)="fileBrowseHandler($event.target.files)" />
-                                    <label for="fileDropRef"><img src="{{add_my_self_Icon}}" alt="" height="20px">
+                                    <label for="fileDropRef"><img src="{{Add_my_self_icon}}" alt="" height="20px">
                                         {{'Location-Attachment' | translate}}</label>
                                 </div>
                             </div>
                         </div>
                     </form>
+
                 </div>
+
             </div>
 
             <div class="row cust-margin">

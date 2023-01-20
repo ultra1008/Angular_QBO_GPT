@@ -1100,7 +1100,7 @@ export enum httproutes {
     INVOICE_GET_VENDOR_DATATABLES = "/webapi/v1/portal/getvendordatatable",
     INVOICE_ARCHIVE_VENDOR = "/webapi/v1/portal/deletevendor",
     INVOICE_GET_VENDOR_HISTORY = "/webapi/v1/portal/getvendorhistory",
-    INVOICE_GET_VENDOR_REPORT = "webapi/v1/portal/getvendorreport",
+    INVOICE_GET_VENDOR_REPORT = "/webapi/v1/portal/getvendorreport",
     INVOICE_CHANGE_VENDOR_STATUS = "/webapi/v1/portal/vendorStatusUpdate",
     INVOICE_VENDOR_STATUS_COUNT = "/webapi/v1/portal/getvendorstatuscount",
 
