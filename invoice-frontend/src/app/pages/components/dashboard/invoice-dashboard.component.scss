@@ -228,7 +228,8 @@
 }
 
 .statastic-card-title {
-    margin-top: 5%;
+    margin-top: auto;
+    margin-bottom: auto;
     font-size: 15px;
 }
 
@@ -330,8 +331,9 @@
 .statastic-small-card-title {
     // margin-top: 5%;
     font-size: 10px;
-    margin-top: 5px;
-    margin-left: 5px;
+    padding: 5px;
+    // margin-top: 5px;
+    // margin-left: 5px;
 }
 
 .number-card-process {
@@ -365,7 +367,6 @@
 }
 
 .header-text-cust-chart {
-
     background-color: #fff;
     // text-align: center !important;
     max-height: 450px;
