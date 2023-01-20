@@ -42,6 +42,7 @@ const swalWithBootstrapButtons = Swal.mixin({
 export class VendorsComponent implements OnInit {
   @ViewChild(DataTableDirective, { static: false })
   datatableElement: DataTableDirective;
+
   @ViewChild("OpenFilebox") OpenFilebox: ElementRef<HTMLElement>;
   @ViewChild("gallery") gallery: NgxGalleryComponent;
   dtOptions: any = {};
@@ -255,7 +256,7 @@ export class VendorsComponent implements OnInit {
         $(".button_attachment").on("click", (event) => {
           this.imageObject = JSON.parse(
             event.target.getAttribute("edit_tmp_id")
-          ).vendor_attachment;
+          ).attachment;
           this.galleryImages = [];
           if (this.imageObject != undefined) {
             for (let i = 0; i < this.imageObject.length; i++) {
