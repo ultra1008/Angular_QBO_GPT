@@ -121,6 +121,8 @@ router.post('/webapi/v1/portal/importemployees', common.checkTokenExistOrNot, em
 router.post('/webapi/v1/portal/checkandinsertimportdata', common.checkTokenExistOrNot, employeeController.checkAndInsertImportData);
 router.get('/webapi/v1/portal/getarchiveteams', common.checkTokenExistOrNot, employeeController.getarchiveteams);
 router.post('/webapi/v1/portal/recoverteam', common.checkTokenExistOrNot, employeeController.recoverteam);
+router.get('/webapi/v1/portal/listManagementUser', common.checkTokenExistOrNot, employeeController.listManagementUser);
+router.post('/webapi/v1/portal/importManagementUser', common.checkTokenExistOrNot, employeeController.importManagementUser);
 
 let employeeCron = require("./employee/employeeCron");
 router.post('/webapi/v1/portal/userdocumentexpiryalert', common.checkTokenExistOrNot, employeeCron.userDocumentExpiryAlert);

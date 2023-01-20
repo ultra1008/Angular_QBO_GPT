@@ -866,7 +866,14 @@ module.exports.getAllUser = async function (req, res) {
                     $sort: { 'userstartdate': -1 }
                 }
             ]);
-            res.send({ data: user_by_id, message: translator.getStr('UserListing'), status: true });
+            var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+            let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
+            let checkManagement = _.find(company_data.otherstool, function (n) { return n.key == config.MANAGEMENT_KEY; });
+            let isManagement = false;
+            if (checkManagement) {
+                isManagement = true;
+            }
+            res.send({ data: user_by_id, is_management: isManagement, message: translator.getStr('UserListing'), status: true });
         } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
@@ -2139,6 +2146,7 @@ module.exports.getUserDocumentHistory = async function (req, res) {
 };
 
 var user_historySchema = require('./../../../../../model/history/user_history');
+const invoiceRolesSchema = require('./../../../../../model/invoice_roles');
 
 async function addUSER_History(action, data, decodedToken) {
     try {
@@ -4140,3 +4148,120 @@ module.exports.recoverteam = async function (req, res) {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
+
+// Get Management user
+module.exports.listManagementUser = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            let managementUserConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+            let match = {
+                is_delete: 0,
+                userstatus: 1,
+            };
+            let temp_users = await userConnection.find(match, { _id: 0, useremail: 1 });
+            let users = [];
+            temp_users.forEach((user) => {
+                users.push(user.useremail);
+            });
+            match.useremail = { $nin: users };
+            console.log("match", match);
+            let get_user = await managementUserConnection.find(match);
+            res.send({ status: true, data: get_user });
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            //connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+// get only those user whose email are not used as Invoice user's email
+module.exports.importManagementUser = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+            let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
+            let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+            let managementUserConnection = connection_db_api.model(collectionConstant.USER, userSchema);
+
+            let selectedPlan = company_data.billingplan;
+
+
+
+            for (let i = 0; i < requestObject.users.length; i++) {
+                let management_user = await managementUserConnection.findOne({ _id: ObjectID(requestObject.users[i]._id) }, { _id: 0, __v: 0 });
+                let new_user = new userConnection({ useremail: management_user.useremail });
+                let add = await new_user.save();
+                management_user.userroleId = requestObject.users[i].role_id;
+                management_user.usermanager_id = '';
+                management_user.usersupervisor_id = '';
+                management_user.userlocation_id = '';
+                management_user.usercreated_at = Math.round(new Date().getTime() / 1000);
+                management_user.userupdated_at = Math.round(new Date().getTime() / 1000);
+                management_user.usercreated_by = decodedToken.UserData._id;
+                management_user.userupdated_by = decodedToken.UserData._id;
+                // console.log("management_user", management_user);
+                await userConnection.updateOne({ _id: ObjectID(add._id) }, management_user);
+                // let add_user = new userConnection(management_user);
+                // let add = await add_user.save();
+                if (add) {
+                    history_object = management_user;
+                    history_object.user_id = add._id;
+                    // addUSER_History("Insert", history_object, decodedToken);
+                    const file_data = fs.readFileSync('./controller/emailtemplates/invitationuser.html', 'utf8');
+                    let emailTmp = {
+                        HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
+                        SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
+                        ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                        THANKS: translator.getStr('EmailTemplateThanks'),
+                        ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                        EMAILTITLE: `${translator.getStr('EmailInvitationUserTitle')} ${company_data.companyname} ${translator.getStr('EmailInvitationPortal')}`,
+                        USERNAME: `${translator.getStr('EmailLoginHello')} ${management_user.username}`,
+                        TEXT1: `${translator.getStr('EmailInvitationUserText1')}, ${company_data.companyname}.`,
+                        TEXT2: translator.getStr('EmailInvitationUserText2'),
+                        USEREMAIL: `${translator.getStr('EmailInvitationUserLoginEmail')} ${management_user.useremail}`,
+                        USERPASSWORD: ``,
+                        COMPANYCODE: `${translator.getStr('EmailInvitationUserCompanyCode')} ${decodedToken.companycode}`,
+                        DOWNLOAD_APP: translator.getStr('EmailInvitationUserDownloadApp'),
+                        LOG_IN: translator.getStr('EmailInvitationLogIn'),
+                        LOGIN_LINK: config.SITE_URL + "/login",
+
+                        COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
+                        COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
+                    };
+                    //translator.getStr('SomethingWrong')
+                    var template = handlebars.compile(file_data);
+                    var HtmlData = await template(emailTmp);
+                    let LowerCase_bucket = decodedToken.companycode.toLowerCase();
+                    var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+                    let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
+                    sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, management_user.useremail, "Rovuk Registration", HtmlData,
+                        talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
+                        talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                }
+                if (i == requestObject.users.length - 1) {
+                    res.send({ message: translator.getStr('ManagementUserImported'), status: true });
+                }
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            //connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+}; 
