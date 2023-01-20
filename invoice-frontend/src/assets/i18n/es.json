@@ -2402,5 +2402,7 @@
     "Vendor_Do_Want_Archive": "Do you want to archive this vendor?",
     "History_Vendor": "Vendor History",
     "All_TREMS": "All Terms",
-    "Company-Vendor-select-trems": "Please select the trems of the vendor"
+    "Company-Vendor-select-trems": "Please select the trems of the vendor",
+    "Export_Employee_Add_Team_Button": "Management User",
+    "Export_Management_User": " Import Management User"
 }

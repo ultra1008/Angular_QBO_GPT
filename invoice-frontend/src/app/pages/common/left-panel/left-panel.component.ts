@@ -51,7 +51,7 @@ export class LeftPanelComponent implements OnInit {
   /*
     Constructor
   */
-  constructor(private layoutService: LayoutService, private router: Router,
+  constructor (private layoutService: LayoutService, private router: Router,
     public mostusedservice: Mostusedservice, public route: ActivatedRoute, public translate: TranslateService) {
 
     var tmpurl = this.router.url.split("?");
@@ -155,7 +155,7 @@ export class LeftPanelComponent implements OnInit {
 
       // Daily Report Menu
       // if (that.role_permission.role_permission.dailyReports.View == true) {
-      if (true) {
+      /* if (true) {
         let reqObj = {
           name: textarray['Sidebar-Templates'],
           icon: '',
@@ -163,7 +163,7 @@ export class LeftPanelComponent implements OnInit {
           url: '/template',
         };
         that.menuList.splice(index++, 0, reqObj);
-      }
+      } */
 
       // Location
       // if (that.role_permission.role_permission.dailyReports.View == true) {

@@ -1,5 +1,5 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EmployeeService } from '../employee.service';
 import { Subject, Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
@@ -48,6 +48,7 @@ class DataTablesResponse {
 })
 
 export class EmployeeListComponent implements OnInit {
+  isManagement: boolean = true;
   usersArray: any;
   btn_grid_list_text: any;
   listtogrid_text: any;
@@ -191,6 +192,7 @@ export class EmployeeListComponent implements OnInit {
       if (data.status) {
         that.isEmployeeData = true;
         that.usersArray = data.data;
+        that.isManagement = data.is_management;
       }
     });
 
@@ -227,6 +229,24 @@ export class EmployeeListComponent implements OnInit {
   btnClick() {
     this.router.navigateByUrl('/employee-form');
   }
+
+  openManagementUserDialog() {
+    let that = this;
+    const dialogRef = this.dialog.open(ExportManagementUserComponent, {
+      height: "550px",
+      width: "750px",
+      disableClose: true,
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      that.employeeservice.getalluser().subscribe(function (data) {
+        if (data.status) {
+          that.usersArray = data.data;
+          that.isManagement = data.is_management;
+        }
+      });
+    });
+  }
+
   viewpageoprn(id: any) {
     this.router.navigateByUrl('/employee-view/' + id);
   }
@@ -848,6 +868,152 @@ export class TeamReportForm {
       let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
       this.emailsList.push(user_data.UserData.useremail);
       this.is_oneOnly = false;
+    }
+  }
+}
+
+@Component({
+  selector: 'export-management-user',
+  templateUrl: './export-management-user.html',
+  styleUrls: ['./employee-list.component.scss']
+})
+
+export class ExportManagementUserComponent {
+  exitIcon: string;
+  mode: any;
+  subscription: Subscription;
+  userList!: any[];
+  allRoles!: any[];
+  showLoader: boolean = true;
+  gifLoader: string = '';
+  selectedUserList: any = [];
+  newUserList: any = [];
+  Import_Management_User_Missing_Role: string = '';
+  UserLimitExceed: string = '';
+
+  constructor (
+    private modeService: ModeDetectService,
+    public dialogRef: MatDialogRef<ExportManagementUserComponent>,
+    public mostusedservice: Mostusedservice,
+    public httpCall: HttpCall,
+    public route: ActivatedRoute,
+    private formBuilder: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public snackbarservice: Snackbarservice,
+    public uiSpinner: UiSpinnerService,
+    public translate: TranslateService,
+  ) {
+    var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
+    this.mode = modeLocal === "on" ? "on" : "off";
+    if (this.mode == "off") {
+      this.exitIcon = icon.CANCLE;
+    } else {
+      this.exitIcon = icon.CANCLE_WHITE;
+    }
+    this.subscription = this.modeService.onModeDetect().subscribe((mode) => {
+      if (mode) {
+        this.mode = "off";
+        this.exitIcon = icon.CANCLE;
+      } else {
+        this.mode = "on";
+        this.exitIcon = icon.CANCLE_WHITE;
+      }
+    });
+    var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
+    tmp_locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configdata.fst_load_lang : tmp_locallanguage;
+    this.translate.use(tmp_locallanguage);
+    this.translate.stream(['']).subscribe((textarray) => {
+      this.Import_Management_User_Missing_Role = this.translate.instant('Import_Management_User_Missing_Role');
+      this.UserLimitExceed = this.translate.instant('UserLimitExceed');
+    });
+
+    this.userList = data?.reqData;
+    this.gifLoader = this.httpCall.getLoader();
+  }
+
+  ngOnInit(): void {
+
+    this.getAllUserList();
+    this.getAllRoles();
+
+  }
+  async getAllUserList() {
+    let data = await this.httpCall.httpGetCall(httproutes.PORTAL_GET_MANAGEMENT_USERS).toPromise();
+    if (data.status) {
+      data.data.forEach((element: any) => {
+        this.newUserList.push({ check: false, _id: element._id, role_id: '', role_name: '' });
+      });
+      this.userList = data.data;
+      this.showLoader = false;
+    }
+  }
+  getAllRoles() {
+    let that = this;
+    this.httpCall.httpGetCall(httproutes.PORTAL_SETTING_ROLES_ALL).subscribe(function (params) {
+      if (params.status) {
+        that.allRoles = params.data;
+      }
+    });
+  }
+
+  checkboxChange(i: any, user: any) {
+    this.newUserList[i].check = !this.newUserList[i].check;
+  }
+
+  selectRole(event: any, i: any) {
+    let one_role = _.find(this.allRoles, function (n: any) { return n.role_id == event.value; });
+    this.newUserList[i].role_id = one_role.role_id;
+    this.newUserList[i].role_name = one_role.role_name;
+  }
+
+  importFromManagement() {
+    let that = this;
+    let final_users = _.filter(that.newUserList, function (p) {
+      return p.check == true;
+    });
+    let checkInvalid = _.find(final_users, function (n: any) { return n.role_id == ""; });
+    if (checkInvalid) {
+      that.snackbarservice.openSnackBar(that.Import_Management_User_Missing_Role, "error");
+    } else {
+      that.uiSpinner.spin$.next(true);
+      let requestObject = {
+        users: final_users
+      };
+      that.httpCall.httpPostCall(httproutes.PORTAL_IMPORT_MANAGEMENT_USERS, requestObject).subscribe(function (params: any) {
+        if (params.status) {
+          that.dialogRef.close();
+          that.uiSpinner.spin$.next(false);
+          that.snackbarservice.openSnackBar(params.message, "success");
+        } else {
+          that.uiSpinner.spin$.next(false);
+          that.snackbarservice.openSnackBar(params.message, "error");
+        }
+      });
+      /* console.log("test: ", final_users);
+      let admin_total = _.filter(final_users, function (p) {
+        return p.role_name != configdata.ROLE_VIEWER;
+      });
+      let viewer_total = _.filter(final_users, function (p) {
+        return p.role_name == configdata.ROLE_VIEWER;
+      });
+      if (admin_total.length > that.remainning_plan.all_admin || viewer_total.length > that.remainning_plan.viewer) {
+        that.snackbarservice.openSnackBar(that.UserLimitExceed, "error");
+      } else {
+        that.uiSpinner.spin$.next(true);
+        let requestObject = {
+          users: final_users
+        };
+        that.httpCall.httpPostCall(httproutes.PORTAL_IMPORT_MANAGEMENT_USERS, requestObject).subscribe(function (params: any) {
+          if (params.status) {
+            that.dialogRef.close();
+            that.uiSpinner.spin$.next(false);
+            that.snackbarservice.openSnackBar(params.message, "success");
+          } else {
+            that.uiSpinner.spin$.next(false);
+            that.snackbarservice.openSnackBar(params.message, "error");
+          }
+        });
+      } */
     }
   }
 }

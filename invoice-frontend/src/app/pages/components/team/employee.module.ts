@@ -21,7 +21,7 @@ import { HttpClient } from '@angular/common/http';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { EmployeeFormComponent, ScheduleFormEmployee } from './employee-form/employee-form.component';
-import { BulkUploadErrorData, EmployeeListComponent, ImportButtonDownload, TeamHistory, TeamReportForm } from './employee-list/employee-list.component';
+import { BulkUploadErrorData, EmployeeListComponent, ExportManagementUserComponent, ImportButtonDownload, TeamHistory, TeamReportForm } from './employee-list/employee-list.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -76,7 +76,8 @@ registerLocaleData(localeFr);
     EmpListFilterPipe,
     EmpListFilterStatusPipe,
     TeamReportForm,
-    ArchiveTeamListComponent
+    ArchiveTeamListComponent,
+    ExportManagementUserComponent,
   ],
 
   imports: [

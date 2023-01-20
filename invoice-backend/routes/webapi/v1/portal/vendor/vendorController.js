@@ -288,38 +288,37 @@ module.exports.getVendorDatatable = async function (req, res) {
 
     if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
-
         try {
+            var requestObject = req.body;
             var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
             var col = [];
-            var match_query = { is_delete: req.body.is_delete };
+            var match_query = { is_delete: requestObject.is_delete };
             col.push("vendor_name", "vendor_id", "customer_id", "phone", "email", "address", "attachment", "status");
 
-            var start = parseInt(req.body.start) || 0;
-            var perpage = parseInt(req.body.length);
+            var start = parseInt(requestObject.start) || 0;
+            var perpage = parseInt(requestObject.length);
 
-            var columnData = (req.body.order != undefined && req.body.order != '') ? req.body.order[0].column : '';
-            var columntype = (req.body.order != undefined && req.body.order != '') ? req.body.order[0].dir : '';
+            var columnData = (requestObject.order != undefined && requestObject.order != '') ? requestObject.order[0].column : '';
+            var columntype = (requestObject.order != undefined && requestObject.order != '') ? requestObject.order[0].dir : '';
 
             var sort = {};
-            if (req.body.draw == 1) {
-                sort = { "createdAt": -1 };
+            if (requestObject.draw == 1) {
+                sort = { "created_at": -1 };
             } else {
                 sort[col[columnData]] = (columntype == 'asc') ? 1 : -1;
 
             }
             let query = {};
-            if (req.body.search.value) {
+            if (requestObject.search.value) {
                 query = {
                     $or: [
-                        { "vendor_name": new RegExp(req.body.search.value, 'i') },
-                        { "vendor_id": new RegExp(req.body.search.value, 'i') },
-                        { "customer_id": new RegExp(req.body.search.value, 'i') },
-                        { "phone": new RegExp(req.body.search.value, 'i') },
-                        { "email": new RegExp(req.body.search.value, 'i') },
-                        { "address": new RegExp(req.body.search.value, 'i') },
-                        { "attachment": new RegExp(req.body.search.value, 'i') },
-                        { "status": new RegExp(req.body.search.value, 'i') },
+                        { "vendor_name": new RegExp(requestObject.search.value, 'i') },
+                        { "vendor_id": new RegExp(requestObject.search.value, 'i') },
+                        { "customer_id": new RegExp(requestObject.search.value, 'i') },
+                        { "phone": new RegExp(requestObject.search.value, 'i') },
+                        { "email": new RegExp(requestObject.search.value, 'i') },
+                        { "address": new RegExp(requestObject.search.value, 'i') },
+                        { "status": new RegExp(requestObject.search.value, 'i') },
                     ]
                 };
             }
@@ -341,14 +340,13 @@ module.exports.getVendorDatatable = async function (req, res) {
             ];
             let count = 0;
             count = await vendorConnection.countDocuments(match_query);
-            let all_vendors = await vendorConnection.aggregate(aggregateQuery);
+            let all_vendors = await vendorConnection.aggregate(aggregateQuery).collation({ locale: "en_US" });
 
             var dataResponce = {};
             dataResponce.data = all_vendors;
-            dataResponce.draw = req.body.draw;
-            dataResponce.recordsTotle = count;
-            dataResponce.recordsFiltered = (req.body.search.value) ? all_vendors.length : count;
-            // console.log(dataResponce);
+            dataResponce.draw = requestObject.draw;
+            dataResponce.recordsTotal = count;
+            dataResponce.recordsFiltered = (requestObject.search.value) ? all_vendors.length : count;
             res.json(dataResponce);
         } catch (e) {
             console.log(e);

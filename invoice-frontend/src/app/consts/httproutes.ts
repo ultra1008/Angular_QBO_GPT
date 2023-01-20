@@ -752,6 +752,8 @@ export enum httproutes {
     // Employee
     PORTAL_GET_ALL_USERS = "/webapi/v1/portal/getalluser", // For display in team menu
     PORTAL_GET_ALL_USERS_LIST = "/webapi/v1/portal/getalluserlist", // For display user list in dropdown
+    PORTAL_GET_MANAGEMENT_USERS = "/webapi/v1/portal/listManagementUser",
+    PORTAL_IMPORT_MANAGEMENT_USERS = "/webapi/v1/portal/importManagementUser",
 
     // Project User
     PORTAL_GET_USERS_FOR_ADD_PROJECT_USERS = "/webapi/v1/portal/getsuersforaddprojectUser",

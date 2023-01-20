@@ -87,6 +87,7 @@ module.exports = {
     PasswordNotMatched: 'Old password not matched.',
     WrongPassword: 'Wrong pasword.',
     UserNotFound: "User not found.",
+    ManagementUserImported: "Management user imported successfully.",
 
     // Supplier Company Code
     CompanyCodeAdd: "Company code added successfully.",
