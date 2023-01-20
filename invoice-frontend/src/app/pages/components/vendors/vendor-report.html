@@ -1,7 +1,3 @@
-<!-- <div class="modal-header cust-report-header-footer-div">
-    <h2 class="modal-title" id="modal-basic-title" class="cust-report-label-header-text">{{'Company-Vendor-Report' |
-        translate}}</h2>
-</div> -->
 <div class="row modal-header">
     <div class="col-2 dialog-head-left"></div>
     <div class="col-8 dialog-head-center">
@@ -19,38 +15,22 @@
 <form [formGroup]="vendorInfo">
     <div class="modal-body">
         <h4 mat-dialog-title class="cust-report-label-header-text">
-            {{'Company-Vendor-select-status' | translate}}
+            {{'Company-Vendor-select-trems' | translate}}
         </h4>
         <div>
-            <mat-checkbox formControlName="All_Status" (change)="onChangeValueAll_Status($event)" class="example-margin"
-                color="primary">{{'Company-Vendor-All-status' | translate}}</mat-checkbox>
+            <mat-checkbox formControlName="All_Terms" (change)="onChangeValueAll_Terms($event)" class="example-margin"
+                color="primary">{{'All_TREMS' | translate}}</mat-checkbox>
         </div>
-        <!-- <mat-form-field appearance="outline" class="cust-report-full-width-fields">
-            <mat-label>{{'Company-Vendor-Status-Types' | translate}}</mat-label>
-            <mat-select formControlName="vendor_status" required placeholder="Status" multiple>
-                <mat-option *ngFor="let vendor of VENDORSTATUS" [value]="vendor.value">
-                    {{vendor.tmp_lanaguage | translate}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field> -->
-
         <mat-form-field appearance="outline" class="main-one-input-field">
             <mat-label>{{'Company-Vendor-Terms' | translate }}</mat-label>
-            <mat-select formControlName="terms_id" placeholder="{{'Company-Vendor-Terms' | translate }}" required>
+            <mat-select formControlName="terms_ids" multiple placeholder="{{'Company-Vendor-Terms' | translate }}"
+                required>
                 <mat-option *ngFor="let item of termList" [value]="item._id">
                     {{item.name}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
 
-
-        <h4 mat-dialog-title class="cust-report-label-header-text">
-            {{'Company-Vendor-select-contacts' | translate}}
-        </h4>
-        <div>
-            <mat-checkbox formControlName="All_Contact" (change)="onChangeValueAll_Contact($event)"
-                class="example-margin" color="primary">{{'Company-Vendor-All-Contact' | translate}}</mat-checkbox>
-        </div>
         <h4 mat-dialog-title class="cust-report-label-header-text">
             {{'Company-Expenses-Send-report' | translate}}
             <button mat-raised-button color="primary" *ngIf="is_oneOnly" (click)="ADD_MY_SELF()">

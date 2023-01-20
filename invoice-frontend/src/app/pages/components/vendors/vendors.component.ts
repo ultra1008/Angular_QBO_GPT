@@ -60,23 +60,18 @@ export class VendorsComponent implements OnInit {
   Vendor_Attachments: string;
   Vendor_Status: string;
   Vendor_Description: string;
-  Vendor_CostCode: string;
   Vendor_Terms: string;
-  Vendor_ZipCode: string;
   Customer_Id: string;
   Vendor_ID: string;
   Vendor_Do_Want_Archive: string = "";
   Compnay_Equipment_Delete_Yes: string = "";
   Compnay_Equipment_Delete_No: string = "";
-  Data_Not_Found: string = "";
-  Compnay_Vendor_Report_Download: string = "";
-  Company_Equipment_File_Not_Match: string = "";
+  deleteIcon: string;
   Listing_Action_Edit: string = "";
   Archived_all: string = "";
   acticve_word: string = "";
   inacticve_word: string = "";
   archivedIcon: string;
-  importIcon: string;
   mode: any;
   historyIcon: string;
   reportIcon: string;
@@ -86,7 +81,6 @@ export class VendorsComponent implements OnInit {
   yesButton: string = "";
   noButton: string = "";
   editIcon: string;
-  deleteIcon: string;
   count = {
     active: 0, inactive: 0
   };
@@ -106,16 +100,16 @@ export class VendorsComponent implements OnInit {
       this.reportIcon = icon.REPORT;
       this.historyIcon = icon.HISTORY;
       this.archivedIcon = icon.ARCHIVE;
-      this.importIcon = icon.IMPORT;
+      this.deleteIcon = icon.DELETE_WHITE;
       this.editIcon = icon.EDIT;
-      this.deleteIcon = icon.DELETE;
+
     } else {
       this.reportIcon = icon.REPORT_WHITE;
       this.historyIcon = icon.HISTORY_WHITE;
       this.archivedIcon = icon.ARCHIVE_WHITE;
-      this.importIcon = icon.IMPORT_WHITE;
-      this.editIcon = icon.EDIT_WHITE;
       this.deleteIcon = icon.DELETE_WHITE;
+      this.editIcon = icon.EDIT_WHITE;
+
     }
     let j = 0;
     this.subscription = this.modeService.onModeDetect().subscribe((mode) => {
@@ -124,15 +118,15 @@ export class VendorsComponent implements OnInit {
         this.reportIcon = icon.REPORT;
         this.historyIcon = icon.HISTORY;
         this.archivedIcon = icon.ARCHIVE;
-        this.importIcon = icon.IMPORT;
+        this.deleteIcon = icon.DELETE_WHITE;
         this.editIcon = icon.EDIT;
-        this.deleteIcon = icon.DELETE;
+
       } else {
         this.mode = "on";
         this.reportIcon = icon.REPORT_WHITE;
         this.historyIcon = icon.HISTORY_WHITE;
         this.archivedIcon = icon.ARCHIVE_WHITE;
-        this.importIcon = icon.IMPORT_WHITE;
+
         this.editIcon = icon.EDIT_WHITE;
         this.deleteIcon = icon.DELETE_WHITE;
       }
@@ -158,6 +152,7 @@ export class VendorsComponent implements OnInit {
   ngOnInit(): void {
     const that = this;
     that.statusCount();
+    that.getAllTerms();
     let role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
 
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
@@ -194,13 +189,7 @@ export class VendorsComponent implements OnInit {
       that.Compnay_Equipment_Delete_No = that.translate.instant(
         "Compnay_Equipment_Delete_No"
       );
-      that.Data_Not_Found = that.translate.instant("Data_Not_Found");
-      that.Compnay_Vendor_Report_Download = that.translate.instant(
-        "Compnay_Vendor_Report_Download"
-      );
-      that.Company_Equipment_File_Not_Match = that.translate.instant(
-        "Company_Equipment_File_Not_Match"
-      );
+
       that.Listing_Action_Edit = that.translate.instant("Listing_Action_Edit");
       that.Archived_all = that.translate.instant(
         "Archived_all"
@@ -594,6 +583,7 @@ export class VendorsComponent implements OnInit {
       width: '800px',
       data: {
         termList: this.termList,
+
       },
       disableClose: true
     });
@@ -610,7 +600,7 @@ export class VendorsComponent implements OnInit {
         if (params.status) {
           that.termList = params.data;
         }
-        console.log("termList", that.termList);
+
       });
   }
 
@@ -643,7 +633,6 @@ export class VendorHistoryComponent implements OnInit {
   search: string = "";
   is_httpCall: boolean = false;
   todayactivity_search!: String;
-
   activityIcon!: string;
   isSearch: boolean = false;
   subscription: Subscription;
@@ -748,25 +737,23 @@ export class VendorHistoryComponent implements OnInit {
 })
 export class VendorReportComponent implements OnInit {
   public form: FormGroup;
-
-  VENDORSTATUS: any = configdata.superAdminStatus;
   selectable = true;
   removable = true;
   addOnBlur = true;
-  readonly separatorKeysCodes = [ENTER, COMMA] as const;
   emailsList: any[] = [];
   vendorInfo: FormGroup;
   Report_File_Message: string = "";
   Report_File_Enter_Email: string = "";
   is_oneOnly: boolean = true;
-  saveIcon = icon.SAVE_WHITE;
   exitIcon: string;
   yesButton: string = "";
   noButton: string = "";
   mode: any;
   subscription: Subscription;
   copyDataFromProject: string = "";
-  termList: [];
+  termList: any = [];
+  saveIcon = icon.SAVE_WHITE;
+  readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
   /*Constructor*/
   constructor(
@@ -779,14 +766,15 @@ export class VendorReportComponent implements OnInit {
     public uiSpinner: UiSpinnerService,
     public translate: TranslateService
   ) {
+    console.log("data2", data);
+    this.termList = data.termList;
     this.Report_File_Message = this.translate.instant("Report_File_Message");
     this.Report_File_Enter_Email = this.translate.instant(
       "Report_File_Enter_Email"
     );
     this.vendorInfo = this.formBuilder.group({
-      All_Status: [true],
-      terms_id: [this.VENDORSTATUS.map((el) => el.value)],
-      All_Contact: [true],
+      All_Terms: [true],
+      terms_ids: [this.termList.map((el) => el._id)],
     });
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
@@ -806,8 +794,7 @@ export class VendorReportComponent implements OnInit {
         this.exitIcon = icon.CANCLE_WHITE;
       }
     });
-    //let that = this;
-    // this.uiSpinner.spin$.next(true);
+
     this.translate.stream([""]).subscribe((textarray) => {
       this.copyDataFromProject = this.translate.instant(
         "Copy_Data_From_Project"
@@ -815,6 +802,21 @@ export class VendorReportComponent implements OnInit {
       this.yesButton = this.translate.instant("Compnay_Equipment_Delete_Yes");
       this.noButton = this.translate.instant("Compnay_Equipment_Delete_No");
     });
+  }
+
+  /*
+ngOnInit
+*/
+  ngOnInit(): void {
+    let that = this;
+    this.vendorInfo.get("terms_ids")
+      .valueChanges.subscribe(function (params: any) {
+        if (params.length == that.termList.length) {
+          that.vendorInfo.get("All_Terms").setValue(true);
+        } else {
+          that.vendorInfo.get("All_Terms").setValue(false);
+        }
+      });
   }
 
   isValidMailFormat(value): any {
@@ -856,37 +858,16 @@ export class VendorReportComponent implements OnInit {
     }
   }
 
-  onChangeValueAll_Status(params) {
+  onChangeValueAll_Terms(params) {
     if (params.checked) {
       this.vendorInfo
-        .get("vendor_status")
-        .setValue(this.VENDORSTATUS.map((el) => el.value));
+        .get("terms_ids")
+        .setValue(this.termList.map((el) => el._id));
     } else {
-      this.vendorInfo.get("vendor_status").setValue([]);
+      this.vendorInfo.get("terms_ids").setValue([]);
     }
   }
 
-  onChangeValueAll_Contact(params) {
-    if (params.checked) {
-    } else {
-    }
-  }
-
-  /*
-ngOnInit
-*/
-  ngOnInit(): void {
-    let that = this;
-    this.vendorInfo
-      .get("vendor_status")
-      .valueChanges.subscribe(function (params: any) {
-        if (params.length == that.VENDORSTATUS.length) {
-          that.vendorInfo.get("All_Status").setValue(true);
-        } else {
-          that.vendorInfo.get("All_Status").setValue(false);
-        }
-      });
-  }
 
   /*
    *

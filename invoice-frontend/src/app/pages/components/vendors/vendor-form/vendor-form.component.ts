@@ -40,10 +40,8 @@ const swalWithBootstrapButtons = Swal.mixin({
   styleUrls: ['./vendor-form.component.scss']
 })
 export class VendorFormComponent implements OnInit {
-
   @ViewChild("OpenFilebox") OpenFilebox: ElementRef<HTMLElement>;
   @ViewChild("gallery") gallery: NgxGalleryComponent;
-
   imageError: string;
   cardImageBase64: string;
   filepath: any;
@@ -64,10 +62,7 @@ export class VendorFormComponent implements OnInit {
   files_old: any = [];
   last_files_array: any = [];
   map_flag: boolean = true;
-
-  // Cost code list variable - For cost code dropdown
-  variablescostCodeList: any = [];
-  costCodeList: any = this.variablescostCodeList.slice();
+  Add_my_self_icon = icon.ADD_MY_SELF_WHITE;
   termList = [];
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[] = [];
