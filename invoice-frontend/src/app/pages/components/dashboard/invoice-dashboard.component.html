@@ -60,9 +60,9 @@
                     <div class="statastic-card mt-2 "
                         [ngClass]="mode == 'on'? 'header-text-cust-card-dark' : 'header-text-cust-card '">
                         <div class="statastic-small-card-title">
-                            <p>Invoice#: 561235</p>
-                            <p class="ml-2">Invoice date: 12/05</p>
-                            <p class="ml-2">Last update: 11/05</p>
+                            <div>Invoice#: 561235</div>
+                            <div class="ml-2">Invoice date: 12/05</div>
+                            <div class="ml-2">Last update: 11/05</div>
                         </div>
 
                         <div class="number-card-small">
@@ -81,9 +81,9 @@
                     <div class="statastic-card mt-2"
                         [ngClass]="mode == 'on'? 'header-text-cust-card-dark' : 'header-text-cust-card '">
                         <div class="statastic-small-card-title">
-                            <p>Invoice#: 561235</p>
-                            <p class="ml-2">Invoice date: 12/05</p>
-                            <p class="ml-2">Last update: 11/05</p>
+                            <div>Invoice#: 561235</div>
+                            <div class="ml-2">Invoice date: 12/05</div>
+                            <div class="ml-2">Last update: 11/05</div>
                         </div>
 
                         <div class="number-card-process">
@@ -102,9 +102,9 @@
                     <div class="statastic-card mt-2"
                         [ngClass]="mode == 'on'? 'header-text-cust-card-dark' : 'header-text-cust-card '">
                         <div class="statastic-small-card-title">
-                            <p>Invoice#: 561235</p>
-                            <p class="ml-2">Invoice date: 12/05</p>
-                            <p class="ml-2">Last update: 11/05</p>
+                            <div>Invoice#: 561235</div>
+                            <div class="ml-2">Invoice date: 12/05</div>
+                            <div class="ml-2">Last update: 11/05</div>
                         </div>
 
                         <div class="number-card-cancle">
@@ -124,8 +124,7 @@
                 <div class="main-row-cust-div">
                     <div class="one-div-cust-user">
                         <b class="ml-1">Reports</b>
-                        <div class=" mt-2"
-                            [ngClass]="mode == 'on'? 'header-text-cust-chart-dark' : 'header-text-cust-chart '">
+                        <div class=" mt-2">
                             <div class="card-body">
                                 <div style="display: block;">
                                     <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels"
@@ -143,7 +142,7 @@
                     <div class="one-div-cust-user">
                         <b class="ml-1">Last Activity History</b>
                         <div class=" mt-2"
-                            [ngClass]="mode == 'on'? 'header-text-cust-chart-dark' : 'header-text-cust-chart '">
+                            [ngClass]="mode == 'on'? 'header-text-cust-chart-dark' : 'header-text-cust-chart'">
                             <p style="font-size: 10px;  word-wrap: break-word; text-align: left; color: #06479D;">
                                 Today
                             </p>
