@@ -290,5 +290,8 @@ router.post('/webapi/v1/portal/datatabletemplate', common.checkTokenExistOrNot, 
 router.post('/webapi/v1/portal/datatablehistorytemplate', common.checkTokenExistOrNot, invoice_templateValidation.datatablehistoryTemplate, invoice_templateController.historydatatable);
 
 router.post('/webapi/v1/portal/urlToBase64api', common.urlToBase64Api);
+var saveAttechment = require("./../../../../controller/common/saveAttechment");
+router.post('/webapi/v1/portal/saveattechment', common.checkTokenExistOrNot, saveAttechment.saveAttechment);
+router.post('/webapi/v1/portal/saveprofileimagescompany', common.checkTokenExistOrNot, saveAttechment.saveProfileImagesCompany);
 
 module.exports = router;

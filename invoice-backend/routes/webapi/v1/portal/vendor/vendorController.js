@@ -303,7 +303,7 @@ module.exports.getVendorDatatable = async function (req, res) {
 
             var sort = {};
             if (req.body.draw == 1) {
-                sort = { "createdAt": -1 };
+                sort = { "created_at": -1 };
             } else {
                 sort[col[columnData]] = (columntype == 'asc') ? 1 : -1;
 
@@ -318,7 +318,6 @@ module.exports.getVendorDatatable = async function (req, res) {
                         { "phone": new RegExp(req.body.search.value, 'i') },
                         { "email": new RegExp(req.body.search.value, 'i') },
                         { "address": new RegExp(req.body.search.value, 'i') },
-                        { "attachment": new RegExp(req.body.search.value, 'i') },
                         { "status": new RegExp(req.body.search.value, 'i') },
                     ]
                 };

@@ -24,7 +24,6 @@ const saveVendor = (req, res, next) => {
         "state": "required",
         "zipcode": "required",
         "terms_id": "required",
-        "image": "required",
     };
     validator(req.body, validationRule, {}, (error, status) => {
         if (!status) {

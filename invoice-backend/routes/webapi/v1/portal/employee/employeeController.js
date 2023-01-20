@@ -3562,7 +3562,6 @@ async function getAllpayroll_group(decodedToken) {
 };
 
 async function getAllRoles(decodedToken) {
-
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
@@ -3592,14 +3591,12 @@ async function getAllRoles(decodedToken) {
 module.exports.importEmployees = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
-
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
 
             let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             let creditcardsettingsCollection = connection_db_api.model(collectionConstant.CREDITCARD, creditcardsettingsSchema);
-
             let none_creditcardsettings = await creditcardsettingsCollection.findOne({ name: "None" });
             var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
 
@@ -3654,7 +3651,8 @@ module.exports.importEmployees = async function (req, res) {
                                     data.push(res);
                                 });
                             }
-
+                            let adminCount = 0;
+                            let viewerCount = 0;
                             for (let m = 0; m < data.length; m++) {
                                 if (data[m].userdepartment != undefined && data[m].userdepartment != null && data[m].userdepartment != "") {
                                     var Obj_department_name = _.find(all_department, function (o) { return o.department_name == data[m].userdepartment; });
@@ -3679,19 +3677,10 @@ module.exports.importEmployees = async function (req, res) {
                                         //delete data[m].userjob_type
                                     }
                                 }
-
-                                /* if (data[m].payroll_group != undefined && data[m].payroll_group != null && data[m].payroll_group != "") {
-                                    var Obj_payroll_group_name = _.find(All_payroll_group, function (o) { return o.payroll_group_name == data[m].payroll_group; });
-                                    if (Obj_payroll_group_name != null || Obj_payroll_group_name != undefined) {
-                                        data[m].user_id_payroll_group = Obj_payroll_group_name._id
-                                        //delete data[m].payroll_group
-                                    }
-                                } */
-                                data[m].user_id_payroll_group = All_payroll_group[0]._id;
-
                                 if (data[m].user_role != undefined && data[m].user_role != null && data[m].user_role != "") {
                                     var Obj_AllRoles = _.find(AllRoles, function (o) { return o.role_name == data[m].user_role; });
                                     if (Obj_AllRoles != null || Obj_AllRoles != undefined) {
+                                        // console.log("***************************** matching role", Obj_AllRoles.role_id, Obj_AllRoles.role_name, Obj_AllRoles._id, Obj_AllRoles);
                                         data[m].userroleId = Obj_AllRoles.role_id;
                                         //delete data[m].user_role
                                     }
@@ -3710,9 +3699,9 @@ module.exports.importEmployees = async function (req, res) {
 
                                 data[m].userfullname = `${data[m].userfirstname} ${data[m].userlastname}`;
                                 if (data[m].userdepartment_id == undefined || data[m].userjob_title_id == undefined || data[m].userjob_type_id == undefined ||
-                                    data[m].user_id_payroll_group == undefined || data[m].userroleId == undefined || data[m].user_payroll_rules == undefined) {
+                                    data[m].userroleId == undefined || data[m].user_payroll_rules == undefined) {
                                     data[m].status = false;
-                                    console.log(" data[m].: ", data[m]);
+                                    // console.log(" data[m].: ", data[m]);
                                     data[m].message = translator.getStr('Data_Missing');
                                     error_data.push({ data: data[m], message: translator.getStr('Data_Missing') });
                                 } else {
@@ -3720,6 +3709,13 @@ module.exports.importEmployees = async function (req, res) {
                                     if (objRes.status) {
                                         data[m].status = objRes.status;
                                         data[m].message = objRes.message;
+                                        if (objRes.role != '' && objRes.role != null && objRes.role != undefined) {
+                                            if (objRes.role == config.ROLE_VIEWER) {
+                                                viewerCount++;
+                                            } else {
+                                                adminCount++;
+                                            }
+                                        }
                                         success_data.push({ data: data[m], message: objRes.message });
                                     } else {
                                         data[m].status = objRes.status;
@@ -3734,17 +3730,13 @@ module.exports.importEmployees = async function (req, res) {
                                         status: true,
                                         data: data,
                                         error_data: error_data,
-                                        success_data: success_data
+                                        success_data: success_data,
                                     });
                                 }
                             }
-
-
-                            //console.log("-=-=-=-", data)
                         }
                     }
                 });
-
         } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
