@@ -83,6 +83,7 @@ export class EmployeeFormComponent implements OnInit {
   personalicon = icon.PERSONAL_INFO;
   personalwhiteicon = icon.PERSONAL_INFO_WHITE;
   close_this_window: string = "";
+  Empty_Temporary_Password: string = "";
 
   constructor(private location: Location, private modeService: ModeDetectService, public mostusedservice: Mostusedservice, private formBuilder: FormBuilder,
     public spinner: UiSpinnerService, public employeeservice: EmployeeService, public snackbarservice: Snackbarservice,
@@ -93,6 +94,7 @@ export class EmployeeFormComponent implements OnInit {
       that.Compnay_Equipment_Delete_No = that.translate.instant('Compnay_Equipment_Delete_No');
       that.YOU_WANT_TO_ADD_SCHEDULE = that.translate.instant("YOU_WANT_TO_ADD_SCHEDULE");
       that.close_this_window = that.translate.instant("close_this_window");
+      this.Empty_Temporary_Password = this.translate.instant("Empty_Temporary_Password");
     });
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
