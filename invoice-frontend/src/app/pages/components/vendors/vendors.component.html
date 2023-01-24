@@ -1,9 +1,3 @@
-<div class="row mr-2" style="justify-content: right;">
-    <button mat-raised-button color="primary" style="margin-right: 10px; " (click)="openVendorForm()"
-        class="sign-button ml-1"><img src="{{add_my_self_icon}}" alt="" height="20px">
-        {{'Add-Vendor' | translate }}
-    </button>
-</div>
 <div class="display-inline-cust">
     <div class="main-search-bar">
         <div class="row d-flex justify-content-between m-3 py-3">
@@ -37,6 +31,10 @@
                     mat-raised-button>
                     <img src="{{archivedIcon}}" alt="" class="pr-1" height="19px">
                     {{'Archived_all' | translate }}
+                </button>
+                <button mat-raised-button color="primary" style="margin-right: 10px; " (click)="openVendorForm()"
+                    class="sign-button ml-1"><img src="{{add_my_self_icon}}" alt="" height="20px">
+                    {{'Add-Vendor' | translate }}
                 </button>
             </div>
         </div>
