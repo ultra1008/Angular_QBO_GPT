@@ -296,4 +296,10 @@ var saveAttechment = require("./../../../../controller/common/saveAttechment");
 router.post('/webapi/v1/portal/saveattechment', common.checkTokenExistOrNot, saveAttechment.saveAttechment);
 router.post('/webapi/v1/portal/saveprofileimagescompany', common.checkTokenExistOrNot, saveAttechment.saveProfileImagesCompany);
 
+let processInvoiceController = require('./process_invoice/processInvoiceController');
+let processInvoiceValidation = require('./process_invoice/processInvoiceValidation');
+router.get('/webapi/v1/portal/getinvoiceprocess', common.checkTokenExistOrNot, processInvoiceController.getAllProcessInvoice);
+router.post('/webapi/v1/portal/saveinvoiceprocess', common.checkTokenExistOrNot, processInvoiceController.saveInvoiceProcess);
+router.post('/webapi/v1/portal/deleteinvoiceprocess', common.checkTokenExistOrNot, processInvoiceValidation.deleteInvoiceProcess, processInvoiceController.deleteInvoiceProcess);
+
 module.exports = router;
