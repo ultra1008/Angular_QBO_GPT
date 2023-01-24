@@ -14,27 +14,28 @@ from extractors import ExpensesCreator, ExtractorsManager
 from indexer import Indexer
 
 
-def process_documents_bundle(documents_bundle_url):
-    print(f'started process_document_bundle: {documents_bundle_url}')
+def process_documents_bundle(data):
     for _ in range(3):
         print('#'*100)
 
-    custom_fields_conf = _load_custom_fields_conf()
-    extracted_documents = ExtractorsManager(documents_bundle_url, custom_fields_conf).extract()
+    print(f'started process_document_bundle: {data}')
 
-    indices = [i for i in range(len(documents_bundle_url)) if documents_bundle_url[i] == '/']
-    customer_id = documents_bundle_url[indices[2] + 1: indices[3]]
+    custom_fields_conf = _load_custom_fields_conf()
+    extracted_documents = ExtractorsManager(data['document_url'], custom_fields_conf).extract()
+
+    indices = [i for i in range(len(data['document_url'])) if data['document_url'][i] == '/']
+    customer_id = data['document_url'][indices[2] + 1: indices[3]]
 
     redis = Redis.from_url('redis://cache:6379/0')
     customer_lock = Redlock(key=customer_id, masters={redis}, auto_release_time=5*60)
     try:
         with customer_lock:
-            Indexer().index(customer_id, documents_bundle_url, extracted_documents)
+            Indexer().index(customer_id, data['document_id'], data['document_url'], extracted_documents)
 
     except ReleaseUnlockedLock:
-        print(f'Released unlocked lock for key: {customer_id} of url: {documents_bundle_url}')
+        print(f'Released unlocked lock for key: {customer_id} of url: {data["document_url"]}')
 
-    print(f'ended process_document_bundle: {documents_bundle_url}')
+    print(f'ended process_document_bundle: {data["document_url"]}')
 
 
 def _load_custom_fields_conf():

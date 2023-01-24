@@ -315,6 +315,7 @@ class ExtractorsManager:
                 self.documents_bundle_pages
         )):
             doc_type = self._detect_doc_type(expense_json)
+            print(f'{doc_type=}')
             expense_parser = ExpenseParser(expense_json).parse()
             forms_parser = FormsParser(s3_document_page, i_page, self.documents_bundle_url)
 

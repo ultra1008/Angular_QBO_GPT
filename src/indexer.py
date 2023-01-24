@@ -12,18 +12,53 @@ class Indexer:
         # If the index already exists, MongoDB will not recreate the index
         self.db.documents.create_index([('searchable', pymongo.TEXT)], name='document_fields')
         self.db.relations.create_index([('relation_id', ASCENDING)], name='relation_id')
+        self.db.relations.create_index([('document_id', ASCENDING)], name='document_id')
 
 
-    def index(self, customer_id, s3_docs_bundle_url, documents):
+    def index(self, customer_id, document_id, s3_docs_bundle_url, documents):
         for doc in documents:
-            self._index_document(customer_id, s3_docs_bundle_url, doc)
+            self._index_document(customer_id, document_id, s3_docs_bundle_url, doc)
+
+    def _index_document(self, customer_id, document_id, s3_docs_bundle_url, document):
+        if document['document_type'] == 'PURCHASE_ORDER':
+            self._index_purchase_order_document(customer_id, document_id, s3_docs_bundle_url, document)
+        elif document['document_type'] == 'PACKING_SLIP':
+            self._index_packing_slip_document(customer_id, document_id, s3_docs_bundle_url, document)
+        elif document['document_type'] == 'QUOTE':
+            self._index_quote_document(customer_id, document_id, s3_docs_bundle_url, document)
+        elif document['document_type'] == 'INVOICE':
+            self._index_invoice_document(customer_id, document_id, s3_docs_bundle_url, document)
+
 
     def search(self, customer_id, query):
         if 'documents' not in self.db.list_collection_names():
             return []
 
         documents = list(self.db.documents.find({'customer_id': customer_id, '$text': {'$search': query}}))
+        return self._compose_documents(documents)
 
+
+    def get_documents_by_id(self, customer_id, document_ids):
+        print('get_documents_by_id')
+        if 'documents' not in self.db.list_collection_names():
+            return []
+
+        documents = list(self.db.documents.find({'customer_id': customer_id, 'document_id': {'$in': document_ids}}))
+        documents = self._compose_documents(documents)
+
+        results = {}
+        for doc in documents:
+            if doc['document_id'] not in results:
+                results[doc['document_id']] = []
+            results[doc['document_id']].append(doc)
+
+        for did in document_ids:
+            if did not in results:
+                results[did] = None
+
+        return results
+
+    def _compose_documents(self, documents):
         relation_ids = list({doc['relation_id'] for doc in documents})
         relations = list(self.db.relations.find({"relation_id": {'$in': relation_ids}}))
         related_document_ids = []
@@ -38,6 +73,7 @@ class Indexer:
         for doc_set in documents:
             doc_set_result = {
                 'document_type': doc_set['document_type'],
+                'document_id': doc_set['document_id'],
                 'document_url': doc_set['url'],
                 'document_pages': [{
                         'fields': doc['fields'],
@@ -51,6 +87,7 @@ class Indexer:
             related = [rel for rel in related if rel != doc_set['_id']]
             doc_set_result['related_documents'] = [{
                     'document_type': all_related_documents_map[rel]['document_type'],
+                    'document_id': doc_set['document_id'],
                     'document_url': all_related_documents_map[rel]['url'],
                     'document_pages': [{
                             'fields': doc['fields'],
@@ -66,21 +103,6 @@ class Indexer:
 
         return results
 
-
-    def _index_document(self, customer_id, s3_docs_bundle_url, document):
-        if document['document_type'] == 'PURCHASE_ORDER':
-            self._index_purchase_order_document(customer_id, s3_docs_bundle_url, document)
-        elif document['document_type'] == 'PACKING_SLIP':
-            self._index_packing_slip_document(customer_id, s3_docs_bundle_url, document)
-        elif document['document_type'] == 'QUOTE':
-            self._index_quote_document(customer_id, s3_docs_bundle_url, document)
-        elif document['document_type'] == 'INVOICE':
-            self._index_invoice_document(customer_id, s3_docs_bundle_url, document)
-
-# class Database:
-#     def __init__(self):
-#         client = MongoClient()
-#         self.db = client.rovuk_db
 
     @staticmethod
     def _generate_uuid():
@@ -118,7 +140,7 @@ class Indexer:
 
         return new_relation_id
 
-    def _index_quote_document(self, customer_id, s3_docs_bundle_url, document):
+    def _index_quote_document(self, customer_id, document_id, s3_docs_bundle_url, document):
         n_docs = 0
         if document['fields']['QUOTE_NUMBER']:
             n_docs = self.db.documents.count_documents({
@@ -158,6 +180,15 @@ class Indexer:
                 if matched_po:
                     relation_id = self._relate_to_matched(customer_id, matched_po, relation_id)
 
+            # Insert document-id
+            self.db.documents.update_one({
+                'customer_id': customer_id,
+                'document_type': 'QUOTE',
+                'quote_number': document['fields']['QUOTE_NUMBER']
+            }, {
+                '$set': {'document_id': document_id}
+            })
+
         else:
             self.db.documents.update_one({
                 'customer_id': customer_id,
@@ -171,7 +202,7 @@ class Indexer:
             })
 
 
-    def _index_purchase_order_document(self, customer_id, s3_docs_bundle_url, document):
+    def _index_purchase_order_document(self, customer_id, document_id, s3_docs_bundle_url, document):
         n_docs = 0
         if document['fields']['PO_NUMBER']:
             n_docs = self.db.documents.count_documents({
@@ -232,6 +263,14 @@ class Indexer:
                 if matched_ps:
                     relation_id = self._relate_to_matched(customer_id, matched_ps, relation_id)
 
+            # Insert document-id
+            self.db.documents.update_one({
+                'customer_id': customer_id,
+                'document_type': 'PURCHASE_ORDER',
+                'po_number': document['fields']['PO_NUMBER']
+            }, {
+                '$set': {'document_id': document_id}
+            })
         else:
             self.db.documents.update_one({
                 'customer_id': customer_id,
@@ -244,7 +283,7 @@ class Indexer:
                 },
             })
 
-    def _index_invoice_document(self, customer_id, s3_docs_bundle_url, document):
+    def _index_invoice_document(self, customer_id, document_id, s3_docs_bundle_url, document):
         n_docs = 0
         if document['fields']['INVOICE_NUMBER']:
             n_docs = self.db.documents.count_documents({
@@ -294,6 +333,15 @@ class Indexer:
                 if matched_ps:
                     relation_id = self._relate_to_matched(customer_id, matched_ps, relation_id)
 
+            # Insert document-id
+            self.db.documents.update_one({
+                'customer_id': customer_id,
+                'document_type': 'INVOICE',
+                'invoice_number': document['fields']['INVOICE_NUMBER'],
+            }, {
+                '$set': {'document_id': document_id}
+            })
+
         else:
             self.db.documents.update_one({
                 'customer_id': customer_id,
@@ -307,7 +355,7 @@ class Indexer:
             })
 
 
-    def _index_packing_slip_document(self, customer_id, s3_docs_bundle_url, document):
+    def _index_packing_slip_document(self, customer_id, document_id, s3_docs_bundle_url, document):
         n_docs = 0
         if document['fields']['INVOICE_NUMBER'] and document['fields']['PO_NUMBER']:
             n_docs = self.db.documents.count_documents({
@@ -359,6 +407,16 @@ class Indexer:
                 if matched_po:
                     relation_id = self._relate_to_matched(customer_id, matched_po, relation_id)
 
+            # Insert document-id
+            self.db.documents.update_one({
+                'customer_id': customer_id,
+                'document_type': 'PACKING_SLIP',
+                # Note: since PS does not have a dedicated ID (like PO_NUMBER for PO) we identify it by these:
+                'invoice_number': document['fields']['INVOICE_NUMBER'],
+                'po_number': document['fields']['PO_NUMBER'],
+            }, {
+                '$set': {'document_id': document_id}
+            })
         else:
             self.db.documents.update_one({
                 'customer_id': customer_id,

@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from typing import List
 from pydantic import BaseModel
 from indexer import Indexer
@@ -41,6 +41,7 @@ def health_check():
 
 class Document(BaseModel):
     document_url: str
+    document_id: str
 
 
 class Documents(BaseModel):
@@ -51,12 +52,22 @@ class Documents(BaseModel):
 async def process(data: Documents, _=Depends(auth)):
     print(f'process: {data=}')
     for document in data.documents:
-        r = q.enqueue('worker.process_documents_bundle', document.document_url, job_timeout=600)  # 10min
-        print('send_task:', r)
+        r = q.enqueue(
+            'worker.process_documents_bundle',
+            {'document_url': document.document_url, 'document_id': document.document_id},
+            job_timeout=600  # 10min
+        )
+        print('sent_task:', r)
 
     return {
         'status': 'OK'
     }
+
+
+@app.get("/get_documents_by_id")
+async def search(customer_id: str, document_id: List[str] = Query(default=None), _=Depends(auth)):
+    print(f'get_documents_by_id: {customer_id=}, {document_id=}')
+    return indexer.get_documents_by_id(customer_id, document_id)
 
 
 @app.get("/search")

@@ -28,7 +28,7 @@ services:
       - ~/rovuk_data:/data
 
   mongo:
-    image: mongo:latest
+    image: mongo:6.0.3
 #    environment:
 #      MONGO_INITDB_ROOT_USERNAME: root
 #      MONGO_INITDB_ROOT_PASSWORD: rootpassword
