@@ -632,7 +632,15 @@ export class InvoiceAttachment {
       .subscribe(function (params) {
         if (params.status) {
           console.log("pdf links:", params.data);
-          that.uiSpinner.spin$.next(false);
+          that.httpCall
+            .httpPostCall(httproutes.INVOICE_SAVE_INVOICE_PROCESS, { pdf_urls: params.data })
+            .subscribe(function (params) {
+              if (params.status) {
+                that.uiSpinner.spin$.next(false);
+              } else {
+                that.uiSpinner.spin$.next(false);
+              }
+            });
         } else {
           that.uiSpinner.spin$.next(false);
         }
