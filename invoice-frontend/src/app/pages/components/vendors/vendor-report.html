@@ -15,7 +15,7 @@
 <form [formGroup]="vendorInfo">
     <div class="modal-body">
         <h4 mat-dialog-title class="cust-report-label-header-text">
-            {{'Company-Vendor-select-trems' | translate}}
+            {{'Company-Vendor-select-terms' | translate}}
         </h4>
         <div>
             <mat-checkbox formControlName="All_Terms" (change)="onChangeValueAll_Terms($event)" class="example-margin"
@@ -33,8 +33,9 @@
 
         <h4 mat-dialog-title class="cust-report-label-header-text">
             {{'Company-Expenses-Send-report' | translate}}
-            <button mat-raised-button color="primary" *ngIf="is_oneOnly" (click)="ADD_MY_SELF()">
-                <img alt="" class="mr-1 cust-all-add-my-self-img" height="20px" />{{'add-my-self' | translate}}
+            <button mat-raised-button color="primary" *ngIf="is_oneOnly" (click)="ADD_MY_SELF()"><img
+                    src="{{add_my_self_icon}}" alt="" class="mr-1 cust-all-add-my-self-img"
+                    height="20px">{{'add-my-self' | translate}}
             </button>
         </h4>
         <mat-form-field class="example-chip-list" appearance="outline" class="cust-report-full-width-fields">

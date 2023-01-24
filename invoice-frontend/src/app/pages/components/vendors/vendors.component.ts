@@ -67,7 +67,7 @@ export class VendorsComponent implements OnInit {
   Vendor_Do_Want_Archive: string = "";
   Compnay_Equipment_Delete_Yes: string = "";
   Compnay_Equipment_Delete_No: string = "";
-  deleteIcon: string;
+
   Listing_Action_Edit: string = "";
   Archived_all: string = "";
   acticve_word: string = "";
@@ -101,14 +101,12 @@ export class VendorsComponent implements OnInit {
       this.reportIcon = icon.REPORT;
       this.historyIcon = icon.HISTORY;
       this.archivedIcon = icon.ARCHIVE;
-      this.deleteIcon = icon.DELETE_WHITE;
       this.editIcon = icon.EDIT;
 
     } else {
       this.reportIcon = icon.REPORT_WHITE;
       this.historyIcon = icon.HISTORY_WHITE;
       this.archivedIcon = icon.ARCHIVE_WHITE;
-      this.deleteIcon = icon.DELETE_WHITE;
       this.editIcon = icon.EDIT_WHITE;
 
     }
@@ -119,7 +117,6 @@ export class VendorsComponent implements OnInit {
         this.reportIcon = icon.REPORT;
         this.historyIcon = icon.HISTORY;
         this.archivedIcon = icon.ARCHIVE;
-        this.deleteIcon = icon.DELETE_WHITE;
         this.editIcon = icon.EDIT;
 
       } else {
@@ -127,9 +124,8 @@ export class VendorsComponent implements OnInit {
         this.reportIcon = icon.REPORT_WHITE;
         this.historyIcon = icon.HISTORY_WHITE;
         this.archivedIcon = icon.ARCHIVE_WHITE;
-
         this.editIcon = icon.EDIT_WHITE;
-        this.deleteIcon = icon.DELETE_WHITE;
+
       }
 
       if (j != 0) {
@@ -495,7 +491,7 @@ export class VendorsComponent implements OnInit {
               `' aria-hidden="true"></i>
             <div class= "dropdown-content-cust" aria-labelledby="dropdownMenuButton">
               <a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_shiftEditClass" >` + '<img src="' + that.editIcon + '" alt="" height="15px">' + that.Listing_Action_Edit + `</a>
-              <a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_shiftDeleteClass" >` + '<img src="' + that.deleteIcon + '" alt="" height="15px">' + that.Archived_all + `</a>
+              <a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_shiftDeleteClass" >` + '<img src="' + that.archivedIcon + '" alt="" height="15px">' + that.Archived_all + `</a>
             </div>
         </div>`
             );
@@ -755,6 +751,7 @@ export class VendorReportComponent implements OnInit {
   termList: any = [];
   saveIcon = icon.SAVE_WHITE;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  add_my_self_icon = icon.ADD_MY_SELF_WHITE;
 
   /*Constructor*/
   constructor(
