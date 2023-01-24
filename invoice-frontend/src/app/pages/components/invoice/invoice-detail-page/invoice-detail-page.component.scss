@@ -8,3 +8,66 @@
         font-weight: 700;
     }
 }
+
+.invoice-card {
+    color: white;
+    background-color: #023E8A;
+    height: 40px;
+    margin-right: unset;
+    margin-left: unset;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3);
+
+}
+
+.invoice-viwe {
+
+    height: 90%;
+    // margin-right: unset;
+    // margin-left: unset;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3);
+
+}
+
+
+
+.notes {
+    color: white;
+    background-color: #023E8A;
+    height: 40px;
+    // margin-right: unset;
+    // margin-left: unset;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3);
+}
+
+.history-viwe {
+    height: 95%;
+    // margin-right: unset;
+    // margin-left: unset;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3);
+}
+
+.mat-expansion-panel {
+    border-radius: 5px;
+}
+
+::ng-deep .mat-expansion-panel-header {
+    // background-color: red !important;
+    height: 40px !important;
+    background-color: #023E8A !important;
+    color: white;
+
+}
+
+::ng-deep .mat-expansion-indicator::after {
+    color: white;
+    height: 11px;
+    width: 11px;
+}
+
+::ng-deep .mat-expansion-panel-body {
+    padding: 0px !important;
+}

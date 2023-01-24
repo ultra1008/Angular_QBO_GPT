@@ -91,7 +91,8 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     MatTreeModule,
     PortalModule,
     ScrollingModule,
-    NgxMatSelectSearchModule
+    NgxMatSelectSearchModule,
+
   ]
 })
 export class DemoMaterialModule { }

@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { FlatTreeControl } from '@angular/cdk/tree';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatAccordion } from '@angular/material/expansion';
+import { MatTreeFlattener, MatTreeFlatDataSource } from '@angular/material/tree';
 import { icon, localstorageconstants } from 'src/app/consts';
 
 @Component({
@@ -7,9 +10,14 @@ import { icon, localstorageconstants } from 'src/app/consts';
   styleUrls: ['./invoice-detail-page.component.scss']
 })
 export class InvoiceDetailPageComponent implements OnInit {
+  @ViewChild(MatAccordion) accordion: MatAccordion;
   placeholderIcon: icon.PHOTO_PLACEHOLDER;
+  show_tabs: boolean = true;
+  hide: Boolean = false;
+  pdf_url = 'https://s3.us-west-1.wasabisys.com/rovukdata/invoice-sample-pdfs/adrian@vmgconstructioninc10.comae95eb347d143714017d21f295de0449112194196aa89c3932ce0cbb7d3d574882405.pdf';
 
-  constructor () {
+
+  constructor() {
     /* var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === "on" ? "on" : "off";
     if (this.mode == "off") {
@@ -30,5 +38,9 @@ export class InvoiceDetailPageComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
 }
+
+
+
+
+
