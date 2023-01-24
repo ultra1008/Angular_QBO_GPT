@@ -21,6 +21,7 @@ export enum httproutes {
     USER_LOGOUT = "/webapi/v1/userlogout",
     USER_LOGIN_HISTORY = "/webapi/v1/savelogindetails",
     USER_FORGET_PASSWORD = "/webapi/v1/sponsorforgetpassword",
+    USER_SEND_PASSWORD = "/webapi/v1/senduserpassword",
 
     ALL_SUPERVISORS_GET = "/webapi/v1/portal/getallsupervisors",
 

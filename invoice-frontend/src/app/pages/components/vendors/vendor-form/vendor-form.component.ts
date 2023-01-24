@@ -63,7 +63,7 @@ export class VendorFormComponent implements OnInit {
   last_files_array: any = [];
   map_flag: boolean = true;
   Add_my_self_icon = icon.ADD_MY_SELF_WHITE;
-  termList = [];
+  // termList = [];
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[] = [];
   Compnay_Vendor_Form_Submitting: string = "";
@@ -82,6 +82,8 @@ export class VendorFormComponent implements OnInit {
   All_Save_Exit = "";
   Dont_Save = "";
   Company_vendor_Form_Submitting = "";
+  variablestermList: any = [];
+  termList: any = this.variablestermList.slice();
 
   constructor(private modeService: ModeDetectService,
     public dialog: MatDialog,
@@ -338,7 +340,8 @@ export class VendorFormComponent implements OnInit {
       .httpGetCall(httproutes.OTHER_TERM_GET)
       .subscribe(function (params: any) {
         if (params.status) {
-          that.termList = params.data;
+          that.variablestermList = params.data;
+          that.termList = that.variablestermList.slice();
         }
         console.log("termList", that.termList);
       });

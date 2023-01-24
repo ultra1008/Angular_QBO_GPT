@@ -118,10 +118,19 @@
                                     </mat-form-field>
                                 </div>
                                 <div class="main-second-col2 padding-left-cust">
-                                    <mat-form-field class="main-one-input-field" appearance="outline">
+                                    <!-- <mat-form-field class="main-one-input-field" appearance="outline">
                                         <mat-label>{{'Employee-form-Temporary-password' | translate }}</mat-label>
                                         <input matInput formControlName="password"
                                             placeholder="{{'Employee-form-Temporary-password' | translate }}">
+                                    </mat-form-field> -->
+                                    <mat-form-field class="main-one-input-field" appearance="outline">
+                                        <span matSuffix><button
+                                                [ngClass]=" mode == 'on' ? 'user-menu__button-custom-small_dark': 'user-menu__button-custom-small' "
+                                                (click)="sendInvitation()">
+                                                <i class="fas fa-paper-plane"></i></button></span>
+                                        <mat-label>{{'Employee-form-Temporary-password' | translate }}</mat-label>
+                                        <input matInput formControlName="password"
+                                            placeholder="{{'Employee-form-Temporary-password' | translate }}" required>
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -382,6 +391,10 @@
                                 <mat-form-field class="main-one-input-field" appearance="outline">
                                     <mat-label>{{'Employee-form-Manager' | translate }}</mat-label>
                                     <mat-select formControlName="usermanager_id" class="dark-cust-color">
+                                        <mat-select-filter [placeholder]="'Filter'" [displayMember]="'userfullname'"
+                                            [array]="variablesdb_manager_users"
+                                            (filteredReturn)="db_manager_users =$event">
+                                        </mat-select-filter>
                                         <mat-option *ngFor="let manager_user of db_manager_users"
                                             [value]="manager_user._id">
                                             {{manager_user.userfullname}}
@@ -393,6 +406,10 @@
                                 <mat-form-field class="main-one-input-field" appearance="outline">
                                     <mat-label>{{'Employee-form-Supervisor' | translate }}</mat-label>
                                     <mat-select formControlName="usersupervisor_id" class="dark-cust-color">
+                                        <mat-select-filter [placeholder]="'Filter'" [displayMember]="'userfullname'"
+                                            [array]="variablesdb_supervisor_users"
+                                            (filteredReturn)="db_supervisor_users =$event">
+                                        </mat-select-filter>
                                         <mat-option *ngFor="let supervisor_user of db_supervisor_users"
                                             [value]="supervisor_user._id">
                                             {{supervisor_user.userfullname}}
@@ -406,6 +423,9 @@
                                 <mat-form-field class="main-one-input-field" appearance="outline">
                                     <mat-label>{{'Employee-form-Location' | translate }}</mat-label>
                                     <mat-select formControlName="userlocation_id" class="dark-cust-color">
+                                        <mat-select-filter [placeholder]="'Filter'" [displayMember]="'location_name'"
+                                            [array]="variablesdb_locations" (filteredReturn)="db_locations =$event">
+                                        </mat-select-filter>
                                         <mat-option *ngFor="let db_location of db_locations" [value]="db_location._id">
                                             {{db_location.location_name}}
                                         </mat-option>
@@ -416,6 +436,10 @@
                                 <mat-form-field class="main-one-input-field" appearance="outline">
                                     <mat-label>{{'Employee-form-Department' | translate }}</mat-label>
                                     <mat-select formControlName="userdepartment_id" class="dark-cust-color" required>
+                                        <mat-select-filter [placeholder]="'Filter'" [displayMember]="'department_name'"
+                                            [array]="variablesdb_Departmaents"
+                                            (filteredReturn)="db_Departmaents =$event">
+                                        </mat-select-filter>
                                         <mat-option *ngFor="let db_Departmaent of db_Departmaents"
                                             [value]="db_Departmaent._id">
                                             {{db_Departmaent.department_name}}
@@ -429,6 +453,9 @@
                                 <mat-form-field class="main-one-input-field" appearance="outline">
                                     <mat-label>{{'Employee-form-Job-Title' | translate }}</mat-label>
                                     <mat-select formControlName="userjob_title_id" class="dark-cust-color" required>
+                                        <mat-select-filter [placeholder]="'Filter'" [displayMember]="'job_title_name'"
+                                            [array]="variablesdb_jobtitle" (filteredReturn)="db_jobtitle =$event">
+                                        </mat-select-filter>
                                         <mat-option *ngFor="let db_job_title of db_jobtitle" [value]="db_job_title._id">
                                             {{db_job_title.job_title_name}}
                                         </mat-option>
@@ -439,6 +466,9 @@
                                 <mat-form-field class="main-one-input-field" appearance="outline">
                                     <mat-label>{{'Employee-form-Job-Type' | translate }}</mat-label>
                                     <mat-select formControlName="userjob_type_id" class="dark-cust-color" required>
+                                        <mat-select-filter [placeholder]="'Filter'" [displayMember]="'job_type_name'"
+                                            [array]="variablesdb_jobtype" (filteredReturn)="db_jobtype =$event">
+                                        </mat-select-filter>
                                         <mat-option *ngFor="let db_job_type of db_jobtype" [value]="db_job_type._id">
                                             {{db_job_type.job_type_name}}
                                         </mat-option>
@@ -477,6 +507,9 @@
                                 <mat-select formControlName="user_languages" (selectionChange)="language_change($event)"
                                     placeholder="{{'Employee_Information_Language_Spoken' | translate }}" required
                                     multiple>
+                                    <mat-select-filter [placeholder]="'Filter'" [displayMember]="'name'"
+                                        [array]="variableslanguageList" (filteredReturn)="languageList =$event">
+                                    </mat-select-filter>
                                     <mat-option *ngFor="let item of languageList" [value]="item._id">
                                         {{item.name}}
                                     </mat-option>

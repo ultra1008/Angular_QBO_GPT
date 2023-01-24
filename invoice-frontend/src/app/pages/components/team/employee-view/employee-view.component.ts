@@ -84,14 +84,31 @@ export class EmployeeViewComponent implements OnInit {
   filepath: any;
   filepath_mobile: any;
   db_roles: any = [];
-  db_jobtype: any = [];
-  db_jobtitle: any = [];
+
+  //db_jobtitle
+  variablesdb_jobtitle: any = [];
+  db_jobtitle: any = this.variablesdb_jobtitle.slice();
+  //db_jobtype
+  variablesdb_jobtype: any = [];
+  db_jobtype: any = this.variablesdb_jobtype.slice();
   db_payroll_group: any = [];
   db_Doc_types: any = [];
-  db_Departmaents: any = [];
-  db_manager_users: any = [];
-  db_supervisor_users: any = [];
-  db_locations: any = [];
+
+  //db_Departmaents
+  variablesdb_Departmaents: any = [];
+  db_Departmaents: any = this.variablesdb_Departmaents.slice();
+
+  //db_manager_users
+  variablesdb_manager_users: any = [];
+  db_manager_users: any = this.variablesdb_manager_users.slice();
+
+  //db_supervisor_users
+  variablesdb_supervisor_users: any = [];
+  db_supervisor_users: any = this.variablesdb_supervisor_users.slice();
+
+  //db_locations
+  variablesdb_locations: any = [];
+  db_locations: any = this.variablesdb_locations.slice();
   db_costcodes: any = [];
   firstParam: any = "";
   doc_controller: number = 0;
@@ -136,6 +153,8 @@ export class EmployeeViewComponent implements OnInit {
   variableslanguageList: any = [];
   languageList: any = this.variableslanguageList.slice();
   showicard: boolean = true;
+  close_this_window: string = "";
+
 
   // Safety talk Table variables
   Safetytalk_Filename: any;
@@ -183,6 +202,7 @@ export class EmployeeViewComponent implements OnInit {
   LastSettingUpdated: any;
   Action: any;
   All_Remove: any;
+  Empty_Temporary_Password: string;
 
 
   constructor(private modeService: ModeDetectService, public sb: Snackbarservice, private location: Location, public dialog: MatDialog, public translate: TranslateService, public mostusedservice: Mostusedservice,
@@ -195,7 +215,7 @@ export class EmployeeViewComponent implements OnInit {
       this.Compnay_Equipment_Delete_Yes = this.translate.instant('Compnay_Equipment_Delete_Yes');
       this.Compnay_Equipment_Delete_No = this.translate.instant('Compnay_Equipment_Delete_No');
       this.Project_Documents_Do_Want_Delete = this.translate.instant('Project_Documents_Do_Want_Delete');
-
+      this.Empty_Temporary_Password = this.translate.instant('Empty_Temporary_Password');
       this.Safetytalk_Filename = this.translate.instant('SafetyTalks-Superadmin-FileName');
       this.Safetytalk_FileLanguage = this.translate.instant('SafetyTalks-Superadmin-FileLanguage');
       this.Safetytalk_FileDate = this.translate.instant('SafetyTalks-Superadmin-FileDate');
@@ -219,6 +239,7 @@ export class EmployeeViewComponent implements OnInit {
       this.LastSettingUpdated = this.translate.instant('Project-from-Last-Updated');
       this.Action = this.translate.instant('All-Action');
       this.All_Remove = this.translate.instant('All_Remove');
+      this.close_this_window = this.translate.instant("close_this_window");
 
       if (i != 0) {
         setTimeout(() => {
@@ -374,7 +395,10 @@ export class EmployeeViewComponent implements OnInit {
     let that = this;
     that.httpCall.httpGetCall(httproutes.OTHER_LANGUAGE_GET).subscribe(function (params) {
       if (params.status) {
-        that.languageList = params.data;
+        that.variableslanguageList = params.data;
+        that.languageList = that.variableslanguageList.slice();
+        // that.languageList = params.data;
+
       }
     });
   }
@@ -623,8 +647,12 @@ export class EmployeeViewComponent implements OnInit {
         var reqObject = {};
         that.mostusedservice.getSpecificUsers(reqObject).subscribe(function (user_data) {
           if (user_data.status) {
-            that.db_manager_users = user_data.data;
-            that.db_supervisor_users = user_data.data;
+            // that.db_manager_users = user_data.data;
+            that.variablesdb_manager_users = user_data.data;
+            that.db_manager_users = that.variablesdb_manager_users.slice();
+            // that.db_supervisor_users = user_data.data;
+            that.variablesdb_supervisor_users = user_data.data;
+            that.db_supervisor_users = that.variablesdb_supervisor_users.slice();
           }
         });
 
@@ -634,13 +662,17 @@ export class EmployeeViewComponent implements OnInit {
 
     this.mostusedservice.getAlljobtitle().subscribe(function (data) {
       if (data.status) {
-        that.db_jobtitle = data.data;
+        // that.db_jobtitle = data.data;
+        that.variablesdb_jobtitle = data.data;
+        that.db_jobtitle = that.variablesdb_jobtitle.slice();
       }
     });
 
     this.mostusedservice.getAlljobtype().subscribe(function (data) {
       if (data.status) {
-        that.db_jobtype = data.data;
+        // that.db_jobtype = data.data;
+        that.variablesdb_jobtype = data.data;
+        that.db_jobtype = that.variablesdb_jobtype.slice();
       }
     });
 
@@ -658,13 +690,17 @@ export class EmployeeViewComponent implements OnInit {
 
     this.mostusedservice.getAllLocation().subscribe(function (data) {
       if (data.status) {
-        that.db_locations = data.data;
+        // that.db_locations = data.data;
+        that.variablesdb_locations = data.data;
+        that.db_locations = that.variablesdb_locations.slice();
       }
     });
 
     this.mostusedservice.getAllDepartment().subscribe(function (data) {
       if (data.status) {
-        that.db_Departmaents = data.data;
+        // that.db_Departmaents = data.data;
+        that.variablesdb_Departmaents = data.data;
+        that.db_Departmaents = that.variablesdb_Departmaents.slice();
       }
     });
     this.getspokenLanguage();
@@ -1185,29 +1221,54 @@ export class EmployeeViewComponent implements OnInit {
     // });
   }
 
+  // sendInvitation() {
+  //   let that = this;
+  //   that.usersendinvitation.markAllAsTouched();
+  //   if (that.usersendinvitation.valid) {
+  //     that.uiSpinner.spin$.next(true);
+  //     let req_temp = that.usersendinvitation.value;
+
+  //     let reqObject = {
+  //       recipient: req_temp.recipient,
+  //       name: that.user_data.username,
+  //       login_email: that.user_data.useremail,
+  //     };
+
+  //     that.httpCall.httpPostCall(httproutes.SEND_INVITATION, reqObject).subscribe(function (params_new) {
+  //       if (params_new.status) {
+  //         that.snackbarservice.openSnackBar(params_new.message, "success");
+  //         that.uiSpinner.spin$.next(false);
+  //         that.usersendinvitation.reset();
+  //       } else {
+  //         that.snackbarservice.openSnackBar(params_new.message, "error");
+  //         that.uiSpinner.spin$.next(false);
+  //       }
+  //     });
+  //   }
+  // }
   sendInvitation() {
     let that = this;
-    that.usersendinvitation.markAllAsTouched();
-    if (that.usersendinvitation.valid) {
+    let req_temp = that.userpersonalinfo.value;
+    if (req_temp.password == "") {
+      that.snackbarservice.openSnackBar(that.Empty_Temporary_Password, "error");
+    } else {
       that.uiSpinner.spin$.next(true);
-      let req_temp = that.usersendinvitation.value;
-
       let reqObject = {
-        recipient: req_temp.recipient,
-        name: that.user_data.username,
-        login_email: that.user_data.useremail,
+        password: req_temp.password,
       };
 
-      that.httpCall.httpPostCall(httproutes.SEND_INVITATION, reqObject).subscribe(function (params_new) {
-        if (params_new.status) {
-          that.snackbarservice.openSnackBar(params_new.message, "success");
-          that.uiSpinner.spin$.next(false);
-          that.usersendinvitation.reset();
-        } else {
-          that.snackbarservice.openSnackBar(params_new.message, "error");
-          that.uiSpinner.spin$.next(false);
-        }
-      });
+      that.httpCall
+        .httpPostCall(httproutes.USER_SEND_PASSWORD, reqObject)
+        .subscribe(function (params_new) {
+          if (params_new.status) {
+            that.snackbarservice.openSnackBar(params_new.message, "success");
+            that.uiSpinner.spin$.next(false);
+            that.userpersonalinfo.get("password").setValue("");
+          } else {
+            that.snackbarservice.openSnackBar(params_new.message, "error");
+            that.uiSpinner.spin$.next(false);
+          }
+        });
     }
   }
 
@@ -1508,13 +1569,15 @@ export class EmployeeViewComponent implements OnInit {
 
 export class EmergencycontactFrom {
   public form: FormGroup;
-  relation_array: any;
+  // relation_array: any;
   user_id: any;
   subscription: Subscription;
   mode: any;
   backIcon: string;
   saveIcon: string;
-
+  //relation_array
+  variablesrelation_array: any = [];
+  relation_array: any = this.variablesrelation_array.slice();
 
   constructor(public dialogRef: MatDialogRef<EmergencycontactFrom>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
     private formBuilder: FormBuilder, public httpCall: HttpCall, public route: ActivatedRoute,
@@ -1555,7 +1618,8 @@ export class EmergencycontactFrom {
 
     this.httpCall.httpGetCall(httproutes.REALTIONSHIP_GET_ALL).subscribe(function (params) {
       if (params.status) {
-        that.relation_array = params.data;
+        that.variablesrelation_array = params.data;
+        that.relation_array = that.variablesrelation_array.slice();
       }
     });
 
@@ -1627,7 +1691,10 @@ export class EmergencycontactFrom {
   styleUrls: ['./employee-view.component.scss']
 })
 export class DocumentUpdateFrom {
-  public db_Doc_types: any;
+  // public db_Doc_types: any;
+  //db_Doc_types
+  variablesdb_Doc_types: any = [];
+  db_Doc_types: any = this.variablesdb_Doc_types.slice();
   public form: FormGroup;
   cardImageBase64_mobile: any;
   imageError: any;
@@ -1672,7 +1739,9 @@ export class DocumentUpdateFrom {
 
     this.mostusedservice.getAllDocumentType().subscribe(function (data) {
       if (data.status) {
-        that.db_Doc_types = data.data;
+        // that.db_Doc_types = data.data;
+        that.variablesdb_Doc_types = data.data;
+        that.db_Doc_types = that.variablesdb_Doc_types.slice();
         if (Object.keys(that.data.reqData).length !== 0) {
           that.showHideExpirationDate(that.data.reqData.userdocument_type_id);
         }
