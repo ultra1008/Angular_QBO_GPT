@@ -19,6 +19,12 @@ class Indexer:
         for doc in documents:
             self._index_document(customer_id, document_id, s3_docs_bundle_url, doc)
 
+        self.db.documents.update_many({
+            'document_id': document_id
+        }, {
+            '$set': {'indexed': True}
+        })
+
     def _index_document(self, customer_id, document_id, s3_docs_bundle_url, document):
         if document['document_type'] == 'PURCHASE_ORDER':
             self._index_purchase_order_document(customer_id, document_id, s3_docs_bundle_url, document)
@@ -43,7 +49,11 @@ class Indexer:
         if 'documents' not in self.db.list_collection_names():
             return []
 
-        documents = list(self.db.documents.find({'customer_id': customer_id, 'document_id': {'$in': document_ids}}))
+        documents = list(self.db.documents.find({
+            'customer_id': customer_id,
+            'document_id': {'$in': document_ids},
+            'indexed': True
+        }))
         documents = self._compose_documents(documents)
 
         results = {}
@@ -154,6 +164,7 @@ class Indexer:
             relation_id = self._generate_uuid()
             quote_resp = self.db.documents.insert_one({
                 'customer_id': customer_id,
+                'document_id': document_id,
                 'document_type': 'QUOTE',
                 'quote_number': document['fields']['QUOTE_NUMBER'],
                 'documents': [
@@ -179,15 +190,6 @@ class Indexer:
                 })
                 if matched_po:
                     relation_id = self._relate_to_matched(customer_id, matched_po, relation_id)
-
-            # Insert document-id
-            self.db.documents.update_one({
-                'customer_id': customer_id,
-                'document_type': 'QUOTE',
-                'quote_number': document['fields']['QUOTE_NUMBER']
-            }, {
-                '$set': {'document_id': document_id}
-            })
 
         else:
             self.db.documents.update_one({
@@ -216,6 +218,7 @@ class Indexer:
             relation_id = self._generate_uuid()
             po_resp = self.db.documents.insert_one({
                 'customer_id': customer_id,
+                'document_id': document_id,
                 'document_type': 'PURCHASE_ORDER',
                 'po_number': document['fields']['PO_NUMBER'],
                 'quote_number': document['fields']['QUOTE_NUMBER'],
@@ -263,14 +266,6 @@ class Indexer:
                 if matched_ps:
                     relation_id = self._relate_to_matched(customer_id, matched_ps, relation_id)
 
-            # Insert document-id
-            self.db.documents.update_one({
-                'customer_id': customer_id,
-                'document_type': 'PURCHASE_ORDER',
-                'po_number': document['fields']['PO_NUMBER']
-            }, {
-                '$set': {'document_id': document_id}
-            })
         else:
             self.db.documents.update_one({
                 'customer_id': customer_id,
@@ -296,6 +291,7 @@ class Indexer:
             relation_id = self._generate_uuid()
             invoice_resp = self.db.documents.insert_one({
                 'customer_id': customer_id,
+                'document_id': document_id,
                 'document_type': 'INVOICE',
                 'invoice_number': document['fields']['INVOICE_NUMBER'],
                 'po_number': document['fields']['PO_NUMBER'],
@@ -333,15 +329,6 @@ class Indexer:
                 if matched_ps:
                     relation_id = self._relate_to_matched(customer_id, matched_ps, relation_id)
 
-            # Insert document-id
-            self.db.documents.update_one({
-                'customer_id': customer_id,
-                'document_type': 'INVOICE',
-                'invoice_number': document['fields']['INVOICE_NUMBER'],
-            }, {
-                '$set': {'document_id': document_id}
-            })
-
         else:
             self.db.documents.update_one({
                 'customer_id': customer_id,
@@ -370,6 +357,7 @@ class Indexer:
             relation_id = self._generate_uuid()
             ps_resp = self.db.documents.insert_one({
                 'customer_id': customer_id,
+                'document_id': document_id,
                 'document_type': 'PACKING_SLIP',
                 'invoice_number': document['fields']['INVOICE_NUMBER'],
                 'po_number': document['fields']['PO_NUMBER'],
@@ -407,16 +395,6 @@ class Indexer:
                 if matched_po:
                     relation_id = self._relate_to_matched(customer_id, matched_po, relation_id)
 
-            # Insert document-id
-            self.db.documents.update_one({
-                'customer_id': customer_id,
-                'document_type': 'PACKING_SLIP',
-                # Note: since PS does not have a dedicated ID (like PO_NUMBER for PO) we identify it by these:
-                'invoice_number': document['fields']['INVOICE_NUMBER'],
-                'po_number': document['fields']['PO_NUMBER'],
-            }, {
-                '$set': {'document_id': document_id}
-            })
         else:
             self.db.documents.update_one({
                 'customer_id': customer_id,

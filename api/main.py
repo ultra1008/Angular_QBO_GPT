@@ -65,7 +65,7 @@ async def process(data: Documents, _=Depends(auth)):
 
 
 @app.get("/get_documents_by_id")
-async def search(customer_id: str, document_id: List[str] = Query(default=None), _=Depends(auth)):
+async def get_documents_by_id(customer_id: str, document_id: List[str] = Query(default=None), _=Depends(auth)):
     print(f'get_documents_by_id: {customer_id=}, {document_id=}')
     return indexer.get_documents_by_id(customer_id, document_id)
 
