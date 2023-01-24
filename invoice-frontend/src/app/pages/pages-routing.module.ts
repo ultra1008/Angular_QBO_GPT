@@ -76,12 +76,6 @@ const routes: Routes = [
     component: VendorFormComponent
   },
   {
-    path: 'invoice-detail',
-    pathMatch: 'full',
-    canActivate: [PortalAuthGuard],
-    component: InvoiceDetailPageComponent
-  },
-  {
     path: '',
     component: PagesCoreComponent,
     children: [
@@ -326,7 +320,12 @@ const routes: Routes = [
 
 
 
-
+      {
+        path: 'invoice-detail',
+        pathMatch: 'full',
+        canActivate: [PortalAuthGuard],
+        component: InvoiceDetailPageComponent
+      },
     ]
   },
 

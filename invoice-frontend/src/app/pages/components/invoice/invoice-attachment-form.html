@@ -24,8 +24,7 @@
         <div class="container-cust" appDnd (fileDropped)="onFileDropped($event)">
             <div><img src="{{fileIcon}}" alt="" height="25px"></div>
 
-            <input type="file" #fileDropRef id="fileDropRef" multiple
-                (change)="fileBrowseHandler($event.target.files)" />
+            <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event)" />
             <label for="fileDropRef">
                 Drop your files here</label>
         </div>
@@ -34,7 +33,8 @@
     </div>
 </div>
 <div class="mt-4" style="text-align: center;">
-    <button mat-raised-button color="primary" mat-dialog-close (click)="openform()" class="cust-button-form">Upload
+    <button mat-raised-button color="primary" mat-dialog-close (click)="uploadDocuments()"
+        class="cust-button-form">Upload
         Files</button>
 </div>
 <div class="row cust-margin">
