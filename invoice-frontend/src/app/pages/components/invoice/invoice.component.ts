@@ -13,11 +13,12 @@ import { HttpCall } from 'src/app/service/httpcall.service';
 import { Mostusedservice } from 'src/app/service/mostused.service';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
-import { formatPhoneNumber, gallery_options, LanguageApp } from 'src/app/service/utils';
+import { commonFileChangeEvent, formatPhoneNumber, gallery_options, LanguageApp } from 'src/app/service/utils';
 import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
 import { ModeDetectService } from '../map/mode-detect.service';
 import { EmployeeService } from '../team/employee.service';
+import moment from "moment";
 
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
@@ -80,7 +81,7 @@ export class InvoiceComponent implements OnInit {
   dtTrigger: Subject<any> = new Subject<any>();
   @ViewChild('OpenFilebox') OpenFilebox: any;
   Company_Equipment_File_Not_Match: any;
-  constructor(private router: Router, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
+  constructor (private router: Router, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
     public employeeservice: EmployeeService, public translate: TranslateService, public dialog: MatDialog,
     public httpCall: HttpCall, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService) {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
@@ -285,7 +286,7 @@ export class InvoiceComponent implements OnInit {
     });
   }
 
-  openReportDialog() {
+  openAddDialog() {
     const dialogRef = this.dialog.open(InvoiceAttachment, {
       height: '400px',
       width: '700px',
@@ -349,15 +350,13 @@ export class InvoiceAttachment {
   add_my_self_icon = icon.ADD_MY_SELF_WHITE;
   _id!: string;
   fileIcon: string = "";
+  FILE_NOT_SUPPORTED: string;
 
-  constructor(private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
+  constructor (private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
     public dialogRef: MatDialogRef<InvoiceAttachment>,
     @Inject(MAT_DIALOG_DATA) public data: any, public sb: Snackbarservice, public translate: TranslateService, public dialog: MatDialog, private sanitiser: DomSanitizer,
-    public snackbarservice: Snackbarservice,
+    public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService,
     private router: Router, public route: ActivatedRoute, public spinner: UiSpinnerService,) {
-
-
-
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
@@ -389,6 +388,9 @@ export class InvoiceAttachment {
       console.log("DARK MODE: " + this.mode);
 
     });
+    this.translate.stream([""]).subscribe((textarray) => {
+      this.FILE_NOT_SUPPORTED = this.translate.instant("FILE_NOT_SUPPORTED");
+    });
 
   }
   ngOnInit(): void {
@@ -402,7 +404,6 @@ export class InvoiceAttachment {
   files: File[] = [];
 
 
-
   /**
    * on file drop handler
    */
@@ -414,7 +415,14 @@ export class InvoiceAttachment {
    * handle file from browsing
    */
   fileBrowseHandler(files: any) {
-    this.prepareFilesList(files);
+    commonFileChangeEvent(files, "pdf").then((result: any) => {
+      if (result.status) {
+        this.prepareFilesList(files.target.files);
+      } else {
+        this.snackbarservice.openSnackBar(this.FILE_NOT_SUPPORTED, "error");
+      }
+    });
+
   }
 
   /**
@@ -608,8 +616,28 @@ export class InvoiceAttachment {
     );
   }
 
-  openform() {
-    this.router.navigate(['/template-form']);
+  uploadDocuments() {
+    console.log("start");
+    let that = this;
+    const formData = new FormData();
+    for (var i = 0; i < that.files.length; i++) {
+      formData.append("file[]", that.files[i]);
+    }
+    formData.append("dir_name", 'invoice');
+    formData.append("local_date", moment().format("DD/MM/YYYY hh:mmA"));
+    console.log("upload");
+    that.uiSpinner.spin$.next(true);
+    that.httpCall
+      .httpPostCall(httproutes.PORTAL_ATTECHMENT, formData)
+      .subscribe(function (params) {
+        if (params.status) {
+          console.log("pdf links:", params.data);
+          that.uiSpinner.spin$.next(false);
+        } else {
+          that.uiSpinner.spin$.next(false);
+        }
+      });
+    // this.router.navigate(['/template-form']);
   }
 }
 
@@ -648,7 +676,7 @@ export class InvoiceReport {
   copyDataFromProject: string = '';
   add_my_self_icon = icon.ADD_MY_SELF_WHITE;
 
-  constructor(private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
+  constructor (private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
     public dialogRef: MatDialogRef<InvoiceReport>,
     @Inject(MAT_DIALOG_DATA) public data: any, public sb: Snackbarservice, public translate: TranslateService) {
 
