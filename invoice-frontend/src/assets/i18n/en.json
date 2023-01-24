@@ -2428,5 +2428,7 @@
     "Company-Vendor-select-terms": "Please select the terms of the vendor",
     "Export_Employee_Add_Team_Button": "Management User",
     "Export_Management_User": " Import Management User",
-    "Empty_Temporary_Password": "Please fill out temporary password."
+    "Empty_Temporary_Password": "Please fill out temporary password.",
+    "Language_Form_Submitting": "Please complete the language form before submitting.",
+    "Employee_Language_Do_Want_Delete": "Do you want to delete this language?"
 }

@@ -90,6 +90,7 @@ import { InvoiceDashboardComponent } from './components/dashboard/invoice-dashbo
 import { VendorHistoryComponent, VendorReportComponent, VendorsComponent } from './components/vendors/vendors.component';
 import { VendorFormComponent } from './components/vendors/vendor-form/vendor-form.component';
 import { ArchiveVendorComponent } from './components/vendors/archive-vendor/archive-vendor.component';
+import { EmployeeLanguageComponent, EmployeeLanguageForm } from './components/setting/settings-employee/employee-language/employee-language.component';
 
 
 
@@ -164,7 +165,9 @@ import { ArchiveVendorComponent } from './components/vendors/archive-vendor/arch
     VendorFormComponent,
     ArchiveVendorComponent,
     VendorHistoryComponent,
-    VendorReportComponent
+    VendorReportComponent,
+    EmployeeLanguageComponent,
+    EmployeeLanguageForm
   ],
   imports: [
     PortalModule,

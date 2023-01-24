@@ -125,6 +125,8 @@ const maskConfig: Partial<IConfig> = {
     TaxRateComponent,
     DocumentsComponent,
     SettingsSecurityComponent,
+
+    ,
   ],
 
   imports: [
