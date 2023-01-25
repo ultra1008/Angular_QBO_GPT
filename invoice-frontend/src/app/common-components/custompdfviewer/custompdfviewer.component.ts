@@ -41,9 +41,10 @@ export class CustompdfviewerComponent implements OnInit {
   denyIcon: string;
   backIcon: string;
   downloadIcon: string;
+  printIcon: string;
   subscription: Subscription;
   mode: any;
-  printIcon: string;
+
   Custom_Pdf_Viewer_Want_Approve_Owner_Direct_Purchase: string = '';
   Custom_Pdf_Viewer_Want_Deny_Owner_Direct_Purchase: string = '';
   Custom_Pdf_Viewer_Want_Accept_Vendor_Certificate: string = '';
@@ -334,7 +335,7 @@ export class CustompdfviewerComponent implements OnInit {
           certificate_link: certificate_link,
           status: status,
           reject_reason: '',
-        }
+        };
         if (status == 'Accept') {
           that.updateCertificateStatus(requestObject);
         } else {

@@ -1,5 +1,5 @@
 <div class="wrapper-cust-admin" fxLayout style="height: 95%">
-    <div class="invoice-data">
+    <div class="invoice-data" [ngClass]="mode == 'on'? 'header-text-cust-chart-dark' : 'header-text-cust-chart'">
         <div class="d-flex justify-content-between p-3">
             <!-- <img src="{{placeholderIcon}}" alt="" height="20px"> -->
             <div>
@@ -76,42 +76,105 @@
                 <h3 style="text-justify: center;">Notes</h3>
             </div> -->
             <!-- Invoice_preview -->
-            <mat-nav-list>
-                <mat-expansion-panel>
-                    <mat-expansion-panel-header class="hover">
-                        <h4 class="mt-3">{{ "Invoice_preview" |
-                            translate }}</h4>
-                    </mat-expansion-panel-header>
-                    <div class="task-data">
-                        <pdf-viewer id="pdf" [src]="pdf_url" [rotation]="0" [original-size]="false" [show-all]="true"
-                            [fit-to-page]="false" [zoom]="1" [zoom-scale]="'page-width'" [stick-to-page]="false"
-                            [render-text]="true" [external-link-target]="'blank'" [autoresize]="true"
-                            [show-borders]="false" [external-link-target]="'blank'"
-                            style="display: block;"></pdf-viewer>
-                    </div>
+            <mat-accordion [displayMode]="displayMode" [multi]="multi" class="mat-expansion-demo-width">
+                <mat-nav-list>
+                    <!-- [expanded]="hide" -->
 
-                </mat-expansion-panel>
-            </mat-nav-list>
-            <!-- Notes -->
-            <mat-nav-list>
-                <mat-expansion-panel>
-                    <mat-expansion-panel-header class="hover">
-                        <h4 class="mt-3">{{ "Project-Timecard-Notes" |
-                            translate }}</h4>
-                    </mat-expansion-panel-header>
-                    <div class="task-data">
-                        <img src="https://s3.us-west-1.wasabisys.com/rovukdata/invoice_icon.png" width="15%"
-                            style="padding-top: 15px;" />
-                    </div>
+                    <mat-expansion-panel [expanded]="hide" [hideToggle]="hideToggle">
+                        <mat-expansion-panel-header class="hover">
+                            <h4 class="mt-3">{{ "Invoice_preview" |
+                                translate }}</h4>
+                        </mat-expansion-panel-header>
+                        <div class="pdf-data">
+                            <div class=" mt-1 pdf-header">
+                                <button mat-raised-button color="primary" (click)="download()"
+                                    class="cust-button-form"><img src="{{downloadIcon}}" alt="" class="" height="20px"
+                                        style=" padding-right: 4px;">{{'PO-View-Download' |
+                                    translate}}</button>
+                                <button mat-raised-button color="primary" (click)="print()"
+                                    class="cust-button-form"><img src="{{printIcon}}" alt="" class="" height="15px"
+                                        style=" padding-right: 4px;">{{'PO-View-Print' |
+                                    translate}}</button>
+                            </div>
+                            <div class="pdf-viewer">
+                                <pdf-viewer id="pdf" [src]="pdf_url" [rotation]="0" [original-size]="false"
+                                    [show-all]="true" [fit-to-page]="false" [zoom]="1" [zoom-scale]="'page-width'"
+                                    [stick-to-page]="false" [render-text]="true" [external-link-target]="'blank'"
+                                    [autoresize]="true" [show-borders]="false" [external-link-target]="'blank'"
+                                    style="display: block;"></pdf-viewer>
+                            </div>
+                        </div>
 
-                </mat-expansion-panel>
-            </mat-nav-list>
+                    </mat-expansion-panel>
+                </mat-nav-list>
+                <!-- invoice-Notes -->
+                <mat-nav-list>
+                    <!-- [expanded]="invoice_notes" -->
+                    <mat-expansion-panel [hideToggle]="hideToggle" [disabled]="disabled">
+                        <mat-expansion-panel-header class="hover">
+                            <h4 class="mt-3">{{ "Project-Timecard-Notes" |
+                                translate }}</h4>
+                        </mat-expansion-panel-header>
+                        <div class="task-data">
+                            <img src="https://s3.us-west-1.wasabisys.com/rovukdata/invoice_icon.png" width="15%"
+                                style="padding-top: 15px;" />
+                        </div>
+
+                    </mat-expansion-panel>
+
+                </mat-nav-list>
+            </mat-accordion>
         </div>
         <div class="col-2">
             <div class="invoice-card">
-                <h2 class="text-center">History log</h2>
+                <h4 class="History-text">History Log</h4>
             </div>
             <div class="history-viwe">
+                <div class=" mt-2" [ngClass]="mode == 'on'? 'header-text-cust-chart-dark' : 'header-text-cust-chart'">
+                    <p style="font-size: 10px;  word-wrap: break-word; text-align: left; color: #06479D;">
+                        Today
+                    </p>
+                    <div class="" [ngClass]="mode == 'on'? 'card-history-dark' : 'card-history'">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-2">
+                                    <img class="crl card-img-left example-card-img-responsive"
+                                        src="./assets/logo/RovukInvoice.png" />
+                                </div>
+                                <div class="col-10">
+                                    <p style="font-size: 12px;">Roque Rivera @ 8:15 am</p>
+                                    <p style="font-size: 10px;  word-wrap: break-word;">Roque Rivera open the
+                                        invoice</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <p
+                        style="font-size: 10px;  word-wrap: break-word; margin-top: 8px; text-align: left; color: #06479D;">
+                        Monday 6/27/2022
+                    </p>
+                    <div class="" [ngClass]="mode == 'on'? 'card-history-dark' : 'card-history'">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-2">
+                                    <img class="crl card-img-left example-card-img-responsive"
+                                        src="./assets/logo/RovukInvoice.png" />
+                                </div>
+                                <div class="col-10">
+                                    <p style="font-size: 12px;">Roque Rivera @ 8:15 am</p>
+                                    <p style="font-size: 10px;  word-wrap: break-word;">The definition of a
+                                        description is a statement that gives details about someone or
+                                        something. An example
+                                        of description is a story about the places visited on a family trip.
+                                        Sort, kind, or variety. Books of every
+                                        description.</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
 
             </div>
         </div>
@@ -139,53 +202,74 @@
 
                         </mat-tab-group>
                         <!-- Invoice_preview -->
-                        <mat-nav-list>
-                            <mat-expansion-panel [expanded]="blueprintPlan">
-                                <mat-expansion-panel-header class="hover">
-                                    <h4 class="mt-3">{{ "Invoice_preview" |
-                                        translate }}</h4>
-                                </mat-expansion-panel-header>
-                                <div class="task-data">
-                                    <img src="https://s3.us-west-1.wasabisys.com/rovukdata/invoice_icon.png"
-                                        width="100%" style="padding-top: 15px;" />
-                                </div>
+                        <mat-accordion [displayMode]="displayMode" [multi]="multi" class="mat-expansion-demo-width">
+                            <mat-nav-list>
+                                <!-- [expanded]="hide" -->
+                                <mat-expansion-panel [expanded]="hide" [hideToggle]="hideToggle">
+                                    <mat-expansion-panel-header class="hover">
+                                        <h4 class="mt-3">{{ "Invoice_preview" |
+                                            translate }}</h4>
+                                    </mat-expansion-panel-header>
+                                    <div class="pdf-data">
+                                        <div class=" mt-1 pdf-header">
+                                            <button mat-raised-button color="primary" (click)="download()"
+                                                class="cust-button-form"><img src="{{downloadIcon}}" alt="" class=""
+                                                    height="20px" style=" padding-right: 4px;">{{'PO-View-Download' |
+                                                translate}}</button>
+                                            <button mat-raised-button color="primary" (click)="print()"
+                                                class="cust-button-form"><img src="{{printIcon}}" alt="" class=""
+                                                    height="15px" style=" padding-right: 4px;">{{'PO-View-Print'
+                                                |
+                                                translate}}</button>
+                                        </div>
+                                        <div class="pdf-viewer">
+                                            <pdf-viewer id="pdf" [src]="pdf_url" [rotation]="0" [original-size]="false"
+                                                [show-all]="true" [fit-to-page]="false" [zoom]="1"
+                                                [zoom-scale]="'page-width'" [stick-to-page]="false" [render-text]="true"
+                                                [external-link-target]="'blank'" [autoresize]="true"
+                                                [show-borders]="false" [external-link-target]="'blank'"
+                                                style="display: block;"></pdf-viewer>
+                                        </div>
+                                    </div>
 
-                            </mat-expansion-panel>
-                        </mat-nav-list>
-                        <!-- Notes -->
-                        <mat-nav-list>
-                            <mat-expansion-panel [expanded]="blueprintPlan">
-                                <mat-expansion-panel-header class="hover">
-                                    <h4 class="mt-3">{{ "Project-Timecard-Notes" |
-                                        translate }}</h4>
-                                </mat-expansion-panel-header>
-                                <div class="task-data">
-                                    <img src="https://s3.us-west-1.wasabisys.com/rovukdata/invoice_icon.png" width="15%"
-                                        style="padding-top: 15px;" />
-                                </div>
+                                </mat-expansion-panel>
+                            </mat-nav-list>
+                            <!-- Notes -->
+                            <mat-nav-list>
+                                <!-- [expanded]="Notes" -->
+                                <mat-expansion-panel [hideToggle]="hideToggle" [disabled]="disabled">
+                                    <mat-expansion-panel-header class="hover">
+                                        <h4 class="mt-3">{{ "Project-Timecard-Notes" |
+                                            translate }}</h4>
+                                    </mat-expansion-panel-header>
+                                    <div class="task-data">
+                                        <img src="https://s3.us-west-1.wasabisys.com/rovukdata/invoice_icon.png"
+                                            width="15%" style="padding-top: 15px;" />
+                                    </div>
 
-                            </mat-expansion-panel>
-                        </mat-nav-list>
-                        <!-- Attchments -->
-                        <mat-nav-list>
-                            <mat-expansion-panel [expanded]="blueprintPlan">
-                                <mat-expansion-panel-header class="hover">
-                                    <h4 class="mt-3">{{ "Project-Attachments-Information-Tab8" |
-                                        translate }}</h4>
-                                </mat-expansion-panel-header>
-                                <div class="task-data">
-                                    <img src="https://s3.us-west-1.wasabisys.com/rovukdata/invoice_icon.png" width="15%"
-                                        style="padding-top: 15px;" />
-                                </div>
+                                </mat-expansion-panel>
+                            </mat-nav-list>
+                            <!-- Attchments -->
+                            <mat-nav-list>
+                                <!-- [expanded]="Attchments" -->
+                                <mat-expansion-panel [hideToggle]="hideToggle" [disabled]="disabled">
+                                    <mat-expansion-panel-header class="hover">
+                                        <h4 class="mt-3">{{ "Project-Attachments-Information-Tab8" |
+                                            translate }}</h4>
+                                    </mat-expansion-panel-header>
+                                    <div class="task-data">
+                                        <img src="https://s3.us-west-1.wasabisys.com/rovukdata/invoice_icon.png"
+                                            width="15%" style="padding-top: 15px;" />
+                                    </div>
 
-                            </mat-expansion-panel>
-                        </mat-nav-list>
+                                </mat-expansion-panel>
+                            </mat-nav-list>
+                        </mat-accordion>
 
                     </div>
                 </div>
             </div>
-
-
         </div>
+
     </div>
 </div>

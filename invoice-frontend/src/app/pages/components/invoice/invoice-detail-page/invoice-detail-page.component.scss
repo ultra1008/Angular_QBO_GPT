@@ -1,6 +1,6 @@
 .invoice-data {
     width: 100%;
-    box-shadow: 0 0 8px 8px #f3f2f2;
+    // box-shadow: 0 0 8px 8px #f3f2f2;
     border-radius: 10px;
     background-color: white;
 
@@ -21,12 +21,28 @@
 }
 
 .invoice-viwe {
-
     height: 90%;
     // margin-right: unset;
     // margin-left: unset;
     border-radius: 4px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3);
+
+}
+
+.pdf-viewer {
+    height: 630px;
+    overflow-y: scroll;
+}
+
+.pdf-header {
+    height: 50px;
+    background-color: rgba(0, 0, 0, 0);
+    text-align: right
+}
+
+.History-text {
+    text-align: center;
+    padding: 8px;
 
 }
 
@@ -70,4 +86,79 @@
 
 ::ng-deep .mat-expansion-panel-body {
     padding: 0px !important;
+}
+
+// history
+.header-text-cust-chart {
+    background-color: #fff;
+    // text-align: center !important;
+    max-height: 450px;
+    border-radius: 6px;
+    // border-top-right-radius: 4px;
+    padding: 1em 1em;
+    font-size: 1.2em !important;
+    font-weight: 500 !important;
+}
+
+.header-text-cust-chart-dark {
+
+    background-color: #30343d;
+    color: white !important;
+    // text-align: center !important;
+    max-height: 450px;
+    border-radius: 6px;
+    // border-top-right-radius: 4px;
+    padding: 1em 1em;
+    font-size: 1.2em !important;
+    font-weight: 500 !important;
+}
+
+.card-history {
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    margin-right: 10px;
+    margin-top: 5px;
+    background-color: white;
+    // height: 60px;
+    //width: 240px;
+    // height: 80px;
+}
+
+.card-history-dark {
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    margin-right: 10px;
+    margin-top: 5px;
+    background-color: #424242;
+    // height: 60px;
+    //width: 240px;
+    // height: 80px;
+}
+
+/* On mouse-over, add a deeper shadow */
+.card-history:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.card-history-dark:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.card-body {
+    padding: 0.75rem .75rem;
+
+}
+
+.container {
+    padding: 2px 16px;
+
+}
+
+.crl {
+    border-radius: 100%;
+    background-color: red;
+    height: 30px;
+
 }
