@@ -1,5 +1,9 @@
 <div class="wrapper-cust-admin" fxLayout style="height: 95%">
     <div class="row mr-2" style="justify-content: right;">
+        <button mat-raised-button color="primary" style="margin-right: 10px; " (click)="importProcessData()"
+            class="sign-button ml-1"><img src="{{add_my_self_icon}}" alt="" height="20px">
+            Import Data
+        </button>
         <button mat-raised-button color="primary" style="margin-right: 10px; " (click)="openAddDialog()"
             class="sign-button ml-1"><img src="{{add_my_self_icon}}" alt="" height="20px">
             Create an invoice
@@ -12,13 +16,13 @@
                     <button mat-raised-button color="primary" class="sign-button cust-margin-div mr-1">
                         <div class="row d-flex justify-content-between px-2">
                             <div class="mr-4">Exported</div>
-                            <div>15</div>
+                            <div>{{invoiceCount.complete}}</div>
                         </div>
                     </button>
                     <button mat-raised-button class=" btn-success sign-button cust-margin-div mr-1">
                         <div class="row d-flex justify-content-between px-2">
                             <div class="mr-4">Not Exported</div>
-                            <div>2</div>
+                            <div>{{invoiceCount.pending}}</div>
                         </div>
                     </button>
 
@@ -58,47 +62,38 @@
     <div class="pt-3" style="float: right;">
 
     </div>
-    <div class="card mb-3 mr-4" style="margin-top: 5rem !important;" *ngIf="gridtolist">
-        <!-- <div class="dropdown menu-icon">
-            <i class="fas fa-ellipsis-v cust-fontsize-tmp" aria-hidden="true"></i>
-            <div class="dropdown-content-cust">
-                <a (click)="sendCertificate(certi)"><img src="{{sendIcon}}" alt="" class="pr-1" height="15px">Send</a>
-                <a (click)="downloadCertificate(certi.certificate_link)"><img src="{{downloadIcon}}" alt="" class="pr-1"
-                        height="15px">Download</a>
-                <a *ngIf="!isDisabled" (click)="openDialogDocument(certi)"><img src="{{status_change_Icon}}" alt=""
-                        class="pr-1" height="15px">Change status</a>
-                <a (click)="deleteDocument(certi)"><img src="{{trashIcon}}" alt="" class="pr-1" height="15px">Delete</a>
-            </div>
-        </div> -->
-        <div class="card-body" style="text-align: center; padding: 5px 10px !important;" (click)="detailpage()">
-            <div class="pt-2 pb-2">
-                <img src="assets\images\currentplaceholder.png" class="img-responsive cardsmall img-fluid"
-                    style="height: 100px; width: 100px; object-fit: contain;" alt="">
-            </div>
-
-            <div style="text-align: left;font-weight: 400;">
-                <b>Invoice #</b>
-                <br />
-                <b>P.O #</b>
-                <br />
-                <b>Packing Slip</b>
-                <br />
-                <b>Receiving Slip</b>
-                <br />
-                <b>Receiving Sheet</b>
-                <br />
-                <b>Files Attached #</b>
-                <br />
-                <b>Notes</b>
-                <br />
-                <b>Status</b>
+    <div class="row ml-3" *ngIf="gridtolist">
+        <div class="card mb-3 mr-4" *ngFor="let invoice of allInvoices">
+            <div class="card-body" style="text-align: center; padding: 5px 10px !important;"
+                (click)="viewInvoice(invoice)">
+                <div class="pt-2 pb-2">
+                    <img src="assets\images\currentplaceholder.png" class="img-responsive cardsmall img-fluid"
+                        style="height: 100px; width: 100px; object-fit: contain;" alt="">
+                </div>
+                <div style="text-align: left;font-weight: 400;">
+                    <b>Invoice # </b> <span>{{invoice.invoice}}</span>
+                    <br />
+                    <b>P.O # </b> <span>{{invoice.p_o}}</span>
+                    <br />
+                    <b>Packing Slip </b> <span> </span>
+                    <br />
+                    <b>Receiving Slip </b> <span> </span>
+                    <br />
+                    <b>Receiving Sheet </b> <span></span>
+                    <br />
+                    <b>Files Attached # </b> <span></span>
+                    <br />
+                    <b>Notes </b> <span>{{invoice.notes}}</span>
+                    <br />
+                    <b>Status </b> <span>{{invoice.status}}</span>
+                </div>
             </div>
         </div>
     </div>
     <div class=" cust-padding-tmp">
         <div *ngIf="!gridtolist" class="margin-cust-top table-responsive cust-padding-tmp">
             <div>
-                <table *ngIf="isEmployeeData" datatable [dtOptions]="dtOptions" class="row-border hover  ">
+                <table *ngIf="showInvoiceTable" datatable [dtOptions]="dtOptions" class="row-border hover  ">
                     <thead>
                         <tr>
                             <th>{{"invoice_no" | translate}}</th>
@@ -106,45 +101,34 @@
                             <th>{{"packing_slip_no" | translate}}</th>
                             <th>{{"Receiving_Slip" | translate}}</th>
                             <th>{{'Receiving_Sheet' | translate}}</th>
-                            <th>{{"template_notes" | translate}}</th>
                             <th>{{"Receiving_Attachment" | translate}}</th>
+                            <th>{{"template_notes" | translate}}</th>
                             <th>{{"Employee-form-Status" | translate}}</th>
                             <th width="1%" data-orderable="false">{{"All-Action" | translate }}</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let userArray of usersArray">
-                            <td>{{ userArray.userfullname }}</td>
-                            <td>{{ userArray.useremail }}</td>
-                            <td>{{ userArray.useremail }}</td>
-                            <td>{{ userArray.useremail }}</td>
-                            <td>{{ phonenoFormat(userArray.userphone) }}</td>
-                            <td>{{ userArray.userjob_title_name }}</td>
-                            <td>{{ userArray.department_name }}</td>
-                            <td width="1%">{{ userArray.userstatus == 1 ? acticve_word :inacticve_word }}</td>
+                        <tr *ngFor="let invoice of allInvoices">
+                            <td>{{ invoice.invoice }}</td>
+                            <td>{{ invoice.p_o }}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>{{ invoice.notes }}</td>
+                            <td width="1%">{{ invoice.status }}</td>
                             <td width="1%">
-                                <div *ngIf="deleteTeamMember">
+                                <div>
                                     <div class="dropdown">
                                         <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust"
                                             aria-hidden="true"></i>
                                         <div class="dropdown-content-cust">
-                                            <a (click)="viewpageoprn(userArray._id);" class="button_shiftEditClass"><img
-                                                    src="{{editIcon}}" alt="" height="20px"> {{'All-Edit' |
+                                            <a (click)="viewInvoice(invoice);"><img src="{{viewIcon}}" alt=""
+                                                    height="20px"> {{'All-View' |
                                                 translate}}</a>
-                                            <a (click)="deleteTimecardButtonClick(userArray._id)"
-                                                class="button_shiftDeleteClass"><img src="{{trashIcon}}" alt=""
-                                                    height="20px"> {{'All-Delete' | translate}}</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div *ngIf="!deleteTeamMember">
-                                    <div class="dropdown">
-                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust"
-                                            aria-hidden="true"></i>
-                                        <div class="dropdown-content-cust">
-                                            <a (click)="viewpageoprn(userArray._id);" class="button_shiftEditClass"><img
-                                                    src="{{editIcon}}" alt="" height="20px"> {{'All-Edit' |
-                                                translate}}</a>
+                                            <a (click)="editInvoice(invoice)"><img src="{{editIcon}}" alt=""
+                                                    height="20px">
+                                                {{'All-Edit' | translate}}</a>
                                         </div>
                                     </div>
                                 </div>

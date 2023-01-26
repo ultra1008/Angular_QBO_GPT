@@ -45,20 +45,14 @@ class DataTablesResponse {
 export class InvoiceComponent implements OnInit {
   mode: any;
   add_my_self_icon = icon.ADD_MY_SELF_WHITE;
-  usersArray: any;
   btn_grid_list_text: any;
   listtogrid_text: any;
   gridtolist_text: any;
-  sorting_asc: Boolean = false;
-  sorting_desc: Boolean = false;
-  soruing_all: Boolean = true;
   username_search: any;
   username_status: any;
   gridtolist: Boolean = true;
   addTeamMember: boolean = true;
-  deleteTeamMember: boolean = true;
   locallanguage: any;
-  isEmployeeData: Boolean = false;
   dtOptions: DataTables.Settings = {};
   User_Card_Do_Want_Delete: string = "";
   Compnay_Equipment_Delete_Yes: string = "";
@@ -71,9 +65,14 @@ export class InvoiceComponent implements OnInit {
   importIcon!: string;
   editIcon!: string;
   role_to: any;
-  allRoles = [];
+  allInvoices = [];
+  invoiceCount: any = {
+    pending: 0,
+    complete: 0
+  };
   add_my_self_ico = icon.ADD_MY_SELF_WHITE;
   reportIcon: string = "";
+  viewIcon: string = '';
   role_permission: any;
 
   // We use this trigger because fetching the list of persons can be quite long,
@@ -81,8 +80,10 @@ export class InvoiceComponent implements OnInit {
   dtTrigger: Subject<any> = new Subject<any>();
   @ViewChild('OpenFilebox') OpenFilebox: any;
   Company_Equipment_File_Not_Match: any;
+  showInvoiceTable = true;
+
   constructor (private router: Router, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
-    public employeeservice: EmployeeService, public translate: TranslateService, public dialog: MatDialog,
+    public translate: TranslateService, public dialog: MatDialog,
     public httpCall: HttpCall, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService) {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
@@ -90,10 +91,12 @@ export class InvoiceComponent implements OnInit {
       this.trashIcon = icon.DELETE;
       this.editIcon = icon.EDIT;
       this.reportIcon = icon.REPORT;
+      this.viewIcon = icon.VIEW;
     } else {
       this.trashIcon = icon.DELETE_WHITE;
       this.editIcon = icon.EDIT_WHITE;
       this.reportIcon = icon.REPORT_WHITE;
+      this.viewIcon = icon.VIEW_WHITE;
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
       if (mode) {
@@ -101,11 +104,13 @@ export class InvoiceComponent implements OnInit {
         this.trashIcon = icon.DELETE;
         this.editIcon = icon.EDIT;
         this.reportIcon = icon.REPORT;
+        this.viewIcon = icon.VIEW;
       } else {
         this.mode = 'on';
         this.trashIcon = icon.DELETE_WHITE;
         this.editIcon = icon.EDIT_WHITE;
         this.reportIcon = icon.REPORT_WHITE;
+        this.viewIcon = icon.VIEW_WHITE;
       }
       this.rerenderfunc();
     });
@@ -119,9 +124,7 @@ export class InvoiceComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("i am here");
     let role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA) ?? '');
-    console.log("role", role_permission.UserData.role_name);
     this.role_to = role_permission.UserData.role_name;
     // let role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
     // if (role_permission.role_permission.team.team.Add == false) {
@@ -130,9 +133,9 @@ export class InvoiceComponent implements OnInit {
     // if (role_permission.role_permission.team.team.Delete == false) {
     //   this.deleteTeamMember = false;
     // }
-    this.uiSpinner.spin$.next(true);
-    let that = this;
 
+    let that = this;
+    this.uiSpinner.spin$.next(true);
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     this.locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configdata.fst_load_lang : tmp_locallanguage;
     that.translate.use(this.locallanguage);
@@ -157,7 +160,7 @@ export class InvoiceComponent implements OnInit {
       if (i != 0) {
         setTimeout(() => {
           that.rerenderfunc();
-        }, 1000);
+        }, 100);
       }
       i++;
     });
@@ -165,35 +168,20 @@ export class InvoiceComponent implements OnInit {
       pagingType: 'full_numbers',
       language: tmp_locallanguage == "en" ? LanguageApp.english_datatables : LanguageApp.spanish_datatables
     };
-    that.employeeservice.getalluser().subscribe(function (data) {
-      that.uiSpinner.spin$.next(false);
-      if (data.status) {
-        that.isEmployeeData = true;
-        that.usersArray = data.data;
-      }
-    });
 
-    that.mostusedservice.deleteUserEmit$.subscribe(function (editdata) {
-      that.employeeservice.getalluser().subscribe(function (data) {
-        if (data.status) {
-          that.isEmployeeData = true;
-          that.usersArray = data.data;
-        }
-      });
-    });
-
-    this.getAllRoles();
+    this.getAllInvoices();
   }
 
   rerenderfunc() {
-    this.isEmployeeData = false;
+    this.showInvoiceTable = false;
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     let that = this;
     this.dtOptions.language = tmp_locallanguage == "en" ? LanguageApp.english_datatables : LanguageApp.spanish_datatables;
     setTimeout(() => {
-      that.isEmployeeData = true;
+      that.showInvoiceTable = true;
     }, 100);
   }
+
   gotoArchive() {
     this.router.navigateByUrl('/archive-team-list');
   }
@@ -213,61 +201,14 @@ export class InvoiceComponent implements OnInit {
     }
   }
 
-  sorting_name() {
-    if (this.sorting_desc) {
-      this.sorting_desc = false;
-      this.sorting_asc = true;
-      this.soruing_all = false;
-      this.usersArray = this.usersArray.sort((a: any, b: any) => a.username.localeCompare(b.username, 'en', { sensitivity: 'base' }));
-    } else if (this.sorting_asc) {
-      this.sorting_desc = true;
-      this.sorting_asc = false;
-      this.soruing_all = false;
-      this.usersArray = this.usersArray.reverse((a: any, b: any) => a.username.localeCompare(b.username, 'en', { sensitivity: 'base' }));
-
-    } else {
-      this.sorting_desc = false;
-      this.sorting_asc = true;
-      this.soruing_all = false;
-      this.usersArray = this.usersArray.sort((a: any, b: any) => a.username.localeCompare(b.username, 'en', { sensitivity: 'base' }));
-    }
-  }
-
-  searchData(searchValue: any) {
-    this.usersArray = this.usersArray.filter((item: any) => {
-      return item.username.toLowerCase().includes(searchValue.toLowerCase());
-    });
-  }
-
-  deleteTimecardButtonClick(id: any) {
+  getAllInvoices() {
     let that = this;
-    swalWithBootstrapButtons.fire({
-      title: that.User_Card_Do_Want_Delete,
-      allowOutsideClick: false,
-      showDenyButton: true,
-      showCancelButton: false,
-      confirmButtonText: this.Compnay_Equipment_Delete_Yes,
-      denyButtonText: this.Compnay_Equipment_Delete_No,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.httpCall.httpPostCall(httproutes.TEAM_DELETE, { _id: id }).subscribe(function (params) {
-          if (params.status) {
-            that.snackbarservice.openSnackBar(params.message, "success");
-            that.mostusedservice.userdeleteEmit();
-          } else {
-            that.snackbarservice.openSnackBar(params.message, "error");
-          }
-        });
-      }
-    });
-  }
-
-  getAllRoles() {
-    let that = this;
-    this.httpCall.httpGetCall(httproutes.PORTAL_SETTING_ROLES_ALL).subscribe(function (params) {
+    this.httpCall.httpGetCall(httproutes.INVOICE_GET_LIST).subscribe(function (params) {
       if (params.status) {
-        that.allRoles = params.data;
+        that.allInvoices = params.data;
+        that.invoiceCount = params.count;
       }
+      that.uiSpinner.spin$.next(false);
     });
   }
 
@@ -276,7 +217,7 @@ export class InvoiceComponent implements OnInit {
       height: '500px',
       width: '800px',
       data: {
-        allRoles: this.allRoles
+        // allRoles: this.allRoles
       },
       disableClose: true
     });
@@ -284,6 +225,29 @@ export class InvoiceComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
 
     });
+  }
+
+  importProcessData() {
+    let that = this;
+    that.uiSpinner.spin$.next(true);
+    this.httpCall.httpGetCall(httproutes.INVOICE_PROCESS_INVOICE_DATA).subscribe(function (params) {
+      if (params.status) {
+        that.snackbarservice.openSnackBar(params.message, "success");
+        that.uiSpinner.spin$.next(false);
+        that.getAllInvoices();
+      } else {
+        that.snackbarservice.openSnackBar(params.message, "error");
+        that.uiSpinner.spin$.next(false);
+      }
+    });
+  }
+
+  viewInvoice(invoice) {
+    this.router.navigate(['/invoice-detail'], { queryParams: { _id: invoice._id } });
+  }
+
+  editInvoice(invoice) {
+    this.router.navigate(['/invoice-form'], { queryParams: { _id: invoice._id } });
   }
 
   openAddDialog() {
@@ -301,14 +265,6 @@ export class InvoiceComponent implements OnInit {
 
   ngAfterViewInit() {
     this.dtTrigger.next();
-  }
-
-  detailpage() {
-    this.router.navigate(['/invoice-detail']);
-  }
-
-  openform() {
-    this.router.navigate(['/invoice-form']);
   }
 }
 
@@ -636,6 +592,7 @@ export class InvoiceAttachment {
             .httpPostCall(httproutes.INVOICE_SAVE_INVOICE_PROCESS, { pdf_urls: params.data })
             .subscribe(function (params) {
               if (params.status) {
+                that.sb.openSnackBar(params.message, "success");
                 that.uiSpinner.spin$.next(false);
               } else {
                 that.uiSpinner.spin$.next(false);

@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { Location } from '@angular/common';
-import { icon, localstorageconstants, wasabiImagePath } from 'src/app/consts';
+import { httproutes, icon, localstorageconstants, wasabiImagePath } from 'src/app/consts';
 import { HttpCall } from 'src/app/service/httpcall.service';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,7 +12,6 @@ import { commonFileChangeEvent } from 'src/app/service/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
-
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
     confirmButton: 'btn btn-success s2-confirm margin-right-cust',
@@ -28,16 +27,11 @@ const swalWithBootstrapButtons = Swal.mixin({
   styleUrls: ['./invoice-form.component.scss']
 })
 export class InvoiceFormComponent implements OnInit {
-
-
-
   filepath: any;
   item_image_url: String = "./assets/images/currentplaceholder.png";
 
   startDate: any;
   endDate: any;
-  sponsor_id: any;
-  id: string = '';
   showHeader = false;
   one_template: any;
   mode: any;
@@ -51,8 +45,14 @@ export class InvoiceFormComponent implements OnInit {
   Dont_Save = "";
   invoiceform: FormGroup;
   Email_Template_Form_Submitting = "";
-  constructor(private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
+  id: any;
+
+  statusList = configdata.INVOICE_STATUS;
+
+  constructor (private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
+    this.id = this.route.snapshot.queryParamMap.get('_id');
+
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     var locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configdata.fst_load_lang : tmp_locallanguage;
     this.translate.use(locallanguage);
@@ -63,33 +63,16 @@ export class InvoiceFormComponent implements OnInit {
       this.Dont_Save = this.translate.instant('Dont_Save');
       this.Email_Template_Form_Submitting = this.translate.instant('Email_Template_Form_Submitting');
     });
-    this.sponsor_id = localStorage.getItem(localstorageconstants.SUPPLIERID);
-
-
     this.invoiceform = this.formBuilder.group({
-      assign_to: ["", [Validators.required]],
-      vendor_name: ["", Validators.required],
-      vendor_id: ["", Validators.required],
-      customer_id: ["", Validators.required],
-      Invoice_has: ["", Validators.required],
-      po_has: ["", Validators.required],
-      invoice_date: ["", Validators.required],
-      due_date: ["", Validators.required],
-      order_date: ["", Validators.required],
-      ship_date: ["", Validators.required],
-      terms: ["", Validators.required],
-      total_paid: ["", Validators.required],
-      tax_rate: ["", Validators.required],
-      tax_amount: ["", Validators.required],
-      tax_id: ["", Validators.required],
-      sub_total: ["", Validators.required],
-      amount_due: ["", Validators.required],
-      cost_code: ["", Validators.required],
-      gl_account: ["", Validators.required],
-      receiv_date: ["", Validators.required],
-      notes: ["", Validators.required]
-    });
+      invoice: ["", [Validators.required]],
+      p_o: ["", Validators.required],
 
+      packing_slip: [""],
+      receiving_slip: [""],
+      receiving_sheet: [""],
+      notes: [""],
+      status: ["", Validators.required],
+    });
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
@@ -111,13 +94,54 @@ export class InvoiceFormComponent implements OnInit {
         this.exitIcon = icon.CANCLE_WHITE;
       }
     });
+    if (this.id) {
+      this.getOneInvoice();
+    }
   }
 
   back() {
-    this.location.back();
+    this.router.navigate(['/invoice']);
   }
 
   ngOnInit(): void {
   }
 
+  getOneInvoice() {
+    let that = this;
+    this.httpCall.httpPostCall(httproutes.INVOICE_GET_ONE_INVOICE, { _id: that.id }).subscribe(function (params) {
+      if (params.status) {
+        that.invoiceform = that.formBuilder.group({
+          invoice: [params.data.invoice, [Validators.required]],
+          p_o: [params.data.p_o, Validators.required],
+
+          packing_slip: [params.data.packing_slip],
+          receiving_slip: [params.data.receiving_slip],
+          receiving_sheet: [params.data.receiving_sheet],
+          notes: [params.data.notes],
+          status: [params.data.status, Validators.required],
+        });
+      }
+      that.uiSpinner.spin$.next(false);
+    });
+  }
+
+  saveInvoice() {
+    let that = this;
+    if (that.invoiceform.valid) {
+      let requestObject = that.invoiceform.value;
+      if (that.id) {
+        requestObject._id = that.id;
+      }
+      that.uiSpinner.spin$.next(true);
+      that.httpCall.httpPostCall(httproutes.INVOICE_SAVE_INVOICE, requestObject).subscribe(function (params) {
+        if (params.status) {
+          that.snackbarservice.openSnackBar(params.message, "success");
+          that.back();
+        } else {
+          that.snackbarservice.openSnackBar(params.message, "error");
+        }
+        that.uiSpinner.spin$.next(false);
+      });
+    }
+  }
 }

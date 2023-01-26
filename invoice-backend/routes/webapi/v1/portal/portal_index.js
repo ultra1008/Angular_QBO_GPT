@@ -259,11 +259,12 @@ router.post('/webapi/v1/portal/saveinvoicecostcode', common.checkTokenExistOrNot
 router.get('/webapi/v1/portal/getinvoicecostcode', common.checkTokenExistOrNot, invoice_costcodeController.getcostCode);
 router.post('/webapi/v1/portal/deleteInvoicecostcode', common.checkTokenExistOrNot, invoice_costcodeValidation.deletecostCode, invoice_costcodeController.deleteinvoicecostCode);
 
-let invoice_Controller = require('./invoices/invoice_Controller');
+let invoiceController = require('./invoices/invoiceController');
 let invoiceValidation = require('./invoices/invoiceValidation');
-router.post('/webapi/v1/portal/saveinvoice', common.checkTokenExistOrNot, invoice_Controller.saveinvoice);
-router.get('/webapi/v1/portal/getinvoice', common.checkTokenExistOrNot, invoice_Controller.getInvoice);
-router.get('/webapi/v1/portal/deleteinvoice', common.checkTokenExistOrNot, invoiceValidation.deleteinvoice, invoice_Controller.deleteInvoice);
+router.post('/webapi/v1/portal/saveinvoice', common.checkTokenExistOrNot, invoiceController.saveInvoice);
+router.get('/webapi/v1/portal/getinvoice', common.checkTokenExistOrNot, invoiceController.getInvoice);
+router.post('/webapi/v1/portal/getoneinvoice', common.checkTokenExistOrNot, invoiceValidation.getOneInvoice, invoiceController.getOneInvoice);
+router.get('/webapi/v1/portal/deleteinvoice', common.checkTokenExistOrNot, invoiceValidation.deleteInvoice, invoiceController.deleteInvoice);
 
 
 let invoiceDashboard = require('./dashboard/dashboardController');
@@ -300,6 +301,7 @@ let processInvoiceController = require('./process_invoice/processInvoiceControll
 let processInvoiceValidation = require('./process_invoice/processInvoiceValidation');
 router.get('/webapi/v1/portal/getinvoiceprocess', common.checkTokenExistOrNot, processInvoiceController.getAllProcessInvoice);
 router.post('/webapi/v1/portal/saveinvoiceprocess', common.checkTokenExistOrNot, processInvoiceController.saveInvoiceProcess);
+router.get('/webapi/v1/portal/importprocessinvoice', common.checkTokenExistOrNot, processInvoiceController.importProcessData);
 router.post('/webapi/v1/portal/deleteinvoiceprocess', common.checkTokenExistOrNot, processInvoiceValidation.deleteInvoiceProcess, processInvoiceController.deleteInvoiceProcess);
 
 module.exports = router;

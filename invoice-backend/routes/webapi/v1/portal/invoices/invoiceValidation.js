@@ -1,6 +1,6 @@
 var validator = require('./../../../../../controller/common/validationforrequest');
 
-const deleteinvoice = (req, res, next) => {
+const getOneInvoice = (req, res, next) => {
     const validationRule = {
         "_id": "required"
     };
@@ -14,4 +14,21 @@ const deleteinvoice = (req, res, next) => {
     });
 };
 
-module.exports = { deleteinvoice };
+const deleteInvoice = (req, res, next) => {
+    const validationRule = {
+        "_id": "required"
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({ status: false, message: err });
+        }
+        else {
+            next();
+        }
+    });
+};
+
+module.exports = {
+    getOneInvoice,
+    deleteInvoice,
+};

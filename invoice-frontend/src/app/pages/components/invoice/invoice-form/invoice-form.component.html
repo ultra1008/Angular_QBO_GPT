@@ -19,202 +19,68 @@
             </h3>
         </div>
         <div class="container">
-            <div class="row">
-                <div class="col-6">
-                    <form class="form" [formGroup]="invoiceform">
-                        <div class="main-cust-image">
-                            <div>
-                                <mat-form-field class="main-one-input-field" appearance="outline">
-                                    <mat-label>Assign to</mat-label>
-                                    <input matInput required class="input-capitalized-textfield" placeholder="Assign to"
-                                        formControlName="assign_to" />
-                                </mat-form-field>
-                            </div>
-                            <div>
-                                <mat-form-field class="main-one-input-field" appearance="outline">
-                                    <mat-label>Vendor Name</mat-label>
-                                    <input matInput required placeholder="Vendor Name" formControlName="vendor_name">
-                                </mat-form-field>
-                            </div>
-
-
-                            <div>
-                                <mat-form-field class="main-one-input-field" appearance="outline">
-                                    <mat-label>Vendor ID</mat-label>
-                                    <input matInput required class="input-capitalized-textfield" placeholder="Vendor ID"
-                                        formControlName="vendor_id" />
-                                </mat-form-field>
-                            </div>
-
-                            <div>
-                                <mat-form-field class="main-one-input-field" appearance="outline">
-                                    <mat-label>Customer ID</mat-label>
-                                    <input matInput required class="input-capitalized-textfield"
-                                        placeholder="Customer ID" formControlName="customer_id" />
-                                </mat-form-field>
-                            </div>
-                            <div>
-                                <mat-form-field class="main-one-input-field" appearance="outline">
-                                    <mat-label>Invoice #</mat-label>
-                                    <input matInput required class="input-capitalized-textfield" placeholder="Invoice #"
-                                        formControlName="Invoice_has" />
-                                </mat-form-field>
-                            </div>
-                            <div>
-                                <mat-form-field class="main-one-input-field" appearance="outline">
-                                    <mat-label>P.O #</mat-label>
-                                    <input matInput required class="input-capitalized-textfield" placeholder="P.O #"
-                                        formControlName="po_has" />
-                                </mat-form-field>
-                            </div>
-
-                            <div>
-                                <mat-form-field appearance="outline" class="main-one-input-field">
-                                    <mat-label>Invoice date</mat-label>
-                                    <input matInput required [matDatepicker]="picker" disabled
-                                        formControlName="invoice_date">
-                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                    <mat-datepicker #picker disabled="false"></mat-datepicker>
-                                </mat-form-field>
-                            </div>
-
-                            <div>
-                                <mat-form-field appearance="outline" class="main-one-input-field">
-                                    <mat-label>Due date</mat-label>
-                                    <input matInput required [matDatepicker]="due" disabled formControlName="due_date">
-                                    <mat-datepicker-toggle matSuffix [for]="due"></mat-datepicker-toggle>
-                                    <mat-datepicker #due disabled="false"></mat-datepicker>
-                                </mat-form-field>
-                            </div>
-
-                            <div>
-                                <mat-form-field appearance="outline" class="main-one-input-field">
-                                    <mat-label>Order date</mat-label>
-                                    <input matInput required [matDatepicker]="order" disabled
-                                        formControlName="order_date">
-                                    <mat-datepicker-toggle matSuffix [for]="order"></mat-datepicker-toggle>
-                                    <mat-datepicker #order disabled="false"></mat-datepicker>
-                                </mat-form-field>
-                            </div>
-
-                            <div>
-                                <mat-form-field appearance="outline" class="main-one-input-field">
-                                    <mat-label>Ship date</mat-label>
-                                    <input matInput required [matDatepicker]="ship" disabled
-                                        formControlName="ship_date">
-                                    <mat-datepicker-toggle matSuffix [for]="ship"></mat-datepicker-toggle>
-                                    <mat-datepicker #ship disabled="false"></mat-datepicker>
-                                </mat-form-field>
-                            </div>
-
-                            <div>
-                                <mat-form-field class="main-one-input-field" appearance="outline">
-                                    <mat-label>Terms</mat-label>
-                                    <input matInput required class="input-capitalized-textfield" placeholder="Terms"
-                                        formControlName="terms" />
-                                </mat-form-field>
-                            </div>
-
-                            <div>
-                                <mat-form-field class="main-one-input-field" appearance="outline">
-                                    <mat-label>Total to be paid</mat-label>
-                                    <input matInput required class="input-capitalized-textfield"
-                                        placeholder="Total to be paid" formControlName="total_paid" />
-                                </mat-form-field>
-                            </div>
-
-                            <div>
-                                <mat-form-field class="main-one-input-field" appearance="outline">
-                                    <mat-label>Tax Amount</mat-label>
-                                    <input matInput required class="input-capitalized-textfield"
-                                        placeholder="Tax Amount" formControlName="tax_amount" />
-                                </mat-form-field>
-                            </div>
-
-
-                            <div>
-                                <mat-form-field class="main-one-input-field" appearance="outline">
-                                    <mat-label>Tax Rate</mat-label>
-                                    <input matInput required class="input-capitalized-textfield" placeholder="Tax Rate"
-                                        formControlName="tax_rate" />
-                                </mat-form-field>
-                            </div>
-
-                            <div>
-                                <mat-form-field class="main-one-input-field" appearance="outline">
-                                    <mat-label>Tax ID</mat-label>
-                                    <input matInput required class="input-capitalized-textfield" placeholder="Tax ID"
-                                        formControlName="tax_id" />
-                                </mat-form-field>
-                            </div>
-
-                            <div>
-                                <mat-form-field class="main-one-input-field" appearance="outline">
-                                    <mat-label>Sub Total</mat-label>
-                                    <input matInput required class="input-capitalized-textfield" placeholder="Sub Total"
-                                        formControlName="sub_total" />
-                                </mat-form-field>
-                            </div>
-
-                            <div>
-                                <mat-form-field class="main-one-input-field" appearance="outline">
-                                    <mat-label>Amount Due</mat-label>
-                                    <input matInput required class="input-capitalized-textfield"
-                                        placeholder="Amount Due" formControlName="amount_due" />
-                                </mat-form-field>
-                            </div>
-
-                            <div>
-                                <mat-form-field class="main-one-input-field" appearance="outline">
-                                    <mat-label>Cost Code</mat-label>
-                                    <input matInput required class="input-capitalized-textfield" placeholder="Cost Code"
-                                        formControlName="cost_code" />
-                                </mat-form-field>
-                            </div>
-
-                            <div>
-                                <mat-form-field class="main-one-input-field" appearance="outline">
-                                    <mat-label>GL Account #</mat-label>
-                                    <input matInput required class="input-capitalized-textfield"
-                                        placeholder="GL Account #" formControlName="gl_account" />
-                                </mat-form-field>
-                            </div>
-
-                            <div>
-                                <mat-form-field appearance="outline" class="main-one-input-field">
-                                    <mat-label>Receiving date</mat-label>
-                                    <input matInput required [matDatepicker]="receiving" disabled
-                                        formControlName="receiv_date">
-                                    <mat-datepicker-toggle matSuffix [for]="receiving"></mat-datepicker-toggle>
-                                    <mat-datepicker #receiving disabled="false"></mat-datepicker>
-                                </mat-form-field>
-                            </div>
-
-                            <div>
-                                <mat-form-field class="main-one-input-field" appearance="outline">
-                                    <mat-label>Notes</mat-label>
-                                    <textarea matInput required appTextareaAutoresizeproject
-                                        class="input-capitalized-textArea" placeholder="Notes"
-                                        formControlName="notes"></textarea>
-                                </mat-form-field>
-                            </div>
-
-
-
-
-                        </div>
-                        <div class="cust-center-save pb-3">
-                            <button mat-raised-button class="cust-button-form"><img src="{{backIcon}}" alt=""
-                                    (click)="back()" class="pr-1" height="15px">{{'All-back' |
-                                translate}}</button>
-                            <button mat-raised-button color="primary" class="cust-button-form"><img src="{{saveIcon}}"
-                                    alt="" class="pr-1" height="15px">{{'All-save' | translate
-                                }}</button>
-                        </div>
-                    </form>
-                    <!-- </div> -->
+            <form class="form" [formGroup]="invoiceform">
+                <div class="main-cust-image">
+                    <div>
+                        <mat-form-field class="main-one-input-field" appearance="outline">
+                            <mat-label>Invoice #</mat-label>
+                            <input matInput required class="input-capitalized-textfield" placeholder="Invoice #"
+                                formControlName="invoice" />
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-form-field class="main-one-input-field" appearance="outline">
+                            <mat-label>P.O #</mat-label>
+                            <input matInput required class="input-capitalized-textfield" placeholder="P.O #"
+                                formControlName="p_o" />
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-form-field class="main-one-input-field" appearance="outline">
+                            <mat-label>Packing Slip</mat-label>
+                            <input matInput class="input-capitalized-textfield" placeholder="Packing Slip"
+                                formControlName="packing_slip" />
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-form-field class="main-one-input-field" appearance="outline">
+                            <mat-label>Receiving Slip</mat-label>
+                            <input matInput class="input-capitalized-textArea" placeholder="Receiving Slip"
+                                formControlName="receiving_slip" />
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-form-field class="main-one-input-field" appearance="outline">
+                            <mat-label>Receiving Sheet</mat-label>
+                            <input matInput class="input-capitalized-textArea" placeholder="Receiving Sheet"
+                                formControlName="receiving_sheet" />
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-form-field class="main-one-input-field" appearance="outline">
+                            <mat-label>Status</mat-label>
+                            <mat-select formControlName="status" class="dark-cust-color" required>
+                                <mat-option *ngFor="let status of statusList" [value]="status.value">
+                                    {{status.tmp_lanaguage | translate}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-form-field class="main-one-input-field" appearance="outline">
+                            <mat-label>Notes</mat-label>
+                            <textarea matInput appTextareaAutoresizeproject class="input-capitalized-textArea"
+                                placeholder="Notes" formControlName="notes"></textarea>
+                        </mat-form-field>
+                    </div>
                 </div>
-            </div>
+                <div class="cust-center-save pb-3">
+                    <button mat-raised-button class="cust-button-form"><img src="{{backIcon}}" alt="" (click)="back()"
+                            class="pr-1" height="15px">{{'All-back' | translate}}</button>
+                    <button mat-raised-button color="primary" class="cust-button-form" (click)="saveInvoice()"><img
+                            src="{{saveIcon}}" alt="" class="pr-1" height="15px">{{'All-save' | translate }}</button>
+                </div>
+            </form>
         </div>
     </mat-card>
 </div>

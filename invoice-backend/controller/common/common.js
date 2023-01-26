@@ -1912,3 +1912,54 @@ module.exports.findUpdatedFieldHistory = async function (requestObject, dbData) 
         resolve(arr);
     });
 };
+
+// Call API of Send Invoice for processing
+module.exports.sendInvoiceForProcess = function (requestObject) {
+    var request = require('request');
+    const options = {
+        'method': 'POST',
+        'url': 'http://db-invoice.rovuk.us:8000/process',
+        'headers': {
+            'Content-Type': 'application/json',
+            'X-API-KEY': '4194168a-4a32-45d9-9d7c-0a730f887e7f'
+        },
+        rejectUnauthorized: false,
+        body: JSON.stringify(requestObject)
+    };
+    return new Promise(function (resolve, reject) {
+        request(options, function (err, resp, body) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve({ body });
+            }
+        });
+    });
+};
+
+// Call API of Get Invoice for processing
+module.exports.sendInvoiceForProcess = function (requestObject) {
+    var request = require('request');
+    const options = {
+        'method': 'GET',
+        'url': `http://db-invoice.rovuk.us:8000/get_documents_by_id${requestObject}`,
+        'headers': {
+            'Content-Type': 'application/json',
+            'X-API-KEY': '4194168a-4a32-45d9-9d7c-0a730f887e7f'
+        },
+        rejectUnauthorized: false,
+    };
+    return new Promise(function (resolve, reject) {
+        request(options, function (err, resp, body) {
+            if (err) {
+                reject(err);
+            } else {
+                if (resp.statusCode == 200) {
+                    resolve({ status: true, data: JSON.parse(body) });
+                } else {
+                    resolve({ status: false });
+                }
+            }
+        });
+    });
+};

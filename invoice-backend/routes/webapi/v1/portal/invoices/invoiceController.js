@@ -1,23 +1,21 @@
-var invoice_Schema = require('./../../../../../model/invoice');
-var invoice_history_Schema = require('./../../../../../model/history/invoice_history');
-let db_connection = require('./../../../../../controller/common/connectiondb');
-let collectionConstant = require('./../../../../../config/collectionConstant');
-let config = require('./../../../../../config/config');
-let common = require('./../../../../../controller/common/common');
+var invoice_Schema = require('../../../../../model/invoice');
+var processInvoiceSchema = require('../../../../../model/process_invoice');
+var invoice_history_Schema = require('../../../../../model/history/invoice_history');
+let db_connection = require('../../../../../controller/common/connectiondb');
+let collectionConstant = require('../../../../../config/collectionConstant');
+let config = require('../../../../../config/config');
+let common = require('../../../../../controller/common/common');
 const historyCollectionConstant = require('../../../../../config/historyCollectionConstant');
 var ObjectID = require('mongodb').ObjectID;
 
-
 // save invoice
-
-module.exports.saveinvoice = async function (req, res) {
+module.exports.saveInvoice = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
     if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoice_Schema);
             var id = requestObject._id;
             delete requestObject._id;
@@ -61,7 +59,6 @@ module.exports.saveinvoice = async function (req, res) {
 };
 
 //get invoice
-
 module.exports.getInvoice = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
@@ -70,12 +67,65 @@ module.exports.getInvoice = async function (req, res) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoice_Schema);
+            var processInvoiceConnection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
             var get_data = await invoicesConnection.find({ is_delete: 0 });
+            var get_count = await processInvoiceConnection.aggregate([
+                { $match: { is_delete: 0 } },
+                {
+                    $project: {
+                        pending: { $cond: [{ $eq: ["$status", 'Pending'] }, 1, 0] },
+                        complete: { $cond: [{ $eq: ["$status", 'Complete'] }, 1, 0] },
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        pending: { $sum: "$pending" },
+                        complete: { $sum: "$complete" },
+                    }
+                }
+            ]);
             if (get_data) {
-                res.send({ status: true, message: "Invoice data", data: get_data });
+                var count = {
+                    pending: 0,
+                    complete: 0,
+                };
+                if (get_count) {
+                    if (get_count.length > 0) {
+                        get_count = get_count[0];
+                    }
+                    count = {
+                        pending: get_count.pending,
+                        complete: get_count.complete,
+                    };
+                }
+                res.send({ status: true, message: "Invoice data", data: get_data, count });
             } else {
                 res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
             }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    }
+    else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+//get invoice
+module.exports.getOneInvoice = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoice_Schema);
+            var get_data = await invoicesConnection.findOne({ _id: ObjectID(requestObject._id) });
+            res.send({ status: true, message: "Invoice data", data: get_data });
         } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
@@ -131,7 +181,6 @@ module.exports.deleteInvoice = async function (req, res) {
 };
 
 //invoice pending datatable
-
 module.exports.getpendingdatatable = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
@@ -152,7 +201,6 @@ module.exports.getpendingdatatable = async function (req, res) {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
-
 
 // history function
 async function addchangeInvoice_History(action, data, decodedToken, updatedAt) {
