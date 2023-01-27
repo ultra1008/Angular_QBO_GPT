@@ -195,6 +195,7 @@ class Indexer:
         else:
             self.db.documents.update_one({
                 'customer_id': customer_id,
+                'document_id': document_id,
                 'document_type': 'QUOTE',
                 'quote_number': document['fields']['QUOTE_NUMBER'],
             }, {
@@ -271,6 +272,7 @@ class Indexer:
         else:
             self.db.documents.update_one({
                 'customer_id': customer_id,
+                'document_id': document_id,
                 'document_type': 'PURCHASE_ORDER',
                 'po_number': document['fields']['PO_NUMBER']
             }, {
@@ -335,6 +337,7 @@ class Indexer:
         else:
             self.db.documents.update_one({
                 'customer_id': customer_id,
+                'document_id': document_id,
                 'document_type': 'INVOICE',
                 'invoice_number': document['fields']['INVOICE_NUMBER'],
             }, {
@@ -402,6 +405,7 @@ class Indexer:
         else:
             self.db.documents.update_one({
                 'customer_id': customer_id,
+                'document_id': document_id,
                 'document_type': 'PACKING_SLIP',
                 # Note: since PS does not have a dedicated ID (like PO_NUMBER for PO) we identify it by these:
                 'invoice_number': document['fields']['INVOICE_NUMBER'],
