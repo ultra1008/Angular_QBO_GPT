@@ -155,6 +155,7 @@ class Indexer:
         if document['fields']['QUOTE_NUMBER']:
             n_docs = self.db.documents.count_documents({
                 'customer_id': customer_id,
+                'document_id': document_id,
                 'document_type': 'QUOTE',
                 'quote_number': document['fields']['QUOTE_NUMBER']
             })
@@ -209,6 +210,7 @@ class Indexer:
         if document['fields']['PO_NUMBER']:
             n_docs = self.db.documents.count_documents({
                 'customer_id': customer_id,
+                'document_id': document_id,
                 'document_type': 'PURCHASE_ORDER',
                 'po_number': document['fields']['PO_NUMBER'],
             })
@@ -283,6 +285,7 @@ class Indexer:
         if document['fields']['INVOICE_NUMBER']:
             n_docs = self.db.documents.count_documents({
                 'customer_id': customer_id,
+                'document_id': document_id,
                 'document_type': 'INVOICE',
                 'invoice_number': document['fields']['INVOICE_NUMBER']
             })
@@ -347,6 +350,7 @@ class Indexer:
         if document['fields']['INVOICE_NUMBER'] and document['fields']['PO_NUMBER']:
             n_docs = self.db.documents.count_documents({
                 'customer_id': customer_id,
+                'document_id': document_id,
                 'document_type': 'PACKING_SLIP',
                 'invoice_number': document['fields']['INVOICE_NUMBER'],
                 'po_number': document['fields']['PO_NUMBER']
