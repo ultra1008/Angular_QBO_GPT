@@ -463,7 +463,7 @@ module.exports.savelogindetails = async function (req, res) {
                     COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
                     COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
                 };
-                const file_data = fs.readFileSync('./controller/emailtemplates/loginFromNewDevice.html', 'utf8');
+                const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/loginFromNewDevice.html', 'utf8');
                 var template = handlebars.compile(file_data);
                 var HtmlData = await template(emailTmp);
                 let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [decodedToken.UserData.useremail], "Login from a new device", HtmlData,
@@ -538,7 +538,7 @@ module.exports.sponsorforgetpassword = async function (req, res) {
 
                         let update_user = await supplierUserSchemaConnection.updateOne({ useremail: req.body.useremail }, { password: common.generateHash(temp_password), useris_password_temp: true });
                         console.log("useremail", req.body.useremail, update_user);
-                        const data = await fs.readFileSync('./controller/emailtemplates/resetPassword.html', 'utf8');
+                        const data = await fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/resetPassword.html', 'utf8');
                         let emailTmp = {
                             HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
                             SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
@@ -626,7 +626,7 @@ module.exports.sendUserPassword = async function (req, res) {
                 res.send({ message: translator.getStr('UserNotFound'), status: false });
             } else {
                 let update_user = await userConnection.updateOne({ _id: decodedToken.UserData._id }, { password: common.generateHash(requestObject.password), useris_password_temp: true });
-                const data = await fs.readFileSync('./controller/emailtemplates/resetPassword.html', 'utf8');
+                const data = await fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/resetPassword.html', 'utf8');
                 let emailTmp = {
                     HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
                     SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${config.NUMBERPHONE2}`,
@@ -728,7 +728,7 @@ module.exports.sendSupplierOTP = async function (req, res) {
                     COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
                     COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
                 };
-                const file_data = fs.readFileSync('./controller/emailtemplates/emailOTP.html', 'utf8');
+                const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/emailOTP.html', 'utf8');
                 var template = handlebars.compile(file_data);
                 var HtmlData = await template(emailTmp);
                 let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [requestObject.useremail], "OTP Verification", HtmlData,

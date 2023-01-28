@@ -29,8 +29,8 @@ async function userDocumentExpiryAlertCronFunction() {
         for (const item_new of All_Compnay) {
             //employee 
             var translator = new common.Language(item_new.companylanguage);
-            const file_data = fs.readFileSync('./controller/emailtemplates/userDocumentExpiryAlert.html', 'utf8');
-            const file_dataAdmin = fs.readFileSync('./controller/emailtemplates/userAdminDocumentExpiryAlert.html', 'utf8');
+            const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/userDocumentExpiryAlert.html', 'utf8');
+            const file_dataAdmin = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/userAdminDocumentExpiryAlert.html', 'utf8');
             var template = handlebars.compile(file_data);
             var templateAdmin = handlebars.compile(file_dataAdmin);
 
@@ -215,7 +215,7 @@ async function userEmergencyContactAlertCronFunction() {
             let connection_db_api = await db_connection.connection_db_api(item);
             let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             let all_user = await userConnection.find({ is_delete: 0 });
-            const file_data = fs.readFileSync('./controller/emailtemplates/commonEmailTemplate.html', 'utf8');
+            const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/commonEmailTemplate.html', 'utf8');
             let emailTmp = {
                 HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
                 SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,

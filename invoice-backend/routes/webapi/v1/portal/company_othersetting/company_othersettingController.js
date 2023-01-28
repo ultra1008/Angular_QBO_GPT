@@ -252,7 +252,7 @@ module.exports.sendIframeCode = async function (req, res) {
                 COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
                 COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
             };
-            const file_data = fs.readFileSync('./controller/emailtemplates/sendIfameCode.html', 'utf8');
+            const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/sendIfameCode.html', 'utf8');
             var template = handlebars.compile(file_data);
             var HtmlData = await template(emailTmp);
             let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, requestObject.emailsList, "Iframe Code", HtmlData,

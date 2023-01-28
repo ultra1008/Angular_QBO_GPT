@@ -155,7 +155,7 @@ module.exports.saveEmployee = async function (req, res) {
                         // if (current_count >= allowed_count) {
                         //     res.send({ message: translator.getStr('UserLimitExceed'), status: false });
                         // } else {
-                        const file_data = fs.readFileSync('./controller/emailtemplates/invitationuser.html', 'utf8');
+                        const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/invitationuser.html', 'utf8');
                         let add_user = new userConnection(body);
                         history_object = body;
 
@@ -1753,7 +1753,7 @@ module.exports.sendappinvitation = async function (req, res) {
                 COMPANYCODE: `${translator.getStr('EmailAppInvitationCompanyCode')} ${decodedToken.companycode}`,
             };
 
-            const file_data = fs.readFileSync('./controller/emailtemplates/appinvitation.html', 'utf8');
+            const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/appinvitation.html', 'utf8');
             var template = handlebars.compile(file_data);
             var HtmlData = await template(emailTmp);
             let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [requestObject.recipient], "App Download Invitation", HtmlData,
@@ -1986,7 +1986,7 @@ module.exports.senddocumentexpiration = async function (req, res) {
                 }
             }
             if (sendResponse != 0) {
-                const file_data = fs.readFileSync('./controller/emailtemplates/singleDocumentExpiryAlert.html', 'utf8');
+                const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/singleDocumentExpiryAlert.html', 'utf8');
                 var template = handlebars.compile(file_data);
                 var HtmlData = await template(emailTmp);
                 let subject = "";
@@ -3296,7 +3296,7 @@ module.exports.getAllEmployeeReport = async function (req, res) {
                 Body: tmpResultExcel,
                 ACL: 'public-read-write'
             };
-            const file_data = fs.readFileSync('./controller/emailtemplates/excelReport.html', 'utf8');
+            const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/excelReport.html', 'utf8');
 
             bucketOpration.uploadFile(PARAMS, async function (err, resultUpload) {
                 if (err) {
@@ -3408,7 +3408,7 @@ module.exports.checkAndInsertImportData = async function (req, res) {
             let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
             let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
             let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
-            const file_data = fs.readFileSync('./controller/emailtemplates/invitationuser.html', 'utf8');
+            const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/invitationuser.html', 'utf8');
             for (let m = 0; m < requestObject.data.length; m++) {
                 let check_user = await userConnection.findOne({
                     useremail: requestObject.data[m].useremail
@@ -4220,7 +4220,7 @@ module.exports.importManagementUser = async function (req, res) {
                     history_object = management_user;
                     history_object.user_id = add._id;
                     // addUSER_History("Insert", history_object, decodedToken);
-                    const file_data = fs.readFileSync('./controller/emailtemplates/invitationuser.html', 'utf8');
+                    const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/invitationuser.html', 'utf8');
                     let emailTmp = {
                         HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
                         SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,

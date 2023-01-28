@@ -6,6 +6,7 @@ var ObjectID = require('mongodb').ObjectID;
 let db_connection = require('./../../../../../controller/common/connectiondb');
 let common = require('./../../../../../controller/common/common');
 let collectionConstant = require('./../../../../../config/collectionConstant');
+var request = require('request');
 
 module.exports.getAllProcessInvoice = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -56,7 +57,9 @@ module.exports.saveInvoiceProcess = async function (req, res) {
                     });
                 }
                 let insert_data = await invoiceProcessCollection.insertMany(saveObj);
+                console.log("insert_data: ", insert_data);
                 if (insert_data) {
+                    console.log("here");
                     let apiObj = [];
                     for (let i = 0; i < insert_data.length; i++) {
                         apiObj.push({
@@ -64,7 +67,27 @@ module.exports.saveInvoiceProcess = async function (req, res) {
                             document_url: insert_data[i].pdf_url,
                         });
                     }
-                    common.sendInvoiceForProcess({ documents: apiObj });
+                    console.log("before call");
+                    await sendInvoiceForProcess(apiObj);
+                    /* const options = {
+                        'method': 'POST',
+                        'url': 'http://db-invoice.rovuk.us:8000/process',
+                        'headers': {
+                            'Content-Type': 'application/json',
+                            'X-API-KEY': '4194168a-4a32-45d9-9d7c-0a730f887e7f'
+                        },
+                        rejectUnauthorized: false,
+                        body: JSON.stringify({ documents: apiObj })
+                    };
+                    console.log("process body: ", JSON.stringify({ documents: apiObj }));
+                    request(options, function (err, resp, body) {
+                        if (err) {
+                            // reject(err);
+                        } else {
+                            console.log("response: ", body);
+                            // resolve({ body });
+                        }
+                    }); */
                     res.send({ message: 'Invoice for process added successfully.', data: apiObj, status: true });
                 }
             }
@@ -79,6 +102,33 @@ module.exports.saveInvoiceProcess = async function (req, res) {
     }
 };
 
+// Call API of Send Invoice for processing
+function sendInvoiceForProcess(requestObject) {
+    return new Promise(function (resolve, reject) {
+        console.log("api call");
+        var request = require('request');
+        const options = {
+            'method': 'POST',
+            'url': 'http://db-invoice.rovuk.us:8000/process',
+            'headers': {
+                'Content-Type': 'application/json',
+                'X-API-KEY': '4194168a-4a32-45d9-9d7c-0a730f887e7f'
+            },
+            rejectUnauthorized: false,
+            body: JSON.stringify({ documents: requestObject })
+        };
+        console.log("process body: ", JSON.stringify({ documents: requestObject }));
+        request(options, function (err, resp, body) {
+            if (err) {
+                reject(err);
+            } else {
+                console.log("response: ", body);
+                resolve({ body });
+            }
+        });
+    });
+};
+
 module.exports.importProcessData = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
@@ -88,8 +138,8 @@ module.exports.importProcessData = async function (req, res) {
             let invoiceProcessCollection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
             let invoiceCollection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             let get_invoice = await invoiceProcessCollection.find({ is_delete: 0, status: 'Pending' });
-            var queryString = `?customer_id=demo-3`;
-            // var queryString = `?customer_id=${decodedToken.companycode.toLowerCase()}`;
+            // var queryString = `?customer_id=demo-3`;
+            var queryString = `?customer_id=${decodedToken.companycode.toLowerCase()}`;
             for (let i = 0; i < get_invoice.length; i++) {
                 queryString += `&document_id=${get_invoice[i]._id}`;
             }

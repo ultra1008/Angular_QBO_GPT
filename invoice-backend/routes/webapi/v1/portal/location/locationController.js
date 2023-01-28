@@ -218,7 +218,7 @@ async function sendLocationUpdateMail(locationData, decodedToken, translator) {
                 // LATITUDE: `${translator.getStr('Location_Latitude')} : ${locationData.location_lat}`,
                 // LONGITUDE: `${translator.getStr('Location_Longitude')} : ${locationData.location_lng}`,
             };
-            const file_data = fs.readFileSync('./controller/emailtemplates/locationAlert.html', 'utf8');
+            const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/locationAlert.html', 'utf8');
             var template = handlebars.compile(file_data);
             var HtmlData = await template(emailTmp);
             let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, userEmailList, translator.getStr('Location_Mail_Subject'), HtmlData,
