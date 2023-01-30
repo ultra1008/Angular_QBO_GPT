@@ -20,8 +20,6 @@ import { UserpublicDatatableComponent } from './components/userpublic-datatable/
 
 
 
-import { ForcefullyResetpasswordComponent } from './components/forcefully-resetpassword/forcefully-resetpassword.component';
-
 import { EmployeeListComponent } from './components/team/employee-list/employee-list.component';
 import { EmployeeFormComponent } from './components/team/employee-form/employee-form.component';
 import { EmployeeViewComponent } from './components/team/employee-view/employee-view.component';
@@ -311,11 +309,11 @@ const routes: Routes = [
         pathMatch: 'full',
         component: TermspageComponent
       },
-      {
+      /* {
         path: 'forcefully-resetpassword',
         pathMatch: 'full',
         component: ForcefullyResetpasswordComponent
-      },
+      }, */
 
 
 

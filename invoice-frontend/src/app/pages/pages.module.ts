@@ -53,10 +53,6 @@ import { ShortcutsMenuComponent, ShortcutsAddComponent } from './common/header/c
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CurrencyPipe } from '@angular/common';
 import { configdata } from 'src/environments/configData';
-import { ForcefullyResetpasswordComponent } from './components/forcefully-resetpassword/forcefully-resetpassword.component';
-
-
-
 
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
@@ -115,7 +111,6 @@ import { EmployeeLanguageComponent, EmployeeLanguageForm } from './components/se
     ShortcutsMenuComponent,
     ShortcutsAddComponent,
     InvoiceOtherSettingsComponent,
-    ForcefullyResetpasswordComponent,
     IframeCustomepdfviewerComponent,
     SettingRoleComponent,
     RejectVendorCertificateForm,
