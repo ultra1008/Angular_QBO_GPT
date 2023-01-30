@@ -2433,5 +2433,21 @@
     "Empty_Temporary_Password": "Please fill out temporary password.",
     "Language_Form_Submitting": "Please complete the language form before submitting.",
     "Employee_Language_Do_Want_Delete": "Do you want to delete this language?",
-    "Invoice_preview": "Preview"
+    "Invoice_preview": "Preview",
+    "Invoice_Name": "Invoice Name",
+    "Vendor_Name": "Vendor Name",
+    "Vendor_Id": "Vendor Id",
+    "Invoice_Date": "Invoice Date",
+    "due_date": "Due Date",
+    "Order_Date": "Order Date",
+    "Ship_date": "Ship Date",
+    "terms": "Terms",
+    "Totle_to_be_Paid": "Total to be Paid",
+    "Tax_Rate": "Tax Rate",
+    "Tax_Amount": "Tax Amount",
+    "Tax_id": "Tax ID",
+    "sub_totle": "Sub Total",
+    "Amount_Due": "Amount Due",
+    "GL_Account": "GL Account#",
+    "Assign_To": "Assign To"
 }

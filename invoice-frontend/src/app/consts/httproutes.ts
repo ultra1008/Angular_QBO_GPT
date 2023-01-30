@@ -132,6 +132,7 @@ export enum httproutes {
     PROJECT_SETTING_COST_CODE_SAVE = "/webapi/v1/portal/savecostcode",
     PROJECT_SETTING_COST_CODE_DATATABLE = "/webapi/v1/portal/getcostcodefordatatable",
     PROJECT_SETTING_ALL_COST_CODE = "/webapi/v1/portal/getallcostcode",
+    PROJECT_SETTING_COST_CODE = "/webapi/v1/portal/getcostcode",
     PROJECT_SETTING_COST_CODE_DELETE = "/webapi/v1/portal/deletecostcode",
     PROJECT_SETTING_WORKER_GET = "/webapi/v1/portal/getprojectworker",
     PROJECT_SETTING_WORKER_DELETE = "/webapi/v1/portal/getprojectworker",
@@ -1112,4 +1113,6 @@ export enum httproutes {
     INVOICE_GET_LIST = "/webapi/v1/portal/getinvoice",
     INVOICE_GET_ONE_INVOICE = "/webapi/v1/portal/getoneinvoice",
     INVOICE_SAVE_INVOICE = "/webapi/v1/portal/saveinvoice",
+
+    PORTAL_COMPANY_GET_COST_CODE = "/webapi/v1/portal/getinvoicecostcode",
 }
