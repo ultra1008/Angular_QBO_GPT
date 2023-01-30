@@ -2411,5 +2411,21 @@
     "Language_Form_Submitting": "Complete el formulario de idioma antes de enviarlo.",
     "Employee_Language_Do_Want_Delete": "¿Quieres eliminar este idioma?",
     "Invoice_preview": "Preview",
-    "Import_Management_Invoice": "Management Invoice"
+    "Import_Management_Invoice": "Management Invoice",
+    "Invoice_Name": "Invoice Name",
+    "Vendor_Name": "Vendor Name",
+    "Vendor_Id": "Vendor Id",
+    "Invoice_Date": "Invoice Date",
+    "due_date": "Due Date",
+    "Order_Date": "Order Date",
+    "Ship_date": "Ship Date",
+    "terms": "Terms",
+    "Totle_to_be_Paid": "Total to be Paid",
+    "Tax_Rate": "Tax Rate",
+    "Tax_Amount": "Tax Amount",
+    "Tax_id": "Tax ID",
+    "sub_totle": "Sub Total",
+    "Amount_Due": "Amount Due",
+    "GL_Account": "GL Account#",
+    "Assign_To": "Assign To"
 }

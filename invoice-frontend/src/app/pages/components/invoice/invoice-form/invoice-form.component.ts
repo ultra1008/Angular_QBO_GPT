@@ -12,6 +12,7 @@ import { commonFileChangeEvent } from 'src/app/service/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
+import { EmployeeService } from '../../team/employee.service';
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
     confirmButton: 'btn btn-success s2-confirm margin-right-cust',
@@ -36,9 +37,11 @@ export class InvoiceFormComponent implements OnInit {
   one_template: any;
   mode: any;
   backIcon: string = "";
+  downloadIcon: string = "";
   saveIcon = icon.SAVE_WHITE;
   subscription!: Subscription;
   exitIcon: string = "";
+  printIcon: string = "";
   close_this_window: string = "";
   All_popup_Cancel = "";
   All_Save_Exit = "";
@@ -46,10 +49,21 @@ export class InvoiceFormComponent implements OnInit {
   invoiceform: FormGroup;
   Email_Template_Form_Submitting = "";
   id: any;
+  isManagement: boolean = true;
+
+  isEmployeeData: Boolean = false;
+  // db_costcodes
+  variablesdb_costcodes: any = [];
+  db_costcodes: any = this.variablesdb_costcodes.slice();
+  // usersArray
+  variablesusersArray: any = [];
+  usersArray: any = this.variablesusersArray.slice();
+
+  pdf_url = 'https://s3.us-west-1.wasabisys.com/rovukdata/invoice-sample-pdfs/adrian@vmgconstructioninc10.com8a83e28d7dc522e9017e4939f2250519457511c73e527873ff3e198be850e1d1c710b0.pdf';
 
   statusList = configdata.INVOICE_STATUS;
 
-  constructor (private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
+  constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
 
@@ -64,13 +78,30 @@ export class InvoiceFormComponent implements OnInit {
       this.Email_Template_Form_Submitting = this.translate.instant('Email_Template_Form_Submitting');
     });
     this.invoiceform = this.formBuilder.group({
-      invoice: ["", [Validators.required]],
-      p_o: ["", Validators.required],
-
+      invoice_name: [""],
+      vendor_name: [""],
+      customer_id: [""],
+      invoice: [""],
+      p_o: [""],
+      invoice_date: [""],
+      due_date: [""],
+      order_date: [""],
+      ship_date: [""],
       packing_slip: [""],
       receiving_slip: [""],
+      status: [""],
+      terms: [""],
+      total: [""],
+
+
+      tax_amount: [""],
+      tax_id: [""],
+      sub_total: [""],
+      amount_due: [""],
+      cost_code: [""],
+      gl_account: [""],
+      assign_to: [""],
       notes: [""],
-      status: ["", Validators.required],
     });
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
@@ -78,19 +109,27 @@ export class InvoiceFormComponent implements OnInit {
     if (this.mode == 'off') {
       this.backIcon = icon.BACK;
       this.exitIcon = icon.CANCLE;
+      this.downloadIcon = icon.DOWNLOAD_WHITE;
+      this.printIcon = icon.PRINT_WHITE;
     } else {
       this.backIcon = icon.BACK_WHITE;
       this.exitIcon = icon.CANCLE_WHITE;
+      this.downloadIcon = icon.DOWNLOAD_WHITE;
+      this.printIcon = icon.PRINT_WHITE;
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
       if (mode) {
         this.mode = 'off';
         this.backIcon = icon.BACK;
         this.exitIcon = icon.CANCLE;
+        this.downloadIcon = icon.DOWNLOAD_WHITE;
+        this.printIcon = icon.PRINT_WHITE;
       } else {
         this.mode = 'on';
         this.backIcon = icon.BACK_WHITE;
         this.exitIcon = icon.CANCLE_WHITE;
+        this.downloadIcon = icon.DOWNLOAD_WHITE;
+        this.printIcon = icon.PRINT_WHITE;
       }
     });
     if (this.id) {
@@ -103,6 +142,62 @@ export class InvoiceFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    let that = this;
+    this.employeeservice.getalluser().subscribe(function (data) {
+      that.uiSpinner.spin$.next(false);
+      if (data.status) {
+        that.isEmployeeData = true;
+        // that.usersArray = data.data;
+        that.variablesusersArray = data.data;
+        that.usersArray = that.variablesusersArray.slice();
+        that.isManagement = data.is_management;
+      }
+      console.log("usersArray", data.data);
+    });
+    that.getAllCostCode();
+  }
+  print() {
+    fetch(this.pdf_url).then(resp => resp.arrayBuffer()).then(resp => {
+      /*--- set the blog type to final pdf ---*/
+      const file = new Blob([resp], { type: 'application/pdf' });
+      const blobUrl = window.URL.createObjectURL(file);
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = blobUrl;
+      document.body.appendChild(iframe);
+      //iframe.contentWindow.print();
+      iframe.onload = () => {
+        setTimeout(() => {
+          iframe.focus();
+          iframe.contentWindow!.print();
+        });
+      };
+    });
+  }
+
+  download() {
+    let a = document.createElement('a');
+    /*--- Firefox requires the link to be in the body --*/
+    document.body.appendChild(a);
+    a.style.display = 'none';
+    a.target = "_blank";
+    a.href = this.pdf_url;
+    a.click();
+    /*--- Remove the link when done ---*/
+    document.body.removeChild(a);
+  }
+  getAllCostCode() {
+    let that = this;
+    that.httpCall.httpPostCall(httproutes.PROJECT_SETTING_COST_CODE, { module: 'Invoice' }
+    ).subscribe(function (params) {
+
+      if (params.status) {
+        // that.db_costcodes = params.data;
+        that.variablesdb_costcodes = params.data;
+        that.db_costcodes = that.variablesdb_costcodes.slice();
+
+      }
+    });
   }
 
   getOneInvoice() {
@@ -110,13 +205,37 @@ export class InvoiceFormComponent implements OnInit {
     this.httpCall.httpPostCall(httproutes.INVOICE_GET_ONE_INVOICE, { _id: that.id }).subscribe(function (params) {
       if (params.status) {
         that.invoiceform = that.formBuilder.group({
-          invoice: [params.data.invoice, [Validators.required]],
-          p_o: [params.data.p_o, Validators.required],
+          // invoice: [params.data.invoice],
+          // p_o: [params.data.p_o, Validators.required],
+
+          // packing_slip: [params.data.packing_slip],
+          // receiving_slip: [params.data.receiving_slip],
+          // notes: [params.data.notes],
+          // status: [params.data.status, Validators.required],
+          invoice_name: [params.data.invoice_name],
+          vendor_name: [params.data.vendor_name],
+          customer_id: [params.data.customer_id],
+          invoice: [params.data.invoice],
+          p_o: [params.data.p_o],
+          invoice_date: [params.data.invoice_date],
+          due_date: [params.data.due_date],
+          order_date: [params.data.order_date],
+          ship_date: [params.data.ship_date],
 
           packing_slip: [params.data.packing_slip],
           receiving_slip: [params.data.receiving_slip],
+          status: [params.data.status],
+          terms: [params.data.terms],
+          total: [params.data.total],
+
+          tax_amount: [params.data.tax_amount],
+          tax_id: [params.data.tax_id],
+          sub_total: [params.data.sub_total],
+          amount_due: [params.data.amount_due],
+          cost_code: [params.data.cost_code],
+          gl_account: [params.data.gl_account],
+          assign_to: [params.data.assign_to],
           notes: [params.data.notes],
-          status: [params.data.status, Validators.required],
         });
       }
       that.uiSpinner.spin$.next(false);
