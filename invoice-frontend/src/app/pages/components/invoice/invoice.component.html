@@ -64,22 +64,19 @@
     </div>
     <div class="row ml-3" *ngIf="gridtolist">
         <div class="card mb-3 mr-4" *ngFor="let invoice of allInvoices">
-            <div class="card-body" style="text-align: center; padding: 5px 10px !important;"
-                (click)="viewInvoice(invoice)">
-                <div class="pt-2 pb-2">
+            <div class="card-body" (click)="viewInvoice(invoice)">
+                <!--  <div class="pt-2 pb-2">
                     <img src="assets\images\currentplaceholder.png" class="img-responsive cardsmall img-fluid"
                         style="height: 100px; width: 100px; object-fit: contain;" alt="">
-                </div>
-                <div style="text-align: left;font-weight: 400;">
+                </div> -->
+                <div class="data">
                     <b>Invoice # </b> <span>{{invoice.invoice}}</span>
                     <br />
                     <b>P.O # </b> <span>{{invoice.p_o}}</span>
                     <br />
-                    <b>Packing Slip </b> <span> </span>
+                    <b>Packing Slip </b> <span>{{invoice.packing_slip}}</span>
                     <br />
-                    <b>Receiving Slip </b> <span> </span>
-                    <br />
-                    <b>Receiving Sheet </b> <span></span>
+                    <b>Receiving Slip </b> <span>{{invoice.receiving_slip}}</span>
                     <br />
                     <b>Files Attached # </b> <span></span>
                     <br />
@@ -100,7 +97,6 @@
                             <th>{{"po_no" | translate}}</th>
                             <th>{{"packing_slip_no" | translate}}</th>
                             <th>{{"Receiving_Slip" | translate}}</th>
-                            <th>{{'Receiving_Sheet' | translate}}</th>
                             <th>{{"Receiving_Attachment" | translate}}</th>
                             <th>{{"template_notes" | translate}}</th>
                             <th>{{"Employee-form-Status" | translate}}</th>
@@ -111,9 +107,8 @@
                         <tr *ngFor="let invoice of allInvoices">
                             <td>{{ invoice.invoice }}</td>
                             <td>{{ invoice.p_o }}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>{{ invoice.packing_slip }}</td>
+                            <td>{{ invoice.receiving_slip }}</td>
                             <td></td>
                             <td>{{ invoice.notes }}</td>
                             <td width="1%">{{ invoice.status }}</td>

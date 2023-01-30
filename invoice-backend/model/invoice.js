@@ -29,6 +29,10 @@ var invoiceSchema = new Schema({
     contract_number: { type: String, default: "" },
     account_number: { type: String, default: "" },
     discount: { type: String, default: "" },
+    pdf_url: { type: String, default: "" },
+    items: { type: Array, default: [] },
+    packing_slip: { type: String, default: "" },
+    receiving_slip: { type: String, default: "" },
 
     created_by: { type: mongoose.ObjectId, default: "" },
     created_at: { type: Number, default: 0 },

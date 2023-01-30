@@ -69,7 +69,6 @@ export class InvoiceFormComponent implements OnInit {
 
       packing_slip: [""],
       receiving_slip: [""],
-      receiving_sheet: [""],
       notes: [""],
       status: ["", Validators.required],
     });
@@ -116,7 +115,6 @@ export class InvoiceFormComponent implements OnInit {
 
           packing_slip: [params.data.packing_slip],
           receiving_slip: [params.data.receiving_slip],
-          receiving_sheet: [params.data.receiving_sheet],
           notes: [params.data.notes],
           status: [params.data.status, Validators.required],
         });

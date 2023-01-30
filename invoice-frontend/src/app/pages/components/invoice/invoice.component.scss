@@ -454,7 +454,15 @@
 }
 
 .card-body {
-    min-height: 200px;
+    // min-height: 200px;
+    text-align: center;
+    padding: 5px 10px !important;
+
+    .data {
+        text-align: left;
+        font-weight: 400;
+        padding: 10px;
+    }
 }
 
 .cardsmall {
