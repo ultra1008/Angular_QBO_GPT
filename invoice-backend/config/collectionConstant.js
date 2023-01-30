@@ -80,7 +80,7 @@ module.exports = {
     INVOICE_DOCUMENT: "invoice_documents",
     INVOICE_TERM: "invoice_terms",
     INVOICE_COST_CODE: "invoice_cost_codes",
-    INVOICE: "invoices",
+    INVOICE: "invoice_invoices",
     INVOICE_VENDOR: "invoice_vendors",
     INVOICE_TEMPLATE: "invoice_template",
     INVOICE_SETTING: "invoice_settings",
@@ -89,4 +89,6 @@ module.exports = {
     INVOICE_USER_DOCUMENT: "invoice_user_documents",
     INVOICE_LOGINHISTORY: "invoice_login_histories",
     INVOICE_PROCESS: "invoice_processes",
+
+    MANAGEMENT_INVOICE: "invoices",
 };

@@ -43,6 +43,7 @@ class DataTablesResponse {
   styleUrls: ['./invoice.component.scss']
 })
 export class InvoiceComponent implements OnInit {
+  isManagement: boolean = true;
   mode: any;
   add_my_self_icon = icon.ADD_MY_SELF_WHITE;
   btn_grid_list_text: any;
@@ -207,6 +208,7 @@ export class InvoiceComponent implements OnInit {
       if (params.status) {
         that.allInvoices = params.data;
         that.invoiceCount = params.count;
+        that.isManagement = params.is_management;
       }
       that.uiSpinner.spin$.next(false);
     });
@@ -265,6 +267,21 @@ export class InvoiceComponent implements OnInit {
 
   ngAfterViewInit() {
     this.dtTrigger.next();
+  }
+
+  importManagementInvoice() {
+    let that = this;
+    that.uiSpinner.spin$.next(true);
+    this.httpCall.httpGetCall(httproutes.INVOICE_IMPORT_MANAGEMENT_INVOICE).subscribe(function (params) {
+      if (params.status) {
+        that.snackbarservice.openSnackBar(params.message, "success");
+        that.uiSpinner.spin$.next(false);
+        that.getAllInvoices();
+      } else {
+        that.snackbarservice.openSnackBar(params.message, "error");
+        that.uiSpinner.spin$.next(false);
+      }
+    });
   }
 }
 

@@ -2410,5 +2410,6 @@
     "Empty_Temporary_Password": "Por favor complete la contraseña temporal.",
     "Language_Form_Submitting": "Complete el formulario de idioma antes de enviarlo.",
     "Employee_Language_Do_Want_Delete": "¿Quieres eliminar este idioma?",
-    "Invoice_preview": "Preview"
+    "Invoice_preview": "Preview",
+    "Import_Management_Invoice": "Management Invoice"
 }

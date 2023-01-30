@@ -7,6 +7,8 @@ let config = require('../../../../../config/config');
 let common = require('../../../../../controller/common/common');
 const historyCollectionConstant = require('../../../../../config/historyCollectionConstant');
 var ObjectID = require('mongodb').ObjectID;
+let rest_Api = require('./../../../../../config/db_rest_api');
+var _ = require('lodash');
 
 // save invoice
 module.exports.saveInvoice = async function (req, res) {
@@ -85,6 +87,13 @@ module.exports.getInvoice = async function (req, res) {
                     }
                 }
             ]);
+            var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+            let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
+            let checkManagement = _.find(company_data.otherstool, function (n) { return n.key == config.MANAGEMENT_KEY; });
+            let isManagement = false;
+            if (checkManagement) {
+                isManagement = true;
+            }
             if (get_data) {
                 var count = {
                     pending: 0,
@@ -99,7 +108,7 @@ module.exports.getInvoice = async function (req, res) {
                         complete: get_count.complete,
                     };
                 }
-                res.send({ status: true, message: "Invoice data", data: get_data, count });
+                res.send({ status: true, message: "Invoice data", data: get_data, is_management: isManagement, count });
             } else {
                 res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
             }
