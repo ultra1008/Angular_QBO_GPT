@@ -40,14 +40,30 @@ export class EmployeeFormComponent implements OnInit {
   filepath: any;
   value: any;
   db_roles: any = [];
-  db_jobtype: any = [];
-  db_jobtitle: any = [];
+  //db_jobtitle
+  variablesdb_jobtitle: any = [];
+  db_jobtitle: any = this.variablesdb_jobtitle.slice();
+  //db_jobtype
+  variablesdb_jobtype: any = [];
+  db_jobtype: any = this.variablesdb_jobtype.slice();
   db_payroll_group: any = [];
   db_Doc_types: any = [];
-  db_Departmaents: any = [];
-  db_manager_users: any = [];
-  db_supervisor_users: any = [];
-  db_locations: any = [];
+
+  //db_Departmaents
+  variablesdb_Departmaents: any = [];
+  db_Departmaents: any = this.variablesdb_Departmaents.slice();
+
+  //db_manager_users
+  variablesdb_manager_users: any = [];
+  db_manager_users: any = this.variablesdb_manager_users.slice();
+
+  //db_supervisor_users
+  variablesdb_supervisor_users: any = [];
+  db_supervisor_users: any = this.variablesdb_supervisor_users.slice();
+
+  //db_locations
+  variablesdb_locations: any = [];
+  db_locations: any = this.variablesdb_locations.slice();
   db_costcodes: any = [];
   firstParam: any = "";
   doc_controller: number = 0;
@@ -193,8 +209,12 @@ export class EmployeeFormComponent implements OnInit {
         var reqObject = {};
         that.mostusedservice.getSpecificUsers(reqObject).subscribe(function (user_data) {
           if (user_data.status) {
-            that.db_manager_users = user_data.data;
-            that.db_supervisor_users = user_data.data;
+            // that.db_manager_users = user_data.data;
+            that.variablesdb_manager_users = user_data.data;
+            that.db_manager_users = that.variablesdb_manager_users.slice();
+            // that.db_supervisor_users = user_data.data;
+            that.variablesdb_supervisor_users = user_data.data;
+            that.db_supervisor_users = that.variablesdb_supervisor_users.slice();
           }
         });
       }
@@ -202,13 +222,17 @@ export class EmployeeFormComponent implements OnInit {
 
     this.mostusedservice.getAlljobtitle().subscribe(function (data) {
       if (data.status) {
-        that.db_jobtitle = data.data;
+        // that.db_jobtitle = data.data;
+        that.variablesdb_jobtitle = data.data;
+        that.db_jobtitle = that.variablesdb_jobtitle.slice();
       }
     });
 
     this.mostusedservice.getAlljobtype().subscribe(function (data) {
       if (data.status) {
-        that.db_jobtype = data.data;
+        // that.db_jobtype = data.data;
+        that.variablesdb_jobtype = data.data;
+        that.db_jobtype = that.variablesdb_jobtype.slice();
       }
     });
 
@@ -227,12 +251,15 @@ export class EmployeeFormComponent implements OnInit {
 
     this.mostusedservice.getAllLocation().subscribe(function (data) {
       if (data.status) {
-        that.db_locations = data.data;
+        that.variablesdb_locations = data.data;
+        that.db_locations = that.variablesdb_locations.slice();
       }
     });
     this.mostusedservice.getAllDepartment().subscribe(function (data) {
       if (data.status) {
-        that.db_Departmaents = data.data;
+        // that.db_Departmaents = data.data;
+        that.variablesdb_Departmaents = data.data;
+        that.db_Departmaents = that.variablesdb_Departmaents.slice();
       }
     });
     this.getAllLoction();
@@ -296,7 +323,9 @@ export class EmployeeFormComponent implements OnInit {
     let that = this;
     that.httpCall.httpGetCall(httproutes.OTHER_LANGUAGE_GET).subscribe(function (params) {
       if (params.status) {
-        that.languageList = params.data;
+        that.variableslanguageList = params.data;
+        that.languageList = that.variableslanguageList.slice();
+        // that.languageList = params.data;
       }
     });
   }

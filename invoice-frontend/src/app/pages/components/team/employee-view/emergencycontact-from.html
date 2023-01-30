@@ -25,9 +25,10 @@
       </mat-form-field>
       <mat-form-field appearance="outline" class="contact-cust-width">
         <mat-label>{{'Emergency-Contact-Form-Relation' | translate }}</mat-label>
-        <mat-select formControlName="emergency_contact_relation" class="dark-cust-color" required>
+        <mat-select formControlName="emergency_contact_relation" #relation_arraySelect class="dark-cust-color" required>
           <mat-select-filter [placeholder]="'Filter'" [displayMember]="'relationship_name'"
-            [array]="variablesrelation_array" (filteredReturn)="relation_array =$event">
+            *ngIf="relation_arraySelect.focused" [array]="variablesrelation_array"
+            (filteredReturn)="relation_array =$event">
           </mat-select-filter>
           <mat-option *ngFor="let relation of relation_array" [value]="relation._id">
             {{relation.relationship_name}}

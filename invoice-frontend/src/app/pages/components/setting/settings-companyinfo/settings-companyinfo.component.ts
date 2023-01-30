@@ -59,8 +59,13 @@ export class SettingsCompanyinfoComponent implements OnInit {
   cardImageBase64: any;
   filepath: any;
   maxDate: any;
-  CompnaySizes_data: any;
-  CompnayTypes_data: any;
+  // CompnaySizes_data: any;
+  variablesCompnaySizes_data: any = [];
+  CompnaySizes_data: any = this.variablesCompnaySizes_data.slice();
+  // CompnayTypes_data: any;
+  variablesCompnayTypes_data: any = [];
+  CompnayTypes_data: any = this.variablesCompnayTypes_data.slice();
+
   FILE_NOT_SUPPORTED: any;
   saveIcon = icon.SAVE_WHITE;
   variablesCSIDivisions: any = [];
@@ -181,7 +186,9 @@ export class SettingsCompanyinfoComponent implements OnInit {
     let self = this;
     this.httpCall.httpGetCall(httproutes.PORTAL_ROVUK_SPONSOR_GET_COMPNAY_TYPE).subscribe(function (params: any) {
       if (params.status) {
-        self.CompnayTypes_data = params.data;
+        // self.CompnayTypes_data = params.data;
+        self.variablesCompnayTypes_data = params.data;
+        self.CompnayTypes_data = self.variablesCompnayTypes_data.slice();
       }
       self.getCompanyInfo();
     });
@@ -191,7 +198,9 @@ export class SettingsCompanyinfoComponent implements OnInit {
     let self = this;
     this.httpCall.httpGetCall(httproutes.PORTAL_ROVUK_SPONSOR_GET_COMPNAY_SIZE).subscribe(function (params: any) {
       if (params.status) {
-        self.CompnaySizes_data = params.data;
+        // self.CompnaySizes_data = params.data;
+        self.variablesCompnaySizes_data = params.data;
+        self.CompnaySizes_data = self.variablesCompnaySizes_data.slice();
       }
     });
   }
