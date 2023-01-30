@@ -30,8 +30,8 @@ import { ModeDetectService } from '../../components/map/mode-detect.service';
 export class ChangepasswordComponent implements OnInit {
 
   change_password_form: any;
-  Forcefull_Change_Password_Not_Matched: string = ""
-  Forcefull_Change_Password_Reset: string = ""
+  Forcefull_Change_Password_Not_Matched: string = "";
+  Forcefull_Change_Password_Reset: string = "";
   hideOld: boolean = true;
   hideNew: boolean = true;
   hideConfirm: boolean = true;
@@ -53,28 +53,24 @@ export class ChangepasswordComponent implements OnInit {
   /*
     constructor
   */
-  constructor(private location: Location, private modeService: ModeDetectService, public authservice: AuthService, public httpCall: HttpCall,
+  constructor (private location: Location, private modeService: ModeDetectService, public authservice: AuthService, public httpCall: HttpCall,
     public snackbarservice: Snackbarservice, public translate: TranslateService) {
     this.translate.stream(['']).subscribe((textarray) => {
-      let that = this
-      that.Forcefull_Change_Password_Not_Matched = that.translate.instant('Forcefull_Change_Password_Not_Matched')
-      that.Forcefull_Change_Password_Reset = that.translate.instant('Forcefull_Change_Password_Reset')
-    })
+      let that = this;
+      that.Forcefull_Change_Password_Not_Matched = that.translate.instant('Forcefull_Change_Password_Not_Matched');
+      that.Forcefull_Change_Password_Reset = that.translate.instant('Forcefull_Change_Password_Reset');
+    });
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off')
-    {
+    if (this.mode == 'off') {
       console.log("this.mod", this.mode);
-    } else
-    {
+    } else {
       console.log("this.mod else", this.mode);
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode)
-      {
+      if (mode) {
         this.mode = 'off';
-      } else
-      {
+      } else {
         this.mode = 'on';
       }
       console.log("DARK MODE: " + this.mode);
@@ -90,15 +86,12 @@ export class ChangepasswordComponent implements OnInit {
   }
 
   // confirm new password validator
-  private passwordMatcher(control: FormControl): { [s: string]: boolean } {
-    if (
-      this.change_password_form &&
-      (control.value !== this.change_password_form.controls.password.value)
-    )
-    {
+  private passwordMatcher(control: FormControl): { [s: string]: boolean; } {
+    if (this.change_password_form && (control.value !== this.change_password_form.controls.password.value)) {
       return { passwordNotMatch: true };
+    } else {
+      return null;
     }
-    return { passwordNotMatch: false };
   }
 
   /*
@@ -106,42 +99,35 @@ export class ChangepasswordComponent implements OnInit {
     API call and password changed for user in database.
   */
   changePasswordPress(): void {
-    if (this.change_password_form.controls.password.value !== this.change_password_form.controls.password_confirmation.value)
-    {
+    if (this.change_password_form.controls.password.value !== this.change_password_form.controls.password_confirmation.value) {
       this.snackbarservice.openSnackBar(this.Forcefull_Change_Password_Not_Matched, 'error');
       return;
     }
-    if (this.change_password_form.valid)
-    {
+    if (this.change_password_form.valid) {
       const that = this;
       let url = "";
-      let reqObject = that.change_password_form.value
+      let reqObject = that.change_password_form.value;
       let portal_type = sessionStorage.getItem(localstorageconstants.USERTYPE);
-      if (portal_type == "superadmin")
-      {
+      if (portal_type == "superadmin") {
         reqObject.userrole = localStorage.getItem(localstorageconstants.USERROLE);
-        url = httproutes.ADMIN_CHANGEPASSWORD
-      } else if (portal_type == "invoice-portal")
-      {
-        url = httproutes.EMPLOYEE_CHANGEPASSWORD
-      } else
-      {
+        url = httproutes.ADMIN_CHANGEPASSWORD;
+      } else if (portal_type == "invoice-portal") {
+        url = httproutes.EMPLOYEE_CHANGEPASSWORD;
+      } else {
         return;
       }
       this.httpCall.httpPostCall(url, reqObject).subscribe(function (data) {
-        if (data.status)
-        {
+        if (data.status) {
           that.snackbarservice.openSnackBar(that.Forcefull_Change_Password_Reset, 'success');
           that.change_password_form.reset();
           that.location.back();
           Object.keys(that.change_password_form.controls).forEach(key => {
             that.change_password_form.get(key).setErrors(null);
           });
-        } else
-        {
+        } else {
           that.snackbarservice.openSnackBar(data.message, 'error');
         }
-      })
+      });
     }
   }
 }
