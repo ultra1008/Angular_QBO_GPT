@@ -109,6 +109,7 @@ export class EmployeeViewComponent implements OnInit {
   //db_locations
   variablesdb_locations: any = [];
   db_locations: any = this.variablesdb_locations.slice();
+
   db_costcodes: any = [];
   firstParam: any = "";
   doc_controller: number = 0;

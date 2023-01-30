@@ -165,10 +165,11 @@
                                 <div class="col">
                                     <mat-form-field appearance="outline" class="main-one-input-field">
                                         <mat-label>{{'Company-Vendor-Terms' | translate }}</mat-label>
-                                        <mat-select formControlName="terms_id"
+                                        <mat-select formControlName="terms_id" #termListSelect
                                             placeholder="{{'Company-Vendor-Terms' | translate }}" required>
                                             <mat-select-filter [placeholder]="'Filter'" [displayMember]="'name'"
-                                                [array]="variablestermList" (filteredReturn)="termList =$event">
+                                                *ngIf="termListSelect.focused" [array]="variablestermList"
+                                                (filteredReturn)="termList =$event">
                                             </mat-select-filter>
                                             <mat-option *ngFor="let item of termList" [value]="item._id">
                                                 {{item.name}}
