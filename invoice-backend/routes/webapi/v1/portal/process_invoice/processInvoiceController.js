@@ -299,6 +299,10 @@ module.exports.importProcessData = async function (req, res) {
                                     notes: '',
                                     pdf_url: get_data.data[key][j].document_url,
                                     items: [],
+                                    created_by: decodedToken.UserData._id,
+                                    created_at: Math.round(new Date().getTime() / 1000),
+                                    updated_by: decodedToken.UserData._id,
+                                    updated_at: Math.round(new Date().getTime() / 1000),
                                 };
                                 let items = [];
                                 for (let i = 0; i < pages.length; i++) {

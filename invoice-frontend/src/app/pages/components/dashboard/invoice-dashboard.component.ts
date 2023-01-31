@@ -18,6 +18,7 @@ import { Label } from 'ng2-charts';
 import { Subscription } from 'rxjs';
 import { httproutes, localstorageconstants } from 'src/app/consts';
 import { HttpCall } from 'src/app/service/httpcall.service';
+import { MMDDYYYY } from 'src/app/service/utils';
 import { configdata } from 'src/environments/configData';
 import { ModeDetectService } from '../map/mode-detect.service';
 
@@ -37,14 +38,14 @@ var chartColors = {
 })
 export class InvoiceDashboardComponent implements OnInit {
   mode: any;
-  countlist: any = {
-    pending: [],
-    generated: [],
-    approved: [],
-    rejected: [],
-    late: [],
+  counts: any = {
+    pending_files: 0,
+    pending_invoices: 0,
+    approved_invoices: 0,
+    rejected_invoices: 0,
+    late_invoices: 0,
   };
-  cardcountlist: any = {
+  cardList: any = {
     pending: [],
     process: [],
     cancelled: [],
@@ -129,7 +130,8 @@ export class InvoiceDashboardComponent implements OnInit {
   */
 
   constructor(private router: Router, public translate: TranslateService, private modeService: ModeDetectService, public httpCall: HttpCall) {
-
+    var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
+    this.mode = modeLocal === 'on' ? 'on' : 'off';
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
@@ -161,7 +163,7 @@ export class InvoiceDashboardComponent implements OnInit {
       this.refreshPage();
     });
     that.getCount();
-    that.getcardcount();
+    that.getCardData();
   }
 
   refreshPage() {
@@ -195,30 +197,22 @@ export class InvoiceDashboardComponent implements OnInit {
     });
   }
 
-
   getCount() {
     let that = this;
     this.httpCall.httpGetCall(httproutes.PORTAL_DASHBOARD_COUNT_GETDATA).subscribe(function (params) {
       if (params.status) {
-        that.countlist = params.data;
-        console.log("count", that.countlist);
+        that.counts = params.data;
       }
     });
   }
 
-  getcardcount() {
-    /* let that = this;
+  getCardData() {
+    let that = this;
     this.httpCall.httpGetCall(httproutes.PORTAL_DASHBOARD_CARD_COUNT_GETDATA).subscribe(function (params) {
       if (params.status) {
-        that.cardcountlist = params.data;
-        console.log("count", that.cardcountlist);
+        that.cardList = params.data;
       }
-    }); */
-    this.cardcountlist = {
-      pending: [1],
-      process: [1, 2],
-      cancelled: [1, 2, 3],
-    };
+    });
   }
   // Save chart order list for Dashboard
   saveChartList(timePeriods: any) {
@@ -231,5 +225,9 @@ export class InvoiceDashboardComponent implements OnInit {
     this.httpCall.httpPostCall(httproutes.SAVE_CHART_LIST, reqObject).subscribe(params => {
 
     });
+  }
+
+  temp_MMDDYYY(epoch) {
+    return MMDDYYYY(epoch);
   }
 }
