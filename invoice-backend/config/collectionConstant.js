@@ -91,4 +91,5 @@ module.exports = {
     INVOICE_PROCESS: "invoice_processes",
 
     MANAGEMENT_INVOICE: "invoices",
+    MANAGEMENT_PO: "project_po",
 };

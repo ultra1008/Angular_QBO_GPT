@@ -1,16 +1,20 @@
 <div class="wrapper-cust-admin" fxLayout style="height: 95%">
     <div class="row mr-2" style="justify-content: right;">
-        <button mat-raised-button color="primary" style="margin-right: 10px; " (click)="importProcessData()"
-            class="sign-button ml-1"><img src="{{add_my_self_icon}}" alt="" height="20px">
+        <button mat-raised-button color="primary" (click)="importProcessData()" class="sign-button ml-2"><img
+                src="{{add_my_self_icon}}" alt="" height="20px">
             Import Data
         </button>
-        <button mat-raised-button color="primary" style="margin-right: 10px; " (click)="openAddDialog()"
-            class="sign-button ml-1"><img src="{{add_my_self_icon}}" alt="" height="20px">
+        <button mat-raised-button color="primary" (click)="openAddDialog()" class="sign-button ml-2"><img
+                src="{{add_my_self_icon}}" alt="" height="20px">
             {{'Add_invoice' | translate }}
         </button>
-        <button *ngIf="isManagement" mat-raised-button color="primary" class="sign-button ml-1"
+        <!-- <button *ngIf="isManagement" mat-raised-button color="primary" class="sign-button ml-2"
             (click)="importManagementInvoice();"><img src="{{add_my_self_icon}}" alt="" height="20px">
             {{'Import_Management_Invoice' | translate }}
+        </button> -->
+        <button *ngIf="isManagement" mat-raised-button color="primary" class="sign-button ml-2"
+            (click)="importManagementPO();"><img src="{{add_my_self_icon}}" alt="" height="20px">
+            {{'Import_Management_PO' | translate }}
         </button>
     </div>
     <div class="display-inline-cust">

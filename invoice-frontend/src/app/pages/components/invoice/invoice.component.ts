@@ -283,6 +283,21 @@ export class InvoiceComponent implements OnInit {
       }
     });
   }
+
+  importManagementPO() {
+    let that = this;
+    that.uiSpinner.spin$.next(true);
+    this.httpCall.httpGetCall(httproutes.INVOICE_IMPORT_MANAGEMENT_PO).subscribe(function (params) {
+      if (params.status) {
+        that.snackbarservice.openSnackBar(params.message, "success");
+        that.uiSpinner.spin$.next(false);
+        that.getAllInvoices();
+      } else {
+        that.snackbarservice.openSnackBar(params.message, "error");
+        that.uiSpinner.spin$.next(false);
+      }
+    });
+  }
 }
 
 

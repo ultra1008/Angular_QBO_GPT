@@ -1,6 +1,7 @@
 var processInvoiceSchema = require('./../../../../../model/process_invoice');
 var invoiceSchema = require('./../../../../../model/invoice');
 var managementInvoiceSchema = require('./../../../../../model/management_invoice');
+var managementPOSchema = require('./../../../../../model/management_po');
 var userSchema = require('./../../../../../model/user');
 const mongoose = require('mongoose');
 var ObjectID = require('mongodb').ObjectID;
@@ -112,10 +113,10 @@ module.exports.importManagementInvoice = async function (req, res) {
             var requestObject = req.body;
             let invoiceProcessCollection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
             let managementInvoiceCollection = connection_db_api.model(collectionConstant.MANAGEMENT_INVOICE, managementInvoiceSchema);
-            let temp_invoices = await invoiceProcessCollection.find({ is_delete: 0, status: 'Pending' });
+            let temp_invoices = await invoiceProcessCollection.find({ is_delete: 0 });
             let tempIds = [];
             temp_invoices.forEach((data) => {
-                if (data.invoice_id != null && data.invoice_id != undefined) {
+                if (data.invoice_id != null && data.invoice_id != undefined && data.invoice_id != '') {
                     tempIds.push(ObjectID(data.invoice_id));
                 }
             });
@@ -149,6 +150,64 @@ module.exports.importManagementInvoice = async function (req, res) {
                 }
                 await sendInvoiceForProcess(apiObj);
                 res.send({ message: 'Management Invoice imported successfully.', data: apiObj, status: true });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.importManagementPO = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            let invoiceProcessCollection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
+            let managementPOCollection = connection_db_api.model(collectionConstant.MANAGEMENT_PO, managementPOSchema);
+            let temp_pos = await invoiceProcessCollection.find({ is_delete: 0 });
+            let tempIds = [];
+            temp_pos.forEach((data) => {
+                if (data.po_id != null && data.po_id != undefined && data.po_id != '') {
+                    tempIds.push(ObjectID(data.po_id));
+                }
+            });
+            let query;
+            if (tempIds.length == 0) {
+                query = { is_delete: 0 };
+            } else {
+                query = { is_delete: 0, _id: { $nin: tempIds } };
+            }
+            console.log("query: ", query);
+            let pos = await managementPOCollection.find(query);
+            let saveObj = [];
+            for (let i = 0; i < pos.length; i++) {
+                saveObj.push({
+                    po_id: pos[i]._id,
+                    pdf_url: pos[i].po_url,
+                    created_by: decodedToken.UserData._id,
+                    created_at: Math.round(new Date().getTime() / 1000),
+                    updated_by: decodedToken.UserData._id,
+                    updated_at: Math.round(new Date().getTime() / 1000),
+                });
+            }
+            let insert_data = await invoiceProcessCollection.insertMany(saveObj);
+            if (insert_data) {
+                let apiObj = [];
+                for (let i = 0; i < insert_data.length; i++) {
+                    apiObj.push({
+                        document_id: insert_data[i]._id,
+                        document_url: insert_data[i].pdf_url,
+                    });
+                }
+                await sendInvoiceForProcess(apiObj);
+                res.send({ message: 'Management PO imported successfully.', data: apiObj, status: true });
             }
         } catch (e) {
             console.log(e);
