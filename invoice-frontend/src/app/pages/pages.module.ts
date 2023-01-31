@@ -92,6 +92,7 @@ import { ReceivingSlipFormComponent } from './components/invoice/receiving-slip-
 import { QuoteFormComponent } from './components/invoice/quote-form/quote-form.component';
 import { PoDetailFormComponent } from './components/invoice/po-detail-form/po-detail-form.component';
 import { FormCoreComponent } from './form-core/form-core.component';
+import { DashboardInvoiceListComponent } from './components/dashboard/dashboard-invoice-list/dashboard-invoice-list.component';
 
 
 
@@ -173,7 +174,8 @@ import { FormCoreComponent } from './form-core/form-core.component';
     ReceivingSlipFormComponent,
     QuoteFormComponent,
 
-    PoDetailFormComponent
+    PoDetailFormComponent,
+      DashboardInvoiceListComponent
   ],
   imports: [
     PortalModule,
