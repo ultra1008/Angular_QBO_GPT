@@ -6,7 +6,7 @@
         </button>
         <button mat-raised-button color="primary" style="margin-right: 10px; " (click)="openAddDialog()"
             class="sign-button ml-1"><img src="{{add_my_self_icon}}" alt="" height="20px">
-            Create an invoice
+            {{'Add_invoice' | translate }}
         </button>
         <button *ngIf="isManagement" mat-raised-button color="primary" class="sign-button ml-1"
             (click)="importManagementInvoice();"><img src="{{add_my_self_icon}}" alt="" height="20px">
@@ -74,6 +74,16 @@
                         style="height: 100px; width: 100px; object-fit: contain;" alt="">
                 </div> -->
                 <div class="data">
+                    <div class="dropdown">
+                        <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust" aria-hidden="true"></i>
+                        <div class="dropdown-content-cust">
+                            <a (click)="viewInvoice(invoice);"><img src="{{viewIcon}}" alt="" height="20px">
+                                {{'All-View' |
+                                translate}}</a>
+                            <a (click)="editInvoice(invoice)"><img src="{{editIcon}}" alt="" height="20px">
+                                {{'All-Edit' | translate}}</a>
+                        </div>
+                    </div>
                     <b>Invoice # </b> <span>{{invoice.invoice}}</span>
                     <br />
                     <b>P.O # </b> <span>{{invoice.p_o}}</span>

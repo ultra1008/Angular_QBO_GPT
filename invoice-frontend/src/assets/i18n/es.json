@@ -2427,5 +2427,6 @@
     "sub_totle": "Sub Total",
     "Amount_Due": "Amount Due",
     "GL_Account": "GL Account#",
-    "Assign_To": "Assign To"
+    "Assign_To": "Assign To",
+    "Add_invoice": "Add Invoice"
 }
