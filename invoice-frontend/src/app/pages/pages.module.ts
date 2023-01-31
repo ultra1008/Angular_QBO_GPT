@@ -87,6 +87,11 @@ import { VendorHistoryComponent, VendorReportComponent, VendorsComponent } from 
 import { VendorFormComponent } from './components/vendors/vendor-form/vendor-form.component';
 import { ArchiveVendorComponent } from './components/vendors/archive-vendor/archive-vendor.component';
 import { EmployeeLanguageComponent, EmployeeLanguageForm } from './components/setting/settings-employee/employee-language/employee-language.component';
+import { PackingSlipFormComponent } from './components/invoice/packing-slip-form/packing-slip-form.component';
+import { ReceivingSlipFormComponent } from './components/invoice/receiving-slip-form/receiving-slip-form.component';
+import { QuoteFormComponent } from './components/invoice/quote-form/quote-form.component';
+import { PoDetailFormComponent } from './components/invoice/po-detail-form/po-detail-form.component';
+import { FormCoreComponent } from './form-core/form-core.component';
 
 
 
@@ -144,6 +149,7 @@ import { EmployeeLanguageComponent, EmployeeLanguageForm } from './components/se
     DocumentsComponent,
     TermsForm,
     TaxRateForm,
+    FormCoreComponent,
     DocumentForm,
     ImOtherDownload,
     ImportOther,
@@ -162,7 +168,12 @@ import { EmployeeLanguageComponent, EmployeeLanguageForm } from './components/se
     VendorHistoryComponent,
     VendorReportComponent,
     EmployeeLanguageComponent,
-    EmployeeLanguageForm
+    EmployeeLanguageForm,
+    PackingSlipFormComponent,
+    ReceivingSlipFormComponent,
+    QuoteFormComponent,
+
+    PoDetailFormComponent
   ],
   imports: [
     PortalModule,
@@ -191,6 +202,7 @@ import { EmployeeLanguageComponent, EmployeeLanguageForm } from './components/se
     DataTablesModule,
     MatSortModule,
     MatTableModule,
+
     CdkAccordionModule,
     // MatGridListModule,
     NgxMaskModule.forRoot(maskConfigFunction),

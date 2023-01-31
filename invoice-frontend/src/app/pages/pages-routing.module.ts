@@ -52,26 +52,34 @@ import { InvoiceDashboardComponent } from './components/dashboard/invoice-dashbo
 import { VendorsComponent } from './components/vendors/vendors.component';
 import { VendorFormComponent } from './components/vendors/vendor-form/vendor-form.component';
 import { ArchiveVendorComponent } from './components/vendors/archive-vendor/archive-vendor.component';
+import { FormCoreComponent } from './form-core/form-core.component';
 
 
 const routes: Routes = [
   {
-    path: 'invoice-form',
-    pathMatch: 'full',
-    canActivate: [PortalAuthGuard],
-    component: InvoiceFormComponent
-  },
-  {
-    path: 'template-form',
-    pathMatch: 'full',
-    canActivate: [PortalAuthGuard],
-    component: TemplateFormComponent
-  },
-  {
-    path: 'vendor-form',
-    pathMatch: 'full',
-    canActivate: [PortalAuthGuard],
-    component: VendorFormComponent
+    path: "",
+    component: FormCoreComponent,
+    children: [
+
+      {
+        path: 'invoice-form',
+        pathMatch: 'full',
+        canActivate: [PortalAuthGuard],
+        component: InvoiceFormComponent
+      },
+      {
+        path: 'template-form',
+        pathMatch: 'full',
+        canActivate: [PortalAuthGuard],
+        component: TemplateFormComponent
+      },
+      {
+        path: 'vendor-form',
+        pathMatch: 'full',
+        canActivate: [PortalAuthGuard],
+        component: VendorFormComponent
+      },
+    ],
   },
   {
     path: '',

@@ -2451,5 +2451,10 @@
     "Amount_Due": "Amount Due",
     "GL_Account": "GL Account#",
     "Assign_To": "Assign To",
-    "Add_invoice": "Add Invoice"
+    "Add_invoice": "Add Invoice",
+    "Invoice_Details": "Invoice Details",
+    "P_O_Details": "P.O Details",
+    "Packing_slip_Details": "Packaging Slip Details",
+    "Receiving_Slip_Details": "Receiving Slip  Details",
+    "Quote_Details": "Quote Details"
 }

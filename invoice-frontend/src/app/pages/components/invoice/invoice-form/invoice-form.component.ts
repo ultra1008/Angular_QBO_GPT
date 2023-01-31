@@ -50,6 +50,8 @@ export class InvoiceFormComponent implements OnInit {
   Email_Template_Form_Submitting = "";
   id: any;
   isManagement: boolean = true;
+  pdf_url: "";
+  invoiceData: any;
 
   isEmployeeData: Boolean = false;
   // db_costcodes
@@ -59,7 +61,6 @@ export class InvoiceFormComponent implements OnInit {
   variablesusersArray: any = [];
   usersArray: any = this.variablesusersArray.slice();
 
-  pdf_url = 'https://s3.us-west-1.wasabisys.com/rovukdata/invoice-sample-pdfs/adrian@vmgconstructioninc10.com8a83e28d7dc522e9017e4939f2250519457511c73e527873ff3e198be850e1d1c710b0.pdf';
 
   statusList = configdata.INVOICE_STATUS;
 
@@ -204,6 +205,8 @@ export class InvoiceFormComponent implements OnInit {
     let that = this;
     this.httpCall.httpPostCall(httproutes.INVOICE_GET_ONE_INVOICE, { _id: that.id }).subscribe(function (params) {
       if (params.status) {
+        console.log("params11", params);
+        that.invoiceData = params.data;
         that.invoiceform = that.formBuilder.group({
           // invoice: [params.data.invoice],
           // p_o: [params.data.p_o, Validators.required],
@@ -221,13 +224,11 @@ export class InvoiceFormComponent implements OnInit {
           due_date: [params.data.due_date],
           order_date: [params.data.order_date],
           ship_date: [params.data.ship_date],
-
           packing_slip: [params.data.packing_slip],
           receiving_slip: [params.data.receiving_slip],
           status: [params.data.status],
           terms: [params.data.terms],
           total: [params.data.total],
-
           tax_amount: [params.data.tax_amount],
           tax_id: [params.data.tax_id],
           sub_total: [params.data.sub_total],
@@ -236,6 +237,7 @@ export class InvoiceFormComponent implements OnInit {
           gl_account: [params.data.gl_account],
           assign_to: [params.data.assign_to],
           notes: [params.data.notes],
+          pdf_url: [params.data.pdf_url],
         });
       }
       that.uiSpinner.spin$.next(false);
