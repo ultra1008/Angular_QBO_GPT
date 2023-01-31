@@ -4,7 +4,7 @@ import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core'
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { DataTableDirective } from 'angular-datatables';
 import { NgxGalleryComponent, NgxGalleryOptions, NgxGalleryImage } from 'ngx-gallery-9';
@@ -79,16 +79,13 @@ export class DashboardInvoiceListComponent implements OnInit {
   yesButton: string = "";
   noButton: string = "";
   editIcon: string;
-  countlist: any = {
-    pending: [],
-    generated: [],
-    approved: [],
-    rejected: [],
-    late: [],
-  };
+  approveIcon: string = "";
+  rejectIcon: string = "";
 
+  status: any;
+  count: number = 0;
 
-  constructor(private modeService: ModeDetectService,
+  constructor (private modeService: ModeDetectService,
     public dialog: MatDialog,
     private router: Router,
     private http: HttpClient,
@@ -96,32 +93,33 @@ export class DashboardInvoiceListComponent implements OnInit {
     public uiSpinner: UiSpinnerService,
     public snackbarservice: Snackbarservice,
     public mostusedservice: Mostusedservice,
+    public route: ActivatedRoute,
     public translate: TranslateService) {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === "on" ? "on" : "off";
+    this.status = this.route.snapshot.queryParamMap.get('status');
     if (this.mode == "off") {
       this.reportIcon = icon.REPORT;
-
-
+      this.approveIcon = icon.EDIT;
+      this.rejectIcon = icon.EDIT;
     } else {
       this.reportIcon = icon.REPORT_WHITE;
-
-
+      this.approveIcon = icon.EDIT_WHITE;
+      this.rejectIcon = icon.EDIT_WHITE;
     }
     let j = 0;
     this.subscription = this.modeService.onModeDetect().subscribe((mode) => {
       if (mode) {
         this.mode = "off";
         this.reportIcon = icon.REPORT;
-
-
+        this.approveIcon = icon.EDIT;
+        this.rejectIcon = icon.EDIT;
       } else {
         this.mode = "on";
         this.reportIcon = icon.REPORT_WHITE;
-
-
+        this.approveIcon = icon.EDIT_WHITE;
+        this.rejectIcon = icon.EDIT_WHITE;
       }
-
       if (j != 0) {
         setTimeout(() => {
           that.rerenderfunc();
@@ -132,9 +130,7 @@ export class DashboardInvoiceListComponent implements OnInit {
     let that = this;
     // this.uiSpinner.spin$.next(true);
     this.translate.stream([""]).subscribe((textarray) => {
-      this.copyDataFromProject = this.translate.instant(
-        "Copy_Data_From_Project"
-      );
+      this.copyDataFromProject = this.translate.instant("Copy_Data_From_Project");
       this.yesButton = this.translate.instant("Compnay_Equipment_Delete_Yes");
       this.noButton = this.translate.instant("Compnay_Equipment_Delete_No");
     });
@@ -142,9 +138,7 @@ export class DashboardInvoiceListComponent implements OnInit {
 
   ngOnInit(): void {
     const that = this;
-
     let role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
-
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     this.locallanguage =
       tmp_locallanguage == "" ||
@@ -190,7 +184,7 @@ export class DashboardInvoiceListComponent implements OnInit {
       if (i != 0) {
         setTimeout(() => {
           that.rerenderfunc();
-        }, 1000);
+        }, 100);
       }
       i++;
     });
@@ -222,10 +216,10 @@ export class DashboardInvoiceListComponent implements OnInit {
         $(".dataTables_processing").html(
           "<img  src=" + this.httpCall.getLoader() + ">"
         );
-        dataTablesParameters.is_delete = 0;
+        dataTablesParameters.status = that.status;
         that.http
           .post<DataTablesResponse>(
-            configdata.apiurl + httproutes.INVOICE_GET_VENDOR_DATATABLES,
+            configdata.apiurl + httproutes.INVOICE_GET_INVOICE_DATATABLE,
             dataTablesParameters,
             { headers: headers }
           )
@@ -235,10 +229,10 @@ export class DashboardInvoiceListComponent implements OnInit {
               recordsFiltered: resp.recordsFiltered,
               data: resp.data,
             });
+            that.count = resp.recordsTotal;
           });
       },
       columns: that.getColumName(),
-
       drawCallback: () => {
         $(".button_attachment").on("click", (event) => {
           this.imageObject = JSON.parse(
@@ -346,51 +340,64 @@ export class DashboardInvoiceListComponent implements OnInit {
             this.gallery.openPreview(0);
           }, 0);
         });
-        $(".button_shiftEditClass").on("click", (event) => {
-          // Edit Vendor here
+        $(".button_shiftApproveClass").on("click", (event) => {
+          // Approve Invoice here
           let data = JSON.parse(event.target.getAttribute("edit_tmp_id"));
-          this.router.navigate(["/vendor-form"], {
-            queryParams: { _id: data._id },
-          });
+          that.updateInvoice({ _id: data._id, status: 'Approved' });
         });
-        $(".button_shiftDeleteClass").on("click", (event) => {
-          // Delete Vendor here
+        $(".button_shiftRejectClass").on("click", (event) => {
+          // Approve Invoice here
           let data = JSON.parse(event.target.getAttribute("edit_tmp_id"));
-
+          that.updateInvoice({ _id: data._id, status: 'Rejected' });
         });
-
-
       },
     };
   }
+
+  updateInvoice(requestObject) {
+    let that = this;
+    that.uiSpinner.spin$.next(true);
+    that.httpCall.httpPostCall(httproutes.INVOICE_UPDATE_INVOICE_STATUS, requestObject).subscribe(params => {
+      if (params.status) {
+        that.snackbarservice.openSnackBar(params.message, "success");
+        that.uiSpinner.spin$.next(false);
+        that.rerenderfunc();
+      } else {
+        that.snackbarservice.openSnackBar(params.message, "error");
+        that.uiSpinner.spin$.next(false);
+
+      }
+    });
+  }
+
   getColumName() {
     let that = this;
-    let role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
     return [
       {
         title: that.invoice_no,
-        data: "vendor_name",
+        data: "invoice",
         defaultContent: "",
       },
       {
         title: that.po_no,
-        data: "vendor_id",
+        data: "p_o",
         defaultContent: "",
       },
-
       {
         title: that.packing_slip_no,
-        data: "email",
+        data: "packing_slip",
         defaultContent: "",
       },
       {
         title: that.Receiving_Slip,
-        data: "address",
+        data: "receiving_slip",
         defaultContent: "",
       },
       {
         title: that.Vendor_Status,
-        render: function (data: any, type: any, full: any) {
+        data: 'status',
+        defaultContent: "",
+        /* render: function (data: any, type: any, full: any) {
           var tmp_return;
           if (full.status == 1)
             tmp_return =
@@ -411,12 +418,13 @@ export class DashboardInvoiceListComponent implements OnInit {
               that.inacticve_word +
               `</div>`;
           return tmp_return;
-        },
+        }, */
         width: "7%",
       },
       {
         title: that.Receiving_Attachment,
-        render: function (data: any, type: any, full: any) {
+        defaultContent: "",
+        /* render: function (data: any, type: any, full: any) {
           let htmlData = ``;
           if (full.attachment.length != 0) {
             htmlData =
@@ -429,7 +437,7 @@ export class DashboardInvoiceListComponent implements OnInit {
       </button> `;
           }
           return htmlData;
-        },
+        }, */
         width: "1%",
         orderable: false,
       },
@@ -439,30 +447,23 @@ export class DashboardInvoiceListComponent implements OnInit {
           let tmp_tmp = {
             _id: full._id,
           };
-          if ("") {
-            return (
-              `
-          <div class="dropdown">
-            <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust"  aria-haspopup="true" aria-expanded="false"  edit_tmp_id='` + JSON.stringify(full) + `' aria-hidden="true"></i>
-            <div class= "dropdown-content-cust" aria-labelledby="dropdownMenuButton">
-              <a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_shiftEditClass" >` + '<img src="' + that.editIcon + '" alt="" height="15px">' + that.Listing_Action_Edit + `</a>
-            </div>
-        </div>`
-            );
-          } else {
-            return (
-              `
-          <div class="dropdown">
-            <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust"  aria-haspopup="true" aria-expanded="false"  edit_tmp_id='` +
-              JSON.stringify(full) +
-              `' aria-hidden="true"></i>
-            <div class= "dropdown-content-cust" aria-labelledby="dropdownMenuButton">
-              <a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_shiftEditClass" >` + '<img src="' + that.editIcon + '" alt="" height="15px">' + that.Listing_Action_Edit + `</a>
-              <a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_shiftDeleteClass" >` + '<img src="' + that.archivedIcon + '" alt="" height="15px">' + that.Archived_all + `</a>
-            </div>
-        </div>`
-            );
+          let approve = '';
+          let reject = '';
+          if (that.status != 'Approved') {
+            approve = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_shiftApproveClass" >` + '<img src="' + that.approveIcon + '" alt="" height="15px">Approve</a>';
           }
+          if (that.status != 'Rejected') {
+            reject = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_shiftRejectClass" >` + '<img src="' + that.rejectIcon + '" alt="" height="15px">Reject</a>';
+          }
+          return (
+            `<div class="dropdown">
+                <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust"  aria-haspopup="true" aria-expanded="false"  edit_tmp_id='` + JSON.stringify(full) + `' aria-hidden="true"></i>
+                <div class= "dropdown-content-cust" aria-labelledby="dropdownMenuButton">
+                  ` + approve + `
+                  ` + reject + `
+                </div>
+            </div>`
+          );
         },
         width: "1%",
         orderable: false,

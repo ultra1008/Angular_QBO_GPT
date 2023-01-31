@@ -129,7 +129,7 @@ export class InvoiceDashboardComponent implements OnInit {
     constructor
   */
 
-  constructor(private router: Router, public translate: TranslateService, private modeService: ModeDetectService, public httpCall: HttpCall) {
+  constructor (private router: Router, public translate: TranslateService, private modeService: ModeDetectService, public httpCall: HttpCall) {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
@@ -173,10 +173,10 @@ export class InvoiceDashboardComponent implements OnInit {
       that.hideShow = true;
     }, 1000);
   }
-  gotolist() {
-    this.router.navigateByUrl('dashboard-invoice-list');
-  }
 
+  gotoList(status) {
+    this.router.navigate(['/dashboard-invoice-list'], { queryParams: { status: status } });
+  }
 
   drop(event: CdkDragDrop<string[]>) {
     let tmp = moveItemInArray(this.timePeriods, event.previousIndex, event.currentIndex);

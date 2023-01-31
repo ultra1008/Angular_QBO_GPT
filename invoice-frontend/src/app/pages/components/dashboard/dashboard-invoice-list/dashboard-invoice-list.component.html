@@ -1,27 +1,23 @@
 <div class="main-search-bar">
     <div class="row">
         <div class="one-div-cust-user">
-
             <div class="header-text-cust statastic-card mt-1">
-                <div class="statastic-card-title">Pending Invoice </div>
-                <div class="number-new">
-                    <div class="mt-2">{{countlist.generated}}</div>
+                <div class="statastic-card-title">{{status}} Invoice </div>
+                <div class="number-new"
+                    [ngClass]="status == 'Pending'? 'pending-background' : status == 'Approved' ? 'approve-background' : status == 'Rejected' ? 'reject-background' : status == 'Late' ? 'late-background' : ''">
+                    <div class="mt-2">{{count}}</div>
                 </div>
             </div>
-            <!-- <div class="number-cust">  </div> -->
         </div>
-
     </div>
     <div class="display-inline-cust">
         <div class="row  d-flex">
-
             <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
                 matTooltip="{{ 'TOOLTIP_REPORT' | translate }}" aria-label="Left Align">
                 <img src="{{reportIcon}}" alt="" height="20px">
             </button>
         </div>
     </div>
-
 </div>
 <div class="wrapper-cust-admin cust-width ">
     <div class="table-responsive cust-padding cust-padding-tmp mt-5" *ngIf="showTable">

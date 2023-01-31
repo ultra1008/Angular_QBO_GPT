@@ -189,22 +189,108 @@ module.exports.deleteInvoice = async function (req, res) {
     }
 };
 
-//invoice pending datatable
-module.exports.getpendingdatatable = async function (req, res) {
+// invoice status update
+module.exports.updateInvoiceStatus = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
     if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
+            var requestObject = req.body;
+            var id = requestObject._id;
+            delete requestObject._id;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoice_Schema);
-            var col = [];
-            var userid = { is_delete: 0 };
-            col.push('invoice', 'p_o', 'Packing Slip');
+            requestObject.updated_by = decodedToken.UserData._id;
+            requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+            var update_data = await invoicesConnection.updateOne({ _id: ObjectID(id) }, requestObject);
+            let isDelete = update_data.nModified;
+            if (isDelete == 0) {
+                res.send({ status: false, message: "There is no data with this id." });
+            } else {
+                var get_one = await invoicesConnection.findOne({ _id: ObjectID(id) }, { _id: 0, __v: 0 });
+                let reqObj = { invoice_id: id, ...get_one._doc };
+                addchangeInvoice_History("Update", reqObj, decodedToken, get_one.updated_at);
+                res.send({ message: `Invoice ${requestObject.status.toLowerCase()} successfully`, status: true, data: update_data });
+            }
         } catch (e) {
             console.log(e);
-            res.send({ status: false, message: translator.getStr('InvalidUser'), error: e });
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         } finally {
+            connection_db_api.close();
+        }
+    }
+    else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
 
+//invoice datatable
+module.exports.getInvoiceDatatable = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoice_Schema);
+            var col = [];
+            col.push("invoice", "p_o", "packing_slip", "receiving_slip", "", "notes", "status");
+
+            var start = parseInt(requestObject.start) || 0;
+            var perpage = parseInt(requestObject.length);
+
+            var columnData = (requestObject.order != undefined && requestObject.order != '') ? requestObject.order[0].column : '';
+            var columntype = (requestObject.order != undefined && requestObject.order != '') ? requestObject.order[0].dir : '';
+
+            var sort = {};
+            if (requestObject.draw == 1) {
+                sort = { "created_at": -1 };
+            } else {
+                sort[col[columnData]] = (columntype == 'asc') ? 1 : -1;
+            }
+            let query = {};
+            if (requestObject.search.value) {
+                query = {
+                    $or: [
+                        { "invoice": new RegExp(requestObject.search.value, 'i') },
+                        { "p_o": new RegExp(requestObject.search.value, 'i') },
+                        { "packing_slip": new RegExp(requestObject.search.value, 'i') },
+                        { "receiving_slip": new RegExp(requestObject.search.value, 'i') },
+                        { "notes": new RegExp(requestObject.search.value, 'i') },
+                        { "status": new RegExp(requestObject.search.value, 'i') },
+                    ]
+                };
+            }
+            var match_query = { is_delete: 0 };
+            if (requestObject.status) {
+                match_query = {
+                    is_delete: 0,
+                    status: requestObject.status
+                };
+            }
+            var aggregateQuery = [
+                { $match: match_query },
+                { $match: query },
+                { $sort: sort },
+                { $limit: start + perpage },
+                { $skip: start },
+            ];
+            let count = 0;
+            count = await invoicesConnection.countDocuments(match_query);
+            let all_vendors = await invoicesConnection.aggregate(aggregateQuery).collation({ locale: "en_US" });
+
+            var dataResponce = {};
+            dataResponce.data = all_vendors;
+            dataResponce.draw = requestObject.draw;
+            dataResponce.recordsTotal = count;
+            dataResponce.recordsFiltered = (requestObject.search.value) ? all_vendors.length : count;
+            res.json(dataResponce);
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false, error: e });
+        } finally {
+            connection_db_api.close();
         }
     } else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });

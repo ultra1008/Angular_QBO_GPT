@@ -65,7 +65,27 @@
     font-size: 15px;
 }
 
+.pending-background {
+    background-color: hsl(19, 94%, 55%);
+}
+
+.approve-background {
+    background-color: #0fb900;
+}
+
+.reject-background {
+    background-color: #D16D6D;
+}
+
+.late-background {
+    background-color: #D6A400;
+}
+
 .d-flex {
     float: right;
     margin-right: 47px;
+}
+
+.cust-padding {
+    padding-bottom: 50px;
 }
