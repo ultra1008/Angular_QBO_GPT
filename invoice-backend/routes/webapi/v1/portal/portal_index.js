@@ -301,6 +301,7 @@ let processInvoiceController = require('./process_invoice/processInvoiceControll
 let processInvoiceValidation = require('./process_invoice/processInvoiceValidation');
 router.get('/webapi/v1/portal/getinvoiceprocess', common.checkTokenExistOrNot, processInvoiceController.getAllProcessInvoice);
 router.post('/webapi/v1/portal/saveinvoiceprocess', common.checkTokenExistOrNot, processInvoiceController.saveInvoiceProcess);
+router.get('/webapi/v1/portal/importmanagementinvoice', common.checkTokenExistOrNot, processInvoiceController.importManagementInvoice);
 router.get('/webapi/v1/portal/importprocessinvoice', common.checkTokenExistOrNot, processInvoiceController.importProcessData);
 router.post('/webapi/v1/portal/deleteinvoiceprocess', common.checkTokenExistOrNot, processInvoiceValidation.deleteInvoiceProcess, processInvoiceController.deleteInvoiceProcess);
 

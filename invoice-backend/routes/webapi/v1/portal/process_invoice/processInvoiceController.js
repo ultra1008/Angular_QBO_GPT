@@ -1,5 +1,6 @@
 var processInvoiceSchema = require('./../../../../../model/process_invoice');
 var invoiceSchema = require('./../../../../../model/invoice');
+var managementInvoiceSchema = require('./../../../../../model/management_invoice');
 var userSchema = require('./../../../../../model/user');
 const mongoose = require('mongoose');
 var ObjectID = require('mongodb').ObjectID;
@@ -102,10 +103,67 @@ module.exports.saveInvoiceProcess = async function (req, res) {
     }
 };
 
+module.exports.importManagementInvoice = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            let invoiceProcessCollection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
+            let managementInvoiceCollection = connection_db_api.model(collectionConstant.MANAGEMENT_INVOICE, managementInvoiceSchema);
+            let temp_invoices = await invoiceProcessCollection.find({ is_delete: 0, status: 'Pending' });
+            let tempIds = [];
+            temp_invoices.forEach((data) => {
+                if (data.invoice_id != null && data.invoice_id != undefined) {
+                    tempIds.push(ObjectID(data.invoice_id));
+                }
+            });
+            let query;
+            if (tempIds.length == 0) {
+                query = { is_delete: 0 };
+            } else {
+                query = { is_delete: 0, _id: { $nin: tempIds } };
+            }
+            console.log("query: ", query);
+            let invoices = await managementInvoiceCollection.find(query);
+            let saveObj = [];
+            for (let i = 0; i < invoices.length; i++) {
+                saveObj.push({
+                    invoice_id: invoices[i]._id,
+                    pdf_url: invoices[i].pdf_url,
+                    created_by: decodedToken.UserData._id,
+                    created_at: Math.round(new Date().getTime() / 1000),
+                    updated_by: decodedToken.UserData._id,
+                    updated_at: Math.round(new Date().getTime() / 1000),
+                });
+            }
+            let insert_data = await invoiceProcessCollection.insertMany(saveObj);
+            if (insert_data) {
+                let apiObj = [];
+                for (let i = 0; i < insert_data.length; i++) {
+                    apiObj.push({
+                        document_id: insert_data[i]._id,
+                        document_url: insert_data[i].pdf_url,
+                    });
+                }
+                await sendInvoiceForProcess(apiObj);
+                res.send({ message: 'Management Invoice imported successfully.', data: apiObj, status: true });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
 // Call API of Send Invoice for processing
 function sendInvoiceForProcess(requestObject) {
     return new Promise(function (resolve, reject) {
-        console.log("api call");
         var request = require('request');
         const options = {
             'method': 'POST',
@@ -117,12 +175,10 @@ function sendInvoiceForProcess(requestObject) {
             rejectUnauthorized: false,
             body: JSON.stringify({ documents: requestObject })
         };
-        console.log("process body: ", JSON.stringify({ documents: requestObject }));
         request(options, function (err, resp, body) {
             if (err) {
                 reject(err);
             } else {
-                console.log("response: ", body);
                 resolve({ body });
             }
         });

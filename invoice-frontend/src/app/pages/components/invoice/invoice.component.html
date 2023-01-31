@@ -8,6 +8,10 @@
             class="sign-button ml-1"><img src="{{add_my_self_icon}}" alt="" height="20px">
             Create an invoice
         </button>
+        <button *ngIf="isManagement" mat-raised-button color="primary" class="sign-button ml-1"
+            (click)="importManagementInvoice();"><img src="{{add_my_self_icon}}" alt="" height="20px">
+            {{'Import_Management_Invoice' | translate }}
+        </button>
     </div>
     <div class="display-inline-cust">
         <div class="main-search-bar">
