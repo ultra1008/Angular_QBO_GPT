@@ -2435,5 +2435,10 @@
     "Packing_slip_Details": "Packaging Slip Details",
     "Receiving_Slip_Details": "Receiving Slip  Details",
     "Quote_Details": "Quote Details",
-    "Invoice_Add_Atleast_One_Document": "Please select atleast one document."
+    "Invoice_Add_Atleast_One_Document": "Please select atleast one document.",
+    "Dashboard_Pending_File": "Pending Files",
+    "Dashboard_Pending_Invoice": "Pending Invoices",
+    "Dashboard_Approved_Invoice": "Approved Invoices",
+    "Dashboard_Rejected_Invoice": "Rejected Invoices",
+    "Dashboard_Late_Invoice": "Take actions"
 }

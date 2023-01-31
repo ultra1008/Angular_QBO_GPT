@@ -1089,7 +1089,7 @@ export enum httproutes {
     PORTAL_ROVUK_INVOICE_OTHER_SETTING_DELETE_DOCUMENT = "/webapi/v1/portal/deleteInvoiceDocument",
 
     PORTAL_DASHBOARD_COUNT_GETDATA = "/webapi/v1/portal/getdashboardcount",
-    PORTAL_DASHBOARD_CARD_COUNT_GETDATA = "/webapi/v1/portal/getdashboardpending",
+    PORTAL_DASHBOARD_CARD_COUNT_GETDATA = "/webapi/v1/portal/getdashboardinvoice",
     // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<invoice-other-setting-Alerta>>>>>>>>>>>>>>>>>>>>>>>>
     PORTAL_ROVUK_INVOICE__SETTINGS_GET_ALL_ALERTS = "/webapi/v1/portal/getallsetting",
     PORTAL_ROVUK_INVOICE_OTHER_SETTING_UPDATE_ALERTS = "/webapi/v1/portal/getupdatesetting",

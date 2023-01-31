@@ -268,8 +268,8 @@ router.get('/webapi/v1/portal/deleteinvoice', common.checkTokenExistOrNot, invoi
 
 
 let invoiceDashboard = require('./dashboard/dashboardController');
-router.get('/webapi/v1/portal/getdashboardcount', common.checkTokenExistOrNot, invoiceDashboard.getdashboardcount);
-router.get('/webapi/v1/portal/getdashboardpending', common.checkTokenExistOrNot, invoiceDashboard.pendinginvoice);
+router.get('/webapi/v1/portal/getdashboardcount', common.checkTokenExistOrNot, invoiceDashboard.getDashboardCount);
+router.get('/webapi/v1/portal/getdashboardinvoice', common.checkTokenExistOrNot, invoiceDashboard.dashboardInvoiceList);
 
 
 let invoice_vendorController = require('./vendor/vendorController');

@@ -1,11 +1,10 @@
 <div class="container-fluid">
     <div class="main-row-cust-div">
         <div class="one-div-cust-user">
-
             <div class="header-text-cust statastic-card mt-2">
-                <div class="statastic-card-title"> Pending Document </div>
+                <div class="statastic-card-title">{{'Dashboard_Pending_File' | translate }}</div>
                 <div class="number">
-                    <div class="mt-2">{{countlist.pending}}</div>
+                    <div class="mt-2">{{counts.pending_files}}</div>
                 </div>
             </div>
             <!-- <div class="number-cust">  </div> -->
@@ -13,9 +12,9 @@
         <div class="one-div-cust-user">
 
             <div class="header-text-cust statastic-card mt-2">
-                <div class="statastic-card-title">Pending Invoice </div>
+                <div class="statastic-card-title">{{'Dashboard_Pending_Invoice' | translate }}</div>
                 <div class="number-new">
-                    <div class="mt-2">{{countlist.generated}}</div>
+                    <div class="mt-2">{{counts.pending_invoices}}</div>
                 </div>
             </div>
             <!-- <div class="number-cust">  </div> -->
@@ -23,9 +22,9 @@
         <div class="one-div-cust-user">
 
             <div class="header-text-cust statastic-card mt-2">
-                <div class="statastic-card-title">Approved Invoices</div>
+                <div class="statastic-card-title">{{'Dashboard_Approved_Invoice' | translate }}</div>
                 <div class="number-app">
-                    <div class="mt-2">{{countlist.approved}}</div>
+                    <div class="mt-2">{{counts.approved_invoices}}</div>
                 </div>
             </div>
             <!-- <div class="number-cust">  </div> -->
@@ -33,9 +32,9 @@
         <div class="one-div-cust-user">
 
             <div class="header-text-cust statastic-card mt-2">
-                <div class="statastic-card-title">Rejected Invoices</div>
+                <div class="statastic-card-title">{{'Dashboard_Rejected_Invoice' | translate }}</div>
                 <div class="number-rej">
-                    <div class="mt-2">{{countlist.rejected}}</div>
+                    <div class="mt-2">{{counts.rejected_invoices}}</div>
                 </div>
             </div>
             <!-- <div class="number-cust">  </div> -->
@@ -43,9 +42,9 @@
         <div class="one-div-cust-user">
 
             <div class="header-text-cust statastic-card mt-2">
-                <div class="statastic-card-title">Take actions</div>
+                <div class="statastic-card-title">{{'Dashboard_Late_Invoice' | translate }}</div>
                 <div class="number-tk">
-                    <div class="mt-2">{{countlist.late}}</div>
+                    <div class="mt-2">{{counts.late_invoices}}</div>
                 </div>
             </div>
             <!-- <div class="number-cust">  </div> -->
@@ -56,17 +55,16 @@
         <div class="one-div-cust-user mr-3">
             <b class="ml-1">Received</b>
             <div class="header-text-cust detail-list-card mt-2">
-                <div class="one-div-cust-user-card" *ngFor="let data of cardcountlist.pending">
+                <div class="one-div-cust-user-card" *ngFor="let data of cardList.pending_invoices">
                     <div class="statastic-card mt-2 "
                         [ngClass]="mode == 'on'? 'header-text-cust-card-dark' : 'header-text-cust-card '">
-                        <div class="statastic-small-card-title">
-                            <div>Invoice#: 561235</div>
-                            <div class="ml-2">Invoice date: 12/05</div>
-                            <div class="ml-2">Last update: 11/05</div>
+                        <div class="statastic-small-card-title ml-2">
+                            <div>Invoice#: {{data.invoice}}</div>
+                            <div>Invoice date: {{data.invoice_date}}</div>
+                            <div>Last update: {{temp_MMDDYYY(data.updated_at)}}</div>
                         </div>
-
                         <div class="number-card-small">
-                            Total: $1,000.00
+                            Total: {{data.total}}
                         </div>
                     </div>
                     <!-- <div class="number-cust">  </div> -->
@@ -77,17 +75,16 @@
         <div class="one-div-cust-user mr-3">
             <b class="ml-1">Processed</b>
             <div class="header-text-cust detail-list-card mt-2">
-                <div class="one-div-cust-user-card" *ngFor="let data of cardcountlist.process">
+                <div class="one-div-cust-user-card" *ngFor="let data of cardList.process_invoices">
                     <div class="statastic-card mt-2"
                         [ngClass]="mode == 'on'? 'header-text-cust-card-dark' : 'header-text-cust-card '">
-                        <div class="statastic-small-card-title">
-                            <div>Invoice#: 561235</div>
-                            <div class="ml-2">Invoice date: 12/05</div>
-                            <div class="ml-2">Last update: 11/05</div>
+                        <div class="statastic-small-card-title ml-2">
+                            <div>Invoice#: {{data.invoice}}</div>
+                            <div>Invoice date: {{data.invoice_date}}</div>
+                            <div>Last update: {{temp_MMDDYYY(data.updated_at)}}</div>
                         </div>
-
                         <div class="number-card-process">
-                            Total: $1,000.00
+                            Total: {{data.total}}
                         </div>
                     </div>
                     <!-- <div class="number-cust">  </div> -->
@@ -98,17 +95,16 @@
         <div class="one-div-cust-user">
             <b class="ml-1">Cancelled</b>
             <div class="header-text-cust detail-list-card mt-2">
-                <div class="one-div-cust-user-card" *ngFor="let data of cardcountlist.cancelled">
+                <div class="one-div-cust-user-card" *ngFor="let data of cardList.cancelled_invoices">
                     <div class="statastic-card mt-2"
                         [ngClass]="mode == 'on'? 'header-text-cust-card-dark' : 'header-text-cust-card '">
-                        <div class="statastic-small-card-title">
-                            <div>Invoice#: 561235</div>
-                            <div class="ml-2">Invoice date: 12/05</div>
-                            <div class="ml-2">Last update: 11/05</div>
+                        <div class="statastic-small-card-title ml-2">
+                            <div>Invoice#: {{data.invoice}}</div>
+                            <div>Invoice date: {{data.invoice_date}}</div>
+                            <div>Last update: {{temp_MMDDYYY(data.updated_at)}}</div>
                         </div>
-
                         <div class="number-card-cancle">
-                            Total: $1,000.00
+                            Total: {{data.total}}
                         </div>
                     </div>
                     <!-- <div class="number-cust">  </div> -->
