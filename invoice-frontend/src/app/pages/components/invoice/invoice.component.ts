@@ -283,6 +283,21 @@ export class InvoiceComponent implements OnInit {
       }
     });
   }
+
+  importManagementPO() {
+    let that = this;
+    that.uiSpinner.spin$.next(true);
+    this.httpCall.httpGetCall(httproutes.INVOICE_IMPORT_MANAGEMENT_PO).subscribe(function (params) {
+      if (params.status) {
+        that.snackbarservice.openSnackBar(params.message, "success");
+        that.uiSpinner.spin$.next(false);
+        that.getAllInvoices();
+      } else {
+        that.snackbarservice.openSnackBar(params.message, "error");
+        that.uiSpinner.spin$.next(false);
+      }
+    });
+  }
 }
 
 
@@ -324,6 +339,7 @@ export class InvoiceAttachment {
   _id!: string;
   fileIcon: string = "";
   FILE_NOT_SUPPORTED: string;
+  Invoice_Add_Atleast_One_Document: string = '';
 
   constructor (private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
     public dialogRef: MatDialogRef<InvoiceAttachment>,
@@ -363,6 +379,7 @@ export class InvoiceAttachment {
     });
     this.translate.stream([""]).subscribe((textarray) => {
       this.FILE_NOT_SUPPORTED = this.translate.instant("FILE_NOT_SUPPORTED");
+      this.Invoice_Add_Atleast_One_Document = this.translate.instant('Invoice_Add_Atleast_One_Document');
     });
 
   }
@@ -590,36 +607,39 @@ export class InvoiceAttachment {
   }
 
   uploadDocuments() {
-    console.log("start");
     let that = this;
-    const formData = new FormData();
-    for (var i = 0; i < that.files.length; i++) {
-      formData.append("file[]", that.files[i]);
+    if (that.files.length == 0) {
+      that.sb.openSnackBar(that.Invoice_Add_Atleast_One_Document, "error");
+    } else {
+      const formData = new FormData();
+      for (var i = 0; i < that.files.length; i++) {
+        formData.append("file[]", that.files[i]);
+      }
+      formData.append("dir_name", 'invoice');
+      formData.append("local_date", moment().format("DD/MM/YYYY hh:mmA"));
+      that.uiSpinner.spin$.next(true);
+      that.httpCall
+        .httpPostCall(httproutes.PORTAL_ATTECHMENT, formData)
+        .subscribe(function (params) {
+          if (params.status) {
+            that.httpCall
+              .httpPostCall(httproutes.INVOICE_SAVE_INVOICE_PROCESS, { pdf_urls: params.data })
+              .subscribe(function (new_params) {
+                if (new_params.status) {
+                  that.sb.openSnackBar(new_params.message, "success");
+                  that.uiSpinner.spin$.next(false);
+                  that.dialogRef.close();
+                } else {
+                  that.sb.openSnackBar(new_params.message, "error");
+                  that.uiSpinner.spin$.next(false);
+                }
+              });
+          } else {
+            that.sb.openSnackBar(params.message, "error");
+            that.uiSpinner.spin$.next(false);
+          }
+        });
     }
-    formData.append("dir_name", 'invoice');
-    formData.append("local_date", moment().format("DD/MM/YYYY hh:mmA"));
-    console.log("upload");
-    that.uiSpinner.spin$.next(true);
-    that.httpCall
-      .httpPostCall(httproutes.PORTAL_ATTECHMENT, formData)
-      .subscribe(function (params) {
-        if (params.status) {
-          console.log("pdf links:", params.data);
-          that.httpCall
-            .httpPostCall(httproutes.INVOICE_SAVE_INVOICE_PROCESS, { pdf_urls: params.data })
-            .subscribe(function (params) {
-              if (params.status) {
-                that.sb.openSnackBar(params.message, "success");
-                that.uiSpinner.spin$.next(false);
-              } else {
-                that.uiSpinner.spin$.next(false);
-              }
-            });
-        } else {
-          that.uiSpinner.spin$.next(false);
-        }
-      });
-    // this.router.navigate(['/template-form']);
   }
 }
 

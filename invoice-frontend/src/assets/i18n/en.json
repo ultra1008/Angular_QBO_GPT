@@ -2435,6 +2435,7 @@
     "Employee_Language_Do_Want_Delete": "Do you want to delete this language?",
     "Invoice_preview": "Preview",
     "Import_Management_Invoice": "Management Invoice",
+    "Import_Management_PO": "Management PO",
     "Invoice_Name": "Invoice Name",
     "Vendor_Name": "Vendor Name",
     "Vendor_Id": "Vendor Id",
@@ -2456,5 +2457,6 @@
     "P_O_Details": "P.O Details",
     "Packing_slip_Details": "Packaging Slip Details",
     "Receiving_Slip_Details": "Receiving Slip  Details",
-    "Quote_Details": "Quote Details"
+    "Quote_Details": "Quote Details",
+    "Invoice_Add_Atleast_One_Document": "Please select atleast one document."
 }
