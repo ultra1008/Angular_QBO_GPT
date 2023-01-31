@@ -93,6 +93,7 @@ import { QuoteFormComponent } from './components/invoice/quote-form/quote-form.c
 import { PoDetailFormComponent } from './components/invoice/po-detail-form/po-detail-form.component';
 import { FormCoreComponent } from './form-core/form-core.component';
 import { DashboardInvoiceListComponent } from './components/dashboard/dashboard-invoice-list/dashboard-invoice-list.component';
+import { DashboardFilesListComponent } from './components/dashboard/dashboard-files-list/dashboard-files-list.component';
 
 
 
@@ -175,7 +176,8 @@ import { DashboardInvoiceListComponent } from './components/dashboard/dashboard-
     QuoteFormComponent,
 
     PoDetailFormComponent,
-      DashboardInvoiceListComponent
+      DashboardInvoiceListComponent,
+      DashboardFilesListComponent
   ],
   imports: [
     PortalModule,

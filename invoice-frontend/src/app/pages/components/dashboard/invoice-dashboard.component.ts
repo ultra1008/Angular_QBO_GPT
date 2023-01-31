@@ -176,6 +176,9 @@ export class InvoiceDashboardComponent implements OnInit {
   gotolist() {
     this.router.navigateByUrl('dashboard-invoice-list');
   }
+  gotoFilesList() {
+    this.router.navigate(['/dashboard-files-list']);
+  }
 
 
   drop(event: CdkDragDrop<string[]>) {
