@@ -2452,5 +2452,6 @@
     "Amount_Due": "Amount Due",
     "GL_Account": "GL Account#",
     "Assign_To": "Assign To",
-    "Add_invoice": "Add Invoice"
+    "Add_invoice": "Add Invoice",
+    "Invoice_Add_Atleast_One_Document": "Please select atleast one document."
 }
