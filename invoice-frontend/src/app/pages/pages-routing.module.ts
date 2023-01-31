@@ -54,6 +54,7 @@ import { VendorFormComponent } from './components/vendors/vendor-form/vendor-for
 import { ArchiveVendorComponent } from './components/vendors/archive-vendor/archive-vendor.component';
 import { FormCoreComponent } from './form-core/form-core.component';
 import { DashboardInvoiceListComponent } from './components/dashboard/dashboard-invoice-list/dashboard-invoice-list.component';
+import { DashboardFilesListComponent } from './components/dashboard/dashboard-files-list/dashboard-files-list.component';
 
 
 const routes: Routes = [
@@ -104,6 +105,12 @@ const routes: Routes = [
         pathMatch: 'full',
         canActivate: [PortalAuthGuard],
         component: DashboardInvoiceListComponent
+      },
+      {
+        path: 'dashboard-files-list',
+        pathMatch: 'full',
+        canActivate: [PortalAuthGuard],
+        component: DashboardFilesListComponent
       },
       {
         path: 'invoice',

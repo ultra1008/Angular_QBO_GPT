@@ -174,6 +174,10 @@ export class InvoiceDashboardComponent implements OnInit {
     }, 1000);
   }
 
+  gotoFilesList() {
+    this.router.navigate(['/dashboard-files-list']);
+  }
+
   gotoList(status) {
     this.router.navigate(['/dashboard-invoice-list'], { queryParams: { status: status } });
   }
