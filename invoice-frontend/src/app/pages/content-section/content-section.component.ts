@@ -9,26 +9,35 @@ import { LayoutService } from '../../shared/services/layout.service';
 
 export class ContentSectionComponent implements OnInit {
   screenTitle = 'Page Title';
-  contentHeight: any;
-  @Input() navLayout: any;
-  @Input() defaultNavbar: any;
-  @Input() toggleNavbar: any;
-  @Input() toggleStatus: any;
-  @Input() navbarEffect: any;
-  @Input() deviceType: any;
-  @Input() headerColorTheme: any;
-  @Input() navbarColorTheme: any;
-  @Input() activeNavColorTheme: any;
+  contentHeight: number;
+  @Input() navLayout: string;
+  @Input() defaultNavbar: string;
+  @Input() toggleNavbar: string;
+  @Input() toggleStatus: boolean;
+  @Input() navbarEffect: string;
+  @Input() deviceType: string;
+  @Input() headerColorTheme: string;
+  @Input() navbarColorTheme: string;
+  @Input() activeNavColorTheme: string;
+  @Input() showHeader: boolean = true;
 
-  selectlanguage: any;
+  selectlanguage: string;
   constructor(private layoutService: LayoutService) { }
 
   ngOnInit() {
-    this.layoutService.contentHeightCast.subscribe(setCtHeight => this.contentHeight = setCtHeight);
+    if (this.showHeader) {
+      this.layoutService.contentHeightCast.subscribe(setCtHeight => this.contentHeight = setCtHeight);
+    } else {
+      this.layoutService.contentHeightCast.subscribe(setCtHeight => this.contentHeight = setCtHeight + this.layoutService.headerHeight);
+    }
   }
 
   @HostListener('window:resize', ['$event'])
   onResizeHeight(event: any) {
-    this.contentHeight = window.innerHeight - this.layoutService.headerHeight;
+    if (this.showHeader) {
+      this.contentHeight = window.innerHeight - this.layoutService.headerHeight;
+    } else {
+      this.contentHeight = window.innerHeight;
+    }
   }
 }
