@@ -18,6 +18,7 @@ import { formatPhoneNumber, gallery_options, LanguageApp, MMDDYYYY_formet } from
 import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
 import { ModeDetectService } from '../../map/mode-detect.service';
+import { Location } from '@angular/common';
 
 class DataTablesResponse {
   data: any[];
@@ -81,11 +82,12 @@ export class DashboardInvoiceListComponent implements OnInit {
   editIcon: string;
   approveIcon: string = "";
   rejectIcon: string = "";
+  backIcon: string;
 
   status: any;
   count: number = 0;
 
-  constructor (private modeService: ModeDetectService,
+  constructor (private location: Location, private modeService: ModeDetectService,
     public dialog: MatDialog,
     private router: Router,
     private http: HttpClient,
@@ -102,10 +104,12 @@ export class DashboardInvoiceListComponent implements OnInit {
       this.reportIcon = icon.REPORT;
       this.approveIcon = icon.EDIT;
       this.rejectIcon = icon.EDIT;
+      this.backIcon = icon.BACK;
     } else {
       this.reportIcon = icon.REPORT_WHITE;
       this.approveIcon = icon.EDIT_WHITE;
       this.rejectIcon = icon.EDIT_WHITE;
+      this.backIcon = icon.BACK_WHITE;
     }
     let j = 0;
     this.subscription = this.modeService.onModeDetect().subscribe((mode) => {
@@ -114,11 +118,13 @@ export class DashboardInvoiceListComponent implements OnInit {
         this.reportIcon = icon.REPORT;
         this.approveIcon = icon.EDIT;
         this.rejectIcon = icon.EDIT;
+        this.backIcon = icon.BACK;
       } else {
         this.mode = "on";
         this.reportIcon = icon.REPORT_WHITE;
         this.approveIcon = icon.EDIT_WHITE;
         this.rejectIcon = icon.EDIT_WHITE;
+        this.backIcon = icon.BACK_WHITE;
       }
       if (j != 0) {
         setTimeout(() => {
@@ -134,6 +140,10 @@ export class DashboardInvoiceListComponent implements OnInit {
       this.yesButton = this.translate.instant("Compnay_Equipment_Delete_Yes");
       this.noButton = this.translate.instant("Compnay_Equipment_Delete_No");
     });
+  }
+
+  back() {
+    this.location.back();
   }
 
   ngOnInit(): void {

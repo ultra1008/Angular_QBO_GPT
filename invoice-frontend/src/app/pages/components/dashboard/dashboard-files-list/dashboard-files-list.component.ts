@@ -18,6 +18,7 @@ import { formatPhoneNumber, gallery_options, LanguageApp, MMDDYYYY_formet } from
 import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
 import { ModeDetectService } from '../../map/mode-detect.service';
+import { Location } from '@angular/common';
 
 class DataTablesResponse {
   data: any[];
@@ -79,6 +80,7 @@ export class DashboardFilesListComponent implements OnInit {
   yesButton: string = "";
   noButton: string = "";
   editIcon: string;
+  backIcon: string;
   counts: any = {
     pending_files: 0,
     pending_invoices: 0,
@@ -88,7 +90,7 @@ export class DashboardFilesListComponent implements OnInit {
   };
 
 
-  constructor(private modeService: ModeDetectService,
+  constructor(private location: Location, private modeService: ModeDetectService,
     public dialog: MatDialog,
     private router: Router,
     private http: HttpClient,
@@ -101,25 +103,21 @@ export class DashboardFilesListComponent implements OnInit {
     this.mode = modeLocal === "on" ? "on" : "off";
     if (this.mode == "off") {
       this.reportIcon = icon.REPORT;
-
-
+      this.backIcon = icon.BACK;
     } else {
       this.reportIcon = icon.REPORT_WHITE;
-
-
+      this.backIcon = icon.BACK_WHITE;
     }
     let j = 0;
     this.subscription = this.modeService.onModeDetect().subscribe((mode) => {
       if (mode) {
         this.mode = "off";
         this.reportIcon = icon.REPORT;
-
-
+        this.backIcon = icon.BACK;
       } else {
         this.mode = "on";
         this.reportIcon = icon.REPORT_WHITE;
-
-
+        this.backIcon = icon.BACK_WHITE;
       }
 
       if (j != 0) {
@@ -138,6 +136,10 @@ export class DashboardFilesListComponent implements OnInit {
       this.yesButton = this.translate.instant("Compnay_Equipment_Delete_Yes");
       this.noButton = this.translate.instant("Compnay_Equipment_Delete_No");
     });
+  }
+
+  back() {
+    this.location.back();
   }
 
   ngOnInit(): void {
