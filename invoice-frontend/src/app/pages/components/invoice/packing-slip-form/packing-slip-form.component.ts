@@ -139,7 +139,7 @@ export class PackingSlipFormComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/invoice']);
+    this.router.navigate(['/invoice-detail']);
   }
 
   ngOnInit(): void {

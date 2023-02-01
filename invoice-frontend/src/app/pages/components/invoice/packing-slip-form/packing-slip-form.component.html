@@ -1,6 +1,6 @@
 <mat-card class="example-card">
     <div class="wrapper-cust-admin mr-5">
-        <div class="row ml-2 mb-2">
+        <div class="row ml-2  pt-2 mb-2">
             <div class="screen-title-section  cust-h1-inline">
                 <h1 class="screen-title">
                     {{ "Packing_slip_Details" | translate | titlecase }}
@@ -259,10 +259,10 @@
                     </div>
                     <div class="pdf-viewer">
                         <!-- *ngIf="loadInvoice" -->
-                        <pdf-viewer id="pdf" [src]="invoiceData.pdf_url" [rotation]="0" [original-size]="false"
-                            [show-all]="true" [fit-to-page]="false" [zoom]="1" [zoom-scale]="'page-width'"
-                            [stick-to-page]="false" [render-text]="true" [external-link-target]="'blank'"
-                            [autoresize]="true" [show-borders]="false" [external-link-target]="'blank'"
+                        <pdf-viewer id="pdf" [src]="pdf_url" [rotation]="0" [original-size]="false" [show-all]="true"
+                            [fit-to-page]="false" [zoom]="1" [zoom-scale]="'page-width'" [stick-to-page]="false"
+                            [render-text]="true" [external-link-target]="'blank'" [autoresize]="true"
+                            [show-borders]="false" [external-link-target]="'blank'"
                             style="display: block;"></pdf-viewer>
                     </div>
                 </div>
