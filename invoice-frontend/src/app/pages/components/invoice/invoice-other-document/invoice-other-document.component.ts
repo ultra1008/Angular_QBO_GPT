@@ -1,58 +1,39 @@
-import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatAccordion } from '@angular/material/expansion';
-import { MatTreeFlattener, MatTreeFlatDataSource } from '@angular/material/tree';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { httproutes, icon, localstorageconstants } from 'src/app/consts';
-import { HttpCall } from 'src/app/service/httpcall.service';
-import { Snackbarservice } from 'src/app/service/snack-bar-service';
-import { UiSpinnerService } from 'src/app/service/spinner.service';
+import { icon, localstorageconstants } from 'src/app/consts';
 import { ModeDetectService } from '../../map/mode-detect.service';
 
 @Component({
-  selector: 'app-invoice-detail-page',
-  templateUrl: './invoice-detail-page.component.html',
-  styleUrls: ['./invoice-detail-page.component.scss']
+  selector: 'app-invoice-other-document',
+  templateUrl: './invoice-other-document.component.html',
+  styleUrls: ['./invoice-other-document.component.scss']
 })
-export class InvoiceDetailPageComponent implements OnInit {
-  @ViewChild(MatAccordion) accordion: MatAccordion;
-  displayMode: string = 'default';
-  placeholderIcon: icon.PHOTO_PLACEHOLDER;
-  show_tabs: boolean = true;
+export class InvoiceOtherDocumentComponent implements OnInit {
+  @Input() documentType: any;
+
   hideToggle = false;
   disabled = false;
+  displayMode: string = 'default';
   pdf_url = 'https://s3.us-west-1.wasabisys.com/rovukdata/invoice-sample-pdfs/adrian@vmgconstructioninc10.com8a83e28d7dc522e9017e4939f2250519457511c73e527873ff3e198be850e1d1c710b0.pdf';
   multi = false;
   hide: Boolean = true;
-
   downloadIcon: string;
   printIcon: string;
   editIcon: string;
   subscription: Subscription;
   mode: any;
-
-  id: any;
-  invoiceData: any;
-  loadInvoice: boolean = false;
-
-  poDocumentType = 'PO';
-  packingSlipDocumentType = 'Packing Slip';
-  receivingSlipDocumentType = 'Receiving Slip';
-  quoteoDocumentType = 'Quote';
-
-
   documentTypes: any = {
     po: 'PO',
     packingSlip: 'Packing Slip',
     receivingSlip: 'Receiving Slip',
     quote: 'Quote',
   };
-  constructor(private modeService: ModeDetectService, private router: Router, public route: ActivatedRoute, public uiSpinner: UiSpinnerService, public httpCall: HttpCall,
-    public snackbarservice: Snackbarservice,) {
+
+  constructor(private router: Router, private modeService: ModeDetectService, public route: ActivatedRoute,) {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === "on" ? "on" : "off";
-    this.id = this.route.snapshot.queryParamMap.get('_id');
+
     if (this.mode == "off") {
       this.downloadIcon = icon.DOWNLOAD_WHITE;
       this.printIcon = icon.PRINT_WHITE;
@@ -75,33 +56,23 @@ export class InvoiceDetailPageComponent implements OnInit {
         this.editIcon = icon.EDIT_WHITE;
       }
     });
-    if (this.id) {
-      this.uiSpinner.spin$.next(true);
-      this.getOneInvoice();
-    }
   }
 
   ngOnInit(): void {
   }
-
-  getOneInvoice() {
+  goToEdit() {
     let that = this;
-    that.httpCall
-      .httpPostCall(httproutes.INVOICE_GET_ONE_INVOICE, { _id: that.id })
-      .subscribe(function (params) {
-        if (params.status) {
-          that.invoiceData = params.data;
-          that.loadInvoice = true;
-          that.uiSpinner.spin$.next(false);
-        } else {
-          that.snackbarservice.openSnackBar(params.message, "error");
-          that.uiSpinner.spin$.next(false);
-        }
-      });
-  }
+    console.log("sdafdsf", that.documentType, that.documentTypes);
+    if (that.documentType == that.documentTypes.po) {
+      that.router.navigate(['/po-detail-form']);
+    } else if (that.documentType == that.documentTypes.packingSlip) {
+      that.router.navigate(['/packing-slip-form']);
+    } else if (that.documentType == that.documentTypes.receivingSlip) {
+      that.router.navigate(['/receiving-slip-form']);
+    } else if (that.documentType == that.documentTypes.quote) {
+      that.router.navigate(['/quote-detail-form']);
+    }
 
-  goToInvoiceEdit() {
-    this.router.navigate(['/invoice-form']);
   }
   print() {
     fetch(this.pdf_url).then(resp => resp.arrayBuffer()).then(resp => {
@@ -133,10 +104,4 @@ export class InvoiceDetailPageComponent implements OnInit {
     /*--- Remove the link when done ---*/
     document.body.removeChild(a);
   }
-
 }
-
-
-
-
-

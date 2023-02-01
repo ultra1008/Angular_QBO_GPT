@@ -55,6 +55,10 @@ import { ArchiveVendorComponent } from './components/vendors/archive-vendor/arch
 import { FormCoreComponent } from './form-core/form-core.component';
 import { DashboardInvoiceListComponent } from './components/dashboard/dashboard-invoice-list/dashboard-invoice-list.component';
 import { DashboardFilesListComponent } from './components/dashboard/dashboard-files-list/dashboard-files-list.component';
+import { PackingSlipFormComponent } from './components/invoice/packing-slip-form/packing-slip-form.component';
+import { PoDetailFormComponent } from './components/invoice/po-detail-form/po-detail-form.component';
+import { ReceivingSlipFormComponent } from './components/invoice/receiving-slip-form/receiving-slip-form.component';
+import { QuoteFormComponent } from './components/invoice/quote-form/quote-form.component';
 
 
 const routes: Routes = [
@@ -68,6 +72,28 @@ const routes: Routes = [
         pathMatch: 'full',
         canActivate: [PortalAuthGuard],
         component: InvoiceFormComponent
+      },
+      {
+        path: 'packing-slip-form',
+        pathMatch: 'full',
+        canActivate: [PortalAuthGuard],
+        component: PackingSlipFormComponent
+      }, {
+        path: 'po-detail-form',
+        pathMatch: 'full',
+        canActivate: [PortalAuthGuard],
+        component: PoDetailFormComponent
+      },
+      {
+        path: 'receiving-slip-form',
+        pathMatch: 'full',
+        canActivate: [PortalAuthGuard],
+        component: ReceivingSlipFormComponent
+      }, {
+        path: 'quote-detail-form',
+        pathMatch: 'full',
+        canActivate: [PortalAuthGuard],
+        component: QuoteFormComponent
       },
       {
         path: 'template-form',

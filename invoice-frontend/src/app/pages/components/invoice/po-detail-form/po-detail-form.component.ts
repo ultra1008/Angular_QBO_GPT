@@ -29,7 +29,6 @@ const swalWithBootstrapButtons = Swal.mixin({
 export class PoDetailFormComponent implements OnInit {
   filepath: any;
   item_image_url: String = "./assets/images/currentplaceholder.png";
-
   startDate: any;
   endDate: any;
   showHeader = false;
@@ -58,7 +57,7 @@ export class PoDetailFormComponent implements OnInit {
   variablesusersArray: any = [];
   usersArray: any = this.variablesusersArray.slice();
 
-  pdf_url = "";
+  pdf_url = "https://s3.us-west-1.wasabisys.com/rovukdata/invoice-sample-pdfs/adrian@vmgconstructioninc10.comae95eb347d143714017d21f295de0449112194196aa89c3932ce0cbb7d3d574882405.pdf";
   invoiceData: any;
   statusList = configdata.INVOICE_STATUS;
 
@@ -91,8 +90,6 @@ export class PoDetailFormComponent implements OnInit {
       status: [""],
       terms: [""],
       total: [""],
-
-
       tax_amount: [""],
       tax_id: [""],
       sub_total: [""],
@@ -137,7 +134,7 @@ export class PoDetailFormComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/invoice']);
+    this.router.navigate(['/invoice-detail']);
   }
 
   ngOnInit(): void {
