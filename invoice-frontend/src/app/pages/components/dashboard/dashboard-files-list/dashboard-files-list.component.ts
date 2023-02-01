@@ -1,20 +1,19 @@
-import { ENTER, COMMA } from '@angular/cdk/keycodes';
+
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { MatChipInputEvent } from '@angular/material/chips';
+
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { DataTableDirective } from 'angular-datatables';
 import { NgxGalleryComponent, NgxGalleryOptions, NgxGalleryImage } from 'ngx-gallery-9';
-import { Subject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { httproutes, icon, localstorageconstants } from 'src/app/consts';
 import { HttpCall } from 'src/app/service/httpcall.service';
 import { Mostusedservice } from 'src/app/service/mostused.service';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
-import { formatPhoneNumber, gallery_options, LanguageApp, MMDDYYYY_formet } from 'src/app/service/utils';
+import { gallery_options, LanguageApp } from 'src/app/service/utils';
 import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
 import { ModeDetectService } from '../../map/mode-detect.service';

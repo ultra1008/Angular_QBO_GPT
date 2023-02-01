@@ -79,39 +79,59 @@
     </div>
     <div class="row ml-3" *ngIf="gridtolist">
         <div class="card mb-3 mr-4" *ngFor="let invoice of allInvoices">
-            <div class="card-body" (click)="viewInvoice(invoice)">
+            <div class="card-body">
                 <!--  <div class="pt-2 pb-2">
                     <img src="assets\images\currentplaceholder.png" class="img-responsive cardsmall img-fluid"
                         style="height: 100px; width: 100px; object-fit: contain;" alt="">
                 </div> -->
                 <div class="data">
                     <div class="dropdown">
-                        <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust" aria-hidden="true"></i>
+
+                        <!-- <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust" aria-hidden="true"></i>
                         <div class="dropdown-content-cust">
                             <a (click)="viewInvoice(invoice);"><img src="{{viewIcon}}" alt="" height="20px">
                                 {{'All-View' |
                                 translate}}</a>
-                            <a (click)="editInvoice(invoice)"><img src="{{editIcon}}" alt="" height="20px">
+                            <a (click)="editInvoice(invoice)"><img src="{{{{'All-Edit' | translate}}}}" alt="" height="20px">
                                 {{'All-Edit' | translate}}</a>
-                        </div>
+                        </div> -->
+                        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu">
+                            <button (click)="viewInvoice(invoice)" class="button_shiftEditClass" mat-menu-item>
+                                <span><img src="{{viewIcon}}" alt="" height="15px">
+                                    {{'All-View' |
+                                    translate}}</span>
+                            </button>
+                            <button (click)="editInvoice(invoice)" class="button_shiftDeleteClass" mat-menu-item>
+                                <span><img src="{{editIcon}}" alt="" height="15px">
+                                    {{'All-Edit' | translate}}</span>
+                            </button>
+                        </mat-menu>
                     </div>
-                    <b>Invoice # </b> <span>{{invoice.invoice}}</span>
-                    <br />
-                    <b>P.O # </b> <span>{{invoice.p_o}}</span>
-                    <br />
-                    <b>Packing Slip </b> <span>{{invoice.packing_slip}}</span>
-                    <br />
-                    <b>Receiving Slip </b> <span>{{invoice.receiving_slip}}</span>
-                    <br />
-                    <b>Files Attached # </b> <span></span>
-                    <br />
-                    <b>Notes </b> <span>{{invoice.notes}}</span>
-                    <br />
-                    <b>Status </b> <span>{{invoice.status}}</span>
+                    <div (click)="viewInvoice(invoice)">
+                        <b>Invoice # </b> <span>{{invoice.invoice}}</span>
+                        <br />
+                        <b>P.O # </b> <span>{{invoice.p_o}}</span>
+                        <br />
+                        <b>Packing Slip </b> <span>{{invoice.packing_slip}}</span>
+                        <br />
+                        <b>Receiving Slip </b> <span>{{invoice.receiving_slip}}</span>
+                        <br />
+                        <b>Files Attached # </b> <span></span>
+                        <br />
+                        <b>Notes </b> <span>{{invoice.notes}}</span>
+                        <br />
+                        <b>Status </b> <span>{{invoice.status}}</span>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
+
+
     <div class=" cust-padding-tmp">
         <div *ngIf="!gridtolist" class="margin-cust-top table-responsive cust-padding-tmp">
             <div>
