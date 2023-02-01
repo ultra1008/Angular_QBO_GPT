@@ -55,8 +55,8 @@ export class UserCardComponent implements OnInit {
   Compnay_Equipment_Delete_No: string = "";
   acticve_word: string = "";
   inacticve_word: string = "";
-  trashIcon: string;
-  editIcon: string;
+  trashIcon: string = icon.ARCHIVE;
+  editIcon: string; 
   mode: any;
   subscription: Subscription;
   userComplianceIcon = icon.USER_COMPLIANCE_ICON;
@@ -73,20 +73,16 @@ export class UserCardComponent implements OnInit {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
     if (this.mode == 'off') {
-      this.trashIcon = "./assets/diversityicon/thememode/trash_icon.png";
       this.editIcon = "./assets/diversityicon/thememode/edit_icon.png";
     } else {
-      this.trashIcon = "./assets/diversityicon/thememode/trash_icon.png";
       this.editIcon = "./assets/diversityicon/thememode/edit_icon.png";
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
       if (mode) {
         this.mode = 'off';
-        this.trashIcon = "./assets/diversityicon/thememode/trash_icon.png";
         this.editIcon = "./assets/diversityicon/thememode/edit_icon.png";
       } else {
         this.mode = 'on';
-        this.trashIcon = "./assets/diversityicon/thememode/trash_icon.png";
         this.editIcon = "./assets/diversityicon/thememode/edit_icon.png";
       }
     });

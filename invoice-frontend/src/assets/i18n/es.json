@@ -2440,5 +2440,6 @@
     "Dashboard_Pending_Invoice": "Pending Invoices",
     "Dashboard_Approved_Invoice": "Approved Invoices",
     "Dashboard_Rejected_Invoice": "Rejected Invoices",
-    "Dashboard_Late_Invoice": "Take actions"
+    "Dashboard_Late_Invoice": "Take actions",
+    "Restore_user": "Restore User"
 }

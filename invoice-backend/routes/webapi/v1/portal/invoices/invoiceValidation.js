@@ -28,7 +28,23 @@ const deleteInvoice = (req, res, next) => {
     });
 };
 
+const updateInvoiceStatus = (req, res, next) => {
+    const validationRule = {
+        "_id": "required",
+        "status": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({ status: false, message: err });
+        }
+        else {
+            next();
+        }
+    });
+};
+
 module.exports = {
     getOneInvoice,
     deleteInvoice,
+    updateInvoiceStatus,
 };

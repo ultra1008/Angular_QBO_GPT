@@ -1,11 +1,13 @@
 <div class="wrapper-cust-admin" fxLayout style="height: 95%">
-  <div class="head-text" [ngClass]="mode == 'on'? 'carddark' : 'cardlight'">
+  <!-- <div class="head-text" [ngClass]="mode == 'on'? 'carddark' : 'cardlight'">
     <h3 class="editing">{{'user_title' | translate}}</h3>
-  </div>
+  </div> -->
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6">
+      <h1 class="screen-title">{{'user_title' | translate}}</h1>
+    </div>
+    <div class="col-md-6">
       <div class="screen-title-section cust-user-heading-inline">
-        <!-- <h1 class="screen-title">{{'Employee-heading' | translate }}</h1> -->
         <div *ngIf="addTeamMember" class="inner-search-bar cust-heght-textbox">
           <div class="main-search-bar">
             <button mat-stroked-button style="margin-right: 2px;" class="sign-button" mat-raised-button

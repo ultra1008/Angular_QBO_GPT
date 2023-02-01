@@ -9,8 +9,7 @@
             </div>
             <!-- <div class="number-cust">  </div> -->
         </div>
-        <div class="one-div-cust-user" (click)="gotolist()">
-
+        <div class="one-div-cust-user" (click)="gotoList('Pending')">
             <div class="header-text-cust statastic-card mt-2">
                 <div class="statastic-card-title">{{'Dashboard_Pending_Invoice' | translate }}</div>
                 <div class="number-new">
@@ -19,8 +18,7 @@
             </div>
             <!-- <div class="number-cust">  </div> -->
         </div>
-        <div class="one-div-cust-user">
-
+        <div class="one-div-cust-user" (click)="gotoList('Approved')">
             <div class="header-text-cust statastic-card mt-2">
                 <div class="statastic-card-title">{{'Dashboard_Approved_Invoice' | translate }}</div>
                 <div class="number-app">
@@ -29,8 +27,7 @@
             </div>
             <!-- <div class="number-cust">  </div> -->
         </div>
-        <div class="one-div-cust-user">
-
+        <div class="one-div-cust-user" (click)="gotoList('Rejected')">
             <div class="header-text-cust statastic-card mt-2">
                 <div class="statastic-card-title">{{'Dashboard_Rejected_Invoice' | translate }}</div>
                 <div class="number-rej">
@@ -39,8 +36,7 @@
             </div>
             <!-- <div class="number-cust">  </div> -->
         </div>
-        <div class="one-div-cust-user">
-
+        <div class="one-div-cust-user" (click)="gotoList('Late')">
             <div class="header-text-cust statastic-card mt-2">
                 <div class="statastic-card-title">{{'Dashboard_Late_Invoice' | translate }}</div>
                 <div class="number-tk">
