@@ -154,6 +154,7 @@ export enum icon {
     COSTCODE_WHITE = "./assets/diversityicon/costcode_white.png",
     SECURITY_SETTINGS = "./assets/diversityicon/thememode/security_settings.png",
     SECURITY_SETTINGS_WHITE = "./assets/diversityicon/darkmode/security_settings_white.png",
-
     PHOTO_PLACEHOLDER = "./assets/diversityicon/placeholder.png",
+    DAILY_REPORT = './assets/sidemenu/dailyreport_icon.png',
+    DAILY_REPORT_WHITE = './assets/sidemenu/dailyreports_icon.png',
 }

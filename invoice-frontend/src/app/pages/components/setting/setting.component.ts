@@ -33,10 +33,11 @@ export class SettingComponent implements OnInit {
   usageIcon = icon.USAGE;
   usage_whiteIcon = icon.USAGE_WHITE;
   costcode = icon.COSTCODE;
-  costcode_white = icon.COSTCODE_WHITE
+  costcode_white = icon.COSTCODE_WHITE;
   security_settings = icon.SECURITY_SETTINGS;
   security_settings_white = icon.SECURITY_SETTINGS_WHITE;
-
+  Document_view = icon.DAILY_REPORT;
+  Document_view_white = icon.DAILY_REPORT_WHITE;
 
 
   constructor(private router: Router) { }
@@ -44,7 +45,7 @@ export class SettingComponent implements OnInit {
   ngOnInit(): void { }
 
   routefun() {
-    this.router.navigate(['/settings'])
+    this.router.navigate(['/settings']);
   }
 
 

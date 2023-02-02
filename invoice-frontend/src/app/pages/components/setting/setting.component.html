@@ -18,6 +18,7 @@
             <img *ngIf="index == 8" src="{{other_settings_white}}" alt="" height="15px">
             <img *ngIf="index == 9" src="{{security_settings_white}}" alt="" height="15px">
             <img *ngIf="index == 10" src="{{costcode_white}}" alt="" height="15px">
+            <img *ngIf="index == 11" src="{{Document_view}}" alt="" height="15px">
 
         </ng-template>
 
@@ -63,6 +64,10 @@
         <ng-template matStepperIcon="costcode">
 
             <img src="{{costcode}}" alt="" height="15px">
+        </ng-template>
+        <ng-template matStepperIcon="documentview">
+
+            <img src="{{Document_view_white}}" alt="" height="15px">
         </ng-template>
 
 
@@ -144,6 +149,12 @@
             <form>
                 <ng-template matStepLabel>Cost Code</ng-template>
                 <app-cost-code></app-cost-code>
+            </form>
+        </mat-step>
+        <mat-step state="documentview" [completed]="false">
+            <form>
+                <ng-template matStepLabel>Document View</ng-template>
+                <app-document-view></app-document-view>
             </form>
         </mat-step>
 

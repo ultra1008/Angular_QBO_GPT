@@ -1,0 +1,17 @@
+<div class="main-cust-setting-div">
+    <div class="container">
+        <form [formGroup]="documentviews">
+            <mat-slide-toggle color="primary">
+                {{'Document_View_Text' | translate}}&nbsp;
+            </mat-slide-toggle>
+
+            <mat-form-field appearance="outline">
+                <mat-label>{{'' | translate }}</mat-label>
+                <input maxlength="2" (keypress)="numberOnly($event)" matInput placeholder="{{'' | translate }}"
+                    formControlName="documentview" />
+            </mat-form-field>
+            &nbsp;{{'Document_Invoice_View_Text' | translate}}
+        </form>
+
+    </div>
+</div>

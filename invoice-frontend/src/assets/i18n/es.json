@@ -2441,5 +2441,7 @@
     "Dashboard_Approved_Invoice": "Approved Invoices",
     "Dashboard_Rejected_Invoice": "Rejected Invoices",
     "Dashboard_Late_Invoice": "Take actions",
-    "Restore_user": "Restore User"
+    "Restore_user": "Restore User",
+    "Document_View_Text": "Display documents older then",
+    "Document_Invoice_View_Text": "In the invoice view"
 }
