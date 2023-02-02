@@ -104,7 +104,7 @@ export class InvoiceDetailPageComponent implements OnInit {
     this.router.navigate(['/invoice-form']);
   }
   print() {
-    fetch(this.pdf_url).then(resp => resp.arrayBuffer()).then(resp => {
+    fetch(this.invoiceData.pdf_url).then(resp => resp.arrayBuffer()).then(resp => {
       /*--- set the blog type to final pdf ---*/
       const file = new Blob([resp], { type: 'application/pdf' });
       const blobUrl = window.URL.createObjectURL(file);
@@ -128,7 +128,7 @@ export class InvoiceDetailPageComponent implements OnInit {
     document.body.appendChild(a);
     a.style.display = 'none';
     a.target = "_blank";
-    a.href = this.pdf_url;
+    a.href = this.invoiceData.pdf_url;
     a.click();
     /*--- Remove the link when done ---*/
     document.body.removeChild(a);
