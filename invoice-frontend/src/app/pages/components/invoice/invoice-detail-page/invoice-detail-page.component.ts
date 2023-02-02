@@ -100,8 +100,9 @@ export class InvoiceDetailPageComponent implements OnInit {
       });
   }
 
-  goToInvoiceEdit() {
-    this.router.navigate(['/invoice-form']);
+  goToInvoiceEdit(invoiceData) {
+    this.router.navigate(['/invoice-form'], { queryParams: { _id: invoiceData._id } });
+
   }
   print() {
     fetch(this.invoiceData.pdf_url).then(resp => resp.arrayBuffer()).then(resp => {

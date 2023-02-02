@@ -30,7 +30,6 @@ const swalWithBootstrapButtons = Swal.mixin({
 export class InvoiceFormComponent implements OnInit {
   filepath: any;
   item_image_url: String = "./assets/images/currentplaceholder.png";
-
   startDate: any;
   endDate: any;
   showHeader = false;
