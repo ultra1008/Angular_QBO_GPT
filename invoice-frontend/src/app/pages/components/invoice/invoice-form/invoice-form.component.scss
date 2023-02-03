@@ -183,7 +183,7 @@ form {
 
 .paddings {
     padding-left: 4rem !important;
-    text-align: end;
+    text-align: right !important;
 }
 
 b {
@@ -199,4 +199,14 @@ b {
 .button-margin {
     margin-top: 90px;
     padding-bottom: 50px;
+}
+
+.Approve {
+    background-color: green;
+    color: rgb(255, 255, 255);
+}
+
+.Denied {
+    background-color: red;
+    color: rgb(255, 255, 255);
 }

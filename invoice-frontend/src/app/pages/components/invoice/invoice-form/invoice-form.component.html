@@ -182,8 +182,7 @@
                                     <b> {{'Amount_Due' | translate }}:</b>&nbsp;&nbsp;
                                     <mat-form-field>
 
-                                        <input matInput placeholder="{{'Amount_Due' | translate }}"
-                                            formControlName="amount_due">
+                                        <input matInput placeholder="{{'' | translate }}" formControlName="amount_due">
 
                                     </mat-form-field>
                                 </div>
@@ -242,17 +241,25 @@
                                     </mat-form-field>
                                 </div>
 
-                                <div class="button-margin cust-center-save ">
-                                    <button mat-raised-button class="cust-button-form"><img src="{{backIcon}}" alt=""
-                                            (click)="back()" class="pr-1" height="15px">{{'All-back' |
-                                        translate}}</button>
-                                    <button mat-raised-button (click)="saveInvoice()" color="primary"
-                                        class="cust-button-form"><img src="{{saveIcon}}" alt="" class="pr-1"
-                                            height="15px">{{'All-save' |
-                                        translate}}</button>
-                                </div>
+
                             </div>
                         </form>
+                    </div>
+                    <div class="button-margin cust-center-save ">
+                        <button mat-raised-button class="cust-button-form"><img src="{{backIcon}}" alt=""
+                                (click)="back()" class="pr-1" height="15px">{{'All-back' |
+                            translate}}</button>
+                        <button mat-raised-button (click)="saveInvoice()" color="primary" class="cust-button-form"><img
+                                src="{{saveIcon}}" alt="" class="pr-1" height="15px">{{'All-save' |
+                            translate}}</button>
+                        <button mat-raised-button (click)="invoiceApprove()" class="cust-button-form Approve"><img
+                                src="{{approveIcon}}" alt="" height="15px">
+                            {{'PO-View-Approve' | translate}}</button>
+
+                        <button mat-raised-button (click)="invoiceDenied()" class="cust-button-form Denied"><img
+                                src="{{denyIcon}}" alt="" height="15px">
+                            {{'reject_all' |
+                            translate}}</button>
                     </div>
                     <div class="col-6">
 

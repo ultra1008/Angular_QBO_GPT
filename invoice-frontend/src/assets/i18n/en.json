@@ -2466,5 +2466,6 @@
     "Dashboard_Late_Invoice": "Take actions",
     "Restore_user": "Restore User",
     "Document_View_Text": "Display documents older then",
-    "Document_Invoice_View_Text": "In the invoice view"
+    "Document_Invoice_View_Text": "In the invoice view",
+    "reject_all": "Reject"
 }
