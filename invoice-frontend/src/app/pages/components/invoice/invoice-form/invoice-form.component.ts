@@ -63,6 +63,11 @@ export class InvoiceFormComponent implements OnInit {
   usersArray: any = this.variablesusersArray.slice();
 
 
+  // DOCUMENT TYPE
+  variablesDocumenttype: any = configdata.DOCUMENT_TYPE;
+  DocumentType = this.variablesDocumenttype.slice();
+
+
   statusList = configdata.INVOICE_STATUS;
 
   constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
@@ -80,6 +85,7 @@ export class InvoiceFormComponent implements OnInit {
       this.Email_Template_Form_Submitting = this.translate.instant('Email_Template_Form_Submitting');
     });
     this.invoiceform = this.formBuilder.group({
+      document_type: [""],
       invoice_name: [""],
       vendor_name: [""],
       customer_id: [""],
@@ -94,8 +100,6 @@ export class InvoiceFormComponent implements OnInit {
       status: [""],
       terms: [""],
       total: [""],
-
-
       tax_amount: [""],
       tax_id: [""],
       sub_total: [""],
@@ -291,6 +295,7 @@ export class InvoiceFormComponent implements OnInit {
           // receiving_slip: [params.data.receiving_slip],
           // notes: [params.data.notes],
           // status: [params.data.status, Validators.required],
+          document_type: [params.data.document_type],
           invoice_name: [params.data.invoice_name],
           vendor_name: [params.data.vendor_name],
           customer_id: [params.data.customer_id],

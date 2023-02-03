@@ -60,6 +60,11 @@ export class PoDetailFormComponent implements OnInit {
   pdf_url = "https://s3.us-west-1.wasabisys.com/rovukdata/invoice-sample-pdfs/adrian@vmgconstructioninc10.comae95eb347d143714017d21f295de0449112194196aa89c3932ce0cbb7d3d574882405.pdf";
   invoiceData: any;
   statusList = configdata.INVOICE_STATUS;
+  approveIcon: string;
+  denyIcon: string;
+  // DOCUMENT TYPE
+  variablesDocumenttype: any = configdata.DOCUMENT_TYPE;
+  DocumentType = this.variablesDocumenttype.slice();
 
   constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
@@ -76,6 +81,7 @@ export class PoDetailFormComponent implements OnInit {
       this.Email_Template_Form_Submitting = this.translate.instant('Email_Template_Form_Submitting');
     });
     this.invoiceform = this.formBuilder.group({
+      document_type: [""],
       invoice_name: [""],
       vendor_name: [""],
       customer_id: [""],
@@ -107,11 +113,16 @@ export class PoDetailFormComponent implements OnInit {
       this.exitIcon = icon.CANCLE;
       this.downloadIcon = icon.DOWNLOAD_WHITE;
       this.printIcon = icon.PRINT_WHITE;
+      this.approveIcon = icon.APPROVE_WHITE;
+      this.denyIcon = icon.DENY_WHITE;
     } else {
+
       this.backIcon = icon.BACK_WHITE;
       this.exitIcon = icon.CANCLE_WHITE;
       this.downloadIcon = icon.DOWNLOAD_WHITE;
       this.printIcon = icon.PRINT_WHITE;
+      this.approveIcon = icon.APPROVE_WHITE;
+      this.denyIcon = icon.DENY_WHITE;
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
       if (mode) {
@@ -120,12 +131,16 @@ export class PoDetailFormComponent implements OnInit {
         this.exitIcon = icon.CANCLE;
         this.downloadIcon = icon.DOWNLOAD_WHITE;
         this.printIcon = icon.PRINT_WHITE;
+        this.approveIcon = icon.APPROVE_WHITE;
+        this.denyIcon = icon.DENY_WHITE;
       } else {
         this.mode = 'on';
         this.backIcon = icon.BACK_WHITE;
         this.exitIcon = icon.CANCLE_WHITE;
         this.downloadIcon = icon.DOWNLOAD_WHITE;
         this.printIcon = icon.PRINT_WHITE;
+        this.approveIcon = icon.APPROVE_WHITE;
+        this.denyIcon = icon.DENY_WHITE;
       }
     });
     if (this.id) {
@@ -195,6 +210,71 @@ export class PoDetailFormComponent implements OnInit {
       }
     });
   }
+  poApprove() {
+    // let po_id = this.route.snapshot.queryParamMap.get("po_id");
+    // let po_status = "Pending";
+    // let that = this;
+    // swalWithBootstrapButtons
+    //   .fire({
+    //     title: this.Custom_Pdf_Viewer_Please_Confirm,
+    //     text: this.Custom_Pdf_Viewer_Want_Approve_Po,
+    //     showDenyButton: true,
+    //     showCancelButton: false,
+    //     confirmButtonText: this.Compnay_Equipment_Delete_Yes,
+    //     denyButtonText: this.Compnay_Equipment_Delete_No,
+    //   })
+    //   .then((result) => {
+    //     if (result.isConfirmed) {
+    //       // denied PO api call
+    //       that.httpCall
+    //         .httpPostCall(httproutes.PORTAL_COMPANY_UPDATE_PO_STATUS, {
+    //           _id: po_id,
+    //           po_status: po_status,
+    //         })
+    //         .subscribe(function (params) {
+    //           if (params.status) {
+    //             that.snackbarservice.openSnackBar(params.message, "success");
+    //             that.location.back();
+    //           } else {
+    //             that.snackbarservice.openSnackBar(params.message, "error");
+    //           }
+    //         });
+    //     }
+    //   });
+  }
+
+  poDenied() {
+    // let po_id = this.route.snapshot.queryParamMap.get("po_id");
+    // let po_status = "Denied";
+    // let that = this;
+    // swalWithBootstrapButtons
+    //   .fire({
+    //     title: this.Custom_Pdf_Viewer_Please_Confirm,
+    //     text: this.Custom_Pdf_Viewer_Want_Deny_Po,
+    //     showDenyButton: true,
+    //     showCancelButton: false,
+    //     confirmButtonText: this.Compnay_Equipment_Delete_Yes,
+    //     denyButtonText: this.Compnay_Equipment_Delete_No,
+    //   })
+    //   .then((result) => {
+    //     if (result.isConfirmed) {
+    //       /*--- denied PO api call ---*/
+    //       that.httpCall
+    //         .httpPostCall(httproutes.PORTAL_COMPANY_UPDATE_PO_STATUS, {
+    //           _id: po_id,
+    //           po_status: po_status,
+    //         })
+    //         .subscribe(function (params) {
+    //           if (params.status) {
+    //             that.snackbarservice.openSnackBar(params.message, "success");
+    //             that.location.back();
+    //           } else {
+    //             that.snackbarservice.openSnackBar(params.message, "error");
+    //           }
+    //         });
+    //     }
+    //   });
+  }
 
   getOneInvoice() {
     let that = this;
@@ -209,6 +289,7 @@ export class PoDetailFormComponent implements OnInit {
           // receiving_slip: [params.data.receiving_slip],
           // notes: [params.data.notes],
           // status: [params.data.status, Validators.required],
+          document_type: [params.data.document_type],
           invoice_name: [params.data.invoice_name],
           vendor_name: [params.data.vendor_name],
           customer_id: [params.data.customer_id],
