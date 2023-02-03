@@ -48,9 +48,15 @@
                         aria-label="Left Align">
                         <img src="{{reportIcon}}" alt="" height="20px">
                     </button>
-
+                    <!-- 
                     <button mat-stroked-button class="mr-1" (click)="gridTolist();"> {{
-                        btn_grid_list_text }} </button>
+                        btn_grid_list_text }} </button> -->
+                    <button mat-stroked-button class="sign-button mr-1" (click)="gridTolist();">
+                        <img src="{{gridIcon}}" alt="" class="pr-1" height="15px" width="20px" *ngIf="!gridtolist" />
+
+                        <img src="{{listIcon}}" alt="" class="pr-1" height="15px" width="20px" *ngIf="gridtolist" />
+                        {{btn_grid_list_text}}
+                    </button>
                     <mat-form-field class="mr-1" appearance="outline">
                         <mat-label>Due Date</mat-label>
                         <input matInput>

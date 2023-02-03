@@ -157,4 +157,6 @@ export enum icon {
     PHOTO_PLACEHOLDER = "./assets/diversityicon/placeholder.png",
     DAILY_REPORT = './assets/sidemenu/dailyreport_icon.png',
     DAILY_REPORT_WHITE = './assets/sidemenu/dailyreports_icon.png',
+    List_LIGHT = "./assets/diversityicon/list_white.png",
+    List = "./assets/diversityicon/list_dark.png",
 }

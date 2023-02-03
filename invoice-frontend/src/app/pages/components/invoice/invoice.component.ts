@@ -65,6 +65,8 @@ export class InvoiceComponent implements OnInit {
   trashIcon!: string;
   importIcon!: string;
   editIcon!: string;
+  gridIcon: string;
+  listIcon: string;
   role_to: any;
   allInvoices = [];
   invoiceCount: any = {
@@ -83,7 +85,7 @@ export class InvoiceComponent implements OnInit {
   Company_Equipment_File_Not_Match: any;
   showInvoiceTable = true;
 
-  constructor (private router: Router, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
+  constructor(private router: Router, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
     public translate: TranslateService, public dialog: MatDialog,
     public httpCall: HttpCall, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService) {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
@@ -93,11 +95,15 @@ export class InvoiceComponent implements OnInit {
       this.editIcon = icon.EDIT;
       this.reportIcon = icon.REPORT;
       this.viewIcon = icon.VIEW;
+      this.gridIcon = icon.GRID;
+      this.listIcon = icon.List;
     } else {
       this.trashIcon = icon.DELETE_WHITE;
       this.editIcon = icon.EDIT_WHITE;
       this.reportIcon = icon.REPORT_WHITE;
       this.viewIcon = icon.VIEW_WHITE;
+      this.gridIcon = icon.GRID_WHITE;
+      this.listIcon = icon.List_LIGHT;
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
       if (mode) {
@@ -106,12 +112,16 @@ export class InvoiceComponent implements OnInit {
         this.editIcon = icon.EDIT;
         this.reportIcon = icon.REPORT;
         this.viewIcon = icon.VIEW;
+        this.gridIcon = icon.GRID;
+        this.listIcon = icon.List;
       } else {
         this.mode = 'on';
         this.trashIcon = icon.DELETE_WHITE;
         this.editIcon = icon.EDIT_WHITE;
         this.reportIcon = icon.REPORT_WHITE;
         this.viewIcon = icon.VIEW_WHITE;
+        this.gridIcon = icon.GRID_WHITE;
+        this.listIcon = icon.List_LIGHT;
       }
       this.rerenderfunc();
     });
@@ -191,17 +201,28 @@ export class InvoiceComponent implements OnInit {
     return formatPhoneNumber(data);
   }
 
+  // gridTolist() {
+  //   if (this.gridtolist) {
+  //     this.rerenderfunc();
+  //     this.btn_grid_list_text = this.listtogrid_text;
+  //     this.gridtolist = false;
+  //   } else {
+  //     this.btn_grid_list_text = this.gridtolist_text;
+  //     this.gridtolist = true;
+  //   }
+  // }
   gridTolist() {
     if (this.gridtolist) {
       this.rerenderfunc();
       this.btn_grid_list_text = this.listtogrid_text;
+      localStorage.setItem('gridtolist_team', "list");
       this.gridtolist = false;
     } else {
       this.btn_grid_list_text = this.gridtolist_text;
+      localStorage.setItem('gridtolist_team', "grid");
       this.gridtolist = true;
     }
   }
-
   getAllInvoices() {
     let that = this;
     this.httpCall.httpGetCall(httproutes.INVOICE_GET_LIST).subscribe(function (params) {
@@ -341,7 +362,7 @@ export class InvoiceAttachment {
   FILE_NOT_SUPPORTED: string;
   Invoice_Add_Atleast_One_Document: string = '';
 
-  constructor (private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
+  constructor(private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
     public dialogRef: MatDialogRef<InvoiceAttachment>,
     @Inject(MAT_DIALOG_DATA) public data: any, public sb: Snackbarservice, public translate: TranslateService, public dialog: MatDialog, private sanitiser: DomSanitizer,
     public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService,
@@ -678,7 +699,7 @@ export class InvoiceReport {
   copyDataFromProject: string = '';
   add_my_self_icon = icon.ADD_MY_SELF_WHITE;
 
-  constructor (private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
+  constructor(private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
     public dialogRef: MatDialogRef<InvoiceReport>,
     @Inject(MAT_DIALOG_DATA) public data: any, public sb: Snackbarservice, public translate: TranslateService) {
 
