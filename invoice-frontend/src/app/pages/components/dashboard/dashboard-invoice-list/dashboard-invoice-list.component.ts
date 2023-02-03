@@ -83,11 +83,13 @@ export class DashboardInvoiceListComponent implements OnInit {
   approveIcon: string = "";
   rejectIcon: string = "";
   backIcon: string;
+  viewIcon: string;
+  Purchasing_Orders_View: any;
 
   status: any;
   count: number = 0;
 
-  constructor (private location: Location, private modeService: ModeDetectService,
+  constructor(private location: Location, private modeService: ModeDetectService,
     public dialog: MatDialog,
     private router: Router,
     private http: HttpClient,
@@ -102,29 +104,37 @@ export class DashboardInvoiceListComponent implements OnInit {
     this.status = this.route.snapshot.queryParamMap.get('status');
     if (this.mode == "off") {
       this.reportIcon = icon.REPORT;
-      this.approveIcon = icon.EDIT;
-      this.rejectIcon = icon.EDIT;
+      this.approveIcon = icon.APPROVE;
+      this.rejectIcon = icon.DENY;
       this.backIcon = icon.BACK;
+      this.editIcon = icon.EDIT;
+      this.viewIcon = icon.VIEW;
     } else {
       this.reportIcon = icon.REPORT_WHITE;
-      this.approveIcon = icon.EDIT_WHITE;
-      this.rejectIcon = icon.EDIT_WHITE;
+      this.approveIcon = icon.APPROVE_WHITE;
+      this.rejectIcon = icon.DENY_WHITE;
       this.backIcon = icon.BACK_WHITE;
+      this.editIcon = icon.EDIT_WHITE;
+      this.viewIcon = icon.VIEW_WHITE;
     }
     let j = 0;
     this.subscription = this.modeService.onModeDetect().subscribe((mode) => {
       if (mode) {
         this.mode = "off";
         this.reportIcon = icon.REPORT;
-        this.approveIcon = icon.EDIT;
-        this.rejectIcon = icon.EDIT;
+        this.approveIcon = icon.APPROVE;
+        this.rejectIcon = icon.DENY;
         this.backIcon = icon.BACK;
+        this.editIcon = icon.EDIT;
+        this.viewIcon = icon.VIEW;
       } else {
         this.mode = "on";
         this.reportIcon = icon.REPORT_WHITE;
-        this.approveIcon = icon.EDIT_WHITE;
-        this.rejectIcon = icon.EDIT_WHITE;
+        this.approveIcon = icon.APPROVE_WHITE;
+        this.rejectIcon = icon.DENY_WHITE;
         this.backIcon = icon.BACK_WHITE;
+        this.editIcon = icon.EDIT_WHITE;
+        this.viewIcon = icon.VIEW_WHITE;
       }
       if (j != 0) {
         setTimeout(() => {
@@ -139,6 +149,7 @@ export class DashboardInvoiceListComponent implements OnInit {
       this.copyDataFromProject = this.translate.instant("Copy_Data_From_Project");
       this.yesButton = this.translate.instant("Compnay_Equipment_Delete_Yes");
       this.noButton = this.translate.instant("Compnay_Equipment_Delete_No");
+      that.Listing_Action_Edit = that.translate.instant('Listing_Action_Edit');
     });
   }
 
@@ -180,6 +191,9 @@ export class DashboardInvoiceListComponent implements OnInit {
       );
       that.Compnay_Equipment_Delete_No = that.translate.instant(
         "Compnay_Equipment_Delete_No"
+      );
+      that.Purchasing_Orders_View = that.translate.instant(
+        "Purchasing_Orders_View"
       );
 
       that.Listing_Action_Edit = that.translate.instant("Listing_Action_Edit");
@@ -350,6 +364,23 @@ export class DashboardInvoiceListComponent implements OnInit {
             this.gallery.openPreview(0);
           }, 0);
         });
+        $(".button_shiftEditClass").on("click", (event) => {
+          let invoice1 = event.target.getAttribute("edit_tmp_id")?.replace(/\\/g, "'");
+          let invoice = JSON.parse(invoice1 ?? '');
+          this.router.navigate(['/invoice-form'], { queryParams: { _id: invoice._id } });
+        });
+        $(".button_poReceivedViewClass").on("click", (event) => {
+          // PO PDF view here
+          let invoice = JSON.parse(event.target.getAttribute("edit_tmp_id"));
+          this.router.navigate(['/invoice-detail'], { queryParams: { _id: invoice._id } });
+          /* this.router.navigate(["/app-custompdfviewer"], {
+            queryParams: {
+              po_url: data.received_url,
+              po_status: data.po_status,
+              po_id: data._id,
+            },
+          }); */
+        });
         $(".button_shiftApproveClass").on("click", (event) => {
           // Approve Invoice here
           let data = JSON.parse(event.target.getAttribute("edit_tmp_id"));
@@ -459,8 +490,14 @@ export class DashboardInvoiceListComponent implements OnInit {
           };
           let approve = '';
           let reject = '';
+          let view = '';
+          let edit = '';
+          view = ` <a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_poViewClass" ><span><img src="` + that.viewIcon + `" alt="" height="15px"></span>` + that.Purchasing_Orders_View + `</a>`;
+          edit = ` <a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="button_shiftEditClass" ><span><img src="` + that.editIcon + `" alt="" height="15px"></span>` + that.Listing_Action_Edit + `</a>`;
           if (that.status != 'Approved') {
             approve = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_shiftApproveClass" >` + '<img src="' + that.approveIcon + '" alt="" height="15px">Approve</a>';
+
+
           }
           if (that.status != 'Rejected') {
             reject = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_shiftRejectClass" >` + '<img src="' + that.rejectIcon + '" alt="" height="15px">Reject</a>';
@@ -471,6 +508,8 @@ export class DashboardInvoiceListComponent implements OnInit {
                 <div class= "dropdown-content-cust" aria-labelledby="dropdownMenuButton">
                   ` + approve + `
                   ` + reject + `
+                  ` + edit + `
+                  ` + view + `
                 </div>
             </div>`
           );
