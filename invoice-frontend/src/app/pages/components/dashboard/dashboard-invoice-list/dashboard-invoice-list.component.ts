@@ -103,6 +103,12 @@ export class DashboardInvoiceListComponent implements OnInit {
     public mostusedservice: Mostusedservice,
     public route: ActivatedRoute,
     public translate: TranslateService) {
+
+    let tmp_gridtolist_team = localStorage.getItem("gridtolist_invoice");
+    this.gridtolist =
+      tmp_gridtolist_team == "grid" || tmp_gridtolist_team == null
+        ? true
+        : false;
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === "on" ? "on" : "off";
     this.status = this.route.snapshot.queryParamMap.get('status');
@@ -435,14 +441,13 @@ export class DashboardInvoiceListComponent implements OnInit {
   }
   gridTolist() {
     if (this.gridtolist) {
-
       this.btn_grid_list_text = this.listtogrid_text;
-      localStorage.setItem('gridtolist_team', "list");
+      localStorage.setItem('gridtolist_invoice', "list");
       this.gridtolist = false;
       this.rerenderfunc();
     } else {
       this.btn_grid_list_text = this.gridtolist_text;
-      localStorage.setItem('gridtolist_team', "grid");
+      localStorage.setItem('gridtolist_invoice', "grid");
       this.gridtolist = true;
     }
   }

@@ -2,12 +2,13 @@
   <div class="col-md-12">
     <div class="screen-title-section cust-h1-inline">
       <div class="inner-search-bar"></div>
-      <button mat-stroked-button class="sign-button mr-1" (click)="gridTolist();">
-        <img src="{{gridIcon}}" alt="" class="pr-1" height="15px" width="20px" *ngIf="!gridtolist" />
 
-        <img src="{{listIcon}}" alt="" class="pr-1" height="15px" width="20px" *ngIf="gridtolist" />
-        {{btn_grid_list_text}}
+      <button mat-stroked-button class="sign-button cust-padding-top padding-left-cust" (click)="gridTolist()">
+        <img src="{{ gridIcon }}" alt="" class="pr-1" height="15px" *ngIf="!gridtolist" />
+        <img src="{{ listIcon }}" alt="" class="pr-1" height="15px" *ngIf="gridtolist" />
+        {{ btn_grid_list_text }}
       </button>
+
       <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
         matTooltip="{{ 'TOOLTIP_REPORT' | translate }}" aria-label="Left Align">
         <img src="{{ reportIcon }}" alt="" height="20px" />

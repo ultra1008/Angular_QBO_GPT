@@ -93,6 +93,12 @@ export class EmployeeListComponent implements OnInit {
     public employeeservice: EmployeeService, public translate: TranslateService, public dialog: MatDialog,
     public httpCall: HttpCall, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService,) {
     var userdata = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+
+    let tmp_gridtolist_team = localStorage.getItem("gridtolist_team");
+    this.gridtolist =
+      tmp_gridtolist_team == "grid" || tmp_gridtolist_team == null
+        ? true
+        : false;
     this.role_permission = userdata.role_permission.users;
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
@@ -260,9 +266,11 @@ export class EmployeeListComponent implements OnInit {
     if (this.gridtolist) {
       this.rerenderfunc();
       this.btn_grid_list_text = this.listtogrid_text;
+      localStorage.setItem('gridtolist_team', "list");
       this.gridtolist = false;
     } else {
       this.btn_grid_list_text = this.gridtolist_text;
+      localStorage.setItem('gridtolist_team', "grid");
       this.gridtolist = true;
     }
   }

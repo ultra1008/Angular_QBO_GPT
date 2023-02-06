@@ -90,6 +90,11 @@ export class InvoiceComponent implements OnInit {
   constructor(private router: Router, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
     public translate: TranslateService, public dialog: MatDialog,
     public httpCall: HttpCall, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService) {
+    let tmp_gridtolist_team = localStorage.getItem("gridtolist_invoice_list");
+    this.gridtolist =
+      tmp_gridtolist_team == "grid" || tmp_gridtolist_team == null
+        ? true
+        : false;
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
     if (this.mode == 'off') {
@@ -203,25 +208,16 @@ export class InvoiceComponent implements OnInit {
     return formatPhoneNumber(data);
   }
 
-  // gridTolist() {
-  //   if (this.gridtolist) {
-  //     this.rerenderfunc();
-  //     this.btn_grid_list_text = this.listtogrid_text;
-  //     this.gridtolist = false;
-  //   } else {
-  //     this.btn_grid_list_text = this.gridtolist_text;
-  //     this.gridtolist = true;
-  //   }
-  // }
+
   gridTolist() {
     if (this.gridtolist) {
       this.rerenderfunc();
       this.btn_grid_list_text = this.listtogrid_text;
-      localStorage.setItem('gridtolist_team', "list");
+      localStorage.setItem('gridtolist_invoice_list', "list");
       this.gridtolist = false;
     } else {
       this.btn_grid_list_text = this.gridtolist_text;
-      localStorage.setItem('gridtolist_team', "grid");
+      localStorage.setItem('gridtolist_invoice_list', "grid");
       this.gridtolist = true;
     }
   }
