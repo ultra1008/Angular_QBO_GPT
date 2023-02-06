@@ -62,7 +62,7 @@ export class DashboardInvoiceListComponent implements OnInit {
   Vendor_Action: string;
   Vendor_Status: string;
   template_notes: string;
-
+  gridtolist: Boolean = true;
   Vendor_Do_Want_Archive: string = "";
   Compnay_Equipment_Delete_Yes: string = "";
   Compnay_Equipment_Delete_No: string = "";
@@ -85,8 +85,12 @@ export class DashboardInvoiceListComponent implements OnInit {
   backIcon: string;
   viewIcon: string;
   Purchasing_Orders_View: any;
-
+  listIcon!: string;
+  gridIcon: string;
   status: any;
+  btn_grid_list_text: any;
+  listtogrid_text: any;
+  gridtolist_text: any;
   count: number = 0;
 
   constructor(private location: Location, private modeService: ModeDetectService,
@@ -109,6 +113,8 @@ export class DashboardInvoiceListComponent implements OnInit {
       this.backIcon = icon.BACK;
       this.editIcon = icon.EDIT;
       this.viewIcon = icon.VIEW;
+      this.gridIcon = icon.GRID;
+      this.listIcon = icon.List;
     } else {
       this.reportIcon = icon.REPORT_WHITE;
       this.approveIcon = icon.APPROVE_WHITE;
@@ -116,6 +122,8 @@ export class DashboardInvoiceListComponent implements OnInit {
       this.backIcon = icon.BACK_WHITE;
       this.editIcon = icon.EDIT_WHITE;
       this.viewIcon = icon.VIEW_WHITE;
+      this.gridIcon = icon.GRID_WHITE;
+      this.listIcon = icon.List_LIGHT;
     }
     let j = 0;
     this.subscription = this.modeService.onModeDetect().subscribe((mode) => {
@@ -127,6 +135,9 @@ export class DashboardInvoiceListComponent implements OnInit {
         this.backIcon = icon.BACK;
         this.editIcon = icon.EDIT;
         this.viewIcon = icon.VIEW;
+        this.gridIcon = icon.GRID;
+        this.listIcon = icon.List;
+
       } else {
         this.mode = "on";
         this.reportIcon = icon.REPORT_WHITE;
@@ -135,6 +146,8 @@ export class DashboardInvoiceListComponent implements OnInit {
         this.backIcon = icon.BACK_WHITE;
         this.editIcon = icon.EDIT_WHITE;
         this.viewIcon = icon.VIEW_WHITE;
+        this.gridIcon = icon.GRID_WHITE;
+        this.listIcon = icon.List_LIGHT;
       }
       if (j != 0) {
         setTimeout(() => {
@@ -195,6 +208,13 @@ export class DashboardInvoiceListComponent implements OnInit {
       that.Purchasing_Orders_View = that.translate.instant(
         "Purchasing_Orders_View"
       );
+      that.translate.get('Employee-List-list-to-grid').subscribe((text: string) => {
+        that.listtogrid_text = text;
+      });
+
+      that.translate.get('Employee-List-grid-to-list').subscribe((text: string) => {
+        that.gridtolist_text = text; that.btn_grid_list_text = text;
+      });
 
       that.Listing_Action_Edit = that.translate.instant("Listing_Action_Edit");
       that.Archived_all = that.translate.instant(
@@ -395,6 +415,9 @@ export class DashboardInvoiceListComponent implements OnInit {
     };
   }
 
+  invoiceCountData(event) {
+    this.count = event;
+  }
   updateInvoice(requestObject) {
     let that = this;
     that.uiSpinner.spin$.next(true);
@@ -409,6 +432,19 @@ export class DashboardInvoiceListComponent implements OnInit {
 
       }
     });
+  }
+  gridTolist() {
+    if (this.gridtolist) {
+
+      this.btn_grid_list_text = this.listtogrid_text;
+      localStorage.setItem('gridtolist_team', "list");
+      this.gridtolist = false;
+      this.rerenderfunc();
+    } else {
+      this.btn_grid_list_text = this.gridtolist_text;
+      localStorage.setItem('gridtolist_team', "grid");
+      this.gridtolist = true;
+    }
   }
 
   getColumName() {

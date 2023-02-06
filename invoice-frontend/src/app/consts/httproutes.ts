@@ -1114,6 +1114,8 @@ export enum httproutes {
     INVOICE_IMPORT_MANAGEMENT_PO = "/webapi/v1/portal/importmanagementpo",
 
     INVOICE_GET_LIST = "/webapi/v1/portal/getinvoice",
+    INVOICE_GET_STATUS_VISE_LIST = "/webapi/v1/portal/getinvoicelist",
+
     INVOICE_GET_ONE_INVOICE = "/webapi/v1/portal/getoneinvoice",
     INVOICE_SAVE_INVOICE = "/webapi/v1/portal/saveinvoice",
     INVOICE_GET_INVOICE_DATATABLE = "/webapi/v1/portal/getinvoicedatatable",

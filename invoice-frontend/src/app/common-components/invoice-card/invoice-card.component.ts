@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { httproutes, icon, localstorageconstants } from 'src/app/consts';
@@ -14,6 +15,9 @@ import { LanguageApp } from 'src/app/service/utils';
   styleUrls: ['./invoice-card.component.scss']
 })
 export class InvoiceCardComponent implements OnInit {
+  @Input() invoiceStatus: any;
+  @Output() invoiceCountData: EventEmitter<void> = new EventEmitter<void>();
+
   subscription!: Subscription;
   mode: any;
   allInvoices = [];
@@ -68,22 +72,35 @@ export class InvoiceCardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    let that = this;
+    console.log("invoiceStatus", this.invoiceStatus);
     let role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA) ?? '');
     this.role_to = role_permission.UserData.role_name;
-    let that = this;
+
     this.getAllInvoices();
   }
   getAllInvoices() {
     let that = this;
-    this.httpCall.httpGetCall(httproutes.INVOICE_GET_LIST).subscribe(function (params) {
+    let requestData = {};
+    if (this.invoiceStatus != undefined && this.invoiceStatus != null && this.invoiceStatus != '') {
+      requestData = {
+        status: this.invoiceStatus,
+      };
+    }
+    this.httpCall.httpPostCall(httproutes.INVOICE_GET_STATUS_VISE_LIST, requestData).subscribe(function (params) {
       if (params.status) {
         that.allInvoices = params.data;
         that.invoiceCount = params.count;
         that.isManagement = params.is_management;
+        that.sendCount(params.count);
       }
       that.uiSpinner.spin$.next(false);
     });
   }
+  public sendCount(count): void {
+    this.invoiceCountData.emit(count);
+  }
+
   viewInvoice(invoice) {
     this.router.navigate(['/invoice-detail'], { queryParams: { _id: invoice._id } });
   }

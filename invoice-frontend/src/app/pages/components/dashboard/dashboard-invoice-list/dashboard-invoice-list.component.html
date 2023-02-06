@@ -1,3 +1,24 @@
+<div class="display-inline-cust">
+  <div class="col-md-12">
+    <div class="screen-title-section cust-h1-inline">
+      <div class="inner-search-bar"></div>
+      <button mat-stroked-button class="sign-button mr-1" (click)="gridTolist();">
+        <img src="{{gridIcon}}" alt="" class="pr-1" height="15px" width="20px" *ngIf="!gridtolist" />
+
+        <img src="{{listIcon}}" alt="" class="pr-1" height="15px" width="20px" *ngIf="gridtolist" />
+        {{btn_grid_list_text}}
+      </button>
+      <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+        matTooltip="{{ 'TOOLTIP_REPORT' | translate }}" aria-label="Left Align">
+        <img src="{{ reportIcon }}" alt="" height="20px" />
+      </button>
+      <button mat-raised-button (click)="back()" class="cust-button-form">
+        <img src="{{ backIcon }}" alt="" height="20px" />
+        {{ "All-back" | translate }}
+      </button>
+    </div>
+  </div>
+</div>
 <div class="main-search-bar">
   <div class="row">
     <div class="one-div-cust-user">
@@ -19,24 +40,15 @@
       </div>
     </div>
   </div>
-  <div class="display-inline-cust">
-    <div class="col-md-12">
-      <div class="screen-title-section cust-h1-inline">
-        <div class="inner-search-bar"></div>
-        <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
-          matTooltip="{{ 'TOOLTIP_REPORT' | translate }}" aria-label="Left Align">
-          <img src="{{ reportIcon }}" alt="" height="20px" />
-        </button>
-        <button mat-raised-button (click)="back()" class="cust-button-form">
-          <img src="{{ backIcon }}" alt="" height="20px" />
-          {{ "All-back" | translate }}
-        </button>
-      </div>
-    </div>
-  </div>
+
 </div>
 <div class="wrapper-cust-admin cust-width">
-  <div class="table-responsive cust-padding cust-padding-tmp mt-5" *ngIf="showTable">
+  <div class="row ml-3" *ngIf="gridtolist">
+    <app-invoice-card [invoiceStatus]="status" (invoiceCountData)="invoiceCountData($event)"></app-invoice-card>
+
+
+  </div>
+  <div *ngIf="!gridtolist && showTable" class="table-responsive cust-padding cust-padding-tmp mt-5">
     <table datatable [dtOptions]="dtOptions" id="dtOptions_vendor" class="row-border hover"></table>
   </div>
 </div>
