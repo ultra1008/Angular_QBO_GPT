@@ -81,7 +81,8 @@ export class EmployeeListComponent implements OnInit {
   archivedIcon!: string;
   allRoles = [];
   add_my_self_icon = icon.ADD_MY_SELF_WHITE;
-
+  listIcon!: string;
+  gridIcon: string;
   role_permission: any;
 
   // We use this trigger because fetching the list of persons can be quite long,
@@ -105,7 +106,8 @@ export class EmployeeListComponent implements OnInit {
     if (this.mode == 'off') {
       this.historyIcon = icon.HISTORY;
       this.archivedIcon = icon.ARCHIVE;
-
+      this.gridIcon = icon.GRID;
+      this.listIcon = icon.List;
       this.trashIcon = icon.DELETE;
       this.importIcon = icon.IMPORT;
 
@@ -118,6 +120,8 @@ export class EmployeeListComponent implements OnInit {
       this.importIcon = icon.IMPORT_WHITE;
       this.editIcon = icon.EDIT_WHITE;
       this.reportIcon = icon.REPORT_WHITE;
+      this.gridIcon = icon.GRID_WHITE;
+      this.listIcon = icon.List_LIGHT;
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
       if (mode) {
@@ -128,6 +132,8 @@ export class EmployeeListComponent implements OnInit {
         this.importIcon = icon.IMPORT;
         this.editIcon = icon.EDIT;
         this.reportIcon = icon.REPORT;
+        this.gridIcon = icon.GRID;
+        this.listIcon = icon.List;
       } else {
         this.mode = 'on';
         this.historyIcon = icon.HISTORY_WHITE;
@@ -136,6 +142,8 @@ export class EmployeeListComponent implements OnInit {
         this.importIcon = icon.IMPORT_WHITE;
         this.editIcon = icon.EDIT_WHITE;
         this.reportIcon = icon.REPORT_WHITE;
+        this.gridIcon = icon.GRID_WHITE;
+        this.listIcon = icon.List_LIGHT;
       }
       this.rerenderfunc();
     });

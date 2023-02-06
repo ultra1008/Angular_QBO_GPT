@@ -70,10 +70,14 @@
           <mat-label>{{'Employee-List-Search-User' | translate }}</mat-label>
           <input matInput [(ngModel)]="username_search" placeholder="{{'Employee-List-Search-User' | translate }}">
         </mat-form-field>
-
+        <!-- 
         <button mat-stroked-button class="sign-button cust-padding-top padding-left-cust" (click)="gridTolist();"> {{
-          btn_grid_list_text }} </button>
-
+          btn_grid_list_text }} </button> -->
+        <button mat-stroked-button class="sign-button cust-padding-top padding-left-cust" (click)="gridTolist()">
+          <img src="{{ gridIcon }}" alt="" class="pr-1" height="15px" *ngIf="!gridtolist" />
+          <img src="{{ listIcon }}" alt="" class="pr-1" height="15px" *ngIf="gridtolist" />
+          {{ btn_grid_list_text }}
+        </button>
         <button *ngIf="gridtolist" mat-stroked-button (click)="sorting_name();"
           class="sign-button cust-padding-top padding-left-cust">
           <i class="fa fa-sort" *ngIf="soruing_all"></i>

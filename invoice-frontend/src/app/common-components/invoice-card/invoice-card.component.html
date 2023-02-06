@@ -17,6 +17,17 @@
                             <span><img src="{{editIcon}}" alt="" height="15px">
                                 {{'All-Edit' | translate}}</span>
                         </button>
+                        <button (click)="invoiceApprove(invoice)" *ngIf="status != 'Approved'" class="button_shiftEditClass" mat-menu-item>
+                            <span><img src="{{approveIcon}}" alt="" height="15px">
+                                {{'PO-View-Approve' |
+                                translate}}</span>
+                        </button>
+                        <button (click)="invoiceDenied(invoice)" *ngIf="status != 'Rejected'"
+                            class="button_shiftDeleteClass" mat-menu-item>
+                            <span><img src="{{denyIcon}}" alt="" height="15px">
+                                {{'reject_all' | translate}}</span>
+                        </button>
+
                     </mat-menu>
                 </div>
 

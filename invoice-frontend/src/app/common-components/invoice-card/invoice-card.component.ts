@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { httproutes, icon, localstorageconstants } from 'src/app/consts';
 import { ModeDetectService } from 'src/app/pages/components/map/mode-detect.service';
@@ -17,7 +17,6 @@ import { LanguageApp } from 'src/app/service/utils';
 export class InvoiceCardComponent implements OnInit {
   @Input() invoiceStatus: any;
   @Output() invoiceCountData: EventEmitter<void> = new EventEmitter<void>();
-
   subscription!: Subscription;
   mode: any;
   allInvoices = [];
@@ -34,20 +33,25 @@ export class InvoiceCardComponent implements OnInit {
   listIcon: string;
   role_to: any;
   role_permission: any;
-
-  constructor(private router: Router, private modeService: ModeDetectService, public httpCall: HttpCall, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService) {
+  approveIcon: string;
+  denyIcon: string;
+  status: any;
+  constructor(public route: ActivatedRoute, private router: Router, private modeService: ModeDetectService, public httpCall: HttpCall, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService) {
+    this.status = this.route.snapshot.queryParamMap.get('status');
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
     if (this.mode == 'off') {
 
       this.editIcon = icon.EDIT;
-
+      this.approveIcon = icon.APPROVE;
+      this.denyIcon = icon.DENY;
       this.viewIcon = icon.VIEW;
 
     } else {
 
       this.editIcon = icon.EDIT_WHITE;
-
+      this.approveIcon = icon.APPROVE_WHITE;
+      this.denyIcon = icon.DENY_WHITE;
       this.viewIcon = icon.VIEW_WHITE;
 
     }
@@ -56,14 +60,16 @@ export class InvoiceCardComponent implements OnInit {
         this.mode = 'off';
 
         this.editIcon = icon.EDIT;
-
+        this.approveIcon = icon.APPROVE;
+        this.denyIcon = icon.DENY;
         this.viewIcon = icon.VIEW;
 
       } else {
         this.mode = 'on';
 
         this.editIcon = icon.EDIT_WHITE;
-
+        this.approveIcon = icon.APPROVE_WHITE;
+        this.denyIcon = icon.DENY_WHITE;
         this.viewIcon = icon.VIEW_WHITE;
 
       }
@@ -100,6 +106,72 @@ export class InvoiceCardComponent implements OnInit {
   public sendCount(count): void {
     this.invoiceCountData.emit(count);
   }
+  invoiceApprove() {
+    // let po_id = this.route.snapshot.queryParamMap.get("po_id");
+    // let po_status = "Pending";
+    // let that = this;
+    // swalWithBootstrapButtons
+    //   .fire({
+    //     title: this.Custom_Pdf_Viewer_Please_Confirm,
+    //     text: this.Custom_Pdf_Viewer_Want_Approve_Po,
+    //     showDenyButton: true,
+    //     showCancelButton: false,
+    //     confirmButtonText: this.Compnay_Equipment_Delete_Yes,
+    //     denyButtonText: this.Compnay_Equipment_Delete_No,
+    //   })
+    //   .then((result) => {
+    //     if (result.isConfirmed) {
+    //       // denied PO api call
+    //       that.httpCall
+    //         .httpPostCall(httproutes.PORTAL_COMPANY_UPDATE_PO_STATUS, {
+    //           _id: po_id,
+    //           po_status: po_status,
+    //         })
+    //         .subscribe(function (params) {
+    //           if (params.status) {
+    //             that.snackbarservice.openSnackBar(params.message, "success");
+    //             that.location.back();
+    //           } else {
+    //             that.snackbarservice.openSnackBar(params.message, "error");
+    //           }
+    //         });
+    //     }
+    //   });
+  }
+
+  invoiceDenied() {
+    // let po_id = this.route.snapshot.queryParamMap.get("po_id");
+    // let po_status = "Denied";
+    // let that = this;
+    // swalWithBootstrapButtons
+    //   .fire({
+    //     title: this.Custom_Pdf_Viewer_Please_Confirm,
+    //     text: this.Custom_Pdf_Viewer_Want_Deny_Po,
+    //     showDenyButton: true,
+    //     showCancelButton: false,
+    //     confirmButtonText: this.Compnay_Equipment_Delete_Yes,
+    //     denyButtonText: this.Compnay_Equipment_Delete_No,
+    //   })
+    //   .then((result) => {
+    //     if (result.isConfirmed) {
+    //       /*--- denied PO api call ---*/
+    //       that.httpCall
+    //         .httpPostCall(httproutes.PORTAL_COMPANY_UPDATE_PO_STATUS, {
+    //           _id: po_id,
+    //           po_status: po_status,
+    //         })
+    //         .subscribe(function (params) {
+    //           if (params.status) {
+    //             that.snackbarservice.openSnackBar(params.message, "success");
+    //             that.location.back();
+    //           } else {
+    //             that.snackbarservice.openSnackBar(params.message, "error");
+    //           }
+    //         });
+    //     }
+    //   });
+  }
+
 
   viewInvoice(invoice) {
     this.router.navigate(['/invoice-detail'], { queryParams: { _id: invoice._id } });
