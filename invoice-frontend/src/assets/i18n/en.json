@@ -2466,6 +2466,7 @@
     "Dashboard_Late_Invoice": "Late Invoices",
     "Restore_user": "Restore User",
     "Document_View_Text": "Display documents older then",
-    "Document_Invoice_View_Text": "In the invoice view",
-    "reject_all": "Reject"
+    "Document_Invoice_View_Text": "days in the invoice view",
+    "reject_all": "Reject",
+    "Document_Settings_Alert_Sure_Want_Change": "This is a global setting that will affect all document. Are you sure you want to make the change?"
 }
