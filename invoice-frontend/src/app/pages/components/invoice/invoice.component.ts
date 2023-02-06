@@ -54,7 +54,7 @@ export class InvoiceComponent implements OnInit {
   gridtolist: Boolean = true;
   addTeamMember: boolean = true;
   locallanguage: any;
-  dtOptions: DataTables.Settings = {};
+
   User_Card_Do_Want_Delete: string = "";
   Compnay_Equipment_Delete_Yes: string = "";
   Compnay_Equipment_Delete_No: string = "";
@@ -67,15 +67,16 @@ export class InvoiceComponent implements OnInit {
   editIcon!: string;
   gridIcon: string;
   listIcon: string;
-  role_to: any;
+
   allInvoices = [];
+  viewIcon: string = '';
   invoiceCount: any = {
     pending: 0,
     complete: 0
   };
   add_my_self_ico = icon.ADD_MY_SELF_WHITE;
   reportIcon: string = "";
-  viewIcon: string = '';
+  role_to: any;
   role_permission: any;
 
   // We use this trigger because fetching the list of persons can be quite long,
@@ -84,6 +85,7 @@ export class InvoiceComponent implements OnInit {
   @ViewChild('OpenFilebox') OpenFilebox: any;
   Company_Equipment_File_Not_Match: any;
   showInvoiceTable = true;
+  dtOptions: DataTables.Settings = {};
 
   constructor(private router: Router, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
     public translate: TranslateService, public dialog: MatDialog,

@@ -176,7 +176,6 @@ import { DocumentViewComponent } from './components/setting/document-view/docume
     PackingSlipFormComponent,
     ReceivingSlipFormComponent,
     QuoteFormComponent,
-
     PoDetailFormComponent,
     DashboardInvoiceListComponent,
     DashboardFilesListComponent,

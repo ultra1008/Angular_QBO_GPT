@@ -1,0 +1,43 @@
+<div class="card mb-3 mr-4" *ngFor="let invoice of allInvoices">
+    <div class="card-body">
+        <div class="data">
+            <div class="row dropdown">
+                <div class="col-9" (click)="viewInvoice(invoice)"></div>
+                <div class="col-3" style="float: right;">
+                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button (click)="viewInvoice(invoice)" class="button_shiftEditClass" mat-menu-item>
+                            <span><img src="{{viewIcon}}" alt="" height="15px">
+                                {{'All-View' |
+                                translate}}</span>
+                        </button>
+                        <button (click)="editInvoice(invoice)" class="button_shiftDeleteClass" mat-menu-item>
+                            <span><img src="{{editIcon}}" alt="" height="15px">
+                                {{'All-Edit' | translate}}</span>
+                        </button>
+                    </mat-menu>
+                </div>
+
+            </div>
+            <div (click)="viewInvoice(invoice)">
+                <b>Invoice # </b> <span>{{invoice.invoice}}</span>
+                <br />
+                <b>P.O # </b> <span>{{invoice.p_o}}</span>
+                <br />
+                <b>Packing Slip </b> <span>{{invoice.packing_slip}}</span>
+                <br />
+                <b>Receiving Slip </b> <span>{{invoice.receiving_slip}}</span>
+                <br />
+                <b>Files Attached # </b> <span></span>
+                <br />
+                <b
+                    [ngClass]="invoice.status == 'Pending'? 'pendingcss' : 'Approvedcss' && invoice.status == 'Approved'? 'Approvedcss' : 'Rejectcss'&& invoice.status == 'Rejected'? 'Rejectcss' : 'Rejectcss'">
+
+                    <span>{{invoice.status}}</span></b>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -24,6 +24,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ArchiveTeamListComponent } from '../pages/components/team/archive-team-list/archive-team-list.component';
 import { MatSelectFilterModule } from 'mat-select-filter';
+import { InvoiceCardComponent } from './invoice-card/invoice-card.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { MatSelectFilterModule } from 'mat-select-filter';
     UserCardComponent,
     TeamArchiveCradComponent,
     SelectUserRoleForm,
+    InvoiceCardComponent,
 
   ],
   imports: [
@@ -68,6 +70,7 @@ import { MatSelectFilterModule } from 'mat-select-filter';
     UserCardComponent,
     TeamArchiveCradComponent,
     SelectUserRoleForm,
+    InvoiceCardComponent
 
 
   ],
