@@ -125,6 +125,55 @@ module.exports.getInvoice = async function (req, res) {
 };
 
 //get invoice
+module.exports.getInvoiceList = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoice_Schema);
+            var processInvoiceConnection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
+            var match_query = { is_delete: 0 };
+            if (requestObject.status) {
+                match_query = {
+                    is_delete: 0,
+                    status: requestObject.status
+                };
+            }
+            var get_data = await invoicesConnection.find(match_query);
+            let count = get_data.length;
+            var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+            let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
+            let checkManagement = _.find(company_data.otherstool, function (n) { return n.key == config.MANAGEMENT_KEY; });
+            let isManagement = false;
+            if (checkManagement) {
+                isManagement = true;
+            }
+            if (get_data) {
+                res.send({ status: true, message: "Invoice data", data: get_data, is_management: isManagement, count });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+            }
+            /* if (get_data) {
+                res.send({ status: true, message: "Invoice data", data: get_data, count });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+            } */
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    }
+    else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+//get invoice
 module.exports.getOneInvoice = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);

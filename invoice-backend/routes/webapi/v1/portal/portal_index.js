@@ -263,6 +263,7 @@ let invoiceController = require('./invoices/invoiceController');
 let invoiceValidation = require('./invoices/invoiceValidation');
 router.post('/webapi/v1/portal/saveinvoice', common.checkTokenExistOrNot, invoiceController.saveInvoice);
 router.get('/webapi/v1/portal/getinvoice', common.checkTokenExistOrNot, invoiceController.getInvoice);
+router.post('/webapi/v1/portal/getinvoicelist', common.checkTokenExistOrNot, invoiceController.getInvoiceList);
 router.post('/webapi/v1/portal/getoneinvoice', common.checkTokenExistOrNot, invoiceValidation.getOneInvoice, invoiceController.getOneInvoice);
 router.post('/webapi/v1/portal/deleteinvoice', common.checkTokenExistOrNot, invoiceValidation.deleteInvoice, invoiceController.deleteInvoice);
 router.post('/webapi/v1/portal/updateinvoicestatus', common.checkTokenExistOrNot, invoiceValidation.updateInvoiceStatus, invoiceController.updateInvoiceStatus);
