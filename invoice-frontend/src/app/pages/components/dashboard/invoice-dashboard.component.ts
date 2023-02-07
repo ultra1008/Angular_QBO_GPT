@@ -220,6 +220,7 @@ export class InvoiceDashboardComponent implements OnInit {
       if (params.status) {
         that.cardList = params.data;
       }
+      console.log(" params.data", params.data);
     });
   }
   // Save chart order list for Dashboard

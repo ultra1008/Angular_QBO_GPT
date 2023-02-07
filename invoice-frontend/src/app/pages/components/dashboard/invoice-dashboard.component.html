@@ -51,6 +51,11 @@
         <div class="one-div-cust-user mr-3">
             <b class="ml-1">{{'Pending_Invoice' | translate }}</b>
             <div class="header-text-cust detail-list-card mt-2">
+                <div class="text-center"
+                    *ngIf="cardList.pending_invoices != null && cardList.pending_invoices.length == 0">
+                    {{'No_Pending_Invoice' |
+                    translate}}
+                </div>
                 <div class="one-div-cust-user-card" *ngFor="let data of cardList.pending_invoices">
                     <div class="statastic-card mt-2 " (click)="gotoEditInvoice(data)"
                         [ngClass]="mode == 'on'? 'header-text-cust-card-dark' : 'header-text-cust-card '">
@@ -65,12 +70,18 @@
                     </div>
                     <!-- <div class="number-cust">  </div> -->
                 </div>
+
             </div>
             <!-- <div class="number-cust">  </div> -->
         </div>
         <div class="one-div-cust-user mr-3">
             <b class="ml-1">{{'Processed_Invoice' | translate }}</b>
             <div class="header-text-cust detail-list-card mt-2">
+                <div class="text-center"
+                    *ngIf="cardList.process_invoices != null && cardList.process_invoices.length == 0">
+                    {{'No_Processed_Invoice' |
+                    translate}}
+                </div>
                 <div class="one-div-cust-user-card" *ngFor="let data of cardList.process_invoices">
                     <div class="statastic-card mt-2" (click)="gotoEditInvoice(data)"
                         [ngClass]="mode == 'on'? 'header-text-cust-card-dark' : 'header-text-cust-card '">
@@ -91,10 +102,16 @@
         <div class="one-div-cust-user">
             <b class="ml-1">{{'Reject_Invoice' | translate }}</b>
             <div class="header-text-cust detail-list-card mt-2">
+                <div class="text-center"
+                    *ngIf="cardList.cancelled_invoices != null && cardList.cancelled_invoices.length == 0">
+                    {{'No_Reject_Invoice' |
+                    translate}}
+                </div>
                 <div class="one-div-cust-user-card" *ngFor="let data of cardList.cancelled_invoices">
                     <div class="statastic-card mt-2" (click)="gotoEditInvoice(data)"
                         [ngClass]="mode == 'on'? 'header-text-cust-card-dark' : 'header-text-cust-card '">
                         <div class="statastic-small-card-title ml-2">
+
                             <div>Invoice#: {{data.invoice}}</div>
                             <div>Invoice date: {{data.invoice_date}}</div>
                             <div>Last update: {{temp_MMDDYYY(data.updated_at)}}</div>
@@ -103,7 +120,11 @@
                             Total: {{data.total}}
                         </div>
                     </div>
-                    <!-- <div class="number-cust">  </div> -->
+
+
+
+
+
                 </div>
 
             </div>
