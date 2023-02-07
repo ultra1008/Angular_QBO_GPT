@@ -174,10 +174,11 @@
                                                 invoice</p>
                                         </div> -->
                                         <div class="col-10">
-                                            <b class="text-color" (click)="goToUserProfile(local_user)"
-                                                style="font-size: 12px;">
+                                            <b [ngClass]="mode == 'on'? 'text-color-dark' : 'text-color'"
+                                                (click)="goToUserProfile(local_user)" style="font-size: 12px;">
                                                 {{item.created_by.userfullname}} </b>
-                                            <b style="font-size: 12px;">{{item.action}}</b><b class="text-color"
+                                            <b style="font-size: 12px;">{{item.action}}</b><b
+                                                [ngClass]="mode == 'on'? 'text-color-dark' : 'text-color'"
                                                 style="font-size: 12px;">
                                                 <!-- (click)="goToInvoiceForm(item)" -->
                                                 {{item.module}} </b>
