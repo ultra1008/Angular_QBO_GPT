@@ -49,10 +49,10 @@
 
     <div class="main-row-cust-div">
         <div class="one-div-cust-user mr-3">
-            <b class="ml-1">Received</b>
+            <b class="ml-1">{{'Pending_Invoice' | translate }}</b>
             <div class="header-text-cust detail-list-card mt-2">
                 <div class="one-div-cust-user-card" *ngFor="let data of cardList.pending_invoices">
-                    <div class="statastic-card mt-2 "
+                    <div class="statastic-card mt-2 " (click)="gotoEditInvoice(data)"
                         [ngClass]="mode == 'on'? 'header-text-cust-card-dark' : 'header-text-cust-card '">
                         <div class="statastic-small-card-title ml-2">
                             <div>Invoice#: {{data.invoice}}</div>
@@ -69,10 +69,10 @@
             <!-- <div class="number-cust">  </div> -->
         </div>
         <div class="one-div-cust-user mr-3">
-            <b class="ml-1">Processed</b>
+            <b class="ml-1">{{'Processed_Invoice' | translate }}</b>
             <div class="header-text-cust detail-list-card mt-2">
                 <div class="one-div-cust-user-card" *ngFor="let data of cardList.process_invoices">
-                    <div class="statastic-card mt-2"
+                    <div class="statastic-card mt-2" (click)="gotoEditInvoice(data)"
                         [ngClass]="mode == 'on'? 'header-text-cust-card-dark' : 'header-text-cust-card '">
                         <div class="statastic-small-card-title ml-2">
                             <div>Invoice#: {{data.invoice}}</div>
@@ -89,10 +89,10 @@
             <!-- <div class="number-cust">  </div> -->
         </div>
         <div class="one-div-cust-user">
-            <b class="ml-1">Cancelled</b>
+            <b class="ml-1">{{'Reject_Invoice' | translate }}</b>
             <div class="header-text-cust detail-list-card mt-2">
                 <div class="one-div-cust-user-card" *ngFor="let data of cardList.cancelled_invoices">
-                    <div class="statastic-card mt-2"
+                    <div class="statastic-card mt-2" (click)="gotoEditInvoice(data)"
                         [ngClass]="mode == 'on'? 'header-text-cust-card-dark' : 'header-text-cust-card '">
                         <div class="statastic-small-card-title ml-2">
                             <div>Invoice#: {{data.invoice}}</div>

@@ -49,7 +49,7 @@ export class InvoiceFormComponent implements OnInit {
   Email_Template_Form_Submitting = "";
   id: any;
   isManagement: boolean = true;
-  pdf_url: "";
+  pdf_url = "";
   invoiceData: any;
   approveIcon: string;
   denyIcon: string;
@@ -73,7 +73,13 @@ export class InvoiceFormComponent implements OnInit {
   constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
-
+    this.pdf_url = this.route.snapshot.queryParamMap.get('pdf_url');
+    console.log("id", this.id);
+    if (this.id) {
+      console.log("id11111111", this.id);
+      this.uiSpinner.spin$.next(true);
+      this.getOneInvoice();
+    }
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     var locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configdata.fst_load_lang : tmp_locallanguage;
     this.translate.use(locallanguage);
@@ -147,9 +153,7 @@ export class InvoiceFormComponent implements OnInit {
         this.denyIcon = icon.DENY_WHITE;
       }
     });
-    if (this.id) {
-      this.getOneInvoice();
-    }
+
   }
 
   back() {
@@ -157,9 +161,12 @@ export class InvoiceFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     let that = this;
+
+
     this.employeeservice.getalluser().subscribe(function (data) {
-      that.uiSpinner.spin$.next(false);
+      // that.uiSpinner.spin$.next(false);
       if (data.status) {
         that.isEmployeeData = true;
         // that.usersArray = data.data;
@@ -285,16 +292,9 @@ export class InvoiceFormComponent implements OnInit {
     let that = this;
     this.httpCall.httpPostCall(httproutes.INVOICE_GET_ONE_INVOICE, { _id: that.id }).subscribe(function (params) {
       if (params.status) {
-        console.log("params11", params);
         that.invoiceData = params.data;
+        that.pdf_url = that.invoiceData.pdf_url;
         that.invoiceform = that.formBuilder.group({
-          // invoice: [params.data.invoice],
-          // p_o: [params.data.p_o, Validators.required],
-
-          // packing_slip: [params.data.packing_slip],
-          // receiving_slip: [params.data.receiving_slip],
-          // notes: [params.data.notes],
-          // status: [params.data.status, Validators.required],
           document_type: [params.data.document_type],
           invoice_name: [params.data.invoice_name],
           vendor_name: [params.data.vendor_name],
