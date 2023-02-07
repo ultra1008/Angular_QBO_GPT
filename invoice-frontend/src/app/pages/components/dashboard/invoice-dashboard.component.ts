@@ -16,9 +16,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
 import { Label } from 'ng2-charts';
 import { Subscription } from 'rxjs';
-import { httproutes, localstorageconstants } from 'src/app/consts';
+import { httproutes, icon, localstorageconstants } from 'src/app/consts';
 import { HttpCall } from 'src/app/service/httpcall.service';
-import { MMDDYYYY } from 'src/app/service/utils';
+import { MMDDYYYY, MMDDYYYY_formet } from 'src/app/service/utils';
 import { configdata } from 'src/environments/configData';
 import { ModeDetectService } from '../map/mode-detect.service';
 
@@ -62,6 +62,17 @@ export class InvoiceDashboardComponent implements OnInit {
     "app-totalContractvalueMinority",
     "app-paymentperproject"
   ];
+  id!: string;
+  dashboardHistory = [];
+  SearchIcon = icon.SEARCH_WHITE;
+  start: number = 0;
+
+  exitIcon: string = "";
+  search: string = "";
+  is_httpCall: boolean = false;
+  todayactivity_search!: String;
+  activityIcon!: string;
+  isSearch: boolean = false;
 
 
   public barChartOptions: ChartOptions = {
@@ -130,8 +141,7 @@ export class InvoiceDashboardComponent implements OnInit {
   */
 
   constructor(private router: Router, public translate: TranslateService, private modeService: ModeDetectService, public httpCall: HttpCall) {
-    var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
-    this.mode = modeLocal === 'on' ? 'on' : 'off';
+
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
@@ -153,6 +163,7 @@ export class InvoiceDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     let that = this;
+
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     this.locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configdata.fst_load_lang : tmp_locallanguage;
     that.translate.use(this.locallanguage);
@@ -162,6 +173,7 @@ export class InvoiceDashboardComponent implements OnInit {
     this.translate.stream(['']).subscribe((textarray) => {
       this.refreshPage();
     });
+    that.getTodaysActivity();
     that.getCount();
     that.getCardData();
   }
@@ -238,5 +250,93 @@ export class InvoiceDashboardComponent implements OnInit {
 
   temp_MMDDYYY(epoch) {
     return MMDDYYYY(epoch);
+  }
+  // history listing apis
+  goToUserProfile(local_user) {
+    this.router.navigateByUrl('/employee-view/' + local_user._id);
+    // this.router.navigate(['/employee-view/'], { queryParams: { user_id: local_user._id } });
+    console.log(" local_user", this.local_user._id);
+  }
+  goToInvoiceForm(invoice) {
+    console.log("invoice11", invoice);
+    this.router.navigate(['/invoice-form'], { queryParams: { _id: invoice._id, pdf_url: invoice.pdf_url } });
+
+  }
+  onKey(event: any) {
+    console.log(event.target.value);
+    if (event.target.value.length == 0) {
+      console.log("emprty string");
+      this.dashboardHistory = [];
+      this.start = 0;
+      this.getTodaysActivity();
+    }
+  }
+  searchActivity() {
+    console.log("searchTodayActivity");
+    console.log("Entered email:", this.todayactivity_search);
+    let that = this;
+    that.isSearch = true;
+    that.dashboardHistory = [];
+    that.start = 0;
+    this.getTodaysActivity();
+  }
+
+  onScroll() {
+    this.start++;
+    this.getTodaysActivity();
+  }
+  // getTodaysActivity() {
+  //   console.log("callllll");
+  //   let self = this;
+
+  //   // let requestObject = { start: this.start };
+
+  //   self.httpCall
+  //     .httpPostCall(httproutes.INVOICE_GET_DASHBOARD_HISTORY,
+  //       { start: 0 })
+  //     .subscribe(function (params) {
+  //       console.log("dashboardHistory", params);
+  //       if (params.status) {
+  //         if (self.start == 0)
+
+  //           self.dashboardHistory = self.dashboardHistory.concat(params.data);
+  //         console.log("dashboardHistory", self.dashboardHistory);
+  //       }
+
+  //     });
+
+  // }
+  getTodaysActivity() {
+    let self = this;
+    this.is_httpCall = true;
+    let requestObject = {};
+
+    requestObject = {
+      start: this.start,
+
+    };
+
+
+    this.httpCall
+      .httpPostCall(httproutes.INVOICE_GET_DASHBOARD_HISTORY, requestObject)
+      .subscribe(function (params) {
+        if (params.status) {
+          if (self.start == 0)
+            self.is_httpCall = false;
+          self.dashboardHistory = self.dashboardHistory.concat(params.data);
+        }
+      });
+  }
+
+  tmp_date(epoch: any) {
+    return MMDDYYYY_formet(epoch);
+  }
+
+  setHeightStyles() {
+    let styles = {
+      height: window.screen.height + "px",
+      "overflow-y": "scroll",
+    };
+    return styles;
   }
 }
