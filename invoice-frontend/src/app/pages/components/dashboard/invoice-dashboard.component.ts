@@ -252,14 +252,21 @@ export class InvoiceDashboardComponent implements OnInit {
     return MMDDYYYY(epoch);
   }
   // history listing apis
-  goToUserProfile(local_user) {
-    this.router.navigateByUrl('/employee-view/' + local_user._id);
+  goToUserProfile(user_id) {
+    console.log("user_id", user_id);
+    this.router.navigateByUrl('/employee-view/' + user_id.user_id);
     // this.router.navigate(['/employee-view/'], { queryParams: { user_id: local_user._id } });
-    console.log(" local_user", this.local_user._id);
   }
-  goToInvoiceForm(invoice) {
-    console.log("invoice11", invoice);
-    this.router.navigate(['/invoice-form'], { queryParams: { _id: invoice._id, pdf_url: invoice.pdf_url } });
+  goToInvoiceForm(user_id) {
+    console.log("invoice11", user_id);
+    // this.router.navigate(['/invoice-form'], { queryParams: { _id: user_id.data_id } });
+    if (user_id.module == 'Invoice') {
+      this.router.navigate(['/invoice-form'], { queryParams: { _id: user_id.data_id } });
+    } if (user_id.module == 'Vendor') {
+      this.router.navigate(['/vendor-form'], { queryParams: { _id: user_id.data_id } });
+    } if (user_id.module == 'User') {
+      this.router.navigate(['/employee-view'], { queryParams: { _id: user_id.data_id } });
+    }
 
   }
   onKey(event: any) {

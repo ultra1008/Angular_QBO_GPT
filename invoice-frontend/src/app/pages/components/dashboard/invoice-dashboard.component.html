@@ -175,12 +175,12 @@
                                         </div> -->
                                         <div class="col-10">
                                             <b [ngClass]="mode == 'on'? 'text-color-dark' : 'text-color'"
-                                                (click)="goToUserProfile(local_user)" style="font-size: 12px;">
+                                                (click)="goToUserProfile(item)" style="font-size: 12px;">
                                                 {{item.created_by.userfullname}} </b>
                                             <b style="font-size: 12px;">{{item.action}}</b><b
                                                 [ngClass]="mode == 'on'? 'text-color-dark' : 'text-color'"
-                                                style="font-size: 12px;">
-                                                <!-- (click)="goToInvoiceForm(item)" -->
+                                                style="font-size: 12px;" (click)="goToInvoiceForm(item)">
+
                                                 {{item.module}} </b>
                                             <b style="font-size: 12px;">at</b>&nbsp;
                                             <b style="font-size: 12px;">{{tmp_date(item.created_at)}}</b>
