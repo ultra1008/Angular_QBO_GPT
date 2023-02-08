@@ -35,6 +35,7 @@ export class InvoiceCardComponent implements OnInit {
   approveIcon: string;
   denyIcon: string;
   status: any;
+  id: any;
   constructor(public route: ActivatedRoute, private router: Router, private modeService: ModeDetectService, public httpCall: HttpCall, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService) {
     this.status = this.route.snapshot.queryParamMap.get('status');
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
@@ -107,6 +108,10 @@ export class InvoiceCardComponent implements OnInit {
   }
   updateInvoice(requestObject) {
     let that = this;
+    console.log("requestObject", requestObject);
+    // this.id = requestObject.invoice._id;
+
+    // console.log("_id", this.id);
     that.uiSpinner.spin$.next(true);
     that.httpCall.httpPostCall(httproutes.INVOICE_UPDATE_INVOICE_STATUS, requestObject).subscribe(params => {
       if (params.status) {

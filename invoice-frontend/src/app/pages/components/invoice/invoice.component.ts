@@ -67,6 +67,8 @@ export class InvoiceComponent implements OnInit {
   editIcon!: string;
   gridIcon: string;
   listIcon: string;
+  denyIcon: string;
+  approveIcon: string;
 
   allInvoices = [];
   viewIcon: string = '';
@@ -104,6 +106,9 @@ export class InvoiceComponent implements OnInit {
       this.viewIcon = icon.VIEW;
       this.gridIcon = icon.GRID;
       this.listIcon = icon.List;
+      this.denyIcon = icon.DENY;
+      this.approveIcon = icon.APPROVE;
+
     } else {
       this.trashIcon = icon.DELETE_WHITE;
       this.editIcon = icon.EDIT_WHITE;
@@ -111,6 +116,9 @@ export class InvoiceComponent implements OnInit {
       this.viewIcon = icon.VIEW_WHITE;
       this.gridIcon = icon.GRID_WHITE;
       this.listIcon = icon.List_LIGHT;
+      this.denyIcon = icon.DENY_WHITE;
+      this.approveIcon = icon.APPROVE_WHITE;
+
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
       if (mode) {
@@ -121,6 +129,9 @@ export class InvoiceComponent implements OnInit {
         this.viewIcon = icon.VIEW;
         this.gridIcon = icon.GRID;
         this.listIcon = icon.List;
+        this.denyIcon = icon.DENY;
+        this.approveIcon = icon.APPROVE;
+
       } else {
         this.mode = 'on';
         this.trashIcon = icon.DELETE_WHITE;
@@ -129,6 +140,9 @@ export class InvoiceComponent implements OnInit {
         this.viewIcon = icon.VIEW_WHITE;
         this.gridIcon = icon.GRID_WHITE;
         this.listIcon = icon.List_LIGHT;
+        this.denyIcon = icon.DENY_WHITE;
+        this.approveIcon = icon.APPROVE_WHITE;
+
       }
       this.rerenderfunc();
     });
@@ -206,6 +220,25 @@ export class InvoiceComponent implements OnInit {
 
   phonenoFormat(data: any) {
     return formatPhoneNumber(data);
+  }
+  updateInvoice(requestObject) {
+    let that = this;
+    console.log("requestObject", requestObject);
+    // this.id = requestObject.invoice._id;
+
+    // console.log("_id", this.id);
+    that.uiSpinner.spin$.next(true);
+    that.httpCall.httpPostCall(httproutes.INVOICE_UPDATE_INVOICE_STATUS, requestObject).subscribe(params => {
+      if (params.status) {
+        that.snackbarservice.openSnackBar(params.message, "success");
+        that.uiSpinner.spin$.next(false);
+        that.getAllInvoices();
+      } else {
+        that.snackbarservice.openSnackBar(params.message, "error");
+        that.uiSpinner.spin$.next(false);
+
+      }
+    });
   }
 
 
