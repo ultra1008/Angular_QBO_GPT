@@ -62,11 +62,11 @@ import { QuoteFormComponent } from './components/invoice/quote-form/quote-form.c
 
 
 const routes: Routes = [
+
   {
     path: "",
     component: FormCoreComponent,
     children: [
-
       {
         path: 'invoice-form',
         pathMatch: 'full',

@@ -42,9 +42,9 @@
     cursor: not-allowed !important;
 }
 
-.example-container .mat-form-field+.mat-form-field {
-    margin-left: 15px;
-}
+// .example-container .mat-form-field+.mat-form-field {
+//     margin-left: 15px;
+// }
 
 .main-one-input-field {
     width: 100%;
@@ -182,9 +182,9 @@ form {
 }
 
 .paddings {
-    padding-left: 4rem !important;
+    padding-left: 1rem !important;
     text-align: right !important;
-    margin-right: 52px;
+    margin-right: 40px;
 }
 
 b {
@@ -213,7 +213,14 @@ b {
 }
 
 .rix {
-    width: 500px;
+    width: 450px;
+}
 
+::ng-deep .flux-content-section[navbar-type="collapsed"][effect-type="shrink"] {
+    margin-left: 1px !important;
+}
 
+::ng-deep .flux-content-section[navbar-type="expanded"][effect-type="push"] {
+    margin-left: 0px !important;
+    margin-right: 0px !important;
 }
