@@ -2445,5 +2445,11 @@
     "Document_View_Text": "Display documents older then",
     "Document_Invoice_View_Text": "days in the invoice view",
     "reject_all": "Reject",
-    "Document_Settings_Alert_Sure_Want_Change": "This is a global setting that will affect all document. Are you sure you want to make the change?"
+    "Document_Settings_Alert_Sure_Want_Change": "This is a global setting that will affect all document. Are you sure you want to make the change?",
+    "Reject_Invoice": "Rejected",
+    "Processed_Invoice": "Processed",
+    "Pending_Invoice": "Pending",
+    "No_Reject_Invoice": "No invoice rejected yet",
+    "No_Processed_Invoice": "No invoice processed yet",
+    "No_Pending_Invoice": "No invoice pending yet"
 }

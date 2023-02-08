@@ -1122,4 +1122,7 @@ export enum httproutes {
     INVOICE_UPDATE_INVOICE_STATUS = "/webapi/v1/portal/updateinvoicestatus",
 
     PORTAL_COMPANY_GET_COST_CODE = "/webapi/v1/portal/getinvoicecostcode",
+
+
+    INVOICE_GET_DASHBOARD_HISTORY = "/webapi/v1/portal/getrecentactivity",
 }

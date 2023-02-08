@@ -106,72 +106,21 @@ export class InvoiceCardComponent implements OnInit {
   public sendCount(count): void {
     this.invoiceCountData.emit(count);
   }
-  invoiceApprove() {
-    // let po_id = this.route.snapshot.queryParamMap.get("po_id");
-    // let po_status = "Pending";
-    // let that = this;
-    // swalWithBootstrapButtons
-    //   .fire({
-    //     title: this.Custom_Pdf_Viewer_Please_Confirm,
-    //     text: this.Custom_Pdf_Viewer_Want_Approve_Po,
-    //     showDenyButton: true,
-    //     showCancelButton: false,
-    //     confirmButtonText: this.Compnay_Equipment_Delete_Yes,
-    //     denyButtonText: this.Compnay_Equipment_Delete_No,
-    //   })
-    //   .then((result) => {
-    //     if (result.isConfirmed) {
-    //       // denied PO api call
-    //       that.httpCall
-    //         .httpPostCall(httproutes.PORTAL_COMPANY_UPDATE_PO_STATUS, {
-    //           _id: po_id,
-    //           po_status: po_status,
-    //         })
-    //         .subscribe(function (params) {
-    //           if (params.status) {
-    //             that.snackbarservice.openSnackBar(params.message, "success");
-    //             that.location.back();
-    //           } else {
-    //             that.snackbarservice.openSnackBar(params.message, "error");
-    //           }
-    //         });
-    //     }
-    //   });
-  }
+  updateInvoice(requestObject) {
+    let that = this;
+    that.uiSpinner.spin$.next(true);
+    that.httpCall.httpPostCall(httproutes.INVOICE_UPDATE_INVOICE_STATUS, requestObject).subscribe(params => {
+      if (params.status) {
+        that.snackbarservice.openSnackBar(params.message, "success");
+        that.uiSpinner.spin$.next(false);
+        that.rerenderfunc();
+      } else {
+        that.snackbarservice.openSnackBar(params.message, "error");
+        that.uiSpinner.spin$.next(false);
 
-  invoiceDenied() {
-    // let po_id = this.route.snapshot.queryParamMap.get("po_id");
-    // let po_status = "Denied";
-    // let that = this;
-    // swalWithBootstrapButtons
-    //   .fire({
-    //     title: this.Custom_Pdf_Viewer_Please_Confirm,
-    //     text: this.Custom_Pdf_Viewer_Want_Deny_Po,
-    //     showDenyButton: true,
-    //     showCancelButton: false,
-    //     confirmButtonText: this.Compnay_Equipment_Delete_Yes,
-    //     denyButtonText: this.Compnay_Equipment_Delete_No,
-    //   })
-    //   .then((result) => {
-    //     if (result.isConfirmed) {
-    //       /*--- denied PO api call ---*/
-    //       that.httpCall
-    //         .httpPostCall(httproutes.PORTAL_COMPANY_UPDATE_PO_STATUS, {
-    //           _id: po_id,
-    //           po_status: po_status,
-    //         })
-    //         .subscribe(function (params) {
-    //           if (params.status) {
-    //             that.snackbarservice.openSnackBar(params.message, "success");
-    //             that.location.back();
-    //           } else {
-    //             that.snackbarservice.openSnackBar(params.message, "error");
-    //           }
-    //         });
-    //     }
-    //   });
+      }
+    });
   }
-
 
   viewInvoice(invoice) {
     this.router.navigate(['/invoice-detail'], { queryParams: { _id: invoice._id } });

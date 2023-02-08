@@ -217,12 +217,6 @@ const routes: Routes = [
         component: DocumentsComponent
       },
 
-
-
-
-
-
-
       {
         path: 'employee-list',
         pathMatch: 'full',

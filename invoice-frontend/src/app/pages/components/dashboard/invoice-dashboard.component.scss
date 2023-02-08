@@ -31,6 +31,10 @@
 
 .card-body {
     padding: 0.75rem .75rem;
+    box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.5), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+    transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+
+
 
 }
 
@@ -85,6 +89,15 @@
 .col-2 {
     padding: 0px !important;
 }
+
+.text-color {
+    color: #06479D;
+}
+
+.text-color-dark {
+    color: #FE6E00;
+}
+
 
 .number {
     background-color: #06479D;
@@ -431,10 +444,19 @@
 }
 
 .crl {
-    border-radius: 100%;
+
     background-color: red;
-    height: 30px;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
     // margin-top: 13px;
     float: right;
     margin-left: 10px;
+}
+
+.userimg {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    border: 1px solid black;
 }

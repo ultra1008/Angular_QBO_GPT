@@ -49,10 +49,15 @@
 
     <div class="main-row-cust-div">
         <div class="one-div-cust-user mr-3">
-            <b class="ml-1">Received</b>
+            <b class="ml-1">{{'Pending_Invoice' | translate }}</b>
             <div class="header-text-cust detail-list-card mt-2">
+                <div class="text-center"
+                    *ngIf="cardList.pending_invoices != null && cardList.pending_invoices.length == 0">
+                    {{'No_Pending_Invoice' |
+                    translate}}
+                </div>
                 <div class="one-div-cust-user-card" *ngFor="let data of cardList.pending_invoices">
-                    <div class="statastic-card mt-2 "
+                    <div class="statastic-card mt-2 " (click)="gotoEditInvoice(data)"
                         [ngClass]="mode == 'on'? 'header-text-cust-card-dark' : 'header-text-cust-card '">
                         <div class="statastic-small-card-title ml-2">
                             <div>Invoice#: {{data.invoice}}</div>
@@ -65,14 +70,20 @@
                     </div>
                     <!-- <div class="number-cust">  </div> -->
                 </div>
+
             </div>
             <!-- <div class="number-cust">  </div> -->
         </div>
         <div class="one-div-cust-user mr-3">
-            <b class="ml-1">Processed</b>
+            <b class="ml-1">{{'Processed_Invoice' | translate }}</b>
             <div class="header-text-cust detail-list-card mt-2">
+                <div class="text-center"
+                    *ngIf="cardList.process_invoices != null && cardList.process_invoices.length == 0">
+                    {{'No_Processed_Invoice' |
+                    translate}}
+                </div>
                 <div class="one-div-cust-user-card" *ngFor="let data of cardList.process_invoices">
-                    <div class="statastic-card mt-2"
+                    <div class="statastic-card mt-2" (click)="gotoEditInvoice(data)"
                         [ngClass]="mode == 'on'? 'header-text-cust-card-dark' : 'header-text-cust-card '">
                         <div class="statastic-small-card-title ml-2">
                             <div>Invoice#: {{data.invoice}}</div>
@@ -89,12 +100,18 @@
             <!-- <div class="number-cust">  </div> -->
         </div>
         <div class="one-div-cust-user">
-            <b class="ml-1">Cancelled</b>
+            <b class="ml-1">{{'Reject_Invoice' | translate }}</b>
             <div class="header-text-cust detail-list-card mt-2">
+                <div class="text-center"
+                    *ngIf="cardList.cancelled_invoices != null && cardList.cancelled_invoices.length == 0">
+                    {{'No_Reject_Invoice' |
+                    translate}}
+                </div>
                 <div class="one-div-cust-user-card" *ngFor="let data of cardList.cancelled_invoices">
-                    <div class="statastic-card mt-2"
+                    <div class="statastic-card mt-2" (click)="gotoEditInvoice(data)"
                         [ngClass]="mode == 'on'? 'header-text-cust-card-dark' : 'header-text-cust-card '">
                         <div class="statastic-small-card-title ml-2">
+
                             <div>Invoice#: {{data.invoice}}</div>
                             <div>Invoice date: {{data.invoice_date}}</div>
                             <div>Last update: {{temp_MMDDYYY(data.updated_at)}}</div>
@@ -103,7 +120,11 @@
                             Total: {{data.total}}
                         </div>
                     </div>
-                    <!-- <div class="number-cust">  </div> -->
+
+
+
+
+
                 </div>
 
             </div>
@@ -133,32 +154,48 @@
                 <div class="main-row-cust-div">
                     <div class="one-div-cust-user">
                         <b class="ml-1">Last Activity History</b>
-                        <div class=" mt-2"
+                        <div class=" mt-2 "
                             [ngClass]="mode == 'on'? 'header-text-cust-chart-dark' : 'header-text-cust-chart'">
-                            <p style="font-size: 10px;  word-wrap: break-word; text-align: left; color: #06479D;">
+                            <!-- <p style="font-size: 10px;  word-wrap: break-word; text-align: left; color: #06479D;">
                                 Today
-                            </p>
+                            </p> -->
                             <div class="" [ngClass]="mode == 'on'? 'card-history-dark' : 'card-history'">
-                                <div class="card-body">
+                                <div class="card-body mb-2" *ngFor=" let item of dashboardHistory">
                                     <div class="row">
                                         <div class="col-2">
+                                            <!-- <img class="crl card-img-left example-card-img-responsive"
+                                                src="./assets/logo/RovukInvoice.png" /> -->
                                             <img class="crl card-img-left example-card-img-responsive"
-                                                src="./assets/logo/RovukInvoice.png" />
+                                                src="{{item.userpicture || '../assets/images/user_placeholder.png'}}" />
                                         </div>
-                                        <div class="col-10">
+                                        <!-- <div class="col-10">
                                             <p style="font-size: 12px;">Roque Rivera @ 8:15 am</p>
                                             <p style="font-size: 10px;  word-wrap: break-word;">Roque Rivera open the
                                                 invoice</p>
+                                        </div> -->
+                                        <div class="col-10">
+                                            <b [ngClass]="mode == 'on'? 'text-color-dark' : 'text-color'"
+                                                (click)="goToUserProfile(local_user)" style="font-size: 12px;">
+                                                {{item.created_by.userfullname}} </b>
+                                            <b style="font-size: 12px;">{{item.action}}</b><b
+                                                [ngClass]="mode == 'on'? 'text-color-dark' : 'text-color'"
+                                                style="font-size: 12px;">
+                                                <!-- (click)="goToInvoiceForm(item)" -->
+                                                {{item.module}} </b>
+                                            <b style="font-size: 12px;">at</b>&nbsp;
+                                            <b style="font-size: 12px;">{{tmp_date(item.created_at)}}</b>
+                                            &nbsp; <b style="font-size: 12px;">from</b>&nbsp;
+                                            <b style="font-size: 12px;">{{item.action_from}}.</b>
                                         </div>
                                     </div>
 
                                 </div>
                             </div>
-                            <p
+                            <!-- <p
                                 style="font-size: 10px;  word-wrap: break-word; margin-top: 8px; text-align: left; color: #06479D;">
                                 Monday 6/27/2022
-                            </p>
-                            <div class="" [ngClass]="mode == 'on'? 'card-history-dark' : 'card-history'">
+                            </p> -->
+                            <!-- <div class="" [ngClass]="mode == 'on'? 'card-history-dark' : 'card-history'">
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-2">
@@ -177,7 +214,7 @@
                                     </div>
 
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
