@@ -1,4 +1,5 @@
 var invoice_Schema = require('../../../../../model/invoice');
+var vendorSchema = require('../../../../../model/vendor');
 var processInvoiceSchema = require('../../../../../model/process_invoice');
 var invoice_history_Schema = require('../../../../../model/history/invoice_history');
 let db_connection = require('../../../../../controller/common/connectiondb');
@@ -10,6 +11,11 @@ var ObjectID = require('mongodb').ObjectID;
 let rest_Api = require('./../../../../../config/db_rest_api');
 var _ = require('lodash');
 var recentActivity = require('./../recent_activity/recentActivityController');
+const excel = require("exceljs");
+var handlebars = require('handlebars');
+let sendEmail = require('./../../../../../controller/common/sendEmail');
+var fs = require('fs');
+var bucketOpration = require('../../../../../controller/common/s3-wasabi');
 
 // save invoice
 module.exports.saveInvoice = async function (req, res) {
@@ -163,7 +169,19 @@ module.exports.getInvoiceList = async function (req, res) {
                     status: requestObject.status
                 };
             }
-            var get_data = await invoicesConnection.find(match_query);
+            // var get_data = await invoicesConnection.find(match_query);
+            var get_data = await invoicesConnection.aggregate([
+                { $match: match_query },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_VENDOR,
+                        localField: "vendor",
+                        foreignField: "_id",
+                        as: "vendor"
+                    }
+                },
+                { $unwind: "$vendor" },
+            ]);
             let count = get_data.length;
             var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
             let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
@@ -395,3 +413,269 @@ async function addchangeInvoice_History(action, data, decodedToken, updatedAt) {
         connection_db_api.close();
     }
 }
+
+module.exports.getInvoiceExcelReport = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    var local_offset = Number(req.headers.local_offset);
+    var timezone = req.headers.timezone;
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            let email_list = requestObject.email_list;
+            var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+            let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
+            let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
+
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoice_Schema);
+            let sort = { vendor_name: 1 };
+            let vendorQuery = [];
+            let query = [];
+            if (requestObject.vendor_ids.length != 0) {
+                let data_Query = [];
+                for (let i = 0; i < requestObject.vendor_ids.length; i++) {
+                    data_Query.push(ObjectID(requestObject.vendor_ids[i]));
+                }
+                vendorQuery.push({ "_id": { $in: data_Query } });
+                query.push({ "vendor": { $in: data_Query } });
+            }
+
+            if (requestObject.status.length != 0) {
+                query.push({ "status": { $in: requestObject.status } });
+            }
+            query = query.length == 0 ? {} : { $and: query };
+
+            let date_query = {};
+            if (requestObject.start_date != 0 && requestObject.end_date != 0) {
+                date_query = { "created_by": { $gte: requestObject.start_date, $lt: requestObject.end_date } };
+            }
+
+            let get_invoice = await invoicesConnection.aggregate([
+                { $match: { is_delete: 0 }, },
+                { $match: query },
+                { $match: date_query },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "assign_to",
+                        foreignField: "_id",
+                        as: "assign_to"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$assign_to",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_VENDOR,
+                        localField: "vendor",
+                        foreignField: "_id",
+                        as: "vendor"
+                    }
+                },
+                { $unwind: "$vendor" },
+                { $sort: sort }
+            ]).collation({ locale: "en_US" });
+            console.log("sagar.........get_invoice: ", get_invoice.length);
+            let workbook = new excel.Workbook();
+            let title_tmp = translator.getStr('Invoice_Report_Title');
+            let worksheet = workbook.addWorksheet(title_tmp);
+            let xlsx_data = [];
+            let result = await common.urlToBase64(company_data.companylogo);
+            let logo_rovuk = await common.urlToBase64(config.INVOICE_LOGO);
+            for (let i = 0; i < get_invoice.length; i++) {
+                let invoice = get_invoice[i];
+                xlsx_data.push([invoice.assign_to == undefined || invoice.assign_to == null ? '' : invoice.assign_to.userfullname,
+                invoice.vendor.vendor_name, invoice.vendor_id, invoice.customer_id, invoice.invoice, invoice.p_o, invoice.invoice_date,
+                invoice.due_date, invoice.order_date, invoice.ship_date, invoice.terms == undefined || invoice.terms == null ? '' : invoice.terms.name,
+                invoice.total, invoice.invoice_total, invoice.tax_amount, invoice.tax_id, invoice.sub_total, invoice.amount_due,
+                invoice.cost_code, invoice.gl_account, invoice.receiving_date, invoice.notes, invoice.status,
+                invoice.job_number, invoice.account_number, invoice.discount, invoice.packing_slip, invoice.receiving_slip]);
+            }
+            let headers = [
+                translator.getStr('Invoice_History.assign_to'),
+                translator.getStr('Invoice_History.vendor'),
+                translator.getStr('Invoice_History.vendor_id'),
+                translator.getStr('Invoice_History.customer_id'),
+                translator.getStr('Invoice_History.invoice'),
+                translator.getStr('Invoice_History.p_o'),
+                translator.getStr('Invoice_History.invoice_date'),
+                translator.getStr('Invoice_History.due_date'),
+                translator.getStr('Invoice_History.order_date'),
+                translator.getStr('Invoice_History.ship_date'),
+                translator.getStr('Invoice_History.terms'),
+                translator.getStr('Invoice_History.total'),
+                translator.getStr('Invoice_History.invoice_total'),
+                translator.getStr('Invoice_History.tax_amount'),
+                translator.getStr('Invoice_History.tax_id'),
+                translator.getStr('Invoice_History.sub_total'),
+                translator.getStr('Invoice_History.amount_due'),
+                translator.getStr('Invoice_History.cost_code'),
+                translator.getStr('Invoice_History.gl_account'),
+                translator.getStr('Invoice_History.receiving_date'),
+                translator.getStr('Invoice_History.notes'),
+                translator.getStr('Invoice_History.status'),
+                translator.getStr('Invoice_History.job_number'),
+                translator.getStr('Invoice_History.account_number'),
+                translator.getStr('Invoice_History.discount'),
+                translator.getStr('Invoice_History.packing_slip'),
+                translator.getStr('Invoice_History.receiving_slip'),
+            ];
+
+            let d = new Date();
+            let excel_date = common.fullDate_format();
+
+            //compnay logo
+            let myLogoImage = workbook.addImage({
+                base64: result,
+                extension: 'png',
+            });
+            worksheet.addImage(myLogoImage, "A1:A6");
+            worksheet.mergeCells('A1:A6');
+
+            //supplier logo
+            let rovukLogoImage = workbook.addImage({
+                base64: logo_rovuk,
+                extension: 'png',
+            });
+            worksheet.mergeCells('N1:N6');
+            worksheet.addImage(rovukLogoImage, 'N1:N6');
+
+            // Image between text 1
+            let titleRowValue1 = worksheet.getCell('B1');
+            titleRowValue1.value = `Vendor detailed report`;
+            titleRowValue1.font = {
+                name: 'Calibri',
+                size: 15,
+                bold: true,
+            };
+            titleRowValue1.alignment = { vertical: 'middle', horizontal: 'left' };
+            worksheet.mergeCells(`B1:M3`);
+
+            // Image between text 2
+            let titleRowValue2 = worksheet.getCell('B4');
+            titleRowValue2.value = `Generated by: ${decodedToken.UserData.userfullname}`;
+            titleRowValue2.font = {
+                name: 'Calibri',
+                size: 15,
+                bold: true,
+            };
+            titleRowValue2.alignment = { vertical: 'middle', horizontal: 'left' };
+            worksheet.mergeCells(`B4:M6`);
+
+            //header design
+            let headerRow = worksheet.addRow(headers);
+            headerRow.height = 40;
+            headerRow.alignment = { vertical: 'middle', horizontal: 'center' };
+            headerRow.eachCell((cell, number) => {
+                cell.font = {
+                    bold: true,
+                    size: 14,
+                    color: { argb: "FFFFFFF" }
+                };
+                cell.fill = {
+                    type: 'pattern',
+                    pattern: 'solid',
+                    fgColor: {
+                        argb: 'FF023E8A'
+                    }
+                };
+            });
+            xlsx_data.forEach(d => {
+                let row = worksheet.addRow(d);
+            });
+            worksheet.getColumn(3).width = 20;
+            worksheet.addRow([]);
+            worksheet.columns.forEach(function (column, i) {
+                column.width = 20;
+            });
+
+            let footerRow = worksheet.addRow([translator.getStr('XlsxReportGeneratedAt') + excel_date]);
+            footerRow.alignment = { vertical: 'middle', horizontal: 'center' };
+            worksheet.mergeCells(`A${footerRow.number}:N${footerRow.number}`);
+            const tmpResultExcel = await workbook.xlsx.writeBuffer();
+
+            let vendor = '';
+            let status = '';
+            let date_range = '';
+            if (requestObject.All_Vendors) {
+                vendor = `${translator.getStr('EmailExcelVendors')} ${translator.getStr('EmailExcelAllVendors')}`;
+            } else {
+                termQuery = termQuery.length == 0 ? {} : { $or: termQuery };
+                let vendorCollection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
+                let all_vendor = await vendorCollection.find(termQuery, { vendor_name: 1 });
+                let temp_data = [];
+                for (var i = 0; i < all_vendor.length; i++) {
+                    temp_data.push(all_vendor[i]['name']);
+                }
+                vendor = `${translator.getStr('EmailExcelVendors')} ${temp_data.join(", ")}`;
+            }
+
+            if (requestObject.All_Status) {
+                status = `${translator.getStr('EmailExcelStatus')} ${translator.getStr('EmailExcelAllStatus')}`;
+            } else {
+                status = `${translator.getStr('EmailExcelStatus')} ${requestObject.status.join(", ")}`;
+            }
+
+            if (requestObject.start_date != 0 && requestObject.end_date != 0) {
+                date_range = `${translator.getStr('EmailExcelDateRange')} ${common.MMDDYYYY(requestObject.start_date + local_offset)} - ${common.MMDDYYYY(requestObject.end_date + local_offset)}`;
+            }
+
+            let companycode = decodedToken.companycode.toLowerCase();
+            // let key_url = config.INVOICE_WASABI_PATH + "/invoice/excel_report/invoice_" + new Date().getTime() + ".xlsx";
+            let key_url = config.INVOICE_WASABI_PATH + "/invoice/excel_report/invoice.xlsx";
+            let PARAMS = {
+                Bucket: companycode,
+                Key: key_url,
+                Body: tmpResultExcel,
+                ACL: 'public-read-write'
+            };
+            const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/excelReport.html', 'utf8');
+            bucketOpration.uploadFile(PARAMS, async function (err, resultUpload) {
+                if (err) {
+                    res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
+                } else {
+                    excelUrl = config.wasabisys_url + "/" + companycode + "/" + key_url;
+                    console.log("invoice excelUrl", excelUrl);
+                    let emailTmp = {
+                        HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
+                        SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
+                        ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                        THANKS: translator.getStr('EmailTemplateThanks'),
+                        ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                        VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
+
+                        EMAILTITLE: `${translator.getStr('EmailInvoiceReportTitle')}`,
+                        TEXT1: translator.getStr('EmailInvoiceReportText1'),
+                        TEXT2: translator.getStr('EmailInvoiceReportText2'),
+
+                        FILE_LINK: excelUrl,
+
+                        SELECTION: new handlebars.SafeString(`<h4>${vendor}</h4><h4>${status}</h4>`),
+
+                        COMPANYNAME: `${translator.getStr('EmasilCompanyName')} ${company_data.companyname}`,
+                        COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
+                    };
+                    var template = handlebars.compile(file_data);
+                    var HtmlData = await template(emailTmp);
+                    let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, email_list, translator.getStr('Invoice_Report_Title'), HtmlData,
+                        talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
+                        talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                    console.log("mailsend: ", mailsend);
+                    res.send({ message: translator.getStr('Report_Sent_Successfully'), status: true });
+                }
+            });
+        } catch (e) {
+            console.log("error:", e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};

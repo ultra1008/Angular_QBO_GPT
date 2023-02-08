@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 var invoiceSchema = new Schema({
     assign_to: { type: mongoose.ObjectId, default: "" }, //user
-    vendor_name: { type: String, default: "" },
+    vendor: { type: mongoose.ObjectId, default: "" },
     vendor_id: { type: String, default: "" },
     customer_id: { type: String, default: "" },
     invoice: { type: String, default: "" },
@@ -26,8 +26,8 @@ var invoiceSchema = new Schema({
     status: { type: String, default: "Pending", enum: ['Pending', 'Approved', 'Rejected', 'Late'] },
     job_number: { type: String, default: "" },
     delivery_address: { type: String, default: "" },
-    contract_number: { type: String, default: "" },
-    account_number: { type: String, default: "" },
+    // contract_number: { type: String, default: "" },
+    // account_number: { type: String, default: "" },
     discount: { type: String, default: "" },
     pdf_url: { type: String, default: "" },
     items: { type: Array, default: [] },

@@ -268,6 +268,7 @@ router.post('/webapi/v1/portal/getoneinvoice', common.checkTokenExistOrNot, invo
 router.post('/webapi/v1/portal/deleteinvoice', common.checkTokenExistOrNot, invoiceValidation.deleteInvoice, invoiceController.deleteInvoice);
 router.post('/webapi/v1/portal/updateinvoicestatus', common.checkTokenExistOrNot, invoiceValidation.updateInvoiceStatus, invoiceController.updateInvoiceStatus);
 router.post('/webapi/v1/portal/getinvoicedatatable', common.checkTokenExistOrNot, invoiceController.getInvoiceDatatable);
+router.post('/webapi/v1/portal/getinvoiceexcelreport', common.checkTokenExistOrNot, invoiceController.getInvoiceExcelReport);
 
 let invoiceDashboard = require('./dashboard/dashboardController');
 router.get('/webapi/v1/portal/getdashboardcount', common.checkTokenExistOrNot, invoiceDashboard.getDashboardCount);

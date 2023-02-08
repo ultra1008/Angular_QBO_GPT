@@ -2,8 +2,8 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var invoice_history_Schema = new Schema({
-    assign_to: { type: mongoose.ObjectId, default: "" }, //user
-    vendor_name: { type: String, default: "" },
+    assign_to: { type: mongoose.ObjectId, default: "" },
+    vendor: { type: mongoose.ObjectId, default: "" },
     vendor_id: { type: String, default: "" },
     customer_id: { type: String, default: "" },
     invoice: { type: String, default: "" },

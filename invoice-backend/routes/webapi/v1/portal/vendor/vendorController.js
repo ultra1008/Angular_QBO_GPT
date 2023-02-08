@@ -681,8 +681,7 @@ module.exports.getVendorExcelReport = async function (req, res) {
 
 
             let companycode = decodedToken.companycode.toLowerCase();
-            // let key_url = config.INVOICE_WASABI_PATH + "/vendor/excel_report/vendor_" + new Date().getTime() + ".xlsx";
-            let key_url = config.INVOICE_WASABI_PATH + "/vendor/excel_report/vendor.xlsx";
+            let key_url = config.INVOICE_WASABI_PATH + "/vendor/excel_report/vendor_" + new Date().getTime() + ".xlsx";
             let PARAMS = {
                 Bucket: companycode,
                 Key: key_url,
