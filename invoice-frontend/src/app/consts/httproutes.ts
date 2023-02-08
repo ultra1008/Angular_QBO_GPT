@@ -1105,6 +1105,7 @@ export enum httproutes {
     INVOICE_GET_VENDOR_REPORT = "/webapi/v1/portal/getvendorreport",
     INVOICE_CHANGE_VENDOR_STATUS = "/webapi/v1/portal/vendorStatusUpdate",
     INVOICE_VENDOR_STATUS_COUNT = "/webapi/v1/portal/getvendorstatuscount",
+    INVOICE_VENDOR_GET = "/webapi/v1/portal/getvendor",
 
     // invoice module
     INVOICE_SAVE_INVOICE_PROCESS = "/webapi/v1/portal/saveinvoiceprocess",
@@ -1112,6 +1113,7 @@ export enum httproutes {
     INVOICE_PROCESS_INVOICE_DATA = "/webapi/v1/portal/importprocessinvoice",
     INVOICE_IMPORT_MANAGEMENT_INVOICE = "/webapi/v1/portal/importmanagementinvoice",
     INVOICE_IMPORT_MANAGEMENT_PO = "/webapi/v1/portal/importmanagementpo",
+    PORTAL_INVOICE_REPORT = "/webapi/v1/portal/getinvoiceexcelreport",
 
     INVOICE_GET_LIST = "/webapi/v1/portal/getinvoice",
     INVOICE_GET_STATUS_VISE_LIST = "/webapi/v1/portal/getinvoicelist",

@@ -71,6 +71,7 @@ export class InvoiceComponent implements OnInit {
   approveIcon: string;
 
   allInvoices = [];
+  vendorsList = [];
   viewIcon: string = '';
   invoiceCount: any = {
     pending: 0,
@@ -167,6 +168,7 @@ export class InvoiceComponent implements OnInit {
     // }
 
     let that = this;
+    this.getAllVendors();
     this.uiSpinner.spin$.next(true);
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     this.locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configdata.fst_load_lang : tmp_locallanguage;
@@ -266,13 +268,26 @@ export class InvoiceComponent implements OnInit {
     });
   }
 
+  getAllVendors() {
+    let that = this;
+    that.httpCall
+      .httpGetCall(httproutes.INVOICE_VENDOR_GET)
+      .subscribe(function (params) {
+        if (params.status) {
+          that.vendorsList = params.data;
+          console.log("vendorsList", params.data);
+
+        }
+      });
+  }
+
+
   invoiceReportDialog() {
     const dialogRef = this.dialog.open(InvoiceReport, {
       height: '500px',
       width: '800px',
-      data: {
-        // allRoles: this.allRoles
-      },
+      data: this.vendorsList
+      ,
       disableClose: true
     });
 
@@ -704,9 +719,9 @@ export class InvoiceAttachment {
 export class InvoiceReport {
   is_oneOnly: boolean = true;
   public form: any;
-  public rolesList = [];
+  public vendorList = [];
   selectedRoles: any;
-  public statusList = configdata.superAdminStatus;
+  public statusList = configdata.INVOICES_STATUS;
   selectedStatus: any;
 
   selectable = true;
@@ -716,10 +731,10 @@ export class InvoiceReport {
   saveIcon: string;
   emailsList: any[] = [];
   range = new FormGroup({
-    start: new FormControl(),
-    end: new FormControl()
+    start_date: new FormControl(),
+    end_date: new FormControl()
   });
-  timecardinfo: FormGroup;
+  invoiceinfo: FormGroup;
   Report_File_Message: string = "";
   Report_File_Enter_Email: string = "";
   exitIcon: string;
@@ -734,15 +749,15 @@ export class InvoiceReport {
     public dialogRef: MatDialogRef<InvoiceReport>,
     @Inject(MAT_DIALOG_DATA) public data: any, public sb: Snackbarservice, public translate: TranslateService) {
 
-
+    console.log("dataaaaaa", data);
     this.Report_File_Message = this.translate.instant('Report_File_Message');
     this.Report_File_Enter_Email = this.translate.instant('Report_File_Enter_Email');
-    this.rolesList = data.allRoles;
-    this.timecardinfo = this.formBuilder.group({
-      All_Roles: [true],
-      role_ids: [this.rolesList.map((el: any) => el.role_id)],
+    this.vendorList = data;
+    this.invoiceinfo = this.formBuilder.group({
+      All_Vendors: [true],
+      vendor_ids: [this.vendorList.map((el: any) => el._id)],
       All_Status: [true],
-      status_ids: [this.statusList.map((el: any) => el.value)],
+      status: [this.statusList.map((el: any) => el.name)],
     });
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
@@ -814,47 +829,47 @@ export class InvoiceReport {
 
   ngOnInit(): void {
     let that = this;
-    this.timecardinfo.get("role_ids")!.valueChanges.subscribe(function (params: any) {
-      if (params.length == that.rolesList.length) {
-        that.timecardinfo.get("All_Roles")!.setValue(true);
+    this.invoiceinfo.get("vendor_ids")!.valueChanges.subscribe(function (params: any) {
+      if (params.length == that.vendorList.length) {
+        that.invoiceinfo.get("All_Vendors")!.setValue(true);
       } else {
-        that.timecardinfo.get("All_Roles")!.setValue(false);
+        that.invoiceinfo.get("All_Vendors")!.setValue(false);
       }
     });
-    this.timecardinfo.get("status_ids")!.valueChanges.subscribe(function (params: any) {
+    this.invoiceinfo.get("status")!.valueChanges.subscribe(function (params: any) {
       if (params.length == that.statusList.length) {
-        that.timecardinfo.get("All_Status")!.setValue(true);
+        that.invoiceinfo.get("All_Status")!.setValue(true);
       } else {
-        that.timecardinfo.get("All_Status")!.setValue(false);
+        that.invoiceinfo.get("All_Status")!.setValue(false);
       }
     });
   }
 
-  onChangeValueAll_Roles(params: any) {
+  onChangeValueAll_Vendors(params: any) {
     if (params.checked) {
-      this.timecardinfo.get("role_ids")!.setValue(this.rolesList.map((el: any) => el.role_id));
+      this.invoiceinfo.get("vendor_ids")!.setValue(this.vendorList.map((el: any) => el._id));
     } else {
-      this.timecardinfo.get("role_ids")!.setValue([]);
+      this.invoiceinfo.get("vendor_ids")!.setValue([]);
     }
   }
 
   onChangeValueAll_Status(params: any) {
     if (params.checked) {
-      this.timecardinfo.get("status_ids")!.setValue(this.statusList.map(el => el.value));
+      this.invoiceinfo.get("status")!.setValue(this.statusList.map(el => el.name));
     } else {
-      this.timecardinfo.get("status_ids")!.setValue([]);
+      this.invoiceinfo.get("status")!.setValue([]);
     }
   }
 
   saveData() {
     if (this.emailsList.length != 0) {
       this.sb.openSnackBar(this.Report_File_Message, "success");
-      let requestObject = this.timecardinfo.value;
+      let requestObject = this.invoiceinfo.value;
       var company_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
       requestObject.email_list = this.emailsList;
       requestObject.logo_url = company_data.companydata.companylogo;
 
-      this.httpCall.httpPostCall(httproutes.PORTAL_EMPLOYEE_REPORT, requestObject).subscribe(function (params: any) { });
+      this.httpCall.httpPostCall(httproutes.PORTAL_INVOICE_REPORT, requestObject).subscribe(function (params: any) { });
       setTimeout(() => {
         this.dialogRef.close();
       }, 3000);
