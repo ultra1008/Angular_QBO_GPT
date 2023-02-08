@@ -9,6 +9,7 @@ const historyCollectionConstant = require('../../../../../config/historyCollecti
 var ObjectID = require('mongodb').ObjectID;
 let rest_Api = require('./../../../../../config/db_rest_api');
 var _ = require('lodash');
+var recentActivity = require('./../recent_activity/recentActivityController');
 
 // save invoice
 module.exports.saveInvoice = async function (req, res) {
@@ -24,11 +25,21 @@ module.exports.saveInvoice = async function (req, res) {
             if (id) {
                 requestObject.updated_by = decodedToken.UserData._id;
                 requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+                let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(id) });
                 let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(id) }, requestObject);
                 if (update_invoice) {
                     requestObject.invoice_id = id;
                     addchangeInvoice_History("Update", requestObject, decodedToken, requestObject.updated_at);
-
+                    recentActivity.saveRecentActivity({
+                        user_id: decodedToken.UserData._id,
+                        username: decodedToken.UserData.userfullname,
+                        userpicture: decodedToken.UserData.userpicture,
+                        data_id: id,
+                        title: `Invoice #${get_invoice.invoice}`,
+                        module: 'Invoice',
+                        action: 'Update',
+                        action_from: 'Web',
+                    }, decodedToken);
                     res.send({ status: true, message: "Invoice updated successfully..", data: update_invoice });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
@@ -44,6 +55,16 @@ module.exports.saveInvoice = async function (req, res) {
                 if (save_invoice) {
                     requestObject.invoice_id = save_invoice._id;
                     addchangeInvoice_History("Insert", requestObject, decodedToken, requestObject.updated_at);
+                    recentActivity.saveRecentActivity({
+                        user_id: decodedToken.UserData._id,
+                        username: decodedToken.UserData.userfullname,
+                        userpicture: decodedToken.UserData.userpicture,
+                        data_id: save_invoice._id,
+                        title: `Invoice #${save_invoice.invoice}`,
+                        module: 'Invoice',
+                        action: 'Insert',
+                        action_from: 'Web',
+                    }, decodedToken);
                     res.send({ status: true, message: "Invoice saved successfully.." });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
@@ -251,6 +272,7 @@ module.exports.updateInvoiceStatus = async function (req, res) {
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoice_Schema);
             requestObject.updated_by = decodedToken.UserData._id;
             requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+            var get_invoice = await invoicesConnection.findOne({ _id: ObjectID(id) });
             var update_data = await invoicesConnection.updateOne({ _id: ObjectID(id) }, requestObject);
             let isDelete = update_data.nModified;
             if (isDelete == 0) {
@@ -259,6 +281,16 @@ module.exports.updateInvoiceStatus = async function (req, res) {
                 var get_one = await invoicesConnection.findOne({ _id: ObjectID(id) }, { _id: 0, __v: 0 });
                 let reqObj = { invoice_id: id, ...get_one._doc };
                 addchangeInvoice_History("Update", reqObj, decodedToken, get_one.updated_at);
+                recentActivity.saveRecentActivity({
+                    user_id: decodedToken.UserData._id,
+                    username: decodedToken.UserData.userfullname,
+                    userpicture: decodedToken.UserData.userpicture,
+                    data_id: id,
+                    title: `Invoice #${get_invoice.invoice}`,
+                    module: 'Invoice',
+                    action: requestObject.status,
+                    action_from: 'Web',
+                }, decodedToken);
                 res.send({ message: `Invoice ${requestObject.status.toLowerCase()} successfully`, status: true, data: update_data });
             }
         } catch (e) {

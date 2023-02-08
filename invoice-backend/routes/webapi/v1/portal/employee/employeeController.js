@@ -36,6 +36,7 @@ var _ = require('lodash');
 let superadminCollection = require('../../../../../config/superadminCollection');
 let billingPlan = require('./../../../../../config/billing_plan');
 let attachmentLocations = require('./../../../../../config/attachmentLocations');
+var recentActivity = require('./../recent_activity/recentActivityController');
 
 module.exports.getAllUserList = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -214,6 +215,17 @@ module.exports.saveEmployee = async function (req, res) {
                                 let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, body.useremail, "Rovuk Registration", HtmlData,
                                     talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
                                     talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+
+                                recentActivity.saveRecentActivity({
+                                    user_id: decodedToken.UserData._id,
+                                    username: decodedToken.UserData.userfullname,
+                                    userpicture: decodedToken.UserData.userpicture,
+                                    data_id: add._id,
+                                    title: add.userfullname,
+                                    module: 'User',
+                                    action: 'Insert',
+                                    action_from: 'Web',
+                                }, decodedToken);
 
                                 if (notFonud == 1) {
                                     var temp_path = newOpenFile[0].path;
@@ -1370,6 +1382,17 @@ module.exports.savePersonalInfo = async function (req, res) {
                             user_no: body.user_no,
                             allow_for_projects: body.allow_for_projects,
                         };
+                        recentActivity.saveRecentActivity({
+                            user_id: decodedToken.UserData._id,
+                            username: decodedToken.UserData.userfullname,
+                            userpicture: decodedToken.UserData.userpicture,
+                            data_id: user_edit_id,
+                            title: body.userfullname,
+                            module: 'User',
+                            action: 'Update',
+                            action_from: 'Web',
+                        }, decodedToken);
+
                         if (notFonud == 1) {
                             var temp_path = newOpenFile[0].path;
                             var file_name = newOpenFile[0].name;
@@ -1518,10 +1541,21 @@ module.exports.saveContactInfo = async function (req, res) {
             let _id = req.body._id;
             delete req.body["_id"];
             let body = req.body;
+            let get_user = await userConnection.findOne({ _id: ObjectID(_id) });
             let updateuser = await userConnection.updateOne({ _id: ObjectID(_id) }, body);
             if (updateuser) {
                 body.updated_id = _id;
                 addUSER_History("Update", body, decodedToken);
+                recentActivity.saveRecentActivity({
+                    user_id: decodedToken.UserData._id,
+                    username: decodedToken.UserData.userfullname,
+                    userpicture: decodedToken.UserData.userpicture,
+                    data_id: _id,
+                    title: get_user.userfullname,
+                    module: 'User',
+                    action: 'Update',
+                    action_from: 'Web',
+                }, decodedToken);
                 //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
                 res.send({ message: translator.getStr('ContactInfoUpdated'), status: true });
             }
@@ -1585,6 +1619,7 @@ module.exports.saveEmployeeInfo = async function (req, res) {
                 temp_user_languages.push(ObjectID(tempLang[i]));
             }
             body.user_languages = temp_user_languages;
+            let get_user = await userConnection.findOne({ _id: ObjectID(_id) });
             let one_user = await userConnection.findOne({ _id: ObjectID(_id) }, { usersalary: 1, userstartdate: 1, usermanager_id: 1, usersupervisor_id: 1, userlocation_id: 1, userjob_title_id: 1, userdepartment_id: 1, userjob_type_id: 1, user_languages: 1 });
             let updateuser = await userConnection.updateOne({ _id: ObjectID(_id) }, body);
             if (updateuser) {
@@ -1685,6 +1720,17 @@ module.exports.saveEmployeeInfo = async function (req, res) {
                     user_id: _id,
                 };
                 addUSER_History("Update", histioryObject, decodedToken);
+                recentActivity.saveRecentActivity({
+                    user_id: decodedToken.UserData._id,
+                    username: decodedToken.UserData.userfullname,
+                    userpicture: decodedToken.UserData.userpicture,
+                    data_id: _id,
+                    title: get_user.userfullname,
+                    module: 'User',
+                    action: 'Update',
+                    action_from: 'Web',
+                }, decodedToken);
+
                 //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
                 res.send({ message: translator.getStr('EmployeeInfoUpdated'), status: true });
             } else {
@@ -1709,12 +1755,23 @@ module.exports.deleteTeamMember = async function (req, res) {
         try {
             let requestObject = req.body;
             let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+            let get_user = await userConnection.findOne({ _id: ObjectID(requestObject._id) });
             let update_user_1 = await userConnection.updateOne({ _id: ObjectID(requestObject._id) }, { is_delete: 1, userstatus: 2, userroleId: '' });
             if (update_user_1) {
                 let histioryObject = {
                     data: [],
                     user_id: ObjectID(requestObject._id),
                 };
+                recentActivity.saveRecentActivity({
+                    user_id: decodedToken.UserData._id,
+                    username: decodedToken.UserData.userfullname,
+                    userpicture: decodedToken.UserData.userpicture,
+                    data_id: requestObject._id,
+                    title: get_user.userfullname,
+                    module: 'User',
+                    action: 'Archive',
+                    action_from: 'Web',
+                }, decodedToken);
                 addUSER_History("Archive", histioryObject, decodedToken);
                 res.send({ message: translator.getStr('UserDeleted'), status: true });
             }
@@ -4092,8 +4149,8 @@ module.exports.recoverteam = async function (req, res) {
             let compnay_collection = await db_rest_api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
             let company_data = await db_rest_api.findOne(compnay_collection, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
             let selectedPlan = company_data.billingplan;
-            let one_user = await userCollection.findOne({ _id: ObjectID(requestObject._id) });
-            let checkEmailExist = await userCollection.findOne({ useremail: one_user.useremail, is_delete: 0 });
+            let get_user = await userCollection.findOne({ _id: ObjectID(requestObject._id) });
+            let checkEmailExist = await userCollection.findOne({ useremail: get_user.useremail, is_delete: 0 });
             if (checkEmailExist) {
                 res.send({ message: translator.getStr('EmailAlreadyExists'), status: false });
             } else {
@@ -4124,6 +4181,17 @@ module.exports.recoverteam = async function (req, res) {
                         data: [],
                         user_id: ObjectID(requestObject._id),
                     };
+                    recentActivity.saveRecentActivity({
+                        user_id: decodedToken.UserData._id,
+                        username: decodedToken.UserData.userfullname,
+                        userpicture: decodedToken.UserData.userpicture,
+                        data_id: requestObject._id,
+                        title: get_user.userfullname,
+                        module: 'User',
+                        action: 'Restore',
+                        action_from: 'Web',
+                    }, decodedToken);
+
                     addUSER_History("Restore", histioryObject, decodedToken);
                     let one_user = await userCollection.findOne({ _id: ObjectID(requestObject._id) });
                     if (one_user.userstatus == 1) {
