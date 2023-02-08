@@ -16,6 +16,7 @@ var handlebars = require('handlebars');
 let sendEmail = require('./../../../../../controller/common/sendEmail');
 var fs = require('fs');
 var bucketOpration = require('../../../../../controller/common/s3-wasabi');
+var recentActivity = require('./../recent_activity/recentActivityController');
 
 // save vendor
 module.exports.saveVendor = async function (req, res) {
@@ -74,6 +75,16 @@ module.exports.saveVendor = async function (req, res) {
                         vendor_id: id,
                     };
                     addVendorHistory("Update", histioryObject, decodedToken);
+                    recentActivity.saveRecentActivity({
+                        user_id: decodedToken.UserData._id,
+                        username: decodedToken.UserData.userfullname,
+                        userpicture: decodedToken.UserData.userpicture,
+                        data_id: id,
+                        title: requestObject.vendor_name,
+                        module: 'Vendor',
+                        action: 'Update',
+                        action_from: 'Web',
+                    }, decodedToken);
                     res.send({ status: true, message: "Vendor updated successfully.", data: update_vendor });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
@@ -121,6 +132,16 @@ module.exports.saveVendor = async function (req, res) {
                         vendor_id: save_vendor._id,
                     };
                     addVendorHistory("Insert", histioryObject, decodedToken);
+                    recentActivity.saveRecentActivity({
+                        user_id: decodedToken.UserData._id,
+                        username: decodedToken.UserData.userfullname,
+                        userpicture: decodedToken.UserData.userpicture,
+                        data_id: save_vendor._id,
+                        title: save_vendor.vendor_name,
+                        module: 'Vendor',
+                        action: 'Insert',
+                        action_from: 'Web',
+                    }, decodedToken);
                     res.send({ status: true, message: "Vendor saved successfully.", data: save_vendor });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
@@ -249,6 +270,7 @@ module.exports.deleteVendor = async function (req, res) {
 
             requestObject.updated_by = decodedToken.UserData._id;
             requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+            var one_vendor = await vendorConnection.findOne({ _id: ObjectID(id) });
             var delete_vendor = await vendorConnection.updateOne({ _id: ObjectID(id) }, requestObject);
             if (delete_vendor) {
                 let histioryObject = {
@@ -256,13 +278,27 @@ module.exports.deleteVendor = async function (req, res) {
                     vendor_id: id,
                 };
                 if (delete_vendor.nModified == 1) {
+                    let action = '';
+                    let message = '';
                     if (requestObject.is_delete == 1) {
-                        addVendorHistory("Archive", histioryObject, decodedToken);
-                        res.send({ message: "Vendor archive successfully", status: true });
+                        action = "Archive";
+                        message = "Vendor archive successfully";
                     } else {
-                        addVendorHistory("Restore", histioryObject, decodedToken);
-                        res.send({ message: "Vendor restore successfully", status: true });
+                        action = "Restore";
+                        message = "Vendor restore successfully";
                     }
+                    addVendorHistory(action, histioryObject, decodedToken);
+                    recentActivity.saveRecentActivity({
+                        user_id: decodedToken.UserData._id,
+                        username: decodedToken.UserData.userfullname,
+                        userpicture: decodedToken.UserData.userpicture,
+                        data_id: id,
+                        title: one_vendor.vendor_name,
+                        module: 'Vendor',
+                        action: action,
+                        action_from: 'Web',
+                    }, decodedToken);
+                    res.send({ message: message, status: true });
                 } else {
                     res.send({ message: "No data with this id", status: false });
 
@@ -371,20 +407,35 @@ module.exports.updateVendorStatus = async function (req, res) {
             var requestObject = req.body;
             var id = requestObject._id;
             delete requestObject._id;
+            var one_vendor = await vendorConnection.findOne({ _id: ObjectID(id) });
             var updateStatus = await vendorConnection.updateOne({ _id: ObjectID(id) }, requestObject);
             if (updateStatus) {
                 if (updateStatus.nModified == 1) {
+                    let action = '';
+                    let message = '';
                     let histioryObject = {
                         data: [],
                         vendor_id: id,
                     };
                     if (requestObject.status == 1) {
-                        addVendorHistory("Active", histioryObject, decodedToken);
-                        res.send({ status: true, message: "Vendor status active successfully." });
+                        action = "Active";
+                        message = "Vendor status active successfully.";
                     } else {
-                        addVendorHistory("Inactive", histioryObject, decodedToken);
-                        res.send({ status: true, message: "Vendor status inactive successfully." });
+                        action = "Inactive";
+                        message = "Vendor status inactive successfully.";
                     }
+                    addVendorHistory(action, histioryObject, decodedToken);
+                    recentActivity.saveRecentActivity({
+                        user_id: decodedToken.UserData._id,
+                        username: decodedToken.UserData.userfullname,
+                        userpicture: decodedToken.UserData.userpicture,
+                        data_id: id,
+                        title: one_vendor.vendor_name,
+                        module: 'Vendor',
+                        action: action,
+                        action_from: 'Web',
+                    }, decodedToken);
+                    res.send({ message: message, status: true });
                 } else {
                     res.send({ message: "No data with this id", status: false });
                 }

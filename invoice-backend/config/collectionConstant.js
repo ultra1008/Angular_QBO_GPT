@@ -89,6 +89,7 @@ module.exports = {
     INVOICE_USER_DOCUMENT: "invoice_user_documents",
     INVOICE_LOGINHISTORY: "invoice_login_histories",
     INVOICE_PROCESS: "invoice_processes",
+    INVOICE_RECENT_ACTIVITY: "invoice_recent_activities",
 
     MANAGEMENT_INVOICE: "invoices",
     MANAGEMENT_PO: "project_po",

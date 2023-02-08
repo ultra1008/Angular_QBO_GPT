@@ -308,4 +308,7 @@ router.get('/webapi/v1/portal/importmanagementpo', common.checkTokenExistOrNot, 
 router.get('/webapi/v1/portal/importprocessinvoice', common.checkTokenExistOrNot, processInvoiceController.importProcessData);
 router.post('/webapi/v1/portal/deleteinvoiceprocess', common.checkTokenExistOrNot, processInvoiceValidation.deleteInvoiceProcess, processInvoiceController.deleteInvoiceProcess);
 
+let recentActivityController = require('./recent_activity/recentActivityController');
+router.post('/webapi/v1/portal/getrecentactivity', common.checkTokenExistOrNot, recentActivityController.getRecentActivity);
+
 module.exports = router;
