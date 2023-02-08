@@ -97,7 +97,18 @@ module.exports.getInvoice = async function (req, res) {
         try {
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoice_Schema);
             var processInvoiceConnection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
-            var get_data = await invoicesConnection.find({ is_delete: 0 });
+            var get_data = await invoicesConnection.aggregate([
+                { $match: { is_delete: 0 } },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_VENDOR,
+                        localField: "vendor",
+                        foreignField: "_id",
+                        as: "vendor"
+                    }
+                },
+                { $unwind: "$vendor" },
+            ]);
             var get_count = await processInvoiceConnection.aggregate([
                 { $match: { is_delete: 0 } },
                 {
@@ -195,11 +206,6 @@ module.exports.getInvoiceList = async function (req, res) {
             } else {
                 res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
             }
-            /* if (get_data) {
-                res.send({ status: true, message: "Invoice data", data: get_data, count });
-            } else {
-                res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
-            } */
         } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
@@ -370,6 +376,15 @@ module.exports.getInvoiceDatatable = async function (req, res) {
             }
             var aggregateQuery = [
                 { $match: match_query },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_VENDOR,
+                        localField: "vendor",
+                        foreignField: "_id",
+                        as: "vendor"
+                    }
+                },
+                { $unwind: "$vendor" },
                 { $match: query },
                 { $sort: sort },
                 { $limit: start + perpage },

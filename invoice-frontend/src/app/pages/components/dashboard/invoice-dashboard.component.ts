@@ -121,26 +121,22 @@ export class InvoiceDashboardComponent implements OnInit {
     }
   };
 
-  public barChartLabels: Label[] = [];
-  public barChartType: ChartType = 'horizontalBar';
+  public barChartLabels: Label[] = ['February', 'January', 'December', 'November', 'October'];
+  public barChartType: ChartType = 'bar';
   public barChartLegend = false;
   public barChartPlugins = [];
 
   public barChartData: ChartDataSets[] = [
-    { data: [12, 10], label: 'Received', },
-    { data: [13, 12], label: 'Processed', },
-    { data: [14, 15], label: 'Cancelled', },
-    { data: [15, 16], label: 'Approved invoices', },
-    { data: [16, 17], label: 'Rejected invoices', },
-    { data: [17, 18], label: 'Late invoices', },
-    { data: [18, 19], label: 'Reports', },
+    { data: [65, 59, 80, 81, 56], label: 'Pending' },
+    { data: [28, 48, 40, 19, 86], label: 'Approve' },
+    { data: [48, 48, 48, 48, 48], label: 'Reject' },
   ];
-
+  showChart: boolean = true;
   /*
     constructor
   */
 
-  constructor(private router: Router, public translate: TranslateService, private modeService: ModeDetectService, public httpCall: HttpCall) {
+  constructor (private router: Router, public translate: TranslateService, private modeService: ModeDetectService, public httpCall: HttpCall) {
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
@@ -153,7 +149,6 @@ export class InvoiceDashboardComponent implements OnInit {
     });
   }
   locallanguage: any;
-  hideShow: boolean = true;
   local_user: any;
   list_id: any;
 
@@ -171,19 +166,11 @@ export class InvoiceDashboardComponent implements OnInit {
     this.local_user = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).UserData;
 
     this.translate.stream(['']).subscribe((textarray) => {
-      this.refreshPage();
     });
+    that.getChartData();
     that.getTodaysActivity();
     that.getCount();
     that.getCardData();
-  }
-
-  refreshPage() {
-    this.hideShow = false;
-    let that = this;
-    setTimeout(() => {
-      that.hideShow = true;
-    }, 1000);
   }
 
   gotoFilesList() {
@@ -226,13 +213,30 @@ export class InvoiceDashboardComponent implements OnInit {
     });
   }
 
+  getChartData() {
+    let that = this;
+    this.httpCall.httpPostCall(httproutes.PORTAL_DASHBOARD_GET_CHART_DATA, { data_type: 'top' }).subscribe(function (params) {
+      if (params.status) {
+        let tempData = [];
+        for (let i = 0; i < params.data.length; i++) {
+          tempData.push({ data: params.data[i].data, label: params.data[i].status });
+        }
+        that.barChartLabels = params.month;
+        that.barChartData = tempData;
+        that.showChart = false;
+        setTimeout(() => {
+          that.showChart = true;
+        }, 100);
+      }
+    });
+  }
+
   getCardData() {
     let that = this;
     this.httpCall.httpGetCall(httproutes.PORTAL_DASHBOARD_CARD_COUNT_GETDATA).subscribe(function (params) {
       if (params.status) {
         that.cardList = params.data;
       }
-      console.log(" params.data", params.data);
     });
   }
   // Save chart order list for Dashboard

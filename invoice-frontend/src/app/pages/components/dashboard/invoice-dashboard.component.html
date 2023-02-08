@@ -139,7 +139,7 @@
                         <b class="ml-1">Reports</b>
                         <div class=" mt-2">
                             <div class="card-body">
-                                <div style="display: block;">
+                                <div style="display: block;" *ngIf="showChart">
                                     <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels"
                                         [options]="barChartOptions" [plugins]="barChartPlugins"
                                         [legend]="barChartLegend" [chartType]="barChartType">
