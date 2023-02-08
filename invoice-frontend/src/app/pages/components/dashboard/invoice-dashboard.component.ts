@@ -251,15 +251,16 @@ export class InvoiceDashboardComponent implements OnInit {
   temp_MMDDYYY(epoch) {
     return MMDDYYYY(epoch);
   }
+
   // history listing apis
   goToUserProfile(user_id) {
     console.log("user_id", user_id);
     this.router.navigateByUrl('/employee-view/' + user_id.user_id);
-    // this.router.navigate(['/employee-view/'], { queryParams: { user_id: local_user._id } });
+
   }
   goToInvoiceForm(user_id) {
     console.log("invoice11", user_id);
-    // this.router.navigate(['/invoice-form'], { queryParams: { _id: user_id.data_id } });
+
     if (user_id.module == 'Invoice') {
       this.router.navigate(['/invoice-form'], { queryParams: { _id: user_id.data_id } });
     } if (user_id.module == 'Vendor') {
