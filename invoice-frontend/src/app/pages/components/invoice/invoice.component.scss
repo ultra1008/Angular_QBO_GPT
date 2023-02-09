@@ -643,3 +643,10 @@
 .dropdown {
     height: 25px;
 }
+
+.table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: unset !important;
+    -webkit-overflow-scrolling: touch;
+}

@@ -1044,6 +1044,12 @@ $angular-dark-theme: mat-dark-theme((color: (primary: $angular-primary,
     color: white !important;
   }
 
+  .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+  .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover,
+  .dataTables_wrapper .dataTables_paginate .paginate_button.current:active {
+    color: white !important;
+  }
+
   .card-header .title {
     color: white !important;
   }
@@ -1271,29 +1277,43 @@ $angular-dark-theme: mat-dark-theme((color: (primary: $angular-primary,
     color: white !important;
   }
 
-  table.dataTable thead th.sorting:after,
-  table.dataTable thead th.sorting_asc:after,
-  table.dataTable thead th.sorting_desc:after {
-    position: absolute;
+  // table.dataTable thead th.sorting:after,
+  // table.dataTable thead th.sorting_asc:after,
+  // table.dataTable thead th.sorting_desc:after {
+  //   position: absolute;
 
-    top: 12px;
+  //   top: 12px;
 
-    right: 8px;
+  //   right: 8px;
 
-    display: block;
+  //   display: block;
 
-    font-family: "Font Awesome\ 5 Free";
-  }
+  //   font-family: "Font Awesome\ 5 Free";
+  // }
 
   table.dataTable thead th.sorting:after {
     //content: "\f0dc";
 
     color: #ddd;
 
-    font-size: 0.8em;
+    font-size: 1.2em;
 
     padding-top: 0.12em;
+    opacity: .6;
   }
+
+  table.dataTable thead th.sorting::before {
+    //content: "\f0dc";
+
+    color: #ddd;
+    bottom: 45%;
+    font-size: 1.2em;
+
+    padding-top: 0.12em;
+    opacity: .6;
+  }
+
+
 
   // table.dataTable thead th.sorting_asc:after {
 

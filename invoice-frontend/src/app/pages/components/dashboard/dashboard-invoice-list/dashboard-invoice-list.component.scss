@@ -94,3 +94,10 @@
 .inner-search-bar {
     width: 90%;
 }
+
+.table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: unset !important;
+    -webkit-overflow-scrolling: touch;
+}
