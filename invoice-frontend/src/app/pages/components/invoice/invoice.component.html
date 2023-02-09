@@ -140,6 +140,7 @@
                         <tr>
                             <th>{{"invoice_no" | translate}}</th>
                             <th>{{"po_no" | translate}}</th>
+                            <th>{{"Vendor_Name" | translate}}</th>
                             <th>{{"packing_slip_no" | translate}}</th>
                             <th>{{"Receiving_Slip" | translate}}</th>
                             <th>{{"Receiving_Attachment" | translate}}</th>
@@ -152,6 +153,7 @@
                         <tr *ngFor="let invoice of allInvoices">
                             <td>{{ invoice.invoice }}</td>
                             <td>{{ invoice.p_o }}</td>
+                            <td>{{ invoice.vendor.vendor_name }}</td>
                             <td>{{ invoice.packing_slip }}</td>
                             <td>{{ invoice.receiving_slip }}</td>
                             <td></td>
