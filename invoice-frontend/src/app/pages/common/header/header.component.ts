@@ -174,11 +174,9 @@ export class HeaderComponent implements OnInit {
 
   moveToDashboard() {
     this.usertype = sessionStorage.getItem(localstorageconstants.USERTYPE) ? sessionStorage.getItem(localstorageconstants.USERTYPE) : "portal";
-    if (this.usertype == "portal")
-    {
+    if (this.usertype == "portal") {
       this.router.navigate([this.routers.DASHBOARD]).then();
-    } else
-    {
+    } else {
       this.router.navigate([this.routers.SUERADMINDASHBOARD]).then();
     }
   }
@@ -228,27 +226,23 @@ export class AddressBook implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any, private modeService: ModeDetectService, public translate: TranslateService, public httpCall: HttpCall,) {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off')
-    {
+    if (this.mode == 'off') {
       this.emailIcon = icon.EMAIL;
       this.callIcon = icon.EMERGENCY_CONTACT;
       this.exitIcon = icon.CANCLE;
 
-    } else
-    {
+    } else {
       this.emailIcon = icon.EMAIL;
       this.callIcon = icon.EMERGENCY_CONTACT;
       this.exitIcon = icon.CANCLE_WHITE;
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode)
-      {
+      if (mode) {
         this.mode = 'off';
         this.emailIcon = icon.EMAIL;
         this.callIcon = icon.EMERGENCY_CONTACT;
         this.exitIcon = icon.CANCLE;
-      } else
-      {
+      } else {
         this.mode = 'on';
         this.emailIcon = icon.EMAIL;
         this.callIcon = icon.EMERGENCY_CONTACT;
@@ -291,14 +285,13 @@ export class AddressBook implements OnInit {
         }
       ]
     };
-    // this.getAllUserList();
-    // this.getAllVendorList();
+    this.getAllUserList();
+    this.getAllVendorList();
 
   }
   async getAllUserList() {
     let data = await this.httpCall.httpGetCall(httproutes.PORTAL_GET_ALL_USERS).toPromise();
-    if (data.status)
-    {
+    if (data.status) {
       this.userList = data.data;
       this.showTable = false;
       setTimeout(() => {
@@ -309,9 +302,8 @@ export class AddressBook implements OnInit {
   }
 
   async getAllVendorList() {
-    let data = await this.httpCall.httpGetCall(httproutes.SPONSOR_GET_ALL_VENDOR).toPromise();
-    if (data.status)
-    {
+    let data = await this.httpCall.httpGetCall(httproutes.PORTAL_COMPANY_VENDOR_GET_BY_ID).toPromise();
+    if (data.status) {
       this.vendorList = data.data;
       this.showTableTwo = false;
       setTimeout(() => {

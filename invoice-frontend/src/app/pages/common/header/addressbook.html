@@ -111,7 +111,7 @@
                             <thead>
                                 <tr>
                                     <th>{{'addressbook_Vendor_Name' | translate}}</th>
-                                    <th>{{'addressbook_Vendor_Contact_Person' | translate}}</th>
+                                    <!-- <th>{{'addressbook_Vendor_Contact_Person' | translate}}</th> -->
                                     <th>{{'addressbook_Vendor_Contact_Phone' | translate}}</th>
                                     <th>{{'addressbook_Vendor_Email' | translate}}</th>
                                     <th>{{'addressbook_Vendor_Status' | translate}}</th>
@@ -120,15 +120,15 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let vendordata of vendorList">
-                                    <td>{{vendordata.company_name}}</td>
-                                    <td>{{vendordata.contact_person_name}}</td>
+                                    <td>{{vendordata.vendor_name}}</td>
+                                    <!-- <td>{{vendordata.contact_person_name}}</td> -->
                                     <td>{{vendordata.phone | mask: '(000) 000-0000'}}</td>
                                     <td>{{vendordata.email}}</td>
                                     <td>
-                                        <div *ngIf="vendordata.vendor_status == 1">
+                                        <div *ngIf="vendordata.status == 1">
                                             {{'Team-EmployeeList-Status-Active' | translate}}
                                         </div>
-                                        <div *ngIf="vendordata.vendor_status == 2">
+                                        <div *ngIf="vendordata.status == 2">
                                             {{'Team-EmployeeList-Status-In-Active' |
                                             translate}}</div>
                                     </td>
