@@ -92,8 +92,9 @@ export class DashboardInvoiceListComponent implements OnInit {
   listtogrid_text: any;
   gridtolist_text: any;
   count: number = 0;
+  allInvoices: any = [];
 
-  constructor(private location: Location, private modeService: ModeDetectService,
+  constructor (private location: Location, private modeService: ModeDetectService,
     public dialog: MatDialog,
     private router: Router,
     private http: HttpClient,
@@ -238,7 +239,7 @@ export class DashboardInvoiceListComponent implements OnInit {
       }
       i++;
     });
-
+    this.getAllInvoices();
     const token = localStorage.getItem(localstorageconstants.INVOICE_TOKEN);
     let portal_language = localStorage.getItem(localstorageconstants.LANGUAGE);
     let headers = new HttpHeaders({ Authorization: token, language: portal_language, });
@@ -421,8 +422,26 @@ export class DashboardInvoiceListComponent implements OnInit {
     };
   }
 
-  invoiceCountData(event) {
-    this.count = event;
+  getAllInvoices() {
+    let that = this;
+    let requestData = {};
+    if (this.status != undefined && this.status != null && this.status != '') {
+      requestData = {
+        status: this.status,
+      };
+    }
+    this.httpCall.httpPostCall(httproutes.INVOICE_GET_STATUS_VISE_LIST, requestData).subscribe(function (params) {
+      if (params.status) {
+        that.allInvoices = params.data;
+        that.count = params.count;
+      }
+      that.uiSpinner.spin$.next(false);
+    });
+  }
+
+  invoiceUpdateCard() {
+    this.rerenderfunc();
+    this.getAllInvoices();
   }
   updateInvoice(requestObject) {
     let that = this;
@@ -431,7 +450,7 @@ export class DashboardInvoiceListComponent implements OnInit {
       if (params.status) {
         that.snackbarservice.openSnackBar(params.message, "success");
         that.uiSpinner.spin$.next(false);
-        that.rerenderfunc();
+        this.rerenderfunc();
       } else {
         that.snackbarservice.openSnackBar(params.message, "error");
         that.uiSpinner.spin$.next(false);

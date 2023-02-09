@@ -138,7 +138,12 @@ module.exports.getInvoice = async function (req, res) {
                     complete: 0,
                 };
                 if (get_count) {
-                    if (get_count.length > 0) {
+                    if (get_count.length == 0) {
+                        get_count = {
+                            pending: 0,
+                            complete: 0,
+                        };
+                    } else {
                         get_count = get_count[0];
                     }
                     count = {
@@ -193,16 +198,50 @@ module.exports.getInvoiceList = async function (req, res) {
                 },
                 { $unwind: "$vendor" },
             ]);
-            let count = get_data.length;
-            var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+            var count = get_data.length;
+            /* var get_count = await processInvoiceConnection.aggregate([
+                { $match: { is_delete: 0 } },
+                {
+                    $project: {
+                        pending: { $cond: [{ $eq: ["$status", 'Pending'] }, 1, 0] },
+                        complete: { $cond: [{ $eq: ["$status", 'Complete'] }, 1, 0] },
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        pending: { $sum: "$pending" },
+                        complete: { $sum: "$complete" },
+                    }
+                }
+            ]); */
+            /* var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
             let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
             let checkManagement = _.find(company_data.otherstool, function (n) { return n.key == config.MANAGEMENT_KEY; });
             let isManagement = false;
             if (checkManagement) {
                 isManagement = true;
-            }
+            } */
             if (get_data) {
-                res.send({ status: true, message: "Invoice data", data: get_data, is_management: isManagement, count });
+                /* var count = {
+                    pending: 0,
+                    complete: 0,
+                };
+                if (get_count) {
+                    if (get_count.length == 0) {
+                        get_count = {
+                            pending: 0,
+                            complete: 0,
+                        };
+                    } else {
+                        get_count = get_count[0];
+                    }
+                    count = {
+                        pending: get_count.pending,
+                        complete: get_count.complete,
+                    };
+                } */
+                res.send({ status: true, message: "Invoice data", data: get_data, count });
             } else {
                 res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
             }
@@ -672,7 +711,7 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
 
                         SELECTION: new handlebars.SafeString(`<h4>${vendor}</h4><h4>${status}</h4>`),
 
-                        COMPANYNAME: `${translator.getStr('EmasilCompanyName')} ${company_data.companyname}`,
+                        COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
                         COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
                     };
                     var template = handlebars.compile(file_data);

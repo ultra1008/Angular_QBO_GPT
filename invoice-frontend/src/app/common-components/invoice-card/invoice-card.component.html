@@ -1,4 +1,4 @@
-<div class="card mb-3 mr-4" *ngFor="let invoice of allInvoices">
+<div class="card mb-3 mr-4">
     <div class="card-body">
         <div class="data">
             <div class="row dropdown">
@@ -38,7 +38,7 @@
                 <br />
                 <b>P.O # </b> <span>{{invoice.p_o}}</span>
                 <br />
-                <b>Vendor </b> <span>{{invoice.vendor.vendor_name}}</span>
+                <b>Vendor </b> <span>{{invoice.vendor}}</span>
                 <br />
                 <b>Packing Slip </b> <span>{{invoice.packing_slip}}</span>
                 <br />
@@ -48,7 +48,6 @@
                 <br />
                 <b
                     [ngClass]="invoice.status == 'Pending'? 'pendingcss' : 'Approvedcss' && invoice.status == 'Approved'? 'Approvedcss' : 'Rejectcss'&& invoice.status == 'Rejected'? 'Rejectcss' : 'Rejectcss'">
-
                     <span>{{invoice.status}}</span></b>
             </div>
 

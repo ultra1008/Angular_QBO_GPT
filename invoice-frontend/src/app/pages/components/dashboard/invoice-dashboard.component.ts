@@ -103,7 +103,7 @@ export class InvoiceDashboardComponent implements OnInit {
     scales: {
       yAxes: [{
         ticks: {
-          // stepSize: 10,
+          stepSize: 1,
           min: 0,
         },
       }],
@@ -127,9 +127,9 @@ export class InvoiceDashboardComponent implements OnInit {
   public barChartPlugins = [];
 
   public barChartData: ChartDataSets[] = [
-    { data: [65, 59, 80, 81, 56], label: 'Pending' },
-    { data: [28, 48, 40, 19, 86], label: 'Approve' },
-    { data: [48, 48, 48, 48, 48], label: 'Reject' },
+    // { data: [65, 59, 80, 81, 56], label: 'Pending' },
+    // { data: [28, 48, 40, 19, 86], label: 'Approve' },
+    // { data: [48, 48, 48, 48, 48], label: 'Reject' },
   ];
   showChart: boolean = true;
   /*

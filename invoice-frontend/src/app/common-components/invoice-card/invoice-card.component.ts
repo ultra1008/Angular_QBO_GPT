@@ -14,8 +14,9 @@ import { LanguageApp } from 'src/app/service/utils';
   styleUrls: ['./invoice-card.component.scss']
 })
 export class InvoiceCardComponent implements OnInit {
-  @Input() invoiceStatus: any;
-  @Output() invoiceCountData: EventEmitter<void> = new EventEmitter<void>();
+  @Input() invoice: any;
+  // @Input() invoiceStatus: any;
+  @Output() invoiceUpdateCard: EventEmitter<void> = new EventEmitter<void>();
   subscription!: Subscription;
   mode: any;
   allInvoices = [];
@@ -36,7 +37,7 @@ export class InvoiceCardComponent implements OnInit {
   denyIcon: string;
   status: any;
   id: any;
-  constructor(public route: ActivatedRoute, private router: Router, private modeService: ModeDetectService, public httpCall: HttpCall, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService) {
+  constructor (public route: ActivatedRoute, private router: Router, private modeService: ModeDetectService, public httpCall: HttpCall, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService) {
     this.status = this.route.snapshot.queryParamMap.get('status');
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
@@ -79,13 +80,13 @@ export class InvoiceCardComponent implements OnInit {
 
   ngOnInit(): void {
     let that = this;
-    console.log("invoiceStatus", this.invoiceStatus);
+    // console.log("invoiceStatus", this.invoiceStatus);
     let role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA) ?? '');
     this.role_to = role_permission.UserData.role_name;
 
-    this.getAllInvoices();
+    // this.getAllInvoices();
   }
-  getAllInvoices() {
+  /* getAllInvoices() {
     let that = this;
     let requestData = {};
     if (this.invoiceStatus != undefined && this.invoiceStatus != null && this.invoiceStatus != '') {
@@ -102,10 +103,7 @@ export class InvoiceCardComponent implements OnInit {
       }
       that.uiSpinner.spin$.next(false);
     });
-  }
-  public sendCount(count): void {
-    this.invoiceCountData.emit(count);
-  }
+  } */
   updateInvoice(requestObject) {
     let that = this;
     console.log("requestObject", requestObject);
@@ -117,11 +115,11 @@ export class InvoiceCardComponent implements OnInit {
       if (params.status) {
         that.snackbarservice.openSnackBar(params.message, "success");
         that.uiSpinner.spin$.next(false);
-        that.rerenderfunc();
+        // that.rerenderfunc();
+        that.invoiceUpdateCard.emit();
       } else {
         that.snackbarservice.openSnackBar(params.message, "error");
         that.uiSpinner.spin$.next(false);
-
       }
     });
   }

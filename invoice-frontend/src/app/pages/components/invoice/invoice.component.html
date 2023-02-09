@@ -75,16 +75,16 @@
 
                 </div>
             </div>
-
-
         </div>
-
     </div>
     <div class="pt-3" style="float: right;">
-
     </div>
+    <!-- {{allInvoices.length}} -->
     <div class="row ml-3" *ngIf="gridtolist">
-        <app-invoice-card></app-invoice-card>
+        <div class="mb-3 mr-4" *ngFor="let invoice of allInvoices">
+            <app-invoice-card [invoice]="invoice" (invoiceUpdateCard)="invoiceUpdateCard()"></app-invoice-card>
+        </div>
+        <!-- <app-invoice-card  ></app-invoice-card> -->
 
         <!-- <div class="card mb-3 mr-4" *ngFor="let invoice of allInvoices">
             <div class="card-body">
