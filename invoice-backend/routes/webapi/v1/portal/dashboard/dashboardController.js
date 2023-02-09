@@ -1,4 +1,4 @@
-var invoice_Schema = require('./../../../../../model/invoice');
+var invoiceSchema = require('./../../../../../model/invoice');
 var invoiceProcessSchema = require('./../../../../../model/process_invoice');
 let db_connection = require('./../../../../../controller/common/connectiondb');
 let collectionConstant = require('./../../../../../config/collectionConstant');
@@ -15,7 +15,7 @@ module.exports.getDashboardCount = async function (req, res) {
     if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
-            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoice_Schema);
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var invoicesProcessConnection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, invoiceProcessSchema);
             var get_data = await invoicesConnection.aggregate([
                 {
@@ -69,7 +69,7 @@ module.exports.dashboardInvoiceList = async function (req, res) {
     if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
-            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoice_Schema);
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var pending_data = await invoicesConnection.find({ is_delete: 0, status: 'Pending' }).sort({ created_at: -1 }).limit(3);
             // var process_data = await invoicesConnection.find({ is_delete: 0, status: 'Generated' }).sort({ created_at: -1 }).limit(3);
             var cancel_data = await invoicesConnection.find({ is_delete: 0, status: 'Rejected' }).sort({ created_at: -1 }).limit(3);
@@ -98,7 +98,7 @@ module.exports.getDashboardChart = async function (req, res) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             let requestObject = req.body;
-            /* var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoice_Schema);
+            /* var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var invoicesProcessConnection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, invoiceProcessSchema);
             var get_data = await invoicesConnection.aggregate([
                 {
@@ -146,7 +146,7 @@ module.exports.getDashboardChart = async function (req, res) {
             // epoch = _(epoch).sort();
             epoch = _.reverse(epoch);
             console.log("epoch: ", epoch);
-            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoice_Schema);
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             let get_invoice = await invoicesConnection.aggregate([
                 {
                     $match: {

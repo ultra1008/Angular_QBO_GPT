@@ -1,4 +1,4 @@
-var invoice_Schema = require('../../../../../model/invoice');
+var invoiceSchema = require('../../../../../model/invoice');
 var vendorSchema = require('../../../../../model/vendor');
 var processInvoiceSchema = require('../../../../../model/process_invoice');
 var invoice_history_Schema = require('../../../../../model/history/invoice_history');
@@ -25,7 +25,7 @@ module.exports.saveInvoice = async function (req, res) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoice_Schema);
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var id = requestObject._id;
             delete requestObject._id;
             if (id) {
@@ -95,7 +95,7 @@ module.exports.getInvoice = async function (req, res) {
     if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
-            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoice_Schema);
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var processInvoiceConnection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
             var get_data = await invoicesConnection.aggregate([
                 { $match: { is_delete: 0 } },
@@ -176,7 +176,7 @@ module.exports.getInvoiceList = async function (req, res) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoice_Schema);
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var processInvoiceConnection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
             var match_query = { is_delete: 0 };
             if (requestObject.status) {
@@ -265,7 +265,7 @@ module.exports.getOneInvoice = async function (req, res) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoice_Schema);
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var get_data = await invoicesConnection.findOne({ _id: ObjectID(requestObject._id) });
             res.send({ status: true, message: "Invoice data", data: get_data });
         } catch (e) {
@@ -292,7 +292,7 @@ module.exports.deleteInvoice = async function (req, res) {
             var id = requestObject._id;
             delete requestObject._id;
 
-            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoice_Schema);
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             requestObject.updated_by = decodedToken.UserData._id;
             requestObject.updated_at = Math.round(new Date().getTime() / 1000);
             requestObject.is_delete = 1;
@@ -332,7 +332,7 @@ module.exports.updateInvoiceStatus = async function (req, res) {
             var requestObject = req.body;
             var id = requestObject._id;
             delete requestObject._id;
-            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoice_Schema);
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             requestObject.updated_by = decodedToken.UserData._id;
             requestObject.updated_at = Math.round(new Date().getTime() / 1000);
             var get_invoice = await invoicesConnection.findOne({ _id: ObjectID(id) });
@@ -377,7 +377,7 @@ module.exports.getInvoiceDatatable = async function (req, res) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoice_Schema);
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var col = [];
             col.push("invoice", "p_o", "packing_slip", "receiving_slip", "", "notes", "status");
 
@@ -482,7 +482,7 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
             let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
             let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
 
-            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoice_Schema);
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             let sort = { vendor_name: 1 };
             let vendorQuery = [];
             let query = [];
@@ -731,5 +731,55 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.getOrphanDocuments = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var invoiceConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+            var processInvoiceConnection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
+            var one_invoice = await invoiceConnection.aggregate([
+                { $match: { _id: ObjectID(requestObject._id) } },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_VENDOR,
+                        localField: "vendor",
+                        foreignField: "_id",
+                        as: "vendor"
+                    }
+                },
+                { $unwind: "$vendor" },
+            ]);
+            if (one_invoice) {
+                if (one_invoice.length > 0) {
+                    one_invoice = one_invoice[0];
+                }
+                let query = {
+                    status: 'Complete',
+                    document_type: { $ne: 'INVOICE' },
+                    "process_data.document_pages.fields.VENDOR_NAME": { $regex: one_invoice.vendor.vendor_name, $options: 'i' },
+                    "process_data.document_pages.fields.INVOICE_NUMBER": { $regex: one_invoice.invoice, $options: 'i' },
+                    // "process_data.document_pages.fields.VENDOR_NAME": /CN SOLUTIONS GROUP LLc/i
+                };
+                // console.log("qauerys: ", query);
+                let get_process = await processInvoiceConnection.find(query);
+                res.send({ status: true, message: "Invoice data", data: get_process });
+            } else {
+                res.send({ message: translator.getStr('NoDataWithId'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    }
+    else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
