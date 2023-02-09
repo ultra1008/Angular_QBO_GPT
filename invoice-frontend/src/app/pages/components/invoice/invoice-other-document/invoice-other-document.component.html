@@ -8,7 +8,8 @@
                     translate }}</h4>
             </mat-expansion-panel-header>
             <div class="pdf-data">
-                <div class=" mt-1 pdf-header">
+
+                <div class=" mt-1 pdf-header" *ngIf="show_pdf">
                     <button mat-raised-button color="primary" (click)="goToEdit()" class="cust-button-form"><img
                             src="{{editIcon}}" alt="" class="" height="20px" style=" padding-right: 4px;">{{'All-Edit' |
                         translate}}</button>
@@ -22,11 +23,27 @@
                         |
                         translate}}</button>
                 </div>
-                <div class="pdf-viewer">
+                <div class="pdf-viewer" *ngIf="show_pdf">
                     <pdf-viewer id="pdf" [src]="pdf_url" [rotation]="0" [original-size]="false" [show-all]="true"
                         [fit-to-page]="false" [zoom]="1" [zoom-scale]="'page-width'" [stick-to-page]="false"
                         [render-text]="true" [external-link-target]="'blank'" [autoresize]="true" [show-borders]="false"
                         [external-link-target]="'blank'" style="display: block;"></pdf-viewer>
+                </div>
+                <div class="text-center">
+                    <button mat-raised-button color="primary" style="margin-right: 10px;width: 180px; "
+                        class="sign-button ml-1 mb-2">
+                        {{'Add_files' | translate }}
+                    </button>
+                    <p>OR</p>
+                    <button mat-raised-button color="primary" style="margin-right: 10px; width: 180px;"
+                        class="sign-button ml-1 mb-2">
+                        {{'Orphan_Vendor_files' | translate }}
+                    </button>
+                    <p>OR</p>
+                    <button mat-raised-button color="primary" style="margin-right: 10px;width: 180px; "
+                        class="sign-button ml-1">
+                        {{'Request_For_Files' | translate }}
+                    </button>
                 </div>
             </div>
 

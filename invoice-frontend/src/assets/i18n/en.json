@@ -2474,5 +2474,8 @@
     "Pending_Invoice": "Pending",
     "No_Reject_Invoice": "No invoice rejected yet",
     "No_Processed_Invoice": "No invoice processed yet",
-    "No_Pending_Invoice": "No invoice pending yet"
+    "No_Pending_Invoice": "No invoice pending yet",
+    "Add_files": "Add Files/ Import Files",
+    "Orphan_Vendor_files": "Orphan Vendor Files",
+    "Request_For_Files": "Request For Files"
 }

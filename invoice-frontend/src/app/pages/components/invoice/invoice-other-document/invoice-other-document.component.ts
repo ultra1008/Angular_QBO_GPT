@@ -15,7 +15,7 @@ export class InvoiceOtherDocumentComponent implements OnInit {
   hideToggle = false;
   disabled = false;
   displayMode: string = 'default';
-  pdf_url = 'https://s3.us-west-1.wasabisys.com/rovukdata/invoice-sample-pdfs/adrian@vmgconstructioninc10.com8a83e28d7dc522e9017e4939f2250519457511c73e527873ff3e198be850e1d1c710b0.pdf';
+  pdf_url = '';
   multi = false;
   hide: Boolean = true;
   downloadIcon: string;
@@ -23,6 +23,7 @@ export class InvoiceOtherDocumentComponent implements OnInit {
   editIcon: string;
   subscription: Subscription;
   mode: any;
+  show_pdf: Boolean = false;
   documentTypes: any = {
     po: 'PO',
     packingSlip: 'Packing Slip',
