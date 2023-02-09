@@ -2477,5 +2477,7 @@
     "No_Pending_Invoice": "No invoice pending yet",
     "Add_files": "Add Files/ Import Files",
     "Orphan_Vendor_files": "Orphan Vendor Files",
-    "Request_For_Files": "Request For Files"
+    "Request_For_Files": "Request For Files",
+    "Panding_Files_Older_Then": "Panding Files Older Then",
+    "Days": "Days"
 }

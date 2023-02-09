@@ -51,6 +51,7 @@ export class DashboardFilesListComponent implements OnInit {
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[] = [];
   termList = [];
+  Document_View_time_value = [];
   locallanguage: string;
   showTable: boolean = true;
   invoice_no: string;
@@ -143,7 +144,7 @@ export class DashboardFilesListComponent implements OnInit {
 
   ngOnInit(): void {
     const that = this;
-
+    this.getDocumentViwe();
     let role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
 
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
@@ -470,6 +471,23 @@ export class DashboardFilesListComponent implements OnInit {
       },
     ];
   }
+
+
+  getDocumentViwe() {
+    let that = this;
+    this.httpCall
+      .httpGetCall(httproutes.PORTAL_ROVUK_INVOICE__SETTINGS_GET_ALL_ALERTS)
+      .subscribe(function (params) {
+        if (params.status) {
+
+          that.Document_View_time_value = params.data.settings.Document_View.setting_value;
+          console.log("Document_View_time_value", params.data.settings.Document_View.setting_value);
+
+        }
+      });
+
+  }
+
 
   // openVendorForm() {
   //   this.router.navigateByUrl('vendor-form');

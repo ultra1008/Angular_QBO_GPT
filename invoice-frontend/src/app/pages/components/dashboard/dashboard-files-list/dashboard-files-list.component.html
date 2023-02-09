@@ -1,49 +1,113 @@
-<div class="main-search-bar">
-    <div class="row">
-        <div class="one-div-cust-user">
-            <div class="header-text-cust statastic-card mt-2">
-                <div class="statastic-card-title">{{'Dashboard_Pending_File' | translate }}</div>
-                <div class="number">
-                    <div class="mt-2">{{counts.pending_files}}</div>
-                </div>
-            </div>
-            <!-- <div class="number-cust">  </div> -->
-        </div>
-
+<div class="display-inline-cust">
+  <div class="col-md-12">
+    <div class="screen-title-section cust-h1-inline">
+      <div class="inner-search-bar"></div>
+      <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
+        matTooltip="{{ 'TOOLTIP_REPORT' | translate }}" aria-label="Left Align">
+        <img src="{{ reportIcon }}" alt="" height="20px" />
+      </button>
+      <button mat-raised-button (click)="back()" class="cust-button-form">
+        <img src="{{ backIcon }}" alt="" height="20px" />
+        {{ "All-back" | translate }}
+      </button>
     </div>
-    <div class="display-inline-cust">
-        <div class="col-md-12">
-          <div class="screen-title-section cust-h1-inline">
-            <div class="inner-search-bar"></div>
-            <button
-              class="import-export-btn-datatable button_workersEditClass cust-margin-div"
-              matTooltip="{{ 'TOOLTIP_REPORT' | translate }}"
-              aria-label="Left Align"
-            >
-              <img src="{{ reportIcon }}" alt="" height="20px" />
-            </button>
-            <button mat-raised-button (click)="back()" class="cust-button-form">
-              <img src="{{ backIcon }}" alt="" height="20px" />
-              {{ "All-back" | translate }}
-            </button>
-          </div>
+  </div>
+</div>
+<div class="main-search-bar">
+  <div class="row">
+    <div class="one-div-cust-user">
+      <div class="header-text-cust statastic-card mt-2">
+        <div class="statastic-card-title">{{'Dashboard_Pending_File' | translate }}</div>
+        <div class="number">
+          <div class="mt-2">{{counts.pending_files}}</div>
         </div>
       </div>
-    <!-- <div class="display-inline-cust">
-        <div class="row  d-flex">
-
-            <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
-                matTooltip="{{ 'TOOLTIP_REPORT' | translate }}" aria-label="Left Align">
-                <img src="{{reportIcon}}" alt="" height="20px">
-            </button>
-        </div>
-    </div> -->
-
-</div>
-<div class="wrapper-cust-admin cust-width ">
-    <div class="table-responsive cust-padding cust-padding-tmp mt-5" *ngIf="showTable">
-        <table datatable [dtOptions]="dtOptions" id="dtOptions_vendor" class="row-border hover">
-        </table>
+      <!-- <div class="number-cust">  </div> -->
     </div>
+
+  </div>
+
+  <div class="wrapper-cust-admin" fxLayout style="height: 95%">
+
+
+    <!-- <mat-horizontal-stepper labelPosition="bottom" fxFlex="100" #stepper>
+      <ng-template matStepperIcon="edit" let-index="index">
+        <img *ngIf="index == 0" src="{{companyinfo_white}}" alt="" height="15px">
+        <img *ngIf="index == 1" src="{{userIcon_white}}" alt="" height="15px">
+
+      </ng-template>
+
+      <ng-template matStepperIcon="companyprofile">
+        <img src="{{companyinfo}}" alt="" height="15px">
+      </ng-template>
+
+      <ng-template matStepperIcon="mailbox">
+        <img src="{{companyinfo}}" alt="" height="15px">
+      </ng-template>
+
+
+
+      <mat-step state="companyprofile" [completed]="false">
+        <form>
+          <ng-template matStepLabel>{{'Dashboard_Pending_File' | translate}}</ng-template>
+          <div class="wrapper-cust-admin cust-width ">
+            <div class="table-responsive cust-padding cust-padding-tmp mt-5" *ngIf="showTable">
+              <table datatable [dtOptions]="dtOptions" id="dtOptions_vendor" class="row-border hover">
+              </table>
+            </div>
+          </div>
+          <ngx-gallery [options]="galleryOptions" [images]="galleryImages" #gallery></ngx-gallery>
+        </form>
+      </mat-step>
+
+      <mat-step state="mailbox" [completed]="false">
+        <form>
+          <ng-template matStepLabel>
+            <div>{{'Panding_Files_Older_Then' | translate}}</div>
+            <div>{{Document_View_time_value}}</div>
+            <div>{{'Days' |
+              translate}}</div>
+          </ng-template>
+          <div class="wrapper-cust-admin cust-width ">
+            <div class="table-responsive cust-padding cust-padding-tmp mt-5" *ngIf="showTable">
+              <table datatable [dtOptions]="dtOptions" id="dtOptions_vendor" class="row-border hover">
+              </table>
+            </div>
+          </div>
+          <ngx-gallery [options]="galleryOptions" [images]="galleryImages" #gallery></ngx-gallery>
+        </form>
+      </mat-step>
+
+    </mat-horizontal-stepper> -->
+    <div>
+      <mat-tab-group mat-align-tabs="center">
+        <mat-tab label="{{'Dashboard_Pending_File' | translate}}">
+          <div class="wrapper-cust-admin cust-width ">
+            <div class="table-responsive cust-padding cust-padding-tmp mt-5" *ngIf="showTable">
+              <table datatable [dtOptions]="dtOptions" id="dtOptions_vendor" class="row-border hover">
+              </table>
+            </div>
+          </div>
+          <ngx-gallery [options]="galleryOptions" [images]="galleryImages" #gallery></ngx-gallery>
+        </mat-tab>
+        <mat-tab
+          label="{{'Panding_Files_Older_Then' | translate}} {{Document_View_time_value}}&nbsp;{{'Days' | translate}}">
+
+          <div class="wrapper-cust-admin cust-width ">
+            <div class="table-responsive cust-padding cust-padding-tmp mt-5" *ngIf="showTable">
+              <table datatable [dtOptions]="dtOptions" id="dtOptions_vendor" class="row-border hover">
+              </table>
+            </div>
+          </div>
+          <ngx-gallery [options]="galleryOptions" [images]="galleryImages" #gallery></ngx-gallery>
+
+        </mat-tab>
+
+
+
+      </mat-tab-group>
+    </div>
+  </div>
+
+
 </div>
-<ngx-gallery [options]="galleryOptions" [images]="galleryImages" #gallery></ngx-gallery>
