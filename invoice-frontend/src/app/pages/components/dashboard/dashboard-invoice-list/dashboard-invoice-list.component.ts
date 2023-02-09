@@ -94,7 +94,7 @@ export class DashboardInvoiceListComponent implements OnInit {
   count: number = 0;
   allInvoices: any = [];
 
-  constructor (private location: Location, private modeService: ModeDetectService,
+  constructor(private location: Location, private modeService: ModeDetectService,
     public dialog: MatDialog,
     private router: Router,
     private http: HttpClient,
@@ -498,47 +498,13 @@ export class DashboardInvoiceListComponent implements OnInit {
         title: that.Vendor_Status,
         data: 'status',
         defaultContent: "",
-        /* render: function (data: any, type: any, full: any) {
-          var tmp_return;
-          if (full.status == 1)
-            tmp_return =
-              `<div class="active-chip-green call-active-inactive-api" edit_tmp_id=` +
-              full._id +
-              `><i  edit_tmp_id=` +
-              full._id +
-              ` class="fa fa-check cust-fontsize-right" aria-hidden="true"></i>` +
-              that.acticve_word +
-              `</div>`;
-          else
-            tmp_return =
-              `<div class="inactive-chip-green call-active-active-api" edit_tmp_id=` +
-              full._id +
-              `><i  edit_tmp_id=` +
-              full._id +
-              ` class="fa fa-times cust-fontsize-right" aria-hidden="true"></i>` +
-              that.inacticve_word +
-              `</div>`;
-          return tmp_return;
-        }, */
+
         width: "7%",
       },
       {
         title: that.Receiving_Attachment,
         defaultContent: "",
-        /* render: function (data: any, type: any, full: any) {
-          let htmlData = ``;
-          if (full.attachment.length != 0) {
-            htmlData =
-              `<button  edit_tmp_id='` +
-              JSON.stringify(full) +
-              `' class="cusr-edit-btn-datatable button_attachment" aria-label="Left Align">
-          <span class="fas fa-paperclip cust-fontsize-tmp"  edit_tmp_id='` +
-              JSON.stringify(full) +
-              `' aria-hidden="true"></span>
-      </button> `;
-          }
-          return htmlData;
-        }, */
+
         width: "1%",
         orderable: false,
       },

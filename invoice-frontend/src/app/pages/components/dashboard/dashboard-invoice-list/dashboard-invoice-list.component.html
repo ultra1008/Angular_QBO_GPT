@@ -20,12 +20,12 @@
     </div>
   </div>
 </div>
-<div class="main-search-bar">
-  <div class="row">
-    <div class="one-div-cust-user">
-      <div class="header-text-cust statastic-card mt-1">
-        <div class="statastic-card-title">{{ status }} Invoices</div>
-        <div class="number-new" [ngClass]="
+
+
+
+<div class="header-text-cust statastic-card mt-1">
+  <div class="statastic-card-title">{{ status }} Invoices</div>
+  <div class="number-new" [ngClass]="
             status == 'Pending'
               ? 'pending-background'
               : status == 'Approved'
@@ -36,13 +36,12 @@
               ? 'late-background'
               : ''
           ">
-          <div class="mt-2">{{ count }}</div>
-        </div>
-      </div>
-    </div>
+    <div class="mt-2">{{ count }}</div>
   </div>
-
 </div>
+
+
+
 <div class="wrapper-cust-admin cust-width">
   <div class="row ml-3" *ngIf="gridtolist">
     <div class="mb-3 mr-4" *ngFor="let invoice of allInvoices">
