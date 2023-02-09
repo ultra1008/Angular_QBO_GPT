@@ -325,6 +325,7 @@ export class InvoiceComponent implements OnInit {
   }
 
   openAddDialog() {
+    let that = this;
     const dialogRef = this.dialog.open(InvoiceAttachment, {
       height: '400px',
       width: '700px',
@@ -333,7 +334,7 @@ export class InvoiceComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-
+      that.getAllInvoices();
     });
   }
 

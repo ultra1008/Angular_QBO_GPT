@@ -59,9 +59,8 @@ module.exports.saveInvoiceProcess = async function (req, res) {
                     });
                 }
                 let insert_data = await invoiceProcessCollection.insertMany(saveObj);
-                console.log("insert_data: ", insert_data);
+                // console.log("insert_data: ", insert_data);
                 if (insert_data) {
-                    console.log("here");
                     let apiObj = [];
                     for (let i = 0; i < insert_data.length; i++) {
                         apiObj.push({
@@ -69,7 +68,6 @@ module.exports.saveInvoiceProcess = async function (req, res) {
                             document_url: insert_data[i].pdf_url,
                         });
                     }
-                    console.log("before call");
                     await sendInvoiceForProcess(apiObj);
                     /* const options = {
                         'method': 'POST',
@@ -184,7 +182,6 @@ module.exports.importManagementPO = async function (req, res) {
             } else {
                 query = { is_delete: 0, _id: { $nin: tempIds } };
             }
-            console.log("query: ", query);
             let pos = await managementPOCollection.find(query);
             let saveObj = [];
             for (let i = 0; i < pos.length; i++) {
@@ -305,18 +302,24 @@ module.exports.importProcessData = async function (req, res) {
                                     updated_at: Math.round(new Date().getTime() / 1000),
                                 };
                                 let items = [];
+                                let invoiceIsDuplicate = false;
                                 for (let i = 0; i < pages.length; i++) {
+                                    let invoice_no = '';
+                                    if (pages[i].fields.INVOICE_NUMBER != null) {
+                                        invoice_no = pages[i].fields.INVOICE_NUMBER;
+                                    }
                                     if (pages[i].fields.VENDOR_NAME != null) {
-                                        let tmpVendor = await getOneVendor(pages[i].fields.VENDOR_NAME.replace(/\n/g, " "), connection_db_api);
-                                        console.log("tmpVendor: ", tmpVendor);
+                                        let tmpVendor = await getAndCheckVendor(pages[i].fields.VENDOR_NAME.replace(/\n/g, " "), invoice_no, connection_db_api);
                                         if (tmpVendor.status) {
-                                            invoiceObject.vendor = tmpVendor.data._id;
+                                            if (tmpVendor.duplicate) {
+                                                invoiceIsDuplicate = true;
+                                            } else {
+                                                invoiceObject.vendor = tmpVendor.data._id;
+                                            }
                                         }
                                     }
                                     if (invoiceObject.vendor != '') {
-                                        if (pages[i].fields.INVOICE_NUMBER != null) {
-                                            invoiceObject.invoice = pages[i].fields.INVOICE_NUMBER;
-                                        }
+                                        invoiceObject.invoice = invoice_no;
                                         if (pages[i].fields.INVOICE_DATE != null) {
                                             invoiceObject.invoice_date = pages[i].fields.INVOICE_DATE;
                                         }
@@ -391,9 +394,10 @@ module.exports.importProcessData = async function (req, res) {
                                         }
                                     }
                                 }
-                                invoiceObject.items = items;
-                                console.log("nvoiceObject.vendor: ", invoiceObject.vendor);
-                                if (invoiceObject.vendor != '') {
+                                console.log("invoiceIsDuplicate ******************* ", invoiceIsDuplicate, "----", invoiceObject.vendor);
+                                // console.log("nvoiceObject.vendor: ", invoiceObject.vendor);
+                                if (!invoiceIsDuplicate && invoiceObject.vendor != '') {
+                                    invoiceObject.items = items;
                                     let add_invoice = new invoiceCollection(invoiceObject);
                                     let save_invoice = await add_invoice.save();
                                     console.log("invoiceObject: ", invoiceObject);
@@ -416,12 +420,18 @@ module.exports.importProcessData = async function (req, res) {
     }
 };
 
-function getOneVendor(vendorName, connection_db_api) {
+function getAndCheckVendor(vendorName, invoice_no, connection_db_api) {
     return new Promise(async function (resolve, reject) {
+        let invoiceCollection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
         let vendorCollection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
         let get_vendor = await vendorCollection.findOne({ vendor_name: vendorName });
         if (get_vendor) {
-            resolve({ status: true, data: get_vendor });
+            let one_invoice = await invoiceCollection.findOne({ vendor: ObjectID(get_vendor._id), invoice: invoice_no });
+            if (one_invoice) {
+                resolve({ status: true, duplicate: true });
+            } else {
+                resolve({ status: true, duplicate: false, data: get_vendor });
+            }
         } else {
             resolve({ status: false });
         }
