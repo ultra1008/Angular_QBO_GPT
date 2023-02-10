@@ -13,16 +13,27 @@ class Indexer:
         self.db.documents.create_index([('searchable', pymongo.TEXT)], name='document_fields')
         self.db.relations.create_index([('relation_id', ASCENDING)], name='relation_id')
         self.db.relations.create_index([('document_id', ASCENDING)], name='document_id')
+        self.db.relations.create_index([('document_hash', ASCENDING)], name='document_hash')
 
 
-    def index(self, customer_id, document_id, s3_docs_bundle_url, documents):
+    def update_duplicate_document_bundle(self, doc_hash, document_id, s3_docs_bundle_url):
+        result = self.db.documents.update_many({
+            'document_hash': doc_hash
+        }, {
+            '$set': {'document_id': document_id, 'url': s3_docs_bundle_url}
+        })
+
+        return result.modified_count > 0
+
+
+    def index(self, customer_id, document_id, s3_docs_bundle_url, doc_hash, documents):
         for doc in documents:
             self._index_document(customer_id, document_id, s3_docs_bundle_url, doc)
 
         self.db.documents.update_many({
             'document_id': document_id
         }, {
-            '$set': {'indexed': True}
+            '$set': {'indexed': True, 'document_hash': doc_hash}
         })
 
     def _index_document(self, customer_id, document_id, s3_docs_bundle_url, document):
@@ -544,7 +555,7 @@ if __name__ == '__main__':
     # test_relation_case(['quote'], 'cust_2', drop_db=False)
     # print(json.dumps({'search': Indexer().search('cust_2', 'q1')}, indent=2))
     # --
-    print(json.dumps({'search': Indexer().search('cust_1', '899')}, indent=2))
+    # print(json.dumps({'search': Indexer().search('cust_1', '899')}, indent=2))
 
 
     def test_index_search():
@@ -635,6 +646,65 @@ if __name__ == '__main__':
         Indexer()._index_packing_slip_document('cust_1', results_[0])
 
 
+    def test_agg():
+        import datetime
+        from bson.timestamp import Timestamp
+
+        client = MongoClient('mongodb://localhost:27017')
+        db = client.rovuk_db
+
+        # db.documents.insert_many([
+        #     {
+        #         "documents_1": [
+        #             {
+        #                 "created_date": datetime.datetime.utcnow(),
+        #                 "textract": [
+        #                     "exp",
+        #                     "form"
+        #                 ]
+        #             },
+        #             {
+        #                 "created_date": datetime.datetime.utcnow(),
+        #                 "textract": [
+        #                     "exp"
+        #                 ]
+        #             }
+        #         ]
+        #     },
+        #     {
+        #         "documents_1": [
+        #             {
+        #                 "created_date": datetime.datetime.utcnow(),
+        #                 "textract": [
+        #                     "exp"
+        #                 ]
+        #             }
+        #         ]
+        #     }
+        # ])
+
+        # date_from = datetime.datetime.fromisoformat('2023-02-10T12:40:51.860+00:00')
+        # date_to = datetime.datetime.fromisoformat('2023-02-10T12:40:53.860+00:00')
+        date_from = datetime.datetime.fromisoformat('2023-02-10T00:00:01.000+00:00')
+        date_to = datetime.datetime.fromisoformat('2023-02-10T23:59:59.860+00:00')
+
+        results = db.documents.aggregate([
+            # {'$match': {{'documents_1.created_date': {$gt: 70, $lt: 90}}}},
+            {'$match': {'documents_1.created_date': {'$gt': date_from, '$lt': date_to}}},
+            # {'$match': {'documents_1.created_date': datetime.datetime.fromisoformat('2023-02-10T11:16:48.271+00:00')}},
+            {'$unwind': "$documents_1"},
+            {'$unwind': "$documents_1.textract"},
+            {'$group': {'_id': "$documents_1.textract", 'count': {'$sum': 1}}},
+        ])
+        import pprint
+        pprint.pprint(list(results))
+        #https://www.bmc.com/blogs/mongodb-unwind/
+        # results = db.documents.count(
+        #     {"documents.te": True}
+        # )
+        # print(results)
+
+    test_agg()
     # test_index_quote()
     # test_index_po()
     # test_index_invoice()

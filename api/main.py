@@ -74,3 +74,10 @@ async def get_documents_by_id(customer_id: str, document_id: List[str] = Query(d
 async def search(customer_id: str, query: str, _=Depends(auth)):
     print(f'search: {customer_id=}, {query=}')
     return indexer.search(customer_id, query)
+
+
+
+@app.get("/stats")
+async def stats(customer_id: str, date_from: str, date_to: str, _=Depends(auth)):
+    pass
+    return indexer.search(customer_id, query)

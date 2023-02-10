@@ -6,6 +6,7 @@ import os
 import trp
 from PyPDF2 import PdfReader, PdfWriter
 from io import BytesIO
+from typing import List
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -88,11 +89,13 @@ class ExpenseParser:
     def __init__(self, document):
         self.document = document
         self.classified_fields = None
+        self.all_classified_fields = None
         self.other_fields = None
         self.expense_groups = None
 
     def parse(self):
         (self.classified_fields,
+         self.all_classified_fields,
          self.other_fields,
          self.expense_groups) = self._parse_document()
 
@@ -100,6 +103,7 @@ class ExpenseParser:
 
     def _parse_document(self):
         classified = {}
+        all_classified = {}
         other = []
 
         # Parse fields
@@ -113,7 +117,13 @@ class ExpenseParser:
 
             if field_type != 'OTHER':
                 if field.value:
+                    # Classified
                     classified[field_type] = field
+
+                    # All classified
+                    if field_type not in all_classified:
+                        all_classified[field_type] = []
+                    all_classified[field_type].append(field)
             else:
                 other.append(field)
 
@@ -141,7 +151,7 @@ class ExpenseParser:
 
             parsed_groups.append(parsed_group)
 
-        return classified, other, parsed_groups
+        return classified, all_classified, other, parsed_groups
 
 
     def get_clf_field_value(self, key_name: str):
@@ -150,6 +160,11 @@ class ExpenseParser:
             return value if value.strip() != '' else None
         else:
             return None
+
+
+    def get_clf_fields(self, key_name: str) -> List[ExpenseAnalysisField]:
+        return self.all_classified_fields.get(key_name)
+
 
     def get_other_field_value(self, label: str):
         label = label.lower()
@@ -340,14 +355,15 @@ class ExtractorsManager:
 
         return results
 
-    def _detect_doc_type(self, expense_doc):
-        if self._contains_text(expense_doc, 'Purchase Order'):
+    @staticmethod
+    def _detect_doc_type(expense_doc):
+        if ExtractorsManager._contains_text(expense_doc, 'Purchase Order'):
             return 'PURCHASE_ORDER'
-        elif self._contains_text(expense_doc, 'Packing Slip'):
+        elif ExtractorsManager._contains_text(expense_doc, 'Packing Slip'):
             return 'PACKING_SLIP'
-        elif self._contains_text(expense_doc, 'Quote'):
+        elif ExtractorsManager._contains_text(expense_doc, 'Quote'):
             return 'QUOTE'
-        elif self._contains_text(expense_doc, 'Invoice'):
+        elif ExtractorsManager._contains_text(expense_doc, 'Invoice'):
             return 'INVOICE'
         else:
             return None
@@ -416,14 +432,31 @@ class Extractor:
     def _extract(self) -> dict:
         pass
 
+    @staticmethod
+    def _clean_extracted_value(value):
+        if value is not None:
+            value = value.replace('\n', ' ')
+        return value
+
     def get_clf_field_value(self, key_name: str):
-        return self.expense_parser.get_clf_field_value(key_name)
+        value = self.expense_parser.get_clf_field_value(key_name)
+        value = self._clean_extracted_value(value)
+        return value
+
+    def get_clf_fields(self, key_name: str):
+        fields = self.expense_parser.get_clf_fields(key_name)
+        return [field._replace(value=self._clean_extracted_value(field.value))
+                for field in fields]
 
     def get_other_field_value(self, label: str):
-        return self.expense_parser.get_other_field_value(label)
+        value = self.expense_parser.get_other_field_value(label)
+        value = self._clean_extracted_value(value)
+        return value
 
     def get_forms_field_value(self, key_name: str, equals=True):
-        return self.forms_parser.get_field_value(key_name, equals)
+        value = self.forms_parser.get_field_value(key_name, equals)
+        value = self._clean_extracted_value(value)
+        return value
 
     def get_expense_groups(self):
         groups = []
@@ -433,14 +466,30 @@ class Extractor:
 
             for item_desc in expense_group:
                 group.append({
-                    'ITEM': item_desc.item,
-                    'PRODUCT_CODE': item_desc.product_code,
-                    'UNIT_PRICE': item_desc.unit_price,
-                    'QUANTITY': item_desc.quantity,
-                    'PRICE': item_desc.price
+                    'ITEM': self._clean_extracted_value(item_desc.item),
+                    'PRODUCT_CODE': self._clean_extracted_value(item_desc.product_code),
+                    'UNIT_PRICE': self._clean_extracted_value(item_desc.unit_price),
+                    'QUANTITY': self._clean_extracted_value(item_desc.quantity),
+                    'PRICE': self._clean_extracted_value(item_desc.price)
                 })
 
         return groups
+
+    @staticmethod
+    def clean_extracted_id(value):
+        if value is None:
+            return None
+
+        cleaned_value = ''
+        for ch in value:
+            if ch.isdigit():
+                cleaned_value += ch
+            elif ch.isalpha():
+                cleaned_value += ch
+            elif ch in ['-', '_', ' ']:
+                cleaned_value += ch
+
+        return cleaned_value
 
 
 class PackingSlipExtractor(Extractor):
@@ -449,11 +498,11 @@ class PackingSlipExtractor(Extractor):
 
     def _extract(self):
         date = self.get_clf_field_value('INVOICE_RECEIPT_DATE')
-        invoice_number = self.get_clf_field_value('INVOICE_RECEIPT_ID')
+        invoice_number = self.clean_extracted_id(self.get_clf_field_value('INVOICE_RECEIPT_ID'))
         ship_to_address = self.get_clf_field_value('RECEIVER_ADDRESS')
         vendor_name = self.get_clf_field_value('VENDOR_NAME')
         vendor_address = self.get_clf_field_value('VENDOR_ADDRESS')
-        po_number = self.get_clf_field_value('PO_NUMBER')
+        po_number = self.clean_extracted_id(self.get_clf_field_value('PO_NUMBER'))
         received_by = self.get_clf_field_value('RECEIVER_NAME')
 
         fields = {
@@ -477,7 +526,7 @@ class QuoteExtractor(Extractor):
         super().__init__('QUOTE', expense_parser, forms_parser, conf)
 
     def _extract(self):
-        quote_number = self.get_clf_field_value('INVOICE_RECEIPT_ID')
+        quote_number = self.clean_extracted_id(self.get_clf_field_value('INVOICE_RECEIPT_ID'))
         quote_date = self.get_clf_field_value('INVOICE_RECEIPT_DATE')
         terms = self.get_clf_field_value('PAYMENT_TERMS')
         address = self.get_clf_field_value('RECEIVER_ADDRESS')
@@ -518,10 +567,10 @@ class InvoiceExtractor(Extractor):
 
     def _extract(self):
         fields = {
-            'INVOICE_NUMBER': self._extract_invoice_number(),
+            'INVOICE_NUMBER': self.clean_extracted_id(self._extract_invoice_number()),
             'INVOICE_DATE': self.get_clf_field_value('INVOICE_RECEIPT_DATE'),
             'ORDER_DATE': self.get_clf_field_value('ORDER_DATE'),
-            'PO_NUMBER': self._extract_po(),
+            'PO_NUMBER': self.clean_extracted_id(self._extract_po()),
             'INVOICE_TO': self.get_clf_field_value('RECEIVER_NAME'),
             'ADDRESS': self.get_clf_field_value('RECEIVER_ADDRESS'),
             'SUBTOTAL': self.get_clf_field_value('SUBTOTAL'),
@@ -536,9 +585,9 @@ class InvoiceExtractor(Extractor):
             'TERMS': self._extract_terms(),
             'DUE_DATE': self.get_clf_field_value('DUE_DATE'),
             'SHIP_DATE': self.get_other_field_value('DATE SHIPPED'),
-            'CONTRACT_NUMBER': self._extract_contract_number(),
+            'CONTRACT_NUMBER': self.clean_extracted_id(self._extract_contract_number()),
             'DISCOUNT': self.get_clf_field_value('DISCOUNT'),
-            'ACCOUNT_NUMBER': self._extract_account_number()
+            'ACCOUNT_NUMBER': self.clean_extracted_id(self._extract_account_number())
         }
 
         groups = self.get_expense_groups()
@@ -568,23 +617,15 @@ class InvoiceExtractor(Extractor):
         value = self.get_clf_field_value('INVOICE_RECEIPT_ID')
         if value is None:
             value = self.get_forms_field_value('Invoice')
-            if value is not None:
-                value = ''.join([ch for ch in value if ch.isdigit()])  # to eliminate case "#00121"
 
         return value
 
     def _extract_contract_number(self):
         value = self.get_other_field_value('CONTRACT NUMBER')
-        if value is not None:
-            value = ''.join([ch for ch in value if ch.isdigit()])  # to eliminate case "'121010925"
-
         return value
 
     def _extract_account_number(self):
         value = self.get_clf_field_value('ACCOUNT_NUMBER')
-        if value is not None:
-            value = ''.join([ch for ch in value if ch.isdigit()])  # to eliminate case "'501527"
-
         return value
 
 
@@ -596,19 +637,20 @@ class PurchaseOrderExtractor(Extractor):
     def _extract(self):
         fields = {
             'PO_CREATE_DATE': self.get_clf_field_value('INVOICE_RECEIPT_DATE'),
-            'PO_NUMBER': self.get_clf_field_value('PO_NUMBER'),
+            'PO_NUMBER': self.clean_extracted_id(self._extract_po_number()),
             'CUSTOMER_ID': self.get_clf_field_value('CUSTOMER_NUMBER'),
-            'ADDRESS': self.get_clf_field_value('RECEIVER_ADDRESS'),
             'TERMS': self.get_clf_field_value('PAYMENT_TERMS'),
             'DELIVERY_DATE': self.get_clf_field_value('DELIVERY_DATE'),
             'DUE_DATE': self.get_clf_field_value('DUE_DATE'),
-            'QUOTE_NUMBER': self.get_clf_field_value('INVOICE_RECEIPT_ID'),
+            'QUOTE_NUMBER': self.clean_extracted_id(self.get_clf_field_value('INVOICE_RECEIPT_ID')),
             'CONTRACT_NUMBER': self.get_clf_field_value('RECEIVER_PHONE'),
             'DELIVERY_ADDRESS': self.get_clf_field_value('RECEIVER_ADDRESS'),
             'VENDOR_ID': self.get_other_field_value('Vendor'),
+            'VENDOR_NAME': self._extract_vendor_name(),
+            'VENDOR_ADDRESS': self._extract_vendor_address(),
             'SUBTOTAL': self.get_clf_field_value('SUBTOTAL'),
             'TAX': self.get_clf_field_value('TAX'),
-            'PURCHASE_ORDER_TOTAL': self.get_clf_field_value('TOTAL')
+            'PURCHASE_ORDER_TOTAL': self.get_clf_field_value('TOTAL'),
         }
 
         groups = self.get_expense_groups()
@@ -619,6 +661,55 @@ class PurchaseOrderExtractor(Extractor):
             'expense_groups': groups
         }
 
+    def _extract_po_number(self):
+        value = self.get_clf_field_value('PO_NUMBER')
+        if value is None:
+            value = self.get_forms_field_value('P.O. #')
+
+        return value
+
+    def _extract_vendor_name(self):
+        forms_vendor_value = self.get_forms_field_value('Vendor')
+
+        # High confidence
+        if forms_vendor_value:
+            for clf_field in self.get_clf_fields('VENDOR_NAME'):
+                if all(k_value in forms_vendor_value for k_value in clf_field.value.split()):
+                    return clf_field.value
+
+        # High confidence
+        receiver_name_fields = self.get_clf_fields('RECEIVER_NAME')
+        forms_to_value = self.get_forms_field_value('To:')
+        if not forms_vendor_value and receiver_name_fields and forms_to_value:
+            for clf_field in receiver_name_fields:
+                if all(k_value in forms_to_value for k_value in clf_field.value.split()):
+                    return clf_field.value
+
+        # Low confidence
+        if forms_vendor_value:
+            return forms_vendor_value.split()[0]
+
+        return self.get_clf_field_value('VENDOR_NAME')
+
+    def _extract_vendor_address(self):
+        vendor_name = self._extract_vendor_name()
+        forms_vendor_value = self.get_forms_field_value('Vendor')
+
+        # High confidence
+        if forms_vendor_value:
+            for vendor_address_field in self.get_clf_fields('VENDOR_ADDRESS'):
+                if all(k_value in forms_vendor_value for k_value in vendor_address_field.value.split()):
+                    return vendor_address_field.value.replace(vendor_name, '').strip()
+
+        # High confidence
+        receiver_address_fields = self.get_clf_fields('RECEIVER_ADDRESS')
+        forms_to_value = self.get_forms_field_value('To:')
+        if not forms_vendor_value and receiver_address_fields and forms_to_value:
+            for receiver_address_field in receiver_address_fields:
+                if all(k_value in forms_to_value for k_value in receiver_address_field.value.split()):
+                    return receiver_address_field.value.replace(vendor_name, '').strip()
+
+        return None
 
 
 
@@ -682,15 +773,60 @@ if __name__ == '__main__':
 
     # inv_fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_analyze_api/invoice_adrian@vmgconstructioninc10.com8a83e28d7dc522e9017e253dfe203d5b21458d07f1c756ee4ad62d25a33dbd1e07bbb.pdf.json'
     # frm_fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_forms_and_tables_api/invoice_adrian@vmgconstructioninc10.com8a83e28d7dc522e9017e253dfe203d5b21458d07f1c756ee4ad62d25a33dbd1e07bbb.pdf.json'
-    #
     # """Test fields"""
     # print(json.dumps(
     #     InvoiceExtractor(
     #         ExpenseParser(load_resp(inv_fn)['ExpenseDocuments'][0]).parse(),
-    #         FormsParser(load_resp(frm_fn)), None
+    #         FormsParser(load_resp(frm_fn), 0, 'some_url'), None
     #     ).extract(), indent=2))
 
 
+    # po_exp_fn = '/home/yuri/upwork/ridaro/data/processed/docs_3_POs_aws_analyze_api/po3_60c31f3dc5ba8494a2b1070fpo1675153979115.pdf.json'
+    # po_forms_fn = '/home/yuri/upwork/ridaro/data/processed/docs_3_POs_aws_forms_and_tables_api/po3_60c31f3dc5ba8494a2b1070fpo1675153979115.pdf.json'
+    # po_exp_fn = '/home/yuri/upwork/ridaro/data/processed/docs_3_POs_aws_analyze_api/po3_6266b4fa53a358c32e41a022po1675345707726.pdf.json'
+    # po_forms_fn = '/home/yuri/upwork/ridaro/data/processed/docs_3_POs_aws_forms_and_tables_api/po3_6266b4fa53a358c32e41a022po1675345707726.pdf.json'
+    # po_exp_fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_POs_aws_analyze_api/po_61cc7994d2045c72475f9ed4po1646925766302.pdf.json'
+    # po_forms_fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_POs_aws_forms_and_tables_api/po_61cc7994d2045c72475f9ed4po1646925766302.pdf.json'
+    # po_exp_fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_POs_aws_analyze_api/po_PO FNC for Anil.pdf.json'
+    # po_forms_fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_POs_aws_forms_and_tables_api/po_PO FNC for Anil.pdf.json'
+
+
+    def test_docs4():
+        po_exp_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/po4_Book4.pdf_expense.json'
+        po_forms_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/po4_Book4.pdf_FT.json'
+
+        # print('detected_doctype:', ExtractorsManager._detect_doc_type(load_resp(po_exp_fn)['ExpenseDocuments'][0]))
+        print(json.dumps(
+            PurchaseOrderExtractor(
+                ExpenseParser(load_resp(po_exp_fn)['ExpenseDocuments'][0]).parse(),
+                FormsParser(load_resp(po_forms_fn), 0, 'some_url'), None
+            ).extract(), indent=2))
+
+        # ps_exp_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/ps4_Packing slip.pdf_expense.json'
+        # ps_forms_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/ps4_Packing slip.pdf_FT.json'
+        #
+        # print('detected_doctype:', ExtractorsManager._detect_doc_type(load_resp(ps_exp_fn)['ExpenseDocuments'][0]))
+        # print(json.dumps(
+        #     PackingSlipExtractor(
+        #         ExpenseParser(load_resp(ps_exp_fn)['ExpenseDocuments'][0]).parse(),
+        #         FormsParser(load_resp(ps_forms_fn), 0, 'some_url'), None
+        #     ).extract(), indent=2))
+        #
+        # in_exp_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/invoice4_Amazon.com order number 113-1939597-2877857.pdf_expense.json'
+        # in_forms_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/invoice4_Amazon.com order number 113-1939597-2877857.pdf_FT.json'
+        #
+        # print('detected_doctype:', ExtractorsManager._detect_doc_type(load_resp(in_exp_fn)['ExpenseDocuments'][0]))
+        # print(json.dumps(
+        #     InvoiceExtractor(
+        #         ExpenseParser(load_resp(in_exp_fn)['ExpenseDocuments'][0]).parse(),
+        #         FormsParser(load_resp(in_forms_fn), 0, 'some_url'), None
+        #     ).extract(), indent=2))
+
+
+
+
+
+    test_docs4()
 
 
 
