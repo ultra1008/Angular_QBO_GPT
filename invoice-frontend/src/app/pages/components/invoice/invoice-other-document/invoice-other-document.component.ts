@@ -10,11 +10,14 @@ import { NgxGalleryComponent, NgxGalleryImage, NgxGalleryOptions } from 'ngx-gal
 import { Subscription } from 'rxjs';
 import { httproutes, icon, localstorageconstants } from 'src/app/consts';
 import { HttpCall } from 'src/app/service/httpcall.service';
+import { Mostusedservice } from 'src/app/service/mostused.service';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
 import { commonFileChangeEvent, gallery_options } from 'src/app/service/utils';
+import { configdata } from 'src/environments/configData';
 import { ModeDetectService } from '../../map/mode-detect.service';
-import { InvoiceAttachment } from '../invoice.component';
+
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-invoice-other-document',
@@ -118,22 +121,22 @@ export class InvoiceOtherDocumentComponent implements OnInit {
       // that.getAllInvoices();
     });
   }
-  // openOrphanFilesDialog() {
-  //   let that = this;
-  //   const dialogRef = this.dialog.open(ExportManagementUserComponent, {
-  //     height: "550px",
-  //     width: "750px",
-  //     disableClose: true,
-  //   });
-  //   dialogRef.afterClosed().subscribe((result) => {
-  //     that.employeeservice.getalluser().subscribe(function (data) {
-  //       if (data.status) {
-  //         that.usersArray = data.data;
+  openOrphanFilesDialog() {
+    let that = this;
+    const dialogRef = this.dialog.open(OrphanFiles, {
+      height: "550px",
+      width: "750px",
+      disableClose: true,
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      // that.employeeservice.getalluser().subscribe(function (data) {
+      //   if (data.status) {
+      //     that.usersArray = data.data;
 
-  //       }
-  //     });
-  //   });
-  // }
+      //   }
+      // });
+    });
+  }
 
 
   download() {
@@ -489,4 +492,146 @@ export class AddOtherFiles implements OnInit {
         });
     }
   }
+}
+
+
+@Component({
+  selector: 'orphan-files',
+  templateUrl: './orphan-files.html',
+  styleUrls: ['./invoice-other-document.component.scss']
+})
+export class OrphanFiles implements OnInit {
+  exitIcon: string;
+  mode: any;
+  subscription: Subscription;
+  userList!: any[];
+  orphanlist!: any[];
+  showLoader: boolean = true;
+  gifLoader: string = '';
+  selectedUserList: any = [];
+  newUserList: any = [];
+  Import_Management_User_Missing_Role: string = '';
+  UserLimitExceed: string = '';
+  _id!: string;
+  viewIcon: any;
+
+  constructor(
+    private modeService: ModeDetectService,
+    public dialogRef: MatDialogRef<OrphanFiles>,
+    public mostusedservice: Mostusedservice,
+    public httpCall: HttpCall,
+    public route: ActivatedRoute,
+    private formBuilder: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public snackbarservice: Snackbarservice,
+    public uiSpinner: UiSpinnerService,
+    public translate: TranslateService,
+  ) {
+    var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
+    this.mode = modeLocal === "on" ? "on" : "off";
+    if (this.mode == "off") {
+      this.exitIcon = icon.CANCLE;
+      this.viewIcon = icon.VIEW;
+    } else {
+      this.exitIcon = icon.CANCLE_WHITE;
+      this.viewIcon = icon.VIEW_WHITE;
+    }
+    this.subscription = this.modeService.onModeDetect().subscribe((mode) => {
+      if (mode) {
+        this.mode = "off";
+        this.exitIcon = icon.CANCLE;
+        this.viewIcon = icon.VIEW;
+      } else {
+        this.mode = "on";
+        this.exitIcon = icon.CANCLE_WHITE;
+        this.viewIcon = icon.VIEW_WHITE;
+      }
+    });
+    this._id = this.route.snapshot.queryParamMap.get("_id");
+    var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
+    tmp_locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configdata.fst_load_lang : tmp_locallanguage;
+    this.translate.use(tmp_locallanguage);
+    this.translate.stream(['']).subscribe((textarray) => {
+      this.Import_Management_User_Missing_Role = this.translate.instant('Import_Management_User_Missing_Role');
+      this.UserLimitExceed = this.translate.instant('UserLimitExceed');
+    });
+
+    // this.userList = data?.reqData;
+    // this.gifLoader = this.httpCall.getLoader();
+  }
+
+  ngOnInit(): void {
+
+    // this.getAllUserList();
+    this.getOrphanDocument();
+
+  }
+  // async getAllUserList() {
+  //   let data = await this.httpCall.httpGetCall(httproutes.PORTAL_GET_MANAGEMENT_USERS).toPromise();
+  //   if (data.status) {
+  //     data.data.forEach((element: any) => {
+  //       this.newUserList.push({ check: false, _id: element._id, role_id: '', role_name: '' });
+  //     });
+  //     this.userList = data.data;
+  //     this.showLoader = false;
+  //   }
+  // }
+  // getOrphanDocument() {
+  //   let that = this;
+  //   this.httpCall.httpPostCall(httproutes.INVOICE_SAVE_INVOICE_PROCESS, { pdf_urls: params.data }).subscribe(function (params)
+  //     if (params.status) {
+  //       that.orphanlist = params.data;
+  //       console.log("orphanlist", params.data);
+  //     }
+  //   });
+  // }
+
+
+  getOrphanDocument() {
+    console.log("call");
+    let that = this;
+    this.httpCall.httpPostCall(httproutes.PORTAL_INVOICE_GET_ORPHAN_DOCUMENTS, { _id: this._id }).subscribe(params => {
+      if (params.data) {
+        that.orphanlist = params.data;
+        console.log("orphanlist", params);
+      }
+
+    });
+  }
+  // checkboxChange(i: any, user: any) {
+  //   this.newUserList[i].check = !this.newUserList[i].check;
+  // }
+
+  // selectRole(event: any, i: any) {
+  //   let one_role = _.find(this.allRoles, function (n: any) { return n.role_id == event.value; });
+  //   this.newUserList[i].role_id = one_role.role_id;
+  //   this.newUserList[i].role_name = one_role.role_name;
+  // }
+
+  // importFromManagement() {
+  //   let that = this;
+  //   let final_users = _.filter(that.newUserList, function (p) {
+  //     return p.check == true;
+  //   });
+  //   let checkInvalid = _.find(final_users, function (n: any) { return n.role_id == ""; });
+  //   if (checkInvalid) {
+  //     that.snackbarservice.openSnackBar(that.Import_Management_User_Missing_Role, "error");
+  //   } else {
+  //     that.uiSpinner.spin$.next(true);
+  //     let requestObject = {
+  //       users: final_users
+  //     };
+  //     that.httpCall.httpPostCall(httproutes.PORTAL_IMPORT_MANAGEMENT_USERS, requestObject).subscribe(function (params: any) {
+  //       if (params.status) {
+  //         that.dialogRef.close();
+  //         that.uiSpinner.spin$.next(false);
+  //         that.snackbarservice.openSnackBar(params.message, "success");
+  //       } else {
+  //         that.uiSpinner.spin$.next(false);
+  //         that.snackbarservice.openSnackBar(params.message, "error");
+  //       }
+  //     });
+
+  //   }
+  // }
 }

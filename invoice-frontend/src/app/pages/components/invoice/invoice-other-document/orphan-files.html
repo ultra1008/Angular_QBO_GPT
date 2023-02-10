@@ -1,0 +1,57 @@
+<!-- 
+<div>
+    <div class="row">
+        <div class="col-10 dialog-head-left">
+            <h2 class="screen-title" class="cust-report-label-header-text">{{'Export_Management_User' |
+                translate}}</h2>
+        </div>
+
+        <div class="col-2 dialog-head-right">
+            <button class="import-export-btn-datatable cust-margin-div" matTooltip="{{ 'All-exit' | translate }}"
+                mat-dialog-close>
+                <img src="{{exitIcon}}" alt="" class="far fa-paper-plane" height="20px">
+            </button>
+        </div>
+    </div>
+
+    <div *ngIf="showLoader" class="loader"><img src="{{gifLoader}}"></div>
+    <div class="particiepants-box" *ngIf="!showLoader">
+        <div class="box" *ngFor="let user of userList;let i = index">
+            <div class="row">
+                <div class="check-box cust-checkbox-margin">
+                    <input type="checkbox" class="checkbox" color="primary" [checked]="newUserList[i].check"
+                        (change)="checkboxChange(i,user)" />
+                </div>
+                <div class="col-7 row">
+                    <div class="user">
+                        <img [src]="user.userpicture" alt=""
+                            onerror="this.src='../../../../../assets/images/user.png';">
+                    </div>
+                    <div class="details col-8">
+                        <h3> {{ user.userfullname }} </h3>
+                    </div>
+                </div>
+
+                <mat-form-field appearance="outline" class="user_role">
+                    <mat-label>{{'Employee-form-User-Role' | translate }}</mat-label>
+                    <mat-select class="dark-cust-color" [(ngModel)]="newUserList[i].role_id"
+                        (selectionChange)="selectRole($event,i)">
+                        <mat-option *ngFor="let db_role of orphanlist" [value]="db_role.role_id">
+                            {{db_role.role_name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+
+</div> -->
+<div>
+
+    <div>name</div>
+    <button class="button_shiftEditClass" mat-menu-item>
+        <span><img src="{{viewIcon}}" alt="" height="15px">
+            {{'All-View' |
+            translate}}</span>
+    </button>
+</div>
