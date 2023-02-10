@@ -94,7 +94,7 @@ import { PoDetailFormComponent } from './components/invoice/po-detail-form/po-de
 import { FormCoreComponent } from './form-core/form-core.component';
 import { DashboardInvoiceListComponent } from './components/dashboard/dashboard-invoice-list/dashboard-invoice-list.component';
 import { DashboardFilesListComponent } from './components/dashboard/dashboard-files-list/dashboard-files-list.component';
-import { InvoiceOtherDocumentComponent } from './components/invoice/invoice-other-document/invoice-other-document.component';
+import { AddOtherFiles, InvoiceOtherDocumentComponent } from './components/invoice/invoice-other-document/invoice-other-document.component';
 import { DocumentViewComponent } from './components/setting/document-view/document-view.component';
 
 
@@ -180,7 +180,8 @@ import { DocumentViewComponent } from './components/setting/document-view/docume
     DashboardInvoiceListComponent,
     DashboardFilesListComponent,
     InvoiceOtherDocumentComponent,
-    DocumentViewComponent
+    DocumentViewComponent,
+    AddOtherFiles
   ],
   imports: [
     PortalModule,

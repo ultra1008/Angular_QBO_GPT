@@ -1,8 +1,20 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ENTER, COMMA } from '@angular/cdk/keycodes';
+import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
+import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import moment from 'moment';
+import { NgxGalleryComponent, NgxGalleryImage, NgxGalleryOptions } from 'ngx-gallery-9';
 import { Subscription } from 'rxjs';
-import { icon, localstorageconstants } from 'src/app/consts';
+import { httproutes, icon, localstorageconstants } from 'src/app/consts';
+import { HttpCall } from 'src/app/service/httpcall.service';
+import { Snackbarservice } from 'src/app/service/snack-bar-service';
+import { UiSpinnerService } from 'src/app/service/spinner.service';
+import { commonFileChangeEvent, gallery_options } from 'src/app/service/utils';
 import { ModeDetectService } from '../../map/mode-detect.service';
+import { InvoiceAttachment } from '../invoice.component';
 
 @Component({
   selector: 'app-invoice-other-document',
@@ -31,7 +43,7 @@ export class InvoiceOtherDocumentComponent implements OnInit {
     quote: 'Quote',
   };
 
-  constructor(private router: Router, private modeService: ModeDetectService, public route: ActivatedRoute,) {
+  constructor(public dialog: MatDialog, private router: Router, private modeService: ModeDetectService, public route: ActivatedRoute,) {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === "on" ? "on" : "off";
 
@@ -93,6 +105,36 @@ export class InvoiceOtherDocumentComponent implements OnInit {
       };
     });
   }
+  openAddDialog() {
+    let that = this;
+    const dialogRef = this.dialog.open(AddOtherFiles, {
+      height: '400px',
+      width: '700px',
+      data: {},
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // that.getAllInvoices();
+    });
+  }
+  // openOrphanFilesDialog() {
+  //   let that = this;
+  //   const dialogRef = this.dialog.open(ExportManagementUserComponent, {
+  //     height: "550px",
+  //     width: "750px",
+  //     disableClose: true,
+  //   });
+  //   dialogRef.afterClosed().subscribe((result) => {
+  //     that.employeeservice.getalluser().subscribe(function (data) {
+  //       if (data.status) {
+  //         that.usersArray = data.data;
+
+  //       }
+  //     });
+  //   });
+  // }
+
 
   download() {
     let a = document.createElement('a');
@@ -104,5 +146,347 @@ export class InvoiceOtherDocumentComponent implements OnInit {
     a.click();
     /*--- Remove the link when done ---*/
     document.body.removeChild(a);
+  }
+}
+
+@Component({
+  selector: 'add-other-files',
+  templateUrl: './add-other-files.html',
+  styleUrls: ['./invoice-other-document.component.scss']
+})
+export class AddOtherFiles implements OnInit {
+  @ViewChild('gallery')
+  gallery!: NgxGalleryComponent;
+
+  public form: any;
+  selectedStatus: any;
+  files_old: any = [];
+  last_files_array: any = [];
+  galleryOptions!: NgxGalleryOptions[];
+  galleryImages: NgxGalleryImage[] = [];
+  selectable = true;
+  removable = true;
+  addOnBlur = true;
+  readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  saveIcon: string;
+  emailsList: any[] = [];
+  range = new FormGroup({
+    start: new FormControl(),
+    end: new FormControl()
+  });
+
+  Report_File_Message: string = "";
+  Report_File_Enter_Email: string = "";
+  exitIcon: string;
+  yesButton: string = '';
+  noButton: string = '';
+  mode: any;
+  subscription: Subscription;
+  copyDataFromProject: string = '';
+  add_my_self_icon = icon.ADD_MY_SELF_WHITE;
+  _id!: string;
+  fileIcon: string = "";
+  FILE_NOT_SUPPORTED: string;
+  Invoice_Add_Atleast_One_Document: string = '';
+
+  constructor(private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
+    public dialogRef: MatDialogRef<AddOtherFiles>,
+    @Inject(MAT_DIALOG_DATA) public data: any, public sb: Snackbarservice, public translate: TranslateService, public dialog: MatDialog, private sanitiser: DomSanitizer,
+    public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService,
+    private router: Router, public route: ActivatedRoute, public spinner: UiSpinnerService,) {
+
+    var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
+    this.mode = modeLocal === 'on' ? 'on' : 'off';
+    if (this.mode == 'off') {
+      this.exitIcon = icon.CANCLE;
+      this.saveIcon = icon.SAVE_WHITE;
+      this.fileIcon = icon.REPORT;
+
+    } else {
+      this.exitIcon = icon.CANCLE_WHITE;
+      this.saveIcon = icon.SAVE_WHITE;
+      this.fileIcon = icon.REPORT_WHITE;
+    }
+
+    this.subscription = this.modeService.onModeDetect().subscribe(mode => {
+      if (mode) {
+        this.mode = 'off';
+        this.exitIcon = icon.CANCLE;
+        this.saveIcon = icon.SAVE_WHITE;
+        this.fileIcon = icon.REPORT;
+
+      } else {
+        this.mode = 'on';
+        this.exitIcon = icon.CANCLE_WHITE;
+        this.saveIcon = icon.SAVE_WHITE;
+        this.fileIcon = icon.REPORT_WHITE;
+
+      }
+      console.log("DARK MODE: " + this.mode);
+
+    });
+    this.translate.stream([""]).subscribe((textarray) => {
+      this.FILE_NOT_SUPPORTED = this.translate.instant("FILE_NOT_SUPPORTED");
+      this.Invoice_Add_Atleast_One_Document = this.translate.instant('Invoice_Add_Atleast_One_Document');
+    });
+
+  }
+  ngOnInit(): void {
+    let tmp_gallery = gallery_options();
+    this.galleryOptions = [
+      tmp_gallery
+    ];
+  }
+
+
+  files: File[] = [];
+
+
+  /**
+   * on file drop handler
+   */
+  onFileDropped($event: any[]) {
+    this.prepareFilesList($event);
+  }
+
+  /**
+   * handle file from browsing
+   */
+  fileBrowseHandler(files: any) {
+    commonFileChangeEvent(files, "pdf").then((result: any) => {
+      if (result.status) {
+        this.prepareFilesList(files.target.files);
+      } else {
+        this.snackbarservice.openSnackBar(this.FILE_NOT_SUPPORTED, "error");
+      }
+    });
+
+  }
+
+  /**
+   * Delete file from files list
+   * @param index (File index)
+   */
+  deleteFile(index: number) {
+    this.files.splice(index, 1);
+  }
+
+  deleteFile_old(index: number) {
+    this.last_files_array.splice(index, 1);
+    this.files_old.splice(index, 1);
+  }
+
+  /**
+   * Convert Files list to normal array list
+   * @param files (Files List)
+   */
+  prepareFilesList(files: Array<any>) {
+    for (const item of files) {
+      item.progress = 0;
+      this.files.push(item);
+    }
+  }
+
+
+
+  /*
+    This method is used to display thumb image from local file.
+    File/Image picker item is diplayed thmb based on file extensions.
+  */
+  thumbImage(file: any) {
+    switch (file.type) {
+      case 'application/pdf':
+        return '../../../../../../assets/images/pdf.png';
+        break;
+
+      case 'image/png':
+        return this.sanitiser.bypassSecurityTrustUrl(URL.createObjectURL(file));
+        break;
+
+      case 'image/jpeg':
+        return this.sanitiser.bypassSecurityTrustUrl(URL.createObjectURL(file));
+        break;
+
+      case 'image/jpg':
+        return this.sanitiser.bypassSecurityTrustUrl(URL.createObjectURL(file));
+        break;
+
+      case 'image/gif':
+        return this.sanitiser.bypassSecurityTrustUrl(URL.createObjectURL(file));
+        break;
+
+      case 'application/msword':
+      case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+        return '../../../../../../assets/images/doc.png';
+        break;
+
+      case 'application/vnd.ms-excel':
+      case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+        return '../../../../../../assets/images/xls.png';
+        break;
+
+      case 'application/vnd.oasis.opendocument.text':
+        return '../../../../../../assets/images/odt.png';
+        break;
+
+      case 'application/zip':
+        return '../../../../../../assets/images/zip.png';
+        break;
+
+      case 'image/svg+xml':
+        return '../../../../../../assets/images/svg.png';
+        break;
+
+      case 'application/vnd.ms-powerpoint':
+        return '../../../../../../assets/images/ppt.png';
+        break;
+
+      default:
+        return '../../../../../../assets/images/no-preview.png';
+        break;
+    }
+  }
+
+  /*
+    This Method is used to display the Network Image.
+    Find extension from url and display it from Wasabi. So this thumb is prepared from network only.
+  */
+  thumbNetworkImage(index: any) {
+    var extension = this.last_files_array[index].substring(this.last_files_array[index].lastIndexOf('.') + 1);
+    if (extension == "doc" || extension == "docx") {
+      return 'https://s3.us-west-1.wasabisys.com/rovukdata/doc.png';
+    } else if (extension == "pdf") {
+      return 'https://s3.us-west-1.wasabisys.com/rovukdata/pdf.png';
+    } else if (extension == "xls" || extension == "xlsx" || extension == "csv") {
+      return 'https://s3.us-west-1.wasabisys.com/rovukdata/xls.png';
+    } else if (extension == "zip") {
+      return 'https://s3.us-west-1.wasabisys.com/rovukdata/zip.png';
+    } else if (extension == "ppt") {
+      return 'https://s3.us-west-1.wasabisys.com/rovukdata/ppt.png';
+    } else if (extension == "rtf") {
+      return 'https://s3.us-west-1.wasabisys.com/rovukdata/rtf.png';
+    } else if (extension == "odt") {
+      return 'https://s3.us-west-1.wasabisys.com/rovukdata/odt.png';
+    } else if (extension == "txt") {
+      return 'https://s3.us-west-1.wasabisys.com/rovukdata/txt.png';
+    } else if (extension == "jpg" || extension == "png" || extension == "jpeg" || extension == "gif" || extension == "webp") {
+      return this.last_files_array[index];
+    } else {
+      return 'https://s3.us-west-1.wasabisys.com/rovukdata/no-preview.png';
+    }
+  }
+
+  /*
+    This method is used for download provision on click of the thumb initially implemented
+    now improved as an open the Full size preview.
+  */
+  imageNetworkPreview(allAttachment: any, index: any) {
+    for (let i = 0; i < allAttachment.length; i++) {
+      var extension = allAttachment[i].substring(allAttachment[i].lastIndexOf('.') + 1);
+      if (extension == "jpg" || extension == "png" || extension == "jpeg" || extension == "gif" || extension == 'webp') {
+        var srctmp: any = {
+          small: allAttachment[i],
+          medium: allAttachment[i],
+          big: allAttachment[i]
+        };
+        this.galleryImages.push(srctmp);
+      } else if (extension == "doc" || extension == "docx") {
+        var srctmp: any = {
+          small: 'https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png',
+          medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png',
+          big: 'https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png'
+        };
+        this.galleryImages.push(srctmp);
+      } else if (extension == "pdf") {
+        var srctmp: any = {
+          small: 'https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png',
+          medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png',
+          big: 'https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png'
+        };
+        this.galleryImages.push(srctmp);
+      } else if (extension == "odt") {
+        var srctmp: any = {
+          small: 'https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png',
+          medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png',
+          big: 'https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png'
+        };
+        this.galleryImages.push(srctmp);
+      } else if (extension == "rtf") {
+        var srctmp: any = {
+          small: 'https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png',
+          medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png',
+          big: 'https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png'
+        };
+        this.galleryImages.push(srctmp);
+      } else if (extension == "txt") {
+        var srctmp: any = {
+          small: 'https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png',
+          medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png',
+          big: 'https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png'
+        };
+        this.galleryImages.push(srctmp);
+      } else if (extension == "ppt") {
+        var srctmp: any = {
+          small: 'https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png',
+          medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png',
+          big: 'https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png'
+        };
+        this.galleryImages.push(srctmp);
+      } else if (extension == "xls" || extension == "xlsx" || extension == "csv") {
+        var srctmp: any = {
+          small: 'https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png',
+          medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png',
+          big: 'https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png'
+        };
+        this.galleryImages.push(srctmp);
+      } else {
+        var srctmp: any = {
+          small: 'https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png',
+          medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png',
+          big: 'https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png'
+        };
+        this.galleryImages.push(srctmp);
+      }
+    }
+    setTimeout(() => {
+      this.gallery.openPreview(index);
+    }, 0
+    );
+  }
+
+  uploadDocuments() {
+    let that = this;
+    if (that.files.length == 0) {
+      that.sb.openSnackBar(that.Invoice_Add_Atleast_One_Document, "error");
+    } else {
+      const formData = new FormData();
+      for (var i = 0; i < that.files.length; i++) {
+        formData.append("file[]", that.files[i]);
+      }
+      formData.append("dir_name", 'invoice');
+      formData.append("local_date", moment().format("DD/MM/YYYY hh:mmA"));
+      that.uiSpinner.spin$.next(true);
+      that.httpCall
+        .httpPostCall(httproutes.PORTAL_ATTECHMENT, formData)
+        .subscribe(function (params) {
+          if (params.status) {
+            that.httpCall
+              .httpPostCall(httproutes.INVOICE_SAVE_INVOICE_PROCESS, { pdf_urls: params.data })
+              .subscribe(function (new_params) {
+                if (new_params.status) {
+                  that.sb.openSnackBar(new_params.message, "success");
+                  that.uiSpinner.spin$.next(false);
+                  that.dialogRef.close();
+                } else {
+                  that.sb.openSnackBar(new_params.message, "error");
+                  that.uiSpinner.spin$.next(false);
+                }
+              });
+          } else {
+            that.sb.openSnackBar(params.message, "error");
+            that.uiSpinner.spin$.next(false);
+          }
+        });
+    }
   }
 }
