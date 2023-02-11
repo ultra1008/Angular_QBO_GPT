@@ -2456,5 +2456,8 @@
     "Orphan_Vendor_files": "Orphan Vendor Files",
     "Request_For_Files": "Request For Files",
     "Panding_Files_Older_Then": "Panding Files Older Then",
-    "Days": "Days"
+    "Days": "Days",
+    "View_Related_Documents": "View Related Documents",
+    "Approve_Invoice_massage": "Are you sure you want to approve this invoice?",
+    "Reject_Invoice_massage": "Are you sure you want to reject this invoice?"
 }
