@@ -517,6 +517,7 @@ export class OrphanFiles implements OnInit {
 
   constructor(
     private modeService: ModeDetectService,
+    private router: Router,
     public dialogRef: MatDialogRef<OrphanFiles>,
     public mostusedservice: Mostusedservice,
     public httpCall: HttpCall,
@@ -586,7 +587,23 @@ export class OrphanFiles implements OnInit {
   //   });
   // }
 
+  // goToDocument(){
 
+  // }
+  goToDocument(document) {
+
+    console.log("invoice11", document.document_type);
+
+    if (document.document_type == 'PACKING_SLIP') {
+      this.router.navigate(['/packing-slip-form'], { queryParams: {} });
+    }
+    // else if (document.document_type == 'Vendor') {
+    //   this.router.navigate(['/po-detail-form'], { queryParams: {} });
+    // } else if (document.document_type == 'User') {
+    //   this.router.navigate(['/quote-detail-form'], { queryParams: {} });
+    // }
+
+  }
   getOrphanDocument() {
     console.log("call");
     let that = this;
