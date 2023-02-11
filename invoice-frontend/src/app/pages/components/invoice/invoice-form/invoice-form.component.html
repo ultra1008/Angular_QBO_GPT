@@ -8,7 +8,24 @@
 
 
 
-                <div class="col-2 dialog-head-right">
+
+
+
+                <div class="col-6 dialog-head-right">
+                    <button mat-raised-button (click)="viewInvoice(id)" color="primary" class="cust-button-form"><img
+                            src="{{viewIcon}}" alt="" class="pr-1" height="15px">{{'View_Related_Documents' |
+                        translate}}</button>
+                    <button mat-raised-button (click)="saveInvoice()" color="primary" class="cust-button-form"><img
+                            src="{{saveIcon}}" alt="" class="pr-1" height="15px">{{'All-save' |
+                        translate}}</button>
+                    <button mat-raised-button (click)="updateInvoice(id,'Approved')"
+                        class="cust-button-form Approve"><img src="{{approveIcon}}" alt="" height="15px">
+                        {{'PO-View-Approve' | translate}}</button>
+
+                    <button mat-raised-button (click)="updateInvoice(id,'Rejected')"
+                        class="cust-button-form Denied"><img src="{{denyIcon}}" alt="" height="15px">
+                        {{'reject_all' |
+                        translate}}</button>
                     <button class="import-export-btn-datatable cust-margin-div" (click)="back()"
                         matTooltip="{{ 'All-exit' | translate }}">
                         <img src="{{exitIcon}}" alt="" class="far fa-paper-plane" height="20px">
@@ -67,6 +84,10 @@
 
                                 <div class="col">
                                     <b>{{'invoice_no' | translate }}:</b>&nbsp;&nbsp;
+
+                                    <img class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
+                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+
                                     <mat-form-field>
 
                                         <input matInput placeholder="{{' ' | translate }}" formControlName="invoice" />
@@ -148,8 +169,9 @@
 
                                 <div class="col">
                                     <b>{{'Totle_to_be_Paid' | translate }}:</b>&nbsp;&nbsp;
+                                    <img class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
+                                        width="20px" src="./assets/logo/RovukInvoice.png" />
                                     <mat-form-field>
-
                                         <input matInput placeholder="{{'' | translate }}" formControlName="total" />
 
                                     </mat-form-field>
@@ -257,12 +279,12 @@
                         <button mat-raised-button (click)="saveInvoice()" color="primary" class="cust-button-form"><img
                                 src="{{saveIcon}}" alt="" class="pr-1" height="15px">{{'All-save' |
                             translate}}</button>
-                        <button mat-raised-button (click)="invoiceApprove()" class="cust-button-form Approve"><img
-                                src="{{approveIcon}}" alt="" height="15px">
+                        <button mat-raised-button (click)="updateInvoice(id,'Approved')" class="
+                            cust-button-form Approve"><img src="{{approveIcon}}" alt="" height="15px">
                             {{'PO-View-Approve' | translate}}</button>
 
-                        <button mat-raised-button (click)="invoiceDenied()" class="cust-button-form Denied"><img
-                                src="{{denyIcon}}" alt="" height="15px">
+                        <button mat-raised-button (click)="updateInvoice(id,'Rejected')" class="
+                            cust-button-form Denied"><img src="{{denyIcon}}" alt="" height="15px">
                             {{'reject_all' |
                             translate}}</button>
                     </div>

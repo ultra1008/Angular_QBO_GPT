@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { Location } from '@angular/common';
@@ -15,11 +15,11 @@ import Swal from 'sweetalert2';
 import { EmployeeService } from '../../team/employee.service';
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
-    confirmButton: 'btn btn-success s2-confirm margin-right-cust',
-    denyButton: 'btn btn-danger',
-    cancelButton: 's2-confirm btn btn-gray ml-2'
+    confirmButton: "btn btn-success margin-right-cust s2-confirm",
+    denyButton: "btn btn-danger s2-confirm",
   },
-  buttonsStyling: false
+  buttonsStyling: false,
+  allowOutsideClick: false,
 });
 
 @Component({
@@ -28,6 +28,7 @@ const swalWithBootstrapButtons = Swal.mixin({
   styleUrls: ['./invoice-form.component.scss']
 })
 export class InvoiceFormComponent implements OnInit {
+  @Input() invoice: any;
   filepath: any;
   item_image_url: String = "./assets/images/currentplaceholder.png";
   startDate: any;
@@ -41,6 +42,7 @@ export class InvoiceFormComponent implements OnInit {
   subscription!: Subscription;
   exitIcon: string = "";
   printIcon: string = "";
+  viewIcon: string = "";
   close_this_window: string = "";
   All_popup_Cancel = "";
   All_Save_Exit = "";
@@ -69,6 +71,12 @@ export class InvoiceFormComponent implements OnInit {
 
 
   statusList = configdata.INVOICE_STATUS;
+  Compnay_Equipment_Delete_Yes: string = "";
+  Compnay_Equipment_Delete_No: string = "";
+  yesButton: string = "";
+  noButton: string = "";
+  Approve_Invoice_massage: string = "";
+  Reject_Invoice_massage: string = "";
 
   constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
@@ -89,6 +97,12 @@ export class InvoiceFormComponent implements OnInit {
       this.All_Save_Exit = this.translate.instant('All_Save_Exit');
       this.Dont_Save = this.translate.instant('Dont_Save');
       this.Email_Template_Form_Submitting = this.translate.instant('Email_Template_Form_Submitting');
+      this.yesButton = this.translate.instant("Compnay_Equipment_Delete_Yes");
+      this.noButton = this.translate.instant("Compnay_Equipment_Delete_No");
+      this.Approve_Invoice_massage = this.translate.instant("Approve_Invoice_massage");
+      this.Reject_Invoice_massage = this.translate.instant("Reject_Invoice_massage");
+
+
     });
     this.invoiceform = this.formBuilder.group({
       document_type: [""],
@@ -125,6 +139,7 @@ export class InvoiceFormComponent implements OnInit {
       this.printIcon = icon.PRINT_WHITE;
       this.approveIcon = icon.APPROVE_WHITE;
       this.denyIcon = icon.DENY_WHITE;
+      this.viewIcon = icon.VIEW_WHITE;
     } else {
 
       this.backIcon = icon.BACK_WHITE;
@@ -133,6 +148,7 @@ export class InvoiceFormComponent implements OnInit {
       this.printIcon = icon.PRINT_WHITE;
       this.approveIcon = icon.APPROVE_WHITE;
       this.denyIcon = icon.DENY_WHITE;
+      this.viewIcon = icon.VIEW;
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
       if (mode) {
@@ -143,6 +159,8 @@ export class InvoiceFormComponent implements OnInit {
         this.printIcon = icon.PRINT_WHITE;
         this.approveIcon = icon.APPROVE_WHITE;
         this.denyIcon = icon.DENY_WHITE;
+        this.viewIcon = icon.VIEW_WHITE;
+
       } else {
         this.mode = 'on';
         this.backIcon = icon.BACK_WHITE;
@@ -151,6 +169,8 @@ export class InvoiceFormComponent implements OnInit {
         this.printIcon = icon.PRINT_WHITE;
         this.approveIcon = icon.APPROVE_WHITE;
         this.denyIcon = icon.DENY_WHITE;
+        this.viewIcon = icon.VIEW;
+
       }
     });
 
@@ -222,71 +242,117 @@ export class InvoiceFormComponent implements OnInit {
     });
   }
 
-  invoiceApprove() {
-    // let po_id = this.route.snapshot.queryParamMap.get("po_id");
-    // let po_status = "Pending";
-    // let that = this;
-    // swalWithBootstrapButtons
-    //   .fire({
-    //     title: this.Custom_Pdf_Viewer_Please_Confirm,
-    //     text: this.Custom_Pdf_Viewer_Want_Approve_Po,
-    //     showDenyButton: true,
-    //     showCancelButton: false,
-    //     confirmButtonText: this.Compnay_Equipment_Delete_Yes,
-    //     denyButtonText: this.Compnay_Equipment_Delete_No,
-    //   })
-    //   .then((result) => {
-    //     if (result.isConfirmed) {
-    //       // denied PO api call
-    //       that.httpCall
-    //         .httpPostCall(httproutes.PORTAL_COMPANY_UPDATE_PO_STATUS, {
-    //           _id: po_id,
-    //           po_status: po_status,
-    //         })
-    //         .subscribe(function (params) {
-    //           if (params.status) {
-    //             that.snackbarservice.openSnackBar(params.message, "success");
-    //             that.location.back();
-    //           } else {
-    //             that.snackbarservice.openSnackBar(params.message, "error");
-    //           }
-    //         });
-    //     }
-    //   });
+  updateInvoice(id, status) {
+    let that = this;
+    let title = '';
+    if (status == 'Approved') {
+      title = that.Approve_Invoice_massage;
+    } else {
+      title = that.Reject_Invoice_massage;
+    }
+    let requestObject = {
+      _id: id,
+      status: status,
+    };
+    swalWithBootstrapButtons
+      .fire({
+        title: title,
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: that.yesButton,
+        denyButtonText: that.noButton,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          that.uiSpinner.spin$.next(true);
+          that.httpCall.httpPostCall(httproutes.INVOICE_UPDATE_INVOICE_STATUS, requestObject).subscribe(params => {
+            if (params.status) {
+              that.snackbarservice.openSnackBar(params.message, "success");
+              that.uiSpinner.spin$.next(false);
+              // that.rerenderfunc();
+              // that.invoiceUpdateCard.emit();
+            } else {
+              that.snackbarservice.openSnackBar(params.message, "error");
+              that.uiSpinner.spin$.next(false);
+            }
+          });
+        }
+      });
+    /* if (requestObject.status == 'Approved') {
+
+      swalWithBootstrapButtons
+        .fire({
+
+          title: that.Approve_Invoice_massage,
+          showDenyButton: true,
+          showCancelButton: false,
+          confirmButtonText: that.yesButton,
+          denyButtonText: that.noButton,
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            that.uiSpinner.spin$.next(true);
+            that.httpCall.httpPostCall(httproutes.INVOICE_UPDATE_INVOICE_STATUS, requestObject).subscribe(params => {
+              if (params.status) {
+                that.snackbarservice.openSnackBar(params.message, "success");
+                that.uiSpinner.spin$.next(false);
+                // that.rerenderfunc();
+                // that.invoiceUpdateCard.emit();
+              } else {
+                that.snackbarservice.openSnackBar(params.message, "error");
+                that.uiSpinner.spin$.next(false);
+              }
+            });
+          }
+        });
+
+    } else {
+      swalWithBootstrapButtons
+        .fire({
+
+          title: that.Reject_Invoice_massage,
+          showDenyButton: true,
+          showCancelButton: false,
+          confirmButtonText: that.yesButton,
+          denyButtonText: that.noButton,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            that.uiSpinner.spin$.next(true);
+            that.httpCall.httpPostCall(httproutes.INVOICE_UPDATE_INVOICE_STATUS, requestObject).subscribe(params => {
+              if (params.status) {
+                that.snackbarservice.openSnackBar(params.message, "success");
+                that.uiSpinner.spin$.next(false);
+                // that.rerenderfunc();
+                // that.invoiceUpdateCard.emit();
+              } else {
+                that.snackbarservice.openSnackBar(params.message, "error");
+                that.uiSpinner.spin$.next(false);
+              }
+            });
+          }
+        });
+
+
+    } */
+
+    // that.uiSpinner.spin$.next(true);
+    // that.httpCall.httpPostCall(httproutes.INVOICE_UPDATE_INVOICE_STATUS, requestObject).subscribe(params => {
+    //   if (params.status) {
+    //     that.snackbarservice.openSnackBar(params.message, "success");
+    //     that.uiSpinner.spin$.next(false);
+    //     // that.rerenderfunc();
+    //     // that.invoiceUpdateCard.emit();
+    //   } else {
+    //     that.snackbarservice.openSnackBar(params.message, "error");
+    //     that.uiSpinner.spin$.next(false);
+    //   }
+    // });
+  }
+  viewInvoice(_id) {
+    this.router.navigate(['/invoice-detail'], { queryParams: { _id: _id } });
   }
 
-  invoiceDenied() {
-    // let po_id = this.route.snapshot.queryParamMap.get("po_id");
-    // let po_status = "Denied";
-    // let that = this;
-    // swalWithBootstrapButtons
-    //   .fire({
-    //     title: this.Custom_Pdf_Viewer_Please_Confirm,
-    //     text: this.Custom_Pdf_Viewer_Want_Deny_Po,
-    //     showDenyButton: true,
-    //     showCancelButton: false,
-    //     confirmButtonText: this.Compnay_Equipment_Delete_Yes,
-    //     denyButtonText: this.Compnay_Equipment_Delete_No,
-    //   })
-    //   .then((result) => {
-    //     if (result.isConfirmed) {
-    //       /*--- denied PO api call ---*/
-    //       that.httpCall
-    //         .httpPostCall(httproutes.PORTAL_COMPANY_UPDATE_PO_STATUS, {
-    //           _id: po_id,
-    //           po_status: po_status,
-    //         })
-    //         .subscribe(function (params) {
-    //           if (params.status) {
-    //             that.snackbarservice.openSnackBar(params.message, "success");
-    //             that.location.back();
-    //           } else {
-    //             that.snackbarservice.openSnackBar(params.message, "error");
-    //           }
-    //         });
-    //     }
-    //   });
-  }
+
 
   getOneInvoice() {
     let that = this;
