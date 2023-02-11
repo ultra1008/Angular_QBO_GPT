@@ -1,4 +1,60 @@
-.dt-button {
-    background: #023E8A !important;
+ ::ng-deep .dt-button {
+
+     background-color: green !important;
+     color: white !important;
+     height: 30px !important;
+ }
+
+ ::ng-deep .dt-button .buttons-columnVisibility .active {
+     background-color: rgb(89, 0, 255) !important;
+     color: white !important;
+ }
+
+ ::ng-deep .buttons-columnVisibility {
+     background-color: red !important;
+     color: white !important;
+ }
+
+ ::ng-deep .dt-down-arrow {
+     color: white !important;
+     padding-left: 15px !important;
+     line-height: 1em !important;
+     font-size: 10px;
+ }
+
+ ::ng-deep div.dt-button-collection button.dt-button.active:not(.disabled) {
+     background: green !important;
+     background-color: green !important;
+ }
+
+ ::ng-deep .button.dt-button span.dt-down-arrow {
+
+     padding-left: 17px !important;
+     line-height: 1em !important;
+ }
+
+ // ::ng-deep div.dt-button-collection button.dt-button:first-child,
+ // div.dt-button-collection div.dt-button:first-child,
+ // div.dt-button-collection a.dt-button:first-child {
+
+ //     background-color: rgb(247, 0, 0) !important;
+ //     color: white !important;
+ // }
+
+
+
+
+
+ /* ::ng-deep .dt-button .active {
+    background-color: green !important;
     color: white !important;
 }
+
+::ng-deep .dt-button .dt-button-collection {
+    background-color: green !important;
+    color: white !important;
+} */
+
+
+
+ //.active :not(.disabled)

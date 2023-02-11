@@ -91,59 +91,60 @@ export class ReportsComponent implements OnInit {
     public translate: TranslateService) {
 
 
-    // var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
-    // this.mode = modeLocal === "on" ? "on" : "off";
+    var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
+    this.mode = modeLocal === "on" ? "on" : "off";
 
-    // if (this.mode == "off") {
-    //   this.reportIcon = icon.REPORT;
-    //   this.approveIcon = icon.APPROVE;
-    //   this.rejectIcon = icon.DENY;
-    //   this.backIcon = icon.BACK;
-    //   this.editIcon = icon.EDIT;
-    //   this.viewIcon = icon.VIEW;
-    //   this.gridIcon = icon.GRID;
-    //   this.listIcon = icon.List;
-    // } else {
-    //   this.reportIcon = icon.REPORT_WHITE;
-    //   this.approveIcon = icon.APPROVE_WHITE;
-    //   this.rejectIcon = icon.DENY_WHITE;
-    //   this.backIcon = icon.BACK_WHITE;
-    //   this.editIcon = icon.EDIT_WHITE;
-    //   this.viewIcon = icon.VIEW_WHITE;
-    //   this.gridIcon = icon.GRID_WHITE;
-    //   this.listIcon = icon.List_LIGHT;
-    // }
-    // let j = 0;
-    // this.subscription = this.modeService.onModeDetect().subscribe((mode) => {
-    //   if (mode) {
-    //     this.mode = "off";
-    //     this.reportIcon = icon.REPORT;
-    //     this.approveIcon = icon.APPROVE;
-    //     this.rejectIcon = icon.DENY;
-    //     this.backIcon = icon.BACK;
-    //     this.editIcon = icon.EDIT;
-    //     this.viewIcon = icon.VIEW;
-    //     this.gridIcon = icon.GRID;
-    //     this.listIcon = icon.List;
+    if (this.mode == "off") {
+      this.reportIcon = icon.REPORT;
+      this.approveIcon = icon.APPROVE;
+      this.rejectIcon = icon.DENY;
+      this.backIcon = icon.BACK;
+      this.editIcon = icon.EDIT;
+      this.viewIcon = icon.VIEW;
+      this.gridIcon = icon.GRID;
+      this.listIcon = icon.List;
+    } else {
+      this.reportIcon = icon.REPORT_WHITE;
+      this.approveIcon = icon.APPROVE_WHITE;
+      this.rejectIcon = icon.DENY_WHITE;
+      this.backIcon = icon.BACK_WHITE;
+      this.editIcon = icon.EDIT_WHITE;
+      this.viewIcon = icon.VIEW_WHITE;
+      this.gridIcon = icon.GRID_WHITE;
+      this.listIcon = icon.List_LIGHT;
+    }
+    let j = 0;
+    this.subscription = this.modeService.onModeDetect().subscribe((mode) => {
+      if (mode) {
+        this.mode = "off";
+        this.reportIcon = icon.REPORT;
+        this.approveIcon = icon.APPROVE;
+        this.rejectIcon = icon.DENY;
+        this.backIcon = icon.BACK;
+        this.editIcon = icon.EDIT;
+        this.viewIcon = icon.VIEW;
+        this.gridIcon = icon.GRID;
+        this.listIcon = icon.List;
 
-    //   } else {
-    //     this.mode = "on";
-    //     this.reportIcon = icon.REPORT_WHITE;
-    //     this.approveIcon = icon.APPROVE_WHITE;
-    //     this.rejectIcon = icon.DENY_WHITE;
-    //     this.backIcon = icon.BACK_WHITE;
-    //     this.editIcon = icon.EDIT_WHITE;
-    //     this.viewIcon = icon.VIEW_WHITE;
-    //     this.gridIcon = icon.GRID_WHITE;
-    //     this.listIcon = icon.List_LIGHT;
-    //   }
-    //   if (j != 0) {
-    //     setTimeout(() => {
-
-    //     }, 100);
-    //   }
-    //   j++;
-    // });
+      } else {
+        this.mode = "on";
+        this.reportIcon = icon.REPORT_WHITE;
+        this.approveIcon = icon.APPROVE_WHITE;
+        this.rejectIcon = icon.DENY_WHITE;
+        this.backIcon = icon.BACK_WHITE;
+        this.editIcon = icon.EDIT_WHITE;
+        this.viewIcon = icon.VIEW_WHITE;
+        this.gridIcon = icon.GRID_WHITE;
+        this.listIcon = icon.List_LIGHT;
+      }
+      if (j != 0) {
+        setTimeout(() => {
+          this.rerenderfunc();
+        }, 100);
+      }
+      j++;
+    });
+    let i = 0;
     let that = this;
     // this.uiSpinner.spin$.next(true);
     this.translate.stream([""]).subscribe((textarray) => {
@@ -160,6 +161,12 @@ export class ReportsComponent implements OnInit {
       that.Receiving_Attachment = that.translate.instant("Receiving_Attachment");
       that.Vendor_Status = that.translate.instant("Vendor_Status");
       that.template_notes = that.translate.instant("template_notes");
+      if (i != 0) {
+        setTimeout(() => {
+          this.rerenderfunc();
+        }, 100);
+      }
+      i++;
     });
   }
 
@@ -218,58 +225,12 @@ export class ReportsComponent implements OnInit {
             this.count = resp.recordsTotal;
           });
       },
-      columns: [
-        //   {
-        //   title: 'Invoice',
-        //   data: 'id'
-        // }, {
-        //   title: 'First name',
-        //   data: 'firstName'
-        // }, {
-        //   title: 'Last name',
-        //   data: 'lastName'
-        // }
-        {
-          title: this.invoice_no,
-          data: "invoice",
-          defaultContent: "",
-        },
-        {
-          title: this.po_no,
-          data: "p_o",
-          defaultContent: "",
-        },
-        {
-          title: this.packing_slip_no,
-          data: "packing_slip",
-          defaultContent: "",
-        },
-        {
-          title: this.Receiving_Slip,
-          data: "receiving_slip",
-          defaultContent: "",
-        },
-        {
-          title: this.Vendor_Status,
-          data: 'status',
-          defaultContent: "",
-
-          width: "7%",
-        },
-        {
-          title: this.Receiving_Attachment,
-          defaultContent: "",
-
-          width: "1%",
-          orderable: false,
-        },
-
-      ],
+      columns: this.getColumnName(),
       // Declare the use of the extension in the dom parameter
       dom: 'Bfrtip',
       // Configure the buttons
       buttons: [
-        'columnsToggle',
+        // 'columnsToggle',
         'colvis',
         // 'copy',
         // 'print',
@@ -419,6 +380,7 @@ export class ReportsComponent implements OnInit {
         });
       },
     };
+    // this.rerenderfunc();
     // this.dtOptions = {
     //   // ajax: 'data/data.json',
     //   columns: [
@@ -489,8 +451,69 @@ export class ReportsComponent implements OnInit {
     //   ]
     // };
   }
+
+  getColumnName() {
+    return [
+      //   {
+      //   title: 'Invoice',
+      //   data: 'id'
+      // }, {
+      //   title: 'First name',
+      //   data: 'firstName'
+      // }, {
+      //   title: 'Last name',
+      //   data: 'lastName'
+      // }
+      {
+        title: this.invoice_no,
+        data: "invoice",
+        defaultContent: "",
+      },
+      {
+        title: this.po_no,
+        data: "p_o",
+        defaultContent: "",
+      },
+      {
+        title: this.packing_slip_no,
+        data: "packing_slip",
+        defaultContent: "",
+      },
+      {
+        title: this.Receiving_Slip,
+        data: "receiving_slip",
+        defaultContent: "",
+      },
+      {
+        title: this.Vendor_Status,
+        data: 'status',
+        defaultContent: "",
+
+        width: "7%",
+      },
+      {
+        title: this.Receiving_Attachment,
+        defaultContent: "",
+
+        width: "1%",
+        orderable: false,
+      },
+
+    ];
+  }
   downloadButtonPress(event, index): void {
     window.location.href = this.imageObject[index];
+  }
+  rerenderfunc() {
+    this.showTable = false;
+    var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
+    let that = this;
+    this.dtOptions.language = tmp_locallanguage == "en" ? LanguageApp.english_datatables : LanguageApp.spanish_datatables;
+    setTimeout(() => {
+      that.dtOptions.language = tmp_locallanguage == "en" ? LanguageApp.english_datatables : LanguageApp.spanish_datatables;
+      that.dtOptions.columns = that.getColumnName();
+      that.showTable = true;
+    }, 100);
   }
 
 }
