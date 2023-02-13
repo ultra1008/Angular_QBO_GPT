@@ -9,6 +9,7 @@ import { HttpCall } from 'src/app/service/httpcall.service';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
 import { ModeDetectService } from '../../map/mode-detect.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-invoice-detail-page',
@@ -25,13 +26,13 @@ export class InvoiceDetailPageComponent implements OnInit {
   pdf_url = '';
   multi = false;
   hide: Boolean = true;
-
+  backIcon: string;
   downloadIcon: string;
   printIcon: string;
   editIcon: string;
   subscription: Subscription;
   mode: any;
-
+  add_my_self_icon = icon.ADD_MY_SELF_WHITE;
   id: any;
   invoiceData: any;
   loadInvoice: boolean = false;
@@ -48,7 +49,7 @@ export class InvoiceDetailPageComponent implements OnInit {
     receivingSlip: 'Receiving Slip',
     quote: 'Quote',
   };
-  constructor(private modeService: ModeDetectService, private router: Router, public route: ActivatedRoute, public uiSpinner: UiSpinnerService, public httpCall: HttpCall,
+  constructor(private location: Location, private modeService: ModeDetectService, private router: Router, public route: ActivatedRoute, public uiSpinner: UiSpinnerService, public httpCall: HttpCall,
     public snackbarservice: Snackbarservice,) {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === "on" ? "on" : "off";
@@ -57,10 +58,12 @@ export class InvoiceDetailPageComponent implements OnInit {
       this.downloadIcon = icon.DOWNLOAD_WHITE;
       this.printIcon = icon.PRINT_WHITE;
       this.editIcon = icon.EDIT_WHITE;
+      this.backIcon = icon.BACK;
     } else {
       this.downloadIcon = icon.DOWNLOAD_WHITE;
       this.printIcon = icon.PRINT_WHITE;
       this.editIcon = icon.EDIT_WHITE;
+      this.backIcon = icon.BACK_WHITE;
     }
     this.subscription = this.modeService.onModeDetect().subscribe((mode) => {
       if (mode) {
@@ -68,11 +71,13 @@ export class InvoiceDetailPageComponent implements OnInit {
         this.downloadIcon = icon.DOWNLOAD_WHITE;
         this.printIcon = icon.PRINT_WHITE;
         this.editIcon = icon.EDIT_WHITE;
+        this.backIcon = icon.BACK;
       } else {
         this.mode = "on";
         this.downloadIcon = icon.DOWNLOAD_WHITE;
         this.printIcon = icon.PRINT_WHITE;
         this.editIcon = icon.EDIT_WHITE;
+        this.backIcon = icon.BACK_WHITE;
       }
     });
     if (this.id) {
@@ -103,6 +108,9 @@ export class InvoiceDetailPageComponent implements OnInit {
   goToInvoiceEdit(invoiceData) {
     this.router.navigate(['/invoice-form'], { queryParams: { _id: invoiceData._id } });
 
+  }
+  back() {
+    this.location.back();
   }
   print() {
     fetch(this.invoiceData.pdf_url).then(resp => resp.arrayBuffer()).then(resp => {

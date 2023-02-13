@@ -650,3 +650,15 @@
     overflow-x: unset !important;
     -webkit-overflow-scrolling: touch;
 }
+
+.Approvedcss {
+    color: #0fb900;
+}
+
+.Rejectcss {
+    color: red;
+}
+
+.pendingcss {
+    color: hsl(19, 94%, 55%)
+}

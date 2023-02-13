@@ -26,22 +26,29 @@
                 <p class="title">Files Attached #</p>
                 <p></p>
             </div>
-            <div>
+            <!-- <div>
                 <p class="title">Notes</p>
                 <p *ngIf="loadInvoice">{{invoiceData.notes}}</p>
                 <p *ngIf="!loadInvoice"></p>
-            </div>
+            </div> -->
             <div>
                 <p class="title">Status</p>
-                <p *ngIf="loadInvoice">{{invoiceData.status}}</p>
+                <p [ngClass]="invoiceData.status == 'Pending'? 'pendingcss' : 'Approvedcss' && invoiceData.status == 'Approved'? 'Approvedcss' : 'Rejectcss'&& invoiceData.status == 'Rejected'? 'Rejectcss' : 'Rejectcss'"
+                    *ngIf="loadInvoice">
+                    {{invoiceData.status}}</p>
                 <p *ngIf="!loadInvoice"></p>
             </div>
             <div class="row my-2">
-                <button mat-raised-button color="primary" style="margin-right: 6px;" class="sign-button ml-1">
+                <!-- <button mat-raised-button color="primary" style="margin-right: 6px;" class="sign-button ml-1">
                     Save Changes
-                </button>
+                </button> -->
                 <button mat-raised-button color="primary" style="margin-right: 12px;" class="sign-button">
+                    <img src="{{add_my_self_icon}}" alt="" height="20px">
                     Add to batch
+                </button>
+                <button mat-raised-button (click)="back()" class="sign-button">
+                    <img src="{{ backIcon }}" alt="" height="20px" />
+                    {{ "All-back" | translate }}
                 </button>
             </div>
         </div>
