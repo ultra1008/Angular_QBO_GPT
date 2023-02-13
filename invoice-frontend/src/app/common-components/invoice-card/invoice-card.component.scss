@@ -455,15 +455,30 @@
 }
 
 .card-body {
-    min-height: 200px;
+    min-height: 170px;
     text-align: center;
-    padding: 5px 10px !important;
+    padding: 5px 5px 5px 5px !important;
 
     .data {
         text-align: left;
         font-weight: 400;
         padding: 10px;
+
     }
+}
+
+.text-margin {
+    margin-left: 15px;
+    margin-right: 5px;
+}
+
+.text-overflow {
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 235px;
+
 }
 
 .cardsmall {
@@ -630,7 +645,7 @@
 }
 
 .Approvedcss {
-    color: orange;
+    color: #0fb900;
 }
 
 .Rejectcss {
@@ -638,7 +653,7 @@
 }
 
 .pendingcss {
-    color: green;
+    color: hsl(19, 94%, 55%)
 }
 
 .dropdown {

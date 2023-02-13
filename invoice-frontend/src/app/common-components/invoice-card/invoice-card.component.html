@@ -38,8 +38,12 @@
                 <br />
                 <b>P.O # </b> <span>{{invoice.p_o}}</span>
                 <br />
-                <b>Vendor </b> <span>{{invoice.vendor.vendor_name}}</span>
-                <br />
+
+                <div class="row"><b class="text-margin">Vendor </b>
+                    <div class="text-overflow">{{invoice.vendor.vendor_name }}
+                    </div>
+                </div>
+
                 <b>Packing Slip </b> <span>{{invoice.packing_slip}}</span>
                 <br />
                 <b>Receiving Slip </b> <span>{{invoice.receiving_slip}}</span>
