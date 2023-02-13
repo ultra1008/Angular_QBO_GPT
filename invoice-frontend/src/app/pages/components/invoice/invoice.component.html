@@ -57,20 +57,27 @@
                         <img src="{{listIcon}}" alt="" class="pr-1" height="15px" width="20px" *ngIf="gridtolist" />
                         {{btn_grid_list_text}}
                     </button>
-                    <mat-form-field class="mr-1" appearance="outline">
+                    <mat-form-field *ngIf="gridtolist" class="mr-1" appearance="outline">
                         <mat-label>Due Date</mat-label>
                         <input matInput>
                         <mat-datepicker-toggle matSuffix></mat-datepicker-toggle>
                         <mat-datepicker></mat-datepicker>
                     </mat-form-field>
-                    <mat-form-field class="mr-1" appearance="outline">
+                    <mat-form-field class="mr-1" *ngIf="gridtolist" appearance="outline">
                         <mat-label>Status</mat-label>
-                        <input matInput placeholder="Status" />
+                        <mat-select (change)="changeStatus($event)" [(ngModel)]="invoice_status">
+                            <mat-option value="All">{{'Team-EmployeeList-Status-All' | translate}}</mat-option>
+                            <mat-option value="Approved">{{'status_Approved' | translate}}</mat-option>
+                            <mat-option value="Rejected">{{'Reject_Invoice' | translate}}</mat-option>
+                            <mat-option value="Pending">{{'status_Pending' | translate}}</mat-option>
+                        </mat-select>
                     </mat-form-field>
 
-                    <mat-form-field class="" appearance="outline">
+
+
+                    <mat-form-field class="" *ngIf="gridtolist" appearance="outline">
                         <mat-label>Search</mat-label>
-                        <input matInput placeholder="Search" />
+                        <input [(ngModel)]="invoice_search" matInput placeholder="Search" />
                     </mat-form-field>
 
                 </div>
@@ -80,13 +87,15 @@
     <div class="pt-3" style="float: right;">
     </div>
     <!-- {{allInvoices.length}} -->
-    <div class="row ml-3" *ngIf="gridtolist">
-        <div class="mb-3 mr-4" *ngFor="let invoice of allInvoices">
-            <app-invoice-card [invoice]="invoice" (invoiceUpdateCard)="invoiceUpdateCard()"></app-invoice-card>
-        </div>
-        <!-- <app-invoice-card  ></app-invoice-card> -->
+    <div *ngIf="gridtolist">
+        <div class="row ml-3 ">
+            <div class="mb-3 mr-4"
+                *ngFor="let invoice of allInvoices | invoiceListFilter : invoice_search | invoiceListFilterStatus : invoice_status">
+                <app-invoice-card [invoice]="invoice" (invoiceUpdateCard)="invoiceUpdateCard()"></app-invoice-card>
+            </div>
+            <!-- <app-invoice-card  ></app-invoice-card> -->
 
-        <!-- <div class="card mb-3 mr-4" *ngFor="let invoice of allInvoices">
+            <!-- <div class="card mb-3 mr-4" *ngFor="let invoice of allInvoices">
             <div class="card-body">
                 <div class="data">
                     <div class="row dropdown">
@@ -129,6 +138,7 @@
                 </div>
             </div>
         </div> -->
+        </div>
     </div>
 
 

@@ -17,7 +17,6 @@ import { commonFileChangeEvent, formatPhoneNumber, gallery_options, LanguageApp 
 import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
 import { ModeDetectService } from '../map/mode-detect.service';
-import { EmployeeService } from '../team/employee.service';
 import moment from "moment";
 
 const swalWithBootstrapButtons = Swal.mixin({
@@ -50,11 +49,11 @@ export class InvoiceComponent implements OnInit {
   listtogrid_text: any;
   gridtolist_text: any;
   username_search: any;
-  username_status: any;
+
   gridtolist: Boolean = true;
   addTeamMember: boolean = true;
   locallanguage: any;
-
+  invoice_search: any;
   User_Card_Do_Want_Delete: string = "";
   Compnay_Equipment_Delete_Yes: string = "";
   Compnay_Equipment_Delete_No: string = "";
@@ -69,8 +68,10 @@ export class InvoiceComponent implements OnInit {
   listIcon: string;
   denyIcon: string;
   approveIcon: string;
-
-  allInvoices = [];
+  sorting_asc: Boolean = false;
+  sorting_desc: Boolean = false;
+  soruing_all: Boolean = true;
+  allInvoices: any = [];
   vendorsList = [];
   viewIcon: string = '';
   invoiceCount: any = {
@@ -81,6 +82,7 @@ export class InvoiceComponent implements OnInit {
   reportIcon: string = "";
   role_to: any;
   role_permission: any;
+  invoice_status: any;
 
   // We use this trigger because fetching the list of persons can be quite long,
   // thus we ensure the data is fetched before rendering
@@ -90,7 +92,7 @@ export class InvoiceComponent implements OnInit {
   showInvoiceTable = true;
   dtOptions: DataTables.Settings = {};
 
-  constructor (private router: Router, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
+  constructor(private router: Router, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
     public translate: TranslateService, public dialog: MatDialog,
     public httpCall: HttpCall, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService) {
     let tmp_gridtolist_team = localStorage.getItem("gridtolist_invoice_list");
@@ -215,6 +217,31 @@ export class InvoiceComponent implements OnInit {
       that.showInvoiceTable = true;
     }, 100);
   }
+  sorting_name() {
+    if (this.sorting_desc) {
+      this.sorting_desc = false;
+      this.sorting_asc = true;
+      this.soruing_all = false;
+      this.allInvoices = this.allInvoices.sort((a: any, b: any) => a.invoice_no.localeCompare(b.invoice_no, 'en', { sensitivity: 'base' }));
+    } else if (this.sorting_asc) {
+      this.sorting_desc = true;
+      this.sorting_asc = false;
+      this.soruing_all = false;
+      this.allInvoices = this.allInvoices.reverse((a: any, b: any) => a.invoice_no.localeCompare(b.invoice_no, 'en', { sensitivity: 'base' }));
+
+    } else {
+      this.sorting_desc = false;
+      this.sorting_asc = true;
+      this.soruing_all = false;
+      this.allInvoices = this.allInvoices.sort((a: any, b: any) => a.invoice_no.localeCompare(b.invoice_no, 'en', { sensitivity: 'base' }));
+    }
+  }
+
+  searchData(searchValue: any) {
+    this.allInvoices = this.allInvoices.filter((item: any) => {
+      return item.invoice_no.toLowerCase().includes(searchValue.toLowerCase());
+    });
+  }
 
   gotoArchive() {
     this.router.navigateByUrl('/archive-team-list');
@@ -268,6 +295,7 @@ export class InvoiceComponent implements OnInit {
         that.allInvoices = params.data;
         that.invoiceCount = params.count;
         that.isManagement = params.is_management;
+        console.log("invoiceList", params.data);
       }
       that.uiSpinner.spin$.next(false);
     });
@@ -414,7 +442,7 @@ export class InvoiceAttachment {
   FILE_NOT_SUPPORTED: string;
   Invoice_Add_Atleast_One_Document: string = '';
 
-  constructor (private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
+  constructor(private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
     public dialogRef: MatDialogRef<InvoiceAttachment>,
     @Inject(MAT_DIALOG_DATA) public data: any, public sb: Snackbarservice, public translate: TranslateService, public dialog: MatDialog, private sanitiser: DomSanitizer,
     public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService,
@@ -751,7 +779,7 @@ export class InvoiceReport {
   copyDataFromProject: string = '';
   add_my_self_icon = icon.ADD_MY_SELF_WHITE;
 
-  constructor (private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
+  constructor(private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
     public dialogRef: MatDialogRef<InvoiceReport>,
     @Inject(MAT_DIALOG_DATA) public data: any, public sb: Snackbarservice, public translate: TranslateService) {
 

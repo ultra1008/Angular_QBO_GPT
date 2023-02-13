@@ -96,6 +96,7 @@ import { DashboardInvoiceListComponent } from './components/dashboard/dashboard-
 import { DashboardFilesListComponent } from './components/dashboard/dashboard-files-list/dashboard-files-list.component';
 import { AddOtherFiles, InvoiceOtherDocumentComponent, OrphanFiles } from './components/invoice/invoice-other-document/invoice-other-document.component';
 import { DocumentViewComponent } from './components/setting/document-view/document-view.component';
+import { InvoiceListFilterPipe, InvoiceListFilterStatus } from './components/invoice/invoice-list-filter.pipe';
 
 
 
@@ -182,7 +183,9 @@ import { DocumentViewComponent } from './components/setting/document-view/docume
     InvoiceOtherDocumentComponent,
     DocumentViewComponent,
     AddOtherFiles,
-    OrphanFiles
+    OrphanFiles,
+    InvoiceListFilterPipe,
+    InvoiceListFilterStatus
   ],
   imports: [
     PortalModule,
