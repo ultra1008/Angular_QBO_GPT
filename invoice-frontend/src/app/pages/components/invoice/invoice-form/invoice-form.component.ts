@@ -77,12 +77,13 @@ export class InvoiceFormComponent implements OnInit {
   noButton: string = "";
   Approve_Invoice_massage: string = "";
   Reject_Invoice_massage: string = "";
-
+  status: any;
   constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.pdf_url = this.route.snapshot.queryParamMap.get('pdf_url');
-    console.log("id", this.id);
+    this.status = this.route.snapshot.queryParamMap.get('status');
+    console.log("invoice", this.id);
     if (this.id) {
       console.log("id11111111", this.id);
       this.uiSpinner.spin$.next(true);
@@ -268,6 +269,7 @@ export class InvoiceFormComponent implements OnInit {
           that.httpCall.httpPostCall(httproutes.INVOICE_UPDATE_INVOICE_STATUS, requestObject).subscribe(params => {
             if (params.status) {
               that.snackbarservice.openSnackBar(params.message, "success");
+              that.status = status;
               that.uiSpinner.spin$.next(false);
               // that.rerenderfunc();
               // that.invoiceUpdateCard.emit();
@@ -358,6 +360,7 @@ export class InvoiceFormComponent implements OnInit {
     let that = this;
     this.httpCall.httpPostCall(httproutes.INVOICE_GET_ONE_INVOICE, { _id: that.id }).subscribe(function (params) {
       if (params.status) {
+        that.status = params.data.status;
         that.invoiceData = params.data;
         that.pdf_url = that.invoiceData.pdf_url;
         that.invoiceform = that.formBuilder.group({
