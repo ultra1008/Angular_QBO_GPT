@@ -18,6 +18,7 @@ import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
 import { ModeDetectService } from '../map/mode-detect.service';
 import moment from "moment";
+import { event } from 'jquery';
 
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
@@ -168,7 +169,6 @@ export class InvoiceComponent implements OnInit {
     // if (role_permission.role_permission.team.team.Delete == false) {
     //   this.deleteTeamMember = false;
     // }
-
     let that = this;
     this.getAllVendors();
     this.uiSpinner.spin$.next(true);
@@ -202,12 +202,32 @@ export class InvoiceComponent implements OnInit {
     });
     that.dtOptions = {
       pagingType: 'full_numbers',
-      language: tmp_locallanguage == "en" ? LanguageApp.english_datatables : LanguageApp.spanish_datatables
+      language: tmp_locallanguage == "en" ? LanguageApp.english_datatables : LanguageApp.spanish_datatables,
+      rowCallback: (row: Node, invoice: any[] | Object, index: number) => {
+        const self = this;
+
+        // Unbind first in order to avoid any duplicate handler
+        // (see https://github.com/l-lin/angular-datatables/issues/87)
+        // Note: In newer jQuery v3 versions, `unbind` and `bind` are 
+        // deprecated in favor of `off` and `on`
+        $('td', row).off('click');
+        $('td', row).on('click', () => {
+          self.editInvoice(invoice);
+
+
+        });
+        return row;
+      }
     };
 
     this.getAllInvoices();
+    console.log("allInvoices", this.allInvoices);
+
   }
 
+  // someClickHandler(info: any): void {
+  //   this.message = info.id + ' - ' + info.firstName;
+  // }
   rerenderfunc() {
     this.showInvoiceTable = false;
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
@@ -349,8 +369,11 @@ export class InvoiceComponent implements OnInit {
   }
 
   editInvoice(invoice) {
+    console.log("invoice123", invoice);
+
     this.router.navigate(['/invoice-form'], { queryParams: { _id: invoice._id } });
   }
+
 
   openAddDialog() {
     let that = this;
