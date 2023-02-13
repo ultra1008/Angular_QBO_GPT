@@ -18,11 +18,11 @@
                     <button mat-raised-button (click)="saveInvoice()" color="primary" class="cust-button-form"><img
                             src="{{saveIcon}}" alt="" class="pr-1" height="15px">{{'All-save' |
                         translate}}</button>
-                    <button mat-raised-button (click)="updateInvoice(id,'Approved')" *ngIf="status == 'Rejected'"
+                    <button mat-raised-button (click)="updateInvoice(id,'Approved')" *ngIf="status != 'Approved'"
                         class="cust-button-form Approve"><img src="{{approveIcon}}" alt="" height="15px">
                         {{'PO-View-Approve' | translate}}</button>
 
-                    <button mat-raised-button (click)="updateInvoice(id,'Rejected')" *ngIf="status == 'Approved'"
+                    <button mat-raised-button (click)="updateInvoice(id,'Rejected')" *ngIf="status != 'Rejected'"
                         class="cust-button-form Denied"><img src="{{denyIcon}}" alt="" height="15px">
                         {{'reject_all' |
                         translate}}</button>
@@ -279,12 +279,12 @@
                         <button mat-raised-button (click)="saveInvoice()" color="primary" class="cust-button-form"><img
                                 src="{{saveIcon}}" alt="" class="pr-1" height="15px">{{'All-save' |
                             translate}}</button>
-                        <button mat-raised-button (click)="updateInvoice(id,'Approved')" *ngIf="status == 'Rejected'"
+                        <button mat-raised-button (click)="updateInvoice(id,'Approved')" *ngIf="status != 'Approved'"
                             class="
                             cust-button-form Approve"><img src="{{approveIcon}}" alt="" height="15px">
                             {{'PO-View-Approve' | translate}}</button>
 
-                        <button mat-raised-button (click)="updateInvoice(id,'Rejected')" *ngIf="status == 'Approved'"
+                        <button mat-raised-button (click)="updateInvoice(id,'Rejected')" *ngIf="status != 'Rejected'"
                             class="
                             cust-button-form Denied"><img src="{{denyIcon}}" alt="" height="15px">
                             {{'reject_all' |
