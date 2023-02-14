@@ -156,11 +156,11 @@
                             <th>{{"Receiving_Attachment" | translate}}</th>
 
                             <th>{{"Employee-form-Status" | translate}}</th>
-                            <th width="1%" data-orderable="false">{{"All-Action" | translate }}</th>
+                            <!-- <th width="1%" data-orderable="false">{{"All-Action" | translate }}</th> -->
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let invoice of allInvoices">
+                        <tr *ngFor="let invoice of allInvoices" (click)="editInvoice(invoice);">
                             <td>{{ invoice.invoice }}</td>
                             <td>{{ invoice.p_o }}</td>
                             <td>{{ invoice.vendor.vendor_name }}</td>
@@ -171,34 +171,9 @@
                             <td width="1%"
                                 [ngClass]="invoice.status == 'Pending'? 'pendingcss' : 'Approvedcss' && invoice.status == 'Approved'? 'Approvedcss' : 'Rejectcss'&& invoice.status == 'Rejected'? 'Rejectcss' : 'Rejectcss'">
                                 {{ invoice.status }}</td>
-                            <td width="1%">
+                            <!-- <td width="1%">
                                 <div>
-                                    <!-- <div class="dropdown">
-                                        <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust"
-                                            aria-hidden="true"></i>
-                                        <div class="dropdown-content-cust">
-                                            <a (click)="viewInvoice(invoice);"><img src="{{viewIcon}}" alt=""
-                                                    height="20px">
-                                                {{'All-View' |
-                                                translate}}</a>
-                                            <a (click)="editInvoice(invoice)"><img src="{{editIcon}}" alt=""
-                                                    height="20px">
-                                                {{'All-Edit' | translate}}</a>
-                                            <button (click)="updateInvoice({status: 'Approved',_id:invoice._id})"
-                                                *ngIf="status != 'Approved'" class="button_shiftEditClass"
-                                                mat-menu-item>
-                                                <span><img src="{{approveIcon}}" alt="" height="15px">
-                                                    {{'PO-View-Approve' |
-                                                    translate}}</span>
-                                            </button>
-                                            <button (click)="updateInvoice({status: 'Rejected',_id:invoice._id})"
-                                                *ngIf="status != 'Rejected'" class="button_shiftDeleteClass"
-                                                mat-menu-item>
-                                                <span><img src="{{denyIcon}}" alt="" height="15px">
-                                                    {{'reject_all' | translate}}</span>
-                                            </button>
-                                        </div>
-                                    </div> -->
+                                                                   
                                     <div class="dropdown">
                                         <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust"
                                             aria-hidden="true"></i>
@@ -226,7 +201,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </td>
+                            </td> -->
                         </tr>
                     </tbody>
                 </table>

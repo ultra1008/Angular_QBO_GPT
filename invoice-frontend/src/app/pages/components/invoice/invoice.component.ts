@@ -203,26 +203,19 @@ export class InvoiceComponent implements OnInit {
     that.dtOptions = {
       pagingType: 'full_numbers',
       language: tmp_locallanguage == "en" ? LanguageApp.english_datatables : LanguageApp.spanish_datatables,
-      rowCallback: (row: Node, invoice: any[] | Object, index: number) => {
-        const self = this;
+      // rowCallback: (row: Node, invoice: any[] | Object, index: number) => {
+      //   const self = this;
+      //   $('td', row).off('click');
+      //   $('td', row).on('click', () => {
+      //    self.editInvoice(invoice);
+      //     console.log("invoice", invoice);
 
-        // Unbind first in order to avoid any duplicate handler
-        // (see https://github.com/l-lin/angular-datatables/issues/87)
-        // Note: In newer jQuery v3 versions, `unbind` and `bind` are 
-        // deprecated in favor of `off` and `on`
-        $('td', row).off('click');
-        $('td', row).on('click', () => {
-          self.editInvoice(invoice);
-
-
-        });
-        return row;
-      }
+      //   });
+      //   return row;
+      // }
     };
 
     this.getAllInvoices();
-    console.log("allInvoices", this.allInvoices);
-
   }
 
   // someClickHandler(info: any): void {
@@ -315,7 +308,7 @@ export class InvoiceComponent implements OnInit {
         that.allInvoices = params.data;
         that.invoiceCount = params.count;
         that.isManagement = params.is_management;
-        console.log("invoiceList", params.data);
+        console.log("invoiceList", that.allInvoices);
       }
       that.uiSpinner.spin$.next(false);
     });
