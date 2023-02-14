@@ -1,3 +1,31 @@
-<div class="wrapper-cust-admin cust-width" *ngIf="showTable">
-    <table datatable [dtOptions]="dtOptions" class="row-border hover"></table>
-</div>
+<div class="wrapper-cust-admin" fxLayout style="height: 95%">
+
+    <div class="d-flex justify-content-between">
+
+        <h1 class="screen-title">
+            {{ "Sidebar-Report" | translate | titlecase }}
+        </h1>
+        <div class="row mr-2 action-button">
+            <!-- <button mat-raised-button color="primary" class="sign-button ml-2"><img src="{{add_my_self_icon}}" alt=""
+                    height="20px">
+                Import Data
+            </button> -->
+
+            <mat-form-field appearance="outline" class="cust-report-full-width-fields">
+                <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                    <input matStartDate formControlName="start_date"
+                        placeholder="{{'Company-Material-Report-StartDate' | translate}}" disabled>
+                    <input matEndDate formControlName="end_date"
+                        placeholder="{{'Company-Material-Report-EndDate' | translate}}" disabled>
+                </mat-date-range-input>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker disabled="false"></mat-date-range-picker>
+            </mat-form-field>
+
+
+
+        </div>
+    </div>
+    <div class="wrapper-cust-admin cust-width" *ngIf="showTable">
+        <table datatable [dtOptions]="dtOptions" class="row-border hover"></table>
+    </div>

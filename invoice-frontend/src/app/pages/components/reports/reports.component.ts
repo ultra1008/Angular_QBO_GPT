@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -74,12 +75,16 @@ export class ReportsComponent implements OnInit {
   Purchasing_Orders_View: any;
   listIcon!: string;
   gridIcon: string;
-
+  reportinfo: FormGroup;
   btn_grid_list_text: any;
   listtogrid_text: any;
   gridtolist_text: any;
   count: number = 0;
   allInvoices: any = [];
+  range = new FormGroup({
+    start_date: new FormControl(),
+    end_date: new FormControl()
+  });
   constructor(private modeService: ModeDetectService,
     private router: Router,
     private http: HttpClient,
@@ -228,10 +233,22 @@ export class ReportsComponent implements OnInit {
       columns: this.getColumnName(),
       // Declare the use of the extension in the dom parameter
       dom: 'Bfrtip',
+      columnDefs: [
+        {
+          targets: [0, 1],
+          className: 'noVis'
+        }
+      ],
+
       // Configure the buttons
       buttons: [
         // 'columnsToggle',
-        'colvis',
+        // 'colvis',
+        {
+          extend: 'colvis',
+          columns: ':not(.noVis)'
+
+        },
         // 'copy',
         // 'print',
         // 'excel',
@@ -477,11 +494,15 @@ export class ReportsComponent implements OnInit {
         title: this.invoice_no,
         data: "invoice",
         defaultContent: "",
+
       },
       {
         title: this.po_no,
         data: "p_o",
         defaultContent: "",
+
+
+
       },
       {
         title: this.packing_slip_no,
