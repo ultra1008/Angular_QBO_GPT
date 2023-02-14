@@ -234,7 +234,16 @@ export class ReportsComponent implements OnInit {
         'colvis',
         // 'copy',
         // 'print',
-        'excel',
+        // 'excel',
+        {
+          extend: 'excelHtml5',
+          title: 'Invoice excel Report',
+          //  messageTop: '"https://s3.us-west-1.wasabisys.com/rovukdata/few-clouds.png"',
+          titleAttr: 'Export Excel',
+          exportOptions: {
+            columns: ':visible'
+          }
+        },
         // {
         //   text: 'Some button',
         //   key: '1',
