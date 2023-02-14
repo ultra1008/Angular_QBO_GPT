@@ -1,7 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { DataTableDirective } from 'angular-datatables';
@@ -85,6 +84,7 @@ export class ReportsComponent implements OnInit {
     start_date: new FormControl(),
     end_date: new FormControl()
   });
+  showInvoiceTable = true;
   constructor(private modeService: ModeDetectService,
     private router: Router,
     private http: HttpClient,
@@ -147,6 +147,7 @@ export class ReportsComponent implements OnInit {
           this.rerenderfunc();
         }, 100);
       }
+
       j++;
     });
     let i = 0;
@@ -173,6 +174,7 @@ export class ReportsComponent implements OnInit {
       }
       i++;
     });
+
   }
 
   ngOnInit(): void {
@@ -201,44 +203,19 @@ export class ReportsComponent implements OnInit {
     this.galleryOptions = [tmp_gallery];
     this.dtOptions = {
       pagingType: "full_numbers",
-      pageLength: 10,
-      serverSide: true,
-      processing: true,
-      responsive: false,
-      language:
-        portal_language == "en"
-          ? LanguageApp.english_datatables
-          : LanguageApp.spanish_datatables,
-      order: [],
-      ajax: (dataTablesParameters: any, callback) => {
-        $(".dataTables_processing").html(
-          "<img  src=" + this.httpCall.getLoader() + ">"
-        );
-
-        this.http
-          .post<DataTablesResponse>(
-            configdata.apiurl + httproutes.INVOICE_GET_INVOICE_DATATABLE,
-            dataTablesParameters,
-            { headers: headers }
-          )
-          .subscribe((resp) => {
-            callback({
-              recordsTotal: resp.recordsTotal,
-              recordsFiltered: resp.recordsFiltered,
-              data: resp.data,
-            });
-            this.count = resp.recordsTotal;
-          });
-      },
-      columns: this.getColumnName(),
-      // Declare the use of the extension in the dom parameter
-      dom: 'Bfrtip',
       columnDefs: [
+        {
+          targets: [], //first column / numbering column
+          orderable: false, //set not orderable
+        },
         {
           targets: [0, 1],
           className: 'noVis'
         }
       ],
+
+      // Declare the use of the extension in the dom parameter
+      dom: 'Bfrtip',
 
       // Configure the buttons
       buttons: [
@@ -255,11 +232,12 @@ export class ReportsComponent implements OnInit {
         {
           extend: 'excelHtml5',
           title: 'Invoice excel Report',
-          //  messageTop: '"https://s3.us-west-1.wasabisys.com/rovukdata/few-clouds.png"',
+
           titleAttr: 'Export Excel',
           exportOptions: {
             columns: ':visible'
           }
+
         },
         // {
         //   text: 'Some button',
@@ -269,282 +247,42 @@ export class ReportsComponent implements OnInit {
         //   }
         // }
       ],
-
-      drawCallback: () => {
-        $(".button_attachment").on("click", (event) => {
-          this.imageObject = JSON.parse(
-            event.target.getAttribute("edit_tmp_id")
-          ).attachment;
-          this.galleryImages = [];
-          if (this.imageObject != undefined) {
-            for (let i = 0; i < this.imageObject.length; i++) {
-              var extension = this.imageObject[i].substring(
-                this.imageObject[i].lastIndexOf(".") + 1
-              );
-              if (
-                extension == "jpg" ||
-                extension == "png" ||
-                extension == "jpeg" ||
-                extension == "gif" ||
-                extension == "webp"
-              ) {
-                var srctmp: any = {
-                  small: this.imageObject[i],
-                  medium: this.imageObject[i],
-                  big: this.imageObject[i],
-                };
-                this.galleryImages.push(srctmp);
-              } else if (extension == "doc" || extension == "docx") {
-                var srctmp: any = {
-                  small:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png",
-                  medium:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png",
-                  big: "https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png",
-                };
-                this.galleryImages.push(srctmp);
-              } else if (extension == "pdf") {
-                var srctmp: any = {
-                  small:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png",
-                  medium:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png",
-                  big: "https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png",
-                };
-                this.galleryImages.push(srctmp);
-              } else if (extension == "odt") {
-                var srctmp: any = {
-                  small:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png",
-                  medium:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png",
-                  big: "https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png",
-                };
-                this.galleryImages.push(srctmp);
-              } else if (extension == "rtf") {
-                var srctmp: any = {
-                  small:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png",
-                  medium:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png",
-                  big: "https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png",
-                };
-                this.galleryImages.push(srctmp);
-              } else if (extension == "txt") {
-                var srctmp: any = {
-                  small:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png",
-                  medium:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png",
-                  big: "https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png",
-                };
-                this.galleryImages.push(srctmp);
-              } else if (extension == "ppt") {
-                var srctmp: any = {
-                  small:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png",
-                  medium:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png",
-                  big: "https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png",
-                };
-                this.galleryImages.push(srctmp);
-              } else if (
-                extension == "xls" ||
-                extension == "xlsx" ||
-                extension == "csv"
-              ) {
-                var srctmp: any = {
-                  small:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png",
-                  medium:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png",
-                  big: "https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png",
-                };
-                this.galleryImages.push(srctmp);
-              } else {
-                var srctmp: any = {
-                  small:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png",
-                  medium:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png",
-                  big: "https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png",
-                };
-                this.galleryImages.push(srctmp);
-              }
-            }
-          }
-          setTimeout(() => {
-            this.gallery.openPreview(0);
-          }, 0);
-        });
-        $(".button_shiftEditClass").on("click", (event) => {
-          let invoice1 = event.target.getAttribute("edit_tmp_id")?.replace(/\\/g, "'");
-          let invoice = JSON.parse(invoice1 ?? '');
-          this.router.navigate(['/invoice-form'], { queryParams: { _id: invoice._id } });
-        });
-        $(".button_poReceivedViewClass").on("click", (event) => {
-          // PO PDF view here
-          let invoice = JSON.parse(event.target.getAttribute("edit_tmp_id"));
-          this.router.navigate(['/invoice-detail'], { queryParams: { _id: invoice._id } });
-          /* this.router.navigate(["/app-custompdfviewer"], {
-            queryParams: {
-              po_url: data.received_url,
-              po_status: data.po_status,
-              po_id: data._id,
-            },
-          }); */
-        });
-        $(".button_shiftApproveClass").on("click", (event) => {
-          // Approve Invoice here
-          let data = JSON.parse(event.target.getAttribute("edit_tmp_id"));
-          // this.updateInvoice({ _id: data._id, status: 'Approved' });
-        });
-        $(".button_shiftRejectClass").on("click", (event) => {
-          // Approve Invoice here
-          let data = JSON.parse(event.target.getAttribute("edit_tmp_id"));
-          // this.updateInvoice({ _id: data._id, status: 'Rejected' });
-        });
-      },
     };
-    // this.rerenderfunc();
-    // this.dtOptions = {
-    //   // ajax: 'data/data.json',
-    //   columns: [
-    //     //   {
-    //     //   title: 'Invoice',
-    //     //   data: 'id'
-    //     // }, {
-    //     //   title: 'First name',
-    //     //   data: 'firstName'
-    //     // }, {
-    //     //   title: 'Last name',
-    //     //   data: 'lastName'
-    //     // }
-    //     {
-    //       title: this.invoice_no,
-    //       data: "invoice",
-    //       defaultContent: "",
-    //     },
-    //     {
-    //       title: this.po_no,
-    //       data: "p_o",
-    //       defaultContent: "",
-    //     },
-    //     {
-    //       title: this.packing_slip_no,
-    //       data: "packing_slip",
-    //       defaultContent: "",
-    //     },
-    //     {
-    //       title: this.Receiving_Slip,
-    //       data: "receiving_slip",
-    //       defaultContent: "",
-    //     },
-    //     {
-    //       title: this.Vendor_Status,
-    //       data: 'status',
-    //       defaultContent: "",
 
-    //       width: "7%",
-    //     },
-    //     {
-    //       title: this.Receiving_Attachment,
-    //       defaultContent: "",
-
-    //       width: "1%",
-    //       orderable: false,
-    //     },
-
-    //   ],
-
-
-    //   // Declare the use of the extension in the dom parameter
-    //   dom: 'Bfrtip',
-    //   // Configure the buttons
-    //   buttons: [
-    //     'columnsToggle',
-    //     'colvis',
-    //     // 'copy',
-    //     // 'print',
-    //     // 'excel',
-    //     // {
-    //     //   text: 'Some button',
-    //     //   key: '1',
-    //     //   action: function (e: any, dt: any, node: any, config: any) {
-    //     //     alert('Button activated');
-    //     //   }
-    //     // }
-    //   ]
-    // };
+    this.getAllInvoices();
   }
 
-  getColumnName() {
-    return [
-      //   {
-      //   title: 'Invoice',
-      //   data: 'id'
-      // }, {
-      //   title: 'First name',
-      //   data: 'firstName'
-      // }, {
-      //   title: 'Last name',
-      //   data: 'lastName'
-      // }
-      {
-        title: this.invoice_no,
-        data: "invoice",
-        defaultContent: "",
 
-      },
-      {
-        title: this.po_no,
-        data: "p_o",
-        defaultContent: "",
-
-
-
-      },
-      {
-        title: this.packing_slip_no,
-        data: "packing_slip",
-        defaultContent: "",
-      },
-      {
-        title: this.Receiving_Slip,
-        data: "receiving_slip",
-        defaultContent: "",
-      },
-      {
-        title: this.Vendor_Status,
-        data: 'status',
-        defaultContent: "",
-
-        width: "7%",
-      },
-      {
-        title: this.Receiving_Attachment,
-        defaultContent: "",
-
-        width: "1%",
-        orderable: false,
-      },
-
-    ];
-  }
   downloadButtonPress(event, index): void {
     window.location.href = this.imageObject[index];
   }
   rerenderfunc() {
-    this.showTable = false;
+    this.showInvoiceTable = false;
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     let that = this;
-    this.dtOptions.language = tmp_locallanguage == "en" ? LanguageApp.english_datatables : LanguageApp.spanish_datatables;
+
     setTimeout(() => {
       that.dtOptions.language = tmp_locallanguage == "en" ? LanguageApp.english_datatables : LanguageApp.spanish_datatables;
-      that.dtOptions.columns = that.getColumnName();
-      that.showTable = true;
+      that.showInvoiceTable = true;
     }, 100);
   }
+
+  getAllInvoices() {
+    let that = this;
+    this.httpCall.httpGetCall(httproutes.INVOICE_GET_LIST).subscribe(function (params) {
+      if (params.status) {
+        that.allInvoices = params.data;
+
+        console.log("invoiceList", that.allInvoices);
+      }
+      that.uiSpinner.spin$.next(false);
+      that.showInvoiceTable = false;
+      setTimeout(() => {
+        that.showInvoiceTable = true;
+      }, 100);
+    });
+  }
+
 
 }
 

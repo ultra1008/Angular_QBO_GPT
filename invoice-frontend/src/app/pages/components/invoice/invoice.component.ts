@@ -311,6 +311,10 @@ export class InvoiceComponent implements OnInit {
         console.log("invoiceList", that.allInvoices);
       }
       that.uiSpinner.spin$.next(false);
+      that.showInvoiceTable = false;
+      setTimeout(() => {
+        that.showInvoiceTable = true;
+      }, 100);
     });
   }
 

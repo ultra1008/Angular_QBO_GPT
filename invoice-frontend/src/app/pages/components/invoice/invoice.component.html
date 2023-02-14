@@ -168,7 +168,7 @@
                             <td>{{ invoice.receiving_slip }}</td>
                             <td></td>
 
-                            <td width="1%"
+                            <td
                                 [ngClass]="invoice.status == 'Pending'? 'pendingcss' : 'Approvedcss' && invoice.status == 'Approved'? 'Approvedcss' : 'Rejectcss'&& invoice.status == 'Rejected'? 'Rejectcss' : 'Rejectcss'">
                                 {{ invoice.status }}</td>
                             <!-- <td width="1%">
