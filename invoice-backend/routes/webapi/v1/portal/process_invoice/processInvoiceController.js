@@ -300,6 +300,7 @@ module.exports.importProcessData = async function (req, res) {
                                     created_at: Math.round(new Date().getTime() / 1000),
                                     updated_by: decodedToken.UserData._id,
                                     updated_at: Math.round(new Date().getTime() / 1000),
+                                    badge: {},
                                 };
                                 let items = [];
                                 let invoiceIsDuplicate = false;
@@ -307,6 +308,7 @@ module.exports.importProcessData = async function (req, res) {
                                     let invoice_no = '';
                                     if (pages[i].fields.INVOICE_NUMBER != null) {
                                         invoice_no = pages[i].fields.INVOICE_NUMBER;
+                                        invoiceObject.badge.invoice = true;
                                     }
                                     if (pages[i].fields.VENDOR_NAME != null) {
                                         let tmpVendor = await getAndCheckVendor(pages[i].fields.VENDOR_NAME.replace(/\n/g, " "), invoice_no, connection_db_api);
@@ -315,6 +317,7 @@ module.exports.importProcessData = async function (req, res) {
                                                 invoiceIsDuplicate = true;
                                             } else {
                                                 invoiceObject.vendor = tmpVendor.data._id;
+                                                invoiceObject.badge.vendor = true;
                                             }
                                         }
                                     }
@@ -322,30 +325,39 @@ module.exports.importProcessData = async function (req, res) {
                                         invoiceObject.invoice = invoice_no;
                                         if (pages[i].fields.INVOICE_DATE != null) {
                                             invoiceObject.invoice_date = pages[i].fields.INVOICE_DATE;
+                                            invoiceObject.badge.invoice_date = true;
                                         }
                                         if (pages[i].fields.ORDER_DATE != null) {
                                             invoiceObject.order_date = pages[i].fields.ORDER_DATE;
+                                            invoiceObject.badge.order_date = true;
                                         }
                                         if (pages[i].fields.PO_NUMBER != null) {
                                             invoiceObject.p_o = pages[i].fields.PO_NUMBER;
+                                            invoiceObject.badge.p_o = true;
                                         }
                                         /* if (pages[i].fields.INVOICE_TO != null) {
                                             invoiceObject.invoice = pages[i].fields.INVOICE_TO;
+                                            invoiceObject.   badge.vendor=true
                                         }
                                         if (pages[i].fields.ADDRESS != null) {
                                             invoiceObject.invoice = pages[i].fields.ADDRESS;
+                                            invoiceObject.   badge.vendor=true
                                         } */
                                         if (pages[i].fields.SUBTOTAL != null) {
                                             invoiceObject.sub_total = pages[i].fields.SUBTOTAL;
+                                            invoiceObject.badge.sub_total = true;
                                         }
                                         if (pages[i].fields.TOTAL != null) {
                                             invoiceObject.total = pages[i].fields.TOTAL;
+                                            invoiceObject.badge.total = true;
                                         }
                                         if (pages[i].fields.TAX != null) {
                                             invoiceObject.tax_amount = pages[i].fields.TAX;
+                                            invoiceObject.badge.tax_amount = true;
                                         }
                                         if (pages[i].fields.INVOICE_TOTAL != null) {
                                             invoiceObject.invoice_total = pages[i].fields.INVOICE_TOTAL;
+                                            invoiceObject.badge.invoice_total = true;
                                         }
 
                                         /* if (pages[i].fields.VENDOR_ADDRESS != null) {
@@ -356,27 +368,35 @@ module.exports.importProcessData = async function (req, res) {
                                         } */
                                         if (pages[i].fields.JOB_NUMBER != null) {
                                             invoiceObject.job_number = pages[i].fields.JOB_NUMBER;
+                                            invoiceObject.badge.job_number = true;
                                         }
                                         if (pages[i].fields.DELIVERY_ADDRESS != null) {
                                             invoiceObject.delivery_address = pages[i].fields.DELIVERY_ADDRESS;
+                                            invoiceObject.badge.delivery_address = true;
                                         }
                                         if (pages[i].fields.TERMS != null) {
                                             invoiceObject.terms = pages[i].fields.TERMS;
+                                            invoiceObject.badge.terms = true;
                                         }
                                         if (pages[i].fields.DUE_DATE != null) {
                                             invoiceObject.due_date = pages[i].fields.DUE_DATE;
+                                            invoiceObject.badge.due_date = true;
                                         }
                                         if (pages[i].fields.SHIP_DATE != null) {
                                             invoiceObject.ship_date = pages[i].fields.SHIP_DATE;
+                                            invoiceObject.badge.ship_date = true;
                                         }
                                         if (pages[i].fields.CONTRACT_NUMBER != null) {
                                             invoiceObject.contract_number = pages[i].fields.CONTRACT_NUMBER;
+                                            invoiceObject.badge.contract_number = true;
                                         }
                                         if (pages[i].fields.DISCOUNT != null) {
                                             invoiceObject.discount = pages[i].fields.DISCOUNT;
+                                            invoiceObject.badge.discount = true;
                                         }
                                         if (pages[i].fields.ACCOUNT_NUMBER != null) {
                                             invoiceObject.account_number = pages[i].fields.ACCOUNT_NUMBER;
+                                            invoiceObject.badge.account_number = true;
                                         }
                                         if (pages[i].expense_groups.length > 0) {
                                             if (pages[i].expense_groups[0].length > 0) {
