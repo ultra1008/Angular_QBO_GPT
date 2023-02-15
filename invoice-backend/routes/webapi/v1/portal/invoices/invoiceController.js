@@ -151,6 +151,7 @@ module.exports.getInvoice = async function (req, res) {
                                 cond: { $eq: ['$$note.is_delete', 0] }
                             }
                         },
+                        invoice_attachments: 1,
                     }
                 },
             ]);
@@ -294,6 +295,7 @@ module.exports.getInvoiceList = async function (req, res) {
                                 cond: { $eq: ['$$note.is_delete', 0] }
                             }
                         },
+                        invoice_attachments: 1,
                     }
                 },
             ]);
@@ -389,6 +391,7 @@ module.exports.getOneInvoice = async function (req, res) {
                                 cond: { $eq: ['$$note.is_delete', 0] }
                             }
                         },
+                        invoice_attachments: 1,
                     }
                 },
             ]);
