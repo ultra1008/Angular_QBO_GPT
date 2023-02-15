@@ -273,6 +273,7 @@ router.post('/webapi/v1/portal/getorphandocumentofinvoice', common.checkTokenExi
 router.post('/webapi/v1/portal/getinvoicehistorylog', common.checkTokenExistOrNot, invoiceValidation.getInvoiceHistoryLog, invoiceController.getInvoiceHistoryLog);
 router.post('/webapi/v1/portal/saveinvoicenote', common.checkTokenExistOrNot, invoiceValidation.saveInvoiceNotes, invoiceController.saveInvoiceNotes);
 router.post('/webapi/v1/portal/deleteinvoicenote', common.checkTokenExistOrNot, invoiceValidation.deleteInvoiceNote, invoiceController.deleteInvoiceNote);
+router.post('/webapi/v1/portal/updateinvoiceattachment', common.checkTokenExistOrNot, invoiceValidation.saveInvoiceAttachment, invoiceController.saveInvoiceAttachment);
 
 let invoiceDashboard = require('./dashboard/dashboardController');
 router.get('/webapi/v1/portal/getdashboardcount', common.checkTokenExistOrNot, invoiceDashboard.getDashboardCount);

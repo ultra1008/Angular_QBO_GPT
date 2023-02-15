@@ -930,15 +930,15 @@ module.exports.getInvoiceHistoryLog = async function (req, res) {
             var recentActivityConnection = connection_db_api.model(collectionConstant.INVOICE_RECENT_ACTIVITY, recentActivitySchema);
             let get_data = await recentActivityConnection.aggregate([
                 { $match: { module: 'Invoice', data_id: ObjectID(requestObject._id) } },
-                {
-                    $lookup: {
-                        from: collectionConstant.INVOICE,
-                        localField: "data_id",
-                        foreignField: "_id",
-                        as: "invoice"
-                    }
-                },
-                { $unwind: "$invoice" },
+                /*  {
+                     $lookup: {
+                         from: collectionConstant.INVOICE,
+                         localField: "data_id",
+                         foreignField: "_id",
+                         as: "invoice"
+                     }
+                 },
+                 { $unwind: "$invoice" }, */
                 {
                     $lookup: {
                         from: collectionConstant.INVOICE_USER,
@@ -1067,6 +1067,47 @@ module.exports.deleteInvoiceNote = async function (req, res) {
                     action_from: 'Web',
                 }, decodedToken);
                 res.send({ status: true, message: "Invoice note deleted successfully.", data: update_invoice });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+// Update Invoice Attachment
+module.exports.saveInvoiceAttachment = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+            requestObject.updated_by = decodedToken.UserData._id;
+            requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+            let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(requestObject._id) });
+            let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
+            if (update_invoice) {
+                requestObject.invoice_id = requestObject._id;
+                addchangeInvoice_History("Update Attachment", requestObject, decodedToken, requestObject.updated_at);
+                recentActivity.saveRecentActivity({
+                    user_id: decodedToken.UserData._id,
+                    username: decodedToken.UserData.userfullname,
+                    userpicture: decodedToken.UserData.userpicture,
+                    data_id: requestObject._id,
+                    title: `Invoice #${get_invoice.invoice}`,
+                    module: 'Invoice',
+                    action: 'Update Attachment',
+                    action_from: 'Web',
+                }, decodedToken);
+                res.send({ status: true, message: "Invoice attachment updated successfully..", data: update_invoice });
             } else {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
             }

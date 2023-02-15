@@ -101,6 +101,20 @@ const deleteInvoiceNote = (req, res, next) => {
     });
 };
 
+const saveInvoiceAttachment = (req, res, next) => {
+    const validationRule = {
+        "_id": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({ status: false, message: err });
+        }
+        else {
+            next();
+        }
+    });
+};
+
 module.exports = {
     getOneInvoice,
     deleteInvoice,
@@ -109,4 +123,5 @@ module.exports = {
     getInvoiceHistoryLog,
     saveInvoiceNotes,
     deleteInvoiceNote,
+    saveInvoiceAttachment,
 };
