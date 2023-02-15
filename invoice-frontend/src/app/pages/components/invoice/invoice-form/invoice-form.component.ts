@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { Location } from '@angular/common';
 import { httproutes, icon, localstorageconstants, wasabiImagePath } from 'src/app/consts';
@@ -7,12 +7,13 @@ import { HttpCall } from 'src/app/service/httpcall.service';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModeDetectService } from '../../map/mode-detect.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { commonFileChangeEvent } from 'src/app/service/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
 import { EmployeeService } from '../../team/employee.service';
+import { map, startWith } from 'rxjs/operators';
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
     confirmButton: "btn btn-success margin-right-cust s2-confirm",
@@ -55,7 +56,8 @@ export class InvoiceFormComponent implements OnInit {
   invoiceData: any;
   approveIcon: string;
   denyIcon: string;
-
+  vendorList: any = [];
+  filteredVendors: Observable<any[]>;
   isEmployeeData: Boolean = false;
   // db_costcodes
   variablesdb_costcodes: any = [];
@@ -78,6 +80,11 @@ export class InvoiceFormComponent implements OnInit {
   Approve_Invoice_massage: string = "";
   Reject_Invoice_massage: string = "";
   status: any;
+  // options: string[] = ['One', 'Two', 'Three'];
+  filteredOptions: Observable<string[]>;
+  vendor_name = new FormControl('');
+
+
   constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
@@ -129,6 +136,7 @@ export class InvoiceFormComponent implements OnInit {
       gl_account: [""],
       assign_to: [""],
       notes: [""],
+      myControl: [""]
     });
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
@@ -184,6 +192,24 @@ export class InvoiceFormComponent implements OnInit {
   ngOnInit(): void {
 
     let that = this;
+    this.filteredVendors = this.vendor_name.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value || '')),
+    );
+    this.invoiceform.get("due_date").valueChanges.subscribe(function (params: any) {
+      console.log("params:         $$$$$$$$$", params);
+      /* if (params.length == that.vendorList.length) {
+        that.invoiceinfo.get("All_Vendors")!.setValue(true);
+      } else {
+        that.invoiceinfo.get("All_Vendors")!.setValue(false);
+      } */
+    });
+    /* this.filteredVendors = this.invoiceform.get('vendor_name').valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value || '')),
+    ); */
+
+
 
 
     this.employeeservice.getalluser().subscribe(function (data) {
@@ -198,7 +224,20 @@ export class InvoiceFormComponent implements OnInit {
       console.log("usersArray", data.data);
     });
     that.getAllCostCode();
+    this.getAllVendorList();
   }
+
+  // private _filter(value: string) {
+  //   console.log("vealue: v", value);
+  //   const filterValue = value.toLowerCase();
+  //   return this.vendorList.filter(option => option.vendor_name.toLowerCase().includes(filterValue));
+  // }
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.vendorList.filter(option => option.vendor_name.toLowerCase().includes(filterValue));
+  }
+
   print() {
     fetch(this.invoiceData.pdf_url).then(resp => resp.arrayBuffer()).then(resp => {
       /*--- set the blog type to final pdf ---*/
@@ -352,6 +391,15 @@ export class InvoiceFormComponent implements OnInit {
   }
   viewInvoice(_id) {
     this.router.navigate(['/invoice-detail'], { queryParams: { _id: _id } });
+  }
+  async getAllVendorList() {
+    let data = await this.httpCall.httpGetCall(httproutes.PORTAL_COMPANY_VENDOR_GET_BY_ID).toPromise();
+    if (data.status) {
+      this.vendorList = data.data;
+      console.log("vendorListttttt", this.vendorList);
+
+
+    }
   }
 
 

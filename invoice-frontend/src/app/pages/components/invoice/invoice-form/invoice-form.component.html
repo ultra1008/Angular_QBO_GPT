@@ -68,14 +68,41 @@
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
-
+                                <!-- 
                                 <div class="col ">
                                     <b>{{'Vendor_Name' | translate }}:</b>&nbsp;&nbsp;
                                     <mat-form-field>
                                         <input matInput placeholder="{{' ' | translate }}"
                                             formControlName="vendor_name">
                                     </mat-form-field>
+                                </div> -->
+                                <div class="col ">
+                                    <b>{{'Vendor_Name' | translate }}:</b>&nbsp;&nbsp;
+                                    <mat-form-field>
+
+                                        <input type="text" aria-label="Number" matInput [formControl]="vendor_name"
+                                            [matAutocomplete]="auto">
+                                        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                                            <mat-option *ngFor="let option of filteredVendors | async" [value]="option">
+                                                {{option.vendor_name}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
                                 </div>
+                                <!-- <div class="col ">
+                                    <b>{{'Vendor_Name' | translate }}:</b>&nbsp;&nbsp;
+                                    <mat-form-field>
+                                        <input type="text" matInput placeholder="{{' ' | translate }}"
+                                            formControlName="vendor_name" [matAutocomplete]="auto">
+
+                                        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                                            <mat-option *ngFor="let option of filteredVendors | async"
+                                                [value]="option._id">
+                                                {{option.vendor_name}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                </div> -->
 
                                 <div class="col ">
                                     <b>{{'Customer_Id' | translate }}:</b>&nbsp;&nbsp;

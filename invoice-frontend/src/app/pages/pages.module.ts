@@ -97,6 +97,7 @@ import { DashboardFilesListComponent } from './components/dashboard/dashboard-fi
 import { AddOtherFiles, InvoiceOtherDocumentComponent, OrphanFiles } from './components/invoice/invoice-other-document/invoice-other-document.component';
 import { DocumentViewComponent } from './components/setting/document-view/document-view.component';
 import { InvoiceListFilterPipe, InvoiceListFilterStatus } from './components/invoice/invoice-list-filter.pipe';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 
 
@@ -214,7 +215,7 @@ import { InvoiceListFilterPipe, InvoiceListFilterStatus } from './components/inv
     DataTablesModule,
     MatSortModule,
     MatTableModule,
-
+    MatAutocompleteModule,
     CdkAccordionModule,
     // MatGridListModule,
     NgxMaskModule.forRoot(maskConfigFunction),
