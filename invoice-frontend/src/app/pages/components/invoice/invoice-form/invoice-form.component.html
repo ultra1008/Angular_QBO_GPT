@@ -83,7 +83,8 @@
                                         <input type="text" aria-label="Number" matInput [formControl]="vendor"
                                             [matAutocomplete]="auto">
                                         <mat-autocomplete [displayWith]="displayOption" #auto="matAutocomplete">
-                                            <mat-option *ngFor="let option of filteredVendors | async" [value]="option">
+                                            <mat-option *ngFor="let option of filteredVendors | async" [value]="option"
+                                                (onSelectionChange)="getIdFromVendor($event, option)">
                                                 {{option.vendor_name}}
                                             </mat-option>
                                         </mat-autocomplete>

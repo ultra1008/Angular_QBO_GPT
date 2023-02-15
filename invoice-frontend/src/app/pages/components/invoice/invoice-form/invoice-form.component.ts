@@ -14,6 +14,7 @@ import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
 import { EmployeeService } from '../../team/employee.service';
 import { map, startWith } from 'rxjs/operators';
+import { Console } from 'console';
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
     confirmButton: "btn btn-success margin-right-cust s2-confirm",
@@ -83,6 +84,7 @@ export class InvoiceFormComponent implements OnInit {
   // options: string[] = ['One', 'Two', 'Three'];
   filteredOptions: Observable<string[]>;
   vendor = new FormControl('');
+
 
 
   constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
@@ -219,6 +221,9 @@ export class InvoiceFormComponent implements OnInit {
       return one_vendor.vendor_name.toLowerCase().indexOf(vendor_name.toLowerCase()) > -1;
     });
 
+  }
+  getIdFromVendor(event, Option) {
+    this.invoiceform.get('vendor').setValue(Option._id);
   }
 
   print() {
@@ -431,7 +436,7 @@ export class InvoiceFormComponent implements OnInit {
   saveInvoice() {
     let that = this;
     console.log("hy: ", that.invoiceform.value);
-    /* if (that.invoiceform.valid) {
+    if (that.invoiceform.valid) {
       let requestObject = that.invoiceform.value;
       if (that.id) {
         requestObject._id = that.id;
@@ -446,6 +451,6 @@ export class InvoiceFormComponent implements OnInit {
         }
         that.uiSpinner.spin$.next(false);
       });
-    } */
+    }
   }
 }
