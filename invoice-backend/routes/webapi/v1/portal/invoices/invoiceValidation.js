@@ -71,10 +71,42 @@ const getInvoiceHistoryLog = (req, res, next) => {
     });
 };
 
+const saveInvoiceNotes = (req, res, next) => {
+    const validationRule = {
+        "invoice_id": "required",
+        "notes": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({ status: false, message: err });
+        }
+        else {
+            next();
+        }
+    });
+};
+
+const deleteInvoiceNote = (req, res, next) => {
+    const validationRule = {
+        "invoice_id": "required",
+        "_id": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({ status: false, message: err });
+        }
+        else {
+            next();
+        }
+    });
+};
+
 module.exports = {
     getOneInvoice,
     deleteInvoice,
     updateInvoiceStatus,
     getOrphanDocuments,
     getInvoiceHistoryLog,
+    saveInvoiceNotes,
+    deleteInvoiceNote,
 };

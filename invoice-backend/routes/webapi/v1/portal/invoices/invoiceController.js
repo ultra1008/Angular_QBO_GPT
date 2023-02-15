@@ -109,6 +109,50 @@ module.exports.getInvoice = async function (req, res) {
                     }
                 },
                 { $unwind: "$vendor" },
+                {
+                    $project: {
+                        assign_to: 1,
+                        vendor: "$vendor",
+                        vendor_id: 1,
+                        customer_id: 1,
+                        invoice: 1,
+                        p_o: 1,
+                        invoice_date: 1,
+                        due_date: 1,
+                        order_date: 1,
+                        ship_date: 1,
+                        terms: 1,
+                        total: 1,
+                        invoice_total: 1,
+                        tax_amount: 1,
+                        tax_id: 1,
+                        sub_total: 1,
+                        amount_due: 1,
+                        cost_code: 1,
+                        receiving_date: 1,
+                        notes: 1,
+                        status: 1,
+                        job_number: 1,
+                        delivery_address: 1,
+                        contract_number: 1,
+                        account_number: 1,
+                        discount: 1,
+                        pdf_url: 1,
+                        items: 1,
+                        packing_slip: 1,
+                        receiving_slip: 1,
+                        badge: 1,
+                        gl_account: 1,
+                        // invoice_notes: { $elemMatch: { is_delete: 0 } },
+                        invoice_notes: {
+                            $filter: {
+                                input: '$invoice_notes',
+                                as: 'note',
+                                cond: { $eq: ['$$note.is_delete', 0] }
+                            }
+                        },
+                    }
+                },
             ]);
             var get_count = await processInvoiceConnection.aggregate([
                 { $match: { is_delete: 0 } },
@@ -178,7 +222,6 @@ module.exports.getInvoiceList = async function (req, res) {
         try {
             var requestObject = req.body;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
-            var processInvoiceConnection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
             var match_query = { is_delete: 0 };
             if (requestObject.status) {
                 match_query = {
@@ -186,7 +229,18 @@ module.exports.getInvoiceList = async function (req, res) {
                     status: requestObject.status
                 };
             }
-            // var get_data = await invoicesConnection.find(match_query);
+            /* var get_data = await invoicesConnection.aggregate([
+                { $match: match_query },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_VENDOR,
+                        localField: "vendor",
+                        foreignField: "_id",
+                        as: "vendor"
+                    }
+                },
+                { $unwind: "$vendor" },
+            ]); */
             var get_data = await invoicesConnection.aggregate([
                 { $match: match_query },
                 {
@@ -198,50 +252,53 @@ module.exports.getInvoiceList = async function (req, res) {
                     }
                 },
                 { $unwind: "$vendor" },
-            ]);
-            var count = get_data.length;
-            /* var get_count = await processInvoiceConnection.aggregate([
-                { $match: { is_delete: 0 } },
                 {
                     $project: {
-                        pending: { $cond: [{ $eq: ["$status", 'Pending'] }, 1, 0] },
-                        complete: { $cond: [{ $eq: ["$status", 'Complete'] }, 1, 0] },
+                        assign_to: 1,
+                        vendor: "$vendor",
+                        vendor_id: 1,
+                        customer_id: 1,
+                        invoice: 1,
+                        p_o: 1,
+                        invoice_date: 1,
+                        due_date: 1,
+                        order_date: 1,
+                        ship_date: 1,
+                        terms: 1,
+                        total: 1,
+                        invoice_total: 1,
+                        tax_amount: 1,
+                        tax_id: 1,
+                        sub_total: 1,
+                        amount_due: 1,
+                        cost_code: 1,
+                        receiving_date: 1,
+                        notes: 1,
+                        status: 1,
+                        job_number: 1,
+                        delivery_address: 1,
+                        contract_number: 1,
+                        account_number: 1,
+                        discount: 1,
+                        pdf_url: 1,
+                        items: 1,
+                        packing_slip: 1,
+                        receiving_slip: 1,
+                        badge: 1,
+                        gl_account: 1,
+                        // invoice_notes: { $elemMatch: { is_delete: 0 } },
+                        invoice_notes: {
+                            $filter: {
+                                input: '$invoice_notes',
+                                as: 'note',
+                                cond: { $eq: ['$$note.is_delete', 0] }
+                            }
+                        },
                     }
                 },
-                {
-                    $group: {
-                        _id: null,
-                        pending: { $sum: "$pending" },
-                        complete: { $sum: "$complete" },
-                    }
-                }
-            ]); */
-            /* var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
-            let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
-            let checkManagement = _.find(company_data.otherstool, function (n) { return n.key == config.MANAGEMENT_KEY; });
-            let isManagement = false;
-            if (checkManagement) {
-                isManagement = true;
-            } */
+            ]);
+            var count = get_data.length;
             if (get_data) {
-                /* var count = {
-                    pending: 0,
-                    complete: 0,
-                };
-                if (get_count) {
-                    if (get_count.length == 0) {
-                        get_count = {
-                            pending: 0,
-                            complete: 0,
-                        };
-                    } else {
-                        get_count = get_count[0];
-                    }
-                    count = {
-                        pending: get_count.pending,
-                        complete: get_count.complete,
-                    };
-                } */
                 res.send({ status: true, message: "Invoice data", data: get_data, count });
             } else {
                 res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
@@ -267,7 +324,18 @@ module.exports.getOneInvoice = async function (req, res) {
         try {
             var requestObject = req.body;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
-            // var get_data = await invoicesConnection.findOne({ _id: ObjectID(requestObject._id) });
+            /* var get_data = await invoicesConnection.aggregate([
+                { $match: { _id: ObjectID(requestObject._id) } },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_VENDOR,
+                        localField: "vendor",
+                        foreignField: "_id",
+                        as: "vendor"
+                    }
+                },
+                { $unwind: "$vendor" },
+            ]); */
             var get_data = await invoicesConnection.aggregate([
                 { $match: { _id: ObjectID(requestObject._id) } },
                 {
@@ -279,6 +347,50 @@ module.exports.getOneInvoice = async function (req, res) {
                     }
                 },
                 { $unwind: "$vendor" },
+                {
+                    $project: {
+                        assign_to: 1,
+                        vendor: "$vendor",
+                        vendor_id: 1,
+                        customer_id: 1,
+                        invoice: 1,
+                        p_o: 1,
+                        invoice_date: 1,
+                        due_date: 1,
+                        order_date: 1,
+                        ship_date: 1,
+                        terms: 1,
+                        total: 1,
+                        invoice_total: 1,
+                        tax_amount: 1,
+                        tax_id: 1,
+                        sub_total: 1,
+                        amount_due: 1,
+                        cost_code: 1,
+                        receiving_date: 1,
+                        notes: 1,
+                        status: 1,
+                        job_number: 1,
+                        delivery_address: 1,
+                        contract_number: 1,
+                        account_number: 1,
+                        discount: 1,
+                        pdf_url: 1,
+                        items: 1,
+                        packing_slip: 1,
+                        receiving_slip: 1,
+                        badge: 1,
+                        gl_account: 1,
+                        // invoice_notes: { $elemMatch: { is_delete: 0 } },
+                        invoice_notes: {
+                            $filter: {
+                                input: '$invoice_notes',
+                                as: 'note',
+                                cond: { $eq: ['$$note.is_delete', 0] }
+                            }
+                        },
+                    }
+                },
             ]);
             if (get_data.length > 0) {
                 get_data = get_data[0];
@@ -833,16 +945,7 @@ module.exports.getInvoiceHistoryLog = async function (req, res) {
                     }
                 },
                 { $unwind: "$user" },
-                /* {
-                    $lookup: {
-                        from: collectionConstant.INVOICE_USER,
-                        localField: "history_created_by",
-                        foreignField: "_id",
-                        as: "history_created_by"
-                    }
-                },
-                { $unwind: "$history_created_by" }, */
-                { $sort: { history_created_at: -1 } },
+                { $sort: { created_at: -1 } },
                 { $limit: perpage + start },
                 { $skip: start }
             ]);
@@ -855,5 +958,122 @@ module.exports.getInvoiceHistoryLog = async function (req, res) {
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+// Save Invoice Notes
+module.exports.saveInvoiceNotes = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+            var invoice_id = requestObject.invoice_id;
+            delete requestObject.invoice_id;
+            var id = requestObject._id;
+            delete requestObject._id;
+            if (id) {
+                requestObject.updated_by = decodedToken.UserData._id;
+                requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+                let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id), "invoice_notes._id": id }, { $set: { "invoice_notes.$.updated_by": decodedToken.UserData._id, "invoice_notes.$.updated_at": Math.round(new Date().getTime() / 1000), "invoice_notes.$.notes": requestObject.notes } });
+                let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
+                if (update_invoice) {
+                    requestObject.invoice_id = invoice_id;
+                    addchangeInvoice_History("Update Note", requestObject, decodedToken, requestObject.updated_at);
+                    recentActivity.saveRecentActivity({
+                        user_id: decodedToken.UserData._id,
+                        username: decodedToken.UserData.userfullname,
+                        userpicture: decodedToken.UserData.userpicture,
+                        data_id: invoice_id,
+                        title: `Invoice #${get_invoice.invoice}`,
+                        module: 'Invoice',
+                        action: 'Update Note',
+                        action_from: 'Web',
+                    }, decodedToken);
+                    res.send({ status: true, message: "Invoice note updated successfully.", data: update_invoice });
+                } else {
+                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                }
+            } else {
+                //save invoice note
+                requestObject.created_by = decodedToken.UserData._id;
+                requestObject.created_at = Math.round(new Date().getTime() / 1000);
+                requestObject.updated_by = decodedToken.UserData._id;
+                requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+                let save_invoice_note = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id) }, { $push: { invoice_notes: requestObject } });
+                let one_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
+                if (save_invoice_note) {
+                    requestObject.invoice_id = invoice_id;
+                    addchangeInvoice_History("Insert Note", requestObject, decodedToken, requestObject.updated_at);
+                    recentActivity.saveRecentActivity({
+                        user_id: decodedToken.UserData._id,
+                        username: decodedToken.UserData.userfullname,
+                        userpicture: decodedToken.UserData.userpicture,
+                        data_id: invoice_id,
+                        title: `Invoice #${one_invoice.invoice}`,
+                        module: 'Invoice',
+                        action: 'Insert Note',
+                        action_from: 'Web',
+                    }, decodedToken);
+                    res.send({ status: true, message: "Invoice note saved successfully." });
+                } else {
+                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                }
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+// Delete Invoice Notes
+module.exports.deleteInvoiceNote = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+            var invoice_id = requestObject.invoice_id;
+            delete requestObject.invoice_id;
+            var id = requestObject._id;
+            delete requestObject._id;
+            requestObject.updated_by = decodedToken.UserData._id;
+            requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+            let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id), "invoice_notes._id": id }, { $set: { "invoice_notes.$.updated_by": decodedToken.UserData._id, "invoice_notes.$.updated_at": Math.round(new Date().getTime() / 1000), "invoice_notes.$.is_delete": 1 } });
+            let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
+            if (update_invoice) {
+                requestObject.invoice_id = invoice_id;
+                addchangeInvoice_History("Delete Note", requestObject, decodedToken, requestObject.updated_at);
+                recentActivity.saveRecentActivity({
+                    user_id: decodedToken.UserData._id,
+                    username: decodedToken.UserData.userfullname,
+                    userpicture: decodedToken.UserData.userpicture,
+                    data_id: invoice_id,
+                    title: `Invoice #${get_invoice.invoice}`,
+                    module: 'Invoice',
+                    action: 'Delete Note',
+                    action_from: 'Web',
+                }, decodedToken);
+                res.send({ status: true, message: "Invoice note deleted successfully.", data: update_invoice });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };

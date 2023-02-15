@@ -56,6 +56,15 @@ var badgeValue = {
     receiving_slip: false,
 };
 
+var invoice_notes = new mongoose.Schema({
+    notes: { type: String, default: "" },
+    created_at: { type: Number },
+    created_by: { type: mongoose.ObjectId },
+    updated_at: { type: Number },
+    updated_by: { type: mongoose.ObjectId },
+    is_delete: { type: Number, default: 0 },
+});
+
 var invoiceSchema = new Schema({
     assign_to: { type: mongoose.ObjectId, default: "" }, //user
     vendor: { type: mongoose.ObjectId, default: "" },
@@ -90,6 +99,8 @@ var invoiceSchema = new Schema({
     receiving_slip: { type: String, default: "" },
 
     badge: { type: badge, default: badgeValue },
+    invoice_notes: { type: [invoice_notes], default: [] },
+    invoice_attachments: { type: Array, default: [] },
 
     created_by: { type: mongoose.ObjectId, default: "" },
     created_at: { type: Number, default: 0 },
