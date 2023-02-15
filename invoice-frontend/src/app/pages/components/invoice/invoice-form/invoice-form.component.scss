@@ -217,9 +217,9 @@ b {
 }
 
 // collapsed problem
-.flux-content-section[navbar-type="collapsed"][effect-type="shrink"] {
-    margin-left: unset !important;
-}
+// .flux-content-section[navbar-type="collapsed"][effect-type="shrink"] {
+//     margin-left: unset !important;
+// }
 
 ::ng-deep .flux-content-section[navbar-type="expanded"][effect-type="push"] {
     margin-left: 0px !important;
@@ -233,4 +233,17 @@ b {
 ::ng-deep .btn-gray {
     background-color: grey !important;
     color: white !important;
+}
+
+.Approvedcss {
+
+    color: green;
+}
+
+.Rejectcss {
+    color: red;
+}
+
+.pendingcss {
+    color: orange;
 }

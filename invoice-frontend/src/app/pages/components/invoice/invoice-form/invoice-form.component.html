@@ -7,7 +7,11 @@
                 </h1>
 
 
-
+                <h1 class="screen-title ">
+                    <p>Status:&nbsp;<span
+                            [ngClass]="status == 'Pending'? 'pendingcss' : 'Approvedcss' && status == 'Approved'? 'Approvedcss' : 'Rejectcss'&& status == 'Rejected'? 'Rejectcss' : 'Rejectcss'">
+                            {{status | translate}}</span></p>
+                </h1>
 
 
 
@@ -152,8 +156,8 @@
                                     <mat-form-field>
 
                                         <mat-select formControlName="status">
-                                            <mat-option *ngFor="let status of statusList" [value]="status.value">
-                                                {{status.tmp_lanaguage | translate}}
+                                            <mat-option *ngFor="let status of statusList" [value]="status.key">
+                                                {{status.name | translate}}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>

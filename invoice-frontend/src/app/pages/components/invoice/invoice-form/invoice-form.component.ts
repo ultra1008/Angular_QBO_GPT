@@ -70,7 +70,7 @@ export class InvoiceFormComponent implements OnInit {
   DocumentType = this.variablesDocumenttype.slice();
 
 
-  statusList = configdata.INVOICE_STATUS;
+  statusList = configdata.INVOICES_STATUS;
   Compnay_Equipment_Delete_Yes: string = "";
   Compnay_Equipment_Delete_No: string = "";
   yesButton: string = "";
