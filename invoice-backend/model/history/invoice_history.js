@@ -110,7 +110,7 @@ var invoice_history_Schema = new Schema({
 
     history_created_at: { type: Number, default: 0 },
     history_created_by: { type: mongoose.ObjectId, default: "" },
-    action: { type: String, enum: ["Insert", "Update", "Delete", "Insert Note", "Update Note", "Delete Note"] },
+    action: { type: String, enum: ["Insert", "Update", "Delete", "Insert Note", "Update Note", "Delete Note", "Update Attachment"] },
     taken_device: { type: String, default: "Web", enum: ["Mobile", "Web"] },
     invoice_id: { type: mongoose.ObjectId, default: "" }
 });
