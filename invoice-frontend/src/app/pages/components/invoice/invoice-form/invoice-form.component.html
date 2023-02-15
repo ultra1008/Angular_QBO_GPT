@@ -73,16 +73,16 @@
                                     <b>{{'Vendor_Name' | translate }}:</b>&nbsp;&nbsp;
                                     <mat-form-field>
                                         <input matInput placeholder="{{' ' | translate }}"
-                                            formControlName="vendor_name">
+                                            formControlName="vendor">
                                     </mat-form-field>
                                 </div> -->
                                 <div class="col ">
                                     <b>{{'Vendor_Name' | translate }}:</b>&nbsp;&nbsp;
                                     <mat-form-field>
 
-                                        <input type="text" aria-label="Number" matInput [formControl]="vendor_name"
+                                        <input type="text" aria-label="Number" matInput [formControl]="vendor"
                                             [matAutocomplete]="auto">
-                                        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                                        <mat-autocomplete [displayWith]="displayOption" #auto="matAutocomplete">
                                             <mat-option *ngFor="let option of filteredVendors | async" [value]="option">
                                                 {{option.vendor_name}}
                                             </mat-option>
@@ -93,12 +93,12 @@
                                     <b>{{'Vendor_Name' | translate }}:</b>&nbsp;&nbsp;
                                     <mat-form-field>
                                         <input type="text" matInput placeholder="{{' ' | translate }}"
-                                            formControlName="vendor_name" [matAutocomplete]="auto">
+                                            formControlName="vendor" [matAutocomplete]="auto">
 
                                         <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
                                             <mat-option *ngFor="let option of filteredVendors | async"
                                                 [value]="option._id">
-                                                {{option.vendor_name}}
+                                                {{option.vendor}}
                                             </mat-option>
                                         </mat-autocomplete>
                                     </mat-form-field>

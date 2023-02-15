@@ -82,7 +82,7 @@ export class InvoiceFormComponent implements OnInit {
   status: any;
   // options: string[] = ['One', 'Two', 'Three'];
   filteredOptions: Observable<string[]>;
-  vendor_name = new FormControl('');
+  vendor = new FormControl('');
 
 
   constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
@@ -115,7 +115,7 @@ export class InvoiceFormComponent implements OnInit {
     this.invoiceform = this.formBuilder.group({
       document_type: [""],
       invoice_name: [""],
-      vendor_name: [""],
+      vendor: [""],
       customer_id: [""],
       invoice: [""],
       p_o: [""],
@@ -192,25 +192,10 @@ export class InvoiceFormComponent implements OnInit {
   ngOnInit(): void {
 
     let that = this;
-    this.filteredVendors = this.vendor_name.valueChanges.pipe(
+    this.filteredVendors = this.vendor.valueChanges.pipe(
       startWith(''),
-      map(value => this._filter(value || '')),
+      map(value => this._filterVendor(value || '')),
     );
-    this.invoiceform.get("due_date").valueChanges.subscribe(function (params: any) {
-      console.log("params:         $$$$$$$$$", params);
-      /* if (params.length == that.vendorList.length) {
-        that.invoiceinfo.get("All_Vendors")!.setValue(true);
-      } else {
-        that.invoiceinfo.get("All_Vendors")!.setValue(false);
-      } */
-    });
-    /* this.filteredVendors = this.invoiceform.get('vendor_name').valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value || '')),
-    ); */
-
-
-
 
     this.employeeservice.getalluser().subscribe(function (data) {
       // that.uiSpinner.spin$.next(false);
@@ -227,15 +212,13 @@ export class InvoiceFormComponent implements OnInit {
     this.getAllVendorList();
   }
 
-  // private _filter(value: string) {
-  //   console.log("vealue: v", value);
-  //   const filterValue = value.toLowerCase();
-  //   return this.vendorList.filter(option => option.vendor_name.toLowerCase().includes(filterValue));
-  // }
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
 
-    return this.vendorList.filter(option => option.vendor_name.toLowerCase().includes(filterValue));
+  private _filterVendor(value: any): any[] {
+    return this.vendorList.filter(one_vendor => {
+      let vendor_name = value.vendor_name ? value.vendor_name : value;
+      return one_vendor.vendor_name.toLowerCase().indexOf(vendor_name.toLowerCase()) > -1;
+    });
+
   }
 
   print() {
@@ -402,7 +385,9 @@ export class InvoiceFormComponent implements OnInit {
     }
   }
 
-
+  displayOption(option: any): string {
+    return option ? option.vendor_name : option;
+  }
 
   getOneInvoice() {
     let that = this;
@@ -411,10 +396,11 @@ export class InvoiceFormComponent implements OnInit {
         that.status = params.data.status;
         that.invoiceData = params.data;
         that.pdf_url = that.invoiceData.pdf_url;
+        that.vendor.setValue(params.data.vendor);
         that.invoiceform = that.formBuilder.group({
           document_type: [params.data.document_type],
           invoice_name: [params.data.invoice_name],
-          vendor_name: [params.data.vendor_name],
+          vendor: [params.data.vendor.vendor_name],
           customer_id: [params.data.customer_id],
           invoice: [params.data.invoice],
           p_o: [params.data.p_o],
@@ -444,7 +430,8 @@ export class InvoiceFormComponent implements OnInit {
 
   saveInvoice() {
     let that = this;
-    if (that.invoiceform.valid) {
+    console.log("hy: ", that.invoiceform.value);
+    /* if (that.invoiceform.valid) {
       let requestObject = that.invoiceform.value;
       if (that.id) {
         requestObject._id = that.id;
@@ -459,6 +446,6 @@ export class InvoiceFormComponent implements OnInit {
         }
         that.uiSpinner.spin$.next(false);
       });
-    }
+    } */
   }
 }
