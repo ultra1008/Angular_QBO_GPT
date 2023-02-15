@@ -270,6 +270,7 @@ router.post('/webapi/v1/portal/updateinvoicestatus', common.checkTokenExistOrNot
 router.post('/webapi/v1/portal/getinvoicedatatable', common.checkTokenExistOrNot, invoiceController.getInvoiceDatatable);
 router.post('/webapi/v1/portal/getinvoiceexcelreport', common.checkTokenExistOrNot, invoiceController.getInvoiceExcelReport);
 router.post('/webapi/v1/portal/getorphandocumentofinvoice', common.checkTokenExistOrNot, invoiceValidation.getOrphanDocuments, invoiceController.getOrphanDocuments);
+router.post('/webapi/v1/portal/getinvoicehistorylog', common.checkTokenExistOrNot, invoiceValidation.getInvoiceHistoryLog, invoiceController.getInvoiceHistoryLog);
 
 let invoiceDashboard = require('./dashboard/dashboardController');
 router.get('/webapi/v1/portal/getdashboardcount', common.checkTokenExistOrNot, invoiceDashboard.getDashboardCount);

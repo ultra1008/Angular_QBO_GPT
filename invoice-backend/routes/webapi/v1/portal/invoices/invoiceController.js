@@ -2,6 +2,7 @@ var invoiceSchema = require('../../../../../model/invoice');
 var vendorSchema = require('../../../../../model/vendor');
 var processInvoiceSchema = require('../../../../../model/process_invoice');
 var invoice_history_Schema = require('../../../../../model/history/invoice_history');
+var recentActivitySchema = require('../../../../../model/recent_activities');
 let db_connection = require('../../../../../controller/common/connectiondb');
 let collectionConstant = require('../../../../../config/collectionConstant');
 let config = require('../../../../../config/config');
@@ -796,5 +797,63 @@ module.exports.getOrphanDocuments = async function (req, res) {
     }
     else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+module.exports.getInvoiceHistoryLog = async function (req, res) {
+    var translator = new common.Language('en');
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            let perpage = 10;
+            if (requestObject.start) { } else {
+                requestObject.start = 0;
+            }
+            let start = requestObject.start == 0 ? 0 : perpage * requestObject.start;
+            var recentActivityConnection = connection_db_api.model(collectionConstant.INVOICE_RECENT_ACTIVITY, recentActivitySchema);
+            let get_data = await recentActivityConnection.aggregate([
+                { $match: { module: 'Invoice', data_id: ObjectID(requestObject._id) } },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE,
+                        localField: "data_id",
+                        foreignField: "_id",
+                        as: "invoice"
+                    }
+                },
+                { $unwind: "$invoice" },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "user_id",
+                        foreignField: "_id",
+                        as: "user"
+                    }
+                },
+                { $unwind: "$user" },
+                /* {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "history_created_by",
+                        foreignField: "_id",
+                        as: "history_created_by"
+                    }
+                },
+                { $unwind: "$history_created_by" }, */
+                { $sort: { history_created_at: -1 } },
+                { $limit: perpage + start },
+                { $skip: start }
+            ]);
+            res.send({ data: get_data, status: true });
+        } catch (e) {
+            console.log("e", e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
