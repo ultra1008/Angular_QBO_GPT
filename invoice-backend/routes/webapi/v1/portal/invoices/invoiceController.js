@@ -266,7 +266,22 @@ module.exports.getOneInvoice = async function (req, res) {
         try {
             var requestObject = req.body;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
-            var get_data = await invoicesConnection.findOne({ _id: ObjectID(requestObject._id) });
+            // var get_data = await invoicesConnection.findOne({ _id: ObjectID(requestObject._id) });
+            var get_data = await invoicesConnection.aggregate([
+                { $match: { _id: ObjectID(requestObject._id) } },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_VENDOR,
+                        localField: "vendor",
+                        foreignField: "_id",
+                        as: "vendor"
+                    }
+                },
+                { $unwind: "$vendor" },
+            ]);
+            if (get_data.length > 0) {
+                get_data = get_data[0];
+            }
             res.send({ status: true, message: "Invoice data", data: get_data });
         } catch (e) {
             console.log(e);
