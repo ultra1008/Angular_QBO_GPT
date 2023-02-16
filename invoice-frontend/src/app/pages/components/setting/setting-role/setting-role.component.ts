@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { httproutes } from 'src/app/consts';
+import { httproutes, icon } from 'src/app/consts';
 import { HttpCall } from 'src/app/service/httpcall.service';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 
@@ -11,7 +11,9 @@ import { Snackbarservice } from 'src/app/service/snack-bar-service';
 export class SettingRoleComponent implements OnInit {
   allRoles: any = [];
   roleName: any;
-  constructor(public httpCall: HttpCall, public snackbarservice: Snackbarservice) {
+  saveIcon = icon.SAVE_WHITE;
+
+  constructor (public httpCall: HttpCall, public snackbarservice: Snackbarservice) {
   }
 
   ngOnInit(): void {
@@ -39,14 +41,14 @@ export class SettingRoleComponent implements OnInit {
   }
 
   onTabNameChanged(rName: any) {
-    console.log("onTabNameChanged")
+    console.log("onTabNameChanged");
     console.log(rName);
     if (rName == "Admin") {
       this.roleName = "Admin";
     } else if (rName == "Manager") {
       this.roleName = "Admin Without Settings";
     } else {
-      this.roleName = ""
+      this.roleName = "";
     }
   }
 

@@ -1,10 +1,12 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { HttpCall } from "src/app/service/httpcall.service";
-import { httproutes } from "src/app/consts";
+import { httproutes, icon } from "src/app/consts";
 import { Snackbarservice } from "src/app/service/snack-bar-service";
 import Swal from "sweetalert2";
 import { TranslateService } from "@ngx-translate/core";
 import { configdata } from "src/environments/configData";
+import { FormGroup, FormBuilder } from "@angular/forms";
+import { MatSelect } from "@angular/material/select";
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
     confirmButton: "btn btn-success margin-right-cust s2-confirm",
@@ -21,6 +23,8 @@ const swalWithBootstrapButtons = Swal.mixin({
   styleUrls: ['./alerts.component.scss']
 })
 export class AlertsComponent implements OnInit {
+  @ViewChild("drop") nameField: ElementRef;
+
   settingObject: any;
   setting_id!: string;
   clockinradius_value!: string;
@@ -33,16 +37,16 @@ export class AlertsComponent implements OnInit {
   Invoice_due_day_value!: string;
 
   Invoice_arrive: boolean = false;
-  Invoice_arrive_value!: string;
+  Invoice_arrive_value!: [];
 
   Invoice_modified: boolean = false;
-  Invoice_modified_value!: string;
+  Invoice_modified_value!: [];
 
   Invoice_sent_to_batch: boolean = false;
-  Invoice_sent_to_batch_value!: string;
+  Invoice_sent_to_batch_value!: [];
 
   daily_productivity_report: boolean = false;
-  daily_productivity_report_value!: string;
+  daily_productivity_report_value!: [];
 
   pendingdata: any = configdata.PENDING_ITEM_ALERT;
   duetime: any = configdata.INVOICE_DUE_TIME_ALERT;
@@ -56,12 +60,9 @@ export class AlertsComponent implements OnInit {
   pendingitems: string = "";
   temppendingitems: string = "";
 
+  saveIcon = icon.SAVE_WHITE;
 
-  constructor (
-    public httpCall: HttpCall,
-    public snackbarservice: Snackbarservice,
-    public translate: TranslateService
-  ) {
+  constructor (private formBuilder: FormBuilder, public httpCall: HttpCall, public snackbarservice: Snackbarservice, public translate: TranslateService) {
     this.translate.stream([""]).subscribe((textarray) => {
       this.Project_Settings_Alert_Sure_Want_Change = this.translate.instant(
         "Project_Settings_Alert_Sure_Want_Change"
@@ -76,7 +77,6 @@ export class AlertsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     let that = this;
     that.getAllRoles();
     that.getAllUser();
@@ -88,48 +88,41 @@ export class AlertsComponent implements OnInit {
             that.settingObject = params.data.settings;
             that.setting_id = params.data._id;
 
-            that.Pending_items_value =
-              params.data.settings.Pending_items.setting_value;
+            that.Pending_items_value = params.data.settings.Pending_items.setting_value;
             if (params.data.settings.Pending_items.setting_status == "Active") {
               that.Pending_items = true;
             } else {
               that.Pending_items = false;
             }
 
-            that.Invoice_due_time_value =
-              params.data.settings.Invoice_due_date.setting_value;
-            that.Invoice_due_day_value =
-              params.data.settings.Invoice_due_date.setting_value2;
+            that.Invoice_due_time_value = params.data.settings.Invoice_due_date.setting_value;
+            that.Invoice_due_day_value = params.data.settings.Invoice_due_date.setting_value2;
             if (params.data.settings.Invoice_due_date.setting_status == "Active") {
               that.Invoice_due_date = true;
             } else {
               that.Invoice_due_date = false;
             }
 
-            that.Invoice_arrive_value =
-              params.data.settings.Invoice_arrive.setting_value;
+            that.Invoice_arrive_value = params.data.settings.Invoice_arrive.setting_value;
             if (params.data.settings.Invoice_arrive.setting_status == "Active") {
               that.Invoice_arrive = true;
             } else {
               that.Invoice_arrive = false;
             }
 
-            that.Invoice_modified_value =
-              params.data.settings.Invoice_modified.setting_value;
+            that.Invoice_modified_value = params.data.settings.Invoice_modified.setting_value;
             if (params.data.settings.Invoice_modified.setting_status == "Active") {
               that.Invoice_modified = true;
             } else {
               that.Invoice_modified = false;
             }
-            that.daily_productivity_report_value =
-              params.data.settings.daily_productivity_report.setting_value;
+            that.daily_productivity_report_value = params.data.settings.daily_productivity_report.setting_value;
             if (params.data.settings.daily_productivity_report.setting_status == "Active") {
               that.daily_productivity_report = true;
             } else {
               that.daily_productivity_report = false;
             }
-            that.Invoice_sent_to_batch_value =
-              params.data.settings.Invoice_sent_to_batch.setting_value;
+            that.Invoice_sent_to_batch_value = params.data.settings.Invoice_sent_to_batch.setting_value;
             if (params.data.settings.Invoice_sent_to_batch.setting_status == "Active") {
               that.Invoice_sent_to_batch = true;
             } else {
@@ -141,7 +134,6 @@ export class AlertsComponent implements OnInit {
   }
 
   modelChangeSwitch(event: any, checkoption: any) {
-    console.log("hello", this.settingObject);
     let settingKey = "settings." + checkoption;
     let obj = this.settingObject[checkoption];
     obj.setting_status = event ? "Active" : "Inactive";
@@ -179,7 +171,6 @@ export class AlertsComponent implements OnInit {
   }
 
   modelChangeDropdown(event: any, checkoption: any, firstSetting: boolean) {
-    console.log(event);
     // this.timer = event;
     let settingKey = "settings." + checkoption;
     let obj = this.settingObject[checkoption];
@@ -205,6 +196,7 @@ export class AlertsComponent implements OnInit {
         if (result.isConfirmed) {
           that.updateSetting(reqObject);
         } else {
+          that.nameField.nativeElement.focus();
           if (checkoption == "Pending_items") {
             that.Pending_items_value =
               that.settingObject.Pending_items.setting_value;
@@ -251,7 +243,6 @@ export class AlertsComponent implements OnInit {
   }
 
   updateSetting(objectForEdit: any) {
-    let userData = JSON.parse(localStorage.getItem("userdata") ?? "");
     let that = this;
     objectForEdit._id = that.setting_id;
     this.httpCall
@@ -260,6 +251,54 @@ export class AlertsComponent implements OnInit {
         if (params.status) {
           that.snackbarservice.openSnackBar(params.message, "success");
         } else {
+          that.snackbarservice.openSnackBar(params.message, "error");
+        }
+      });
+  }
+
+  saveSettings() {
+    let that = this;
+    let tempSettings = this.settingObject;
+    tempSettings.Pending_items.setting_value = that.Pending_items_value;
+    tempSettings.Invoice_due_date.setting_value = that.Invoice_due_time_value;
+    tempSettings.Invoice_due_date.setting_value2 = that.Invoice_due_day_value;
+    tempSettings.Invoice_arrive.setting_value = that.Invoice_arrive_value;
+    tempSettings.Invoice_modified.setting_value = that.Invoice_modified_value;
+    tempSettings.Invoice_sent_to_batch.setting_value = that.Invoice_sent_to_batch_value;
+    tempSettings.daily_productivity_report.setting_value = that.daily_productivity_report_value;
+    // that.Pending_items_value =              params.data.settings.Pending_items.setting_value;
+
+    // that.Invoice_due_time_value =              params.data.settings.Invoice_due_date.setting_value;
+    // that.Invoice_due_day_value =              params.data.settings.Invoice_due_date.setting_value2;
+
+    //         that.Invoice_arrive_value = params.data.settings.Invoice_arrive.setting_value;
+
+    //         that.Invoice_modified_value =              params.data.settings.Invoice_modified.setting_value;
+
+    // that.Invoice_sent_to_batch_value =              params.data.settings.Invoice_sent_to_batch.setting_value;
+
+    //     that.daily_productivity_report_value =              params.data.settings.daily_productivity_report.setting_value;
+    /* console.log("Pending_items_value: ", this.Pending_items_value);
+    console.log("Invoice_due_time_value: ", this.Invoice_due_time_value);
+    console.log("Invoice_due_day_value: ", this.Invoice_due_day_value);
+    console.log("Invoice_arrive_value: ", this.Invoice_arrive_value);
+    console.log("Invoice_modified_value: ", this.Invoice_modified_value);
+    console.log("Invoice_sent_to_batch_value: ", this.Invoice_sent_to_batch_value);
+    console.log("daily_productivity_report_value: ", this.daily_productivity_report_value); */
+    // let that = this;
+    let reqObject = {
+      _id: that.setting_id,
+      settings: tempSettings
+    };
+    // objectForEdit._id = that.setting_id;
+    this.httpCall
+      .httpPostCall(httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTING_UPDATE_ALERTS, reqObject)
+      .subscribe(function (params) {
+        if (params.status) {
+          that.snackbarservice.openSnackBar(params.message, "success");
+          that.settingObject = tempSettings;
+        } else {
+          tempSettings = that.settingObject;
           that.snackbarservice.openSnackBar(params.message, "error");
         }
       });

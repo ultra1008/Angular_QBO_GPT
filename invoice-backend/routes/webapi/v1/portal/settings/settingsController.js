@@ -60,13 +60,13 @@ module.exports.getUpdateSetting = async function (req, res) {
             let updateSettingObject = await settingsConnection.updateOne({ _id: ObjectID(id) }, { $set: reqObject });
             let updated = updateSettingObject['n'];
             if (updated == 1) {
-                let reqObject_new = {
+                /* let reqObject_new = {
                     updated_id: id,
                     settings: {
                         [Object.keys(reqObject)[0].split(".")[1]]: reqObject[Object.keys(reqObject)[0]]
                     }
                 };
-                addsettings_History("Update", reqObject_new, decodedToken);
+                addsettings_History("Update", reqObject_new, decodedToken); */
                 res.send({ message: translator.getStr('CompanySettingUpdated'), status: true });
             } else {
                 res.send({ message: translator.getStr('CompanySettingAlreadyUpdated'), status: true });

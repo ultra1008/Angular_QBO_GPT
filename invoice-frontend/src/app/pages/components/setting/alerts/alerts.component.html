@@ -8,8 +8,8 @@
             {{'ALERT_SEND_REMINDER' | translate}}
         </mat-slide-toggle>
         <mat-form-field appearance="outline" class="ml-2">
-            <mat-select class="dark-cust-color" [(ngModel)]="Pending_items_value"
-                (ngModelChange)="modelChangeDropdown($event,'Pending_items',true)">
+            <!--  (ngModelChange)="modelChangeDropdown($event,'Pending_items',true)" -->
+            <mat-select class="dark-cust-color" [(ngModel)]="Pending_items_value">
                 <mat-option *ngFor="let data of pendingdata" [value]="data.key">
                     {{data.name}}
                 </mat-option>
@@ -23,8 +23,8 @@
             {{'SEND_ALERT_EVERY' | translate}}
         </mat-slide-toggle>
         <mat-form-field appearance="outline" class="ml-2">
-            <mat-select class="dark-cust-color" [(ngModel)]="Invoice_due_time_value"
-                (ngModelChange)="modelChangeDropdown($event,'Invoice_due_date',true)">
+            <!-- (ngModelChange)="modelChangeDropdown($event,'Invoice_due_date',true)" -->
+            <mat-select class="dark-cust-color" [(ngModel)]="Invoice_due_time_value">
                 <mat-option *ngFor="let time of duetime" [value]="time.key">
                     {{time.name}}
                 </mat-option>
@@ -32,8 +32,8 @@
         </mat-form-field>
         {{'WHEN_INVOICE_DUE' | translate}}
         <mat-form-field appearance="outline" class="ml-2">
-            <mat-select class="dark-cust-color" [(ngModel)]="Invoice_due_day_value"
-                (ngModelChange)="modelChangeDropdown($event,'Invoice_due_date',false)">
+            <!-- (ngModelChange)="modelChangeDropdown($event,'Invoice_due_date',false)" -->
+            <mat-select class="dark-cust-color" [(ngModel)]="Invoice_due_day_value">
                 <mat-option *ngFor="let date of duedate" [value]="date.key">
                     {{date.name}}
                 </mat-option>
@@ -47,8 +47,8 @@
             {{'WHEN_NEW_INVOICES' | translate}}
         </mat-slide-toggle>
         <mat-form-field appearance="outline" class="ml-2">
-            <mat-select class="dark-cust-color" [(ngModel)]="Invoice_arrive_value"
-                (ngModelChange)="modelChangeDropdown($event,'Invoice_arrive',true)">
+            <!-- (ngModelChange)="modelChangeDropdown($event,'Invoice_arrive',true)" -->
+            <mat-select class="dark-cust-color" [(ngModel)]="Invoice_arrive_value" multiple>
                 <mat-option *ngFor="let role of allRoles" [value]="role.role_id">
                     {{role.role_name}}
                 </mat-option>
@@ -63,8 +63,8 @@
             {{'INVOICE_MODIFIED' | translate}}
         </mat-slide-toggle>
         <mat-form-field appearance="outline" class="ml-2">
-            <mat-select class="dark-cust-color" [(ngModel)]="Invoice_modified_value"
-                (ngModelChange)="modelChangeDropdown($event,'Invoice_modified',true)">
+            <!-- (ngModelChange)="modelChangeDropdown($event,'Invoice_modified',true)"  -->
+            <mat-select class="dark-cust-color" [(ngModel)]="Invoice_modified_value" multiple>
                 <mat-option *ngFor="let role of allRoles" [value]="role.role_id">
                     {{role.role_name}}
                 </mat-option>
@@ -79,8 +79,8 @@
             {{'SEND_ALERT_TO' | translate}}
         </mat-slide-toggle>
         <mat-form-field appearance="outline" class="ml-2">
-            <mat-select class="dark-cust-color" [(ngModel)]="Invoice_sent_to_batch_value"
-                (ngModelChange)="modelChangeDropdown($event,'Invoice_sent_to_batch',true)">
+            <!-- (ngModelChange)="modelChangeDropdown($event,'Invoice_sent_to_batch',true)" -->
+            <mat-select class="dark-cust-color" [(ngModel)]="Invoice_sent_to_batch_value" multiple>
                 <mat-option *ngFor="let user of allUser" [value]="user._id">
                     {{user.userfullname}}
                 </mat-option>
@@ -95,12 +95,18 @@
             {{'DAILY_PRODUCTIVITY' | translate}}
         </mat-slide-toggle>
         <mat-form-field appearance="outline" class="ml-2">
-            <mat-select class="dark-cust-color" [(ngModel)]="daily_productivity_report_value"
-                (ngModelChange)="modelChangeDropdown($event,'daily_productivity_report',true)">
+            <!-- (ngModelChange)="modelChangeDropdown($event,'daily_productivity_report',true)" -->
+            <mat-select #drop [(ngModel)]="daily_productivity_report_value" class="dark-cust-color" multiple>
                 <mat-option *ngFor="let user of allUser" [value]="user._id">
                     {{user.userfullname}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
+    </div>
+    <div class="cust-center-justify">
+        <button mat-raised-button (click)="saveSettings()" color="primary">
+            <img src="{{saveIcon}}" alt="" height="20px">
+            {{'All-save' |
+            translate}}</button>
     </div>
 </div>
