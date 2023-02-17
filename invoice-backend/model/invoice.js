@@ -90,6 +90,84 @@ var packingSlipData = {
     is_delete: 0,
 };
 
+var po_schema = new mongoose.Schema({
+    pdf_url: { type: String, default: "" },
+    document_id: { type: mongoose.ObjectId, default: "" }, // Process document id
+    document_type: { type: String, default: "" }, // Process document type
+    date: { type: String, default: "" },
+    po_number: { type: String, default: "" },
+    customer_id: { type: String, default: "" },
+    terms: { type: String, default: "" },
+    delivery_date: { type: String, default: "" },
+    delivery_address: { type: String, default: "" },
+    due_date: { type: String, default: "" },
+    quote_number: { type: String, default: "" },
+    contract_number: { type: String, default: "" },
+    vendor_id: { type: String, default: "" },
+    vendor: { type: mongoose.ObjectId, default: "" },
+    sub_total: { type: String, default: "" },
+    tax: { type: String, default: "" },
+    po_total: { type: String, default: "" },
+    items: { type: Array, default: [] },
+    is_delete: { type: Number, default: 0 },
+});
+var poData = {
+    pdf_url: "",
+    document_id: "",
+    document_type: "",
+    date: "",
+    po_number: "",
+    customer_id: "",
+    terms: "",
+    delivery_date: "",
+    delivery_address: "",
+    due_date: "",
+    quote_number: "",
+    contract_number: "",
+    vendor_id: "",
+    vendor: "",
+    sub_total: "",
+    tax: "",
+    po_total: "",
+    items: [],
+    is_delete: 0,
+};
+
+var quote_schema = new mongoose.Schema({
+    pdf_url: { type: String, default: "" },
+    document_id: { type: mongoose.ObjectId, default: "" }, // Process document id
+    document_type: { type: String, default: "" }, // Process document type
+    date: { type: String, default: "" },
+    quote_number: { type: String, default: "" },
+    terms: { type: String, default: "" },
+    address: { type: String, default: "" },
+    vendor: { type: mongoose.ObjectId, default: "" },
+    shipping_method: { type: String, default: "" },
+    sub_total: { type: String, default: "" },
+    tax: { type: String, default: "" },
+    quote_total: { type: String, default: "" },
+    receiver_phone: { type: String, default: "" },
+    items: { type: Array, default: [] },
+    is_delete: { type: Number, default: 0 },
+});
+var quoteData = {
+    pdf_url: "",
+    document_id: "",
+    document_type: "",
+    date: "",
+    quote_number: "",
+    terms: "",
+    address: "",
+    vendor: "",
+    shipping_method: "",
+    sub_total: "",
+    tax: "",
+    quote_total: "",
+    receiver_phone: "",
+    items: "",
+    is_delete: 0,
+};
+
 var invoiceSchema = new Schema({
     assign_to: { type: mongoose.ObjectId, default: "" }, //user
     vendor: { type: mongoose.ObjectId, default: "" },
@@ -131,6 +209,16 @@ var invoiceSchema = new Schema({
     packing_slip_data: { type: packing_slip_schema, default: packingSlipData },
     packing_slip_notes: { type: [notesSchema], default: [] },
     packing_slip_attachments: { type: Array, default: [] },
+
+    has_po: { type: Boolean, default: false },
+    po_data: { type: po_schema, default: poData },
+    po_notes: { type: [notesSchema], default: [] },
+    po_attachments: { type: Array, default: [] },
+
+    has_quote: { type: Boolean, default: false },
+    quote_data: { type: quote_schema, default: quoteData },
+    quote_notes: { type: [notesSchema], default: [] },
+    quote_attachments: { type: Array, default: [] },
 
     created_by: { type: mongoose.ObjectId, default: "" },
     created_at: { type: Number, default: 0 },
