@@ -1131,4 +1131,5 @@ export enum httproutes {
 
 
     INVOICE_GET_DASHBOARD_HISTORY = "/webapi/v1/portal/getrecentactivity",
+    INVOICE_GET_INVOICE_HISTORY = "/webapi/v1/portal/getinvoicehistorylog"
 }
