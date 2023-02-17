@@ -582,14 +582,24 @@ function getRelatedInvoiceOfDocument(documents, connection_db_api) {
                 if (documents[i].document_type == 'INVOICE') {
                     let one_process = await invoiceProcessCollection.findOne({ _id: ObjectID(documents[i].document_id) });
                     if (one_process) {
-                        let one_invoice = await invoiceCollection.findOne({ _id: ObjectID(one_process.invoice_id) });
-                        hasInvoiceData = true;
-                        invoiceData = one_invoice;
-                        if (i == documents.length - 1) {
-                            if (hasInvoiceData) {
-                                resolve({ status: true, data: invoiceData });
-                            } else {
-                                resolve({ status: false });
+                        let one_invoice = await invoiceCollection.findOne({ _id: one_process.invoice_id });
+                        if (one_invoice) {
+                            hasInvoiceData = true;
+                            invoiceData = one_invoice;
+                            if (i == documents.length - 1) {
+                                if (hasInvoiceData) {
+                                    resolve({ status: true, data: invoiceData });
+                                } else {
+                                    resolve({ status: false });
+                                }
+                            }
+                        } else {
+                            if (i == documents.length - 1) {
+                                if (hasInvoiceData) {
+                                    resolve({ status: true, data: invoiceData });
+                                } else {
+                                    resolve({ status: false });
+                                }
                             }
                         }
                     } else {
