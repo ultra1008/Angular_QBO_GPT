@@ -254,7 +254,7 @@ module.exports.importProcessData = async function (req, res) {
             for (let i = 0; i < get_invoice.length; i++) {
                 queryString += `&document_id=${get_invoice[i]._id}`;
             }
-            queryString = '?customer_id=r-988514&document_id=63ef5719916b4b2d74acb594';
+            queryString = '?customer_id=r-988514&document_id=63ef5856916b4b2d74acb59a';
             console.log("queryString: ", queryString);
 
             let get_data = await common.sendInvoiceForProcess(queryString);
@@ -263,6 +263,7 @@ module.exports.importProcessData = async function (req, res) {
                     if (get_data.data[key] != null) {
                         for (let j = 0; j < get_data.data[key].length; j++) {
                             let documentType = get_data.data[key][j].document_type;
+                            console.log("DOCUMENT TYPE :************", documentType);
                             if (documentType == 'INVOICE') {
                                 var pages = get_data.data[key][j].document_pages;
                                 var relatedDocuments = get_data.data[key][j].related_documents;
@@ -560,7 +561,85 @@ module.exports.importProcessData = async function (req, res) {
                                                     // Update po to invoice
                                                     let update_related_doc = await invoiceCollection.updateOne({ _id: ObjectID(save_invoice._id) }, { has_po: true, po_data: po_obj });
                                                 }
-                                            } else if (related_document_type == 'QUOTE') { }
+                                            } else if (related_document_type == 'QUOTE') {
+                                                // Set process data and related document process data to complete
+                                                let updateRelatedDocObj = {
+                                                    status: 'Complete',
+                                                    document_type: related_document_type,
+                                                    process_data: relatedDocuments[i],
+                                                };
+                                                await invoiceProcessCollection.updateOne({ _id: ObjectID(relatedDocuments[i].document_id) }, updateRelatedDocObj);
+                                                // Make packing slip Object
+                                                let quote_obj = {
+                                                    pdf_url: relatedDocuments[i].document_url,
+                                                    document_id: relatedDocuments[i].document_id,
+                                                    document_type: relatedDocuments[i].document_type,
+                                                    date: "",
+                                                    quote_number: "",
+                                                    customer_id: "",
+                                                    terms: "",
+                                                    address: "",
+                                                    vendor: "",
+                                                    shipping_method: "",
+                                                    sub_total: "",
+                                                    tax: "",
+                                                    quote_total: "",
+                                                    receiver_phone: "",
+                                                    items: [],
+                                                };
+                                                let tmpVendor = await getAndCheckVendorPO(related_doc_pages[0].fields.VENDOR_NAME.replace(/\n/g, " "), connection_db_api);
+                                                if (tmpVendor.status) {
+                                                    quote_obj.vendor = ObjectID(tmpVendor.data._id);
+                                                }
+                                                if (quote_obj.vendor != '') {
+                                                    if (related_doc_pages[0].fields.QUOTE_DATE != null) {
+                                                        quote_obj.date = related_doc_pages[0].fields.QUOTE_DATE;
+                                                    }
+                                                    if (related_doc_pages[0].fields.QUOTE_NUMBER != null) {
+                                                        quote_obj.quote_number = related_doc_pages[0].fields.QUOTE_NUMBER;
+                                                    }
+                                                    if (related_doc_pages[0].fields.TERMS != null) {
+                                                        quote_obj.terms = related_doc_pages[0].fields.TERMS;
+                                                    }
+                                                    if (related_doc_pages[0].fields.ADDRESS != null) {
+                                                        quote_obj.address = related_doc_pages[0].fields.ADDRESS;
+                                                    }
+                                                    if (related_doc_pages[0].fields.SHIPPING_METHOD != null) {
+                                                        quote_obj.shipping_method = related_doc_pages[0].fields.SHIPPING_METHOD;
+                                                    }
+                                                    if (related_doc_pages[0].fields.SUB_TOTAL != null) {
+                                                        quote_obj.sub_total = related_doc_pages[0].fields.SUB_TOTAL;
+                                                    }
+                                                    if (related_doc_pages[0].fields.TAX != null) {
+                                                        quote_obj.tax = related_doc_pages[0].fields.TAX;
+                                                    }
+                                                    if (related_doc_pages[0].fields.QUOTE_ORDER_TOTAL != null) {
+                                                        quote_obj.quote_total = related_doc_pages[0].fields.QUOTE_ORDER_TOTAL;
+                                                    }
+                                                    if (related_doc_pages[0].fields.RECEIVER_PHONE != null) {
+                                                        quote_obj.receiver_phone = related_doc_pages[0].fields.RECEIVER_PHONE;
+                                                    }
+
+                                                    let items = [];
+                                                    if (related_doc_pages[0].expense_groups.length > 0) {
+                                                        if (related_doc_pages[0].expense_groups[0].length > 0) {
+                                                            for (let k = 0; k < related_doc_pages[0].expense_groups[0].length; k++) {
+                                                                let item = related_doc_pages[0].expense_groups[0][k];
+                                                                items.push({
+                                                                    item: item.ITEM == null ? '' : item.ITEM,
+                                                                    product_code: item.PRODUCT_CODE == null ? '' : item.PRODUCT_CODE,
+                                                                    unit_price: item.UNIT_PRICE == null ? '' : item.UNIT_PRICE,
+                                                                    quantity: item.QUANTITY == null ? '' : item.QUANTITY,
+                                                                    price: item.PRICE == null ? '' : item.PRICE,
+                                                                });
+                                                            }
+                                                        }
+                                                    }
+                                                    quote_obj.items = items;
+                                                    // Update po to invoice
+                                                    let update_related_doc = await invoiceCollection.updateOne({ _id: ObjectID(save_invoice._id) }, { has_quote: true, quote_data: quote_obj });
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -651,9 +730,9 @@ module.exports.importProcessData = async function (req, res) {
                                         updatePOObj.status = 'Complete';
                                         // Make packing slip Object
                                         let po_obj = {
-                                            pdf_url: relatedDocuments[i].document_url,
-                                            document_id: relatedDocuments[i].document_id,
-                                            document_type: relatedDocuments[i].document_type,
+                                            pdf_url: get_data.data[key][j].document_url,
+                                            document_id: get_data.data[key][j].document_id,
+                                            document_type: get_data.data[key][j].document_type,
                                             date: "",
                                             po_number: "",
                                             customer_id: "",
@@ -671,15 +750,12 @@ module.exports.importProcessData = async function (req, res) {
                                             items: [],
                                         };
                                         if (pages[0].fields.VENDOR_NAME != null) {
-                                            let tmpVendor = await getAndCheckVendor(pages[0].fields.VENDOR_NAME.replace(/\n/g, " "), invoice_no, connection_db_api);
+                                            let tmpVendor = await getAndCheckVendorPO(pages[0].fields.VENDOR_NAME.replace(/\n/g, " "), connection_db_api);
                                             if (tmpVendor.status) {
                                                 po_obj.vendor = ObjectID(tmpVendor.data._id);
                                             }
                                         }
                                         if (po_obj.vendor != '') {
-                                            if (pages[0].fields.DATE != null) {
-                                                po_obj.date = pages[0].fields.DATE;
-                                            }
                                             if (pages[0].fields.PO_CREATE_DATE != null) {
                                                 po_obj.date = pages[0].fields.PO_CREATE_DATE;
                                             }
@@ -745,6 +821,102 @@ module.exports.importProcessData = async function (req, res) {
                                     await invoiceProcessCollection.updateOne({ _id: ObjectID(get_related_doc._id) }, updatePOObj);
                                 }
                             } else if (documentType == 'QUOTE') {
+                                var pages = get_data.data[key][j].document_pages;
+                                var relatedDocuments = get_data.data[key][j].related_documents;
+
+                                // Check document id is available or not
+                                let get_related_doc = await invoiceProcessCollection.findOne({ _id: ObjectID(get_data.data[key][j].document_id) });
+                                // If document is there then process data
+                                if (get_related_doc) {
+                                    // Set process data and related document process data to complete
+                                    let updateQuoteObj = {
+                                        invoice_id: '',
+                                        status: 'Process',
+                                        document_type: documentType,
+                                        process_data: get_data.data[key][j],
+                                    };
+                                    // Check document has related invoice or not
+                                    let related_invoice = await getRelatedInvoiceOfDocument(relatedDocuments, connection_db_api);
+                                    if (related_invoice.status) {
+                                        updateQuoteObj.invoice_id = related_invoice.data._id;
+                                        updateQuoteObj.status = 'Complete';
+                                        // Make packing slip Object
+                                        let quote_obj = {
+                                            pdf_url: get_data.data[key][j].document_url,
+                                            document_id: get_data.data[key][j].document_id,
+                                            document_type: get_data.data[key][j].document_type,
+                                            date: "",
+                                            quote_number: "",
+                                            customer_id: "",
+                                            terms: "",
+                                            address: "",
+                                            vendor: "",
+                                            shipping_method: "",
+                                            sub_total: "",
+                                            tax: "",
+                                            quote_total: "",
+                                            receiver_phone: "",
+                                            items: [],
+                                        };
+                                        if (pages[0].fields.VENDOR_NAME != null) {
+                                            let tmpVendor = await getAndCheckVendorPO(pages[0].fields.VENDOR_NAME.replace(/\n/g, " "), connection_db_api);
+                                            if (tmpVendor.status) {
+                                                quote_obj.vendor = ObjectID(tmpVendor.data._id);
+                                            }
+                                        }
+                                        if (quote_obj.vendor != '') {
+                                            if (pages[0].fields.QUOTE_DATE != null) {
+                                                quote_obj.date = pages[0].fields.QUOTE_DATE;
+                                            }
+                                            if (pages[0].fields.QUOTE_NUMBER != null) {
+                                                quote_obj.quote_number = pages[0].fields.QUOTE_NUMBER;
+                                            }
+                                            if (pages[0].fields.TERMS != null) {
+                                                quote_obj.terms = pages[0].fields.TERMS;
+                                            }
+                                            if (pages[0].fields.ADDRESS != null) {
+                                                quote_obj.address = pages[0].fields.ADDRESS;
+                                            }
+                                            if (pages[0].fields.SHIPPING_METHOD != null) {
+                                                quote_obj.shipping_method = pages[0].fields.SHIPPING_METHOD;
+                                            }
+                                            if (pages[0].fields.SUB_TOTAL != null) {
+                                                quote_obj.sub_total = pages[0].fields.SUB_TOTAL;
+                                            }
+                                            if (pages[0].fields.TAX != null) {
+                                                quote_obj.tax = pages[0].fields.TAX;
+                                            }
+                                            if (pages[0].fields.QUOTE_ORDER_TOTAL != null) {
+                                                quote_obj.quote_total = pages[0].fields.QUOTE_ORDER_TOTAL;
+                                            }
+                                            if (pages[0].fields.RECEIVER_PHONE != null) {
+                                                quote_obj.receiver_phone = pages[0].fields.RECEIVER_PHONE;
+                                            }
+
+                                            let items = [];
+                                            if (pages[0].expense_groups.length > 0) {
+                                                if (pages[0].expense_groups[0].length > 0) {
+                                                    for (let k = 0; k < pages[0].expense_groups[0].length; k++) {
+                                                        let item = pages[0].expense_groups[0][k];
+                                                        items.push({
+                                                            item: item.ITEM == null ? '' : item.ITEM,
+                                                            product_code: item.PRODUCT_CODE == null ? '' : item.PRODUCT_CODE,
+                                                            unit_price: item.UNIT_PRICE == null ? '' : item.UNIT_PRICE,
+                                                            quantity: item.QUANTITY == null ? '' : item.QUANTITY,
+                                                            price: item.PRICE == null ? '' : item.PRICE,
+                                                        });
+                                                    }
+                                                }
+                                            }
+                                            quote_obj.items = items;
+                                            console.log("quote_obj", quote_obj);
+                                            // Update packing slip to invoice
+                                            let update_related_doc = await invoiceCollection.updateOne({ _id: ObjectID(updateQuoteObj.invoice_id) }, { has_quote: true, quote_data: quote_obj });
+                                        }
+                                    }
+                                    // Update packing slip object
+                                    await invoiceProcessCollection.updateOne({ _id: ObjectID(get_related_doc._id) }, updateQuoteObj);
+                                }
                             }
                         }
                     }
