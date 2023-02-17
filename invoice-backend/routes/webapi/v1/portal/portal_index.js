@@ -274,6 +274,9 @@ router.post('/webapi/v1/portal/getinvoicehistorylog', common.checkTokenExistOrNo
 router.post('/webapi/v1/portal/saveinvoicenote', common.checkTokenExistOrNot, invoiceValidation.saveInvoiceNotes, invoiceController.saveInvoiceNotes);
 router.post('/webapi/v1/portal/deleteinvoicenote', common.checkTokenExistOrNot, invoiceValidation.deleteInvoiceNote, invoiceController.deleteInvoiceNote);
 router.post('/webapi/v1/portal/updateinvoiceattachment', common.checkTokenExistOrNot, invoiceValidation.saveInvoiceAttachment, invoiceController.saveInvoiceAttachment);
+router.post('/webapi/v1/portal/savepackingslipnote', common.checkTokenExistOrNot, invoiceValidation.savePackingSlipNotes, invoiceController.savePackingSlipNotes);
+router.post('/webapi/v1/portal/deletepackingslipnote', common.checkTokenExistOrNot, invoiceValidation.deletePackingSlipNote, invoiceController.deletePackingSlipNote);
+router.post('/webapi/v1/portal/updatepackingslipattachment', common.checkTokenExistOrNot, invoiceValidation.savePackingSlipAttachment, invoiceController.savePackingSlipAttachment);
 
 let invoiceDashboard = require('./dashboard/dashboardController');
 router.get('/webapi/v1/portal/getdashboardcount', common.checkTokenExistOrNot, invoiceDashboard.getDashboardCount);

@@ -152,6 +152,16 @@ module.exports.getInvoice = async function (req, res) {
                             }
                         },
                         invoice_attachments: 1,
+                        has_packing_slip: 1,
+                        packing_slip_data: 1,
+                        packing_slip_notes: {
+                            $filter: {
+                                input: '$packing_slip_notes',
+                                as: 'note',
+                                cond: { $eq: ['$$note.is_delete', 0] }
+                            }
+                        },
+                        packing_slip_attachments: 1,
                     }
                 },
             ]);
@@ -296,6 +306,16 @@ module.exports.getInvoiceList = async function (req, res) {
                             }
                         },
                         invoice_attachments: 1,
+                        has_packing_slip: 1,
+                        packing_slip_data: 1,
+                        packing_slip_notes: {
+                            $filter: {
+                                input: '$packing_slip_notes',
+                                as: 'note',
+                                cond: { $eq: ['$$note.is_delete', 0] }
+                            }
+                        },
+                        packing_slip_attachments: 1,
                     }
                 },
             ]);
@@ -392,6 +412,16 @@ module.exports.getOneInvoice = async function (req, res) {
                             }
                         },
                         invoice_attachments: 1,
+                        has_packing_slip: 1,
+                        packing_slip_data: 1,
+                        packing_slip_notes: {
+                            $filter: {
+                                input: '$packing_slip_notes',
+                                as: 'note',
+                                cond: { $eq: ['$$note.is_delete', 0] }
+                            }
+                        },
+                        packing_slip_attachments: 1,
                     }
                 },
             ]);
@@ -891,13 +921,12 @@ module.exports.getOrphanDocuments = async function (req, res) {
                     one_invoice = one_invoice[0];
                 }
                 let query = {
-                    status: 'Complete',
+                    status: 'Process',
                     document_type: { $ne: 'INVOICE' },
                     "process_data.document_pages.fields.VENDOR_NAME": { $regex: one_invoice.vendor.vendor_name, $options: 'i' },
                     "process_data.document_pages.fields.INVOICE_NUMBER": { $regex: one_invoice.invoice, $options: 'i' },
                     // "process_data.document_pages.fields.VENDOR_NAME": /CN SOLUTIONS GROUP LLc/i
                 };
-                // console.log("qauerys: ", query);
                 let get_process = await processInvoiceConnection.find(query);
                 res.send({ status: true, message: "Invoice data", data: get_process });
             } else {
@@ -1108,6 +1137,164 @@ module.exports.saveInvoiceAttachment = async function (req, res) {
                     action_from: 'Web',
                 }, decodedToken);
                 res.send({ status: true, message: "Invoice attachment updated successfully..", data: update_invoice });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+// Save Packing Slip Notes
+module.exports.savePackingSlipNotes = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+            var invoice_id = requestObject.invoice_id;
+            delete requestObject.invoice_id;
+            var id = requestObject._id;
+            delete requestObject._id;
+            if (id) {
+                requestObject.updated_by = decodedToken.UserData._id;
+                requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+                let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id), "packing_slip_notes._id": id }, { $set: { "packing_slip_notes.$.updated_by": decodedToken.UserData._id, "packing_slip_notes.$.updated_at": Math.round(new Date().getTime() / 1000), "packing_slip_notes.$.notes": requestObject.notes } });
+                let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
+                if (update_invoice) {
+                    requestObject.invoice_id = invoice_id;
+                    addchangeInvoice_History("Update Packing Slip Note", requestObject, decodedToken, requestObject.updated_at);
+                    recentActivity.saveRecentActivity({
+                        user_id: decodedToken.UserData._id,
+                        username: decodedToken.UserData.userfullname,
+                        userpicture: decodedToken.UserData.userpicture,
+                        data_id: invoice_id,
+                        title: `Invoice #${get_invoice.invoice}`,
+                        module: 'Invoice',
+                        action: 'Update Packing Slip Note',
+                        action_from: 'Web',
+                    }, decodedToken);
+                    res.send({ status: true, message: "Packing slip note updated successfully.", data: update_invoice });
+                } else {
+                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                }
+            } else {
+                //save invoice note
+                requestObject.created_by = decodedToken.UserData._id;
+                requestObject.created_at = Math.round(new Date().getTime() / 1000);
+                requestObject.updated_by = decodedToken.UserData._id;
+                requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+                let save_invoice_note = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id) }, { $push: { packing_slip_notes: requestObject } });
+                let one_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
+                if (save_invoice_note) {
+                    requestObject.invoice_id = invoice_id;
+                    addchangeInvoice_History("Insert Packing Slip Note", requestObject, decodedToken, requestObject.updated_at);
+                    recentActivity.saveRecentActivity({
+                        user_id: decodedToken.UserData._id,
+                        username: decodedToken.UserData.userfullname,
+                        userpicture: decodedToken.UserData.userpicture,
+                        data_id: invoice_id,
+                        title: `Invoice #${one_invoice.invoice}`,
+                        module: 'Invoice',
+                        action: 'Insert Packing Slip Note',
+                        action_from: 'Web',
+                    }, decodedToken);
+                    res.send({ status: true, message: "Packing slip note saved successfully." });
+                } else {
+                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                }
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+// Delete Packing Slip Notes
+module.exports.deletePackingSlipNote = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+            var invoice_id = requestObject.invoice_id;
+            delete requestObject.invoice_id;
+            var id = requestObject._id;
+            delete requestObject._id;
+            requestObject.updated_by = decodedToken.UserData._id;
+            requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+            let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id), "packing_slip_notes._id": id }, { $set: { "packing_slip_notes.$.updated_by": decodedToken.UserData._id, "packing_slip_notes.$.updated_at": Math.round(new Date().getTime() / 1000), "packing_slip_notes.$.is_delete": 1 } });
+            let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
+            if (update_invoice) {
+                requestObject.invoice_id = invoice_id;
+                addchangeInvoice_History("Delete Packing Slip Note", requestObject, decodedToken, requestObject.updated_at);
+                recentActivity.saveRecentActivity({
+                    user_id: decodedToken.UserData._id,
+                    username: decodedToken.UserData.userfullname,
+                    userpicture: decodedToken.UserData.userpicture,
+                    data_id: invoice_id,
+                    title: `Invoice #${get_invoice.invoice}`,
+                    module: 'Invoice',
+                    action: 'Delete Packing Slip Note',
+                    action_from: 'Web',
+                }, decodedToken);
+                res.send({ status: true, message: "Packing slip note deleted successfully.", data: update_invoice });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+// Update Packing Slip Attachment
+module.exports.savePackingSlipAttachment = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+            requestObject.updated_by = decodedToken.UserData._id;
+            requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+            let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(requestObject._id) });
+            let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
+            if (update_invoice) {
+                requestObject.invoice_id = requestObject._id;
+                addchangeInvoice_History("Update Packing Slip Attachment", requestObject, decodedToken, requestObject.updated_at);
+                recentActivity.saveRecentActivity({
+                    user_id: decodedToken.UserData._id,
+                    username: decodedToken.UserData.userfullname,
+                    userpicture: decodedToken.UserData.userpicture,
+                    data_id: requestObject._id,
+                    title: `Invoice #${get_invoice.invoice}`,
+                    module: 'Invoice',
+                    action: 'Update Packing Slip Attachment',
+                    action_from: 'Web',
+                }, decodedToken);
+                res.send({ status: true, message: "Packing slip attachment updated successfully..", data: update_invoice });
             } else {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
             }

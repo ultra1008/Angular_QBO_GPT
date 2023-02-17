@@ -115,6 +115,50 @@ const saveInvoiceAttachment = (req, res, next) => {
     });
 };
 
+const savePackingSlipNotes = (req, res, next) => {
+    const validationRule = {
+        "invoice_id": "required",
+        "notes": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({ status: false, message: err });
+        }
+        else {
+            next();
+        }
+    });
+};
+
+const deletePackingSlipNote = (req, res, next) => {
+    const validationRule = {
+        "invoice_id": "required",
+        "_id": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({ status: false, message: err });
+        }
+        else {
+            next();
+        }
+    });
+};
+
+const savePackingSlipAttachment = (req, res, next) => {
+    const validationRule = {
+        "_id": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({ status: false, message: err });
+        }
+        else {
+            next();
+        }
+    });
+};
+
 module.exports = {
     getOneInvoice,
     deleteInvoice,
@@ -124,4 +168,7 @@ module.exports = {
     saveInvoiceNotes,
     deleteInvoiceNote,
     saveInvoiceAttachment,
+    savePackingSlipNotes,
+    deletePackingSlipNote,
+    savePackingSlipAttachment,
 };

@@ -4,8 +4,9 @@ var Schema = mongoose.Schema;
 var processInvoiceSchema = new Schema({
     pdf_url: { type: String, default: "" },
     invoice_id: { type: mongoose.ObjectId, default: "" },
-    po_id: { type: mongoose.ObjectId, default: "" },
-    status: { type: String, default: "Pending" },
+    management_invoice_id: { type: mongoose.ObjectId, default: "" },
+    management_po_id: { type: mongoose.ObjectId, default: "" },
+    status: { type: String, default: "Pending" }, // Pending, Process, Complete
     document_type: { type: String, default: "" },
     process_data: { type: Schema.Types.Mixed },
 
