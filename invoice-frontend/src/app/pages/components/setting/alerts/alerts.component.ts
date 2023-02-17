@@ -266,31 +266,10 @@ export class AlertsComponent implements OnInit {
     tempSettings.Invoice_modified.setting_value = that.Invoice_modified_value;
     tempSettings.Invoice_sent_to_batch.setting_value = that.Invoice_sent_to_batch_value;
     tempSettings.daily_productivity_report.setting_value = that.daily_productivity_report_value;
-    // that.Pending_items_value =              params.data.settings.Pending_items.setting_value;
-
-    // that.Invoice_due_time_value =              params.data.settings.Invoice_due_date.setting_value;
-    // that.Invoice_due_day_value =              params.data.settings.Invoice_due_date.setting_value2;
-
-    //         that.Invoice_arrive_value = params.data.settings.Invoice_arrive.setting_value;
-
-    //         that.Invoice_modified_value =              params.data.settings.Invoice_modified.setting_value;
-
-    // that.Invoice_sent_to_batch_value =              params.data.settings.Invoice_sent_to_batch.setting_value;
-
-    //     that.daily_productivity_report_value =              params.data.settings.daily_productivity_report.setting_value;
-    /* console.log("Pending_items_value: ", this.Pending_items_value);
-    console.log("Invoice_due_time_value: ", this.Invoice_due_time_value);
-    console.log("Invoice_due_day_value: ", this.Invoice_due_day_value);
-    console.log("Invoice_arrive_value: ", this.Invoice_arrive_value);
-    console.log("Invoice_modified_value: ", this.Invoice_modified_value);
-    console.log("Invoice_sent_to_batch_value: ", this.Invoice_sent_to_batch_value);
-    console.log("daily_productivity_report_value: ", this.daily_productivity_report_value); */
-    // let that = this;
     let reqObject = {
       _id: that.setting_id,
       settings: tempSettings
     };
-    // objectForEdit._id = that.setting_id;
     this.httpCall
       .httpPostCall(httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTING_UPDATE_ALERTS, reqObject)
       .subscribe(function (params) {

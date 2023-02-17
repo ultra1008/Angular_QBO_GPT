@@ -114,8 +114,8 @@ module.exports.importManagementInvoice = async function (req, res) {
             let temp_invoices = await invoiceProcessCollection.find({ is_delete: 0 });
             let tempIds = [];
             temp_invoices.forEach((data) => {
-                if (data.invoice_id != null && data.invoice_id != undefined && data.invoice_id != '') {
-                    tempIds.push(ObjectID(data.invoice_id));
+                if (data.management_invoice_id != null && data.management_invoice_id != undefined && data.management_invoice_id != '') {
+                    tempIds.push(ObjectID(data.management_invoice_id));
                 }
             });
             let query;
@@ -129,7 +129,7 @@ module.exports.importManagementInvoice = async function (req, res) {
             let saveObj = [];
             for (let i = 0; i < invoices.length; i++) {
                 saveObj.push({
-                    invoice_id: invoices[i]._id,
+                    management_invoice_id: invoices[i]._id,
                     pdf_url: invoices[i].pdf_url,
                     created_by: decodedToken.UserData._id,
                     created_at: Math.round(new Date().getTime() / 1000),
@@ -172,8 +172,8 @@ module.exports.importManagementPO = async function (req, res) {
             let temp_pos = await invoiceProcessCollection.find({ is_delete: 0 });
             let tempIds = [];
             temp_pos.forEach((data) => {
-                if (data.po_id != null && data.po_id != undefined && data.po_id != '') {
-                    tempIds.push(ObjectID(data.po_id));
+                if (data.management_po_id != null && data.management_po_id != undefined && data.management_po_id != '') {
+                    tempIds.push(ObjectID(data.management_po_id));
                 }
             });
             let query;
@@ -186,7 +186,7 @@ module.exports.importManagementPO = async function (req, res) {
             let saveObj = [];
             for (let i = 0; i < pos.length; i++) {
                 saveObj.push({
-                    po_id: pos[i]._id,
+                    management_po_id: pos[i]._id,
                     pdf_url: pos[i].po_url,
                     created_by: decodedToken.UserData._id,
                     created_at: Math.round(new Date().getTime() / 1000),
@@ -250,7 +250,6 @@ module.exports.importProcessData = async function (req, res) {
             let invoiceProcessCollection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
             let invoiceCollection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             let get_invoice = await invoiceProcessCollection.find({ is_delete: 0, status: 'Pending' });
-            // var queryString = `?customer_id=demo-3`;
             var queryString = `?customer_id=${decodedToken.companycode.toLowerCase()}`;
             for (let i = 0; i < get_invoice.length; i++) {
                 queryString += `&document_id=${get_invoice[i]._id}`;
@@ -260,18 +259,15 @@ module.exports.importProcessData = async function (req, res) {
 
             let get_data = await common.sendInvoiceForProcess(queryString);
             if (get_data.status) {
-                // let data = [];
                 for (const key in get_data.data) {
                     if (get_data.data[key] != null) {
                         for (let j = 0; j < get_data.data[key].length; j++) {
-                            let updateObject = {
-                                status: 'Complete',
-                                document_type: get_data.data[key][j].document_type,
-                                process_data: get_data.data[key][j],
-                            };
-                            await invoiceProcessCollection.updateOne({ _id: ObjectID(key) }, updateObject);
-                            if (updateObject.document_type == 'INVOICE') {
+                            let documentType = get_data.data[key][j].document_type;
+                            if (documentType == 'INVOICE') {
                                 var pages = get_data.data[key][j].document_pages;
+                                var relatedDocuments = get_data.data[key][j].related_documents;
+
+                                // Make invoice object
                                 let invoiceObject = {
                                     assign_to: '',
                                     vendor: '',
@@ -304,6 +300,7 @@ module.exports.importProcessData = async function (req, res) {
                                 };
                                 let items = [];
                                 let invoiceIsDuplicate = false;
+                                // Find invoice data
                                 for (let i = 0; i < pages.length; i++) {
                                     let invoice_no = '';
                                     if (pages[i].fields.INVOICE_NUMBER != null) {
@@ -414,14 +411,128 @@ module.exports.importProcessData = async function (req, res) {
                                         }
                                     }
                                 }
-                                console.log("invoiceIsDuplicate ******************* ", invoiceIsDuplicate, "----", invoiceObject.vendor);
-                                // console.log("nvoiceObject.vendor: ", invoiceObject.vendor);
+                                // Check if invoice is duplicate and invoice vendor is available or not
                                 if (!invoiceIsDuplicate && invoiceObject.vendor != '') {
                                     invoiceObject.items = items;
                                     let add_invoice = new invoiceCollection(invoiceObject);
                                     let save_invoice = await add_invoice.save();
-                                    console.log("invoiceObject: ", invoiceObject);
-                                    console.log("save_invoice: ", save_invoice);
+
+                                    // Set process data and invoice process data to complete
+                                    let updateInvoiceProcessObject = {
+                                        invoice_id: save_invoice._id,
+                                        status: 'Complete',
+                                        document_type: get_data.data[key][j].document_type,
+                                        process_data: get_data.data[key][j],
+                                    };
+                                    await invoiceProcessCollection.updateOne({ _id: ObjectID(key) }, updateInvoiceProcessObject);
+
+                                    // Related documents
+                                    for (let i = 0; i < relatedDocuments.length; i++) {
+                                        // Check document id is available or not
+                                        let get_related_doc = await invoiceProcessCollection.findOne({ _id: ObjectID(relatedDocuments[i].document_id) });
+                                        if (get_related_doc) {
+                                            let related_document_type = relatedDocuments[i].document_type;
+                                            let related_doc_pages = relatedDocuments[i].document_pages;
+                                            if (related_document_type == 'PACKING_SLIP') {
+                                                // Set process data and related document process data to complete
+                                                let updateRelatedDocObj = {
+                                                    status: 'Complete',
+                                                    document_type: related_document_type,
+                                                    process_data: relatedDocuments[i],
+                                                };
+                                                await invoiceProcessCollection.updateOne({ _id: ObjectID(relatedDocuments[i].document_id) }, updateRelatedDocObj);
+                                                // Make packing slip Object
+                                                let packing_slip_obj = {
+                                                    pdf_url: relatedDocuments[i].document_url,
+                                                    document_id: relatedDocuments[i].document_id,
+                                                    document_type: relatedDocuments[i].document_type,
+                                                    date: "",
+                                                    invoice_number: invoiceObject.invoice,
+                                                    po_number: "",
+                                                    ship_to_address: "",
+                                                    vendor: ObjectID(invoiceObject.vendor),
+                                                    received_by: "",
+                                                };
+                                                if (related_doc_pages[0].fields.DATE != null) {
+                                                    packing_slip_obj.date = related_doc_pages[0].fields.DATE;
+                                                }
+                                                if (related_doc_pages[0].fields.PO_NUMBER != null) {
+                                                    packing_slip_obj.po_number = related_doc_pages[0].fields.PO_NUMBER;
+                                                }
+                                                if (related_doc_pages[0].fields.SHIP_TO_ADDRESS != null) {
+                                                    packing_slip_obj.ship_to_address = related_doc_pages[0].fields.SHIP_TO_ADDRESS;
+                                                }
+                                                if (related_doc_pages[0].fields.RECEIVED_BY != null) {
+                                                    packing_slip_obj.received_by = related_doc_pages[0].fields.RECEIVED_BY;
+                                                }
+                                                // Update packing slip to invoice
+                                                let update_related_doc = await invoiceCollection.updateOne({ _id: ObjectID(save_invoice._id) }, { has_packing_slip: true, packing_slip_data: packing_slip_obj });
+                                            }
+                                        }
+                                    }
+                                }
+                            } else if (documentType == 'PACKING_SLIP') {
+                                var pages = get_data.data[key][j].document_pages;
+                                var relatedDocuments = get_data.data[key][j].related_documents;
+
+                                // Check document id is available or not
+                                let get_related_doc = await invoiceProcessCollection.findOne({ _id: ObjectID(get_data.data[key][j].document_id) });
+                                // If document is there then process data
+                                if (get_related_doc) {
+                                    // Set process data and related document process data to complete
+                                    let updatePackingSlipObj = {
+                                        invoice_id: '',
+                                        status: 'Process',
+                                        document_type: documentType,
+                                        process_data: get_data.data[key][j],
+                                    };
+                                    // Check document has related invoice or not
+                                    let related_invoice = await getRelatedInvoiceOfDocument(relatedDocuments, connection_db_api);
+                                    if (related_invoice.status) {
+                                        updatePackingSlipObj.invoice_id = related_invoice.data._id;
+                                        updatePackingSlipObj.status = 'Complete';
+                                        // Make packing slip Object
+                                        let packing_slip_obj = {
+                                            pdf_url: get_data.data[key][j].document_url,
+                                            document_id: get_data.data[key][j].document_id,
+                                            document_type: get_data.data[key][j].document_type,
+                                            date: "",
+                                            invoice_number: "",
+                                            po_number: "",
+                                            ship_to_address: "",
+                                            vendor: "",
+                                            received_by: "",
+                                        };
+                                        let invoice_no = '';
+                                        if (pages[0].fields.INVOICE_NUMBER != null) {
+                                            invoice_no = pages[0].fields.INVOICE_NUMBER;
+                                        }
+                                        if (pages[0].fields.VENDOR_NAME != null) {
+                                            let tmpVendor = await getAndCheckVendor(pages[0].fields.VENDOR_NAME.replace(/\n/g, " "), invoice_no, connection_db_api);
+                                            if (tmpVendor.status) {
+                                                packing_slip_obj.vendor = ObjectID(tmpVendor.data._id);
+                                            }
+                                        }
+                                        if (packing_slip_obj.vendor != '') {
+                                            if (pages[0].fields.DATE != null) {
+                                                packing_slip_obj.date = pages[0].fields.DATE;
+                                            }
+                                            packing_slip_obj.invoice_number = invoice_no;
+                                            if (pages[0].fields.PO_NUMBER != null) {
+                                                packing_slip_obj.po_number = pages[0].fields.PO_NUMBER;
+                                            }
+                                            if (pages[0].fields.SHIP_TO_ADDRESS != null) {
+                                                packing_slip_obj.ship_to_address = pages[0].fields.SHIP_TO_ADDRESS;
+                                            }
+                                            if (pages[0].fields.RECEIVED_BY != null) {
+                                                packing_slip_obj.received_by = pages[0].fields.RECEIVED_BY;
+                                            }
+                                            // Update packing slip to invoice
+                                            let update_related_doc = await invoiceCollection.updateOne({ _id: ObjectID(updatePackingSlipObj.invoice_id) }, { has_packing_slip: true, packing_slip_data: packing_slip_obj });
+                                        }
+                                    }
+                                    // Update packing slip object
+                                    await invoiceProcessCollection.updateOne({ _id: ObjectID(get_related_doc._id) }, updatePackingSlipObj);
                                 }
                             }
                         }
@@ -448,13 +559,71 @@ function getAndCheckVendor(vendorName, invoice_no, connection_db_api) {
         if (get_vendor) {
             let one_invoice = await invoiceCollection.findOne({ vendor: ObjectID(get_vendor._id), invoice: invoice_no });
             if (one_invoice) {
-                resolve({ status: true, duplicate: true });
+                resolve({ status: true, duplicate: true, data: get_vendor });
             } else {
                 resolve({ status: true, duplicate: false, data: get_vendor });
             }
         } else {
             resolve({ status: false });
         }
+    });
+};
+
+function getRelatedInvoiceOfDocument(documents, connection_db_api) {
+    return new Promise(async function (resolve, reject) {
+        let invoiceCollection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+        let invoiceProcessCollection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
+        if (documents.length == 0) {
+            resolve({ status: false });
+        } else {
+            let hasInvoiceData = false;
+            let invoiceData;
+            for (let i = 0; i < documents.length; i++) {
+                if (documents[i].document_type == 'INVOICE') {
+                    let one_process = await invoiceProcessCollection.findOne({ _id: ObjectID(documents[i].document_id) });
+                    if (one_process) {
+                        let one_invoice = await invoiceCollection.findOne({ _id: ObjectID(one_process.invoice_id) });
+                        hasInvoiceData = true;
+                        invoiceData = one_invoice;
+                        if (i == documents.length - 1) {
+                            if (hasInvoiceData) {
+                                resolve({ status: true, data: invoiceData });
+                            } else {
+                                resolve({ status: false });
+                            }
+                        }
+                    } else {
+                        if (i == documents.length - 1) {
+                            if (hasInvoiceData) {
+                                resolve({ status: true, data: invoiceData });
+                            } else {
+                                resolve({ status: false });
+                            }
+                        }
+                    }
+                } else {
+                    if (i == documents.length - 1) {
+                        if (hasInvoiceData) {
+                            resolve({ status: true, data: invoiceData });
+                        } else {
+                            resolve({ status: false });
+                        }
+                    }
+                }
+            }
+        }
+        /* let vendorCollection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
+        let get_vendor = await vendorCollection.findOne({ vendor_name: vendorName });
+        if (get_vendor) {
+            let one_invoice = await invoiceCollection.findOne({ vendor: ObjectID(get_vendor._id), invoice: invoice_no });
+            if (one_invoice) {
+                resolve({ status: true, duplicate: true });
+            } else {
+                resolve({ status: true, duplicate: false, data: get_vendor });
+            }
+        } else {
+            resolve({ status: false });
+        } */
     });
 };
 

@@ -891,13 +891,12 @@ module.exports.getOrphanDocuments = async function (req, res) {
                     one_invoice = one_invoice[0];
                 }
                 let query = {
-                    status: 'Complete',
+                    status: 'Process',
                     document_type: { $ne: 'INVOICE' },
                     "process_data.document_pages.fields.VENDOR_NAME": { $regex: one_invoice.vendor.vendor_name, $options: 'i' },
                     "process_data.document_pages.fields.INVOICE_NUMBER": { $regex: one_invoice.invoice, $options: 'i' },
                     // "process_data.document_pages.fields.VENDOR_NAME": /CN SOLUTIONS GROUP LLc/i
                 };
-                // console.log("qauerys: ", query);
                 let get_process = await processInvoiceConnection.find(query);
                 res.send({ status: true, message: "Invoice data", data: get_process });
             } else {

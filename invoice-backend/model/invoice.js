@@ -65,6 +65,31 @@ var invoice_notes = new mongoose.Schema({
     is_delete: { type: Number, default: 0 },
 });
 
+var packing_slip_schema = new mongoose.Schema({
+    pdf_url: { type: String, default: "" },
+    document_id: { type: mongoose.ObjectId, default: "" }, // Process document id
+    document_type: { type: String, default: "" }, // Process document type
+    date: { type: String, default: "" },
+    invoice_number: { type: String, default: "" },
+    po_number: { type: String, default: "" },
+    ship_to_address: { type: String, default: "" },
+    vendor: { type: mongoose.ObjectId, default: "" },
+    received_by: { type: String, default: "" },
+    is_delete: { type: Number, default: 0 },
+});
+var packingSlipData = {
+    pdf_url: "",
+    document_id: "",
+    document_type: "",
+    date: "",
+    invoice_number: "",
+    po_number: "",
+    ship_to_address: "",
+    vendor: "",
+    received_by: "",
+    is_delete: 0,
+};
+
 var invoiceSchema = new Schema({
     assign_to: { type: mongoose.ObjectId, default: "" }, //user
     vendor: { type: mongoose.ObjectId, default: "" },
@@ -101,6 +126,9 @@ var invoiceSchema = new Schema({
     badge: { type: badge, default: badgeValue },
     invoice_notes: { type: [invoice_notes], default: [] },
     invoice_attachments: { type: Array, default: [] },
+
+    has_packing_slip: { type: Boolean, default: false },
+    packing_slip_data: { type: packing_slip_schema, default: packingSlipData },
 
     created_by: { type: mongoose.ObjectId, default: "" },
     created_at: { type: Number, default: 0 },
