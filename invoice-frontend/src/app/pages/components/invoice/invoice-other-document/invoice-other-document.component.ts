@@ -38,15 +38,21 @@ export class InvoiceOtherDocumentComponent implements OnInit {
   editIcon: string;
   subscription: Subscription;
   mode: any;
-  show_pdf: Boolean = false;
+  // show_pdf: Boolean = false;
   documentTypes: any = {
     po: 'PO',
     packingSlip: 'Packing Slip',
     receivingSlip: 'Receiving Slip',
     quote: 'Quote',
   };
+  invoiceData: any;
+  loadInvoice: boolean = false;
+  id: any;
+  has_document: boolean = false;
+  otherDocument: any;
 
-  constructor(public dialog: MatDialog, private router: Router, private modeService: ModeDetectService, public route: ActivatedRoute,) {
+  constructor(public snackbarservice: Snackbarservice, public httpCall: HttpCall, public uiSpinner: UiSpinnerService, public dialog: MatDialog, private router: Router, private modeService: ModeDetectService, public route: ActivatedRoute,) {
+    this.id = this.route.snapshot.queryParamMap.get('_id');
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === "on" ? "on" : "off";
 
@@ -75,6 +81,7 @@ export class InvoiceOtherDocumentComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getOneInvoice();
   }
   goToEdit() {
     let that = this;
@@ -89,6 +96,33 @@ export class InvoiceOtherDocumentComponent implements OnInit {
       that.router.navigate(['/quote-detail-form']);
     }
 
+  }
+  getOneInvoice() {
+    let that = this;
+    that.httpCall
+      .httpPostCall(httproutes.INVOICE_GET_ONE_INVOICE, { _id: that.id })
+      .subscribe(function (params) {
+        if (params.status) {
+          that.invoiceData = params.data;
+          /* if (that.documentType == that.documentTypes.po) {
+            that.router.navigate(['/po-detail-form']);
+          } else */ if (that.documentType == that.documentTypes.packingSlip) {
+            that.has_document = params.data.has_packing_slip;
+            that.otherDocument = params.data.packing_slip_data;
+          } /* else if (that.documentType == that.documentTypes.receivingSlip) {
+            that.router.navigate(['/receiving-slip-form']);
+          } else if (that.documentType == that.documentTypes.quote) {
+            that.router.navigate(['/quote-detail-form']);
+          } */
+
+          that.loadInvoice = true;
+          that.uiSpinner.spin$.next(false);
+        } else {
+          that.snackbarservice.openSnackBar(params.message, "error");
+          that.uiSpinner.spin$.next(false);
+        }
+        console.log("otherDocument", params.data.packing_slip_data);
+      });
   }
   print() {
     fetch(this.pdf_url).then(resp => resp.arrayBuffer()).then(resp => {
@@ -604,6 +638,7 @@ export class OrphanFiles implements OnInit {
     // }
 
   }
+
   getOrphanDocument() {
     console.log("call");
     let that = this;

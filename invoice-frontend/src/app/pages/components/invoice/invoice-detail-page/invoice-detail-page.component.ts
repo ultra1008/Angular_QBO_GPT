@@ -37,6 +37,7 @@ export class InvoiceDetailPageComponent implements OnInit {
   id: any;
   invoiceData: any;
   loadInvoice: boolean = false;
+  has_packing_slip: any = [];
 
   poDocumentType = 'PO';
   packingSlipDocumentType = 'Packing Slip';
@@ -109,6 +110,7 @@ export class InvoiceDetailPageComponent implements OnInit {
       .subscribe(function (params) {
         if (params.status) {
           that.invoiceData = params.data;
+          that.has_packing_slip = that.invoiceData.has_packing_slip;
           that.loadInvoice = true;
           that.uiSpinner.spin$.next(false);
         } else {
