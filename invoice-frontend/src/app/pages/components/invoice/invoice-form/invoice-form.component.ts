@@ -84,6 +84,7 @@ export class InvoiceFormComponent implements OnInit {
   // options: string[] = ['One', 'Two', 'Three'];
   filteredOptions: Observable<string[]>;
   vendor = new FormControl('');
+  badge: any = [];
 
 
 
@@ -92,6 +93,7 @@ export class InvoiceFormComponent implements OnInit {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.pdf_url = this.route.snapshot.queryParamMap.get('pdf_url');
     this.status = this.route.snapshot.queryParamMap.get('status');
+
     console.log("invoice", this.id);
     if (this.id) {
       console.log("id11111111", this.id);
@@ -121,6 +123,7 @@ export class InvoiceFormComponent implements OnInit {
       customer_id: [""],
       invoice: [""],
       p_o: [""],
+      job_number: [""],
       invoice_date: [""],
       due_date: [""],
       order_date: [""],
@@ -401,6 +404,7 @@ export class InvoiceFormComponent implements OnInit {
         that.status = params.data.status;
         that.invoiceData = params.data;
         that.pdf_url = that.invoiceData.pdf_url;
+        that.badge = that.invoiceData.badge;
         that.vendor.setValue(params.data.vendor);
         that.invoiceform = that.formBuilder.group({
           document_type: [params.data.document_type],
@@ -409,6 +413,7 @@ export class InvoiceFormComponent implements OnInit {
           customer_id: [params.data.customer_id],
           invoice: [params.data.invoice],
           p_o: [params.data.p_o],
+          job_number: [params.data.job_number],
           invoice_date: [params.data.invoice_date],
           due_date: [params.data.due_date],
           order_date: [params.data.order_date],
