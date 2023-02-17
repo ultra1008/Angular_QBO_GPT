@@ -136,7 +136,7 @@ export class InvoiceDashboardComponent implements OnInit {
     constructor
   */
 
-  constructor (private router: Router, public translate: TranslateService, private modeService: ModeDetectService, public httpCall: HttpCall) {
+  constructor(private router: Router, public translate: TranslateService, private modeService: ModeDetectService, public httpCall: HttpCall) {
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';

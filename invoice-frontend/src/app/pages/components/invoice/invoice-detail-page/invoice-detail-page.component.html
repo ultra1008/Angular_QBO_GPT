@@ -141,6 +141,7 @@
                 </mat-nav-list>
             </mat-accordion>
         </div>
+        <!-- history div -->
         <div class="col-2">
             <div class="invoice-card">
                 <h4 class="History-text">History Log</h4>
@@ -150,27 +151,45 @@
                     <p style="font-size: 10px;  word-wrap: break-word; text-align: left; color: #06479D;">
                         Today
                     </p>
-                    <div class="" [ngClass]="mode == 'on'? 'card-history-dark' : 'card-history'">
-                        <div class="card-body">
+                    <div class="search-results" [ngClass]="mode == 'on'? 'card-history-dark' : 'card-history'">
+                        <div class="card-body " *ngFor=" let item of dashboardHistory">
                             <div class="row">
                                 <div class="col-2">
+                                    <!-- <img class="crl card-img-left example-card-img-responsive"
+                                                                src="./assets/logo/RovukInvoice.png" /> -->
                                     <img class="crl card-img-left example-card-img-responsive"
-                                        src="./assets/logo/RovukInvoice.png" />
+                                        src="{{item.userpicture || '../assets/images/user_placeholder.png'}}" />
                                 </div>
-                                <div class="col-10">
-                                    <p style="font-size: 12px;">Roque Rivera @ 8:15 am</p>
-                                    <p style="font-size: 10px;  word-wrap: break-word;">Roque Rivera open the
-                                        invoice</p>
-                                </div>
-                            </div>
+                                <!-- <div class="col-10">
+                                                            <p style="font-size: 12px;">Roque Rivera @ 8:15 am</p>
+                                                            <p style="font-size: 10px;  word-wrap: break-word;">Roque Rivera open the
+                                                                invoice</p>
+                                                        </div> -->
+                                <div class="col-10 ">
+                                    <b [ngClass]="mode == 'on'? 'text-color-dark' : 'text-color'"
+                                        (click)="goToUserProfile(item)" style="font-size: 10px;">
+                                        {{item.user.userfullname}} </b>
+                                    <b style="font-size: 10px;">{{item.action}}</b><b
+                                        [ngClass]="mode == 'on'? 'text-color-dark' : 'text-color'"
+                                        style="font-size: 10px;" (click)="goToInvoiceForm(item)">
 
+                                        {{item.module}} </b>
+                                    <b style="font-size: 10px;">at </b>
+                                    <b style="font-size: 10px;">{{temp_MMDDYYY(item.created_at)}}</b>
+                                    <b style="font-size: 10px;"> from </b>
+                                    <b style="font-size: 10px;">{{item.action_from}}.</b>
+
+                                </div>
+
+                            </div>
+                            <hr class="solid">
                         </div>
                     </div>
-                    <p
+                    <!-- <p
                         style="font-size: 10px;  word-wrap: break-word; margin-top: 8px; text-align: left; color: #06479D;">
                         Monday 6/27/2022
-                    </p>
-                    <div class="" [ngClass]="mode == 'on'? 'card-history-dark' : 'card-history'">
+                    </p> -->
+                    <!-- <div class="" [ngClass]="mode == 'on'? 'card-history-dark' : 'card-history'">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-2">
@@ -189,11 +208,12 @@
                             </div>
 
                         </div>
-                    </div>
+                    </div> -->
                 </div>
 
             </div>
         </div>
+        <!-- history div over -->
         <div class="col-5">
             <div class="wrapper-cust-admin">
 

@@ -59,7 +59,7 @@
 }
 
 .history-viwe {
-    height: 95%;
+    height: 92%;
     // margin-right: unset;
     // margin-left: unset;
     border-radius: 4px;
@@ -90,27 +90,26 @@
 
 // history
 .header-text-cust-chart {
-    background-color: #fff;
-    // text-align: center !important;
-    max-height: 450px;
+    max-height: 760px;
     border-radius: 6px;
-    // border-top-right-radius: 4px;
     padding: 1em 1em;
     font-size: 1.2em !important;
     font-weight: 500 !important;
+    overflow: auto;
 }
 
 .header-text-cust-chart-dark {
 
-    background-color: #30343d;
+    // background-color: #30343d;
     color: white !important;
     // text-align: center !important;
-    max-height: 450px;
+    max-height: 760px;
     border-radius: 6px;
     // border-top-right-radius: 4px;
     padding: 1em 1em;
     font-size: 1.2em !important;
     font-weight: 500 !important;
+    overflow: auto;
 }
 
 .card-history {
@@ -147,7 +146,8 @@
 }
 
 .card-body {
-    padding: 0.75rem .75rem;
+    padding: 0.3rem 0.3rem;
+    // height: 90px;
 
 }
 
@@ -158,10 +158,20 @@
 
 .crl {
     border-radius: 100%;
-    background-color: red;
-    height: 30px;
+    background-color: rgb(250, 250, 250);
+    height: 24px;
+    width: 24px;
+    margin-top: 6px;
+    margin-left: 6px;
+
 
 }
+
+// /* Solid border */
+// hr.solid {
+//     border: 1px solid #00000050;
+//     transition: 0.4s;
+// }
 
 .Approvedcss {
     color: #0fb900;
@@ -173,4 +183,8 @@
 
 .pendingcss {
     color: hsl(19, 94%, 55%)
+}
+
+hr.solid {
+    border-top: 3px solid #bbb;
 }

@@ -10,6 +10,7 @@ import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
 import { ModeDetectService } from '../../map/mode-detect.service';
 import { Location } from '@angular/common';
+import { MMDDYYYY } from 'src/app/service/utils';
 
 @Component({
   selector: 'app-invoice-detail-page',
@@ -49,6 +50,17 @@ export class InvoiceDetailPageComponent implements OnInit {
     receivingSlip: 'Receiving Slip',
     quote: 'Quote',
   };
+
+  dashboardHistory = [];
+  SearchIcon = icon.SEARCH_WHITE;
+  start: number = 0;
+
+  exitIcon: string = "";
+  search: string = "";
+  is_httpCall: boolean = false;
+  todayactivity_search!: String;
+  activityIcon!: string;
+  isSearch: boolean = false;
   constructor(private location: Location, private modeService: ModeDetectService, private router: Router, public route: ActivatedRoute, public uiSpinner: UiSpinnerService, public httpCall: HttpCall,
     public snackbarservice: Snackbarservice,) {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
@@ -87,6 +99,7 @@ export class InvoiceDetailPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getTodaysActivity();
   }
 
   getOneInvoice() {
@@ -142,6 +155,74 @@ export class InvoiceDetailPageComponent implements OnInit {
     /*--- Remove the link when done ---*/
     document.body.removeChild(a);
   }
+  onKey(event: any) {
+    console.log(event.target.value);
+    if (event.target.value.length == 0) {
+      console.log("emprty string");
+      this.dashboardHistory = [];
+      this.start = 0;
+      this.getTodaysActivity();
+    }
+  }
+  searchActivity() {
+    console.log("searchTodayActivity");
+    console.log("Entered email:", this.todayactivity_search);
+    let that = this;
+    that.isSearch = true;
+    that.dashboardHistory = [];
+    that.start = 0;
+    this.getTodaysActivity();
+  }
+
+  onScroll() {
+    this.start++;
+    this.getTodaysActivity();
+  }
+  // getTodaysActivity() {
+  //   console.log("callllll");
+  //   let self = this;
+
+  //   // let requestObject = { start: this.start };
+
+  //   self.httpCall
+  //     .httpPostCall(httproutes.INVOICE_GET_DASHBOARD_HISTORY,
+  //       { start: 0 })
+  //     .subscribe(function (params) {
+  //       console.log("dashboardHistory", params);
+  //       if (params.status) {
+  //         if (self.start == 0)
+
+  //           self.dashboardHistory = self.dashboardHistory.concat(params.data);
+  //         console.log("dashboardHistory", self.dashboardHistory);
+  //       }
+
+  //     });
+
+  // }
+  temp_MMDDYYY(epoch) {
+    return MMDDYYYY(epoch);
+  }
+  getTodaysActivity() {
+    let self = this;
+    this.is_httpCall = true;
+    let requestObject = {};
+    requestObject = {
+      start: this.start,
+      _id: this.id
+
+    };
+    this.httpCall
+      .httpPostCall(httproutes.INVOICE_GET_INVOICE_HISTORY, requestObject)
+      .subscribe(function (params) {
+        if (params.status) {
+          if (self.start == 0)
+            self.is_httpCall = false;
+          self.dashboardHistory = self.dashboardHistory.concat(params.data);
+        }
+        console.log("dashboardHistory", self.dashboardHistory);
+      });
+  }
+
 
 }
 
