@@ -11,6 +11,7 @@ import { UiSpinnerService } from 'src/app/service/spinner.service';
 import { ModeDetectService } from '../../map/mode-detect.service';
 import { Location } from '@angular/common';
 import { MMDDYYYY } from 'src/app/service/utils';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-invoice-detail-page',
@@ -34,16 +35,17 @@ export class InvoiceDetailPageComponent implements OnInit {
   subscription: Subscription;
   mode: any;
   add_my_self_icon = icon.ADD_MY_SELF_WHITE;
+  saveIcon = icon.SAVE_WHITE;
   id: any;
   invoiceData: any;
   loadInvoice: boolean = false;
   has_packing_slip: any = [];
-
+  invoiceNoteform: FormGroup;
   poDocumentType = 'PO';
   packingSlipDocumentType = 'Packing Slip';
   receivingSlipDocumentType = 'Receiving Slip';
   quoteoDocumentType = 'Quote';
-
+  invoice_id: any;
 
   documentTypes: any = {
     po: 'PO',
@@ -55,6 +57,7 @@ export class InvoiceDetailPageComponent implements OnInit {
   dashboardHistory = [];
   SearchIcon = icon.SEARCH_WHITE;
   start: number = 0;
+  show_Nots: boolean = false;
 
   exitIcon: string = "";
   search: string = "";
@@ -62,11 +65,12 @@ export class InvoiceDetailPageComponent implements OnInit {
   todayactivity_search!: String;
   activityIcon!: string;
   isSearch: boolean = false;
-  constructor(private location: Location, private modeService: ModeDetectService, private router: Router, public route: ActivatedRoute, public uiSpinner: UiSpinnerService, public httpCall: HttpCall,
+  constructor(private formBuilder: FormBuilder, private location: Location, private modeService: ModeDetectService, private router: Router, public route: ActivatedRoute, public uiSpinner: UiSpinnerService, public httpCall: HttpCall,
     public snackbarservice: Snackbarservice,) {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === "on" ? "on" : "off";
     this.id = this.route.snapshot.queryParamMap.get('_id');
+    this.invoice_id = this.id;
     if (this.mode == "off") {
       this.downloadIcon = icon.DOWNLOAD_WHITE;
       this.printIcon = icon.PRINT_WHITE;
@@ -101,6 +105,36 @@ export class InvoiceDetailPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.getTodaysActivity();
+    this.invoiceNoteform = this.formBuilder.group({
+      notes: [""],
+
+    });
+  }
+  addNotes() {
+    this.show_Nots = true;
+  }
+  saveNotes() {
+    console.log("call");
+    let that = this;
+    this.invoiceNoteform.markAllAsTouched();
+    if (that.invoiceNoteform.valid) {
+      let req_temp = that.invoiceNoteform.value;
+      req_temp.invoice_id = this.invoice_id;
+      that.uiSpinner.spin$.next(true);
+      that.httpCall.httpPostCall(httproutes.PORTAL_SAVE_INVOICE_NOTES, req_temp).subscribe(function (params_new) {
+        if (params_new.status) {
+
+          that.snackbarservice.openSnackBar(params_new.message, "success");
+          that.uiSpinner.spin$.next(false);
+
+        } else {
+          that.snackbarservice.openSnackBar(params_new.message, "error");
+          that.uiSpinner.spin$.next(false);
+        }
+      });
+    }
+
+
   }
 
   getOneInvoice() {

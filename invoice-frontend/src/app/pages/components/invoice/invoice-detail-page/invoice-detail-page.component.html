@@ -132,8 +132,45 @@
                                 translate }}</h4>
                         </mat-expansion-panel-header>
                         <div class="task-data">
-                            <img src="https://s3.us-west-1.wasabisys.com/rovukdata/invoice_icon.png" width="15%"
-                                style="padding-top: 15px;" />
+                            <div class="row">
+                                <div class="col-12">
+                                    <button mat-raised-button color="primary"
+                                        style="margin: 4px 6px 4px 0px;float: right;" (click)="addNotes()"
+                                        class="sign-button ml-1"><img src="{{add_my_self_icon}}" alt="" height="20px">
+                                        {{'Project-Timecard-Notes' | translate }}
+                                    </button>
+                                </div>
+
+                            </div>
+
+                            <div class="row" *ngIf="show_Nots">
+
+                                <div class="col-9" style="margin-left: 25px;">
+                                    <form class="form" [formGroup]="invoiceNoteform">
+                                        <mat-form-field appearance="outline" class="main-one-input-field">
+                                            <mat-label>{{'Project-Timecard-Notes' | translate }}</mat-label>
+                                            <textarea matInput appTextareaAutoresizeproject
+                                                class="input-capitalized-textArea" formControlName="notes"
+                                                placeholder="{{'Project-Timecard-Notes' | translate }}"></textarea>
+                                        </mat-form-field>
+                                    </form>
+
+                                </div>
+                                <div class="col-2" style="padding-top: 20px;">
+                                    <button mat-raised-button (click)="saveNotes()" color="primary"
+                                        class="cust-button-form"><img src="{{saveIcon}}" alt="" class="pr-1"
+                                            height="15px">{{'All-save' |
+                                        translate}}</button>
+                                </div>
+
+                            </div>
+                            <div class="note-card">
+                                <!-- <div>
+                                    {{invoiceData.invoice_notes.notes}}
+                                </div> -->
+
+                            </div>
+
                         </div>
 
                     </mat-expansion-panel>
