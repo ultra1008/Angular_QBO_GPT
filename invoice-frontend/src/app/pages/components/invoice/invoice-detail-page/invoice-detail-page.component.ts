@@ -10,7 +10,7 @@ import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
 import { ModeDetectService } from '../../map/mode-detect.service';
 import { Location } from '@angular/common';
-import { MMDDYYYY } from 'src/app/service/utils';
+import { MMDDYYYY, MMDDYYYY_formet } from 'src/app/service/utils';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { MatDialog } from '@angular/material/dialog';
@@ -68,7 +68,7 @@ export class InvoiceDetailPageComponent implements OnInit {
   dashboardHistory = [];
   SearchIcon = icon.SEARCH_WHITE;
   start: number = 0;
-  show_Nots: boolean = false;
+
 
   exitIcon: string = "";
   search: string = "";
@@ -76,13 +76,10 @@ export class InvoiceDetailPageComponent implements OnInit {
   todayactivity_search!: String;
   activityIcon!: string;
   isSearch: boolean = false;
-
-  modelDeleteTitle: string = "";
-  modelDeleteYes: string = "";
-  modelDeleteNo: string = "";
   yesButton: string;
   noButton: string;
   Remove_Notes: string;
+  show_Nots: boolean = false;
 
 
   constructor(private formBuilder: FormBuilder, public dialog: MatDialog, private location: Location, private modeService: ModeDetectService, private router: Router, public route: ActivatedRoute, public uiSpinner: UiSpinnerService, public httpCall: HttpCall,
@@ -218,7 +215,7 @@ export class InvoiceDetailPageComponent implements OnInit {
           that.uiSpinner.spin$.next(false);
         }
 
-        console.log("notsList", that.notsList);
+        console.log("invoiceData", that.invoiceData);
       });
   }
 
@@ -303,8 +300,8 @@ export class InvoiceDetailPageComponent implements OnInit {
   //     });
 
   // }
-  temp_MMDDYYY(epoch) {
-    return MMDDYYYY(epoch);
+  temp_MMDDYYY_format(epoch) {
+    return MMDDYYYY_formet(epoch);
   }
   getTodaysActivity() {
     let self = this;

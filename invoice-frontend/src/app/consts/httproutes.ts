@@ -1133,5 +1133,19 @@ export enum httproutes {
 
 
     INVOICE_GET_DASHBOARD_HISTORY = "/webapi/v1/portal/getrecentactivity",
-    INVOICE_GET_INVOICE_HISTORY = "/webapi/v1/portal/getinvoicehistorylog"
+    INVOICE_GET_INVOICE_HISTORY = "/webapi/v1/portal/getinvoicehistorylog",
+
+    // PACKING_SLIP NOTS & ATTCHMENTS
+    PORTAL_SAVE_PACKING_SLIP_NOTES = "/webapi/v1/portal/savepackingslipnote",
+    PORTAL_DELETE_PACKING_SLIP_NOTES = "/webapi/v1/portal/deletepackingslipnote",
+    //P.O Slip NOTS & ATTCHMENTS
+    PORTAL_SAVE_P_O_NOTES = "/webapi/v1/portal/saveponote",
+    PORTAL_DELETE_P_O_NOTES = "/webapi/v1/portal/deleteponote",
+    // Receiving Slip  NOTS & ATTCHMENTS
+    PORTAL_SAVE_Receiving_Slip_NOTES = "/webapi/v1/portal/savepackingslipnote",
+    PORTAL_DELETE_Receiving_Slip_NOTES = "/webapi/v1/portal/deletepackingslipnote",
+    // Quote NOTS & ATTCHMENTS
+    PORTAL_SAVE_Quote_NOTES = "/webapi/v1/portal/savequotenote",
+    PORTAL_DELETE_Quote_NOTES = "/webapi/v1/portal/deletequotenote",
+
 }

@@ -13,11 +13,20 @@ import { HttpCall } from 'src/app/service/httpcall.service';
 import { Mostusedservice } from 'src/app/service/mostused.service';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
-import { commonFileChangeEvent, gallery_options } from 'src/app/service/utils';
+import { commonFileChangeEvent, gallery_options, MMDDYYYY } from 'src/app/service/utils';
 import { configdata } from 'src/environments/configData';
 import { ModeDetectService } from '../../map/mode-detect.service';
 
 import * as _ from 'lodash';
+import Swal from 'sweetalert2';
+const swalWithBootstrapButtons = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-success s2-confirm margin-right-cust',
+    denyButton: 'btn btn-danger',
+    cancelButton: 's2-confirm btn btn-gray ml-2'
+  },
+  buttonsStyling: false
+});
 
 @Component({
   selector: 'app-invoice-other-document',
@@ -50,9 +59,27 @@ export class InvoiceOtherDocumentComponent implements OnInit {
   id: any;
   has_document: boolean = false;
   otherDocument: any;
+  add_my_self_icon = icon.ADD_MY_SELF_WHITE;
+  saveIcon = icon.SAVE_WHITE;
+  yesButton: string;
+  noButton: string;
+  Remove_Notes: string;
 
-  constructor(public snackbarservice: Snackbarservice, public httpCall: HttpCall, public uiSpinner: UiSpinnerService, public dialog: MatDialog, private router: Router, private modeService: ModeDetectService, public route: ActivatedRoute,) {
+  notesList: any = [];
+  atchmentList: any = [];
+  show_Nots: boolean = false;
+  otherDocumentNoteform: FormGroup;
+  invoice_id: any;
+
+  constructor(public translate: TranslateService, private formBuilder: FormBuilder, public snackbarservice: Snackbarservice, public httpCall: HttpCall, public uiSpinner: UiSpinnerService, public dialog: MatDialog, private router: Router, private modeService: ModeDetectService, public route: ActivatedRoute,) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
+    this.invoice_id = this.id;
+    this.translate.stream([""]).subscribe((textarray) => {
+
+      this.yesButton = this.translate.instant("Compnay_Equipment_Delete_Yes");
+      this.noButton = this.translate.instant("Compnay_Equipment_Delete_No");
+      this.Remove_Notes = this.translate.instant("Remove_Notes");
+    });
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === "on" ? "on" : "off";
 
@@ -82,6 +109,10 @@ export class InvoiceOtherDocumentComponent implements OnInit {
 
   ngOnInit(): void {
     this.getOneInvoice();
+    this.otherDocumentNoteform = this.formBuilder.group({
+      notes: [""],
+
+    });
   }
   goToEdit() {
     let that = this;
@@ -97,6 +128,93 @@ export class InvoiceOtherDocumentComponent implements OnInit {
     }
 
   }
+  addNotes() {
+    this.show_Nots = true;
+  }
+  temp_MMDDYYY(epoch) {
+    return MMDDYYYY(epoch);
+  }
+  saveNotes() {
+    let document_Url;
+    console.log("call");
+    let that = this;
+    this.otherDocumentNoteform.markAllAsTouched();
+    if (that.otherDocumentNoteform.valid) {
+      let req_temp = that.otherDocumentNoteform.value;
+      req_temp.invoice_id = this.invoice_id;
+      that.uiSpinner.spin$.next(true);
+      if (that.documentType == that.documentTypes.po) {
+        document_Url = httproutes.PORTAL_SAVE_P_O_NOTES;
+      } else if (that.documentType == that.documentTypes.packingSlip) {
+        document_Url = httproutes.PORTAL_SAVE_PACKING_SLIP_NOTES;
+      } else if (that.documentType == that.documentTypes.receivingSlip) {
+        document_Url = httproutes.PORTAL_SAVE_Receiving_Slip_NOTES;
+      } else if (that.documentType == that.documentTypes.quote) {
+        document_Url = httproutes.PORTAL_SAVE_Quote_NOTES;
+      }
+
+
+      that.httpCall.httpPostCall(document_Url, req_temp).subscribe(function (params_new) {
+        if (params_new.status) {
+
+          that.snackbarservice.openSnackBar(params_new.message, "success");
+          that.uiSpinner.spin$.next(false);
+          that.show_Nots = false;
+          that.getOneInvoice();
+
+        } else {
+          that.snackbarservice.openSnackBar(params_new.message, "error");
+          that.uiSpinner.spin$.next(false);
+        }
+      });
+    }
+
+
+  }
+  deleteNote(_id, invoice_id) {
+    let that = this;
+    let document_Delet_Url;
+    swalWithBootstrapButtons
+      .fire({
+        title: that.Remove_Notes,
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: this.yesButton,
+        denyButtonText: this.noButton,
+
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          this.uiSpinner.spin$.next(true);
+          if (that.documentType == that.documentTypes.po) {
+            document_Delet_Url = httproutes.PORTAL_DELETE_P_O_NOTES;
+          } else if (that.documentType == that.documentTypes.packingSlip) {
+            document_Delet_Url = httproutes.PORTAL_DELETE_PACKING_SLIP_NOTES;
+          } else if (that.documentType == that.documentTypes.receivingSlip) {
+            document_Delet_Url = httproutes.PORTAL_DELETE_Receiving_Slip_NOTES;
+          } else if (that.documentType == that.documentTypes.quote) {
+            document_Delet_Url = httproutes.PORTAL_DELETE_Quote_NOTES;
+          }
+          that.httpCall
+            .httpPostCall(document_Delet_Url, {
+              _id: _id,
+              invoice_id: invoice_id
+            })
+            .subscribe(function (params) {
+              that.uiSpinner.spin$.next(false);
+              if (params.status) {
+
+                that.snackbarservice.openSnackBar(params.message, "success");
+                that.dialog.closeAll();
+                that.getOneInvoice();
+              } else {
+                that.snackbarservice.openSnackBar(params.message, "error");
+              }
+            });
+        }
+      });
+  }
+
   getOneInvoice() {
     let that = this;
     that.httpCall
@@ -104,16 +222,24 @@ export class InvoiceOtherDocumentComponent implements OnInit {
       .subscribe(function (params) {
         if (params.status) {
           that.invoiceData = params.data;
-          /* if (that.documentType == that.documentTypes.po) {
-            that.router.navigate(['/po-detail-form']);
-          } else */ if (that.documentType == that.documentTypes.packingSlip) {
+          if (that.documentType == that.documentTypes.po) {
+            that.has_document = params.data.has_po;
+            that.otherDocument = params.data.po_data;
+            that.notesList = that.invoiceData.po_notes;
+          } else if (that.documentType == that.documentTypes.packingSlip) {
             that.has_document = params.data.has_packing_slip;
             that.otherDocument = params.data.packing_slip_data;
-          } /* else if (that.documentType == that.documentTypes.receivingSlip) {
-            that.router.navigate(['/receiving-slip-form']);
+            that.notesList = that.invoiceData.packing_slip_notes;
+            that.atchmentList = that.invoiceData.packing_slip_notes;
+          } else if (that.documentType == that.documentTypes.receivingSlip) {
+            that.has_document = params.data.has_packing_slip;
+            that.otherDocument = params.data.packing_slip_data;
+            that.notesList = that.invoiceData.packing_slip_notes;
           } else if (that.documentType == that.documentTypes.quote) {
-            that.router.navigate(['/quote-detail-form']);
-          } */
+            that.has_document = params.data.has_quote;
+            that.otherDocument = params.data.quote_data;
+            that.notesList = that.invoiceData.quote_notes;
+          }
 
           that.loadInvoice = true;
           that.uiSpinner.spin$.next(false);
@@ -121,7 +247,7 @@ export class InvoiceOtherDocumentComponent implements OnInit {
           that.snackbarservice.openSnackBar(params.message, "error");
           that.uiSpinner.spin$.next(false);
         }
-        console.log("otherDocument", params.data.packing_slip_data);
+        console.log("notesList", that.notesList);
       });
   }
   print() {
