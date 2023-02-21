@@ -277,6 +277,12 @@ router.post('/webapi/v1/portal/updateinvoiceattachment', common.checkTokenExistO
 router.post('/webapi/v1/portal/savepackingslipnote', common.checkTokenExistOrNot, invoiceValidation.savePackingSlipNotes, invoiceController.savePackingSlipNotes);
 router.post('/webapi/v1/portal/deletepackingslipnote', common.checkTokenExistOrNot, invoiceValidation.deletePackingSlipNote, invoiceController.deletePackingSlipNote);
 router.post('/webapi/v1/portal/updatepackingslipattachment', common.checkTokenExistOrNot, invoiceValidation.savePackingSlipAttachment, invoiceController.savePackingSlipAttachment);
+router.post('/webapi/v1/portal/saveponote', common.checkTokenExistOrNot, invoiceValidation.savePONotes, invoiceController.savePONotes);
+router.post('/webapi/v1/portal/deleteponote', common.checkTokenExistOrNot, invoiceValidation.deletePONote, invoiceController.deletePONote);
+router.post('/webapi/v1/portal/updatepoattachment', common.checkTokenExistOrNot, invoiceValidation.savePOAttachment, invoiceController.savePOAttachment);
+router.post('/webapi/v1/portal/savequotenote', common.checkTokenExistOrNot, invoiceValidation.saveQuoteNotes, invoiceController.saveQuoteNotes);
+router.post('/webapi/v1/portal/deletequotenote', common.checkTokenExistOrNot, invoiceValidation.deleteQuoteNote, invoiceController.deleteQuoteNote);
+router.post('/webapi/v1/portal/updatequoteattachment', common.checkTokenExistOrNot, invoiceValidation.saveQuoteAttachment, invoiceController.saveQuoteAttachment);
 
 let invoiceDashboard = require('./dashboard/dashboardController');
 router.get('/webapi/v1/portal/getdashboardcount', common.checkTokenExistOrNot, invoiceDashboard.getDashboardCount);

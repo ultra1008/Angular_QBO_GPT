@@ -162,6 +162,27 @@ module.exports.getInvoice = async function (req, res) {
                             }
                         },
                         packing_slip_attachments: 1,
+                        has_packing_slip: 1,
+                        has_po: 1,
+                        po_data: 1,
+                        po_notes: {
+                            $filter: {
+                                input: '$po_notes',
+                                as: 'note',
+                                cond: { $eq: ['$$note.is_delete', 0] }
+                            }
+                        },
+                        po_attachments: 1,
+                        has_quote: 1,
+                        quote_data: 1,
+                        quote_notes: {
+                            $filter: {
+                                input: '$quote_notes',
+                                as: 'note',
+                                cond: { $eq: ['$$note.is_delete', 0] }
+                            }
+                        },
+                        quote_attachments: 1,
                     }
                 },
             ]);
@@ -316,6 +337,25 @@ module.exports.getInvoiceList = async function (req, res) {
                             }
                         },
                         packing_slip_attachments: 1,
+                        po_data: 1,
+                        po_notes: {
+                            $filter: {
+                                input: '$po_notes',
+                                as: 'note',
+                                cond: { $eq: ['$$note.is_delete', 0] }
+                            }
+                        },
+                        po_attachments: 1,
+                        has_quote: 1,
+                        quote_data: 1,
+                        quote_notes: {
+                            $filter: {
+                                input: '$quote_notes',
+                                as: 'note',
+                                cond: { $eq: ['$$note.is_delete', 0] }
+                            }
+                        },
+                        quote_attachments: 1,
                     }
                 },
             ]);
@@ -422,6 +462,25 @@ module.exports.getOneInvoice = async function (req, res) {
                             }
                         },
                         packing_slip_attachments: 1,
+                        po_data: 1,
+                        po_notes: {
+                            $filter: {
+                                input: '$po_notes',
+                                as: 'note',
+                                cond: { $eq: ['$$note.is_delete', 0] }
+                            }
+                        },
+                        po_attachments: 1,
+                        has_quote: 1,
+                        quote_data: 1,
+                        quote_notes: {
+                            $filter: {
+                                input: '$quote_notes',
+                                as: 'note',
+                                cond: { $eq: ['$$note.is_delete', 0] }
+                            }
+                        },
+                        quote_attachments: 1,
                     }
                 },
             ]);
@@ -1295,6 +1354,322 @@ module.exports.savePackingSlipAttachment = async function (req, res) {
                     action_from: 'Web',
                 }, decodedToken);
                 res.send({ status: true, message: "Packing slip attachment updated successfully..", data: update_invoice });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+// Save PO Notes
+module.exports.savePONotes = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+            var invoice_id = requestObject.invoice_id;
+            delete requestObject.invoice_id;
+            var id = requestObject._id;
+            delete requestObject._id;
+            if (id) {
+                requestObject.updated_by = decodedToken.UserData._id;
+                requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+                let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id), "quote_notes._id": id }, { $set: { "po_notes.$.updated_by": decodedToken.UserData._id, "po_notes.$.updated_at": Math.round(new Date().getTime() / 1000), "po_notes.$.notes": requestObject.notes } });
+                let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
+                if (update_invoice) {
+                    requestObject.invoice_id = invoice_id;
+                    addchangeInvoice_History("Update PO Note", requestObject, decodedToken, requestObject.updated_at);
+                    recentActivity.saveRecentActivity({
+                        user_id: decodedToken.UserData._id,
+                        username: decodedToken.UserData.userfullname,
+                        userpicture: decodedToken.UserData.userpicture,
+                        data_id: invoice_id,
+                        title: `Invoice #${get_invoice.invoice}`,
+                        module: 'Invoice',
+                        action: 'Update PO Note',
+                        action_from: 'Web',
+                    }, decodedToken);
+                    res.send({ status: true, message: "PO note updated successfully.", data: update_invoice });
+                } else {
+                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                }
+            } else {
+                //save invoice note
+                requestObject.created_by = decodedToken.UserData._id;
+                requestObject.created_at = Math.round(new Date().getTime() / 1000);
+                requestObject.updated_by = decodedToken.UserData._id;
+                requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+                let save_invoice_note = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id) }, { $push: { po_notes: requestObject } });
+                let one_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
+                if (save_invoice_note) {
+                    requestObject.invoice_id = invoice_id;
+                    addchangeInvoice_History("Insert PO Note", requestObject, decodedToken, requestObject.updated_at);
+                    recentActivity.saveRecentActivity({
+                        user_id: decodedToken.UserData._id,
+                        username: decodedToken.UserData.userfullname,
+                        userpicture: decodedToken.UserData.userpicture,
+                        data_id: invoice_id,
+                        title: `Invoice #${one_invoice.invoice}`,
+                        module: 'Invoice',
+                        action: 'Insert PO Note',
+                        action_from: 'Web',
+                    }, decodedToken);
+                    res.send({ status: true, message: "PO note saved successfully." });
+                } else {
+                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                }
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+// Delete PO Notes
+module.exports.deletePONote = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+            var invoice_id = requestObject.invoice_id;
+            delete requestObject.invoice_id;
+            var id = requestObject._id;
+            delete requestObject._id;
+            requestObject.updated_by = decodedToken.UserData._id;
+            requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+            let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id), "po_notes._id": id }, { $set: { "po_notes.$.updated_by": decodedToken.UserData._id, "po_notes.$.updated_at": Math.round(new Date().getTime() / 1000), "po_notes.$.is_delete": 1 } });
+            let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
+            if (update_invoice) {
+                requestObject.invoice_id = invoice_id;
+                addchangeInvoice_History("Delete PO Note", requestObject, decodedToken, requestObject.updated_at);
+                recentActivity.saveRecentActivity({
+                    user_id: decodedToken.UserData._id,
+                    username: decodedToken.UserData.userfullname,
+                    userpicture: decodedToken.UserData.userpicture,
+                    data_id: invoice_id,
+                    title: `Invoice #${get_invoice.invoice}`,
+                    module: 'Invoice',
+                    action: 'Delete PO Note',
+                    action_from: 'Web',
+                }, decodedToken);
+                res.send({ status: true, message: "PO note deleted successfully.", data: update_invoice });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+// Update PO Attachment
+module.exports.savePOAttachment = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+            requestObject.updated_by = decodedToken.UserData._id;
+            requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+            let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(requestObject._id) });
+            let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
+            if (update_invoice) {
+                requestObject.invoice_id = requestObject._id;
+                addchangeInvoice_History("Update PO Attachment", requestObject, decodedToken, requestObject.updated_at);
+                recentActivity.saveRecentActivity({
+                    user_id: decodedToken.UserData._id,
+                    username: decodedToken.UserData.userfullname,
+                    userpicture: decodedToken.UserData.userpicture,
+                    data_id: requestObject._id,
+                    title: `Invoice #${get_invoice.invoice}`,
+                    module: 'Invoice',
+                    action: 'Update PO Attachment',
+                    action_from: 'Web',
+                }, decodedToken);
+                res.send({ status: true, message: "PO attachment updated successfully..", data: update_invoice });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+// Save Quote Notes
+module.exports.saveQuoteNotes = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+            var invoice_id = requestObject.invoice_id;
+            delete requestObject.invoice_id;
+            var id = requestObject._id;
+            delete requestObject._id;
+            if (id) {
+                requestObject.updated_by = decodedToken.UserData._id;
+                requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+                let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id), "quote_notes._id": id }, { $set: { "quote_notes.$.updated_by": decodedToken.UserData._id, "quote_notes.$.updated_at": Math.round(new Date().getTime() / 1000), "quote_notes.$.notes": requestObject.notes } });
+                let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
+                if (update_invoice) {
+                    requestObject.invoice_id = invoice_id;
+                    addchangeInvoice_History("Update Quote Note", requestObject, decodedToken, requestObject.updated_at);
+                    recentActivity.saveRecentActivity({
+                        user_id: decodedToken.UserData._id,
+                        username: decodedToken.UserData.userfullname,
+                        userpicture: decodedToken.UserData.userpicture,
+                        data_id: invoice_id,
+                        title: `Invoice #${get_invoice.invoice}`,
+                        module: 'Invoice',
+                        action: 'Update Quote Note',
+                        action_from: 'Web',
+                    }, decodedToken);
+                    res.send({ status: true, message: "Quote note updated successfully.", data: update_invoice });
+                } else {
+                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                }
+            } else {
+                //save invoice note
+                requestObject.created_by = decodedToken.UserData._id;
+                requestObject.created_at = Math.round(new Date().getTime() / 1000);
+                requestObject.updated_by = decodedToken.UserData._id;
+                requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+                let save_invoice_note = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id) }, { $push: { quote_notes: requestObject } });
+                let one_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
+                if (save_invoice_note) {
+                    requestObject.invoice_id = invoice_id;
+                    addchangeInvoice_History("Insert Quote Note", requestObject, decodedToken, requestObject.updated_at);
+                    recentActivity.saveRecentActivity({
+                        user_id: decodedToken.UserData._id,
+                        username: decodedToken.UserData.userfullname,
+                        userpicture: decodedToken.UserData.userpicture,
+                        data_id: invoice_id,
+                        title: `Invoice #${one_invoice.invoice}`,
+                        module: 'Invoice',
+                        action: 'Insert Quote Note',
+                        action_from: 'Web',
+                    }, decodedToken);
+                    res.send({ status: true, message: "Quote note saved successfully." });
+                } else {
+                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                }
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+// Delete Quote Notes
+module.exports.deleteQuoteNote = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+            var invoice_id = requestObject.invoice_id;
+            delete requestObject.invoice_id;
+            var id = requestObject._id;
+            delete requestObject._id;
+            requestObject.updated_by = decodedToken.UserData._id;
+            requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+            let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id), "quote_notes._id": id }, { $set: { "quote_notes.$.updated_by": decodedToken.UserData._id, "quote_notes.$.updated_at": Math.round(new Date().getTime() / 1000), "quote_notes.$.is_delete": 1 } });
+            let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
+            if (update_invoice) {
+                requestObject.invoice_id = invoice_id;
+                addchangeInvoice_History("Delete Quote Note", requestObject, decodedToken, requestObject.updated_at);
+                recentActivity.saveRecentActivity({
+                    user_id: decodedToken.UserData._id,
+                    username: decodedToken.UserData.userfullname,
+                    userpicture: decodedToken.UserData.userpicture,
+                    data_id: invoice_id,
+                    title: `Invoice #${get_invoice.invoice}`,
+                    module: 'Invoice',
+                    action: 'Delete Quote Note',
+                    action_from: 'Web',
+                }, decodedToken);
+                res.send({ status: true, message: "Quote note deleted successfully.", data: update_invoice });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+// Update Quote Attachment
+module.exports.saveQuoteAttachment = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+            requestObject.updated_by = decodedToken.UserData._id;
+            requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+            let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(requestObject._id) });
+            let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
+            if (update_invoice) {
+                requestObject.invoice_id = requestObject._id;
+                addchangeInvoice_History("Update Quote Attachment", requestObject, decodedToken, requestObject.updated_at);
+                recentActivity.saveRecentActivity({
+                    user_id: decodedToken.UserData._id,
+                    username: decodedToken.UserData.userfullname,
+                    userpicture: decodedToken.UserData.userpicture,
+                    data_id: requestObject._id,
+                    title: `Invoice #${get_invoice.invoice}`,
+                    module: 'Invoice',
+                    action: 'Update Quote Attachment',
+                    action_from: 'Web',
+                }, decodedToken);
+                res.send({ status: true, message: "Quote attachment updated successfully..", data: update_invoice });
             } else {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
             }

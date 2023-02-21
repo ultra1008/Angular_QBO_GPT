@@ -159,6 +159,94 @@ const savePackingSlipAttachment = (req, res, next) => {
     });
 };
 
+const savePONotes = (req, res, next) => {
+    const validationRule = {
+        "invoice_id": "required",
+        "notes": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({ status: false, message: err });
+        }
+        else {
+            next();
+        }
+    });
+};
+
+const deletePONote = (req, res, next) => {
+    const validationRule = {
+        "invoice_id": "required",
+        "_id": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({ status: false, message: err });
+        }
+        else {
+            next();
+        }
+    });
+};
+
+const savePOAttachment = (req, res, next) => {
+    const validationRule = {
+        "_id": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({ status: false, message: err });
+        }
+        else {
+            next();
+        }
+    });
+};
+
+const saveQuoteNotes = (req, res, next) => {
+    const validationRule = {
+        "invoice_id": "required",
+        "notes": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({ status: false, message: err });
+        }
+        else {
+            next();
+        }
+    });
+};
+
+const deleteQuoteNote = (req, res, next) => {
+    const validationRule = {
+        "invoice_id": "required",
+        "_id": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({ status: false, message: err });
+        }
+        else {
+            next();
+        }
+    });
+};
+
+const saveQuoteAttachment = (req, res, next) => {
+    const validationRule = {
+        "_id": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({ status: false, message: err });
+        }
+        else {
+            next();
+        }
+    });
+};
+
 module.exports = {
     getOneInvoice,
     deleteInvoice,
@@ -171,4 +259,10 @@ module.exports = {
     savePackingSlipNotes,
     deletePackingSlipNote,
     savePackingSlipAttachment,
+    savePONotes,
+    deletePONote,
+    savePOAttachment,
+    saveQuoteNotes,
+    deleteQuoteNote,
+    saveQuoteAttachment,
 };

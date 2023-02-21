@@ -1,6 +1,12 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-
+var historyModule = [
+    "Insert", "Update", "Delete",
+    "Insert Note", "Update Note", "Delete Note", "Update Attachment",
+    "Insert Packing Slip Note", "Update Packing Slip Note", "Delete Packing Slip Note", "Update Packing Slip Attachment",
+    "Insert PO Note", "Update PO Note", "Delete PO Note", "Update PO Attachment",
+    "Insert Quote Note", "Update Quote Note", "Delete Quote Note", "Update Quote Attachment",
+];
 var badge = new mongoose.Schema({
     vendor: { type: Boolean, default: false },
     vendor_id: { type: Boolean, default: false },
@@ -110,7 +116,7 @@ var invoice_history_Schema = new Schema({
 
     history_created_at: { type: Number, default: 0 },
     history_created_by: { type: mongoose.ObjectId, default: "" },
-    action: { type: String, enum: ["Insert", "Update", "Delete", "Insert Note", "Update Note", "Delete Note", "Update Attachment", "Insert Packing Slip Note", "Update Packing Slip Note", "Delete Packing Slip Note", "Update Packing Slip Attachment"] },
+    action: { type: String, enum: historyModule },
     taken_device: { type: String, default: "Web", enum: ["Mobile", "Web"] },
     invoice_id: { type: mongoose.ObjectId, default: "" }
 });
