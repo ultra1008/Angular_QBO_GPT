@@ -261,18 +261,6 @@ module.exports.getInvoiceList = async function (req, res) {
                     status: requestObject.status
                 };
             }
-            /* var get_data = await invoicesConnection.aggregate([
-                { $match: match_query },
-                {
-                    $lookup: {
-                        from: collectionConstant.INVOICE_VENDOR,
-                        localField: "vendor",
-                        foreignField: "_id",
-                        as: "vendor"
-                    }
-                },
-                { $unwind: "$vendor" },
-            ]); */
             var get_data = await invoicesConnection.aggregate([
                 { $match: match_query },
                 {
@@ -386,18 +374,6 @@ module.exports.getOneInvoice = async function (req, res) {
         try {
             var requestObject = req.body;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
-            /* var get_data = await invoicesConnection.aggregate([
-                { $match: { _id: ObjectID(requestObject._id) } },
-                {
-                    $lookup: {
-                        from: collectionConstant.INVOICE_VENDOR,
-                        localField: "vendor",
-                        foreignField: "_id",
-                        as: "vendor"
-                    }
-                },
-                { $unwind: "$vendor" },
-            ]); */
             var get_data = await invoicesConnection.aggregate([
                 { $match: { _id: ObjectID(requestObject._id) } },
                 {
@@ -1680,6 +1656,64 @@ module.exports.saveQuoteAttachment = async function (req, res) {
             connection_db_api.close();
         }
     } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+// Update Related document
+module.exports.updateInvoiceRelatedDocument = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var id = requestObject._id;
+            delete requestObject._id;
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+            requestObject.updated_by = decodedToken.UserData._id;
+            requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+            var get_invoice = await invoicesConnection.findOne({ _id: ObjectID(id) });
+            let module = '';
+            if (requestObject.packing_slip_data) {
+                module = 'Packing Slip';
+            } else if (requestObject.po_data) {
+                module = 'PO';
+            } else if (requestObject.quote_data) {
+                module = 'Quote';
+            }
+            if (module == '') {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            } else {
+                var update_data = await invoicesConnection.updateOne({ _id: ObjectID(id) }, requestObject);
+                let isDelete = update_data.nModified;
+                if (isDelete == 0) {
+                    res.send({ status: false, message: "There is no data with this id." });
+                } else {
+                    var get_one = await invoicesConnection.findOne({ _id: ObjectID(id) }, { _id: 0, __v: 0 });
+                    let reqObj = { invoice_id: id, ...get_one._doc };
+                    addchangeInvoice_History("Update", reqObj, decodedToken, get_one.updated_at);
+                    recentActivity.saveRecentActivity({
+                        user_id: decodedToken.UserData._id,
+                        username: decodedToken.UserData.userfullname,
+                        userpicture: decodedToken.UserData.userpicture,
+                        data_id: id,
+                        title: `Invoice #${get_invoice.invoice} ${module} Update`,
+                        module: `Invoice`,
+                        action: `Update ${module}`,
+                        action_from: 'Web',
+                    }, decodedToken);
+                    res.send({ message: `${module} updated successfully.`, status: true });
+                }
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    }
+    else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };

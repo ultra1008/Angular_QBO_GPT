@@ -247,6 +247,20 @@ const saveQuoteAttachment = (req, res, next) => {
     });
 };
 
+const updateInvoiceRelatedDocument = (req, res, next) => {
+    const validationRule = {
+        "_id": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({ status: false, message: err });
+        }
+        else {
+            next();
+        }
+    });
+};
+
 module.exports = {
     getOneInvoice,
     deleteInvoice,
@@ -265,4 +279,5 @@ module.exports = {
     saveQuoteNotes,
     deleteQuoteNote,
     saveQuoteAttachment,
+    updateInvoiceRelatedDocument,
 };

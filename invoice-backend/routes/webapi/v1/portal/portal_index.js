@@ -283,6 +283,7 @@ router.post('/webapi/v1/portal/updatepoattachment', common.checkTokenExistOrNot,
 router.post('/webapi/v1/portal/savequotenote', common.checkTokenExistOrNot, invoiceValidation.saveQuoteNotes, invoiceController.saveQuoteNotes);
 router.post('/webapi/v1/portal/deletequotenote', common.checkTokenExistOrNot, invoiceValidation.deleteQuoteNote, invoiceController.deleteQuoteNote);
 router.post('/webapi/v1/portal/updatequoteattachment', common.checkTokenExistOrNot, invoiceValidation.saveQuoteAttachment, invoiceController.saveQuoteAttachment);
+router.post('/webapi/v1/portal/updateinvoicerelateddocument', common.checkTokenExistOrNot, invoiceValidation.updateInvoiceRelatedDocument, invoiceController.updateInvoiceRelatedDocument);
 
 let invoiceDashboard = require('./dashboard/dashboardController');
 router.get('/webapi/v1/portal/getdashboardcount', common.checkTokenExistOrNot, invoiceDashboard.getDashboardCount);

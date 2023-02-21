@@ -3,9 +3,9 @@ var Schema = mongoose.Schema;
 var historyModule = [
     "Insert", "Update", "Delete",
     "Insert Note", "Update Note", "Delete Note", "Update Attachment",
-    "Insert Packing Slip Note", "Update Packing Slip Note", "Delete Packing Slip Note", "Update Packing Slip Attachment",
-    "Insert PO Note", "Update PO Note", "Delete PO Note", "Update PO Attachment",
-    "Insert Quote Note", "Update Quote Note", "Delete Quote Note", "Update Quote Attachment",
+    "Update Packing Slip", "Insert Packing Slip Note", "Update Packing Slip Note", "Delete Packing Slip Note", "Update Packing Slip Attachment",
+    "Update PO", "Insert PO Note", "Update PO Note", "Delete PO Note", "Update PO Attachment",
+    "Update Quote", "Insert Quote Note", "Update Quote Note", "Delete Quote Note", "Update Quote Attachment",
 ];
 var badge = new mongoose.Schema({
     vendor: { type: Boolean, default: false },
