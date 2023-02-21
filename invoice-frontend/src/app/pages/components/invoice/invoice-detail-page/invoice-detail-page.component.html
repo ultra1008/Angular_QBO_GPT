@@ -164,12 +164,21 @@
                                 </div>
 
                             </div>
-                            <div class="note-card">
-                                <!-- <div>
-                                    {{invoiceData.invoice_notes.notes}}
-                                </div> -->
+
+                            <div class="row" *ngFor="let nots of notsList">
+                                <div class="col-10 note-card  mr-1" style="justify-content: center;padding: 15px;">
+                                    {{nots.notes}}<b
+                                        style="font-size: 10px;float: inline-end;;">{{temp_MMDDYYY(nots.updated_at)}}</b>
+                                </div>
+                                <div class="col-sm-1 cust-margin pt-2">
+                                    <a mat-icon-button aria-label="Example icon button with a vertical three dot icon"
+                                        (click)="deleteNote(nots._id,invoice_id)">
+                                        <mat-icon>delete</mat-icon>
+                                    </a>
+                                </div>
 
                             </div>
+
 
                         </div>
 

@@ -12,7 +12,17 @@ import { ModeDetectService } from '../../map/mode-detect.service';
 import { Location } from '@angular/common';
 import { MMDDYYYY } from 'src/app/service/utils';
 import { FormBuilder, FormGroup } from '@angular/forms';
-
+import Swal from 'sweetalert2';
+import { MatDialog } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
+const swalWithBootstrapButtons = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-success s2-confirm margin-right-cust',
+    denyButton: 'btn btn-danger',
+    cancelButton: 's2-confirm btn btn-gray ml-2'
+  },
+  buttonsStyling: false
+});
 @Component({
   selector: 'app-invoice-detail-page',
   templateUrl: './invoice-detail-page.component.html',
@@ -40,6 +50,7 @@ export class InvoiceDetailPageComponent implements OnInit {
   invoiceData: any;
   loadInvoice: boolean = false;
   has_packing_slip: any = [];
+  notsList: any = [];
   invoiceNoteform: FormGroup;
   poDocumentType = 'PO';
   packingSlipDocumentType = 'Packing Slip';
@@ -65,12 +76,29 @@ export class InvoiceDetailPageComponent implements OnInit {
   todayactivity_search!: String;
   activityIcon!: string;
   isSearch: boolean = false;
-  constructor(private formBuilder: FormBuilder, private location: Location, private modeService: ModeDetectService, private router: Router, public route: ActivatedRoute, public uiSpinner: UiSpinnerService, public httpCall: HttpCall,
-    public snackbarservice: Snackbarservice,) {
+
+  modelDeleteTitle: string = "";
+  modelDeleteYes: string = "";
+  modelDeleteNo: string = "";
+  yesButton: string;
+  noButton: string;
+  Remove_Notes: string;
+
+
+  constructor(private formBuilder: FormBuilder, public dialog: MatDialog, private location: Location, private modeService: ModeDetectService, private router: Router, public route: ActivatedRoute, public uiSpinner: UiSpinnerService, public httpCall: HttpCall,
+    public snackbarservice: Snackbarservice, public translate: TranslateService,) {
+    this.translate.stream([""]).subscribe((textarray) => {
+
+      this.yesButton = this.translate.instant("Compnay_Equipment_Delete_Yes");
+      this.noButton = this.translate.instant("Compnay_Equipment_Delete_No");
+      this.Remove_Notes = this.translate.instant("Remove_Notes");
+    });
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === "on" ? "on" : "off";
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.invoice_id = this.id;
+
+
     if (this.mode == "off") {
       this.downloadIcon = icon.DOWNLOAD_WHITE;
       this.printIcon = icon.PRINT_WHITE;
@@ -126,6 +154,8 @@ export class InvoiceDetailPageComponent implements OnInit {
 
           that.snackbarservice.openSnackBar(params_new.message, "success");
           that.uiSpinner.spin$.next(false);
+          that.show_Nots = false;
+          that.getOneInvoice();
 
         } else {
           that.snackbarservice.openSnackBar(params_new.message, "error");
@@ -136,6 +166,40 @@ export class InvoiceDetailPageComponent implements OnInit {
 
 
   }
+  deleteNote(_id, invoice_id) {
+    let that = this;
+    swalWithBootstrapButtons
+      .fire({
+        title: that.Remove_Notes,
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: this.yesButton,
+        denyButtonText: this.noButton,
+
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          this.uiSpinner.spin$.next(true);
+          that.httpCall
+            .httpPostCall(httproutes.PORTAL_DELETE_INVOICE_NOTES, {
+              _id: _id,
+              invoice_id: invoice_id
+            })
+            .subscribe(function (params) {
+              that.uiSpinner.spin$.next(false);
+              if (params.status) {
+
+                that.snackbarservice.openSnackBar(params.message, "success");
+                that.dialog.closeAll();
+                that.getOneInvoice();
+              } else {
+                that.snackbarservice.openSnackBar(params.message, "error");
+              }
+            });
+        }
+      });
+  }
+
 
   getOneInvoice() {
     let that = this;
@@ -145,12 +209,16 @@ export class InvoiceDetailPageComponent implements OnInit {
         if (params.status) {
           that.invoiceData = params.data;
           that.has_packing_slip = that.invoiceData.has_packing_slip;
+          that.notsList = that.invoiceData.invoice_notes;
+
           that.loadInvoice = true;
           that.uiSpinner.spin$.next(false);
         } else {
           that.snackbarservice.openSnackBar(params.message, "error");
           that.uiSpinner.spin$.next(false);
         }
+
+        console.log("notsList", that.notsList);
       });
   }
 
