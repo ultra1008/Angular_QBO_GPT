@@ -254,7 +254,7 @@ module.exports.importProcessData = async function (req, res) {
             for (let i = 0; i < get_invoice.length; i++) {
                 queryString += `&document_id=${get_invoice[i]._id}`;
             }
-            queryString = '?customer_id=r-988514&document_id=63ef5856916b4b2d74acb59a';
+            // queryString = '?customer_id=r-988514&document_id=63ef5856916b4b2d74acb59a';
             console.log("queryString: ", queryString);
 
             let get_data = await common.sendInvoiceForProcess(queryString);
@@ -453,18 +453,26 @@ module.exports.importProcessData = async function (req, res) {
                                                     ship_to_address: "",
                                                     vendor: ObjectID(invoiceObject.vendor),
                                                     received_by: "",
+                                                    badge: {
+                                                        invoice_number: true,
+                                                        vendor: true
+                                                    }
                                                 };
                                                 if (related_doc_pages[0].fields.DATE != null) {
                                                     packing_slip_obj.date = related_doc_pages[0].fields.DATE;
+                                                    packing_slip_obj.badge.date = true;
                                                 }
                                                 if (related_doc_pages[0].fields.PO_NUMBER != null) {
                                                     packing_slip_obj.po_number = related_doc_pages[0].fields.PO_NUMBER;
+                                                    packing_slip_obj.badge.po_number = true;
                                                 }
                                                 if (related_doc_pages[0].fields.SHIP_TO_ADDRESS != null) {
                                                     packing_slip_obj.ship_to_address = related_doc_pages[0].fields.SHIP_TO_ADDRESS;
+                                                    packing_slip_obj.badge.ship_to_address = true;
                                                 }
                                                 if (related_doc_pages[0].fields.RECEIVED_BY != null) {
                                                     packing_slip_obj.received_by = related_doc_pages[0].fields.RECEIVED_BY;
+                                                    packing_slip_obj.badge.received_by = true;
                                                 }
                                                 // Update packing slip to invoice
                                                 let update_related_doc = await invoiceCollection.updateOne({ _id: ObjectID(save_invoice._id) }, { has_packing_slip: true, packing_slip_data: packing_slip_obj });
@@ -496,50 +504,65 @@ module.exports.importProcessData = async function (req, res) {
                                                     tax: "",
                                                     po_total: "",
                                                     items: [],
+                                                    badge: {}
                                                 };
                                                 let tmpVendor = await getAndCheckVendorPO(related_doc_pages[0].fields.VENDOR_NAME.replace(/\n/g, " "), connection_db_api);
                                                 if (tmpVendor.status) {
                                                     po_obj.vendor = ObjectID(tmpVendor.data._id);
+                                                    po_obj.badge.vendor = true;
                                                 }
                                                 if (po_obj.vendor != '') {
                                                     if (related_doc_pages[0].fields.PO_CREATE_DATE != null) {
                                                         po_obj.date = related_doc_pages[0].fields.PO_CREATE_DATE;
+                                                        po_obj.badge.date = true;
                                                     }
                                                     if (related_doc_pages[0].fields.PO_NUMBER != null) {
                                                         po_obj.po_number = related_doc_pages[0].fields.PO_NUMBER;
+                                                        po_obj.badge.po_number = true;
                                                     }
                                                     if (related_doc_pages[0].fields.CUSTOMER_ID != null) {
                                                         po_obj.customer_id = related_doc_pages[0].fields.CUSTOMER_ID;
+                                                        po_obj.badge.customer_id = true;
                                                     }
                                                     if (related_doc_pages[0].fields.TERMS != null) {
                                                         po_obj.terms = related_doc_pages[0].fields.TERMS;
+                                                        po_obj.badge.terms = true;
                                                     }
                                                     if (related_doc_pages[0].fields.DELIVERY_DATE != null) {
                                                         po_obj.delivery_date = related_doc_pages[0].fields.DELIVERY_DATE;
+                                                        po_obj.badge.delivery_date = true;
                                                     }
                                                     if (related_doc_pages[0].fields.DELIVERY_ADDRESS != null) {
                                                         po_obj.delivery_address = related_doc_pages[0].fields.DELIVERY_ADDRESS;
+                                                        po_obj.badge.delivery_address = true;
                                                     }
                                                     if (related_doc_pages[0].fields.DUE_DATE != null) {
                                                         po_obj.due_date = related_doc_pages[0].fields.DUE_DATE;
+                                                        po_obj.badge.due_date = true;
                                                     }
                                                     if (related_doc_pages[0].fields.QUOTE_NUMBER != null) {
                                                         po_obj.quote_number = related_doc_pages[0].fields.QUOTE_NUMBER;
+                                                        po_obj.badge.quote_number = true;
                                                     }
                                                     if (related_doc_pages[0].fields.CONTRACT_NUMBER != null) {
                                                         po_obj.contract_number = related_doc_pages[0].fields.CONTRACT_NUMBER;
+                                                        po_obj.badge.contract_number = true;
                                                     }
                                                     if (related_doc_pages[0].fields.VENDOR_ID != null) {
                                                         po_obj.vendor_id = related_doc_pages[0].fields.VENDOR_ID;
+                                                        po_obj.badge.vendor_id = true;
                                                     }
                                                     if (related_doc_pages[0].fields.SUBTOTAL != null) {
                                                         po_obj.sub_total = related_doc_pages[0].fields.SUBTOTAL;
+                                                        po_obj.badge.sub_total = true;
                                                     }
                                                     if (related_doc_pages[0].fields.TAX != null) {
                                                         po_obj.tax = related_doc_pages[0].fields.TAX;
+                                                        po_obj.badge.tax = true;
                                                     }
                                                     if (related_doc_pages[0].fields.PURCHASE_ORDER_TOTAL != null) {
                                                         po_obj.po_total = related_doc_pages[0].fields.PURCHASE_ORDER_TOTAL;
+                                                        po_obj.badge.po_total = true;
                                                     }
 
                                                     let items = [];
@@ -586,38 +609,49 @@ module.exports.importProcessData = async function (req, res) {
                                                     quote_total: "",
                                                     receiver_phone: "",
                                                     items: [],
+                                                    badge: {}
                                                 };
                                                 let tmpVendor = await getAndCheckVendorPO(related_doc_pages[0].fields.VENDOR_NAME.replace(/\n/g, " "), connection_db_api);
                                                 if (tmpVendor.status) {
                                                     quote_obj.vendor = ObjectID(tmpVendor.data._id);
+                                                    quote_obj.badge.vendor = true;
                                                 }
                                                 if (quote_obj.vendor != '') {
                                                     if (related_doc_pages[0].fields.QUOTE_DATE != null) {
                                                         quote_obj.date = related_doc_pages[0].fields.QUOTE_DATE;
+                                                        quote_obj.badge.date = true;
                                                     }
                                                     if (related_doc_pages[0].fields.QUOTE_NUMBER != null) {
                                                         quote_obj.quote_number = related_doc_pages[0].fields.QUOTE_NUMBER;
+                                                        quote_obj.badge.quote_number = true;
                                                     }
                                                     if (related_doc_pages[0].fields.TERMS != null) {
                                                         quote_obj.terms = related_doc_pages[0].fields.TERMS;
+                                                        quote_obj.badge.terms = true;
                                                     }
                                                     if (related_doc_pages[0].fields.ADDRESS != null) {
                                                         quote_obj.address = related_doc_pages[0].fields.ADDRESS;
+                                                        quote_obj.badge.address = true;
                                                     }
                                                     if (related_doc_pages[0].fields.SHIPPING_METHOD != null) {
                                                         quote_obj.shipping_method = related_doc_pages[0].fields.SHIPPING_METHOD;
+                                                        quote_obj.badge.shipping_method = true;
                                                     }
                                                     if (related_doc_pages[0].fields.SUB_TOTAL != null) {
                                                         quote_obj.sub_total = related_doc_pages[0].fields.SUB_TOTAL;
+                                                        quote_obj.badge.sub_total = true;
                                                     }
                                                     if (related_doc_pages[0].fields.TAX != null) {
                                                         quote_obj.tax = related_doc_pages[0].fields.TAX;
+                                                        quote_obj.badge.tax = true;
                                                     }
                                                     if (related_doc_pages[0].fields.QUOTE_ORDER_TOTAL != null) {
                                                         quote_obj.quote_total = related_doc_pages[0].fields.QUOTE_ORDER_TOTAL;
+                                                        quote_obj.badge.quote_total = true;
                                                     }
                                                     if (related_doc_pages[0].fields.RECEIVER_PHONE != null) {
                                                         quote_obj.receiver_phone = related_doc_pages[0].fields.RECEIVER_PHONE;
+                                                        quote_obj.badge.receiver_phone = true;
                                                     }
 
                                                     let items = [];
@@ -674,30 +708,37 @@ module.exports.importProcessData = async function (req, res) {
                                             ship_to_address: "",
                                             vendor: "",
                                             received_by: "",
+                                            badge: {}
                                         };
                                         let invoice_no = '';
                                         if (pages[0].fields.INVOICE_NUMBER != null) {
                                             invoice_no = pages[0].fields.INVOICE_NUMBER;
+                                            packing_slip_obj.badge.invoice_number = true;
                                         }
                                         if (pages[0].fields.VENDOR_NAME != null) {
                                             let tmpVendor = await getAndCheckVendor(pages[0].fields.VENDOR_NAME.replace(/\n/g, " "), invoice_no, connection_db_api);
                                             if (tmpVendor.status) {
                                                 packing_slip_obj.vendor = ObjectID(tmpVendor.data._id);
+                                                packing_slip_obj.badge.vendor = true;
                                             }
                                         }
                                         if (packing_slip_obj.vendor != '') {
                                             if (pages[0].fields.DATE != null) {
                                                 packing_slip_obj.date = pages[0].fields.DATE;
+                                                packing_slip_obj.badge.date = true;
                                             }
                                             packing_slip_obj.invoice_number = invoice_no;
                                             if (pages[0].fields.PO_NUMBER != null) {
                                                 packing_slip_obj.po_number = pages[0].fields.PO_NUMBER;
+                                                packing_slip_obj.badge.po_number = true;
                                             }
                                             if (pages[0].fields.SHIP_TO_ADDRESS != null) {
                                                 packing_slip_obj.ship_to_address = pages[0].fields.SHIP_TO_ADDRESS;
+                                                packing_slip_obj.badge.ship_to_address = true;
                                             }
                                             if (pages[0].fields.RECEIVED_BY != null) {
                                                 packing_slip_obj.received_by = pages[0].fields.RECEIVED_BY;
+                                                packing_slip_obj.badge.received_by = true;
                                             }
                                             // Update packing slip to invoice
                                             let update_related_doc = await invoiceCollection.updateOne({ _id: ObjectID(updatePackingSlipObj.invoice_id) }, { has_packing_slip: true, packing_slip_data: packing_slip_obj });
@@ -748,52 +789,67 @@ module.exports.importProcessData = async function (req, res) {
                                             tax: "",
                                             po_total: "",
                                             items: [],
+                                            badge: {}
                                         };
                                         if (pages[0].fields.VENDOR_NAME != null) {
                                             let tmpVendor = await getAndCheckVendorPO(pages[0].fields.VENDOR_NAME.replace(/\n/g, " "), connection_db_api);
                                             if (tmpVendor.status) {
                                                 po_obj.vendor = ObjectID(tmpVendor.data._id);
+                                                po_obj.badge.vendor = true;
                                             }
                                         }
                                         if (po_obj.vendor != '') {
                                             if (pages[0].fields.PO_CREATE_DATE != null) {
                                                 po_obj.date = pages[0].fields.PO_CREATE_DATE;
+                                                po_obj.badge.date = true;
                                             }
                                             if (pages[0].fields.PO_NUMBER != null) {
                                                 po_obj.po_number = pages[0].fields.PO_NUMBER;
+                                                po_obj.badge.po_number = true;
                                             }
                                             if (pages[0].fields.CUSTOMER_ID != null) {
                                                 po_obj.customer_id = pages[0].fields.CUSTOMER_ID;
+                                                po_obj.badge.customer_id = true;
                                             }
                                             if (pages[0].fields.TERMS != null) {
                                                 po_obj.terms = pages[0].fields.TERMS;
+                                                po_obj.badge.terms = true;
                                             }
                                             if (pages[0].fields.DELIVERY_DATE != null) {
                                                 po_obj.delivery_date = pages[0].fields.DELIVERY_DATE;
+                                                po_obj.badge.delivery_date = true;
                                             }
                                             if (pages[0].fields.DELIVERY_ADDRESS != null) {
                                                 po_obj.delivery_address = pages[0].fields.DELIVERY_ADDRESS;
+                                                po_obj.badge.delivery_address = true;
                                             }
                                             if (pages[0].fields.DUE_DATE != null) {
                                                 po_obj.due_date = pages[0].fields.DUE_DATE;
+                                                po_obj.badge.due_date = true;
                                             }
                                             if (pages[0].fields.QUOTE_NUMBER != null) {
                                                 po_obj.quote_number = pages[0].fields.QUOTE_NUMBER;
+                                                po_obj.badge.quote_number = true;
                                             }
                                             if (pages[0].fields.CONTRACT_NUMBER != null) {
                                                 po_obj.contract_number = pages[0].fields.CONTRACT_NUMBER;
+                                                po_obj.badge.contract_number = true;
                                             }
                                             if (pages[0].fields.VENDOR_ID != null) {
                                                 po_obj.vendor_id = pages[0].fields.VENDOR_ID;
+                                                po_obj.badge.vendor_id = true;
                                             }
                                             if (pages[0].fields.SUBTOTAL != null) {
                                                 po_obj.sub_total = pages[0].fields.SUBTOTAL;
+                                                po_obj.badge.sub_total = true;
                                             }
                                             if (pages[0].fields.TAX != null) {
                                                 po_obj.tax = pages[0].fields.TAX;
+                                                po_obj.badge.tax = true;
                                             }
                                             if (pages[0].fields.PURCHASE_ORDER_TOTAL != null) {
                                                 po_obj.po_total = pages[0].fields.PURCHASE_ORDER_TOTAL;
+                                                po_obj.badge.po_total = true;
                                             }
 
                                             let items = [];
@@ -857,40 +913,51 @@ module.exports.importProcessData = async function (req, res) {
                                             quote_total: "",
                                             receiver_phone: "",
                                             items: [],
+                                            badge: {},
                                         };
                                         if (pages[0].fields.VENDOR_NAME != null) {
                                             let tmpVendor = await getAndCheckVendorPO(pages[0].fields.VENDOR_NAME.replace(/\n/g, " "), connection_db_api);
                                             if (tmpVendor.status) {
                                                 quote_obj.vendor = ObjectID(tmpVendor.data._id);
+                                                quote_obj.badge.vendor = true;
                                             }
                                         }
                                         if (quote_obj.vendor != '') {
                                             if (pages[0].fields.QUOTE_DATE != null) {
                                                 quote_obj.date = pages[0].fields.QUOTE_DATE;
+                                                quote_obj.badge.date = true;
                                             }
                                             if (pages[0].fields.QUOTE_NUMBER != null) {
                                                 quote_obj.quote_number = pages[0].fields.QUOTE_NUMBER;
+                                                quote_obj.badge.quote_number = true;
                                             }
                                             if (pages[0].fields.TERMS != null) {
                                                 quote_obj.terms = pages[0].fields.TERMS;
+                                                quote_obj.badge.terms = true;
                                             }
                                             if (pages[0].fields.ADDRESS != null) {
                                                 quote_obj.address = pages[0].fields.ADDRESS;
+                                                quote_obj.badge.address = true;
                                             }
                                             if (pages[0].fields.SHIPPING_METHOD != null) {
                                                 quote_obj.shipping_method = pages[0].fields.SHIPPING_METHOD;
+                                                quote_obj.badge.shipping_method = true;
                                             }
                                             if (pages[0].fields.SUB_TOTAL != null) {
                                                 quote_obj.sub_total = pages[0].fields.SUB_TOTAL;
+                                                quote_obj.badge.sub_total = true;
                                             }
                                             if (pages[0].fields.TAX != null) {
                                                 quote_obj.tax = pages[0].fields.TAX;
+                                                quote_obj.badge.tax = true;
                                             }
                                             if (pages[0].fields.QUOTE_ORDER_TOTAL != null) {
                                                 quote_obj.quote_total = pages[0].fields.QUOTE_ORDER_TOTAL;
+                                                quote_obj.badge.quote_total = true;
                                             }
                                             if (pages[0].fields.RECEIVER_PHONE != null) {
                                                 quote_obj.receiver_phone = pages[0].fields.RECEIVER_PHONE;
+                                                quote_obj.badge.receiver_phone = true;
                                             }
 
                                             let items = [];
