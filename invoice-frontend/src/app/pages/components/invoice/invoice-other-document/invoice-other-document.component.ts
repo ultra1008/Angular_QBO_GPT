@@ -118,6 +118,8 @@ export class InvoiceOtherDocumentComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    let that = this;
+    let pdf_url;
     this.getOneInvoice();
     let tmp_gallery = gallery_options();
     tmp_gallery.actions = [
@@ -132,6 +134,7 @@ export class InvoiceOtherDocumentComponent implements OnInit {
       notes: [""],
 
     });
+
   }
   goToEdit(invoice) {
     let that = this;
@@ -704,6 +707,17 @@ export class InvoiceOtherDocumentComponent implements OnInit {
       });
   }
   print() {
+    let that = this;
+    let pdf_url;
+    if (that.documentType == that.documentTypes.po) {
+      pdf_url = this.invoiceData.po_data.pdf_url;
+    } else if (that.documentType == that.documentTypes.packingSlip) {
+      pdf_url = this.invoiceData.packing_slip_data.pdf_url;
+    } else if (that.documentType == that.documentTypes.receivingSlip) {
+      pdf_url = this.invoiceData.reciving_slip_data.pdf_url;
+    } else if (that.documentType == that.documentTypes.quote) {
+      pdf_url = this.invoiceData.quote_data.pdf_url;
+    }
     fetch(this.pdf_url).then(resp => resp.arrayBuffer()).then(resp => {
       /*--- set the blog type to final pdf ---*/
       const file = new Blob([resp], { type: 'application/pdf' });

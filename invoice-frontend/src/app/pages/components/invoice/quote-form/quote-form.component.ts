@@ -66,11 +66,12 @@ export class QuoteFormComponent implements OnInit {
   pdf_url = "https://s3.us-west-1.wasabisys.com/rovukdata/invoice-sample-pdfs/adrian@vmgconstructioninc10.comae95eb347d143714017d21f295de0449112194196aa89c3932ce0cbb7d3d574882405.pdf";
   invoiceData: any;
   statusList = configdata.INVOICE_STATUS;
+  invoice_id: any;
 
   constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
-
+    this.invoice_id = this.id;
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     var locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configdata.fst_load_lang : tmp_locallanguage;
     this.translate.use(locallanguage);
@@ -152,7 +153,7 @@ export class QuoteFormComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/invoice-detail']);
+    this.router.navigate(['/invoice-detail'], { queryParams: { _id: this.invoice_id } });
   }
 
   ngOnInit(): void {

@@ -68,10 +68,12 @@ export class PackingSlipFormComponent implements OnInit {
   // DOCUMENT TYPE
   variablesDocumenttype: any = configdata.DOCUMENT_TYPE;
   DocumentType = this.variablesDocumenttype.slice();
+  invoice_id: any;
 
   constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
+    this.invoice_id = this.id;
 
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     var locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configdata.fst_load_lang : tmp_locallanguage;
@@ -154,7 +156,7 @@ export class PackingSlipFormComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/invoice-detail']);
+    this.router.navigate(['/invoice-detail'], { queryParams: { _id: this.invoice_id } });
   }
 
   ngOnInit(): void {
