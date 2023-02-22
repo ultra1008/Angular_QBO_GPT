@@ -15,7 +15,7 @@
 <div class="row mt-3">
     <h3 style="margin: auto;">Upload files or drag and drop them from your computer into this window.</h3>
     <div class="row pt-4" style="margin: auto;">
-        <div class="container-cust" appDnd (fileDropped)="onFileDropped($event)">
+        <div class="containers-cust" appDnd (fileDropped)="onFileDropped($event)">
             <div><img src="{{fileIcon}}" alt="" height="25px"></div>
 
             <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event)" />
