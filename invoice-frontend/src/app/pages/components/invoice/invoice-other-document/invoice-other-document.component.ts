@@ -680,15 +680,17 @@ export class InvoiceOtherDocumentComponent implements OnInit {
               that.files_old.push(params.data.packing_slip_attachments[loop_i]);
             }
             that.last_files_array = that.invoiceData.packing_slip_attachments;
-          } else if (that.documentType == that.documentTypes.receivingSlip) {
-            that.has_document = params.data.has_reciving_slip_a;
-            that.otherDocument = params.data.reciving_slip_a_data;
-            that.notesList = that.invoiceData.reciving_slip_a_notes;
-            for (let loop_i = 0; loop_i < params.data.reciving_slip_a_attachments.length; loop_i++) {
-              that.files_old.push(params.data.reciving_slip_attachments[loop_i]);
-            }
-            that.last_files_array = that.invoiceData.reciving_slip_a_attachments;
-          } else if (that.documentType == that.documentTypes.quote) {
+          }
+          // else if (that.documentType == that.documentTypes.receivingSlip) {
+          //   that.has_document = params.data.has_reciving_slip_a;
+          //   that.otherDocument = params.data.reciving_slip_a_data;
+          //   that.notesList = that.invoiceData.reciving_slip_a_notes;
+          //   for (let loop_i = 0; loop_i < params.data.reciving_slip_a_attachments.length; loop_i++) {
+          //     that.files_old.push(params.data.reciving_slip_attachments[loop_i]);
+          //   }
+          //   that.last_files_array = that.invoiceData.reciving_slip_a_attachments;
+          // } 
+          else if (that.documentType == that.documentTypes.quote) {
             that.has_document = params.data.has_quote;
             that.otherDocument = params.data.quote_data;
             that.notesList = that.invoiceData.quote_notes;
@@ -718,7 +720,7 @@ export class InvoiceOtherDocumentComponent implements OnInit {
     } else if (that.documentType == that.documentTypes.quote) {
       pdf_url = this.invoiceData.quote_data.pdf_url;
     }
-    fetch(this.pdf_url).then(resp => resp.arrayBuffer()).then(resp => {
+    fetch(pdf_url).then(resp => resp.arrayBuffer()).then(resp => {
       /*--- set the blog type to final pdf ---*/
       const file = new Blob([resp], { type: 'application/pdf' });
       const blobUrl = window.URL.createObjectURL(file);

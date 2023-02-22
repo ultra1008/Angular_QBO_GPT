@@ -318,7 +318,7 @@ export class QuoteFormComponent implements OnInit {
           gl_account: [params.data.gl_account],
           assign_to: [params.data.assign_to],
           notes: [params.data.notes],
-          pdf_url: [params.data.pdf_url]
+          pdf_url: [params.data.quote_data.pdf_url]
         });
       }
       that.uiSpinner.spin$.next(false);
