@@ -1118,6 +1118,7 @@ export enum httproutes {
     PORTAL_INVOICE_GET_ORPHAN_DOCUMENTS = "/webapi/v1/portal/getorphandocumentofinvoice",
     PORTAL_SAVE_INVOICE_NOTES = "/webapi/v1/portal/saveinvoicenote",
     PORTAL_DELETE_INVOICE_NOTES = "/webapi/v1/portal/deleteinvoicenote",
+    PORTAL_INVOICE_ATTCHMENTS = "/webapi/v1/portal/updateinvoiceattachment",
 
 
 
@@ -1138,14 +1139,23 @@ export enum httproutes {
     // PACKING_SLIP NOTS & ATTCHMENTS
     PORTAL_SAVE_PACKING_SLIP_NOTES = "/webapi/v1/portal/savepackingslipnote",
     PORTAL_DELETE_PACKING_SLIP_NOTES = "/webapi/v1/portal/deletepackingslipnote",
+    PACKING_PACKING_SLIP_ATTCHMENTS = "/webapi/v1/portal/updatepackingslipattachment",
+
     //P.O Slip NOTS & ATTCHMENTS
     PORTAL_SAVE_P_O_NOTES = "/webapi/v1/portal/saveponote",
     PORTAL_DELETE_P_O_NOTES = "/webapi/v1/portal/deleteponote",
+    PORTAL_P_O_ATTCHMENTS = "/webapi/v1/portal/updatepoattachment",
+
+
     // Receiving Slip  NOTS & ATTCHMENTS
     PORTAL_SAVE_Receiving_Slip_NOTES = "/webapi/v1/portal/savepackingslipnote",
     PORTAL_DELETE_Receiving_Slip_NOTES = "/webapi/v1/portal/deletepackingslipnote",
+    PORTAL_Receiving_Slip_ATTCHMENTS = "/webapi/v1/portal/updateinvoiceattachment",
+
     // Quote NOTS & ATTCHMENTS
     PORTAL_SAVE_Quote_NOTES = "/webapi/v1/portal/savequotenote",
     PORTAL_DELETE_Quote_NOTES = "/webapi/v1/portal/deletequotenote",
+    PORTAL_Quote_ATTCHMENTS = "/webapi/v1/portal/updatequoteattachment",
+
 
 }
