@@ -60,7 +60,7 @@ export class PackingSlipFormComponent implements OnInit {
   variablesusersArray: any = [];
   usersArray: any = this.variablesusersArray.slice();
 
-  pdf_url = 'https://s3.us-west-1.wasabisys.com/rovukdata/invoice-sample-pdfs/adrian@vmgconstructioninc10.com8a83e28d7dc522e9017e4939f2250519457511c73e527873ff3e198be850e1d1c710b0.pdf';
+  pdf_url = '';
 
   statusList = configdata.INVOICE_STATUS;
   approveIcon: string;
@@ -320,7 +320,7 @@ export class PackingSlipFormComponent implements OnInit {
           gl_account: [params.data.gl_account],
           assign_to: [params.data.assign_to],
           notes: [params.data.notes],
-          pdf_url: [params.data.pdf_url]
+          pdf_url: [params.data.packing_slip_data.pdf_url]
         });
       }
       that.uiSpinner.spin$.next(false);

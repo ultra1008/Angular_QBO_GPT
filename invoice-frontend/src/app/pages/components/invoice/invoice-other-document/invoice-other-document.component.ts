@@ -133,18 +133,21 @@ export class InvoiceOtherDocumentComponent implements OnInit {
 
     });
   }
-  goToEdit() {
+  goToEdit(invoice) {
     let that = this;
     console.log("sdafdsf", that.documentType, that.documentTypes);
     if (that.documentType == that.documentTypes.po) {
-      that.router.navigate(['/po-detail-form']);
+      that.router.navigate(['/po-detail-form'], { queryParams: { _id: this.invoice_id } });
     } else if (that.documentType == that.documentTypes.packingSlip) {
-      that.router.navigate(['/packing-slip-form']);
+      that.router.navigate(['/packing-slip-form'], { queryParams: { _id: this.invoice_id } });
     } else if (that.documentType == that.documentTypes.receivingSlip) {
-      that.router.navigate(['/receiving-slip-form']);
+      that.router.navigate(['/receiving-slip-form'], { queryParams: { _id: this.invoice_id } });
     } else if (that.documentType == that.documentTypes.quote) {
-      that.router.navigate(['/quote-detail-form']);
+      that.router.navigate(['/quote-detail-form'], { queryParams: { _id: this.invoice_id } });
     }
+
+
+
 
   }
   addNotes() {
@@ -750,12 +753,22 @@ export class InvoiceOtherDocumentComponent implements OnInit {
 
 
   download() {
+    let that = this;
     let a = document.createElement('a');
     /*--- Firefox requires the link to be in the body --*/
     document.body.appendChild(a);
     a.style.display = 'none';
     a.target = "_blank";
-    a.href = this.pdf_url;
+    if (that.documentType == that.documentTypes.po) {
+      a.href = this.invoiceData.po_data.pdf_url;
+    } else if (that.documentType == that.documentTypes.packingSlip) {
+      a.href = this.invoiceData.packing_slip_data.pdf_url;
+    } else if (that.documentType == that.documentTypes.receivingSlip) {
+      a.href = this.invoiceData.reciving_slip_data.pdf_url;
+    } else if (that.documentType == that.documentTypes.quote) {
+      a.href = this.invoiceData.quote_data.pdf_url;
+    }
+
     a.click();
     /*--- Remove the link when done ---*/
     document.body.removeChild(a);

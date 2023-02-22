@@ -57,7 +57,7 @@ export class PoDetailFormComponent implements OnInit {
   variablesusersArray: any = [];
   usersArray: any = this.variablesusersArray.slice();
 
-  pdf_url = "https://s3.us-west-1.wasabisys.com/rovukdata/invoice-sample-pdfs/adrian@vmgconstructioninc10.comae95eb347d143714017d21f295de0449112194196aa89c3932ce0cbb7d3d574882405.pdf";
+  pdf_url = "";
   invoiceData: any;
   statusList = configdata.INVOICE_STATUS;
   approveIcon: string;
@@ -314,7 +314,7 @@ export class PoDetailFormComponent implements OnInit {
           gl_account: [params.data.gl_account],
           assign_to: [params.data.assign_to],
           notes: [params.data.notes],
-          pdf_url: [params.data.pdf_url]
+          pdf_url: [params.data.po_data.pdf_url]
         });
       }
       that.uiSpinner.spin$.next(false);
