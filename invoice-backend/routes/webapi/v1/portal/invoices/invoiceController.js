@@ -19,27 +19,22 @@ var fs = require('fs');
 var bucketOpration = require('../../../../../controller/common/s3-wasabi');
 
 // save invoice
-module.exports.saveInvoice = async function (req, res)
-{
+module.exports.saveInvoice = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
-    if (decodedToken)
-    {
+    if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             var requestObject = req.body;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var id = requestObject._id;
             delete requestObject._id;
-            if (id)
-            {
+            if (id) {
                 requestObject.updated_by = decodedToken.UserData._id;
                 requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                 let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(id) });
                 let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(id) }, requestObject);
-                if (update_invoice)
-                {
+                if (update_invoice) {
                     requestObject.invoice_id = id;
                     addchangeInvoice_History("Update", requestObject, decodedToken, requestObject.updated_at);
                     recentActivity.saveRecentActivity({
@@ -53,12 +48,10 @@ module.exports.saveInvoice = async function (req, res)
                         action_from: 'Web',
                     }, decodedToken);
                     res.send({ status: true, message: "Invoice updated successfully..", data: update_invoice });
-                } else
-                {
+                } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
                 }
-            } else
-            {
+            } else {
                 //ivoice save
                 requestObject.created_by = decodedToken.UserData._id;
                 requestObject.created_at = Math.round(new Date().getTime() / 1000);
@@ -66,8 +59,7 @@ module.exports.saveInvoice = async function (req, res)
                 requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                 let add_invoice = new invoicesConnection(requestObject);
                 let save_invoice = await add_invoice.save();
-                if (save_invoice)
-                {
+                if (save_invoice) {
                     requestObject.invoice_id = save_invoice._id;
                     addchangeInvoice_History("Insert", requestObject, decodedToken, requestObject.updated_at);
                     recentActivity.saveRecentActivity({
@@ -81,36 +73,29 @@ module.exports.saveInvoice = async function (req, res)
                         action_from: 'Web',
                     }, decodedToken);
                     res.send({ status: true, message: "Invoice saved successfully.." });
-                } else
-                {
+                } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
                 }
             }
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), status: false });
-        } finally
-        {
+        } finally {
             connection_db_api.close();
         }
-    } else
-    {
+    } else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
 
 //get invoice
-module.exports.getInvoice = async function (req, res)
-{
+module.exports.getInvoice = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
 
-    if (decodedToken)
-    {
+    if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var processInvoiceConnection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
             var get_data = await invoicesConnection.aggregate([
@@ -221,26 +206,21 @@ module.exports.getInvoice = async function (req, res)
             let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
             let checkManagement = _.find(company_data.otherstool, function (n) { return n.key == config.MANAGEMENT_KEY; });
             let isManagement = false;
-            if (checkManagement)
-            {
+            if (checkManagement) {
                 isManagement = true;
             }
-            if (get_data)
-            {
+            if (get_data) {
                 var count = {
                     pending: 0,
                     complete: 0,
                 };
-                if (get_count)
-                {
-                    if (get_count.length == 0)
-                    {
+                if (get_count) {
+                    if (get_count.length == 0) {
                         get_count = {
                             pending: 0,
                             complete: 0,
                         };
-                    } else
-                    {
+                    } else {
                         get_count = get_count[0];
                     }
                     count = {
@@ -249,41 +229,33 @@ module.exports.getInvoice = async function (req, res)
                     };
                 }
                 res.send({ status: true, message: "Invoice data", data: get_data, is_management: isManagement, count });
-            } else
-            {
+            } else {
                 res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
             }
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
-        } finally
-        {
+        } finally {
             connection_db_api.close();
         }
     }
-    else
-    {
+    else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
 
 //get invoice
-module.exports.getInvoiceList = async function (req, res)
-{
+module.exports.getInvoiceList = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
 
-    if (decodedToken)
-    {
+    if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             var requestObject = req.body;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var match_query = { is_delete: 0 };
-            if (requestObject.status)
-            {
+            if (requestObject.status) {
                 match_query = {
                     is_delete: 0,
                     status: requestObject.status
@@ -377,38 +349,30 @@ module.exports.getInvoiceList = async function (req, res)
                 },
             ]);
             var count = get_data.length;
-            if (get_data)
-            {
+            if (get_data) {
                 res.send({ status: true, message: "Invoice data", data: get_data, count });
-            } else
-            {
+            } else {
                 res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
             }
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
-        } finally
-        {
+        } finally {
             connection_db_api.close();
         }
     }
-    else
-    {
+    else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
 
 //get invoice
-module.exports.getOneInvoice = async function (req, res)
-{
+module.exports.getOneInvoice = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
-    if (decodedToken)
-    {
+    if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             var requestObject = req.body;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var get_data = await invoicesConnection.aggregate([
@@ -498,37 +462,30 @@ module.exports.getOneInvoice = async function (req, res)
                     }
                 },
             ]);
-            if (get_data.length > 0)
-            {
+            if (get_data.length > 0) {
                 get_data = get_data[0];
             }
             res.send({ status: true, message: "Invoice data", data: get_data });
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
-        } finally
-        {
+        } finally {
             connection_db_api.close();
         }
     }
-    else
-    {
+    else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
 
 // delete invoice
-module.exports.deleteInvoice = async function (req, res)
-{
+module.exports.deleteInvoice = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
 
-    if (decodedToken)
-    {
+    if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             var requestObject = req.body;
             var id = requestObject._id;
             delete requestObject._id;
@@ -539,11 +496,9 @@ module.exports.deleteInvoice = async function (req, res)
             requestObject.is_delete = 1;
             var update_data = await invoicesConnection.updateOne({ _id: ObjectID(id) }, requestObject);
             let isDelete = update_data.nModified;
-            if (isDelete == 0)
-            {
+            if (isDelete == 0) {
                 res.send({ status: false, message: "There is no data with this id." });
-            } else
-            {
+            } else {
                 var get_one = await invoicesConnection.findOne({ _id: ObjectID(id) }, { _id: 0, __v: 0 });
                 let reqObj = { invoice_id: id, ...get_one._doc };
 
@@ -553,31 +508,25 @@ module.exports.deleteInvoice = async function (req, res)
             }
 
 
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
-        } finally
-        {
+        } finally {
             connection_db_api.close();
         }
     }
-    else
-    {
+    else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
 
 // invoice status update
-module.exports.updateInvoiceStatus = async function (req, res)
-{
+module.exports.updateInvoiceStatus = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
-    if (decodedToken)
-    {
+    if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             var requestObject = req.body;
             var id = requestObject._id;
             delete requestObject._id;
@@ -587,11 +536,9 @@ module.exports.updateInvoiceStatus = async function (req, res)
             var get_invoice = await invoicesConnection.findOne({ _id: ObjectID(id) });
             var update_data = await invoicesConnection.updateOne({ _id: ObjectID(id) }, requestObject);
             let isDelete = update_data.nModified;
-            if (isDelete == 0)
-            {
+            if (isDelete == 0) {
                 res.send({ status: false, message: "There is no data with this id." });
-            } else
-            {
+            } else {
                 var get_one = await invoicesConnection.findOne({ _id: ObjectID(id) }, { _id: 0, __v: 0 });
                 let reqObj = { invoice_id: id, ...get_one._doc };
                 addchangeInvoice_History("Update", reqObj, decodedToken, get_one.updated_at);
@@ -607,32 +554,26 @@ module.exports.updateInvoiceStatus = async function (req, res)
                 }, decodedToken);
                 res.send({ message: `Invoice ${requestObject.status.toLowerCase()} successfully`, status: true, data: update_data });
             }
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
-        } finally
-        {
+        } finally {
             connection_db_api.close();
         }
     }
-    else
-    {
+    else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
 
 //invoice datatable
-module.exports.getInvoiceDatatable = async function (req, res)
-{
+module.exports.getInvoiceDatatable = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
 
-    if (decodedToken)
-    {
+    if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             var requestObject = req.body;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var col = [];
@@ -645,16 +586,13 @@ module.exports.getInvoiceDatatable = async function (req, res)
             var columntype = (requestObject.order != undefined && requestObject.order != '') ? requestObject.order[0].dir : '';
 
             var sort = {};
-            if (requestObject.draw == 1)
-            {
+            if (requestObject.draw == 1) {
                 sort = { "created_at": -1 };
-            } else
-            {
+            } else {
                 sort[col[columnData]] = (columntype == 'asc') ? 1 : -1;
             }
             let query = {};
-            if (requestObject.search.value)
-            {
+            if (requestObject.search.value) {
                 query = {
                     $or: [
                         { "invoice": new RegExp(requestObject.search.value, 'i') },
@@ -667,8 +605,7 @@ module.exports.getInvoiceDatatable = async function (req, res)
                 };
             }
             var match_query = { is_delete: 0 };
-            if (requestObject.status)
-            {
+            if (requestObject.status) {
                 match_query = {
                     is_delete: 0,
                     status: requestObject.status
@@ -700,26 +637,21 @@ module.exports.getInvoiceDatatable = async function (req, res)
             dataResponce.recordsTotal = count;
             dataResponce.recordsFiltered = (requestObject.search.value) ? all_vendors.length : count;
             res.json(dataResponce);
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), status: false, error: e });
-        } finally
-        {
+        } finally {
             connection_db_api.close();
         }
-    } else
-    {
+    } else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
 
 // history function
-async function addchangeInvoice_History(action, data, decodedToken, updatedAt)
-{
+async function addchangeInvoice_History(action, data, decodedToken, updatedAt) {
     var connection_db_api = await db_connection.connection_db_api(decodedToken);
-    try
-    {
+    try {
         let invoice_Histroy_Connection = connection_db_api.model(historyCollectionConstant.INVOICES_HISTORY, invoice_history_Schema);
         data.action = action;
         data.taken_device = config.WEB_ALL;
@@ -727,26 +659,21 @@ async function addchangeInvoice_History(action, data, decodedToken, updatedAt)
         data.history_created_by = decodedToken.UserData._id;
         var add_invoice_history = new invoice_Histroy_Connection(data);
         var save_invoice_history = await add_invoice_history.save();
-    } catch (e)
-    {
+    } catch (e) {
         console.log(e);
-    } finally
-    {
+    } finally {
         connection_db_api.close();
     }
 }
 
-module.exports.getInvoiceExcelReport = async function (req, res)
-{
+module.exports.getInvoiceExcelReport = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
     var local_offset = Number(req.headers.local_offset);
     var timezone = req.headers.timezone;
-    if (decodedToken)
-    {
+    if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             var requestObject = req.body;
             let email_list = requestObject.email_list;
             var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
@@ -757,26 +684,22 @@ module.exports.getInvoiceExcelReport = async function (req, res)
             let sort = { vendor_name: 1 };
             let vendorQuery = [];
             let query = [];
-            if (requestObject.vendor_ids.length != 0)
-            {
+            if (requestObject.vendor_ids.length != 0) {
                 let data_Query = [];
-                for (let i = 0; i < requestObject.vendor_ids.length; i++)
-                {
+                for (let i = 0; i < requestObject.vendor_ids.length; i++) {
                     data_Query.push(ObjectID(requestObject.vendor_ids[i]));
                 }
                 vendorQuery.push({ "_id": { $in: data_Query } });
                 query.push({ "vendor": { $in: data_Query } });
             }
 
-            if (requestObject.status.length != 0)
-            {
+            if (requestObject.status.length != 0) {
                 query.push({ "status": { $in: requestObject.status } });
             }
             query = query.length == 0 ? {} : { $and: query };
 
             let date_query = {};
-            if (requestObject.start_date != 0 && requestObject.end_date != 0)
-            {
+            if (requestObject.start_date != 0 && requestObject.end_date != 0) {
                 date_query = { "created_by": { $gte: requestObject.start_date, $lt: requestObject.end_date } };
             }
 
@@ -816,8 +739,7 @@ module.exports.getInvoiceExcelReport = async function (req, res)
             let xlsx_data = [];
             let result = await common.urlToBase64(company_data.companylogo);
             let logo_rovuk = await common.urlToBase64(config.INVOICE_LOGO);
-            for (let i = 0; i < get_invoice.length; i++)
-            {
+            for (let i = 0; i < get_invoice.length; i++) {
                 let invoice = get_invoice[i];
                 xlsx_data.push([invoice.assign_to == undefined || invoice.assign_to == null ? '' : invoice.assign_to.userfullname,
                 invoice.vendor.vendor_name, invoice.vendor_id, invoice.customer_id, invoice.invoice, invoice.p_o, invoice.invoice_date,
@@ -901,8 +823,7 @@ module.exports.getInvoiceExcelReport = async function (req, res)
             let headerRow = worksheet.addRow(headers);
             headerRow.height = 40;
             headerRow.alignment = { vertical: 'middle', horizontal: 'center' };
-            headerRow.eachCell((cell, number) =>
-            {
+            headerRow.eachCell((cell, number) => {
                 cell.font = {
                     bold: true,
                     size: 14,
@@ -916,14 +837,12 @@ module.exports.getInvoiceExcelReport = async function (req, res)
                     }
                 };
             });
-            xlsx_data.forEach(d =>
-            {
+            xlsx_data.forEach(d => {
                 let row = worksheet.addRow(d);
             });
             worksheet.getColumn(3).width = 20;
             worksheet.addRow([]);
-            worksheet.columns.forEach(function (column, i)
-            {
+            worksheet.columns.forEach(function (column, i) {
                 column.width = 20;
             });
 
@@ -935,32 +854,26 @@ module.exports.getInvoiceExcelReport = async function (req, res)
             let vendor = '';
             let status = '';
             let date_range = '';
-            if (requestObject.All_Vendors)
-            {
+            if (requestObject.All_Vendors) {
                 vendor = `${translator.getStr('EmailExcelVendors')} ${translator.getStr('EmailExcelAllVendors')}`;
-            } else
-            {
+            } else {
                 termQuery = termQuery.length == 0 ? {} : { $or: termQuery };
                 let vendorCollection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
                 let all_vendor = await vendorCollection.find(termQuery, { vendor_name: 1 });
                 let temp_data = [];
-                for (var i = 0; i < all_vendor.length; i++)
-                {
+                for (var i = 0; i < all_vendor.length; i++) {
                     temp_data.push(all_vendor[i]['name']);
                 }
                 vendor = `${translator.getStr('EmailExcelVendors')} ${temp_data.join(", ")}`;
             }
 
-            if (requestObject.All_Status)
-            {
+            if (requestObject.All_Status) {
                 status = `${translator.getStr('EmailExcelStatus')} ${translator.getStr('EmailExcelAllStatus')}`;
-            } else
-            {
+            } else {
                 status = `${translator.getStr('EmailExcelStatus')} ${requestObject.status.join(", ")}`;
             }
 
-            if (requestObject.start_date != 0 && requestObject.end_date != 0)
-            {
+            if (requestObject.start_date != 0 && requestObject.end_date != 0) {
                 date_range = `${translator.getStr('EmailExcelDateRange')} ${common.MMDDYYYY(requestObject.start_date + local_offset)} - ${common.MMDDYYYY(requestObject.end_date + local_offset)}`;
             }
 
@@ -974,13 +887,10 @@ module.exports.getInvoiceExcelReport = async function (req, res)
                 ACL: 'public-read-write'
             };
             const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/excelReport.html', 'utf8');
-            bucketOpration.uploadFile(PARAMS, async function (err, resultUpload)
-            {
-                if (err)
-                {
+            bucketOpration.uploadFile(PARAMS, async function (err, resultUpload) {
+                if (err) {
                     res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
-                } else
-                {
+                } else {
                     excelUrl = config.wasabisys_url + "/" + companycode + "/" + key_url;
                     console.log("invoice excelUrl", excelUrl);
                     let emailTmp = {
@@ -1011,29 +921,23 @@ module.exports.getInvoiceExcelReport = async function (req, res)
                     res.send({ message: translator.getStr('Report_Sent_Successfully'), status: true });
                 }
             });
-        } catch (e)
-        {
+        } catch (e) {
             console.log("error:", e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
-        } finally
-        {
+        } finally {
             connection_db_api.close();
         }
-    } else
-    {
+    } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
 
-module.exports.getOrphanDocuments = async function (req, res)
-{
+module.exports.getOrphanDocuments = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
-    if (decodedToken)
-    {
+    if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             var requestObject = req.body;
             var invoiceConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var processInvoiceConnection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
@@ -1049,10 +953,8 @@ module.exports.getOrphanDocuments = async function (req, res)
                 },
                 { $unwind: "$vendor" },
             ]);
-            if (one_invoice)
-            {
-                if (one_invoice.length > 0)
-                {
+            if (one_invoice) {
+                if (one_invoice.length > 0) {
                     one_invoice = one_invoice[0];
                 }
                 let query = {
@@ -1064,38 +966,30 @@ module.exports.getOrphanDocuments = async function (req, res)
                 };
                 let get_process = await processInvoiceConnection.find(query);
                 res.send({ status: true, message: "Invoice data", data: get_process });
-            } else
-            {
+            } else {
                 res.send({ message: translator.getStr('NoDataWithId'), status: false });
             }
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
-        } finally
-        {
+        } finally {
             connection_db_api.close();
         }
     }
-    else
-    {
+    else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
 
-module.exports.getInvoiceHistoryLog = async function (req, res)
-{
+module.exports.getInvoiceHistoryLog = async function (req, res) {
     var translator = new common.Language('en');
     var decodedToken = common.decodedJWT(req.headers.authorization);
-    if (decodedToken)
-    {
+    if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             var requestObject = req.body;
             let perpage = 10;
-            if (requestObject.start) { } else
-            {
+            if (requestObject.start) { } else {
                 requestObject.start = 0;
             }
             let start = requestObject.start == 0 ? 0 : perpage * requestObject.start;
@@ -1125,44 +1019,36 @@ module.exports.getInvoiceHistoryLog = async function (req, res)
                 { $skip: start }
             ]);
             res.send({ data: get_data, status: true });
-        } catch (e)
-        {
+        } catch (e) {
             console.log("e", e);
             res.send({ message: translator.getStr('SomethingWrong'), status: false });
-        } finally
-        {
+        } finally {
             connection_db_api.close();
         }
-    } else
-    {
+    } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
 
 // Save Invoice Notes
-module.exports.saveInvoiceNotes = async function (req, res)
-{
+module.exports.saveInvoiceNotes = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
-    if (decodedToken)
-    {
+    if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             var requestObject = req.body;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var invoice_id = requestObject.invoice_id;
             delete requestObject.invoice_id;
             var id = requestObject._id;
             delete requestObject._id;
-            if (id)
-            {
+            if (id) {
                 requestObject.updated_by = decodedToken.UserData._id;
                 requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                 let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id), "invoice_notes._id": id }, { $set: { "invoice_notes.$.updated_by": decodedToken.UserData._id, "invoice_notes.$.updated_at": Math.round(new Date().getTime() / 1000), "invoice_notes.$.notes": requestObject.notes } });
                 let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
-                if (update_invoice)
-                {
+                if (update_invoice) {
                     requestObject.invoice_id = invoice_id;
                     addchangeInvoice_History("Update Note", requestObject, decodedToken, requestObject.updated_at);
                     recentActivity.saveRecentActivity({
@@ -1176,12 +1062,10 @@ module.exports.saveInvoiceNotes = async function (req, res)
                         action_from: 'Web',
                     }, decodedToken);
                     res.send({ status: true, message: "Invoice note updated successfully.", data: update_invoice });
-                } else
-                {
+                } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
                 }
-            } else
-            {
+            } else {
                 //save invoice note
                 requestObject.created_by = decodedToken.UserData._id;
                 requestObject.created_at = Math.round(new Date().getTime() / 1000);
@@ -1189,8 +1073,7 @@ module.exports.saveInvoiceNotes = async function (req, res)
                 requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                 let save_invoice_note = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id) }, { $push: { invoice_notes: requestObject } });
                 let one_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
-                if (save_invoice_note)
-                {
+                if (save_invoice_note) {
                     requestObject.invoice_id = invoice_id;
                     addchangeInvoice_History("Insert Note", requestObject, decodedToken, requestObject.updated_at);
                     recentActivity.saveRecentActivity({
@@ -1204,35 +1087,28 @@ module.exports.saveInvoiceNotes = async function (req, res)
                         action_from: 'Web',
                     }, decodedToken);
                     res.send({ status: true, message: "Invoice note saved successfully." });
-                } else
-                {
+                } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
                 }
             }
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), status: false });
-        } finally
-        {
+        } finally {
             connection_db_api.close();
         }
-    } else
-    {
+    } else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
 
 // Delete Invoice Notes
-module.exports.deleteInvoiceNote = async function (req, res)
-{
+module.exports.deleteInvoiceNote = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
-    if (decodedToken)
-    {
+    if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             var requestObject = req.body;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var invoice_id = requestObject.invoice_id;
@@ -1243,8 +1119,7 @@ module.exports.deleteInvoiceNote = async function (req, res)
             requestObject.updated_at = Math.round(new Date().getTime() / 1000);
             let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id), "invoice_notes._id": id }, { $set: { "invoice_notes.$.updated_by": decodedToken.UserData._id, "invoice_notes.$.updated_at": Math.round(new Date().getTime() / 1000), "invoice_notes.$.is_delete": 1 } });
             let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
-            if (update_invoice)
-            {
+            if (update_invoice) {
                 requestObject.invoice_id = invoice_id;
                 addchangeInvoice_History("Delete Note", requestObject, decodedToken, requestObject.updated_at);
                 recentActivity.saveRecentActivity({
@@ -1258,42 +1133,34 @@ module.exports.deleteInvoiceNote = async function (req, res)
                     action_from: 'Web',
                 }, decodedToken);
                 res.send({ status: true, message: "Invoice note deleted successfully.", data: update_invoice });
-            } else
-            {
+            } else {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
             }
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), status: false });
-        } finally
-        {
+        } finally {
             connection_db_api.close();
         }
-    } else
-    {
+    } else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
 
 // Update Invoice Attachment
-module.exports.saveInvoiceAttachment = async function (req, res)
-{
+module.exports.saveInvoiceAttachment = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
-    if (decodedToken)
-    {
+    if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             var requestObject = req.body;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             requestObject.updated_by = decodedToken.UserData._id;
             requestObject.updated_at = Math.round(new Date().getTime() / 1000);
             let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(requestObject._id) });
             let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
-            if (update_invoice)
-            {
+            if (update_invoice) {
                 requestObject.invoice_id = requestObject._id;
                 addchangeInvoice_History("Update Attachment", requestObject, decodedToken, requestObject.updated_at);
                 recentActivity.saveRecentActivity({
@@ -1307,48 +1174,39 @@ module.exports.saveInvoiceAttachment = async function (req, res)
                     action_from: 'Web',
                 }, decodedToken);
                 res.send({ status: true, message: "Invoice attachment updated successfully..", data: update_invoice });
-            } else
-            {
+            } else {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
             }
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), status: false });
-        } finally
-        {
+        } finally {
             connection_db_api.close();
         }
-    } else
-    {
+    } else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
 
 // Save Packing Slip Notes
-module.exports.savePackingSlipNotes = async function (req, res)
-{
+module.exports.savePackingSlipNotes = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
-    if (decodedToken)
-    {
+    if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             var requestObject = req.body;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var invoice_id = requestObject.invoice_id;
             delete requestObject.invoice_id;
             var id = requestObject._id;
             delete requestObject._id;
-            if (id)
-            {
+            if (id) {
                 requestObject.updated_by = decodedToken.UserData._id;
                 requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                 let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id), "packing_slip_notes._id": id }, { $set: { "packing_slip_notes.$.updated_by": decodedToken.UserData._id, "packing_slip_notes.$.updated_at": Math.round(new Date().getTime() / 1000), "packing_slip_notes.$.notes": requestObject.notes } });
                 let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
-                if (update_invoice)
-                {
+                if (update_invoice) {
                     requestObject.invoice_id = invoice_id;
                     addchangeInvoice_History("Update Packing Slip Note", requestObject, decodedToken, requestObject.updated_at);
                     recentActivity.saveRecentActivity({
@@ -1362,12 +1220,10 @@ module.exports.savePackingSlipNotes = async function (req, res)
                         action_from: 'Web',
                     }, decodedToken);
                     res.send({ status: true, message: "Packing slip note updated successfully.", data: update_invoice });
-                } else
-                {
+                } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
                 }
-            } else
-            {
+            } else {
                 //save invoice note
                 requestObject.created_by = decodedToken.UserData._id;
                 requestObject.created_at = Math.round(new Date().getTime() / 1000);
@@ -1375,8 +1231,7 @@ module.exports.savePackingSlipNotes = async function (req, res)
                 requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                 let save_invoice_note = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id) }, { $push: { packing_slip_notes: requestObject } });
                 let one_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
-                if (save_invoice_note)
-                {
+                if (save_invoice_note) {
                     requestObject.invoice_id = invoice_id;
                     addchangeInvoice_History("Insert Packing Slip Note", requestObject, decodedToken, requestObject.updated_at);
                     recentActivity.saveRecentActivity({
@@ -1390,35 +1245,28 @@ module.exports.savePackingSlipNotes = async function (req, res)
                         action_from: 'Web',
                     }, decodedToken);
                     res.send({ status: true, message: "Packing slip note saved successfully." });
-                } else
-                {
+                } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
                 }
             }
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), status: false });
-        } finally
-        {
+        } finally {
             connection_db_api.close();
         }
-    } else
-    {
+    } else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
 
 // Delete Packing Slip Notes
-module.exports.deletePackingSlipNote = async function (req, res)
-{
+module.exports.deletePackingSlipNote = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
-    if (decodedToken)
-    {
+    if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             var requestObject = req.body;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var invoice_id = requestObject.invoice_id;
@@ -1429,8 +1277,7 @@ module.exports.deletePackingSlipNote = async function (req, res)
             requestObject.updated_at = Math.round(new Date().getTime() / 1000);
             let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id), "packing_slip_notes._id": id }, { $set: { "packing_slip_notes.$.updated_by": decodedToken.UserData._id, "packing_slip_notes.$.updated_at": Math.round(new Date().getTime() / 1000), "packing_slip_notes.$.is_delete": 1 } });
             let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
-            if (update_invoice)
-            {
+            if (update_invoice) {
                 requestObject.invoice_id = invoice_id;
                 addchangeInvoice_History("Delete Packing Slip Note", requestObject, decodedToken, requestObject.updated_at);
                 recentActivity.saveRecentActivity({
@@ -1444,42 +1291,34 @@ module.exports.deletePackingSlipNote = async function (req, res)
                     action_from: 'Web',
                 }, decodedToken);
                 res.send({ status: true, message: "Packing slip note deleted successfully.", data: update_invoice });
-            } else
-            {
+            } else {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
             }
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), status: false });
-        } finally
-        {
+        } finally {
             connection_db_api.close();
         }
-    } else
-    {
+    } else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
 
 // Update Packing Slip Attachment
-module.exports.savePackingSlipAttachment = async function (req, res)
-{
+module.exports.savePackingSlipAttachment = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
-    if (decodedToken)
-    {
+    if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             var requestObject = req.body;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             requestObject.updated_by = decodedToken.UserData._id;
             requestObject.updated_at = Math.round(new Date().getTime() / 1000);
             let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(requestObject._id) });
             let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
-            if (update_invoice)
-            {
+            if (update_invoice) {
                 requestObject.invoice_id = requestObject._id;
                 addchangeInvoice_History("Update Packing Slip Attachment", requestObject, decodedToken, requestObject.updated_at);
                 recentActivity.saveRecentActivity({
@@ -1493,48 +1332,39 @@ module.exports.savePackingSlipAttachment = async function (req, res)
                     action_from: 'Web',
                 }, decodedToken);
                 res.send({ status: true, message: "Packing slip attachment updated successfully..", data: update_invoice });
-            } else
-            {
+            } else {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
             }
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), status: false });
-        } finally
-        {
+        } finally {
             connection_db_api.close();
         }
-    } else
-    {
+    } else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
 
 // Save PO Notes
-module.exports.savePONotes = async function (req, res)
-{
+module.exports.savePONotes = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
-    if (decodedToken)
-    {
+    if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             var requestObject = req.body;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var invoice_id = requestObject.invoice_id;
             delete requestObject.invoice_id;
             var id = requestObject._id;
             delete requestObject._id;
-            if (id)
-            {
+            if (id) {
                 requestObject.updated_by = decodedToken.UserData._id;
                 requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                 let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id), "quote_notes._id": id }, { $set: { "po_notes.$.updated_by": decodedToken.UserData._id, "po_notes.$.updated_at": Math.round(new Date().getTime() / 1000), "po_notes.$.notes": requestObject.notes } });
                 let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
-                if (update_invoice)
-                {
+                if (update_invoice) {
                     requestObject.invoice_id = invoice_id;
                     addchangeInvoice_History("Update PO Note", requestObject, decodedToken, requestObject.updated_at);
                     recentActivity.saveRecentActivity({
@@ -1548,12 +1378,10 @@ module.exports.savePONotes = async function (req, res)
                         action_from: 'Web',
                     }, decodedToken);
                     res.send({ status: true, message: "PO note updated successfully.", data: update_invoice });
-                } else
-                {
+                } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
                 }
-            } else
-            {
+            } else {
                 //save invoice note
                 requestObject.created_by = decodedToken.UserData._id;
                 requestObject.created_at = Math.round(new Date().getTime() / 1000);
@@ -1561,8 +1389,7 @@ module.exports.savePONotes = async function (req, res)
                 requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                 let save_invoice_note = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id) }, { $push: { po_notes: requestObject } });
                 let one_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
-                if (save_invoice_note)
-                {
+                if (save_invoice_note) {
                     requestObject.invoice_id = invoice_id;
                     addchangeInvoice_History("Insert PO Note", requestObject, decodedToken, requestObject.updated_at);
                     recentActivity.saveRecentActivity({
@@ -1576,35 +1403,28 @@ module.exports.savePONotes = async function (req, res)
                         action_from: 'Web',
                     }, decodedToken);
                     res.send({ status: true, message: "PO note saved successfully." });
-                } else
-                {
+                } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
                 }
             }
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), status: false });
-        } finally
-        {
+        } finally {
             connection_db_api.close();
         }
-    } else
-    {
+    } else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
 
 // Delete PO Notes
-module.exports.deletePONote = async function (req, res)
-{
+module.exports.deletePONote = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
-    if (decodedToken)
-    {
+    if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             var requestObject = req.body;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var invoice_id = requestObject.invoice_id;
@@ -1615,8 +1435,7 @@ module.exports.deletePONote = async function (req, res)
             requestObject.updated_at = Math.round(new Date().getTime() / 1000);
             let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id), "po_notes._id": id }, { $set: { "po_notes.$.updated_by": decodedToken.UserData._id, "po_notes.$.updated_at": Math.round(new Date().getTime() / 1000), "po_notes.$.is_delete": 1 } });
             let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
-            if (update_invoice)
-            {
+            if (update_invoice) {
                 requestObject.invoice_id = invoice_id;
                 addchangeInvoice_History("Delete PO Note", requestObject, decodedToken, requestObject.updated_at);
                 recentActivity.saveRecentActivity({
@@ -1630,42 +1449,34 @@ module.exports.deletePONote = async function (req, res)
                     action_from: 'Web',
                 }, decodedToken);
                 res.send({ status: true, message: "PO note deleted successfully.", data: update_invoice });
-            } else
-            {
+            } else {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
             }
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), status: false });
-        } finally
-        {
+        } finally {
             connection_db_api.close();
         }
-    } else
-    {
+    } else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
 
 // Update PO Attachment
-module.exports.savePOAttachment = async function (req, res)
-{
+module.exports.savePOAttachment = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
-    if (decodedToken)
-    {
+    if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             var requestObject = req.body;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             requestObject.updated_by = decodedToken.UserData._id;
             requestObject.updated_at = Math.round(new Date().getTime() / 1000);
             let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(requestObject._id) });
             let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
-            if (update_invoice)
-            {
+            if (update_invoice) {
                 requestObject.invoice_id = requestObject._id;
                 addchangeInvoice_History("Update PO Attachment", requestObject, decodedToken, requestObject.updated_at);
                 recentActivity.saveRecentActivity({
@@ -1679,48 +1490,39 @@ module.exports.savePOAttachment = async function (req, res)
                     action_from: 'Web',
                 }, decodedToken);
                 res.send({ status: true, message: "PO attachment updated successfully..", data: update_invoice });
-            } else
-            {
+            } else {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
             }
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), status: false });
-        } finally
-        {
+        } finally {
             connection_db_api.close();
         }
-    } else
-    {
+    } else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
 
 // Save Quote Notes
-module.exports.saveQuoteNotes = async function (req, res)
-{
+module.exports.saveQuoteNotes = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
-    if (decodedToken)
-    {
+    if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             var requestObject = req.body;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var invoice_id = requestObject.invoice_id;
             delete requestObject.invoice_id;
             var id = requestObject._id;
             delete requestObject._id;
-            if (id)
-            {
+            if (id) {
                 requestObject.updated_by = decodedToken.UserData._id;
                 requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                 let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id), "quote_notes._id": id }, { $set: { "quote_notes.$.updated_by": decodedToken.UserData._id, "quote_notes.$.updated_at": Math.round(new Date().getTime() / 1000), "quote_notes.$.notes": requestObject.notes } });
                 let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
-                if (update_invoice)
-                {
+                if (update_invoice) {
                     requestObject.invoice_id = invoice_id;
                     addchangeInvoice_History("Update Quote Note", requestObject, decodedToken, requestObject.updated_at);
                     recentActivity.saveRecentActivity({
@@ -1734,12 +1536,10 @@ module.exports.saveQuoteNotes = async function (req, res)
                         action_from: 'Web',
                     }, decodedToken);
                     res.send({ status: true, message: "Quote note updated successfully.", data: update_invoice });
-                } else
-                {
+                } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
                 }
-            } else
-            {
+            } else {
                 //save invoice note
                 requestObject.created_by = decodedToken.UserData._id;
                 requestObject.created_at = Math.round(new Date().getTime() / 1000);
@@ -1747,8 +1547,7 @@ module.exports.saveQuoteNotes = async function (req, res)
                 requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                 let save_invoice_note = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id) }, { $push: { quote_notes: requestObject } });
                 let one_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
-                if (save_invoice_note)
-                {
+                if (save_invoice_note) {
                     requestObject.invoice_id = invoice_id;
                     addchangeInvoice_History("Insert Quote Note", requestObject, decodedToken, requestObject.updated_at);
                     recentActivity.saveRecentActivity({
@@ -1762,35 +1561,28 @@ module.exports.saveQuoteNotes = async function (req, res)
                         action_from: 'Web',
                     }, decodedToken);
                     res.send({ status: true, message: "Quote note saved successfully." });
-                } else
-                {
+                } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
                 }
             }
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), status: false });
-        } finally
-        {
+        } finally {
             connection_db_api.close();
         }
-    } else
-    {
+    } else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
 
 // Delete Quote Notes
-module.exports.deleteQuoteNote = async function (req, res)
-{
+module.exports.deleteQuoteNote = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
-    if (decodedToken)
-    {
+    if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             var requestObject = req.body;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var invoice_id = requestObject.invoice_id;
@@ -1801,8 +1593,7 @@ module.exports.deleteQuoteNote = async function (req, res)
             requestObject.updated_at = Math.round(new Date().getTime() / 1000);
             let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id), "quote_notes._id": id }, { $set: { "quote_notes.$.updated_by": decodedToken.UserData._id, "quote_notes.$.updated_at": Math.round(new Date().getTime() / 1000), "quote_notes.$.is_delete": 1 } });
             let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
-            if (update_invoice)
-            {
+            if (update_invoice) {
                 requestObject.invoice_id = invoice_id;
                 addchangeInvoice_History("Delete Quote Note", requestObject, decodedToken, requestObject.updated_at);
                 recentActivity.saveRecentActivity({
@@ -1816,42 +1607,34 @@ module.exports.deleteQuoteNote = async function (req, res)
                     action_from: 'Web',
                 }, decodedToken);
                 res.send({ status: true, message: "Quote note deleted successfully.", data: update_invoice });
-            } else
-            {
+            } else {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
             }
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), status: false });
-        } finally
-        {
+        } finally {
             connection_db_api.close();
         }
-    } else
-    {
+    } else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
 
 // Update Quote Attachment
-module.exports.saveQuoteAttachment = async function (req, res)
-{
+module.exports.saveQuoteAttachment = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
-    if (decodedToken)
-    {
+    if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             var requestObject = req.body;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             requestObject.updated_by = decodedToken.UserData._id;
             requestObject.updated_at = Math.round(new Date().getTime() / 1000);
             let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(requestObject._id) });
             let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
-            if (update_invoice)
-            {
+            if (update_invoice) {
                 requestObject.invoice_id = requestObject._id;
                 addchangeInvoice_History("Update Quote Attachment", requestObject, decodedToken, requestObject.updated_at);
                 recentActivity.saveRecentActivity({
@@ -1865,91 +1648,76 @@ module.exports.saveQuoteAttachment = async function (req, res)
                     action_from: 'Web',
                 }, decodedToken);
                 res.send({ status: true, message: "Quote attachment updated successfully..", data: update_invoice });
-            } else
-            {
+            } else {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
             }
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), status: false });
-        } finally
-        {
+        } finally {
             connection_db_api.close();
         }
-    } else
-    {
+    } else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
 
 // Update Related document
-module.exports.updateInvoiceRelatedDocument = async function (req, res)
-{
+module.exports.updateInvoiceRelatedDocument = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
-    if (decodedToken)
-    {
+    if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try
-        {
+        try {
             var requestObject = req.body;
             var id = requestObject._id;
             delete requestObject._id;
+            var module = requestObject.module;
+            delete requestObject.module;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
-            requestObject.updated_by = decodedToken.UserData._id;
-            requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+            // requestObject.updated_by = decodedToken.UserData._id;
+            // requestObject.updated_at = Math.round(new Date().getTime() / 1000);
             var get_invoice = await invoicesConnection.findOne({ _id: ObjectID(id) });
-            let module = '';
-            if (requestObject.packing_slip_data)
-            {
+            /* let module = '';
+            let updateObject = {};
+            if (requestObject.packing_slip_data) {
                 module = 'Packing Slip';
-            } else if (requestObject.po_data)
-            {
+                updateObject = { $set: { packing_slip_data: requestObject.packing_slip_data } };
+            } else if (requestObject.po_data) {
                 module = 'PO';
-            } else if (requestObject.quote_data)
-            {
+                updateObject = { $set: { po_data: requestObject.po_data } };
+            } else if (requestObject.quote_data) {
                 module = 'Quote';
+                updateObject = { $set: { quote_data: requestObject.quote_data } };
+            }  */
+            var update_data = await invoicesConnection.updateOne({ _id: ObjectID(id) }, requestObject);
+            let isUpdated = update_data.nModified;
+            if (isUpdated == 0) {
+                res.send({ status: false, message: "There is no data with this id." });
+            } else {
+                var get_one = await invoicesConnection.findOne({ _id: ObjectID(id) }, { _id: 0, __v: 0 });
+                let reqObj = { invoice_id: id, ...get_one._doc };
+                addchangeInvoice_History("Update", reqObj, decodedToken, get_one.updated_at);
+                recentActivity.saveRecentActivity({
+                    user_id: decodedToken.UserData._id,
+                    username: decodedToken.UserData.userfullname,
+                    userpicture: decodedToken.UserData.userpicture,
+                    data_id: id,
+                    title: `Invoice #${get_invoice.invoice} ${module} Update`,
+                    module: `Invoice`,
+                    action: `Update ${module}`,
+                    action_from: 'Web',
+                }, decodedToken);
+                res.send({ message: `${module} updated successfully.`, status: true });
             }
-            if (module == '')
-            {
-                res.send({ message: translator.getStr('SomethingWrong'), status: false });
-            } else
-            {
-                var update_data = await invoicesConnection.updateOne({ _id: ObjectID(id) }, requestObject);
-                let isDelete = update_data.nModified;
-                if (isDelete == 0)
-                {
-                    res.send({ status: false, message: "There is no data with this id." });
-                } else
-                {
-                    var get_one = await invoicesConnection.findOne({ _id: ObjectID(id) }, { _id: 0, __v: 0 });
-                    let reqObj = { invoice_id: id, ...get_one._doc };
-                    addchangeInvoice_History("Update", reqObj, decodedToken, get_one.updated_at);
-                    recentActivity.saveRecentActivity({
-                        user_id: decodedToken.UserData._id,
-                        username: decodedToken.UserData.userfullname,
-                        userpicture: decodedToken.UserData.userpicture,
-                        data_id: id,
-                        title: `Invoice #${get_invoice.invoice} ${module} Update`,
-                        module: `Invoice`,
-                        action: `Update ${module}`,
-                        action_from: 'Web',
-                    }, decodedToken);
-                    res.send({ message: `${module} updated successfully.`, status: true });
-                }
-            }
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
-        } finally
-        {
+        } finally {
             connection_db_api.close();
         }
     }
-    else
-    {
+    else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
