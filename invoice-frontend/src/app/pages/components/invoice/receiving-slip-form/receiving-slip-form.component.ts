@@ -66,6 +66,8 @@ export class ReceivingSlipFormComponent implements OnInit {
   // DOCUMENT TYPE
   variablesDocumenttype: any = configdata.DOCUMENT_TYPE;
   DocumentType = this.variablesDocumenttype.slice();
+  loadInvoice: boolean = false;
+
 
   constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
@@ -284,6 +286,7 @@ export class ReceivingSlipFormComponent implements OnInit {
     this.httpCall.httpPostCall(httproutes.INVOICE_GET_ONE_INVOICE, { _id: that.id }).subscribe(function (params) {
       if (params.status) {
         that.invoiceData = params.data;
+        that.loadInvoice = true;
         that.invoiceform = that.formBuilder.group({
           // invoice: [params.data.invoice],
           // p_o: [params.data.p_o, Validators.required],

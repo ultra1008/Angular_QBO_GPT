@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { Location } from '@angular/common';
 import { httproutes, icon, localstorageconstants, wasabiImagePath } from 'src/app/consts';
@@ -7,12 +7,13 @@ import { HttpCall } from 'src/app/service/httpcall.service';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModeDetectService } from '../../map/mode-detect.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { commonFileChangeEvent } from 'src/app/service/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
 import { EmployeeService } from '../../team/employee.service';
+import { map, startWith } from 'rxjs/operators';
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
     confirmButton: 'btn btn-success s2-confirm margin-right-cust',
@@ -67,12 +68,21 @@ export class PoDetailFormComponent implements OnInit {
   variablesDocumenttype: any = configdata.DOCUMENT_TYPE;
   DocumentType = this.variablesDocumenttype.slice();
   invoice_id: any;
+  badge: any = [];
+  status: any;
+  filteredOptions: Observable<string[]>;
+  vendor = new FormControl('');
+  filteredVendors: Observable<any[]>;
+  vendorList: any = [];
+  viewIcon: any;
+
 
   constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.invoice_id = this.id;
-
+    this.pdf_url = this.route.snapshot.queryParamMap.get('pdf_url');
+    this.status = this.route.snapshot.queryParamMap.get('status');
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     var locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configdata.fst_load_lang : tmp_locallanguage;
     this.translate.use(locallanguage);
@@ -82,31 +92,34 @@ export class PoDetailFormComponent implements OnInit {
       this.All_Save_Exit = this.translate.instant('All_Save_Exit');
       this.Dont_Save = this.translate.instant('Dont_Save');
       this.Email_Template_Form_Submitting = this.translate.instant('Email_Template_Form_Submitting');
+
     });
     this.invoiceform = this.formBuilder.group({
+      document_id: [""],
       document_type: [""],
-      invoice_name: [""],
-      vendor_name: [""],
+      date: [""],
+      po_number: [""],
       customer_id: [""],
-      invoice: [""],
       p_o: [""],
-      invoice_date: [""],
-      due_date: [""],
-      order_date: [""],
-      ship_date: [""],
-      packing_slip: [""],
-      receiving_slip: [""],
-      status: [""],
       terms: [""],
-      total: [""],
-      tax_amount: [""],
-      tax_id: [""],
+      delivery_date: [""],
+      delivery_address: [""],
+      due_date: [""],
+      quote_number: [""],
+      contract_number: [""],
+      vendor_id: [""],
+      vendor: [""],
       sub_total: [""],
-      amount_due: [""],
-      cost_code: [""],
-      gl_account: [""],
-      assign_to: [""],
-      notes: [""],
+      po_total: [""],
+      tax: [""],
+      // tax_amount: [""],
+      // tax_id: [""],
+      // sub_total: [""],
+      // amount_due: [""],
+      // cost_code: [""],
+      // gl_account: [""],
+      // assign_to: [""],
+      // notes: [""],
     });
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
@@ -118,6 +131,7 @@ export class PoDetailFormComponent implements OnInit {
       this.printIcon = icon.PRINT_WHITE;
       this.approveIcon = icon.APPROVE_WHITE;
       this.denyIcon = icon.DENY_WHITE;
+      this.viewIcon = icon.VIEW;
     } else {
 
       this.backIcon = icon.BACK_WHITE;
@@ -126,6 +140,7 @@ export class PoDetailFormComponent implements OnInit {
       this.printIcon = icon.PRINT_WHITE;
       this.approveIcon = icon.APPROVE_WHITE;
       this.denyIcon = icon.DENY_WHITE;
+      this.viewIcon = icon.VIEW_WHITE;
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
       if (mode) {
@@ -136,6 +151,7 @@ export class PoDetailFormComponent implements OnInit {
         this.printIcon = icon.PRINT_WHITE;
         this.approveIcon = icon.APPROVE_WHITE;
         this.denyIcon = icon.DENY_WHITE;
+        this.viewIcon = icon.VIEW;
       } else {
         this.mode = 'on';
         this.backIcon = icon.BACK_WHITE;
@@ -144,6 +160,7 @@ export class PoDetailFormComponent implements OnInit {
         this.printIcon = icon.PRINT_WHITE;
         this.approveIcon = icon.APPROVE_WHITE;
         this.denyIcon = icon.DENY_WHITE;
+        this.viewIcon = icon.VIEW_WHITE;
       }
     });
     if (this.id) {
@@ -157,6 +174,12 @@ export class PoDetailFormComponent implements OnInit {
 
   ngOnInit(): void {
     let that = this;
+    this.getAllVendorList();
+    this.filteredVendors = this.vendor.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filterVendor(value || '')),
+    );
+
     this.employeeservice.getalluser().subscribe(function (data) {
       that.uiSpinner.spin$.next(false);
       if (data.status) {
@@ -170,6 +193,32 @@ export class PoDetailFormComponent implements OnInit {
     });
     that.getAllCostCode();
   }
+  private _filterVendor(value: any): any[] {
+    return this.vendorList.filter(one_vendor => {
+      let vendor_name = value.vendor_name ? value.vendor_name : value;
+      return one_vendor.vendor_name.toLowerCase().indexOf(vendor_name.toLowerCase()) > -1;
+    });
+
+  }
+  viewInvoice(_id) {
+    this.router.navigate(['/invoice-detail'], { queryParams: { _id: _id } });
+  }
+  async getAllVendorList() {
+    let data = await this.httpCall.httpGetCall(httproutes.PORTAL_COMPANY_VENDOR_GET_BY_ID).toPromise();
+    if (data.status) {
+      this.vendorList = data.data;
+    }
+  }
+  getIdFromVendor(event, Option) {
+    this.invoiceform.get('vendor').setValue(Option._id);
+  }
+
+  displayOption(option: any): string {
+    return option ? option.vendor_name : option;
+  }
+
+
+
   print() {
     fetch(this.pdf_url).then(resp => resp.arrayBuffer()).then(resp => {
       /*--- set the blog type to final pdf ---*/
@@ -213,127 +262,89 @@ export class PoDetailFormComponent implements OnInit {
       }
     });
   }
-  poApprove() {
-    // let po_id = this.route.snapshot.queryParamMap.get("po_id");
-    // let po_status = "Pending";
-    // let that = this;
-    // swalWithBootstrapButtons
-    //   .fire({
-    //     title: this.Custom_Pdf_Viewer_Please_Confirm,
-    //     text: this.Custom_Pdf_Viewer_Want_Approve_Po,
-    //     showDenyButton: true,
-    //     showCancelButton: false,
-    //     confirmButtonText: this.Compnay_Equipment_Delete_Yes,
-    //     denyButtonText: this.Compnay_Equipment_Delete_No,
-    //   })
-    //   .then((result) => {
-    //     if (result.isConfirmed) {
-    //       // denied PO api call
-    //       that.httpCall
-    //         .httpPostCall(httproutes.PORTAL_COMPANY_UPDATE_PO_STATUS, {
-    //           _id: po_id,
-    //           po_status: po_status,
-    //         })
-    //         .subscribe(function (params) {
-    //           if (params.status) {
-    //             that.snackbarservice.openSnackBar(params.message, "success");
-    //             that.location.back();
-    //           } else {
-    //             that.snackbarservice.openSnackBar(params.message, "error");
-    //           }
-    //         });
-    //     }
-    //   });
-  }
 
-  poDenied() {
-    // let po_id = this.route.snapshot.queryParamMap.get("po_id");
-    // let po_status = "Denied";
-    // let that = this;
-    // swalWithBootstrapButtons
-    //   .fire({
-    //     title: this.Custom_Pdf_Viewer_Please_Confirm,
-    //     text: this.Custom_Pdf_Viewer_Want_Deny_Po,
-    //     showDenyButton: true,
-    //     showCancelButton: false,
-    //     confirmButtonText: this.Compnay_Equipment_Delete_Yes,
-    //     denyButtonText: this.Compnay_Equipment_Delete_No,
-    //   })
-    //   .then((result) => {
-    //     if (result.isConfirmed) {
-    //       /*--- denied PO api call ---*/
-    //       that.httpCall
-    //         .httpPostCall(httproutes.PORTAL_COMPANY_UPDATE_PO_STATUS, {
-    //           _id: po_id,
-    //           po_status: po_status,
-    //         })
-    //         .subscribe(function (params) {
-    //           if (params.status) {
-    //             that.snackbarservice.openSnackBar(params.message, "success");
-    //             that.location.back();
-    //           } else {
-    //             that.snackbarservice.openSnackBar(params.message, "error");
-    //           }
-    //         });
-    //     }
-    //   });
-  }
 
   getOneInvoice() {
     let that = this;
     this.httpCall.httpPostCall(httproutes.INVOICE_GET_ONE_INVOICE, { _id: that.id }).subscribe(function (params) {
       if (params.status) {
+        that.status = params.data.status;
         that.invoiceData = params.data;
+        that.pdf_url = that.invoiceData.po_data.pdf_url;
+        that.badge = that.invoiceData.po_data.badge;
+        that.vendor.setValue(params.data.vendor);
         that.loadInvoice = true;
         that.invoiceform = that.formBuilder.group({
+          document_id: [params.data.po_data.document_id],
+          document_type: [params.data.po_data.document_type],
+          vendor: [params.data.vendor._id],
+          customer_id: [params.data.po_data.customer_id],
+          due_date: [params.data.po_data.due_date],
+          p_o: [params.data.po_data.p_o],
+          terms: [params.data.po_data.terms],
+          sub_total: [params.data.po_data.sub_total],
+          date: [params.data.po_data.date],
+          po_number: [params.data.po_data.po_number],
+          delivery_date: [params.data.po_data.delivery_date],
+          delivery_address: [params.data.po_data.delivery_address],
+          quote_number: [params.data.po_data.quote_number],
+          contract_number: [params.data.po_data.contract_number],
+          vendor_id: [params.data.po_data.vendor_id],
+          tax: [params.data.po_data.tax],
+          po_total: [params.data.po_data.po_total],
+          // invoice_name: [params.data.invoice_name],
           // invoice: [params.data.invoice],
-          // p_o: [params.data.p_o, Validators.required],
-
+          // job_number: [params.data.job_number],
+          // invoice_date: [params.data.invoice_date],
+          // order_date: [params.data.order_date],
+          // ship_date: [params.data.ship_date],
           // packing_slip: [params.data.packing_slip],
           // receiving_slip: [params.data.receiving_slip],
+          // status: [params.data.status],
+          // total: [params.data.total],
+          // tax_amount: [params.data.tax_amount],
+          // tax_id: [params.data.tax_id],
+          // amount_due: [params.data.amount_due],
+          // cost_code: [params.data.cost_code],
+          // gl_account: [params.data.gl_account],
+          // assign_to: [params.data.assign_to],
           // notes: [params.data.notes],
-          // status: [params.data.status, Validators.required],
-          document_type: [params.data.document_type],
-          invoice_name: [params.data.invoice_name],
-          vendor_name: [params.data.vendor_name],
-          customer_id: [params.data.customer_id],
-          invoice: [params.data.invoice],
-          p_o: [params.data.p_o],
-          invoice_date: [params.data.invoice_date],
-          due_date: [params.data.due_date],
-          order_date: [params.data.order_date],
-          ship_date: [params.data.ship_date],
-
-          packing_slip: [params.data.packing_slip],
-          receiving_slip: [params.data.receiving_slip],
-          status: [params.data.status],
-          terms: [params.data.terms],
-          total: [params.data.total],
-
-          tax_amount: [params.data.tax_amount],
-          tax_id: [params.data.tax_id],
-          sub_total: [params.data.sub_total],
-          amount_due: [params.data.amount_due],
-          cost_code: [params.data.cost_code],
-          gl_account: [params.data.gl_account],
-          assign_to: [params.data.assign_to],
-          notes: [params.data.notes],
-          pdf_url: [params.data.po_data.pdf_url]
+          // pdf_url: [params.data.po_data.pdf_url],
         });
       }
       that.uiSpinner.spin$.next(false);
+      console.log("pdf_url", that.pdf_url);
     });
   }
-
   saveInvoice() {
     let that = this;
     if (that.invoiceform.valid) {
-      let requestObject = that.invoiceform.value;
-      if (that.id) {
-        requestObject._id = that.id;
-      }
+
+      let formVal = that.invoiceform.value;
+      let requestObject = {
+        _id: that.id,
+        module: 'PO',
+        'po_data.date': formVal.date,
+        // 'po_data.document_id': formVal.document_id,
+        // 'po_data.document_type': formVal.document_type,
+        'po_data.vendor': formVal.vendor,
+        'po_data.customer_id': formVal.customer_id,
+        'po_data.due_date': formVal.due_date,
+        // 'po_data.p_o': formVal.p_o,
+        'po_data.terms': formVal.terms,
+        'po_data.sub_total': formVal.sub_total,
+        'po_data.po_number': formVal.po_number,
+        'po_data.delivery_date': formVal.delivery_date,
+        'po_data.delivery_address': formVal.delivery_address,
+        'po_data.quote_number': formVal.quote_number,
+        'po_data.contract_number': formVal.contract_number,
+        'po_data.vendor_id': formVal.vendor_id,
+        'po_data.tax': formVal.tax,
+        'po_data.po_total': formVal.po_total,
+      };
+
       that.uiSpinner.spin$.next(true);
-      that.httpCall.httpPostCall(httproutes.INVOICE_SAVE_INVOICE, requestObject).subscribe(function (params) {
+      that.httpCall.httpPostCall(httproutes.PORTAL_UPDATE_P_O, requestObject).subscribe(function (params) {
         if (params.status) {
           that.snackbarservice.openSnackBar(params.message, "success");
           that.back();
@@ -342,6 +353,7 @@ export class PoDetailFormComponent implements OnInit {
         }
         that.uiSpinner.spin$.next(false);
       });
+      console.log("requestObject", requestObject);
     }
   }
 }

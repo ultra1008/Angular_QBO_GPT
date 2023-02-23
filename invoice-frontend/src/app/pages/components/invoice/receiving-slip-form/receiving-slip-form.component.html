@@ -288,8 +288,8 @@
                                     style=" padding-right: 4px;">{{'PO-View-Print' |
                                 translate}}</button>
                         </div>
-                        <div class="pdf-viewer">
-                            <!-- *ngIf="loadInvoice" -->
+                        <div class="pdf-viewer" *ngIf="loadInvoice">
+
                             <pdf-viewer id="pdf" [src]="pdf_url" [rotation]="0" [original-size]="false"
                                 [show-all]="true" [fit-to-page]="false" [zoom]="1" [zoom-scale]="'page-width'"
                                 [stick-to-page]="false" [render-text]="true" [external-link-target]="'blank'"

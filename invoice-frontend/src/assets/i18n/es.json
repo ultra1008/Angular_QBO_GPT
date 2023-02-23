@@ -2460,5 +2460,11 @@
     "View_Related_Documents": "View Related Documents",
     "Approve_Invoice_massage": "Are you sure you want to approve this invoice?",
     "Reject_Invoice_massage": "Are you sure you want to reject this invoice?",
-    "Remove_Notes": "Are you sure you want to remove this notes"
+    "Remove_Notes": "Are you sure you want to remove this notes",
+    "Document_id": "Document ID",
+    "delivery_date": "Delivery Date",
+    "delivery_address": "Delivery Address",
+    "quote_number": "Quote Number",
+    "contract_number": "Contract Number",
+    "P_O_Totle": "P.O Totle"
 }

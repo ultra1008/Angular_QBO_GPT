@@ -1145,7 +1145,7 @@ export enum httproutes {
     PORTAL_SAVE_P_O_NOTES = "/webapi/v1/portal/saveponote",
     PORTAL_DELETE_P_O_NOTES = "/webapi/v1/portal/deleteponote",
     PORTAL_P_O_ATTCHMENTS = "/webapi/v1/portal/updatepoattachment",
-
+    PORTAL_UPDATE_P_O = "/webapi/v1/portal/updateinvoicerelateddocument",
 
     // Receiving Slip  NOTS & ATTCHMENTS
     PORTAL_SAVE_Receiving_Slip_NOTES = "/webapi/v1/portal/savepackingslipnote",

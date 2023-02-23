@@ -69,6 +69,7 @@ export class PackingSlipFormComponent implements OnInit {
   variablesDocumenttype: any = configdata.DOCUMENT_TYPE;
   DocumentType = this.variablesDocumenttype.slice();
   invoice_id: any;
+  loadInvoice: boolean = false;
 
   constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
@@ -289,6 +290,7 @@ export class PackingSlipFormComponent implements OnInit {
       if (params.status) {
 
         that.invoiceData = params.data;
+        that.loadInvoice = true;
         that.invoiceform = that.formBuilder.group({
           // invoice: [params.data.invoice],
           // p_o: [params.data.p_o, Validators.required],

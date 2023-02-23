@@ -80,18 +80,19 @@ export class InvoiceFormComponent implements OnInit {
   noButton: string = "";
   Approve_Invoice_massage: string = "";
   Reject_Invoice_massage: string = "";
-  status: any;
+
   // options: string[] = ['One', 'Two', 'Three'];
   filteredOptions: Observable<string[]>;
   vendor = new FormControl('');
   badge: any = [];
+  status: any;
 
 
 
   constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
-    this.pdf_url = this.route.snapshot.queryParamMap.get('pdf_url');
+    // this.pdf_url = this.route.snapshot.queryParamMap.get('pdf_url');
     this.status = this.route.snapshot.queryParamMap.get('status');
 
     console.log("invoice", this.id);
@@ -153,7 +154,7 @@ export class InvoiceFormComponent implements OnInit {
       this.printIcon = icon.PRINT_WHITE;
       this.approveIcon = icon.APPROVE_WHITE;
       this.denyIcon = icon.DENY_WHITE;
-      this.viewIcon = icon.VIEW_WHITE;
+      this.viewIcon = icon.VIEW;
     } else {
 
       this.backIcon = icon.BACK_WHITE;
@@ -162,7 +163,7 @@ export class InvoiceFormComponent implements OnInit {
       this.printIcon = icon.PRINT_WHITE;
       this.approveIcon = icon.APPROVE_WHITE;
       this.denyIcon = icon.DENY_WHITE;
-      this.viewIcon = icon.VIEW;
+      this.viewIcon = icon.VIEW_WHITE;
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
       if (mode) {
@@ -173,7 +174,7 @@ export class InvoiceFormComponent implements OnInit {
         this.printIcon = icon.PRINT_WHITE;
         this.approveIcon = icon.APPROVE_WHITE;
         this.denyIcon = icon.DENY_WHITE;
-        this.viewIcon = icon.VIEW_WHITE;
+        this.viewIcon = icon.VIEW;
 
       } else {
         this.mode = 'on';
@@ -183,7 +184,7 @@ export class InvoiceFormComponent implements OnInit {
         this.printIcon = icon.PRINT_WHITE;
         this.approveIcon = icon.APPROVE_WHITE;
         this.denyIcon = icon.DENY_WHITE;
-        this.viewIcon = icon.VIEW;
+        this.viewIcon = icon.VIEW_WHITE;
 
       }
     });
