@@ -290,11 +290,11 @@
                         </div>
                         <div class="pdf-viewer">
                             <!-- *ngIf="loadInvoice" -->
-                            <pdf-viewer id="pdf" [src]="pdf_url" [rotation]="0" [original-size]="false"
-                                [show-all]="true" [fit-to-page]="false" [zoom]="1" [zoom-scale]="'page-width'"
-                                [stick-to-page]="false" [render-text]="true" [external-link-target]="'blank'"
-                                [autoresize]="true" [show-borders]="false" [external-link-target]="'blank'"
-                                style="display: block;"></pdf-viewer>
+                            <pdf-viewer id="pdf" [src]="invoiceData.packing_slip_data.pdf_url" [rotation]="0"
+                                [original-size]="false" [show-all]="true" [fit-to-page]="false" [zoom]="1"
+                                [zoom-scale]="'page-width'" [stick-to-page]="false" [render-text]="true"
+                                [external-link-target]="'blank'" [autoresize]="true" [show-borders]="false"
+                                [external-link-target]="'blank'" style="display: block;"></pdf-viewer>
                         </div>
                     </div>
                 </mat-card>

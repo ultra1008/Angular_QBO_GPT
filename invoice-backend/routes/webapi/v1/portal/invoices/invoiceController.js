@@ -325,6 +325,7 @@ module.exports.getInvoiceList = async function (req, res) {
                             }
                         },
                         packing_slip_attachments: 1,
+                        has_po: 1,
                         po_data: 1,
                         po_notes: {
                             $filter: {
@@ -438,6 +439,7 @@ module.exports.getOneInvoice = async function (req, res) {
                             }
                         },
                         packing_slip_attachments: 1,
+                        has_po: 1,
                         po_data: 1,
                         po_notes: {
                             $filter: {

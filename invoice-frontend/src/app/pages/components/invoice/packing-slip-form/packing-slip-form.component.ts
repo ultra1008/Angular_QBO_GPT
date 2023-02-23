@@ -60,7 +60,7 @@ export class PackingSlipFormComponent implements OnInit {
   variablesusersArray: any = [];
   usersArray: any = this.variablesusersArray.slice();
 
-  pdf_url = 'https://s3.us-west-1.wasabisys.com/rovukdata/invoice-sample-pdfs/adrian@vmgconstructioninc10.com8a83e28d7dc522e9017e4939f2250519457511c73e527873ff3e198be850e1d1c710b0.pdf';
+  pdf_url = '';
 
   statusList = configdata.INVOICE_STATUS;
   approveIcon: string;
@@ -68,10 +68,12 @@ export class PackingSlipFormComponent implements OnInit {
   // DOCUMENT TYPE
   variablesDocumenttype: any = configdata.DOCUMENT_TYPE;
   DocumentType = this.variablesDocumenttype.slice();
+  invoice_id: any;
 
   constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
+    this.invoice_id = this.id;
 
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     var locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configdata.fst_load_lang : tmp_locallanguage;
@@ -154,7 +156,7 @@ export class PackingSlipFormComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/invoice-detail']);
+    this.router.navigate(['/invoice-detail'], { queryParams: { _id: this.invoice_id } });
   }
 
   ngOnInit(): void {
@@ -320,7 +322,7 @@ export class PackingSlipFormComponent implements OnInit {
           gl_account: [params.data.gl_account],
           assign_to: [params.data.assign_to],
           notes: [params.data.notes],
-          pdf_url: [params.data.pdf_url]
+          pdf_url: [params.data.packing_slip_data.pdf_url]
         });
       }
       that.uiSpinner.spin$.next(false);

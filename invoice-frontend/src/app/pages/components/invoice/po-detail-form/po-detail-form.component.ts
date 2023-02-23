@@ -57,7 +57,7 @@ export class PoDetailFormComponent implements OnInit {
   variablesusersArray: any = [];
   usersArray: any = this.variablesusersArray.slice();
 
-  pdf_url = "https://s3.us-west-1.wasabisys.com/rovukdata/invoice-sample-pdfs/adrian@vmgconstructioninc10.comae95eb347d143714017d21f295de0449112194196aa89c3932ce0cbb7d3d574882405.pdf";
+  pdf_url = "";
   invoiceData: any;
   statusList = configdata.INVOICE_STATUS;
   approveIcon: string;
@@ -65,10 +65,12 @@ export class PoDetailFormComponent implements OnInit {
   // DOCUMENT TYPE
   variablesDocumenttype: any = configdata.DOCUMENT_TYPE;
   DocumentType = this.variablesDocumenttype.slice();
+  invoice_id: any;
 
   constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
+    this.invoice_id = this.id;
 
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     var locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configdata.fst_load_lang : tmp_locallanguage;
@@ -149,7 +151,7 @@ export class PoDetailFormComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/invoice-detail']);
+    this.router.navigate(['/invoice-detail'], { queryParams: { _id: this.invoice_id } });
   }
 
   ngOnInit(): void {
@@ -314,7 +316,7 @@ export class PoDetailFormComponent implements OnInit {
           gl_account: [params.data.gl_account],
           assign_to: [params.data.assign_to],
           notes: [params.data.notes],
-          pdf_url: [params.data.pdf_url]
+          pdf_url: [params.data.po_data.pdf_url]
         });
       }
       that.uiSpinner.spin$.next(false);
