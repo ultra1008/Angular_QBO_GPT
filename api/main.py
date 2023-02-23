@@ -9,6 +9,9 @@ from fastapi.security.api_key import APIKeyHeader
 
 from redis import Redis
 from rq import Queue
+import boto3
+import hashlib
+
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -39,6 +42,31 @@ def health_check():
     return {"status": "OK"}
 
 
+def _calc_document_bundle_hash(documents_bundle_url):
+    indices = [i for i in range(len(documents_bundle_url)) if documents_bundle_url[i] == '/']
+    endpoint_url = documents_bundle_url[:indices[2]]
+    bucket = documents_bundle_url[indices[2] + 1: indices[3]]
+    key = documents_bundle_url[indices[3] + 1:]
+
+    # Connect to source s3
+    input_s3 = boto3.client(
+        's3',
+        endpoint_url=endpoint_url,
+        aws_access_key_id=os.getenv('INPUT_AWS_ACCESS_KEY_ID'),
+        aws_secret_access_key=os.getenv('INPUT_AWS_SECRET_ACCESS_KEY')
+    )
+
+    # Get bucket object
+    result = input_s3.get_object(Bucket=bucket, Key=key)
+    raw_bytes_data = result['Body'].read()
+
+    # Hash
+    h1 = hashlib.sha1()
+    h1.update(raw_bytes_data)
+    return h1.hexdigest()  # 160 bits
+
+
+
 class Document(BaseModel):
     document_url: str
     document_id: str
@@ -51,17 +79,38 @@ class Documents(BaseModel):
 @app.post("/process")
 async def process(data: Documents, _=Depends(auth)):
     print(f'process: {data=}')
-    for document in data.documents:
-        r = q.enqueue(
-            'worker.process_documents_bundle',
-            {'document_url': document.document_url, 'document_id': document.document_id},
-            job_timeout=600  # 10min
-        )
-        print('sent_task:', r)
+    if len(data.documents) == 0:
+        return {}
 
-    return {
-        'status': 'OK'
+    document_hashes = {
+        document.document_url: _calc_document_bundle_hash(document.document_url)
+        for document in data.documents
     }
+
+    document_url = data.documents[0].document_url
+    indices = [i for i in range(len(document_url)) if document_url[i] == '/']
+    customer_id = document_url[indices[2] + 1: indices[3]]
+
+    hashes_status = indexer.is_duplicate(customer_id, list(document_hashes.values()))
+
+    response = {}
+    for document in data.documents:
+        if not hashes_status[document_hashes[document.document_url]]:
+            r = q.enqueue(
+                'worker.process_documents_bundle', {
+                    'document_url': document.document_url,
+                    'document_id': document.document_id,
+                    'document_hash': document_hashes[document.document_url]
+                },
+                job_timeout=600  # 10min
+            )
+            print('sent_task:', document.document_url, r)
+            response[document.document_id] = 'SENT_FOR_PROCESSING'
+        else:
+            print('duplicate:', document)
+            response[document.document_id] = 'ALREADY_EXISTS'
+
+    return response
 
 
 @app.get("/get_documents_by_id")
@@ -76,8 +125,13 @@ async def search(customer_id: str, query: str, _=Depends(auth)):
     return indexer.search(customer_id, query)
 
 
-
 @app.get("/stats")
-async def stats(customer_id: str, date_from: str, date_to: str, _=Depends(auth)):
-    pass
-    return indexer.search(customer_id, query)
+async def stats(date_from: str, date_to: str, _=Depends(auth)):
+    print(f'stats: {date_from=}, {date_to=}')
+    return indexer.calc_stats(date_from, date_to)
+
+
+@app.get("/detailed_stats")
+async def stats(date_from: str, date_to: str, _=Depends(auth)):
+    print(f'detailed_stats: {date_from=}, {date_to=}')
+    return indexer.detailed_stats(date_from, date_to)

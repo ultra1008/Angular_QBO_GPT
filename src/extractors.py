@@ -7,6 +7,7 @@ import trp
 from PyPDF2 import PdfReader, PdfWriter
 from io import BytesIO
 from typing import List
+from datetime import datetime
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -347,11 +348,10 @@ class ExtractorsManager:
                 extractor = InvoiceExtractor(expense_parser, forms_parser,
                                              self.custom_fields_conf.get('INVOICE'))
             else:
-                extractor = None
+                extractor = UnknownExtractor(expense_parser, forms_parser, self.custom_fields_conf)
 
-            if extractor:
-                result = extractor.extract()
-                results.append(result)
+            result = extractor.extract()
+            results.append(result)
 
         return results
 
@@ -395,6 +395,12 @@ class Extractor:
             except Exception as e:
                 print(f'Exception occurred while parsing custom_fields_conf for doctype: {self.document_type}, '
                       f'exception: {e}')
+
+        result['paid'] = ['EXPENSE']
+        if self.forms_parser is not None and self.forms_parser.fields is not None:
+            result['paid'].append('FORMS')
+
+        result['created_date'] = datetime.utcnow()
 
         return result
 
@@ -445,6 +451,9 @@ class Extractor:
 
     def get_clf_fields(self, key_name: str):
         fields = self.expense_parser.get_clf_fields(key_name)
+        if fields is None:
+            return None
+
         return [field._replace(value=self._clean_extracted_value(field.value))
                 for field in fields]
 
@@ -517,8 +526,10 @@ class PackingSlipExtractor(Extractor):
 
         return {
             'document_type': 'PACKING_SLIP',
-            'fields': fields
+            'fields': fields,
+            'expense_groups': self.get_expense_groups()
         }
+
 
 
 class QuoteExtractor(Extractor):
@@ -530,7 +541,7 @@ class QuoteExtractor(Extractor):
         quote_date = self.get_clf_field_value('INVOICE_RECEIPT_DATE')
         terms = self.get_clf_field_value('PAYMENT_TERMS')
         address = self.get_clf_field_value('RECEIVER_ADDRESS')
-        vendor_name = self.get_clf_field_value('VENDOR_NAME')
+        vendor_name = self._extract_vendor_name()
         vendor_address = self.get_clf_field_value('VENDOR_ADDRESS')
         shipping_method = self.get_other_field_value('Shipping Method')
         sub_total = self.get_clf_field_value('SUBTOTAL')
@@ -560,6 +571,19 @@ class QuoteExtractor(Extractor):
             'expense_groups': groups
         }
 
+    def _extract_vendor_name(self):
+        value = self.get_clf_field_value('VENDOR_NAME')
+        if value:
+            value = value.replace('ON ACCOUNT', '').strip()
+        else:
+            for block in self.expense_parser.document['Blocks']:
+                if block['BlockType'] == 'LINE':
+                    value = block['Text']
+                    break
+
+        return self.clean_extracted_id(value)
+
+
 
 class InvoiceExtractor(Extractor):
     def __init__(self, expense_parser, forms_parser, conf):
@@ -577,7 +601,7 @@ class InvoiceExtractor(Extractor):
             'TOTAL': self.get_clf_field_value('TOTAL'),
             'TAX': self.get_clf_field_value('TAX'),
             'INVOICE_TOTAL': self.get_clf_field_value('TOTAL'),
-            'VENDOR_NAME': self.get_clf_field_value('VENDOR_NAME'),
+            'VENDOR_NAME': self._extract_vendor_name(),
             'VENDOR_ADDRESS': self.get_clf_field_value('VENDOR_ADDRESS'),
             'VENDOR_PHONE': self.get_clf_field_value('VENDOR_PHONE'),
             'JOB_NUMBER': self.get_other_field_value('JOB NUMBER'),
@@ -628,6 +652,12 @@ class InvoiceExtractor(Extractor):
         value = self.get_clf_field_value('ACCOUNT_NUMBER')
         return value
 
+    def _extract_vendor_name(self):
+        clf_fields = self.get_clf_fields('VENDOR_NAME')
+        if clf_fields:
+            return self.clean_extracted_id(clf_fields[0].value)
+        else:
+            return None
 
 
 class PurchaseOrderExtractor(Extractor):
@@ -642,7 +672,7 @@ class PurchaseOrderExtractor(Extractor):
             'TERMS': self.get_clf_field_value('PAYMENT_TERMS'),
             'DELIVERY_DATE': self.get_clf_field_value('DELIVERY_DATE'),
             'DUE_DATE': self.get_clf_field_value('DUE_DATE'),
-            'QUOTE_NUMBER': self.clean_extracted_id(self.get_clf_field_value('INVOICE_RECEIPT_ID')),
+            'QUOTE_NUMBER': self.extract_quote_number(),
             'CONTRACT_NUMBER': self.get_clf_field_value('RECEIVER_PHONE'),
             'DELIVERY_ADDRESS': self.get_clf_field_value('RECEIVER_ADDRESS'),
             'VENDOR_ID': self.get_other_field_value('Vendor'),
@@ -672,7 +702,7 @@ class PurchaseOrderExtractor(Extractor):
         forms_vendor_value = self.get_forms_field_value('Vendor')
 
         # High confidence
-        if forms_vendor_value:
+        if forms_vendor_value and self.get_clf_fields('VENDOR_NAME'):
             for clf_field in self.get_clf_fields('VENDOR_NAME'):
                 if all(k_value in forms_vendor_value for k_value in clf_field.value.split()):
                     return clf_field.value
@@ -696,7 +726,7 @@ class PurchaseOrderExtractor(Extractor):
         forms_vendor_value = self.get_forms_field_value('Vendor')
 
         # High confidence
-        if forms_vendor_value:
+        if forms_vendor_value and self.get_clf_fields('VENDOR_ADDRESS'):
             for vendor_address_field in self.get_clf_fields('VENDOR_ADDRESS'):
                 if all(k_value in forms_vendor_value for k_value in vendor_address_field.value.split()):
                     return vendor_address_field.value.replace(vendor_name, '').strip()
@@ -711,6 +741,29 @@ class PurchaseOrderExtractor(Extractor):
 
         return None
 
+    def extract_quote_number(self):
+        value = self.get_clf_field_value('INVOICE_RECEIPT_ID')
+        if not value:
+            value = self.get_other_field_value('QUOTE NUMBER')
+
+        return self.clean_extracted_id(value)
+
+
+class UnknownExtractor(Extractor):
+    def __init__(self, expense_parser, forms_parser, confs):
+        super().__init__('UNKNOWN', expense_parser, forms_parser, None)
+        self.confs = confs
+
+    def _extract(self):
+        po = PurchaseOrderExtractor(self.expense_parser, self.forms_parser, self.confs.get('PURCHASE_ORDER')).extract()
+        ps = PackingSlipExtractor(self.expense_parser, self.forms_parser, self.confs.get('PACKING_SLIP')).extract()
+        qo = QuoteExtractor(self.expense_parser, self.forms_parser, self.confs.get('QUOTE')).extract()
+        inv = InvoiceExtractor(self.expense_parser, self.forms_parser, self.confs.get('INVOICE')).extract()
+
+        result = max([po, ps, qo, inv], key=lambda r: sum(1 for v in r['fields'].values() if v) / len(r['fields']))
+        print(f"Unknown extracted as: {result['document_type']}")
+        result['document_type'] = 'UNKNOWN'
+        return result
 
 
 if __name__ == '__main__':
@@ -724,16 +777,30 @@ if __name__ == '__main__':
     # fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_PSs_aws_analyze_api/ps_packingslip.pdf.json'
     # print(json.dumps(PackingSlipExtractor(load_resp(fn)['ExpenseDocuments'][0]).extract(), indent=2))
 
-    # fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_QUOTEs_aws_analyze_api/quote_1.pdf.json'
-    # print(json.dumps(QuoteExtractor(load_resp(fn)['ExpenseDocuments'][0]).extract(), indent=2))
+    # exp_fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_QUOTEs_aws_analyze_api/quote_1.pdf.json'
+    # forms_fn = ''
+    # # print(json.dumps(QuoteExtractor(load_resp(fn)['ExpenseDocuments'][0]).extract(), indent=2))
+    # print(json.dumps(
+    #     QuoteExtractor(
+    #         ExpenseParser(load_resp(exp_fn)['ExpenseDocuments'][0]).parse(),
+    #         None, {}
+    #     ).extract(), indent=2, default=str))
+
 
     # fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_analyze_api/' \
     #      'Invoice,8042209225,38077982,PJ WG Renewal 1 year.PDF.json'
     # print(json.dumps(InvoiceExtractor(load_resp(fn)['ExpenseDocuments'][0]).extract(), indent=2))
 
-    # fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_POs_aws_analyze_api/po_PO FNC for Anil.pdf.json'
-    # fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_POs_aws_analyze_api/po_PO FNC for Anil.pdf.json'
-    # print(json.dumps(PurchaseOrderExtractor(load_resp(fn)['ExpenseDocuments'][0]).extract(), indent=2))
+    # fn_exp = '/home/yuri/upwork/ridaro/data/demo_2/po3_6266b4fa53a358c32e41a022po1675345707726_edited.pdf_expense.json'
+    # fn_form = '/home/yuri/upwork/ridaro/data/demo_2/po3_6266b4fa53a358c32e41a022po1675345707726_edited.pdf_page_0_FT.json'
+    # print(json.dumps(
+    #     PurchaseOrderExtractor(
+    #         ExpenseParser(load_resp(fn_exp)['ExpenseDocuments'][0]).parse(),
+    #         FormsParser(load_resp(fn_form), 0, 'some_url'), {}
+    #     ).extract(), indent=2, default=str))
+
+
+
 
     # fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_POs_aws_analyze_api/po_PO FNC for Anil.pdf.json'
     # results_ = ExtractorsManager([load_resp(fn)['ExpenseDocuments'][0]]).extract()
@@ -791,6 +858,43 @@ if __name__ == '__main__':
     # po_forms_fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_POs_aws_forms_and_tables_api/po_PO FNC for Anil.pdf.json'
 
 
+    def test_demo_2():
+        # fn_exp = '/home/yuri/upwork/ridaro/data/demo_2/po3_6266b4fa53a358c32e41a022po1675345707726_edited.pdf_expense.json'
+        # fn_form = '/home/yuri/upwork/ridaro/data/demo_2/po3_6266b4fa53a358c32e41a022po1675345707726_edited.pdf_page_0_FT.json'
+        # print(json.dumps(
+        #     PurchaseOrderExtractor(
+        #         ExpenseParser(load_resp(fn_exp)['ExpenseDocuments'][0]).parse(),
+        #         FormsParser(load_resp(fn_form), 0, 'some_url'), {}
+        #     ).extract(), indent=2, default=str))
+
+        # fn_exp = '/home/yuri/upwork/ridaro/data/demo_2/Invoice_2431_from_Ridaro_Inc.pdf_expense.json'
+        # print(json.dumps(
+        #     InvoiceExtractor(
+        #         ExpenseParser(load_resp(fn_exp)['ExpenseDocuments'][0]).parse(),
+        #         None, {}
+        #     ).extract(), indent=2, default=str))
+
+        # fn_exp = '/home/yuri/upwork/ridaro/data/demo_2/ps_Intuit - Ridaro FCNS22-9185_PackingSlip_10202022_test.pdf_expense.json'
+        # print(json.dumps(
+        #     InvoiceExtractor(
+        #         ExpenseParser(load_resp(fn_exp)['ExpenseDocuments'][0]).parse(),
+        #         None, {}
+        #     ).extract(), indent=2, default=str))
+
+        # fn_exp = '/home/yuri/upwork/ridaro/data/processed/docs_2_QUOTEs_aws_analyze_api/quote_1.pdf.json'
+        # fn_exp = '/home/yuri/upwork/ridaro/data/demo_2/quote_1.pdf_expense.json'
+        fn_exp = '/home/yuri/upwork/ridaro/data/demo_2/quote_1_1p.pdf_expense.json'
+        # fn_exp = '/home/yuri/upwork/ridaro/data/demo_2/quote_1_1p_pic.pdf_expense.json'
+        print(json.dumps(
+            QuoteExtractor(
+                ExpenseParser(load_resp(fn_exp)['ExpenseDocuments'][0]).parse(),
+                None, {}
+            ).extract(), indent=2, default=str))
+
+
+    test_demo_2()
+
+
     def test_docs4():
         po_exp_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/po4_Book4.pdf_expense.json'
         po_forms_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/po4_Book4.pdf_FT.json'
@@ -823,10 +927,31 @@ if __name__ == '__main__':
         #     ).extract(), indent=2))
 
 
+    def test_unknown_extractor():
+        # po_exp_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/po4_Book4.pdf_expense.json'
+        # po_forms_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/po4_Book4.pdf_FT.json'
+
+        # po_exp_fn = '/home/yuri/upwork/ridaro/data/processed/docs_3_POs_aws_analyze_api/po3_60c31f3dc5ba8494a2b1070fpo1675153979115.pdf.json'
+        # po_forms_fn = '/home/yuri/upwork/ridaro/data/processed/docs_3_POs_aws_forms_and_tables_api/po3_60c31f3dc5ba8494a2b1070fpo1675153979115.pdf.json'
+        # po_exp_fn = '/home/yuri/upwork/ridaro/data/processed/docs_3_POs_aws_analyze_api/po3_6266b4fa53a358c32e41a022po1675345707726.pdf.json'
+        # po_forms_fn = '/home/yuri/upwork/ridaro/data/processed/docs_3_POs_aws_forms_and_tables_api/po3_6266b4fa53a358c32e41a022po1675345707726.pdf.json'
+        po_exp_fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_POs_aws_analyze_api/po_61cc7994d2045c72475f9ed4po1646925766302.pdf.json'
+        po_forms_fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_POs_aws_forms_and_tables_api/po_61cc7994d2045c72475f9ed4po1646925766302.pdf.json'
+        # po_exp_fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_POs_aws_analyze_api/po_PO FNC for Anil.pdf.json'
+        # po_forms_fn = '/home/yuri/upwork/ridaro/data/processed/docs_2_POs_aws_forms_and_tables_api/po_PO FNC for Anil.pdf.json'
+
+        # print('detected_doctype:', ExtractorsManager._detect_doc_type(load_resp(po_exp_fn)['ExpenseDocuments'][0]))
+        print(json.dumps(
+            UnknownExtractor(
+                ExpenseParser(load_resp(po_exp_fn)['ExpenseDocuments'][0]).parse(),
+                FormsParser(load_resp(po_forms_fn), 0, 'some_url'), {}
+            ).extract(), indent=2, default=str))
 
 
+    # test_unknown_extractor()
 
-    test_docs4()
+
+    # test_docs4()
 
 
 

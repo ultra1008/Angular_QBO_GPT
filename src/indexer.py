@@ -1,12 +1,14 @@
 import pymongo
 from pymongo import MongoClient, ASCENDING
 from uuid import uuid4
-
+from datetime import datetime
+import pprint
 
 
 class Indexer:
-    def __init__(self):
-        client = MongoClient('mongodb://mongo:27017')
+    def __init__(self, conn=None):
+        conn = conn or 'mongodb://mongo:27017'
+        client = MongoClient(conn)
         self.db = client.rovuk_db
 
         # If the index already exists, MongoDB will not recreate the index
@@ -15,15 +17,32 @@ class Indexer:
         self.db.relations.create_index([('document_id', ASCENDING)], name='document_id')
         self.db.relations.create_index([('document_hash', ASCENDING)], name='document_hash')
 
+    def is_duplicate(self, customer_id, hashes):
+        results = self.db.documents.aggregate([
+            {'$match': {'customer_id': customer_id, 'document_hash': {'$in': hashes}}},
+            {'$group': {'_id': "$document_hash", 'count': {'$sum': 1}}},
+        ])
 
-    def update_duplicate_document_bundle(self, doc_hash, document_id, s3_docs_bundle_url):
+        found_hashes = {
+            result['_id']
+            for result in results
+        }
+
+        return {
+            hash_code: hash_code in found_hashes
+            for hash_code in hashes
+        }
+
+    def update_duplicate_document_bundle(self, customer_id, doc_hash, document_id, s3_docs_bundle_url):
+        # n_docs = self.db.documents.count_documents({
         result = self.db.documents.update_many({
+            'customer_id': customer_id,
             'document_hash': doc_hash
         }, {
             '$set': {'document_id': document_id, 'url': s3_docs_bundle_url}
         })
 
-        return result.modified_count > 0
+        return result.matched_count > 0
 
 
     def index(self, customer_id, document_id, s3_docs_bundle_url, doc_hash, documents):
@@ -45,6 +64,8 @@ class Indexer:
             self._index_quote_document(customer_id, document_id, s3_docs_bundle_url, document)
         elif document['document_type'] == 'INVOICE':
             self._index_invoice_document(customer_id, document_id, s3_docs_bundle_url, document)
+        elif document['document_type'] == 'UNKNOWN':
+            self._index_unknown_document(customer_id, document_id, s3_docs_bundle_url, document)
 
 
     def search(self, customer_id, query):
@@ -63,7 +84,8 @@ class Indexer:
         documents = list(self.db.documents.find({
             'customer_id': customer_id,
             'document_id': {'$in': document_ids},
-            'indexed': True
+            'indexed': True,
+            'document_type': {'$ne': 'UNKNOWN'}
         }))
         documents = self._compose_documents(documents)
 
@@ -108,7 +130,7 @@ class Indexer:
             related = [rel for rel in related if rel != doc_set['_id']]
             doc_set_result['related_documents'] = [{
                     'document_type': all_related_documents_map[rel]['document_type'],
-                    'document_id': doc_set['document_id'],
+                    'document_id': all_related_documents_map[rel]['document_id'],
                     'document_url': all_related_documents_map[rel]['url'],
                     'document_pages': [{
                             'fields': doc['fields'],
@@ -123,6 +145,69 @@ class Indexer:
             results.append(doc_set_result)
 
         return results
+
+    def calc_stats(self, date_from: str, date_to: str):
+        date_from = datetime.fromisoformat(f'{date_from}T00:00:01.000+00:00')
+        date_to = datetime.fromisoformat(f'{date_to}T23:59:59.999+00:00')
+
+        results = self.db.documents.aggregate([
+            {'$match': {'documents.created_date': {'$gt': date_from, '$lt': date_to}}},
+            {'$unwind': "$documents"},
+            {'$unwind': "$documents.paid"},
+            {'$group': {'_id': "$documents.paid", 'count': {'$sum': 1}}},
+        ])
+
+        results = {
+            result['_id']: result['count']
+            for result in results
+        }
+
+        if 'EXPENSE' not in results:
+            results['EXPENSE'] = 0
+
+        if 'FORMS' not in results:
+            results['FORMS'] = 0
+
+        return results
+
+
+    def detailed_stats(self, date_from: str, date_to: str):
+        date_from = datetime.fromisoformat(f'{date_from}T00:00:01.000+00:00')
+        date_to = datetime.fromisoformat(f'{date_to}T23:59:59.999+00:00')
+
+        results = self.db.documents.aggregate([
+            {'$match': {'documents.created_date': {'$gt': date_from, '$lt': date_to}}},
+            {'$unwind': "$documents"},
+            {'$unwind': "$documents.paid"},
+            {'$group': {'_id': {"cust_id": "$customer_id",
+                                "doc_type": "$document_type",
+                                "paid": "$documents.paid"},
+                        'count': {'$sum': 1}}},
+        ])
+
+        output = {}
+        for result in list(results):
+            if result['_id']['cust_id'] not in output:
+                output[result['_id']['cust_id']] = {
+                    'other': {
+                        'EXPENSE': 0,
+                        'FORMS': 0
+                    },
+                    'invoice': {
+                        'EXPENSE': 0,
+                        'FORMS': 0
+                    }
+                }
+
+            if result['_id']['doc_type'] == 'INVOICE':
+                output[result['_id']['cust_id']]['invoice'][result['_id']['paid']] = result['count']
+            else:
+                output[result['_id']['cust_id']]['other'][result['_id']['paid']] = \
+                    output[result['_id']['cust_id']]['other'][result['_id']['paid']] + result['count']
+
+
+        return output
+
 
 
     @staticmethod
@@ -163,12 +248,13 @@ class Indexer:
 
     def _index_quote_document(self, customer_id, document_id, s3_docs_bundle_url, document):
         n_docs = 0
-        if document['fields']['QUOTE_NUMBER']:
+        if document['fields']['QUOTE_NUMBER'] and document['fields']['VENDOR_NAME']:
             n_docs = self.db.documents.count_documents({
                 'customer_id': customer_id,
                 'document_id': document_id,
                 'document_type': 'QUOTE',
-                'quote_number': document['fields']['QUOTE_NUMBER']
+                'quote_number': document['fields']['QUOTE_NUMBER'],
+                'vendor_name': document['fields']['VENDOR_NAME']
             })
 
         if n_docs == 0:
@@ -179,6 +265,7 @@ class Indexer:
                 'document_id': document_id,
                 'document_type': 'QUOTE',
                 'quote_number': document['fields']['QUOTE_NUMBER'],
+                'vendor_name': document['fields']['VENDOR_NAME'],
                 'documents': [
                     document
                 ],
@@ -194,11 +281,12 @@ class Indexer:
             })
 
             # Match to PO
-            if document['fields']['QUOTE_NUMBER']:
+            if document['fields']['QUOTE_NUMBER'] and document['fields']['VENDOR_NAME']:
                 matched_po = self.db.documents.find_one({
                     'customer_id': customer_id,
                     'document_type': 'PURCHASE_ORDER',
-                    'quote_number': document['fields']['QUOTE_NUMBER']
+                    'quote_number': document['fields']['QUOTE_NUMBER'],
+                    'vendor_name': document['fields']['VENDOR_NAME']
                 })
                 if matched_po:
                     relation_id = self._relate_to_matched(customer_id, matched_po, relation_id)
@@ -209,6 +297,7 @@ class Indexer:
                 'document_id': document_id,
                 'document_type': 'QUOTE',
                 'quote_number': document['fields']['QUOTE_NUMBER'],
+                'vendor_name': document['fields']['VENDOR_NAME']
             }, {
                 '$push': {
                     'documents': document,
@@ -217,14 +306,36 @@ class Indexer:
             })
 
 
+    def _index_unknown_document(self, customer_id, document_id, s3_docs_bundle_url, document):
+        # Add document
+        relation_id = self._generate_uuid()
+        resp = self.db.documents.insert_one({
+            'customer_id': customer_id,
+            'document_id': document_id,
+            'relation_id': relation_id,
+            'document_type': 'UNKNOWN',
+            'documents': [
+                document
+            ],
+            'url': s3_docs_bundle_url,
+            'searchable': list(document['fields'].values()),
+        })
+        # Add Relation
+        self.db.relations.insert_one({
+            'customer_id': customer_id,
+            'relation_id': relation_id,
+            'related': [resp.inserted_id]
+        })
+
     def _index_purchase_order_document(self, customer_id, document_id, s3_docs_bundle_url, document):
         n_docs = 0
-        if document['fields']['PO_NUMBER']:
+        if document['fields']['PO_NUMBER'] and document['fields']['VENDOR_NAME']:
             n_docs = self.db.documents.count_documents({
                 'customer_id': customer_id,
                 'document_id': document_id,
                 'document_type': 'PURCHASE_ORDER',
                 'po_number': document['fields']['PO_NUMBER'],
+                'vendor_name': document['fields']['VENDOR_NAME']
             })
 
         if n_docs == 0:
@@ -236,6 +347,7 @@ class Indexer:
                 'document_type': 'PURCHASE_ORDER',
                 'po_number': document['fields']['PO_NUMBER'],
                 'quote_number': document['fields']['QUOTE_NUMBER'],
+                'vendor_name': document['fields']['VENDOR_NAME'],
                 'documents': [
                     document
                 ],
@@ -251,31 +363,34 @@ class Indexer:
             })
 
             # Match to Quote
-            if document['fields']['QUOTE_NUMBER']:
+            if document['fields']['QUOTE_NUMBER'] and document['fields']['VENDOR_NAME']:
                 matched_quote = self.db.documents.find_one({
                     'customer_id': customer_id,
                     'document_type': 'QUOTE',
-                    'quote_number': document['fields']['QUOTE_NUMBER']
+                    'quote_number': document['fields']['QUOTE_NUMBER'],
+                    'vendor_name': document['fields']['VENDOR_NAME']
                 })
                 if matched_quote:
                     relation_id = self._relate_to_matched(customer_id, matched_quote, relation_id)
 
             # Match to Invoice
-            if document['fields']['PO_NUMBER']:
+            if document['fields']['PO_NUMBER'] and document['fields']['VENDOR_NAME']:
                 matched_invoice = self.db.documents.find_one({
                     'customer_id': customer_id,
                     'document_type': 'INVOICE',
-                    'po_number': document['fields']['PO_NUMBER']
+                    'po_number': document['fields']['PO_NUMBER'],
+                    'vendor_name': document['fields']['VENDOR_NAME']
                 })
                 if matched_invoice:
                     relation_id = self._relate_to_matched(customer_id, matched_invoice, relation_id)
 
             # Match to PS
-            if document['fields']['PO_NUMBER']:
+            if document['fields']['PO_NUMBER'] and document['fields']['VENDOR_NAME']:
                 matched_ps = self.db.documents.find_one({
                     'customer_id': customer_id,
                     'document_type': 'PACKING_SLIP',
-                    'po_number': document['fields']['PO_NUMBER']
+                    'po_number': document['fields']['PO_NUMBER'],
+                    'vendor_name': document['fields']['VENDOR_NAME']
                 })
                 if matched_ps:
                     relation_id = self._relate_to_matched(customer_id, matched_ps, relation_id)
@@ -285,7 +400,8 @@ class Indexer:
                 'customer_id': customer_id,
                 'document_id': document_id,
                 'document_type': 'PURCHASE_ORDER',
-                'po_number': document['fields']['PO_NUMBER']
+                'po_number': document['fields']['PO_NUMBER'],
+                'vendor_name': document['fields']['VENDOR_NAME']
             }, {
                 '$push': {
                     'documents': document,
@@ -295,12 +411,13 @@ class Indexer:
 
     def _index_invoice_document(self, customer_id, document_id, s3_docs_bundle_url, document):
         n_docs = 0
-        if document['fields']['INVOICE_NUMBER']:
+        if document['fields']['INVOICE_NUMBER'] and document['fields']['VENDOR_NAME']:
             n_docs = self.db.documents.count_documents({
                 'customer_id': customer_id,
                 'document_id': document_id,
                 'document_type': 'INVOICE',
-                'invoice_number': document['fields']['INVOICE_NUMBER']
+                'invoice_number': document['fields']['INVOICE_NUMBER'],
+                'vendor_name': document['fields']['VENDOR_NAME']
             })
 
         if n_docs == 0:
@@ -311,6 +428,7 @@ class Indexer:
                 'document_type': 'INVOICE',
                 'invoice_number': document['fields']['INVOICE_NUMBER'],
                 'po_number': document['fields']['PO_NUMBER'],
+                'vendor_name': document['fields']['VENDOR_NAME'],
                 'documents': [
                     document
                 ],
@@ -326,21 +444,23 @@ class Indexer:
             })
 
             # Match to PO
-            if document['fields']['PO_NUMBER']:
+            if document['fields']['PO_NUMBER'] and document['fields']['VENDOR_NAME']:
                 matched_po = self.db.documents.find_one({
                     'customer_id': customer_id,
                     'document_type': 'PURCHASE_ORDER',
-                    'po_number': document['fields']['PO_NUMBER']
+                    'po_number': document['fields']['PO_NUMBER'],
+                    'vendor_name': document['fields']['VENDOR_NAME']
                 })
                 if matched_po:
                     relation_id = self._relate_to_matched(customer_id, matched_po, relation_id)
 
             # Match to PS
-            if document['fields']['INVOICE_NUMBER']:
+            if document['fields']['INVOICE_NUMBER'] and document['fields']['VENDOR_NAME']:
                 matched_ps = self.db.documents.find_one({
                     'customer_id': customer_id,
                     'document_type': 'PACKING_SLIP',
-                    'invoice_number': document['fields']['INVOICE_NUMBER']
+                    'invoice_number': document['fields']['INVOICE_NUMBER'],
+                    'vendor_name': document['fields']['VENDOR_NAME']
                 })
                 if matched_ps:
                     relation_id = self._relate_to_matched(customer_id, matched_ps, relation_id)
@@ -351,6 +471,7 @@ class Indexer:
                 'document_id': document_id,
                 'document_type': 'INVOICE',
                 'invoice_number': document['fields']['INVOICE_NUMBER'],
+                'vendor_name': document['fields']['VENDOR_NAME']
             }, {
                 '$push': {
                     'documents': document,
@@ -361,13 +482,14 @@ class Indexer:
 
     def _index_packing_slip_document(self, customer_id, document_id, s3_docs_bundle_url, document):
         n_docs = 0
-        if document['fields']['INVOICE_NUMBER'] and document['fields']['PO_NUMBER']:
+        if document['fields']['INVOICE_NUMBER'] and document['fields']['PO_NUMBER'] and document['fields']['VENDOR_NAME']:
             n_docs = self.db.documents.count_documents({
                 'customer_id': customer_id,
                 'document_id': document_id,
                 'document_type': 'PACKING_SLIP',
                 'invoice_number': document['fields']['INVOICE_NUMBER'],
-                'po_number': document['fields']['PO_NUMBER']
+                'po_number': document['fields']['PO_NUMBER'],
+                'vendor_name': document['fields']['VENDOR_NAME']
             })
 
         if n_docs == 0:
@@ -379,6 +501,7 @@ class Indexer:
                 'document_type': 'PACKING_SLIP',
                 'invoice_number': document['fields']['INVOICE_NUMBER'],
                 'po_number': document['fields']['PO_NUMBER'],
+                'vendor_name': document['fields']['VENDOR_NAME'],
                 'documents': [
                     document
                 ],
@@ -394,21 +517,23 @@ class Indexer:
             })
 
             # Match to Invoice
-            if document['fields']['INVOICE_NUMBER']:
+            if document['fields']['INVOICE_NUMBER'] and document['fields']['VENDOR_NAME']:
                 matched_invoice = self.db.documents.find_one({
                     'customer_id': customer_id,
                     'document_type': 'INVOICE',
-                    'invoice_number': document['fields']['INVOICE_NUMBER']
+                    'invoice_number': document['fields']['INVOICE_NUMBER'],
+                    'vendor_name': document['fields']['VENDOR_NAME']
                 })
                 if matched_invoice:
                     relation_id = self._relate_to_matched(customer_id, matched_invoice, relation_id)
 
             # Match to PO
-            if document['fields']['PO_NUMBER']:
+            if document['fields']['PO_NUMBER'] and document['fields']['VENDOR_NAME']:
                 matched_po = self.db.documents.find_one({
                     'customer_id': customer_id,
                     'document_type': 'PURCHASE_ORDER',
-                    'po_number': document['fields']['PO_NUMBER']
+                    'po_number': document['fields']['PO_NUMBER'],
+                    'vendor_name': document['fields']['VENDOR_NAME']
                 })
                 if matched_po:
                     relation_id = self._relate_to_matched(customer_id, matched_po, relation_id)
@@ -421,6 +546,7 @@ class Indexer:
                 # Note: since PS does not have a dedicated ID (like PO_NUMBER for PO) we identify it by these:
                 'invoice_number': document['fields']['INVOICE_NUMBER'],
                 'po_number': document['fields']['PO_NUMBER'],
+                'vendor_name': document['fields']['VENDOR_NAME']
             }, {
                 '$push': {
                     'documents': document,
@@ -438,14 +564,14 @@ if __name__ == '__main__':
 
     # -----------------------------------------------------------------------------------------
     def case_1():
-        Indexer()._index_quote_document('cust_1', {
+        Indexer()._index_quote_document('cust_1', 'doc_id_1', 'doc_url', {
             'fields': {
                 'document_type': 'QUOTE',
                 'QUOTE_NUMBER': 'q1'
             }
         })
 
-        Indexer()._index_invoice_document('cust_1', {
+        Indexer()._index_invoice_document('cust_1', 'doc_id_1', 'doc_url', {
             'fields': {
                 'document_type': 'INVOICE',
                 'INVOICE_NUMBER': 'in1',
@@ -453,7 +579,7 @@ if __name__ == '__main__':
             }
         })
 
-        Indexer()._index_purchase_order_document('cust_1', {
+        Indexer()._index_purchase_order_document('cust_1', 'doc_id_1', 'doc_url', {
             'fields': {
                 'document_type': 'PURCHASE_ORDER',
                 'PO_NUMBER': 'po1',
@@ -463,48 +589,63 @@ if __name__ == '__main__':
 
     def test_relation_case(case, customer_id, drop_db=True):
         if drop_db:
-            MongoClient().drop_database('rovuk_db')
+            MongoClient('mongodb://localhost:27017').drop_database('rovuk_db')
 
         documents = {
             'QUOTE': {
                 'document_type': 'QUOTE',
                 'fields': {
-                    'QUOTE_NUMBER': 'q1'
-                }
+                    'QUOTE_NUMBER': 'q1',
+                    'VENDOR_NAME': 'vend-name-1'
+                },
             },
             'INVOICE': {
                 'document_type': 'INVOICE',
                 'fields': {
                     'INVOICE_NUMBER': 'in1',
                     'PO_NUMBER': 'po1',
-                }
+                    'VENDOR_NAME': 'vend-name-1'
+                },
             },
             'PURCHASE_ORDER': {
                 'document_type': 'PURCHASE_ORDER',
                 'fields': {
                     'PO_NUMBER': 'po1',
-                    'QUOTE_NUMBER': 'q1'
-                }
+                    'QUOTE_NUMBER': 'q1',
+                    'VENDOR_NAME': 'vend-name-1'
+                },
             },
             'PACKING_SLIP': {
                 'document_type': 'PACKING_SLIP',
                 'fields': {
                     'PO_NUMBER': 'po1',
-                    'INVOICE_NUMBER': 'in1'
-                }
+                    'INVOICE_NUMBER': 'in1',
+                    'VENDOR_NAME': 'vend-name-1'
+                },
             }
         }
 
         for doc_type in case:
             if doc_type == 'quote':
-                Indexer()._index_quote_document(customer_id, 'my-s3_docs_bundle_url', documents['QUOTE'])
+                Indexer('mongodb://localhost:27017').index(customer_id, 'doc_id_1',
+                                                           'my-s3_docs_bundle_url',
+                                                           'doc-hash-1',
+                                                           [documents['QUOTE']])
             elif doc_type == 'invoice':
-                Indexer()._index_invoice_document(customer_id, 'my-s3_docs_bundle_url', documents['INVOICE'])
+                Indexer('mongodb://localhost:27017').index(customer_id, 'doc_id_1',
+                                                           'my-s3_docs_bundle_url',
+                                                           'doc-hash-1',
+                                                           [documents['INVOICE']])
             elif doc_type == 'po':
-                Indexer()._index_purchase_order_document(customer_id, 'my-s3_docs_bundle_url',
-                                                         documents['PURCHASE_ORDER'])
+                Indexer('mongodb://localhost:27017').index(customer_id, 'doc_id_1',
+                                                           'my-s3_docs_bundle_url',
+                                                           'doc-hash-1',
+                                                           [documents['PURCHASE_ORDER']])
             elif doc_type == 'ps':
-                Indexer()._index_packing_slip_document(customer_id, 'my-s3_docs_bundle_url', documents['PACKING_SLIP'])
+                Indexer('mongodb://localhost:27017').index(customer_id, 'doc_id_1',
+                                                           'my-s3_docs_bundle_url',
+                                                           'doc-hash-1',
+                                                           [documents['PACKING_SLIP']])
             else:
                 raise Exception(f'Wrong input document type: {doc_type}')
 
@@ -526,15 +667,23 @@ if __name__ == '__main__':
     # test_relation_case(['invoice', 'ps'], 'cust_1')
     # --
     # test_relation_case(['ps', 'po'], 'cust_1')
-    # --
     # test_relation_case(['po', 'ps'], 'cust_1')
+    # --
+    # test_relation_case(['invoice', 'po'], 'cust_1')
+    # test_relation_case(['po', 'invoice'], 'cust_1')
+    # --
+    # test_relation_case(['quote', 'po'], 'cust_1')
+    # test_relation_case(['po', 'quote'], 'cust_1')
+
+
+    # print(Indexer('mongodb://localhost:27017').get_documents_by_id('cust_1', ['doc_id_1']))
     # --
 
 
     # test_relation_case(['ps', 'invoice', 'quote', 'po'], 'cust_1')
     # test_relation_case(['po', 'ps', 'invoice', 'quote'], 'cust_1')
     # test_relation_case(['quote', 'invoice', 'ps', 'po'], 'cust_1')
-
+    #
     # --
     # test_relation_case(['quote', 'invoice', 'ps', 'po'], 'cust_1')
     # test_relation_case(['quote', 'invoice', 'ps', 'po'], 'cust_2', drop_db=False)
@@ -543,10 +692,13 @@ if __name__ == '__main__':
     # test_relation_case(['quote', 'invoice', 'ps', 'po'], 'cust_1', drop_db=False)
     # --
 
+
+
+
     """Test Search"""
     # test_relation_case(['quote', 'invoice', 'ps', 'po'], 'cust_1')
     # test_relation_case(['quote', 'invoice', 'ps', 'po'], 'cust_1', drop_db=False)
-    # print(json.dumps({'search': Indexer().search('cust_1', 'in1')}, indent=2))
+    # print(json.dumps({'search': Indexer('mongodb://localhost:27017').search('cust_1', 'aaa1')}, indent=2))
     # # --
     # test_relation_case(['quote'], 'cust_1')
     # print(json.dumps({'search': Indexer().search('cust_1', 'q1')}, indent=2))
@@ -686,7 +838,7 @@ if __name__ == '__main__':
         # date_from = datetime.datetime.fromisoformat('2023-02-10T12:40:51.860+00:00')
         # date_to = datetime.datetime.fromisoformat('2023-02-10T12:40:53.860+00:00')
         date_from = datetime.datetime.fromisoformat('2023-02-10T00:00:01.000+00:00')
-        date_to = datetime.datetime.fromisoformat('2023-02-10T23:59:59.860+00:00')
+        date_to = datetime.datetime.fromisoformat('2023-02-28T23:59:59.860+00:00')
 
         results = db.documents.aggregate([
             # {'$match': {{'documents_1.created_date': {$gt: 70, $lt: 90}}}},
@@ -704,8 +856,98 @@ if __name__ == '__main__':
         # )
         # print(results)
 
-    test_agg()
+
+    def test_agg_2():
+        import datetime
+
+        date_from = datetime.datetime.fromisoformat('2023-02-10T15:43:50.065+00:00')
+        date_to = datetime.datetime.fromisoformat('2023-02-28T15:43:52.065+00:00')
+
+        client = MongoClient('mongodb://localhost:27017')
+        db = client.rovuk_db
+
+        results = db.documents.aggregate([
+            {'$match': {'documents.created_date': {'$gt': date_from, '$lt': date_to}}},
+            {'$unwind': "$documents"},
+            {'$unwind': "$documents.paid"},
+            {'$group': {'_id': "$documents.paid", 'count': {'$sum': 1}}},
+        ])
+        import pprint
+        pprint.pprint(list(results))
+
+
+    def test_agg_2a():
+        import datetime
+
+        date_from = datetime.datetime.fromisoformat('2023-02-10T15:43:50.065+00:00')
+        date_to = datetime.datetime.fromisoformat('2023-02-28T15:43:52.065+00:00')
+
+        client = MongoClient('mongodb://localhost:27017')
+        db = client.rovuk_db
+
+        results = db.documents.aggregate([
+            {'$match': {'documents.created_date': {'$gt': date_from, '$lt': date_to}}},
+            {'$unwind': "$documents"},
+            {'$unwind': "$documents.paid"},
+            # {'$group': {'_id': "$documents.paid", 'count': {'$sum': 1}}},
+            {'$group': {'_id': {"cust_id": "$customer_id",
+                                "doc_type": "$document_type",
+                                "paid": "$documents.paid"},
+                        'count': {'$sum': 1}}},
+        ])
+        results = list(results)
+        pprint.pprint(list(results))
+
+        # output = defaultdict(dict)
+
+        output = {}
+        for result in list(results):
+            if result['_id']['cust_id'] not in output:
+                output[result['_id']['cust_id']] = {
+                    'other':  {
+                        'EXPENSE': 0,
+                        'FORMS': 0
+                    },
+                    'invoice': {
+                        'EXPENSE': 0,
+                        'FORMS': 0
+                    }
+                }
+
+            if result['_id']['doc_type'] == 'INVOICE':
+                output[result['_id']['cust_id']]['invoice'][result['_id']['paid']] = result['count']
+            else:
+                output[result['_id']['cust_id']]['other'][result['_id']['paid']] = \
+                    output[result['_id']['cust_id']]['other'][result['_id']['paid']] + result['count']
+
+
+        print('-'*100)
+        print(output)
+
+    def test_agg_3():
+        import datetime
+
+        date_from = datetime.datetime.fromisoformat('2023-02-10T15:43:50.065+00:00')
+        date_to = datetime.datetime.fromisoformat('2023-02-28T15:43:52.065+00:00')
+
+        client = MongoClient('mongodb://localhost:27017')
+        db = client.rovuk_db
+
+        hashes = ['3cbb845dc704f1182eb540c51d3d7eceada032ef', 'e53778574454d9f599f4c6e1bd72d7d88dc26cb9']
+        results = db.documents.aggregate([
+            {'$match': {'customer_id': 'docs-4a', 'document_hash': {'$in': hashes}}},
+            {'$group': {'_id': "$document_hash", 'count': {'$sum': 1}}},
+        ])
+        import pprint
+        pprint.pprint(list(results))
+
+
+    test_agg_2a()
+
+    # test_agg_3()
+    # test_agg_2()
     # test_index_quote()
     # test_index_po()
     # test_index_invoice()
     # test_index_ps()
+
