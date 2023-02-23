@@ -1670,41 +1670,43 @@ module.exports.updateInvoiceRelatedDocument = async function (req, res) {
             var requestObject = req.body;
             var id = requestObject._id;
             delete requestObject._id;
+            var module = requestObject.module;
+            delete requestObject.module;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
-            requestObject.updated_by = decodedToken.UserData._id;
-            requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+            // requestObject.updated_by = decodedToken.UserData._id;
+            // requestObject.updated_at = Math.round(new Date().getTime() / 1000);
             var get_invoice = await invoicesConnection.findOne({ _id: ObjectID(id) });
-            let module = '';
+            /* let module = '';
+            let updateObject = {};
             if (requestObject.packing_slip_data) {
                 module = 'Packing Slip';
+                updateObject = { $set: { packing_slip_data: requestObject.packing_slip_data } };
             } else if (requestObject.po_data) {
                 module = 'PO';
+                updateObject = { $set: { po_data: requestObject.po_data } };
             } else if (requestObject.quote_data) {
                 module = 'Quote';
-            }
-            if (module == '') {
-                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                updateObject = { $set: { quote_data: requestObject.quote_data } };
+            }  */
+            var update_data = await invoicesConnection.updateOne({ _id: ObjectID(id) }, requestObject);
+            let isUpdated = update_data.nModified;
+            if (isUpdated == 0) {
+                res.send({ status: false, message: "There is no data with this id." });
             } else {
-                var update_data = await invoicesConnection.updateOne({ _id: ObjectID(id) }, requestObject);
-                let isDelete = update_data.nModified;
-                if (isDelete == 0) {
-                    res.send({ status: false, message: "There is no data with this id." });
-                } else {
-                    var get_one = await invoicesConnection.findOne({ _id: ObjectID(id) }, { _id: 0, __v: 0 });
-                    let reqObj = { invoice_id: id, ...get_one._doc };
-                    addchangeInvoice_History("Update", reqObj, decodedToken, get_one.updated_at);
-                    recentActivity.saveRecentActivity({
-                        user_id: decodedToken.UserData._id,
-                        username: decodedToken.UserData.userfullname,
-                        userpicture: decodedToken.UserData.userpicture,
-                        data_id: id,
-                        title: `Invoice #${get_invoice.invoice} ${module} Update`,
-                        module: `Invoice`,
-                        action: `Update ${module}`,
-                        action_from: 'Web',
-                    }, decodedToken);
-                    res.send({ message: `${module} updated successfully.`, status: true });
-                }
+                var get_one = await invoicesConnection.findOne({ _id: ObjectID(id) }, { _id: 0, __v: 0 });
+                let reqObj = { invoice_id: id, ...get_one._doc };
+                addchangeInvoice_History("Update", reqObj, decodedToken, get_one.updated_at);
+                recentActivity.saveRecentActivity({
+                    user_id: decodedToken.UserData._id,
+                    username: decodedToken.UserData.userfullname,
+                    userpicture: decodedToken.UserData.userpicture,
+                    data_id: id,
+                    title: `Invoice #${get_invoice.invoice} ${module} Update`,
+                    module: `Invoice`,
+                    action: `Update ${module}`,
+                    action_from: 'Web',
+                }, decodedToken);
+                res.send({ message: `${module} updated successfully.`, status: true });
             }
         } catch (e) {
             console.log(e);
