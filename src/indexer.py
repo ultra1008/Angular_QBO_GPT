@@ -47,7 +47,19 @@ class Indexer:
 
     def index(self, customer_id, document_id, s3_docs_bundle_url, doc_hash, documents):
         for doc in documents:
-            self._index_document(customer_id, document_id, s3_docs_bundle_url, doc)
+            if doc['parent_i_page'] != -1:
+                self.db.documents.update_one({
+                    'customer_id': customer_id,
+                    'document_id': document_id,
+                    'documents.i_page': doc['parent_i_page']
+                }, {
+                    '$push': {
+                        'documents': doc,
+                        'searchable': {'$each': list(doc['fields'].values())}
+                    }
+                })
+            else:
+                self._index_document(customer_id, document_id, s3_docs_bundle_url, doc)
 
         self.db.documents.update_many({
             'document_id': document_id
@@ -85,7 +97,7 @@ class Indexer:
             'customer_id': customer_id,
             'document_id': {'$in': document_ids},
             'indexed': True,
-            'document_type': {'$ne': 'UNKNOWN'}
+            # 'document_type': {'$ne': 'UNKNOWN'}
         }))
         documents = self._compose_documents(documents)
 
@@ -189,25 +201,16 @@ class Indexer:
         for result in list(results):
             if result['_id']['cust_id'] not in output:
                 output[result['_id']['cust_id']] = {
-                    'other': {
-                        'EXPENSE': 0,
-                        'FORMS': 0
-                    },
-                    'invoice': {
-                        'EXPENSE': 0,
-                        'FORMS': 0
-                    }
+                    'PURCHASE_ORDER': {'EXPENSE': 0, 'FORMS': 0},
+                    'PACKING_SLIP': {'EXPENSE': 0, 'FORMS': 0},
+                    'QUOTE': {'EXPENSE': 0, 'FORMS': 0},
+                    'INVOICE': {'EXPENSE': 0, 'FORMS': 0},
+                    'UNKNOWN': {'EXPENSE': 0, 'FORMS': 0}
                 }
 
-            if result['_id']['doc_type'] == 'INVOICE':
-                output[result['_id']['cust_id']]['invoice'][result['_id']['paid']] = result['count']
-            else:
-                output[result['_id']['cust_id']]['other'][result['_id']['paid']] = \
-                    output[result['_id']['cust_id']]['other'][result['_id']['paid']] + result['count']
-
+            output[result['_id']['cust_id']][result['_id']['doc_type']][result['_id']['paid']] = result['count']
 
         return output
-
 
 
     @staticmethod
@@ -924,6 +927,48 @@ if __name__ == '__main__':
         print('-'*100)
         print(output)
 
+
+    def test_agg_2b():
+        import datetime
+
+        date_from = datetime.datetime.fromisoformat('2023-02-10T15:43:50.065+00:00')
+        date_to = datetime.datetime.fromisoformat('2023-02-28T15:43:52.065+00:00')
+
+        client = MongoClient('mongodb://localhost:27017')
+        db = client.rovuk_db
+
+        results = db.documents.aggregate([
+            {'$match': {'documents.created_date': {'$gt': date_from, '$lt': date_to}}},
+            {'$unwind': "$documents"},
+            {'$unwind': "$documents.paid"},
+            {'$group': {'_id': {"cust_id": "$customer_id",
+                                "doc_type": "$document_type",
+                                "paid": "$documents.paid"},
+                        'count': {'$sum': 1}}},
+        ])
+        results = list(results)
+        pprint.pprint(list(results))
+
+        output = {}
+        for result in list(results):
+            if result['_id']['cust_id'] not in output:
+                output[result['_id']['cust_id']] = {
+                    'PURCHASE_ORDER': {'EXPENSE': 0, 'FORMS': 0},
+                    'PACKING_SLIP': {'EXPENSE': 0, 'FORMS': 0},
+                    'QUOTE': {'EXPENSE': 0, 'FORMS': 0},
+                    'INVOICE': {'EXPENSE': 0, 'FORMS': 0},
+                    'UNKNOWN': {'EXPENSE': 0, 'FORMS': 0}
+                }
+
+            output[result['_id']['cust_id']][result['_id']['doc_type']][result['_id']['paid']] = result['count']
+
+            # output[result['_id']['cust_id']]['other'][result['_id']['paid']] = \
+            #     output[result['_id']['cust_id']]['other'][result['_id']['paid']] + result['count']
+
+
+        print('-'*100)
+        print(output)
+
     def test_agg_3():
         import datetime
 
@@ -942,7 +987,7 @@ if __name__ == '__main__':
         pprint.pprint(list(results))
 
 
-    test_agg_2a()
+    test_agg_2b()
 
     # test_agg_3()
     # test_agg_2()

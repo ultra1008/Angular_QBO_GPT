@@ -331,7 +331,26 @@ class ExtractorsManager:
                 self.documents_bundle_pages
         )):
             doc_type = self._detect_doc_type(expense_json)
-            print(f'{doc_type=}')
+            print(f'\n{doc_type=}')
+
+            print(f'{i_page=}')
+
+            parent_i_page = -1
+            if not doc_type:
+                for ii_page in range(i_page - 1, -1, -1):
+                    print(f'{ii_page=}')
+                    print(f"{results[ii_page]['document_type']=}")
+
+                    if results[ii_page]['document_type'] != 'UNKNOWN':
+                        doc_type = results[ii_page]['document_type']
+                        parent_i_page = (results[ii_page]['parent_i_page']
+                                         if results[ii_page]['parent_i_page'] != -1
+                                         else ii_page)
+                        print(f"{results[ii_page]['parent_i_page']=}")
+                        break
+
+                print(f'Inferred doc_type: {doc_type}')
+
             expense_parser = ExpenseParser(expense_json).parse()
             forms_parser = FormsParser(s3_document_page, i_page, self.documents_bundle_url)
 
@@ -351,6 +370,9 @@ class ExtractorsManager:
                 extractor = UnknownExtractor(expense_parser, forms_parser, self.custom_fields_conf)
 
             result = extractor.extract()
+            result['i_page'] = i_page
+            result['parent_i_page'] = parent_i_page
+
             results.append(result)
 
         return results
