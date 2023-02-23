@@ -65,18 +65,39 @@
                         {{'Project-Timecard-Notes' | translate }}
                     </button>
                 </div>
-                <div class="row" *ngFor="let nots of notesList">
-                    <div class="col-10 note-card note-text mr-1">
-                        {{nots.notes}}<b class="update-date">{{temp_MMDDYYY_format(nots.updated_at)}}</b>
+
+
+                <div class="d-flex no-gutters" *ngFor="let nots of notesList">
+                    <div class="col">
+                        <div class=" note-card" style="justify-content: center;padding: 15px;">
+                            {{nots.notes}}<b class="update-date">{{temp_MMDDYYY_format(nots.updated_at)}}</b>
+                        </div>
                     </div>
-                    <div class="col-sm-1 cust-margin pt-2">
+                    <div class="cust-margin mx-1 pt-2">
                         <a mat-icon-button aria-label="Example icon button with a vertical three dot icon"
                             (click)="deleteNote(nots._id,invoice_id)">
                             <mat-icon>delete</mat-icon>
                         </a>
                     </div>
+                    <!-- <div class="col-10 col-sm-6 col-md-10">
+                                                    <div class=" note-card" style="justify-content: center;padding: 15px;">
+                                                        {{nots.notes}}<b
+                                                            style="font-size: 10px;float: inline-end;;">{{temp_MMDDYYY_format(nots.updated_at)}}</b>
+                                                    </div>
+                                                </div>
+                                                <div class="col-2 col-md-2">
+                                                    <div class="cust-margin pt-2">
+                                                        <a mat-icon-button
+                                                            aria-label="Example icon button with a vertical three dot icon"
+                                                            (click)="deleteNote(nots._id,invoice_id)">
+                                                            <mat-icon>delete</mat-icon>
+                                                        </a>
+                                                    </div>
+                                                </div> -->
+
 
                 </div>
+
                 <div *ngIf="show_Nots">
                     <div class="mt-3">
                         <form class="form text-center" [formGroup]="otherDocumentNoteform">
