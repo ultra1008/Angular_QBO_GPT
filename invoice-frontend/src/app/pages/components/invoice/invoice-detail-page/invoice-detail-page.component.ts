@@ -138,6 +138,7 @@ export class InvoiceDetailPageComponent implements OnInit {
       this.uiSpinner.spin$.next(true);
       this.getOneInvoice();
     }
+
   }
 
   ngOnInit(): void {

@@ -63,15 +63,21 @@ export class QuoteFormComponent implements OnInit {
   variablesDocumenttype: any = configdata.DOCUMENT_TYPE;
   DocumentType = this.variablesDocumenttype.slice();
 
-  pdf_url = "https://s3.us-west-1.wasabisys.com/rovukdata/invoice-sample-pdfs/adrian@vmgconstructioninc10.comae95eb347d143714017d21f295de0449112194196aa89c3932ce0cbb7d3d574882405.pdf";
+  pdf_url = "";
   invoiceData: any;
   statusList = configdata.INVOICE_STATUS;
   invoice_id: any;
+  loadInvoice: boolean = false;
 
   constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.invoice_id = this.id;
+    if (this.id) {
+      console.log("id11111111", this.id);
+      this.uiSpinner.spin$.next(true);
+      this.getOneInvoice();
+    }
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     var locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configdata.fst_load_lang : tmp_locallanguage;
     this.translate.use(locallanguage);
@@ -285,6 +291,7 @@ export class QuoteFormComponent implements OnInit {
     this.httpCall.httpPostCall(httproutes.INVOICE_GET_ONE_INVOICE, { _id: that.id }).subscribe(function (params) {
       if (params.status) {
         that.invoiceData = params.data;
+        that.loadInvoice = true;
         that.invoiceform = that.formBuilder.group({
           // invoice: [params.data.invoice],
           // p_o: [params.data.p_o, Validators.required],

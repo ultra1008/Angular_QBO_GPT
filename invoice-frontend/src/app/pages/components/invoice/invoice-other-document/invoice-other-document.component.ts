@@ -13,7 +13,7 @@ import { HttpCall } from 'src/app/service/httpcall.service';
 import { Mostusedservice } from 'src/app/service/mostused.service';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
-import { commonFileChangeEvent, gallery_options, MMDDYYYY } from 'src/app/service/utils';
+import { commonFileChangeEvent, gallery_options, MMDDYYYY, MMDDYYYY_formet } from 'src/app/service/utils';
 import { configdata } from 'src/environments/configData';
 import { ModeDetectService } from '../../map/mode-detect.service';
 
@@ -156,8 +156,8 @@ export class InvoiceOtherDocumentComponent implements OnInit {
   addNotes() {
     this.show_Nots = true;
   }
-  temp_MMDDYYY(epoch) {
-    return MMDDYYYY(epoch);
+  temp_MMDDYYY_format(epoch) {
+    return MMDDYYYY_formet(epoch);
   }
   saveNotes() {
     let document_Url;

@@ -59,6 +59,7 @@ export class PoDetailFormComponent implements OnInit {
 
   pdf_url = "";
   invoiceData: any;
+  loadInvoice: boolean = false;
   statusList = configdata.INVOICE_STATUS;
   approveIcon: string;
   denyIcon: string;
@@ -283,6 +284,7 @@ export class PoDetailFormComponent implements OnInit {
     this.httpCall.httpPostCall(httproutes.INVOICE_GET_ONE_INVOICE, { _id: that.id }).subscribe(function (params) {
       if (params.status) {
         that.invoiceData = params.data;
+        that.loadInvoice = true;
         that.invoiceform = that.formBuilder.group({
           // invoice: [params.data.invoice],
           // p_o: [params.data.p_o, Validators.required],

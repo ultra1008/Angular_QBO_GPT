@@ -67,7 +67,7 @@
                 </div>
                 <div class="row" *ngFor="let nots of notesList">
                     <div class="col-10 note-card note-text mr-1">
-                        {{nots.notes}}<b class="update-date">{{temp_MMDDYYY(nots.updated_at)}}</b>
+                        {{nots.notes}}<b class="update-date">{{temp_MMDDYYY_format(nots.updated_at)}}</b>
                     </div>
                     <div class="col-sm-1 cust-margin pt-2">
                         <a mat-icon-button aria-label="Example icon button with a vertical three dot icon"
