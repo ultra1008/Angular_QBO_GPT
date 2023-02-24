@@ -1215,8 +1215,8 @@ module.exports.savePackingSlipNotes = async function (req, res) {
                         userpicture: decodedToken.UserData.userpicture,
                         data_id: invoice_id,
                         title: `Invoice #${get_invoice.invoice}`,
-                        module: 'Invoice',
-                        action: 'Update Packing Slip Note',
+                        module: 'Packing Slip',
+                        action: 'Update Note in',
                         action_from: 'Web',
                     }, decodedToken);
                     res.send({ status: true, message: "Packing slip note updated successfully.", data: update_invoice });
@@ -1240,8 +1240,8 @@ module.exports.savePackingSlipNotes = async function (req, res) {
                         userpicture: decodedToken.UserData.userpicture,
                         data_id: invoice_id,
                         title: `Invoice #${one_invoice.invoice}`,
-                        module: 'Invoice',
-                        action: 'Insert Packing Slip Note',
+                        module: 'Packing Slip',
+                        action: 'Insert Note in',
                         action_from: 'Web',
                     }, decodedToken);
                     res.send({ status: true, message: "Packing slip note saved successfully." });
@@ -1286,8 +1286,8 @@ module.exports.deletePackingSlipNote = async function (req, res) {
                     userpicture: decodedToken.UserData.userpicture,
                     data_id: invoice_id,
                     title: `Invoice #${get_invoice.invoice}`,
-                    module: 'Invoice',
-                    action: 'Delete Packing Slip Note',
+                    module: 'Packing Slip',
+                    action: 'Delete Note in',
                     action_from: 'Web',
                 }, decodedToken);
                 res.send({ status: true, message: "Packing slip note deleted successfully.", data: update_invoice });
@@ -1327,8 +1327,8 @@ module.exports.savePackingSlipAttachment = async function (req, res) {
                     userpicture: decodedToken.UserData.userpicture,
                     data_id: requestObject._id,
                     title: `Invoice #${get_invoice.invoice}`,
-                    module: 'Invoice',
-                    action: 'Update Packing Slip Attachment',
+                    module: 'Packing Slip',
+                    action: 'Update Attachment in',
                     action_from: 'Web',
                 }, decodedToken);
                 res.send({ status: true, message: "Packing slip attachment updated successfully..", data: update_invoice });
@@ -1373,8 +1373,8 @@ module.exports.savePONotes = async function (req, res) {
                         userpicture: decodedToken.UserData.userpicture,
                         data_id: invoice_id,
                         title: `Invoice #${get_invoice.invoice}`,
-                        module: 'Invoice',
-                        action: 'Update PO Note',
+                        module: 'PO',
+                        action: 'Update Note in',
                         action_from: 'Web',
                     }, decodedToken);
                     res.send({ status: true, message: "PO note updated successfully.", data: update_invoice });
@@ -1398,8 +1398,8 @@ module.exports.savePONotes = async function (req, res) {
                         userpicture: decodedToken.UserData.userpicture,
                         data_id: invoice_id,
                         title: `Invoice #${one_invoice.invoice}`,
-                        module: 'Invoice',
-                        action: 'Insert PO Note',
+                        module: 'PO',
+                        action: 'Insert Note in',
                         action_from: 'Web',
                     }, decodedToken);
                     res.send({ status: true, message: "PO note saved successfully." });
@@ -1444,8 +1444,8 @@ module.exports.deletePONote = async function (req, res) {
                     userpicture: decodedToken.UserData.userpicture,
                     data_id: invoice_id,
                     title: `Invoice #${get_invoice.invoice}`,
-                    module: 'Invoice',
-                    action: 'Delete PO Note',
+                    module: 'PO',
+                    action: 'Delete Note in',
                     action_from: 'Web',
                 }, decodedToken);
                 res.send({ status: true, message: "PO note deleted successfully.", data: update_invoice });
@@ -1485,8 +1485,8 @@ module.exports.savePOAttachment = async function (req, res) {
                     userpicture: decodedToken.UserData.userpicture,
                     data_id: requestObject._id,
                     title: `Invoice #${get_invoice.invoice}`,
-                    module: 'Invoice',
-                    action: 'Update PO Attachment',
+                    module: 'PO',
+                    action: 'Update Attachment in',
                     action_from: 'Web',
                 }, decodedToken);
                 res.send({ status: true, message: "PO attachment updated successfully..", data: update_invoice });
@@ -1531,8 +1531,8 @@ module.exports.saveQuoteNotes = async function (req, res) {
                         userpicture: decodedToken.UserData.userpicture,
                         data_id: invoice_id,
                         title: `Invoice #${get_invoice.invoice}`,
-                        module: 'Invoice',
-                        action: 'Update Quote Note',
+                        module: 'Quote',
+                        action: 'Update Note in',
                         action_from: 'Web',
                     }, decodedToken);
                     res.send({ status: true, message: "Quote note updated successfully.", data: update_invoice });
@@ -1556,8 +1556,8 @@ module.exports.saveQuoteNotes = async function (req, res) {
                         userpicture: decodedToken.UserData.userpicture,
                         data_id: invoice_id,
                         title: `Invoice #${one_invoice.invoice}`,
-                        module: 'Invoice',
-                        action: 'Insert Quote Note',
+                        module: 'Quote',
+                        action: 'Insert Note in',
                         action_from: 'Web',
                     }, decodedToken);
                     res.send({ status: true, message: "Quote note saved successfully." });
@@ -1602,8 +1602,8 @@ module.exports.deleteQuoteNote = async function (req, res) {
                     userpicture: decodedToken.UserData.userpicture,
                     data_id: invoice_id,
                     title: `Invoice #${get_invoice.invoice}`,
-                    module: 'Invoice',
-                    action: 'Delete Quote Note',
+                    module: 'Quote',
+                    action: 'Delete Note in',
                     action_from: 'Web',
                 }, decodedToken);
                 res.send({ status: true, message: "Quote note deleted successfully.", data: update_invoice });
@@ -1643,8 +1643,8 @@ module.exports.saveQuoteAttachment = async function (req, res) {
                     userpicture: decodedToken.UserData.userpicture,
                     data_id: requestObject._id,
                     title: `Invoice #${get_invoice.invoice}`,
-                    module: 'Invoice',
-                    action: 'Update Quote Attachment',
+                    module: 'Quote',
+                    action: 'Update Attachment in',
                     action_from: 'Web',
                 }, decodedToken);
                 res.send({ status: true, message: "Quote attachment updated successfully..", data: update_invoice });
@@ -1675,41 +1675,22 @@ module.exports.updateInvoiceRelatedDocument = async function (req, res) {
             var module = requestObject.module;
             delete requestObject.module;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
-            // requestObject.updated_by = decodedToken.UserData._id;
-            // requestObject.updated_at = Math.round(new Date().getTime() / 1000);
             var get_invoice = await invoicesConnection.findOne({ _id: ObjectID(id) });
-            /* let module = '';
-            let updateObject = {};
-            if (requestObject.packing_slip_data) {
-                module = 'Packing Slip';
-                updateObject = { $set: { packing_slip_data: requestObject.packing_slip_data } };
-            } else if (requestObject.po_data) {
-                module = 'PO';
-                updateObject = { $set: { po_data: requestObject.po_data } };
-            } else if (requestObject.quote_data) {
-                module = 'Quote';
-                updateObject = { $set: { quote_data: requestObject.quote_data } };
-            }  */
             var update_data = await invoicesConnection.updateOne({ _id: ObjectID(id) }, requestObject);
-            let isUpdated = update_data.nModified;
-            if (isUpdated == 0) {
-                res.send({ status: false, message: "There is no data with this id." });
-            } else {
-                var get_one = await invoicesConnection.findOne({ _id: ObjectID(id) }, { _id: 0, __v: 0 });
-                let reqObj = { invoice_id: id, ...get_one._doc };
-                addchangeInvoice_History("Update", reqObj, decodedToken, get_one.updated_at);
-                recentActivity.saveRecentActivity({
-                    user_id: decodedToken.UserData._id,
-                    username: decodedToken.UserData.userfullname,
-                    userpicture: decodedToken.UserData.userpicture,
-                    data_id: id,
-                    title: `Invoice #${get_invoice.invoice} ${module} Update`,
-                    module: `Invoice`,
-                    action: `Update ${module}`,
-                    action_from: 'Web',
-                }, decodedToken);
-                res.send({ message: `${module} updated successfully.`, status: true });
-            }
+            var get_one = await invoicesConnection.findOne({ _id: ObjectID(id) }, { _id: 0, __v: 0 });
+            let reqObj = { invoice_id: id, ...get_one._doc };
+            addchangeInvoice_History("Update", reqObj, decodedToken, get_one.updated_at);
+            recentActivity.saveRecentActivity({
+                user_id: decodedToken.UserData._id,
+                username: decodedToken.UserData.userfullname,
+                userpicture: decodedToken.UserData.userpicture,
+                data_id: id,
+                title: `Invoice #${get_invoice.invoice} ${module} Update`,
+                module: module,
+                action: `Update`,
+                action_from: 'Web',
+            }, decodedToken);
+            res.send({ message: `${module} updated successfully.`, status: true });
         } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
