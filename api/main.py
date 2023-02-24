@@ -132,6 +132,12 @@ async def stats(date_from: str, date_to: str, _=Depends(auth)):
 
 
 @app.get("/detailed_stats")
-async def stats(date_from: str, date_to: str, _=Depends(auth)):
+async def detailed_stats(date_from: str, date_to: str, _=Depends(auth)):
     print(f'detailed_stats: {date_from=}, {date_to=}')
-    return indexer.detailed_stats(date_from, date_to)
+    return indexer.calc_detailed_stats(date_from, date_to)
+
+
+@app.get("/customer_monthly_stats")
+async def customer_monthly_stats(customer_id: str, _=Depends(auth)):
+    print(f'customer_monthly_stats: {customer_id=}')
+    return indexer.calc_customer_monthly_stats(customer_id)

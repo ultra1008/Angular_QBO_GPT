@@ -183,7 +183,7 @@ class Indexer:
         return results
 
 
-    def detailed_stats(self, date_from: str, date_to: str):
+    def calc_detailed_stats(self, date_from: str, date_to: str):
         date_from = datetime.fromisoformat(f'{date_from}T00:00:01.000+00:00')
         date_to = datetime.fromisoformat(f'{date_to}T23:59:59.999+00:00')
 
@@ -209,6 +209,51 @@ class Indexer:
                 }
 
             output[result['_id']['cust_id']][result['_id']['doc_type']][result['_id']['paid']] = result['count']
+
+        return output
+
+
+    def calc_customer_monthly_stats(self, customer_id: str):
+        results = self.db.documents.aggregate([
+            {'$match': {'customer_id': customer_id}},
+            {'$unwind': "$documents"},
+            {'$unwind': "$documents.paid"},
+            {'$group': {'_id': {"year": {"$year": "$documents.created_date"},
+                                "month": {"$month": "$documents.created_date"},
+                                "doc_type": "$document_type",
+                                "paid": "$documents.paid"},
+                        'count': {'$sum': 1}}},
+        ])
+        results = list(results)
+
+        output = {}
+        for result in list(results):
+            ym_key = (result['_id']['year'], result['_id']['month'])
+            if ym_key not in output:
+                output[ym_key] = {
+                    'PURCHASE_ORDER': {'EXPENSE': 0, 'FORMS': 0},
+                    'PACKING_SLIP': {'EXPENSE': 0, 'FORMS': 0},
+                    'QUOTE': {'EXPENSE': 0, 'FORMS': 0},
+                    'INVOICE': {'EXPENSE': 0, 'FORMS': 0},
+                    'UNKNOWN': {'EXPENSE': 0, 'FORMS': 0}
+                }
+
+            output[ym_key][result['_id']['doc_type']][result['_id']['paid']] = result['count']
+
+
+        def get_ym_key(item):
+            ym = item[0]
+            return int(ym[0]) * 12 + int(ym[1])
+
+        output = sorted(output.items(), key=lambda item: get_ym_key(item))
+        output = [{
+                'date': {
+                    'year': item[0][0],
+                    'month': item[0][1]
+                },
+                'paid': item[1]
+            } for item in output
+        ]
 
         return output
 
@@ -969,6 +1014,66 @@ if __name__ == '__main__':
         print('-'*100)
         print(output)
 
+
+    def test_agg_2c():
+        import datetime
+
+        date_from = datetime.datetime.fromisoformat('2023-02-10T15:43:50.065+00:00')
+        date_to = datetime.datetime.fromisoformat('2023-02-28T15:43:52.065+00:00')
+
+        client = MongoClient('mongodb://localhost:27017')
+        db = client.rovuk_db
+
+        results = db.documents.aggregate([
+            # {'$match': {'documents.created_date': {'$gt': date_from, '$lt': date_to}}},
+            {'$match': {'customer_id': 'demo-2-vn'}},
+            {'$unwind': "$documents"},
+            {'$unwind': "$documents.paid"},
+            {'$group': {'_id': {"year": {"$year": "$documents.created_date"},
+                                "month": {"$month": "$documents.created_date"},
+                                "doc_type": "$document_type",
+                                "paid": "$documents.paid"},
+                        'count': {'$sum': 1}}},
+        ])
+        results = list(results)
+        # pprint.pprint(results)
+
+        # return
+
+        output = {}
+        for result in list(results):
+            ym_key = (result['_id']['year'], result['_id']['month'])
+            if ym_key not in output:
+                output[ym_key] = {
+                    'PURCHASE_ORDER': {'EXPENSE': 0, 'FORMS': 0},
+                    'PACKING_SLIP': {'EXPENSE': 0, 'FORMS': 0},
+                    'QUOTE': {'EXPENSE': 0, 'FORMS': 0},
+                    'INVOICE': {'EXPENSE': 0, 'FORMS': 0},
+                    'UNKNOWN': {'EXPENSE': 0, 'FORMS': 0}
+                }
+
+            # output[result['_id']['month']][result['_id']['doc_type']][result['_id']['paid']] = result['count']
+            output[ym_key][result['_id']['doc_type']][result['_id']['paid']] = result['count']
+
+
+        def get_ym_key(item):
+            ym = item[0]
+            return int(ym[0]) * 12 + int(ym[1])
+
+        output = sorted(output.items(), key=lambda item: get_ym_key(item))
+        output = [{
+                'date': {
+                    'year': item[0][0],
+                    'month': item[0][1]
+                },
+                'paid': item[1]
+            } for item in output
+        ]
+
+        print(json.dumps(output, indent=2))
+
+
+
     def test_agg_3():
         import datetime
 
@@ -987,7 +1092,7 @@ if __name__ == '__main__':
         pprint.pprint(list(results))
 
 
-    test_agg_2b()
+    test_agg_2c()
 
     # test_agg_3()
     # test_agg_2()
