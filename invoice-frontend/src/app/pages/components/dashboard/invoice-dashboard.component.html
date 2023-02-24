@@ -131,13 +131,13 @@
             <!-- <div class="number-cust">  </div> -->
         </div>
     </div>
-    <div class="container" style="max-width: 100%;">
+    <div class="" style="max-width: 100%;">
         <div class="row">
-            <div class="col-sm-8 ">
+            <div class="col-sm-12 col-md-12 col-lg-8">
                 <div class="main-row-cust-div">
                     <div class="one-div-cust-user">
                         <b class="ml-1">Reports</b>
-                        <div class=" mt-2">
+                        <div class="mt-2">
                             <div class="card-body">
                                 <div style="display: block;" *ngIf="showChart">
                                     <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels"
@@ -150,30 +150,23 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-4 ">
+            <div class="col-sm-12 col-md-12 col-lg-4">
                 <div class="main-row-cust-div">
-                    <div class="one-div-cust-user">
+                    <div class="">
                         <b class="ml-1">Last Activity History</b>
                         <div class=" mt-2 "
                             [ngClass]="mode == 'on'? 'header-text-cust-chart-dark' : 'header-text-cust-chart'">
-                            <!-- <p style="font-size: 10px;  word-wrap: break-word; text-align: left; color: #06479D;">
-                                Today
-                            </p> -->
+
                             <div class="search-results" [ngClass]="mode == 'on'? 'card-history-dark' : 'card-history'">
                                 <div class="card-body  mb-2" *ngFor=" let item of dashboardHistory">
-                                    <div class="row">
-                                        <div class="col-2">
-                                            <!-- <img class="crl card-img-left example-card-img-responsive"
-                                                src="./assets/logo/RovukInvoice.png" /> -->
+                                    <div class="d-flex flex-row">
+                                        <div class="p-2">
+
                                             <img class="crl card-img-left example-card-img-responsive"
                                                 src="{{item.userpicture || '../assets/images/user_placeholder.png'}}" />
                                         </div>
-                                        <!-- <div class="col-10">
-                                            <p style="font-size: 12px;">Roque Rivera @ 8:15 am</p>
-                                            <p style="font-size: 10px;  word-wrap: break-word;">Roque Rivera open the
-                                                invoice</p>
-                                        </div> -->
-                                        <div class="col-10">
+
+                                        <div class="">
                                             <b [ngClass]="mode == 'on'? 'text-color-dark' : 'text-color'"
                                                 (click)="goToUserProfile(item)" style="font-size: 12px;">
                                                 {{item.created_by.userfullname}} </b>
@@ -182,49 +175,22 @@
                                                 style="font-size: 12px;" (click)="goToInvoiceForm(item)">
 
                                                 {{item.module}} </b>
-                                            <b style="font-size: 12px;">at</b>&nbsp;
+                                            <b style="font-size: 12px;"> at </b>
                                             <b style="font-size: 12px;">{{tmp_date(item.created_at)}}</b>
-                                            &nbsp; <b style="font-size: 12px;">from</b>&nbsp;
+                                            <b style="font-size: 12px;"> from </b>
                                             <b style="font-size: 12px;">{{item.action_from}}.</b>
                                         </div>
                                     </div>
 
                                 </div>
                             </div>
-                            <!-- <p
-                                style="font-size: 10px;  word-wrap: break-word; margin-top: 8px; text-align: left; color: #06479D;">
-                                Monday 6/27/2022
-                            </p> -->
-                            <!-- <div class="" [ngClass]="mode == 'on'? 'card-history-dark' : 'card-history'">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-2">
-                                            <img class="crl card-img-left example-card-img-responsive"
-                                                src="./assets/logo/RovukInvoice.png" />
-                                        </div>
-                                        <div class="col-10">
-                                            <p style="font-size: 12px;">Roque Rivera @ 8:15 am</p>
-                                            <p style="font-size: 10px;  word-wrap: break-word;">The definition of a
-                                                description is a statement that gives details about someone or
-                                                something. An example
-                                                of description is a story about the places visited on a family trip.
-                                                Sort, kind, or variety. Books of every
-                                                description.</p>
-                                        </div>
-                                    </div>
 
-                                </div>
-                            </div> -->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- <div class="d-flex bd-highlight">
-        <div class="p-2 w-100 bd-highlight bg-primary">Flex item</div>
-        <div class="p-2 w-50 flex-shrink-1 bd-highlight bg-danger">Flex item</div>
-    </div> -->
 
 
 </div>
