@@ -108,6 +108,49 @@ var packingSlipData = {
     badge: packingSlipBadgeValue
 };
 
+var receivingSlipBadge = new mongoose.Schema({
+    date: { type: Boolean, default: false },
+    invoice_number: { type: Boolean, default: false },
+    po_number: { type: Boolean, default: false },
+    ship_to_address: { type: Boolean, default: false },
+    vendor: { type: Boolean, default: false },
+    received_by: { type: Boolean, default: false },
+});
+var receivingSlipBadgeValue = {
+    date: false,
+    invoice_number: false,
+    po_number: false,
+    ship_to_address: false,
+    vendor: false,
+    received_by: false,
+};
+var receiving_slip_schema = new mongoose.Schema({
+    pdf_url: { type: String, default: "" },
+    document_id: { type: mongoose.ObjectId, default: "" }, // Process document id
+    document_type: { type: String, default: "" }, // Process document type
+    date: { type: String, default: "" },
+    invoice_number: { type: String, default: "" },
+    po_number: { type: String, default: "" },
+    ship_to_address: { type: String, default: "" },
+    vendor: { type: mongoose.ObjectId, default: "" },
+    received_by: { type: String, default: "" },
+    is_delete: { type: Number, default: 0 },
+    badge: { type: receivingSlipBadge, default: receivingSlipBadgeValue },
+});
+var receivingSlipData = {
+    pdf_url: "",
+    document_id: "",
+    document_type: "",
+    date: "",
+    invoice_number: "",
+    po_number: "",
+    ship_to_address: "",
+    vendor: "",
+    received_by: "",
+    is_delete: 0,
+    badge: receivingSlipBadgeValue
+};
+
 var poBadge = new mongoose.Schema({
     date: { type: Boolean, default: false },
     po_number: { type: Boolean, default: false },
@@ -287,6 +330,11 @@ var invoiceSchema = new Schema({
     packing_slip_data: { type: packing_slip_schema, default: packingSlipData },
     packing_slip_notes: { type: [notesSchema], default: [] },
     packing_slip_attachments: { type: Array, default: [] },
+
+    has_receiving_slip: { type: Boolean, default: false },
+    receiving_slip_data: { type: receiving_slip_schema, default: receivingSlipData },
+    receiving_slip_notes: { type: [notesSchema], default: [] },
+    receiving_slip_attachments: { type: Array, default: [] },
 
     has_po: { type: Boolean, default: false },
     po_data: { type: po_schema, default: poData },

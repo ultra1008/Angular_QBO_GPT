@@ -277,6 +277,9 @@ router.post('/webapi/v1/portal/updateinvoiceattachment', common.checkTokenExistO
 router.post('/webapi/v1/portal/savepackingslipnote', common.checkTokenExistOrNot, invoiceValidation.savePackingSlipNotes, invoiceController.savePackingSlipNotes);
 router.post('/webapi/v1/portal/deletepackingslipnote', common.checkTokenExistOrNot, invoiceValidation.deletePackingSlipNote, invoiceController.deletePackingSlipNote);
 router.post('/webapi/v1/portal/updatepackingslipattachment', common.checkTokenExistOrNot, invoiceValidation.savePackingSlipAttachment, invoiceController.savePackingSlipAttachment);
+router.post('/webapi/v1/portal/savereceivingslipnote', common.checkTokenExistOrNot, invoiceValidation.saveReceivingSlipNotes, invoiceController.saveReceivingSlipNotes);
+router.post('/webapi/v1/portal/deletereceivingslipnote', common.checkTokenExistOrNot, invoiceValidation.deleteReceivingSlipNote, invoiceController.deleteReceivingSlipNote);
+router.post('/webapi/v1/portal/updatereceivingslipattachment', common.checkTokenExistOrNot, invoiceValidation.saveReceivingSlipAttachment, invoiceController.saveReceivingSlipAttachment);
 router.post('/webapi/v1/portal/saveponote', common.checkTokenExistOrNot, invoiceValidation.savePONotes, invoiceController.savePONotes);
 router.post('/webapi/v1/portal/deleteponote', common.checkTokenExistOrNot, invoiceValidation.deletePONote, invoiceController.deletePONote);
 router.post('/webapi/v1/portal/updatepoattachment', common.checkTokenExistOrNot, invoiceValidation.savePOAttachment, invoiceController.savePOAttachment);

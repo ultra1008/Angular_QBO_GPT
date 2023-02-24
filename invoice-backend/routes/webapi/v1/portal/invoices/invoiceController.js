@@ -1346,6 +1346,164 @@ module.exports.savePackingSlipAttachment = async function (req, res) {
     }
 };
 
+// Save Receiving Slip Notes
+module.exports.saveReceivingSlipNotes = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+            var invoice_id = requestObject.invoice_id;
+            delete requestObject.invoice_id;
+            var id = requestObject._id;
+            delete requestObject._id;
+            if (id) {
+                requestObject.updated_by = decodedToken.UserData._id;
+                requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+                let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id), "receiving_slip_notes._id": id }, { $set: { "receiving_slip_notes.$.updated_by": decodedToken.UserData._id, "receiving_slip_notes.$.updated_at": Math.round(new Date().getTime() / 1000), "receiving_slip_notes.$.notes": requestObject.notes } });
+                let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
+                if (update_invoice) {
+                    requestObject.invoice_id = invoice_id;
+                    addchangeInvoice_History("Update Receiving Slip Note", requestObject, decodedToken, requestObject.updated_at);
+                    recentActivity.saveRecentActivity({
+                        user_id: decodedToken.UserData._id,
+                        username: decodedToken.UserData.userfullname,
+                        userpicture: decodedToken.UserData.userpicture,
+                        data_id: invoice_id,
+                        title: `Invoice #${get_invoice.invoice}`,
+                        module: 'Receiving Slip',
+                        action: 'Update Note in',
+                        action_from: 'Web',
+                    }, decodedToken);
+                    res.send({ status: true, message: "Receiving slip note updated successfully.", data: update_invoice });
+                } else {
+                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                }
+            } else {
+                //save invoice note
+                requestObject.created_by = decodedToken.UserData._id;
+                requestObject.created_at = Math.round(new Date().getTime() / 1000);
+                requestObject.updated_by = decodedToken.UserData._id;
+                requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+                let save_invoice_note = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id) }, { $push: { receiving_slip_notes: requestObject } });
+                let one_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
+                if (save_invoice_note) {
+                    requestObject.invoice_id = invoice_id;
+                    addchangeInvoice_History("Insert Receiving Slip Note", requestObject, decodedToken, requestObject.updated_at);
+                    recentActivity.saveRecentActivity({
+                        user_id: decodedToken.UserData._id,
+                        username: decodedToken.UserData.userfullname,
+                        userpicture: decodedToken.UserData.userpicture,
+                        data_id: invoice_id,
+                        title: `Invoice #${one_invoice.invoice}`,
+                        module: 'Receiving Slip',
+                        action: 'Insert Note in',
+                        action_from: 'Web',
+                    }, decodedToken);
+                    res.send({ status: true, message: "Receiving slip note saved successfully." });
+                } else {
+                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                }
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+// Delete Receiving Slip Notes
+module.exports.deleteReceivingSlipNote = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+            var invoice_id = requestObject.invoice_id;
+            delete requestObject.invoice_id;
+            var id = requestObject._id;
+            delete requestObject._id;
+            requestObject.updated_by = decodedToken.UserData._id;
+            requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+            let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(invoice_id), "receiving_slip_notes._id": id }, { $set: { "receiving_slip_notes.$.updated_by": decodedToken.UserData._id, "receiving_slip_notes.$.updated_at": Math.round(new Date().getTime() / 1000), "receiving_slip_notes.$.is_delete": 1 } });
+            let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(invoice_id) });
+            if (update_invoice) {
+                requestObject.invoice_id = invoice_id;
+                addchangeInvoice_History("Delete Receiving Slip Note", requestObject, decodedToken, requestObject.updated_at);
+                recentActivity.saveRecentActivity({
+                    user_id: decodedToken.UserData._id,
+                    username: decodedToken.UserData.userfullname,
+                    userpicture: decodedToken.UserData.userpicture,
+                    data_id: invoice_id,
+                    title: `Invoice #${get_invoice.invoice}`,
+                    module: 'Receiving Slip',
+                    action: 'Delete Note in',
+                    action_from: 'Web',
+                }, decodedToken);
+                res.send({ status: true, message: "Receiving slip note deleted successfully.", data: update_invoice });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+// Update Receiving Slip Attachment
+module.exports.saveReceivingSlipAttachment = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+            requestObject.updated_by = decodedToken.UserData._id;
+            requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+            let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(requestObject._id) });
+            let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
+            if (update_invoice) {
+                requestObject.invoice_id = requestObject._id;
+                addchangeInvoice_History("Update Receiving Slip Attachment", requestObject, decodedToken, requestObject.updated_at);
+                recentActivity.saveRecentActivity({
+                    user_id: decodedToken.UserData._id,
+                    username: decodedToken.UserData.userfullname,
+                    userpicture: decodedToken.UserData.userpicture,
+                    data_id: requestObject._id,
+                    title: `Invoice #${get_invoice.invoice}`,
+                    module: 'Receiving Slip',
+                    action: 'Update Attachment in',
+                    action_from: 'Web',
+                }, decodedToken);
+                res.send({ status: true, message: "Receiving slip attachment updated successfully..", data: update_invoice });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
 // Save PO Notes
 module.exports.savePONotes = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
