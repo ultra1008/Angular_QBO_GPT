@@ -172,6 +172,15 @@
     margin-top: 5px;
 }
 
+.button_dark {
+    // background-color: #424242 !important;
+    background-color: #30343d !important;
+}
+
+.button_light {
+    background-color: #023e8af7;
+}
+
 .text-cust-notes-dark {
     background-color: #30343d;
     color: white !important;
@@ -228,6 +237,7 @@
         margin-bottom: 0px;
     }
 }
+
 
 .fileover {
     animation: shake 1s;
