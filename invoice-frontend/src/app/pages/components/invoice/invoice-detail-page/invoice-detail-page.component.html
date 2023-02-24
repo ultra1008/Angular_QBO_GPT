@@ -78,7 +78,7 @@
         </div> -->
     </div>
     <div class="row mt-2" style="height:90%">
-        <div class="col-5">
+        <div class="col-sm-12 col-md-12 col-lg-5">
             <!-- <div class="invoice-card">
                 <h2 class=" text-center ">Invoice-123</h2>
             </div>
@@ -140,7 +140,8 @@
                             </div>
                             <div class="d-flex no-gutters" *ngFor="let nots of notsList">
                                 <div class="col">
-                                    <div class=" note-card" style="justify-content: center;padding: 15px;">
+                                    <div class=" note-card" style="justify-content: center;padding: 15px;"
+                                        [ngClass]="mode == 'on'? 'text-cust-notes-dark' : 'text-cust-notes'">
                                         {{nots.notes}}<b
                                             style="font-size: 10px;float: inline-end;;">{{temp_MMDDYYY_format(nots.updated_at)}}</b>
                                     </div>
@@ -269,8 +270,8 @@
             </mat-accordion>
         </div>
         <!-- history div -->
-        <div class="col-2">
-            <div class="invoice-card">
+        <div class="col-sm-12 col-md-12 col-lg-2 mt-3">
+            <div class="invoice-card" [ngClass]="mode == 'on'? 'invoice-card-dark':''">
                 <h4 class="History-text">History Log</h4>
             </div>
             <div class="history-viwe">
@@ -341,7 +342,7 @@
             </div>
         </div>
         <!-- history div over -->
-        <div class="col-5">
+        <div class="col-sm-12 col-md-12 col-lg-5">
             <div class="wrapper-cust-admin">
 
                 <div class="container">

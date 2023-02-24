@@ -20,6 +20,14 @@
 
 }
 
+.invoice-card-dark {
+
+    background-color: #30343d !important;
+    color: white !important;
+
+
+}
+
 .invoice-viwe {
     height: 90%;
     // margin-right: unset;
@@ -78,6 +86,14 @@
 
 }
 
+::ng-deep .darkMode .mat-expansion-panel-header {
+    // background-color: red !important;
+    height: 40px !important;
+    background-color: #30343d !important;
+    color: white;
+
+}
+
 ::ng-deep .mat-expansion-indicator::after {
     color: white;
     height: 11px;
@@ -100,7 +116,7 @@
 
 .header-text-cust-chart-dark {
 
-    // background-color: #30343d;
+    background-color: #30343d;
     color: white !important;
     // text-align: center !important;
     max-height: 760px;
@@ -111,6 +127,13 @@
     font-weight: 500 !important;
     overflow: auto;
 }
+
+.text-cust-notes-dark {
+    background-color: #30343d;
+    color: white !important;
+}
+
+
 
 .card-history {
     /* Add shadows to create the "card" effect */
