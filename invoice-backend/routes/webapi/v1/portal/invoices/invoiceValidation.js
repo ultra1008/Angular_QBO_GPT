@@ -294,6 +294,7 @@ const saveQuoteAttachment = (req, res, next) => {
 const updateInvoiceRelatedDocument = (req, res, next) => {
     const validationRule = {
         "_id": "required",
+        "module": "required",
     };
     validator(req.body, validationRule, {}, (err, status) => {
         if (!status) {
