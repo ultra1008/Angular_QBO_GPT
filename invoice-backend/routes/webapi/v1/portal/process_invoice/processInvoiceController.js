@@ -476,6 +476,48 @@ module.exports.importProcessData = async function (req, res) {
                                                 }
                                                 // Update packing slip to invoice
                                                 let update_related_doc = await invoiceCollection.updateOne({ _id: ObjectID(save_invoice._id) }, { has_packing_slip: true, packing_slip_data: packing_slip_obj });
+                                            } else if (related_document_type == 'RECEIVING_SLIP') {
+                                                // Set process data and related document process data to complete
+                                                let updateRelatedDocObj = {
+                                                    status: 'Complete',
+                                                    document_type: related_document_type,
+                                                    process_data: relatedDocuments[i],
+                                                };
+                                                await invoiceProcessCollection.updateOne({ _id: ObjectID(relatedDocuments[i].document_id) }, updateRelatedDocObj);
+                                                // Make packing slip Object
+                                                let receiving_slip_obj = {
+                                                    pdf_url: relatedDocuments[i].document_url,
+                                                    document_id: relatedDocuments[i].document_id,
+                                                    document_type: relatedDocuments[i].document_type,
+                                                    date: "",
+                                                    invoice_number: invoiceObject.invoice,
+                                                    po_number: "",
+                                                    ship_to_address: "",
+                                                    vendor: ObjectID(invoiceObject.vendor),
+                                                    received_by: "",
+                                                    badge: {
+                                                        invoice_number: true,
+                                                        vendor: true
+                                                    }
+                                                };
+                                                if (related_doc_pages[0].fields.DATE != null) {
+                                                    receiving_slip_obj.date = related_doc_pages[0].fields.DATE;
+                                                    receiving_slip_obj.badge.date = true;
+                                                }
+                                                if (related_doc_pages[0].fields.PO_NUMBER != null) {
+                                                    receiving_slip_obj.po_number = related_doc_pages[0].fields.PO_NUMBER;
+                                                    receiving_slip_obj.badge.po_number = true;
+                                                }
+                                                if (related_doc_pages[0].fields.SHIP_TO_ADDRESS != null) {
+                                                    receiving_slip_obj.ship_to_address = related_doc_pages[0].fields.SHIP_TO_ADDRESS;
+                                                    receiving_slip_obj.badge.ship_to_address = true;
+                                                }
+                                                if (related_doc_pages[0].fields.RECEIVED_BY != null) {
+                                                    receiving_slip_obj.received_by = related_doc_pages[0].fields.RECEIVED_BY;
+                                                    receiving_slip_obj.badge.received_by = true;
+                                                }
+                                                // Update packing slip to invoice
+                                                let update_related_doc = await invoiceCollection.updateOne({ _id: ObjectID(save_invoice._id) }, { has_receiving_slip: true, receiving_slip_data: receiving_slip_obj });
                                             } else if (related_document_type == 'PURCHASE_ORDER') {
                                                 // Set process data and related document process data to complete
                                                 let updateRelatedDocObj = {
@@ -746,6 +788,76 @@ module.exports.importProcessData = async function (req, res) {
                                     }
                                     // Update packing slip object
                                     await invoiceProcessCollection.updateOne({ _id: ObjectID(get_related_doc._id) }, updatePackingSlipObj);
+                                }
+                            } else if (documentType == 'RECEIVING_SLIP') {
+                                var pages = get_data.data[key][j].document_pages;
+                                var relatedDocuments = get_data.data[key][j].related_documents;
+
+                                // Check document id is available or not
+                                let get_related_doc = await invoiceProcessCollection.findOne({ _id: ObjectID(get_data.data[key][j].document_id) });
+                                // If document is there then process data
+                                if (get_related_doc) {
+                                    // Set process data and related document process data to complete
+                                    let updateReceivingSlipObj = {
+                                        invoice_id: '',
+                                        status: 'Process',
+                                        document_type: documentType,
+                                        process_data: get_data.data[key][j],
+                                    };
+                                    // Check document has related invoice or not
+                                    let related_invoice = await getRelatedInvoiceOfDocument(relatedDocuments, connection_db_api);
+                                    if (related_invoice.status) {
+                                        updateReceivingSlipObj.invoice_id = related_invoice.data._id;
+                                        updateReceivingSlipObj.status = 'Complete';
+                                        // Make packing slip Object
+                                        let receiving_slip_obj = {
+                                            pdf_url: get_data.data[key][j].document_url,
+                                            document_id: get_data.data[key][j].document_id,
+                                            document_type: get_data.data[key][j].document_type,
+                                            date: "",
+                                            invoice_number: "",
+                                            po_number: "",
+                                            ship_to_address: "",
+                                            vendor: "",
+                                            received_by: "",
+                                            badge: {}
+                                        };
+                                        let invoice_no = '';
+                                        if (pages[0].fields.INVOICE_NUMBER != null) {
+                                            invoice_no = pages[0].fields.INVOICE_NUMBER;
+                                            receiving_slip_obj.badge.invoice_number = true;
+                                        }
+                                        if (pages[0].fields.VENDOR_NAME != null) {
+                                            let tmpVendor = await getAndCheckVendor(pages[0].fields.VENDOR_NAME.replace(/\n/g, " "), invoice_no, connection_db_api);
+                                            if (tmpVendor.status) {
+                                                receiving_slip_obj.vendor = ObjectID(tmpVendor.data._id);
+                                                receiving_slip_obj.badge.vendor = true;
+                                            }
+                                        }
+                                        if (receiving_slip_obj.vendor != '') {
+                                            if (pages[0].fields.DATE != null) {
+                                                receiving_slip_obj.date = pages[0].fields.DATE;
+                                                receiving_slip_obj.badge.date = true;
+                                            }
+                                            receiving_slip_obj.invoice_number = invoice_no;
+                                            if (pages[0].fields.PO_NUMBER != null) {
+                                                receiving_slip_obj.po_number = pages[0].fields.PO_NUMBER;
+                                                receiving_slip_obj.badge.po_number = true;
+                                            }
+                                            if (pages[0].fields.SHIP_TO_ADDRESS != null) {
+                                                receiving_slip_obj.ship_to_address = pages[0].fields.SHIP_TO_ADDRESS;
+                                                receiving_slip_obj.badge.ship_to_address = true;
+                                            }
+                                            if (pages[0].fields.RECEIVED_BY != null) {
+                                                receiving_slip_obj.received_by = pages[0].fields.RECEIVED_BY;
+                                                receiving_slip_obj.badge.received_by = true;
+                                            }
+                                            // Update packing slip to invoice
+                                            let update_related_doc = await invoiceCollection.updateOne({ _id: ObjectID(updateReceivingSlipObj.invoice_id) }, { has_receiving_slip: true, receiving_slip_data: receiving_slip_obj });
+                                        }
+                                    }
+                                    // Update packing slip object
+                                    await invoiceProcessCollection.updateOne({ _id: ObjectID(get_related_doc._id) }, updateReceivingSlipObj);
                                 }
                             } else if (documentType == 'PURCHASE_ORDER') {
                                 var pages = get_data.data[key][j].document_pages;

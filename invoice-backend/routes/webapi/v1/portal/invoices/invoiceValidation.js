@@ -159,6 +159,50 @@ const savePackingSlipAttachment = (req, res, next) => {
     });
 };
 
+const saveReceivingSlipNotes = (req, res, next) => {
+    const validationRule = {
+        "invoice_id": "required",
+        "notes": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({ status: false, message: err });
+        }
+        else {
+            next();
+        }
+    });
+};
+
+const deleteReceivingSlipNote = (req, res, next) => {
+    const validationRule = {
+        "invoice_id": "required",
+        "_id": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({ status: false, message: err });
+        }
+        else {
+            next();
+        }
+    });
+};
+
+const saveReceivingSlipAttachment = (req, res, next) => {
+    const validationRule = {
+        "_id": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({ status: false, message: err });
+        }
+        else {
+            next();
+        }
+    });
+};
+
 const savePONotes = (req, res, next) => {
     const validationRule = {
         "invoice_id": "required",
@@ -250,6 +294,7 @@ const saveQuoteAttachment = (req, res, next) => {
 const updateInvoiceRelatedDocument = (req, res, next) => {
     const validationRule = {
         "_id": "required",
+        "module": "required",
     };
     validator(req.body, validationRule, {}, (err, status) => {
         if (!status) {
@@ -273,6 +318,9 @@ module.exports = {
     savePackingSlipNotes,
     deletePackingSlipNote,
     savePackingSlipAttachment,
+    saveReceivingSlipNotes,
+    deleteReceivingSlipNote,
+    saveReceivingSlipAttachment,
     savePONotes,
     deletePONote,
     savePOAttachment,
