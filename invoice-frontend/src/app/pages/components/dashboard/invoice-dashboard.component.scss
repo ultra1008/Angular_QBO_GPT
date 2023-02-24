@@ -385,27 +385,18 @@
 .header-text-cust-chart {
     background-color: #fff;
     // text-align: center !important;
-    max-height: 533px;
+    max-height: 552px;
     border-radius: 6px;
     // border-top-right-radius: 4px;
     padding: 1em 1em;
     font-size: 1.2em !important;
     font-weight: 500 !important;
-    overflow: scroll !important;
+    // overflow: scroll !important;
 }
 
 .header-text-cust-chart-dark {
-
-    background-color: #30343d;
+    background-color: #30343d !important;
     color: white !important;
-    // text-align: center !important;
-    max-height: 533px;
-    border-radius: 6px;
-    // border-top-right-radius: 4px;
-    padding: 1em 1em;
-    font-size: 1.2em !important;
-    font-weight: 500 !important;
-    overflow: scroll !important;
 }
 
 .card-history {

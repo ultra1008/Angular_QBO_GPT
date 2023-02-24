@@ -294,6 +294,7 @@ export class InvoiceDashboardComponent implements OnInit {
   }
 
   onScroll() {
+    console.log("hello");
     this.start++;
     this.getTodaysActivity();
   }
@@ -325,10 +326,7 @@ export class InvoiceDashboardComponent implements OnInit {
 
     requestObject = {
       start: this.start,
-
     };
-
-
     this.httpCall
       .httpPostCall(httproutes.INVOICE_GET_DASHBOARD_HISTORY, requestObject)
       .subscribe(function (params) {
@@ -338,6 +336,7 @@ export class InvoiceDashboardComponent implements OnInit {
           self.dashboardHistory = self.dashboardHistory.concat(params.data);
         }
       });
+    console.log("dashboardHistory", self.dashboardHistory);
   }
 
   tmp_date(epoch: any) {
@@ -346,7 +345,8 @@ export class InvoiceDashboardComponent implements OnInit {
 
   setHeightStyles() {
     let styles = {
-      height: window.screen.height + "px",
+      height: "520px",
+      // height: window.screen.height + "px",
       "overflow-y": "scroll",
     };
     return styles;

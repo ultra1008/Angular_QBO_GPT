@@ -154,10 +154,13 @@
                 <div class="">
                     <div class="">
                         <b class="ml-1">Last Activity History</b>
-                        <div class=" mt-2 "
-                            [ngClass]="mode == 'on'? 'header-text-cust-chart-dark' : 'header-text-cust-chart'">
+                        <div class=" mt-2 header-text-cust-chart"
+                            [ngClass]="mode == 'on'? 'header-text-cust-chart-dark' : ''">
 
-                            <div class="search-results" [ngClass]="mode == 'on'? 'card-history-dark' : 'card-history'">
+                            <div class="search-results" infiniteScroll [infiniteScrollDistance]="2"
+                                [infiniteScrollThrottle]="50" (scrolled)="onScroll()" [scrollWindow]="false"
+                                [ngStyle]="setHeightStyles()"
+                                [ngClass]="mode == 'on'? 'card-history-dark' : 'card-history'">
                                 <div class="card-body  mb-2" *ngFor=" let item of dashboardHistory">
                                     <div class="d-flex flex-row">
                                         <div class="p-2">
