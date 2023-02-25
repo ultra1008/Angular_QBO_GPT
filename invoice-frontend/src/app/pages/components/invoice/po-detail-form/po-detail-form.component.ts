@@ -313,7 +313,7 @@ export class PoDetailFormComponent implements OnInit {
         });
       }
       that.uiSpinner.spin$.next(false);
-      console.log("pdf_url", that.pdf_url);
+      console.log("invoiceData.packing_slip_data", that.invoiceData.packing_slip_data);
     });
   }
   saveInvoice() {

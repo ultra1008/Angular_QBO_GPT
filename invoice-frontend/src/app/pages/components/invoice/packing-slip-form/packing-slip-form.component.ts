@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { Location } from '@angular/common';
 import { httproutes, icon, localstorageconstants, wasabiImagePath } from 'src/app/consts';
@@ -7,12 +7,13 @@ import { HttpCall } from 'src/app/service/httpcall.service';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModeDetectService } from '../../map/mode-detect.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { commonFileChangeEvent } from 'src/app/service/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
 import { EmployeeService } from '../../team/employee.service';
+import { map, startWith } from 'rxjs/operators';
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
     confirmButton: 'btn btn-success s2-confirm margin-right-cust',
@@ -71,6 +72,14 @@ export class PackingSlipFormComponent implements OnInit {
   invoice_id: any;
   loadInvoice: boolean = false;
 
+  badge: any = [];
+  status: any;
+  filteredOptions: Observable<string[]>;
+  vendor = new FormControl('');
+  filteredVendors: Observable<any[]>;
+  vendorList: any = [];
+  viewIcon: any;
+
   constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
@@ -87,31 +96,39 @@ export class PackingSlipFormComponent implements OnInit {
       this.Email_Template_Form_Submitting = this.translate.instant('Email_Template_Form_Submitting');
     });
     this.invoiceform = this.formBuilder.group({
+
       document_type: [""],
-      invoice_name: [""],
-      vendor_name: [""],
-      customer_id: [""],
-      invoice: [""],
-      p_o: [""],
-      invoice_date: [""],
-      due_date: [""],
-      order_date: [""],
-      ship_date: [""],
-      packing_slip: [""],
-      receiving_slip: [""],
-      status: [""],
-      terms: [""],
-      total: [""],
+      invoice_number: [""],
+      po_number: [""],
+      received_by: [""],
+      ship_to_address: [""],
+      date: [""],
 
 
-      tax_amount: [""],
-      tax_id: [""],
-      sub_total: [""],
-      amount_due: [""],
-      cost_code: [""],
-      gl_account: [""],
-      assign_to: [""],
-      notes: [""],
+
+      // invoice_name: [""],
+      // vendor_name: [""],
+      // customer_id: [""],
+
+      // invoice_date: [""],
+      // due_date: [""],
+      // order_date: [""],
+      // ship_date: [""],
+      // packing_slip: [""],
+      // receiving_slip: [""],
+      // status: [""],
+      // terms: [""],
+      // total: [""],
+
+
+      // tax_amount: [""],
+      // tax_id: [""],
+      // sub_total: [""],
+      // amount_due: [""],
+      // cost_code: [""],
+      // gl_account: [""],
+      // assign_to: [""],
+      // notes: [""],
     });
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
@@ -156,12 +173,14 @@ export class PackingSlipFormComponent implements OnInit {
     }
   }
 
-  back() {
-    this.router.navigate(['/invoice-detail'], { queryParams: { _id: this.invoice_id } });
-  }
 
   ngOnInit(): void {
     let that = this;
+    this.getAllVendorList();
+    this.filteredVendors = this.vendor.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filterVendor(value || '')),
+    );
     this.employeeservice.getalluser().subscribe(function (data) {
       that.uiSpinner.spin$.next(false);
       if (data.status) {
@@ -174,6 +193,36 @@ export class PackingSlipFormComponent implements OnInit {
       console.log("usersArray", data.data);
     });
     that.getAllCostCode();
+  }
+
+  private _filterVendor(value: any): any[] {
+    return this.vendorList.filter(one_vendor => {
+      let vendor_name = value.vendor_name ? value.vendor_name : value;
+      return one_vendor.vendor_name.toLowerCase().indexOf(vendor_name.toLowerCase()) > -1;
+    });
+
+  }
+  viewInvoice(_id) {
+    this.router.navigate(['/invoice-detail'], { queryParams: { _id: _id } });
+  }
+  async getAllVendorList() {
+    let data = await this.httpCall.httpGetCall(httproutes.PORTAL_COMPANY_VENDOR_GET_BY_ID).toPromise();
+    if (data.status) {
+      this.vendorList = data.data;
+    }
+  }
+  getIdFromVendor(event, Option) {
+    this.invoiceform.get('vendor').setValue(Option._id);
+  }
+
+  displayOption(option: any): string {
+    return option ? option.vendor_name : option;
+  }
+
+
+
+  back() {
+    this.router.navigate(['/invoice-detail'], { queryParams: { _id: this.invoice_id } });
   }
   print() {
     fetch(this.pdf_url).then(resp => resp.arrayBuffer()).then(resp => {
@@ -218,71 +267,7 @@ export class PackingSlipFormComponent implements OnInit {
       }
     });
   }
-  invoiceApprove() {
-    // let po_id = this.route.snapshot.queryParamMap.get("po_id");
-    // let po_status = "Pending";
-    // let that = this;
-    // swalWithBootstrapButtons
-    //   .fire({
-    //     title: this.Custom_Pdf_Viewer_Please_Confirm,
-    //     text: this.Custom_Pdf_Viewer_Want_Approve_Po,
-    //     showDenyButton: true,
-    //     showCancelButton: false,
-    //     confirmButtonText: this.Compnay_Equipment_Delete_Yes,
-    //     denyButtonText: this.Compnay_Equipment_Delete_No,
-    //   })
-    //   .then((result) => {
-    //     if (result.isConfirmed) {
-    //       // denied PO api call
-    //       that.httpCall
-    //         .httpPostCall(httproutes.PORTAL_COMPANY_UPDATE_PO_STATUS, {
-    //           _id: po_id,
-    //           po_status: po_status,
-    //         })
-    //         .subscribe(function (params) {
-    //           if (params.status) {
-    //             that.snackbarservice.openSnackBar(params.message, "success");
-    //             that.location.back();
-    //           } else {
-    //             that.snackbarservice.openSnackBar(params.message, "error");
-    //           }
-    //         });
-    //     }
-    //   });
-  }
 
-  invoiceDenied() {
-    // let po_id = this.route.snapshot.queryParamMap.get("po_id");
-    // let po_status = "Denied";
-    // let that = this;
-    // swalWithBootstrapButtons
-    //   .fire({
-    //     title: this.Custom_Pdf_Viewer_Please_Confirm,
-    //     text: this.Custom_Pdf_Viewer_Want_Deny_Po,
-    //     showDenyButton: true,
-    //     showCancelButton: false,
-    //     confirmButtonText: this.Compnay_Equipment_Delete_Yes,
-    //     denyButtonText: this.Compnay_Equipment_Delete_No,
-    //   })
-    //   .then((result) => {
-    //     if (result.isConfirmed) {
-    //       /*--- denied PO api call ---*/
-    //       that.httpCall
-    //         .httpPostCall(httproutes.PORTAL_COMPANY_UPDATE_PO_STATUS, {
-    //           _id: po_id,
-    //           po_status: po_status,
-    //         })
-    //         .subscribe(function (params) {
-    //           if (params.status) {
-    //             that.snackbarservice.openSnackBar(params.message, "success");
-    //             that.location.back();
-    //           } else {
-    //             that.snackbarservice.openSnackBar(params.message, "error");
-    //           }
-    //         });
-    //     }
-    //   });
-  }
 
   getOneInvoice() {
     let that = this;
@@ -290,56 +275,72 @@ export class PackingSlipFormComponent implements OnInit {
       if (params.status) {
 
         that.invoiceData = params.data;
+        that.pdf_url = that.invoiceData.packing_slip_data.pdf_url;
+        that.badge = that.invoiceData.packing_slip_data.badge;
+        that.vendor.setValue(params.data.vendor);
         that.loadInvoice = true;
         that.invoiceform = that.formBuilder.group({
-          // invoice: [params.data.invoice],
-          // p_o: [params.data.p_o, Validators.required],
+
+          document_type: [params.data.packing_slip_data.document_type],
+          vendor: [params.data.vendor._id],
+          invoice_number: [params.data.packing_slip_data.invoice_number],
+          po_number: [params.data.packing_slip_data.po_number],
+          date: [params.data.packing_slip_data.date],
+          ship_to_address: [params.data.packing_slip_data.ship_to_address],
+          received_by: [params.data.packing_slip_data.received_by],
+
+
+          // invoice_name: [params.data.invoice_name],
+          // vendor_name: [params.data.vendor_name],
+
+          // customer_id: [params.data.customer_id],
+
+          // invoice_date: [params.data.invoice_date],
+          // due_date: [params.data.due_date],
+          // order_date: [params.data.order_date],
+          // ship_date: [params.data.ship_date],
 
           // packing_slip: [params.data.packing_slip],
           // receiving_slip: [params.data.receiving_slip],
+          // status: [params.data.status],
+          // terms: [params.data.terms],
+          // total: [params.data.total],
+
+          // tax_amount: [params.data.tax_amount],
+          // tax_id: [params.data.tax_id],
+          // sub_total: [params.data.sub_total],
+          // amount_due: [params.data.amount_due],
+          // cost_code: [params.data.cost_code],
+          // gl_account: [params.data.gl_account],
+          // assign_to: [params.data.assign_to],
           // notes: [params.data.notes],
-          // status: [params.data.status, Validators.required],
-          document_type: [params.data.document_type],
-          invoice_name: [params.data.invoice_name],
-          vendor_name: [params.data.vendor_name],
-          customer_id: [params.data.customer_id],
-          invoice: [params.data.invoice],
-          p_o: [params.data.p_o],
-          invoice_date: [params.data.invoice_date],
-          due_date: [params.data.due_date],
-          order_date: [params.data.order_date],
-          ship_date: [params.data.ship_date],
-
-          packing_slip: [params.data.packing_slip],
-          receiving_slip: [params.data.receiving_slip],
-          status: [params.data.status],
-          terms: [params.data.terms],
-          total: [params.data.total],
-
-          tax_amount: [params.data.tax_amount],
-          tax_id: [params.data.tax_id],
-          sub_total: [params.data.sub_total],
-          amount_due: [params.data.amount_due],
-          cost_code: [params.data.cost_code],
-          gl_account: [params.data.gl_account],
-          assign_to: [params.data.assign_to],
-          notes: [params.data.notes],
-          pdf_url: [params.data.packing_slip_data.pdf_url]
+          // pdf_url: [params.data.packing_slip_data.pdf_url]
         });
       }
       that.uiSpinner.spin$.next(false);
+      console.log("invoiceData.packing_slip_data", that.invoiceData.packing_slip_data);
     });
   }
 
   saveInvoice() {
     let that = this;
     if (that.invoiceform.valid) {
-      let requestObject = that.invoiceform.value;
-      if (that.id) {
-        requestObject._id = that.id;
-      }
+
+      let formVal = that.invoiceform.value;
+      let requestObject = {
+        _id: that.id,
+        module: 'Packing Slip',
+        'po_data.date': formVal.date,
+        'po_data.invoice_number': formVal.invoice_number,
+        'po_data.po_number': formVal.po_number,
+        'po_data.vendor': formVal.vendor,
+        'po_data.received_by': formVal.received_by,
+        'po_data.ship_to_address': formVal.ship_to_address,
+        'po_data.document_type': formVal.document_type,
+      };
+
       that.uiSpinner.spin$.next(true);
-      that.httpCall.httpPostCall(httproutes.INVOICE_SAVE_INVOICE, requestObject).subscribe(function (params) {
+      that.httpCall.httpPostCall(httproutes.PORTAL_UPDATE_PACKING_SLIP, requestObject).subscribe(function (params) {
         if (params.status) {
           that.snackbarservice.openSnackBar(params.message, "success");
           that.back();
@@ -348,6 +349,7 @@ export class PackingSlipFormComponent implements OnInit {
         }
         that.uiSpinner.spin$.next(false);
       });
+      console.log("requestObject", requestObject);
     }
   }
 }

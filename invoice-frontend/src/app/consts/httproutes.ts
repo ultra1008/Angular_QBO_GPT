@@ -1140,6 +1140,7 @@ export enum httproutes {
     PORTAL_SAVE_PACKING_SLIP_NOTES = "/webapi/v1/portal/savepackingslipnote",
     PORTAL_DELETE_PACKING_SLIP_NOTES = "/webapi/v1/portal/deletepackingslipnote",
     PACKING_PACKING_SLIP_ATTCHMENTS = "/webapi/v1/portal/updatepackingslipattachment",
+    PORTAL_UPDATE_PACKING_SLIP = "/webapi/v1/portal/updateinvoicerelateddocument",
 
     //P.O Slip NOTS & ATTCHMENTS
     PORTAL_SAVE_P_O_NOTES = "/webapi/v1/portal/saveponote",
