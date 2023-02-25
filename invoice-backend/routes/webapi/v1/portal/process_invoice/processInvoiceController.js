@@ -59,7 +59,6 @@ module.exports.saveInvoiceProcess = async function (req, res) {
                     });
                 }
                 let insert_data = await invoiceProcessCollection.insertMany(saveObj);
-                // console.log("insert_data: ", insert_data);
                 if (insert_data) {
                     let apiObj = [];
                     for (let i = 0; i < insert_data.length; i++) {
@@ -68,27 +67,16 @@ module.exports.saveInvoiceProcess = async function (req, res) {
                             document_url: insert_data[i].pdf_url,
                         });
                     }
-                    await sendInvoiceForProcess(apiObj);
-                    /* const options = {
-                        'method': 'POST',
-                        'url': 'http://db-invoice.rovuk.us:8000/process',
-                        'headers': {
-                            'Content-Type': 'application/json',
-                            'X-API-KEY': '4194168a-4a32-45d9-9d7c-0a730f887e7f'
-                        },
-                        rejectUnauthorized: false,
-                        body: JSON.stringify({ documents: apiObj })
-                    };
-                    console.log("process body: ", JSON.stringify({ documents: apiObj }));
-                    request(options, function (err, resp, body) {
-                        if (err) {
-                            // reject(err);
-                        } else {
-                            console.log("response: ", body);
-                            // resolve({ body });
+                    let data = await common.sendInvoiceForProcess(apiObj);
+                    let json = JSON.parse(data.body);
+                    for (const key in json) {
+                        if (json[key] == 'ALREADY_EXISTS') {
+                            await invoiceProcessCollection.updateOne({ _id: ObjectID(key) }, { status: 'Already Exists' });
                         }
-                    }); */
+                    }
                     res.send({ message: 'Invoice for process added successfully.', data: apiObj, status: true });
+                } else {
+                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
                 }
             }
         } catch (e) {
@@ -146,7 +134,13 @@ module.exports.importManagementInvoice = async function (req, res) {
                         document_url: insert_data[i].pdf_url,
                     });
                 }
-                await sendInvoiceForProcess(apiObj);
+                let data = await common.sendInvoiceForProcess(apiObj);
+                let json = JSON.parse(data.body);
+                for (const key in json) {
+                    if (json[key] == 'ALREADY_EXISTS') {
+                        await invoiceProcessCollection.updateOne({ _id: ObjectID(key) }, { status: 'Already Exists' });
+                    }
+                }
                 res.send({ message: 'Management Invoice imported successfully.', data: apiObj, status: true });
             }
         } catch (e) {
@@ -203,7 +197,13 @@ module.exports.importManagementPO = async function (req, res) {
                         document_url: insert_data[i].pdf_url,
                     });
                 }
-                await sendInvoiceForProcess(apiObj);
+                let data = await common.sendInvoiceForProcess(apiObj);
+                let json = JSON.parse(data.body);
+                for (const key in json) {
+                    if (json[key] == 'ALREADY_EXISTS') {
+                        await invoiceProcessCollection.updateOne({ _id: ObjectID(key) }, { status: 'Already Exists' });
+                    }
+                }
                 res.send({ message: 'Management PO imported successfully.', data: apiObj, status: true });
             }
         } catch (e) {
@@ -217,30 +217,6 @@ module.exports.importManagementPO = async function (req, res) {
     }
 };
 
-// Call API of Send Invoice for processing
-function sendInvoiceForProcess(requestObject) {
-    return new Promise(function (resolve, reject) {
-        var request = require('request');
-        const options = {
-            'method': 'POST',
-            'url': 'http://db-invoice.rovuk.us:8000/process',
-            'headers': {
-                'Content-Type': 'application/json',
-                'X-API-KEY': '4194168a-4a32-45d9-9d7c-0a730f887e7f'
-            },
-            rejectUnauthorized: false,
-            body: JSON.stringify({ documents: requestObject })
-        };
-        request(options, function (err, resp, body) {
-            if (err) {
-                reject(err);
-            } else {
-                resolve({ body });
-            }
-        });
-    });
-};
-
 module.exports.importProcessData = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
@@ -251,13 +227,19 @@ module.exports.importProcessData = async function (req, res) {
             let invoiceCollection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             let get_invoice = await invoiceProcessCollection.find({ is_delete: 0, status: 'Pending' });
             var queryString = `?customer_id=${decodedToken.companycode.toLowerCase()}`;
+            let temp = [];
             for (let i = 0; i < get_invoice.length; i++) {
                 queryString += `&document_id=${get_invoice[i]._id}`;
+                temp.push({
+                    'document_id': get_invoice[i]._id,
+                    'document_url': get_invoice[i].pdf_url,
+                });
             }
+            // console.log("temp", temp);
             // queryString = '?customer_id=r-988514&document_id=63ef5856916b4b2d74acb59a';
             console.log("queryString: ", queryString);
-
-            let get_data = await common.sendInvoiceForProcess(queryString);
+            // if (true) { } else {
+            let get_data = await common.getProcessedDocuments(queryString);
             if (get_data.status) {
                 for (const key in get_data.data) {
                     if (get_data.data[key] != null) {
@@ -319,95 +301,93 @@ module.exports.importProcessData = async function (req, res) {
                                             }
                                         }
                                     }
-                                    if (invoiceObject.vendor != '') {
-                                        invoiceObject.invoice = invoice_no;
-                                        if (pages[i].fields.INVOICE_DATE != null) {
-                                            invoiceObject.invoice_date = pages[i].fields.INVOICE_DATE;
-                                            invoiceObject.badge.invoice_date = true;
-                                        }
-                                        if (pages[i].fields.ORDER_DATE != null) {
-                                            invoiceObject.order_date = pages[i].fields.ORDER_DATE;
-                                            invoiceObject.badge.order_date = true;
-                                        }
-                                        if (pages[i].fields.PO_NUMBER != null) {
-                                            invoiceObject.p_o = pages[i].fields.PO_NUMBER;
-                                            invoiceObject.badge.p_o = true;
-                                        }
-                                        /* if (pages[i].fields.INVOICE_TO != null) {
-                                            invoiceObject.invoice = pages[i].fields.INVOICE_TO;
-                                            invoiceObject.   badge.vendor=true
-                                        }
-                                        if (pages[i].fields.ADDRESS != null) {
-                                            invoiceObject.invoice = pages[i].fields.ADDRESS;
-                                            invoiceObject.   badge.vendor=true
-                                        } */
-                                        if (pages[i].fields.SUBTOTAL != null) {
-                                            invoiceObject.sub_total = pages[i].fields.SUBTOTAL;
-                                            invoiceObject.badge.sub_total = true;
-                                        }
-                                        if (pages[i].fields.TOTAL != null) {
-                                            invoiceObject.total = pages[i].fields.TOTAL;
-                                            invoiceObject.badge.total = true;
-                                        }
-                                        if (pages[i].fields.TAX != null) {
-                                            invoiceObject.tax_amount = pages[i].fields.TAX;
-                                            invoiceObject.badge.tax_amount = true;
-                                        }
-                                        if (pages[i].fields.INVOICE_TOTAL != null) {
-                                            invoiceObject.invoice_total = pages[i].fields.INVOICE_TOTAL;
-                                            invoiceObject.badge.invoice_total = true;
-                                        }
+                                    invoiceObject.invoice = invoice_no;
+                                    if (pages[i].fields.INVOICE_DATE != null) {
+                                        invoiceObject.invoice_date = pages[i].fields.INVOICE_DATE;
+                                        invoiceObject.badge.invoice_date = true;
+                                    }
+                                    if (pages[i].fields.ORDER_DATE != null) {
+                                        invoiceObject.order_date = pages[i].fields.ORDER_DATE;
+                                        invoiceObject.badge.order_date = true;
+                                    }
+                                    if (pages[i].fields.PO_NUMBER != null) {
+                                        invoiceObject.p_o = pages[i].fields.PO_NUMBER;
+                                        invoiceObject.badge.p_o = true;
+                                    }
+                                    /* if (pages[i].fields.INVOICE_TO != null) {
+                                        invoiceObject.invoice = pages[i].fields.INVOICE_TO;
+                                        invoiceObject.   badge.vendor=true
+                                    }
+                                    if (pages[i].fields.ADDRESS != null) {
+                                        invoiceObject.invoice = pages[i].fields.ADDRESS;
+                                        invoiceObject.   badge.vendor=true
+                                    } */
+                                    if (pages[i].fields.SUBTOTAL != null) {
+                                        invoiceObject.sub_total = pages[i].fields.SUBTOTAL;
+                                        invoiceObject.badge.sub_total = true;
+                                    }
+                                    if (pages[i].fields.TOTAL != null) {
+                                        invoiceObject.total = pages[i].fields.TOTAL;
+                                        invoiceObject.badge.total = true;
+                                    }
+                                    if (pages[i].fields.TAX != null) {
+                                        invoiceObject.tax_amount = pages[i].fields.TAX;
+                                        invoiceObject.badge.tax_amount = true;
+                                    }
+                                    if (pages[i].fields.INVOICE_TOTAL != null) {
+                                        invoiceObject.invoice_total = pages[i].fields.INVOICE_TOTAL;
+                                        invoiceObject.badge.invoice_total = true;
+                                    }
 
-                                        /* if (pages[i].fields.VENDOR_ADDRESS != null) {
-                                            invoiceObject.invoice = pages[i].fields.VENDOR_ADDRESS;
-                                        }
-                                        if (pages[i].fields.VENDOR_PHONE != null) {
-                                            invoiceObject.invoice = pages[i].fields.VENDOR_PHONE;
-                                        } */
-                                        if (pages[i].fields.JOB_NUMBER != null) {
-                                            invoiceObject.job_number = pages[i].fields.JOB_NUMBER;
-                                            invoiceObject.badge.job_number = true;
-                                        }
-                                        if (pages[i].fields.DELIVERY_ADDRESS != null) {
-                                            invoiceObject.delivery_address = pages[i].fields.DELIVERY_ADDRESS;
-                                            invoiceObject.badge.delivery_address = true;
-                                        }
-                                        if (pages[i].fields.TERMS != null) {
-                                            invoiceObject.terms = pages[i].fields.TERMS;
-                                            invoiceObject.badge.terms = true;
-                                        }
-                                        if (pages[i].fields.DUE_DATE != null) {
-                                            invoiceObject.due_date = pages[i].fields.DUE_DATE;
-                                            invoiceObject.badge.due_date = true;
-                                        }
-                                        if (pages[i].fields.SHIP_DATE != null) {
-                                            invoiceObject.ship_date = pages[i].fields.SHIP_DATE;
-                                            invoiceObject.badge.ship_date = true;
-                                        }
-                                        if (pages[i].fields.CONTRACT_NUMBER != null) {
-                                            invoiceObject.contract_number = pages[i].fields.CONTRACT_NUMBER;
-                                            invoiceObject.badge.contract_number = true;
-                                        }
-                                        if (pages[i].fields.DISCOUNT != null) {
-                                            invoiceObject.discount = pages[i].fields.DISCOUNT;
-                                            invoiceObject.badge.discount = true;
-                                        }
-                                        if (pages[i].fields.ACCOUNT_NUMBER != null) {
-                                            invoiceObject.account_number = pages[i].fields.ACCOUNT_NUMBER;
-                                            invoiceObject.badge.account_number = true;
-                                        }
-                                        if (pages[i].expense_groups.length > 0) {
-                                            if (pages[i].expense_groups[0].length > 0) {
-                                                for (let k = 0; k < pages[i].expense_groups[0].length; k++) {
-                                                    let item = pages[i].expense_groups[0][k];
-                                                    items.push({
-                                                        item: item.ITEM == null ? '' : item.ITEM,
-                                                        product_code: item.PRODUCT_CODE == null ? '' : item.PRODUCT_CODE,
-                                                        unit_price: item.UNIT_PRICE == null ? '' : item.UNIT_PRICE,
-                                                        quantity: item.QUANTITY == null ? '' : item.QUANTITY,
-                                                        price: item.PRICE == null ? '' : item.PRICE,
-                                                    });
-                                                }
+                                    /* if (pages[i].fields.VENDOR_ADDRESS != null) {
+                                        invoiceObject.invoice = pages[i].fields.VENDOR_ADDRESS;
+                                    }
+                                    if (pages[i].fields.VENDOR_PHONE != null) {
+                                        invoiceObject.invoice = pages[i].fields.VENDOR_PHONE;
+                                    } */
+                                    if (pages[i].fields.JOB_NUMBER != null) {
+                                        invoiceObject.job_number = pages[i].fields.JOB_NUMBER;
+                                        invoiceObject.badge.job_number = true;
+                                    }
+                                    if (pages[i].fields.DELIVERY_ADDRESS != null) {
+                                        invoiceObject.delivery_address = pages[i].fields.DELIVERY_ADDRESS;
+                                        invoiceObject.badge.delivery_address = true;
+                                    }
+                                    if (pages[i].fields.TERMS != null) {
+                                        invoiceObject.terms = pages[i].fields.TERMS;
+                                        invoiceObject.badge.terms = true;
+                                    }
+                                    if (pages[i].fields.DUE_DATE != null) {
+                                        invoiceObject.due_date = pages[i].fields.DUE_DATE;
+                                        invoiceObject.badge.due_date = true;
+                                    }
+                                    if (pages[i].fields.SHIP_DATE != null) {
+                                        invoiceObject.ship_date = pages[i].fields.SHIP_DATE;
+                                        invoiceObject.badge.ship_date = true;
+                                    }
+                                    if (pages[i].fields.CONTRACT_NUMBER != null) {
+                                        invoiceObject.contract_number = pages[i].fields.CONTRACT_NUMBER;
+                                        invoiceObject.badge.contract_number = true;
+                                    }
+                                    if (pages[i].fields.DISCOUNT != null) {
+                                        invoiceObject.discount = pages[i].fields.DISCOUNT;
+                                        invoiceObject.badge.discount = true;
+                                    }
+                                    if (pages[i].fields.ACCOUNT_NUMBER != null) {
+                                        invoiceObject.account_number = pages[i].fields.ACCOUNT_NUMBER;
+                                        invoiceObject.badge.account_number = true;
+                                    }
+                                    if (pages[i].expense_groups.length > 0) {
+                                        if (pages[i].expense_groups[0].length > 0) {
+                                            for (let k = 0; k < pages[i].expense_groups[0].length; k++) {
+                                                let item = pages[i].expense_groups[0][k];
+                                                items.push({
+                                                    item: item.ITEM == null ? '' : item.ITEM,
+                                                    product_code: item.PRODUCT_CODE == null ? '' : item.PRODUCT_CODE,
+                                                    unit_price: item.UNIT_PRICE == null ? '' : item.UNIT_PRICE,
+                                                    quantity: item.QUANTITY == null ? '' : item.QUANTITY,
+                                                    price: item.PRICE == null ? '' : item.PRICE,
+                                                });
                                             }
                                         }
                                     }
@@ -424,6 +404,7 @@ module.exports.importProcessData = async function (req, res) {
                                         status: 'Complete',
                                         document_type: get_data.data[key][j].document_type,
                                         process_data: get_data.data[key][j],
+                                        data: invoiceObject,
                                     };
                                     await invoiceProcessCollection.updateOne({ _id: ObjectID(key) }, updateInvoiceProcessObject);
 
@@ -435,13 +416,6 @@ module.exports.importProcessData = async function (req, res) {
                                             let related_document_type = relatedDocuments[i].document_type;
                                             let related_doc_pages = relatedDocuments[i].document_pages;
                                             if (related_document_type == 'PACKING_SLIP') {
-                                                // Set process data and related document process data to complete
-                                                let updateRelatedDocObj = {
-                                                    status: 'Complete',
-                                                    document_type: related_document_type,
-                                                    process_data: relatedDocuments[i],
-                                                };
-                                                await invoiceProcessCollection.updateOne({ _id: ObjectID(relatedDocuments[i].document_id) }, updateRelatedDocObj);
                                                 // Make packing slip Object
                                                 let packing_slip_obj = {
                                                     pdf_url: relatedDocuments[i].document_url,
@@ -476,14 +450,15 @@ module.exports.importProcessData = async function (req, res) {
                                                 }
                                                 // Update packing slip to invoice
                                                 let update_related_doc = await invoiceCollection.updateOne({ _id: ObjectID(save_invoice._id) }, { has_packing_slip: true, packing_slip_data: packing_slip_obj });
-                                            } else if (related_document_type == 'RECEIVING_SLIP') {
                                                 // Set process data and related document process data to complete
                                                 let updateRelatedDocObj = {
                                                     status: 'Complete',
                                                     document_type: related_document_type,
                                                     process_data: relatedDocuments[i],
+                                                    data: packing_slip_obj,
                                                 };
                                                 await invoiceProcessCollection.updateOne({ _id: ObjectID(relatedDocuments[i].document_id) }, updateRelatedDocObj);
+                                            } else if (related_document_type == 'RECEIVING_SLIP') {
                                                 // Make packing slip Object
                                                 let receiving_slip_obj = {
                                                     pdf_url: relatedDocuments[i].document_url,
@@ -518,14 +493,15 @@ module.exports.importProcessData = async function (req, res) {
                                                 }
                                                 // Update packing slip to invoice
                                                 let update_related_doc = await invoiceCollection.updateOne({ _id: ObjectID(save_invoice._id) }, { has_receiving_slip: true, receiving_slip_data: receiving_slip_obj });
-                                            } else if (related_document_type == 'PURCHASE_ORDER') {
                                                 // Set process data and related document process data to complete
                                                 let updateRelatedDocObj = {
                                                     status: 'Complete',
                                                     document_type: related_document_type,
                                                     process_data: relatedDocuments[i],
+                                                    data: receiving_slip_obj,
                                                 };
                                                 await invoiceProcessCollection.updateOne({ _id: ObjectID(relatedDocuments[i].document_id) }, updateRelatedDocObj);
+                                            } else if (related_document_type == 'PURCHASE_ORDER') {
                                                 // Make packing slip Object
                                                 let po_obj = {
                                                     pdf_url: relatedDocuments[i].document_url,
@@ -625,15 +601,16 @@ module.exports.importProcessData = async function (req, res) {
                                                     po_obj.items = items;
                                                     // Update po to invoice
                                                     let update_related_doc = await invoiceCollection.updateOne({ _id: ObjectID(save_invoice._id) }, { has_po: true, po_data: po_obj });
+                                                    // Set process data and related document process data to complete
+                                                    let updateRelatedDocObj = {
+                                                        status: 'Complete',
+                                                        document_type: related_document_type,
+                                                        process_data: relatedDocuments[i],
+                                                        data: po_obj,
+                                                    };
+                                                    await invoiceProcessCollection.updateOne({ _id: ObjectID(relatedDocuments[i].document_id) }, updateRelatedDocObj);
                                                 }
                                             } else if (related_document_type == 'QUOTE') {
-                                                // Set process data and related document process data to complete
-                                                let updateRelatedDocObj = {
-                                                    status: 'Complete',
-                                                    document_type: related_document_type,
-                                                    process_data: relatedDocuments[i],
-                                                };
-                                                await invoiceProcessCollection.updateOne({ _id: ObjectID(relatedDocuments[i].document_id) }, updateRelatedDocObj);
                                                 // Make packing slip Object
                                                 let quote_obj = {
                                                     pdf_url: relatedDocuments[i].document_url,
@@ -714,10 +691,27 @@ module.exports.importProcessData = async function (req, res) {
                                                     quote_obj.items = items;
                                                     // Update po to invoice
                                                     let update_related_doc = await invoiceCollection.updateOne({ _id: ObjectID(save_invoice._id) }, { has_quote: true, quote_data: quote_obj });
+                                                    // Set process data and related document process data to complete
+                                                    let updateRelatedDocObj = {
+                                                        status: 'Complete',
+                                                        document_type: related_document_type,
+                                                        process_data: relatedDocuments[i],
+                                                        data: quote_obj,
+                                                    };
+                                                    await invoiceProcessCollection.updateOne({ _id: ObjectID(relatedDocuments[i].document_id) }, updateRelatedDocObj);
                                                 }
                                             }
                                         }
                                     }
+                                } else {
+                                    // Set process data and invoice process data to complete
+                                    let updateInvoiceProcessObject = {
+                                        status: 'Process',
+                                        document_type: get_data.data[key][j].document_type,
+                                        process_data: get_data.data[key][j],
+                                        data: invoiceObject,
+                                    };
+                                    await invoiceProcessCollection.updateOne({ _id: ObjectID(key) }, updateInvoiceProcessObject);
                                 }
                             } else if (documentType == 'PACKING_SLIP') {
                                 var pages = get_data.data[key][j].document_pages;
@@ -727,31 +721,33 @@ module.exports.importProcessData = async function (req, res) {
                                 let get_related_doc = await invoiceProcessCollection.findOne({ _id: ObjectID(get_data.data[key][j].document_id) });
                                 // If document is there then process data
                                 if (get_related_doc) {
+                                    // Make packing slip Object
+                                    let packing_slip_obj = {
+                                        pdf_url: get_data.data[key][j].document_url,
+                                        document_id: get_data.data[key][j].document_id,
+                                        document_type: get_data.data[key][j].document_type,
+                                        date: "",
+                                        invoice_number: "",
+                                        po_number: "",
+                                        ship_to_address: "",
+                                        vendor: "",
+                                        received_by: "",
+                                        badge: {}
+                                    };
                                     // Set process data and related document process data to complete
                                     let updatePackingSlipObj = {
                                         invoice_id: '',
                                         status: 'Process',
                                         document_type: documentType,
                                         process_data: get_data.data[key][j],
+                                        data: packing_slip_obj,
                                     };
                                     // Check document has related invoice or not
                                     let related_invoice = await getRelatedInvoiceOfDocument(relatedDocuments, connection_db_api);
                                     if (related_invoice.status) {
+                                        // Set invoice id and status if invoice is found
                                         updatePackingSlipObj.invoice_id = related_invoice.data._id;
                                         updatePackingSlipObj.status = 'Complete';
-                                        // Make packing slip Object
-                                        let packing_slip_obj = {
-                                            pdf_url: get_data.data[key][j].document_url,
-                                            document_id: get_data.data[key][j].document_id,
-                                            document_type: get_data.data[key][j].document_type,
-                                            date: "",
-                                            invoice_number: "",
-                                            po_number: "",
-                                            ship_to_address: "",
-                                            vendor: "",
-                                            received_by: "",
-                                            badge: {}
-                                        };
                                         let invoice_no = '';
                                         if (pages[0].fields.INVOICE_NUMBER != null) {
                                             invoice_no = pages[0].fields.INVOICE_NUMBER;
@@ -784,6 +780,7 @@ module.exports.importProcessData = async function (req, res) {
                                             }
                                             // Update packing slip to invoice
                                             let update_related_doc = await invoiceCollection.updateOne({ _id: ObjectID(updatePackingSlipObj.invoice_id) }, { has_packing_slip: true, packing_slip_data: packing_slip_obj });
+                                            updatePackingSlipObj.data = packing_slip_obj;
                                         }
                                     }
                                     // Update packing slip object
@@ -797,31 +794,33 @@ module.exports.importProcessData = async function (req, res) {
                                 let get_related_doc = await invoiceProcessCollection.findOne({ _id: ObjectID(get_data.data[key][j].document_id) });
                                 // If document is there then process data
                                 if (get_related_doc) {
+                                    // Make packing slip Object
+                                    let receiving_slip_obj = {
+                                        pdf_url: get_data.data[key][j].document_url,
+                                        document_id: get_data.data[key][j].document_id,
+                                        document_type: get_data.data[key][j].document_type,
+                                        date: "",
+                                        invoice_number: "",
+                                        po_number: "",
+                                        ship_to_address: "",
+                                        vendor: "",
+                                        received_by: "",
+                                        badge: {}
+                                    };
                                     // Set process data and related document process data to complete
                                     let updateReceivingSlipObj = {
                                         invoice_id: '',
                                         status: 'Process',
                                         document_type: documentType,
                                         process_data: get_data.data[key][j],
+                                        data: receiving_slip_obj,
                                     };
                                     // Check document has related invoice or not
                                     let related_invoice = await getRelatedInvoiceOfDocument(relatedDocuments, connection_db_api);
                                     if (related_invoice.status) {
                                         updateReceivingSlipObj.invoice_id = related_invoice.data._id;
                                         updateReceivingSlipObj.status = 'Complete';
-                                        // Make packing slip Object
-                                        let receiving_slip_obj = {
-                                            pdf_url: get_data.data[key][j].document_url,
-                                            document_id: get_data.data[key][j].document_id,
-                                            document_type: get_data.data[key][j].document_type,
-                                            date: "",
-                                            invoice_number: "",
-                                            po_number: "",
-                                            ship_to_address: "",
-                                            vendor: "",
-                                            received_by: "",
-                                            badge: {}
-                                        };
+
                                         let invoice_no = '';
                                         if (pages[0].fields.INVOICE_NUMBER != null) {
                                             invoice_no = pages[0].fields.INVOICE_NUMBER;
@@ -854,6 +853,7 @@ module.exports.importProcessData = async function (req, res) {
                                             }
                                             // Update packing slip to invoice
                                             let update_related_doc = await invoiceCollection.updateOne({ _id: ObjectID(updateReceivingSlipObj.invoice_id) }, { has_receiving_slip: true, receiving_slip_data: receiving_slip_obj });
+                                            updateReceivingSlipObj.data = receiving_slip_obj;
                                         }
                                     }
                                     // Update packing slip object
@@ -868,41 +868,41 @@ module.exports.importProcessData = async function (req, res) {
                                 console.log("get_related_doc", get_related_doc);
                                 // If document is there then process data
                                 if (get_related_doc) {
+                                    // Make packing slip Object
+                                    let po_obj = {
+                                        pdf_url: get_data.data[key][j].document_url,
+                                        document_id: get_data.data[key][j].document_id,
+                                        document_type: get_data.data[key][j].document_type,
+                                        date: "",
+                                        po_number: "",
+                                        customer_id: "",
+                                        terms: "",
+                                        delivery_date: "",
+                                        delivery_address: "",
+                                        due_date: "",
+                                        quote_number: "",
+                                        contract_number: "",
+                                        vendor_id: "",
+                                        vendor: "",
+                                        sub_total: "",
+                                        tax: "",
+                                        po_total: "",
+                                        items: [],
+                                        badge: {}
+                                    };
                                     // Set process data and related document process data to complete
                                     let updatePOObj = {
                                         invoice_id: '',
                                         status: 'Process',
                                         document_type: documentType,
                                         process_data: get_data.data[key][j],
+                                        data: po_obj,
                                     };
                                     // Check document has related invoice or not
                                     let related_invoice = await getRelatedInvoiceOfDocument(relatedDocuments, connection_db_api);
-                                    console.log("related_invoice: ********", related_invoice.status);
                                     if (related_invoice.status) {
                                         updatePOObj.invoice_id = related_invoice.data._id;
                                         updatePOObj.status = 'Complete';
-                                        // Make packing slip Object
-                                        let po_obj = {
-                                            pdf_url: get_data.data[key][j].document_url,
-                                            document_id: get_data.data[key][j].document_id,
-                                            document_type: get_data.data[key][j].document_type,
-                                            date: "",
-                                            po_number: "",
-                                            customer_id: "",
-                                            terms: "",
-                                            delivery_date: "",
-                                            delivery_address: "",
-                                            due_date: "",
-                                            quote_number: "",
-                                            contract_number: "",
-                                            vendor_id: "",
-                                            vendor: "",
-                                            sub_total: "",
-                                            tax: "",
-                                            po_total: "",
-                                            items: [],
-                                            badge: {}
-                                        };
                                         if (pages[0].fields.VENDOR_NAME != null) {
                                             let tmpVendor = await getAndCheckVendorPO(pages[0].fields.VENDOR_NAME.replace(/\n/g, " "), connection_db_api);
                                             if (tmpVendor.status) {
@@ -980,9 +980,9 @@ module.exports.importProcessData = async function (req, res) {
                                                 }
                                             }
                                             po_obj.items = items;
-                                            console.log("po_obj", po_obj);
                                             // Update packing slip to invoice
                                             let update_related_doc = await invoiceCollection.updateOne({ _id: ObjectID(updatePOObj.invoice_id) }, { has_po: true, po_data: po_obj });
+                                            updatePOObj.data = po_obj;
                                         }
                                     }
                                     // Update packing slip object
@@ -996,37 +996,38 @@ module.exports.importProcessData = async function (req, res) {
                                 let get_related_doc = await invoiceProcessCollection.findOne({ _id: ObjectID(get_data.data[key][j].document_id) });
                                 // If document is there then process data
                                 if (get_related_doc) {
+                                    // Make packing slip Object
+                                    let quote_obj = {
+                                        pdf_url: get_data.data[key][j].document_url,
+                                        document_id: get_data.data[key][j].document_id,
+                                        document_type: get_data.data[key][j].document_type,
+                                        date: "",
+                                        quote_number: "",
+                                        customer_id: "",
+                                        terms: "",
+                                        address: "",
+                                        vendor: "",
+                                        shipping_method: "",
+                                        sub_total: "",
+                                        tax: "",
+                                        quote_total: "",
+                                        receiver_phone: "",
+                                        items: [],
+                                        badge: {},
+                                    };
                                     // Set process data and related document process data to complete
                                     let updateQuoteObj = {
                                         invoice_id: '',
                                         status: 'Process',
                                         document_type: documentType,
                                         process_data: get_data.data[key][j],
+                                        data: quote_obj,
                                     };
                                     // Check document has related invoice or not
                                     let related_invoice = await getRelatedInvoiceOfDocument(relatedDocuments, connection_db_api);
                                     if (related_invoice.status) {
                                         updateQuoteObj.invoice_id = related_invoice.data._id;
                                         updateQuoteObj.status = 'Complete';
-                                        // Make packing slip Object
-                                        let quote_obj = {
-                                            pdf_url: get_data.data[key][j].document_url,
-                                            document_id: get_data.data[key][j].document_id,
-                                            document_type: get_data.data[key][j].document_type,
-                                            date: "",
-                                            quote_number: "",
-                                            customer_id: "",
-                                            terms: "",
-                                            address: "",
-                                            vendor: "",
-                                            shipping_method: "",
-                                            sub_total: "",
-                                            tax: "",
-                                            quote_total: "",
-                                            receiver_phone: "",
-                                            items: [],
-                                            badge: {},
-                                        };
                                         if (pages[0].fields.VENDOR_NAME != null) {
                                             let tmpVendor = await getAndCheckVendorPO(pages[0].fields.VENDOR_NAME.replace(/\n/g, " "), connection_db_api);
                                             if (tmpVendor.status) {
@@ -1088,19 +1089,33 @@ module.exports.importProcessData = async function (req, res) {
                                                 }
                                             }
                                             quote_obj.items = items;
-                                            console.log("quote_obj", quote_obj);
                                             // Update packing slip to invoice
                                             let update_related_doc = await invoiceCollection.updateOne({ _id: ObjectID(updateQuoteObj.invoice_id) }, { has_quote: true, quote_data: quote_obj });
+                                            updateQuoteObj.data = quote_obj;
                                         }
                                     }
                                     // Update packing slip object
                                     await invoiceProcessCollection.updateOne({ _id: ObjectID(get_related_doc._id) }, updateQuoteObj);
+                                }
+                            } else {
+                                let updateObj = {
+                                    invoice_id: '',
+                                    status: 'Process',
+                                    document_type: documentType,
+                                    process_data: get_data.data[key][j],
+                                };
+                                // Check document id is available or not
+                                let get_related_doc = await invoiceProcessCollection.findOne({ _id: ObjectID(get_data.data[key][j].document_id) });
+                                if (get_related_doc) {
+                                    // Update packing slip object
+                                    await invoiceProcessCollection.updateOne({ _id: ObjectID(get_related_doc._id) }, updateObj);
                                 }
                             }
                         }
                     }
                 }
             }
+            // }
             res.send({ message: 'Processed invoice imported sucessfully.', data: get_data.data, status: true });
         } catch (e) {
             console.log(e);

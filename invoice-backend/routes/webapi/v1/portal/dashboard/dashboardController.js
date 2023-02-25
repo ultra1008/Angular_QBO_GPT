@@ -38,7 +38,7 @@ module.exports.getDashboardCount = async function (req, res) {
                     }
                 },
             ]);
-            let get_process = await invoicesProcessConnection.find({ status: 'Complete', document_type: { $ne: 'INVOICE' } }).count();
+            let get_process = await invoicesProcessConnection.find({ status: 'Process' }).count();
             if (get_data) {
                 if (get_data.length > 0) {
                     get_data = get_data[0];

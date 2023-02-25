@@ -1119,8 +1119,8 @@ export enum httproutes {
     PORTAL_SAVE_INVOICE_NOTES = "/webapi/v1/portal/saveinvoicenote",
     PORTAL_DELETE_INVOICE_NOTES = "/webapi/v1/portal/deleteinvoicenote",
     PORTAL_INVOICE_ATTCHMENTS = "/webapi/v1/portal/updateinvoiceattachment",
-
-
+    PORTAL_VIEW_DOCUMENTS_DATATABLE = "/webapi/v1/portal/getviewdocumetdatatable",
+    PORTAL_DELETE_DOCUMENTS = "/webapi/v1/portal/deleteviewdocument",
 
     INVOICE_GET_LIST = "/webapi/v1/portal/getinvoice",
     INVOICE_GET_STATUS_VISE_LIST = "/webapi/v1/portal/getinvoicelist",
