@@ -134,32 +134,6 @@ export class ViewDocumentsComponent implements OnInit {
     this.rerenderfunc();
   }
 
-  deleteDocument(_id) {
-    let that = this;
-    swalWithBootstrapButtons
-      .fire({
-        title: 'Are you sure you want to delete this document?',
-        showDenyButton: true,
-        showCancelButton: false,
-        confirmButtonText: 'Yes',
-        denyButtonText: 'No',
-      })
-      .then((result) => {
-        if (result.isConfirmed) {
-          that.httpCall
-            .httpPostCall(httproutes.PORTAL_DELETE_DOCUMENTS, { _id: _id })
-            .subscribe(function (params) {
-              if (params.status) {
-                that.snackbarservice.openSnackBar(params.message, "success");
-                that.rerenderfunc();
-              } else {
-                that.snackbarservice.openSnackBar(params.message, "error");
-              }
-            });
-        }
-      });
-  }
-
   getColumName() {
     let that = this;
     return [
@@ -209,6 +183,31 @@ export class ViewDocumentsComponent implements OnInit {
     ];
   }
 
+  deleteDocument(_id) {
+    let that = this;
+    swalWithBootstrapButtons
+      .fire({
+        title: 'Are you sure you want to delete this document?',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: 'Yes',
+        denyButtonText: 'No',
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          that.httpCall
+            .httpPostCall(httproutes.PORTAL_DELETE_DOCUMENTS, { _id: _id })
+            .subscribe(function (params) {
+              if (params.status) {
+                that.snackbarservice.openSnackBar(params.message, "success");
+                that.rerenderfunc();
+              } else {
+                that.snackbarservice.openSnackBar(params.message, "error");
+              }
+            });
+        }
+      });
+  }
   rerenderfunc() {
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     let that = this;
