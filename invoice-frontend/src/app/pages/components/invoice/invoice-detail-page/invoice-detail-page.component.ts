@@ -18,6 +18,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { NgxGalleryComponent, NgxGalleryImage, NgxGalleryOptions } from 'ngx-gallery-9';
 import { DomSanitizer } from '@angular/platform-browser';
 import moment from 'moment';
+import { InvoiceHistoryComponent } from '../invoice-form/invoice-form.component';
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
     confirmButton: 'btn btn-success s2-confirm margin-right-cust',
@@ -89,6 +90,7 @@ export class InvoiceDetailPageComponent implements OnInit {
   datefrompicker = new Date();
   _id: string;
   LOCAL_OFFSET: number;
+  historyIcon: string;
 
 
 
@@ -113,11 +115,15 @@ export class InvoiceDetailPageComponent implements OnInit {
       this.printIcon = icon.PRINT_WHITE;
       this.editIcon = icon.EDIT_WHITE;
       this.backIcon = icon.BACK;
+      this.exitIcon = icon.CANCLE;
+      this.historyIcon = icon.HISTORY;
     } else {
       this.downloadIcon = icon.DOWNLOAD_WHITE;
       this.printIcon = icon.PRINT_WHITE;
       this.editIcon = icon.EDIT_WHITE;
       this.backIcon = icon.BACK_WHITE;
+      this.exitIcon = icon.CANCLE_WHITE;
+      this.historyIcon = icon.HISTORY_WHITE;
     }
     this.subscription = this.modeService.onModeDetect().subscribe((mode) => {
       if (mode) {
@@ -126,12 +132,16 @@ export class InvoiceDetailPageComponent implements OnInit {
         this.printIcon = icon.PRINT_WHITE;
         this.editIcon = icon.EDIT_WHITE;
         this.backIcon = icon.BACK;
+        this.exitIcon = icon.CANCLE;
+        this.historyIcon = icon.HISTORY;
       } else {
         this.mode = "on";
         this.downloadIcon = icon.DOWNLOAD_WHITE;
         this.printIcon = icon.PRINT_WHITE;
         this.editIcon = icon.EDIT_WHITE;
         this.backIcon = icon.BACK_WHITE;
+        this.exitIcon = icon.CANCLE_WHITE;
+        this.historyIcon = icon.HISTORY_WHITE;
       }
     });
     if (this.id) {
@@ -673,6 +683,17 @@ export class InvoiceDetailPageComponent implements OnInit {
   // }
   temp_MMDDYYY_format(epoch) {
     return MMDDYYYY_formet(epoch);
+  }
+  openHistoryDialog() {
+    const dialogRef = this.dialog.open(InvoiceHistoryComponent, {
+      height: "550px",
+      width: "1000px",
+      data: {
+        // project_id: this.projectId,
+      },
+      disableClose: true,
+    });
+    dialogRef.afterClosed().subscribe((result) => { });
   }
   getTodaysActivity() {
     let self = this;

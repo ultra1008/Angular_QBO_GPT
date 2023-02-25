@@ -2476,5 +2476,7 @@
     "Receiving_slip_Expense": "Receiving slip Expense",
     "Receiving_slip_Froms": "Receiving slip Froms",
     "Quote_Expense": "Quote Expense",
-    "Quote_Froms": "Quote Froms"
+    "Quote_Froms": "Quote Froms",
+    "ship_to_address": "Ship To Address:",
+    "received_by": "Received By"
 }
