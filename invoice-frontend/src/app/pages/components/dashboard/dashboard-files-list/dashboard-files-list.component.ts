@@ -46,14 +46,17 @@ export class DashboardFilesListComponent implements OnInit {
   @ViewChild("OpenFilebox") OpenFilebox: ElementRef<HTMLElement>;
   @ViewChild("gallery") gallery: NgxGalleryComponent;
   dtOptions: any = {};
+  dtOptionsView: any = {};
   imageObject: any;
   add_my_self_icon = icon.ADD_MY_SELF_WHITE;
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[] = [];
   termList = [];
+  Document_View_time: boolean = false;
   Document_View_time_value = [];
   locallanguage: string;
   showTable: boolean = true;
+  showViewTable: boolean = true;
   invoice_no: string;
   po_no: string;
   packing_slip_no: string;
@@ -262,6 +265,50 @@ export class DashboardFilesListComponent implements OnInit {
 
       },
     };
+    this.dtOptionsView = {
+      pagingType: "full_numbers",
+      pageLength: 10,
+      serverSide: true,
+      processing: true,
+      responsive: false,
+      language:
+        portal_language == "en"
+          ? LanguageApp.english_datatables
+          : LanguageApp.spanish_datatables,
+      order: [],
+      ajax: (dataTablesParameters: any, callback) => {
+        $(".dataTables_processing").html(
+          "<img  src=" + this.httpCall.getLoader() + ">"
+        );
+        dataTablesParameters.view_option = true;
+        that.http
+          .post<DataTablesResponse>(
+            configdata.apiurl + httproutes.PORTAL_ORPHAN_DOCUMENTS_DATATABLE,
+            dataTablesParameters,
+            { headers: headers }
+          )
+          .subscribe((resp) => {
+            callback({
+              recordsTotal: resp.recordsTotal,
+              recordsFiltered: resp.recordsFiltered,
+              data: resp.data,
+            });
+            that.counts.pending_files = resp.recordsTotal;
+          });
+      },
+      columns: that.getColumName(),
+      drawCallback: () => {
+        $(".button_viewDocViewClass").on("click", (event) => {
+          let data = JSON.parse(event.target.getAttribute("edit_tmp_id"));
+          that.router.navigate(['/app-custompdfviewer'], { queryParams: { po_url: data.pdf_url } });
+        });
+        $(".button_viewDocDeleteClass").on("click", (event) => {
+          let data = JSON.parse(event.target.getAttribute("edit_tmp_id"));
+          that.deleteDocument(data._id);
+        });
+      },
+    };
+    this.rerenderfunc();
   }
 
   getColumName() {
@@ -344,6 +391,7 @@ export class DashboardFilesListComponent implements OnInit {
       .httpGetCall(httproutes.PORTAL_ROVUK_INVOICE__SETTINGS_GET_ALL_ALERTS)
       .subscribe(function (params) {
         if (params.status) {
+          that.Document_View_time = params.data.settings.Document_View.setting_status == 'Active';
           that.Document_View_time_value = params.data.settings.Document_View.setting_value;
         }
       });
@@ -356,10 +404,12 @@ export class DashboardFilesListComponent implements OnInit {
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     let that = this;
     that.showTable = false;
+    that.showViewTable = false;
     setTimeout(() => {
       that.dtOptions.language = tmp_locallanguage == "en" ? LanguageApp.english_datatables : LanguageApp.spanish_datatables;
       that.dtOptions.columns = that.getColumName();
       that.showTable = true;
+      that.showViewTable = true;
     }, 100);
   }
 }

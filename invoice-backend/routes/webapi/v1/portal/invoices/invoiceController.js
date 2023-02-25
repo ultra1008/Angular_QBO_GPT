@@ -3,6 +3,7 @@ var vendorSchema = require('../../../../../model/vendor');
 var processInvoiceSchema = require('../../../../../model/process_invoice');
 var invoice_history_Schema = require('../../../../../model/history/invoice_history');
 var recentActivitySchema = require('../../../../../model/recent_activities');
+var settingsSchema = require('../../../../../model/settings');
 let db_connection = require('../../../../../controller/common/connectiondb');
 let collectionConstant = require('../../../../../config/collectionConstant');
 let config = require('../../../../../config/config');
@@ -700,7 +701,7 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
 
             let date_query = {};
             if (requestObject.start_date != 0 && requestObject.end_date != 0) {
-                date_query = { "created_by": { $gte: requestObject.start_date, $lt: requestObject.end_date } };
+                date_query = { "created_at": { $gte: requestObject.start_date, $lt: requestObject.end_date } };
             }
 
             let get_invoice = await invoicesConnection.aggregate([
@@ -991,6 +992,9 @@ module.exports.getOrphanDocumentsDatatable = async function (req, res) {
         try {
             var requestObject = req.body;
             var processInvoiceConnection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
+            var settingsConnection = connection_db_api.model(collectionConstant.INVOICE_SETTING, settingsSchema);
+            let one_settings = await settingsConnection.findOne({});
+            let settings = one_settings.settings.Document_View;
             var col = [];
             col.push("document_type", "po_no", "invoice_no", "vendor_name");
             var start = parseInt(requestObject.start) || 0;
@@ -1014,9 +1018,23 @@ module.exports.getOrphanDocumentsDatatable = async function (req, res) {
                     ]
                 };
             }
-            var match_query = { is_delete: 0, status: { $eq: 'Process' } };
+            var match_query = {
+                is_delete: 0,
+                status: { $eq: 'Process' }
+            };
+            let date_query = {};
+            // settings.setting_value->created_at
+            // settings.setting_status == 'Active'
+            if (requestObject.view_option) {
+                match_query.created_at = { $gte: Number(settings.setting_value) };
+            } else {
+                match_query.created_at = { $lte: Number(settings.setting_value) };
+                date_query = { created_at: { $lte: Number(settings.setting_value) } };
+            }
+            console.log("match_query: ", match_query);
             var aggregateQuery = [
                 { $match: match_query },
+                // { $match: date_query },
                 {
                     $project: {
                         document_type: {
