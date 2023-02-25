@@ -11,12 +11,12 @@
 </div>
 <div class="search-results" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50"
     (scrolled)="onScroll()" [scrollWindow]="false" [ngStyle]="setHeightStyles()">
-    <div class="hbox" *ngFor="let item of taskHistory">
+    <div class="hbox mt-2" *ngFor="let item of taskHistory">
         <div class="row pb-2">
-            <div class="col-1"><img class="userimg"
+            <div class="col-1 mt-1"><img class="userimg"
                     src="{{item.history_created_by.userpicture || '../assets/images/user_placeholder.png'}}" />
             </div>
-            <div class="col-11">
+            <div class="col-11 mt-1">
                 <b> {{item.history_created_by.userfullname}} </b> {{item.action}} <b>
                     {{item.vendor.vendor_name}}
                 </b>
@@ -30,7 +30,7 @@
                         </td>
                     </tr>
                 </table>
-                <hr class="solid">
+                <!-- <hr class="solid "> -->
             </div>
         </div>
     </div>
