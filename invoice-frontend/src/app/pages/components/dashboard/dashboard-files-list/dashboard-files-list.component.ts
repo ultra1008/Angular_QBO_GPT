@@ -46,14 +46,17 @@ export class DashboardFilesListComponent implements OnInit {
   @ViewChild("OpenFilebox") OpenFilebox: ElementRef<HTMLElement>;
   @ViewChild("gallery") gallery: NgxGalleryComponent;
   dtOptions: any = {};
+  dtOptionsView: any = {};
   imageObject: any;
   add_my_self_icon = icon.ADD_MY_SELF_WHITE;
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[] = [];
   termList = [];
+  Document_View_time: boolean = false;
   Document_View_time_value = [];
   locallanguage: string;
   showTable: boolean = true;
+  showViewTable: boolean = true;
   invoice_no: string;
   po_no: string;
   packing_slip_no: string;
@@ -81,6 +84,8 @@ export class DashboardFilesListComponent implements OnInit {
   noButton: string = "";
   editIcon: string;
   backIcon: string;
+  viewIcon: string;
+  deleteIcon: string;
   counts: any = {
     pending_files: 0,
     pending_invoices: 0,
@@ -90,7 +95,7 @@ export class DashboardFilesListComponent implements OnInit {
   };
 
 
-  constructor(private location: Location, private modeService: ModeDetectService,
+  constructor (private location: Location, private modeService: ModeDetectService,
     public dialog: MatDialog,
     private router: Router,
     private http: HttpClient,
@@ -104,9 +109,13 @@ export class DashboardFilesListComponent implements OnInit {
     if (this.mode == "off") {
       this.reportIcon = icon.REPORT;
       this.backIcon = icon.BACK;
+      this.viewIcon = icon.VIEW;
+      this.deleteIcon = icon.DELETE;
     } else {
       this.reportIcon = icon.REPORT_WHITE;
       this.backIcon = icon.BACK_WHITE;
+      this.viewIcon = icon.VIEW_WHITE;
+      this.deleteIcon = icon.DELETE_WHITE;
     }
     let j = 0;
     this.subscription = this.modeService.onModeDetect().subscribe((mode) => {
@@ -114,10 +123,14 @@ export class DashboardFilesListComponent implements OnInit {
         this.mode = "off";
         this.reportIcon = icon.REPORT;
         this.backIcon = icon.BACK;
+        this.viewIcon = icon.VIEW;
+        this.deleteIcon = icon.DELETE;
       } else {
         this.mode = "on";
         this.reportIcon = icon.REPORT_WHITE;
         this.backIcon = icon.BACK_WHITE;
+        this.viewIcon = icon.VIEW_WHITE;
+        this.deleteIcon = icon.DELETE_WHITE;
       }
 
       if (j != 0) {
@@ -144,7 +157,7 @@ export class DashboardFilesListComponent implements OnInit {
 
   ngOnInit(): void {
     const that = this;
-    this.getDocumentViwe();
+    this.getSettings();
     let role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
 
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
@@ -192,7 +205,7 @@ export class DashboardFilesListComponent implements OnInit {
       if (i != 0) {
         setTimeout(() => {
           that.rerenderfunc();
-        }, 1000);
+        }, 100);
       }
       i++;
     });
@@ -224,10 +237,9 @@ export class DashboardFilesListComponent implements OnInit {
         $(".dataTables_processing").html(
           "<img  src=" + this.httpCall.getLoader() + ">"
         );
-        dataTablesParameters.is_delete = 0;
         that.http
           .post<DataTablesResponse>(
-            configdata.apiurl + httproutes.INVOICE_GET_VENDOR_DATATABLES,
+            configdata.apiurl + httproutes.PORTAL_ORPHAN_DOCUMENTS_DATATABLE,
             dataTablesParameters,
             { headers: headers }
           )
@@ -237,234 +249,110 @@ export class DashboardFilesListComponent implements OnInit {
               recordsFiltered: resp.recordsFiltered,
               data: resp.data,
             });
+            that.counts.pending_files = resp.recordsTotal;
           });
       },
       columns: that.getColumName(),
-
       drawCallback: () => {
-        $(".button_attachment").on("click", (event) => {
-          this.imageObject = JSON.parse(
-            event.target.getAttribute("edit_tmp_id")
-          ).attachment;
-          this.galleryImages = [];
-          if (this.imageObject != undefined) {
-            for (let i = 0; i < this.imageObject.length; i++) {
-              var extension = this.imageObject[i].substring(
-                this.imageObject[i].lastIndexOf(".") + 1
-              );
-              if (
-                extension == "jpg" ||
-                extension == "png" ||
-                extension == "jpeg" ||
-                extension == "gif" ||
-                extension == "webp"
-              ) {
-                var srctmp: any = {
-                  small: this.imageObject[i],
-                  medium: this.imageObject[i],
-                  big: this.imageObject[i],
-                };
-                this.galleryImages.push(srctmp);
-              } else if (extension == "doc" || extension == "docx") {
-                var srctmp: any = {
-                  small:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png",
-                  medium:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png",
-                  big: "https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png",
-                };
-                this.galleryImages.push(srctmp);
-              } else if (extension == "pdf") {
-                var srctmp: any = {
-                  small:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png",
-                  medium:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png",
-                  big: "https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png",
-                };
-                this.galleryImages.push(srctmp);
-              } else if (extension == "odt") {
-                var srctmp: any = {
-                  small:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png",
-                  medium:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png",
-                  big: "https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png",
-                };
-                this.galleryImages.push(srctmp);
-              } else if (extension == "rtf") {
-                var srctmp: any = {
-                  small:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png",
-                  medium:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png",
-                  big: "https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png",
-                };
-                this.galleryImages.push(srctmp);
-              } else if (extension == "txt") {
-                var srctmp: any = {
-                  small:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png",
-                  medium:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png",
-                  big: "https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png",
-                };
-                this.galleryImages.push(srctmp);
-              } else if (extension == "ppt") {
-                var srctmp: any = {
-                  small:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png",
-                  medium:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png",
-                  big: "https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png",
-                };
-                this.galleryImages.push(srctmp);
-              } else if (
-                extension == "xls" ||
-                extension == "xlsx" ||
-                extension == "csv"
-              ) {
-                var srctmp: any = {
-                  small:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png",
-                  medium:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png",
-                  big: "https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png",
-                };
-                this.galleryImages.push(srctmp);
-              } else {
-                var srctmp: any = {
-                  small:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png",
-                  medium:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png",
-                  big: "https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png",
-                };
-                this.galleryImages.push(srctmp);
-              }
-            }
-          }
-          setTimeout(() => {
-            this.gallery.openPreview(0);
-          }, 0);
-        });
-        $(".button_shiftEditClass").on("click", (event) => {
-          // Edit Vendor here
+        $(".button_viewDocViewClass").on("click", (event) => {
           let data = JSON.parse(event.target.getAttribute("edit_tmp_id"));
-          this.router.navigate(["/vendor-form"], {
-            queryParams: { _id: data._id },
-          });
+          that.router.navigate(['/app-custompdfviewer'], { queryParams: { po_url: data.pdf_url } });
         });
-        $(".button_shiftDeleteClass").on("click", (event) => {
-          // Delete Vendor here
+        $(".button_viewDocDeleteClass").on("click", (event) => {
           let data = JSON.parse(event.target.getAttribute("edit_tmp_id"));
-
+          that.deleteDocument(data._id);
         });
-
 
       },
     };
+    this.dtOptionsView = {
+      pagingType: "full_numbers",
+      pageLength: 10,
+      serverSide: true,
+      processing: true,
+      responsive: false,
+      language:
+        portal_language == "en"
+          ? LanguageApp.english_datatables
+          : LanguageApp.spanish_datatables,
+      order: [],
+      ajax: (dataTablesParameters: any, callback) => {
+        $(".dataTables_processing").html(
+          "<img  src=" + this.httpCall.getLoader() + ">"
+        );
+        dataTablesParameters.view_option = true;
+        that.http
+          .post<DataTablesResponse>(
+            configdata.apiurl + httproutes.PORTAL_ORPHAN_DOCUMENTS_DATATABLE,
+            dataTablesParameters,
+            { headers: headers }
+          )
+          .subscribe((resp) => {
+            callback({
+              recordsTotal: resp.recordsTotal,
+              recordsFiltered: resp.recordsFiltered,
+              data: resp.data,
+            });
+            that.counts.pending_files = resp.recordsTotal;
+          });
+      },
+      columns: that.getColumName(),
+      drawCallback: () => {
+        $(".button_viewDocViewClass").on("click", (event) => {
+          let data = JSON.parse(event.target.getAttribute("edit_tmp_id"));
+          that.router.navigate(['/app-custompdfviewer'], { queryParams: { po_url: data.pdf_url } });
+        });
+        $(".button_viewDocDeleteClass").on("click", (event) => {
+          let data = JSON.parse(event.target.getAttribute("edit_tmp_id"));
+          that.deleteDocument(data._id);
+        });
+      },
+    };
+    this.rerenderfunc();
   }
+
   getColumName() {
     let that = this;
-    let role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
     return [
       {
-        title: that.invoice_no,
+        title: 'Document Type',
+        data: "document_type",
+        defaultContent: "",
+      },
+      {
+        title: 'PO NO',
+        data: "po_no",
+        defaultContent: "",
+      },
+      {
+        title: 'Invoice No',
+        data: "invoice_no",
+        defaultContent: "",
+      },
+      {
+        title: 'Vendor Name',
         data: "vendor_name",
         defaultContent: "",
       },
       {
-        title: that.po_no,
-        data: "vendor_id",
-        defaultContent: "",
-      },
-
-      {
-        title: that.packing_slip_no,
-        data: "email",
-        defaultContent: "",
-      },
-      {
-        title: that.Receiving_Slip,
-        data: "address",
-        defaultContent: "",
-      },
-      {
-        title: that.Vendor_Status,
-        render: function (data: any, type: any, full: any) {
-          var tmp_return;
-          if (full.status == 1)
-            tmp_return =
-              `<div class="active-chip-green call-active-inactive-api" edit_tmp_id=` +
-              full._id +
-              `><i  edit_tmp_id=` +
-              full._id +
-              ` class="fa fa-check cust-fontsize-right" aria-hidden="true"></i>` +
-              that.acticve_word +
-              `</div>`;
-          else
-            tmp_return =
-              `<div class="inactive-chip-green call-active-active-api" edit_tmp_id=` +
-              full._id +
-              `><i  edit_tmp_id=` +
-              full._id +
-              ` class="fa fa-times cust-fontsize-right" aria-hidden="true"></i>` +
-              that.inacticve_word +
-              `</div>`;
-          return tmp_return;
-        },
-        width: "7%",
-      },
-      {
-        title: that.Receiving_Attachment,
-        render: function (data: any, type: any, full: any) {
-          let htmlData = ``;
-          if (full.attachment.length != 0) {
-            htmlData =
-              `<button  edit_tmp_id='` +
-              JSON.stringify(full) +
-              `' class="cusr-edit-btn-datatable button_attachment" aria-label="Left Align">
-          <span class="fas fa-paperclip cust-fontsize-tmp"  edit_tmp_id='` +
-              JSON.stringify(full) +
-              `' aria-hidden="true"></span>
-      </button> `;
-          }
-          return htmlData;
-        },
-        width: "1%",
-        orderable: false,
-      },
-      {
-        title: that.Vendor_Action,
+        title: 'Action',
         render: function (data: any, type: any, full: any) {
           let tmp_tmp = {
             _id: full._id,
+            pdf_url: full.pdf_url,
           };
-          if ("") {
-            return (
-              `
-          <div class="dropdown">
-            <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust"  aria-haspopup="true" aria-expanded="false"  edit_tmp_id='` + JSON.stringify(full) + `' aria-hidden="true"></i>
-            <div class= "dropdown-content-cust" aria-labelledby="dropdownMenuButton">
-              <a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_shiftEditClass" >` + '<img src="' + that.editIcon + '" alt="" height="15px">' + that.Listing_Action_Edit + `</a>
-            </div>
-        </div>`
-            );
-          } else {
-            return (
-              `
-          <div class="dropdown">
-            <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust"  aria-haspopup="true" aria-expanded="false"  edit_tmp_id='` +
-              JSON.stringify(full) +
-              `' aria-hidden="true"></i>
-            <div class= "dropdown-content-cust" aria-labelledby="dropdownMenuButton">
-              <a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_shiftEditClass" >` + '<img src="' + that.editIcon + '" alt="" height="15px">' + that.Listing_Action_Edit + `</a>
-              <a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_shiftDeleteClass" >` + '<img src="' + that.archivedIcon + '" alt="" height="15px">' + that.Archived_all + `</a>
-            </div>
-        </div>`
-            );
-          }
+          let view = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_viewDocViewClass" >` + '<img src="' + that.viewIcon + `" alt="" height="15px">View</a>`;
+          let archive = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_viewDocDeleteClass" >` + '<img src="' + that.deleteIcon + `" alt="" height="15px">Delete</a>`;
+          return (
+            `
+         <div class="dropdown">
+           <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust"  aria-haspopup="true" aria-expanded="false"  edit_tmp_id='` + JSON.stringify(full) + `' aria-hidden="true"></i>
+           <div class= "dropdown-content-cust" aria-labelledby="dropdownMenuButton">
+             ` + view + `
+             ` + archive + `
+           </div>
+       </div>`
+          );
         },
         width: "1%",
         orderable: false,
@@ -472,29 +360,43 @@ export class DashboardFilesListComponent implements OnInit {
     ];
   }
 
-
-  getDocumentViwe() {
+  deleteDocument(_id) {
+    let that = this;
+    swalWithBootstrapButtons
+      .fire({
+        title: 'Are you sure you want to delete this document?',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: 'Yes',
+        denyButtonText: 'No',
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          that.httpCall
+            .httpPostCall(httproutes.PORTAL_DELETE_DOCUMENTS, { _id: _id })
+            .subscribe(function (params) {
+              if (params.status) {
+                that.snackbarservice.openSnackBar(params.message, "success");
+                that.rerenderfunc();
+              } else {
+                that.snackbarservice.openSnackBar(params.message, "error");
+              }
+            });
+        }
+      });
+  }
+  getSettings() {
     let that = this;
     this.httpCall
       .httpGetCall(httproutes.PORTAL_ROVUK_INVOICE__SETTINGS_GET_ALL_ALERTS)
       .subscribe(function (params) {
         if (params.status) {
-
+          that.Document_View_time = params.data.settings.Document_View.setting_status == 'Active';
           that.Document_View_time_value = params.data.settings.Document_View.setting_value;
-          console.log("Document_View_time_value", params.data.settings.Document_View.setting_value);
-
         }
       });
-
   }
 
-
-  // openVendorForm() {
-  //   this.router.navigateByUrl('vendor-form');
-  // }
-  // openArchived() {
-  //   this.router.navigateByUrl('vendor-archive');
-  // }
   downloadButtonPress(event, index): void {
     window.location.href = this.imageObject[index];
   }
@@ -502,10 +404,12 @@ export class DashboardFilesListComponent implements OnInit {
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     let that = this;
     that.showTable = false;
+    that.showViewTable = false;
     setTimeout(() => {
       that.dtOptions.language = tmp_locallanguage == "en" ? LanguageApp.english_datatables : LanguageApp.spanish_datatables;
       that.dtOptions.columns = that.getColumName();
       that.showTable = true;
+      that.showViewTable = true;
     }, 100);
   }
 }
