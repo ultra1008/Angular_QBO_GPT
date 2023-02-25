@@ -44,7 +44,7 @@ export class InvoiceFormComponent implements OnInit {
   subscription!: Subscription;
   exitIcon: string = "";
   printIcon: string = "";
-  viewIcon: string = "";
+  viewIcon: string = icon.VIEW_WHITE;
   close_this_window: string = "";
   All_popup_Cancel = "";
   All_Save_Exit = "";
@@ -154,7 +154,7 @@ export class InvoiceFormComponent implements OnInit {
       this.printIcon = icon.PRINT_WHITE;
       this.approveIcon = icon.APPROVE_WHITE;
       this.denyIcon = icon.DENY_WHITE;
-      this.viewIcon = icon.VIEW;
+
     } else {
 
       this.backIcon = icon.BACK_WHITE;
@@ -163,7 +163,7 @@ export class InvoiceFormComponent implements OnInit {
       this.printIcon = icon.PRINT_WHITE;
       this.approveIcon = icon.APPROVE_WHITE;
       this.denyIcon = icon.DENY_WHITE;
-      this.viewIcon = icon.VIEW_WHITE;
+
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
       if (mode) {
@@ -174,7 +174,7 @@ export class InvoiceFormComponent implements OnInit {
         this.printIcon = icon.PRINT_WHITE;
         this.approveIcon = icon.APPROVE_WHITE;
         this.denyIcon = icon.DENY_WHITE;
-        this.viewIcon = icon.VIEW;
+
 
       } else {
         this.mode = 'on';
@@ -184,7 +184,7 @@ export class InvoiceFormComponent implements OnInit {
         this.printIcon = icon.PRINT_WHITE;
         this.approveIcon = icon.APPROVE_WHITE;
         this.denyIcon = icon.DENY_WHITE;
-        this.viewIcon = icon.VIEW_WHITE;
+
 
       }
     });
