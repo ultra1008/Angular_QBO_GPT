@@ -46,6 +46,7 @@ export class InvoiceComponent implements OnInit {
   isManagement: boolean = true;
   mode: any;
   add_my_self_icon = icon.ADD_MY_SELF_WHITE;
+  viewicon = icon.VIEW_WHITE;
   btn_grid_list_text: any;
   listtogrid_text: any;
   gridtolist_text: any;
@@ -93,7 +94,7 @@ export class InvoiceComponent implements OnInit {
   showInvoiceTable = true;
   dtOptions: DataTables.Settings = {};
 
-  constructor(private router: Router, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
+  constructor (private router: Router, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
     public translate: TranslateService, public dialog: MatDialog,
     public httpCall: HttpCall, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService) {
     let tmp_gridtolist_team = localStorage.getItem("gridtolist_invoice_list");
@@ -203,24 +204,11 @@ export class InvoiceComponent implements OnInit {
     that.dtOptions = {
       pagingType: 'full_numbers',
       language: tmp_locallanguage == "en" ? LanguageApp.english_datatables : LanguageApp.spanish_datatables,
-      // rowCallback: (row: Node, invoice: any[] | Object, index: number) => {
-      //   const self = this;
-      //   $('td', row).off('click');
-      //   $('td', row).on('click', () => {
-      //    self.editInvoice(invoice);
-      //     console.log("invoice", invoice);
-
-      //   });
-      //   return row;
-      // }
     };
 
     this.getAllInvoices();
   }
 
-  // someClickHandler(info: any): void {
-  //   this.message = info.id + ' - ' + info.firstName;
-  // }
   rerenderfunc() {
     this.showInvoiceTable = false;
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
@@ -265,10 +253,6 @@ export class InvoiceComponent implements OnInit {
   }
   updateInvoice(requestObject) {
     let that = this;
-    console.log("requestObject", requestObject);
-    // this.id = requestObject.invoice._id;
-
-    // console.log("_id", this.id);
     that.uiSpinner.spin$.next(true);
     that.httpCall.httpPostCall(httproutes.INVOICE_UPDATE_INVOICE_STATUS, requestObject).subscribe(params => {
       if (params.status) {
@@ -308,7 +292,6 @@ export class InvoiceComponent implements OnInit {
         that.allInvoices = params.data;
         that.invoiceCount = params.count;
         that.isManagement = params.is_management;
-        console.log("invoiceList", that.allInvoices);
       }
       that.uiSpinner.spin$.next(false);
       that.showInvoiceTable = false;
@@ -325,8 +308,6 @@ export class InvoiceComponent implements OnInit {
       .subscribe(function (params) {
         if (params.status) {
           that.vendorsList = params.data;
-          console.log("vendorsList", params.data);
-
         }
       });
   }
@@ -344,6 +325,10 @@ export class InvoiceComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
 
     });
+  }
+
+  viewDocuments() {
+    this.router.navigate(['/view-documents']);
   }
 
   importProcessData() {
@@ -366,8 +351,6 @@ export class InvoiceComponent implements OnInit {
   }
 
   editInvoice(invoice) {
-    console.log("invoice123", invoice);
-
     this.router.navigate(['/invoice-form'], { queryParams: { _id: invoice._id } });
   }
 
@@ -462,7 +445,7 @@ export class InvoiceAttachment {
   FILE_NOT_SUPPORTED: string;
   Invoice_Add_Atleast_One_Document: string = '';
 
-  constructor(private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
+  constructor (private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
     public dialogRef: MatDialogRef<InvoiceAttachment>,
     @Inject(MAT_DIALOG_DATA) public data: any, public sb: Snackbarservice, public translate: TranslateService, public dialog: MatDialog, private sanitiser: DomSanitizer,
     public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService,
@@ -480,23 +463,18 @@ export class InvoiceAttachment {
       this.saveIcon = icon.SAVE_WHITE;
       this.fileIcon = icon.REPORT_WHITE;
     }
-
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
       if (mode) {
         this.mode = 'off';
         this.exitIcon = icon.CANCLE;
         this.saveIcon = icon.SAVE_WHITE;
         this.fileIcon = icon.REPORT;
-
       } else {
         this.mode = 'on';
         this.exitIcon = icon.CANCLE_WHITE;
         this.saveIcon = icon.SAVE_WHITE;
         this.fileIcon = icon.REPORT_WHITE;
-
       }
-      console.log("DARK MODE: " + this.mode);
-
     });
     this.translate.stream([""]).subscribe((textarray) => {
       this.FILE_NOT_SUPPORTED = this.translate.instant("FILE_NOT_SUPPORTED");
@@ -511,9 +489,7 @@ export class InvoiceAttachment {
     ];
   }
 
-
   files: File[] = [];
-
 
   /**
    * on file drop handler
@@ -729,6 +705,18 @@ export class InvoiceAttachment {
 
   uploadDocuments() {
     let that = this;
+    /* that.httpCall
+      .httpPostCall(httproutes.INVOICE_SAVE_INVOICE_PROCESS, { pdf_urls: [] })
+      .subscribe(function (new_params) {
+        if (new_params.status) {
+          that.sb.openSnackBar(new_params.message, "success");
+          that.uiSpinner.spin$.next(false);
+          that.dialogRef.close();
+        } else {
+          that.sb.openSnackBar(new_params.message, "error");
+          that.uiSpinner.spin$.next(false);
+        }
+      }); */
     if (that.files.length == 0) {
       that.sb.openSnackBar(that.Invoice_Add_Atleast_One_Document, "error");
     } else {
@@ -799,11 +787,10 @@ export class InvoiceReport {
   copyDataFromProject: string = '';
   add_my_self_icon = icon.ADD_MY_SELF_WHITE;
 
-  constructor(private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
+  constructor (private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
     public dialogRef: MatDialogRef<InvoiceReport>,
     @Inject(MAT_DIALOG_DATA) public data: any, public sb: Snackbarservice, public translate: TranslateService) {
 
-    console.log("dataaaaaa", data);
     this.Report_File_Message = this.translate.instant('Report_File_Message');
     this.Report_File_Enter_Email = this.translate.instant('Report_File_Enter_Email');
     this.vendorList = data;
@@ -830,15 +817,11 @@ export class InvoiceReport {
         this.mode = 'off';
         this.exitIcon = icon.CANCLE;
         this.saveIcon = icon.SAVE_WHITE;
-
       } else {
         this.mode = 'on';
         this.exitIcon = icon.CANCLE_WHITE;
         this.saveIcon = icon.SAVE_WHITE;
-
       }
-      console.log("DARK MODE: " + this.mode);
-
     });
 
   }
@@ -864,7 +847,7 @@ export class InvoiceReport {
         // here error for valid email
       }
     }
-  }
+  };
 
   internalEmailremove(email: any): void {
     //----
@@ -897,7 +880,7 @@ export class InvoiceReport {
         that.invoiceinfo.get("All_Status")!.setValue(false);
       }
     });
-  }
+  };
 
   onChangeValueAll_Vendors(params: any) {
     if (params.checked) {

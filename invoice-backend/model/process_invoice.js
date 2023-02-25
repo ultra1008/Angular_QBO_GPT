@@ -6,9 +6,10 @@ var processInvoiceSchema = new Schema({
     invoice_id: { type: mongoose.ObjectId, default: "" },
     management_invoice_id: { type: mongoose.ObjectId, default: "" },
     management_po_id: { type: mongoose.ObjectId, default: "" },
-    status: { type: String, default: "Pending" }, // Pending, Process, Complete
+    status: { type: String, default: "Pending" }, // Pending, Already Exists, Process, Complete
     document_type: { type: String, default: "" },
     process_data: { type: Schema.Types.Mixed },
+    data: { type: Schema.Types.Mixed },
 
     created_by: { type: mongoose.ObjectId, default: "" },
     created_at: { type: Number, default: 0 },

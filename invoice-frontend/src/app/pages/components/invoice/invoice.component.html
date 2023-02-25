@@ -6,6 +6,10 @@
             {{ "Rovuk_Invoice_Roles_Invoice" | translate | titlecase }}
         </h1>
         <div class="row mr-2 action-button">
+            <button mat-raised-button color="primary" (click)="viewDocuments()" class="sign-button ml-2"><img
+                    src="{{viewicon}}" alt="" height="20px">
+                View Documents
+            </button>
             <button mat-raised-button color="primary" (click)="importProcessData()" class="sign-button ml-2"><img
                     src="{{add_my_self_icon}}" alt="" height="20px">
                 Import Data
@@ -170,7 +174,8 @@
 
                             <td
                                 [ngClass]="invoice.status == 'Pending'? 'pendingcss' : 'Approvedcss' && invoice.status == 'Approved'? 'Approvedcss' : 'Rejectcss'&& invoice.status == 'Rejected'? 'Rejectcss' : 'Rejectcss'">
-                                {{ invoice.status }}</td>
+                                {{ invoice.status }}
+                            </td>
                             <!-- <td width="1%">
                                 <div>
                                                                    

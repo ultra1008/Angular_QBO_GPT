@@ -1916,7 +1916,6 @@ module.exports.findUpdatedFieldHistory = async function (requestObject, dbData) 
 // Call API of Send Invoice for processing
 module.exports.sendInvoiceForProcess = function (requestObject) {
     return new Promise(function (resolve, reject) {
-        console.log("api call");
         var request = require('request');
         const options = {
             'method': 'POST',
@@ -1928,12 +1927,10 @@ module.exports.sendInvoiceForProcess = function (requestObject) {
             rejectUnauthorized: false,
             body: JSON.stringify({ documents: requestObject })
         };
-        console.log("process body: ", JSON.stringify(requestObject));
         request(options, function (err, resp, body) {
             if (err) {
                 reject(err);
             } else {
-                console.log("response: ", body);
                 resolve({ body });
             }
         });
@@ -1941,7 +1938,7 @@ module.exports.sendInvoiceForProcess = function (requestObject) {
 };
 
 // Call API of Get Invoice for processing
-module.exports.sendInvoiceForProcess = function (requestObject) {
+module.exports.getProcessedDocuments = function (requestObject) {
     var request = require('request');
     const options = {
         'method': 'GET',
