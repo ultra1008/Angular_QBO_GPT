@@ -30,11 +30,11 @@
     </div> -->
     <div class="hbox" *ngFor="let item of taskHistory">
         <!-- <div *ngFor="let oneActivity of activityArray"> -->
-        <div class="row pb-2">
-            <div class="col-1"><img class="userimg"
+        <div class="row pb-2 ">
+            <div class="col-1 mt-2"><img class="userimg"
                     src="{{item.history_created_by.userpicture || '../assets/images/user_placeholder.png'}}" />
             </div>
-            <div class="col-11">
+            <div class="col-11 mt-2">
                 <b> {{item.history_created_by.userfullname}} </b> {{item.action}} <b>
                     {{item.user.username}}
                 </b>
@@ -48,7 +48,7 @@
                         </td>
                     </tr>
                 </table>
-                <hr class="solid">
+                <!-- <hr class="solid"> -->
             </div>
         </div>
     </div>

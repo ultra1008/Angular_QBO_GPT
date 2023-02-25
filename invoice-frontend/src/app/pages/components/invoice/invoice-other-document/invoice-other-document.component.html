@@ -69,7 +69,7 @@
 
                 <div class="d-flex no-gutters" *ngFor="let nots of notesList">
                     <div class="col">
-                        <div class=" note-card" style="justify-content: center;padding: 15px;"
+                        <div class=" note-card" style="justify-content: center;padding: 20px;"
                             [ngClass]="mode == 'on'? 'text-cust-notes-dark' : 'text-cust-notes'">
                             {{nots.notes}}<b class="update-date">{{temp_MMDDYYY_format(nots.updated_at)}}</b>
                         </div>

@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { Location } from '@angular/common';
@@ -8,13 +8,14 @@ import { UiSpinnerService } from 'src/app/service/spinner.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModeDetectService } from '../../map/mode-detect.service';
 import { Observable, Subscription } from 'rxjs';
-import { commonFileChangeEvent } from 'src/app/service/utils';
+import { commonFileChangeEvent, MMDDYYYY_formet } from 'src/app/service/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
 import { EmployeeService } from '../../team/employee.service';
 import { map, startWith } from 'rxjs/operators';
 import { Console } from 'console';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
     confirmButton: "btn btn-success margin-right-cust s2-confirm",
@@ -86,10 +87,11 @@ export class InvoiceFormComponent implements OnInit {
   vendor = new FormControl('');
   badge: any = [];
   status: any;
+  historyIcon: string;
 
 
 
-  constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
+  constructor(public dialog: MatDialog, public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     // this.pdf_url = this.route.snapshot.queryParamMap.get('pdf_url');
@@ -154,6 +156,7 @@ export class InvoiceFormComponent implements OnInit {
       this.printIcon = icon.PRINT_WHITE;
       this.approveIcon = icon.APPROVE_WHITE;
       this.denyIcon = icon.DENY_WHITE;
+      this.historyIcon = icon.HISTORY;
 
     } else {
 
@@ -163,7 +166,7 @@ export class InvoiceFormComponent implements OnInit {
       this.printIcon = icon.PRINT_WHITE;
       this.approveIcon = icon.APPROVE_WHITE;
       this.denyIcon = icon.DENY_WHITE;
-
+      this.historyIcon = icon.HISTORY_WHITE;
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
       if (mode) {
@@ -174,6 +177,7 @@ export class InvoiceFormComponent implements OnInit {
         this.printIcon = icon.PRINT_WHITE;
         this.approveIcon = icon.APPROVE_WHITE;
         this.denyIcon = icon.DENY_WHITE;
+        this.historyIcon = icon.HISTORY;
 
 
       } else {
@@ -184,6 +188,7 @@ export class InvoiceFormComponent implements OnInit {
         this.printIcon = icon.PRINT_WHITE;
         this.approveIcon = icon.APPROVE_WHITE;
         this.denyIcon = icon.DENY_WHITE;
+        this.historyIcon = icon.HISTORY_WHITE;
 
 
       }
@@ -272,6 +277,17 @@ export class InvoiceFormComponent implements OnInit {
 
       }
     });
+  }
+  openHistoryDialog() {
+    const dialogRef = this.dialog.open(InvoiceHistoryComponent, {
+      height: "550px",
+      width: "1000px",
+      data: {
+        // project_id: this.projectId,
+      },
+      disableClose: true,
+    });
+    dialogRef.afterClosed().subscribe((result) => { });
   }
 
   updateInvoice(id, status) {
@@ -459,4 +475,141 @@ export class InvoiceFormComponent implements OnInit {
       });
     }
   }
+}
+
+
+@Component({
+  selector: 'invoice-history',
+  templateUrl: './invoice-history.html',
+  styleUrls: ['./invoice-form.component.scss']
+})
+export class InvoiceHistoryComponent implements OnInit {
+  id!: string;
+
+  SearchIcon = icon.SEARCH_WHITE;
+  start: number = 0;
+  mode: any;
+  exitIcon: string = "";
+  search: string = "";
+  is_httpCall: boolean = false;
+  todayactivity_search!: String;
+  activityIcon!: string;
+  isSearch: boolean = false;
+  subscription: Subscription;
+  dashboardHistory = [];
+  constructor(
+    public httpCall: HttpCall,
+    public snackbarservice: Snackbarservice,
+    private modeService: ModeDetectService,
+    public route: ActivatedRoute,
+
+    @Inject(MAT_DIALOG_DATA) public data: any,
+  ) {
+    console.log("history call");
+
+    this.id = this.route.snapshot.queryParamMap.get('_id');
+    var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
+    this.mode = modeLocal === "on" ? "on" : "off";
+    if (this.mode == "off") {
+      this.exitIcon = icon.CANCLE;
+    } else {
+      this.exitIcon = icon.CANCLE_WHITE;
+    }
+
+    this.subscription = this.modeService.onModeDetect().subscribe((mode) => {
+      if (mode) {
+        this.mode = "off";
+        this.exitIcon = icon.CANCLE;
+      } else {
+        this.mode = "on";
+        this.exitIcon = icon.CANCLE_WHITE;
+      }
+    });
+  }
+
+  ngOnInit(): void {
+    this.getTodaysActivity();
+  }
+
+  // onKey(event: any) {
+  //   console.log(event.target.value);
+  //   if (event.target.value.length == 0) {
+  //     console.log("emprty string");
+  //     this.taskHistory = [];
+  //     this.start = 0;
+  //     this.getTodaysActivity();
+  //   }
+  // }
+  // searchActivity() {
+  //   console.log("searchTodayActivity");
+  //   console.log("Entered email:", this.todayactivity_search);
+  //   let that = this;
+  //   that.isSearch = true;
+  //   that.taskHistory = [];
+  //   that.start = 0;
+  //   this.getTodaysActivity();
+  // }
+
+  // onScroll() {
+  //   this.start++;
+  //   this.getTodaysActivity();
+  // }
+
+
+  onKey(event: any) {
+    console.log(event.target.value);
+    if (event.target.value.length == 0) {
+      console.log("emprty string");
+      this.dashboardHistory = [];
+      this.start = 0;
+      this.getTodaysActivity();
+    }
+  }
+  searchActivity() {
+    console.log("searchTodayActivity");
+    console.log("Entered email:", this.todayactivity_search);
+    let that = this;
+    that.isSearch = true;
+    that.dashboardHistory = [];
+    that.start = 0;
+    this.getTodaysActivity();
+  }
+
+  onScroll() {
+    this.start++;
+    this.getTodaysActivity();
+  }
+  getTodaysActivity() {
+    let self = this;
+    this.is_httpCall = true;
+    let requestObject = {};
+    requestObject = {
+      start: this.start,
+      _id: this.id
+
+    };
+    this.httpCall
+      .httpPostCall(httproutes.INVOICE_GET_INVOICE_HISTORY, requestObject)
+      .subscribe(function (params) {
+        if (params.status) {
+          if (self.start == 0)
+            self.is_httpCall = false;
+          self.dashboardHistory = self.dashboardHistory.concat(params.data);
+        }
+        console.log("dashboardHistory", self.dashboardHistory);
+      });
+  }
+
+  temp_MMDDYYY_format(epoch) {
+    return MMDDYYYY_formet(epoch);
+  }
+
+  setHeightStyles() {
+    let styles = {
+      height: window.screen.height + "px",
+      "overflow-y": "scroll",
+    };
+    return styles;
+  }
+
 }

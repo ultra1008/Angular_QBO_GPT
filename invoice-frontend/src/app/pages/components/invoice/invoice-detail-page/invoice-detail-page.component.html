@@ -42,13 +42,19 @@
                 <!-- <button mat-raised-button color="primary" style="margin-right: 6px;" class="sign-button ml-1">
                     Save Changes
                 </button> -->
+
                 <button mat-raised-button color="primary" style="margin-right: 12px;" class="sign-button">
                     <img src="{{add_my_self_icon}}" alt="" height="20px">
                     Add to batch
                 </button>
-                <button mat-raised-button (click)="back()" class="sign-button">
-                    <img src="{{ backIcon }}" alt="" height="20px" />
-                    {{ "All-back" | translate }}
+                <button (click)="openHistoryDialog()"
+                    class="import-export-btn-datatable button_workersEditClass cust-margin-div mr-2 "
+                    matTooltip="{{ 'TOOLTIP_HISTORY' | translate }}">
+                    <img src="{{historyIcon}}" alt="" height="20px">
+                </button>
+                <button class="import-export-btn-datatable cust-margin-div" (click)="back()"
+                    matTooltip="{{ 'All-exit' | translate }}">
+                    <img src="{{exitIcon}}" alt="" class="far fa-paper-plane" height="20px">
                 </button>
             </div>
         </div>
@@ -78,7 +84,7 @@
         </div> -->
     </div>
     <div class="row mt-2" style="height:90%">
-        <div class="col-sm-12 col-md-12 col-lg-5">
+        <div class="col-sm-12 col-md-12 col-lg-6">
             <!-- <div class="invoice-card">
                 <h2 class=" text-center ">Invoice-123</h2>
             </div>
@@ -138,9 +144,9 @@
                                     {{'Project-Timecard-Notes' | translate }}
                                 </button>
                             </div>
-                            <div class="d-flex no-gutters" *ngFor="let nots of notsList">
+                            <div class="d-flex no-gutters m-3" *ngFor="let nots of notsList">
                                 <div class="col">
-                                    <div class=" note-card" style="justify-content: center;padding: 15px;"
+                                    <div class=" note-card" style="justify-content: center;padding: 20px;"
                                         [ngClass]="mode == 'on'? 'text-cust-notes-dark' : 'text-cust-notes'">
                                         {{nots.notes}}<b
                                             style="font-size: 10px;float: inline-end;;">{{temp_MMDDYYY_format(nots.updated_at)}}</b>
@@ -270,7 +276,7 @@
             </mat-accordion>
         </div>
         <!-- history div -->
-        <div class="col-sm-12 col-md-12 col-lg-2 mt-3">
+        <!-- <div class="col-sm-12 col-md-12 col-lg-2 mt-3">
             <div class="invoice-card" [ngClass]="mode == 'on'? 'invoice-card-dark':''">
                 <h4 class="History-text">History Log</h4>
             </div>
@@ -283,16 +289,11 @@
                         <div class="card-body " *ngFor=" let item of dashboardHistory">
                             <div class="row">
                                 <div class="col-2">
-                                    <!-- <img class="crl card-img-left example-card-img-responsive"
-                                                                src="./assets/logo/RovukInvoice.png" /> -->
+                               
                                     <img class="crl card-img-left example-card-img-responsive"
                                         src="{{item.userpicture || '../assets/images/user_placeholder.png'}}" />
                                 </div>
-                                <!-- <div class="col-10">
-                                                            <p style="font-size: 12px;">Roque Rivera @ 8:15 am</p>
-                                                            <p style="font-size: 10px;  word-wrap: break-word;">Roque Rivera open the
-                                                                invoice</p>
-                                                        </div> -->
+                              
                                 <div class="col-10 ">
                                     <b [ngClass]="mode == 'on'? 'text-color-dark' : 'text-color'"
                                         (click)="goToUserProfile(item)" style="font-size: 10px;">
@@ -313,36 +314,13 @@
                             <hr class="solid">
                         </div>
                     </div>
-                    <!-- <p
-                        style="font-size: 10px;  word-wrap: break-word; margin-top: 8px; text-align: left; color: #06479D;">
-                        Monday 6/27/2022
-                    </p> -->
-                    <!-- <div class="" [ngClass]="mode == 'on'? 'card-history-dark' : 'card-history'">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-2">
-                                    <img class="crl card-img-left example-card-img-responsive"
-                                        src="./assets/logo/RovukInvoice.png" />
-                                </div>
-                                <div class="col-10">
-                                    <p style="font-size: 12px;">Roque Rivera @ 8:15 am</p>
-                                    <p style="font-size: 10px;  word-wrap: break-word;">The definition of a
-                                        description is a statement that gives details about someone or
-                                        something. An example
-                                        of description is a story about the places visited on a family trip.
-                                        Sort, kind, or variety. Books of every
-                                        description.</p>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div> -->
+                
                 </div>
 
             </div>
-        </div>
+        </div> -->
         <!-- history div over -->
-        <div class="col-sm-12 col-md-12 col-lg-5">
+        <div class="col-sm-12 col-md-12 col-lg-6">
             <div class="wrapper-cust-admin">
 
                 <div class="container">

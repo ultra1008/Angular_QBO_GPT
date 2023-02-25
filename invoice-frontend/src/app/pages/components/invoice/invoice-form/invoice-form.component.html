@@ -16,6 +16,7 @@
 
 
                 <div class="col-6 dialog-head-right">
+
                     <button mat-raised-button (click)="viewInvoice(id)" color="primary" class="cust-button-form"><img
                             src="{{viewIcon}}" alt="" class="pr-1" height="15px">{{'View_Related_Documents' |
                         translate}}</button>
@@ -30,6 +31,11 @@
                         class="cust-button-form Denied"><img src="{{denyIcon}}" alt="" height="15px">
                         {{'reject_all' |
                         translate}}</button>
+                    <button (click)="openHistoryDialog()"
+                        class="import-export-btn-datatable button_workersEditClass cust-margin-div mr-2 "
+                        matTooltip="{{ 'TOOLTIP_HISTORY' | translate }}">
+                        <img src="{{historyIcon}}" alt="" height="20px">
+                    </button>
                     <button class="import-export-btn-datatable cust-margin-div" (click)="back()"
                         matTooltip="{{ 'All-exit' | translate }}">
                         <img src="{{exitIcon}}" alt="" class="far fa-paper-plane" height="20px">
@@ -50,7 +56,7 @@
                 <mat-card class="example-card" style=" box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);">
 
                     <div class=" paddings pt-3">
-                        <form class="form" [formGroup]="invoiceform">
+                        <form class="form invoice-form" [formGroup]="invoiceform">
                             <div class="main-cust-image pb-3">
 
                                 <div class="col">
