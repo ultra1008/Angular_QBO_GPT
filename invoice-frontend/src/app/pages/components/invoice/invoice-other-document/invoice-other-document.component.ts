@@ -83,7 +83,7 @@ export class InvoiceOtherDocumentComponent implements OnInit {
   _id: string;
   LOCAL_OFFSET: number;
 
-  constructor(private sanitiser: DomSanitizer, public translate: TranslateService, private formBuilder: FormBuilder, public snackbarservice: Snackbarservice, public httpCall: HttpCall, public uiSpinner: UiSpinnerService, public dialog: MatDialog, private router: Router, private modeService: ModeDetectService, public route: ActivatedRoute,) {
+  constructor (private sanitiser: DomSanitizer, public translate: TranslateService, private formBuilder: FormBuilder, public snackbarservice: Snackbarservice, public httpCall: HttpCall, public uiSpinner: UiSpinnerService, public dialog: MatDialog, private router: Router, private modeService: ModeDetectService, public route: ActivatedRoute,) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.invoice_id = this.id;
     this._id = this.id;
@@ -721,7 +721,6 @@ export class InvoiceOtherDocumentComponent implements OnInit {
           that.snackbarservice.openSnackBar(params.message, "error");
           that.uiSpinner.spin$.next(false);
         }
-        console.log("notesList", that.notesList);
       });
   }
   print() {
@@ -847,7 +846,7 @@ export class AddOtherFiles implements OnInit {
   FILE_NOT_SUPPORTED: string;
   Invoice_Add_Atleast_One_Document: string = '';
 
-  constructor(private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
+  constructor (private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
     public dialogRef: MatDialogRef<AddOtherFiles>,
     @Inject(MAT_DIALOG_DATA) public data: any, public sb: Snackbarservice, public translate: TranslateService, public dialog: MatDialog, private sanitiser: DomSanitizer,
     public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService,
@@ -1170,7 +1169,7 @@ export class OrphanFiles implements OnInit {
   _id!: string;
   viewIcon: any;
 
-  constructor(
+  constructor (
     private modeService: ModeDetectService,
     private router: Router,
     public dialogRef: MatDialogRef<OrphanFiles>,
@@ -1338,7 +1337,7 @@ export class RequestFilesComponent implements OnInit {
   add_my_self_icon = icon.ADD_MY_SELF_WHITE;
 
   /*Constructor*/
-  constructor(
+  constructor (
     private formBuilder: FormBuilder,
     public httpCall: HttpCall,
     private modeService: ModeDetectService,

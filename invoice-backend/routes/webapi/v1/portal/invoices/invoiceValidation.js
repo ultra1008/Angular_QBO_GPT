@@ -320,6 +320,22 @@ const deleteViewDocument = (req, res, next) => {
     });
 };
 
+const requestForInvoiceFile = (req, res, next) => {
+    const validationRule = {
+        "_id": "required",
+        "email_list": "required",
+        "module": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({ status: false, message: err });
+        }
+        else {
+            next();
+        }
+    });
+};
+
 module.exports = {
     getOneInvoice,
     deleteInvoice,
@@ -343,4 +359,5 @@ module.exports = {
     saveQuoteAttachment,
     updateInvoiceRelatedDocument,
     deleteViewDocument,
+    requestForInvoiceFile,
 };
