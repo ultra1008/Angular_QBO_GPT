@@ -1122,6 +1122,8 @@ export enum httproutes {
     PORTAL_VIEW_DOCUMENTS_DATATABLE = "/webapi/v1/portal/getviewdocumetdatatable",
     PORTAL_ORPHAN_DOCUMENTS_DATATABLE = "/webapi/v1/portal/getorphandocumentdatatable",
     PORTAL_DELETE_DOCUMENTS = "/webapi/v1/portal/deleteviewdocument",
+    INVOICE_DOCUMENT_PROCESS_SAVE = "/webapi/v1/portal/updateinvoiceprocess",
+    INVOICE_DOCUMENT_PROCESS_GET = "/webapi/v1/portal/getoneinvoiceprocess",
 
     INVOICE_GET_LIST = "/webapi/v1/portal/getinvoice",
     INVOICE_GET_STATUS_VISE_LIST = "/webapi/v1/portal/getinvoicelist",

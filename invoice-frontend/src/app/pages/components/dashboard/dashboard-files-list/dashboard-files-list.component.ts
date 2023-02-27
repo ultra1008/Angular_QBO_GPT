@@ -94,8 +94,20 @@ export class DashboardFilesListComponent implements OnInit {
     late_invoices: 0,
   };
 
+  /*  document_type: any = {
+     PO: 'PURCHASE_ORDER',
+     PackingSlip: 'PACKING_SLIP',
+     ReceivingSlip: 'RECEIVING_SLIP',
+     Quote: 'QUOTE',
+   }; */
+  documentTypes: any = {
+    po: 'PURCHASE_ORDER',
+    packingSlip: 'PACKING_SLIP',
+    receivingSlip: 'RECEIVING_SLIP',
+    quote: 'QUOTE',
+  };
 
-  constructor (private location: Location, private modeService: ModeDetectService,
+  constructor(private location: Location, private modeService: ModeDetectService,
     public dialog: MatDialog,
     private router: Router,
     private http: HttpClient,
@@ -111,11 +123,13 @@ export class DashboardFilesListComponent implements OnInit {
       this.backIcon = icon.BACK;
       this.viewIcon = icon.VIEW;
       this.deleteIcon = icon.DELETE;
+      this.editIcon = icon.EDIT;
     } else {
       this.reportIcon = icon.REPORT_WHITE;
       this.backIcon = icon.BACK_WHITE;
       this.viewIcon = icon.VIEW_WHITE;
       this.deleteIcon = icon.DELETE_WHITE;
+      this.editIcon = icon.EDIT_WHITE;
     }
     let j = 0;
     this.subscription = this.modeService.onModeDetect().subscribe((mode) => {
@@ -125,12 +139,14 @@ export class DashboardFilesListComponent implements OnInit {
         this.backIcon = icon.BACK;
         this.viewIcon = icon.VIEW;
         this.deleteIcon = icon.DELETE;
+        this.editIcon = icon.EDIT;
       } else {
         this.mode = "on";
         this.reportIcon = icon.REPORT_WHITE;
         this.backIcon = icon.BACK_WHITE;
         this.viewIcon = icon.VIEW_WHITE;
         this.deleteIcon = icon.DELETE_WHITE;
+        this.editIcon = icon.EDIT_WHITE;
       }
 
       if (j != 0) {
@@ -262,6 +278,10 @@ export class DashboardFilesListComponent implements OnInit {
           let data = JSON.parse(event.target.getAttribute("edit_tmp_id"));
           that.deleteDocument(data._id);
         });
+        $(".button_viewDocEditClass").on("click", (event) => {
+          let data = JSON.parse(event.target.getAttribute("edit_tmp_id"));
+          that.goToEdit(data);
+        });
 
       },
     };
@@ -313,6 +333,7 @@ export class DashboardFilesListComponent implements OnInit {
 
   getColumName() {
     let that = this;
+
     return [
       {
         title: 'Document Type',
@@ -339,17 +360,22 @@ export class DashboardFilesListComponent implements OnInit {
         render: function (data: any, type: any, full: any) {
           let tmp_tmp = {
             _id: full._id,
+            document_id: full._id,
             pdf_url: full.pdf_url,
+            document_type: full.document_type
           };
           let view = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_viewDocViewClass" >` + '<img src="' + that.viewIcon + `" alt="" height="15px">View</a>`;
           let archive = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_viewDocDeleteClass" >` + '<img src="' + that.deleteIcon + `" alt="" height="15px">Delete</a>`;
+          let edit = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_viewDocEditClass" >` + '<img src="' + that.editIcon + `" alt="" height="15px">Edit</a>`;
           return (
             `
          <div class="dropdown">
            <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust"  aria-haspopup="true" aria-expanded="false"  edit_tmp_id='` + JSON.stringify(full) + `' aria-hidden="true"></i>
            <div class= "dropdown-content-cust" aria-labelledby="dropdownMenuButton">
              ` + view + `
+             ` + edit + `
              ` + archive + `
+             
            </div>
        </div>`
           );
@@ -358,6 +384,19 @@ export class DashboardFilesListComponent implements OnInit {
         orderable: false,
       },
     ];
+  }
+
+  goToEdit(document) {
+    let that = this;
+    if (document.document_type == that.documentTypes.po) {
+      that.router.navigate(['/po-detail-form'], { queryParams: { document_id: document._id } });
+    } else if (document.document_type == that.documentTypes.packingSlip) {
+      that.router.navigate(['/packing-slip-form'], { queryParams: { document_id: document._id } });
+    } else if (document.document_type == that.documentTypes.receivingSlip) {
+      that.router.navigate(['/receiving-slip-form'], { queryParams: { document_id: document._id } });
+    } else if (document.document_type == that.documentTypes.quote) {
+      that.router.navigate(['/quote-detail-form'], { queryParams: { document_id: document._id } });
+    }
   }
 
   deleteDocument(_id) {
