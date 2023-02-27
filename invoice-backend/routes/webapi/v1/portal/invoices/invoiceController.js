@@ -18,6 +18,7 @@ var handlebars = require('handlebars');
 let sendEmail = require('./../../../../../controller/common/sendEmail');
 var fs = require('fs');
 var bucketOpration = require('../../../../../controller/common/s3-wasabi');
+var moment = require('moment');
 
 // save invoice
 module.exports.saveInvoice = async function (req, res) {
@@ -1022,19 +1023,22 @@ module.exports.getOrphanDocumentsDatatable = async function (req, res) {
                 is_delete: 0,
                 status: { $eq: 'Process' }
             };
-            let date_query = {};
-            // settings.setting_value->created_at
-            // settings.setting_status == 'Active'
+            let currentEpoch = Math.round(new Date().getTime() / 1000);
+            let settingDays = Number(settings.setting_value);
+            let settingDate = moment(currentEpoch * 1000);
+            settingDate.hours(0);
+            settingDate.minutes(0);
+            settingDate.seconds(0);
+            settingDate.milliseconds(0);
+            settingDate.subtract(settingDays, 'days');
+            settingEpoch = settingDate.unix();
             if (requestObject.view_option) {
-                match_query.created_at = { $gte: Number(settings.setting_value) };
+                match_query.created_at = { $lte: settingEpoch };
             } else {
-                match_query.created_at = { $lte: Number(settings.setting_value) };
-                date_query = { created_at: { $lte: Number(settings.setting_value) } };
+                match_query.created_at = { $gte: settingEpoch };
             }
-            console.log("match_query: ", match_query);
             var aggregateQuery = [
                 { $match: match_query },
-                // { $match: date_query },
                 {
                     $project: {
                         document_type: {
