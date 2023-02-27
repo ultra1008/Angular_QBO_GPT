@@ -290,6 +290,7 @@ router.post('/webapi/v1/portal/savequotenote', common.checkTokenExistOrNot, invo
 router.post('/webapi/v1/portal/deletequotenote', common.checkTokenExistOrNot, invoiceValidation.deleteQuoteNote, invoiceController.deleteQuoteNote);
 router.post('/webapi/v1/portal/updatequoteattachment', common.checkTokenExistOrNot, invoiceValidation.saveQuoteAttachment, invoiceController.saveQuoteAttachment);
 router.post('/webapi/v1/portal/updateinvoicerelateddocument', common.checkTokenExistOrNot, invoiceValidation.updateInvoiceRelatedDocument, invoiceController.updateInvoiceRelatedDocument);
+router.post('/webapi/v1/portal/requestforinvoicefile', common.checkTokenExistOrNot, invoiceValidation.requestForInvoiceFile, invoiceController.requestForInvoiceFile);
 
 let invoiceDashboard = require('./dashboard/dashboardController');
 router.get('/webapi/v1/portal/getdashboardcount', common.checkTokenExistOrNot, invoiceDashboard.getDashboardCount);
@@ -324,6 +325,8 @@ router.post('/webapi/v1/portal/saveprofileimagescompany', common.checkTokenExist
 let processInvoiceController = require('./process_invoice/processInvoiceController');
 let processInvoiceValidation = require('./process_invoice/processInvoiceValidation');
 router.get('/webapi/v1/portal/getinvoiceprocess', common.checkTokenExistOrNot, processInvoiceController.getAllProcessInvoice);
+router.post('/webapi/v1/portal/getoneinvoiceprocess', common.checkTokenExistOrNot, processInvoiceValidation.getOneProcessInvoice, processInvoiceController.getOneProcessInvoice);
+router.post('/webapi/v1/portal/updateinvoiceprocess', common.checkTokenExistOrNot, processInvoiceController.updateProcessInvoice);
 router.post('/webapi/v1/portal/saveinvoiceprocess', common.checkTokenExistOrNot, processInvoiceController.saveInvoiceProcess);
 router.get('/webapi/v1/portal/importmanagementinvoice', common.checkTokenExistOrNot, processInvoiceController.importManagementInvoice);
 router.get('/webapi/v1/portal/importmanagementpo', common.checkTokenExistOrNot, processInvoiceController.importManagementPO);

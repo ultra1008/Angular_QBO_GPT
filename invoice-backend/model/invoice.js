@@ -346,6 +346,7 @@ var invoiceSchema = new Schema({
     quote_notes: { type: [notesSchema], default: [] },
     quote_attachments: { type: Array, default: [] },
 
+    document_type: { type: String, default: "INVOICE" },
     created_by: { type: mongoose.ObjectId, default: "" },
     created_at: { type: Number, default: 0 },
     updated_by: { type: mongoose.ObjectId, default: "" },

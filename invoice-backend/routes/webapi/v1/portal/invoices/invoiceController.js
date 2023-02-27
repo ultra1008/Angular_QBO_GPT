@@ -185,6 +185,7 @@ module.exports.getInvoice = async function (req, res) {
                             }
                         },
                         quote_attachments: 1,
+                        document_type: { $ifNull: ["$document_type", "INVOICE"] },
                     }
                 },
             ]);
@@ -347,6 +348,7 @@ module.exports.getInvoiceList = async function (req, res) {
                             }
                         },
                         quote_attachments: 1,
+                        document_type: { $ifNull: ["$document_type", "INVOICE"] },
                     }
                 },
             ]);
@@ -461,6 +463,7 @@ module.exports.getOneInvoice = async function (req, res) {
                             }
                         },
                         quote_attachments: 1,
+                        document_type: { $ifNull: ["$document_type", "INVOICE"] },
                     }
                 },
             ]);
@@ -1385,7 +1388,7 @@ module.exports.saveInvoiceNotes = async function (req, res) {
                         data_id: invoice_id,
                         title: `Invoice #${one_invoice.invoice}`,
                         module: 'Invoice',
-                        action: 'Insert Note',
+                        action: 'Insert Note in',
                         action_from: 'Web',
                     }, decodedToken);
                     res.send({ status: true, message: "Invoice note saved successfully." });
@@ -1431,7 +1434,7 @@ module.exports.deleteInvoiceNote = async function (req, res) {
                     data_id: invoice_id,
                     title: `Invoice #${get_invoice.invoice}`,
                     module: 'Invoice',
-                    action: 'Delete Note',
+                    action: 'Delete Note in',
                     action_from: 'Web',
                 }, decodedToken);
                 res.send({ status: true, message: "Invoice note deleted successfully.", data: update_invoice });
@@ -1472,7 +1475,7 @@ module.exports.saveInvoiceAttachment = async function (req, res) {
                     data_id: requestObject._id,
                     title: `Invoice #${get_invoice.invoice}`,
                     module: 'Invoice',
-                    action: 'Update Attachment',
+                    action: 'Update Attachment in',
                     action_from: 'Web',
                 }, decodedToken);
                 res.send({ status: true, message: "Invoice attachment updated successfully..", data: update_invoice });
@@ -2160,5 +2163,62 @@ module.exports.updateInvoiceRelatedDocument = async function (req, res) {
     }
     else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+// Request For invoice files
+module.exports.requestForInvoiceFile = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    var local_offset = Number(req.headers.local_offset);
+    var timezone = req.headers.timezone;
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            let email_list = requestObject.email_list;
+            var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+            let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
+            let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
+
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+            let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(requestObject._id) });
+
+            var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
+            let get_vendor = await vendorConnection.findOne({ _id: ObjectID(get_invoice.vendor) });
+
+            const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/commonEmailTemplate.html', 'utf8');
+            let emailTmp = {
+                HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
+                SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
+                ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                THANKS: translator.getStr('EmailTemplateThanks'),
+                ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
+
+                TITLE: `Missing Document request!`,
+                TEXT: new handlebars.SafeString(`<p>Hi,</p>
+                <p>The ${requestObject.module} is requested by ${company_data.companyname} for Invoice No #${get_invoice.invoice}.</p>
+                <p>Please send missing document for further invoice processing.</p>
+                <h4>Invoice No: #${get_invoice.invoice}</h4>
+                <h4>Vendor Name: ${get_vendor.vendor_name}</h4>`),
+
+                COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
+                COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
+            };
+            var template = handlebars.compile(file_data);
+            var HtmlData = await template(emailTmp);
+            sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, email_list, 'Missing Document request!', HtmlData,
+                talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
+                talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+            res.send({ message: `Request for ${requestObject.module} files sent successfully.`, status: true });
+        } catch (e) {
+            console.log("error:", e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
