@@ -1388,7 +1388,7 @@ module.exports.saveInvoiceNotes = async function (req, res) {
                         data_id: invoice_id,
                         title: `Invoice #${one_invoice.invoice}`,
                         module: 'Invoice',
-                        action: 'Insert Note',
+                        action: 'Insert Note in',
                         action_from: 'Web',
                     }, decodedToken);
                     res.send({ status: true, message: "Invoice note saved successfully." });
@@ -1434,7 +1434,7 @@ module.exports.deleteInvoiceNote = async function (req, res) {
                     data_id: invoice_id,
                     title: `Invoice #${get_invoice.invoice}`,
                     module: 'Invoice',
-                    action: 'Delete Note',
+                    action: 'Delete Note in',
                     action_from: 'Web',
                 }, decodedToken);
                 res.send({ status: true, message: "Invoice note deleted successfully.", data: update_invoice });
@@ -1475,7 +1475,7 @@ module.exports.saveInvoiceAttachment = async function (req, res) {
                     data_id: requestObject._id,
                     title: `Invoice #${get_invoice.invoice}`,
                     module: 'Invoice',
-                    action: 'Update Attachment',
+                    action: 'Update Attachment in',
                     action_from: 'Web',
                 }, decodedToken);
                 res.send({ status: true, message: "Invoice attachment updated successfully..", data: update_invoice });
