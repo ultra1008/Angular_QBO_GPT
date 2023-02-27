@@ -83,7 +83,7 @@ export class InvoiceOtherDocumentComponent implements OnInit {
   _id: string;
   LOCAL_OFFSET: number;
 
-  constructor (private sanitiser: DomSanitizer, public translate: TranslateService, private formBuilder: FormBuilder, public snackbarservice: Snackbarservice, public httpCall: HttpCall, public uiSpinner: UiSpinnerService, public dialog: MatDialog, private router: Router, private modeService: ModeDetectService, public route: ActivatedRoute,) {
+  constructor(private sanitiser: DomSanitizer, public translate: TranslateService, private formBuilder: FormBuilder, public snackbarservice: Snackbarservice, public httpCall: HttpCall, public uiSpinner: UiSpinnerService, public dialog: MatDialog, private router: Router, private modeService: ModeDetectService, public route: ActivatedRoute,) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.invoice_id = this.id;
     this._id = this.id;
@@ -167,7 +167,7 @@ export class InvoiceOtherDocumentComponent implements OnInit {
     const dialogRef = this.dialog.open(RequestFilesComponent, {
       height: '500px',
       width: '800px',
-
+      data: this.documentType,
       disableClose: true
     });
 
@@ -846,7 +846,7 @@ export class AddOtherFiles implements OnInit {
   FILE_NOT_SUPPORTED: string;
   Invoice_Add_Atleast_One_Document: string = '';
 
-  constructor (private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
+  constructor(private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
     public dialogRef: MatDialogRef<AddOtherFiles>,
     @Inject(MAT_DIALOG_DATA) public data: any, public sb: Snackbarservice, public translate: TranslateService, public dialog: MatDialog, private sanitiser: DomSanitizer,
     public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService,
@@ -1169,7 +1169,7 @@ export class OrphanFiles implements OnInit {
   _id!: string;
   viewIcon: any;
 
-  constructor (
+  constructor(
     private modeService: ModeDetectService,
     private router: Router,
     public dialogRef: MatDialogRef<OrphanFiles>,
@@ -1335,9 +1335,16 @@ export class RequestFilesComponent implements OnInit {
   saveIcon = icon.SAVE_WHITE;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   add_my_self_icon = icon.ADD_MY_SELF_WHITE;
+  documentTypes: any = {
+    po: 'PO',
+    packingSlip: 'Packing Slip',
+    receivingSlip: 'Receiving Slip',
+    quote: 'Quote',
+  };
+  _id: any;
 
   /*Constructor*/
-  constructor (
+  constructor(
     private formBuilder: FormBuilder,
     public httpCall: HttpCall,
     private modeService: ModeDetectService,
@@ -1345,18 +1352,18 @@ export class RequestFilesComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     public sb: Snackbarservice,
     public uiSpinner: UiSpinnerService,
-    public translate: TranslateService
+    public translate: TranslateService,
+    private router: Router,
+    public route: ActivatedRoute,
   ) {
-    console.log("data2", data);
-
     this.Report_File_Message = this.translate.instant("Report_File_Message");
     this.Report_File_Enter_Email = this.translate.instant(
       "Report_File_Enter_Email"
     );
     this.vendorInfo = this.formBuilder.group({
-      All_Terms: [true],
-      terms_ids: [this.termList.map((el) => el._id)],
+
     });
+    this._id = this.route.snapshot.queryParamMap.get('_id');
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === "on" ? "on" : "off";
@@ -1390,14 +1397,7 @@ ngOnInit
 */
   ngOnInit(): void {
     let that = this;
-    this.vendorInfo.get("terms_ids")
-      .valueChanges.subscribe(function (params: any) {
-        if (params.length == that.termList.length) {
-          that.vendorInfo.get("All_Terms").setValue(true);
-        } else {
-          that.vendorInfo.get("All_Terms").setValue(false);
-        }
-      });
+
   }
 
   isValidMailFormat(value): any {
@@ -1439,41 +1439,30 @@ ngOnInit
     }
   }
 
-  onChangeValueAll_Terms(params) {
-    if (params.checked) {
-      this.vendorInfo
-        .get("terms_ids")
-        .setValue(this.termList.map((el) => el._id));
-    } else {
-      this.vendorInfo.get("terms_ids").setValue([]);
-    }
-  }
-
 
   /*
    *
    * save button action
    */
   saveData() {
-    if (this.emailsList.length != 0) {
-      this.uiSpinner.spin$.next(true);
-      let requestObject = this.vendorInfo.value;
-      var company_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
-      requestObject.email_list = this.emailsList;
-      requestObject.logo_url = company_data.companydata.companylogo;
-      this.httpCall
-        .httpPostCall(
-          httproutes.INVOICE_GET_VENDOR_REPORT,
-          requestObject
-        )
+    let that = this;
+    if (that.emailsList.length != 0) {
+      that.uiSpinner.spin$.next(true);
+      let requestObject = {
+        email_list: that.emailsList,
+        _id: that._id,
+        module: that.data,
+      };
+      that.httpCall
+        .httpPostCall(httproutes.INVOICE_REQUESR_FOR_INVOICE_FILES, requestObject)
         .subscribe(function (params: any) { });
       setTimeout(() => {
-        this.uiSpinner.spin$.next(false);
-        this.sb.openSnackBar(this.Report_File_Message, "success");
-        this.dialogRef.close();
-      }, 3000);
+        that.uiSpinner.spin$.next(false);
+        that.sb.openSnackBar(that.Report_File_Message, "success");
+        that.dialogRef.close();
+      }, 1000);
     } else {
-      this.sb.openSnackBar(this.Report_File_Enter_Email, "error");
+      that.sb.openSnackBar(that.Report_File_Enter_Email, "error");
     }
   }
 
