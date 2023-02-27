@@ -1,5 +1,6 @@
 var processInvoiceSchema = require('./../../../../../model/process_invoice');
 var invoiceSchema = require('./../../../../../model/invoice');
+var vendorSchema = require('./../../../../../model/vendor');
 var managementInvoiceSchema = require('./../../../../../model/management_invoice');
 var managementPOSchema = require('./../../../../../model/management_po');
 var vendorSchema = require('./../../../../../model/vendor');
@@ -38,7 +39,11 @@ module.exports.getOneProcessInvoice = async function (req, res) {
         try {
             var requestObject = req.body;
             let invoiceProcessCollection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
+            let vendorCollection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
             let get_data = await invoiceProcessCollection.findOne({ _id: ObjectID(requestObject._id) });
+            if (get_data.data.vendor != '') {
+                get_data.data.vendor = await vendorCollection.findOne({ _id: ObjectID(get_data.data.vendor) });
+            }
             res.send({ message: 'Listing', data: get_data, status: true });
         } catch (e) {
             console.log(e);
