@@ -1023,18 +1023,14 @@ module.exports.getOrphanDocumentsDatatable = async function (req, res) {
                 status: { $eq: 'Process' }
             };
             let date_query = {};
-            // settings.setting_value->created_at
-            // settings.setting_status == 'Active'
             if (requestObject.view_option) {
                 match_query.created_at = { $gte: Number(settings.setting_value) };
             } else {
                 match_query.created_at = { $lte: Number(settings.setting_value) };
                 date_query = { created_at: { $lte: Number(settings.setting_value) } };
             }
-            console.log("match_query: ", match_query);
             var aggregateQuery = [
                 { $match: match_query },
-                // { $match: date_query },
                 {
                     $project: {
                         document_type: {

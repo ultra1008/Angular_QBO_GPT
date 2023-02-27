@@ -400,6 +400,12 @@ export class DashboardFilesListComponent implements OnInit {
   downloadButtonPress(event, index): void {
     window.location.href = this.imageObject[index];
   }
+
+  onTabChanged($event) {
+    // this.currrent_tab = this.tab_Array[$event.index]; 
+    this.rerenderfunc();
+  }
+
   rerenderfunc() {
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     let that = this;

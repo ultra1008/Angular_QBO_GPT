@@ -27,7 +27,7 @@
   </div>
 
   <div class="wrapper-cust-admin" fxLayout style="height: 95%">
-    <mat-tab-group mat-align-tabs="center" (click)="rerenderfunc()" *ngIf="Document_View_time">
+    <mat-tab-group mat-align-tabs="center" (selectedTabChange)="onTabChanged($event)" *ngIf="Document_View_time">
       <mat-tab label="{{'Dashboard_Pending_File' | translate}}">
         <div class="wrapper-cust-admin cust-width ">
           <div class="table-responsive cust-padding cust-padding-tmp mt-2" *ngIf="showTable">
