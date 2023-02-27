@@ -85,7 +85,10 @@ export class ReportsComponent implements OnInit {
     end_date: new FormControl()
   });
   showInvoiceTable = true;
-  constructor(private modeService: ModeDetectService,
+  startDate: number = 0;
+  endDate: number = 0;
+
+  constructor (private modeService: ModeDetectService,
     private router: Router,
     private http: HttpClient,
     public httpCall: HttpCall,
@@ -269,11 +272,13 @@ export class ReportsComponent implements OnInit {
 
   getAllInvoices() {
     let that = this;
-    this.httpCall.httpGetCall(httproutes.INVOICE_GET_LIST).subscribe(function (params) {
+    let requestObject = {
+      start_date: this.startDate,
+      end_date: this.endDate,
+    };
+    this.httpCall.httpPostCall(httproutes.INVOICE_GET_INVOICE_FOR_REPORT, requestObject).subscribe(function (params) {
       if (params.status) {
         that.allInvoices = params.data;
-
-        console.log("invoiceList", that.allInvoices);
       }
       that.uiSpinner.spin$.next(false);
       that.showInvoiceTable = false;
@@ -283,7 +288,9 @@ export class ReportsComponent implements OnInit {
     });
   }
 
-
+  dateRangeChange(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
+    this.startDate = Math.round(new Date(dateRangeStart.value).getTime() / 1000);
+    this.endDate = Math.round(new Date(dateRangeEnd.value).getTime() / 1000) + 86400;
+    this.getAllInvoices();
+  }
 }
-
-

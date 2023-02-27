@@ -265,6 +265,7 @@ router.post('/webapi/v1/portal/saveinvoice', common.checkTokenExistOrNot, invoic
 router.get('/webapi/v1/portal/getinvoice', common.checkTokenExistOrNot, invoiceController.getInvoice);
 router.post('/webapi/v1/portal/getinvoicelist', common.checkTokenExistOrNot, invoiceController.getInvoiceList);
 router.post('/webapi/v1/portal/getoneinvoice', common.checkTokenExistOrNot, invoiceValidation.getOneInvoice, invoiceController.getOneInvoice);
+router.post('/webapi/v1/portal/getinvoiceforreport', common.checkTokenExistOrNot, invoiceController.getInvoiceForReport);
 router.post('/webapi/v1/portal/deleteinvoice', common.checkTokenExistOrNot, invoiceValidation.deleteInvoice, invoiceController.deleteInvoice);
 router.post('/webapi/v1/portal/updateinvoicestatus', common.checkTokenExistOrNot, invoiceValidation.updateInvoiceStatus, invoiceController.updateInvoiceStatus);
 router.post('/webapi/v1/portal/getinvoicedatatable', common.checkTokenExistOrNot, invoiceController.getInvoiceDatatable);
