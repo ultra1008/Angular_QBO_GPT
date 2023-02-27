@@ -30,6 +30,52 @@ module.exports.getAllProcessInvoice = async function (req, res) {
     }
 };
 
+module.exports.getOneProcessInvoice = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            let invoiceProcessCollection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
+            let get_data = await invoiceProcessCollection.findOne({ _id: ObjectID(requestObject._id) });
+            res.send({ message: 'Listing', data: get_data, status: true });
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+// Update Related document
+module.exports.updateProcessInvoice = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var id = requestObject._id;
+            delete requestObject._id;
+            let invoiceProcessCollection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
+            var update_data = await invoiceProcessCollection.updateOne({ _id: ObjectID(id) }, requestObject);
+            res.send({ message: `Document updated successfully.`, status: true });
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    }
+    else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
 module.exports.saveInvoiceProcess = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);

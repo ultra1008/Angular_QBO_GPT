@@ -324,6 +324,8 @@ router.post('/webapi/v1/portal/saveprofileimagescompany', common.checkTokenExist
 let processInvoiceController = require('./process_invoice/processInvoiceController');
 let processInvoiceValidation = require('./process_invoice/processInvoiceValidation');
 router.get('/webapi/v1/portal/getinvoiceprocess', common.checkTokenExistOrNot, processInvoiceController.getAllProcessInvoice);
+router.post('/webapi/v1/portal/getoneinvoiceprocess', common.checkTokenExistOrNot, processInvoiceValidation.getOneProcessInvoice, processInvoiceController.getOneProcessInvoice);
+router.post('/webapi/v1/portal/updateinvoiceprocess', common.checkTokenExistOrNot, processInvoiceController.updateProcessInvoice);
 router.post('/webapi/v1/portal/saveinvoiceprocess', common.checkTokenExistOrNot, processInvoiceController.saveInvoiceProcess);
 router.get('/webapi/v1/portal/importmanagementinvoice', common.checkTokenExistOrNot, processInvoiceController.importManagementInvoice);
 router.get('/webapi/v1/portal/importmanagementpo', common.checkTokenExistOrNot, processInvoiceController.importManagementPO);
