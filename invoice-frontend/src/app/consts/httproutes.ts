@@ -1158,6 +1158,7 @@ export enum httproutes {
     PORTAL_SAVE_Quote_NOTES = "/webapi/v1/portal/savequotenote",
     PORTAL_DELETE_Quote_NOTES = "/webapi/v1/portal/deletequotenote",
     PORTAL_Quote_ATTCHMENTS = "/webapi/v1/portal/updatequoteattachment",
+    PORTAL_UPDATE_QUOTE = "/webapi/v1/portal/updateinvoicerelateddocument",
 
 
 }

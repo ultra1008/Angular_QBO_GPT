@@ -272,6 +272,7 @@ export class PoDetailFormComponent implements OnInit {
         that.invoiceData = params.data;
         that.pdf_url = that.invoiceData.po_data.pdf_url;
         that.badge = that.invoiceData.po_data.badge;
+
         that.vendor.setValue(params.data.vendor);
         that.loadInvoice = true;
         that.invoiceform = that.formBuilder.group({

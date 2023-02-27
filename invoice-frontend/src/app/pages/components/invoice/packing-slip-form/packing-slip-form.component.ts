@@ -202,9 +202,7 @@ export class PackingSlipFormComponent implements OnInit {
     });
 
   }
-  viewInvoice(_id) {
-    this.router.navigate(['/invoice-detail'], { queryParams: { _id: _id } });
-  }
+
   async getAllVendorList() {
     let data = await this.httpCall.httpGetCall(httproutes.PORTAL_COMPANY_VENDOR_GET_BY_ID).toPromise();
     if (data.status) {
@@ -218,7 +216,9 @@ export class PackingSlipFormComponent implements OnInit {
   displayOption(option: any): string {
     return option ? option.vendor_name : option;
   }
-
+  viewInvoice(_id) {
+    this.router.navigate(['/invoice-detail'], { queryParams: { _id: _id } });
+  }
 
 
   back() {
@@ -279,6 +279,7 @@ export class PackingSlipFormComponent implements OnInit {
         that.badge = that.invoiceData.packing_slip_data.badge;
         that.vendor.setValue(params.data.vendor);
         that.loadInvoice = true;
+
         that.invoiceform = that.formBuilder.group({
 
           document_type: [params.data.packing_slip_data.document_type],
