@@ -1,33 +1,23 @@
 <div class="wrapper-cust-admin" fxLayout style="height: 95%">
-
     <div class="d-flex justify-content-between">
-
         <h1 class="screen-title">
             {{ "Sidebar-Report" | translate | titlecase }}
         </h1>
         <div class="row mr-2 action-button">
-            <!-- <button mat-raised-button color="primary" class="sign-button ml-2"><img src="{{add_my_self_icon}}" alt=""
-                    height="20px">
-                Import Data
-            </button> -->
-
             <mat-form-field appearance="outline" class="cust-report-full-width-fields">
                 <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
                     <input matStartDate formControlName="start_date"
-                        placeholder="{{'Company-Material-Report-StartDate' | translate}}" disabled>
+                        placeholder="{{'Company-Material-Report-StartDate' | translate}}" disabled #dateRangeStart>
                     <input matEndDate formControlName="end_date"
-                        placeholder="{{'Company-Material-Report-EndDate' | translate}}" disabled>
+                        placeholder="{{'Company-Material-Report-EndDate' | translate}}" disabled #dateRangeEnd
+                        (dateChange)="dateRangeChange(dateRangeStart, dateRangeEnd)">
                 </mat-date-range-input>
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-date-range-picker #picker disabled="false"></mat-date-range-picker>
             </mat-form-field>
-
-
-
         </div>
     </div>
     <div class="wrapper-cust-admin cust-width" *ngIf="showTable">
-        <!-- <table datatable [dtOptions]="dtOptions" class="row-border hover"></table> -->
         <div class=" cust-padding-tmp">
             <div class="margin-cust-top table-responsive cust-padding-tmp">
                 <div>
@@ -39,10 +29,7 @@
                                 <th>{{"Vendor_Name" | translate}}</th>
                                 <th>{{"packing_slip_no" | translate}}</th>
                                 <th>{{"Receiving_Slip" | translate}}</th>
-                                <!-- <th>{{"Receiving_Attachment" | translate}}</th> -->
-
                                 <th>{{"Employee-form-Status" | translate}}</th>
-                                <!-- <th width="1%" data-orderable="false">{{"All-Action" | translate }}</th> -->
                             </tr>
                         </thead>
                         <tbody>
@@ -52,42 +39,10 @@
                                 <td>{{ invoice.vendor.vendor_name }}</td>
                                 <td>{{ invoice.packing_slip }}</td>
                                 <td>{{ invoice.receiving_slip }}</td>
-
-
                                 <td
                                     [ngClass]="invoice.status == 'Pending'? 'pendingcss' : 'Approvedcss' && invoice.status == 'Approved'? 'Approvedcss' : 'Rejectcss'&& invoice.status == 'Rejected'? 'Rejectcss' : 'Rejectcss'">
-                                    {{ invoice.status }}</td>
-                                <!-- <td width="1%">
-                                        <div>
-                                                                           
-                                            <div class="dropdown">
-                                                <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust"
-                                                    aria-hidden="true"></i>
-                                                <div class="dropdown-content-cust">
-                                                    <a (click)="viewInvoice(invoice);"><img src="{{viewIcon}}" alt=""
-                                                            height="20px">
-                                                        {{'All-View' |
-                                                        translate}}</a>
-                                                    <a (click)="editInvoice(invoice)"><img src="{{editIcon}}" alt=""
-                                                            height="20px">
-                                                        {{'All-Edit' | translate}}</a>
-                                                    <button (click)="updateInvoice({status: 'Approved',_id:invoice._id})"
-                                                        *ngIf="invoice.status != 'Approved'" class="button_shiftEditClass"
-                                                        mat-menu-item>
-                                                        <span><img src="{{approveIcon}}" alt="" height="15px">
-                                                            {{'PO-View-Approve' |
-                                                            translate}}</span>
-                                                    </button>
-                                                    <button (click)="updateInvoice({status: 'Rejected',_id:invoice._id})"
-                                                        *ngIf="invoice.status != 'Rejected'" class="button_shiftDeleteClass"
-                                                        mat-menu-item>
-                                                        <span><img src="{{denyIcon}}" alt="" height="15px">
-                                                            {{'reject_all' | translate}}</span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td> -->
+                                    {{ invoice.status }}
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -95,3 +50,4 @@
             </div>
         </div>
     </div>
+</div>

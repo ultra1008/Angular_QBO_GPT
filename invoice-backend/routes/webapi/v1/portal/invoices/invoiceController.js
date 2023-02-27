@@ -483,6 +483,49 @@ module.exports.getOneInvoice = async function (req, res) {
     }
 };
 
+//get invoice
+module.exports.getInvoiceForReport = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+            let date_query = {};
+            if (requestObject.start_date != 0 && requestObject.end_date != 0) {
+                date_query = { created_at: { $gte: requestObject.start_date, $lt: requestObject.end_date } };
+            }
+            var get_data = await invoicesConnection.aggregate([
+                { $match: { is_delete: 0 } },
+                { $match: date_query },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_VENDOR,
+                        localField: "vendor",
+                        foreignField: "_id",
+                        as: "vendor"
+                    }
+                },
+                { $unwind: "$vendor" },
+            ]);
+            if (get_data) {
+                res.send({ status: true, message: "Invoice data", data: get_data, });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    }
+    else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
 // delete invoice
 module.exports.deleteInvoice = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
