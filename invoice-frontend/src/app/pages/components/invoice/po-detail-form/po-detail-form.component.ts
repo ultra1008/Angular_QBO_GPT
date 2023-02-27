@@ -284,7 +284,7 @@ export class PoDetailFormComponent implements OnInit {
         that.invoiceform = that.formBuilder.group({
           document_id: [that.invoiceData.document_id],
           document_type: [that.invoiceData.document_type],
-          vendor: [that.invoiceData._id],
+          vendor: [that.invoiceData.vendor],
           customer_id: [that.invoiceData.customer_id],
           due_date: [that.invoiceData.due_date],
           p_o: [that.invoiceData.p_o],
