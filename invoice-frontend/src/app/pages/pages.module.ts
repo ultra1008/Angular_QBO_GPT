@@ -94,7 +94,7 @@ import { PoDetailFormComponent } from './components/invoice/po-detail-form/po-de
 import { FormCoreComponent } from './form-core/form-core.component';
 import { DashboardInvoiceListComponent } from './components/dashboard/dashboard-invoice-list/dashboard-invoice-list.component';
 import { DashboardFilesListComponent } from './components/dashboard/dashboard-files-list/dashboard-files-list.component';
-import { AddOtherFiles, InvoiceOtherDocumentComponent, OrphanFiles } from './components/invoice/invoice-other-document/invoice-other-document.component';
+import { AddOtherFiles, InvoiceOtherDocumentComponent, OrphanFiles, RequestFilesComponent } from './components/invoice/invoice-other-document/invoice-other-document.component';
 import { DocumentViewComponent } from './components/setting/document-view/document-view.component';
 import { InvoiceListFilterPipe, InvoiceListFilterStatus } from './components/invoice/invoice-list-filter.pipe';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -186,7 +186,8 @@ import { ViewDocumentsComponent } from './components/invoice/view-documents/view
     InvoiceListFilterPipe,
     InvoiceListFilterStatus,
     InvoiceHistoryComponent,
-    ViewDocumentsComponent
+    ViewDocumentsComponent,
+    RequestFilesComponent
   ],
   imports: [
     PortalModule,
