@@ -19,6 +19,9 @@ import { ModeDetectService } from '../../map/mode-detect.service';
 
 import * as _ from 'lodash';
 import Swal from 'sweetalert2';
+import { Email } from '../../portal-auth/models';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { VendorReportComponent } from '../../vendors/vendors.component';
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
     confirmButton: 'btn btn-success s2-confirm margin-right-cust',
@@ -158,6 +161,19 @@ export class InvoiceOtherDocumentComponent implements OnInit {
   }
   temp_MMDDYYY_format(epoch) {
     return MMDDYYYY_formet(epoch);
+  }
+
+  requestFilesDialog() {
+    const dialogRef = this.dialog.open(RequestFilesComponent, {
+      height: '500px',
+      width: '800px',
+
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
+    });
   }
   saveNotes() {
     let document_Url;
@@ -1291,4 +1307,185 @@ export class OrphanFiles implements OnInit {
 
   //   }
   // }
+}
+
+
+@Component({
+  selector: 'request-files',
+  templateUrl: './request-files.html',
+  styleUrls: ['./invoice-other-document.component.scss']
+})
+export class RequestFilesComponent implements OnInit {
+
+  public form: FormGroup;
+  selectable = true;
+  removable = true;
+  addOnBlur = true;
+  emailsList: any[] = [];
+  vendorInfo: FormGroup;
+  Report_File_Message: string = "";
+  Report_File_Enter_Email: string = "";
+  is_oneOnly: boolean = true;
+  exitIcon: string;
+  yesButton: string = "";
+  noButton: string = "";
+  mode: any;
+  subscription: Subscription;
+  copyDataFromProject: string = "";
+  termList: any = [];
+  saveIcon = icon.SAVE_WHITE;
+  readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  add_my_self_icon = icon.ADD_MY_SELF_WHITE;
+
+  /*Constructor*/
+  constructor(
+    private formBuilder: FormBuilder,
+    public httpCall: HttpCall,
+    private modeService: ModeDetectService,
+    public dialogRef: MatDialogRef<RequestFilesComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public sb: Snackbarservice,
+    public uiSpinner: UiSpinnerService,
+    public translate: TranslateService
+  ) {
+    console.log("data2", data);
+
+    this.Report_File_Message = this.translate.instant("Report_File_Message");
+    this.Report_File_Enter_Email = this.translate.instant(
+      "Report_File_Enter_Email"
+    );
+    this.vendorInfo = this.formBuilder.group({
+      All_Terms: [true],
+      terms_ids: [this.termList.map((el) => el._id)],
+    });
+
+    var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
+    this.mode = modeLocal === "on" ? "on" : "off";
+    if (this.mode == "off") {
+      this.exitIcon = icon.CANCLE;
+    } else {
+      this.exitIcon = icon.CANCLE_WHITE;
+    }
+
+    this.subscription = this.modeService.onModeDetect().subscribe((mode) => {
+      if (mode) {
+        this.mode = "off";
+        this.exitIcon = icon.CANCLE;
+      } else {
+        this.mode = "on";
+        this.exitIcon = icon.CANCLE_WHITE;
+      }
+    });
+
+    this.translate.stream([""]).subscribe((textarray) => {
+      this.copyDataFromProject = this.translate.instant(
+        "Copy_Data_From_Project"
+      );
+      this.yesButton = this.translate.instant("Compnay_Equipment_Delete_Yes");
+      this.noButton = this.translate.instant("Compnay_Equipment_Delete_No");
+    });
+  }
+
+  /*
+ngOnInit
+*/
+  ngOnInit(): void {
+    let that = this;
+    this.vendorInfo.get("terms_ids")
+      .valueChanges.subscribe(function (params: any) {
+        if (params.length == that.termList.length) {
+          that.vendorInfo.get("All_Terms").setValue(true);
+        } else {
+          that.vendorInfo.get("All_Terms").setValue(false);
+        }
+      });
+  }
+
+  isValidMailFormat(value): any {
+    var EMAIL_REGEXP =
+      /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
+    if (value != "" && EMAIL_REGEXP.test(value)) {
+      return { "Please provide a valid email": true };
+    }
+    return null;
+  }
+
+  addInternalEmail(event: MatChipInputEvent): void {
+    const value = (event.value || "").trim();
+    // Add email
+    if (value) {
+      var validEmail = this.isValidMailFormat(value);
+      if (validEmail) {
+        this.emailsList.push(value);
+        // Clear the input value
+        event.chipInput!.clear();
+      } else {
+        // here error for valid email
+      }
+    }
+  }
+
+  internalEmailremove(email: Email): void {
+    //----
+    let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
+    //----
+    const index = this.emailsList.indexOf(email);
+    if (index >= 0) {
+      this.emailsList.splice(index, 1);
+      //----
+      if (email == user_data.UserData.useremail) {
+        this.is_oneOnly = true;
+      }
+      //----
+    }
+  }
+
+  onChangeValueAll_Terms(params) {
+    if (params.checked) {
+      this.vendorInfo
+        .get("terms_ids")
+        .setValue(this.termList.map((el) => el._id));
+    } else {
+      this.vendorInfo.get("terms_ids").setValue([]);
+    }
+  }
+
+
+  /*
+   *
+   * save button action
+   */
+  saveData() {
+    if (this.emailsList.length != 0) {
+      this.uiSpinner.spin$.next(true);
+      let requestObject = this.vendorInfo.value;
+      var company_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
+      requestObject.email_list = this.emailsList;
+      requestObject.logo_url = company_data.companydata.companylogo;
+      this.httpCall
+        .httpPostCall(
+          httproutes.INVOICE_GET_VENDOR_REPORT,
+          requestObject
+        )
+        .subscribe(function (params: any) { });
+      setTimeout(() => {
+        this.uiSpinner.spin$.next(false);
+        this.sb.openSnackBar(this.Report_File_Message, "success");
+        this.dialogRef.close();
+      }, 3000);
+    } else {
+      this.sb.openSnackBar(this.Report_File_Enter_Email, "error");
+    }
+  }
+
+  /*
+  Add my self button action
+  */
+  ADD_MY_SELF() {
+    if (this.is_oneOnly) {
+      let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
+      this.emailsList.push(user_data.UserData.useremail);
+      this.is_oneOnly = false;
+    }
+  }
 }

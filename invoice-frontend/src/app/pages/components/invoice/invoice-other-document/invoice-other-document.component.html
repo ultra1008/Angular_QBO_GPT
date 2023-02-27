@@ -32,7 +32,7 @@
                 </div>
                 <div class="empty-document text-center" *ngIf="!has_document">
                     <button mat-raised-button color="primary" style="margin-right: 10px;width: 180px; "
-                        (click)=" openAddDialog()" class="sign-button ml-1 mb-2">
+                        (click)="openAddDialog()" class="sign-button ml-1 mb-2">
                         {{'Add_files' | translate }}
                     </button>
                     <p>OR</p>
@@ -41,8 +41,8 @@
                         {{'Orphan_Vendor_files' | translate }}
                     </button>
                     <p>OR</p>
-                    <button mat-raised-button color="primary" style="margin-right: 10px;width: 180px; "
-                        class="sign-button ml-1">
+                    <button mat-raised-button color="primary" (click)="requestFilesDialog()"
+                        style="margin-right: 10px;width: 180px; " class="sign-button ml-1">
                         {{'Request_For_Files' | translate }}
                     </button>
                 </div>
