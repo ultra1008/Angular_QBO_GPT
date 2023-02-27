@@ -48,6 +48,29 @@ module.exports.saveInvoiceProcess = async function (req, res) {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
                 }
             } else {
+                /* let apiObj = [
+                     {
+                        document_id: '63fc31c58860b01ecc2d81fb',
+                        document_url: 'https://s3.wasabisys.com/r-988514/rovuk_invoice/invoice/27_Feb_2023_09_59_56_148_AM.pdf',
+                    },//Quote  
+                    {
+                        document_id: '63fc32348860b01ecc2d820b',
+                        document_url: 'https://s3.wasabisys.com/r-988514/rovuk_invoice/invoice/27_Feb_2023_10_01_47_892_AM.pdf',
+                    },//PO  
+                     {
+                        document_id: '63fc32a38860b01ecc2d8215',
+                        document_url: 'https://s3.wasabisys.com/r-988514/rovuk_invoice/invoice/27_Feb_2023_10_03_38_793_AM.pdf',
+                    },//Invoice  
+                ];
+                let data = await common.sendInvoiceForProcess(apiObj);
+                let json = JSON.parse(data.body);
+                console.log("json: ", json);
+                for (const key in json) {
+                    if (json[key] == 'ALREADY_EXISTS') {
+                        await invoiceProcessCollection.updateOne({ _id: ObjectID(key) }, { status: 'Already Exists' });
+                    }
+                }
+                res.send({ message: 'Invoice for process added successfully.', data: apiObj, status: true }); */
                 let saveObj = [];
                 for (let i = 0; i < requestObject.pdf_urls.length; i++) {
                     saveObj.push({
@@ -980,14 +1003,29 @@ module.exports.importProcessData = async function (req, res) {
                                     // Check document has related invoice or not
                                     let related_invoice = await getRelatedInvoiceOfDocument(relatedDocuments, connection_db_api);
                                     if (related_invoice.status) {
+                                        // PO has related Quote but not assigned to any invoice
+                                        let check_quote = await getProcessedQuoteFromPO(relatedDocuments, connection_db_api);
+                                        if (check_quote.status) {
+                                            // quote Object
+                                            let quote_obj = check_quote.data.data;
+                                            // Set process data and related document process data to complete
+                                            let updateQuoteObj = {
+                                                invoice_id: related_invoice.data._id,
+                                                status: 'Complete',
+                                            };
+                                            // Update quote to invoice
+                                            let update_related_doc = await invoiceCollection.updateOne({ _id: ObjectID(updateQuoteObj.invoice_id) }, { has_quote: true, quote_data: quote_obj });
+                                            // Update quote object
+                                            await invoiceProcessCollection.updateOne({ _id: ObjectID(check_quote.data._id) }, updateQuoteObj);
+                                        }
                                         updatePOObj.invoice_id = related_invoice.data._id;
                                         updatePOObj.status = 'Complete';
 
-                                        // Update packing slip to invoice
+                                        // Update PO to invoice
                                         let update_related_doc = await invoiceCollection.updateOne({ _id: ObjectID(updatePOObj.invoice_id) }, { has_po: true, po_data: po_obj });
                                     }
                                     updatePOObj.data = po_obj;
-                                    // Update packing slip object
+                                    // Update PO object
                                     await invoiceProcessCollection.updateOne({ _id: ObjectID(get_related_doc._id) }, updatePOObj);
                                 }
                             } else if (documentType == 'QUOTE') {
@@ -998,7 +1036,7 @@ module.exports.importProcessData = async function (req, res) {
                                 let get_related_doc = await invoiceProcessCollection.findOne({ _id: ObjectID(get_data.data[key][j].document_id) });
                                 // If document is there then process data
                                 if (get_related_doc) {
-                                    // Make packing slip Object
+                                    // Make quote Object
                                     let quote_obj = {
                                         pdf_url: get_data.data[key][j].document_url,
                                         document_id: get_data.data[key][j].document_id,
@@ -1249,6 +1287,50 @@ function getRelatedInvoiceOfDocument(documents, connection_db_api) {
         } else {
             resolve({ status: false });
         } */
+    });
+};
+
+function getProcessedQuoteFromPO(documents, connection_db_api) {
+    return new Promise(async function (resolve, reject) {
+        let invoiceProcessCollection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
+        if (documents.length == 0) {
+            resolve({ status: false });
+        } else {
+            let hasQuoteData = false;
+            let quoteData;
+            for (let i = 0; i < documents.length; i++) {
+                if (documents[i].document_type == 'QUOTE') {
+                    let one_process = await invoiceProcessCollection.findOne({ _id: ObjectID(documents[i].document_id), status: 'Process' });
+                    if (one_process) {
+                        hasQuoteData = true;
+                        quoteData = one_process;
+                        if (i == documents.length - 1) {
+                            if (hasQuoteData) {
+                                resolve({ status: true, data: quoteData });
+                            } else {
+                                resolve({ status: false });
+                            }
+                        }
+                    } else {
+                        if (i == documents.length - 1) {
+                            if (hasQuoteData) {
+                                resolve({ status: true, data: quoteData });
+                            } else {
+                                resolve({ status: false });
+                            }
+                        }
+                    }
+                } else {
+                    if (i == documents.length - 1) {
+                        if (hasQuoteData) {
+                            resolve({ status: true, data: quoteData });
+                        } else {
+                            resolve({ status: false });
+                        }
+                    }
+                }
+            }
+        }
     });
 };
 
