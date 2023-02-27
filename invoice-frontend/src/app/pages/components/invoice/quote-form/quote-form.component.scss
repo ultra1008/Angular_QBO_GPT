@@ -42,9 +42,9 @@
     cursor: not-allowed !important;
 }
 
-.example-container .mat-form-field+.mat-form-field {
-    margin-left: 15px;
-}
+// .example-container .mat-form-field+.mat-form-field {
+//     margin-left: 15px;
+// }
 
 .main-one-input-field {
     width: 100%;
@@ -157,7 +157,7 @@
 }
 
 .pdf-viewer {
-    height: 1000px;
+    height: 1035px;
     overflow-y: scroll;
 }
 
@@ -182,8 +182,9 @@ form {
 }
 
 .paddings {
-    padding-left: 4rem !important;
+    // padding-left: 1rem !important;
     text-align: right !important;
+    margin-right: 25px;
 }
 
 b {
@@ -209,4 +210,45 @@ b {
 .Denied {
     background-color: red;
     color: rgb(255, 255, 255);
+}
+
+.rix {
+    width: 450px;
+}
+
+// collapsed problem
+// .flux-content-section[navbar-type="collapsed"][effect-type="shrink"] {
+//     margin-left: unset !important;
+// }
+
+::ng-deep .flux-content-section[navbar-type="expanded"][effect-type="push"] {
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+}
+
+::ng-deep .s2-confirm {
+    width: 130px !important;
+}
+
+::ng-deep .btn-gray {
+    background-color: grey !important;
+    color: white !important;
+}
+
+.Approvedcss {
+
+    color: green;
+}
+
+.Rejectcss {
+    color: red;
+}
+
+.pendingcss {
+    color: orange;
+}
+
+.mat-option {
+    font-size: 11px !important;
+    line-height: unset !important;
 }

@@ -422,6 +422,7 @@ export class InvoiceFormComponent implements OnInit {
         that.invoiceData = params.data;
         that.pdf_url = that.invoiceData.pdf_url;
         that.badge = that.invoiceData.badge;
+
         that.vendor.setValue(params.data.vendor);
         that.invoiceform = that.formBuilder.group({
           document_type: [params.data.document_type],

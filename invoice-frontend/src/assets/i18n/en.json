@@ -2502,5 +2502,9 @@
     "Quote_Froms": "Quote Froms",
     "ship_to_address": "Ship To Address:",
     "received_by": "Received By",
-    "View_Documents": "View Documents"
+    "View_Documents": "View Documents",
+    "Quote_number": "Quote Number",
+    "Shipping_Method": "Shipping Method",
+    "Quote_Total": "Quote Total",
+    "Receiver_Phone": "Receiver Phone"
 }
