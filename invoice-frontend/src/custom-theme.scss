@@ -2020,3 +2020,10 @@ $angular-dark-theme: mat-dark-theme((color: (primary: $angular-primary,
 .dialog-head-right {
   text-align: right;
 }
+
+.dataTables_processing img,
+.loader img {
+  width: 100px;
+  height: 110px;
+  z-index: 9999;
+}

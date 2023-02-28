@@ -367,7 +367,7 @@ module.exports.login = async function (req, res) {
                     }
                 });
             } else {
-                res.send({ message: translator.getStr('SponsorNotExist'), error: err, status: false });
+                res.send({ message: translator.getStr('CompanyNotFound'), error: err, status: false });
             }
         }
     });
