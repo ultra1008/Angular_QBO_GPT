@@ -218,6 +218,7 @@ export enum httproutes {
 
     //setting module -portal
     PORTAL_SETTING_USEAGE = "/webapi/v1/portal/compnayusage",
+    PORTAL_SETTING_CUSTOMER_STATES = "/webapi/v1/portal/getcustomerstatesdatatable",
     PORTAL_SETTING_SMTP = "/webapi/v1/portal/compnaysmtp",
     PORTAL_SETTING_SMTP_UPDATE = "/webapi/v1/portal/compnayupdatesmtp",
     PORTAL_SETTING_GET = "/webapi/v1/portal/getallsetting",

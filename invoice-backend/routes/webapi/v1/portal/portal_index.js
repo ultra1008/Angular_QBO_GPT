@@ -86,6 +86,7 @@ router.get('/webapi/v1/exportdocumenttype', documentTypeController.exportDocumen
 
 var company_othersettingController = require("./company_othersetting/company_othersettingController");
 var company_othersettingValidation = require("./company_othersetting/company_othersettingValidation");
+var otherSettingCron = require("./company_othersetting/otherSettingCron");
 router.get('/webapi/v1/compnayinformation', common.checkTokenExistOrNot, company_othersettingController.compnayinformation);
 router.get('/webapi/v1/portal/compnaysmtp', common.checkTokenExistOrNot, company_othersettingController.compnaysmtp);
 router.post('/webapi/v1/editcompany', common.checkTokenExistOrNot, company_othersettingController.editCompany);
@@ -93,6 +94,8 @@ router.post('/webapi/v1/compnayupdatesmtp', common.checkTokenExistOrNot, company
 router.post('/webapi/v1/compnayverifysmtp', common.checkTokenExistOrNot, company_othersettingValidation.smtpUpdateValidation, company_othersettingController.compnayverifysmtp);
 router.post('/webapi/v1/sendiframecode', common.checkTokenExistOrNot, company_othersettingValidation.sendIframeCode, company_othersettingController.sendIframeCode);
 router.get('/webapi/v1/portal/compnayusage', common.checkTokenExistOrNot, company_othersettingController.compnayUsage);
+router.post('/webapi/v1/portal/getcustomerstatesdatatable', common.checkTokenExistOrNot, company_othersettingController.getCustomerStatesDatatable);
+router.get('/webapi/v1/portal/customerMonthlyState', common.checkTokenExistOrNot, otherSettingCron.customerMonthlyState);
 
 var employeeController = require('./employee/employeeController');
 var employeeValidation = require('./employee/employeeValidation');

@@ -1963,3 +1963,30 @@ module.exports.getProcessedDocuments = function (requestObject) {
         });
     });
 };
+
+// Call API of Get Invoice for processing
+module.exports.getCustomerStates = function (companycode) {
+    var request = require('request');
+    const options = {
+        'method': 'GET',
+        'url': `http://db-invoice.rovuk.us:8000/customer_monthly_stats?customer_id=${companycode}`,
+        'headers': {
+            'Content-Type': 'application/json',
+            'X-API-KEY': '4194168a-4a32-45d9-9d7c-0a730f887e7f'
+        },
+        rejectUnauthorized: false,
+    };
+    return new Promise(function (resolve, reject) {
+        request(options, function (err, resp, body) {
+            if (err) {
+                reject(err);
+            } else {
+                if (resp.statusCode == 200) {
+                    resolve({ status: true, data: JSON.parse(body) });
+                } else {
+                    resolve({ status: false });
+                }
+            }
+        });
+    });
+};

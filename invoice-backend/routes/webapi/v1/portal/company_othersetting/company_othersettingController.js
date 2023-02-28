@@ -16,6 +16,7 @@ var rolesandpermissionsSchema = require('./../../../../../model/rolesandpermissi
 var invoiceRoleSchema = require('./../../../../../model/invoice_roles');
 var bucketOpration = require('./../../../../../controller/common/s3-wasabi');
 const nodemailer = require('nodemailer');
+var customerStateSchema = require('./../../../../../model/customer_monthly_states');
 
 module.exports.compnayinformation = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -60,7 +61,6 @@ module.exports.compnayupdateinformation = async function (req, res) {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
-
 
 module.exports.editCompany = function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -200,7 +200,6 @@ module.exports.compnayverifysmtp = async function (req, res) {
     }
 };
 
-
 module.exports.compnayupdatesmtp = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
@@ -309,5 +308,81 @@ module.exports.compnayUsage = async function (req, res) {
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+// Customer Monthly States
+module.exports.getCustomerStatesDatatable = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            let customerStateCollection = connection_db_api.model(collectionConstant.INVOICE_CUSTOMER_STATES, customerStateSchema);
+            var col = [];
+            col.push("month_name");
+            var start = parseInt(requestObject.start) || 0;
+            var perpage = parseInt(requestObject.length);
+            var columnData = (requestObject.order != undefined && requestObject.order != '') ? requestObject.order[0].column : '';
+            var columntype = (requestObject.order != undefined && requestObject.order != '') ? requestObject.order[0].dir : '';
+            var sort = {};
+            /*  if (requestObject.draw == 1) {
+                 sort = { "month_name": 1 };
+             } else { */
+            sort[col[columnData]] = (columntype == 'asc') ? 1 : -1;
+            // }
+            let query = {};
+            if (requestObject.search.value) {
+                query = {
+                    $or: [
+                        { "month_name": new RegExp(requestObject.search.value, 'i') },
+                    ]
+                };
+            }
+            var match_query = { is_delete: 0 };
+            var aggregateQuery = [
+                { $match: match_query },
+                // { $match: query },
+                {
+                    $project: {
+                        year: 1,
+                        month: 1,
+                        month_name: { $concat: [{ $toString: "$month" }, " ", { $toString: "$year" }] },
+                        po_expense: 1,
+                        po_forms: 1,
+                        packing_slip_expense: 1,
+                        packing_slip_forms: 1,
+                        receiving_slip_expense: 1,
+                        receiving_slip_forms: 1,
+                        quote_expense: 1,
+                        quote_forms: 1,
+                        invoice_expense: 1,
+                        invoice_forms: 1,
+                        unknown_expense: 1,
+                        unknown_forms: 1,
+                    }
+                },
+                { $sort: sort },
+                { $limit: start + perpage },
+                { $skip: start },
+            ];
+            let count = 0;
+            count = await customerStateCollection.countDocuments(match_query);
+            let get_data = await customerStateCollection.aggregate(aggregateQuery).collation({ locale: "en_US" });
+            var dataResponce = {};
+            dataResponce.data = get_data;
+            dataResponce.draw = requestObject.draw;
+            dataResponce.recordsTotal = count;
+            dataResponce.recordsFiltered = (requestObject.search.value) ? get_data.length : count;
+            res.json(dataResponce);
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false, error: e });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };

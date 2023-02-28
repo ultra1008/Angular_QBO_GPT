@@ -4,7 +4,6 @@
             <div class="col-xl-12">
                 <form [formGroup]="usageinfo">
                     <div class="container">
-
                         <div class="row">
                             <div class="col">
                                 <mat-form-field appearance="outline" class="main-one-input-field">
@@ -15,8 +14,6 @@
                                 </mat-form-field>
                             </div>
                         </div>
-
-
                         <div class="row">
                             <div class="col">
                                 <mat-form-field appearance="outline" class="main-one-input-field">
@@ -26,99 +23,10 @@
                                 </mat-form-field>
                             </div>
                         </div>
-                        <!-- INVOICE# -->
-                        <div class="row">
-                            <div class="col-6">
-                                <mat-form-field appearance="outline" class="main-one-input-field">
-                                    <mat-label>{{'Invoice_Expense' | translate}}</mat-label>
-                                    <input matInput formControlName="amount_of_supervisor"
-                                        class="input-capitalized-textfield"
-                                        placeholder="{{'Invoice_Expense' | translate}}" readonly>
-                                </mat-form-field>
-                            </div>
-                            <div class="col-6">
-                                <mat-form-field appearance="outline" class="main-one-input-field">
-                                    <mat-label>{{'Invoice_Froms' | translate}}</mat-label>
-                                    <input matInput formControlName="amount_of_supervisor"
-                                        class="input-capitalized-textfield"
-                                        placeholder="{{'Invoice_Froms' | translate}}" readonly>
-                                </mat-form-field>
-                            </div>
-                        </div>
-                        <!-- P.O -->
-                        <div class="row">
-                            <div class="col-6">
-                                <mat-form-field appearance="outline" class="main-one-input-field">
-                                    <mat-label>{{'Purchase_order_Expense' | translate}}</mat-label>
-                                    <input matInput formControlName="amount_of_supervisor"
-                                        class="input-capitalized-textfield"
-                                        placeholder="{{'Purchase_order_Expense' | translate}}" readonly>
-                                </mat-form-field>
-                            </div>
-                            <div class="col-6">
-                                <mat-form-field appearance="outline" class="main-one-input-field">
-                                    <mat-label>{{'Purchase_order_Froms' | translate}}</mat-label>
-                                    <input matInput formControlName="amount_of_supervisor"
-                                        class="input-capitalized-textfield"
-                                        placeholder="{{'Purchase_order_Froms' | translate}}" readonly>
-                                </mat-form-field>
-                            </div>
-                        </div>
-                        <!-- Packing Slip -->
-                        <div class="row">
-                            <div class="col-6">
-                                <mat-form-field appearance="outline" class="main-one-input-field">
-                                    <mat-label>{{'Packing_Slip_Expense' | translate}}</mat-label>
-                                    <input matInput formControlName="amount_of_supervisor"
-                                        class="input-capitalized-textfield"
-                                        placeholder="{{'Packing_Slip_Expense' | translate}}" readonly>
-                                </mat-form-field>
-                            </div>
-                            <div class="col-6">
-                                <mat-form-field appearance="outline" class="main-one-input-field">
-                                    <mat-label>{{'Packing_Slip_Froms' | translate}}</mat-label>
-                                    <input matInput formControlName="amount_of_supervisor"
-                                        class="input-capitalized-textfield"
-                                        placeholder="{{'Packing_Slip_Froms' | translate}}" readonly>
-                                </mat-form-field>
-                            </div>
-                        </div>
-                        <!-- Receiving Slip -->
-                        <div class="row">
-                            <div class="col-6">
-                                <mat-form-field appearance="outline" class="main-one-input-field">
-                                    <mat-label>{{'Receiving_slip_Expense' | translate}}</mat-label>
-                                    <input matInput formControlName="amount_of_supervisor"
-                                        class="input-capitalized-textfield"
-                                        placeholder="{{'Receiving_slip_Expense' | translate}}" readonly>
-                                </mat-form-field>
-                            </div>
-                            <div class="col-6">
-                                <mat-form-field appearance="outline" class="main-one-input-field">
-                                    <mat-label>{{'Receiving_slip_Froms' | translate}}</mat-label>
-                                    <input matInput formControlName="amount_of_supervisor"
-                                        class="input-capitalized-textfield"
-                                        placeholder="{{'Receiving_slip_Froms' | translate}}" readonly>
-                                </mat-form-field>
-                            </div>
-                        </div>
-                        <!-- Quote -->
-                        <div class="row">
-                            <div class="col-6">
-                                <mat-form-field appearance="outline" class="main-one-input-field">
-                                    <mat-label>{{'Quote_Expense' | translate}}</mat-label>
-                                    <input matInput formControlName="amount_of_supervisor"
-                                        class="input-capitalized-textfield"
-                                        placeholder="{{'Quote_Expense' | translate}}" readonly>
-                                </mat-form-field>
-                            </div>
-                            <div class="col-6">
-                                <mat-form-field appearance="outline" class="main-one-input-field">
-                                    <mat-label>{{'Quote_Froms' | translate}}</mat-label>
-                                    <input matInput formControlName="amount_of_supervisor"
-                                        class="input-capitalized-textfield" placeholder="{{'Quote_Froms' | translate}}"
-                                        readonly>
-                                </mat-form-field>
+                        <div class="cust-width ">
+                            <div class="table-responsive cust-padding cust-padding-tmp mt-5" *ngIf="showTable">
+                                <table datatable [dtOptions]="dtOptions" id="dtOptions_vendor" class="row-border hover">
+                                </table>
                             </div>
                         </div>
                     </div>
