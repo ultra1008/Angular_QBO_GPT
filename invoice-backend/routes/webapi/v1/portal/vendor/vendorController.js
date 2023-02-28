@@ -32,33 +32,33 @@ module.exports.saveVendor = async function (req, res) {
             var id = requestObject._id;
             delete requestObject._id;
             if (id) {
-                requestObject.updated_by = decodedToken.UserData._id;
-                requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+                requestObject.vendor_updated_by = decodedToken.UserData._id;
+                requestObject.vendor_updated_at = Math.round(new Date().getTime() / 1000);
                 let one_vendor = await vendorConnection.findOne({ _id: ObjectID(id) }, { _id: 0, image: 0, attachment: 0, is_delete: 0, created_at: 0, created_by: 0, updated_at: 0, updated_by: 0, __v: 0 });
                 var update_vendor = await vendorConnection.updateOne({ _id: ObjectID(id) }, requestObject);
                 if (update_vendor) {
-                    delete requestObject.created_at;
-                    delete requestObject.created_by;
-                    delete requestObject.updated_at;
-                    delete requestObject.updated_by;
-                    delete requestObject.is_delete;
-                    delete requestObject.image;
-                    delete requestObject.attachment;
+                    delete requestObject.vendor_created_at;
+                    delete requestObject.vendor_created_by;
+                    delete requestObject.vendor_updated_at;
+                    delete requestObject.vendor_updated_by;
+                    delete requestObject.vendor_is_delete;
+                    delete requestObject.vendor_image;
+                    delete requestObject.vendor_attachment;
 
-                    if (requestObject.terms_id) {
-                        requestObject.terms_id = ObjectID(requestObject.terms_id);
+                    if (requestObject.vendor_terms) {
+                        requestObject.vendor_terms = ObjectID(requestObject.vendor_terms);
                     }
 
                     // find difference of object 
                     let updatedData = await common.findUpdatedFieldHistory(requestObject, one_vendor._doc);
                     // Check for object id fields and if it changed then replace id with specific value
-                    let found_term = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'terms_id'; });
+                    let found_term = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'vendor_terms'; });
                     if (found_term != -1) {
                         let one_term = await termConnection.findOne({ _id: ObjectID(updatedData[found_term].value) });
                         updatedData[found_term].value = one_term.name;
                     }
 
-                    let found_status = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'status'; });
+                    let found_status = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'vendor_status'; });
                     if (found_status != -1) {
                         if (updatedData[found_status].value == 1) {
                             updatedData[found_status].value = 'Active';
@@ -91,31 +91,31 @@ module.exports.saveVendor = async function (req, res) {
                 }
             } else {
                 // insert vendor
-                requestObject.created_by = decodedToken.UserData._id;
-                requestObject.created_at = Math.round(new Date().getTime() / 1000);
-                requestObject.updated_by = decodedToken.UserData._id;
-                requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+                requestObject.vendor_created_by = decodedToken.UserData._id;
+                requestObject.vendor_created_at = Math.round(new Date().getTime() / 1000);
+                requestObject.vendor_updated_by = decodedToken.UserData._id;
+                requestObject.vendor_updated_at = Math.round(new Date().getTime() / 1000);
                 var add_vendor = new vendorConnection(requestObject);
                 var save_vendor = await add_vendor.save();
                 if (save_vendor) {
-                    delete requestObject.created_at;
-                    delete requestObject.created_by;
-                    delete requestObject.updated_at;
-                    delete requestObject.updated_by;
+                    delete requestObject.vendor_created_at;
+                    delete requestObject.vendor_created_by;
+                    delete requestObject.vendor_updated_at;
+                    delete requestObject.vendor_updated_by;
                     delete requestObject.is_delete;
-                    delete requestObject.image;
-                    delete requestObject.attachment;
+                    delete requestObject.vendor_image;
+                    delete requestObject.vendor_attachment;
 
                     // find difference of object 
                     let insertedData = await common.setInsertedFieldHistory(requestObject);
                     // Check for object id fields and if it changed then replace id with specific value
-                    let found_term = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'terms_id'; });
+                    let found_term = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'vendor_terms'; });
                     if (found_term != -1) {
                         let one_term = await termConnection.findOne({ _id: ObjectID(insertedData[found_term].value) });
                         insertedData[found_term].value = one_term.name;
                     }
 
-                    let found_status = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'status'; });
+                    let found_status = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'vendor_status'; });
                     if (found_status != -1) {
                         if (insertedData[found_status].value == 1) {
                             insertedData[found_status].value = 'Active';
@@ -171,8 +171,8 @@ module.exports.getVendorStatusCount = async function (req, res) {
                 { $match: { is_delete: 0 } },
                 {
                     $project: {
-                        active: { $cond: [{ $eq: ["$status", 1] }, 1, 0] },
-                        inactive: { $cond: [{ $eq: ["$status", 2] }, 1, 0] },
+                        active: { $cond: [{ $eq: ["$vendor_status", 1] }, 1, 0] },
+                        inactive: { $cond: [{ $eq: ["$vendor_status", 2] }, 1, 0] },
                     }
                 },
                 {
@@ -186,8 +186,6 @@ module.exports.getVendorStatusCount = async function (req, res) {
             if (getdata) {
                 if (getdata.length > 0) {
                     getdata = getdata[0];
-                } else {
-
                 }
                 res.send({ status: true, message: "Vendor count", data: getdata });
             } else {
@@ -267,9 +265,8 @@ module.exports.deleteVendor = async function (req, res) {
             var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
             var id = requestObject._id;
             delete requestObject._id;
-
-            requestObject.updated_by = decodedToken.UserData._id;
-            requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+            requestObject.vendor_updated_by = decodedToken.UserData._id;
+            requestObject.vendor_updated_at = Math.round(new Date().getTime() / 1000);
             var one_vendor = await vendorConnection.findOne({ _id: ObjectID(id) });
             var delete_vendor = await vendorConnection.updateOne({ _id: ObjectID(id) }, requestObject);
             if (delete_vendor) {
@@ -329,7 +326,7 @@ module.exports.getVendorDatatable = async function (req, res) {
             var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
             var col = [];
             var match_query = { is_delete: requestObject.is_delete };
-            col.push("vendor_name", "vendor_id", "customer_id", "phone", "email", "address", "attachment", "status");
+            col.push("vendor_name", "vendor_id", "customer_id", "vendor_phone", "vendor_email", "vendor_address", "vendor_attachment", "vendor_status");
 
             var start = parseInt(requestObject.start) || 0;
             var perpage = parseInt(requestObject.length);
@@ -339,7 +336,7 @@ module.exports.getVendorDatatable = async function (req, res) {
 
             var sort = {};
             if (requestObject.draw == 1) {
-                sort = { "created_at": -1 };
+                sort = { "vendor_created_at": -1 };
             } else {
                 sort[col[columnData]] = (columntype == 'asc') ? 1 : -1;
 
@@ -351,10 +348,10 @@ module.exports.getVendorDatatable = async function (req, res) {
                         { "vendor_name": new RegExp(requestObject.search.value, 'i') },
                         { "vendor_id": new RegExp(requestObject.search.value, 'i') },
                         { "customer_id": new RegExp(requestObject.search.value, 'i') },
-                        { "phone": new RegExp(requestObject.search.value, 'i') },
-                        { "email": new RegExp(requestObject.search.value, 'i') },
-                        { "address": new RegExp(requestObject.search.value, 'i') },
-                        { "status": new RegExp(requestObject.search.value, 'i') },
+                        { "vendor_phone": new RegExp(requestObject.search.value, 'i') },
+                        { "vendor_email": new RegExp(requestObject.search.value, 'i') },
+                        { "vendor_address": new RegExp(requestObject.search.value, 'i') },
+                        { "vendor_status": new RegExp(requestObject.search.value, 'i') },
                     ]
                 };
             }
@@ -363,7 +360,7 @@ module.exports.getVendorDatatable = async function (req, res) {
                 {
                     $lookup: {
                         from: collectionConstant.INVOICE_TERM,
-                        localField: "terms_id",
+                        localField: "vendor_terms",
                         foreignField: "_id",
                         as: "terms"
                     }
@@ -544,7 +541,7 @@ module.exports.getVendorExcelReport = async function (req, res) {
                     data_Query.push(ObjectID(requestObject.terms_ids[i]));
                 }
                 termQuery.push({ "_id": { $in: data_Query } });
-                query.push({ "terms_id": { $in: data_Query } });
+                query.push({ "vendor_terms": { $in: data_Query } });
             }
             query = query.length == 0 ? {} : { $and: query };
 
@@ -554,7 +551,7 @@ module.exports.getVendorExcelReport = async function (req, res) {
                 {
                     $lookup: {
                         from: collectionConstant.INVOICE_TERM,
-                        localField: "terms_id",
+                        localField: "vendor_terms",
                         foreignField: "_id",
                         as: "terms"
                     }
@@ -571,25 +568,25 @@ module.exports.getVendorExcelReport = async function (req, res) {
             let logo_rovuk = await common.urlToBase64(config.INVOICE_LOGO);
             for (let i = 0; i < get_vendor.length; i++) {
                 let vendor = get_vendor[i];
-                xlsx_data.push([vendor.vendor_name, vendor.vendor_id, vendor.customer_id, vendor.phone,
-                vendor.email, vendor.address, vendor.address2, vendor.city, vendor.state, vendor.zipcode,
-                vendor.country, vendor.terms.name, vendor.status, vendor.description]);
+                xlsx_data.push([vendor.vendor_name, vendor.vendor_id, vendor.customer_id, vendor.vendor_phone,
+                vendor.vendor_email, vendor.vendor_address, vendor.vendor_address2, vendor.vendor_city, vendor.vendor_state, vendor.vendor_zipcode,
+                vendor.vendor_country, vendor.terms.name, vendor.vendor_status, vendor.vendor_description]);
             }
             let headers = [
                 translator.getStr('Vendor_History.vendor_name'),
                 translator.getStr('Vendor_History.vendor_id'),
                 translator.getStr('Vendor_History.customer_id'),
-                translator.getStr('Vendor_History.phone'),
-                translator.getStr('Vendor_History.email'),
-                translator.getStr('Vendor_History.address'),
-                translator.getStr('Vendor_History.address2'),
-                translator.getStr('Vendor_History.city'),
-                translator.getStr('Vendor_History.state'),
-                translator.getStr('Vendor_History.zipcode'),
-                translator.getStr('Vendor_History.country'),
-                translator.getStr('Vendor_History.terms_id'),
-                translator.getStr('Vendor_History.status'),
-                translator.getStr('Vendor_History.description'),
+                translator.getStr('Vendor_History.vendor_phone'),
+                translator.getStr('Vendor_History.vendor_email'),
+                translator.getStr('Vendor_History.vendor_address'),
+                translator.getStr('Vendor_History.vendor_address2'),
+                translator.getStr('Vendor_History.vendor_city'),
+                translator.getStr('Vendor_History.vendor_state'),
+                translator.getStr('Vendor_History.vendor_zipcode'),
+                translator.getStr('Vendor_History.vendor_country'),
+                translator.getStr('Vendor_History.vendor_terms'),
+                translator.getStr('Vendor_History.vendor_status'),
+                translator.getStr('Vendor_History.vendor_description'),
             ];
 
             let d = new Date();

@@ -85,7 +85,7 @@ export class VendorFormComponent implements OnInit {
   variablestermList: any = [];
   termList: any = this.variablestermList.slice();
 
-  constructor(private modeService: ModeDetectService,
+  constructor (private modeService: ModeDetectService,
     public dialog: MatDialog,
     private sanitiser: DomSanitizer,
     private location: Location,
@@ -106,9 +106,7 @@ export class VendorFormComponent implements OnInit {
         : tmp_locallanguage;
     this.translate.use(locallanguage);
     this.translate.stream([""]).subscribe((textarray) => {
-      this.Compnay_Vendor_Form_Submitting = this.translate.instant(
-        "Compnay_Vendor_Form_Submitting"
-      );
+      this.Compnay_Vendor_Form_Submitting = this.translate.instant("Compnay_Vendor_Form_Submitting");
     });
     this._id = this.route.snapshot.queryParamMap.get("_id");
     if (this._id != null) {
@@ -118,19 +116,19 @@ export class VendorFormComponent implements OnInit {
 
     this.vendorinfo = this.formBuilder.group({
       vendor_name: ["", Validators.required],
-      phone: ["", Validators.required],
-      email: ["", [Validators.required, Validators.email]],
+      vendor_phone: ["", Validators.required],
+      vendor_email: ["", [Validators.required, Validators.email]],
       gl_account: [""],
-      address: ["", Validators.required],
-      city: ["", Validators.required],
-      address2: [""],
-      state: ["", Validators.required],
-      zipcode: ["", Validators.required],
-      terms_id: ["", Validators.required],
-      status: ["", Validators.required],
-      country: [""],
-      description: [""],
-      attachment: [""],
+      vendor_address: ["", Validators.required],
+      vendor_city: ["", Validators.required],
+      vendor_address2: [""],
+      vendor_state: ["", Validators.required],
+      vendor_zipcode: ["", Validators.required],
+      vendor_terms: ["", Validators.required],
+      vendor_status: ["", Validators.required],
+      vendor_country: [""],
+      vendor_description: [""],
+      vendor_attachment: [""],
       vendor_id: [""],
       customer_id: [""],
       password: [""],
@@ -158,11 +156,8 @@ export class VendorFormComponent implements OnInit {
       }
     });
     let that = this;
-    // this.uiSpinner.spin$.next(true);
     this.translate.stream([""]).subscribe((textarray) => {
-      this.copyDataFromProject = this.translate.instant(
-        "Copy_Data_From_Project"
-      );
+      this.copyDataFromProject = this.translate.instant("Copy_Data_From_Project");
       this.yesButton = this.translate.instant("Compnay_Equipment_Delete_Yes");
       this.noButton = this.translate.instant("Compnay_Equipment_Delete_No");
       this.FILE_NOT_SUPPORTED = this.translate.instant("FILE_NOT_SUPPORTED");
@@ -170,16 +165,12 @@ export class VendorFormComponent implements OnInit {
       this.All_popup_Cancel = this.translate.instant("All_popup_Cancel");
       this.All_Save_Exit = this.translate.instant("All_Save_Exit");
       this.Dont_Save = this.translate.instant("Dont_Save");
-      this.Company_vendor_Form_Submitting = this.translate.instant(
-        "Company_vendor_Form_Submitting"
-      );
+      this.Company_vendor_Form_Submitting = this.translate.instant("Company_vendor_Form_Submitting");
     });
   }
 
   ngAfterViewInit(): void {
-    console.log("after view init");
     mapboxgl!.accessToken = configdata.MAPBOXAPIKEY;
-
     var geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
       mapboxgl: mapboxgl,
@@ -189,44 +180,32 @@ export class VendorFormComponent implements OnInit {
 
     let that = this;
     geocoder.on("result", function (params) {
-      that.vendorinfo.get("address").setValue("");
-      that.vendorinfo.get("zipcode").setValue("");
-      that.vendorinfo.get("city").setValue("");
-      that.vendorinfo.get("state").setValue("");
-      that.vendorinfo.get("country").setValue("");
+      that.vendorinfo.get("vendor_address").setValue("");
+      that.vendorinfo.get("vendor_zipcode").setValue("");
+      that.vendorinfo.get("vendor_city").setValue("");
+      that.vendorinfo.get("vendor_state").setValue("");
+      that.vendorinfo.get("vendor_country").setValue("");
 
 
       params.result.context.forEach((element, index) => {
         if (typeof params.result.context[index] !== "undefined") {
           if (params.result["properties"]["address"] !== -1) {
-            that.vendorinfo
-              .get("address")
-              .setValue(params.result["properties"]["address"]);
+            that.vendorinfo.get("vendor_address").setValue(params.result["properties"]["address"]);
           }
           if (params.result["text"] !== -1) {
-            that.vendorinfo
-              .get("address")
-              .setValue(params.result["text"]);
+            that.vendorinfo.get("vendor_address").setValue(params.result["text"]);
           }
           if (params.result.context[index].id.indexOf("postcode") !== -1) {
-            that.vendorinfo
-              .get("zipcode")
-              .setValue(params.result.context[index].text);
+            that.vendorinfo.get("vendor_zipcode").setValue(params.result.context[index].text);
           }
           if (params.result.context[index].id.indexOf("place") !== -1) {
-            that.vendorinfo
-              .get("city")
-              .setValue(params.result.context[index].text);
+            that.vendorinfo.get("vendor_city").setValue(params.result.context[index].text);
           }
           if (params.result.context[index].id.indexOf("region") !== -1) {
-            that.vendorinfo
-              .get("state")
-              .setValue(params.result.context[index].text);
+            that.vendorinfo.get("vendor_state").setValue(params.result.context[index].text);
           }
           if (params.result.context[index].id.indexOf("country") !== -1) {
-            that.vendorinfo
-              .get("country")
-              .setValue(params.result.context[index].text);
+            that.vendorinfo.get("vendor_country").setValue(params.result.context[index].text);
           }
         }
       });
@@ -284,10 +263,7 @@ export class VendorFormComponent implements OnInit {
           if (this.vendorinfo.valid) {
             this.saveVendorData();
           } else {
-            that.snackbarservice.openSnackBar(
-              this.Company_vendor_Form_Submitting,
-              "error"
-            );
+            that.snackbarservice.openSnackBar(this.Company_vendor_Form_Submitting, "error");
           }
         } else if (result.isDenied) {
         } else {
@@ -343,7 +319,6 @@ export class VendorFormComponent implements OnInit {
           that.variablestermList = params.data;
           that.termList = that.variablestermList.slice();
         }
-        console.log("termList", that.termList);
       });
   }
   /*
@@ -359,19 +334,19 @@ export class VendorFormComponent implements OnInit {
       let reqObject = {
         _id: "",
         vendor_name: req_temp.vendor_name,
-        phone: req_temp.phone,
-        email: req_temp.email,
+        vendor_phone: req_temp.vendor_phone,
+        vendor_email: req_temp.vendor_email,
         gl_account: req_temp.gl_account,
-        address: req_temp.address,
-        city: req_temp.city,
-        address2: req_temp.address2,
-        state: req_temp.state,
-        zipcode: req_temp.zipcode,
-        country: req_temp.country,
-        terms_id: req_temp.terms_id,
-        description: req_temp.description,
-        status: req_temp.status,
-        attachment: "",
+        vendor_address: req_temp.vendor_address,
+        vendor_city: req_temp.vendor_city,
+        vendor_address2: req_temp.vendor_address2,
+        vendor_state: req_temp.vendor_state,
+        vendor_zipcode: req_temp.vendor_zipcode,
+        vendor_country: req_temp.vendor_country,
+        vendor_terms: req_temp.vendor_terms,
+        vendor_description: req_temp.vendor_description,
+        vendor_status: req_temp.vendor_status,
+        vendor_attachment: "",
         vendor_id: req_temp.vendor_id,
         customer_id: req_temp.customer_id,
       };
@@ -385,8 +360,7 @@ export class VendorFormComponent implements OnInit {
           .httpPostCall(
             httproutes.PORTAL_COMMON_COMPANY_SAVE_PROFILE,
             formData_profle
-          )
-          .subscribe(function (profile_data: any) {
+          ).subscribe(function (profile_data: any) {
             if (profile_data.status) {
               if (that.filepath != undefined) {
                 reqObject["vendor_image"] = profile_data.data;
@@ -399,7 +373,7 @@ export class VendorFormComponent implements OnInit {
               that.httpCall
                 .httpPostCall(httproutes.PORTAL_ATTECHMENT, formData)
                 .subscribe(function (params) {
-                  reqObject.attachment = params.data.concat(
+                  reqObject.vendor_attachment = params.data.concat(
                     that.last_files_array
                   );
                   reqObject._id = that._id;
@@ -412,17 +386,11 @@ export class VendorFormComponent implements OnInit {
                     .subscribe(function (params_new) {
                       if (params_new.status) {
                         that.uiSpinner.spin$.next(false);
-                        that.snackbarservice.openSnackBar(
-                          params_new.message,
-                          "success"
-                        );
+                        that.snackbarservice.openSnackBar(params_new.message, "success");
                         that.location.back();
                       } else {
                         that.uiSpinner.spin$.next(false);
-                        that.snackbarservice.openSnackBar(
-                          params_new.message,
-                          "error"
-                        );
+                        that.snackbarservice.openSnackBar(params_new.message, "error");
                       }
                     });
                 });
@@ -455,7 +423,7 @@ export class VendorFormComponent implements OnInit {
                 .httpPostCall(httproutes.PORTAL_ATTECHMENT, formData)
                 .subscribe(function (params) {
                   delete reqObject["_id"];
-                  reqObject.attachment = params.data;
+                  reqObject.vendor_attachment = params.data;
 
                   that.httpCall
                     .httpPostCall(
@@ -465,17 +433,11 @@ export class VendorFormComponent implements OnInit {
                     .subscribe(function (params_new) {
                       if (params_new.status) {
                         that.uiSpinner.spin$.next(false);
-                        that.snackbarservice.openSnackBar(
-                          params_new.message,
-                          "success"
-                        );
+                        that.snackbarservice.openSnackBar(params_new.message, "success");
                         that.location.back();
                       } else {
                         that.uiSpinner.spin$.next(false);
-                        that.snackbarservice.openSnackBar(
-                          params_new.message,
-                          "error"
-                        );
+                        that.snackbarservice.openSnackBar(params_new.message, "error");
                       }
                     });
                 });
@@ -486,10 +448,7 @@ export class VendorFormComponent implements OnInit {
           });
       }
     } else {
-      that.snackbarservice.openSnackBar(
-        this.Compnay_Vendor_Form_Submitting,
-        "error"
-      );
+      that.snackbarservice.openSnackBar(this.Compnay_Vendor_Form_Submitting, "error");
     }
   }
 
@@ -503,35 +462,28 @@ export class VendorFormComponent implements OnInit {
       .subscribe(function (params) {
         if (params.status) {
           that.vendorData = params.data;
-          if (
-            that.vendorData.vendor_image != "" &&
-            that.vendorData.vendor_image != undefined
-          ) {
+          if (that.vendorData.vendor_image != "" && that.vendorData.vendor_image != undefined) {
             that.vendor_image_url = that.vendorData.vendor_image;
           }
           that.files_old = [];
-          for (
-            let loop_i = 0;
-            loop_i < params.data.attachment.length;
-            loop_i++
-          ) {
-            that.files_old.push(params.data.attachment[loop_i]);
+          for (let loop_i = 0; loop_i < params.data.vendor_attachment.length; loop_i++) {
+            that.files_old.push(params.data.vendor_attachment[loop_i]);
           }
-          that.last_files_array = params.data.attachment;
+          that.last_files_array = params.data.vendor_attachment;
           that.vendorinfo = that.formBuilder.group({
             vendor_name: [that.vendorData.vendor_name, Validators.required],
-            phone: [that.vendorData.phone, Validators.required],
-            email: [that.vendorData.email, [Validators.required, Validators.email],],
+            vendor_phone: [that.vendorData.vendor_phone, Validators.required],
+            vendor_email: [that.vendorData.vendor_email, [Validators.required, Validators.email],],
             gl_account: [that.vendorData.gl_account],
-            address: [that.vendorData.address, Validators.required,],
-            city: [that.vendorData.city, Validators.required],
-            address2: [that.vendorData.address2],
-            state: [that.vendorData.state, Validators.required],
-            zipcode: [that.vendorData.zipcode, Validators.required,],
-            terms_id: [that.vendorData.terms_id, Validators.required],
-            status: [that.vendorData.status, Validators.required],
-            country: [that.vendorData.country],
-            description: [that.vendorData.description],
+            vendor_address: [that.vendorData.vendor_address, Validators.required,],
+            vendor_city: [that.vendorData.vendor_city, Validators.required],
+            vendor_address2: [that.vendorData.vendor_address2],
+            vendor_state: [that.vendorData.vendor_state, Validators.required],
+            vendor_zipcode: [that.vendorData.vendor_zipcode, Validators.required,],
+            vendor_terms: [that.vendorData.vendor_terms, Validators.required],
+            vendor_status: [that.vendorData.vendor_status, Validators.required],
+            vendor_country: [that.vendorData.vendor_country],
+            vendor_description: [that.vendorData.vendor_description],
           });
         }
       });
@@ -583,46 +535,6 @@ export class VendorFormComponent implements OnInit {
         this.snackbarservice.openSnackBar(this.FILE_NOT_SUPPORTED, "error");
       }
     });
-    // this.imageError = null;
-
-    // if (fileInput.target.files && fileInput.target.files[0])
-    // {
-
-    //   // Size Filter Bytes
-    //   const max_size = 20971520;
-    //   const allowed_types = ['image/png', 'image/jpeg'];
-    //   const max_height = 15200;
-    //   const max_width = 25600;
-    //   this.filepath = fileInput.target.files[0];
-    //   const reader = new FileReader();
-    //   reader.onload = (e: any) => {
-    //     const image = new Image();
-    //     image.src = e.target.result;
-    //     image.onload = rs => {
-    //       const img_height = rs.currentTarget['height'];
-    //       const img_width = rs.currentTarget['width'];
-
-    //       if (img_height > max_height && img_width > max_width)
-    //       {
-    //         this.imageError =
-    //           'Maximum dimentions allowed ' +
-    //           max_height +
-    //           '*' +
-    //           max_width +
-    //           'px';
-    //         return false;
-    //       }
-    //       else
-    //       {
-    //         const imgBase64Path = e.target.result;
-    //         this.cardImageBase64 = imgBase64Path;
-    //         this.isImageSaved = true;
-    //         // this.previewImagePath = imgBase64Path;
-    //       }
-    //     };
-    //   };
-    //   reader.readAsDataURL(fileInput.target.files[0]);
-    // }
   }
 
   files: File[] = [];
@@ -686,53 +598,41 @@ export class VendorFormComponent implements OnInit {
       case "application/pdf":
         return "../../../../../../assets/images/pdf.png";
         break;
-
       case "image/png":
         return this.sanitiser.bypassSecurityTrustUrl(URL.createObjectURL(file));
         break;
-
       case "image/jpeg":
         return this.sanitiser.bypassSecurityTrustUrl(URL.createObjectURL(file));
         break;
-
       case "image/jpg":
         return this.sanitiser.bypassSecurityTrustUrl(URL.createObjectURL(file));
         break;
-
       case "image/gif":
         return this.sanitiser.bypassSecurityTrustUrl(URL.createObjectURL(file));
         break;
-
       case "application/msword":
       case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
         return "../../../../../../assets/images/doc.png";
         break;
-
       case "application/vnd.ms-excel":
       case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
         return "../../../../../../assets/images/xls.png";
         break;
-
       case "application/vnd.oasis.opendocument.text":
         return "../../../../../../assets/images/odt.png";
         break;
-
       case "application/zip":
         return "../../../../../../assets/images/zip.png";
         break;
-
       case "image/svg+xml":
         return "../../../../../../assets/images/svg.png";
         break;
-
       case "text/plain":
         return "../../../../../../assets/images/txt.png";
         break;
-
       case "application/vnd.ms-powerpoint":
         return "../../../../../../assets/images/ppt.png";
         break;
-
       default:
         return "../../../../../../assets/images/no-preview.png";
         break;
@@ -748,11 +648,7 @@ export class VendorFormComponent implements OnInit {
       return "https://s3.us-west-1.wasabisys.com/rovukdata/doc.png";
     } else if (extension == "pdf") {
       return "https://s3.us-west-1.wasabisys.com/rovukdata/pdf.png";
-    } else if (
-      extension == "xls" ||
-      extension == "xlsx" ||
-      extension == "csv"
-    ) {
+    } else if (extension == "xls" || extension == "xlsx" || extension == "csv") {
       return "https://s3.us-west-1.wasabisys.com/rovukdata/xls.png";
     } else if (extension == "zip") {
       return "https://s3.us-west-1.wasabisys.com/rovukdata/zip.png";
@@ -777,13 +673,7 @@ export class VendorFormComponent implements OnInit {
       var extension = allAttachment[i].substring(
         allAttachment[i].lastIndexOf(".") + 1
       );
-      if (
-        extension == "jpg" ||
-        extension == "png" ||
-        extension == "jpeg" ||
-        extension == "gif" ||
-        extension == "webp"
-      ) {
+      if (extension == "jpg" || extension == "png" || extension == "jpeg" || extension == "gif" || extension == "webp") {
         var srctmp: any = {
           small: allAttachment[i],
           medium: allAttachment[i],
@@ -832,11 +722,7 @@ export class VendorFormComponent implements OnInit {
           big: "https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png",
         };
         this.galleryImages.push(srctmp);
-      } else if (
-        extension == "xls" ||
-        extension == "xlsx" ||
-        extension == "csv"
-      ) {
+      } else if (extension == "xls" || extension == "xlsx" || extension == "csv") {
         var srctmp: any = {
           small: "https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png",
           medium: "https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png",

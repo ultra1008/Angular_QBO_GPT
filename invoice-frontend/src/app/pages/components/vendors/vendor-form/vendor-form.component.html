@@ -52,7 +52,7 @@
                                 <div class="col">
                                     <mat-form-field appearance="outline" class="main-one-input-field">
                                         <mat-label>{{'Company-Vendor-Phone' | translate }}</mat-label>
-                                        <input matInput formControlName="phone"
+                                        <input matInput formControlName="vendor_phone"
                                             onkeypress="return String.fromCharCode(event.charCode).match(/[^0-9]/g) === null"
                                             mask="(000) 000-0000" maxlength="14"
                                             placeholder="{{'Company-Vendor-Phone' | translate }}" required>
@@ -63,7 +63,7 @@
                                 <div class="col">
                                     <mat-form-field appearance="outline" class="main-one-input-field">
                                         <mat-label>{{'Email_Assigned' | translate }}</mat-label>
-                                        <input matInput formControlName="email"
+                                        <input matInput formControlName="vendor_email"
                                             placeholder="{{'Email_Assigned' | translate }}" required>
                                     </mat-form-field>
                                 </div>
@@ -102,7 +102,8 @@
                                 <div class="col">
                                     <mat-form-field appearance="outline" class="main-one-input-field">
                                         <mat-label>{{'Company-Vendor-Address' | translate }}</mat-label>
-                                        <input matInput formControlName="address" class="input-capitalized-textfield"
+                                        <input matInput formControlName="vendor_address"
+                                            class="input-capitalized-textfield"
                                             placeholder="{{'Company-Vendor-Address' | translate }}" required>
                                     </mat-form-field>
                                 </div>
@@ -111,7 +112,8 @@
                                 <div class="col">
                                     <mat-form-field appearance="outline" class="main-one-input-field">
                                         <mat-label>{{'Company-Vendor-BillingAddress' | translate }}</mat-label>
-                                        <input matInput formControlName="address2" class="input-capitalized-textfield"
+                                        <input matInput formControlName="vendor_address2"
+                                            class="input-capitalized-textfield"
                                             placeholder="{{'Company-Vendor-BillingAddress' | translate }}">
                                     </mat-form-field>
                                 </div>
@@ -120,14 +122,16 @@
                                 <div class="col">
                                     <mat-form-field appearance="outline" class="main-one-input-field">
                                         <mat-label>{{'Company-Vendor-City' | translate }}</mat-label>
-                                        <input matInput formControlName="city" class="input-capitalized-textfield"
+                                        <input matInput formControlName="vendor_city"
+                                            class="input-capitalized-textfield"
                                             placeholder="{{'Company-Vendor-City' | translate }}" required>
                                     </mat-form-field>
                                 </div>
                                 <div class="col">
                                     <mat-form-field appearance="outline" class="main-one-input-field">
                                         <mat-label>{{'Company-Vendor-State' | translate }}</mat-label>
-                                        <input matInput formControlName="state" class="input-capitalized-textfield"
+                                        <input matInput formControlName="vendor_state"
+                                            class="input-capitalized-textfield"
                                             onkeypress="return String.fromCharCode(event.charCode).match(/[^A-Za-z ]/g) === null"
                                             placeholder="{{'Company-Vendor-State' | translate }}" required>
                                     </mat-form-field>
@@ -137,8 +141,8 @@
                                 <div class="col">
                                     <mat-form-field appearance="outline" class="main-one-input-field">
                                         <mat-label>{{'Company-Vendor-ZipCode' | translate }}</mat-label>
-                                        <input matInput formControlName="zipcode" class="input-capitalized-textfield"
-                                            maxlength="5"
+                                        <input matInput formControlName="vendor_zipcode"
+                                            class="input-capitalized-textfield" maxlength="5"
                                             onkeypress="return String.fromCharCode(event.charCode).match(/[^0-9]/g) === null"
                                             placeholder="{{'Company-Vendor-ZipCode' | translate }}" required>
                                     </mat-form-field>
@@ -146,7 +150,8 @@
                                 <div class="col">
                                     <mat-form-field appearance="outline" class="main-one-input-field">
                                         <mat-label>{{'Company-Vendor-Country' | translate }}</mat-label>
-                                        <input matInput formControlName="country" class="input-capitalized-textfield"
+                                        <input matInput formControlName="vendor_country"
+                                            class="input-capitalized-textfield"
                                             onkeypress="return String.fromCharCode(event.charCode).match(/[^A-Za-z. ()]/g) === null"
                                             placeholder="{{'Company-Vendor-Country' | translate }}">
                                     </mat-form-field>
@@ -165,7 +170,7 @@
                                 <div class="col">
                                     <mat-form-field appearance="outline" class="main-one-input-field">
                                         <mat-label>{{'Company-Vendor-Terms' | translate }}</mat-label>
-                                        <mat-select formControlName="terms_id" #termListSelect
+                                        <mat-select formControlName="vendor_terms" #termListSelect
                                             placeholder="{{'Company-Vendor-Terms' | translate }}" required>
                                             <mat-select-filter [placeholder]="'Filter'" [displayMember]="'name'"
                                                 *ngIf="termListSelect.focused" [array]="variablestermList"
@@ -182,7 +187,7 @@
                                 <div class="col">
                                     <mat-form-field class="main-one-input-field" appearance="outline">
                                         <mat-label>{{'Company-Vendor-status' | translate}}</mat-label>
-                                        <mat-select formControlName="status" required
+                                        <mat-select formControlName="vendor_status" required
                                             placeholder="{{'Company-Vendor-status' | translate}}">
                                             <mat-option *ngFor="let vendor of VENDORSTATUS" [value]="vendor.value">
                                                 {{vendor.tmp_lanaguage | translate }}
@@ -198,7 +203,7 @@
                                         <textarea matInput appTextareaAutoresizeproject
                                             class="input-capitalized-textArea"
                                             placeholder="{{'Company-Vendor-Description' | translate }}"
-                                            formControlName="description"></textarea>
+                                            formControlName="vendor_description"></textarea>
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -217,19 +222,14 @@
                             </div>
                             <div class="row cust-center-justify ">
                                 <button mat-raised-button (click)="confirmexit()" class="cust-button-form">
-                                    <img src="{{backIcon}}" alt="" height="20px">
-                                    {{'All-back' |
-                                    translate}}</button>
+                                    <img src="{{backIcon}}" alt="" height="20px"> {{'All-back' | translate}}</button>
                                 <!-- <button mat-raised-button (click)="back()" *ngIf="_id" class="cust-button-form">
                                         <img src="{{backIcon}}" alt="" height="20px">
                                         {{'All-back' |
                                         translate}}</button> -->
                                 <button mat-raised-button class="cust-button-form" (click)="saveVendorData()"
                                     color="primary">
-
-                                    <img src="{{saveIcon}}" alt="" height="20px">
-                                    {{'All-save' | translate
-                                    }}</button>
+                                    <img src="{{saveIcon}}" alt="" height="20px"> {{'All-save' | translate }}</button>
                             </div>
                             <div class="mt-3">
                                 <div class="container-cust" [ngClass]="mode == 'on'? 'button-dark' : 'button-light'"
@@ -242,11 +242,8 @@
                             </div>
                         </div>
                     </form>
-
                 </div>
-
             </div>
-
             <div class="row cust-margin">
                 <div class="files-list">
                     <div class="single-file" *ngFor="let file of files; let i = index">

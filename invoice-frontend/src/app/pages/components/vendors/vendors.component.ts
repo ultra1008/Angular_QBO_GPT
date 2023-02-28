@@ -86,7 +86,7 @@ export class VendorsComponent implements OnInit {
     active: 0, inactive: 0
   };
 
-  constructor(private modeService: ModeDetectService,
+  constructor (private modeService: ModeDetectService,
     public dialog: MatDialog,
     private router: Router,
     private http: HttpClient,
@@ -252,7 +252,7 @@ export class VendorsComponent implements OnInit {
         $(".button_attachment").on("click", (event) => {
           this.imageObject = JSON.parse(
             event.target.getAttribute("edit_tmp_id")
-          ).attachment;
+          ).vendor_attachment;
           this.galleryImages = [];
           if (this.imageObject != undefined) {
             for (let i = 0; i < this.imageObject.length; i++) {
@@ -372,7 +372,7 @@ export class VendorsComponent implements OnInit {
           //Inactive vendor status  here
           this.changeStatus({
             _id: event.target.getAttribute("edit_tmp_id"),
-            status: 2,
+            vendor_status: 2,
           });
         });
 
@@ -380,7 +380,7 @@ export class VendorsComponent implements OnInit {
           //Active vendor status  here
           this.changeStatus({
             _id: event.target.getAttribute("edit_tmp_id"),
-            status: 1,
+            vendor_status: 1,
           });
         });
       },
@@ -408,24 +408,24 @@ export class VendorsComponent implements OnInit {
       {
         title: that.Vendor_Phone,
         render: function (data: any, type: any, full: any) {
-          return formatPhoneNumber(full.phone);
+          return formatPhoneNumber(full.vendor_phone);
         },
       },
       {
         title: that.Vendor_Email,
-        data: "email",
+        data: "vendor_email",
         defaultContent: "",
       },
       {
         title: that.Vendor_Address,
-        data: "address",
+        data: "vendor_address",
         defaultContent: "",
       },
       {
         title: that.Vendor_Status,
         render: function (data: any, type: any, full: any) {
           var tmp_return;
-          if (full.status == 1)
+          if (full.vendor_status == 1) {
             tmp_return =
               `<div class="active-chip-green call-active-inactive-api" edit_tmp_id=` +
               full._id +
@@ -434,7 +434,7 @@ export class VendorsComponent implements OnInit {
               ` class="fa fa-check cust-fontsize-right" aria-hidden="true"></i>` +
               that.acticve_word +
               `</div>`;
-          else
+          } else {
             tmp_return =
               `<div class="inactive-chip-green call-active-active-api" edit_tmp_id=` +
               full._id +
@@ -443,6 +443,7 @@ export class VendorsComponent implements OnInit {
               ` class="fa fa-times cust-fontsize-right" aria-hidden="true"></i>` +
               that.inacticve_word +
               `</div>`;
+          }
           return tmp_return;
         },
         width: "7%",
@@ -451,7 +452,7 @@ export class VendorsComponent implements OnInit {
         title: that.Vendor_Attachments,
         render: function (data: any, type: any, full: any) {
           let htmlData = ``;
-          if (full.attachment.length != 0) {
+          if (full.vendor_attachment.length != 0) {
             htmlData =
               `<button  edit_tmp_id='` +
               JSON.stringify(full) +
@@ -633,7 +634,7 @@ export class VendorHistoryComponent implements OnInit {
   activityIcon!: string;
   isSearch: boolean = false;
   subscription: Subscription;
-  constructor(
+  constructor (
     public httpCall: HttpCall,
     public snackbarservice: Snackbarservice,
     private modeService: ModeDetectService,
@@ -754,7 +755,7 @@ export class VendorReportComponent implements OnInit {
   add_my_self_icon = icon.ADD_MY_SELF_WHITE;
 
   /*Constructor*/
-  constructor(
+  constructor (
     private formBuilder: FormBuilder,
     public httpCall: HttpCall,
     private modeService: ModeDetectService,

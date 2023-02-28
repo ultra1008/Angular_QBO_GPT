@@ -17,13 +17,13 @@ const getOneVendor = (req, res, next) => {
 const saveVendor = (req, res, next) => {
     const validationRule = {
         "vendor_name": "required",
-        "phone": "required",
-        "email": "required",
-        "address": "required",
-        "city": "required",
-        "state": "required",
-        "zipcode": "required",
-        "terms_id": "required",
+        "vendor_phone": "required",
+        "vendor_email": "required",
+        "vendor_address": "required",
+        "vendor_city": "required",
+        "vendor_state": "required",
+        "vendor_zipcode": "required",
+        "vendor_terms": "required",
     };
     validator(req.body, validationRule, {}, (error, status) => {
         if (!status) {

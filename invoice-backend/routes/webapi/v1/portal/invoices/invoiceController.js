@@ -164,7 +164,16 @@ module.exports.getInvoice = async function (req, res) {
                             }
                         },
                         packing_slip_attachments: 1,
-                        has_packing_slip: 1,
+                        has_receiving_slip: 1,
+                        receiving_slip_data: 1,
+                        receiving_slip_notes: {
+                            $filter: {
+                                input: '$receiving_slip_notes',
+                                as: 'note',
+                                cond: { $eq: ['$$note.is_delete', 0] }
+                            }
+                        },
+                        receiving_slip_attachments: 1,
                         has_po: 1,
                         po_data: 1,
                         po_notes: {
@@ -328,6 +337,16 @@ module.exports.getInvoiceList = async function (req, res) {
                             }
                         },
                         packing_slip_attachments: 1,
+                        has_receiving_slip: 1,
+                        receiving_slip_data: 1,
+                        receiving_slip_notes: {
+                            $filter: {
+                                input: '$receiving_slip_notes',
+                                as: 'note',
+                                cond: { $eq: ['$$note.is_delete', 0] }
+                            }
+                        },
+                        receiving_slip_attachments: 1,
                         has_po: 1,
                         po_data: 1,
                         po_notes: {
@@ -443,6 +462,16 @@ module.exports.getOneInvoice = async function (req, res) {
                             }
                         },
                         packing_slip_attachments: 1,
+                        has_receiving_slip: 1,
+                        receiving_slip_data: 1,
+                        receiving_slip_notes: {
+                            $filter: {
+                                input: '$receiving_slip_notes',
+                                as: 'note',
+                                cond: { $eq: ['$$note.is_delete', 0] }
+                            }
+                        },
+                        receiving_slip_attachments: 1,
                         has_po: 1,
                         po_data: 1,
                         po_notes: {

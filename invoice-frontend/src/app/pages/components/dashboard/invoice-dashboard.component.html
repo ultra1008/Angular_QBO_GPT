@@ -154,7 +154,7 @@
                 <div class="">
                     <div class="">
                         <b class="ml-1">Last Activity History</b>
-                        <div class=" mt-2 header-text-cust-chart"
+                        <div class="mt-2 header-text-cust-chart"
                             [ngClass]="mode == 'on'? 'header-text-cust-chart-dark' : ''">
 
                             <div class="search-results" infiniteScroll [infiniteScrollDistance]="2"
@@ -163,13 +163,12 @@
                                 [ngClass]="mode == 'on'? 'card-history-dark' : 'card-history'">
                                 <div class="card-body  mb-2" *ngFor=" let item of dashboardHistory">
                                     <div class="d-flex flex-row">
-                                        <div class="p-2">
-
+                                        <div class="pr-2">
                                             <img class="crl card-img-left example-card-img-responsive"
                                                 src="{{item.userpicture || '../assets/images/user_placeholder.png'}}" />
                                         </div>
 
-                                        <div class="">
+                                        <div class="history-text">
                                             <b [ngClass]="mode == 'on'? 'text-color-dark' : 'text-color'"
                                                 (click)="goToUserProfile(item)" style="font-size: 12px;">
                                                 {{item.created_by.userfullname}} </b>
