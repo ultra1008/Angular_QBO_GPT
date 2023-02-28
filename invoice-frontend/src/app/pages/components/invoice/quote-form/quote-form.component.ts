@@ -326,7 +326,10 @@ export class QuoteFormComponent implements OnInit {
         that.invoiceData = params.data.data;
         that.pdf_url = that.invoiceData.pdf_url;
         that.badge = that.invoiceData.badge;
-        that.vendor.setValue(that.invoiceData.vendor);
+        let vendorId = '';
+        if (that.invoiceData.vendor) {
+          vendorId = that.invoiceData.vendor._id;
+        }
         that.loadInvoice = true;
 
         that.invoiceform = that.formBuilder.group({

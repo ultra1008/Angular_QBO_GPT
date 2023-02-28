@@ -340,11 +340,13 @@ export class ReceivingSlipFormComponent implements OnInit {
         that.badge = that.invoiceData.badge;
         that.vendor.setValue(that.invoiceData.vendor);
         that.loadInvoice = true;
-
+        let vendorId = '';
+        if (that.invoiceData.vendor) {
+          vendorId = that.invoiceData.vendor._id;
+        }
         that.invoiceform = that.formBuilder.group({
-
           document_type: [that.invoiceData.document_type],
-          vendor: [that.invoiceData.vendor._id],
+          vendor: [vendorId],
           invoice_number: [that.invoiceData.invoice_number],
           po_number: [that.invoiceData.po_number],
           date: [that.invoiceData.date],
