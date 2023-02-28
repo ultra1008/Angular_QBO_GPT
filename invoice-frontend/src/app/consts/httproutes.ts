@@ -1155,9 +1155,10 @@ export enum httproutes {
     PORTAL_UPDATE_P_O = "/webapi/v1/portal/updateinvoicerelateddocument",
 
     // Receiving Slip  NOTS & ATTCHMENTS
-    PORTAL_SAVE_Receiving_Slip_NOTES = "/webapi/v1/portal/savepackingslipnote",
-    PORTAL_DELETE_Receiving_Slip_NOTES = "/webapi/v1/portal/deletepackingslipnote",
-    PORTAL_Receiving_Slip_ATTCHMENTS = "/webapi/v1/portal/updateinvoiceattachment",
+    PORTAL_SAVE_Receiving_Slip_NOTES = "/webapi/v1/portal/savereceivingslipnote",
+    PORTAL_DELETE_Receiving_Slip_NOTES = "/webapi/v1/portal/deletereceivingslipnote",
+    PORTAL_Receiving_Slip_ATTCHMENTS = "/webapi/v1/portal/updatereceivingslipattachment",
+    PORTAL_UPDATE_Receiving_Slip = "/webapi/v1/portal/updateinvoicerelateddocument",
 
     // Quote NOTS & ATTCHMENTS
     PORTAL_SAVE_Quote_NOTES = "/webapi/v1/portal/savequotenote",

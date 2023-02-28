@@ -261,11 +261,11 @@ export class InvoiceOtherDocumentComponent implements OnInit {
     let attchment_Url;
     let reqObject = {
       // _id: this._id,
-      _id: "",
-      packing_slip_attachments: "",
-      po_attachments: "",
-      quote_attachments: "",
-      reciving_slip_attachments: "",
+      // _id: "",
+      // packing_slip_attachments: "",
+      // po_attachments: "",
+      // quote_attachments: "",
+      // reciving_slip_attachments: "",
     };
     const formData = new FormData();
     for (var i = 0; i < that.files.length; i++) {
@@ -289,21 +289,27 @@ export class InvoiceOtherDocumentComponent implements OnInit {
       .subscribe(function (params) {
         if (params.status) {
 
-          reqObject._id = that._id;
+          // reqObject._id = that._id;
           if (that.documentType == that.documentTypes.po) {
-            reqObject.po_attachments = params.data.concat(
-              that.last_files_array);
+            reqObject = {
+              _id: that._id,
+              po_attachments: params.data.concat(that.last_files_array),
+            };
           } else if (that.documentType == that.documentTypes.packingSlip) {
-            reqObject.packing_slip_attachments = params.data.concat(
-              that.last_files_array);
+            reqObject = {
+              _id: that._id,
+              packing_slip_attachments: params.data.concat(that.last_files_array),
+            };
           } else if (that.documentType == that.documentTypes.receivingSlip) {
-            reqObject.reciving_slip_attachments = params.data.concat(
-              that.last_files_array);
+            reqObject = {
+              _id: that._id,
+              receiving_slip_attachments: params.data.concat(that.last_files_array),
+            };
           } else if (that.documentType == that.documentTypes.quote) {
-            reqObject.quote_attachments = params.data.concat(
-              that.last_files_array
-
-            );
+            reqObject = {
+              _id: that._id,
+              quote_attachments: params.data.concat(that.last_files_array),
+            };
           }
           if (that.documentType == that.documentTypes.po) {
             attchment_Url = httproutes.PORTAL_P_O_ATTCHMENTS;
@@ -697,15 +703,15 @@ export class InvoiceOtherDocumentComponent implements OnInit {
             }
             that.last_files_array = that.invoiceData.packing_slip_attachments;
           }
-          // else if (that.documentType == that.documentTypes.receivingSlip) {
-          //   that.has_document = params.data.has_reciving_slip_a;
-          //   that.otherDocument = params.data.reciving_slip_a_data;
-          //   that.notesList = that.invoiceData.reciving_slip_a_notes;
-          //   for (let loop_i = 0; loop_i < params.data.reciving_slip_a_attachments.length; loop_i++) {
-          //     that.files_old.push(params.data.reciving_slip_attachments[loop_i]);
-          //   }
-          //   that.last_files_array = that.invoiceData.reciving_slip_a_attachments;
-          // } 
+          else if (that.documentType == that.documentTypes.receivingSlip) {
+            that.has_document = params.data.has_receiving_slip;
+            that.otherDocument = params.data.receiving_slip_data;
+            that.notesList = that.invoiceData.receiving_slip_notes;
+            for (let loop_i = 0; loop_i < params.data.receiving_slip_attachments.length; loop_i++) {
+              that.files_old.push(params.data.receiving_slip_attachments[loop_i]);
+            }
+            that.last_files_array = that.invoiceData.receiving_slip_attachments;
+          }
           else if (that.documentType == that.documentTypes.quote) {
             that.has_document = params.data.has_quote;
             that.otherDocument = params.data.quote_data;
@@ -731,7 +737,7 @@ export class InvoiceOtherDocumentComponent implements OnInit {
     } else if (that.documentType == that.documentTypes.packingSlip) {
       pdf_url = this.invoiceData.packing_slip_data.pdf_url;
     } else if (that.documentType == that.documentTypes.receivingSlip) {
-      pdf_url = this.invoiceData.reciving_slip_data.pdf_url;
+      pdf_url = this.invoiceData.receiving_slip_data.pdf_url;
     } else if (that.documentType == that.documentTypes.quote) {
       pdf_url = this.invoiceData.quote_data.pdf_url;
     }
@@ -795,7 +801,7 @@ export class InvoiceOtherDocumentComponent implements OnInit {
     } else if (that.documentType == that.documentTypes.packingSlip) {
       a.href = this.invoiceData.packing_slip_data.pdf_url;
     } else if (that.documentType == that.documentTypes.receivingSlip) {
-      a.href = this.invoiceData.reciving_slip_data.pdf_url;
+      a.href = this.invoiceData.receiving_slip_data.pdf_url;
     } else if (that.documentType == that.documentTypes.quote) {
       a.href = this.invoiceData.quote_data.pdf_url;
     }
