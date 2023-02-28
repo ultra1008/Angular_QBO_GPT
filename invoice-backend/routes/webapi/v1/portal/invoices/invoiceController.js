@@ -4,6 +4,8 @@ var processInvoiceSchema = require('../../../../../model/process_invoice');
 var invoice_history_Schema = require('../../../../../model/history/invoice_history');
 var recentActivitySchema = require('../../../../../model/recent_activities');
 var settingsSchema = require('../../../../../model/settings');
+var rolesSchema = require('../../../../../model/invoice_roles');
+var userSchema = require('../../../../../model/user');
 let db_connection = require('../../../../../controller/common/connectiondb');
 let collectionConstant = require('../../../../../config/collectionConstant');
 let config = require('../../../../../config/config');
@@ -19,6 +21,7 @@ let sendEmail = require('./../../../../../controller/common/sendEmail');
 var fs = require('fs');
 var bucketOpration = require('../../../../../controller/common/s3-wasabi');
 var moment = require('moment');
+var alertController = require('./../alert/alertController');
 
 // save invoice
 module.exports.saveInvoice = async function (req, res) {
@@ -38,6 +41,7 @@ module.exports.saveInvoice = async function (req, res) {
                 let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(id) }, requestObject);
                 if (update_invoice) {
                     requestObject.invoice_id = id;
+                    await sendInvoiceUpdateAlerts(decodedToken, id, translator);
                     addchangeInvoice_History("Update", requestObject, decodedToken, requestObject.updated_at);
                     recentActivity.saveRecentActivity({
                         user_id: decodedToken.UserData._id,
@@ -88,6 +92,84 @@ module.exports.saveInvoice = async function (req, res) {
     } else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
+};
+
+function sendInvoiceUpdateAlerts(decodedToken, id, translator) {
+    return new Promise(async function (resolve, reject) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        let invoiceCollection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+        let settingsCollection = connection_db_api.model(collectionConstant.INVOICE_SETTING, settingsSchema);
+        let userCollection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+        let one_invoice = await invoiceCollection.findOne({ _id: ObjectID(id) });
+        if (one_invoice) {
+            let get_settings = await settingsCollection.findOne({});
+            if (get_settings) {
+                if (get_settings.settings.Invoice_modified.setting_status == 'Active') {
+                    let roles = [];
+                    get_settings.settings.Invoice_modified.setting_value.forEach((id) => {
+                        roles.push(ObjectID(id));
+                    });
+                    let get_users = await userCollection.find({ userroleId: { $in: roles } });
+                    let title = `Invoice #${one_invoice.invoice} Update Alert`;
+                    let description = `Invoice #${one_invoice.invoice} has been updated.`;
+                    let emailList = [];
+                    for (let i = 0; i < get_users.length; i++) {
+                        // Alert
+                        // invoice-form
+                        let alertObject = {
+                            user_id: get_users[i]._id,
+                            module_name: 'Invoice',
+                            module_route: { _id: id },
+                            notification_title: title,
+                            notification_description: description,
+                        };
+                        alertController.saveAlert(alertObject, connection_db_api);
+
+                        emailList.push(get_users[i].useremail);
+                        if (i == get_users.length - 1) {
+                            var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+                            let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
+                            let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
+                            // Email
+                            const file_data = fs.readFileSync('./controller/emailtemplates/commonEmailTemplate.html', 'utf8');
+                            let emailTmp = {
+                                HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
+                                SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
+                                ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                                THANKS: translator.getStr('EmailTemplateThanks'),
+                                ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                                ROVUK_TEAM_SEC: translator.getStr('EmailTemplateRovukTeamSec'),
+                                VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
+
+                                TITLE: `${title}`,
+                                TEXT: new handlebars.SafeString(`<h4>Hello,</h4><h4>${description}</h4>
+                                <div style="text-align: center;">
+                                    <a style="background-color: #023E8A;border: #0077bc solid;color: white;padding: 15px 32px;
+                                                text-align: center;text-decoration: none;display: inline-block;font-size: 16px; width: 20%;" 
+                                                target="_blank" href="${config.SITE_URL}/invoice-form?_id=${id}">View Invoice</a>
+                                </div>`),
+
+                                COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
+                                COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
+                            };
+                            var template = handlebars.compile(file_data);
+                            var HtmlData = await template(emailTmp);
+                            sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, emailList, title, HtmlData,
+                                talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
+                                talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                            resolve();
+                        }
+                    }
+                } else {
+                    resolve();
+                }
+            } else {
+                resolve();
+            }
+        } else {
+            resolve();
+        }
+    });
 };
 
 //get invoice
