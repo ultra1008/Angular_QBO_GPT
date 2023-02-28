@@ -400,13 +400,13 @@ export class PackingSlipFormComponent implements OnInit {
       let requestObject = {
         _id: that.id,
         module: 'Packing Slip',
-        'po_data.date': formVal.date,
-        'po_data.invoice_number': formVal.invoice_number,
-        'po_data.po_number': formVal.po_number,
-        'po_data.vendor': formVal.vendor,
-        'po_data.received_by': formVal.received_by,
-        'po_data.ship_to_address': formVal.ship_to_address,
-        'po_data.document_type': formVal.document_type,
+        'packing_slip_data.date': formVal.date,
+        'packing_slip_data.invoice_number': formVal.invoice_number,
+        'packing_slip_data.po_number': formVal.po_number,
+        'packing_slip_data.vendor': formVal.vendor,
+        'packing_slip_data.received_by': formVal.received_by,
+        'packing_slip_data.ship_to_address': formVal.ship_to_address,
+        'packing_slip_data.document_type': formVal.document_type,
       };
 
       that.uiSpinner.spin$.next(true);
