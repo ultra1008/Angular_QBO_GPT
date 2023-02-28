@@ -360,6 +360,9 @@ class ExtractorsManager:
             elif doc_type == 'PACKING_SLIP':
                 extractor = PackingSlipExtractor(expense_parser, forms_parser,
                                                  self.custom_fields_conf.get('PACKING_SLIP'))
+            elif doc_type == 'RECEIVING_SLIP':
+                extractor = ReceivingSlipExtractor(expense_parser, forms_parser,
+                                                   self.custom_fields_conf.get('RECEIVING_SLIP'))
             elif doc_type == 'QUOTE':
                 extractor = QuoteExtractor(expense_parser, forms_parser,
                                            self.custom_fields_conf.get('QUOTE'))
@@ -383,6 +386,8 @@ class ExtractorsManager:
             return 'PURCHASE_ORDER'
         elif ExtractorsManager._contains_text(expense_doc, 'Packing Slip'):
             return 'PACKING_SLIP'
+        elif ExtractorsManager._contains_text(expense_doc, 'Receiving Slip'):
+            return 'RECEIVING_SLIP'
         elif ExtractorsManager._contains_text(expense_doc, 'Quote'):
             return 'QUOTE'
         elif ExtractorsManager._contains_text(expense_doc, 'Invoice'):
@@ -552,6 +557,49 @@ class PackingSlipExtractor(Extractor):
             'expense_groups': self.get_expense_groups()
         }
 
+
+class ReceivingSlipExtractor(Extractor):
+    def __init__(self, expense_parser, forms_parser, conf):
+        super().__init__('RECEIVING_SLIP', expense_parser, forms_parser, conf)
+
+    def _extract(self):
+        date = self.get_clf_field_value('INVOICE_RECEIPT_DATE')
+        invoice_number = self._extract_invoice_number()
+        ship_to_address = self.get_clf_field_value('RECEIVER_ADDRESS')
+        vendor_name = self.get_clf_field_value('VENDOR_NAME')
+        vendor_address = self._extract_vendor_address(vendor_name)
+        po_number = self.clean_extracted_id(self.get_clf_field_value('PO_NUMBER'))
+        received_by = self.get_clf_field_value('RECEIVER_NAME')
+
+        fields = {
+            'DATE': date,
+            'INVOICE_NUMBER': invoice_number,
+            'PO_NUMBER': po_number,
+            'SHIP_TO_ADDRESS': ship_to_address,
+            'VENDOR_NAME': vendor_name,
+            'VENDOR_ADDRESS': vendor_address,
+            'RECEIVED_BY': received_by
+        }
+
+        return {
+            'document_type': 'RECEIVING_SLIP',
+            'fields': fields,
+            'expense_groups': self.get_expense_groups()
+        }
+
+    def _extract_vendor_address(self, vendor_name):
+        vendor_address = self.get_clf_field_value('VENDOR_ADDRESS')
+        if vendor_name and vendor_address:
+            return vendor_address.replace(vendor_name, '').strip()
+
+        return vendor_address
+
+    def _extract_invoice_number(self):
+        value = self.get_clf_field_value('INVOICE_RECEIPT_ID')
+        if not value:
+            value = self.get_other_field_value('Sales Order #')
+
+        return self.clean_extracted_id(value)
 
 
 class QuoteExtractor(Extractor):
@@ -914,19 +962,19 @@ if __name__ == '__main__':
             ).extract(), indent=2, default=str))
 
 
-    test_demo_2()
+    # test_demo_2()
 
 
     def test_docs4():
-        po_exp_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/po4_Book4.pdf_expense.json'
-        po_forms_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/po4_Book4.pdf_FT.json'
-
-        # print('detected_doctype:', ExtractorsManager._detect_doc_type(load_resp(po_exp_fn)['ExpenseDocuments'][0]))
-        print(json.dumps(
-            PurchaseOrderExtractor(
-                ExpenseParser(load_resp(po_exp_fn)['ExpenseDocuments'][0]).parse(),
-                FormsParser(load_resp(po_forms_fn), 0, 'some_url'), None
-            ).extract(), indent=2))
+        # po_exp_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/po4_Book4.pdf_expense.json'
+        # po_forms_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/po4_Book4.pdf_FT.json'
+        #
+        # # print('detected_doctype:', ExtractorsManager._detect_doc_type(load_resp(po_exp_fn)['ExpenseDocuments'][0]))
+        # print(json.dumps(
+        #     PurchaseOrderExtractor(
+        #         ExpenseParser(load_resp(po_exp_fn)['ExpenseDocuments'][0]).parse(),
+        #         FormsParser(load_resp(po_forms_fn), 0, 'some_url'), None
+        #     ).extract(), indent=2))
 
         # ps_exp_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/ps4_Packing slip.pdf_expense.json'
         # ps_forms_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/ps4_Packing slip.pdf_FT.json'
@@ -948,6 +996,19 @@ if __name__ == '__main__':
         #         FormsParser(load_resp(in_forms_fn), 0, 'some_url'), None
         #     ).extract(), indent=2))
 
+
+        rs_exp_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/rs4_packing-slip-2x.pdf_expense.json'
+
+        print('detected_doctype:', ExtractorsManager._detect_doc_type(load_resp(rs_exp_fn)['ExpenseDocuments'][0]))
+        print(json.dumps(
+            ReceivingSlipExtractor(
+                ExpenseParser(load_resp(rs_exp_fn)['ExpenseDocuments'][0]).parse(),
+                None,
+                None
+            ).extract(), indent=2, default=str))
+
+
+    # test_docs4()
 
     def test_unknown_extractor():
         # po_exp_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/po4_Book4.pdf_expense.json'

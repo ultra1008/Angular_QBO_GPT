@@ -72,6 +72,8 @@ class Indexer:
             self._index_purchase_order_document(customer_id, document_id, s3_docs_bundle_url, document)
         elif document['document_type'] == 'PACKING_SLIP':
             self._index_packing_slip_document(customer_id, document_id, s3_docs_bundle_url, document)
+        elif document['document_type'] == 'RECEIVING_SLIP':
+            self._index_receiving_slip_document(customer_id, document_id, s3_docs_bundle_url, document)
         elif document['document_type'] == 'QUOTE':
             self._index_quote_document(customer_id, document_id, s3_docs_bundle_url, document)
         elif document['document_type'] == 'INVOICE':
@@ -203,6 +205,7 @@ class Indexer:
                 output[result['_id']['cust_id']] = {
                     'PURCHASE_ORDER': {'EXPENSE': 0, 'FORMS': 0},
                     'PACKING_SLIP': {'EXPENSE': 0, 'FORMS': 0},
+                    'RECEIVING_SLIP': {'EXPENSE': 0, 'FORMS': 0},
                     'QUOTE': {'EXPENSE': 0, 'FORMS': 0},
                     'INVOICE': {'EXPENSE': 0, 'FORMS': 0},
                     'UNKNOWN': {'EXPENSE': 0, 'FORMS': 0}
@@ -233,6 +236,7 @@ class Indexer:
                 output[ym_key] = {
                     'PURCHASE_ORDER': {'EXPENSE': 0, 'FORMS': 0},
                     'PACKING_SLIP': {'EXPENSE': 0, 'FORMS': 0},
+                    'RECEIVING_SLIP': {'EXPENSE': 0, 'FORMS': 0},
                     'QUOTE': {'EXPENSE': 0, 'FORMS': 0},
                     'INVOICE': {'EXPENSE': 0, 'FORMS': 0},
                     'UNKNOWN': {'EXPENSE': 0, 'FORMS': 0}
@@ -443,6 +447,17 @@ class Indexer:
                 if matched_ps:
                     relation_id = self._relate_to_matched(customer_id, matched_ps, relation_id)
 
+            # Match to RS
+            if document['fields']['PO_NUMBER'] and document['fields']['VENDOR_NAME']:
+                matched_ps = self.db.documents.find_one({
+                    'customer_id': customer_id,
+                    'document_type': 'RECEIVING_SLIP',
+                    'po_number': document['fields']['PO_NUMBER'],
+                    'vendor_name': document['fields']['VENDOR_NAME']
+                })
+                if matched_ps:
+                    relation_id = self._relate_to_matched(customer_id, matched_ps, relation_id)
+
         else:
             self.db.documents.update_one({
                 'customer_id': customer_id,
@@ -507,6 +522,17 @@ class Indexer:
                 matched_ps = self.db.documents.find_one({
                     'customer_id': customer_id,
                     'document_type': 'PACKING_SLIP',
+                    'invoice_number': document['fields']['INVOICE_NUMBER'],
+                    'vendor_name': document['fields']['VENDOR_NAME']
+                })
+                if matched_ps:
+                    relation_id = self._relate_to_matched(customer_id, matched_ps, relation_id)
+
+            # Match to RS
+            if document['fields']['INVOICE_NUMBER'] and document['fields']['VENDOR_NAME']:
+                matched_ps = self.db.documents.find_one({
+                    'customer_id': customer_id,
+                    'document_type': 'RECEIVING_SLIP',
                     'invoice_number': document['fields']['INVOICE_NUMBER'],
                     'vendor_name': document['fields']['VENDOR_NAME']
                 })
@@ -604,6 +630,85 @@ class Indexer:
 
 
 
+    def _index_receiving_slip_document(self, customer_id, document_id, s3_docs_bundle_url, document):
+        n_docs = 0
+        if document['fields']['INVOICE_NUMBER'] and document['fields']['PO_NUMBER'] and document['fields']['VENDOR_NAME']:
+            n_docs = self.db.documents.count_documents({
+                'customer_id': customer_id,
+                'document_id': document_id,
+                'document_type': 'RECEIVING_SLIP',
+                'invoice_number': document['fields']['INVOICE_NUMBER'],
+                'po_number': document['fields']['PO_NUMBER'],
+                'vendor_name': document['fields']['VENDOR_NAME']
+            })
+
+        if n_docs == 0:
+            # Add document
+            relation_id = self._generate_uuid()
+            ps_resp = self.db.documents.insert_one({
+                'customer_id': customer_id,
+                'document_id': document_id,
+                'document_type': 'RECEIVING_SLIP',
+                'invoice_number': document['fields']['INVOICE_NUMBER'],
+                'po_number': document['fields']['PO_NUMBER'],
+                'vendor_name': document['fields']['VENDOR_NAME'],
+                'documents': [
+                    document
+                ],
+                'relation_id': relation_id,
+                'searchable': list(document['fields'].values()),
+                'url': s3_docs_bundle_url
+            })
+            # Add Relation
+            self.db.relations.insert_one({
+                'customer_id': customer_id,
+                'relation_id': relation_id,
+                'related': [ps_resp.inserted_id]
+            })
+
+            # Match to Invoice
+            if document['fields']['INVOICE_NUMBER'] and document['fields']['VENDOR_NAME']:
+                matched_invoice = self.db.documents.find_one({
+                    'customer_id': customer_id,
+                    'document_type': 'INVOICE',
+                    'invoice_number': document['fields']['INVOICE_NUMBER'],
+                    'vendor_name': document['fields']['VENDOR_NAME']
+                })
+                if matched_invoice:
+                    relation_id = self._relate_to_matched(customer_id, matched_invoice, relation_id)
+
+            # Match to PO
+            if document['fields']['PO_NUMBER'] and document['fields']['VENDOR_NAME']:
+                matched_po = self.db.documents.find_one({
+                    'customer_id': customer_id,
+                    'document_type': 'PURCHASE_ORDER',
+                    'po_number': document['fields']['PO_NUMBER'],
+                    'vendor_name': document['fields']['VENDOR_NAME']
+                })
+                if matched_po:
+                    relation_id = self._relate_to_matched(customer_id, matched_po, relation_id)
+
+        else:
+            self.db.documents.update_one({
+                'customer_id': customer_id,
+                'document_id': document_id,
+                'document_type': 'RECEIVING_SLIP',
+                # Note: since PS does not have a dedicated ID (like PO_NUMBER for PO) we identify it by these:
+                'invoice_number': document['fields']['INVOICE_NUMBER'],
+                'po_number': document['fields']['PO_NUMBER'],
+                'vendor_name': document['fields']['VENDOR_NAME']
+            }, {
+                '$push': {
+                    'documents': document,
+                    'searchable': {'$each': list(document['fields'].values())}
+                }
+            })
+
+
+
+
+
+
 
 
 
@@ -646,6 +751,7 @@ if __name__ == '__main__':
                     'QUOTE_NUMBER': 'q1',
                     'VENDOR_NAME': 'vend-name-1'
                 },
+                'parent_i_page': -1
             },
             'INVOICE': {
                 'document_type': 'INVOICE',
@@ -654,6 +760,7 @@ if __name__ == '__main__':
                     'PO_NUMBER': 'po1',
                     'VENDOR_NAME': 'vend-name-1'
                 },
+                'parent_i_page': -1
             },
             'PURCHASE_ORDER': {
                 'document_type': 'PURCHASE_ORDER',
@@ -662,6 +769,7 @@ if __name__ == '__main__':
                     'QUOTE_NUMBER': 'q1',
                     'VENDOR_NAME': 'vend-name-1'
                 },
+                'parent_i_page': -1
             },
             'PACKING_SLIP': {
                 'document_type': 'PACKING_SLIP',
@@ -670,6 +778,16 @@ if __name__ == '__main__':
                     'INVOICE_NUMBER': 'in1',
                     'VENDOR_NAME': 'vend-name-1'
                 },
+                'parent_i_page': -1
+            },
+            'RECEIVING_SLIP': {
+                'document_type': 'RECEIVING_SLIP',
+                'fields': {
+                    'PO_NUMBER': 'po1',
+                    'INVOICE_NUMBER': 'in1',
+                    'VENDOR_NAME': 'vend-name-1'
+                },
+                'parent_i_page': -1
             }
         }
 
@@ -694,6 +812,12 @@ if __name__ == '__main__':
                                                            'my-s3_docs_bundle_url',
                                                            'doc-hash-1',
                                                            [documents['PACKING_SLIP']])
+            elif doc_type == 'rs':
+                Indexer('mongodb://localhost:27017').index(customer_id, 'doc_id_1',
+                                                           'my-s3_docs_bundle_url',
+                                                           'doc-hash-1',
+                                                           [documents['RECEIVING_SLIP']])
+
             else:
                 raise Exception(f'Wrong input document type: {doc_type}')
 
@@ -711,6 +835,14 @@ if __name__ == '__main__':
     # --
     # test_relation_case(['ps', 'invoice'], 'cust_1')
     # test_relation_case(['invoice', 'ps'], 'cust_1', drop_db=False)
+
+    # --
+    # test_relation_case(['rs', 'invoice'], 'cust_1')
+    # test_relation_case(['invoice', 'rs'], 'cust_1')
+    # --
+    # test_relation_case(['rs', 'po'], 'cust_1')
+    # test_relation_case(['po', 'rs'], 'cust_1')
+
     # --
     # test_relation_case(['invoice', 'ps'], 'cust_1')
     # --
@@ -722,6 +854,8 @@ if __name__ == '__main__':
     # --
     # test_relation_case(['quote', 'po'], 'cust_1')
     # test_relation_case(['po', 'quote'], 'cust_1')
+
+
 
 
     # print(Indexer('mongodb://localhost:27017').get_documents_by_id('cust_1', ['doc_id_1']))
@@ -1092,7 +1226,7 @@ if __name__ == '__main__':
         pprint.pprint(list(results))
 
 
-    test_agg_2c()
+    # test_agg_2c()
 
     # test_agg_3()
     # test_agg_2()
