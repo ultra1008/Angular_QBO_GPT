@@ -36,8 +36,19 @@ export class AppComponent implements OnInit {
   deviceInfo: any;
   lookupInfo: any;
   dialogRef: any;
+  timeValue: any;
 
-
+  constructor(public dialog: MatDialog, private deviceService: DeviceDetectorService, public snackbarservice: Snackbarservice, public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public idle: Idle, public keepalive: Keepalive, public translate: TranslateService, private metaService: Meta, private titleService: Title
+  ) {
+    console.log('====== Constructor call ==========');
+    var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
+    var locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configdata.fst_load_lang : tmp_locallanguage;
+    this.deviceInfo = this.deviceService.getDeviceInfo();
+    localStorage.setItem(localstorageconstants.LANGUAGE, locallanguage);
+    this.translate.use(locallanguage);
+    this.updateIdealTimeout();
+    this.getGIFLoader();
+  }
   updateIdealTimeout() {
     console.log('updateIdealTimeout');
     let that = this;
@@ -45,13 +56,22 @@ export class AppComponent implements OnInit {
     if (localStorage.getItem('invoicelogout') == 'false') {
       that.httpCall.httpGetCall(httproutes.PORTAL_SETTING_GET).subscribe(function (params) {
         console.log(params);
+        that.timeValue = params.data.settings.Auto_Log_Off.setting_value;
         if (params.status) {
+
+          console.log('If 1');
           if (params.data) {
+            console.log('If 2');
             if (params.data.settings.Auto_Log_Off.setting_status == "Active") {
+              console.log('If 3');
+
               // sets an idle timeout of 1 min, for testing purposes. 
-              that.idle.setIdle(params.data.settings.Auto_Log_Off.setting_value); // Change this time from the settings
+              that.idle.setIdle(that.timeValue * 60); // Change this time from the settings
+
+              // that.idle.setIdle(60);
               // sets a timeout period of 30 seconds. after 30 seconds of inactivity, the user will be considered timed out.
               that.idle.setTimeout(30);
+
               // sets the default interrupts, in this case, things like clicks, scrolls, touches to the document
               that.idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
 
@@ -93,7 +113,7 @@ export class AppComponent implements OnInit {
                     that.mainLogout();
                   } else if (
                     /* Read more about handling dismissals below */
-                    result.dismiss === Swal.DismissReason.cancel
+                    result.isDenied
                   ) {
                     that.reset();
                   }
@@ -106,7 +126,7 @@ export class AppComponent implements OnInit {
               });
 
               // sets the ping interval to 15 seconds
-              that.keepalive.interval(15);
+              that.keepalive.interval(1);
 
               that.keepalive.onPing.subscribe(() => that.lastPing = new Date());
 
@@ -118,17 +138,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  constructor (public dialog: MatDialog, private deviceService: DeviceDetectorService, public snackbarservice: Snackbarservice, public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public idle: Idle, public keepalive: Keepalive, public translate: TranslateService, private metaService: Meta, private titleService: Title
-  ) {
-    console.log('====== Constructor call ==========');
-    var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
-    var locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configdata.fst_load_lang : tmp_locallanguage;
-    this.deviceInfo = this.deviceService.getDeviceInfo();
-    localStorage.setItem(localstorageconstants.LANGUAGE, locallanguage);
-    this.translate.use(locallanguage);
-    this.updateIdealTimeout();
-    this.getGIFLoader();
-  }
+
 
   getGIFLoader() {
     let that = this;
@@ -156,7 +166,7 @@ export class AppComponent implements OnInit {
     console.log(that.idleState);
     // Ideal Timeout so Logout.
     that.uiSpinner.spin$.next(true);
-    let userdata = JSON.parse(localStorage.getItem('userdata') ?? '');
+    let userdata = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA) ?? '');
     if (userdata.UserData.role_name != configdata.EMPLOYEE) {
       that.uiSpinner.spin$.next(false);
       that.logoutHistory();
