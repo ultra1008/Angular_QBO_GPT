@@ -97,7 +97,7 @@ export class AppComponent implements OnInit {
                 // that.dialogRef.afterClosed().subscribe(result => {
                 // });
                 let val = params.data.settings.Auto_Log_Off.setting_value;
-                let message = "Your Rovuk session will end in " + val + " minutes due to inactivity.";
+                let message = "You have been inactive for " + val + " minutes, your session is about to end due to inactivity.";
                 let htmlData = "As a security precaution, if there is no additional activity in your ROVUK session, the session will end and you will be brought to the login page.</br></br>If you are still working please click OK to continue.";
                 swalWithBootstrapButtons.fire({
                   title: message,
