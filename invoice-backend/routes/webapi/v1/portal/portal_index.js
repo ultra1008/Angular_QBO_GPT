@@ -340,4 +340,14 @@ router.post('/webapi/v1/portal/deleteinvoiceprocess', common.checkTokenExistOrNo
 let recentActivityController = require('./recent_activity/recentActivityController');
 router.post('/webapi/v1/portal/getrecentactivity', common.checkTokenExistOrNot, recentActivityController.getRecentActivity);
 
+// Alert
+let alertController = require("./alert/alertController");
+let supplierAlertValidation = require("./alert/alertValidation");
+router.post('/webapi/v1/portal/getallgridalert', common.checkTokenExistOrNot, alertController.getAllAlert);
+router.post('/webapi/v1/portal/getgridalertdatatables', common.checkTokenExistOrNot, alertController.getAlertDatatables);
+router.post('/webapi/v1/portal/savegridalert', common.checkTokenExistOrNot, alertController.saveAlert);
+router.post('/webapi/v1/portal/updategridalert', common.checkTokenExistOrNot, alertController.updateAlert);
+router.post('/webapi/v1/portal/updateallgridalert', common.checkTokenExistOrNot, alertController.updateAllAlert);
+router.post('/webapi/v1/portal/getgridalertexcelreport', common.checkTokenExistOrNot, alertController.getAlertExcelReport);
+
 module.exports = router;
