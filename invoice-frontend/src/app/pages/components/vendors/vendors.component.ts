@@ -753,6 +753,7 @@ export class VendorReportComponent implements OnInit {
   saveIcon = icon.SAVE_WHITE;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   add_my_self_icon = icon.ADD_MY_SELF_WHITE;
+  statusList: any = configdata.INVOICES_STATUS;
 
   /*Constructor*/
   constructor (
@@ -774,6 +775,8 @@ export class VendorReportComponent implements OnInit {
     this.vendorInfo = this.formBuilder.group({
       All_Terms: [true],
       terms_ids: [this.termList.map((el) => el._id)],
+      All_Invoice_Status: [true],
+      invoice_status: [this.statusList.map((el) => el.key)],
     });
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
@@ -795,9 +798,7 @@ export class VendorReportComponent implements OnInit {
     });
 
     this.translate.stream([""]).subscribe((textarray) => {
-      this.copyDataFromProject = this.translate.instant(
-        "Copy_Data_From_Project"
-      );
+      this.copyDataFromProject = this.translate.instant("Copy_Data_From_Project");
       this.yesButton = this.translate.instant("Compnay_Equipment_Delete_Yes");
       this.noButton = this.translate.instant("Compnay_Equipment_Delete_No");
     });
@@ -814,6 +815,14 @@ ngOnInit
           that.vendorInfo.get("All_Terms").setValue(true);
         } else {
           that.vendorInfo.get("All_Terms").setValue(false);
+        }
+      });
+    this.vendorInfo.get("invoice_status")
+      .valueChanges.subscribe(function (params: any) {
+        if (params.length == that.statusList.length) {
+          that.vendorInfo.get("All_Invoice_Status").setValue(true);
+        } else {
+          that.vendorInfo.get("All_Invoice_Status").setValue(false);
         }
       });
   }
@@ -864,6 +873,15 @@ ngOnInit
         .setValue(this.termList.map((el) => el._id));
     } else {
       this.vendorInfo.get("terms_ids").setValue([]);
+    }
+  }
+
+
+  onChangeValueAll_VendorStatus(params) {
+    if (params.checked) {
+      this.vendorInfo.get("invoice_status").setValue(this.statusList.map((el) => el.key));
+    } else {
+      this.vendorInfo.get("invoice_status").setValue([]);
     }
   }
 

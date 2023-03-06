@@ -2506,5 +2506,7 @@
     "Quote_number": "Quote Number",
     "Shipping_Method": "Shipping Method",
     "Quote_Total": "Quote Total",
-    "Receiver_Phone": "Receiver Phone"
+    "Receiver_Phone": "Receiver Phone",
+    "Invoice_Status_Select": "Please select the status of invoice",
+    "All_Invoice_Status": "All Invoice Status"
 }
