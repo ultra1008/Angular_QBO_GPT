@@ -499,6 +499,8 @@ module.exports = {
     EmailExcelAllRoles: 'All',
     EmailExcelTerms: 'Terms:',
     EmailExcelAllTerms: 'All',
+    EmailExcelInvoiceStatus: 'Invoice Status:',
+    EmailExcelAllInvoiceStatus: 'All',
 
     //Employee
     Employee_First_Name: "First Name",
@@ -862,6 +864,10 @@ module.exports = {
         vendor_description: 'Description',
         vendor_id: 'Vendor Id',
         customer_id: 'Customer Id',
+        Pending: 'Pending Invoices',
+        Approved: 'Approved Invoices',
+        Rejected: 'Rejected Invoices',
+        Late: 'Late Invoices',
     },
 
     // Vendor Report

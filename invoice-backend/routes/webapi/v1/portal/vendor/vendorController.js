@@ -535,6 +535,7 @@ module.exports.getVendorExcelReport = async function (req, res) {
             let sort = { vendor_name: 1 };
             let termQuery = [];
             let query = [];
+            let status_query = {};
             if (requestObject.terms_ids.length != 0) {
                 let data_Query = [];
                 for (let i = 0; i < requestObject.terms_ids.length; i++) {
@@ -542,6 +543,9 @@ module.exports.getVendorExcelReport = async function (req, res) {
                 }
                 termQuery.push({ "_id": { $in: data_Query } });
                 query.push({ "vendor_terms": { $in: data_Query } });
+            }
+            if (requestObject.invoice_status.length != 0) {
+                status_query = { status: { $in: requestObject.invoice_status } };
             }
             query = query.length == 0 ? {} : { $and: query };
 
@@ -557,6 +561,43 @@ module.exports.getVendorExcelReport = async function (req, res) {
                     }
                 },
                 { $unwind: "$terms" },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE,
+                        let: { id: "$_id" },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $and: [
+                                            { $eq: ["$vendor", "$$id"] },
+                                            { $eq: ["$is_delete", 0] }
+                                        ]
+                                    }
+                                },
+                            },
+                            { $match: status_query },
+                            {
+                                $project: {
+                                    Pending: { $cond: [{ $eq: ["$status", 'Pending'] }, 1, 0] },
+                                    Approved: { $cond: [{ $eq: ["$status", 'Approved'] }, 1, 0] },
+                                    Rejected: { $cond: [{ $eq: ["$status", 'Rejected'] }, 1, 0] },
+                                    Late: { $cond: [{ $eq: ["$status", 'Late'] }, 1, 0] },
+                                }
+                            },
+                            {
+                                $group: {
+                                    _id: null,
+                                    Pending: { $sum: "$Pending" },
+                                    Approved: { $sum: "$Approved" },
+                                    Rejected: { $sum: "$Rejected" },
+                                    Late: { $sum: "$Late" },
+                                }
+                            }
+                        ],
+                        as: "invoice"
+                    }
+                },
                 { $sort: sort }
             ]).collation({ locale: "en_US" });
             console.log("sagar.........get_vendor: ", get_vendor.length);
@@ -568,9 +609,25 @@ module.exports.getVendorExcelReport = async function (req, res) {
             let logo_rovuk = await common.urlToBase64(config.INVOICE_LOGO);
             for (let i = 0; i < get_vendor.length; i++) {
                 let vendor = get_vendor[i];
-                xlsx_data.push([vendor.vendor_name, vendor.vendor_id, vendor.customer_id, vendor.vendor_phone,
+                let tempDate = [vendor.vendor_name, vendor.vendor_id, vendor.customer_id, vendor.vendor_phone,
                 vendor.vendor_email, vendor.vendor_address, vendor.vendor_address2, vendor.vendor_city, vendor.vendor_state, vendor.vendor_zipcode,
-                vendor.vendor_country, vendor.terms.name, vendor.vendor_status, vendor.vendor_description]);
+                vendor.vendor_country, vendor.terms.name, vendor.vendor_status, vendor.vendor_description];
+                let invoiceCount = {
+                    Pending: 0,
+                    Approved: 0,
+                    Rejected: 0,
+                    Late: 0,
+                };
+                if (vendor.invoice.length > 0) {
+                    invoiceCount = vendor.invoice[0];
+                }
+                if (requestObject.invoice_status.length != 0) {
+                    for (let i = 0; i < requestObject.invoice_status.length; i++) {
+                        let status = requestObject.invoice_status[i];
+                        tempDate.push(invoiceCount[status]);
+                    }
+                }
+                xlsx_data.push(tempDate);
             }
             let headers = [
                 translator.getStr('Vendor_History.vendor_name'),
@@ -588,7 +645,11 @@ module.exports.getVendorExcelReport = async function (req, res) {
                 translator.getStr('Vendor_History.vendor_status'),
                 translator.getStr('Vendor_History.vendor_description'),
             ];
-
+            if (requestObject.invoice_status.length != 0) {
+                for (let i = 0; i < requestObject.invoice_status.length; i++) {
+                    headers.push(translator.getStr(`Vendor_History.${requestObject.invoice_status[i]}`));
+                }
+            }
             let d = new Date();
             let excel_date = common.fullDate_format();
 
@@ -600,13 +661,28 @@ module.exports.getVendorExcelReport = async function (req, res) {
             worksheet.addImage(myLogoImage, "A1:A6");
             worksheet.mergeCells('A1:A6');
 
-            //supplier logo
+            let middleTextCell = 'M';
+            let finalCell = 'N';
+            if (requestObject.invoice_status.length == 1) {
+                middleTextCell = 'N';
+                finalCell = 'O';
+            } else if (requestObject.invoice_status.length == 2) {
+                middleTextCell = 'O';
+                finalCell = 'P';
+            } else if (requestObject.invoice_status.length == 3) {
+                middleTextCell = 'P';
+                finalCell = 'Q';
+            } else if (requestObject.invoice_status.length == 4) {
+                middleTextCell = 'Q';
+                finalCell = 'R';
+            }
+            //invoice logo
             let rovukLogoImage = workbook.addImage({
                 base64: logo_rovuk,
                 extension: 'png',
             });
-            worksheet.mergeCells('N1:N6');
-            worksheet.addImage(rovukLogoImage, 'N1:N6');
+            worksheet.mergeCells(`${finalCell}1:${finalCell}6`);
+            worksheet.addImage(rovukLogoImage, `${finalCell}1:${finalCell}6`);
 
             // Image between text 1
             let titleRowValue1 = worksheet.getCell('B1');
@@ -617,7 +693,7 @@ module.exports.getVendorExcelReport = async function (req, res) {
                 bold: true,
             };
             titleRowValue1.alignment = { vertical: 'middle', horizontal: 'left' };
-            worksheet.mergeCells(`B1:M3`);
+            worksheet.mergeCells(`B1:${middleTextCell}3`);
 
             // Image between text 2
             let titleRowValue2 = worksheet.getCell('B4');
@@ -628,7 +704,7 @@ module.exports.getVendorExcelReport = async function (req, res) {
                 bold: true,
             };
             titleRowValue2.alignment = { vertical: 'middle', horizontal: 'left' };
-            worksheet.mergeCells(`B4:M6`);
+            worksheet.mergeCells(`B4:${middleTextCell}6`);
 
             //header design
             let headerRow = worksheet.addRow(headers);
@@ -659,10 +735,11 @@ module.exports.getVendorExcelReport = async function (req, res) {
 
             let footerRow = worksheet.addRow([translator.getStr('XlsxReportGeneratedAt') + excel_date]);
             footerRow.alignment = { vertical: 'middle', horizontal: 'center' };
-            worksheet.mergeCells(`A${footerRow.number}:N${footerRow.number}`);
+            worksheet.mergeCells(`A${footerRow.number}:${finalCell}${footerRow.number}`);
             const tmpResultExcel = await workbook.xlsx.writeBuffer();
 
             let terms = '';
+            let status = '';
             if (requestObject.All_Terms) {
                 terms = `${translator.getStr('EmailExcelTerms')} ${translator.getStr('EmailExcelAllTerms')}`;
             } else {
@@ -674,6 +751,11 @@ module.exports.getVendorExcelReport = async function (req, res) {
                     temp_data.push(all_terms[i]['name']);
                 }
                 terms = `${translator.getStr('EmailExcelTerms')} ${temp_data.join(", ")}`;
+            }
+            if (requestObject.All_Invoice_Status) {
+                status = `${translator.getStr('EmailExcelInvoiceStatus')} ${translator.getStr('EmailExcelAllInvoiceStatus')}`;
+            } else {
+                status = `${translator.getStr('EmailExcelInvoiceStatus')} ${requestObject.invoice_status.join(", ")}`;
             }
 
 
@@ -691,7 +773,7 @@ module.exports.getVendorExcelReport = async function (req, res) {
                     res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
                 } else {
                     excelUrl = config.wasabisys_url + "/" + companycode + "/" + key_url;
-                    console.log("blueprint plan report excelUrl", excelUrl);
+                    console.log("vendor report excelUrl", excelUrl);
                     let emailTmp = {
                         HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
                         SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
@@ -706,7 +788,7 @@ module.exports.getVendorExcelReport = async function (req, res) {
 
                         FILE_LINK: excelUrl,
 
-                        SELECTION: new handlebars.SafeString(`<h4>${terms}</h4>`),
+                        SELECTION: new handlebars.SafeString(`<h4>${terms}</h4><h4>${status}</h4>`),
 
                         COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
                         COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,

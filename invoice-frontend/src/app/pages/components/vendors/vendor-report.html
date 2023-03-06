@@ -32,6 +32,23 @@
         </mat-form-field>
 
         <h4 mat-dialog-title class="cust-report-label-header-text">
+            {{'Invoice_Status_Select' | translate}}
+        </h4>
+        <div>
+            <mat-checkbox formControlName="All_Invoice_Status" (change)="onChangeValueAll_VendorStatus($event)"
+                class="example-margin" color="primary">{{'All_Invoice_Status' | translate}}</mat-checkbox>
+        </div>
+        <mat-form-field appearance="outline" class="main-one-input-field">
+            <mat-label>{{'Company-Vendor-status' | translate }}</mat-label>
+            <mat-select formControlName="invoice_status" multiple placeholder="{{'Company-Vendor-status' | translate }}"
+                required>
+                <mat-option *ngFor="let item of statusList" [value]="item.key">
+                    {{item.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <h4 mat-dialog-title class="cust-report-label-header-text">
             {{'Company-Expenses-Send-report' | translate}}
             <button mat-raised-button color="primary" *ngIf="is_oneOnly" (click)="ADD_MY_SELF()"><img
                     src="{{add_my_self_icon}}" alt="" class="mr-1 cust-all-add-my-self-img"
