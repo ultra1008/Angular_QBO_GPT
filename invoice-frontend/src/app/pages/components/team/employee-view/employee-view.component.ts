@@ -1256,6 +1256,7 @@ export class EmployeeViewComponent implements OnInit {
       that.uiSpinner.spin$.next(true);
       let reqObject = {
         password: req_temp.password,
+        useremail: req_temp.useremail
       };
 
       that.httpCall
