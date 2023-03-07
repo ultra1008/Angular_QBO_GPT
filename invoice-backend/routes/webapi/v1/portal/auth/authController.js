@@ -621,7 +621,8 @@ module.exports.sendUserPassword = async function (req, res) {
             let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
             let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
             let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
-            let UserData = await userConnection.findOne({ _id: decodedToken.UserData._id });
+            // let UserData = await userConnection.findOne({ _id: decodedToken.UserData._id });
+            let UserData = await userConnection.findOne({ useremail: requestObject.useremail });
             if (UserData == null) {
                 res.send({ message: translator.getStr('UserNotFound'), status: false });
             } else {
@@ -646,7 +647,7 @@ module.exports.sendUserPassword = async function (req, res) {
                 };
                 var template = handlebars.compile(data);
                 var HtmlData = await template(emailTmp);
-                let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [UserData.useremail], "Rovuk Forgot Password", HtmlData,
+                let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [requestObject.useremail], "Rovuk Forgot Password", HtmlData,
                     talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail, talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout,
                     talnate_data.tenant_smtp_security);
                 if (mailsend) {
@@ -707,7 +708,8 @@ module.exports.sendSupplierOTP = async function (req, res) {
         let one_user = await userConnection.findOne({ useremail: requestObject.useremail });
         if (one_user) {
             let emailOTPConnection = connection_db_api.model(collectionConstant.EMAIL_OTP, emailOTPSchema);
-            let sixdidgitnumber = Math.floor(Math.random() * (9 * Math.pow(10, 6 - 1))) + Math.pow(10, 6 - 1);
+            //let sixdidgitnumber = Math.floor(Math.random() * (9 * Math.pow(10, 6 - 1))) + Math.pow(10, 6 - 1);
+            let sixdidgitnumber = common.randomString(6);
             requestObject.sent_on = Math.round(new Date().getTime() / 1000);
             requestObject.user_id = one_user._id;
             requestObject.otp = sixdidgitnumber;
