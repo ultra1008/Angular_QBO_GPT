@@ -39,12 +39,13 @@ export class AuthPageComponent implements OnInit {
   otp: string = "";
   otpConfig = {
     length: 6,
-    allowNumbersOnly: true,
+    allowNumbersOnly: false,
+    letterCase: 'Upper'
   };
   otpTimer: any;
   subscription!: Subscription;
 
-  constructor (public httpCall: HttpCall, private service: PortalAuthService, private router: Router,
+  constructor(public httpCall: HttpCall, private service: PortalAuthService, private router: Router,
     public myapp: AppComponent, public uiSpinner: UiSpinnerService,
     public translate: TranslateService, public authservice: PortalAuthService, public snackbarservice: Snackbarservice) {
     this.translate.stream(['']).subscribe((textarray) => {
