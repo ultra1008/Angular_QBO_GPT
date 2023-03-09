@@ -13,7 +13,7 @@ import { HttpCall } from 'src/app/service/httpcall.service';
 import { Mostusedservice } from 'src/app/service/mostused.service';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
-import { gallery_options, LanguageApp } from 'src/app/service/utils';
+import { gallery_options, LanguageApp, MMDDYYYY_formet } from 'src/app/service/utils';
 import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
 import { ModeDetectService } from '../../map/mode-detect.service';
@@ -24,6 +24,7 @@ class DataTablesResponse {
   draw: number;
   recordsFiltered: number;
   recordsTotal: number;
+  pendingCount:number;
 }
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
@@ -47,6 +48,7 @@ export class DashboardFilesListComponent implements OnInit {
   @ViewChild("gallery") gallery: NgxGalleryComponent;
   dtOptions: any = {};
   dtOptionsView: any = {};
+  dtOptionsDuplicate: any = {};
   imageObject: any;
   add_my_self_icon = icon.ADD_MY_SELF_WHITE;
   galleryOptions: NgxGalleryOptions[];
@@ -57,6 +59,7 @@ export class DashboardFilesListComponent implements OnInit {
   locallanguage: string;
   showTable: boolean = true;
   showViewTable: boolean = true;
+  showDuplicateTable: boolean = true;
   invoice_no: string;
   po_no: string;
   packing_slip_no: string;
@@ -107,7 +110,7 @@ export class DashboardFilesListComponent implements OnInit {
     quote: 'QUOTE',
   };
 
-  constructor(private location: Location, private modeService: ModeDetectService,
+  constructor (private location: Location, private modeService: ModeDetectService,
     public dialog: MatDialog,
     private router: Router,
     private http: HttpClient,
@@ -265,7 +268,7 @@ export class DashboardFilesListComponent implements OnInit {
               recordsFiltered: resp.recordsFiltered,
               data: resp.data,
             });
-            that.counts.pending_files = resp.recordsTotal;
+            that.counts.pending_files = resp.pendingCount;
           });
       },
       columns: that.getColumName(),
@@ -313,10 +316,53 @@ export class DashboardFilesListComponent implements OnInit {
               recordsFiltered: resp.recordsFiltered,
               data: resp.data,
             });
-            that.counts.pending_files = resp.recordsTotal;
+            that.counts.pending_files = resp.pendingCount;
           });
       },
       columns: that.getColumName(),
+      drawCallback: () => {
+        $(".button_viewDocViewClass").on("click", (event) => {
+          let data = JSON.parse(event.target.getAttribute("edit_tmp_id"));
+          that.router.navigate(['/app-custompdfviewer'], { queryParams: { po_url: data.pdf_url } });
+        });
+        $(".button_viewDocDeleteClass").on("click", (event) => {
+          let data = JSON.parse(event.target.getAttribute("edit_tmp_id"));
+          that.deleteDocument(data._id);
+        });
+      },
+    };
+    this.dtOptionsDuplicate = {
+      pagingType: "full_numbers",
+      pageLength: 10,
+      serverSide: true,
+      processing: true,
+      responsive: false,
+      language:
+        portal_language == "en"
+          ? LanguageApp.english_datatables
+          : LanguageApp.spanish_datatables,
+      order: [],
+      ajax: (dataTablesParameters: any, callback) => {
+        $(".dataTables_processing").html(
+          "<img  src=" + this.httpCall.getLoader() + ">"
+        );
+        dataTablesParameters.view_option = true;
+        that.http
+          .post<DataTablesResponse>(
+            configdata.apiurl + httproutes.PORTAL_DUPLICATE_DOCUMENTS_DATATABLE,
+            dataTablesParameters,
+            { headers: headers }
+          )
+          .subscribe((resp) => {
+            callback({
+              recordsTotal: resp.recordsTotal,
+              recordsFiltered: resp.recordsFiltered,
+              data: resp.data,
+            });
+            that.counts.pending_files = resp.pendingCount;
+          });
+      },
+      columns: that.getDuplicateColumName(),
       drawCallback: () => {
         $(".button_viewDocViewClass").on("click", (event) => {
           let data = JSON.parse(event.target.getAttribute("edit_tmp_id"));
@@ -333,7 +379,6 @@ export class DashboardFilesListComponent implements OnInit {
 
   getColumName() {
     let that = this;
-
     return [
       {
         title: 'Document Type',
@@ -353,6 +398,18 @@ export class DashboardFilesListComponent implements OnInit {
       {
         title: 'Vendor Name',
         data: "vendor_name",
+        defaultContent: "",
+      },
+      {
+        title: 'Uploaded By',
+        data: "created_by_user.userfullname",
+        defaultContent: "",
+      },
+      {
+        title: 'Uploaded At',
+        render: function (data: any, type: any, full: any) {
+          return MMDDYYYY_formet(full.created_at);
+        },
         defaultContent: "",
       },
       {
@@ -376,6 +433,49 @@ export class DashboardFilesListComponent implements OnInit {
              ` + edit + `
              ` + archive + `
              
+           </div>
+       </div>`
+          );
+        },
+        width: "1%",
+        orderable: false,
+      },
+    ];
+  }
+
+  getDuplicateColumName() {
+    let that = this;
+    return [
+      {
+        title: 'Uploaded By',
+        data: "created_by_user.userfullname",
+        defaultContent: "",
+      },
+      {
+        title: 'Uploaded At',
+        render: function (data: any, type: any, full: any) {
+          return MMDDYYYY_formet(full.created_at);
+        },
+        defaultContent: "",
+      },
+      {
+        title: 'Action',
+        render: function (data: any, type: any, full: any) {
+          let tmp_tmp = {
+            _id: full._id,
+            document_id: full._id,
+            pdf_url: full.pdf_url,
+            document_type: full.document_type
+          };
+          let view = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_viewDocViewClass" >` + '<img src="' + that.viewIcon + `" alt="" height="15px">View</a>`;
+          let archive = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_viewDocDeleteClass" >` + '<img src="' + that.deleteIcon + `" alt="" height="15px">Delete</a>`;
+          return (
+            `
+         <div class="dropdown">
+           <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust"  aria-haspopup="true" aria-expanded="false"  edit_tmp_id='` + JSON.stringify(full) + `' aria-hidden="true"></i>
+           <div class= "dropdown-content-cust" aria-labelledby="dropdownMenuButton">
+             ` + view + `
+             ` + archive + `
            </div>
        </div>`
           );
@@ -450,11 +550,20 @@ export class DashboardFilesListComponent implements OnInit {
     let that = this;
     that.showTable = false;
     that.showViewTable = false;
+    that.showDuplicateTable = false;
     setTimeout(() => {
       that.dtOptions.language = tmp_locallanguage == "en" ? LanguageApp.english_datatables : LanguageApp.spanish_datatables;
       that.dtOptions.columns = that.getColumName();
+
+      that.dtOptionsView.language = tmp_locallanguage == "en" ? LanguageApp.english_datatables : LanguageApp.spanish_datatables;
+      that.dtOptionsView.columns = that.getColumName();
+
+      that.dtOptionsDuplicate.language = tmp_locallanguage == "en" ? LanguageApp.english_datatables : LanguageApp.spanish_datatables;
+      that.dtOptionsDuplicate.columns = that.getDuplicateColumName();
+
       that.showTable = true;
       that.showViewTable = true;
+      that.showDuplicateTable = true;
     }, 100);
   }
 }

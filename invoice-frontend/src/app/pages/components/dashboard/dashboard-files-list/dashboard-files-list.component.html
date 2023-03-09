@@ -27,7 +27,7 @@
   </div>
 
   <div class="wrapper-cust-admin" fxLayout style="height: 95%">
-    <mat-tab-group mat-align-tabs="center" (selectedTabChange)="onTabChanged($event)" *ngIf="Document_View_time">
+    <mat-tab-group mat-align-tabs="center" (selectedTabChange)="onTabChanged($event)">
       <mat-tab label="{{'Dashboard_Pending_File' | translate}}">
         <div class="wrapper-cust-admin cust-width ">
           <div class="table-responsive cust-padding cust-padding-tmp mt-2" *ngIf="showTable">
@@ -36,7 +36,7 @@
           </div>
         </div>
       </mat-tab>
-      <mat-tab
+      <mat-tab *ngIf="Document_View_time"
         label="{{'Panding_Files_Older_Then' | translate}} {{Document_View_time_value}}&nbsp;{{'Days' | translate}}">
         <div class="wrapper-cust-admin cust-width ">
           <div class="table-responsive cust-padding cust-padding-tmp mt-2" *ngIf="showViewTable">
@@ -45,13 +45,21 @@
           </div>
         </div>
       </mat-tab>
+      <mat-tab label="{{'Dashboard_Duplicate_File' | translate}}">
+        <div class="wrapper-cust-admin cust-width ">
+          <div class="table-responsive cust-padding cust-padding-tmp mt-2" *ngIf="showDuplicateTable">
+            <table datatable [dtOptions]="dtOptionsDuplicate" id="dtOptionsDuplicate" class="row-border hover">
+            </table>
+          </div>
+        </div>
+      </mat-tab>
     </mat-tab-group>
-    <div *ngIf="!Document_View_time">
+    <!-- <div *ngIf="!Document_View_time">
       <div class="table-responsive cust-padding cust-padding-tmp mt-2" *ngIf="showTable">
         <table datatable [dtOptions]="dtOptions" id="dtOptions_vendor" class="row-border hover">
         </table>
       </div>
-    </div>
+    </div> -->
   </div>
 </div>
 <ngx-gallery [options]="galleryOptions" [images]="galleryImages" #gallery></ngx-gallery>

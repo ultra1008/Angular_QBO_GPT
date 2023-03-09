@@ -2437,6 +2437,7 @@
     "Quote_Details": "Quote Details",
     "Invoice_Add_Atleast_One_Document": "Please select atleast one document.",
     "Dashboard_Pending_File": "Pending Files",
+    "Dashboard_Duplicate_File": "Duplicate Files",
     "Dashboard_Pending_Invoice": "Pending Invoices",
     "Dashboard_Approved_Invoice": "Approved Invoices",
     "Dashboard_Rejected_Invoice": "Rejected Invoices",
