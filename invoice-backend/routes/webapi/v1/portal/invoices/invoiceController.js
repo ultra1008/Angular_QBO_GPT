@@ -861,7 +861,6 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
             if (requestObject.start_date != 0 && requestObject.end_date != 0) {
                 date_query = { "created_at": { $gte: requestObject.start_date, $lt: requestObject.end_date } };
             }
-
             let get_invoice = await invoicesConnection.aggregate([
                 { $match: { is_delete: 0 }, },
                 { $match: query },
@@ -1037,8 +1036,8 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
             }
 
             let companycode = decodedToken.companycode.toLowerCase();
-            // let key_url = config.INVOICE_WASABI_PATH + "/invoice/excel_report/invoice_" + new Date().getTime() + ".xlsx";
-            let key_url = config.INVOICE_WASABI_PATH + "/invoice/excel_report/invoice.xlsx";
+            let key_url = config.INVOICE_WASABI_PATH + "/invoice/excel_report/invoice_" + new Date().getTime() + ".xlsx";
+            // let key_url = config.INVOICE_WASABI_PATH + "/invoice/excel_report/invoice.xlsx";
             let PARAMS = {
                 Bucket: companycode,
                 Key: key_url,

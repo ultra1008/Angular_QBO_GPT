@@ -902,9 +902,32 @@ export class InvoiceReport {
     if (this.emailsList.length != 0) {
       this.sb.openSnackBar(this.Report_File_Message, "success");
       let requestObject = this.invoiceinfo.value;
+
+      let date_time = this.range.value;
+      let start_date = 0, end_date = 0;
+      let todayDate = new Date();
+      todayDate.setHours(0);
+      todayDate.setMinutes(0);
+      todayDate.setSeconds(0);
+      todayDate.setDate(todayDate.getDate() + 1);
+      if (date_time.start_date) {
+        start_date = moment(date_time.start_date).unix();
+        if (date_time.end_date) { } else {
+          end_date = moment(todayDate).unix();
+          end_date = end_date - 1;
+        }
+      }
+      if (date_time.end_date) {
+        let end = moment(date_time.end_date);
+        end.add('days', 1);
+        end_date = end.unix() - 1;
+      }
+
       var company_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
       requestObject.email_list = this.emailsList;
       requestObject.logo_url = company_data.companydata.companylogo;
+      requestObject.start_date = start_date;
+      requestObject.end_date = end_date;
 
       this.httpCall.httpPostCall(httproutes.PORTAL_INVOICE_REPORT, requestObject).subscribe(function (params: any) { });
       setTimeout(() => {
