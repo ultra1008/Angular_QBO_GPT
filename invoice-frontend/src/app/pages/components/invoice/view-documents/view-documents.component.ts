@@ -37,8 +37,15 @@ export class ViewDocumentsComponent implements OnInit {
   showTable: boolean = true;
   backIcon: string;
   viewIcon: string;
+  editIcon: string;
   deleteIcon: string;
   mode: any;
+  documentTypes: any = {
+    po: 'PURCHASE_ORDER',
+    packingSlip: 'PACKING_SLIP',
+    receivingSlip: 'RECEIVING_SLIP',
+    quote: 'QUOTE',
+  };
 
   constructor (private http: HttpClient, private location: Location, public httpCall: HttpCall, private modeService: ModeDetectService,
     public snackbarservice: Snackbarservice, private router: Router) {
@@ -48,10 +55,12 @@ export class ViewDocumentsComponent implements OnInit {
     if (this.mode == "off") {
       this.backIcon = icon.BACK;
       this.viewIcon = icon.VIEW;
+      this.editIcon = icon.EDIT;
       this.deleteIcon = icon.DELETE;
     } else {
       this.backIcon = icon.BACK_WHITE;
       this.viewIcon = icon.VIEW_WHITE;
+      this.editIcon = icon.EDIT_WHITE;
       this.deleteIcon = icon.DELETE_WHITE;
     }
     let j = 0;
@@ -60,11 +69,13 @@ export class ViewDocumentsComponent implements OnInit {
         this.mode = "off";
         this.backIcon = icon.BACK;
         this.viewIcon = icon.VIEW;
+        this.editIcon = icon.EDIT;
         this.deleteIcon = icon.DELETE;
       } else {
         this.mode = "on";
         this.backIcon = icon.BACK_WHITE;
         this.viewIcon = icon.VIEW_WHITE;
+        this.editIcon = icon.EDIT_WHITE;
         this.deleteIcon = icon.DELETE_WHITE;
       }
 
@@ -128,7 +139,10 @@ export class ViewDocumentsComponent implements OnInit {
           let data = JSON.parse(event.target.getAttribute("edit_tmp_id"));
           that.deleteDocument(data._id);
         });
-
+        $(".button_viewDocEditClass").on("click", (event) => {
+          let data = JSON.parse(event.target.getAttribute("edit_tmp_id"));
+          that.goToEdit(data);
+        });
       },
     };
     this.rerenderfunc();
@@ -162,16 +176,22 @@ export class ViewDocumentsComponent implements OnInit {
         render: function (data: any, type: any, full: any) {
           let tmp_tmp = {
             _id: full._id,
+            document_type: full.document_type,
             pdf_url: full.pdf_url,
           };
           let view = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_viewDocViewClass" >` + '<img src="' + that.viewIcon + `" alt="" height="15px">View</a>`;
+          let edit = '';
           let archive = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_viewDocDeleteClass" >` + '<img src="' + that.deleteIcon + `" alt="" height="15px">Delete</a>`;
+          if (full.document_type != 'Already Exists') {
+            edit = `<a edit_tmp_id='` + JSON.stringify(full) + `' class="dropdown-item button_viewDocEditClass" >` + '<img src="' + that.editIcon + `" alt="" height="15px">Edit</a>`;
+          }
           return (
             `
          <div class="dropdown">
            <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust"  aria-haspopup="true" aria-expanded="false"  edit_tmp_id='` + JSON.stringify(full) + `' aria-hidden="true"></i>
            <div class= "dropdown-content-cust" aria-labelledby="dropdownMenuButton">
              ` + view + `
+             ` + edit + `
              ` + archive + `
            </div>
        </div>`
@@ -181,6 +201,19 @@ export class ViewDocumentsComponent implements OnInit {
         orderable: false,
       },
     ];
+  }
+
+  goToEdit(document) {
+    let that = this;
+    if (document.document_type == that.documentTypes.po) {
+      that.router.navigate(['/po-detail-form'], { queryParams: { document_id: document._id } });
+    } else if (document.document_type == that.documentTypes.packingSlip) {
+      that.router.navigate(['/packing-slip-form'], { queryParams: { document_id: document._id } });
+    } else if (document.document_type == that.documentTypes.receivingSlip) {
+      that.router.navigate(['/receiving-slip-form'], { queryParams: { document_id: document._id } });
+    } else if (document.document_type == that.documentTypes.quote) {
+      that.router.navigate(['/quote-detail-form'], { queryParams: { document_id: document._id } });
+    }
   }
 
   deleteDocument(_id) {
