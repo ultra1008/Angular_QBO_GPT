@@ -131,6 +131,9 @@ export class AppComponent implements OnInit {
               that.keepalive.onPing.subscribe(() => that.lastPing = new Date());
 
               that.reset();
+            } else {
+              console.log("check within inactive");
+              that.idle.stop();
             }
           }
         }
