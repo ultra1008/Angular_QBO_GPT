@@ -37,7 +37,7 @@
         </div>
       </mat-tab>
       <mat-tab *ngIf="Document_View_time"
-        label="{{'Panding_Files_Older_Then' | translate}} {{Document_View_time_value}}&nbsp;{{'Days' | translate}}">
+        label="{{'Pending_Files_Older_Then' | translate}} {{Document_View_time_value}}&nbsp;{{'Days' | translate}}">
         <div class="wrapper-cust-admin cust-width ">
           <div class="table-responsive cust-padding cust-padding-tmp mt-2" *ngIf="showViewTable">
             <table datatable [dtOptions]="dtOptionsView" id="dtOptionsView" class="row-border hover">
