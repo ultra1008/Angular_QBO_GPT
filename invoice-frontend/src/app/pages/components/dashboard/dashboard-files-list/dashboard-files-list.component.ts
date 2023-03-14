@@ -24,7 +24,7 @@ class DataTablesResponse {
   draw: number;
   recordsFiltered: number;
   recordsTotal: number;
-  pendingCount:number;
+  pendingCount: number;
 }
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
@@ -108,9 +108,10 @@ export class DashboardFilesListComponent implements OnInit {
     packingSlip: 'PACKING_SLIP',
     receivingSlip: 'RECEIVING_SLIP',
     quote: 'QUOTE',
+    invoice: 'INVOICE'
   };
 
-  constructor (private location: Location, private modeService: ModeDetectService,
+  constructor(private location: Location, private modeService: ModeDetectService,
     public dialog: MatDialog,
     private router: Router,
     private http: HttpClient,
@@ -488,6 +489,7 @@ export class DashboardFilesListComponent implements OnInit {
 
   goToEdit(document) {
     let that = this;
+    console.log("document_type", document.document_type);
     if (document.document_type == that.documentTypes.po) {
       that.router.navigate(['/po-detail-form'], { queryParams: { document_id: document._id } });
     } else if (document.document_type == that.documentTypes.packingSlip) {
@@ -496,6 +498,8 @@ export class DashboardFilesListComponent implements OnInit {
       that.router.navigate(['/receiving-slip-form'], { queryParams: { document_id: document._id } });
     } else if (document.document_type == that.documentTypes.quote) {
       that.router.navigate(['/quote-detail-form'], { queryParams: { document_id: document._id } });
+    } else if (document.document_type == that.documentTypes.invoice) {
+      that.router.navigate(['/invoice-form'], { queryParams: { document_id: document._id } });
     }
   }
 

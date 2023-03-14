@@ -88,21 +88,31 @@ export class InvoiceFormComponent implements OnInit {
   badge: any = [];
   status: any;
   historyIcon: string;
+  loadInvoice: boolean = false;
+  document_id: any;
 
 
 
   constructor(public dialog: MatDialog, public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
+    this.document_id = this.route.snapshot.queryParamMap.get('document_id');
     // this.pdf_url = this.route.snapshot.queryParamMap.get('pdf_url');
     this.status = this.route.snapshot.queryParamMap.get('status');
 
-    console.log("invoice", this.id);
+
+
+
+
+    // this.getOneInvoice();
     if (this.id) {
-      console.log("id11111111", this.id);
-      this.uiSpinner.spin$.next(true);
       this.getOneInvoice();
     }
+    if (this.document_id) {
+      this.getOneProcessDocument();
+    }
+
+
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     var locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configdata.fst_load_lang : tmp_locallanguage;
     this.translate.use(locallanguage);
@@ -196,8 +206,15 @@ export class InvoiceFormComponent implements OnInit {
 
   }
 
+  // back() {
+  //   this.router.navigate(['/invoice']);
+  // }
   back() {
-    this.router.navigate(['/invoice']);
+    if (this.id) {
+      this.router.navigate(['/invoice']);
+    } else {
+      this.location.back();
+    }
   }
 
   ngOnInit(): void {
@@ -328,10 +345,10 @@ export class InvoiceFormComponent implements OnInit {
         }
       });
     /* if (requestObject.status == 'Approved') {
-
+  
       swalWithBootstrapButtons
         .fire({
-
+  
           title: that.Approve_Invoice_massage,
           showDenyButton: true,
           showCancelButton: false,
@@ -354,11 +371,11 @@ export class InvoiceFormComponent implements OnInit {
             });
           }
         });
-
+  
     } else {
       swalWithBootstrapButtons
         .fire({
-
+  
           title: that.Reject_Invoice_massage,
           showDenyButton: true,
           showCancelButton: false,
@@ -380,8 +397,8 @@ export class InvoiceFormComponent implements OnInit {
             });
           }
         });
-
-
+  
+  
     } */
 
     // that.uiSpinner.spin$.next(true);
@@ -422,14 +439,11 @@ export class InvoiceFormComponent implements OnInit {
         that.invoiceData = params.data;
         that.pdf_url = that.invoiceData.pdf_url;
         that.badge = that.invoiceData.badge;
-
         that.vendor.setValue(params.data.vendor);
         that.invoiceform = that.formBuilder.group({
           document_type: [params.data.document_type],
           invoice_name: [params.data.invoice_name],
-
           vendor: [params.data.vendor._id],
-
           customer_id: [params.data.customer_id],
           invoice: [params.data.invoice],
           p_o: [params.data.p_o],
@@ -458,6 +472,59 @@ export class InvoiceFormComponent implements OnInit {
     });
   }
 
+  getOneProcessDocument() {
+    let that = this;
+    this.httpCall.httpPostCall(httproutes.INVOICE_DOCUMENT_PROCESS_GET, { _id: that.document_id }).subscribe(function (params) {
+      if (params.status) {
+        that.status = params.data.status;
+        that.invoiceData = params.data.data;
+        that.pdf_url = that.invoiceData.pdf_url;
+        that.badge = that.invoiceData.badge;
+        let vendorId = '';
+        if (that.invoiceData.vendor) {
+          vendorId = that.invoiceData.vendor._id;
+        }
+        that.loadInvoice = true;
+        that.invoiceform = that.formBuilder.group({
+          document_type: [params.data.document_type],
+          invoice_name: [that.invoiceData.invoice_name],
+          vendor: [that.invoiceData.vendor._id],
+          customer_id: [that.invoiceData.customer_id],
+          invoice: [that.invoiceData.invoice],
+          p_o: [that.invoiceData.p_o],
+          job_number: [that.invoiceData.job_number],
+          invoice_date: [that.invoiceData.invoice_date],
+          due_date: [that.invoiceData.due_date],
+          order_date: [that.invoiceData.order_date],
+          ship_date: [that.invoiceData.ship_date],
+          packing_slip: [that.invoiceData.packing_slip],
+          receiving_slip: [that.invoiceData.receiving_slip],
+          status: [that.invoiceData.status ?? 'Pending'],
+          terms: [that.invoiceData.terms],
+          total: [that.invoiceData.total],
+          tax_amount: [that.invoiceData.tax_amount],
+          tax_id: [that.invoiceData.tax_id],
+          sub_total: [that.invoiceData.sub_total],
+          amount_due: [that.invoiceData.amount_due],
+          cost_code: [that.invoiceData.cost_code],
+          gl_account: [that.invoiceData.gl_account],
+          assign_to: [that.invoiceData.assign_to],
+          notes: [that.invoiceData.notes],
+          pdf_url: [that.invoiceData.pdf_url],
+        });
+      }
+      that.uiSpinner.spin$.next(false);
+      console.log("invoiceData.packing_slip_data", that.invoiceData.packing_slip_data);
+    });
+  }
+
+  saveData() {
+    if (this.id) {
+      this.saveInvoice();
+    } else if (this.document_id) {
+      this.saveProcessDocument();
+    }
+  }
   saveInvoice() {
     let that = this;
     console.log("hy: ", that.invoiceform.value);
@@ -476,6 +543,55 @@ export class InvoiceFormComponent implements OnInit {
         }
         that.uiSpinner.spin$.next(false);
       });
+    }
+  }
+  saveProcessDocument() {
+    let that = this;
+    if (that.invoiceform.valid) {
+
+      let formVal = that.invoiceform.value;
+      let requestObject = {
+        _id: that.document_id,
+        module: 'INVOICE',
+        'data.date': formVal.date,
+        'data.vendor': formVal.vendor,
+        'data.document_type': formVal.document_type,
+        'data.invoice_name': formVal.invoice_name,
+        'data.customer_id': formVal.customer_id,
+        'data.invoice': formVal.invoice,
+        'data.p_o': formVal.p_o,
+        'data.job_number': formVal.job_number,
+        'data.invoice_date': formVal.invoice_date,
+        'data.due_date': formVal.due_date,
+        'data.order_date': formVal.order_date,
+        'data.ship_date': formVal.ship_date,
+        'data.packing_slip': formVal.packing_slip,
+        'data.receiving_slip': formVal.receiving_slip,
+        'data.status': formVal.status,
+        'data.terms': formVal.terms,
+        'data.total': formVal.total,
+        'data.tax_amount': formVal.tax_amount,
+        'data.tax_id': formVal.tax_id,
+        'data.sub_total': formVal.sub_total,
+        'data.amount_due': formVal.amount_due,
+        'data.cost_code': formVal.cost_code,
+        'data.gl_account': formVal.gl_account,
+        'data.assign_to': formVal.assign_to,
+        'data.notes': formVal.notes,
+        'data.pdf_url': formVal.pdf_url,
+      };
+
+      that.uiSpinner.spin$.next(true);
+      that.httpCall.httpPostCall(httproutes.INVOICE_DOCUMENT_PROCESS_SAVE, requestObject).subscribe(function (params) {
+        if (params.status) {
+          that.snackbarservice.openSnackBar(params.message, "success");
+          that.back();
+        } else {
+          that.snackbarservice.openSnackBar(params.message, "error");
+        }
+        that.uiSpinner.spin$.next(false);
+      });
+      console.log("requestObject", requestObject);
     }
   }
 

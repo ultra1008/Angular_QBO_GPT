@@ -434,12 +434,11 @@ export class PoDetailFormComponent implements OnInit {
         _id: that.document_id,
         module: 'PO',
         'data.date': formVal.date,
-        // 'data.document_id': formVal.document_id,
-        // 'data.document_type': formVal.document_type,
+
         'data.vendor': that.vendor,
         'data.customer_id': formVal.customer_id,
         'data.due_date': formVal.due_date,
-        // 'data.p_o': formVal.p_o,
+
         'data.terms': formVal.terms,
         'data.sub_total': formVal.sub_total,
         'data.po_number': formVal.po_number,

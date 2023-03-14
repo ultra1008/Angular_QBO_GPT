@@ -408,6 +408,11 @@ export class DashboardInvoiceListComponent implements OnInit {
             },
           }); */
         });
+
+        $(".button_viewDocViewClass").on("click", (event) => {
+          let data = JSON.parse(event.target.getAttribute("edit_tmp_id"));
+          that.router.navigate(['/app-custompdfviewer'], { queryParams: { po_url: data.pdf_url } });
+        });
         $(".button_shiftApproveClass").on("click", (event) => {
           // Approve Invoice here
           let data = JSON.parse(event.target.getAttribute("edit_tmp_id"));
@@ -513,12 +518,13 @@ export class DashboardInvoiceListComponent implements OnInit {
         render: function (data: any, type: any, full: any) {
           let tmp_tmp = {
             _id: full._id,
+            pdf_url: full.pdf_url,
           };
           let approve = '';
           let reject = '';
           let view = '';
           let edit = '';
-          view = ` <a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_poViewClass" ><span><img src="` + that.viewIcon + `" alt="" height="15px"></span>` + that.Purchasing_Orders_View + `</a>`;
+          view = ` <a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_viewDocViewClass" ><span><img src="` + that.viewIcon + `" alt="" height="15px"></span>` + that.Purchasing_Orders_View + `</a>`;
           edit = ` <a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="button_shiftEditClass" ><span><img src="` + that.editIcon + `" alt="" height="15px"></span>` + that.Listing_Action_Edit + `</a>`;
           if (that.status != 'Approved') {
             approve = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_shiftApproveClass" >` + '<img src="' + that.approveIcon + '" alt="" height="15px">Approve</a>';
