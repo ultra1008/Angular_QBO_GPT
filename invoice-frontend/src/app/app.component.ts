@@ -37,7 +37,6 @@ export class AppComponent implements OnInit {
   lookupInfo: any;
   dialogRef: any;
   timeValue: any;
-
   constructor(public dialog: MatDialog, private deviceService: DeviceDetectorService, public snackbarservice: Snackbarservice, public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public idle: Idle, public keepalive: Keepalive, public translate: TranslateService, private metaService: Meta, private titleService: Title
   ) {
     console.log('====== Constructor call ==========');
@@ -49,6 +48,7 @@ export class AppComponent implements OnInit {
     this.updateIdealTimeout();
     this.getGIFLoader();
   }
+
   updateIdealTimeout() {
     console.log('updateIdealTimeout');
     let that = this;

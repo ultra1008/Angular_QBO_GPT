@@ -8,12 +8,12 @@
     <mat-horizontal-stepper labelPosition="bottom" fxFlex="100" #stepper>
         <ng-template matStepperIcon="edit" let-index="index">
             <img *ngIf="index == 0" src="{{companyinfo_white}}" alt="" height="15px">
-            <img *ngIf="index == 1" src="{{userIcon_white}}" alt="" height="15px">
+            <img *ngIf="index == 1" src="{{MAILBOX_WHILE}}" alt="" height="15px">
             <img *ngIf="index == 2" src="{{userIcon_white}}" alt="" height="15px">
             <img *ngIf="index == 3" src="{{roleicon_white}}" alt="" height="15px">
             <mat-icon *ngIf="index == 4">phonelink_ring</mat-icon>
-            <img *ngIf="index == 5" src="{{integration_whiteIcon}}" alt="" height="15px">
-            <img *ngIf="index == 6" src="{{smtp_white}}" alt="" height="15px">
+            <img *ngIf="index == 5" src="{{smtp_white}}" alt="" height="15px">
+            <img *ngIf="index == 6" src="{{integration_whiteIcon}}" alt="" height="15px">
             <img *ngIf="index == 7" src="{{usage_whiteIcon}}" alt="" height="15px">
             <img *ngIf="index == 8" src="{{other_settings_white}}" alt="" height="15px">
             <img *ngIf="index == 9" src="{{security_settings_white}}" alt="" height="15px">
@@ -27,7 +27,7 @@
         </ng-template>
 
         <ng-template matStepperIcon="mailbox">
-            <img src="{{companyinfo}}" alt="" height="15px">
+            <img src="{{MAILBOX_BLACK}}" alt="" height="15px">
         </ng-template>
 
         <ng-template matStepperIcon="employee">
@@ -59,7 +59,7 @@
             <img src="{{other_settings}}" alt="" height="15px">
         </ng-template>
         <ng-template matStepperIcon="security">
-            <img src="{{security_settings_white}}" alt="" height="15px">
+            <img src="{{security_settings}}" alt="" height="15px">
         </ng-template>
         <ng-template matStepperIcon="costcode">
 

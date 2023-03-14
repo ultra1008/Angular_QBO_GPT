@@ -159,4 +159,6 @@ export enum icon {
     DAILY_REPORT_WHITE = './assets/sidemenu/dailyreports_icon.png',
     List_LIGHT = "./assets/diversityicon/list_white.png",
     List = "./assets/diversityicon/list_dark.png",
+    MAILBOX_BLACK = "./assets/diversityicon/mailboxblack.png",
+    MAILBOX_WHILE = "./assets/diversityicon/mailboxwhite.png",
 }

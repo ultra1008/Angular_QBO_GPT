@@ -38,6 +38,8 @@ export class SettingComponent implements OnInit {
   security_settings_white = icon.SECURITY_SETTINGS_WHITE;
   Document_view = icon.DAILY_REPORT;
   Document_view_white = icon.DAILY_REPORT_WHITE;
+  MAILBOX_BLACK = icon.MAILBOX_BLACK;
+  MAILBOX_WHILE = icon.MAILBOX_WHILE;
 
 
   constructor(private router: Router) { }
