@@ -6,7 +6,9 @@
     <div class="col-3 dialog-head-left">
     </div>
     <div class="col-6 dialog-head-center">
-        <h2 class="cust-report-label-header-text">Invoice Report</h2>
+        <h2 class="cust-report-label-header-text">{{data.status}} Invoice Report</h2>
+
+
     </div>
     <div class="col-3 dialog-head-right">
         <!-- <button class="import-export-btn-datatable cust-margin-div" matTooltip="{{ 'All-save' | translate }}"
@@ -52,7 +54,7 @@
         </mat-form-field> -->
         <div *ngIf="data.status == null">
             <h4 mat-dialog-title class="cust-report-label-header-text">{{'Company-Equipment-Select-Status' |
-            translate}}</h4>
+                translate}}</h4>
             <div>
                 <mat-checkbox formControlName="All_Status" (change)="onChangeValueAll_Status($event)"
                     class="example-margin" color="primary">{{'All_Status' | translate }} </mat-checkbox>
