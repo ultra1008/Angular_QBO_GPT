@@ -106,6 +106,7 @@
                     <th>{{"Agent-username" | translate}}</th>
                     <th>{{"Agent-email" | translate}}</th>
                     <th>{{'employee_list_phone' | translate}}</th>
+                    <th>{{"Project-Workers-Role" | translate}}</th>
                     <th>{{"Employee-form-Job-Title" | translate}}</th>
                     <th>{{"Employee-form-Department" | translate}}</th>
                     <th>{{"Employee-form-Status" | translate}}</th>
@@ -117,6 +118,7 @@
                     <td>{{ userArray.userfullname }}</td>
                     <td>{{ userArray.useremail }}</td>
                     <td>{{ phonenoFormat(userArray.userphone) }}</td>
+                    <td>{{ userArray.role_name }}</td>
                     <td>{{ userArray.userjob_title_name }}</td>
                     <td>{{ userArray.department_name }}</td>
                     <td width="1%">{{ userArray.userstatus == 1 ? acticve_word :inacticve_word }}</td>
