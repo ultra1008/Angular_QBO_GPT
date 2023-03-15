@@ -14,7 +14,7 @@ import { HttpCall } from 'src/app/service/httpcall.service';
 import { Mostusedservice } from 'src/app/service/mostused.service';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
-import { formatPhoneNumber, gallery_options, LanguageApp, MMDDYYYY_formet } from 'src/app/service/utils';
+import { formatPhoneNumber, gallery_options, LanguageApp, MMDDYYYY, MMDDYYYY_formet } from 'src/app/service/utils';
 import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
 import { ModeDetectService } from '../../map/mode-detect.service';
@@ -61,6 +61,8 @@ export class DashboardInvoiceListComponent implements OnInit {
   packing_slip_no: string;
   Receiving_Slip: string;
   Files_Attached: string;
+  Uploaded_By: string;
+  Uploaded_At: string;
   Receiving_Attachment: string;
   Vendor_Action: string;
   Vendor_Status: string;
@@ -203,6 +205,8 @@ export class DashboardInvoiceListComponent implements OnInit {
       that.po_no = that.translate.instant("po_no");
       that.Vendor_VendorName = that.translate.instant('Vendor_VendorName');
       that.Files_Attached = that.translate.instant('Files_Attached');
+      that.Uploaded_By = that.translate.instant('Uploaded_By');
+      that.Uploaded_At = that.translate.instant('Uploaded_At');
       that.packing_slip_no = that.translate.instant("packing_slip_no");
       that.Receiving_Slip = that.translate.instant("Receiving_Slip");
       that.Vendor_Action = that.translate.instant("Vendor_Action");
@@ -291,6 +295,13 @@ export class DashboardInvoiceListComponent implements OnInit {
           });
       },
       columns: that.getColumName(),
+      rowCallback: (row: Node, data: any[] | Object, index: number) => {
+        $('td', row).off('click');
+        $('td', row).on('click', () => {
+          this.router.navigate(['/invoice-detail'], { queryParams: { _id: data['_id'] } });
+        });
+        return row;
+      },
       drawCallback: () => {
         $(".button_attachment").on("click", (event) => {
           this.imageObject = JSON.parse(
@@ -540,12 +551,24 @@ export class DashboardInvoiceListComponent implements OnInit {
         defaultContent: '',
       },
       {
+        title: that.Uploaded_By,
+        data: 'created_by.userfullname',
+        defaultContent: '',
+      },
+      {
+        title: that.Uploaded_At,
+        render: function (data: any, type: any, full: any) {
+          return MMDDYYYY_formet(full.created_at);
+        },
+        defaultContent: '',
+      },
+      {
         title: that.Vendor_Status,
         data: 'status',
         defaultContent: "",
         width: "7%",
       },
-      {
+      /* {
         title: that.Vendor_Action,
         render: function (data: any, type: any, full: any) {
           let tmp_tmp = {
@@ -580,7 +603,7 @@ export class DashboardInvoiceListComponent implements OnInit {
         },
         width: "1%",
         orderable: false,
-      },
+      }, */
     ];
   }
 

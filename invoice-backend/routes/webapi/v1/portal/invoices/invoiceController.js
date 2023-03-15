@@ -194,6 +194,15 @@ module.exports.getInvoice = async function (req, res) {
                 },
                 { $unwind: "$vendor" },
                 {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "created_by",
+                        foreignField: "_id",
+                        as: "created_by"
+                    }
+                },
+                { $unwind: "$created_by" },
+                {
                     $project: {
                         assign_to: 1,
                         vendor: "$vendor",
@@ -227,6 +236,8 @@ module.exports.getInvoice = async function (req, res) {
                         receiving_slip: 1,
                         badge: 1,
                         gl_account: 1,
+                        created_by: 1,
+                        created_at: 1,
                         // invoice_notes: { $elemMatch: { is_delete: 0 } },
                         invoice_notes: {
                             $filter: {
@@ -392,6 +403,15 @@ module.exports.getInvoiceList = async function (req, res) {
                 },
                 { $unwind: "$vendor" },
                 {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "created_by",
+                        foreignField: "_id",
+                        as: "created_by"
+                    }
+                },
+                { $unwind: "$created_by" },
+                {
                     $project: {
                         assign_to: 1,
                         vendor: "$vendor",
@@ -425,6 +445,8 @@ module.exports.getInvoiceList = async function (req, res) {
                         receiving_slip: 1,
                         badge: 1,
                         gl_account: 1,
+                        created_by: 1,
+                        created_at: 1,
                         // invoice_notes: { $elemMatch: { is_delete: 0 } },
                         invoice_notes: {
                             $filter: {
@@ -542,6 +564,15 @@ module.exports.getOneInvoice = async function (req, res) {
                 },
                 { $unwind: "$vendor" },
                 {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "created_by",
+                        foreignField: "_id",
+                        as: "created_by"
+                    }
+                },
+                { $unwind: "$created_by" },
+                {
                     $project: {
                         assign_to: 1,
                         vendor: "$vendor",
@@ -575,6 +606,8 @@ module.exports.getOneInvoice = async function (req, res) {
                         receiving_slip: 1,
                         badge: 1,
                         gl_account: 1,
+                        created_by: 1,
+                        created_at: 1,
                         // invoice_notes: { $elemMatch: { is_delete: 0 } },
                         invoice_notes: {
                             $filter: {
@@ -811,7 +844,7 @@ module.exports.getInvoiceDatatable = async function (req, res) {
             var requestObject = req.body;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var col = [];
-            col.push("invoice", "p_o", "vendor.vendor_name", "packing_slip", "receiving_slip", "attach_files", "status");
+            col.push("invoice", "p_o", "vendor.vendor_name", "packing_slip", "receiving_slip", "attach_files", "created_by.userfullname", "created_at", "status");
 
             var start = parseInt(requestObject.start) || 0;
             var perpage = parseInt(requestObject.length);
@@ -835,6 +868,7 @@ module.exports.getInvoiceDatatable = async function (req, res) {
                         { "packing_slip": new RegExp(requestObject.search.value, 'i') },
                         { "receiving_slip": new RegExp(requestObject.search.value, 'i') },
                         { "attach_files": new RegExp(requestObject.search.value, 'i') },
+                        { "created_by.userfullname": new RegExp(requestObject.search.value, 'i') },
                         { "status": new RegExp(requestObject.search.value, 'i') },
                     ]
                 };
@@ -857,6 +891,15 @@ module.exports.getInvoiceDatatable = async function (req, res) {
                     }
                 },
                 { $unwind: "$vendor" },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "created_by",
+                        foreignField: "_id",
+                        as: "created_by"
+                    }
+                },
+                { $unwind: "$created_by" },
                 {
                     $project: {
                         assign_to: 1,

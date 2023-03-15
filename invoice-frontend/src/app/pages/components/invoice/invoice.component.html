@@ -112,7 +112,10 @@
                             <th>{{"packing_slip_no" | translate}}</th>
                             <th>{{"Receiving_Slip" | translate}}</th>
                             <th>{{"Files_Attached" | translate}}</th>
+                            <th>{{"Uploaded_By" | translate}}</th>
+                            <th>{{"Uploaded_At" | translate}}</th>
                             <th>{{"Employee-form-Status" | translate}}</th>
+                            created_by.userfullname
                             <!-- <th width="1%" data-orderable="false">{{"All-Action" | translate }}</th> -->
                         </tr>
                     </thead>
@@ -124,6 +127,8 @@
                             <td>{{ invoice.packing_slip }}</td>
                             <td>{{ invoice.receiving_slip }}</td>
                             <td>{{ invoice.attach_files }}</td>
+                            <td>{{ invoice.created_by.userfullname }}</td>
+                            <td>{{ invoice.created_at * 1000 | date: 'MM/dd/yyyy hh:mm a' }}</td>
                             <td
                                 [ngClass]="invoice.status == 'Pending'? 'pendingcss' : 'Approvedcss' && invoice.status == 'Approved'? 'Approvedcss' : 'Rejectcss'&& invoice.status == 'Rejected'? 'Rejectcss' : 'Rejectcss'">
                                 {{ invoice.status }}
