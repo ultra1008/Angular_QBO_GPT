@@ -317,8 +317,7 @@ export class InvoiceComponent implements OnInit {
     const dialogRef = this.dialog.open(InvoiceReport, {
       height: '500px',
       width: '800px',
-      data: this.vendorsList
-      ,
+      data: { vendorList: this.vendorsList },
       disableClose: true
     });
 
@@ -793,13 +792,18 @@ export class InvoiceReport {
 
     this.Report_File_Message = this.translate.instant('Report_File_Message');
     this.Report_File_Enter_Email = this.translate.instant('Report_File_Enter_Email');
-    this.vendorList = data;
+    this.vendorList = data.vendorList;
     this.invoiceinfo = this.formBuilder.group({
       All_Vendors: [true],
       vendor_ids: [this.vendorList.map((el: any) => el._id)],
       All_Status: [true],
       status: [this.statusList.map((el: any) => el.name)],
     });
+
+    if (data.status) {
+      this.invoiceinfo.get('All_Status').setValue(false);
+      this.invoiceinfo.get('status').setValue([data.status]);
+    }
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';

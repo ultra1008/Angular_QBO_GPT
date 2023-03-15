@@ -1176,7 +1176,7 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
 
             // Image between text 1
             let titleRowValue1 = worksheet.getCell('B1');
-            titleRowValue1.value = `Vendor detailed report`;
+            titleRowValue1.value = `Invoice detailed report`;
             titleRowValue1.font = {
                 name: 'Calibri',
                 size: 15,

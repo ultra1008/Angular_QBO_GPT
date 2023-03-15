@@ -100,7 +100,7 @@ export class DashboardInvoiceListComponent implements OnInit {
   allInvoices: any = [];
   vendorsList = [];
 
-  constructor(private location: Location, private modeService: ModeDetectService,
+  constructor (private location: Location, private modeService: ModeDetectService,
     public dialog: MatDialog,
     private router: Router,
     private http: HttpClient,
@@ -475,8 +475,10 @@ export class DashboardInvoiceListComponent implements OnInit {
     const dialogRef = this.dialog.open(InvoiceReport, {
       height: '500px',
       width: '800px',
-      data: this.vendorsList
-      ,
+      data: {
+        vendorList: this.vendorsList,
+        status: this.status,
+      },
       disableClose: true
     });
 

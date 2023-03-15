@@ -50,20 +50,22 @@
                 </mat-option>
             </mat-select>
         </mat-form-field> -->
-        <h4 mat-dialog-title class="cust-report-label-header-text">{{'Company-Equipment-Select-Status' |
+        <div *ngIf="data.status == null">
+            <h4 mat-dialog-title class="cust-report-label-header-text">{{'Company-Equipment-Select-Status' |
             translate}}</h4>
-        <div>
-            <mat-checkbox formControlName="All_Status" (change)="onChangeValueAll_Status($event)" class="example-margin"
-                color="primary">{{'All_Status' | translate }} </mat-checkbox>
+            <div>
+                <mat-checkbox formControlName="All_Status" (change)="onChangeValueAll_Status($event)"
+                    class="example-margin" color="primary">{{'All_Status' | translate }} </mat-checkbox>
+            </div>
+            <mat-form-field appearance="outline" class="cust-report-full-width-fields">
+                <mat-label>{{'Company-Vendor-status' | translate }}</mat-label>
+                <mat-select formControlName="status" placeholder="{{'Company-Vendor-status' | translate }}" multiple>
+                    <mat-option *ngFor="let status of statusList" [value]="status.name">
+                        {{translate.instant(status.key)}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
         </div>
-        <mat-form-field appearance="outline" class="cust-report-full-width-fields">
-            <mat-label>{{'Company-Vendor-status' | translate }}</mat-label>
-            <mat-select formControlName="status" placeholder="{{'Company-Vendor-status' | translate }}" multiple>
-                <mat-option *ngFor="let status of statusList" [value]="status.name">
-                    {{translate.instant(status.key)}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
 
         <h4 mat-dialog-title class="cust-report-label-header-text">{{'Company-Expenses-Select-time' | translate}}</h4>
         <mat-form-field appearance="outline" class="cust-report-full-width-fields">
