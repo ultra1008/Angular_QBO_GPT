@@ -292,6 +292,13 @@ export class DashboardInvoiceListComponent implements OnInit {
           });
       },
       columns: that.getColumName(),
+      rowCallback: (row: Node, data: any[] | Object, index: number) => {
+        $('td', row).off('click');
+        $('td', row).on('click', () => {
+          this.router.navigate(['/invoice-detail'], { queryParams: { _id: data['_id'] } });
+        });
+        return row;
+      },
       drawCallback: () => {
         $(".button_attachment").on("click", (event) => {
           this.imageObject = JSON.parse(
@@ -535,7 +542,7 @@ export class DashboardInvoiceListComponent implements OnInit {
         defaultContent: "",
         width: "7%",
       },
-      {
+      /* {
         title: that.Vendor_Action,
         render: function (data: any, type: any, full: any) {
           let tmp_tmp = {
@@ -570,7 +577,7 @@ export class DashboardInvoiceListComponent implements OnInit {
         },
         width: "1%",
         orderable: false,
-      },
+      }, */
     ];
   }
 
