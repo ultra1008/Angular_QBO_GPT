@@ -19,6 +19,7 @@ import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
 import { ModeDetectService } from '../../map/mode-detect.service';
 import { Location } from '@angular/common';
+import { InvoiceReport } from '../../invoice/invoice.component';
 
 class DataTablesResponse {
   data: any[];
@@ -95,8 +96,9 @@ export class DashboardInvoiceListComponent implements OnInit {
   gridtolist_text: any;
   count: number = 0;
   allInvoices: any = [];
+  vendorsList = [];
 
-  constructor (private location: Location, private modeService: ModeDetectService,
+  constructor(private location: Location, private modeService: ModeDetectService,
     public dialog: MatDialog,
     private router: Router,
     private http: HttpClient,
@@ -180,6 +182,7 @@ export class DashboardInvoiceListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getAllVendors();
     const that = this;
     let role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
@@ -445,6 +448,29 @@ export class DashboardInvoiceListComponent implements OnInit {
         that.count = params.count;
       }
       that.uiSpinner.spin$.next(false);
+    });
+  }
+  getAllVendors() {
+    let that = this;
+    that.httpCall
+      .httpGetCall(httproutes.INVOICE_VENDOR_GET)
+      .subscribe(function (params) {
+        if (params.status) {
+          that.vendorsList = params.data;
+        }
+      });
+  }
+  invoiceReportDialog() {
+    const dialogRef = this.dialog.open(InvoiceReport, {
+      height: '500px',
+      width: '800px',
+      data: this.vendorsList
+      ,
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
     });
   }
 
