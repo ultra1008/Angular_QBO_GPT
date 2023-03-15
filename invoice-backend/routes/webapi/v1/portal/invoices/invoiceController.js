@@ -888,6 +888,14 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
                     }
                 },
                 { $unwind: "$vendor" },
+                {
+                    $lookup: {
+                        from: collectionConstant.COSTCODES,
+                        localField: "cost_code",
+                        foreignField: "_id",
+                        as: "costcode"
+                    }
+                },
                 { $sort: sort }
             ]).collation({ locale: "en_US" });
             console.log("sagar.........get_invoice: ", get_invoice.length);
@@ -899,26 +907,28 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
             let logo_rovuk = await common.urlToBase64(config.INVOICE_LOGO);
             for (let i = 0; i < get_invoice.length; i++) {
                 let invoice = get_invoice[i];
-                xlsx_data.push([invoice.assign_to == undefined || invoice.assign_to == null ? '' : invoice.assign_to.userfullname,
-                invoice.vendor.vendor_name, invoice.vendor_id, invoice.customer_id, invoice.invoice, invoice.p_o, invoice.invoice_date,
-                invoice.due_date, invoice.order_date, invoice.ship_date, invoice.terms == undefined || invoice.terms == null ? '' : invoice.terms.name,
-                invoice.total, invoice.invoice_total, invoice.tax_amount, invoice.tax_id, invoice.sub_total, invoice.amount_due,
-                invoice.cost_code, invoice.gl_account, invoice.receiving_date, invoice.notes, invoice.status,
-                invoice.job_number, invoice.account_number, invoice.discount, invoice.packing_slip, invoice.receiving_slip]);
+                xlsx_data.push([invoice.vendor.vendor_name, invoice.vendor_id, invoice.customer_id, invoice.invoice, invoice.p_o, invoice.job_number,
+                invoice.invoice_date, invoice.due_date, invoice.order_date, invoice.ship_date, invoice.packing_slip, invoice.receiving_slip,
+                invoice.status, invoice.terms, invoice.invoice_total,
+                invoice.tax_amount, invoice.tax_id, invoice.sub_total, invoice.amount_due, invoice.costcode.length > 0 ? invoice.costcode[0].value : '',
+                invoice.gl_account, invoice.assign_to == undefined || invoice.assign_to == null ? '' : invoice.assign_to.userfullname, invoice.notes]);
             }
             let headers = [
-                translator.getStr('Invoice_History.assign_to'),
                 translator.getStr('Invoice_History.vendor'),
                 translator.getStr('Invoice_History.vendor_id'),
                 translator.getStr('Invoice_History.customer_id'),
                 translator.getStr('Invoice_History.invoice'),
                 translator.getStr('Invoice_History.p_o'),
+                translator.getStr('Invoice_History.job_number'),
                 translator.getStr('Invoice_History.invoice_date'),
                 translator.getStr('Invoice_History.due_date'),
                 translator.getStr('Invoice_History.order_date'),
                 translator.getStr('Invoice_History.ship_date'),
+                translator.getStr('Invoice_History.packing_slip'),
+                translator.getStr('Invoice_History.receiving_slip'),
+                translator.getStr('Invoice_History.status'),
                 translator.getStr('Invoice_History.terms'),
-                translator.getStr('Invoice_History.total'),
+                // translator.getStr('Invoice_History.total'),
                 translator.getStr('Invoice_History.invoice_total'),
                 translator.getStr('Invoice_History.tax_amount'),
                 translator.getStr('Invoice_History.tax_id'),
@@ -926,14 +936,12 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
                 translator.getStr('Invoice_History.amount_due'),
                 translator.getStr('Invoice_History.cost_code'),
                 translator.getStr('Invoice_History.gl_account'),
-                translator.getStr('Invoice_History.receiving_date'),
+                translator.getStr('Invoice_History.assign_to'),
                 translator.getStr('Invoice_History.notes'),
-                translator.getStr('Invoice_History.status'),
-                translator.getStr('Invoice_History.job_number'),
+
+                /* translator.getStr('Invoice_History.receiving_date'),
                 translator.getStr('Invoice_History.account_number'),
-                translator.getStr('Invoice_History.discount'),
-                translator.getStr('Invoice_History.packing_slip'),
-                translator.getStr('Invoice_History.receiving_slip'),
+                translator.getStr('Invoice_History.discount'), */
             ];
 
             let d = new Date();
@@ -952,8 +960,8 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
                 base64: logo_rovuk,
                 extension: 'png',
             });
-            worksheet.mergeCells('N1:N6');
-            worksheet.addImage(rovukLogoImage, 'N1:N6');
+            worksheet.mergeCells('W1:W6');
+            worksheet.addImage(rovukLogoImage, 'W1:W6');
 
             // Image between text 1
             let titleRowValue1 = worksheet.getCell('B1');
@@ -964,7 +972,7 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
                 bold: true,
             };
             titleRowValue1.alignment = { vertical: 'middle', horizontal: 'left' };
-            worksheet.mergeCells(`B1:M3`);
+            worksheet.mergeCells(`B1:V3`);
 
             // Image between text 2
             let titleRowValue2 = worksheet.getCell('B4');
@@ -975,7 +983,7 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
                 bold: true,
             };
             titleRowValue2.alignment = { vertical: 'middle', horizontal: 'left' };
-            worksheet.mergeCells(`B4:M6`);
+            worksheet.mergeCells(`B4:V6`);
 
             //header design
             let headerRow = worksheet.addRow(headers);
@@ -1006,7 +1014,7 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
 
             let footerRow = worksheet.addRow([translator.getStr('XlsxReportGeneratedAt') + excel_date]);
             footerRow.alignment = { vertical: 'middle', horizontal: 'center' };
-            worksheet.mergeCells(`A${footerRow.number}:N${footerRow.number}`);
+            worksheet.mergeCells(`A${footerRow.number}:W${footerRow.number}`);
             const tmpResultExcel = await workbook.xlsx.writeBuffer();
 
             let vendor = '';
@@ -1036,8 +1044,8 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
             }
 
             let companycode = decodedToken.companycode.toLowerCase();
-            let key_url = config.INVOICE_WASABI_PATH + "/invoice/excel_report/invoice_" + new Date().getTime() + ".xlsx";
-            // let key_url = config.INVOICE_WASABI_PATH + "/invoice/excel_report/invoice.xlsx";
+            // let key_url = config.INVOICE_WASABI_PATH + "/invoice/excel_report/invoice_" + new Date().getTime() + ".xlsx";
+            let key_url = config.INVOICE_WASABI_PATH + "/invoice/excel_report/invoice.xlsx";
             let PARAMS = {
                 Bucket: companycode,
                 Key: key_url,
