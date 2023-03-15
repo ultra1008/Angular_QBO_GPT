@@ -37,7 +37,14 @@
         </div>
       </mat-tab>
       <mat-tab *ngIf="Document_View_time"
-        label="{{'Pending_Files_Older_Then' | translate}} {{Document_View_time_value}}&nbsp;{{'Days' | translate}}">
+        matTooltip="This {{Document_View_time_value}} days comes form settings - Document view">
+        <ng-template mat-tab-label>
+          <label class="labelHeading mt-2"
+            matTooltip="This {{Document_View_time_value}} days comes form settings - Document view"
+            matTooltipClass="example-tooltip-red1">{{'Pending_Files_Older_Then' | translate}}
+            {{Document_View_time_value}}&nbsp;{{'Days' | translate}}
+          </label>
+        </ng-template>
         <div class="wrapper-cust-admin cust-width ">
           <div class="table-responsive cust-padding cust-padding-tmp mt-2" *ngIf="showViewTable">
             <table datatable [dtOptions]="dtOptionsView" id="dtOptionsView" class="row-border hover">
