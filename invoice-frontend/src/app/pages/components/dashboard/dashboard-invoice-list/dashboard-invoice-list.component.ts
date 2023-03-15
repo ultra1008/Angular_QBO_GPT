@@ -56,8 +56,10 @@ export class DashboardInvoiceListComponent implements OnInit {
   showTable: boolean = true;
   invoice_no: string;
   po_no: string;
+  Vendor_VendorName: string;
   packing_slip_no: string;
   Receiving_Slip: string;
+  Files_Attached: string;
   Receiving_Attachment: string;
   Vendor_Action: string;
   Vendor_Status: string;
@@ -94,7 +96,7 @@ export class DashboardInvoiceListComponent implements OnInit {
   count: number = 0;
   allInvoices: any = [];
 
-  constructor(private location: Location, private modeService: ModeDetectService,
+  constructor (private location: Location, private modeService: ModeDetectService,
     public dialog: MatDialog,
     private router: Router,
     private http: HttpClient,
@@ -196,6 +198,8 @@ export class DashboardInvoiceListComponent implements OnInit {
       that.inacticve_word = this.translate.instant("project_setting_inactive");
       that.invoice_no = that.translate.instant("invoice_no");
       that.po_no = that.translate.instant("po_no");
+      that.Vendor_VendorName = that.translate.instant('Vendor_VendorName');
+      that.Files_Attached = that.translate.instant('Files_Attached');
       that.packing_slip_no = that.translate.instant("packing_slip_no");
       that.Receiving_Slip = that.translate.instant("Receiving_Slip");
       that.Vendor_Action = that.translate.instant("Vendor_Action");
@@ -490,6 +494,11 @@ export class DashboardInvoiceListComponent implements OnInit {
         defaultContent: "",
       },
       {
+        title: that.Vendor_VendorName,
+        data: "vendor.vendor_name",
+        defaultContent: "",
+      },
+      {
         title: that.packing_slip_no,
         data: "packing_slip",
         defaultContent: "",
@@ -500,18 +509,15 @@ export class DashboardInvoiceListComponent implements OnInit {
         defaultContent: "",
       },
       {
+        title: that.Files_Attached,
+        data: 'attach_files',
+        defaultContent: '',
+      },
+      {
         title: that.Vendor_Status,
         data: 'status',
         defaultContent: "",
-
         width: "7%",
-      },
-      {
-        title: that.Receiving_Attachment,
-        defaultContent: "",
-
-        width: "1%",
-        orderable: false,
       },
       {
         title: that.Vendor_Action,

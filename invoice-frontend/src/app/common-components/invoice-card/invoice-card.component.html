@@ -48,7 +48,7 @@
                 <br />
                 <b>Receiving Slip </b> <span>{{invoice.receiving_slip}}</span>
                 <br />
-                <b>Files Attached # </b> <span></span>
+                <b>{{'Files_Attached' | translate}} </b> <span>{{invoice.attach_files}}</span>
                 <br />
                 <b
                     [ngClass]="invoice.status == 'Pending'? 'pendingcss' : 'Approvedcss' && invoice.status == 'Approved'? 'Approvedcss' : 'Rejectcss'&& invoice.status == 'Rejected'? 'Rejectcss' : 'Rejectcss'">

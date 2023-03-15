@@ -2489,5 +2489,6 @@
     "All_Invoice_Status": "All Invoice Status",
     "Settings-Security": "Seguridad",
     "Invoice-Document-Add-Button": "Agregar Documento",
-    "Orphan_Documents": "Orphan Documents"
+    "Orphan_Documents": "Orphan Documents",
+    "Files_Attached": "Files Attached #"
 }

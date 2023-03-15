@@ -277,6 +277,31 @@ module.exports.getInvoice = async function (req, res) {
                         },
                         quote_attachments: 1,
                         document_type: { $ifNull: ["$document_type", "INVOICE"] },
+                        attach_files: {
+                            $sum: [
+                                1, {
+                                    $cond: [
+                                        { $eq: ["$has_packing_slip", true] },
+                                        1, 0
+                                    ]
+                                }, {
+                                    $cond: [
+                                        { $eq: ["$has_receiving_slip", true] },
+                                        1, 0
+                                    ]
+                                }, {
+                                    $cond: [
+                                        { $eq: ["$has_po", true] },
+                                        1, 0
+                                    ]
+                                }, {
+                                    $cond: [
+                                        { $eq: ["$has_quote", true] },
+                                        1, 0
+                                    ]
+                                }
+                            ]
+                        }
                     }
                 },
             ]);
@@ -450,6 +475,31 @@ module.exports.getInvoiceList = async function (req, res) {
                         },
                         quote_attachments: 1,
                         document_type: { $ifNull: ["$document_type", "INVOICE"] },
+                        attach_files: {
+                            $sum: [
+                                1, {
+                                    $cond: [
+                                        { $eq: ["$has_packing_slip", true] },
+                                        1, 0
+                                    ]
+                                }, {
+                                    $cond: [
+                                        { $eq: ["$has_receiving_slip", true] },
+                                        1, 0
+                                    ]
+                                }, {
+                                    $cond: [
+                                        { $eq: ["$has_po", true] },
+                                        1, 0
+                                    ]
+                                }, {
+                                    $cond: [
+                                        { $eq: ["$has_quote", true] },
+                                        1, 0
+                                    ]
+                                }
+                            ]
+                        }
                     }
                 },
             ]);
@@ -575,6 +625,31 @@ module.exports.getOneInvoice = async function (req, res) {
                         },
                         quote_attachments: 1,
                         document_type: { $ifNull: ["$document_type", "INVOICE"] },
+                        attach_files: {
+                            $sum: [
+                                1, {
+                                    $cond: [
+                                        { $eq: ["$has_packing_slip", true] },
+                                        1, 0
+                                    ]
+                                }, {
+                                    $cond: [
+                                        { $eq: ["$has_receiving_slip", true] },
+                                        1, 0
+                                    ]
+                                }, {
+                                    $cond: [
+                                        { $eq: ["$has_po", true] },
+                                        1, 0
+                                    ]
+                                }, {
+                                    $cond: [
+                                        { $eq: ["$has_quote", true] },
+                                        1, 0
+                                    ]
+                                }
+                            ]
+                        }
                     }
                 },
             ]);
@@ -736,7 +811,7 @@ module.exports.getInvoiceDatatable = async function (req, res) {
             var requestObject = req.body;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var col = [];
-            col.push("invoice", "p_o", "packing_slip", "receiving_slip", "", "notes", "status");
+            col.push("invoice", "p_o", "vendor.vendor_name", "packing_slip", "receiving_slip", "attach_files", "status");
 
             var start = parseInt(requestObject.start) || 0;
             var perpage = parseInt(requestObject.length);
@@ -756,9 +831,10 @@ module.exports.getInvoiceDatatable = async function (req, res) {
                     $or: [
                         { "invoice": new RegExp(requestObject.search.value, 'i') },
                         { "p_o": new RegExp(requestObject.search.value, 'i') },
+                        { "vendor.vendor_name": new RegExp(requestObject.search.value, 'i') },
                         { "packing_slip": new RegExp(requestObject.search.value, 'i') },
                         { "receiving_slip": new RegExp(requestObject.search.value, 'i') },
-                        { "notes": new RegExp(requestObject.search.value, 'i') },
+                        { "attach_files": new RegExp(requestObject.search.value, 'i') },
                         { "status": new RegExp(requestObject.search.value, 'i') },
                     ]
                 };
@@ -781,6 +857,98 @@ module.exports.getInvoiceDatatable = async function (req, res) {
                     }
                 },
                 { $unwind: "$vendor" },
+                {
+                    $project: {
+                        assign_to: 1,
+                        vendor: 1,
+                        vendor_id: 1,
+                        customer_id: 1,
+                        invoice: 1,
+                        p_o: 1,
+                        invoice_date: 1,
+                        due_date: 1,
+                        order_date: 1,
+                        ship_date: 1,
+                        terms: 1,
+                        total: 1,
+                        invoice_total: 1,
+                        tax_amount: 1,
+                        tax_id: 1,
+                        sub_total: 1,
+                        amount_due: 1,
+                        cost_code: 1,
+                        gl_account: 1,
+                        receiving_date: 1,
+                        notes: 1,
+                        status: 1,
+                        job_number: 1,
+                        delivery_address: 1,
+                        contract_number: 1,
+                        account_number: 1,
+                        discount: 1,
+                        pdf_url: 1,
+                        items: 1,
+                        packing_slip: 1,
+                        receiving_slip: 1,
+
+                        badge: 1,
+                        invoice_notes: 1,
+                        invoice_attachments: 1,
+
+                        has_packing_slip: 1,
+                        packing_slip_data: 1,
+                        packing_slip_notes: 1,
+                        packing_slip_attachments: 1,
+
+                        has_receiving_slip: 1,
+                        receiving_slip_data: 1,
+                        receiving_slip_notes: 1,
+                        receiving_slip_attachments: 1,
+
+                        has_po: 1,
+                        po_data: 1,
+                        po_notes: 1,
+                        po_attachments: 1,
+
+                        has_quote: 1,
+                        quote_data: 1,
+                        quote_notes: 1,
+                        quote_attachments: 1,
+
+                        document_type: 1,
+                        created_by: 1,
+                        created_at: 1,
+                        updated_by: 1,
+                        updated_at: 1,
+                        is_delete: 1,
+
+                        attach_files: {
+                            $sum: [
+                                1, {
+                                    $cond: [
+                                        { $eq: ["$has_packing_slip", true] },
+                                        1, 0
+                                    ]
+                                }, {
+                                    $cond: [
+                                        { $eq: ["$has_receiving_slip", true] },
+                                        1, 0
+                                    ]
+                                }, {
+                                    $cond: [
+                                        { $eq: ["$has_po", true] },
+                                        1, 0
+                                    ]
+                                }, {
+                                    $cond: [
+                                        { $eq: ["$has_quote", true] },
+                                        1, 0
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                },
                 { $match: query },
                 { $sort: sort },
                 { $limit: start + perpage },
