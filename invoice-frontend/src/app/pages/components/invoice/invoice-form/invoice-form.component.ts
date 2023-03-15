@@ -479,9 +479,15 @@ export class InvoiceFormComponent implements OnInit {
     this.httpCall.httpPostCall(httproutes.INVOICE_DOCUMENT_PROCESS_GET, { _id: that.document_id }).subscribe(function (params) {
       if (params.status) {
         that.status = params.data.status;
-        that.invoiceData = params.data.data;
-        that.pdf_url = that.invoiceData.pdf_url;
-        that.badge = that.invoiceData.badge;
+        if (params.data.data) {
+          that.invoiceData = params.data.data;
+          that.pdf_url = that.invoiceData.pdf_url;
+          that.badge = that.invoiceData.badge;
+        } else {
+          that.invoiceData = params.data;
+          that.pdf_url = that.invoiceData.pdf_url;
+          // that.badge = that.invoiceData.badge;
+        }
         let vendorId = '';
         if (that.invoiceData.vendor) {
           vendorId = that.invoiceData.vendor._id;
@@ -490,7 +496,7 @@ export class InvoiceFormComponent implements OnInit {
         that.invoiceform = that.formBuilder.group({
           document_type: [params.data.document_type],
           invoice_name: [that.invoiceData.invoice_name],
-          vendor: [that.invoiceData.vendor._id],
+          vendor: [vendorId],
           vendor_id: [that.invoiceData.vendor_id],
           customer_id: [that.invoiceData.customer_id],
           invoice: [that.invoiceData.invoice],
@@ -515,9 +521,9 @@ export class InvoiceFormComponent implements OnInit {
           notes: [that.invoiceData.notes],
           pdf_url: [that.invoiceData.pdf_url],
         });
+        console.log("invoiceData.packing_slip_data", that.invoiceData.packing_slip_data);
       }
       that.uiSpinner.spin$.next(false);
-      console.log("invoiceData.packing_slip_data", that.invoiceData.packing_slip_data);
     });
   }
 

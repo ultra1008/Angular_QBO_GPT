@@ -100,7 +100,7 @@ export class DashboardInvoiceListComponent implements OnInit {
   allInvoices: any = [];
   vendorsList = [];
 
-  constructor (private location: Location, private modeService: ModeDetectService,
+  constructor(private location: Location, private modeService: ModeDetectService,
     public dialog: MatDialog,
     private router: Router,
     private http: HttpClient,
@@ -298,7 +298,8 @@ export class DashboardInvoiceListComponent implements OnInit {
       rowCallback: (row: Node, data: any[] | Object, index: number) => {
         $('td', row).off('click');
         $('td', row).on('click', () => {
-          this.router.navigate(['/invoice-detail'], { queryParams: { _id: data['_id'] } });
+          // this.router.navigate(['/invoice-detail'], { queryParams: { _id: data['_id'] } });
+          this.router.navigate(['/invoice-form'], { queryParams: { _id: data['_id'] } });
         });
         return row;
       },

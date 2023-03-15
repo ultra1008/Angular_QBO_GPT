@@ -98,7 +98,7 @@ import { AddOtherFiles, InvoiceOtherDocumentComponent, OrphanFiles, RequestFiles
 import { DocumentViewComponent } from './components/setting/document-view/document-view.component';
 import { InvoiceListFilterPipe, InvoiceListFilterStatus } from './components/invoice/invoice-list-filter.pipe';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { ViewDocumentsComponent } from './components/invoice/view-documents/view-documents.component';
+import { DocumentSelectDialog, ViewDocumentsComponent } from './components/invoice/view-documents/view-documents.component';
 
 
 @NgModule({
@@ -187,7 +187,8 @@ import { ViewDocumentsComponent } from './components/invoice/view-documents/view
     InvoiceListFilterStatus,
     InvoiceHistoryComponent,
     ViewDocumentsComponent,
-    RequestFilesComponent
+    RequestFilesComponent,
+    DocumentSelectDialog
   ],
   imports: [
     PortalModule,

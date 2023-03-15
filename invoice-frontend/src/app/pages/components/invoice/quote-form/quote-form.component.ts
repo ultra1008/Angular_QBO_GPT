@@ -323,9 +323,15 @@ export class QuoteFormComponent implements OnInit {
     let that = this;
     this.httpCall.httpPostCall(httproutes.INVOICE_DOCUMENT_PROCESS_GET, { _id: that.document_id }).subscribe(function (params) {
       if (params.status) {
-        that.invoiceData = params.data.data;
-        that.pdf_url = that.invoiceData.pdf_url;
-        that.badge = that.invoiceData.badge;
+        if (params.data.data) {
+          that.invoiceData = params.data.data;
+          that.pdf_url = that.invoiceData.pdf_url;
+          that.badge = that.invoiceData.badge;
+        } else {
+          that.invoiceData = params.data;
+          that.pdf_url = that.invoiceData.pdf_url;
+          // that.badge = that.invoiceData.badge;
+        }
         let vendorId = '';
         if (that.invoiceData.vendor) {
           vendorId = that.invoiceData.vendor._id;
