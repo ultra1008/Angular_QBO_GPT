@@ -9,10 +9,16 @@ export class InvoiceListFilterPipe implements PipeTransform {
         if (!items || !searchTerm) {
             return items;
         }
-
-        return items.filter(item => item.invoice.toUpperCase().indexOf(searchTerm.toUpperCase()) !== -1);
+        return items.filter(item =>
+            item.invoice.toUpperCase().indexOf(searchTerm.toUpperCase()) !== -1 ||
+            item.p_o.toUpperCase().indexOf(searchTerm.toUpperCase()) !== -1 ||
+            item.vendor.vendor_name.toUpperCase().indexOf(searchTerm.toUpperCase()) !== -1 ||
+            item.packing_slip.toUpperCase().indexOf(searchTerm.toUpperCase()) !== -1 ||
+            item.receiving_slip.toUpperCase().indexOf(searchTerm.toUpperCase()) !== -1 ||
+            item.status.toUpperCase().indexOf(searchTerm.toUpperCase()) !== -1);
     }
 }
+
 @Pipe({
     name: 'invoiceListFilterStatus'
 })

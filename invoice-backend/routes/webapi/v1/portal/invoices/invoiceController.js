@@ -1044,8 +1044,8 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
             }
 
             let companycode = decodedToken.companycode.toLowerCase();
-            // let key_url = config.INVOICE_WASABI_PATH + "/invoice/excel_report/invoice_" + new Date().getTime() + ".xlsx";
-            let key_url = config.INVOICE_WASABI_PATH + "/invoice/excel_report/invoice.xlsx";
+            let key_url = config.INVOICE_WASABI_PATH + "/invoice/excel_report/invoice_" + new Date().getTime() + ".xlsx";
+            // let key_url = config.INVOICE_WASABI_PATH + "/invoice/excel_report/invoice.xlsx";
             let PARAMS = {
                 Bucket: companycode,
                 Key: key_url,
