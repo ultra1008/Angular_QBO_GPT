@@ -299,7 +299,7 @@ export class CustompdfviewerComponent implements OnInit {
       .fire(
         {
 
-          title: that.documentDeletValue == 0 ? ' Are you sure you want to archive this document? This document will be automatically remove from this list after ' + this.Archive_Orphan_Document_value + ' days.' : 'We need to add setting inside View Document for ' + this.Archive_Orphan_Document_value + ' days for Archive automatically.?',
+          title: that.documentDeletValue == 0 ? ' Are you sure you want to archive this document? This document will be automatically remove from this list after ' + this.Archive_Orphan_Document_value + ' days.' : ' Are you sure you want to restore this document?',
           showDenyButton: true,
           showCancelButton: false,
           confirmButtonText: 'Yes',

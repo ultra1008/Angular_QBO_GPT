@@ -299,7 +299,7 @@ export class DashboardInvoiceListComponent implements OnInit {
         $('td', row).off('click');
         $('td', row).on('click', () => {
           // this.router.navigate(['/invoice-detail'], { queryParams: { _id: data['_id'] } });
-          this.router.navigate(['/invoice-form'], { queryParams: { _id: data['_id'] } });
+          this.router.navigate(['/invoice-form'], { queryParams: { _id: data['_id'], status: that.status } });
         });
         return row;
       },

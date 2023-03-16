@@ -90,7 +90,7 @@ export class InvoiceFormComponent implements OnInit {
   historyIcon: string;
   loadInvoice: boolean = false;
   document_id: any;
-
+  invoiceStatus: any;
 
 
   constructor(public dialog: MatDialog, public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
@@ -98,7 +98,7 @@ export class InvoiceFormComponent implements OnInit {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.document_id = this.route.snapshot.queryParamMap.get('document_id');
     // this.pdf_url = this.route.snapshot.queryParamMap.get('pdf_url');
-    this.status = this.route.snapshot.queryParamMap.get('status');
+    this.invoiceStatus = this.route.snapshot.queryParamMap.get('status');
 
 
 
@@ -212,7 +212,12 @@ export class InvoiceFormComponent implements OnInit {
   // }
   back() {
     if (this.id) {
-      this.router.navigate(['/invoice']);
+      if (this.invoiceStatus) {
+        this.router.navigate(['/dashboard-invoice-list'], { queryParams: { status: this.invoiceStatus } });
+      } else {
+        this.router.navigate(['/invoice']);
+      }
+
     } else {
       this.location.back();
     }

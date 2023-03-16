@@ -1,6 +1,23 @@
 <div class="row">
     <div class="col-md-12">
         <div align="end" style="text-align: right;">
+
+            <!-- document button -->
+            <button *ngIf="isDocumentEdit && documentDeletValue == 0" mat-raised-button (click)="goToDocumentEdit()"
+                class="cust-button-form"><img src="{{editIcon}}" alt="" class="" height="15px"
+                    style=" padding-right: 4px;">{{'Listing_Action_Edit' |
+                translate}}</button>
+            <button *ngIf="isDocumentDelete && documentDeletValue == 0" mat-raised-button (click)="deleteDocument()"
+                class="cust-button-form"><img src="{{deleteIcon}}" alt="" class="" height="15px"
+                    style=" padding-right: 4px;">{{'Archived_all' |
+                translate}}</button>
+            <button *ngIf="isDocumentDelete && documentDeletValue == 1" mat-raised-button (click)="deleteDocument()"
+                class="cust-button-form"><img src="{{restoreIcon}}" alt="" class="" height="15px"
+                    style=" padding-right: 4px;">{{'Restore_all' |
+                translate}}</button>
+
+
+            <!-- document button end-->
             <button *ngIf="isrefresh" class="import-export-btn-datatable button_workersDeleteClass cust-margin-div"
                 (click)="refresh()">
                 <i style="font-size: large;" class="fas fa-redo-alt"></i>
@@ -27,22 +44,6 @@
                     class="" height="15px" style=" padding-right: 4px;">{{'PO-View-Print' |
                 translate}}</button>
 
-            <!-- document button -->
-            <button *ngIf="isDocumentEdit" mat-raised-button (click)="goToDocumentEdit()" class="cust-button-form"><img
-                    src="{{editIcon}}" alt="" class="" height="15px"
-                    style=" padding-right: 4px;">{{'Listing_Action_Edit' |
-                translate}}</button>
-            <button *ngIf="isDocumentDelete && documentDeletValue == 0" mat-raised-button (click)="deleteDocument()"
-                class="cust-button-form"><img src="{{deleteIcon}}" alt="" class="" height="15px"
-                    style=" padding-right: 4px;">{{'Archived_all' |
-                translate}}</button>
-            <button *ngIf="isDocumentDelete && documentDeletValue == 1" mat-raised-button (click)="deleteDocument()"
-                class="cust-button-form"><img src="{{restoreIcon}}" alt="" class="" height="15px"
-                    style=" padding-right: 4px;">{{'Restore_all' |
-                translate}}</button>
-
-
-            <!-- document button end-->
 
             <button mat-raised-button (click)="back()" class="cust-button-form" style="margin-right: 10px;"><img
                     src="{{backIcon}}" alt="" class="" height="15px" style=" padding-right: 4px;">{{'All-back' |
