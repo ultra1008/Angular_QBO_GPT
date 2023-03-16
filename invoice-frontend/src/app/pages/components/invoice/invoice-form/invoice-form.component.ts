@@ -14,7 +14,6 @@ import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
 import { EmployeeService } from '../../team/employee.service';
 import { map, startWith } from 'rxjs/operators';
-import { Console } from 'console';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
@@ -97,22 +96,13 @@ export class InvoiceFormComponent implements OnInit {
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.document_id = this.route.snapshot.queryParamMap.get('document_id');
-    // this.pdf_url = this.route.snapshot.queryParamMap.get('pdf_url');
     this.invoiceStatus = this.route.snapshot.queryParamMap.get('status');
-
-
-
-
-
-    // this.getOneInvoice();
     if (this.id) {
       this.getOneInvoice();
     }
     if (this.document_id) {
       this.getOneProcessDocument();
     }
-
-
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     var locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configdata.fst_load_lang : tmp_locallanguage;
     this.translate.use(locallanguage);
@@ -240,7 +230,7 @@ export class InvoiceFormComponent implements OnInit {
         that.usersArray = that.variablesusersArray.slice();
         that.isManagement = data.is_management;
       }
-      console.log("usersArray", data.data);
+
     });
     that.getAllCostCode();
     this.getAllVendorList();
@@ -427,7 +417,7 @@ export class InvoiceFormComponent implements OnInit {
     let data = await this.httpCall.httpGetCall(httproutes.PORTAL_COMPANY_VENDOR_GET_BY_ID).toPromise();
     if (data.status) {
       this.vendorList = data.data;
-      console.log("vendorListttttt", this.vendorList);
+
 
 
     }
@@ -526,7 +516,7 @@ export class InvoiceFormComponent implements OnInit {
           notes: [that.invoiceData.notes],
           pdf_url: [that.invoiceData.pdf_url],
         });
-        console.log("invoiceData.packing_slip_data", that.invoiceData.packing_slip_data);
+
       }
       that.uiSpinner.spin$.next(false);
     });
@@ -541,7 +531,7 @@ export class InvoiceFormComponent implements OnInit {
   }
   saveInvoice() {
     let that = this;
-    console.log("hy: ", that.invoiceform.value);
+
     if (that.invoiceform.valid) {
       let requestObject = that.invoiceform.value;
       if (that.id) {
@@ -606,7 +596,7 @@ export class InvoiceFormComponent implements OnInit {
         }
         that.uiSpinner.spin$.next(false);
       });
-      console.log("requestObject", requestObject);
+
     }
   }
 
@@ -640,8 +630,6 @@ export class InvoiceHistoryComponent implements OnInit {
 
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
-    console.log("history call");
-
     this.id = this.route.snapshot.queryParamMap.get('_id');
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === "on" ? "on" : "off";
@@ -666,43 +654,16 @@ export class InvoiceHistoryComponent implements OnInit {
     this.getTodaysActivity();
   }
 
-  // onKey(event: any) {
-  //   console.log(event.target.value);
-  //   if (event.target.value.length == 0) {
-  //     console.log("emprty string");
-  //     this.taskHistory = [];
-  //     this.start = 0;
-  //     this.getTodaysActivity();
-  //   }
-  // }
-  // searchActivity() {
-  //   console.log("searchTodayActivity");
-  //   console.log("Entered email:", this.todayactivity_search);
-  //   let that = this;
-  //   that.isSearch = true;
-  //   that.taskHistory = [];
-  //   that.start = 0;
-  //   this.getTodaysActivity();
-  // }
-
-  // onScroll() {
-  //   this.start++;
-  //   this.getTodaysActivity();
-  // }
-
 
   onKey(event: any) {
-    console.log(event.target.value);
     if (event.target.value.length == 0) {
-      console.log("emprty string");
       this.dashboardHistory = [];
       this.start = 0;
       this.getTodaysActivity();
     }
   }
   searchActivity() {
-    console.log("searchTodayActivity");
-    console.log("Entered email:", this.todayactivity_search);
+
     let that = this;
     that.isSearch = true;
     that.dashboardHistory = [];
@@ -731,7 +692,7 @@ export class InvoiceHistoryComponent implements OnInit {
             self.is_httpCall = false;
           self.dashboardHistory = self.dashboardHistory.concat(params.data);
         }
-        console.log("dashboardHistory", self.dashboardHistory);
+
       });
   }
 

@@ -37,7 +37,7 @@ export class InvoiceCardComponent implements OnInit {
   denyIcon: string;
   status: any;
   id: any;
-  constructor (public route: ActivatedRoute, private router: Router, private modeService: ModeDetectService, public httpCall: HttpCall, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService) {
+  constructor(public route: ActivatedRoute, private router: Router, private modeService: ModeDetectService, public httpCall: HttpCall, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService) {
     this.status = this.route.snapshot.queryParamMap.get('status');
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
@@ -129,7 +129,7 @@ export class InvoiceCardComponent implements OnInit {
   }
 
   editInvoice(invoice) {
-    this.router.navigate(['/invoice-form'], { queryParams: { _id: invoice._id } });
+    this.router.navigate(['/invoice-form'], { queryParams: { _id: invoice._id, status: this.status } });
   }
 
   rerenderfunc() {
