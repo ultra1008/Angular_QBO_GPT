@@ -309,6 +309,7 @@ const updateInvoiceRelatedDocument = (req, res, next) => {
 const deleteViewDocument = (req, res, next) => {
     const validationRule = {
         "_id": "required",
+        "is_delete": "required|integer",
     };
     validator(req.body, validationRule, {}, (err, status) => {
         if (!status) {

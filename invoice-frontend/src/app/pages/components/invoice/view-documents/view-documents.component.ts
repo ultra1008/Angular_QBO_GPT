@@ -122,6 +122,7 @@ export class ViewDocumentsComponent implements OnInit {
         $(".dataTables_processing").html(
           "<img  src=" + this.httpCall.getLoader() + ">"
         );
+        dataTablesParameters.is_delete = 0;
         that.http
           .post<DataTablesResponse>(
             configdata.apiurl + httproutes.PORTAL_VIEW_DOCUMENTS_DATATABLE,

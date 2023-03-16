@@ -1682,7 +1682,7 @@ module.exports.getViewDocumentsDatatable = async function (req, res) {
                     ]
                 };
             }
-            var match_query = { is_delete: 0, status: { $ne: 'Complete' } };
+            var match_query = { is_delete: requestObject.is_delete, status: { $ne: 'Complete' } };
             var aggregateQuery = [
                 { $match: match_query },
                 {
@@ -1777,12 +1777,18 @@ module.exports.deleteViewDocument = async function (req, res) {
             var id = requestObject._id;
             delete requestObject._id;
             var processInvoiceConnection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
-            var update_data = await processInvoiceConnection.updateOne({ _id: ObjectID(id) }, { is_delete: 1 });
+            var update_data = await processInvoiceConnection.updateOne({ _id: ObjectID(id) }, { is_delete: requestObject.is_delete });
             let isDelete = update_data.nModified;
             if (isDelete == 0) {
                 res.send({ status: false, message: "There is no data with this id." });
             } else {
-                res.send({ message: "Document deleted successfully", status: true, data: update_data });
+                let message = '';
+                if (requestObject.is_delete == 0) {
+                    message = 'Document restored successfully.';
+                } else {
+                    message = 'Document archived successfully.';
+                }
+                res.send({ message, status: true, data: update_data });
             }
         } catch (e) {
             console.log(e);
