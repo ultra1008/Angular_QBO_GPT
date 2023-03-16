@@ -145,6 +145,14 @@ export class ViewDocumentsComponent implements OnInit {
           });
       },
       columns: that.getColumName(),
+      rowCallback: (row: Node, data: any[] | Object, index: number) => {
+        $('td', row).off('click');
+        $('td', row).on('click', () => {
+          // this.router.navigate(['/invoice-detail'], { queryParams: { _id: data['_id'] } });
+          this.router.navigate(['/app-custompdfviewer'], { queryParams: { po_url: data['pdf_url'], document_id: data['_id'], document_type: data['document_type'], is_delete: data['is_delete'] } });
+        });
+        return row;
+      },
       drawCallback: () => {
         $(".button_viewDocViewClass").on("click", (event) => {
           let data = JSON.parse(event.target.getAttribute("edit_tmp_id"));
@@ -182,6 +190,18 @@ export class ViewDocumentsComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
     });
   }
+  goToEdit(document) {
+    let that = this;
+    if (document.document_type == that.documentTypes.po) {
+      that.router.navigate(['/po-detail-form'], { queryParams: { document_id: document._id } });
+    } else if (document.document_type == that.documentTypes.packingSlip) {
+      that.router.navigate(['/packing-slip-form'], { queryParams: { document_id: document._id } });
+    } else if (document.document_type == that.documentTypes.receivingSlip) {
+      that.router.navigate(['/receiving-slip-form'], { queryParams: { document_id: document._id } });
+    } else if (document.document_type == that.documentTypes.quote) {
+      that.router.navigate(['/quote-detail-form'], { queryParams: { document_id: document._id } });
+    }
+  }
   onTabChanged($event) {
     // this.currrent_tab = this.tab_Array[$event.index]; 
     this.rerenderfunc();
@@ -215,52 +235,41 @@ export class ViewDocumentsComponent implements OnInit {
         data: "vendor_name",
         defaultContent: "",
       },
-      {
-        title: 'Action',
-        render: function (data: any, type: any, full: any) {
+      // {
+      //   title: 'Action',
+      //   render: function (data: any, type: any, full: any) {
 
-          let tmp_tmp = {
-            _id: full._id,
-            document_type: full.document_type,
-            pdf_url: full.pdf_url,
+      //     let tmp_tmp = {
+      //       _id: full._id,
+      //       document_type: full.document_type,
+      //       pdf_url: full.pdf_url,
 
-          };
-          let view = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_viewDocViewClass" >` + '<img src="' + that.viewIcon + `" alt="" height="15px">View</a>`;
-          let edit = '';
-          let archive = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_viewDocDeleteClass" >` + '<img src="' + that.deleteIcon + `" alt="" height="15px">Delete</a>`;
-          if (full.document_type != 'Already Exists') {
-            edit = `<a edit_tmp_id='` + JSON.stringify(full) + `' class="dropdown-item button_viewDocEditClass" >` + '<img src="' + that.editIcon + `" alt="" height="15px">Edit</a>`;
-          }
-          return (
-            `
-         <div class="dropdown">
-           <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust"  aria-haspopup="true" aria-expanded="false"  edit_tmp_id='` + JSON.stringify(full) + `' aria-hidden="true"></i>
-           <div class= "dropdown-content-cust" aria-labelledby="dropdownMenuButton">
-             ` + view + `
-             ` + edit + `
-             ` + archive + `
-           </div>
-       </div>`
-          );
-        },
-        width: "1%",
-        orderable: false,
-      },
+      //     };
+      //     let view = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_viewDocViewClass" >` + '<img src="' + that.viewIcon + `" alt="" height="15px">View</a>`;
+      //     let edit = '';
+      //     let archive = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_viewDocDeleteClass" >` + '<img src="' + that.deleteIcon + `" alt="" height="15px">Delete</a>`;
+      //     if (full.document_type != 'Already Exists') {
+      //       edit = `<a edit_tmp_id='` + JSON.stringify(full) + `' class="dropdown-item button_viewDocEditClass" >` + '<img src="' + that.editIcon + `" alt="" height="15px">Edit</a>`;
+      //     }
+      //     return (
+      //       `
+      //    <div class="dropdown">
+      //      <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust"  aria-haspopup="true" aria-expanded="false"  edit_tmp_id='` + JSON.stringify(full) + `' aria-hidden="true"></i>
+      //      <div class= "dropdown-content-cust" aria-labelledby="dropdownMenuButton">
+      //        ` + view + `
+      //        ` + edit + `
+      //        ` + archive + `
+      //      </div>
+      //  </div>`
+      //     );
+      //   },
+      //   width: "1%",
+      //   orderable: false,
+      // },
     ];
   }
 
-  goToEdit(document) {
-    let that = this;
-    if (document.document_type == that.documentTypes.po) {
-      that.router.navigate(['/po-detail-form'], { queryParams: { document_id: document._id } });
-    } else if (document.document_type == that.documentTypes.packingSlip) {
-      that.router.navigate(['/packing-slip-form'], { queryParams: { document_id: document._id } });
-    } else if (document.document_type == that.documentTypes.receivingSlip) {
-      that.router.navigate(['/receiving-slip-form'], { queryParams: { document_id: document._id } });
-    } else if (document.document_type == that.documentTypes.quote) {
-      that.router.navigate(['/quote-detail-form'], { queryParams: { document_id: document._id } });
-    }
-  }
+
 
   deleteDocument(_id) {
     let that = this;

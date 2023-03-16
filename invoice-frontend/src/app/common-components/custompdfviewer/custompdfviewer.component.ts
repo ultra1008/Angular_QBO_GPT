@@ -11,6 +11,8 @@ import { Subscription } from 'rxjs';
 import { ModeDetectService } from 'src/app/pages/components/map/mode-detect.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DocumentSelectDialog } from 'src/app/pages/components/invoice/view-documents/view-documents.component';
+import { LanguageApp } from 'src/app/service/utils';
 
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
@@ -44,11 +46,22 @@ export class CustompdfviewerComponent implements OnInit {
   printIcon: string;
   subscription: Subscription;
   mode: any;
-
+  isDocumentEdit: boolean = false;
+  isDocumentDelete: boolean = false;
+  documentDeletValue: any;
+  editIcon: any;
+  deleteIcon: any;
+  restoreIcon: any;
   Custom_Pdf_Viewer_Want_Approve_Owner_Direct_Purchase: string = '';
   Custom_Pdf_Viewer_Want_Deny_Owner_Direct_Purchase: string = '';
   Custom_Pdf_Viewer_Want_Accept_Vendor_Certificate: string = '';
   Custom_Pdf_Viewer_Want_Reject_Vendor_Certificate: string = '';
+  documentTypes: any = {
+    po: 'PURCHASE_ORDER',
+    packingSlip: 'PACKING_SLIP',
+    receivingSlip: 'RECEIVING_SLIP',
+    quote: 'QUOTE',
+  };
 
   constructor(private location: Location, private modeService: ModeDetectService, public route: ActivatedRoute, private router: Router,
     public httpCall: HttpCall, public spinner: UiSpinnerService, public snackbarservice: Snackbarservice,
@@ -80,12 +93,18 @@ export class CustompdfviewerComponent implements OnInit {
       this.downloadIcon = icon.DOWNLOAD;
       this.backIcon = icon.BACK;
       this.printIcon = icon.PRINT;
+      this.editIcon = icon.EDIT;
+      this.deleteIcon = icon.DELETE;
+      this.restoreIcon = icon.RESTORE;
     } else {
       this.denyIcon = icon.DENY_WHITE;
       this.approveIcon = icon.APPROVE_WHITE;
       this.downloadIcon = icon.DOWNLOAD_WHITE;
       this.backIcon = icon.BACK_WHITE;
       this.printIcon = icon.PRINT_WHITE;
+      this.editIcon = icon.EDIT_WHITE;
+      this.deleteIcon = icon.DELETE_WHITE;
+      this.restoreIcon = icon.RESTORE_WHITE;
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
       if (mode) {
@@ -95,6 +114,9 @@ export class CustompdfviewerComponent implements OnInit {
         this.downloadIcon = icon.DOWNLOAD;
         this.backIcon = icon.BACK;
         this.printIcon = icon.PRINT;
+        this.editIcon = icon.EDIT;
+        this.deleteIcon = icon.DELETE;
+        this.restoreIcon = icon.RESTORE;
       } else {
         this.mode = 'on';
         this.denyIcon = icon.DENY_WHITE;
@@ -102,6 +124,9 @@ export class CustompdfviewerComponent implements OnInit {
         this.downloadIcon = icon.DOWNLOAD_WHITE;
         this.backIcon = icon.BACK_WHITE;
         this.printIcon = icon.PRINT_WHITE;
+        this.editIcon = icon.EDIT_WHITE;
+        this.deleteIcon = icon.DELETE_WHITE;
+        this.restoreIcon = icon.RESTORE_WHITE;
       }
     });
   }
@@ -208,7 +233,91 @@ export class CustompdfviewerComponent implements OnInit {
     if (certificate_status == "Pending") {
       this.isCertificateStatusPending = true;
     }
+    let document_id = this.route.snapshot.queryParamMap.get('document_id');
+    if (document_id) {
+      this.isDocumentEdit = true;
+    }
+
+    let is_delete = this.route.snapshot.queryParamMap.get('is_delete');
+    if (is_delete) {
+      this.documentDeletValue = Number(is_delete);
+      this.isDocumentDelete = true;
+    }
+
     this.refresh();
+  }
+
+  goToDocumentEdit() {
+    let that = this;
+    let document_type = this.route.snapshot.queryParamMap.get('document_type');
+    console.log("document_type", document_type);
+    if (document_type == '') {
+      console.log("szfrdvfgrft",);
+      that.selectDocumentType();
+    } else {
+      that.goToEdit(document_type);
+    }
+  }
+
+  selectDocumentType(): void {
+    console.log("calllrrfg",);
+    let that = this;
+    let document_id = this.route.snapshot.queryParamMap.get('document_id');
+    const dialogRef = this.dialog.open(DocumentSelectDialog, {
+      data: {
+        _id: document_id
+      },
+      disableClose: true,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+    });
+  }
+  goToEdit(document_type) {
+    let that = this;
+    let document_id = this.route.snapshot.queryParamMap.get('document_id');
+    if (document_type == that.documentTypes.po) {
+      that.router.navigate(['/po-detail-form'], { queryParams: { document_id: document_id } });
+    } else if (document_type == that.documentTypes.packingSlip) {
+      that.router.navigate(['/packing-slip-form'], { queryParams: { document_id: document_id } });
+    } else if (document_type == that.documentTypes.receivingSlip) {
+      that.router.navigate(['/receiving-slip-form'], { queryParams: { document_id: document_id } });
+    } else if (document_type == that.documentTypes.quote) {
+      that.router.navigate(['/quote-detail-form'], { queryParams: { document_id: document_id } });
+    }
+  }
+
+  deleteDocument() {
+
+    let that = this;
+
+    let document_id = this.route.snapshot.queryParamMap.get('document_id');
+    swalWithBootstrapButtons
+      .fire(
+        {
+
+          title: that.documentDeletValue == 0 ? 'Are you sure you want to archive this document?' : 'Are you sure you want to restore this document?',
+          showDenyButton: true,
+          showCancelButton: false,
+          confirmButtonText: 'Yes',
+          denyButtonText: 'No',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            that.httpCall
+              .httpPostCall(httproutes.PORTAL_DELETE_DOCUMENTS, { _id: document_id, is_delete: that.documentDeletValue == 0 ? 1 : 0 })
+              .subscribe(function (params) {
+                if (params.status) {
+                  that.snackbarservice.openSnackBar(params.message, "success");
+                  that.router.navigate(['/view-documents'], { queryParams: { _id: document_id }, state: { value: that.documentDeletValue } });
+
+                  //-state:
+                } else {
+                  that.snackbarservice.openSnackBar(params.message, "error");
+                }
+              });
+          }
+        });
+
   }
 
   poApprove() {
