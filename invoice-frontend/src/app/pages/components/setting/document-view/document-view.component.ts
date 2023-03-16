@@ -106,23 +106,9 @@ export class DocumentViewComponent implements OnInit {
         } else {
           if (checkoption == "Document_View") {
             that.Document_View = !event;
+          } else if (checkoption == "Archive_Orphan_Document") {
+            that.Archive_Orphan_Document = !event;
           }
-        }
-      });
-  }
-  updateSetting(objectForEdit: any) {
-    console.log("log1",);
-    let userData = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA) ?? "");
-    let that = this;
-    objectForEdit._id = that.setting_id;
-    this.httpCall
-      .httpPostCall(httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTING_UPDATE_ALERTS, objectForEdit)
-      .subscribe(function (params) {
-        if (params.status) {
-          console.log("log2", params.status);
-          that.snackbarservice.openSnackBar(params.message, "success");
-        } else {
-          that.snackbarservice.openSnackBar(params.message, "error");
         }
       });
   }
@@ -130,8 +116,6 @@ export class DocumentViewComponent implements OnInit {
   modelChangeLocationText(event, checkoption) {
     let settingKey = "settings." + checkoption;
     let obj = this.settingObject[checkoption];
-    console.log("obj: ", obj);
-    console.log("settingKey: ", settingKey);
     obj.setting_value = event;
     let reqObject = {
       [settingKey]: obj,
@@ -147,19 +131,31 @@ export class DocumentViewComponent implements OnInit {
       })
       .then((result) => {
         if (result.isConfirmed) {
-          console.log("reqObject: ", reqObject);
           that.updateSetting(reqObject);
-
-
         } else {
           if (checkoption == "Document_View") {
-            console.log("reqObject1111: ", reqObject);
-            that.Document_View_time_value =
-              that.settingObject.Document_View.setting_value;
+            that.Document_View_time_value = that.settingObject.Document_View.setting_value;
+          } else if (checkoption == "Archive_Orphan_Document") {
+            that.Archive_Orphan_Document_time_value = that.settingObject.Archive_Orphan_Document.setting_value;
           }
         }
       });
   }
+  updateSetting(objectForEdit: any) {
+    let that = this;
+    objectForEdit._id = that.setting_id;
+    this.httpCall
+      .httpPostCall(httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTING_UPDATE_ALERTS, objectForEdit)
+      .subscribe(function (params) {
+        if (params.status) {
+          that.snackbarservice.openSnackBar(params.message, "success");
+        } else {
+          that.snackbarservice.openSnackBar(params.message, "error");
+        }
+      });
+  }
+
+
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
