@@ -47,8 +47,10 @@ module.exports.getOneProcessInvoice = async function (req, res) {
             let invoiceProcessCollection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
             let vendorCollection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
             let get_data = await invoiceProcessCollection.findOne({ _id: ObjectID(requestObject._id) });
-            if (get_data.data.vendor != '') {
-                get_data.data.vendor = await vendorCollection.findOne({ _id: ObjectID(get_data.data.vendor) });
+            if (get_data.data) {
+                if (get_data.data.vendor != '') {
+                    get_data.data.vendor = await vendorCollection.findOne({ _id: ObjectID(get_data.data.vendor) });
+                }
             }
             res.send({ message: 'Listing', data: get_data, status: true });
         } catch (e) {

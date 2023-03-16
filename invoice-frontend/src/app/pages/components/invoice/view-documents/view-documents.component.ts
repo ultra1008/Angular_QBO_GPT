@@ -54,7 +54,7 @@ export class ViewDocumentsComponent implements OnInit {
   };
 
 
-  constructor(public dialog: MatDialog, private http: HttpClient, private location: Location, public httpCall: HttpCall, private modeService: ModeDetectService,
+  constructor (public dialog: MatDialog, private http: HttpClient, private location: Location, public httpCall: HttpCall, private modeService: ModeDetectService,
     public snackbarservice: Snackbarservice, private router: Router) {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     let that = this;
@@ -181,7 +181,12 @@ export class ViewDocumentsComponent implements OnInit {
     return [
       {
         title: 'Document Type',
-        data: "document_type",
+        render: function (data: any, type: any, full: any) {
+          if (full.document_type == '') {
+            return 'No Identifying Information';
+          }
+          return full.document_type;
+        },
         defaultContent: "",
       },
       {
@@ -321,7 +326,7 @@ export class DocumentSelectDialog {
   };
 
 
-  constructor(
+  constructor (
     private modeService: ModeDetectService,
     public dialogRef: MatDialogRef<DocumentSelectDialog>,
     public translate: TranslateService,
