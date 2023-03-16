@@ -1,4 +1,4 @@
-<div class="wrapper-cust-admin" fxLayout style="height: 95%">
+<!-- <div class="wrapper-cust-admin" fxLayout style="height: 95%">
     <div class="d-flex justify-content-between">
         <h1 class="screen-title">
             {{ "Orphan_Documents" | translate | titlecase }}
@@ -9,11 +9,47 @@
                 {{ "All-back" | translate }}
             </button>
         </div>
-    </div>
-    <div>
-        <div class="table-responsive cust-padding cust-padding-tmp mt-2" *ngIf="showTable">
-            <table datatable [dtOptions]="dtOptions" id="dtOptions" class="row-border hover">
-            </table>
+    </div> -->
+<div class="wrapper-cust-admin" fxLayout style="height: 95%">
+    <div class="d-flex justify-content-between">
+
+        <h1 class="screen-title">
+            {{ "iframe_tab_Documents" | translate | titlecase }}
+        </h1>
+        <div class="row mr-2 action-button">
+
         </div>
+    </div>
+
+
+
+
+    <div class="wrapper-cust-admin" fxLayout style="height: 95%">
+        <mat-tab-group mat-align-tabs="center" (selectedTabChange)="onTabChanged($event)"
+            [(selectedIndex)]="step_index">
+            <mat-tab label="{{'Orphan_Documents' | translate}}">
+                <div>
+                    <div class="table-responsive cust-padding cust-padding-tmp mt-2" *ngIf="showTable">
+                        <table datatable [dtOptions]="dtOptions" id="dtOptions" class="row-border hover">
+                        </table>
+                    </div>
+                </div>
+            </mat-tab>
+
+            <mat-tab label="{{'Archive_Orphan_Documents' | translate}}">
+                <div>
+                    <div class="table-responsive cust-padding cust-padding-tmp mt-2" *ngIf="showTable">
+                        <table datatable [dtOptions]="dtOptions" id="dtOptions" class="row-border hover">
+                        </table>
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+        <!-- <div *ngIf="!Document_View_time">
+          <div class="table-responsive cust-padding cust-padding-tmp mt-2" *ngIf="showTable">
+            <table datatable [dtOptions]="dtOptions" id="dtOptions_vendor" class="row-border hover">
+            </table>
+          </div>
+        </div> -->
     </div>
 </div>
