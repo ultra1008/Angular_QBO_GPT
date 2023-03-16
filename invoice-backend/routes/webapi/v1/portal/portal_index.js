@@ -264,6 +264,7 @@ router.post('/webapi/v1/portal/deleteInvoicecostcode', common.checkTokenExistOrN
 
 let invoiceController = require('./invoices/invoiceController');
 let invoiceValidation = require('./invoices/invoiceValidation');
+let invoiceCron = require('./invoices/invoiceCron');
 router.post('/webapi/v1/portal/saveinvoice', common.checkTokenExistOrNot, invoiceController.saveInvoice);
 router.get('/webapi/v1/portal/getinvoice', common.checkTokenExistOrNot, invoiceController.getInvoice);
 router.post('/webapi/v1/portal/getinvoicelist', common.checkTokenExistOrNot, invoiceController.getInvoiceList);
@@ -296,6 +297,7 @@ router.post('/webapi/v1/portal/deletequotenote', common.checkTokenExistOrNot, in
 router.post('/webapi/v1/portal/updatequoteattachment', common.checkTokenExistOrNot, invoiceValidation.saveQuoteAttachment, invoiceController.saveQuoteAttachment);
 router.post('/webapi/v1/portal/updateinvoicerelateddocument', common.checkTokenExistOrNot, invoiceValidation.updateInvoiceRelatedDocument, invoiceController.updateInvoiceRelatedDocument);
 router.post('/webapi/v1/portal/requestforinvoicefile', common.checkTokenExistOrNot, invoiceValidation.requestForInvoiceFile, invoiceController.requestForInvoiceFile);
+router.get('/webapi/v1/portal/deleteOrphanDocumentCronAPI', common.checkTokenExistOrNot, invoiceCron.deleteOrphanDocumentCronAPI);
 
 let invoiceDashboard = require('./dashboard/dashboardController');
 router.get('/webapi/v1/portal/getdashboardcount', common.checkTokenExistOrNot, invoiceDashboard.getDashboardCount);
