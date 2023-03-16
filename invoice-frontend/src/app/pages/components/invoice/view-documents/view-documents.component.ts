@@ -45,6 +45,7 @@ export class ViewDocumentsComponent implements OnInit {
   viewIcon: string;
   editIcon: string;
   deleteIcon: string;
+  step_index: number = 0;
   mode: any;
   documentTypes: any = {
     po: 'PURCHASE_ORDER',
@@ -54,7 +55,7 @@ export class ViewDocumentsComponent implements OnInit {
   };
 
 
-  constructor (public dialog: MatDialog, private http: HttpClient, private location: Location, public httpCall: HttpCall, private modeService: ModeDetectService,
+  constructor(public dialog: MatDialog, private http: HttpClient, private location: Location, public httpCall: HttpCall, private modeService: ModeDetectService,
     public snackbarservice: Snackbarservice, private router: Router) {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     let that = this;
@@ -122,7 +123,12 @@ export class ViewDocumentsComponent implements OnInit {
         $(".dataTables_processing").html(
           "<img  src=" + this.httpCall.getLoader() + ">"
         );
-        dataTablesParameters.is_delete = 0;
+        if (that.step_index == 1) {
+          dataTablesParameters.is_delete = 1;
+        } else {
+          dataTablesParameters.is_delete = 0;
+        }
+
         that.http
           .post<DataTablesResponse>(
             configdata.apiurl + httproutes.PORTAL_VIEW_DOCUMENTS_DATATABLE,
@@ -175,6 +181,10 @@ export class ViewDocumentsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
     });
+  }
+  onTabChanged($event) {
+    // this.currrent_tab = this.tab_Array[$event.index]; 
+    this.rerenderfunc();
   }
 
   getColumName() {
@@ -327,7 +337,7 @@ export class DocumentSelectDialog {
   };
 
 
-  constructor (
+  constructor(
     private modeService: ModeDetectService,
     public dialogRef: MatDialogRef<DocumentSelectDialog>,
     public translate: TranslateService,

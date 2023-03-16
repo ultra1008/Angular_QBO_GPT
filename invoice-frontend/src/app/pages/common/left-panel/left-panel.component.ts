@@ -51,7 +51,7 @@ export class LeftPanelComponent implements OnInit {
   /*
     Constructor
   */
-  constructor (private layoutService: LayoutService, private router: Router,
+  constructor(private layoutService: LayoutService, private router: Router,
     public mostusedservice: Mostusedservice, public route: ActivatedRoute, public translate: TranslateService) {
 
     var tmpurl = this.router.url.split("?");
@@ -75,7 +75,7 @@ export class LeftPanelComponent implements OnInit {
       this.company_logo = this.role_permission.companydata.companylogo;
     }
 
-    this.translate.stream(['Sidebar-Dashboard', 'Sidebar-Vendors', 'Sidebar-invoice', 'Sidebar-Templates', 'Sidebar-Report', 'Sidebar-Team', "Sidebar-Setting"]).subscribe((textarray) => {
+    this.translate.stream(['Sidebar-Dashboard', 'Sidebar-Vendors', 'Sidebar-invoice', 'Sidebar-Templates', 'iframe_tab_Documents', 'Sidebar-Report', 'Sidebar-Team', "Sidebar-Setting"]).subscribe((textarray) => {
 
       that.menuList = [];
       /* that.menuList = [
@@ -149,6 +149,17 @@ export class LeftPanelComponent implements OnInit {
           icon: '',
           image: './assets/sidemenu/dailyreport_icon.png',
           url: '/invoice',
+        };
+        that.menuList.splice(index++, 0, reqObj);
+      }
+
+      // Documents
+      if (true) {
+        let reqObj = {
+          name: textarray['iframe_tab_Documents'],
+          icon: '',
+          image: './assets/sidemenu/document_dark.png',
+          url: '/view-documents',
         };
         that.menuList.splice(index++, 0, reqObj);
       }

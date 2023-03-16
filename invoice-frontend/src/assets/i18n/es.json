@@ -2493,5 +2493,6 @@
     "Files_Attached": "Files Attached #",
     "Uploaded_By": "Uploaded By",
     "Uploaded_At": "Uploaded At",
-    "Select_Document_Type": "Select Document Type"
+    "Select_Document_Type": "Select Document Type",
+    "Archive_Orphan_Documents": "Archive Orphan Documents"
 }
