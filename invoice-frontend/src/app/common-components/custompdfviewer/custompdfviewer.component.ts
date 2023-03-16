@@ -62,6 +62,8 @@ export class CustompdfviewerComponent implements OnInit {
     receivingSlip: 'RECEIVING_SLIP',
     quote: 'QUOTE',
   };
+  Archive_Orphan_Document_value: any = [];
+  Archive_Orphan_Document: any;
 
   constructor(private location: Location, private modeService: ModeDetectService, public route: ActivatedRoute, private router: Router,
     public httpCall: HttpCall, public spinner: UiSpinnerService, public snackbarservice: Snackbarservice,
@@ -225,6 +227,7 @@ export class CustompdfviewerComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getSettings();
     let po_status = this.route.snapshot.queryParamMap.get('po_status');
     if (po_status == "Approve Pending" || po_status == "Approved by Prime") {
       this.isspoStatusapprovepending = true;
@@ -296,7 +299,7 @@ export class CustompdfviewerComponent implements OnInit {
       .fire(
         {
 
-          title: that.documentDeletValue == 0 ? 'Are you sure you want to archive this document?' : 'Are you sure you want to restore this document?',
+          title: that.documentDeletValue == 0 ? ' Are you sure you want to archive this document? This document will be automatically remove from this list after ' + this.Archive_Orphan_Document_value + ' days.' : 'We need to add setting inside View Document for ' + this.Archive_Orphan_Document_value + ' days for Archive automatically.?',
           showDenyButton: true,
           showCancelButton: false,
           confirmButtonText: 'Yes',
@@ -320,6 +323,18 @@ export class CustompdfviewerComponent implements OnInit {
 
   }
 
+  getSettings() {
+    let that = this;
+    this.httpCall
+      .httpGetCall(httproutes.PORTAL_ROVUK_INVOICE__SETTINGS_GET_ALL_ALERTS)
+      .subscribe(function (params) {
+        if (params.status) {
+          that.Archive_Orphan_Document = params.data.settings.Archive_Orphan_Document.setting_status == 'Active';
+          that.Archive_Orphan_Document_value = params.data.settings.Archive_Orphan_Document.setting_value;
+
+        }
+      });
+  }
   poApprove() {
     let id = '';
     let status = '';

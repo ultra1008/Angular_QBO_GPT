@@ -53,6 +53,8 @@ export class ViewDocumentsComponent implements OnInit {
     receivingSlip: 'RECEIVING_SLIP',
     quote: 'QUOTE',
   };
+  Archive_Orphan_Document_value: any = [];
+  Archive_Orphan_Document: any;
 
 
   constructor(public dialog: MatDialog, private http: HttpClient, private location: Location, public httpCall: HttpCall, private modeService: ModeDetectService,
@@ -269,7 +271,17 @@ export class ViewDocumentsComponent implements OnInit {
     ];
   }
 
-
+  getSettings() {
+    let that = this;
+    this.httpCall
+      .httpGetCall(httproutes.PORTAL_ROVUK_INVOICE__SETTINGS_GET_ALL_ALERTS)
+      .subscribe(function (params) {
+        if (params.status) {
+          that.Archive_Orphan_Document = params.data.settings.Archive_Orphan_Document.setting_status == 'Active';
+          that.Archive_Orphan_Document_value = params.data.settings.Archive_Orphan_Document.setting_value;
+        }
+      });
+  }
 
   deleteDocument(_id) {
     let that = this;
