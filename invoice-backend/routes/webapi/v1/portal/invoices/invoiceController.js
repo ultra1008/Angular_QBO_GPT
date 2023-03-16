@@ -1473,6 +1473,7 @@ module.exports.getOrphanDocumentsDatatable = async function (req, res) {
                         pdf_url: 1,
                         created_at: 1,
                         created_by_user: "$created_by_user",
+                        is_delete: 1,
                     }
                 },
                 { $match: query },
@@ -1728,6 +1729,7 @@ module.exports.getViewDocumentsDatatable = async function (req, res) {
                         process_data: 1,
                         data: 1,
                         pdf_url: 1,
+                        is_delete: 1,
                     }
                 },
                 { $match: query },

@@ -21,16 +21,18 @@ const swalWithBootstrapButtons = Swal.mixin({
   styleUrls: ['./document-view.component.scss']
 })
 export class DocumentViewComponent implements OnInit {
-  documentviews: any;
+  // documentviews: any;
   Document_View_time_value!: string;
   Document_View: boolean = false;
+  Archive_Orphan_Document_time_value!: string;
+  Archive_Orphan_Document: boolean = false;
   settingObject: any;
   setting_id!: string;
   Document_Settings_Alert_Sure_Want_Change: string = "";
   Compnay_Equipment_Delete_Yes: string = "";
   Compnay_Equipment_Delete_No: string = "";
 
-  constructor(private formBuilder: FormBuilder, public httpCall: HttpCall, public snackbarservice: Snackbarservice,
+  constructor (private formBuilder: FormBuilder, public httpCall: HttpCall, public snackbarservice: Snackbarservice,
     public translate: TranslateService) {
     this.translate.stream([""]).subscribe((textarray) => {
       this.Document_Settings_Alert_Sure_Want_Change = this.translate.instant("Document_Settings_Alert_Sure_Want_Change");
@@ -65,7 +67,17 @@ export class DocumentViewComponent implements OnInit {
               that.Document_View_time_value = '45';
             }
 
-
+            if (params.data.settings.Archive_Orphan_Document) {
+              that.Archive_Orphan_Document_time_value = params.data.settings.Archive_Orphan_Document.setting_value;
+              if (params.data.settings.Archive_Orphan_Document.setting_status == "Active") {
+                that.Archive_Orphan_Document = true;
+              } else {
+                that.Archive_Orphan_Document = false;
+              }
+            } else {
+              that.Archive_Orphan_Document = false;
+              that.Archive_Orphan_Document_time_value = '30';
+            }
           }
         }
       });

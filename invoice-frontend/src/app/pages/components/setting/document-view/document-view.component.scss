@@ -1,7 +1,23 @@
-.custom-small-field {
-    width: 150px;
-    height: 30px;
-    border: 1px solid black;
-    // margin-top: 100px;
-    // margin-bottom: 50px;
+@import 'src/app/styles/variables';
+
+.main-cust-setting-div {
+    width: 100%;
+
+    @media (max-width: $normal) {}
+
+    @media (max-width: $small) {
+        flex-wrap: wrap;
+    }
+
+    @media (max-width: $medium) {
+        flex-wrap: wrap;
+    }
+}
+
+.decorate-div {
+    margin: auto;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    padding: 0px !important;
 }
