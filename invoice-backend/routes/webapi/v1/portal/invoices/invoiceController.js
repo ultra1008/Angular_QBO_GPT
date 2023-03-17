@@ -1234,9 +1234,9 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
             if (requestObject.All_Vendors) {
                 vendor = `${translator.getStr('EmailExcelVendors')} ${translator.getStr('EmailExcelAllVendors')}`;
             } else {
-                termQuery = termQuery.length == 0 ? {} : { $or: termQuery };
+                vendorQuery = vendorQuery.length == 0 ? {} : { $or: vendorQuery };
                 let vendorCollection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
-                let all_vendor = await vendorCollection.find(termQuery, { vendor_name: 1 });
+                let all_vendor = await vendorCollection.find(vendorQuery, { vendor_name: 1 });
                 let temp_data = [];
                 for (var i = 0; i < all_vendor.length; i++) {
                     temp_data.push(all_vendor[i]['name']);
