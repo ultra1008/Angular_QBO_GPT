@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { httproutes, icon, localstorageconstants } from 'src/app/consts';
 import { HttpCall } from 'src/app/service/httpcall.service';
-import { LanguageApp } from 'src/app/service/utils';
+import { LanguageApp, MMDDYYYY } from 'src/app/service/utils';
 import { configdata } from 'src/environments/configData';
 import { ModeDetectService } from '../../map/mode-detect.service';
 import { Location } from '@angular/common';
@@ -55,10 +55,13 @@ export class ViewDocumentsComponent implements OnInit {
   };
   Archive_Orphan_Document_value: any = [];
   Archive_Orphan_Document: any;
+  Uploaded_By: string;
+  Uploaded_At: string;
+  Archived_By: string;
+  Archived_At: string;
 
-
-  constructor(public dialog: MatDialog, private http: HttpClient, private location: Location, public httpCall: HttpCall, private modeService: ModeDetectService,
-    public snackbarservice: Snackbarservice, private router: Router) {
+  constructor (public dialog: MatDialog, private http: HttpClient, private location: Location, public httpCall: HttpCall, private modeService: ModeDetectService,
+    public snackbarservice: Snackbarservice, private router: Router, public translate: TranslateService,) {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     let that = this;
     this.mode = modeLocal === "on" ? "on" : "off";
@@ -95,6 +98,22 @@ export class ViewDocumentsComponent implements OnInit {
         }, 100);
       }
       j++;
+    });
+    var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
+    this.locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configdata.fst_load_lang : tmp_locallanguage;
+    that.translate.use(this.locallanguage);
+    let i = 0;
+    this.translate.stream(['']).subscribe((textarray) => {
+      this.Uploaded_By = this.translate.instant('Uploaded_By');
+      this.Uploaded_At = this.translate.instant('Uploaded_At');
+      this.Archived_By = this.translate.instant('Archived_By');
+      this.Archived_At = this.translate.instant('Archived_At');
+      if (i != 0) {
+        setTimeout(() => {
+          that.rerenderfunc();
+        }, 100);
+      }
+      i++;
     });
   }
 
@@ -237,6 +256,28 @@ export class ViewDocumentsComponent implements OnInit {
         data: "vendor_name",
         defaultContent: "",
       },
+      {
+        title: that.step_index == 0 ? that.Uploaded_By : that.Archived_By,
+        render: function (data: any, type: any, full: any) {
+          if (that.step_index == 0) {
+            return full.created_by.userfullname;
+          } else {
+            return full.updated_by.userfullname;
+          }
+        },
+        defaultContent: "",
+      },
+      {
+        title: that.step_index == 0 ? that.Uploaded_At : that.Archived_At,
+        render: function (data: any, type: any, full: any) {
+          if (that.step_index == 0) {
+            return MMDDYYYY(full.created_at);
+          } else {
+            return MMDDYYYY(full.updated_at);
+          }
+        },
+        defaultContent: "",
+      },
       // {
       //   title: 'Action',
       //   render: function (data: any, type: any, full: any) {
@@ -358,7 +399,7 @@ export class DocumentSelectDialog {
   };
 
 
-  constructor(
+  constructor (
     private modeService: ModeDetectService,
     public dialogRef: MatDialogRef<DocumentSelectDialog>,
     public translate: TranslateService,

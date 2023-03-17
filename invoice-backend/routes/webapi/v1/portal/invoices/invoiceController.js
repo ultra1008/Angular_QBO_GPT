@@ -1687,6 +1687,24 @@ module.exports.getViewDocumentsDatatable = async function (req, res) {
             var aggregateQuery = [
                 { $match: match_query },
                 {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "created_by",
+                        foreignField: "_id",
+                        as: "created_by"
+                    }
+                },
+                { $unwind: "$created_by" },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "updated_by",
+                        foreignField: "_id",
+                        as: "updated_by"
+                    }
+                },
+                { $unwind: "$updated_by" },
+                {
                     $project: {
                         document_type: {
                             $cond: [
@@ -1730,6 +1748,10 @@ module.exports.getViewDocumentsDatatable = async function (req, res) {
                         data: 1,
                         pdf_url: 1,
                         is_delete: 1,
+                        created_at: 1,
+                        created_by: "$created_by",
+                        updated_at: 1,
+                        updated_by: "$updated_by",
                     }
                 },
                 { $match: query },
@@ -1779,7 +1801,12 @@ module.exports.deleteViewDocument = async function (req, res) {
             var id = requestObject._id;
             delete requestObject._id;
             var processInvoiceConnection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
-            var update_data = await processInvoiceConnection.updateOne({ _id: ObjectID(id) }, { is_delete: requestObject.is_delete });
+            let reqObj = {
+                is_delete: requestObject.is_delete,
+                updated_by: decodedToken.UserData._id,
+                updated_at: Math.round(new Date().getTime() / 1000),
+            };
+            var update_data = await processInvoiceConnection.updateOne({ _id: ObjectID(id) }, reqObj);
             let isDelete = update_data.nModified;
             if (isDelete == 0) {
                 res.send({ status: false, message: "There is no data with this id." });

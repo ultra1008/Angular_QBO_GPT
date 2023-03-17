@@ -2495,5 +2495,7 @@
     "Uploaded_By": "Uploaded By",
     "Uploaded_At": "Uploaded At",
     "Select_Document_Type": "Select Document Type",
-    "Archive_Orphan_Documents": "Archive Orphan Documents"
+    "Archive_Orphan_Documents": "Archive Orphan Documents",
+    "Archived_By": "Archived By",
+    "Archived_At": "Archived At"
 }
