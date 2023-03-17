@@ -51,7 +51,7 @@ export class LeftPanelComponent implements OnInit {
   /*
     Constructor
   */
-  constructor(private layoutService: LayoutService, private router: Router,
+  constructor (private layoutService: LayoutService, private router: Router,
     public mostusedservice: Mostusedservice, public route: ActivatedRoute, public translate: TranslateService) {
 
     var tmpurl = this.router.url.split("?");
@@ -159,7 +159,7 @@ export class LeftPanelComponent implements OnInit {
           name: textarray['iframe_tab_Documents'],
           icon: '',
           image: './assets/sidemenu/document_dark.png',
-          url: '/view-documents',
+          url: '/documents-list',
         };
         that.menuList.splice(index++, 0, reqObj);
       }

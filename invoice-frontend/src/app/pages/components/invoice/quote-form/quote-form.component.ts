@@ -79,13 +79,12 @@ export class QuoteFormComponent implements OnInit {
   viewIcon: any;
   document_id: any;
 
-  constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
+  constructor (public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.document_id = this.route.snapshot.queryParamMap.get('document_id');
     this.invoice_id = this.id;
     if (this.id) {
-      console.log("id11111111", this.id);
       this.uiSpinner.spin$.next(true);
       this.getOneInvoice();
     }
@@ -179,6 +178,8 @@ export class QuoteFormComponent implements OnInit {
   back() {
     if (this.id) {
       this.router.navigate(['/invoice-detail'], { queryParams: { _id: this.invoice_id } });
+    } else if (this.document_id) {
+      this.router.navigate(['/documents-list']);
     } else {
       this.location.back();
     }
@@ -200,7 +201,6 @@ export class QuoteFormComponent implements OnInit {
         that.usersArray = that.variablesusersArray.slice();
         that.isManagement = data.is_management;
       }
-      console.log("usersArray", data.data);
     });
     that.getAllCostCode();
   }
@@ -413,7 +413,6 @@ export class QuoteFormComponent implements OnInit {
         }
         that.uiSpinner.spin$.next(false);
       });
-      console.log("requestObject", requestObject);
     }
   }
 
@@ -446,12 +445,6 @@ export class QuoteFormComponent implements OnInit {
         }
         that.uiSpinner.spin$.next(false);
       });
-      console.log("requestObject", requestObject);
     }
   }
-
-
 }
-
-
-

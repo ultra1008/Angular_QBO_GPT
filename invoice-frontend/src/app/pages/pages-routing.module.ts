@@ -59,7 +59,7 @@ import { PackingSlipFormComponent } from './components/invoice/packing-slip-form
 import { PoDetailFormComponent } from './components/invoice/po-detail-form/po-detail-form.component';
 import { ReceivingSlipFormComponent } from './components/invoice/receiving-slip-form/receiving-slip-form.component';
 import { QuoteFormComponent } from './components/invoice/quote-form/quote-form.component';
-import { ViewDocumentsComponent } from './components/invoice/view-documents/view-documents.component';
+import { DocumentsListComponent } from './components/invoice/documents-list/documents-list.component';
 
 
 const routes: Routes = [
@@ -368,10 +368,10 @@ const routes: Routes = [
         component: InvoiceDetailPageComponent
       },
       {
-        path: 'view-documents',
+        path: 'documents-list',
         pathMatch: 'full',
         canActivate: [PortalAuthGuard],
-        component: ViewDocumentsComponent,
+        component: DocumentsListComponent,
       },
     ]
   },

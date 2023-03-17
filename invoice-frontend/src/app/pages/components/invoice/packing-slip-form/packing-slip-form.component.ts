@@ -82,7 +82,7 @@ export class PackingSlipFormComponent implements OnInit {
   document_id: any;
 
 
-  constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
+  constructor (public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.document_id = this.route.snapshot.queryParamMap.get('document_id');
@@ -182,6 +182,8 @@ export class PackingSlipFormComponent implements OnInit {
   back() {
     if (this.id) {
       this.router.navigate(['/invoice-detail'], { queryParams: { _id: this.invoice_id } });
+    } else if (this.document_id) {
+      this.router.navigate(['/documents-list']);
     } else {
       this.location.back();
     }
@@ -202,7 +204,6 @@ export class PackingSlipFormComponent implements OnInit {
         that.usersArray = that.variablesusersArray.slice();
         that.isManagement = data.is_management;
       }
-      console.log("usersArray", data.data);
     });
     that.getAllCostCode();
   }
@@ -327,7 +328,6 @@ export class PackingSlipFormComponent implements OnInit {
         });
       }
       that.uiSpinner.spin$.next(false);
-      console.log("invoiceData.packing_slip_data", that.invoiceData.packing_slip_data);
     });
   }
   getOneProcessDocument() {
@@ -389,7 +389,6 @@ export class PackingSlipFormComponent implements OnInit {
         });
       }
       that.uiSpinner.spin$.next(false);
-      console.log("invoiceData.packing_slip_data", that.invoiceData.packing_slip_data);
     });
   }
 
@@ -428,15 +427,12 @@ export class PackingSlipFormComponent implements OnInit {
         }
         that.uiSpinner.spin$.next(false);
       });
-      console.log("requestObject", requestObject);
     }
   }
   saveProcessDocument() {
     let that = this;
     if (that.invoiceform.valid) {
-
       let formVal = that.invoiceform.value;
-      console.log("formVal:,", formVal);
       let requestObject = {
         _id: that.document_id,
         module: 'Packing Slip',
@@ -459,7 +455,6 @@ export class PackingSlipFormComponent implements OnInit {
         }
         that.uiSpinner.spin$.next(false);
       });
-      console.log("requestObject", requestObject);
     }
   }
 }

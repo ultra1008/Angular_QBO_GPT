@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewDocumentsComponent } from './view-documents.component';
+import { DocumentsListComponent } from './documents-list.component';
 
-describe('ViewDocumentsComponent', () => {
-  let component: ViewDocumentsComponent;
-  let fixture: ComponentFixture<ViewDocumentsComponent>;
+describe('DocumentsListComponent', () => {
+  let component: DocumentsListComponent;
+  let fixture: ComponentFixture<DocumentsListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ViewDocumentsComponent]
+      declarations: [DocumentsListComponent]
     })
       .compileComponents();
 
-    fixture = TestBed.createComponent(ViewDocumentsComponent);
+    fixture = TestBed.createComponent(DocumentsListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -33,11 +33,11 @@ class DataTablesResponse {
 }
 
 @Component({
-  selector: 'app-view-documents',
-  templateUrl: './view-documents.component.html',
-  styleUrls: ['./view-documents.component.scss']
+  selector: 'app-documents-list',
+  templateUrl: './documents-list.component.html',
+  styleUrls: ['./documents-list.component.scss']
 })
-export class ViewDocumentsComponent implements OnInit {
+export class DocumentsListComponent implements OnInit {
   locallanguage: string;
   dtOptions: any = {};
   showTable: boolean = true;
@@ -196,21 +196,14 @@ export class ViewDocumentsComponent implements OnInit {
   }
 
   selectDocumentType(_id): void {
-    let that = this;
-    console.log("12312", _id);
-
     const dialogRef = this.dialog.open(DocumentSelectDialog, {
-      data: {
-        _id: _id
-      },
+      data: { _id: _id },
       disableClose: true,
-
-
     });
-
     dialogRef.afterClosed().subscribe((result) => {
     });
   }
+
   goToEdit(document) {
     let that = this;
     if (document.document_type == that.documentTypes.po) {
@@ -224,7 +217,6 @@ export class ViewDocumentsComponent implements OnInit {
     }
   }
   onTabChanged($event) {
-    // this.currrent_tab = this.tab_Array[$event.index]; 
     this.rerenderfunc();
   }
 
@@ -365,13 +357,10 @@ export class ViewDocumentsComponent implements OnInit {
   }
 }
 
-
-
-
 @Component({
   selector: 'document-select-dialog',
   templateUrl: './document-select-dialog.html',
-  styleUrls: ['./view-documents.component.scss']
+  styleUrls: ['./documents-list.component.scss']
 })
 export class DocumentSelectDialog {
 
@@ -398,22 +387,9 @@ export class DocumentSelectDialog {
     invoice: 'INVOICE'
   };
 
-
-  constructor (
-    private modeService: ModeDetectService,
-    public dialogRef: MatDialogRef<DocumentSelectDialog>,
-    public translate: TranslateService,
-    private router: Router,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private formBuilder: FormBuilder,
-    public spinner: UiSpinnerService,
-    public sb: Snackbarservice,
-    public route: ActivatedRoute,
-    public httpCall: HttpCall,
-    public snackbarservice: Snackbarservice
-
-  ) {
-    console.log("data", data);
+  constructor (private modeService: ModeDetectService, public dialogRef: MatDialogRef<DocumentSelectDialog>, public translate: TranslateService,
+    private router: Router, @Inject(MAT_DIALOG_DATA) public data: any, private formBuilder: FormBuilder, public spinner: UiSpinnerService,
+    public sb: Snackbarservice, public route: ActivatedRoute, public httpCall: HttpCall, public snackbarservice: Snackbarservice) {
     this.projectId = data.project_id;
     this.LOCAL_OFFSET = moment().utcOffset() * 60;
     let tmp_user = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
@@ -457,9 +433,7 @@ export class DocumentSelectDialog {
 
   onDocumentSelectFormSelect(event) {
     this.dialogRef.close();
-
     let that = this;
-    console.log("document_type", event);
     if (event == that.documentTypes.po) {
       that.router.navigate(['/po-detail-form'], { queryParams: { document_id: this.data._id } });
     } else if (event == that.documentTypes.packingSlip) {
@@ -472,6 +446,4 @@ export class DocumentSelectDialog {
       that.router.navigate(['/invoice-form'], { queryParams: { document_id: this.data._id } });
     }
   }
-
-
 }

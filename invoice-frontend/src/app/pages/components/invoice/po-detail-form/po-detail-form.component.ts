@@ -78,7 +78,7 @@ export class PoDetailFormComponent implements OnInit {
   document_id: any;
 
 
-  constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
+  constructor (public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.document_id = this.route.snapshot.queryParamMap.get('document_id');
@@ -176,6 +176,8 @@ export class PoDetailFormComponent implements OnInit {
   back() {
     if (this.id) {
       this.router.navigate(['/invoice-detail'], { queryParams: { _id: this.invoice_id } });
+    } else if (this.document_id) {
+      this.router.navigate(['/documents-list']);
     } else {
       this.location.back();
     }
@@ -198,7 +200,6 @@ export class PoDetailFormComponent implements OnInit {
         that.usersArray = that.variablesusersArray.slice();
         that.isManagement = data.is_management;
       }
-      console.log("usersArray", data.data);
     });
     that.getAllCostCode();
   }
@@ -328,7 +329,6 @@ export class PoDetailFormComponent implements OnInit {
         });
       }
       that.uiSpinner.spin$.next(false);
-      console.log("invoiceData.packing_slip_data", that.invoiceData.packing_slip_data);
     });
   }
   getOneInvoice() {
@@ -381,7 +381,6 @@ export class PoDetailFormComponent implements OnInit {
         });
       }
       that.uiSpinner.spin$.next(false);
-      console.log("invoiceData.packing_slip_data", that.invoiceData.packing_slip_data);
     });
   }
   saveData() {
@@ -428,7 +427,6 @@ export class PoDetailFormComponent implements OnInit {
         }
         that.uiSpinner.spin$.next(false);
       });
-      console.log("requestObject", requestObject);
     }
   }
   saveProcessDocument() {
@@ -441,7 +439,7 @@ export class PoDetailFormComponent implements OnInit {
         module: 'PO',
         'data.date': formVal.date,
 
-        'data.vendor': that.vendor,
+        'data.vendor': formVal.vendor,
         'data.customer_id': formVal.customer_id,
         'data.due_date': formVal.due_date,
 
@@ -456,7 +454,6 @@ export class PoDetailFormComponent implements OnInit {
         'data.tax': formVal.tax,
         'data.po_total': formVal.po_total,
       };
-
       that.uiSpinner.spin$.next(true);
       that.httpCall.httpPostCall(httproutes.INVOICE_DOCUMENT_PROCESS_SAVE, requestObject).subscribe(function (params) {
         if (params.status) {
@@ -467,7 +464,6 @@ export class PoDetailFormComponent implements OnInit {
         }
         that.uiSpinner.spin$.next(false);
       });
-      console.log("requestObject", requestObject);
     }
   }
 }
