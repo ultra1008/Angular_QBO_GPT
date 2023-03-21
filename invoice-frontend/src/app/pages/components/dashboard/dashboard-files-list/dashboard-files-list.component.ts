@@ -111,7 +111,7 @@ export class DashboardFilesListComponent implements OnInit {
     invoice: 'INVOICE'
   };
 
-  constructor(private location: Location, private modeService: ModeDetectService,
+  constructor (private location: Location, private modeService: ModeDetectService,
     public dialog: MatDialog,
     private router: Router,
     private http: HttpClient,
@@ -252,7 +252,6 @@ export class DashboardFilesListComponent implements OnInit {
         portal_language == "en"
           ? LanguageApp.english_datatables
           : LanguageApp.spanish_datatables,
-      order: [],
       ajax: (dataTablesParameters: any, callback) => {
         $(".dataTables_processing").html(
           "<img  src=" + this.httpCall.getLoader() + ">"
@@ -299,7 +298,6 @@ export class DashboardFilesListComponent implements OnInit {
         portal_language == "en"
           ? LanguageApp.english_datatables
           : LanguageApp.spanish_datatables,
-      order: [],
       ajax: (dataTablesParameters: any, callback) => {
         $(".dataTables_processing").html(
           "<img  src=" + this.httpCall.getLoader() + ">"
@@ -342,7 +340,6 @@ export class DashboardFilesListComponent implements OnInit {
         portal_language == "en"
           ? LanguageApp.english_datatables
           : LanguageApp.spanish_datatables,
-      order: [],
       ajax: (dataTablesParameters: any, callback) => {
         $(".dataTables_processing").html(
           "<img  src=" + this.httpCall.getLoader() + ">"

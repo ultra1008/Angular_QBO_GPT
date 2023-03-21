@@ -100,7 +100,7 @@ export class DashboardInvoiceListComponent implements OnInit {
   allInvoices: any = [];
   vendorsList = [];
 
-  constructor(private location: Location, private modeService: ModeDetectService,
+  constructor (private location: Location, private modeService: ModeDetectService,
     public dialog: MatDialog,
     private router: Router,
     private http: HttpClient,
@@ -273,7 +273,6 @@ export class DashboardInvoiceListComponent implements OnInit {
         portal_language == "en"
           ? LanguageApp.english_datatables
           : LanguageApp.spanish_datatables,
-      order: [],
       ajax: (dataTablesParameters: any, callback) => {
         $(".dataTables_processing").html(
           "<img  src=" + this.httpCall.getLoader() + ">"

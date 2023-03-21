@@ -54,7 +54,6 @@ export class UsageComponent implements OnInit {
         portal_language == "en"
           ? LanguageApp.english_datatables
           : LanguageApp.spanish_datatables,
-      order: [],
       ajax: (dataTablesParameters: any, callback) => {
         $(".dataTables_processing").html(
           "<img  src=" + this.httpCall.getLoader() + ">"
