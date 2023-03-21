@@ -69,7 +69,7 @@
                     </mat-form-field>
                     <mat-form-field class="mr-1" *ngIf="gridtolist" appearance="outline">
                         <mat-label>Status</mat-label>
-                        <mat-select (change)="changeStatus($event)" [(ngModel)]="invoice_status">
+                        <mat-select multiple (change)="changeStatus($event)" [(ngModel)]="invoice_status">
                             <mat-option value="All">{{'Team-EmployeeList-Status-All' | translate}}</mat-option>
                             <mat-option value="Approved">{{'status_Approved' | translate}}</mat-option>
                             <mat-option value="Rejected">{{'Reject_Invoice' | translate}}</mat-option>

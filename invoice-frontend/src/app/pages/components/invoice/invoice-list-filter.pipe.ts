@@ -24,14 +24,16 @@ export class InvoiceListFilterPipe implements PipeTransform {
 })
 export class InvoiceListFilterStatus implements PipeTransform {
 
-    transform(items: any[], searchTerm: string): any {
+    transform(items: any[], searchTerm: string[]): any {
+        var allArray = ['All'];
         if (!items || !searchTerm) {
             return items;
         }
-        if (searchTerm === 'All') {
+        if (JSON.stringify(searchTerm) === JSON.stringify(allArray)) {
             return items;
         }
-        return items.filter(item => item.status.toString().toUpperCase().indexOf(searchTerm.toUpperCase()) !== -1);
+        return items.filter(item => searchTerm.includes(item.status));
+
     }
 }
 

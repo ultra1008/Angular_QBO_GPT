@@ -66,8 +66,9 @@ export class AppComponent implements OnInit {
               console.log('If 3');
 
               // sets an idle timeout of 1 min, for testing purposes. 
-              that.idle.setIdle(that.timeValue * 60); // Change this time from the settings
-
+              if (that.idle) {
+                that.idle.setIdle(that.timeValue * 60); // Change this time from the settings
+              }
               // that.idle.setIdle(60);
               // sets a timeout period of 30 seconds. after 30 seconds of inactivity, the user will be considered timed out.
               that.idle.setTimeout(30);
@@ -119,9 +120,8 @@ export class AppComponent implements OnInit {
                   }
                 });
               });
-
               that.idle.onTimeoutWarning.subscribe((countdown) => {
-                that.idleState = 'You will time out in ' + countdown + ' seconds!';
+                that.idleState = 'You will time out in' + countdown + ' seconds!';
                 console.log(that.idleState);
               });
 
@@ -131,17 +131,16 @@ export class AppComponent implements OnInit {
               that.keepalive.onPing.subscribe(() => that.lastPing = new Date());
 
               that.reset();
-            } else {
-              console.log("check within inactive");
-              that.idle.stop();
             }
+            //  else {
+            //   console.log("check within inactive");
+            //   that.idle.stop();
+            // }
           }
         }
       });
     }
   }
-
-
 
   getGIFLoader() {
     let that = this;
