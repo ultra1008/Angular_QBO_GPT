@@ -135,11 +135,11 @@ export class DocumentsListComponent implements OnInit {
       serverSide: true,
       processing: true,
       responsive: false,
+      retrieve: true,
       language:
         portal_language == "en"
           ? LanguageApp.english_datatables
           : LanguageApp.spanish_datatables,
-      order: [],
       ajax: (dataTablesParameters: any, callback) => {
         $(".dataTables_processing").html(
           "<img  src=" + this.httpCall.getLoader() + ">"
@@ -250,23 +250,20 @@ export class DocumentsListComponent implements OnInit {
       },
       {
         title: that.step_index == 0 ? that.Uploaded_By : that.Archived_By,
-        render: function (data: any, type: any, full: any) {
-          if (that.step_index == 0) {
-            return full.created_by.userfullname;
-          } else {
-            return full.updated_by.userfullname;
-          }
-        },
+        data: "updated_by.userfullname",
+        /* render: function (data: any, type: any, full: any) {
+         if (that.step_index == 0) {
+           return full.created_by.userfullname;
+         } else {
+           return full.updated_by.userfullname;
+         }
+       }, */
         defaultContent: "",
       },
       {
         title: that.step_index == 0 ? that.Uploaded_At : that.Archived_At,
         render: function (data: any, type: any, full: any) {
-          if (that.step_index == 0) {
-            return MMDDYYYY(full.created_at);
-          } else {
-            return MMDDYYYY(full.updated_at);
-          }
+          return MMDDYYYY(full.updated_at);
         },
         defaultContent: "",
       },

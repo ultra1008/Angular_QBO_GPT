@@ -1661,7 +1661,7 @@ module.exports.getViewDocumentsDatatable = async function (req, res) {
             var requestObject = req.body;
             var processInvoiceConnection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
             var col = [];
-            col.push("document_type", "po_no", "invoice_no", "vendor_name");
+            col.push("document_type", "po_no", "invoice_no", "vendor_name", "updated_by.userfullname", "updated_at");
             var start = parseInt(requestObject.start) || 0;
             var perpage = parseInt(requestObject.length);
             var columnData = (requestObject.order != undefined && requestObject.order != '') ? requestObject.order[0].column : '';
@@ -1680,6 +1680,7 @@ module.exports.getViewDocumentsDatatable = async function (req, res) {
                         { "po_no": new RegExp(requestObject.search.value, 'i') },
                         { "invoice_no": new RegExp(requestObject.search.value, 'i') },
                         { "vendor_name": new RegExp(requestObject.search.value, 'i') },
+                        { "updated_by.userfullname": new RegExp(requestObject.search.value, 'i') },
                     ]
                 };
             }
@@ -1752,6 +1753,20 @@ module.exports.getViewDocumentsDatatable = async function (req, res) {
                         created_by: "$created_by",
                         updated_at: 1,
                         updated_by: "$updated_by",
+                        updated_by: {
+                            $cond: [
+                                { $eq: [requestObject.is_delete, 0] },
+                                "$created_by",
+                                "$updated_by"
+                            ]
+                        },
+                        updated_at: {
+                            $cond: [
+                                { $eq: [requestObject.is_delete, 0] },
+                                "$created_at",
+                                "$updated_at"
+                            ]
+                        },
                     }
                 },
                 { $match: query },
