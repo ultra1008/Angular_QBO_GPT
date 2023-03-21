@@ -336,7 +336,7 @@ module.exports.getVendorDatatable = async function (req, res) {
 
             var sort = {};
             if (requestObject.draw == 1) {
-                sort = { "vendor_created_at": -1 };
+                sort = { "vendor_name": 1 };
             } else {
                 sort[col[columnData]] = (columntype == 'asc') ? 1 : -1;
 

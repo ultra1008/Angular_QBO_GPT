@@ -226,7 +226,6 @@ export class VendorsComponent implements OnInit {
         portal_language == "en"
           ? LanguageApp.english_datatables
           : LanguageApp.spanish_datatables,
-      order: [],
       ajax: (dataTablesParameters: any, callback) => {
         $(".dataTables_processing").html(
           "<img  src=" + this.httpCall.getLoader() + ">"
@@ -247,7 +246,6 @@ export class VendorsComponent implements OnInit {
           });
       },
       columns: that.getColumName(),
-
       drawCallback: () => {
         $(".button_attachment").on("click", (event) => {
           this.imageObject = JSON.parse(
