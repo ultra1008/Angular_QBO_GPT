@@ -71,9 +71,12 @@
                         <mat-label>Status</mat-label>
                         <mat-select multiple (change)="changeStatus($event)" [(ngModel)]="invoice_status">
                             <mat-option value="All">{{'Team-EmployeeList-Status-All' | translate}}</mat-option>
+
                             <mat-option value="Approved">{{'status_Approved' | translate}}</mat-option>
                             <mat-option value="Rejected">{{'Reject_Invoice' | translate}}</mat-option>
                             <mat-option value="Pending">{{'status_Pending' | translate}}</mat-option>
+
+
                         </mat-select>
                     </mat-form-field>
 

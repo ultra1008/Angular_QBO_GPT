@@ -51,7 +51,6 @@ export class InvoiceComponent implements OnInit {
   listtogrid_text: any;
   gridtolist_text: any;
   username_search: any;
-
   gridtolist: Boolean = true;
   addTeamMember: boolean = true;
   locallanguage: any;
@@ -84,7 +83,7 @@ export class InvoiceComponent implements OnInit {
   reportIcon: string = "";
   role_to: any;
   role_permission: any;
-  invoice_status: any;
+  invoice_status: any = ['All'];
 
   // We use this trigger because fetching the list of persons can be quite long,
   // thus we ensure the data is fetched before rendering
