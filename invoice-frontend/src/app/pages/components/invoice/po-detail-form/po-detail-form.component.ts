@@ -174,8 +174,6 @@ export class PoDetailFormComponent implements OnInit {
   }
 
   back() {
-    console.log("this.id", this.id);
-    console.log("this.document_id", this.document_id);
     if (this.id) {
       this.router.navigate(['/invoice-detail'], { queryParams: { _id: this.invoice_id } });
     } else if (this.document_id) {

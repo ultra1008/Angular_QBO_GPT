@@ -92,7 +92,7 @@ export class InvoiceFormComponent implements OnInit {
   invoiceStatus: any;
 
 
-  constructor(public dialog: MatDialog, public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
+  constructor (public dialog: MatDialog, public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.document_id = this.route.snapshot.queryParamMap.get('document_id');
@@ -196,10 +196,6 @@ export class InvoiceFormComponent implements OnInit {
     });
 
   }
-
-  // back() {
-  //   this.router.navigate(['/invoice']);
-  // }
   back() {
     if (this.id) {
       if (this.invoiceStatus) {
@@ -207,7 +203,6 @@ export class InvoiceFormComponent implements OnInit {
       } else {
         this.router.navigate(['/invoice']);
       }
-
     } else {
       this.location.back();
     }
@@ -622,7 +617,7 @@ export class InvoiceHistoryComponent implements OnInit {
   isSearch: boolean = false;
   subscription: Subscription;
   dashboardHistory = [];
-  constructor(
+  constructor (
     public httpCall: HttpCall,
     public snackbarservice: Snackbarservice,
     private modeService: ModeDetectService,

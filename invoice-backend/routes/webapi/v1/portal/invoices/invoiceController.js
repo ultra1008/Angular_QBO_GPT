@@ -38,8 +38,35 @@ module.exports.saveInvoice = async function (req, res) {
                 requestObject.updated_by = decodedToken.UserData._id;
                 requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                 let get_invoice = await invoicesConnection.findOne({ _id: ObjectID(id) });
+
+                let findKeys = {};
+                let updateBadgeObject = {};
+                for (const property in requestObject) {
+                    findKeys[property] = 1;
+                }
+                var get_data = await invoicesConnection.findOne({ _id: ObjectID(id) }, findKeys);
                 let update_invoice = await invoicesConnection.updateOne({ _id: ObjectID(id) }, requestObject);
                 if (update_invoice) {
+                    delete requestObject.updated_at;
+                    delete requestObject.invoice_name;
+                    if (requestObject.cost_code) {
+                        requestObject.cost_code = ObjectID(requestObject.cost_code);
+                    }
+                    if (requestObject.invoice_id) {
+                        requestObject.invoice_id = ObjectID(requestObject.invoice_id);
+                    }
+                    if (requestObject.updated_by) {
+                        requestObject.updated_by = ObjectID(requestObject.updated_by);
+                    }
+                    if (requestObject.vendor) {
+                        requestObject.vendor = ObjectID(requestObject.vendor);
+                    }
+                    let updatedData = await common.findUpdatedFieldHistory(requestObject, get_data._doc);
+                    for (let i = 0; i < updatedData.length; i++) {
+                        let key = `badge.${updatedData[i]['key']}`;
+                        updateBadgeObject[key] = false;
+                    }
+                    await invoicesConnection.updateOne({ _id: ObjectID(id) }, updateBadgeObject);
                     requestObject.invoice_id = id;
                     await sendInvoiceUpdateAlerts(decodedToken, id, translator);
                     addchangeInvoice_History("Update", requestObject, decodedToken, requestObject.updated_at);
@@ -2715,21 +2742,65 @@ module.exports.updateInvoiceRelatedDocument = async function (req, res) {
             delete requestObject.module;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var get_invoice = await invoicesConnection.findOne({ _id: ObjectID(id) });
+            let updateBadgeObject = {};
+            if (module == 'PO' || module == 'Quote' || module == 'Packing Slip' || module == 'Receiving Slip') {
+                // Find changed data of module
+                let findKeys = {};
+                let newReqObj = {};
+
+                for (const property in requestObject) {
+                    let key = property.toString().split(".")[1];
+                    newReqObj[key] = requestObject[property];
+                    findKeys[property] = 1;
+                }
+                if (newReqObj.vendor) {
+                    newReqObj.vendor = ObjectID(newReqObj.vendor);
+                }
+                var get_data = await invoicesConnection.findOne({ _id: ObjectID(id) }, findKeys);
+                let updatedData = [];
+                if (module == 'PO') {
+                    updatedData = await findUpdatedFieldHistory(newReqObj, get_data.po_data);
+                } else if (module == 'Quote') {
+                    updatedData = await findUpdatedFieldHistory(newReqObj, get_data.quote_data);
+                } else if (module == 'Packing Slip') {
+                    updatedData = await findUpdatedFieldHistory(newReqObj, get_data.packing_slip_data);
+                } else if (module == 'Receiving Slip') {
+                    updatedData = await findUpdatedFieldHistory(newReqObj, get_data.receiving_slip_data);
+                }
+                for (let i = 0; i < updatedData.length; i++) {
+                    let key;
+                    if (module == 'PO') {
+                        key = `po_data.badge.${updatedData[i]['key']}`;
+                    } else if (module == 'Quote') {
+                        key = `quote_data.badge.${updatedData[i]['key']}`;
+                    } else if (module == 'Packing Slip') {
+                        key = `packing_slip_data.badge.${updatedData[i]['key']}`;
+                    } else if (module == 'Receiving Slip') {
+                        key = `receiving_slip_data.badge.${updatedData[i]['key']}`;
+                    }
+                    updateBadgeObject[key] = false;
+                }
+            }
             var update_data = await invoicesConnection.updateOne({ _id: ObjectID(id) }, requestObject);
-            var get_one = await invoicesConnection.findOne({ _id: ObjectID(id) }, { _id: 0, __v: 0 });
-            let reqObj = { invoice_id: id, ...get_one._doc };
-            addchangeInvoice_History("Update", reqObj, decodedToken, get_one.updated_at);
-            recentActivity.saveRecentActivity({
-                user_id: decodedToken.UserData._id,
-                username: decodedToken.UserData.userfullname,
-                userpicture: decodedToken.UserData.userpicture,
-                data_id: id,
-                title: `Invoice #${get_invoice.invoice} ${module} Update`,
-                module: module,
-                action: `Update`,
-                action_from: 'Web',
-            }, decodedToken);
-            res.send({ message: `${module} updated successfully.`, status: true });
+            if (update_data) {
+                await invoicesConnection.updateOne({ _id: ObjectID(id) }, updateBadgeObject);
+                var get_one = await invoicesConnection.findOne({ _id: ObjectID(id) }, { _id: 0, __v: 0 });
+                let reqObj = { invoice_id: id, ...get_one._doc };
+                addchangeInvoice_History("Update", reqObj, decodedToken, get_one.updated_at);
+                recentActivity.saveRecentActivity({
+                    user_id: decodedToken.UserData._id,
+                    username: decodedToken.UserData.userfullname,
+                    userpicture: decodedToken.UserData.userpicture,
+                    data_id: id,
+                    title: `Invoice #${get_invoice.invoice} ${module} Update`,
+                    module: module,
+                    action: `Update`,
+                    action_from: 'Web',
+                }, decodedToken);
+                res.send({ message: `${module} updated successfully.`, status: true });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
         } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
@@ -2740,6 +2811,26 @@ module.exports.updateInvoiceRelatedDocument = async function (req, res) {
     else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
+};
+
+function findUpdatedFieldHistory(requestObject, dbData) {
+    return new Promise(function (resolve, reject) {
+        let newObj = {};
+        let newData = {};
+        Object.keys(requestObject)
+            .sort()
+            .forEach(function (key, i) {
+                newObj[key] = requestObject[key];
+            });
+        Object.keys(dbData)
+            .sort()
+            .forEach(function (key, i) {
+                newData[key] = dbData[key];
+            });
+        const result = _.pickBy(newObj, (request, database) => !_.isEqual(newData._doc[database], request));
+        const arr = Object.entries(result).map(([key, value]) => ({ key, value }));
+        resolve(arr);
+    });
 };
 
 // Request For invoice files
