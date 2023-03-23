@@ -278,12 +278,28 @@ export class PoDetailFormComponent implements OnInit {
         that.status = params.data.status;
         if (params.data.data) {
           that.invoiceData = params.data.data;
-          that.pdf_url = that.invoiceData.pdf_url;
-          that.badge = that.invoiceData.badge;
+          if (that.invoiceData.pdf_url) {
+            that.pdf_url = that.invoiceData.pdf_url;
+          } else {
+            that.pdf_url = params.data.pdf_url;
+          }
+          if (that.invoiceData.badge) {
+            that.badge = that.invoiceData.badge;
+          } else {
+            that.badge = {
+              document_type: false,
+            };
+          }
         } else {
           that.invoiceData = params.data;
-          that.pdf_url = that.invoiceData.pdf_url;
-          // that.badge = that.invoiceData.badge;
+          if (that.invoiceData.pdf_url) {
+            that.pdf_url = that.invoiceData.pdf_url;
+          } else {
+            that.pdf_url = params.data.pdf_url;
+          }
+          that.badge = {
+            document_type: false,
+          };
         }
         let vendorId = '';
         if (that.invoiceData.vendor) {
@@ -331,6 +347,7 @@ export class PoDetailFormComponent implements OnInit {
       that.uiSpinner.spin$.next(false);
     });
   }
+
   getOneInvoice() {
     let that = this;
     this.httpCall.httpPostCall(httproutes.INVOICE_GET_ONE_INVOICE, { _id: that.id }).subscribe(function (params) {

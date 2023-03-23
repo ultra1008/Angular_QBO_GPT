@@ -57,6 +57,7 @@ export class CustompdfviewerComponent implements OnInit {
   Custom_Pdf_Viewer_Want_Accept_Vendor_Certificate: string = '';
   Custom_Pdf_Viewer_Want_Reject_Vendor_Certificate: string = '';
   documentTypes: any = {
+    invoice: 'INVOICE',
     po: 'PURCHASE_ORDER',
     packingSlip: 'PACKING_SLIP',
     receivingSlip: 'RECEIVING_SLIP',
@@ -279,7 +280,9 @@ export class CustompdfviewerComponent implements OnInit {
   goToEdit(document_type) {
     let that = this;
     let document_id = this.route.snapshot.queryParamMap.get('document_id');
-    if (document_type == that.documentTypes.po) {
+    if (document_type == that.documentTypes.invoice) {
+      that.router.navigate(['/invoice-form'], { queryParams: { document_id: document_id } });
+    } else if (document_type == that.documentTypes.po) {
       that.router.navigate(['/po-detail-form'], { queryParams: { document_id: document_id } });
     } else if (document_type == that.documentTypes.packingSlip) {
       that.router.navigate(['/packing-slip-form'], { queryParams: { document_id: document_id } });

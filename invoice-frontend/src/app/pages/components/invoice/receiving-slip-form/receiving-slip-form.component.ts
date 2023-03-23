@@ -336,12 +336,30 @@ export class ReceivingSlipFormComponent implements OnInit {
       if (params.status) {
         if (params.data.data) {
           that.invoiceData = params.data.data;
-          that.pdf_url = that.invoiceData.pdf_url;
-          that.badge = that.invoiceData.badge;
+          // that.pdf_url = that.invoiceData.pdf_url;
+          // that.badge = that.invoiceData.badge;
+          if (that.invoiceData.pdf_url) {
+            that.pdf_url = that.invoiceData.pdf_url;
+          } else {
+            that.pdf_url = params.data.pdf_url;
+          }
+          if (that.invoiceData.badge) {
+            that.badge = that.invoiceData.badge;
+          } else {
+            that.badge = {
+              vendor: false,
+            };
+          }
         } else {
           that.invoiceData = params.data;
-          that.pdf_url = that.invoiceData.pdf_url;
-          // that.badge = that.invoiceData.badge;
+          if (that.invoiceData.pdf_url) {
+            that.pdf_url = that.invoiceData.pdf_url;
+          } else {
+            that.pdf_url = params.data.pdf_url;
+          }
+          that.badge = {
+            document_type: false,
+          };
         }
         that.vendor.setValue(that.invoiceData.vendor);
         that.loadInvoice = true;
