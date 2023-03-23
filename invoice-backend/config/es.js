@@ -479,7 +479,7 @@ module.exports = {
     EmailExcelAllEmployees: 'All',
     EmailExcelStatus: 'Status:',
     EmailExcelAllStatus: 'All',
-    EmailExcelDateRange: 'Date Range:',
+    EmailExcelDateRange: 'Date:',
     EmailExcelContacts: 'Contacts:',
     EmailExcelAllContacts: 'All',
     EmailExcelVendors: 'Vendors:',

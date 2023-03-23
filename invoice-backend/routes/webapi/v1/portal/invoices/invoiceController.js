@@ -1311,7 +1311,7 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
 
                         FILE_LINK: excelUrl,
 
-                        SELECTION: new handlebars.SafeString(`<h4>${vendor}</h4><h4>${status}</h4>`),
+                        SELECTION: new handlebars.SafeString(`<h4>${vendor}</h4><h4>${status}</h4><h4>${date_range}</h4>`),
 
                         COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
                         COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
