@@ -70,9 +70,46 @@ const ForgetPasswordValidation = (req, res, next) => {
         }
     });
 };
+const loginValidation = (req, res, next) => {
+    const validationRule = {
+        "useremail": "required|email",
+        "companycode": "required|string",
+        "password": "required|string"
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({
+                status: false,
+                message: 'Validation failed',
+                data: err
+            });
+        } else {
+            next();
+        }
+    });
+};
+const update_mobile_picture = (req, res, next) => {
+    const validationRule = {
+
+        "usermobile_picture": "required|string"
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({
+                status: false,
+                message: 'Validation failed',
+                data: err
+            });
+        } else {
+            next();
+        }
+    });
+};
 module.exports = {
     sendOTPforLoginValidation,
     submitEmailOTPforLoginValidation,
     ChangePasswordValidation,
-    ForgetPasswordValidation
+    ForgetPasswordValidation,
+    loginValidation,
+    update_mobile_picture
 };
