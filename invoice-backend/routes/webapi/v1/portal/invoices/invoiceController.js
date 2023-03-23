@@ -1266,7 +1266,7 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
                 let all_vendor = await vendorCollection.find(vendorQuery, { vendor_name: 1 });
                 let temp_data = [];
                 for (var i = 0; i < all_vendor.length; i++) {
-                    temp_data.push(all_vendor[i]['name']);
+                    temp_data.push(all_vendor[i]['vendor_name']);
                 }
                 vendor = `${translator.getStr('EmailExcelVendors')} ${temp_data.join(", ")}`;
             }
