@@ -88,10 +88,12 @@ module.exports.updateProcessInvoice = async function (req, res) {
                     findKeys[property] = 1;
                 }
                 var get_data = await invoiceProcessCollection.findOne({ _id: ObjectID(id) }, findKeys);
-                let updatedData = await common.findUpdatedFieldHistory(newReqObj, get_data.data);
-                for (let i = 0; i < updatedData.length; i++) {
-                    let key = `data.badge.${updatedData[i]['key']}`;
-                    updateBadgeObject[key] = false;
+                if (get_data.data) {
+                    let updatedData = await common.findUpdatedFieldHistory(newReqObj, get_data.data);
+                    for (let i = 0; i < updatedData.length; i++) {
+                        let key = `data.badge.${updatedData[i]['key']}`;
+                        updateBadgeObject[key] = false;
+                    }
                 }
             }
             var update_data = await invoiceProcessCollection.updateOne({ _id: ObjectID(id) }, requestObject);
