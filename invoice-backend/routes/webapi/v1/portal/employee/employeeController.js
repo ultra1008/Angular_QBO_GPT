@@ -4231,7 +4231,7 @@ module.exports.listManagementUser = async function (req, res) {
                 userstatus: 1,
             };
             let temp_users = await userConnection.find(match, { _id: 0, useremail: 1 });
-            let users = [];
+            let users = [''];
             temp_users.forEach((user) => {
                 users.push(user.useremail);
             });
