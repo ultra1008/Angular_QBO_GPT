@@ -161,4 +161,7 @@ export enum icon {
     List = "./assets/diversityicon/list_dark.png",
     MAILBOX_BLACK = "./assets/diversityicon/mailboxblack.png",
     MAILBOX_WHILE = "./assets/diversityicon/mailboxwhite.png",
+
+    MALE_PLACEHOLDER = "./assets/images/male-placeholder.png",
+    FEMALE_PLACEHOLDER = "./assets/images/female-placeholder.png",
 }

@@ -27,8 +27,10 @@
                                             <img [src]="cardImageBase64" alt="" />
                                         </ng-container>
                                         <ng-template #elseTemplate>
-                                            <img src="../assets/images/Daco_2569650.png" class="circular--landscape img"
-                                                alt="">
+                                            <img *ngIf="userpersonalinfo.get('usergender').value != 'Female'"
+                                                src="{{defalut_image}}" class="circular--landscape img" alt="">
+                                            <img *ngIf="userpersonalinfo.get('usergender').value == 'Female'"
+                                                src="{{defalut_female_mage}}" class="circular--landscape img" alt="">
                                         </ng-template>
                                     </div>
                                 </div>

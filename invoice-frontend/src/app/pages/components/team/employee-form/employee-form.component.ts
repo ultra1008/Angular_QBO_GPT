@@ -101,7 +101,10 @@ export class EmployeeFormComponent implements OnInit {
   close_this_window: string = "";
   Empty_Temporary_Password: string = "";
 
-  constructor(private location: Location, private modeService: ModeDetectService, public mostusedservice: Mostusedservice, private formBuilder: FormBuilder,
+  defalut_image: string = icon.MALE_PLACEHOLDER;
+  defalut_female_mage: string = icon.FEMALE_PLACEHOLDER;
+
+  constructor (private location: Location, private modeService: ModeDetectService, public mostusedservice: Mostusedservice, private formBuilder: FormBuilder,
     public spinner: UiSpinnerService, public employeeservice: EmployeeService, public snackbarservice: Snackbarservice,
     private router: Router, public httpCall: HttpCall, public translate: TranslateService, public dialog: MatDialog,) {
     let that = this;
@@ -617,7 +620,7 @@ export class ScheduleFormEmployee {
   mode: any;
   backIcon: string;
   saveIcon = icon.SAVE_WHITE;
-  constructor(public dialogRef: MatDialogRef<ScheduleFormEmployee>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
+  constructor (public dialogRef: MatDialogRef<ScheduleFormEmployee>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
     private formBuilder: FormBuilder, public httpCall: HttpCall, public route: ActivatedRoute,
     @Inject(MAT_DIALOG_DATA) public data: any, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService) {
 

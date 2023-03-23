@@ -108,6 +108,18 @@ const routes: Routes = [
         canActivate: [PortalAuthGuard],
         component: VendorFormComponent
       },
+      {
+        path: 'employee-form',
+        pathMatch: 'full',
+        canActivate: [PortalAuthGuard],
+        component: EmployeeFormComponent
+      },
+      {
+        path: 'employee-view/:idparms',
+        pathMatch: 'full',
+        canActivate: [PortalAuthGuard],
+        component: EmployeeViewComponent
+      },
     ],
   },
   {
@@ -224,22 +236,6 @@ const routes: Routes = [
         canActivate: [PortalAuthGuard],
         component: EmployeeListComponent
       },
-
-      {
-        path: 'employee-form',
-        pathMatch: 'full',
-        canActivate: [PortalAuthGuard],
-        component: EmployeeFormComponent
-      },
-      {
-        path: 'employee-view/:idparms',
-        pathMatch: 'full',
-        canActivate: [PortalAuthGuard],
-        component: EmployeeViewComponent
-      },
-
-
-
 
       {
         path: 'userpublicdata',

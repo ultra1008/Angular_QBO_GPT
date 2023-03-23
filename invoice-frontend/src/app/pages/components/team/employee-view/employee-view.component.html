@@ -44,7 +44,11 @@
                                                 <img [src]="cardImageBase64" alt="" />
                                             </ng-container>
                                             <ng-template #elseTemplate>
-                                                <img src="{{defalut_image}}" class="circular--landscape img" alt="">
+                                                <img *ngIf="userpersonalinfo.get('usergender').value != 'Female'"
+                                                    src="{{defalut_image}}" class="circular--landscape img" alt="">
+                                                <img *ngIf="userpersonalinfo.get('usergender').value == 'Female'"
+                                                    src="{{defalut_female_image}}" class="circular--landscape img"
+                                                    alt="">
                                             </ng-template>
                                         </div>
                                         <div class="row">
@@ -52,13 +56,10 @@
                                                     (click)="copyuser()">
                                                     Copy User Image
                                                 </button></div>
-                                            <div class="col-6" style="text-align: left
-                                                                                    ;">
-
+                                            <div class="col-6" style="text-align: left;">
                                                 <button mat-raised-button (click)="copymobile()">
                                                     Copy Mobile Image</button>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -74,8 +75,12 @@
                                                 <img [src]="cardImageBase64_mobile" alt="" />
                                             </ng-container>
                                             <ng-template #elseTemplate_mobile>
-                                                <img src="{{defalut_image_mobile}}" class="circular--landscape img"
+                                                <img *ngIf="userpersonalinfo.get('usergender').value != 'Female'"
+                                                    src="{{defalut_image_mobile}}" class="circular--landscape img"
                                                     alt="">
+                                                <img *ngIf="userpersonalinfo.get('usergender').value == 'Female'"
+                                                    src="{{defalut_female_image_mobile}}"
+                                                    class="circular--landscape img" alt="">
                                             </ng-template>
                                         </div>
                                     </div>
