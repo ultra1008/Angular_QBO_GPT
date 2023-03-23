@@ -74,9 +74,35 @@ module.exports.updateProcessInvoice = async function (req, res) {
             var requestObject = req.body;
             var id = requestObject._id;
             delete requestObject._id;
+            var module = requestObject.module;
+            delete requestObject.module;
             let invoiceProcessCollection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
+            let updateBadgeObject = {};
+            if (module == 'INVOICE' || module == 'PO' || module == 'Quote' || module == 'Packing Slip' || module == 'Receiving Slip') {
+                // Find changed data of module
+                let findKeys = {};
+                let newReqObj = {};
+                for (const property in requestObject) {
+                    let key = property.toString().split(".")[1];
+                    newReqObj[key] = requestObject[property];
+                    findKeys[property] = 1;
+                }
+                var get_data = await invoiceProcessCollection.findOne({ _id: ObjectID(id) }, findKeys);
+                let updatedData = await common.findUpdatedFieldHistory(newReqObj, get_data.data);
+                for (let i = 0; i < updatedData.length; i++) {
+                    let key = `data.badge.${updatedData[i]['key']}`;
+                    updateBadgeObject[key] = false;
+                }
+            }
             var update_data = await invoiceProcessCollection.updateOne({ _id: ObjectID(id) }, requestObject);
-            res.send({ message: `Document updated successfully.`, status: true });
+            if (update_data) {
+                // Update badges
+                console.log("updateBadgeObject", updateBadgeObject);
+                await invoiceProcessCollection.updateOne({ _id: ObjectID(id) }, updateBadgeObject);
+                res.send({ message: `Document updated successfully.`, status: true });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
         } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
