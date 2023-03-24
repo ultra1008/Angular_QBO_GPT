@@ -1,4 +1,23 @@
-var validator = require("../../../../../controller/common/validationforrequest");
+var validator = require("../../../../controller/common/validationforrequest");
+
+const login = (req, res, next) => {
+    const validationRule = {
+        "useremail": "required|email",
+        "password": "required",
+        "companycode": "required"
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({
+                status: false,
+                message: 'Validation failed',
+                data: err
+            });
+        } else {
+            next();
+        }
+    });
+};
 
 const sendOTPforLoginValidation = (req, res, next) => {
     const validationRule = {
@@ -35,7 +54,7 @@ const submitEmailOTPforLoginValidation = (req, res, next) => {
         }
     });
 };
-const ChangePasswordValidation = (req, res, next) => {
+const changePasswordValidation = (req, res, next) => {
     const validationRule = {
         "password": "required|confirmed",
         "oldpassword": "required|string",
@@ -53,7 +72,7 @@ const ChangePasswordValidation = (req, res, next) => {
         }
     });
 };
-const ForgetPasswordValidation = (req, res, next) => {
+const forgetPasswordValidation = (req, res, next) => {
     const validationRule = {
         "useremail": "required|email",
         "companycode": "required|string"
@@ -70,46 +89,10 @@ const ForgetPasswordValidation = (req, res, next) => {
         }
     });
 };
-const loginValidation = (req, res, next) => {
-    const validationRule = {
-        "useremail": "required|email",
-        "companycode": "required|string",
-        "password": "required|string"
-    };
-    validator(req.body, validationRule, {}, (err, status) => {
-        if (!status) {
-            res.send({
-                status: false,
-                message: 'Validation failed',
-                data: err
-            });
-        } else {
-            next();
-        }
-    });
-};
-const update_mobile_picture = (req, res, next) => {
-    const validationRule = {
-
-        "usermobile_picture": "required|string"
-    };
-    validator(req.body, validationRule, {}, (err, status) => {
-        if (!status) {
-            res.send({
-                status: false,
-                message: 'Validation failed',
-                data: err
-            });
-        } else {
-            next();
-        }
-    });
-};
 module.exports = {
+    login,
     sendOTPforLoginValidation,
     submitEmailOTPforLoginValidation,
-    ChangePasswordValidation,
-    ForgetPasswordValidation,
-    loginValidation,
-    update_mobile_picture
+    changePasswordValidation,
+    forgetPasswordValidation
 };

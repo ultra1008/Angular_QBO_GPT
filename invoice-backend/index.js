@@ -22,8 +22,8 @@ app.use(require('express-session')({
 var portal_api = require('./routes/webapi/v1/portal/portal_index');
 app.use('/', portal_api);
 
-var mobile_api = require('./routes/mobileapi/v1/portal/mobile_api');
-app.use('/', mobile_api)
+var mobile_api = require('./routes/mobileapi/v1/mobile_api');
+app.use('/', mobile_api);
 
 // app.listen('4201', function(){
 //
