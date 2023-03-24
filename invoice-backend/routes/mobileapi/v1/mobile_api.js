@@ -44,4 +44,9 @@ router.post('/mobile/v1/invoice/quote/updateattachment', common.checkTokenExistO
 let recentActivityController = require('./recent_activity/recentActivityController');
 router.post('/mobile/v1/recentactivity/get', common.checkTokenExistOrNot, recentActivityController.getRecentActivity);
 
+// GIF Loader
+let gifLoaderController = require('./gif_loader/gifLoaderController');
+let gifLoaderValidation = require('./gif_loader/gifLoaderValidation');
+router.get('/mobile/v1/getgifloader', gifLoaderController.getGIFLoader);
+
 module.exports = router;

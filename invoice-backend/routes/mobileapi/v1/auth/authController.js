@@ -681,7 +681,7 @@ module.exports.getProfile = async function (req, res) {
                     // let roles_tmp = await roleConnection.findOne({ role_id: ObjectID(one_user.userroleId) });
                     var settings_tmp = await settingConnection.findOne({});
                     var resLast = {
-                        one_user,
+                        UserData: one_user,
                         CompanyData: {
                             company_id: one_Compnay._id,
                             company_code: one_Compnay.companycode,
