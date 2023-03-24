@@ -89,10 +89,32 @@ const forgetPasswordValidation = (req, res, next) => {
         }
     });
 };
+
+const helpMail = (req, res, next) => {
+    const validationRule = {
+        "help_subject": "required",
+        "help_email": "required",
+        "help_phone": "required",
+        "help_message": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({
+                status: false,
+                message: 'Validation failed',
+                data: err
+            });
+        } else {
+            next();
+        }
+    });
+};
+
 module.exports = {
     login,
     sendOTPforLoginValidation,
     submitEmailOTPforLoginValidation,
     changePasswordValidation,
-    forgetPasswordValidation
+    forgetPasswordValidation,
+    helpMail,
 };

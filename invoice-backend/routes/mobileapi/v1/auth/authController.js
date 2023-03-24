@@ -1396,3 +1396,20 @@ module.exports.forgetPassword = async function (req, res) {
         }
     });
 };
+
+module.exports.helpMail = async function (req, res) {
+    var translator = new common.Language(req.headers.language);
+    try {
+        var requestObject = req.body;
+        let subject = requestObject.help_subject;
+        let help_email = requestObject.help_email;
+        let help_phone = requestObject.help_phone;
+        let help_message = requestObject.help_message;
+        let help_body = 'Email : ' + help_email + '<br>Phone : ' + help_phone + '<br>' + help_message;
+        let mailsend = await sendEmail.sendEmail(config.tenants.tenant_smtp_username, config.NEWHELPDESKEMAIL, subject, help_body);
+        res.send({ message: translator.getStr('RequestSent'), data: mailsend, status: true });
+    } catch (e) {
+        console.log(e);
+        res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+    }
+};
