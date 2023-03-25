@@ -353,4 +353,13 @@ router.post('/webapi/v1/portal/updategridalert', common.checkTokenExistOrNot, al
 router.post('/webapi/v1/portal/updateallgridalert', common.checkTokenExistOrNot, alertController.updateAllAlert);
 router.post('/webapi/v1/portal/getgridalertexcelreport', common.checkTokenExistOrNot, alertController.getAlertExcelReport);
 
+// Mailbox Monitor
+let mailboxMonitorController = require("./mailbox_monitor/mailboxMonitorController");
+let mailboxMonitorValidation = require("./mailbox_monitor/mailboxMonitorValidation");
+router.get('/webapi/v1/portal/getallmailboxmonitor', common.checkTokenExistOrNot, mailboxMonitorController.getAllMailboxMonitor);
+router.post('/webapi/v1/portal/getmailboxmonitordatatable', common.checkTokenExistOrNot, mailboxMonitorController.getMailboxMonitorDatatable);
+router.post('/webapi/v1/portal/getonemailboxmonitor', common.checkTokenExistOrNot, mailboxMonitorValidation.getOneMailboxMonitor, mailboxMonitorController.getOneMailboxMonitor);
+router.post('/webapi/v1/portal/savemailboxmonitor', common.checkTokenExistOrNot, mailboxMonitorValidation.saveMailboxMonitor, mailboxMonitorController.saveMailboxMonitor);
+router.post('/webapi/v1/portal/deletemailboxmonitor', common.checkTokenExistOrNot, mailboxMonitorValidation.deleteMailboxMonitor, mailboxMonitorController.deleteMailboxMonitor);
+
 module.exports = router;

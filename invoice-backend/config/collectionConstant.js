@@ -94,6 +94,7 @@ module.exports = {
     INVOICE_RECENT_ACTIVITY: "invoice_recent_activities",
     INVOICE_CUSTOMER_STATES: "invoice_customer_states",
     INVOICE_ALERTS: "invoice_alerts",
+    INVOICE_MAILBOX_MONITORS: "invoice_mailbox_monitors",
 
     MANAGEMENT_INVOICE: "invoices",
     MANAGEMENT_PO: "project_po",

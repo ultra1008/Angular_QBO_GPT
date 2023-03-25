@@ -910,5 +910,11 @@ module.exports = {
         discount: 'Discount',
         packing_slip: 'Packing Slip',
         receiving_slip: 'Receiving Slip',
-    }
+    },
+
+    // Mailbox Monitor
+    MailboxMonitorListing: 'Mailbox Monitor listing',
+    MailboxMonitorAdded: 'Mailbox Monitor added successfully.',
+    MailboxMonitorUpdated: 'Mailbox Monitor updated successfully.',
+    MailboxMonitorDeleted: 'Mailbox Monitor deleted successfully.',
 };
