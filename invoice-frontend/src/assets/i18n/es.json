@@ -2497,5 +2497,6 @@
     "Select_Document_Type": "Select Document Type",
     "Archive_Orphan_Documents": "Archive Orphan Documents",
     "Archived_By": "Archived By",
-    "Archived_At": "Archived At"
+    "Archived_At": "Archived At",
+    "Mail_Box_Do_Want_Delete": "Do you want to delete this mailbox?"
 }

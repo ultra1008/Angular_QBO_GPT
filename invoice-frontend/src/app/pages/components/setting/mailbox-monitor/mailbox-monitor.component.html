@@ -1,55 +1,24 @@
 <div class="wrapper-cust-admin">
-    <div class="container">
-        <div class="row">
-            <div class="col-xl-12">
-                <form [formGroup]="mailbpxform">
-                    <div class="container">
-                        <div class="row ml-2 mb-2">
-                            <b>Mailbox 1</b>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <mat-form-field appearance="outline" class="main-one-input-field">
-                                    <mat-label>Email Address</mat-label>
-                                    <input matInput formControlName="email" class="input-capitalized-textfield"
-                                        placeholder="Email Address">
-                                </mat-form-field>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <mat-form-field appearance="outline" class="main-one-input-field">
-                                    <mat-label>Password</mat-label>
-                                    <input matInput formControlName="password" class="input-capitalized-textfield"
-                                        placeholder="password">
-                                </mat-form-field>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <mat-form-field appearance="outline" class="main-one-input-field">
-                                    <mat-label>Frequency
-                                    </mat-label>
-                                    <mat-select formControlName="frequency" class="dark-cust-color" required>
-                                        <mat-option *ngFor="let f of frequency" [value]="f.key">
-                                            {{f.name}}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="container">
-                                <a class="btn  btn-action-lg btn-accent">
-                                    <i class="material-icons">add</i>
-                                </a>
 
-                                <h5 class="mt-3" style="text-align: center;">Add Another Mailbox</h5>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
+    <div class="row">
+        <div class="col-10 dialog-head-left">
+
+        </div>
+
+        <div class="col-2 dialog-head-right">
+
+            <button mat-stroked-button class="sign-button cust-margin-div" mat-raised-button color="primary"
+                (click)="addMailBox();">
+                <img src="{{addIcon}}" alt="" height="20px">
+                {{'Mail Box' | translate}}
+            </button>
         </div>
     </div>
+    <div class="wrapper-cust-admin cust-width ">
+        <div class="table-responsive cust-padding cust-padding-tmp mt-5" *ngIf="showTable">
+            <table datatable [dtOptions]="dtOptions" class="row-border hover">
+            </table>
+        </div>
+    </div>
+
 </div>

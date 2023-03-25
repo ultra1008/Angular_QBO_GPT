@@ -1168,4 +1168,13 @@ export enum httproutes {
     PORTAL_UPDATE_QUOTE = "/webapi/v1/portal/updateinvoicerelateddocument",
 
 
+    // MAILBOX_MONITOR
+    PORTAL_ROVUK_INVOICE_SETTINGS_SAVE_MAILBOX_MONITOR = "/webapi/v1/portal/savemailboxmonitor",
+    PORTAL_ROVUK_INVOICE_SETTINGS_MAILBOX_MONITOR_GET_DATA_TABLE = "/webapi/v1/portal/getmailboxmonitordatatable",
+    PORTAL_ROVUK_INVOICE_SETTINGS_MAILBOX_MONITOR_GET_ONE_DATA = "/webapi/v1/portal/getonemailboxmonitor",
+    PORTAL_ROVUK_INVOICE_SETTINGS_MAILBOX_MONITOR_DELETE = "/webapi/v1/portal/deletemailboxmonitor",
+
+
+
+
 }

@@ -60,6 +60,7 @@ import { PoDetailFormComponent } from './components/invoice/po-detail-form/po-de
 import { ReceivingSlipFormComponent } from './components/invoice/receiving-slip-form/receiving-slip-form.component';
 import { QuoteFormComponent } from './components/invoice/quote-form/quote-form.component';
 import { DocumentsListComponent } from './components/invoice/documents-list/documents-list.component';
+import { MailboxFormComponent } from './components/setting/mailbox-monitor/mailbox-form/mailbox-form.component';
 
 
 const routes: Routes = [
@@ -119,6 +120,12 @@ const routes: Routes = [
         pathMatch: 'full',
         canActivate: [PortalAuthGuard],
         component: EmployeeViewComponent
+      },
+      {
+        path: 'mail-box-form',
+        pathMatch: 'full',
+        canActivate: [PortalAuthGuard],
+        component: MailboxFormComponent
       },
     ],
   },

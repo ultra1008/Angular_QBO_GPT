@@ -74,6 +74,7 @@ import { TaxRateComponent } from './invoice-other-settings/tax-rate/tax-rate.com
 import { DocumentsComponent } from './invoice-other-settings/documents/documents.component';
 import { SettingsSecurityComponent } from './settings-security/settings-security.component';
 import { DocumentViewComponent } from './document-view/document-view.component';
+import { MailboxFormComponent } from './mailbox-monitor/mailbox-form/mailbox-form.component';
 
 const maskConfig: Partial<IConfig> = {
   validation: false,
@@ -125,7 +126,7 @@ const maskConfig: Partial<IConfig> = {
     TermsComponent,
     TaxRateComponent,
     DocumentsComponent,
-    SettingsSecurityComponent,, DocumentViewComponent
+    SettingsSecurityComponent,, DocumentViewComponent, MailboxFormComponent
 
     ,
   ],

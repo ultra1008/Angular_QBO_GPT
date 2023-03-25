@@ -40,9 +40,16 @@ export class SettingComponent implements OnInit {
   Document_view_white = icon.DAILY_REPORT_WHITE;
   MAILBOX_BLACK = icon.MAILBOX_BLACK;
   MAILBOX_WHILE = icon.MAILBOX_WHILE;
+  step_index: number = 0;
 
-
-  constructor(private router: Router) { }
+  constructor(private router: Router) {
+    if (this.router.getCurrentNavigation().extras.state) {
+      this.step_index = Number(
+        this.router.getCurrentNavigation().extras.state.value
+      );
+      // this.tab_array = this.tab_array[this.step_index];
+    }
+  }
 
   ngOnInit(): void { }
 
@@ -50,5 +57,9 @@ export class SettingComponent implements OnInit {
     this.router.navigate(['/settings']);
   }
 
+  selectionChange(event) {
+    let that = this;
+    that.step_index = event.selectedIndex;
+  }
 
 }

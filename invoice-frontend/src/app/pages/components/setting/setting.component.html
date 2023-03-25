@@ -5,7 +5,8 @@
     <!-- <button mat-stroked-button class="sign-button" (click)="routefun()">
         {{'Settings-Other-Add-Item-Type'| translate}}
     </button> -->
-    <mat-horizontal-stepper labelPosition="bottom" fxFlex="100" #stepper>
+    <mat-horizontal-stepper labelPosition="bottom" fxFlex="100" #stepper [(selectedIndex)]="step_index"
+        (selectionChange)="selectionChange($event)">
         <ng-template matStepperIcon="edit" let-index="index">
             <img *ngIf="index == 0" src="{{companyinfo_white}}" alt="" height="15px">
             <img *ngIf="index == 1" src="{{MAILBOX_WHILE}}" alt="" height="15px">

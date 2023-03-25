@@ -99,6 +99,7 @@ import { DocumentViewComponent } from './components/setting/document-view/docume
 import { InvoiceListFilterPipe, InvoiceListFilterStatus } from './components/invoice/invoice-list-filter.pipe';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { DocumentsListComponent, DocumentSelectDialog } from './components/invoice/documents-list/documents-list.component';
+import { MailboxFormComponent } from './components/setting/mailbox-monitor/mailbox-form/mailbox-form.component';
 
 
 @NgModule({
@@ -188,7 +189,8 @@ import { DocumentsListComponent, DocumentSelectDialog } from './components/invoi
     InvoiceHistoryComponent,
     DocumentsListComponent,
     RequestFilesComponent,
-    DocumentSelectDialog
+    DocumentSelectDialog,
+    MailboxFormComponent
   ],
   imports: [
     PortalModule,
