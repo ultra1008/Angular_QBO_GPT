@@ -32,6 +32,10 @@ export class AlertsComponent implements OnInit {
   Pending_items: boolean = false;
   Pending_items_value!: string;
 
+
+  Invoice_Not_Assigned: boolean = false;
+  Invoice_Not_Assigned_value!: string;
+
   Invoice_due_date: boolean = false;
   Invoice_due_time_value!: string;
   Invoice_due_day_value!: string;
@@ -52,6 +56,10 @@ export class AlertsComponent implements OnInit {
   duetime: any = configdata.INVOICE_DUE_TIME_ALERT;
   duedate: any = configdata.INVOICE_DUE_DAY_ALERT;
 
+
+
+
+
   Project_Settings_Alert_Sure_Want_Change: string = "";
   Compnay_Equipment_Delete_Yes: string = "";
   Compnay_Equipment_Delete_No: string = "";
@@ -62,7 +70,7 @@ export class AlertsComponent implements OnInit {
 
   saveIcon = icon.SAVE_WHITE;
 
-  constructor (private formBuilder: FormBuilder, public httpCall: HttpCall, public snackbarservice: Snackbarservice, public translate: TranslateService) {
+  constructor(private formBuilder: FormBuilder, public httpCall: HttpCall, public snackbarservice: Snackbarservice, public translate: TranslateService) {
     this.translate.stream([""]).subscribe((textarray) => {
       this.Project_Settings_Alert_Sure_Want_Change = this.translate.instant(
         "Project_Settings_Alert_Sure_Want_Change"
@@ -93,6 +101,14 @@ export class AlertsComponent implements OnInit {
               that.Pending_items = true;
             } else {
               that.Pending_items = false;
+            }
+
+
+            that.Invoice_Not_Assigned_value = params.data.settings.Invoice_Not_Assigned.setting_value;
+            if (params.data.settings.Invoice_Not_Assigned.setting_status == "Active") {
+              that.Invoice_Not_Assigned = true;
+            } else {
+              that.Invoice_Not_Assigned = false;
             }
 
             that.Invoice_due_time_value = params.data.settings.Invoice_due_date.setting_value;
@@ -155,6 +171,8 @@ export class AlertsComponent implements OnInit {
         } else {
           if (checkoption == "Pending_items") {
             that.Pending_items = !event;
+          } else if (checkoption == "Invoice_Not_Assigned") {
+            that.Invoice_Not_Assigned = !event;
           } else if (checkoption == "Invoice_due_date") {
             that.Invoice_due_date = !event;
           } else if (checkoption == "daily_productivity_report") {
@@ -200,6 +218,9 @@ export class AlertsComponent implements OnInit {
           if (checkoption == "Pending_items") {
             that.Pending_items_value =
               that.settingObject.Pending_items.setting_value;
+          } else if (checkoption == "Invoice_Not_Assigned") {
+            that.Invoice_Not_Assigned_value =
+              that.settingObject.Invoice_Not_Assigned.setting_value;
           } else if (checkoption == "Invoice_due_date_value") {
             that.Invoice_due_time_value =
               that.settingObject.Invoice_due_date.setting_value;
@@ -260,6 +281,7 @@ export class AlertsComponent implements OnInit {
     let that = this;
     let tempSettings = this.settingObject;
     tempSettings.Pending_items.setting_value = that.Pending_items_value;
+    tempSettings.Invoice_Not_Assigned.setting_value = that.Invoice_Not_Assigned_value;
     tempSettings.Invoice_due_date.setting_value = that.Invoice_due_time_value;
     tempSettings.Invoice_due_date.setting_value2 = that.Invoice_due_day_value;
     tempSettings.Invoice_arrive.setting_value = that.Invoice_arrive_value;

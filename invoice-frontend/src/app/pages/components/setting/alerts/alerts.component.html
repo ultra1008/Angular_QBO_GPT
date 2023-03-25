@@ -16,6 +16,20 @@
             </mat-select>
         </mat-form-field>
     </div>
+    <div class="decorate-div">
+        <mat-slide-toggle color="primary" [(ngModel)]="Invoice_Not_Assigned"
+            (ngModelChange)="modelChangeSwitch($event,'Invoice_Not_Assigned')">
+            {{'INVOICE_NOT_ASSINED_SETTING' | translate}}
+        </mat-slide-toggle>
+        <mat-form-field appearance="outline" class="ml-2">
+            <!--  (ngModelChange)="modelChangeDropdown($event,'Pending_items',true)" -->
+            <mat-select class="dark-cust-color" [(ngModel)]="Invoice_Not_Assigned_value">
+                <mat-option *ngFor="let data of pendingdata" [value]="data.key">
+                    {{data.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
 
     <div class="decorate-div">
         <mat-slide-toggle color="primary" [(ngModel)]="Invoice_due_date"
