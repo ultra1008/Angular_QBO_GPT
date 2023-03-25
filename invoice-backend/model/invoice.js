@@ -348,8 +348,10 @@ var invoiceSchema = new Schema({
 
     document_type: { type: String, default: "INVOICE" },
     created_by: { type: mongoose.ObjectId, default: "" },
+    created_by_mail: { type: String, default: "" },
     created_at: { type: Number, default: 0 },
     updated_by: { type: mongoose.ObjectId, default: "" },
+    updated_by_mail: { type: mongoose.ObjectId, default: "" },
     updated_at: { type: Number, default: 0 },
     is_delete: { type: Number, default: 0 },
 });

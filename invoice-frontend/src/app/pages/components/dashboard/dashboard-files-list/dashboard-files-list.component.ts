@@ -400,7 +400,7 @@ export class DashboardFilesListComponent implements OnInit {
       },
       {
         title: 'Uploaded By',
-        data: "created_by_user.userfullname",
+        data: "created_by_user",
         defaultContent: "",
       },
       {
@@ -446,7 +446,7 @@ export class DashboardFilesListComponent implements OnInit {
     return [
       {
         title: 'Uploaded By',
-        data: "created_by_user.userfullname",
+        data: "created_by_user",
         defaultContent: "",
       },
       {

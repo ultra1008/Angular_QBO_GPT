@@ -729,8 +729,9 @@ module.exports.updateUser = async function (req, res) {
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
+            var requestObject = req.body;
             let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
-            let update_user = await userConnection.updateOne();
+            let update_user = await userConnection.updateOne({ _id: ObjectID(decodedToken.UserData._id) }, requestObject);
             if (update_user) {
                 res.send({ message: 'User updated successfully.', status: true });
             } else {

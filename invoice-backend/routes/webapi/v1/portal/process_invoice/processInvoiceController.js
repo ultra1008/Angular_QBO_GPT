@@ -200,6 +200,43 @@ module.exports.saveInvoiceProcess = async function (req, res) {
     }
 };
 
+module.exports.mailBoxSaveInvoiceProcess = async function (connection_db_api, pdf_urls, email) {
+    try {
+        let invoiceProcessCollection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
+
+        let saveObj = [];
+        for (let i = 0; i < pdf_urls.length; i++) {
+            saveObj.push({
+                pdf_url: pdf_urls[i],
+                created_by_mail: `Email - ${email}`,
+                created_at: Math.round(new Date().getTime() / 1000),
+                updated_by_mail: `Email - ${email}`,
+                updated_at: Math.round(new Date().getTime() / 1000),
+            });
+        }
+        let insert_data = await invoiceProcessCollection.insertMany(saveObj);
+        if (insert_data) {
+            let apiObj = [];
+            for (let i = 0; i < insert_data.length; i++) {
+                apiObj.push({
+                    document_id: insert_data[i]._id,
+                    document_url: insert_data[i].pdf_url,
+                });
+            }
+            let data = await common.sendInvoiceForProcess(apiObj);
+            let json = JSON.parse(data.body);
+            for (const key in json) {
+                if (json[key] == 'ALREADY_EXISTS') {
+                    await invoiceProcessCollection.updateOne({ _id: ObjectID(key) }, { status: 'Already Exists' });
+                }
+            }
+        }
+    } catch (e) {
+        console.log(e);
+    } finally {
+    }
+};
+
 module.exports.importManagementInvoice = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
@@ -336,7 +373,8 @@ module.exports.importProcessData = async function (req, res) {
             let invoiceProcessCollection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
             let invoiceCollection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             let get_invoice = await invoiceProcessCollection.find({ is_delete: 0, status: 'Pending' });
-            var queryString = `?customer_id=${decodedToken.companycode.toLowerCase()}`;
+            var queryString = `?customer_id=tempinvoice`;
+            // var queryString = `?customer_id=${decodedToken.companycode.toLowerCase()}`;
             let temp = [];
             for (let i = 0; i < get_invoice.length; i++) {
                 queryString += `&document_id=${get_invoice[i]._id}`;
@@ -386,8 +424,10 @@ module.exports.importProcessData = async function (req, res) {
                                     pdf_url: get_data.data[key][j].document_url,
                                     items: [],
                                     created_by: decodedToken.UserData._id,
+                                    created_by_mail: '',
                                     created_at: Math.round(new Date().getTime() / 1000),
                                     updated_by: decodedToken.UserData._id,
+                                    updated_by_mail: '',
                                     updated_at: Math.round(new Date().getTime() / 1000),
                                     badge: {},
                                 };

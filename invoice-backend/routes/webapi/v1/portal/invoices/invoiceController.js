@@ -228,7 +228,12 @@ module.exports.getInvoice = async function (req, res) {
                         as: "created_by"
                     }
                 },
-                { $unwind: "$created_by" },
+                {
+                    $unwind: {
+                        path: "$created_by",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
                 {
                     $project: {
                         assign_to: 1,
@@ -263,7 +268,7 @@ module.exports.getInvoice = async function (req, res) {
                         receiving_slip: 1,
                         badge: 1,
                         gl_account: 1,
-                        created_by: 1,
+                        created_by: { $ifNull: ["$created_by.userfullname", "$created_by_mail"] },
                         created_at: 1,
                         // invoice_notes: { $elemMatch: { is_delete: 0 } },
                         invoice_notes: {
@@ -437,7 +442,12 @@ module.exports.getInvoiceList = async function (req, res) {
                         as: "created_by"
                     }
                 },
-                { $unwind: "$created_by" },
+                {
+                    $unwind: {
+                        path: "$created_by",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
                 {
                     $project: {
                         assign_to: 1,
@@ -472,7 +482,7 @@ module.exports.getInvoiceList = async function (req, res) {
                         receiving_slip: 1,
                         badge: 1,
                         gl_account: 1,
-                        created_by: 1,
+                        created_by: { $ifNull: ["$created_by.userfullname", "$created_by_mail"] },
                         created_at: 1,
                         // invoice_notes: { $elemMatch: { is_delete: 0 } },
                         invoice_notes: {
@@ -598,7 +608,12 @@ module.exports.getOneInvoice = async function (req, res) {
                         as: "created_by"
                     }
                 },
-                { $unwind: "$created_by" },
+                {
+                    $unwind: {
+                        path: "$created_by",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
                 {
                     $project: {
                         assign_to: 1,
@@ -633,7 +648,7 @@ module.exports.getOneInvoice = async function (req, res) {
                         receiving_slip: 1,
                         badge: 1,
                         gl_account: 1,
-                        created_by: 1,
+                        created_by: { $ifNull: ["$created_by.userfullname", "$created_by_mail"] },
                         created_at: 1,
                         // invoice_notes: { $elemMatch: { is_delete: 0 } },
                         invoice_notes: {
@@ -871,7 +886,7 @@ module.exports.getInvoiceDatatable = async function (req, res) {
             var requestObject = req.body;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var col = [];
-            col.push("invoice", "p_o", "vendor.vendor_name", "packing_slip", "receiving_slip", "attach_files", "created_by.userfullname", "created_at", "status");
+            col.push("invoice", "p_o", "vendor.vendor_name", "packing_slip", "receiving_slip", "attach_files", "created_by", "created_at", "status");
 
             var start = parseInt(requestObject.start) || 0;
             var perpage = parseInt(requestObject.length);
@@ -895,7 +910,7 @@ module.exports.getInvoiceDatatable = async function (req, res) {
                         { "packing_slip": new RegExp(requestObject.search.value, 'i') },
                         { "receiving_slip": new RegExp(requestObject.search.value, 'i') },
                         { "attach_files": new RegExp(requestObject.search.value, 'i') },
-                        { "created_by.userfullname": new RegExp(requestObject.search.value, 'i') },
+                        { "created_by": new RegExp(requestObject.search.value, 'i') },
                         { "status": new RegExp(requestObject.search.value, 'i') },
                     ]
                 };
@@ -926,7 +941,26 @@ module.exports.getInvoiceDatatable = async function (req, res) {
                         as: "created_by"
                     }
                 },
-                { $unwind: "$created_by" },
+                {
+                    $unwind: {
+                        path: "$created_by",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "updated_by",
+                        foreignField: "_id",
+                        as: "updated_by"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$updated_by",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
                 {
                     $project: {
                         assign_to: 1,
@@ -986,9 +1020,9 @@ module.exports.getInvoiceDatatable = async function (req, res) {
                         quote_attachments: 1,
 
                         document_type: 1,
-                        created_by: 1,
+                        created_by: { $ifNull: ["$created_by.userfullname", "$created_by_mail"] },
                         created_at: 1,
-                        updated_by: 1,
+                        updated_by: { $ifNull: ["$updated_by.userfullname", "$updated_by_mail"] },
                         updated_at: 1,
                         is_delete: 1,
 
@@ -1399,7 +1433,7 @@ module.exports.getOrphanDocumentsDatatable = async function (req, res) {
             let one_settings = await settingsConnection.findOne({});
             let settings = one_settings.settings.Document_View;
             var col = [];
-            col.push("document_type", "po_no", "invoice_no", "vendor_name", "created_by_user.userfullname", "created_at");
+            col.push("document_type", "po_no", "invoice_no", "vendor_name", "created_by_user", "created_at");
             var start = parseInt(requestObject.start) || 0;
             var perpage = parseInt(requestObject.length);
             var columnData = (requestObject.order != undefined && requestObject.order != '') ? requestObject.order[0].column : '';
@@ -1418,7 +1452,7 @@ module.exports.getOrphanDocumentsDatatable = async function (req, res) {
                         { "po_no": new RegExp(requestObject.search.value, 'i') },
                         { "invoice_no": new RegExp(requestObject.search.value, 'i') },
                         { "vendor_name": new RegExp(requestObject.search.value, 'i') },
-                        { "created_by_user.userfullname": new RegExp(requestObject.search.value, 'i') },
+                        { "created_by_user": new RegExp(requestObject.search.value, 'i') },
                     ]
                 };
             }
@@ -1454,7 +1488,12 @@ module.exports.getOrphanDocumentsDatatable = async function (req, res) {
                         as: "created_by_user"
                     }
                 },
-                { $unwind: "$created_by_user" },
+                {
+                    $unwind: {
+                        path: "$created_by_user",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
                 {
                     $project: {
                         document_type: {
@@ -1499,7 +1538,7 @@ module.exports.getOrphanDocumentsDatatable = async function (req, res) {
                         data: 1,
                         pdf_url: 1,
                         created_at: 1,
-                        created_by_user: "$created_by_user",
+                        created_by_user: { $ifNull: ["$created_by_user.userfullname", "$created_by_mail"] },
                         is_delete: 1,
                     }
                 },
@@ -1553,7 +1592,7 @@ module.exports.getDuplicateDocumentsDatatable = async function (req, res) {
             var requestObject = req.body;
             var processInvoiceConnection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
             var col = [];
-            col.push("created_by_user.userfullname", "created_at");
+            col.push("created_by_user", "created_at");
             var start = parseInt(requestObject.start) || 0;
             var perpage = parseInt(requestObject.length);
             var columnData = (requestObject.order != undefined && requestObject.order != '') ? requestObject.order[0].column : '';
@@ -1568,7 +1607,7 @@ module.exports.getDuplicateDocumentsDatatable = async function (req, res) {
             if (requestObject.search.value) {
                 query = {
                     $or: [
-                        { "created_by_user.userfullname": new RegExp(requestObject.search.value, 'i') },
+                        { "created_by_user": new RegExp(requestObject.search.value, 'i') },
                     ]
                 };
             }
@@ -1590,7 +1629,12 @@ module.exports.getDuplicateDocumentsDatatable = async function (req, res) {
                         as: "created_by_user"
                     }
                 },
-                { $unwind: "$created_by_user" },
+                {
+                    $unwind: {
+                        path: "$created_by_user",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
                 {
                     $project: {
                         document_type: {
@@ -1635,7 +1679,7 @@ module.exports.getDuplicateDocumentsDatatable = async function (req, res) {
                         data: 1,
                         pdf_url: 1,
                         created_at: 1,
-                        created_by_user: "$created_by_user",
+                        created_by_user: { $ifNull: ["$created_by_user.userfullname", "$created_by_mail"] },
                     }
                 },
                 { $match: query },
@@ -1688,7 +1732,7 @@ module.exports.getViewDocumentsDatatable = async function (req, res) {
             var requestObject = req.body;
             var processInvoiceConnection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
             var col = [];
-            col.push("document_type", "po_no", "invoice_no", "vendor_name", "updated_by.userfullname", "updated_at");
+            col.push("document_type", "po_no", "invoice_no", "vendor_name", "updated_by", "updated_at");
             var start = parseInt(requestObject.start) || 0;
             var perpage = parseInt(requestObject.length);
             var columnData = (requestObject.order != undefined && requestObject.order != '') ? requestObject.order[0].column : '';
@@ -1707,7 +1751,7 @@ module.exports.getViewDocumentsDatatable = async function (req, res) {
                         { "po_no": new RegExp(requestObject.search.value, 'i') },
                         { "invoice_no": new RegExp(requestObject.search.value, 'i') },
                         { "vendor_name": new RegExp(requestObject.search.value, 'i') },
-                        { "updated_by.userfullname": new RegExp(requestObject.search.value, 'i') },
+                        { "updated_by": new RegExp(requestObject.search.value, 'i') },
                     ]
                 };
             }
@@ -1722,7 +1766,12 @@ module.exports.getViewDocumentsDatatable = async function (req, res) {
                         as: "created_by"
                     }
                 },
-                { $unwind: "$created_by" },
+                {
+                    $unwind: {
+                        path: "$created_by",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
                 {
                     $lookup: {
                         from: collectionConstant.INVOICE_USER,
@@ -1731,7 +1780,12 @@ module.exports.getViewDocumentsDatatable = async function (req, res) {
                         as: "updated_by"
                     }
                 },
-                { $unwind: "$updated_by" },
+                {
+                    $unwind: {
+                        path: "$updated_by",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
                 {
                     $project: {
                         document_type: {
@@ -1777,14 +1831,12 @@ module.exports.getViewDocumentsDatatable = async function (req, res) {
                         pdf_url: 1,
                         is_delete: 1,
                         created_at: 1,
-                        created_by: "$created_by",
                         updated_at: 1,
-                        updated_by: "$updated_by",
                         updated_by: {
                             $cond: [
                                 { $eq: [requestObject.is_delete, 0] },
-                                "$created_by",
-                                "$updated_by"
+                                { $ifNull: ["$created_by.userfullname", "$created_by_mail"] },
+                                { $ifNull: ["$updated_by.userfullname", "$updated_by_mail"] },
                             ]
                         },
                         updated_at: {

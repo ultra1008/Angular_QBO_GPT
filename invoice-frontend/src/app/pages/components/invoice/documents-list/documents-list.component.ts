@@ -250,7 +250,7 @@ export class DocumentsListComponent implements OnInit {
       },
       {
         title: that.step_index == 0 ? that.Uploaded_By : that.Archived_By,
-        data: "updated_by.userfullname",
+        data: "updated_by",
         /* render: function (data: any, type: any, full: any) {
          if (that.step_index == 0) {
            return full.created_by.userfullname;
