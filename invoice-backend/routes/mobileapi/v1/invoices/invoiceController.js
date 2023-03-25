@@ -49,7 +49,12 @@ module.exports.getInvoiceList = async function (req, res) {
                         as: "created_by"
                     }
                 },
-                { $unwind: "$created_by" },
+                {
+                    $unwind: {
+                        path: "$created_by",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
                 {
                     $project: {
                         status: 1,
@@ -87,7 +92,7 @@ module.exports.getInvoiceList = async function (req, res) {
                             receiving_slip: "$receiving_slip",
                             badge: "$badge",
                             gl_account: "$gl_account",
-                            created_by: "$created_by",
+                            created_by: { $ifNull: ["$created_by.userfullname", "$created_by_mail"] },
                             created_at: "$created_at",
                             invoice_notes: {
                                 $filter: {
@@ -229,7 +234,12 @@ module.exports.getStatusWiseInvoice = async function (req, res) {
                         as: "created_by"
                     }
                 },
-                { $unwind: "$created_by" },
+                {
+                    $unwind: {
+                        path: "$created_by",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
                 {
                     $project: {
                         _id: "$_id",
@@ -265,7 +275,7 @@ module.exports.getStatusWiseInvoice = async function (req, res) {
                         receiving_slip: "$receiving_slip",
                         badge: "$badge",
                         gl_account: "$gl_account",
-                        created_by: "$created_by",
+                        created_by: { $ifNull: ["$created_by.userfullname", "$created_by_mail"] },
                         created_at: "$created_at",
                         invoice_notes: {
                             $filter: {
@@ -388,7 +398,12 @@ module.exports.getOneInvoice = async function (req, res) {
                         as: "created_by"
                     }
                 },
-                { $unwind: "$created_by" },
+                {
+                    $unwind: {
+                        path: "$created_by",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
                 {
                     $project: {
                         assign_to: 1,
@@ -423,7 +438,7 @@ module.exports.getOneInvoice = async function (req, res) {
                         receiving_slip: 1,
                         badge: 1,
                         gl_account: 1,
-                        created_by: 1,
+                        created_by: { $ifNull: ["$created_by.userfullname", "$created_by_mail"] },
                         created_at: 1,
                         // invoice_notes: { $elemMatch: { is_delete: 0 } },
                         invoice_notes: {

@@ -554,7 +554,7 @@ export class DashboardInvoiceListComponent implements OnInit {
       },
       {
         title: that.Uploaded_By,
-        data: 'created_by.userfullname',
+        data: 'created_by',
         defaultContent: '',
       },
       {

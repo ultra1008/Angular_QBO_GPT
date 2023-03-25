@@ -356,10 +356,12 @@ router.post('/webapi/v1/portal/getgridalertexcelreport', common.checkTokenExistO
 // Mailbox Monitor
 let mailboxMonitorController = require("./mailbox_monitor/mailboxMonitorController");
 let mailboxMonitorValidation = require("./mailbox_monitor/mailboxMonitorValidation");
+let mailBoxMonitorCron = require("./mailbox_monitor/mailBoxMonitorCron");
 router.get('/webapi/v1/portal/getallmailboxmonitor', common.checkTokenExistOrNot, mailboxMonitorController.getAllMailboxMonitor);
 router.post('/webapi/v1/portal/getmailboxmonitordatatable', common.checkTokenExistOrNot, mailboxMonitorController.getMailboxMonitorDatatable);
 router.post('/webapi/v1/portal/getonemailboxmonitor', common.checkTokenExistOrNot, mailboxMonitorValidation.getOneMailboxMonitor, mailboxMonitorController.getOneMailboxMonitor);
 router.post('/webapi/v1/portal/savemailboxmonitor', common.checkTokenExistOrNot, mailboxMonitorValidation.saveMailboxMonitor, mailboxMonitorController.saveMailboxMonitor);
 router.post('/webapi/v1/portal/deletemailboxmonitor', common.checkTokenExistOrNot, mailboxMonitorValidation.deleteMailboxMonitor, mailboxMonitorController.deleteMailboxMonitor);
+router.get('/webapi/v1/portal/mailboxMonitorCronAPI', mailBoxMonitorCron.mailboxMonitorCronAPI);
 
 module.exports = router;
