@@ -367,9 +367,8 @@ export function amountChange(params: any) {
     return "00.00";
   } else {
     var tempText = "";
-    var numbers = /^[0-9]+$/;
     if (params.match(numbers)) {
-
+      var numbers = /^[0-9]+$/;
       var a = params;
       a = a.replace(/\,/g, '');
       let dotIndex = a.indexOf(".");
