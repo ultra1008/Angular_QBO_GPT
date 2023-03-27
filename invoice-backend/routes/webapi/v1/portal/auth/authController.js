@@ -674,7 +674,7 @@ module.exports.getCompanySetting = async function (req, res) {
             let connection_db_api;
             try {
                 connection_db_api = await db_connection.connection_db_api(result);
-                let settingConnection = connection_db_api.model(collectionConstant.SETTINGS, settingSchema);
+                let settingConnection = connection_db_api.model(collectionConstant.INVOICE_SETTING, settingSchema);
                 let get_setting = await settingConnection.findOne();
                 if (get_setting) {
                     res.send({ message: translator.getStr('CompanySetting'), data: get_setting.settings, status: true });
