@@ -239,7 +239,7 @@ export class AuthPageComponent implements OnInit {
             localStorage.setItem(localstorageconstants.USERTYPE, "invoice-portal");
 
 
-            localStorage.setItem('invoicelogout', 'false');
+            localStorage.setItem(localstorageconstants.LOGOUT, 'false');
             that.myapp.updateIdealTimeout();
 
             if (params.data.UserData.role_name != configdata.EMPLOYEE) {

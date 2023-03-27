@@ -52,8 +52,10 @@ export class AppComponent implements OnInit {
   updateIdealTimeout() {
     console.log('updateIdealTimeout');
     let that = this;
-
-    if (localStorage.getItem('invoicelogout') == 'false') {
+    var logoutStatus = localStorage.getItem(localstorageconstants.LOGOUT);
+    console.log(logoutStatus);
+    if (logoutStatus == 'false') {
+      console.log('======== I AM HERE AFTER LOGIN =============');
       that.httpCall.httpGetCall(httproutes.PORTAL_SETTING_GET).subscribe(function (params) {
         console.log(params);
         that.timeValue = params.data.settings.Auto_Log_Off.setting_value;
@@ -66,9 +68,9 @@ export class AppComponent implements OnInit {
               console.log('If 3');
 
               // sets an idle timeout of 1 min, for testing purposes. 
-              if (that.idle) {
-                that.idle.setIdle(that.timeValue * 60); // Change this time from the settings
-              }
+              //if (that.idle) {
+              that.idle.setIdle(that.timeValue * 60); // Change this time from the settings
+              //}
               // that.idle.setIdle(60);
               // sets a timeout period of 30 seconds. after 30 seconds of inactivity, the user will be considered timed out.
               that.idle.setTimeout(30);
@@ -120,6 +122,7 @@ export class AppComponent implements OnInit {
                   }
                 });
               });
+
               that.idle.onTimeoutWarning.subscribe((countdown) => {
                 that.idleState = 'You will time out in' + countdown + ' seconds!';
                 console.log(that.idleState);
@@ -130,6 +133,9 @@ export class AppComponent implements OnInit {
 
               that.keepalive.onPing.subscribe(() => that.lastPing = new Date());
 
+              that.reset();
+
+            } else {
               that.reset();
             }
             //  else {
@@ -174,7 +180,7 @@ export class AppComponent implements OnInit {
       that.logoutHistory();
     } else {
       that.uiSpinner.spin$.next(false);
-      localStorage.setItem('invoicelogout', 'true');
+      localStorage.setItem(localstorageconstants.LOGOUT, 'true');
       setTimeout(() => {
         that.router.navigateByUrl('/login');
       }, 100);
@@ -209,7 +215,7 @@ export class AppComponent implements OnInit {
           if (params.status) {
             that.snackbarservice.openSnackBar(params.message, "success");
             that.uiSpinner.spin$.next(false);
-            localStorage.setItem('invoicelogout', 'true');
+            localStorage.setItem(localstorageconstants.LOGOUT, 'true');
             setTimeout(() => {
               that.router.navigateByUrl('/login');
             }, 100);
@@ -226,7 +232,7 @@ export class AppComponent implements OnInit {
 
   reset() {
     this.idle.watch();
-    this.idleState = 'Started.';
+    //this.idleState = 'Started.';
     this.timedOut = false;
   }
 
