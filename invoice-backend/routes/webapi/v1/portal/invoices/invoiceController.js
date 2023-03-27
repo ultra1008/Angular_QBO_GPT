@@ -121,7 +121,7 @@ module.exports.saveInvoice = async function (req, res) {
     }
 };
 
-function sendInvoiceUpdateAlerts(decodedToken, id, translator) {
+function sendInvoiceUpdateAlerts(decodedToken, id, module, translator) {
     return new Promise(async function (resolve, reject) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         let invoiceCollection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
@@ -137,15 +137,28 @@ function sendInvoiceUpdateAlerts(decodedToken, id, translator) {
                         roles.push(ObjectID(id));
                     });
                     let get_users = await userCollection.find({ userroleId: { $in: roles } });
-                    let title = `Invoice #${one_invoice.invoice} Update Alert`;
-                    let description = `Invoice #${one_invoice.invoice} has been updated.`;
+                    let title = `${module} #${one_invoice.invoice} Update Alert`;
+                    let description = `${module} #${one_invoice.invoice} has been updated.`;
                     let emailList = [];
+                    let viewRoute = `${config.SITE_URL}/invoice-form?_id=${id}`;
+                    if (module == 'Invoice') {
+                        viewRoute = `${config.SITE_URL}/invoice-form?_id=${id}`;
+                    } else if (module == 'PO') {
+                        viewRoute = `${config.SITE_URL}/po-detail-form?_id=${id}`;
+                    } else if (module == 'Packing Slip') {
+                        viewRoute = `${config.SITE_URL}/packing-slip-form?_id=${id}`;
+                    } else if (module == 'Receiving Slip') {
+                        viewRoute = `${config.SITE_URL}/receiving-slip-form?_id=${id}`;
+                    } else if (module == 'Quote') {
+                        viewRoute = `${config.SITE_URL}/quote-detail-form?_id=${id}`;
+                    }
+
                     for (let i = 0; i < get_users.length; i++) {
                         // Alert
                         // invoice-form
                         let alertObject = {
                             user_id: get_users[i]._id,
-                            module_name: 'Invoice',
+                            module_name: module,
                             module_route: { _id: id },
                             notification_title: title,
                             notification_description: description,
@@ -173,7 +186,7 @@ function sendInvoiceUpdateAlerts(decodedToken, id, translator) {
                                 <div style="text-align: center;">
                                     <a style="background-color: #023E8A;border: #0077bc solid;color: white;padding: 15px 32px;
                                                 text-align: center;text-decoration: none;display: inline-block;font-size: 16px; width: 20%;" 
-                                                target="_blank" href="${config.SITE_URL}/invoice-form?_id=${id}">View Invoice</a>
+                                                target="_blank" href="${viewRoute}">View ${module}</a>
                                 </div>`),
 
                                 COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
@@ -2835,6 +2848,7 @@ module.exports.updateInvoiceRelatedDocument = async function (req, res) {
             }
             var update_data = await invoicesConnection.updateOne({ _id: ObjectID(id) }, requestObject);
             if (update_data) {
+                sendInvoiceUpdateAlerts(decodedToken, id, module, translator);
                 await invoicesConnection.updateOne({ _id: ObjectID(id) }, updateBadgeObject);
                 var get_one = await invoicesConnection.findOne({ _id: ObjectID(id) }, { _id: 0, __v: 0 });
                 let reqObj = { invoice_id: id, ...get_one._doc };
