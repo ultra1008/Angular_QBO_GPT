@@ -21,7 +21,6 @@ var customerStateSchema = require('./../../../../../model/customer_monthly_state
 module.exports.compnayinformation = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
-    console.log("decodedToken", decodedToken);
     if (decodedToken) {
         try {
             var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);

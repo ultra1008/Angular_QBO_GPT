@@ -68,7 +68,7 @@ module.exports.saveInvoice = async function (req, res) {
                     }
                     await invoicesConnection.updateOne({ _id: ObjectID(id) }, updateBadgeObject);
                     requestObject.invoice_id = id;
-                    await sendInvoiceUpdateAlerts(decodedToken, id, translator);
+                    await sendInvoiceUpdateAlerts(decodedToken, id, 'Invoice', translator);
                     addchangeInvoice_History("Update", requestObject, decodedToken, requestObject.updated_at);
                     recentActivity.saveRecentActivity({
                         user_id: decodedToken.UserData._id,

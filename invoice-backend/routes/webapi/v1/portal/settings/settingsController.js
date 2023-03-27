@@ -9,6 +9,7 @@ var rolesandpermissionsSchema = require('../../../../../model/rolesandpermission
 var settingsSchema = require('../../../../../model/settings');
 var bucketOpration = require('../../../../../controller/common/s3-wasabi');
 var ObjectID = require('mongodb').ObjectID;
+var settingsCron = require('./settingsCron');
 
 module.exports.compnayinformation = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -67,6 +68,7 @@ module.exports.getUpdateSetting = async function (req, res) {
                     }
                 };
                 addsettings_History("Update", reqObject_new, decodedToken); */
+                settingsCron.pendingInvoiceToAssignedToUserCronAPI();
                 res.send({ message: translator.getStr('CompanySettingUpdated'), status: true });
             } else {
                 res.send({ message: translator.getStr('CompanySettingAlreadyUpdated'), status: true });

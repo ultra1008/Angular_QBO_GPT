@@ -105,7 +105,7 @@ async function mailboxMonitorCronFunction(query) {
                 imap.connect();
             }
         }
-        console.log("--------------------Mailbox Monitor CRON--------------------");
+        // console.log("--------------------Mailbox Monitor CRON--------------------");
     } catch (e) {
         console.log(e);
     }

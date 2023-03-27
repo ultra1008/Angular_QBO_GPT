@@ -185,9 +185,11 @@ router.get('/webapi/v1/portal/getalllocation', common.checkTokenExistOrNot, loca
 
 let settingsController = require('./settings/settingsController');
 let settingsValidation = require('./settings/settingsValidation');
+let settingsCron = require('./settings/settingsCron');
 router.post('/webapi/v1/portal/compnayinformation', common.checkTokenExistOrNot, settingsController.compnayinformation);
 router.get('/webapi/v1/portal/getallsetting', common.checkTokenExistOrNot, settingsController.getAllSetting);
 router.post('/webapi/v1/portal/getupdatesetting', common.checkTokenExistOrNot, settingsController.getUpdateSetting);
+router.post('/webapi/v1/portal/pendingInvoiceToAssignedToUserCronAPI', common.checkTokenExistOrNot, settingsCron.pendingInvoiceToAssignedToUserCronAPI);
 
 let languageController = require("./language/languageController");
 let languageValidation = require("./language/languageValidation");
