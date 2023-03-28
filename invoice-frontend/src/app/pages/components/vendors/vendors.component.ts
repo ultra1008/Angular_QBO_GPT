@@ -86,7 +86,7 @@ export class VendorsComponent implements OnInit {
     active: 0, inactive: 0
   };
 
-  constructor (private modeService: ModeDetectService,
+  constructor(private modeService: ModeDetectService,
     public dialog: MatDialog,
     private router: Router,
     private http: HttpClient,
@@ -632,7 +632,7 @@ export class VendorHistoryComponent implements OnInit {
   activityIcon!: string;
   isSearch: boolean = false;
   subscription: Subscription;
-  constructor (
+  constructor(
     public httpCall: HttpCall,
     public snackbarservice: Snackbarservice,
     private modeService: ModeDetectService,
@@ -754,7 +754,7 @@ export class VendorReportComponent implements OnInit {
   statusList: any = configdata.INVOICES_STATUS;
 
   /*Constructor*/
-  constructor (
+  constructor(
     private formBuilder: FormBuilder,
     public httpCall: HttpCall,
     private modeService: ModeDetectService,

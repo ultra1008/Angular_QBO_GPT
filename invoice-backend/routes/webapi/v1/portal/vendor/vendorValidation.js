@@ -53,7 +53,7 @@ const deleteVendor = (req, res, next) => {
 const updateVendorStatus = (req, res, next) => {
     const validationRule = {
         "_id": "required",
-        "status": "required"
+        "vendor_status": "required"
     };
     validator(req.body, validationRule, {}, (error, status) => {
         if (!status) {
