@@ -56,17 +56,18 @@ export class UserCardComponent implements OnInit {
   acticve_word: string = "";
   inacticve_word: string = "";
   trashIcon: string = icon.ARCHIVE;
-  editIcon: string; 
+  editIcon: string;
   mode: any;
   subscription: Subscription;
   userComplianceIcon = icon.USER_COMPLIANCE_ICON;
-
+  User_Self_Delete: string = "";
+  First_User_Self_Delete: string = "";
   role_permission: any;
 
   /*
     Constructor
   */
-  constructor (private modeService: ModeDetectService, public translate: TranslateService, public mostusedservice: Mostusedservice,
+  constructor(private modeService: ModeDetectService, public translate: TranslateService, public mostusedservice: Mostusedservice,
     public httpCall: HttpCall, public snackbarservice: Snackbarservice, public router: Router) {
     var userdata = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
     this.role_permission = userdata.role_permission.users;
@@ -92,6 +93,8 @@ export class UserCardComponent implements OnInit {
       this.Compnay_Equipment_Delete_No = this.translate.instant('Compnay_Equipment_Delete_No');
       this.acticve_word = this.translate.instant('Team-EmployeeList-Status-Active');
       this.inacticve_word = this.translate.instant('project_setting_inactive');
+      this.First_User_Self_Delete = this.translate.instant("First_User_Self_Delete");
+      this.User_Self_Delete = this.translate.instant("User_Self_Delete");
     });
   }
 
@@ -114,25 +117,33 @@ export class UserCardComponent implements OnInit {
 
   deleteEmployeeAction() {
     let that = this;
-    if (that.role_permission.Delete) {
-      swalWithBootstrapButtons.fire({
-        title: this.User_Card_Do_Want_Delete,
-        showDenyButton: true,
-        showCancelButton: false,
-        confirmButtonText: this.Compnay_Equipment_Delete_Yes,
-        denyButtonText: this.Compnay_Equipment_Delete_No,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.httpCall.httpPostCall(httproutes.TEAM_DELETE, this.UserData).subscribe(function (params) {
-            if (params.status) {
-              that.snackbarservice.openSnackBar(params.message, "success");
-              that.mostusedservice.userdeleteEmit();
-            } else {
-              that.snackbarservice.openSnackBar(params.message, "error");
-            }
-          });
-        }
-      });
+    let userdata = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
+    //  <!-- UserData.is_first || UserData._id == userdata.UserData._id -->
+    if (this.UserData._id == userdata.UserData._id) {
+      that.snackbarservice.openSnackBar(this.User_Self_Delete, "error");
+    } else if (this.UserData.is_first) {
+      that.snackbarservice.openSnackBar(this.First_User_Self_Delete, "error");
+    } else {
+      if (that.role_permission.Delete) {
+        swalWithBootstrapButtons.fire({
+          title: this.User_Card_Do_Want_Delete,
+          showDenyButton: true,
+          showCancelButton: false,
+          confirmButtonText: this.Compnay_Equipment_Delete_Yes,
+          denyButtonText: this.Compnay_Equipment_Delete_No,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.httpCall.httpPostCall(httproutes.TEAM_DELETE, this.UserData).subscribe(function (params) {
+              if (params.status) {
+                that.snackbarservice.openSnackBar(params.message, "success");
+                that.mostusedservice.userdeleteEmit();
+              } else {
+                that.snackbarservice.openSnackBar(params.message, "error");
+              }
+            });
+          }
+        });
+      }
     }
   }
 }
@@ -150,7 +161,7 @@ export class TeamArchiveCradComponent implements OnInit {
   restoreIcon = icon.RESTORE;
   acticve_word: string = "";
   inacticve_word: string = "";
-  constructor (public httpCall: HttpCall, public uiSpinner: UiSpinnerService,
+  constructor(public httpCall: HttpCall, public uiSpinner: UiSpinnerService,
     public router: Router, public dialog: MatDialog,
     public translate: TranslateService, public snackbarservice: Snackbarservice) {
     this.translate.stream(['']).subscribe((textarray) => {
@@ -221,7 +232,7 @@ export class SelectUserRoleForm implements OnInit {
   copyDataFromProject: string = "";
   saveIcon = icon.SAVE_WHITE;
 
-  constructor (
+  constructor(
     private modeService: ModeDetectService,
     private formBuilder: FormBuilder,
     public httpCall: HttpCall,
