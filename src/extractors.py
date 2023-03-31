@@ -527,13 +527,56 @@ class Extractor:
 
         return cleaned_value
 
+    @staticmethod
+    def to_epoch(str_date):
+        import datetime
+
+        try:
+            epoch = datetime.datetime(1970, 1, 1)
+            if '/' in str_date:
+                try:
+                    p = '%m/%d/%Y'
+                    return int((datetime.datetime.strptime(str_date, p) - epoch).total_seconds())
+                except Exception as e:
+                    p = '%m/%d/%y'
+                    return int((datetime.datetime.strptime(str_date, p) - epoch).total_seconds())
+
+            elif '-' in str_date:
+                try:
+                    p = '%m-%d-%Y'
+                    return int((datetime.datetime.strptime(str_date, p) - epoch).total_seconds())
+                except Exception as e:
+                    p = '%m-%d-%y'
+                    return int((datetime.datetime.strptime(str_date, p) - epoch).total_seconds())
+
+            else:
+                # April 8, 2015
+                month_day = str_date.split(',')[0]
+                month_day = month_day.split()
+                month = dict(January=1, February=2, March=3, April=4, May=5, June=6, July=7, August=8, September=9,
+                             October=10, November=11, December=12)[month_day[0]]
+                day = int(month_day[1])
+                year = int(str_date.split(',')[1])
+
+                d = datetime.datetime(year, month, day)
+                return int((d - epoch).total_seconds())
+
+        except Exception as e:
+            return None
+
+    @staticmethod
+    def make_date_resp(str_date):
+        if not type(str_date) == str:
+            return dict(orig=None, epoch=None)
+        return dict(orig=str_date, epoch=Extractor.to_epoch(str_date))
+
 
 class PackingSlipExtractor(Extractor):
     def __init__(self, expense_parser, forms_parser, conf):
         super().__init__('PACKING_SLIP', expense_parser, forms_parser, conf)
 
     def _extract(self):
-        date = self.get_clf_field_value('INVOICE_RECEIPT_DATE')
+        date = self._extract_date()
         invoice_number = self.clean_extracted_id(self.get_clf_field_value('INVOICE_RECEIPT_ID'))
         ship_to_address = self.get_clf_field_value('RECEIVER_ADDRESS')
         vendor_name = self.get_clf_field_value('VENDOR_NAME')
@@ -557,13 +600,17 @@ class PackingSlipExtractor(Extractor):
             'expense_groups': self.get_expense_groups()
         }
 
+    def _extract_date(self):
+        value = self.get_clf_field_value('INVOICE_RECEIPT_DATE') or self.get_clf_field_value('ORDER_DATE')
+        return self.make_date_resp(value)
+
 
 class ReceivingSlipExtractor(Extractor):
     def __init__(self, expense_parser, forms_parser, conf):
         super().__init__('RECEIVING_SLIP', expense_parser, forms_parser, conf)
 
     def _extract(self):
-        date = self.get_clf_field_value('INVOICE_RECEIPT_DATE')
+        date = self._extract_date()
         invoice_number = self._extract_invoice_number()
         ship_to_address = self.get_clf_field_value('RECEIVER_ADDRESS')
         vendor_name = self.get_clf_field_value('VENDOR_NAME')
@@ -601,6 +648,10 @@ class ReceivingSlipExtractor(Extractor):
 
         return self.clean_extracted_id(value)
 
+    def _extract_date(self):
+        value = self.get_clf_field_value('INVOICE_RECEIPT_DATE') or self.get_clf_field_value('ORDER_DATE')
+        return self.make_date_resp(value)
+
 
 class QuoteExtractor(Extractor):
     def __init__(self, expense_parser, forms_parser, conf):
@@ -608,7 +659,7 @@ class QuoteExtractor(Extractor):
 
     def _extract(self):
         quote_number = self.clean_extracted_id(self.get_clf_field_value('INVOICE_RECEIPT_ID'))
-        quote_date = self.get_clf_field_value('INVOICE_RECEIPT_DATE')
+        quote_date = self.make_date_resp(self.get_clf_field_value('INVOICE_RECEIPT_DATE'))
         terms = self.get_clf_field_value('PAYMENT_TERMS')
         address = self.get_clf_field_value('RECEIVER_ADDRESS')
         vendor_name = self._extract_vendor_name()
@@ -662,8 +713,12 @@ class InvoiceExtractor(Extractor):
     def _extract(self):
         fields = {
             'INVOICE_NUMBER': self.clean_extracted_id(self._extract_invoice_number()),
-            'INVOICE_DATE': self.get_clf_field_value('INVOICE_RECEIPT_DATE'),
-            'ORDER_DATE': self.get_clf_field_value('ORDER_DATE'),
+
+            'INVOICE_DATE': self._extract_invoice_date(),
+            'DUE_DATE': self.make_date_resp(self.get_clf_field_value('DUE_DATE')),
+            'SHIP_DATE': self.make_date_resp(self.get_other_field_value('DATE SHIPPED')),
+            'ORDER_DATE': self._extract_order_date(),
+
             'PO_NUMBER': self.clean_extracted_id(self._extract_po()),
             'INVOICE_TO': self.get_clf_field_value('RECEIVER_NAME'),
             'ADDRESS': self.get_clf_field_value('RECEIVER_ADDRESS'),
@@ -677,8 +732,6 @@ class InvoiceExtractor(Extractor):
             'JOB_NUMBER': self.get_other_field_value('JOB NUMBER'),
             'DELIVERY_ADDRESS': self.get_clf_field_value('RECEIVER_ADDRESS'),
             'TERMS': self._extract_terms(),
-            'DUE_DATE': self.get_clf_field_value('DUE_DATE'),
-            'SHIP_DATE': self.get_other_field_value('DATE SHIPPED'),
             'CONTRACT_NUMBER': self.clean_extracted_id(self._extract_contract_number()),
             'DISCOUNT': self.get_clf_field_value('DISCOUNT'),
             'ACCOUNT_NUMBER': self.clean_extracted_id(self._extract_account_number())
@@ -692,6 +745,13 @@ class InvoiceExtractor(Extractor):
             'expense_groups': groups
         }
 
+    def _extract_invoice_date(self):
+        value = self.get_clf_field_value('INVOICE_RECEIPT_DATE') or self.get_clf_field_value('ORDER_DATE')
+        return self.make_date_resp(value)
+
+    def _extract_order_date(self):
+        value = self.get_clf_field_value('ORDER_DATE'),
+        return self.make_date_resp(value)
 
     def _extract_po(self):
         po = self.expense_parser.get_clf_field_value('PO_NUMBER')
@@ -736,12 +796,13 @@ class PurchaseOrderExtractor(Extractor):
 
     def _extract(self):
         fields = {
-            'PO_CREATE_DATE': self.get_clf_field_value('INVOICE_RECEIPT_DATE'),
+            'PO_CREATE_DATE': self.make_date_resp(self.get_clf_field_value('INVOICE_RECEIPT_DATE')),
+            'DUE_DATE': self.make_date_resp(self.get_clf_field_value('DUE_DATE')),
+            'DELIVERY_DATE': self.make_date_resp(self.get_clf_field_value('DELIVERY_DATE')),
+
             'PO_NUMBER': self.clean_extracted_id(self._extract_po_number()),
             'CUSTOMER_ID': self.get_clf_field_value('CUSTOMER_NUMBER'),
             'TERMS': self.get_clf_field_value('PAYMENT_TERMS'),
-            'DELIVERY_DATE': self.get_clf_field_value('DELIVERY_DATE'),
-            'DUE_DATE': self.get_clf_field_value('DUE_DATE'),
             'QUOTE_NUMBER': self.extract_quote_number(),
             'CONTRACT_NUMBER': self.get_clf_field_value('RECEIVER_PHONE'),
             'DELIVERY_ADDRESS': self.get_clf_field_value('RECEIVER_ADDRESS'),
@@ -931,50 +992,81 @@ if __name__ == '__main__':
     def test_demo_2():
         # fn_exp = '/home/yuri/upwork/ridaro/data/demo_2/po3_6266b4fa53a358c32e41a022po1675345707726_edited.pdf_expense.json'
         # fn_form = '/home/yuri/upwork/ridaro/data/demo_2/po3_6266b4fa53a358c32e41a022po1675345707726_edited.pdf_page_0_FT.json'
+        # fn_exp = '/home/yuri/upwork/ridaro/data/processed/docs_2_POs_aws_analyze_api/po_6132f0d8d1b45f620259d4fdpo1638946256490.pdf.json'
+        # fn_form = '/home/yuri/upwork/ridaro/data/processed/docs_2_POs_aws_forms_and_tables_api/po_6132f0d8d1b45f620259d4fdpo1638946256490.pdf.json'
         # print(json.dumps(
         #     PurchaseOrderExtractor(
         #         ExpenseParser(load_resp(fn_exp)['ExpenseDocuments'][0]).parse(),
         #         FormsParser(load_resp(fn_form), 0, 'some_url'), {}
         #     ).extract(), indent=2, default=str))
 
-        # fn_exp = '/home/yuri/upwork/ridaro/data/demo_2/Invoice_2431_from_Ridaro_Inc.pdf_expense.json'
-        # print(json.dumps(
-        #     InvoiceExtractor(
-        #         ExpenseParser(load_resp(fn_exp)['ExpenseDocuments'][0]).parse(),
-        #         None, {}
-        #     ).extract(), indent=2, default=str))
 
-        # fn_exp = '/home/yuri/upwork/ridaro/data/demo_2/ps_Intuit - Ridaro FCNS22-9185_PackingSlip_10202022_test.pdf_expense.json'
+        # fn_exp = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_analyze_api/invoice_page-1.pdf.json'
+        # fn_frm = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_forms_and_tables_api/invoice_page-1.pdf.json'
+        # fn_exp = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_analyze_api/Invoice_2431_from_Ridaro_Inc.pdf.json'
+        # fn_frm = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_forms_and_tables_api/Invoice_2431_from_Ridaro_Inc.pdf.json'
+        # fn_exp = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_analyze_api/invoice_Ridaro FCNS22-9185_122.50_10202022.pdf.json'
+        # fn_frm = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_forms_and_tables_api/invoice_Ridaro FCNS22-9185_122.50_10202022.pdf.json'
+        # fn_exp = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_analyze_api/Invoice,8042350956,38077982,Smart International.PDF.json'
+        # fn_frm = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_forms_and_tables_api/Invoice,8042350956,38077982,Smart International.PDF.json'
+        # fn_exp = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_analyze_api/Invoice,8042209225,38077982,PJ WG Renewal 1 year.PDF.json'
+        # fn_frm = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_forms_and_tables_api/Invoice,8042209225,38077982,PJ WG Renewal 1 year.PDF.json'
+        # fn_exp = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_analyze_api/invoice_adrian@vmgconstructioninc10.com8a83e28d7dc522e9017e6b71ce2c17ee18190d18579a948ad5962f737df31db01fdad.pdf.json'
+        # fn_frm = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_forms_and_tables_api/invoice_adrian@vmgconstructioninc10.com8a83e28d7dc522e9017e6b71ce2c17ee18190d18579a948ad5962f737df31db01fdad.pdf.json'
+        # fn_exp = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_analyze_api/invoice_adrian@vmgconstructioninc10.com8a83e28d7dc522e9017e253dfe203d5b21458d07f1c756ee4ad62d25a33dbd1e07bbb.pdf.json'
+        # fn_frm = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_forms_and_tables_api/invoice_adrian@vmgconstructioninc10.com8a83e28d7dc522e9017e253dfe203d5b21458d07f1c756ee4ad62d25a33dbd1e07bbb.pdf.json'
+        # fn_exp = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_analyze_api/invoice_adrian@vmgconstructioninc10.comae95eb347d143714017d21f295de0449112194196aa89c3932ce0cbb7d3d574882405.pdf.json'
+        # fn_frm = '/home/yuri/upwork/ridaro/data/processed/docs_2_invoices_aws_forms_and_tables_api/invoice_adrian@vmgconstructioninc10.comae95eb347d143714017d21f295de0449112194196aa89c3932ce0cbb7d3d574882405.pdf.json'
         # print(json.dumps(
         #     InvoiceExtractor(
         #         ExpenseParser(load_resp(fn_exp)['ExpenseDocuments'][0]).parse(),
-        #         None, {}
+        #         FormsParser(load_resp(fn_frm), 0, 'some_url'), None,
         #     ).extract(), indent=2, default=str))
 
         # fn_exp = '/home/yuri/upwork/ridaro/data/processed/docs_2_QUOTEs_aws_analyze_api/quote_1.pdf.json'
         # fn_exp = '/home/yuri/upwork/ridaro/data/demo_2/quote_1.pdf_expense.json'
-        fn_exp = '/home/yuri/upwork/ridaro/data/demo_2/quote_1_1p.pdf_expense.json'
+        # fn_exp = '/home/yuri/upwork/ridaro/data/demo_2/quote_1_1p.pdf_expense.json'  # date_v
+        # fn_exp = '/home/yuri/upwork/ridaro/data/processed/docs_2_QUOTEs_aws_analyze_api/quote_[Untitled].pdf.json'  # date_v
         # fn_exp = '/home/yuri/upwork/ridaro/data/demo_2/quote_1_1p_pic.pdf_expense.json'
+        # fn_exp = '/home/yuri/upwork/ridaro/data/processed/docs_2_QUOTEs_aws_analyze_api/quote_[Untitled].pdf.json'
+        # print(json.dumps(
+        #     QuoteExtractor(
+        #         ExpenseParser(load_resp(fn_exp)['ExpenseDocuments'][0]).parse(),
+        #         None, {}
+        #     ).extract(), indent=2, default=str))
+
+        # fn_exp = '/home/yuri/upwork/ridaro/data/processed/docs_4/ps4_Packing slip.pdf_expense.json'
+        # fn_exp = '/home/yuri/upwork/ridaro/data/processed/docs_2_PSs_aws_analyze_api/ps_Intuit - Ridaro FCNS22-9185_PackingSlip_10202022_test.pdf.json'
+        # fn_exp = '/home/yuri/upwork/ridaro/data/processed/docs_2_PSs_aws_analyze_api/ps_packingslip.pdf.json'
+        # fn_exp = '/home/yuri/upwork/ridaro/data/processed/docs_2_PSs_aws_analyze_api/ps_Ridaro FCNS22-9185_PackingSlip_10202022_test.pdf.json'
+        # print(json.dumps(
+        #     PackingSlipExtractor(
+        #         ExpenseParser(load_resp(fn_exp)['ExpenseDocuments'][0]).parse(),
+        #         None, {}
+        #     ).extract(), indent=2, default=str))
+
+        fn_exp = '/home/yuri/upwork/ridaro/data/processed/docs_4/rs4_packing-slip-2x.pdf_expense.json'
         print(json.dumps(
-            QuoteExtractor(
+            ReceivingSlipExtractor(
                 ExpenseParser(load_resp(fn_exp)['ExpenseDocuments'][0]).parse(),
                 None, {}
             ).extract(), indent=2, default=str))
 
 
-    # test_demo_2()
+
+    test_demo_2()
 
 
     def test_docs4():
         # po_exp_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/po4_Book4.pdf_expense.json'
         # po_forms_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/po4_Book4.pdf_FT.json'
-        #
-        # # print('detected_doctype:', ExtractorsManager._detect_doc_type(load_resp(po_exp_fn)['ExpenseDocuments'][0]))
+
+        # print('detected_doctype:', ExtractorsManager._detect_doc_type(load_resp(po_exp_fn)['ExpenseDocuments'][0]))
         # print(json.dumps(
         #     PurchaseOrderExtractor(
         #         ExpenseParser(load_resp(po_exp_fn)['ExpenseDocuments'][0]).parse(),
         #         FormsParser(load_resp(po_forms_fn), 0, 'some_url'), None
-        #     ).extract(), indent=2))
+        #     ).extract(), indent=2, default=str))
 
         # ps_exp_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/ps4_Packing slip.pdf_expense.json'
         # ps_forms_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/ps4_Packing slip.pdf_FT.json'
@@ -984,7 +1076,7 @@ if __name__ == '__main__':
         #     PackingSlipExtractor(
         #         ExpenseParser(load_resp(ps_exp_fn)['ExpenseDocuments'][0]).parse(),
         #         FormsParser(load_resp(ps_forms_fn), 0, 'some_url'), None
-        #     ).extract(), indent=2))
+        #     ).extract(), indent=2, default=str))
         #
         # in_exp_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/invoice4_Amazon.com order number 113-1939597-2877857.pdf_expense.json'
         # in_forms_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/invoice4_Amazon.com order number 113-1939597-2877857.pdf_FT.json'
@@ -996,8 +1088,7 @@ if __name__ == '__main__':
         #         FormsParser(load_resp(in_forms_fn), 0, 'some_url'), None
         #     ).extract(), indent=2))
 
-
-        rs_exp_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/rs4_packing-slip-2x.pdf_expense.json'
+        rs_exp_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/rs4_packing-slip-2x.pdf_expense.json'  #date_v
 
         print('detected_doctype:', ExtractorsManager._detect_doc_type(load_resp(rs_exp_fn)['ExpenseDocuments'][0]))
         print(json.dumps(
@@ -1008,7 +1099,7 @@ if __name__ == '__main__':
             ).extract(), indent=2, default=str))
 
 
-    # test_docs4()
+
 
     def test_unknown_extractor():
         # po_exp_fn = '/home/yuri/upwork/ridaro/data/processed/docs_4/po4_Book4.pdf_expense.json'
