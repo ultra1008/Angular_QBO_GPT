@@ -528,8 +528,10 @@ export class InvoiceDetailPageComponent implements OnInit {
 
           that.snackbarservice.openSnackBar(params_new.message, "success");
           that.uiSpinner.spin$.next(false);
+          that.invoiceNoteform.reset();
           that.show_Nots = false;
           that.getOneInvoice();
+
 
         } else {
           that.snackbarservice.openSnackBar(params_new.message, "error");
