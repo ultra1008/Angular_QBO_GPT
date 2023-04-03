@@ -135,7 +135,7 @@
                                                 <i class="fas fa-paper-plane"></i></button></span>
                                         <mat-label>{{'Employee-form-Temporary-password' | translate }}</mat-label>
                                         <input matInput formControlName="password"
-                                            placeholder="{{'Employee-form-Temporary-password' | translate }}" required>
+                                            placeholder="{{'Employee-form-Temporary-password' | translate }}">
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -205,7 +205,8 @@
                                 <div class="main-second-col2 padding-left-cust">
                                     <mat-form-field class="main-one-input-field" appearance="outline">
                                         <mat-label>{{'Employee-form-Status' | translate }}</mat-label>
-                                        <mat-select formControlName="userstatus" class="dark-cust-color">
+                                        <mat-select formControlName="userstatus" class="dark-cust-color"
+                                            [disabled]="is_role_disabled || user_id == localUserdata.UserData._id">
                                             <mat-option *ngFor="let status of statuss" [value]="status.value">
                                                 {{status.tmp_lanaguage | translate }}
                                             </mat-option>

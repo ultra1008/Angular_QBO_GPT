@@ -208,7 +208,7 @@ export class EmployeeViewComponent implements OnInit {
   Empty_Temporary_Password: string;
 
 
-  constructor (private modeService: ModeDetectService, public sb: Snackbarservice, private location: Location, public dialog: MatDialog, public translate: TranslateService, public mostusedservice: Mostusedservice,
+  constructor(private modeService: ModeDetectService, public sb: Snackbarservice, private location: Location, public dialog: MatDialog, public translate: TranslateService, public mostusedservice: Mostusedservice,
     private formBuilder: FormBuilder, private http: HttpClient, public employeeservice: EmployeeService, public snackbarservice: Snackbarservice,
     private router: Router, public route: ActivatedRoute, public httpCall: HttpCall, public uiSpinner: UiSpinnerService) {
 
@@ -1252,7 +1252,7 @@ export class EmployeeViewComponent implements OnInit {
   sendInvitation() {
     let that = this;
     let req_temp = that.userpersonalinfo.value;
-    if (req_temp.password == "") {
+    if (req_temp.password == "" || req_temp.password == null || req_temp.password == undefined) {
       that.snackbarservice.openSnackBar(that.Empty_Temporary_Password, "error");
     } else {
       that.uiSpinner.spin$.next(true);
@@ -1583,7 +1583,7 @@ export class EmergencycontactFrom {
   variablesrelation_array: any = [];
   relation_array: any = this.variablesrelation_array.slice();
 
-  constructor (public dialogRef: MatDialogRef<EmergencycontactFrom>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
+  constructor(public dialogRef: MatDialogRef<EmergencycontactFrom>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
     private formBuilder: FormBuilder, public httpCall: HttpCall, public route: ActivatedRoute,
     @Inject(MAT_DIALOG_DATA) public data: any, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService) {
 
@@ -1712,7 +1712,7 @@ export class DocumentUpdateFrom {
   mode: any;
   backIcon: string;
   saveIcon: string;
-  constructor (public dialogRef: MatDialogRef<DocumentUpdateFrom>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
+  constructor(public dialogRef: MatDialogRef<DocumentUpdateFrom>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
     private formBuilder: FormBuilder, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService,
     public employeeservice: EmployeeService, public httpCall: HttpCall, @Inject(MAT_DIALOG_DATA) public data: any) {
 
@@ -1919,7 +1919,7 @@ export class UserDocumentHistoryComponent implements OnInit {
   backIcon: string;
   subscription: Subscription;
 
-  constructor (public httpCall: HttpCall, private modeService: ModeDetectService, public dialogRef: MatDialogRef<UserDocumentHistoryComponent>, private http: HttpClient,
+  constructor(public httpCall: HttpCall, private modeService: ModeDetectService, public dialogRef: MatDialogRef<UserDocumentHistoryComponent>, private http: HttpClient,
     @Inject(MAT_DIALOG_DATA) public data: any, public translate: TranslateService, public sb: Snackbarservice) {
     let that = this;
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
