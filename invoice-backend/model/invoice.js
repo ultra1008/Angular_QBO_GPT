@@ -347,7 +347,7 @@ var invoiceSchema = new Schema({
     gl_account: { type: String },
     receiving_date: { type: String, default: "" },
     notes: { type: String, default: "" },
-    status: { type: String, default: "Pending", enum: ['Pending', 'Approved', 'Rejected', 'Late'] },
+    status: { type: String, default: "Pending", enum: ['Pending', 'Approved', 'Rejected', 'Late', 'Paid', 'Unpaid', 'Overdue'] },
     reject_reason: { type: String, default: "" },
     job_number: { type: String, default: "" },
     delivery_address: { type: String, default: "" },
