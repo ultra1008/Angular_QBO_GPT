@@ -256,9 +256,13 @@ module.exports.getInvoice = async function (req, res) {
                         invoice: 1,
                         p_o: 1,
                         invoice_date: 1,
+                        invoice_date_epoch: 1,
                         due_date: 1,
+                        due_date_epoch: 1,
                         order_date: 1,
+                        order_date_epoch: 1,
                         ship_date: 1,
+                        ship_date_epoch: 1,
                         terms: 1,
                         total: 1,
                         invoice_total: 1,
@@ -470,9 +474,13 @@ module.exports.getInvoiceList = async function (req, res) {
                         invoice: 1,
                         p_o: 1,
                         invoice_date: 1,
+                        invoice_date_epoch: 1,
                         due_date: 1,
+                        due_date_epoch: 1,
                         order_date: 1,
+                        order_date_epoch: 1,
                         ship_date: 1,
+                        ship_date_epoch: 1,
                         terms: 1,
                         total: 1,
                         invoice_total: 1,
@@ -636,9 +644,13 @@ module.exports.getOneInvoice = async function (req, res) {
                         invoice: 1,
                         p_o: 1,
                         invoice_date: 1,
+                        invoice_date_epoch: 1,
                         due_date: 1,
-                        order_date: 1,
+                        due_date_epoch: 1,
+                        order_date_epoch: 1,
+                        order_date_epoch: 1,
                         ship_date: 1,
+                        ship_date_epoch: 1,
                         terms: 1,
                         total: 1,
                         invoice_total: 1,
@@ -823,13 +835,9 @@ module.exports.deleteInvoice = async function (req, res) {
             } else {
                 var get_one = await invoicesConnection.findOne({ _id: ObjectID(id) }, { _id: 0, __v: 0 });
                 let reqObj = { invoice_id: id, ...get_one._doc };
-
                 addchangeInvoice_History("Delete", reqObj, decodedToken, get_one.updated_at);
-
                 res.send({ message: "Invoice deleted successfully", status: true, data: update_data });
             }
-
-
         } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
@@ -983,9 +991,13 @@ module.exports.getInvoiceDatatable = async function (req, res) {
                         invoice: 1,
                         p_o: 1,
                         invoice_date: 1,
+                        invoice_date_epoch: 1,
                         due_date: 1,
+                        due_date_epoch: 1,
                         order_date: 1,
+                        order_date_epoch: 1,
                         ship_date: 1,
+                        ship_date_epoch: 1,
                         terms: 1,
                         total: 1,
                         invoice_total: 1,
@@ -1144,7 +1156,7 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
 
             let date_query = {};
             if (requestObject.start_date != 0 && requestObject.end_date != 0) {
-                date_query = { "created_at": { $gte: requestObject.start_date, $lt: requestObject.end_date } };
+                date_query = { invoice_date_epoch: { $gte: requestObject.start_date, $lt: requestObject.end_date } };
             }
             let get_invoice = await invoicesConnection.aggregate([
                 { $match: { is_delete: 0 }, },
@@ -1193,8 +1205,11 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
             for (let i = 0; i < get_invoice.length; i++) {
                 let invoice = get_invoice[i];
                 xlsx_data.push([invoice.vendor.vendor_name, invoice.vendor_id, invoice.customer_id, invoice.invoice, invoice.p_o, invoice.job_number,
-                invoice.invoice_date, invoice.due_date, invoice.order_date, invoice.ship_date, invoice.packing_slip, invoice.receiving_slip,
-                invoice.status, invoice.terms, invoice.invoice_total,
+                common.MMDDYYYY_local_offset(invoice.invoice_date_epoch, req.headers.language, local_offset),
+                common.MMDDYYYY_local_offset(invoice.due_date_epoch, req.headers.language, local_offset),
+                common.MMDDYYYY_local_offset(invoice.order_date_epoch, req.headers.language, local_offset),
+                common.MMDDYYYY_local_offset(invoice.ship_date_epoch, req.headers.language, local_offset),
+                invoice.packing_slip, invoice.receiving_slip, invoice.status, invoice.terms, invoice.invoice_total,
                 invoice.tax_amount, invoice.tax_id, invoice.sub_total, invoice.amount_due, invoice.costcode.length > 0 ? invoice.costcode[0].value : '',
                 invoice.gl_account, invoice.assign_to == undefined || invoice.assign_to == null ? '' : invoice.assign_to.userfullname, invoice.notes]);
             }
@@ -1205,10 +1220,10 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
                 translator.getStr('Invoice_History.invoice'),
                 translator.getStr('Invoice_History.p_o'),
                 translator.getStr('Invoice_History.job_number'),
-                translator.getStr('Invoice_History.invoice_date'),
-                translator.getStr('Invoice_History.due_date'),
-                translator.getStr('Invoice_History.order_date'),
-                translator.getStr('Invoice_History.ship_date'),
+                translator.getStr('Invoice_History.invoice_date_epoch'),
+                translator.getStr('Invoice_History.due_date_epoch'),
+                translator.getStr('Invoice_History.order_date_epoch'),
+                translator.getStr('Invoice_History.ship_date_epoch'),
                 translator.getStr('Invoice_History.packing_slip'),
                 translator.getStr('Invoice_History.receiving_slip'),
                 translator.getStr('Invoice_History.status'),
@@ -1325,7 +1340,7 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
             }
 
             if (requestObject.start_date != 0 && requestObject.end_date != 0) {
-                date_range = `${translator.getStr('EmailExcelDateRange')} ${common.MMDDYYYY(requestObject.start_date + local_offset)} - ${common.MMDDYYYY(requestObject.end_date + local_offset)}`;
+                date_range = `${translator.getStr('EmailExcelDateRange')} ${common.MMDDYYYY_local_offset(requestObject.start_date, req.headers.language, local_offset)} - ${common.MMDDYYYY_local_offset(requestObject.end_date, req.headers.language, local_offset)}`;
             }
 
             let companycode = decodedToken.companycode.toLowerCase();

@@ -66,12 +66,14 @@
                                 </div>
                                 <div class="col">
                                     <b>{{'Project-Timecard-Date' | translate }}:</b>&nbsp;&nbsp;
-                                    <img *ngIf="badge.date== true"
+                                    <img *ngIf="badge.date_epoch== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
                                         width="20px" src="./assets/logo/RovukInvoice.png" />
                                     <mat-form-field>
-
-                                        <input matInput placeholder="{{'' | translate }}" formControlName="date">
+                                        <input matInput [matDatepicker]="poDate" disabled readonly
+                                            formControlName="date_epoch" />
+                                        <mat-datepicker-toggle matSuffix [for]="poDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #poDate disabled="false"></mat-datepicker>
                                     </mat-form-field>
                                 </div>
                                 <div class="col ">
@@ -135,49 +137,16 @@
                                     </mat-form-field>
                                 </div>
 
-                                <!-- <div class="col">
-                                    <b>{{'invoice_no' | translate }}:</b>&nbsp;&nbsp;
-
-                                    <img *ngIf="badge.invoice== true"
-                                        class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
-
-                                    <mat-form-field>
-
-                                        <input matInput placeholder="{{' ' | translate }}" formControlName="invoice" />
-                                    </mat-form-field>
-                                </div> -->
-
-                                <!-- <div class="col">
-                                    <b>{{'Project-Info-Settings-Job#' | translate }}:</b>&nbsp;&nbsp;
-                                    <img *ngIf="badge.job_number== true"
-                                        class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
-                                    <mat-form-field>
-
-                                        <input matInput placeholder="{{'' | translate }}" formControlName="job_number">
-                                    </mat-form-field>
-                                </div> -->
-                                <!-- <div class="col">
-                                    <b>{{'Invoice_Date' | translate }}:</b>&nbsp;&nbsp;
-                                    <img *ngIf="badge.invoice_date== true"
-                                        class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
-                                    <mat-form-field>
-
-                                        <input matInput placeholder="{{'' | translate }}"
-                                            formControlName="invoice_date" />
-                                    </mat-form-field>
-                                </div> -->
                                 <div class="col">
                                     <b>{{'delivery_date' | translate }}:</b>&nbsp;&nbsp;
-                                    <img *ngIf="badge.delivery_date== true"
+                                    <img *ngIf="badge.delivery_date_epoch== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
                                         width="20px" src="./assets/logo/RovukInvoice.png" />
                                     <mat-form-field>
-
-                                        <input matInput placeholder="{{'' | translate }}"
-                                            formControlName="delivery_date">
+                                        <input matInput [matDatepicker]="deliveryDate" disabled readonly
+                                            formControlName="delivery_date_epoch" />
+                                        <mat-datepicker-toggle matSuffix [for]="deliveryDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #deliveryDate disabled="false"></mat-datepicker>
                                     </mat-form-field>
                                 </div>
                                 <div class="col">
@@ -193,12 +162,14 @@
                                 </div>
                                 <div class="col">
                                     <b>{{'due_date' | translate }}:</b>&nbsp;&nbsp;
-                                    <img *ngIf="badge.due_date== true"
+                                    <img *ngIf="badge.due_date_epoch== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
                                         width="20px" src="./assets/logo/RovukInvoice.png" />
                                     <mat-form-field>
-
-                                        <input matInput placeholder="{{'' | translate }}" formControlName="due_date">
+                                        <input matInput [matDatepicker]="dueDate" disabled readonly
+                                            formControlName="due_date_epoch" />
+                                        <mat-datepicker-toggle matSuffix [for]="dueDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #dueDate disabled="false"></mat-datepicker>
                                     </mat-form-field>
                                 </div>
                                 <div class="col">

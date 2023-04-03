@@ -171,45 +171,50 @@
                                 </div>
                                 <div class="col">
                                     <b>{{'Invoice_Date' | translate }}:</b>&nbsp;&nbsp;
-                                    <img *ngIf="badge.invoice_date== true"
+                                    <img *ngIf="badge.invoice_date_epoch== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
                                         width="20px" src="./assets/logo/RovukInvoice.png" />
                                     <mat-form-field>
-
-                                        <input matInput placeholder="{{'' | translate }}"
-                                            formControlName="invoice_date" />
+                                        <input matInput [matDatepicker]="invoiceDate" disabled readonly
+                                            formControlName="invoice_date_epoch" />
+                                        <mat-datepicker-toggle matSuffix [for]="invoiceDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #invoiceDate disabled="false"></mat-datepicker>
                                     </mat-form-field>
                                 </div>
                                 <div class="col">
                                     <b>{{'due_date' | translate }}:</b>&nbsp;&nbsp;
-                                    <img *ngIf="badge.due_date== true"
+                                    <img *ngIf="badge.due_date_epoch== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
                                         width="20px" src="./assets/logo/RovukInvoice.png" />
                                     <mat-form-field>
-
-                                        <input matInput placeholder="{{'' | translate }}" formControlName="due_date">
+                                        <input matInput [matDatepicker]="dueDate" disabled readonly
+                                            formControlName="due_date_epoch" />
+                                        <mat-datepicker-toggle matSuffix [for]="dueDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #dueDate disabled="false"></mat-datepicker>
                                     </mat-form-field>
                                 </div>
                                 <div class="col">
                                     <b>{{'Order_Date' | translate }}:</b>&nbsp;&nbsp;
-                                    <img *ngIf="badge.order_date== true"
+                                    <img *ngIf="badge.order_date_epoch== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
                                         width="20px" src="./assets/logo/RovukInvoice.png" />
                                     <mat-form-field>
-
-                                        <input matInput placeholder="{{'' | translate }}"
-                                            formControlName="order_date" />
+                                        <input matInput [matDatepicker]="orderDate" disabled readonly
+                                            formControlName="order_date_epoch" />
+                                        <mat-datepicker-toggle matSuffix [for]="orderDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #orderDate disabled="false"></mat-datepicker>
                                     </mat-form-field>
                                 </div>
                                 <div class="col">
                                     <b>{{'Ship_date' | translate }}:</b>&nbsp;&nbsp;
-                                    <img *ngIf="badge.ship_date== true"
+                                    <img *ngIf="badge.ship_date_epoch== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
                                         width="20px" src="./assets/logo/RovukInvoice.png" />
                                     <mat-form-field>
-
-                                        <input matInput placeholder="{{' ' | translate }}"
-                                            formControlName="ship_date" />
+                                        <input matInput [matDatepicker]="shipDate" disabled readonly
+                                            formControlName="ship_date_epoch" />
+                                        <mat-datepicker-toggle matSuffix [for]="shipDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #shipDate disabled="false"></mat-datepicker>
                                     </mat-form-field>
                                 </div>
                                 <div class="col">
@@ -218,7 +223,6 @@
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
                                         width="20px" src="./assets/logo/RovukInvoice.png" />
                                     <mat-form-field>
-
                                         <input matInput placeholder="{{'' | translate }}"
                                             formControlName="packing_slip" />
                                     </mat-form-field>

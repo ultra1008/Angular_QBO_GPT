@@ -130,6 +130,17 @@ module.exports.MMDDYYYY = function (epochTime) {
     return date_tmp;
 };
 
+module.exports.MMDDYYYY_local_offset = function (epochTime, locale, offset) {
+    if (epochTime == 0) {
+        return '';
+    }
+    moment.locale(locale);
+    var dateObj = epochTime * 1000;
+    let date = new Date(dateObj);
+    let local_date = moment(date).utcOffset(Math.floor(offset / 60)).format("DD/MM/YYYY");
+    return local_date;
+};
+
 module.exports.DDMMYYYY = function (epochTime) {
     var dateObj = epochTime * 1000;
     let date = new Date(dateObj);

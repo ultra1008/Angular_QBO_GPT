@@ -8,9 +8,13 @@ var badge = new mongoose.Schema({
     invoice: { type: Boolean, default: false },
     p_o: { type: Boolean, default: false },
     invoice_date: { type: Boolean, default: false },
+    invoice_date_epoch: { type: Boolean, default: false },
     due_date: { type: Boolean, default: false },
+    due_date_epoch: { type: Boolean, default: false },
     order_date: { type: Boolean, default: false },
+    order_date_epoch: { type: Boolean, default: false },
     ship_date: { type: Boolean, default: false },
+    ship_date_epoch: { type: Boolean, default: false },
     terms: { type: Boolean, default: false },
     total: { type: Boolean, default: false },
     invoice_total: { type: Boolean, default: false },
@@ -35,9 +39,13 @@ var badgeValue = {
     invoice: false,
     p_o: false,
     invoice_date: false,
+    invoice_date_epoch: false,
     due_date: false,
+    due_date_epoch: false,
     order_date: false,
+    order_date_epoch: false,
     ship_date: false,
+    ship_date_epoch: false,
     terms: false,
     total: false,
     invoice_total: false,
@@ -67,6 +75,7 @@ var notesSchema = new mongoose.Schema({
 
 var packingSlipBadge = new mongoose.Schema({
     date: { type: Boolean, default: false },
+    date_epoch: { type: Boolean, default: false },
     invoice_number: { type: Boolean, default: false },
     po_number: { type: Boolean, default: false },
     ship_to_address: { type: Boolean, default: false },
@@ -75,6 +84,7 @@ var packingSlipBadge = new mongoose.Schema({
 });
 var packingSlipBadgeValue = {
     date: false,
+    date_epoch: false,
     invoice_number: false,
     po_number: false,
     ship_to_address: false,
@@ -86,6 +96,7 @@ var packing_slip_schema = new mongoose.Schema({
     document_id: { type: mongoose.ObjectId, default: "" }, // Process document id
     document_type: { type: String, default: "" }, // Process document type
     date: { type: String, default: "" },
+    date_epoch: { type: Number, default: 0 },
     invoice_number: { type: String, default: "" },
     po_number: { type: String, default: "" },
     ship_to_address: { type: String, default: "" },
@@ -99,6 +110,7 @@ var packingSlipData = {
     document_id: "",
     document_type: "",
     date: "",
+    date_epoch: 0,
     invoice_number: "",
     po_number: "",
     ship_to_address: "",
@@ -110,6 +122,7 @@ var packingSlipData = {
 
 var receivingSlipBadge = new mongoose.Schema({
     date: { type: Boolean, default: false },
+    date_epoch: { type: Boolean, default: false },
     invoice_number: { type: Boolean, default: false },
     po_number: { type: Boolean, default: false },
     ship_to_address: { type: Boolean, default: false },
@@ -118,6 +131,7 @@ var receivingSlipBadge = new mongoose.Schema({
 });
 var receivingSlipBadgeValue = {
     date: false,
+    date_epoch: false,
     invoice_number: false,
     po_number: false,
     ship_to_address: false,
@@ -129,6 +143,7 @@ var receiving_slip_schema = new mongoose.Schema({
     document_id: { type: mongoose.ObjectId, default: "" }, // Process document id
     document_type: { type: String, default: "" }, // Process document type
     date: { type: String, default: "" },
+    date_epoch: { type: Number, default: 0 },
     invoice_number: { type: String, default: "" },
     po_number: { type: String, default: "" },
     ship_to_address: { type: String, default: "" },
@@ -142,6 +157,7 @@ var receivingSlipData = {
     document_id: "",
     document_type: "",
     date: "",
+    date_epoch: 0,
     invoice_number: "",
     po_number: "",
     ship_to_address: "",
@@ -153,12 +169,15 @@ var receivingSlipData = {
 
 var poBadge = new mongoose.Schema({
     date: { type: Boolean, default: false },
+    date_epoch: { type: Boolean, default: false },
     po_number: { type: Boolean, default: false },
     customer_id: { type: Boolean, default: false },
     terms: { type: Boolean, default: false },
     delivery_date: { type: Boolean, default: false },
+    delivery_date_epoch: { type: Boolean, default: false },
     delivery_address: { type: Boolean, default: false },
     due_date: { type: Boolean, default: false },
+    due_date_epoch: { type: Boolean, default: false },
     quote_number: { type: Boolean, default: false },
     contract_number: { type: Boolean, default: false },
     vendor_id: { type: Boolean, default: false },
@@ -169,12 +188,15 @@ var poBadge = new mongoose.Schema({
 });
 var poBadgeValue = {
     date: false,
+    date_epoch: false,
     po_number: false,
     customer_id: false,
     terms: false,
     delivery_date: false,
+    delivery_date_epoch: false,
     delivery_address: false,
     due_date: false,
+    due_date_epoch: false,
     quote_number: false,
     contract_number: false,
     vendor_id: false,
@@ -188,12 +210,15 @@ var po_schema = new mongoose.Schema({
     document_id: { type: mongoose.ObjectId, default: "" }, // Process document id
     document_type: { type: String, default: "" }, // Process document type
     date: { type: String, default: "" },
+    date_epoch: { type: Number, default: 0 },
     po_number: { type: String, default: "" },
     customer_id: { type: String, default: "" },
     terms: { type: String, default: "" },
     delivery_date: { type: String, default: "" },
+    delivery_date_epoch: { type: Number, default: 0 },
     delivery_address: { type: String, default: "" },
     due_date: { type: String, default: "" },
+    due_date_epoch: { type: Number, default: 0 },
     quote_number: { type: String, default: "" },
     contract_number: { type: String, default: "" },
     vendor_id: { type: String, default: "" },
@@ -210,12 +235,15 @@ var poData = {
     document_id: "",
     document_type: "",
     date: "",
+    date_epoch: 0,
     po_number: "",
     customer_id: "",
     terms: "",
     delivery_date: "",
+    delivery_date_epoch: 0,
     delivery_address: "",
     due_date: "",
+    due_date_epoch: 0,
     quote_number: "",
     contract_number: "",
     vendor_id: "",
@@ -230,6 +258,7 @@ var poData = {
 
 var quoteBadge = new mongoose.Schema({
     date: { type: Boolean, default: false },
+    date_epoch: { type: Boolean, default: false },
     quote_number: { type: Boolean, default: false },
     terms: { type: Boolean, default: false },
     address: { type: Boolean, default: false },
@@ -242,6 +271,7 @@ var quoteBadge = new mongoose.Schema({
 });
 var quoteBadgeValue = {
     date: false,
+    date_epoch: false,
     quote_number: false,
     terms: false,
     address: false,
@@ -257,6 +287,7 @@ var quote_schema = new mongoose.Schema({
     document_id: { type: mongoose.ObjectId, default: "" }, // Process document id
     document_type: { type: String, default: "" }, // Process document type
     date: { type: String, default: "" },
+    date_epoch: { type: Number, default: 0 },
     quote_number: { type: String, default: "" },
     terms: { type: String, default: "" },
     address: { type: String, default: "" },
@@ -275,6 +306,7 @@ var quoteData = {
     document_id: "",
     document_type: "",
     date: "",
+    date_epoch: 0,
     quote_number: "",
     terms: "",
     address: "",
@@ -297,9 +329,13 @@ var invoiceSchema = new Schema({
     invoice: { type: String, default: "" },
     p_o: { type: String, default: "" },
     invoice_date: { type: String, default: "" },
+    invoice_date_epoch: { type: Number, default: 0 },
     due_date: { type: String, default: "" },
+    due_date_epoch: { type: Number, default: 0 },
     order_date: { type: String, default: "" },
+    order_date_epoch: { type: Number, default: 0 },
     ship_date: { type: String, default: "" },
+    ship_date_epoch: { type: Number, default: 0 },
     terms: { type: String, default: "" },
     total: { type: String, default: "" },
     invoice_total: { type: String, default: "" },

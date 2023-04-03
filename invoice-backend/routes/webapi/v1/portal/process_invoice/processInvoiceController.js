@@ -10,6 +10,7 @@ let db_connection = require('./../../../../../controller/common/connectiondb');
 let common = require('./../../../../../controller/common/common');
 let collectionConstant = require('./../../../../../config/collectionConstant');
 var userSchema = require('../../../../../model/user');
+var settingsSchema = require('../../../../../model/settings');
 let config = require('../../../../../config/config');
 let rest_Api = require('./../../../../../config/db_rest_api');
 var handlebars = require('handlebars');
@@ -373,8 +374,8 @@ module.exports.importProcessData = async function (req, res) {
             let invoiceProcessCollection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
             let invoiceCollection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             let get_invoice = await invoiceProcessCollection.find({ is_delete: 0, status: 'Pending' });
-            var queryString = `?customer_id=tempinvoice`;
-            // var queryString = `?customer_id=${decodedToken.companycode.toLowerCase()}`;
+            // var queryString = `?customer_id=tempinvoice`;
+            var queryString = `?customer_id=${decodedToken.companycode.toLowerCase()}`;
             let temp = [];
             for (let i = 0; i < get_invoice.length; i++) {
                 queryString += `&document_id=${get_invoice[i]._id}`;
@@ -407,9 +408,13 @@ module.exports.importProcessData = async function (req, res) {
                                     invoice: '',
                                     p_o: '',
                                     invoice_date: '',
+                                    invoice_date_epoch: 0,
                                     due_date: '',
+                                    due_date_epoch: 0,
                                     order_date: '',
+                                    order_date_epoch: 0,
                                     ship_date: '',
+                                    ship_date_epoch: 0,
                                     terms: '',
                                     total_to_be_paid: '',
                                     tax_rate: '',
@@ -453,12 +458,24 @@ module.exports.importProcessData = async function (req, res) {
                                     }
                                     invoiceObject.invoice = invoice_no;
                                     if (pages[i].fields.INVOICE_DATE != null) {
-                                        invoiceObject.invoice_date = pages[i].fields.INVOICE_DATE;
-                                        invoiceObject.badge.invoice_date = true;
+                                        if (pages[i].fields.INVOICE_DATE.orig != null) {
+                                            invoiceObject.invoice_date = pages[i].fields.INVOICE_DATE.orig;
+                                            invoiceObject.badge.invoice_date = true;
+                                        }
+                                        if (pages[i].fields.INVOICE_DATE.epoch != null) {
+                                            invoiceObject.invoice_date_epoch = pages[i].fields.INVOICE_DATE.epoch;
+                                            invoiceObject.badge.invoice_date_epoch = true;
+                                        }
                                     }
                                     if (pages[i].fields.ORDER_DATE != null) {
-                                        invoiceObject.order_date = pages[i].fields.ORDER_DATE;
-                                        invoiceObject.badge.order_date = true;
+                                        if (pages[i].fields.ORDER_DATE.orig != null) {
+                                            invoiceObject.order_date = pages[i].fields.ORDER_DATE.orig;
+                                            invoiceObject.badge.order_date = true;
+                                        }
+                                        if (pages[i].fields.ORDER_DATE.epoch != null) {
+                                            invoiceObject.order_date_epoch = pages[i].fields.ORDER_DATE.epoch;
+                                            invoiceObject.badge.order_date_epoch = true;
+                                        }
                                     }
                                     if (pages[i].fields.PO_NUMBER != null) {
                                         invoiceObject.p_o = pages[i].fields.PO_NUMBER;
@@ -508,12 +525,24 @@ module.exports.importProcessData = async function (req, res) {
                                         invoiceObject.badge.terms = true;
                                     }
                                     if (pages[i].fields.DUE_DATE != null) {
-                                        invoiceObject.due_date = pages[i].fields.DUE_DATE;
-                                        invoiceObject.badge.due_date = true;
+                                        if (pages[i].fields.DUE_DATE.orig != null) {
+                                            invoiceObject.due_date = pages[i].fields.DUE_DATE.orig;
+                                            invoiceObject.badge.due_date = true;
+                                        }
+                                        if (pages[i].fields.DUE_DATE.epoch != null) {
+                                            invoiceObject.due_date_epoch = pages[i].fields.DUE_DATE.epoch;
+                                            invoiceObject.badge.due_date_epoch = true;
+                                        }
                                     }
                                     if (pages[i].fields.SHIP_DATE != null) {
-                                        invoiceObject.ship_date = pages[i].fields.SHIP_DATE;
-                                        invoiceObject.badge.ship_date = true;
+                                        if (pages[i].fields.SHIP_DATE.orig != null) {
+                                            invoiceObject.ship_date = pages[i].fields.SHIP_DATE.orig;
+                                            invoiceObject.badge.ship_date = true;
+                                        }
+                                        if (pages[i].fields.SHIP_DATE.epoch != null) {
+                                            invoiceObject.ship_date_epoch = pages[i].fields.SHIP_DATE.epoch;
+                                            invoiceObject.badge.ship_date_epoch = true;
+                                        }
                                     }
                                     if (pages[i].fields.CONTRACT_NUMBER != null) {
                                         invoiceObject.contract_number = pages[i].fields.CONTRACT_NUMBER;
@@ -573,6 +602,7 @@ module.exports.importProcessData = async function (req, res) {
                                                     document_id: relatedDocuments[i].document_id,
                                                     document_type: relatedDocuments[i].document_type,
                                                     date: "",
+                                                    date_epoch: 0,
                                                     invoice_number: invoiceObject.invoice,
                                                     po_number: "",
                                                     ship_to_address: "",
@@ -584,8 +614,14 @@ module.exports.importProcessData = async function (req, res) {
                                                     }
                                                 };
                                                 if (related_doc_pages[0].fields.DATE != null) {
-                                                    packing_slip_obj.date = related_doc_pages[0].fields.DATE;
-                                                    packing_slip_obj.badge.date = true;
+                                                    if (related_doc_pages[0].fields.DATE.orig != null) {
+                                                        packing_slip_obj.date = related_doc_pages[0].fields.DATE.orig;
+                                                        packing_slip_obj.badge.date = true;
+                                                    }
+                                                    if (related_doc_pages[0].fields.DATE.epoch != null) {
+                                                        packing_slip_obj.date_epoch = related_doc_pages[0].fields.DATE.epoch;
+                                                        packing_slip_obj.badge.date_epoch = true;
+                                                    }
                                                 }
                                                 if (related_doc_pages[0].fields.PO_NUMBER != null) {
                                                     packing_slip_obj.po_number = related_doc_pages[0].fields.PO_NUMBER;
@@ -616,6 +652,7 @@ module.exports.importProcessData = async function (req, res) {
                                                     document_id: relatedDocuments[i].document_id,
                                                     document_type: relatedDocuments[i].document_type,
                                                     date: "",
+                                                    date_epoch: 0,
                                                     invoice_number: invoiceObject.invoice,
                                                     po_number: "",
                                                     ship_to_address: "",
@@ -627,8 +664,14 @@ module.exports.importProcessData = async function (req, res) {
                                                     }
                                                 };
                                                 if (related_doc_pages[0].fields.DATE != null) {
-                                                    receiving_slip_obj.date = related_doc_pages[0].fields.DATE;
-                                                    receiving_slip_obj.badge.date = true;
+                                                    if (related_doc_pages[0].fields.DATE.orig != null) {
+                                                        receiving_slip_obj.date = related_doc_pages[0].fields.DATE.orig;
+                                                        receiving_slip_obj.badge.date = true;
+                                                    }
+                                                    if (related_doc_pages[0].fields.DATE.epoch != null) {
+                                                        receiving_slip_obj.date_epoch = related_doc_pages[0].fields.DATE.epoch;
+                                                        receiving_slip_obj.badge.date_epoch = true;
+                                                    }
                                                 }
                                                 if (related_doc_pages[0].fields.PO_NUMBER != null) {
                                                     receiving_slip_obj.po_number = related_doc_pages[0].fields.PO_NUMBER;
@@ -659,12 +702,15 @@ module.exports.importProcessData = async function (req, res) {
                                                     document_id: relatedDocuments[i].document_id,
                                                     document_type: relatedDocuments[i].document_type,
                                                     date: "",
+                                                    date_epoch: 0,
                                                     po_number: "",
                                                     customer_id: "",
                                                     terms: "",
                                                     delivery_date: "",
+                                                    delivery_date_epoch: 0,
                                                     delivery_address: "",
                                                     due_date: "",
+                                                    due_date_epoch: 0,
                                                     quote_number: "",
                                                     contract_number: "",
                                                     vendor_id: "",
@@ -682,8 +728,14 @@ module.exports.importProcessData = async function (req, res) {
                                                 }
                                                 if (po_obj.vendor != '') {
                                                     if (related_doc_pages[0].fields.PO_CREATE_DATE != null) {
-                                                        po_obj.date = related_doc_pages[0].fields.PO_CREATE_DATE;
-                                                        po_obj.badge.date = true;
+                                                        if (related_doc_pages[0].fields.PO_CREATE_DATE.orig != null) {
+                                                            po_obj.date = related_doc_pages[0].fields.PO_CREATE_DATE.orig;
+                                                            po_obj.badge.date = true;
+                                                        }
+                                                        if (related_doc_pages[0].fields.PO_CREATE_DATE.epoch != null) {
+                                                            po_obj.date_epoch = related_doc_pages[0].fields.PO_CREATE_DATE.epoch;
+                                                            po_obj.badge.date_epoch = true;
+                                                        }
                                                     }
                                                     if (related_doc_pages[0].fields.PO_NUMBER != null) {
                                                         po_obj.po_number = related_doc_pages[0].fields.PO_NUMBER;
@@ -698,16 +750,28 @@ module.exports.importProcessData = async function (req, res) {
                                                         po_obj.badge.terms = true;
                                                     }
                                                     if (related_doc_pages[0].fields.DELIVERY_DATE != null) {
-                                                        po_obj.delivery_date = related_doc_pages[0].fields.DELIVERY_DATE;
-                                                        po_obj.badge.delivery_date = true;
+                                                        if (related_doc_pages[0].fields.DELIVERY_DATE.orig != null) {
+                                                            po_obj.delivery_date = related_doc_pages[0].fields.DELIVERY_DATE.orig;
+                                                            po_obj.badge.delivery_date = true;
+                                                        }
+                                                        if (related_doc_pages[0].fields.DELIVERY_DATE.epoch != null) {
+                                                            po_obj.delivery_date_epoch = related_doc_pages[0].fields.DELIVERY_DATE.epoch;
+                                                            po_obj.badge.delivery_date_epoch = true;
+                                                        }
                                                     }
                                                     if (related_doc_pages[0].fields.DELIVERY_ADDRESS != null) {
                                                         po_obj.delivery_address = related_doc_pages[0].fields.DELIVERY_ADDRESS;
                                                         po_obj.badge.delivery_address = true;
                                                     }
                                                     if (related_doc_pages[0].fields.DUE_DATE != null) {
-                                                        po_obj.due_date = related_doc_pages[0].fields.DUE_DATE;
-                                                        po_obj.badge.due_date = true;
+                                                        if (related_doc_pages[0].fields.DUE_DATE.orig != null) {
+                                                            po_obj.due_date = related_doc_pages[0].fields.DUE_DATE.orig;
+                                                            po_obj.badge.due_date = true;
+                                                        }
+                                                        if (related_doc_pages[0].fields.DUE_DATE.epoch != null) {
+                                                            po_obj.due_date_epoch = related_doc_pages[0].fields.DUE_DATE.epoch;
+                                                            po_obj.badge.due_date_epoch = true;
+                                                        }
                                                     }
                                                     if (related_doc_pages[0].fields.QUOTE_NUMBER != null) {
                                                         po_obj.quote_number = related_doc_pages[0].fields.QUOTE_NUMBER;
@@ -768,6 +832,7 @@ module.exports.importProcessData = async function (req, res) {
                                                     document_id: relatedDocuments[i].document_id,
                                                     document_type: relatedDocuments[i].document_type,
                                                     date: "",
+                                                    date_epoch: 0,
                                                     quote_number: "",
                                                     customer_id: "",
                                                     terms: "",
@@ -788,8 +853,14 @@ module.exports.importProcessData = async function (req, res) {
                                                 }
                                                 if (quote_obj.vendor != '') {
                                                     if (related_doc_pages[0].fields.QUOTE_DATE != null) {
-                                                        quote_obj.date = related_doc_pages[0].fields.QUOTE_DATE;
-                                                        quote_obj.badge.date = true;
+                                                        if (related_doc_pages[0].fields.QUOTE_DATE.orig != null) {
+                                                            quote_obj.date = related_doc_pages[0].fields.QUOTE_DATE.orig;
+                                                            quote_obj.badge.date = true;
+                                                        }
+                                                        if (related_doc_pages[0].fields.QUOTE_DATE.epoch != null) {
+                                                            quote_obj.date_epoch = related_doc_pages[0].fields.QUOTE_DATE.epoch;
+                                                            quote_obj.badge.date_epoch = true;
+                                                        }
                                                     }
                                                     if (related_doc_pages[0].fields.QUOTE_NUMBER != null) {
                                                         quote_obj.quote_number = related_doc_pages[0].fields.QUOTE_NUMBER;
@@ -878,6 +949,7 @@ module.exports.importProcessData = async function (req, res) {
                                         document_id: get_data.data[key][j].document_id,
                                         document_type: get_data.data[key][j].document_type,
                                         date: "",
+                                        date_epoch: 0,
                                         invoice_number: "",
                                         po_number: "",
                                         ship_to_address: "",
@@ -907,8 +979,14 @@ module.exports.importProcessData = async function (req, res) {
                                         }
                                     }
                                     if (pages[0].fields.DATE != null) {
-                                        packing_slip_obj.date = pages[0].fields.DATE;
-                                        packing_slip_obj.badge.date = true;
+                                        if (pages[0].fields.DATE.orig != null) {
+                                            packing_slip_obj.date = pages[0].fields.DATE.orig;
+                                            packing_slip_obj.badge.date = true;
+                                        }
+                                        if (pages[0].fields.DATE.epoch != null) {
+                                            packing_slip_obj.date_epoch = pages[0].fields.DATE.epoch;
+                                            packing_slip_obj.badge.date_epoch = true;
+                                        }
                                     }
                                     packing_slip_obj.invoice_number = invoice_no;
                                     if (pages[0].fields.PO_NUMBER != null) {
@@ -952,6 +1030,7 @@ module.exports.importProcessData = async function (req, res) {
                                         document_id: get_data.data[key][j].document_id,
                                         document_type: get_data.data[key][j].document_type,
                                         date: "",
+                                        date_epoch: 0,
                                         invoice_number: "",
                                         po_number: "",
                                         ship_to_address: "",
@@ -981,8 +1060,14 @@ module.exports.importProcessData = async function (req, res) {
                                         }
                                     }
                                     if (pages[0].fields.DATE != null) {
-                                        receiving_slip_obj.date = pages[0].fields.DATE;
-                                        receiving_slip_obj.badge.date = true;
+                                        if (pages[0].fields.DATE.orig != null) {
+                                            receiving_slip_obj.date = pages[0].fields.DATE.orig;
+                                            receiving_slip_obj.badge.date = true;
+                                        }
+                                        if (pages[0].fields.DATE.epoch != null) {
+                                            receiving_slip_obj.date_epoch = pages[0].fields.DATE.epoch;
+                                            receiving_slip_obj.badge.date_epoch = true;
+                                        }
                                     }
                                     receiving_slip_obj.invoice_number = invoice_no;
                                     if (pages[0].fields.PO_NUMBER != null) {
@@ -1017,7 +1102,6 @@ module.exports.importProcessData = async function (req, res) {
 
                                 // Check document id is available or not
                                 let get_related_doc = await invoiceProcessCollection.findOne({ _id: ObjectID(get_data.data[key][j].document_id) });
-                                console.log("get_related_doc", get_related_doc);
                                 // If document is there then process data
                                 if (get_related_doc) {
                                     // Make packing slip Object
@@ -1026,12 +1110,15 @@ module.exports.importProcessData = async function (req, res) {
                                         document_id: get_data.data[key][j].document_id,
                                         document_type: get_data.data[key][j].document_type,
                                         date: "",
+                                        date_epoch: 0,
                                         po_number: "",
                                         customer_id: "",
                                         terms: "",
                                         delivery_date: "",
+                                        delivery_date_epoch: 0,
                                         delivery_address: "",
                                         due_date: "",
+                                        due_date_epoch: 0,
                                         quote_number: "",
                                         contract_number: "",
                                         vendor_id: "",
@@ -1059,8 +1146,14 @@ module.exports.importProcessData = async function (req, res) {
                                         }
                                     }
                                     if (pages[0].fields.PO_CREATE_DATE != null) {
-                                        po_obj.date = pages[0].fields.PO_CREATE_DATE;
-                                        po_obj.badge.date = true;
+                                        if (pages[0].fields.PO_CREATE_DATE.orig != null) {
+                                            po_obj.date = pages[0].fields.PO_CREATE_DATE.orig;
+                                            po_obj.badge.date = true;
+                                        }
+                                        if (pages[0].fields.PO_CREATE_DATE.epoch != null) {
+                                            po_obj.date_epoch = pages[0].fields.PO_CREATE_DATE.epoch;
+                                            po_obj.badge.date_epoch = true;
+                                        }
                                     }
                                     if (pages[0].fields.PO_NUMBER != null) {
                                         po_obj.po_number = pages[0].fields.PO_NUMBER;
@@ -1075,16 +1168,28 @@ module.exports.importProcessData = async function (req, res) {
                                         po_obj.badge.terms = true;
                                     }
                                     if (pages[0].fields.DELIVERY_DATE != null) {
-                                        po_obj.delivery_date = pages[0].fields.DELIVERY_DATE;
-                                        po_obj.badge.delivery_date = true;
+                                        if (pages[0].fields.DELIVERY_DATE.orig != null) {
+                                            po_obj.delivery_date = pages[0].fields.DELIVERY_DATE.orig;
+                                            po_obj.badge.delivery_date = true;
+                                        }
+                                        if (pages[0].fields.DELIVERY_DATE.epoch != null) {
+                                            po_obj.delivery_date_epoch = pages[0].fields.DELIVERY_DATE.epoch;
+                                            po_obj.badge.delivery_date_epoch = true;
+                                        }
                                     }
                                     if (pages[0].fields.DELIVERY_ADDRESS != null) {
                                         po_obj.delivery_address = pages[0].fields.DELIVERY_ADDRESS;
                                         po_obj.badge.delivery_address = true;
                                     }
                                     if (pages[0].fields.DUE_DATE != null) {
-                                        po_obj.due_date = pages[0].fields.DUE_DATE;
-                                        po_obj.badge.due_date = true;
+                                        if (pages[0].fields.DUE_DATE.orig != null) {
+                                            po_obj.due_date = pages[0].fields.DUE_DATE.orig;
+                                            po_obj.badge.due_date = true;
+                                        }
+                                        if (pages[0].fields.DUE_DATE.epoch != null) {
+                                            po_obj.due_date_epoch = pages[0].fields.DUE_DATE.epoch;
+                                            po_obj.badge.due_date_epoch = true;
+                                        }
                                     }
                                     if (pages[0].fields.QUOTE_NUMBER != null) {
                                         po_obj.quote_number = pages[0].fields.QUOTE_NUMBER;
@@ -1170,6 +1275,7 @@ module.exports.importProcessData = async function (req, res) {
                                         document_id: get_data.data[key][j].document_id,
                                         document_type: get_data.data[key][j].document_type,
                                         date: "",
+                                        date_epoch: 0,
                                         quote_number: "",
                                         customer_id: "",
                                         terms: "",
@@ -1201,8 +1307,14 @@ module.exports.importProcessData = async function (req, res) {
                                     }
 
                                     if (pages[0].fields.QUOTE_DATE != null) {
-                                        quote_obj.date = pages[0].fields.QUOTE_DATE;
-                                        quote_obj.badge.date = true;
+                                        if (pages[0].fields.QUOTE_DATE.orig != null) {
+                                            quote_obj.date = pages[0].fields.QUOTE_DATE.orig;
+                                            quote_obj.badge.date = true;
+                                        }
+                                        if (pages[0].fields.QUOTE_DATE.epoch != null) {
+                                            quote_obj.date_epoch = pages[0].fields.QUOTE_DATE.epoch;
+                                            quote_obj.badge.date_epoch = true;
+                                        }
                                     }
                                     if (pages[0].fields.QUOTE_NUMBER != null) {
                                         quote_obj.quote_number = pages[0].fields.QUOTE_NUMBER;

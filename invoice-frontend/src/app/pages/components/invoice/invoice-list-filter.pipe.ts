@@ -23,9 +23,7 @@ export class InvoiceListFilterPipe implements PipeTransform {
     name: 'invoiceListFilterStatus'
 })
 export class InvoiceListFilterStatus implements PipeTransform {
-
     transform(items: any[], searchTerm: string[]): any {
-        console.log("searchTerm", searchTerm);
         if (searchTerm) {
             var found = searchTerm.includes('All');
             if (found) {
@@ -38,8 +36,6 @@ export class InvoiceListFilterStatus implements PipeTransform {
                 if (JSON.stringify(searchTerm) === JSON.stringify(allArray)) {
                     return items;
                 }
-                console.log("er4eredfhre", items.filter(item => searchTerm.includes(item.status)));
-
                 return items.filter(item => searchTerm.includes(item.status));
             }
         } else {
@@ -48,3 +44,16 @@ export class InvoiceListFilterStatus implements PipeTransform {
     }
 }
 
+@Pipe({
+    name: 'checkDateRange'
+})
+export class CheckDateRangePipe implements PipeTransform {
+    transform(items: any[], dateRange: any): any {
+        if (dateRange.length == 2) {
+            return items.filter(item => {
+                return dateRange[0] <= item.due_date_epoch && item.due_date_epoch <= dateRange[1];
+            });
+        }
+        return items;
+    }
+}

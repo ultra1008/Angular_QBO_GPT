@@ -8,7 +8,7 @@ import { UiSpinnerService } from 'src/app/service/spinner.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModeDetectService } from '../../map/mode-detect.service';
 import { Observable, Subscription } from 'rxjs';
-import { commonFileChangeEvent } from 'src/app/service/utils';
+import { commonFileChangeEvent, epochToDateTime } from 'src/app/service/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
@@ -99,39 +99,12 @@ export class ReceivingSlipFormComponent implements OnInit {
       this.Email_Template_Form_Submitting = this.translate.instant('Email_Template_Form_Submitting');
     });
     this.invoiceform = this.formBuilder.group({
-
       document_type: [""],
       invoice_number: [""],
       po_number: [""],
       received_by: [""],
       ship_to_address: [""],
-      date: [""],
-
-
-
-      // invoice_name: [""],
-      // vendor_name: [""],
-      // customer_id: [""],
-
-      // invoice_date: [""],
-      // due_date: [""],
-      // order_date: [""],
-      // ship_date: [""],
-      // packing_slip: [""],
-      // receiving_slip: [""],
-      // status: [""],
-      // terms: [""],
-      // total: [""],
-
-
-      // tax_amount: [""],
-      // tax_id: [""],
-      // sub_total: [""],
-      // amount_due: [""],
-      // cost_code: [""],
-      // gl_account: [""],
-      // assign_to: [""],
-      // notes: [""],
+      date_epoch: [""],
     });
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
@@ -277,59 +250,33 @@ export class ReceivingSlipFormComponent implements OnInit {
     });
   }
 
-
   getOneInvoice() {
     let that = this;
     this.httpCall.httpPostCall(httproutes.INVOICE_GET_ONE_INVOICE, { _id: that.id }).subscribe(function (params) {
       if (params.status) {
-
         that.invoiceData = params.data;
         that.pdf_url = that.invoiceData.receiving_slip_data.pdf_url;
         that.badge = that.invoiceData.receiving_slip_data.badge;
         that.vendor.setValue(params.data.vendor);
         that.loadInvoice = true;
-
+        var date;
+        if (params.data.receiving_slip_data.date_epoch != 0) {
+          date = epochToDateTime(params.data.receiving_slip_data.date_epoch);
+        }
         that.invoiceform = that.formBuilder.group({
-
           document_type: [params.data.receiving_slip_data.document_type],
           vendor: [params.data.vendor._id],
           invoice_number: [params.data.receiving_slip_data.invoice_number],
           po_number: [params.data.receiving_slip_data.po_number],
-          date: [params.data.receiving_slip_data.date],
+          date_epoch: [date],
           ship_to_address: [params.data.receiving_slip_data.ship_to_address],
           received_by: [params.data.receiving_slip_data.received_by],
-
-
-          // invoice_name: [params.data.invoice_name],
-          // vendor_name: [params.data.vendor_name],
-
-          // customer_id: [params.data.customer_id],
-
-          // invoice_date: [params.data.invoice_date],
-          // due_date: [params.data.due_date],
-          // order_date: [params.data.order_date],
-          // ship_date: [params.data.ship_date],
-
-          // packing_slip: [params.data.packing_slip],
-          // receiving_slip: [params.data.receiving_slip],
-          // status: [params.data.status],
-          // terms: [params.data.terms],
-          // total: [params.data.total],
-
-          // tax_amount: [params.data.tax_amount],
-          // tax_id: [params.data.tax_id],
-          // sub_total: [params.data.sub_total],
-          // amount_due: [params.data.amount_due],
-          // cost_code: [params.data.cost_code],
-          // gl_account: [params.data.gl_account],
-          // assign_to: [params.data.assign_to],
-          // notes: [params.data.notes],
-          // pdf_url: [params.data.packing_slip_data.pdf_url]
         });
       }
       that.uiSpinner.spin$.next(false);
     });
   }
+
   getOneProcessDocument() {
     let that = this;
     this.httpCall.httpPostCall(httproutes.INVOICE_DOCUMENT_PROCESS_GET, { _id: that.document_id }).subscribe(function (params) {
@@ -367,41 +314,18 @@ export class ReceivingSlipFormComponent implements OnInit {
         if (that.invoiceData.vendor) {
           vendorId = that.invoiceData.vendor._id;
         }
+        var date;
+        if (that.invoiceData.date_epoch != 0) {
+          date = epochToDateTime(that.invoiceData.date_epoch);
+        }
         that.invoiceform = that.formBuilder.group({
           document_type: [that.invoiceData.document_type],
           vendor: [vendorId],
           invoice_number: [that.invoiceData.invoice_number],
           po_number: [that.invoiceData.po_number],
-          date: [that.invoiceData.date],
+          date_epoch: [date],
           ship_to_address: [that.invoiceData.ship_to_address],
           received_by: [that.invoiceData.received_by],
-
-
-          // invoice_name: [params.data.invoice_name],
-          // vendor_name: [params.data.vendor_name],
-
-          // customer_id: [params.data.customer_id],
-
-          // invoice_date: [params.data.invoice_date],
-          // due_date: [params.data.due_date],
-          // order_date: [params.data.order_date],
-          // ship_date: [params.data.ship_date],
-
-          // packing_slip: [params.data.packing_slip],
-          // receiving_slip: [params.data.receiving_slip],
-          // status: [params.data.status],
-          // terms: [params.data.terms],
-          // total: [params.data.total],
-
-          // tax_amount: [params.data.tax_amount],
-          // tax_id: [params.data.tax_id],
-          // sub_total: [params.data.sub_total],
-          // amount_due: [params.data.amount_due],
-          // cost_code: [params.data.cost_code],
-          // gl_account: [params.data.gl_account],
-          // assign_to: [params.data.assign_to],
-          // notes: [params.data.notes],
-          // pdf_url: [params.data.packing_slip_data.pdf_url]
         });
       }
       that.uiSpinner.spin$.next(false);
@@ -419,12 +343,16 @@ export class ReceivingSlipFormComponent implements OnInit {
   saveInvoice() {
     let that = this;
     if (that.invoiceform.valid) {
-
       let formVal = that.invoiceform.value;
+      if (formVal.date_epoch == null) {
+        formVal.date_epoch = 0;
+      } else {
+        formVal.date_epoch = Math.round(formVal.date_epoch.valueOf() / 1000);
+      }
       let requestObject = {
         _id: that.id,
         module: 'Receiving Slip',
-        'receiving_slip_data.date': formVal.date,
+        'receiving_slip_data.date_epoch': formVal.date_epoch,
         'receiving_slip_data.invoice_number': formVal.invoice_number,
         'receiving_slip_data.po_number': formVal.po_number,
         'receiving_slip_data.vendor': formVal.vendor,
@@ -432,7 +360,6 @@ export class ReceivingSlipFormComponent implements OnInit {
         'receiving_slip_data.ship_to_address': formVal.ship_to_address,
         'receiving_slip_data.document_type': formVal.document_type,
       };
-
       that.uiSpinner.spin$.next(true);
       that.httpCall.httpPostCall(httproutes.PORTAL_UPDATE_Receiving_Slip, requestObject).subscribe(function (params) {
         if (params.status) {
@@ -448,12 +375,16 @@ export class ReceivingSlipFormComponent implements OnInit {
   saveProcessDocument() {
     let that = this;
     if (that.invoiceform.valid) {
-
       let formVal = that.invoiceform.value;
+      if (formVal.date_epoch == null) {
+        formVal.date_epoch = 0;
+      } else {
+        formVal.date_epoch = Math.round(formVal.date_epoch.valueOf() / 1000);
+      }
       let requestObject = {
         _id: that.document_id,
         module: 'Receiving Slip',
-        'data.date': formVal.date,
+        'data.date_epoch': formVal.date_epoch,
         'data.invoice_number': formVal.invoice_number,
         'data.po_number': formVal.po_number,
         'data.vendor': formVal.vendor,
@@ -461,7 +392,6 @@ export class ReceivingSlipFormComponent implements OnInit {
         'data.ship_to_address': formVal.ship_to_address,
         'data.document_type': formVal.document_type,
       };
-
       that.uiSpinner.spin$.next(true);
       that.httpCall.httpPostCall(httproutes.INVOICE_DOCUMENT_PROCESS_SAVE, requestObject).subscribe(function (params) {
         if (params.status) {

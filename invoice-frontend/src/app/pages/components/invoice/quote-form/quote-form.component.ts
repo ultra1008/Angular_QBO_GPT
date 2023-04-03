@@ -8,7 +8,7 @@ import { UiSpinnerService } from 'src/app/service/spinner.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModeDetectService } from '../../map/mode-detect.service';
 import { Observable, Subscription } from 'rxjs';
-import { commonFileChangeEvent } from 'src/app/service/utils';
+import { commonFileChangeEvent, epochToDateTime } from 'src/app/service/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
@@ -103,31 +103,13 @@ export class QuoteFormComponent implements OnInit {
       quote_number: [""],
       vendor: [""],
       sub_total: [""],
-      date: [""],
+      date_epoch: [""],
       terms: [""],
       address: [""],
       shipping_method: [""],
       tax: [""],
       receiver_phone: [""],
       quote_total: [""],
-      //     invoice_name: [""],
-      //     invoice: [""],
-      //     p_o: [""],
-      //     invoice_date: [""],
-      //     due_date: [""],
-      //     order_date: [""],
-      //     ship_date: [""],
-      //     packing_slip: [""],
-      //     receiving_slip: [""],
-      //     status: [""],
-      //     total: [""],
-      //  tax_amount: [""],
-      //     tax_id: [""],
-      //     amount_due: [""],
-      //     cost_code: [""],
-      //     gl_account: [""],
-      //     assign_to: [""],
-      //     notes: [""],
     });
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
@@ -256,16 +238,14 @@ export class QuoteFormComponent implements OnInit {
     /*--- Remove the link when done ---*/
     document.body.removeChild(a);
   }
+
   getAllCostCode() {
     let that = this;
     that.httpCall.httpPostCall(httproutes.PROJECT_SETTING_COST_CODE, { module: 'Invoice' }
     ).subscribe(function (params) {
-
       if (params.status) {
-        // that.db_costcodes = params.data;
         that.variablesdb_costcodes = params.data;
         that.db_costcodes = that.variablesdb_costcodes.slice();
-
       }
     });
   }
@@ -279,40 +259,22 @@ export class QuoteFormComponent implements OnInit {
         that.badge = that.invoiceData.quote_data.badge;
         that.vendor.setValue(params.data.vendor);
         that.loadInvoice = true;
-
+        var date;
+        if (params.data.quote_data.date_epoch != 0) {
+          date = epochToDateTime(params.data.quote_data.date_epoch);
+        }
         that.invoiceform = that.formBuilder.group({
-
           terms: [params.data.quote_data.terms],
           sub_total: [params.data.quote_data.sub_total],
           vendor: [params.data.vendor._id],
           document_type: [params.data.quote_data.document_type],
           tax: [params.data.quote_data.tax],
-          date: [params.data.quote_data.date],
+          date_epoch: [date],
           quote_number: [params.data.quote_data.quote_number],
           address: [params.data.quote_data.address],
           shipping_method: [params.data.quote_data.shipping_method],
           receiver_phone: [params.data.quote_data.receiver_phone],
           quote_total: [params.data.quote_data.quote_total],
-
-          // invoice_name: [params.data.invoice_name],
-          // vendor_name: [params.data.vendor_name],
-          // customer_id: [params.data.customer_id],
-          // invoice: [params.data.invoice],
-          // p_o: [params.data.p_o],
-          // invoice_date: [params.data.invoice_date],
-          // order_date: [params.data.order_date],
-          // ship_date: [params.data.ship_date],
-          // packing_slip: [params.data.packing_slip],
-          // receiving_slip: [params.data.receiving_slip],
-          // status: [params.data.status],
-          // total: [params.data.total],
-          // tax_id: [params.data.tax_id],
-          // amount_due: [params.data.amount_due],
-          // cost_code: [params.data.cost_code],
-          // gl_account: [params.data.gl_account],
-          // assign_to: [params.data.assign_to],
-          // notes: [params.data.notes],
-          // pdf_url: [params.data.quote_data.pdf_url]
         });
       }
       that.uiSpinner.spin$.next(false);
@@ -353,40 +315,22 @@ export class QuoteFormComponent implements OnInit {
           vendorId = that.invoiceData.vendor._id;
         }
         that.loadInvoice = true;
-
+        var date;
+        if (that.invoiceData.date_epoch != 0) {
+          date = epochToDateTime(that.invoiceData.date_epoch);
+        }
         that.invoiceform = that.formBuilder.group({
-
           terms: [that.invoiceData.terms],
           sub_total: [that.invoiceData.sub_total],
           vendor: [that.invoiceData.vendor],
           document_type: [that.invoiceData.document_type],
           tax: [that.invoiceData.tax],
-          date: [that.invoiceData.date],
+          date_epoch: [date],
           quote_number: [that.invoiceData.quote_number],
           address: [that.invoiceData.address],
           shipping_method: [that.invoiceData.shipping_method],
           receiver_phone: [that.invoiceData.receiver_phone],
           quote_total: [that.invoiceData.quote_total],
-
-          // invoice_name: [params.data.invoice_name],
-          // vendor_name: [params.data.vendor_name],
-          // customer_id: [params.data.customer_id],
-          // invoice: [params.data.invoice],
-          // p_o: [params.data.p_o],
-          // invoice_date: [params.data.invoice_date],
-          // order_date: [params.data.order_date],
-          // ship_date: [params.data.ship_date],
-          // packing_slip: [params.data.packing_slip],
-          // receiving_slip: [params.data.receiving_slip],
-          // status: [params.data.status],
-          // total: [params.data.total],
-          // tax_id: [params.data.tax_id],
-          // amount_due: [params.data.amount_due],
-          // cost_code: [params.data.cost_code],
-          // gl_account: [params.data.gl_account],
-          // assign_to: [params.data.assign_to],
-          // notes: [params.data.notes],
-          // pdf_url: [params.data.quote_data.pdf_url]
         });
       }
       that.uiSpinner.spin$.next(false);
@@ -403,11 +347,16 @@ export class QuoteFormComponent implements OnInit {
   saveInvoice() {
     let that = this;
     if (that.invoiceform.valid) {
-
       let formVal = that.invoiceform.value;
+      if (formVal.date_epoch == null) {
+        formVal.date_epoch = 0;
+      } else {
+        formVal.date_epoch = Math.round(formVal.date_epoch.valueOf() / 1000);
+      }
       let requestObject = {
         _id: that.id,
         module: 'Quote',
+        'quote_data.date_epoch': formVal.date_epoch,
         'quote_data.document_type': formVal.document_type,
         'quote_data.quote_number': formVal.quote_number,
         'quote_data.sub_total': formVal.sub_total,
@@ -435,11 +384,16 @@ export class QuoteFormComponent implements OnInit {
   saveProcessDocument() {
     let that = this;
     if (that.invoiceform.valid) {
-
       let formVal = that.invoiceform.value;
+      if (formVal.date_epoch == null) {
+        formVal.date_epoch = 0;
+      } else {
+        formVal.date_epoch = Math.round(formVal.date_epoch.valueOf() / 1000);
+      }
       let requestObject = {
         _id: that.document_id,
         module: 'Quote',
+        'data.date_epoch': formVal.date_epoch,
         'data.document_type': formVal.document_type,
         'data.quote_number': formVal.quote_number,
         'data.sub_total': formVal.sub_total,

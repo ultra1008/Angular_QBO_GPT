@@ -13,7 +13,7 @@ import { HttpCall } from 'src/app/service/httpcall.service';
 import { Mostusedservice } from 'src/app/service/mostused.service';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
-import { commonFileChangeEvent, formatPhoneNumber, gallery_options, LanguageApp } from 'src/app/service/utils';
+import { commonFileChangeEvent, formatPhoneNumber, gallery_options, LanguageApp, timeDateToepoch } from 'src/app/service/utils';
 import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
 import { ModeDetectService } from '../map/mode-detect.service';
@@ -92,6 +92,11 @@ export class InvoiceComponent implements OnInit {
   Company_Equipment_File_Not_Match: any;
   showInvoiceTable = true;
   dtOptions: DataTables.Settings = {};
+  range = new FormGroup({
+    start_date: new FormControl(),
+    end_date: new FormControl()
+  });
+  dateRange: any = [];
 
   constructor (private router: Router, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
     public translate: TranslateService, public dialog: MatDialog,
@@ -206,6 +211,10 @@ export class InvoiceComponent implements OnInit {
     };
 
     this.getAllInvoices();
+  }
+
+  dateRangeChange(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
+    this.dateRange = [timeDateToepoch(dateRangeStart.value), timeDateToepoch(dateRangeEnd.value)];
   }
 
   rerenderfunc() {

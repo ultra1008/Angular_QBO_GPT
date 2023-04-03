@@ -8,7 +8,7 @@ import { UiSpinnerService } from 'src/app/service/spinner.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModeDetectService } from '../../map/mode-detect.service';
 import { Observable, Subscription } from 'rxjs';
-import { commonFileChangeEvent, MMDDYYYY_formet } from 'src/app/service/utils';
+import { commonFileChangeEvent, epochToDateTime, MMDDYYYY_formet } from 'src/app/service/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
@@ -91,7 +91,6 @@ export class InvoiceFormComponent implements OnInit {
   document_id: any;
   invoiceStatus: any;
 
-
   constructor (public dialog: MatDialog, public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
@@ -116,8 +115,6 @@ export class InvoiceFormComponent implements OnInit {
       this.noButton = this.translate.instant("Compnay_Equipment_Delete_No");
       this.Approve_Invoice_massage = this.translate.instant("Approve_Invoice_massage");
       this.Reject_Invoice_massage = this.translate.instant("Reject_Invoice_massage");
-
-
     });
     this.invoiceform = this.formBuilder.group({
       document_type: [""],
@@ -128,10 +125,10 @@ export class InvoiceFormComponent implements OnInit {
       invoice: [""],
       p_o: [""],
       job_number: [""],
-      invoice_date: [""],
-      due_date: [""],
-      order_date: [""],
-      ship_date: [""],
+      invoice_date_epoch: [""],
+      due_date_epoch: [""],
+      order_date_epoch: [""],
+      ship_date_epoch: [""],
       packing_slip: [""],
       receiving_slip: [""],
       status: [""],
@@ -158,9 +155,7 @@ export class InvoiceFormComponent implements OnInit {
       this.approveIcon = icon.APPROVE_WHITE;
       this.denyIcon = icon.DENY_WHITE;
       this.historyIcon = icon.HISTORY;
-
     } else {
-
       this.backIcon = icon.BACK_WHITE;
       this.exitIcon = icon.CANCLE_WHITE;
       this.downloadIcon = icon.DOWNLOAD_WHITE;
@@ -179,8 +174,6 @@ export class InvoiceFormComponent implements OnInit {
         this.approveIcon = icon.APPROVE_WHITE;
         this.denyIcon = icon.DENY_WHITE;
         this.historyIcon = icon.HISTORY;
-
-
       } else {
         this.mode = 'on';
         this.backIcon = icon.BACK_WHITE;
@@ -190,12 +183,10 @@ export class InvoiceFormComponent implements OnInit {
         this.approveIcon = icon.APPROVE_WHITE;
         this.denyIcon = icon.DENY_WHITE;
         this.historyIcon = icon.HISTORY_WHITE;
-
-
       }
     });
-
   }
+
   back() {
     if (this.id) {
       if (this.invoiceStatus) {
@@ -211,13 +202,11 @@ export class InvoiceFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     let that = this;
     this.filteredVendors = this.vendor.valueChanges.pipe(
       startWith(''),
       map(value => this._filterVendor(value || '')),
     );
-
     this.employeeservice.getalluser().subscribe(function (data) {
       // that.uiSpinner.spin$.next(false);
       if (data.status) {
@@ -227,20 +216,18 @@ export class InvoiceFormComponent implements OnInit {
         that.usersArray = that.variablesusersArray.slice();
         that.isManagement = data.is_management;
       }
-
     });
     that.getAllCostCode();
     this.getAllVendorList();
   }
-
 
   private _filterVendor(value: any): any[] {
     return this.vendorList.filter(one_vendor => {
       let vendor_name = value.vendor_name ? value.vendor_name : value;
       return one_vendor.vendor_name.toLowerCase().indexOf(vendor_name.toLowerCase()) > -1;
     });
-
   }
+
   getIdFromVendor(event, Option) {
     this.invoiceform.get('vendor').setValue(Option._id);
   }
@@ -275,16 +262,15 @@ export class InvoiceFormComponent implements OnInit {
     /*--- Remove the link when done ---*/
     document.body.removeChild(a);
   }
+
   getAllCostCode() {
     let that = this;
     that.httpCall.httpPostCall(httproutes.PROJECT_SETTING_COST_CODE, { module: 'Invoice' }
     ).subscribe(function (params) {
-
       if (params.status) {
         // that.db_costcodes = params.data;
         that.variablesdb_costcodes = params.data;
         that.db_costcodes = that.variablesdb_costcodes.slice();
-
       }
     });
   }
@@ -337,86 +323,16 @@ export class InvoiceFormComponent implements OnInit {
           });
         }
       });
-    /* if (requestObject.status == 'Approved') {
-  
-      swalWithBootstrapButtons
-        .fire({
-  
-          title: that.Approve_Invoice_massage,
-          showDenyButton: true,
-          showCancelButton: false,
-          confirmButtonText: that.yesButton,
-          denyButtonText: that.noButton,
-        })
-        .then((result) => {
-          if (result.isConfirmed) {
-            that.uiSpinner.spin$.next(true);
-            that.httpCall.httpPostCall(httproutes.INVOICE_UPDATE_INVOICE_STATUS, requestObject).subscribe(params => {
-              if (params.status) {
-                that.snackbarservice.openSnackBar(params.message, "success");
-                that.uiSpinner.spin$.next(false);
-                // that.rerenderfunc();
-                // that.invoiceUpdateCard.emit();
-              } else {
-                that.snackbarservice.openSnackBar(params.message, "error");
-                that.uiSpinner.spin$.next(false);
-              }
-            });
-          }
-        });
-  
-    } else {
-      swalWithBootstrapButtons
-        .fire({
-  
-          title: that.Reject_Invoice_massage,
-          showDenyButton: true,
-          showCancelButton: false,
-          confirmButtonText: that.yesButton,
-          denyButtonText: that.noButton,
-        }).then((result) => {
-          if (result.isConfirmed) {
-            that.uiSpinner.spin$.next(true);
-            that.httpCall.httpPostCall(httproutes.INVOICE_UPDATE_INVOICE_STATUS, requestObject).subscribe(params => {
-              if (params.status) {
-                that.snackbarservice.openSnackBar(params.message, "success");
-                that.uiSpinner.spin$.next(false);
-                // that.rerenderfunc();
-                // that.invoiceUpdateCard.emit();
-              } else {
-                that.snackbarservice.openSnackBar(params.message, "error");
-                that.uiSpinner.spin$.next(false);
-              }
-            });
-          }
-        });
-  
-  
-    } */
-
-    // that.uiSpinner.spin$.next(true);
-    // that.httpCall.httpPostCall(httproutes.INVOICE_UPDATE_INVOICE_STATUS, requestObject).subscribe(params => {
-    //   if (params.status) {
-    //     that.snackbarservice.openSnackBar(params.message, "success");
-    //     that.uiSpinner.spin$.next(false);
-    //     // that.rerenderfunc();
-    //     // that.invoiceUpdateCard.emit();
-    //   } else {
-    //     that.snackbarservice.openSnackBar(params.message, "error");
-    //     that.uiSpinner.spin$.next(false);
-    //   }
-    // });
   }
+
   viewInvoice(_id) {
     this.router.navigate(['/invoice-detail'], { queryParams: { _id: _id } });
   }
+
   async getAllVendorList() {
     let data = await this.httpCall.httpGetCall(httproutes.PORTAL_COMPANY_VENDOR_GET_BY_ID).toPromise();
     if (data.status) {
       this.vendorList = data.data;
-
-
-
     }
   }
 
@@ -433,6 +349,22 @@ export class InvoiceFormComponent implements OnInit {
         that.pdf_url = that.invoiceData.pdf_url;
         that.badge = that.invoiceData.badge;
         that.vendor.setValue(params.data.vendor);
+        var invoiceDate;
+        if (params.data.invoice_date_epoch != 0) {
+          invoiceDate = epochToDateTime(params.data.invoice_date_epoch);
+        }
+        var dueDate;
+        if (params.data.due_date_epoch != 0) {
+          dueDate = epochToDateTime(params.data.due_date_epoch);
+        }
+        var orderDate;
+        if (params.data.order_date_epoch != 0) {
+          orderDate = epochToDateTime(params.data.order_date_epoch);
+        }
+        var shipDate;
+        if (params.data.ship_date_epoch != 0) {
+          shipDate = epochToDateTime(params.data.ship_date_epoch);
+        }
         that.invoiceform = that.formBuilder.group({
           document_type: [params.data.document_type],
           invoice_name: [params.data.invoice_name],
@@ -442,10 +374,10 @@ export class InvoiceFormComponent implements OnInit {
           invoice: [params.data.invoice],
           p_o: [params.data.p_o],
           job_number: [params.data.job_number],
-          invoice_date: [params.data.invoice_date],
-          due_date: [params.data.due_date],
-          order_date: [params.data.order_date],
-          ship_date: [params.data.ship_date],
+          invoice_date_epoch: [invoiceDate],
+          due_date_epoch: [dueDate],
+          order_date_epoch: [orderDate],
+          ship_date_epoch: [shipDate],
           packing_slip: [params.data.packing_slip],
           receiving_slip: [params.data.receiving_slip],
           status: [params.data.status],
@@ -501,6 +433,22 @@ export class InvoiceFormComponent implements OnInit {
           vendorId = that.invoiceData.vendor._id;
         }
         that.loadInvoice = true;
+        var invoiceDate;
+        if (that.invoiceData.invoice_date_epoch != 0) {
+          invoiceDate = epochToDateTime(that.invoiceData.invoice_date_epoch);
+        }
+        var dueDate;
+        if (that.invoiceData.due_date_epoch != 0) {
+          dueDate = epochToDateTime(that.invoiceData.due_date_epoch);
+        }
+        var orderDate;
+        if (that.invoiceData.order_date_epoch != 0) {
+          orderDate = epochToDateTime(that.invoiceData.order_date_epoch);
+        }
+        var shipDate;
+        if (that.invoiceData.ship_date_epoch != 0) {
+          shipDate = epochToDateTime(that.invoiceData.ship_date_epoch);
+        }
         that.invoiceform = that.formBuilder.group({
           document_type: [params.data.document_type],
           invoice_name: [that.invoiceData.invoice_name],
@@ -510,10 +458,10 @@ export class InvoiceFormComponent implements OnInit {
           invoice: [that.invoiceData.invoice],
           p_o: [that.invoiceData.p_o],
           job_number: [that.invoiceData.job_number],
-          invoice_date: [that.invoiceData.invoice_date],
-          due_date: [that.invoiceData.due_date],
-          order_date: [that.invoiceData.order_date],
-          ship_date: [that.invoiceData.ship_date],
+          invoice_date_epoch: [invoiceDate],
+          due_date_epoch: [dueDate],
+          order_date_epoch: [orderDate],
+          ship_date_epoch: [shipDate],
           packing_slip: [that.invoiceData.packing_slip],
           receiving_slip: [that.invoiceData.receiving_slip],
           status: [that.invoiceData.status ?? 'Pending'],
@@ -529,7 +477,6 @@ export class InvoiceFormComponent implements OnInit {
           notes: [that.invoiceData.notes],
           pdf_url: [that.invoiceData.pdf_url],
         });
-
       }
       that.uiSpinner.spin$.next(false);
     });
@@ -544,9 +491,28 @@ export class InvoiceFormComponent implements OnInit {
   }
   saveInvoice() {
     let that = this;
-
     if (that.invoiceform.valid) {
       let requestObject = that.invoiceform.value;
+      if (requestObject.invoice_date_epoch == null) {
+        requestObject.invoice_date_epoch = 0;
+      } else {
+        requestObject.invoice_date_epoch = Math.round(requestObject.invoice_date_epoch.valueOf() / 1000);
+      }
+      if (requestObject.due_date_epoch == null) {
+        requestObject.due_date_epoch = 0;
+      } else {
+        requestObject.due_date_epoch = Math.round(requestObject.due_date_epoch.valueOf() / 1000);
+      }
+      if (requestObject.order_date_epoch == null) {
+        requestObject.order_date_epoch = 0;
+      } else {
+        requestObject.order_date_epoch = Math.round(requestObject.order_date_epoch.valueOf() / 1000);
+      }
+      if (requestObject.ship_date_epoch == null) {
+        requestObject.ship_date_epoch = 0;
+      } else {
+        requestObject.ship_date_epoch = Math.round(requestObject.ship_date_epoch.valueOf() / 1000);
+      }
       if (that.id) {
         requestObject._id = that.id;
       }
@@ -562,15 +528,34 @@ export class InvoiceFormComponent implements OnInit {
       });
     }
   }
+
   saveProcessDocument() {
     let that = this;
     if (that.invoiceform.valid) {
-
       let formVal = that.invoiceform.value;
+      if (formVal.invoice_date_epoch == null) {
+        formVal.invoice_date_epoch = 0;
+      } else {
+        formVal.invoice_date_epoch = Math.round(formVal.invoice_date_epoch.valueOf() / 1000);
+      }
+      if (formVal.due_date_epoch == null) {
+        formVal.due_date_epoch = 0;
+      } else {
+        formVal.due_date_epoch = Math.round(formVal.due_date_epoch.valueOf() / 1000);
+      }
+      if (formVal.order_date_epoch == null) {
+        formVal.order_date_epoch = 0;
+      } else {
+        formVal.order_date_epoch = Math.round(formVal.order_date_epoch.valueOf() / 1000);
+      }
+      if (formVal.ship_date_epoch == null) {
+        formVal.ship_date_epoch = 0;
+      } else {
+        formVal.ship_date_epoch = Math.round(formVal.ship_date_epoch.valueOf() / 1000);
+      }
       let requestObject = {
         _id: that.document_id,
         module: 'INVOICE',
-        'data.date': formVal.date,
         'data.vendor': formVal.vendor,
         'data.document_type': formVal.document_type,
         'data.invoice_name': formVal.invoice_name,
@@ -579,10 +564,10 @@ export class InvoiceFormComponent implements OnInit {
         'data.invoice': formVal.invoice,
         'data.p_o': formVal.p_o,
         'data.job_number': formVal.job_number,
-        'data.invoice_date': formVal.invoice_date,
-        'data.due_date': formVal.due_date,
-        'data.order_date': formVal.order_date,
-        'data.ship_date': formVal.ship_date,
+        'data.invoice_date_epoch': formVal.invoice_date_epoch,
+        'data.due_date_epoch': formVal.due_date_epoch,
+        'data.order_date_epoch': formVal.order_date_epoch,
+        'data.ship_date_epoch': formVal.ship_date_epoch,
         'data.packing_slip': formVal.packing_slip,
         'data.receiving_slip': formVal.receiving_slip,
         'data.status': formVal.status,
@@ -598,7 +583,6 @@ export class InvoiceFormComponent implements OnInit {
         'data.notes': formVal.notes,
         'data.pdf_url': formVal.pdf_url,
       };
-
       that.uiSpinner.spin$.next(true);
       that.httpCall.httpPostCall(httproutes.INVOICE_DOCUMENT_PROCESS_SAVE, requestObject).subscribe(function (params) {
         if (params.status) {
@@ -609,10 +593,8 @@ export class InvoiceFormComponent implements OnInit {
         }
         that.uiSpinner.spin$.next(false);
       });
-
     }
   }
-
 }
 
 

@@ -87,12 +87,14 @@
                                 </div>
                                 <div class="col">
                                     <b>{{'Project-Timecard-Date' | translate }}:</b>&nbsp;&nbsp;
-                                    <img *ngIf="badge.date== true"
+                                    <img *ngIf="badge.date_epoch== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
                                         width="20px" src="./assets/logo/RovukInvoice.png" />
                                     <mat-form-field>
-
-                                        <input matInput placeholder="{{'' | translate }}" formControlName="date">
+                                        <input matInput [matDatepicker]="date" disabled readonly
+                                            formControlName="date_epoch" />
+                                        <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+                                        <mat-datepicker #date disabled="false"></mat-datepicker>
                                     </mat-form-field>
                                 </div>
                                 <div class="col">

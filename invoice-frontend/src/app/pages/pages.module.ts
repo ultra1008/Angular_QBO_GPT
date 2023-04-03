@@ -96,7 +96,7 @@ import { DashboardInvoiceListComponent } from './components/dashboard/dashboard-
 import { DashboardFilesListComponent } from './components/dashboard/dashboard-files-list/dashboard-files-list.component';
 import { AddOtherFiles, InvoiceOtherDocumentComponent, OrphanFiles, RequestFilesComponent } from './components/invoice/invoice-other-document/invoice-other-document.component';
 import { DocumentViewComponent } from './components/setting/document-view/document-view.component';
-import { InvoiceListFilterPipe, InvoiceListFilterStatus } from './components/invoice/invoice-list-filter.pipe';
+import { CheckDateRangePipe, InvoiceListFilterPipe, InvoiceListFilterStatus } from './components/invoice/invoice-list-filter.pipe';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { DocumentsListComponent, DocumentSelectDialog } from './components/invoice/documents-list/documents-list.component';
 import { MailboxFormComponent } from './components/setting/mailbox-monitor/mailbox-form/mailbox-form.component';
@@ -186,6 +186,7 @@ import { MailboxFormComponent } from './components/setting/mailbox-monitor/mailb
     OrphanFiles,
     InvoiceListFilterPipe,
     InvoiceListFilterStatus,
+    CheckDateRangePipe,
     InvoiceHistoryComponent,
     DocumentsListComponent,
     RequestFilesComponent,

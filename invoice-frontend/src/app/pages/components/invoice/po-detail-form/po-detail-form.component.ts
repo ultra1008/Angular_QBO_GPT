@@ -8,7 +8,7 @@ import { UiSpinnerService } from 'src/app/service/spinner.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModeDetectService } from '../../map/mode-detect.service';
 import { Observable, Subscription } from 'rxjs';
-import { commonFileChangeEvent } from 'src/app/service/utils';
+import { commonFileChangeEvent, epochToDateTime } from 'src/app/service/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
@@ -99,14 +99,14 @@ export class PoDetailFormComponent implements OnInit {
     this.invoiceform = this.formBuilder.group({
       document_id: [""],
       document_type: [""],
-      date: [""],
+      date_epoch: [""],
       po_number: [""],
       customer_id: [""],
       p_o: [""],
       terms: [""],
-      delivery_date: [""],
+      delivery_date_epoch: [""],
       delivery_address: [""],
-      due_date: [""],
+      due_date_epoch: [""],
       quote_number: [""],
       contract_number: [""],
       vendor_id: [""],
@@ -306,18 +306,30 @@ export class PoDetailFormComponent implements OnInit {
           vendorId = that.invoiceData.vendor._id;
         }
         that.loadInvoice = true;
+        var date;
+        if (that.invoiceData.date_epoch != 0) {
+          date = epochToDateTime(that.invoiceData.date_epoch);
+        }
+        var dueDate;
+        if (that.invoiceData.due_date_epoch != 0) {
+          dueDate = epochToDateTime(that.invoiceData.due_date_epoch);
+        }
+        var deliveryDate;
+        if (that.invoiceData.delivery_date_epoch != 0) {
+          deliveryDate = epochToDateTime(that.invoiceData.delivery_date_epoch);
+        }
         that.invoiceform = that.formBuilder.group({
           document_id: [that.invoiceData.document_id],
           document_type: [that.invoiceData.document_type],
           vendor: [that.invoiceData.vendor],
           customer_id: [that.invoiceData.customer_id],
-          due_date: [that.invoiceData.due_date],
+          due_date_epoch: [dueDate],
           p_o: [that.invoiceData.p_o],
           terms: [that.invoiceData.terms],
           sub_total: [that.invoiceData.sub_total],
-          date: [that.invoiceData.date],
+          date_epoch: [date],
           po_number: [that.invoiceData.po_number],
-          delivery_date: [that.invoiceData.delivery_date],
+          delivery_date_epoch: [deliveryDate],
           delivery_address: [that.invoiceData.delivery_address],
           quote_number: [that.invoiceData.quote_number],
           contract_number: [that.invoiceData.contract_number],
@@ -359,18 +371,30 @@ export class PoDetailFormComponent implements OnInit {
 
         that.vendor.setValue(params.data.vendor);
         that.loadInvoice = true;
+        var date;
+        if (params.data.po_data.date_epoch != 0) {
+          date = epochToDateTime(params.data.po_data.date_epoch);
+        }
+        var dueDate;
+        if (params.data.po_data.due_date_epoch != 0) {
+          dueDate = epochToDateTime(params.data.po_data.due_date_epoch);
+        }
+        var deliveryDate;
+        if (params.data.po_data.delivery_date_epoch != 0) {
+          deliveryDate = epochToDateTime(params.data.po_data.delivery_date_epoch);
+        }
         that.invoiceform = that.formBuilder.group({
           document_id: [params.data.po_data.document_id],
           document_type: [params.data.po_data.document_type],
           vendor: [params.data.vendor._id],
           customer_id: [params.data.po_data.customer_id],
-          due_date: [params.data.po_data.due_date],
+          due_date_epoch: [dueDate],
           p_o: [params.data.po_data.p_o],
           terms: [params.data.po_data.terms],
           sub_total: [params.data.po_data.sub_total],
-          date: [params.data.po_data.date],
+          date_epoch: [date],
           po_number: [params.data.po_data.po_number],
-          delivery_date: [params.data.po_data.delivery_date],
+          delivery_date_epoch: [deliveryDate],
           delivery_address: [params.data.po_data.delivery_address],
           quote_number: [params.data.po_data.quote_number],
           contract_number: [params.data.po_data.contract_number],
@@ -410,22 +434,36 @@ export class PoDetailFormComponent implements OnInit {
   saveInvoice() {
     let that = this;
     if (that.invoiceform.valid) {
-
       let formVal = that.invoiceform.value;
+      if (formVal.date_epoch == null) {
+        formVal.date_epoch = 0;
+      } else {
+        formVal.date_epoch = Math.round(formVal.date_epoch.valueOf() / 1000);
+      }
+      if (formVal.delivery_date_epoch == null) {
+        formVal.delivery_date_epoch = 0;
+      } else {
+        formVal.delivery_date_epoch = Math.round(formVal.delivery_date_epoch.valueOf() / 1000);
+      }
+      if (formVal.due_date_epoch == null) {
+        formVal.due_date_epoch = 0;
+      } else {
+        formVal.due_date_epoch = Math.round(formVal.due_date_epoch.valueOf() / 1000);
+      }
       let requestObject = {
         _id: that.id,
         module: 'PO',
-        'po_data.date': formVal.date,
+        'po_data.date_epoch': formVal.date_epoch,
         // 'po_data.document_id': formVal.document_id,
         // 'po_data.document_type': formVal.document_type,
         'po_data.vendor': formVal.vendor,
         'po_data.customer_id': formVal.customer_id,
-        'po_data.due_date': formVal.due_date,
+        'po_data.due_date_epoch': formVal.due_date_epoch,
         // 'po_data.p_o': formVal.p_o,
         'po_data.terms': formVal.terms,
         'po_data.sub_total': formVal.sub_total,
         'po_data.po_number': formVal.po_number,
-        'po_data.delivery_date': formVal.delivery_date,
+        'po_data.delivery_date_epoch': formVal.delivery_date_epoch,
         'po_data.delivery_address': formVal.delivery_address,
         'po_data.quote_number': formVal.quote_number,
         'po_data.contract_number': formVal.contract_number,
@@ -451,19 +489,34 @@ export class PoDetailFormComponent implements OnInit {
     if (that.invoiceform.valid) {
 
       let formVal = that.invoiceform.value;
+      if (formVal.date_epoch == null) {
+        formVal.date_epoch = 0;
+      } else {
+        formVal.date_epoch = Math.round(formVal.date_epoch.valueOf() / 1000);
+      }
+      if (formVal.delivery_date_epoch == null) {
+        formVal.delivery_date_epoch = 0;
+      } else {
+        formVal.delivery_date_epoch = Math.round(formVal.delivery_date_epoch.valueOf() / 1000);
+      }
+      if (formVal.due_date_epoch == null) {
+        formVal.due_date_epoch = 0;
+      } else {
+        formVal.due_date_epoch = Math.round(formVal.due_date_epoch.valueOf() / 1000);
+      }
       let requestObject = {
         _id: that.document_id,
         module: 'PO',
-        'data.date': formVal.date,
+        'data.date_epoch': formVal.date_epoch,
 
         'data.vendor': formVal.vendor,
         'data.customer_id': formVal.customer_id,
-        'data.due_date': formVal.due_date,
+        'data.due_date_epoch': formVal.due_date_epoch,
 
         'data.terms': formVal.terms,
         'data.sub_total': formVal.sub_total,
         'data.po_number': formVal.po_number,
-        'data.delivery_date': formVal.delivery_date,
+        'data.delivery_date_epoch': formVal.delivery_date_epoch,
         'data.delivery_address': formVal.delivery_address,
         'data.quote_number': formVal.quote_number,
         'data.contract_number': formVal.contract_number,
