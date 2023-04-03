@@ -18,6 +18,10 @@
     width: 100%;
 }
 
+.mat-form-field {
+    width: 170px !important;
+}
+
 .img-space img {
     display: block;
     width: 100%;
@@ -42,18 +46,9 @@
     cursor: not-allowed !important;
 }
 
-@media only screen and (max-width: 768px) and (min-width: 320px) {
-    .mat-form-field {
-        width: 122px !important;
-    }
-
-    .invoice-form {
-        b {
-
-            font-size: 11px;
-        }
-    }
-}
+// .example-container .mat-form-field+.mat-form-field {
+//     margin-left: 15px;
+// }
 
 .main-one-input-field {
     width: 100%;
@@ -229,6 +224,18 @@ b {
 // .flux-content-section[navbar-type="collapsed"][effect-type="shrink"] {
 //     margin-left: unset !important;
 // }
+@media only screen and (max-width: 768px) and (min-width: 320px) {
+    .mat-form-field {
+        width: 122px !important;
+    }
+
+    .invoice-form {
+        b {
+
+            font-size: 11px;
+        }
+    }
+}
 
 ::ng-deep .flux-content-section[navbar-type="expanded"][effect-type="push"] {
     margin-left: 0px !important;

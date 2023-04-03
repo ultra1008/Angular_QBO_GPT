@@ -111,7 +111,7 @@ export class DashboardFilesListComponent implements OnInit {
     invoice: 'INVOICE'
   };
 
-  constructor (private location: Location, private modeService: ModeDetectService,
+  constructor(private location: Location, private modeService: ModeDetectService,
     public dialog: MatDialog,
     private router: Router,
     private http: HttpClient,
@@ -488,15 +488,15 @@ export class DashboardFilesListComponent implements OnInit {
     let that = this;
     console.log("document_type", document.document_type);
     if (document.document_type == that.documentTypes.po) {
-      that.router.navigate(['/po-detail-form'], { queryParams: { document_id: document._id } });
+      that.router.navigate(['/po-detail-form'], { queryParams: { document_id: document._id, documentTypes: document.document_type } });
     } else if (document.document_type == that.documentTypes.packingSlip) {
-      that.router.navigate(['/packing-slip-form'], { queryParams: { document_id: document._id } });
+      that.router.navigate(['/packing-slip-form'], { queryParams: { document_id: document._id, documentTypes: document.document_type } });
     } else if (document.document_type == that.documentTypes.receivingSlip) {
-      that.router.navigate(['/receiving-slip-form'], { queryParams: { document_id: document._id } });
+      that.router.navigate(['/receiving-slip-form'], { queryParams: { document_id: document._id, documentTypes: document.document_type } });
     } else if (document.document_type == that.documentTypes.quote) {
-      that.router.navigate(['/quote-detail-form'], { queryParams: { document_id: document._id } });
+      that.router.navigate(['/quote-detail-form'], { queryParams: { document_id: document._id, documentTypes: document.document_type } });
     } else if (document.document_type == that.documentTypes.invoice) {
-      that.router.navigate(['/invoice-form'], { queryParams: { document_id: document._id } });
+      that.router.navigate(['/invoice-form'], { queryParams: { document_id: document._id, documentTypes: document.document_type } });
     }
   }
 
