@@ -348,6 +348,7 @@ var invoiceSchema = new Schema({
     receiving_date: { type: String, default: "" },
     notes: { type: String, default: "" },
     status: { type: String, default: "Pending", enum: ['Pending', 'Approved', 'Rejected', 'Late'] },
+    reject_reason: { type: String, default: "" },
     job_number: { type: String, default: "" },
     delivery_address: { type: String, default: "" },
     contract_number: { type: String, default: "" },

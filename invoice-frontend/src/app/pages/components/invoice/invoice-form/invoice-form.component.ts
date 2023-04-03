@@ -14,7 +14,7 @@ import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
 import { EmployeeService } from '../../team/employee.service';
 import { map, startWith } from 'rxjs/operators';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
     confirmButton: "btn btn-success margin-right-cust s2-confirm",
@@ -142,7 +142,8 @@ export class InvoiceFormComponent implements OnInit {
       gl_account: [""],
       assign_to: [""],
       notes: [""],
-      myControl: [""]
+      myControl: [""],
+      reject_reason: [""],
     });
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
@@ -308,21 +309,48 @@ export class InvoiceFormComponent implements OnInit {
       })
       .then((result) => {
         if (result.isConfirmed) {
-          that.uiSpinner.spin$.next(true);
-          that.httpCall.httpPostCall(httproutes.INVOICE_UPDATE_INVOICE_STATUS, requestObject).subscribe(params => {
-            if (params.status) {
-              that.snackbarservice.openSnackBar(params.message, "success");
-              that.status = status;
-              that.uiSpinner.spin$.next(false);
-              // that.rerenderfunc();
-              // that.invoiceUpdateCard.emit();
-            } else {
-              that.snackbarservice.openSnackBar(params.message, "error");
-              that.uiSpinner.spin$.next(false);
-            }
-          });
+          if (status == 'Approved') {
+            that.updateInvoiceStatus(requestObject);
+          } else {
+            const dialogRef = this.dialog.open(InvoiceRejectReason, {
+              height: '350px',
+              width: '600px',
+              disableClose: true
+            });
+            dialogRef.afterClosed().subscribe(result => {
+              if (result.status) {
+                var reqObject = {
+                  _id: id,
+                  status: status,
+                  reject_reason: result.reject_reason,
+                };
+                that.updateInvoiceStatus(reqObject);
+              }
+            });
+          }
         }
       });
+  }
+
+  updateInvoiceStatus(requestObject) {
+    let that = this;
+    that.uiSpinner.spin$.next(true);
+    that.httpCall.httpPostCall(httproutes.INVOICE_UPDATE_INVOICE_STATUS, requestObject).subscribe(params => {
+      if (params.status) {
+        that.snackbarservice.openSnackBar(params.message, "success");
+        if (that.id) {
+          that.getOneInvoice();
+        }
+        if (that.document_id) {
+          that.getOneProcessDocument();
+        }
+        that.status = requestObject.status;
+        that.uiSpinner.spin$.next(false);
+      } else {
+        that.snackbarservice.openSnackBar(params.message, "error");
+        that.uiSpinner.spin$.next(false);
+      }
+    });
   }
 
   viewInvoice(_id) {
@@ -392,6 +420,7 @@ export class InvoiceFormComponent implements OnInit {
           assign_to: [params.data.assign_to],
           notes: [params.data.notes],
           pdf_url: [params.data.pdf_url],
+          reject_reason: [params.data.reject_reason],
         });
       }
       that.uiSpinner.spin$.next(false);
@@ -703,4 +732,58 @@ export class InvoiceHistoryComponent implements OnInit {
     return styles;
   }
 
+}
+
+@Component({
+  selector: 'invoice-reject-reason',
+  templateUrl: './invoice-reject-reason.html',
+  styleUrls: ['./invoice-form.component.scss']
+})
+export class InvoiceRejectReason {
+  saveIcon: string;
+  invoiceinfo: FormGroup;
+  exitIcon: string;
+  mode: any;
+  subscription: Subscription;
+
+  constructor (private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
+    public dialogRef: MatDialogRef<InvoiceRejectReason>,
+    @Inject(MAT_DIALOG_DATA) public data: any, public sb: Snackbarservice, public translate: TranslateService) {
+
+    this.invoiceinfo = this.formBuilder.group({
+      reject_reason: ["", Validators.required],
+    });
+
+    var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
+    this.mode = modeLocal === 'on' ? 'on' : 'off';
+    if (this.mode == 'off') {
+      this.exitIcon = icon.CANCLE;
+      this.saveIcon = icon.SAVE_WHITE;
+    } else {
+      this.exitIcon = icon.CANCLE_WHITE;
+      this.saveIcon = icon.SAVE_WHITE;
+    }
+    this.subscription = this.modeService.onModeDetect().subscribe(mode => {
+      if (mode) {
+        this.mode = 'off';
+        this.exitIcon = icon.CANCLE;
+        this.saveIcon = icon.SAVE_WHITE;
+      } else {
+        this.mode = 'on';
+        this.exitIcon = icon.CANCLE_WHITE;
+        this.saveIcon = icon.SAVE_WHITE;
+      }
+    });
+  }
+
+  ngOnInit(): void {
+  };
+
+  saveData() {
+    this.invoiceinfo.markAllAsTouched();
+    if (this.invoiceinfo.valid) {
+      let requestObject = this.invoiceinfo.value;
+      this.dialogRef.close({ status: true, reject_reason: requestObject.reject_reason });
+    }
+  }
 }

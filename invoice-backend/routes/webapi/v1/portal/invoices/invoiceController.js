@@ -361,7 +361,8 @@ module.exports.getInvoice = async function (req, res) {
                                     ]
                                 }
                             ]
-                        }
+                        },
+                        reject_reason: 1,
                     }
                 },
             ]);
@@ -579,7 +580,8 @@ module.exports.getInvoiceList = async function (req, res) {
                                     ]
                                 }
                             ]
-                        }
+                        },
+                        reject_reason: 1,
                     }
                 },
             ]);
@@ -749,7 +751,8 @@ module.exports.getOneInvoice = async function (req, res) {
                                     ]
                                 }
                             ]
-                        }
+                        },
+                        reject_reason: 1,
                     }
                 },
             ]);
@@ -1075,7 +1078,8 @@ module.exports.getInvoiceDatatable = async function (req, res) {
                                     ]
                                 }
                             ]
-                        }
+                        },
+                        reject_reason: 1,
                     },
                 },
                 { $match: query },

@@ -79,7 +79,7 @@ import { TermsComponent, TermsForm } from './components/setting/invoice-other-se
 import { TaxRateComponent, TaxRateForm } from './components/setting/invoice-other-settings/tax-rate/tax-rate.component';
 import { DocumentForm, DocumentsComponent } from './components/setting/invoice-other-settings/documents/documents.component';
 import { SettingsSecurityComponent } from './components/setting/settings-security/settings-security.component';
-import { InvoiceFormComponent, InvoiceHistoryComponent } from './components/invoice/invoice-form/invoice-form.component';
+import { InvoiceFormComponent, InvoiceHistoryComponent, InvoiceRejectReason } from './components/invoice/invoice-form/invoice-form.component';
 import { TemplateFormComponent } from './components/templates/template-form/template-form.component';
 import { InvoiceDetailPageComponent } from './components/invoice/invoice-detail-page/invoice-detail-page.component';
 import { InvoiceDashboardComponent } from './components/dashboard/invoice-dashboard.component';
@@ -188,6 +188,7 @@ import { MailboxFormComponent } from './components/setting/mailbox-monitor/mailb
     InvoiceListFilterStatus,
     CheckDateRangePipe,
     InvoiceHistoryComponent,
+    InvoiceRejectReason,
     DocumentsListComponent,
     RequestFilesComponent,
     DocumentSelectDialog,

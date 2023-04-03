@@ -171,7 +171,8 @@ module.exports.getInvoiceList = async function (req, res) {
                                         ]
                                     }
                                 ]
-                            }
+                            },
+                            reject_reason: 1,
                         },
                     }
                 },
@@ -358,7 +359,8 @@ module.exports.getStatusWiseInvoice = async function (req, res) {
                                     ]
                                 }
                             ]
-                        }
+                        },
+                        reject_reason: 1,
                     }
                 },
             ]);
@@ -526,7 +528,8 @@ module.exports.getOneInvoice = async function (req, res) {
                                     ]
                                 }
                             ]
-                        }
+                        },
+                        reject_reason: 1,
                     }
                 },
             ]);

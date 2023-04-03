@@ -81,7 +81,7 @@
                                 <div class="col ">
                                     <b>{{'Vendor_Name' | translate }}:</b>&nbsp;&nbsp;
                                     <mat-form-field>
-                                        <input matInput placeholder="{{' ' | translate }}"
+                                        <input matInput 
                                             formControlName="vendor">
                                     </mat-form-field>
                                 </div> -->
@@ -106,7 +106,7 @@
                                 <!-- <div class="col ">
                                     <b>{{'Vendor_Name' | translate }}:</b>&nbsp;&nbsp;
                                     <mat-form-field>
-                                        <input type="text" matInput placeholder="{{' ' | translate }}"
+                                        <input type="text" matInput 
                                             formControlName="vendor" [matAutocomplete]="auto">
 
                                         <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
@@ -122,8 +122,7 @@
 
 
                                     <mat-form-field>
-                                        <input matInput placeholder="{{' ' | translate }}"
-                                            formControlName="vendor_id" />
+                                        <input matInput formControlName="vendor_id" />
                                     </mat-form-field>
                                 </div>
 
@@ -132,8 +131,7 @@
 
 
                                     <mat-form-field>
-                                        <input matInput placeholder="{{' ' | translate }}"
-                                            formControlName="customer_id" />
+                                        <input matInput formControlName="customer_id" />
                                     </mat-form-field>
                                 </div>
 
@@ -146,7 +144,7 @@
 
                                     <mat-form-field>
 
-                                        <input matInput placeholder="{{' ' | translate }}" formControlName="invoice" />
+                                        <input matInput formControlName="invoice" />
                                     </mat-form-field>
                                 </div>
                                 <div class="col">
@@ -352,14 +350,6 @@
                                             formControlName="gl_account" />
                                     </mat-form-field>
                                 </div>
-
-                                <!-- <div class="col">
-                                                    <mat-form-field >
-                                                        <b>{{'Assign_To' | translate }}</b>
-                                                        <input matInput 
-                                                            placeholder="{{'Assign_To' | translate }}" formControlName="assign_to" />
-                                                    </mat-form-field>
-                                                </div> -->
                                 <div class="col">
                                     <b>{{'Assign_To' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.assign_to== true"
@@ -384,12 +374,15 @@
                                         width="20px" src="./assets/logo/RovukInvoice.png" />
                                     <mat-form-field>
 
-                                        <textarea matInput placeholder="{{' ' | translate }}"
-                                            formControlName="notes"></textarea>
+                                        <textarea matInput formControlName="notes"></textarea>
                                     </mat-form-field>
                                 </div>
-
-
+                                <div class="col" *ngIf="status == 'Rejected'">
+                                    <b>Reject Reason:</b>&nbsp;&nbsp;
+                                    <mat-form-field>
+                                        <textarea matInput formControlName="reject_reason"></textarea>
+                                    </mat-form-field>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -412,16 +405,9 @@
                             translate}}</button>
                     </div>
                     <div class="col-6">
-
                     </div>
-
                 </mat-card>
-
-
             </div>
-
-
-
             <div class="col-md-7 col-lg-7 col-sm-10">
                 <mat-card class="example-card" style=" box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);">
                     <div class="pdf-data">
