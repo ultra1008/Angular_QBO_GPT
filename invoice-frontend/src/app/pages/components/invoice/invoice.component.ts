@@ -214,7 +214,8 @@ export class InvoiceComponent implements OnInit {
   }
 
   dateRangeChange(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
-    this.dateRange = [timeDateToepoch(dateRangeStart.value), timeDateToepoch(dateRangeEnd.value)];
+    this.dateRange = [dateRangeStart.value, dateRangeEnd.value];
+    // this.dateRange = [timeDateToepoch(dateRangeStart.value), timeDateToepoch(dateRangeEnd.value)];
   }
 
   rerenderfunc() {

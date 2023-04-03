@@ -1,4 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import moment from 'moment';
+import { epochToDateTime, timeDateToepoch } from 'src/app/service/utils';
 
 @Pipe({
     name: 'invoiceListFilter'
@@ -51,7 +53,10 @@ export class CheckDateRangePipe implements PipeTransform {
     transform(items: any[], dateRange: any): any {
         if (dateRange.length == 2) {
             return items.filter(item => {
-                return dateRange[0] <= item.due_date_epoch && item.due_date_epoch <= dateRange[1];
+                var start = new Date(dateRange[0]);
+                var end = new Date(dateRange[1]);
+                var date = epochToDateTime(item.due_date_epoch - (moment().utcOffset() * 60));
+                return start.getTime() <= date.getTime() && date.getTime() <= end.getTime();
             });
         }
         return items;
