@@ -1,4 +1,4 @@
-<mat-card class="">
+<mat-card class="formclass">
     <div class="wrapper-cust-admin ">
         <div class="row ml-2 pt-2 mb-2">
             <div class="screen-title-section  cust-h1-inline">
@@ -377,10 +377,10 @@
                                         <textarea matInput formControlName="notes"></textarea>
                                     </mat-form-field>
                                 </div>
-                                <div class="col" *ngIf="status == 'Rejected'">
+                                <div class="col mt-4" *ngIf="status == 'Rejected'">
                                     <b>Reject Reason:</b>&nbsp;&nbsp;
                                     <mat-form-field>
-                                        <textarea matInput formControlName="reject_reason"></textarea>
+                                        <textarea readonly matInput formControlName="reject_reason"></textarea>
                                     </mat-form-field>
                                 </div>
                             </div>

@@ -15,6 +15,7 @@ import Swal from 'sweetalert2';
 import { EmployeeService } from '../../team/employee.service';
 import { map, startWith } from 'rxjs/operators';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { log } from 'console';
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
     confirmButton: "btn btn-success margin-right-cust s2-confirm",
@@ -525,14 +526,17 @@ export class InvoiceFormComponent implements OnInit {
     }
   }
   saveInvoice() {
+    console.log("1");
     let that = this;
     if (that.invoiceform.valid) {
+      console.log("2");
       let requestObject = that.invoiceform.value;
       if (requestObject.invoice_date_epoch == null) {
         requestObject.invoice_date_epoch = 0;
       } else {
         requestObject.invoice_date_epoch = Math.round(requestObject.invoice_date_epoch.valueOf() / 1000);
       }
+      console.log("3");
       if (requestObject.due_date_epoch == null) {
         requestObject.due_date_epoch = 0;
       } else {
@@ -548,20 +552,30 @@ export class InvoiceFormComponent implements OnInit {
       } else {
         requestObject.ship_date_epoch = Math.round(requestObject.ship_date_epoch.valueOf() / 1000);
       }
+      console.log("4");
       if (that.id) {
+        console.log("5");
         requestObject._id = that.id;
       }
+      console.log("6");
       that.uiSpinner.spin$.next(true);
       that.httpCall.httpPostCall(httproutes.INVOICE_SAVE_INVOICE, requestObject).subscribe(function (params) {
+        console.log("7");
         if (params.status) {
+          console.log(123);
           that.snackbarservice.openSnackBar(params.message, "success");
+          that.uiSpinner.spin$.next(false);
           that.back();
         } else {
+          console.log(4556);
           that.snackbarservice.openSnackBar(params.message, "error");
         }
+        console.log("8");
         that.uiSpinner.spin$.next(false);
       });
+      console.log("9");
     }
+    console.log("10");
   }
 
   saveProcessDocument() {

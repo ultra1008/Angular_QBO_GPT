@@ -62,14 +62,21 @@ module.exports.saveInvoice = async function (req, res) {
                         requestObject.vendor = ObjectID(requestObject.vendor);
                     }
                     let updatedData = await common.findUpdatedFieldHistory(requestObject, get_data._doc);
+                    console.log("updatedData", updatedData);
                     for (let i = 0; i < updatedData.length; i++) {
+
                         let key = `badge.${updatedData[i]['key']}`;
                         updateBadgeObject[key] = false;
                     }
+
                     await invoicesConnection.updateOne({ _id: ObjectID(id) }, updateBadgeObject);
+
                     requestObject.invoice_id = id;
+
                     await sendInvoiceUpdateAlerts(decodedToken, id, 'Invoice', translator);
+
                     addchangeInvoice_History("Update", requestObject, decodedToken, requestObject.updated_at);
+
                     recentActivity.saveRecentActivity({
                         user_id: decodedToken.UserData._id,
                         username: decodedToken.UserData.userfullname,
@@ -82,9 +89,11 @@ module.exports.saveInvoice = async function (req, res) {
                     }, decodedToken);
                     res.send({ status: true, message: "Invoice updated successfully..", data: update_invoice });
                 } else {
+
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
                 }
             } else {
+
                 //ivoice save
                 requestObject.created_by = decodedToken.UserData._id;
                 requestObject.created_at = Math.round(new Date().getTime() / 1000);
@@ -93,6 +102,7 @@ module.exports.saveInvoice = async function (req, res) {
                 let add_invoice = new invoicesConnection(requestObject);
                 let save_invoice = await add_invoice.save();
                 if (save_invoice) {
+
                     requestObject.invoice_id = save_invoice._id;
                     addchangeInvoice_History("Insert", requestObject, decodedToken, requestObject.updated_at);
                     recentActivity.saveRecentActivity({
@@ -107,6 +117,7 @@ module.exports.saveInvoice = async function (req, res) {
                     }, decodedToken);
                     res.send({ status: true, message: "Invoice saved successfully.." });
                 } else {
+
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
                 }
             }
@@ -114,9 +125,11 @@ module.exports.saveInvoice = async function (req, res) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), status: false });
         } finally {
+
             connection_db_api.close();
         }
     } else {
+
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
@@ -152,53 +165,56 @@ function sendInvoiceUpdateAlerts(decodedToken, id, module, translator) {
                     } else if (module == 'Quote') {
                         viewRoute = `${config.SITE_URL}/quote-detail-form?_id=${id}`;
                     }
+                    if (get_users.length > 0) {
+                        for (let i = 0; i < get_users.length; i++) {
+                            // Alert
+                            // invoice-form
+                            let alertObject = {
+                                user_id: get_users[i]._id,
+                                module_name: module,
+                                module_route: { _id: id },
+                                notification_title: title,
+                                notification_description: description,
+                            };
+                            alertController.saveAlert(alertObject, connection_db_api);
 
-                    for (let i = 0; i < get_users.length; i++) {
-                        // Alert
-                        // invoice-form
-                        let alertObject = {
-                            user_id: get_users[i]._id,
-                            module_name: module,
-                            module_route: { _id: id },
-                            notification_title: title,
-                            notification_description: description,
-                        };
-                        alertController.saveAlert(alertObject, connection_db_api);
+                            emailList.push(get_users[i].useremail);
+                            if (i == get_users.length - 1) {
+                                var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+                                let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
+                                let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
+                                // Email
+                                const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/commonEmailTemplate.html', 'utf8');
+                                let emailTmp = {
+                                    HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
+                                    SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
+                                    ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                                    THANKS: translator.getStr('EmailTemplateThanks'),
+                                    ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                                    ROVUK_TEAM_SEC: translator.getStr('EmailTemplateRovukTeamSec'),
+                                    VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
 
-                        emailList.push(get_users[i].useremail);
-                        if (i == get_users.length - 1) {
-                            var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
-                            let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
-                            let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
-                            // Email
-                            const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/commonEmailTemplate.html', 'utf8');
-                            let emailTmp = {
-                                HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
-                                SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
-                                ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
-                                THANKS: translator.getStr('EmailTemplateThanks'),
-                                ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
-                                ROVUK_TEAM_SEC: translator.getStr('EmailTemplateRovukTeamSec'),
-                                VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
-
-                                TITLE: `${title}`,
-                                TEXT: new handlebars.SafeString(`<h4>Hello,</h4><h4>${description}</h4>
+                                    TITLE: `${title}`,
+                                    TEXT: new handlebars.SafeString(`<h4>Hello,</h4><h4>${description}</h4>
                                 <div style="text-align: center;">
                                     <a style="background-color: #023E8A;border: #0077bc solid;color: white;padding: 15px 32px;
                                                 text-align: center;text-decoration: none;display: inline-block;font-size: 16px; width: 20%;" 
                                                 target="_blank" href="${viewRoute}">View ${module}</a>
                                 </div>`),
 
-                                COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
-                                COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
-                            };
-                            var template = handlebars.compile(file_data);
-                            var HtmlData = await template(emailTmp);
-                            sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, emailList, title, HtmlData,
-                                talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                                talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
-                            resolve();
+                                    COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
+                                    COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
+                                };
+                                var template = handlebars.compile(file_data);
+                                var HtmlData = await template(emailTmp);
+                                sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, emailList, title, HtmlData,
+                                    talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
+                                    talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                                resolve();
+                            }
                         }
+                    } else {
+                        resolve();
                     }
                 } else {
                     resolve();
