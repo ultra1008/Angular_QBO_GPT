@@ -51,7 +51,7 @@ export class PackingSlipFormComponent implements OnInit {
   id: any;
   isManagement: boolean = true;
   invoiceData: any;
-
+  badgeIcon = icon.BADGE_ICON;
 
   isEmployeeData: Boolean = false;
   // db_costcodes
@@ -82,7 +82,7 @@ export class PackingSlipFormComponent implements OnInit {
   document_id: any;
 
 
-  constructor (public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
+  constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.document_id = this.route.snapshot.queryParamMap.get('document_id');

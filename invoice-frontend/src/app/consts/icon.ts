@@ -164,4 +164,6 @@ export enum icon {
 
     MALE_PLACEHOLDER = "./assets/images/male-placeholder.png",
     FEMALE_PLACEHOLDER = "./assets/images/female-placeholder.png",
+
+    BADGE_ICON = './assets/logo/invoice_logo.png'
 }

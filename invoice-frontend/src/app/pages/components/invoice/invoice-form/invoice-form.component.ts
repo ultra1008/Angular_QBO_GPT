@@ -92,6 +92,7 @@ export class InvoiceFormComponent implements OnInit {
   document_id: any;
   invoiceStatus: any;
   documentTypes: any;
+  badgeIcon = icon.BADGE_ICON;
 
   constructor(public dialog: MatDialog, public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {

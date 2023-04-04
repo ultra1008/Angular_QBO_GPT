@@ -38,7 +38,7 @@
                                     <b>{{'Document_id' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.document_id== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px"src="{{badgeIcon}}" />
 
                                     <mat-form-field>
                                         <input matInput placeholder="{{' ' | translate }}"
@@ -50,7 +50,7 @@
                                     <b>{{'Document-type' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.document_type== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px" src="{{badgeIcon}}" />
                                     <mat-form-field>
                                         <mat-select formControlName="document_type" #myselect #DocumentTypeSelect>
                                             <mat-select-filter [displayMember]="'name'"
@@ -68,7 +68,7 @@
                                     <b>{{'Project-Timecard-Date' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.date_epoch== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px" src="{{badgeIcon}}" />
                                     <mat-form-field>
                                         <input matInput [matDatepicker]="poDate" disabled readonly
                                             formControlName="date_epoch" />
@@ -81,7 +81,7 @@
 
                                     <img *ngIf="badge.vendor== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px" src="{{badgeIcon}}" />
 
                                     <mat-form-field>
                                         <input type="text" aria-label="Number" matInput [formControl]="vendor"
@@ -98,7 +98,7 @@
                                     <b>{{'Vendor_ID' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.vendor_id== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px" src="{{badgeIcon}}" />
                                     <mat-form-field>
 
                                         <input matInput placeholder="{{'' | translate }}" formControlName="vendor_id">
@@ -109,7 +109,7 @@
                                     <b>{{'po_no' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.po_number== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px" src="{{badgeIcon}}" />
                                     <mat-form-field>
 
                                         <input matInput placeholder="{{'' | translate }}" formControlName="po_number">
@@ -119,7 +119,7 @@
                                     <b>{{'Customer_Id' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.customer_id== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px" src="{{badgeIcon}}" />
 
                                     <mat-form-field>
                                         <input matInput placeholder="{{' ' | translate }}"
@@ -130,7 +130,7 @@
                                     <b>{{'terms' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.terms== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px" src="{{badgeIcon}}" />
                                     <mat-form-field>
 
                                         <input matInput placeholder="{{'' | translate }}" formControlName="terms" />
@@ -141,7 +141,7 @@
                                     <b>{{'delivery_date' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.delivery_date_epoch== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px" src="{{badgeIcon}}" />
                                     <mat-form-field>
                                         <input matInput [matDatepicker]="deliveryDate" disabled readonly
                                             formControlName="delivery_date_epoch" />
@@ -153,7 +153,7 @@
                                     <b>{{'delivery_address' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.delivery_address== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px" src="{{badgeIcon}}" />
                                     <mat-form-field>
 
                                         <input matInput placeholder="{{'' | translate }}"
@@ -164,7 +164,7 @@
                                     <b>{{'due_date' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.due_date_epoch== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px" src="{{badgeIcon}}" />
                                     <mat-form-field>
                                         <input matInput [matDatepicker]="dueDate" disabled readonly
                                             formControlName="due_date_epoch" />
@@ -176,7 +176,7 @@
                                     <b>{{'quote_number' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.quote_number== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px" src="{{badgeIcon}}" />
                                     <mat-form-field>
 
                                         <input matInput placeholder="{{'' | translate }}"
@@ -187,7 +187,7 @@
                                     <b>{{'contract_number' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.contract_number== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px" src="{{badgeIcon}}" />
                                     <mat-form-field>
 
                                         <input matInput placeholder="{{'' | translate }}"
@@ -198,7 +198,7 @@
                                     <b>{{'Order_Date' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.order_date== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px"src="{{badgeIcon}}" />
                                     <mat-form-field>
 
                                         <input matInput placeholder="{{'' | translate }}"
@@ -209,7 +209,7 @@
                                     <b>{{'Ship_date' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.ship_date== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px"src="{{badgeIcon}}" />
                                     <mat-form-field>
 
                                         <input matInput placeholder="{{' ' | translate }}"
@@ -220,7 +220,7 @@
                                     <b>{{'packing_slip_no' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.packing_slip== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px"src="{{badgeIcon}}" />
                                     <mat-form-field>
 
                                         <input matInput placeholder="{{'' | translate }}"
@@ -231,7 +231,7 @@
                                     <b>{{'Receiving_Slip' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.receiving_slip== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px"src="{{badgeIcon}}" />
                                     <mat-form-field>
 
                                         <input matInput placeholder="{{'' | translate }}"
@@ -257,7 +257,7 @@
                                     <b>{{'Totle_to_be_Paid' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.total== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px"src="{{badgeIcon}}" />
 
                                     <mat-form-field>
                                         <input matInput placeholder="{{'' | translate }}" formControlName="total" />
@@ -276,7 +276,7 @@
                                     <b>{{'Tax_Amount' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.tax_amount== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px"src="{{badgeIcon}}" />
                                     <mat-form-field>
 
                                         <input matInput placeholder="{{'' | translate }}" formControlName="tax_amount">
@@ -286,7 +286,7 @@
                                     <b> {{'sub_totle' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.sub_total== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px" src="{{badgeIcon}}" />
                                     <mat-form-field>
 
                                         <input matInput placeholder="{{'' | translate }}" formControlName=sub_total>
@@ -296,7 +296,7 @@
                                     <b>{{'Company-po-form-Tax' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.tax== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px" src="{{badgeIcon}}" />
                                     <mat-form-field>
 
                                         <input matInput placeholder="{{'' | translate }}" formControlName="tax">
@@ -306,7 +306,7 @@
                                     <b> {{'P_O_Totle' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.po_total== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px" src="{{badgeIcon}}" />
                                     <mat-form-field>
 
                                         <input matInput placeholder="{{'' | translate }}" formControlName=po_total>
@@ -316,7 +316,7 @@
                                     <b>{{'Tax_id' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.tax_id== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px"src="{{badgeIcon}}" />
                                     <mat-form-field>
                                         <input matInput placeholder="{{'' | translate }}" formControlName="tax_id">
                                     </mat-form-field>
@@ -327,7 +327,7 @@
                                     <b> {{'Amount_Due' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.amount_due== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px"src="{{badgeIcon}}" />
                                     <mat-form-field>
 
                                         <input matInput placeholder="{{'' | translate }}" formControlName="amount_due">
@@ -338,7 +338,7 @@
                                     <b>{{'Employee-form-Cost-Code' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.cost_code== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px"src="{{badgeIcon}}" />
                                     <mat-form-field>
 
                                         <mat-select formControlName="cost_code" #db_costcodesSelect
@@ -357,7 +357,7 @@
                                     <b>{{'GL_Account' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.gl_account== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px"src="{{badgeIcon}}" />
                                     <mat-form-field>
 
                                         <input matInput placeholder="{{'' | translate }}"
@@ -376,7 +376,7 @@
                                     <b>{{'Assign_To' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.assign_to== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px"src="{{badgeIcon}}" />
                                     <mat-form-field>
                                         <mat-select formControlName="assign_to" #usersArraySelect>
                                             <mat-select-filter [placeholder]="'Filter'" [displayMember]="'userfullname'"
@@ -393,7 +393,7 @@
                                     <b>{{'template_notes' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.notes== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
-                                        width="20px" src="./assets/logo/RovukInvoice.png" />
+                                        width="20px"src="{{badgeIcon}}" />
                                     <mat-form-field>
 
                                         <textarea matInput placeholder="{{' ' | translate }}"
