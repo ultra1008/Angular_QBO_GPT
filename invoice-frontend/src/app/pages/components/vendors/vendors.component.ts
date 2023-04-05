@@ -638,7 +638,6 @@ export class VendorHistoryComponent implements OnInit {
     private modeService: ModeDetectService,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
-    console.log("history call");
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === "on" ? "on" : "off";
     if (this.mode == "off") {
@@ -663,17 +662,13 @@ export class VendorHistoryComponent implements OnInit {
   }
 
   onKey(event: any) {
-    console.log(event.target.value);
     if (event.target.value.length == 0) {
-      console.log("emprty string");
       this.taskHistory = [];
       this.start = 0;
       this.getTodaysActivity();
     }
   }
   searchActivity() {
-    console.log("searchTodayActivity");
-    console.log("Entered email:", this.todayactivity_search);
     let that = this;
     that.isSearch = true;
     that.taskHistory = [];
@@ -764,7 +759,6 @@ export class VendorReportComponent implements OnInit {
     public uiSpinner: UiSpinnerService,
     public translate: TranslateService
   ) {
-    console.log("data2", data);
     this.termList = data.termList;
     this.Report_File_Message = this.translate.instant("Report_File_Message");
     this.Report_File_Enter_Email = this.translate.instant(

@@ -48,29 +48,11 @@ import { NgOtpInputModule } from 'ng-otp-input';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { SettingsSecurityComponent } from './pages/components/setting/settings-security/settings-security.component';
 
-
-
-
-
-//import { UserpublicpageComponent } from './pages/components/userpublicpage/userpublicpage.component';
-
-
-
-
-
-
 @NgModule({
   declarations: [
     AppComponent,
     CapitalDirective,
     LandingPageComponent,
-
-
-
-
-
-
-
     //UserpublicpageComponent,
   ],
   imports: [
@@ -105,9 +87,6 @@ import { SettingsSecurityComponent } from './pages/components/setting/settings-s
     NgIdleKeepaliveModule.forRoot(),
     MomentModule,
     NgOtpInputModule,
-
-    // MatGridListModule,
-
 
     TranslateModule.forRoot({
       loader: {

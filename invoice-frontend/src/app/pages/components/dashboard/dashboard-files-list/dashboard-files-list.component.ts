@@ -486,7 +486,6 @@ export class DashboardFilesListComponent implements OnInit {
 
   goToEdit(document) {
     let that = this;
-    console.log("document_type", document.document_type);
     if (document.document_type == that.documentTypes.po) {
       that.router.navigate(['/po-detail-form'], { queryParams: { document_id: document._id, documentTypes: document.document_type } });
     } else if (document.document_type == that.documentTypes.packingSlip) {

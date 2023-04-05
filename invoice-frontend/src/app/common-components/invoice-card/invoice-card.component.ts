@@ -15,7 +15,6 @@ import { LanguageApp } from 'src/app/service/utils';
 })
 export class InvoiceCardComponent implements OnInit {
   @Input() invoice: any;
-  // @Input() invoiceStatus: any;
   @Output() invoiceUpdateCard: EventEmitter<void> = new EventEmitter<void>();
   subscription!: Subscription;
   mode: any;
@@ -80,10 +79,8 @@ export class InvoiceCardComponent implements OnInit {
 
   ngOnInit(): void {
     let that = this;
-    // console.log("invoiceStatus", this.invoiceStatus);
     let role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA) ?? '');
     this.role_to = role_permission.UserData.role_name;
-
     // this.getAllInvoices();
   }
   /* getAllInvoices() {
@@ -106,10 +103,7 @@ export class InvoiceCardComponent implements OnInit {
   } */
   updateInvoice(requestObject) {
     let that = this;
-    console.log("requestObject", requestObject);
     // this.id = requestObject.invoice._id;
-
-    // console.log("_id", this.id);
     that.uiSpinner.spin$.next(true);
     that.httpCall.httpPostCall(httproutes.INVOICE_UPDATE_INVOICE_STATUS, requestObject).subscribe(params => {
       if (params.status) {

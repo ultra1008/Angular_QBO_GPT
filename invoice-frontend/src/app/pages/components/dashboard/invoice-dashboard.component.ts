@@ -181,7 +181,6 @@ export class InvoiceDashboardComponent implements OnInit {
     this.router.navigate(['/dashboard-invoice-list'], { queryParams: { status: status } });
   }
   gotoEditInvoice(invoice) {
-    console.log("invoice", invoice);
     this.router.navigate(['/invoice-form'], { queryParams: { _id: invoice._id, pdf_url: invoice.pdf_url } });
   }
 
@@ -258,13 +257,10 @@ export class InvoiceDashboardComponent implements OnInit {
 
   // history listing apis
   goToUserProfile(user_id) {
-    console.log("user_id", user_id);
     this.router.navigateByUrl('/employee-view/' + user_id.user_id);
 
   }
   goToInvoiceForm(user_id) {
-    console.log("invoice11", user_id);
-
     if (user_id.module == 'Invoice') {
       this.router.navigate(['/invoice-form'], { queryParams: { _id: user_id.data_id } });
     } if (user_id.module == 'Vendor') {
@@ -272,20 +268,15 @@ export class InvoiceDashboardComponent implements OnInit {
     } if (user_id.module == 'User') {
       this.router.navigate(['/employee-view'], { queryParams: { _id: user_id.data_id } });
     }
-
   }
   onKey(event: any) {
-    console.log(event.target.value);
     if (event.target.value.length == 0) {
-      console.log("emprty string");
       this.dashboardHistory = [];
       this.start = 0;
       this.getTodaysActivity();
     }
   }
   searchActivity() {
-    console.log("searchTodayActivity");
-    console.log("Entered email:", this.todayactivity_search);
     let that = this;
     that.isSearch = true;
     that.dashboardHistory = [];
@@ -294,31 +285,10 @@ export class InvoiceDashboardComponent implements OnInit {
   }
 
   onScroll() {
-    console.log("hello");
     this.start++;
     this.getTodaysActivity();
   }
-  // getTodaysActivity() {
-  //   console.log("callllll");
-  //   let self = this;
 
-  //   // let requestObject = { start: this.start };
-
-  //   self.httpCall
-  //     .httpPostCall(httproutes.INVOICE_GET_DASHBOARD_HISTORY,
-  //       { start: 0 })
-  //     .subscribe(function (params) {
-  //       console.log("dashboardHistory", params);
-  //       if (params.status) {
-  //         if (self.start == 0)
-
-  //           self.dashboardHistory = self.dashboardHistory.concat(params.data);
-  //         console.log("dashboardHistory", self.dashboardHistory);
-  //       }
-
-  //     });
-
-  // }
   getTodaysActivity() {
     let self = this;
     this.is_httpCall = true;
@@ -336,7 +306,6 @@ export class InvoiceDashboardComponent implements OnInit {
           self.dashboardHistory = self.dashboardHistory.concat(params.data);
         }
       });
-    console.log("dashboardHistory", self.dashboardHistory);
   }
 
   tmp_date(epoch: any) {

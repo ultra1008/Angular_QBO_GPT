@@ -11,7 +11,6 @@ import { Subscription } from 'rxjs';
 import { ModeDetectService } from 'src/app/pages/components/map/mode-detect.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { LanguageApp } from 'src/app/service/utils';
 import { DocumentSelectDialog } from 'src/app/pages/components/invoice/documents-list/documents-list.component';
 
 const swalWithBootstrapButtons = Swal.mixin({
@@ -66,7 +65,7 @@ export class CustompdfviewerComponent implements OnInit {
   Archive_Orphan_Document_value: any = [];
   Archive_Orphan_Document: any;
 
-  constructor (private location: Location, private modeService: ModeDetectService, public route: ActivatedRoute, private router: Router,
+  constructor(private location: Location, private modeService: ModeDetectService, public route: ActivatedRoute, private router: Router,
     public httpCall: HttpCall, public spinner: UiSpinnerService, public snackbarservice: Snackbarservice,
     public translate: TranslateService, public dialog: MatDialog) {
     this.translate.stream(['']).subscribe((textarray) => {
@@ -254,9 +253,7 @@ export class CustompdfviewerComponent implements OnInit {
   goToDocumentEdit() {
     let that = this;
     let document_type = this.route.snapshot.queryParamMap.get('document_type');
-    console.log("document_type", document_type);
     if (document_type == '') {
-      console.log("szfrdvfgrft",);
       that.selectDocumentType();
     } else {
       that.goToEdit(document_type);
@@ -264,7 +261,6 @@ export class CustompdfviewerComponent implements OnInit {
   }
 
   selectDocumentType(): void {
-    console.log("calllrrfg",);
     let that = this;
     let document_id = this.route.snapshot.queryParamMap.get('document_id');
     const dialogRef = this.dialog.open(DocumentSelectDialog, {
@@ -521,7 +517,7 @@ export class RejectVendorCertificateForm {
   mode: any;
   backIcon: string;
   saveIcon = icon.SAVE_WHITE;
-  constructor (public dialogRef: MatDialogRef<RejectVendorCertificateForm>, public httpCall: HttpCall, public uiSpinner: UiSpinnerService,
+  constructor(public dialogRef: MatDialogRef<RejectVendorCertificateForm>, public httpCall: HttpCall, public uiSpinner: UiSpinnerService,
     public translate: TranslateService, @Inject(MAT_DIALOG_DATA) public data: any, private formBuilder: FormBuilder,
     private modeService: ModeDetectService, public snackbarservice: Snackbarservice, public route: ActivatedRoute,) {
     this.rejectForm = this.formBuilder.group({

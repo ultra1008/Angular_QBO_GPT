@@ -179,7 +179,6 @@ export class TeamArchiveCradComponent implements OnInit {
   }
 
   recoverTeamMember(id: any) {
-    console.log(id);
     let that = this;
     swalWithBootstrapButtons.fire({
       title: that.recover_team_member,

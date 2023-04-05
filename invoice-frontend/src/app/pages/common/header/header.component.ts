@@ -248,7 +248,6 @@ export class AddressBook implements OnInit {
         this.callIcon = icon.EMERGENCY_CONTACT;
         this.exitIcon = icon.CANCLE_WHITE;
       }
-      console.log("DARK MODE: " + this.mode);
     });
   }
   ngOnInit(): void {
@@ -297,7 +296,6 @@ export class AddressBook implements OnInit {
       setTimeout(() => {
         this.showTable = true;
       }, 100);
-      console.log("uesr list", this.userList);
     }
   }
 
@@ -309,7 +307,6 @@ export class AddressBook implements OnInit {
       setTimeout(() => {
         this.showTableTwo = true;
       }, 100);
-      console.log("vendor list", this.vendorList);
     }
   }
 }
