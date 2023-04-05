@@ -318,8 +318,8 @@ module.exports.login = async function (req, res) {
                                 if (UserData == null) {
                                     res.send({ message: translator.getStr('UserNotFound'), status: false });
                                 } else {
-                                    let roles_tmp = await roleConnection.findOne({ role_name: 'Admin' });
-                                    // roles_tmp = await roleConnection.findOne({ role_id: ObjectID(UserData.userroleId) })
+                                    // let roles_tmp = await roleConnection.findOne({ role_name: 'Admin' });
+                                    let roles_tmp = await roleConnection.findOne({ role_id: ObjectID(UserData.userroleId) });
                                     var psss_tnp = await common.validPassword(requestObject.password, UserData.password);
                                     if (psss_tnp) {
                                         var resObject_db = {
