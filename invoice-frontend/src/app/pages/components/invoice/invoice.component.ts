@@ -98,9 +98,12 @@ export class InvoiceComponent implements OnInit {
   });
   dateRange: any = [];
 
-  constructor (private router: Router, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
+  constructor(private router: Router, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
     public translate: TranslateService, public dialog: MatDialog,
     public httpCall: HttpCall, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService) {
+
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
+    this.role_permission = this.role_permission.role_permission;
     let tmp_gridtolist_team = localStorage.getItem("gridtolist_invoice_list");
     this.gridtolist =
       tmp_gridtolist_team == "grid" || tmp_gridtolist_team == null
@@ -453,7 +456,7 @@ export class InvoiceAttachment {
   FILE_NOT_SUPPORTED: string;
   Invoice_Add_Atleast_One_Document: string = '';
 
-  constructor (private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
+  constructor(private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
     public dialogRef: MatDialogRef<InvoiceAttachment>,
     @Inject(MAT_DIALOG_DATA) public data: any, public sb: Snackbarservice, public translate: TranslateService, public dialog: MatDialog, private sanitiser: DomSanitizer,
     public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService,
@@ -795,7 +798,7 @@ export class InvoiceReport {
   copyDataFromProject: string = '';
   add_my_self_icon = icon.ADD_MY_SELF_WHITE;
 
-  constructor (private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
+  constructor(private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
     public dialogRef: MatDialogRef<InvoiceReport>,
     @Inject(MAT_DIALOG_DATA) public data: any, public sb: Snackbarservice, public translate: TranslateService) {
 

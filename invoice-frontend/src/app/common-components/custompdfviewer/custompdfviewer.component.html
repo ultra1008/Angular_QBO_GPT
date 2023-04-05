@@ -3,17 +3,17 @@
         <div align="end" style="text-align: right;">
 
             <!-- document button -->
-            <button *ngIf="isDocumentEdit && documentDeletValue == 0" mat-raised-button (click)="goToDocumentEdit()"
-                class="cust-button-form"><img src="{{editIcon}}" alt="" class="" height="15px"
-                    style=" padding-right: 4px;">{{'Listing_Action_Edit' |
+            <button *ngIf="isDocumentEdit && documentDeletValue == 0 && role_permission.documents.Edit"
+                mat-raised-button (click)="goToDocumentEdit()" class="cust-button-form"><img src="{{editIcon}}" alt=""
+                    class="" height="15px" style=" padding-right: 4px;">{{'Listing_Action_Edit' |
                 translate}}</button>
-            <button *ngIf="isDocumentDelete && documentDeletValue == 0" mat-raised-button (click)="deleteDocument()"
-                class="cust-button-form"><img src="{{deleteIcon}}" alt="" class="" height="15px"
-                    style=" padding-right: 4px;">{{'Archive_all' |
+            <button *ngIf="isDocumentDelete && documentDeletValue == 0 && role_permission.documents.Delete"
+                mat-raised-button (click)="deleteDocument()" class="cust-button-form"><img src="{{deleteIcon}}" alt=""
+                    class="" height="15px" style=" padding-right: 4px;">{{'Archive_all' |
                 translate}}</button>
-            <button *ngIf="isDocumentDelete && documentDeletValue == 1" mat-raised-button (click)="deleteDocument()"
-                class="cust-button-form"><img src="{{restoreIcon}}" alt="" class="" height="15px"
-                    style=" padding-right: 4px;">{{'Restore_all' |
+            <button *ngIf="isDocumentDelete && documentDeletValue == 1 && role_permission.documents.Delete"
+                mat-raised-button (click)="deleteDocument()" class="cust-button-form"><img src="{{restoreIcon}}" alt=""
+                    class="" height="15px" style=" padding-right: 4px;">{{'Restore_all' |
                 translate}}</button>
 
 

@@ -10,8 +10,8 @@
       <div class="screen-title-section cust-user-heading-inline">
         <div *ngIf="addTeamMember" class="inner-search-bar cust-heght-textbox">
           <div class="main-search-bar">
-            <button mat-stroked-button style="margin-right: 2px;" class="sign-button" mat-raised-button
-              (click)="gotoArchive();">
+            <button *ngIf="role_permission.role_permission.users.Delete" mat-stroked-button style="margin-right: 2px;"
+              class="sign-button" mat-raised-button (click)="gotoArchive();">
               <img src="{{archivedIcon}}" alt="" class="pr-1" height="19px">
               {{'Archived_all' | translate }}
             </button>
@@ -27,12 +27,15 @@
               matTooltip="{{ 'TOOLTIP_IMPORT' | translate }}" (click)="importFileAction();">
               <img src="{{importIcon}}" alt="" height="20px">
             </button>
-            <!-- *ngIf="role_permission.Add" -->
-            <button mat-raised-button color="primary" class="sign-button" (click)="btnClick();"><img
-                src="{{add_my_self_icon}}" alt="" height="20px"> {{'Employee-Add-Team-Button' | translate }}
+
+            <button *ngIf="role_permission.role_permission.users.Add" mat-raised-button color="primary"
+              class="sign-button" (click)="btnClick();"><img src="{{add_my_self_icon}}" alt="" height="20px">
+              {{'Employee-Add-Team-Button' | translate }}
             </button>
-            <button *ngIf="isManagement" mat-raised-button color="primary" class="sign-button ml-1"
-              (click)="openManagementUserDialog();"><img src="{{add_my_self_icon}}" alt="" height="20px">
+
+            <button *ngIf="isManagement && role_permission.role_permission.users.Add" mat-raised-button color="primary"
+              class="sign-button ml-1" (click)="openManagementUserDialog();"><img src="{{add_my_self_icon}}" alt=""
+                height="20px">
               {{'Export_Employee_Add_Team_Button' | translate }}
             </button>
           </div>

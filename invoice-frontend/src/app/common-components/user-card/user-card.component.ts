@@ -63,12 +63,13 @@ export class UserCardComponent implements OnInit {
   User_Self_Delete: string = "";
   First_User_Self_Delete: string = "";
   role_permission: any;
-
+  role_permissions: any;
   /*
     Constructor
   */
   constructor(private modeService: ModeDetectService, public translate: TranslateService, public mostusedservice: Mostusedservice,
     public httpCall: HttpCall, public snackbarservice: Snackbarservice, public router: Router) {
+    this.role_permissions = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA) ?? '');
     var userdata = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
     this.role_permission = userdata.role_permission.users;
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);

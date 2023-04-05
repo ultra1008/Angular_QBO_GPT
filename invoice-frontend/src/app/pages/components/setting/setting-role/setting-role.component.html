@@ -206,8 +206,8 @@
                                 <!-- personalInformation -->
                                 <div class="col"
                                     *ngIf="role.role_permission.users.hasOwnProperty('personalInformation')">
-                                    <div class="cust-header-text">{{'Employee-form-personal-heading' | translate
-                                                                        }}</div>
+                                    <div class="cust-header-text">{{'Employee-form-personal-heading' | translate }}
+                                    </div>
                                     <div class="cust-div-inner">
                                         <div>
                                             <mat-checkbox class="example-margin"
@@ -229,8 +229,7 @@
                                 <!-- contactInformation -->
                                 <div class="col"
                                     *ngIf="role.role_permission.users.hasOwnProperty('contactInformation')">
-                                    <div class="cust-header-text">{{'Employee-form-contact-heading' | translate
-                                                                                                        }}</div>
+                                    <div class="cust-header-text">{{'Employee-form-contact-heading' | translate }}</div>
                                     <div class="cust-div-inner">
                                         <div>
                                             <mat-checkbox class="example-margin"
@@ -251,8 +250,7 @@
                                 <!-- employeeInformation -->
                                 <div class="col"
                                     *ngIf="role.role_permission.users.hasOwnProperty('employeeInformation')">
-                                    <div class="cust-header-text">{{'Employee-form-Employee-heading' | translate
-                                                                                                        }}</div>
+                                    <div class="cust-header-text">{{'Employee-form-Employee-heading' | translate}}</div>
                                     <div class="cust-div-inner">
                                         <div>
                                             <mat-checkbox class="example-margin"
@@ -272,8 +270,7 @@
                                 </div>
                                 <!-- emergencyContact -->
                                 <div class="col" *ngIf="role.role_permission.users.hasOwnProperty('emergencyContact')">
-                                    <div class="cust-header-text">{{'Employee-form-Emergency-contact' |
-                                                                                                        translate }}
+                                    <div class="cust-header-text">{{'Employee-form-Emergency-contact' |translate }}
                                     </div>
                                     <div class="cust-div-inner">
                                         <div>
@@ -363,8 +360,7 @@
                 <div class="cust-center-justify">
                     <button mat-raised-button (click)="saveData(role)" color="primary">
                         <img src="{{saveIcon}}" alt="" height="20px">
-                        {{'All-save' |
-                        translate}}</button>
+                        {{'All-save' |translate}}</button>
                 </div>
 
             </mat-tab>

@@ -161,7 +161,7 @@
                                 <div class="main-second-col1">
                                     <mat-form-field class="main-one-input-field" appearance="outline">
                                         <mat-label>{{'Employee-form-User-Role' | translate }}</mat-label>
-                                        <mat-select formControlName="userroleId" class="dark-cust-color"
+                                        <mat-select formControlName="userroleId" class="dark-cust-color" z
                                             [disabled]="is_role_disabled" required>
                                             <mat-option *ngFor="let db_role of db_roles" [value]="db_role.role_id">
                                                 {{db_role.role_name}}
@@ -202,11 +202,11 @@
                                         <mat-datepicker #picker disabled="false"></mat-datepicker>
                                     </mat-form-field>
                                 </div>
+                                <!--  [disabled]="is_role_disabled || user_id == localUserdata.UserData._id" -->
                                 <div class="main-second-col2 padding-left-cust">
                                     <mat-form-field class="main-one-input-field" appearance="outline">
                                         <mat-label>{{'Employee-form-Status' | translate }}</mat-label>
-                                        <mat-select formControlName="userstatus" class="dark-cust-color"
-                                            [disabled]="is_role_disabled || user_id == localUserdata.UserData._id">
+                                        <mat-select formControlName="userstatus" class="dark-cust-color">
                                             <mat-option *ngFor="let status of statuss" [value]="status.value">
                                                 {{status.tmp_lanaguage | translate }}
                                             </mat-option>

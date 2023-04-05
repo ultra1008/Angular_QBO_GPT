@@ -33,7 +33,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let invoice of allInvoices" (click)="editInvoice(invoice);">
+                            <tr *ngFor="let invoice of allInvoices">
                                 <td>{{ invoice.invoice }}</td>
                                 <td>{{ invoice.p_o }}</td>
                                 <td>{{ invoice.vendor.vendor_name }}</td>

@@ -85,6 +85,7 @@ export class VendorsComponent implements OnInit {
   count = {
     active: 0, inactive: 0
   };
+  role_permission: any;
 
   constructor(private modeService: ModeDetectService,
     public dialog: MatDialog,
@@ -95,6 +96,9 @@ export class VendorsComponent implements OnInit {
     public snackbarservice: Snackbarservice,
     public mostusedservice: Mostusedservice,
     public translate: TranslateService) {
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
+    this.role_permission = this.role_permission.role_permission;
+
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === "on" ? "on" : "off";
     if (this.mode == "off") {
@@ -150,7 +154,6 @@ export class VendorsComponent implements OnInit {
     const that = this;
     that.statusCount();
     that.getAllTerms();
-    let role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
 
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     this.locallanguage =
@@ -387,6 +390,7 @@ export class VendorsComponent implements OnInit {
   getColumName() {
     let that = this;
     let role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
+    console.log("role_permission", role_permission);
     return [
       {
         title: that.Vendor_VendorName,
@@ -425,22 +429,10 @@ export class VendorsComponent implements OnInit {
           var tmp_return;
           if (full.vendor_status == 1) {
             tmp_return =
-              `<div class="active-chip-green call-active-inactive-api" edit_tmp_id=` +
-              full._id +
-              `><i  edit_tmp_id=` +
-              full._id +
-              ` class="fa fa-check cust-fontsize-right" aria-hidden="true"></i>` +
-              that.acticve_word +
-              `</div>`;
+              `<div class="active-chip-green call-active-inactive-api" edit_tmp_id=` + full._id + `><i  edit_tmp_id=` + full._id + ` class="fa fa-check cust-fontsize-right" aria-hidden="true"></i>` + that.acticve_word + `</div>`;
           } else {
             tmp_return =
-              `<div class="inactive-chip-green call-active-active-api" edit_tmp_id=` +
-              full._id +
-              `><i  edit_tmp_id=` +
-              full._id +
-              ` class="fa fa-times cust-fontsize-right" aria-hidden="true"></i>` +
-              that.inacticve_word +
-              `</div>`;
+              `<div class="inactive-chip-green call-active-active-api" edit_tmp_id=` + full._id + `><i  edit_tmp_id=` + full._id + ` class="fa fa-times cust-fontsize-right" aria-hidden="true"></i>` + that.inacticve_word + `</div>`;
           }
           return tmp_return;
         },
@@ -471,30 +463,30 @@ export class VendorsComponent implements OnInit {
           let tmp_tmp = {
             _id: full._id,
           };
-          if ("") {
-            return (
-              `
-          <div class="dropdown">
-            <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust"  aria-haspopup="true" aria-expanded="false"  edit_tmp_id='` + JSON.stringify(full) + `' aria-hidden="true"></i>
-            <div class= "dropdown-content-cust" aria-labelledby="dropdownMenuButton">
-              <a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_shiftEditClass" >` + '<img src="' + that.editIcon + '" alt="" height="15px">' + that.Listing_Action_Edit + `</a>
-            </div>
-        </div>`
-            );
-          } else {
-            return (
-              `
+          let edit = "";
+          let archive = "";
+
+          if (role_permission.role_permission.vendor.Edit) {
+
+            edit = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_shiftEditClass" >` + '<img src="' + that.editIcon + '" alt="" height="15px">' + that.Listing_Action_Edit + `</a>`;
+          }
+          if (role_permission.role_permission.vendor.Delete) {
+
+            archive = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_shiftDeleteClass" >` + '<img src="' + that.archivedIcon + '" alt="" height="15px">' + that.Archived_all + `</a>`;
+          }
+          return (
+            `
           <div class="dropdown">
             <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust"  aria-haspopup="true" aria-expanded="false"  edit_tmp_id='` +
-              JSON.stringify(full) +
-              `' aria-hidden="true"></i>
+            JSON.stringify(full) +
+            `' aria-hidden="true"></i>
             <div class= "dropdown-content-cust" aria-labelledby="dropdownMenuButton">
-              <a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_shiftEditClass" >` + '<img src="' + that.editIcon + '" alt="" height="15px">' + that.Listing_Action_Edit + `</a>
-              <a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_shiftDeleteClass" >` + '<img src="' + that.archivedIcon + '" alt="" height="15px">' + that.Archived_all + `</a>
+              `+ edit + `
+              `+ archive + `
             </div>
         </div>`
-            );
-          }
+          );
+
         },
         width: "1%",
         orderable: false,

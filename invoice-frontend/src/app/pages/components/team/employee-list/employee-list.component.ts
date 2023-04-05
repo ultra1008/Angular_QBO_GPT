@@ -101,6 +101,7 @@ export class EmployeeListComponent implements OnInit {
         ? true
         : false;
     this.role_permission = userdata.role_permission.users;
+
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
     if (this.mode == 'off') {
@@ -157,16 +158,13 @@ export class EmployeeListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     let role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA) ?? '');
-    console.log("role", role_permission.UserData.role_name);
+
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA) ?? '');
+
     this.role_to = role_permission.UserData.role_name;
-    // let role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
-    // if (role_permission.role_permission.team.team.Add == false) {
-    //   this.addTeamMember = false;
-    // }
-    // if (role_permission.role_permission.team.team.Delete == false) {
-    //   this.deleteTeamMember = false;
-    // }
+
     this.uiSpinner.spin$.next(true);
     let that = this;
 

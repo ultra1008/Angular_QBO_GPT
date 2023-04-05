@@ -4,20 +4,22 @@
             {{ "Rovuk_Invoice_Roles_Invoice" | translate | titlecase }}
         </h1>
         <div class="row mr-2 action-button">
-            <button mat-raised-button color="primary" (click)="importProcessData()" class="sign-button ml-2"><img
-                    src="{{add_my_self_icon}}" alt="" height="20px">
+            <button *ngIf="role_permission.invoice.Add" m mat-raised-button color="primary"
+                (click)="importProcessData()" class="sign-button ml-2"><img src="{{add_my_self_icon}}" alt=""
+                    height="20px">
                 Import Data
             </button>
-            <button mat-raised-button color="primary" (click)="openAddDialog()" class="sign-button ml-2"><img
-                    src="{{add_my_self_icon}}" alt="" height="20px">
+            <button *ngIf="role_permission.invoice.Add" mat-raised-button color="primary" (click)="openAddDialog()"
+                class="sign-button ml-2"><img src="{{add_my_self_icon}}" alt="" height="20px">
                 {{'Invoice-Document-Add-Button' | translate }}
             </button>
             <!-- <button *ngIf="isManagement" mat-raised-button color="primary" class="sign-button ml-2"
             (click)="importManagementInvoice();"><img src="{{add_my_self_icon}}" alt="" height="20px">
             {{'Import_Management_Invoice' | translate }}
         </button> -->
-            <button *ngIf="isManagement" mat-raised-button color="primary" class="sign-button ml-2"
-                (click)="importManagementPO();"><img src="{{add_my_self_icon}}" alt="" height="20px">
+            <button *ngIf="isManagement&&role_permission.invoice.Add" mat-raised-button color="primary"
+                class="sign-button ml-2" (click)="importManagementPO();"><img src="{{add_my_self_icon}}" alt=""
+                    height="20px">
                 {{'Import_Management_PO' | translate }}
             </button>
         </div>

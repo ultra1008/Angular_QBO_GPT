@@ -47,13 +47,14 @@
                     aria-label="Left Align">
                     <img src="{{reportIcon}}" alt="" height="20px">
                 </button>
-                <button mat-stroked-button style="margin-right: 2px;" class="sign-button" (click)="openArchived()"
-                    mat-raised-button>
+                <button *ngIf="role_permission.vendor.Delete" mat-stroked-button style="margin-right: 2px;"
+                    class="sign-button" (click)="openArchived()" mat-raised-button>
                     <img src="{{archivedIcon}}" alt="" class="pr-1" height="19px">
                     {{'Archived_all' | translate }}
                 </button>
-                <button mat-raised-button color="primary" style="margin-right: 10px; " (click)="openVendorForm()"
-                    class="sign-button ml-1"><img src="{{add_my_self_icon}}" alt="" height="20px">
+                <button *ngIf="role_permission.vendor.Add" mat-raised-button color="primary"
+                    style="margin-right: 10px; " (click)="openVendorForm()" class="sign-button ml-1"><img
+                        src="{{add_my_self_icon}}" alt="" height="20px">
                     {{'Add-Vendor' | translate }}
                 </button>
             </div>

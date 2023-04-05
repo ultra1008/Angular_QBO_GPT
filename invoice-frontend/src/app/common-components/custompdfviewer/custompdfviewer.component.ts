@@ -64,10 +64,13 @@ export class CustompdfviewerComponent implements OnInit {
   };
   Archive_Orphan_Document_value: any = [];
   Archive_Orphan_Document: any;
+  role_permission: any;
 
   constructor(private location: Location, private modeService: ModeDetectService, public route: ActivatedRoute, private router: Router,
     public httpCall: HttpCall, public spinner: UiSpinnerService, public snackbarservice: Snackbarservice,
     public translate: TranslateService, public dialog: MatDialog) {
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
+    this.role_permission = this.role_permission.role_permission;
     this.translate.stream(['']).subscribe((textarray) => {
       this.Custom_Pdf_Viewer_Please_Confirm = this.translate.instant('Custom_Pdf_Viewer_Please_Confirm');
       this.Custom_Pdf_Viewer_Want_Approve_Change_Order = this.translate.instant('Custom_Pdf_Viewer_Want_Approve_Change_Order');
