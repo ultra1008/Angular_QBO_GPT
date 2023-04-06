@@ -91,6 +91,7 @@ export class InvoiceDetailPageComponent implements OnInit {
   _id: string;
   LOCAL_OFFSET: number;
   historyIcon: string;
+  role_permission: any;
 
 
 
@@ -107,6 +108,8 @@ export class InvoiceDetailPageComponent implements OnInit {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.invoice_id = this.id;
     this._id = this.id;
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
+    this.role_permission = this.role_permission.role_permission;
 
 
 

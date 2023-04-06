@@ -82,11 +82,14 @@ export class InvoiceOtherDocumentComponent implements OnInit {
   datefrompicker = new Date();
   _id: string;
   LOCAL_OFFSET: number;
+  role_permission: any;
 
   constructor(private sanitiser: DomSanitizer, public translate: TranslateService, private formBuilder: FormBuilder, public snackbarservice: Snackbarservice, public httpCall: HttpCall, public uiSpinner: UiSpinnerService, public dialog: MatDialog, private router: Router, private modeService: ModeDetectService, public route: ActivatedRoute,) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.invoice_id = this.id;
     this._id = this.id;
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
+    this.role_permission = this.role_permission.role_permission;
     this.translate.stream([""]).subscribe((textarray) => {
 
       this.yesButton = this.translate.instant("Compnay_Equipment_Delete_Yes");

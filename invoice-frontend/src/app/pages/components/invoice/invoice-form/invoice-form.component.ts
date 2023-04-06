@@ -72,8 +72,6 @@ export class InvoiceFormComponent implements OnInit {
   // DOCUMENT TYPE
   variablesDocumenttype: any = configdata.DOCUMENT_TYPE;
   DocumentType = this.variablesDocumenttype.slice();
-
-
   statusList = configdata.INVOICES_STATUS;
   Compnay_Equipment_Delete_Yes: string = "";
   Compnay_Equipment_Delete_No: string = "";
@@ -93,6 +91,7 @@ export class InvoiceFormComponent implements OnInit {
   invoiceStatus: any;
   documentTypes: any;
   badgeIcon = icon.BADGE_ICON;
+  role_permission: any;
 
   constructor(public dialog: MatDialog, public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
@@ -100,6 +99,8 @@ export class InvoiceFormComponent implements OnInit {
     this.document_id = this.route.snapshot.queryParamMap.get('document_id');
     this.invoiceStatus = this.route.snapshot.queryParamMap.get('status');
     this.documentTypes = this.route.snapshot.queryParamMap.get('documentTypes');
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
+    this.role_permission = this.role_permission.role_permission;
     if (this.id) {
       this.getOneInvoice();
     }

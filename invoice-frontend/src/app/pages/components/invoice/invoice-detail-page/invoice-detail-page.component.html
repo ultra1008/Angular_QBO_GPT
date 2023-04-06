@@ -45,7 +45,8 @@
                     Save Changes
                 </button> -->
 
-                <button mat-raised-button color="primary" style="margin-right: 12px;" class="sign-button">
+                <button *ngIf="role_permission.invoice.Edit" mat-raised-button color="primary"
+                    style="margin-right: 12px;" class="sign-button">
                     <img src="{{add_my_self_icon}}" alt="" height="20px">
                     Add to batch
                 </button>
@@ -83,8 +84,9 @@
                         </mat-expansion-panel-header>
                         <div class="pdf-data">
                             <div class=" mt-1 pdf-header">
-                                <button mat-raised-button color="primary" (click)="goToInvoiceEdit(invoiceData)"
-                                    class="cust-button-form"><img src="{{editIcon}}" alt="" class="" height="20px"
+                                <button *ngIf="role_permission.invoice.Edit" mat-raised-button color="primary"
+                                    (click)="goToInvoiceEdit(invoiceData)" class="cust-button-form"><img
+                                        src="{{editIcon}}" alt="" class="" height="20px"
                                         style=" padding-right: 4px;">{{'All-Edit' |
                                     translate}}</button>
                                 <button mat-raised-button color="primary" (click)="download()"
@@ -117,8 +119,9 @@
                         </mat-expansion-panel-header>
                         <div class="task-data">
                             <div class="d-flex justify-content-end">
-                                <button mat-raised-button color="primary" (click)="addNotes()"
-                                    class="sign-button m-3"><img src="{{add_my_self_icon}}" alt="" height="20px">
+                                <button *ngIf="role_permission.invoice.Edit" mat-raised-button color="primary"
+                                    (click)="addNotes()" class="sign-button m-3"><img src="{{add_my_self_icon}}" alt=""
+                                        height="20px">
                                     {{'Project-Timecard-Notes' | translate }}
                                 </button>
                             </div>
@@ -131,7 +134,8 @@
                                     </div>
                                 </div>
                                 <div class="cust-margin mx-1 pt-2">
-                                    <a mat-icon-button aria-label="Example icon button with a vertical three dot icon"
+                                    <a *ngIf="role_permission.invoice.Edit" mat-icon-button
+                                        aria-label="Example icon button with a vertical three dot icon"
                                         (click)="deleteNote(nots._id,invoice_id)">
                                         <mat-icon>delete</mat-icon>
                                     </a>
@@ -166,9 +170,9 @@
                                     </form>
                                 </div>
                                 <div class="text-center mb-2">
-                                    <button mat-raised-button (click)="saveNotes()" color="primary"
-                                        class="cust-button-form"><img src="{{saveIcon}}" alt="" class="pr-1"
-                                            height="15px">{{'All-save' |
+                                    <button *ngIf="role_permission.invoice.Edit" mat-raised-button (click)="saveNotes()"
+                                        color="primary" class="cust-button-form"><img src="{{saveIcon}}" alt=""
+                                            class="pr-1" height="15px">{{'All-save' |
                                         translate}}</button>
                                 </div>
                             </div>
@@ -186,7 +190,8 @@
                         </mat-expansion-panel-header>
                         <div class="row d-flex justify-content-end mt-1">
 
-                            <div class="container-cust" [ngClass]="mode == 'on'? 'button_dark' : 'button_light'" appDnd
+                            <div *ngIf="role_permission.invoice.Edit" class="container-cust"
+                                [ngClass]="mode == 'on'? 'button_dark' : 'button_light'" appDnd
                                 (fileDropped)="onFileDropped($event)">
                                 <input type="file" #fileDropRef id="fileDropRef" multiple
                                     (change)="fileBrowseHandler($event.target.files)" />
@@ -232,7 +237,8 @@
                                         </h4>
                                     </div>
 
-                                    <div class="delete" (click)="deleteFile_old(i)">
+                                    <div class="delete" *ngIf="role_permission.invoice.Delete"
+                                        (click)="deleteFile_old(i)">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="18"
                                             viewBox="0 0 14 18">
                                             <path fill="#B1B1B1" fill-rule="nonzero"
@@ -243,8 +249,8 @@
                             </div>
                         </div>
                         <div class="text-center mb-2" *ngIf="files.length">
-                            <button mat-raised-button (click)="saveAttchment()" color="primary"
-                                class="cust-button-form"><img src="{{saveIcon}}" alt="" class="pr-1"
+                            <button *ngIf="role_permission.invoice.Edit" mat-raised-button (click)="saveAttchment()"
+                                color="primary" class="cust-button-form"><img src="{{saveIcon}}" alt="" class="pr-1"
                                     height="15px">{{'All-save' |
                                 translate}}</button>
                         </div>

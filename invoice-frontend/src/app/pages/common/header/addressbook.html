@@ -1,5 +1,6 @@
 <div class="row">
-    <div class="col-2 dialog-head-left">
+    <div class="col-2">
+        <img class="crl mr-2" height="50px" width="50px" src="./assets/logo/invoice_logo.png" />
     </div>
     <div class="col-8 dialog-head-center">
         <h1 class="screen-title">{{'address_book_title' | translate}}</h1>
@@ -130,7 +131,8 @@
                                         </div>
                                         <div *ngIf="vendordata.status == 2">
                                             {{'Team-EmployeeList-Status-In-Active' |
-                                            translate}}</div>
+                                            translate}}
+                                        </div>
                                     </td>
                                     <td width="1%">
                                         <!-- <div class="dropdown">

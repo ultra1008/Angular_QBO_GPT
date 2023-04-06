@@ -20,15 +20,18 @@
                     <button mat-raised-button (click)="viewInvoice(id)" color="primary" class="cust-button-form"><img
                             src="{{viewIcon}}" alt="" class="pr-1" height="15px">{{'View_Related_Documents' |
                         translate}}</button>
-                    <button mat-raised-button (click)="saveInvoice()" color="primary" class="cust-button-form"><img
-                            src="{{saveIcon}}" alt="" class="pr-1" height="15px">{{'All-save' |
+                    <button *ngIf="role_permission.invoice.Edit" mat-raised-button (click)="saveInvoice()"
+                        color="primary" class="cust-button-form"><img src="{{saveIcon}}" alt="" class="pr-1"
+                            height="15px">{{'All-save' |
                         translate}}</button>
-                    <button mat-raised-button (click)="updateInvoice(id,'Approved')" *ngIf="status != 'Approved'"
-                        class="cust-button-form Approve"><img src="{{approveIcon}}" alt="" height="15px">
+                    <button *ngIf="role_permission.invoice.Edit && status != 'Approved'" mat-raised-button
+                        (click)="updateInvoice(id,'Approved')" class="cust-button-form Approve"><img
+                            src="{{approveIcon}}" alt="" height="15px">
                         {{'PO-View-Approve' | translate}}</button>
 
-                    <button mat-raised-button (click)="updateInvoice(id,'Rejected')" *ngIf="status != 'Rejected'"
-                        class="cust-button-form Denied"><img src="{{denyIcon}}" alt="" height="15px">
+                    <button *ngIf="role_permission.invoice.Edit && status != 'Rejected' " mat-raised-button
+                        (click)="updateInvoice(id,'Rejected')" class="cust-button-form Denied"><img src="{{denyIcon}}"
+                            alt="" height="15px">
                         {{'reject_all' |
                         translate}}</button>
                     <button (click)="openHistoryDialog()"
@@ -390,16 +393,17 @@
                         <button mat-raised-button class="cust-button-form" (click)="back()"><img src="{{backIcon}}"
                                 alt="" class="pr-1" height="15px">{{'All-back' |
                             translate}}</button>
-                        <button mat-raised-button (click)="saveData()" color="primary" class="cust-button-form"><img
-                                src="{{saveIcon}}" alt="" class="pr-1" height="15px">{{'All-save' |
+                        <button *ngIf="role_permission.invoice.Edit" mat-raised-button (click)="saveData()"
+                            color="primary" class="cust-button-form"><img src="{{saveIcon}}" alt="" class="pr-1"
+                                height="15px">{{'All-save' |
                             translate}}</button>
-                        <button mat-raised-button (click)="updateInvoice(id,'Approved')" *ngIf="status != 'Approved'"
-                            class="
+                        <button *ngIf="role_permission.invoice.Edit && status != 'Approved' " mat-raised-button
+                            (click)="updateInvoice(id,'Approved')" class="
                             cust-button-form Approve"><img src="{{approveIcon}}" alt="" height="15px">
                             {{'PO-View-Approve' | translate}}</button>
 
-                        <button mat-raised-button (click)="updateInvoice(id,'Rejected')" *ngIf="status != 'Rejected'"
-                            class="
+                        <button *ngIf="role_permission.invoice.Edit && status != 'Rejected'" mat-raised-button
+                            (click)="updateInvoice(id,'Rejected')" class="
                             cust-button-form Denied"><img src="{{denyIcon}}" alt="" height="15px">
                             {{'reject_all' |
                             translate}}</button>
