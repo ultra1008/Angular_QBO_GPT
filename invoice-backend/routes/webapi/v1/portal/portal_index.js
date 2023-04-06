@@ -8,10 +8,10 @@ router.post('/webapi/v1/login', authValidation.login, authController.login);
 router.post('/webapi/v1/changepassword', authValidation.changePasswordValidation, authController.changepassword);
 router.post('/webapi/v1/savelogindetails', common.checkTokenExistOrNot, authController.savelogindetails);
 router.post('/webapi/v1/userlogout', authController.userlogout);
-router.post('/webapi/v1/sponsorforgetpassword', authController.sponsorforgetpassword);
+router.post('/webapi/v1/forgetpassword', authController.forgetpassword);
 router.post('/webapi/v1/senduserpassword', authValidation.sendUserPasswordValidation, authController.sendUserPassword);
 router.post('/webapi/v1/getcompanysetting', authValidation.getCompanySetting, authController.getCompanySetting);
-router.post('/webapi/v1/sendsupplierotp', authValidation.sendSupplierOTP, authController.sendSupplierOTP);
+router.post('/webapi/v1/sendotp', authValidation.sendOTP, authController.sendOTP);
 router.post('/webapi/v1/submitemailotp', authValidation.submitEmailOTP, authController.submitEmailOTP);
 
 var companySizeController = require('./company_size/companySizeController');

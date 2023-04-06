@@ -24,15 +24,14 @@ module.exports.login = async function (req, res) {
         if (err) {
             res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
         } else {
+            requestObject.useremail = requestObject.useremail.toLowerCase();
             if (resultfind != null) {
                 DB.findOne(collectionConstant.SUPER_ADMIN_TENANTS, { companycode: requestObject.companycode }, async function (err, result) {
-
                     if (err) {
                         res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
                     } else {
                         let connection_db_api;
                         try {
-
                             if (result) {
                                 connection_db_api = await db_connection.connection_db_api(result);
                                 let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
@@ -854,6 +853,7 @@ module.exports.sendOTPforLogin = async function (req, res) {
     var translator = new common.Language('en');
     let connection_db_api;
     try {
+        requestObject.useremail = requestObject.useremail.toLowerCase();
         var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
         let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: requestObject.companycode });
         if (company_data != null) {
@@ -915,6 +915,7 @@ module.exports.submitEmailOTPforLogin = async function (req, res) {
     var translator = new common.Language('en');
     let connection_db_api;
     try {
+        requestObject.useremail = requestObject.useremail.toLowerCase();
         var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
         let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: requestObject.companycode });
         let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: requestObject.companycode });
@@ -1335,6 +1336,7 @@ module.exports.forgetPassword = async function (req, res) {
             res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
         } else {
             try {
+                req.body.useremail = req.body.useremail.toLowerCase();
                 if (result) {
                     let connection_db_api = await db_connection.connection_db_api(result);
                     try {

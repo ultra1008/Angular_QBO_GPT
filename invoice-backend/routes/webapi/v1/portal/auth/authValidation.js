@@ -94,7 +94,7 @@ const getCompanySetting = (req, res, next) => {
     });
 };
 
-const sendSupplierOTP = (req, res, next) => {
+const sendOTP = (req, res, next) => {
     const validationRule = {
         "companycode": "required",
         "useremail": "required",
@@ -137,6 +137,6 @@ module.exports = {
     sponsorforgetpassword,
     sendUserPasswordValidation,
     getCompanySetting,
-    sendSupplierOTP,
+    sendOTP,
     submitEmailOTP,
 };

@@ -21,6 +21,7 @@ module.exports.login = async function (req, res) {
         if (err) {
             res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
         } else {
+            requestObject.useremail = requestObject.useremail.toLowerCase();
             if (resultfind != null) {
                 DB.findOne(collectionConstant.SUPER_ADMIN_TENANTS, { companycode: requestObject.companycode }, async function (err, result) {
                     if (err) {
@@ -516,7 +517,7 @@ module.exports.userlogout = async function (req, res) {
     }
 };
 
-module.exports.sponsorforgetpassword = async function (req, res) {
+module.exports.forgetpassword = async function (req, res) {
     var requestObject = req.body;
     DB.findOne(collectionConstant.SUPER_ADMIN_COMPANY, { companycode: requestObject.companycode }, function (err, resultfind) {
         DB.findOne(collectionConstant.SUPER_ADMIN_TENANTS, { companycode: requestObject.companycode }, async function (err, resulttanent) {
@@ -525,6 +526,7 @@ module.exports.sponsorforgetpassword = async function (req, res) {
             } else {
                 var translator = new common.Language('en');
                 let connection_db_api = await db_connection.connection_db_api(resulttanent);
+                req.body.useremail = req.body.useremail.toLowerCase();
                 try {
                     let supplierUserSchemaConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
                     let find_one_vendor = await supplierUserSchemaConnection.findOne({ useremail: requestObject.useremail });
@@ -691,11 +693,12 @@ module.exports.getCompanySetting = async function (req, res) {
     });
 };
 
-module.exports.sendSupplierOTP = async function (req, res) {
+module.exports.sendOTP = async function (req, res) {
     var requestObject = req.body;
     var translator = new common.Language('en');
     let connection_db_api;
     try {
+        requestObject.useremail = requestObject.useremail.toLowerCase();
         var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
         let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: requestObject.companycode });
         let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: requestObject.companycode });
@@ -753,6 +756,7 @@ module.exports.submitEmailOTP = async function (req, res) {
     var translator = new common.Language('en');
     let connection_db_api;
     try {
+        requestObject.useremail = requestObject.useremail.toLowerCase();
         var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
         let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: requestObject.companycode });
         let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: requestObject.companycode });

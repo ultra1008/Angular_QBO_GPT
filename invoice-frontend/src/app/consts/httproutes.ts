@@ -20,7 +20,7 @@ export enum httproutes {
 
     USER_LOGOUT = "/webapi/v1/userlogout",
     USER_LOGIN_HISTORY = "/webapi/v1/savelogindetails",
-    USER_FORGET_PASSWORD = "/webapi/v1/sponsorforgetpassword",
+    USER_FORGET_PASSWORD = "/webapi/v1/forgetpassword",
     USER_SEND_PASSWORD = "/webapi/v1/senduserpassword",
 
     ALL_SUPERVISORS_GET = "/webapi/v1/portal/getallsupervisors",
@@ -854,7 +854,7 @@ export enum httproutes {
     TEAM_RECOVER = "/webapi/v1/portal/recoverteam",
     TEAM_AECHIVE = "/webapi/v1/portal/getarchiveteams",
     GET_COMPANY_SETTINGS = "/webapi/v1/getcompanysetting",
-    SEND_SUPPLIER_OTP_EMAIL = "/webapi/v1/sendsupplierotp",
+    SEND_SUPPLIER_OTP_EMAIL = "/webapi/v1/sendotp",
     SUBMITT_SUPPLIER_OTP = "/webapi/v1/submitemailotp",
 
     // PROJECT_DAILY_REPORT_SEND = "/webapi/v2/portal/senddailypdf",
