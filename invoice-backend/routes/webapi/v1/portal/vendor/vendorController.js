@@ -27,6 +27,7 @@ module.exports.saveVendor = async function (req, res) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
+            requestObject.vendor_email = requestObject.vendor_email.toLowerCase();
             var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
             var termConnection = connection_db_api.model(collectionConstant.INVOICE_TERM, termSchema);
             var id = requestObject._id;

@@ -112,6 +112,7 @@ module.exports.saveEmployee = async function (req, res) {
 
                     newOpenFile = this.openedFiles;
                     var body = await JSON.parse(fields.reqObject);
+                    body.useremail = body.useremail.toLowerCase();
                     jobtitle = body.jobtitle_name;
                     department = body.department_name;
                     costcode = body.costcode_name;
@@ -1250,7 +1251,7 @@ module.exports.savePersonalInfo = async function (req, res) {
                 }).on('end', async function () {
                     newOpenFile = this.openedFiles;
                     var body = JSON.parse(fields.reqObject);
-
+                    body.useremail = body.useremail.toLowerCase();
                     jobtitle = body.jobtitle_name;
                     department = body.department_name;
                     costcode = body.costcode_name;
