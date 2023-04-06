@@ -64,6 +64,8 @@ export class UserCardComponent implements OnInit {
   First_User_Self_Delete: string = "";
   role_permission: any;
   role_permissions: any;
+  defalut_image: string = icon.MALE_PLACEHOLDER;
+  defalut_female_mage: string = icon.FEMALE_PLACEHOLDER;
   /*
     Constructor
   */
