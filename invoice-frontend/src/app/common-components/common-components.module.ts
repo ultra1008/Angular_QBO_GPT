@@ -10,7 +10,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { WeatherUiComponent, WeatherUiForDayComponent } from './weather-ui/weather-ui.component';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -28,8 +27,7 @@ import { InvoiceCardComponent } from './invoice-card/invoice-card.component';
 
 @NgModule({
   declarations: [
-    WeatherUiComponent,
-    WeatherUiForDayComponent,
+
     UserCardComponent,
     TeamArchiveCradComponent,
     SelectUserRoleForm,
@@ -66,7 +64,7 @@ import { InvoiceCardComponent } from './invoice-card/invoice-card.component';
     })
   ],
   exports: [
-    WeatherUiComponent,
+
     UserCardComponent,
     TeamArchiveCradComponent,
     SelectUserRoleForm,

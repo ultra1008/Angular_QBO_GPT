@@ -2,24 +2,13 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { PagesCoreComponent } from './pages-core/pages-core.component';
 import { PortalAuthGuard } from './components/portal-auth/guards';
-
 import { HelppageComponent } from './helppage/helppage.component';
 import { ChangepasswordComponent } from './helppage/changepassword/changepassword.component';
 import { TermspageComponent } from './helppage/termspage/termspage.component';
-
 import { SettingComponent } from './components/setting/setting.component';
 import { CustompdfviewerComponent } from '../common-components/custompdfviewer/custompdfviewer.component';
 import { CustomimageviewerComponent } from '../common-components/customimageviewer/customimageviewer.component';
-
-
-
 import { UserpublicDatatableComponent } from './components/userpublic-datatable/userpublic-datatable.component';
-
-
-
-
-
-
 import { EmployeeListComponent } from './components/team/employee-list/employee-list.component';
 import { EmployeeFormComponent } from './components/team/employee-form/employee-form.component';
 import { EmployeeViewComponent } from './components/team/employee-view/employee-view.component';
@@ -360,9 +349,6 @@ const routes: Routes = [
         pathMatch: 'full',
         component: ForcefullyResetpasswordComponent
       }, */
-
-
-
 
       {
         path: 'invoice-detail',
