@@ -536,7 +536,6 @@ module.exports.forgetpassword = async function (req, res) {
                         let temp_password = common.rendomPassword(8);
 
                         let update_user = await supplierUserSchemaConnection.updateOne({ useremail: req.body.useremail }, { password: common.generateHash(temp_password), useris_password_temp: true });
-                        console.log("useremail", req.body.useremail, update_user);
                         const data = await fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/resetPassword.html', 'utf8');
                         let emailTmp = {
                             HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
@@ -545,16 +544,19 @@ module.exports.forgetpassword = async function (req, res) {
                             THANKS: translator.getStr('EmailTemplateThanks'),
                             ROVUK_TEAM: ` ${resultfind.companyname} ${translator.getStr('team_mail_all')}`,
 
-                            TITLE: `${translator.getStr('vendor_mail_forgotpass_title1')} ${resultfind.companyname} ${translator.getStr('vendor_mail_forgotpass_title2')}`,
-                            HI_USERNAME: `${translator.getStr('Hello_mail')}`,
+                            TITLE: translator.getStr('MailForgotPassword_Title'),
+                            HI_USERNAME: translator.getStr('Hello_mail'),
                             TEXT1: translator.getStr('vendor_mail_forgotpass_line1_1'),
                             TEXT2: translator.getStr('vendor_mail_forgotpass_line3_1'),
                             TEMP_PASSWORD: `${translator.getStr('vendor_mail_forgotpass_line2_1')} ${temp_password}`,
 
+                            BUTTON_TEXT: translator.getStr('EmailInvitationLogIn'),
+                            LINK: config.SITE_URL + "/login",
+
                             COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${resultfind.companyname}`,
                             COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${resultfind.companycode}`,
                         };
-                        let tmp_subject = `${resultfind.companyname} ${translator.getStr('vendor_mail_forgotpass_subject')}`;
+                        let tmp_subject = translator.getStr('MailForgotPassword_Subject');
                         var template = handlebars.compile(data);
                         var HtmlData = await template(emailTmp);
                         let tenant_smtp_security = config.tenants.tenant_smtp_security == "Yes" || config.tenants.tenant_smtp_security == "YES" || config.tenants.tenant_smtp_security == "yes" ? true : false;
@@ -628,21 +630,21 @@ module.exports.sendUserPassword = async function (req, res) {
                 let update_user = await userConnection.updateOne({ _id: decodedToken.UserData._id }, { password: common.generateHash(requestObject.password), useris_password_temp: true });
                 const data = await fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/resetPassword.html', 'utf8');
                 let emailTmp = {
-                    HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
-                    SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${config.NUMBERPHONE2}`,
-                    ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                    HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE} `,
+                    SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${config.NUMBERPHONE2} `,
+                    ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')} `,
                     THANKS: translator.getStr('EmailTemplateThanks'),
                     ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
 
                     TITLE: translator.getStr('EmailResetPasswordTitle'),
-                    HI_USERNAME: `${translator.getStr('EmailTemplateHi')} ${UserData.username},`,
+                    HI_USERNAME: `${translator.getStr('EmailTemplateHi')} ${UserData.username}, `,
                     TEXT1: translator.getStr('EmailResetPasswordText1'),
                     TEXT2: translator.getStr('EmailResetPasswordText2'),
                     TEXT3: translator.getStr('EmailResetPasswordText3'),
-                    TEMP_PASSWORD: `${translator.getStr('EmailResetPasswordTempPassword')} ${requestObject.password}`,
+                    TEMP_PASSWORD: `${translator.getStr('EmailResetPasswordTempPassword')} ${requestObject.password} `,
 
-                    // COMPANYNAME: `${translator.getStr('EmailAppInvitationCompanyName')} ${company_data.companyname}`,
-                    // COMPANYCODE: `${translator.getStr('EmailAppInvitationCompanyCode')} ${company_data.companycode}`,
+                    // COMPANYNAME: `${ translator.getStr('EmailAppInvitationCompanyName'); } ${ company_data.companyname; } `,
+                    // COMPANYCODE: `${ translator.getStr('EmailAppInvitationCompanyCode'); } ${ company_data.companycode; } `,
                 };
                 var template = handlebars.compile(data);
                 var HtmlData = await template(emailTmp);
@@ -717,18 +719,18 @@ module.exports.sendOTP = async function (req, res) {
             let save_email_otp = await send_email_otp.save();
             if (save_email_otp) {
                 let emailTmp = {
-                    HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
-                    SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
-                    ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                    HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE} `,
+                    SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2} `,
+                    ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')} `,
                     THANKS: translator.getStr('EmailTemplateThanks'),
                     ROVUK_TEAM: `${company_data.companyname} team`,
 
                     TITLE: 'One Time Password (OTP) verification',
-                    LINE1: new handlebars.SafeString(`Your One Time Password (OTP) is <b>${sixdidgitnumber}</b>.`),
+                    LINE1: new handlebars.SafeString(`Your One Time Password(OTP) is < b > ${sixdidgitnumber}</b >.`),
                     LINE2: 'Make sure to enter it in the web browser, since your account can’t be accessed without it.',
 
-                    COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
-                    COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
+                    COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname} `,
+                    COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode} `,
                 };
                 const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/emailOTP.html', 'utf8');
                 var template = handlebars.compile(file_data);
@@ -1060,4 +1062,4 @@ module.exports.submitEmailOTP = async function (req, res) {
     } finally {
         //connection_db_api.close()
     }
-};
+};;;;;;;;;;;;

@@ -64,6 +64,8 @@ module.exports = {
     vendor_mail_line1_1: "just registered in the Supplier construction portal.",
     vendor_mail_line2_1: "Please complete the vendor registration process and authorize if necessary.",
 
+    MailForgotPassword_Subject: 'Rovuk Invoice reset password',
+    MailForgotPassword_Title: 'Reset your Rovuk Invoice password',
     vendor_mail_forgotpass_title1: "Reset your",
     vendor_mail_forgotpass_title2: "Login Password",
     vendor_mail_forgotpass_subject: "Login Password Reset",
