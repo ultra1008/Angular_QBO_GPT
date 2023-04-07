@@ -1,21 +1,21 @@
-import { Component, ElementRef, Inject, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { Location } from '@angular/common';
-import { httproutes, icon, localstorageconstants, wasabiImagePath } from 'src/app/consts';
+import { httproutes, icon, localstorageconstants } from 'src/app/consts';
 import { HttpCall } from 'src/app/service/httpcall.service';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModeDetectService } from '../../map/mode-detect.service';
 import { Observable, Subscription } from 'rxjs';
-import { commonFileChangeEvent, epochToDateTime, MMDDYYYY_formet } from 'src/app/service/utils';
+import { epochToDateTime, MMDDYYYY_formet } from 'src/app/service/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
 import { EmployeeService } from '../../team/employee.service';
 import { map, startWith } from 'rxjs/operators';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { log } from 'console';
+
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
     confirmButton: "btn btn-success margin-right-cust s2-confirm",
@@ -61,17 +61,19 @@ export class InvoiceFormComponent implements OnInit {
   vendorList: any = [];
   filteredVendors: Observable<any[]>;
   isEmployeeData: Boolean = false;
+
   // db_costcodes
   variablesdb_costcodes: any = [];
   db_costcodes: any = this.variablesdb_costcodes.slice();
+
   // usersArray
   variablesusersArray: any = [];
   usersArray: any = this.variablesusersArray.slice();
 
-
   // DOCUMENT TYPE
   variablesDocumenttype: any = configdata.DOCUMENT_TYPE;
   DocumentType = this.variablesDocumenttype.slice();
+
   statusList = configdata.INVOICES_STATUS;
   Compnay_Equipment_Delete_Yes: string = "";
   Compnay_Equipment_Delete_No: string = "";
@@ -79,8 +81,6 @@ export class InvoiceFormComponent implements OnInit {
   noButton: string = "";
   Approve_Invoice_massage: string = "";
   Reject_Invoice_massage: string = "";
-
-  // options: string[] = ['One', 'Two', 'Three'];
   filteredOptions: Observable<string[]>;
   vendor = new FormControl('');
   badge: any = [];
@@ -218,10 +218,10 @@ export class InvoiceFormComponent implements OnInit {
       map(value => this._filterVendor(value || '')),
     );
     this.employeeservice.getalluser().subscribe(function (data) {
-      // that.uiSpinner.spin$.next(false);
+
       if (data.status) {
         that.isEmployeeData = true;
-        // that.usersArray = data.data;
+
         that.variablesusersArray = data.data;
         that.usersArray = that.variablesusersArray.slice();
         that.isManagement = data.is_management;
@@ -251,7 +251,6 @@ export class InvoiceFormComponent implements OnInit {
       iframe.style.display = 'none';
       iframe.src = blobUrl;
       document.body.appendChild(iframe);
-      //iframe.contentWindow.print();
       iframe.onload = () => {
         setTimeout(() => {
           iframe.focus();
@@ -278,7 +277,7 @@ export class InvoiceFormComponent implements OnInit {
     that.httpCall.httpPostCall(httproutes.PROJECT_SETTING_COST_CODE, { module: 'Invoice' }
     ).subscribe(function (params) {
       if (params.status) {
-        // that.db_costcodes = params.data;
+
         that.variablesdb_costcodes = params.data;
         that.db_costcodes = that.variablesdb_costcodes.slice();
       }
@@ -528,17 +527,17 @@ export class InvoiceFormComponent implements OnInit {
     }
   }
   saveInvoice() {
-    console.log("1");
+
     let that = this;
     if (that.invoiceform.valid) {
-      console.log("2");
+
       let requestObject = that.invoiceform.value;
       if (requestObject.invoice_date_epoch == null) {
         requestObject.invoice_date_epoch = 0;
       } else {
         requestObject.invoice_date_epoch = Math.round(requestObject.invoice_date_epoch.valueOf() / 1000);
       }
-      console.log("3");
+
       if (requestObject.due_date_epoch == null) {
         requestObject.due_date_epoch = 0;
       } else {
@@ -554,30 +553,30 @@ export class InvoiceFormComponent implements OnInit {
       } else {
         requestObject.ship_date_epoch = Math.round(requestObject.ship_date_epoch.valueOf() / 1000);
       }
-      console.log("4");
+
       if (that.id) {
-        console.log("5");
+
         requestObject._id = that.id;
       }
-      console.log("6");
+
       that.uiSpinner.spin$.next(true);
       that.httpCall.httpPostCall(httproutes.INVOICE_SAVE_INVOICE, requestObject).subscribe(function (params) {
-        console.log("7");
+
         if (params.status) {
-          console.log(123);
+
           that.snackbarservice.openSnackBar(params.message, "success");
           that.uiSpinner.spin$.next(false);
           that.back();
         } else {
-          console.log(4556);
+
           that.snackbarservice.openSnackBar(params.message, "error");
         }
-        console.log("8");
+
         that.uiSpinner.spin$.next(false);
       });
-      console.log("9");
+
     }
-    console.log("10");
+
   }
 
   saveProcessDocument() {

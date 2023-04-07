@@ -60,7 +60,7 @@ export class DocumentsListComponent implements OnInit {
   Archived_By: string;
   Archived_At: string;
 
-  constructor (public dialog: MatDialog, private http: HttpClient, private location: Location, public httpCall: HttpCall, private modeService: ModeDetectService,
+  constructor(public dialog: MatDialog, private http: HttpClient, private location: Location, public httpCall: HttpCall, private modeService: ModeDetectService,
     public snackbarservice: Snackbarservice, private router: Router, public translate: TranslateService,) {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     let that = this;
@@ -251,13 +251,7 @@ export class DocumentsListComponent implements OnInit {
       {
         title: that.step_index == 0 ? that.Uploaded_By : that.Archived_By,
         data: "updated_by",
-        /* render: function (data: any, type: any, full: any) {
-         if (that.step_index == 0) {
-           return full.created_by.userfullname;
-         } else {
-           return full.updated_by.userfullname;
-         }
-       }, */
+
         defaultContent: "",
       },
       {
@@ -267,37 +261,7 @@ export class DocumentsListComponent implements OnInit {
         },
         defaultContent: "",
       },
-      // {
-      //   title: 'Action',
-      //   render: function (data: any, type: any, full: any) {
 
-      //     let tmp_tmp = {
-      //       _id: full._id,
-      //       document_type: full.document_type,
-      //       pdf_url: full.pdf_url,
-
-      //     };
-      //     let view = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_viewDocViewClass" >` + '<img src="' + that.viewIcon + `" alt="" height="15px">View</a>`;
-      //     let edit = '';
-      //     let archive = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_viewDocDeleteClass" >` + '<img src="' + that.deleteIcon + `" alt="" height="15px">Delete</a>`;
-      //     if (full.document_type != 'Already Exists') {
-      //       edit = `<a edit_tmp_id='` + JSON.stringify(full) + `' class="dropdown-item button_viewDocEditClass" >` + '<img src="' + that.editIcon + `" alt="" height="15px">Edit</a>`;
-      //     }
-      //     return (
-      //       `
-      //    <div class="dropdown">
-      //      <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust"  aria-haspopup="true" aria-expanded="false"  edit_tmp_id='` + JSON.stringify(full) + `' aria-hidden="true"></i>
-      //      <div class= "dropdown-content-cust" aria-labelledby="dropdownMenuButton">
-      //        ` + view + `
-      //        ` + edit + `
-      //        ` + archive + `
-      //      </div>
-      //  </div>`
-      //     );
-      //   },
-      //   width: "1%",
-      //   orderable: false,
-      // },
     ];
   }
 
@@ -384,7 +348,7 @@ export class DocumentSelectDialog {
     invoice: 'INVOICE'
   };
 
-  constructor (private modeService: ModeDetectService, public dialogRef: MatDialogRef<DocumentSelectDialog>, public translate: TranslateService,
+  constructor(private modeService: ModeDetectService, public dialogRef: MatDialogRef<DocumentSelectDialog>, public translate: TranslateService,
     private router: Router, @Inject(MAT_DIALOG_DATA) public data: any, private formBuilder: FormBuilder, public spinner: UiSpinnerService,
     public sb: Snackbarservice, public route: ActivatedRoute, public httpCall: HttpCall, public snackbarservice: Snackbarservice) {
     this.projectId = data.project_id;

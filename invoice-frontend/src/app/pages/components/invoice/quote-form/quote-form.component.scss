@@ -195,7 +195,7 @@ form {
 }
 
 .paddings {
-    // padding-left: 1rem !important;
+
     text-align: right !important;
     margin-right: 25px;
 }
@@ -228,11 +228,6 @@ b {
 .rix {
     width: 450px;
 }
-
-// collapsed problem
-// .flux-content-section[navbar-type="collapsed"][effect-type="shrink"] {
-//     margin-left: unset !important;
-// }
 
 ::ng-deep .flux-content-section[navbar-type="expanded"][effect-type="push"] {
     margin-left: 0px !important;

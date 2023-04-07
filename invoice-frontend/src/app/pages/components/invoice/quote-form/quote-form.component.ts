@@ -1,5 +1,5 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { Component, OnInit, } from '@angular/core';
+import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { Location } from '@angular/common';
 import { httproutes, icon, localstorageconstants, wasabiImagePath } from 'src/app/consts';
@@ -8,21 +8,15 @@ import { UiSpinnerService } from 'src/app/service/spinner.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModeDetectService } from '../../map/mode-detect.service';
 import { Observable, Subscription } from 'rxjs';
-import { commonFileChangeEvent, epochToDateTime } from 'src/app/service/utils';
+import { epochToDateTime } from 'src/app/service/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
 import { EmployeeService } from '../../team/employee.service';
 import { map, startWith } from 'rxjs/operators';
-import { Console } from 'console';
-const swalWithBootstrapButtons = Swal.mixin({
-  customClass: {
-    confirmButton: 'btn btn-success s2-confirm margin-right-cust',
-    denyButton: 'btn btn-danger',
-    cancelButton: 's2-confirm btn btn-gray ml-2'
-  },
-  buttonsStyling: false
-});
+
+
+
 @Component({
   selector: 'app-quote-form',
   templateUrl: './quote-form.component.html',
@@ -218,7 +212,7 @@ export class QuoteFormComponent implements OnInit {
       iframe.style.display = 'none';
       iframe.src = blobUrl;
       document.body.appendChild(iframe);
-      //iframe.contentWindow.print();
+
       iframe.onload = () => {
         setTimeout(() => {
           iframe.focus();

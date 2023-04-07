@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation, NgxGalleryImageSize, NgxGalleryComponent } from 'ngx-gallery-9';
+import { NgxGalleryImage, NgxGalleryAnimation, NgxGalleryImageSize } from 'ngx-gallery-9';
 @Component({
   selector: 'app-customimageviewer',
   templateUrl: './customimageviewer.component.html',
@@ -29,7 +29,7 @@ export class CustomimageviewerComponent implements OnInit {
             small: this.tmpgallery[i],
             medium: this.tmpgallery[i],
             big: this.tmpgallery[i]
-          }
+          };
           this.galleryImages.push(srctmp);
         } else if (extension == "doc" || extension == "docx") {
           this.gallery.push('https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png');
@@ -37,7 +37,7 @@ export class CustomimageviewerComponent implements OnInit {
             small: 'https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png',
             medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png',
             big: 'https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png'
-          }
+          };
           this.galleryImages.push(srctmp);
         } else if (extension == "pdf") {
           this.gallery.push('https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png');
@@ -45,7 +45,7 @@ export class CustomimageviewerComponent implements OnInit {
             small: 'https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png',
             medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png',
             big: 'https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png'
-          }
+          };
           this.galleryImages.push(srctmp);
         } else if (extension == "odt") {
           this.gallery.push('https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png');
@@ -53,7 +53,7 @@ export class CustomimageviewerComponent implements OnInit {
             small: 'https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png',
             medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png',
             big: 'https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png'
-          }
+          };
           this.galleryImages.push(srctmp);
         } else if (extension == "rtf") {
           this.gallery.push('https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png');
@@ -61,7 +61,7 @@ export class CustomimageviewerComponent implements OnInit {
             small: 'https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png',
             medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png',
             big: 'https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png'
-          }
+          };
           this.galleryImages.push(srctmp);
         } else if (extension == "txt") {
           this.gallery.push('https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png');
@@ -69,7 +69,7 @@ export class CustomimageviewerComponent implements OnInit {
             small: 'https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png',
             medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png',
             big: 'https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png'
-          }
+          };
           this.galleryImages.push(srctmp);
         } else if (extension == "ppt") {
           this.gallery.push('https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png');
@@ -77,7 +77,7 @@ export class CustomimageviewerComponent implements OnInit {
             small: 'https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png',
             medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png',
             big: 'https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png'
-          }
+          };
           this.galleryImages.push(srctmp);
         } else if (extension == "xls" || extension == "xlsx" || extension == "csv") {
           this.gallery.push('https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png');
@@ -85,7 +85,7 @@ export class CustomimageviewerComponent implements OnInit {
             small: 'https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png',
             medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png',
             big: 'https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png'
-          }
+          };
           this.galleryImages.push(srctmp);
         } else {
           this.gallery.push('https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png');
@@ -93,7 +93,7 @@ export class CustomimageviewerComponent implements OnInit {
             small: 'https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png',
             medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png',
             big: 'https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png'
-          }
+          };
           this.galleryImages.push(srctmp);
         }
       }

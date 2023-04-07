@@ -53,7 +53,6 @@ export class InvoiceDashboardComponent implements OnInit {
   subscription!: Subscription;
   timePeriods: any = [
     "app-totalprojectvalue",
-    // "app-minority-participations", // We commented this as per requirement
     "app-totalnumber-discipline",
     "app-dailyreport-by-status",
     "app-contractvalue-by-prime",
@@ -79,27 +78,8 @@ export class InvoiceDashboardComponent implements OnInit {
     responsive: true,
     showLines: false,
     plugins: {
-      //   legend: {
-      //     display: true,
-      //   },
-      //   datalabels: {
-      //     color: 'white',
-      //     anchor: 'center',
-      //     align: 'center',
-
-      //   }
     },
-    // tooltips: {
-    //   callbacks: {
-    //     label: function (tooltipItem, data) {
-    //       let x = (parseFloat(tooltipItem.value ?? '')).toLocaleString('en-US', {
-    //         style: 'currency',
-    //         currency: 'USD',
-    //       });
-    //       return `Amount: ${x}`;
-    //     }
-    //   }
-    // },
+
     scales: {
       yAxes: [{
         ticks: {
@@ -110,12 +90,7 @@ export class InvoiceDashboardComponent implements OnInit {
       xAxes: [{
         ticks: {
           autoSkip: false,
-          // callback: function (value, index, values) {
-          //   return (value).toLocaleString('en-US', {
-          //     style: 'currency',
-          //     currency: 'USD',
-          //   });
-          // }
+
         }
       }],
     }
@@ -127,9 +102,7 @@ export class InvoiceDashboardComponent implements OnInit {
   public barChartPlugins = [];
 
   public barChartData: ChartDataSets[] = [
-    // { data: [65, 59, 80, 81, 56], label: 'Pending' },
-    // { data: [28, 48, 40, 19, 86], label: 'Approve' },
-    // { data: [48, 48, 48, 48, 48], label: 'Reject' },
+
   ];
   showChart: boolean = true;
   /*
@@ -315,7 +288,7 @@ export class InvoiceDashboardComponent implements OnInit {
   setHeightStyles() {
     let styles = {
       height: "520px",
-      // height: window.screen.height + "px",
+
       "overflow-y": "scroll",
     };
     return styles;

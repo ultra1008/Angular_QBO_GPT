@@ -1,49 +1,15 @@
 <div class="card mb-3 mr-4">
     <div class="card-body">
         <div class="data">
-            <!-- <div class="row dropdown">
-                <div class="col-9" (click)="editInvoice(invoice)"></div>
-                <div class="col-3" style="float: right;">
-                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu">
-                        <mat-icon>more_vert</mat-icon>
-                    </button>
-                    <mat-menu #menu="matMenu">
-                        <button (click)="viewInvoice(invoice)" class="button_shiftEditClass" mat-menu-item>
-                            <span><img src="{{viewIcon}}" alt="" height="15px">
-                                {{'All-View' |
-                                translate}}</span>
-                        </button>
-                        <button (click)="editInvoice(invoice)" class="button_shiftDeleteClass" mat-menu-item>
-                            <span><img src="{{editIcon}}" alt="" height="15px">
-                                {{'All-Edit' | translate}}</span>
-                        </button>
-                        <button (click)="updateInvoice({status: 'Approved',_id:invoice._id})"
-                            *ngIf="status != 'Approved'" class="button_shiftEditClass" mat-menu-item>
-                            <span><img src="{{approveIcon}}" alt="" height="15px">
-                                {{'PO-View-Approve' |
-                                translate}}</span>
-                        </button>
-                        <button (click)="updateInvoice({status: 'Rejected',_id:invoice._id})"
-                            *ngIf="status != 'Rejected'" class="button_shiftDeleteClass" mat-menu-item>
-                            <span><img src="{{denyIcon}}" alt="" height="15px">
-                                {{'reject_all' | translate}}</span>
-                        </button>
-
-                    </mat-menu>
-                </div>
-
-            </div> -->
             <div (click)="editInvoice(invoice)">
                 <b>Invoice # </b> <span>{{invoice.invoice}}</span>
                 <br />
                 <b>P.O # </b> <span>{{invoice.p_o}}</span>
                 <br />
-
                 <div class="row"><b class="text-margin">Vendor </b>
                     <div class="text-overflow">{{invoice.vendor.vendor_name }}
                     </div>
                 </div>
-
                 <b>Packing Slip </b> <span>{{invoice.packing_slip}}</span>
                 <br />
                 <b>Receiving Slip </b> <span>{{invoice.receiving_slip}}</span>

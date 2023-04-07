@@ -1,14 +1,14 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { Location } from '@angular/common';
-import { httproutes, icon, localstorageconstants, wasabiImagePath } from 'src/app/consts';
+import { httproutes, icon, localstorageconstants } from 'src/app/consts';
 import { HttpCall } from 'src/app/service/httpcall.service';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModeDetectService } from '../../map/mode-detect.service';
 import { Observable, Subscription } from 'rxjs';
-import { commonFileChangeEvent, epochToDateTime } from 'src/app/service/utils';
+import { epochToDateTime } from 'src/app/service/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
@@ -49,7 +49,6 @@ export class PoDetailFormComponent implements OnInit {
   Email_Template_Form_Submitting = "";
   id: any;
   isManagement: boolean = true;
-
   isEmployeeData: Boolean = false;
   // db_costcodes
   variablesdb_costcodes: any = [];
@@ -115,14 +114,7 @@ export class PoDetailFormComponent implements OnInit {
       sub_total: [""],
       po_total: [""],
       tax: [""],
-      // tax_amount: [""],
-      // tax_id: [""],
-      // sub_total: [""],
-      // amount_due: [""],
-      // cost_code: [""],
-      // gl_account: [""],
-      // assign_to: [""],
-      // notes: [""],
+
     });
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
@@ -196,7 +188,7 @@ export class PoDetailFormComponent implements OnInit {
       that.uiSpinner.spin$.next(false);
       if (data.status) {
         that.isEmployeeData = true;
-        // that.usersArray = data.data;
+
         that.variablesusersArray = data.data;
         that.usersArray = that.variablesusersArray.slice();
         that.isManagement = data.is_management;
@@ -237,7 +229,7 @@ export class PoDetailFormComponent implements OnInit {
       iframe.style.display = 'none';
       iframe.src = blobUrl;
       document.body.appendChild(iframe);
-      //iframe.contentWindow.print();
+
       iframe.onload = () => {
         setTimeout(() => {
           iframe.focus();
@@ -264,7 +256,7 @@ export class PoDetailFormComponent implements OnInit {
     ).subscribe(function (params) {
 
       if (params.status) {
-        // that.db_costcodes = params.data;
+
         that.variablesdb_costcodes = params.data;
         that.db_costcodes = that.variablesdb_costcodes.slice();
 
@@ -337,24 +329,7 @@ export class PoDetailFormComponent implements OnInit {
           vendor_id: [that.invoiceData.vendor_id],
           tax: [that.invoiceData.tax],
           po_total: [that.invoiceData.po_total],
-          // invoice_name: [params.data.invoice_name],
-          // invoice: [params.data.invoice],
-          // job_number: [params.data.job_number],
-          // invoice_date: [params.data.invoice_date],
-          // order_date: [params.data.order_date],
-          // ship_date: [params.data.ship_date],
-          // packing_slip: [params.data.packing_slip],
-          // receiving_slip: [params.data.receiving_slip],
-          // status: [params.data.status],
-          // total: [params.data.total],
-          // tax_amount: [params.data.tax_amount],
-          // tax_id: [params.data.tax_id],
-          // amount_due: [params.data.amount_due],
-          // cost_code: [params.data.cost_code],
-          // gl_account: [params.data.gl_account],
-          // assign_to: [params.data.assign_to],
-          // notes: [params.data.notes],
-          // pdf_url: [params.data.po_data.pdf_url],
+
         });
       }
       that.uiSpinner.spin$.next(false);
@@ -402,24 +377,7 @@ export class PoDetailFormComponent implements OnInit {
           vendor_id: [params.data.po_data.vendor_id],
           tax: [params.data.po_data.tax],
           po_total: [params.data.po_data.po_total],
-          // invoice_name: [params.data.invoice_name],
-          // invoice: [params.data.invoice],
-          // job_number: [params.data.job_number],
-          // invoice_date: [params.data.invoice_date],
-          // order_date: [params.data.order_date],
-          // ship_date: [params.data.ship_date],
-          // packing_slip: [params.data.packing_slip],
-          // receiving_slip: [params.data.receiving_slip],
-          // status: [params.data.status],
-          // total: [params.data.total],
-          // tax_amount: [params.data.tax_amount],
-          // tax_id: [params.data.tax_id],
-          // amount_due: [params.data.amount_due],
-          // cost_code: [params.data.cost_code],
-          // gl_account: [params.data.gl_account],
-          // assign_to: [params.data.assign_to],
-          // notes: [params.data.notes],
-          // pdf_url: [params.data.po_data.pdf_url],
+
         });
       }
       that.uiSpinner.spin$.next(false);
@@ -455,12 +413,9 @@ export class PoDetailFormComponent implements OnInit {
         _id: that.id,
         module: 'PO',
         'po_data.date_epoch': formVal.date_epoch,
-        // 'po_data.document_id': formVal.document_id,
-        // 'po_data.document_type': formVal.document_type,
         'po_data.vendor': formVal.vendor,
         'po_data.customer_id': formVal.customer_id,
         'po_data.due_date_epoch': formVal.due_date_epoch,
-        // 'po_data.p_o': formVal.p_o,
         'po_data.terms': formVal.terms,
         'po_data.sub_total': formVal.sub_total,
         'po_data.po_number': formVal.po_number,
@@ -509,11 +464,9 @@ export class PoDetailFormComponent implements OnInit {
         _id: that.document_id,
         module: 'PO',
         'data.date_epoch': formVal.date_epoch,
-
         'data.vendor': formVal.vendor,
         'data.customer_id': formVal.customer_id,
         'data.due_date_epoch': formVal.due_date_epoch,
-
         'data.terms': formVal.terms,
         'data.sub_total': formVal.sub_total,
         'data.po_number': formVal.po_number,

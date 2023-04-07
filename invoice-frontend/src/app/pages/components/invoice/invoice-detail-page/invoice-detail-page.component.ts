@@ -1,7 +1,6 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatAccordion } from '@angular/material/expansion';
-import { MatTreeFlattener, MatTreeFlatDataSource } from '@angular/material/tree';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { httproutes, icon, localstorageconstants, wasabiImagePath } from 'src/app/consts';
@@ -10,7 +9,7 @@ import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
 import { ModeDetectService } from '../../map/mode-detect.service';
 import { Location } from '@angular/common';
-import { gallery_options, MMDDYYYY, MMDDYYYY_formet, updatecurrantTimeInDate } from 'src/app/service/utils';
+import { gallery_options, MMDDYYYY_formet } from 'src/app/service/utils';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { MatDialog } from '@angular/material/dialog';
@@ -93,8 +92,6 @@ export class InvoiceDetailPageComponent implements OnInit {
   historyIcon: string;
   role_permission: any;
 
-
-
   constructor(private sanitiser: DomSanitizer, private formBuilder: FormBuilder, public dialog: MatDialog, private location: Location, private modeService: ModeDetectService, private router: Router, public route: ActivatedRoute, public uiSpinner: UiSpinnerService, public httpCall: HttpCall,
     public snackbarservice: Snackbarservice, public translate: TranslateService,) {
     this.translate.stream([""]).subscribe((textarray) => {
@@ -110,9 +107,6 @@ export class InvoiceDetailPageComponent implements OnInit {
     this._id = this.id;
     this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
     this.role_permission = this.role_permission.role_permission;
-
-
-
     if (this.mode == "off") {
       this.downloadIcon = icon.DOWNLOAD_WHITE;
       this.printIcon = icon.PRINT_WHITE;
@@ -665,27 +659,7 @@ export class InvoiceDetailPageComponent implements OnInit {
     this.start++;
     this.getTodaysActivity();
   }
-  // getTodaysActivity() {
-  //   console.log("callllll");
-  //   let self = this;
 
-  //   // let requestObject = { start: this.start };
-
-  //   self.httpCall
-  //     .httpPostCall(httproutes.INVOICE_GET_DASHBOARD_HISTORY,
-  //       { start: 0 })
-  //     .subscribe(function (params) {
-  //       console.log("dashboardHistory", params);
-  //       if (params.status) {
-  //         if (self.start == 0)
-
-  //           self.dashboardHistory = self.dashboardHistory.concat(params.data);
-  //         console.log("dashboardHistory", self.dashboardHistory);
-  //       }
-
-  //     });
-
-  // }
   temp_MMDDYYY_format(epoch) {
     return MMDDYYYY_formet(epoch);
   }

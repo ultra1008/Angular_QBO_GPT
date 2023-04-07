@@ -1,20 +1,20 @@
-import { ENTER, COMMA } from '@angular/cdk/keycodes';
+
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+
+
+import { MatDialog, } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { DataTableDirective } from 'angular-datatables';
 import { NgxGalleryComponent, NgxGalleryOptions, NgxGalleryImage } from 'ngx-gallery-9';
-import { Subject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { httproutes, icon, localstorageconstants } from 'src/app/consts';
 import { HttpCall } from 'src/app/service/httpcall.service';
 import { Mostusedservice } from 'src/app/service/mostused.service';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
-import { formatPhoneNumber, gallery_options, LanguageApp, MMDDYYYY, MMDDYYYY_formet } from 'src/app/service/utils';
+import { gallery_options, LanguageApp, MMDDYYYY_formet } from 'src/app/service/utils';
 import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
 import { ModeDetectService } from '../../map/mode-detect.service';
@@ -100,7 +100,7 @@ export class DashboardInvoiceListComponent implements OnInit {
   allInvoices: any = [];
   vendorsList = [];
 
-  constructor (private location: Location, private modeService: ModeDetectService,
+  constructor(private location: Location, private modeService: ModeDetectService,
     public dialog: MatDialog,
     private router: Router,
     private http: HttpClient,
@@ -297,7 +297,6 @@ export class DashboardInvoiceListComponent implements OnInit {
       rowCallback: (row: Node, data: any[] | Object, index: number) => {
         $('td', row).off('click');
         $('td', row).on('click', () => {
-          // this.router.navigate(['/invoice-detail'], { queryParams: { _id: data['_id'] } });
           this.router.navigate(['/invoice-form'], { queryParams: { _id: data['_id'], status: that.status } });
         });
         return row;
@@ -415,16 +414,9 @@ export class DashboardInvoiceListComponent implements OnInit {
           this.router.navigate(['/invoice-form'], { queryParams: { _id: invoice._id } });
         });
         $(".button_poReceivedViewClass").on("click", (event) => {
-          // PO PDF view here
           let invoice = JSON.parse(event.target.getAttribute("edit_tmp_id"));
           this.router.navigate(['/invoice-detail'], { queryParams: { _id: invoice._id } });
-          /* this.router.navigate(["/app-custompdfviewer"], {
-            queryParams: {
-              po_url: data.received_url,
-              po_status: data.po_status,
-              po_id: data._id,
-            },
-          }); */
+
         });
 
         $(".button_viewDocViewClass").on("click", (event) => {
@@ -570,51 +562,10 @@ export class DashboardInvoiceListComponent implements OnInit {
         defaultContent: "",
         width: "7%",
       },
-      /* {
-        title: that.Vendor_Action,
-        render: function (data: any, type: any, full: any) {
-          let tmp_tmp = {
-            _id: full._id,
-            pdf_url: full.pdf_url,
-          };
-          let approve = '';
-          let reject = '';
-          let view = '';
-          let edit = '';
-          view = ` <a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_viewDocViewClass" ><span><img src="` + that.viewIcon + `" alt="" height="15px"></span>` + that.Purchasing_Orders_View + `</a>`;
-          edit = ` <a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="button_shiftEditClass" ><span><img src="` + that.editIcon + `" alt="" height="15px"></span>` + that.Listing_Action_Edit + `</a>`;
-          if (that.status != 'Approved') {
-            approve = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_shiftApproveClass" >` + '<img src="' + that.approveIcon + '" alt="" height="15px">Approve</a>';
 
-
-          }
-          if (that.status != 'Rejected') {
-            reject = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_shiftRejectClass" >` + '<img src="' + that.rejectIcon + '" alt="" height="15px">Reject</a>';
-          }
-          return (
-            `<div class="dropdown">
-                <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust"  aria-haspopup="true" aria-expanded="false"  edit_tmp_id='` + JSON.stringify(full) + `' aria-hidden="true"></i>
-                <div class= "dropdown-content-cust" aria-labelledby="dropdownMenuButton">
-                  ` + approve + `
-                  ` + reject + `
-                  ` + edit + `
-                  ` + view + `
-                </div>
-            </div>`
-          );
-        },
-        width: "1%",
-        orderable: false,
-      }, */
     ];
   }
 
-  // openVendorForm() {
-  //   this.router.navigateByUrl('vendor-form');
-  // }
-  // openArchived() {
-  //   this.router.navigateByUrl('vendor-archive');
-  // }
   downloadButtonPress(event, index): void {
     window.location.href = this.imageObject[index];
   }

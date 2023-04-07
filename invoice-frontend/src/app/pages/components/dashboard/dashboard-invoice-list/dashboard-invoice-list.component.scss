@@ -4,16 +4,10 @@
     width: 100%;
     margin-right: 5px;
     padding: auto;
-    // box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
-    // transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
     border-radius: 6px;
-    // height: 152px;
     margin-bottom: 1%;
     flex-direction: column;
     justify-content: space-between;
-
-
-    // border-bottom: 3px #fff solid;
 
     @media (max-width: $normal) {
         width: 50%;
@@ -30,11 +24,9 @@
     text-align: center !important;
     min-height: 40px;
     border-radius: 6px;
-    // border-top-right-radius: 4px;
     padding: 1em 1em;
     font-size: 1.2em !important;
     font-weight: 500 !important;
-    // overflow-y: auto;
 }
 
 .statastic-card-title {
@@ -46,9 +38,9 @@
 
 .statastic-card {
     display: flex;
-    justify-content: space-between; // width: 18%;
+    justify-content: space-between;
     max-height: 70px;
-    // height: 18%;
+
     margin-left: 40px;
     margin-right: 40px;
 }

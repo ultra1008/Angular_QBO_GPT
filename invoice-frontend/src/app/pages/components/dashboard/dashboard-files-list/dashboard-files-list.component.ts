@@ -1,8 +1,7 @@
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { DataTableDirective } from 'angular-datatables';
@@ -96,13 +95,6 @@ export class DashboardFilesListComponent implements OnInit {
     rejected_invoices: 0,
     late_invoices: 0,
   };
-
-  /*  document_type: any = {
-     PO: 'PURCHASE_ORDER',
-     PackingSlip: 'PACKING_SLIP',
-     ReceivingSlip: 'RECEIVING_SLIP',
-     Quote: 'QUOTE',
-   }; */
   documentTypes: any = {
     po: 'PURCHASE_ORDER',
     packingSlip: 'PACKING_SLIP',
@@ -161,7 +153,6 @@ export class DashboardFilesListComponent implements OnInit {
       j++;
     });
     let that = this;
-    // this.uiSpinner.spin$.next(true);
     this.translate.stream([""]).subscribe((textarray) => {
       this.copyDataFromProject = this.translate.instant(
         "Copy_Data_From_Project"
@@ -541,7 +532,6 @@ export class DashboardFilesListComponent implements OnInit {
   }
 
   onTabChanged($event) {
-    // this.currrent_tab = this.tab_Array[$event.index]; 
     this.rerenderfunc();
   }
 

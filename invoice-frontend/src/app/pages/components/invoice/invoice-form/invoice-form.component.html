@@ -46,16 +46,9 @@
                 </div>
             </div>
         </div>
-        <!-- <mat-card class="example-card"> -->
-        <!-- <div class="head-text" [ngClass]="mode == 'on'? 'carddark' : 'cardlight'">
-            
-        </div> -->
 
         <div class="row">
-
             <div class="rix">
-
-
                 <mat-card class="example-card" style=" box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);">
 
                     <div class=" paddings pt-3">
@@ -80,14 +73,7 @@
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
-                                <!-- 
-                                <div class="col ">
-                                    <b>{{'Vendor_Name' | translate }}:</b>&nbsp;&nbsp;
-                                    <mat-form-field>
-                                        <input matInput 
-                                            formControlName="vendor">
-                                    </mat-form-field>
-                                </div> -->
+
                                 <div class="col ">
                                     <b>{{'Vendor_Name' | translate }}:</b>&nbsp;&nbsp;
 
@@ -106,20 +92,7 @@
                                         </mat-autocomplete>
                                     </mat-form-field>
                                 </div>
-                                <!-- <div class="col ">
-                                    <b>{{'Vendor_Name' | translate }}:</b>&nbsp;&nbsp;
-                                    <mat-form-field>
-                                        <input type="text" matInput 
-                                            formControlName="vendor" [matAutocomplete]="auto">
 
-                                        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                                            <mat-option *ngFor="let option of filteredVendors | async"
-                                                [value]="option._id">
-                                                {{option.vendor}}
-                                            </mat-option>
-                                        </mat-autocomplete>
-                                    </mat-form-field>
-                                </div> -->
                                 <div class="col ">
                                     <b>{{'Vendor_ID' | translate }}:</b>&nbsp;&nbsp;
 
@@ -274,14 +247,6 @@
 
                                     </mat-form-field>
                                 </div>
-
-                                <!-- <div class="col">
-                                                <mat-form-field appearance="outline" class="main-one-input-field">
-                                                    <b>{{'Tax_Rate' | translate }}</b>
-                                                    <input matInput placeholder="{{'Tex_Rate' | translate }}" formControlName="tex_rate">
-                    
-                                                </mat-form-field>
-                                            </div> -->
                                 <div class="col">
                                     <b>{{'Tax_Amount' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.tax_amount== true"

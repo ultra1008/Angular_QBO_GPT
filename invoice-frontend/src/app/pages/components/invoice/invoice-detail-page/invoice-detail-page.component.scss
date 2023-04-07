@@ -1,6 +1,6 @@
 .invoice-data {
     width: 100%;
-    // box-shadow: 0 0 8px 8px #f3f2f2;
+
     border-radius: 10px;
     background-color: white;
 
@@ -38,8 +38,7 @@
 
 .invoice-viwe {
     height: 90%;
-    // margin-right: unset;
-    // margin-left: unset;
+
     border-radius: 4px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3);
 
@@ -68,16 +67,14 @@
     color: white;
     background-color: #023E8A;
     height: 40px;
-    // margin-right: unset;
-    // margin-left: unset;
+
     border-radius: 10px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3);
 }
 
 .history-viwe {
     height: 92%;
-    // margin-right: unset;
-    // margin-left: unset;
+
     border-radius: 4px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3);
 }
@@ -87,7 +84,7 @@
 }
 
 ::ng-deep .mat-expansion-panel-header {
-    // background-color: red !important;
+
     height: 40px !important;
     background-color: #023E8A !important;
     color: white;
@@ -95,7 +92,7 @@
 }
 
 ::ng-deep .darkMode .mat-expansion-panel-header {
-    // background-color: red !important;
+
     height: 40px !important;
     background-color: #30343d !important;
     color: white;
@@ -126,10 +123,10 @@
 
     background-color: #30343d;
     color: white !important;
-    // text-align: center !important;
+
     max-height: 760px;
     border-radius: 6px;
-    // border-top-right-radius: 4px;
+
     padding: 1em 1em;
     font-size: 1.2em !important;
     font-weight: 500 !important;
@@ -150,9 +147,7 @@
     margin-right: 10px;
     margin-top: 5px;
     background-color: white;
-    // height: 60px;
-    //width: 240px;
-    // height: 80px;
+
 }
 
 .card-history-dark {
@@ -162,9 +157,7 @@
     margin-right: 10px;
     margin-top: 5px;
     background-color: #424242;
-    // height: 60px;
-    //width: 240px;
-    // height: 80px;
+
 }
 
 /* On mouse-over, add a deeper shadow */
@@ -198,12 +191,6 @@
 
 }
 
-// /* Solid border */
-// hr.solid {
-//     border: 1px solid #00000050;
-//     transition: 0.4s;
-// }
-
 .Approvedcss {
     color: #0fb900;
 }
@@ -220,7 +207,7 @@ hr.solid {
     border-top: 3px solid #bbb;
 }
 
-// invoice-nots
+
 .mat-form-field {
 
     width: 95%;
@@ -233,15 +220,12 @@ hr.solid {
 .note-card {
 
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    // margin-left: 15px;
-    // margin-right: 15px;
     margin-bottom: 10px;
     color: black;
     border-radius: 15px;
     margin-left: 30px;
     margin-top: 5px;
-    // padding-top: 10px;
-    // padding-bottom: 10px;
+
 }
 
 
@@ -277,7 +261,7 @@ hr.solid {
         border-radius: 21.5px;
         //background-color: $blue;
         text-align: center;
-        // padding: 3px !important;
+
     }
 
     h3 {

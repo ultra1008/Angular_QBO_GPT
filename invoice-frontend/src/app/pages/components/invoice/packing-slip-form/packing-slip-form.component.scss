@@ -229,11 +229,6 @@ b {
     width: 450px;
 }
 
-// collapsed problem
-// .flux-content-section[navbar-type="collapsed"][effect-type="shrink"] {
-//     margin-left: unset !important;
-// }
-
 ::ng-deep .flux-content-section[navbar-type="expanded"][effect-type="push"] {
     margin-left: 0px !important;
     margin-right: 0px !important;

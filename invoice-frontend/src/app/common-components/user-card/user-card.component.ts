@@ -69,7 +69,7 @@ export class UserCardComponent implements OnInit {
   /*
     Constructor
   */
-  constructor (private modeService: ModeDetectService, public translate: TranslateService, public mostusedservice: Mostusedservice,
+  constructor(private modeService: ModeDetectService, public translate: TranslateService, public mostusedservice: Mostusedservice,
     public httpCall: HttpCall, public snackbarservice: Snackbarservice, public router: Router) {
     this.role_permissions = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA) ?? '');
     var userdata = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
@@ -166,7 +166,7 @@ export class TeamArchiveCradComponent implements OnInit {
   inacticve_word: string = "";
   defalut_image: string = icon.MALE_PLACEHOLDER;
 
-  constructor (public httpCall: HttpCall, public uiSpinner: UiSpinnerService,
+  constructor(public httpCall: HttpCall, public uiSpinner: UiSpinnerService,
     public router: Router, public dialog: MatDialog,
     public translate: TranslateService, public snackbarservice: Snackbarservice) {
     this.translate.stream(['']).subscribe((textarray) => {
@@ -200,19 +200,6 @@ export class TeamArchiveCradComponent implements OnInit {
           disableClose: true,
         });
         dialogRef.afterClosed().subscribe((result) => { });
-        /* this.uiSpinner.spin$.next(true);
-        this.httpCall.httpPostCall(httproutes.TEAM_RECOVER, { _id: id }).subscribe((params) => {
-          if (params.status)
-          {
-            that.snackbarservice.openSnackBar(params.message, "success");
-            that.router.navigateByUrl('/employee-list');
-            that.uiSpinner.spin$.next(false);
-          } else
-          {
-            that.snackbarservice.openSnackBar(params.message, "error");
-            that.uiSpinner.spin$.next(false);
-          }
-        }); */
       }
     });
   }
@@ -236,7 +223,7 @@ export class SelectUserRoleForm implements OnInit {
   copyDataFromProject: string = "";
   saveIcon = icon.SAVE_WHITE;
 
-  constructor (
+  constructor(
     private modeService: ModeDetectService,
     private formBuilder: FormBuilder,
     public httpCall: HttpCall,
@@ -267,8 +254,7 @@ export class SelectUserRoleForm implements OnInit {
         this.exitIcon = icon.CANCLE_WHITE;
       }
     });
-    //let that = this;
-    // this.uiSpinner.spin$.next(true);
+
     this.translate.stream([""]).subscribe((textarray) => {
       this.copyDataFromProject = this.translate.instant("Copy_Data_From_Project");
       this.yesButton = this.translate.instant("Compnay_Equipment_Delete_Yes");

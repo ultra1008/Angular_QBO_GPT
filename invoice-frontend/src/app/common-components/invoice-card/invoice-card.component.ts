@@ -81,29 +81,11 @@ export class InvoiceCardComponent implements OnInit {
     let that = this;
     let role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA) ?? '');
     this.role_to = role_permission.UserData.role_name;
-    // this.getAllInvoices();
+
   }
-  /* getAllInvoices() {
-    let that = this;
-    let requestData = {};
-    if (this.invoiceStatus != undefined && this.invoiceStatus != null && this.invoiceStatus != '') {
-      requestData = {
-        status: this.invoiceStatus,
-      };
-    }
-    this.httpCall.httpPostCall(httproutes.INVOICE_GET_STATUS_VISE_LIST, requestData).subscribe(function (params) {
-      if (params.status) {
-        that.allInvoices = params.data;
-        that.invoiceCount = params.count;
-        that.isManagement = params.is_management;
-        that.sendCount(params.count);
-      }
-      that.uiSpinner.spin$.next(false);
-    });
-  } */
+
   updateInvoice(requestObject) {
     let that = this;
-    // this.id = requestObject.invoice._id;
     that.uiSpinner.spin$.next(true);
     that.httpCall.httpPostCall(httproutes.INVOICE_UPDATE_INVOICE_STATUS, requestObject).subscribe(params => {
       if (params.status) {

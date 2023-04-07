@@ -21,7 +21,7 @@ import * as _ from 'lodash';
 import Swal from 'sweetalert2';
 import { Email } from '../../portal-auth/models';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { VendorReportComponent } from '../../vendors/vendors.component';
+
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
     confirmButton: 'btn btn-success s2-confirm margin-right-cust',
@@ -50,7 +50,7 @@ export class InvoiceOtherDocumentComponent implements OnInit {
   editIcon: string;
   subscription: Subscription;
   mode: any;
-  // show_pdf: Boolean = false;
+
   documentTypes: any = {
     po: 'PO',
     packingSlip: 'Packing Slip',
@@ -177,7 +177,7 @@ export class InvoiceOtherDocumentComponent implements OnInit {
   }
   saveNotes() {
     let document_Url;
-    console.log("call");
+
     let that = this;
     this.otherDocumentNoteform.markAllAsTouched();
     if (that.otherDocumentNoteform.valid) {
@@ -342,7 +342,6 @@ export class InvoiceOtherDocumentComponent implements OnInit {
             }
           });
 
-          console.log("params", params);
         }
       });
   }
@@ -374,7 +373,7 @@ export class InvoiceOtherDocumentComponent implements OnInit {
   }
 
   deleteFile_old(index: number) {
-    console.log("index", index);
+
     this.last_files_array.splice(index, 1);
     this.files_old.splice(index, 1);
     let that = this;
@@ -455,7 +454,6 @@ export class InvoiceOtherDocumentComponent implements OnInit {
             }
           });
 
-          console.log("params", params);
         }
       });
 
@@ -886,7 +884,7 @@ export class AddOtherFiles implements OnInit {
         this.fileIcon = icon.REPORT_WHITE;
 
       }
-      console.log("DARK MODE: " + this.mode);
+
 
     });
     this.translate.stream([""]).subscribe((textarray) => {
@@ -1224,95 +1222,31 @@ export class OrphanFiles implements OnInit {
 
   ngOnInit(): void {
 
-    // this.getAllUserList();
+
     this.getOrphanDocument();
 
   }
-  // async getAllUserList() {
-  //   let data = await this.httpCall.httpGetCall(httproutes.PORTAL_GET_MANAGEMENT_USERS).toPromise();
-  //   if (data.status) {
-  //     data.data.forEach((element: any) => {
-  //       this.newUserList.push({ check: false, _id: element._id, role_id: '', role_name: '' });
-  //     });
-  //     this.userList = data.data;
-  //     this.showLoader = false;
-  //   }
-  // }
-  // getOrphanDocument() {
-  //   let that = this;
-  //   this.httpCall.httpPostCall(httproutes.INVOICE_SAVE_INVOICE_PROCESS, { pdf_urls: params.data }).subscribe(function (params)
-  //     if (params.status) {
-  //       that.orphanlist = params.data;
-  //       console.log("orphanlist", params.data);
-  //     }
-  //   });
-  // }
 
-  // goToDocument(){
-
-  // }
   goToDocument(document) {
-
-    console.log("invoice11", document.document_type);
 
     if (document.document_type == 'PACKING_SLIP') {
       this.router.navigate(['/packing-slip-form'], { queryParams: {} });
     }
-    // else if (document.document_type == 'Vendor') {
-    //   this.router.navigate(['/po-detail-form'], { queryParams: {} });
-    // } else if (document.document_type == 'User') {
-    //   this.router.navigate(['/quote-detail-form'], { queryParams: {} });
-    // }
 
   }
 
   getOrphanDocument() {
-    console.log("call");
+
     let that = this;
     this.httpCall.httpPostCall(httproutes.PORTAL_INVOICE_GET_ORPHAN_DOCUMENTS, { _id: this._id }).subscribe(params => {
       if (params.data) {
         that.orphanlist = params.data;
-        console.log("orphanlist", params);
+
       }
 
     });
   }
-  // checkboxChange(i: any, user: any) {
-  //   this.newUserList[i].check = !this.newUserList[i].check;
-  // }
 
-  // selectRole(event: any, i: any) {
-  //   let one_role = _.find(this.allRoles, function (n: any) { return n.role_id == event.value; });
-  //   this.newUserList[i].role_id = one_role.role_id;
-  //   this.newUserList[i].role_name = one_role.role_name;
-  // }
-
-  // importFromManagement() {
-  //   let that = this;
-  //   let final_users = _.filter(that.newUserList, function (p) {
-  //     return p.check == true;
-  //   });
-  //   let checkInvalid = _.find(final_users, function (n: any) { return n.role_id == ""; });
-  //   if (checkInvalid) {
-  //     that.snackbarservice.openSnackBar(that.Import_Management_User_Missing_Role, "error");
-  //   } else {
-  //     that.uiSpinner.spin$.next(true);
-  //     let requestObject = {
-  //       users: final_users
-  //     };
-  //     that.httpCall.httpPostCall(httproutes.PORTAL_IMPORT_MANAGEMENT_USERS, requestObject).subscribe(function (params: any) {
-  //       if (params.status) {
-  //         that.dialogRef.close();
-  //         that.uiSpinner.spin$.next(false);
-  //         that.snackbarservice.openSnackBar(params.message, "success");
-  //       } else {
-  //         that.uiSpinner.spin$.next(false);
-  //         that.snackbarservice.openSnackBar(params.message, "error");
-  //       }
-  //     });
-
-  //   }
-  // }
 }
 
 

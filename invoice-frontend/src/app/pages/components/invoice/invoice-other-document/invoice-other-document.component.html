@@ -81,23 +81,6 @@
                             <mat-icon>delete</mat-icon>
                         </a>
                     </div>
-                    <!-- <div class="col-10 col-sm-6 col-md-10">
-                                                    <div class=" note-card" style="justify-content: center;padding: 15px;">
-                                                        {{nots.notes}}<b
-                                                            style="font-size: 10px;float: inline-end;;">{{temp_MMDDYYY_format(nots.updated_at)}}</b>
-                                                    </div>
-                                                </div>
-                                                <div class="col-2 col-md-2">
-                                                    <div class="cust-margin pt-2">
-                                                        <a mat-icon-button
-                                                            aria-label="Example icon button with a vertical three dot icon"
-                                                            (click)="deleteNote(nots._id,invoice_id)">
-                                                            <mat-icon>delete</mat-icon>
-                                                        </a>
-                                                    </div>
-                                                </div> -->
-
-
                 </div>
 
                 <div *ngIf="show_Nots">
@@ -140,9 +123,7 @@
                         {{'All-Attachment' | translate}}</label>
                 </div>
             </div>
-            <!-- <div class="task-data" *ngFor="let attchments of attchmentList">
-                                <img src="{{attchments}}" width="15%" style="padding-top: 15px;" />
-                            </div> -->
+
             <div class="row cust-margin">
                 <div class="files-list">
                     <div class="single-file" *ngFor="let file of files; let i = index">

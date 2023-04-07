@@ -390,11 +390,6 @@
     display: inline-flex;
 }
 
-// .cust-center-justify{
-//   justify-content: center;
-// }
-
-
 .fileInputProfileWrap {
     width: 100%;
     height: auto;
@@ -402,8 +397,6 @@
 
 .fileInputProfile {
     position: absolute;
-    /*  height: 100%;
-  width: 100%; */
     z-index: 99;
     opacity: 0;
 }
@@ -472,12 +465,9 @@
 
 .containers-cust {
     width: 50%;
-    // height: 100px;
     padding: 1rem;
-    // background-color: $blue;
     text-align: center;
     border: dotted 2px black;
-
     position: relative;
     margin: 0 auto;
     border-radius: 5px;

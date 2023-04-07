@@ -2,10 +2,6 @@
   <div class="col-md-12">
     <div class="screen-title-section cust-h1-inline">
       <div class="inner-search-bar"></div>
-      <!-- <button class="import-export-btn-datatable button_workersEditClass cust-margin-div"
-        matTooltip="{{ 'TOOLTIP_REPORT' | translate }}" aria-label="Left Align">
-        <img src="{{ reportIcon }}" alt="" height="20px" />
-      </button> -->
       <button mat-raised-button (click)="back()" class="cust-button-form">
         <img src="{{ backIcon }}" alt="" height="20px" />
         {{ "All-back" | translate }}
@@ -61,12 +57,6 @@
         </div>
       </mat-tab>
     </mat-tab-group>
-    <!-- <div *ngIf="!Document_View_time">
-      <div class="table-responsive cust-padding cust-padding-tmp mt-2" *ngIf="showTable">
-        <table datatable [dtOptions]="dtOptions" id="dtOptions_vendor" class="row-border hover">
-        </table>
-      </div>
-    </div> -->
   </div>
 </div>
 <ngx-gallery [options]="galleryOptions" [images]="galleryImages" #gallery></ngx-gallery>

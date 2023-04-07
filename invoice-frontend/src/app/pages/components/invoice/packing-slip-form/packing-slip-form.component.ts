@@ -87,7 +87,6 @@ export class PackingSlipFormComponent implements OnInit {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.document_id = this.route.snapshot.queryParamMap.get('document_id');
     this.invoice_id = this.id;
-
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     var locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configdata.fst_load_lang : tmp_locallanguage;
     this.translate.use(locallanguage);
@@ -106,7 +105,6 @@ export class PackingSlipFormComponent implements OnInit {
       ship_to_address: [""],
       date_epoch: [""],
     });
-
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
     if (this.mode == 'off') {
@@ -172,7 +170,7 @@ export class PackingSlipFormComponent implements OnInit {
       that.uiSpinner.spin$.next(false);
       if (data.status) {
         that.isEmployeeData = true;
-        // that.usersArray = data.data;
+
         that.variablesusersArray = data.data;
         that.usersArray = that.variablesusersArray.slice();
         that.isManagement = data.is_management;

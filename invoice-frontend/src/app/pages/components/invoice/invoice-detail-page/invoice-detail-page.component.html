@@ -1,7 +1,6 @@
 <div class="wrapper-cust-admin" fxLayout style="height: 95%">
     <div class="invoice-data" [ngClass]="mode == 'on'? 'header-text-cust-chart-dark' : 'header-text-cust-chart'">
         <div class="d-flex justify-content-between p-3">
-            <!-- <img src="{{placeholderIcon}}" alt="" height="20px"> -->
             <div>
                 <p class="title">Invoice #</p>
                 <p *ngIf="loadInvoice">{{invoiceData.invoice}}</p>
@@ -27,11 +26,7 @@
                 <p *ngIf="loadInvoice">{{invoiceData.attach_files}}</p>
                 <p *ngIf="!loadInvoice"></p>
             </div>
-            <!-- <div>
-                <p class="title">Notes</p>
-                <p *ngIf="loadInvoice">{{invoiceData.notes}}</p>
-                <p *ngIf="!loadInvoice"></p>
-            </div> -->
+
             <div>
                 <p class="title">Status</p>
                 <p [ngClass]="invoiceData.status == 'Pending'? 'pendingcss' : 'Approvedcss' && invoiceData.status == 'Approved'? 'Approvedcss' : 'Rejectcss'&& invoiceData.status == 'Rejected'? 'Rejectcss' : 'Rejectcss'"
@@ -41,10 +36,6 @@
                 <p *ngIf="!loadInvoice"></p>
             </div>
             <div class="row my-2">
-                <!-- <button mat-raised-button color="primary" style="margin-right: 6px;" class="sign-button ml-1">
-                    Save Changes
-                </button> -->
-
                 <button *ngIf="role_permission.invoice.Edit" mat-raised-button color="primary"
                     style="margin-right: 12px;" class="sign-button">
                     <img src="{{add_my_self_icon}}" alt="" height="20px">
@@ -64,20 +55,10 @@
     </div>
     <div class="row mt-2" style="height:90%">
         <div class="col-sm-12 col-md-12 col-lg-6">
-            <!-- <div class="invoice-card">
-                <h2 class=" text-center ">Invoice-123</h2>
-            </div>
-            <div class="invoice-viwe">
-
-            </div>
-            <div class="notes">
-                <h3 style="text-justify: center;">Notes</h3>
-            </div> -->
             <!-- Invoice_preview -->
             <mat-accordion [displayMode]="displayMode" [multi]="multi" class="mat-expansion-demo-width">
                 <mat-nav-list>
                     <!-- [expanded]="hide" -->
-
                     <mat-expansion-panel [expanded]="hide" [hideToggle]="hideToggle">
                         <mat-expansion-panel-header class="hover">
                             <h4 class="mt-3">{{ "Invoice_preview" | translate }}</h4>
@@ -140,22 +121,6 @@
                                         <mat-icon>delete</mat-icon>
                                     </a>
                                 </div>
-                                <!-- <div class="col-10 col-sm-6 col-md-10">
-                                    <div class=" note-card" style="justify-content: center;padding: 15px;">
-                                        {{nots.notes}}<b
-                                            style="font-size: 10px;float: inline-end;;">{{temp_MMDDYYY_format(nots.updated_at)}}</b>
-                                    </div>
-                                </div>
-                                <div class="col-2 col-md-2">
-                                    <div class="cust-margin pt-2">
-                                        <a mat-icon-button
-                                            aria-label="Example icon button with a vertical three dot icon"
-                                            (click)="deleteNote(nots._id,invoice_id)">
-                                            <mat-icon>delete</mat-icon>
-                                        </a>
-                                    </div>
-                                </div> -->
-
 
                             </div>
                             <div *ngIf="show_Nots">
@@ -199,9 +164,7 @@
                                     {{'All-Attachment' | translate}}</label>
                             </div>
                         </div>
-                        <!-- <div class="task-data" *ngFor="let attchments of attchmentList">
-                            <img src="{{attchments}}" width="15%" style="padding-top: 15px;" />
-                        </div> -->
+
                         <div class="row cust-margin">
                             <div class="files-list">
                                 <div class="single-file" *ngFor="let file of files; let i = index">
@@ -259,51 +222,8 @@
                 </mat-nav-list>
             </mat-accordion>
         </div>
-        <!-- history div -->
-        <!-- <div class="col-sm-12 col-md-12 col-lg-2 mt-3">
-            <div class="invoice-card" [ngClass]="mode == 'on'? 'invoice-card-dark':''">
-                <h4 class="History-text">History Log</h4>
-            </div>
-            <div class="history-viwe">
-                <div class=" mt-2" [ngClass]="mode == 'on'? 'header-text-cust-chart-dark' : 'header-text-cust-chart'">
-                    <p style="font-size: 10px;  word-wrap: break-word; text-align: left; color: #06479D;">
-                        Today
-                    </p>
-                    <div class="search-results" [ngClass]="mode == 'on'? 'card-history-dark' : 'card-history'">
-                        <div class="card-body " *ngFor=" let item of dashboardHistory">
-                            <div class="row">
-                                <div class="col-2">
-                               
-                                    <img class="crl card-img-left example-card-img-responsive"
-                                        src="{{item.userpicture || '../assets/images/user_placeholder.png'}}" />
-                                </div>
-                              
-                                <div class="col-10 ">
-                                    <b [ngClass]="mode == 'on'? 'text-color-dark' : 'text-color'"
-                                        (click)="goToUserProfile(item)" style="font-size: 10px;">
-                                        {{item.user.userfullname}} </b>
-                                    <b style="font-size: 10px;">{{item.action}}</b><b
-                                        [ngClass]="mode == 'on'? 'text-color-dark' : 'text-color'"
-                                        style="font-size: 10px;" (click)="goToInvoiceForm(item)">
 
-                                        {{item.module}} </b>
-                                    <b style="font-size: 10px;">at </b>
-                                    <b style="font-size: 10px;">{{temp_MMDDYYY_format(item.created_at)}}</b>
-                                    <b style="font-size: 10px;"> from </b>
-                                    <b style="font-size: 10px;">{{item.action_from}}.</b>
 
-                                </div>
-
-                            </div>
-                            <hr class="solid">
-                        </div>
-                    </div>
-                
-                </div>
-
-            </div>
-        </div> -->
-        <!-- history div over -->
         <div class="col-sm-12 col-md-12 col-lg-6">
             <div class="wrapper-cust-admin">
 
