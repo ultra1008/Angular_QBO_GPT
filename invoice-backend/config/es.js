@@ -921,4 +921,6 @@ module.exports = {
     MailboxMonitorAdded: 'Mailbox Monitor added successfully.',
     MailboxMonitorUpdated: 'Mailbox Monitor updated successfully.',
     MailboxMonitorDeleted: 'Mailbox Monitor deleted successfully.',
+
+    Processor_Restrict_Mobile_Login: 'Your role does not have login permission in mobile application.  Kindly contact admin of your company to access in the mobile app.',
 };

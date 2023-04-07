@@ -321,33 +321,36 @@ module.exports.login = async function (req, res) {
                                     let roles_tmp = await roleConnection.findOne({ role_id: ObjectID(UserData.userroleId) });
                                     var psss_tnp = await common.validPassword(requestObject.password, UserData.password);
                                     if (psss_tnp) {
-                                        var resObject_db = {
-                                            "DB_HOST": result.DB_HOST,
-                                            "DB_NAME": result.DB_NAME,
-                                            "DB_PORT": result.DB_PORT,
-                                            "DB_USERNAME": result.DB_USERNAME,
-                                            "DB_PASSWORD": result.DB_PASSWORD,
-                                            "companycode": result.companycode,
-                                            "token": ""
-                                        };
-                                        let resObject = {
-                                            ...resObject_db,
-                                            UserData
-                                        };
-                                        //console.log("resObject", resObject)
-                                        var resLast = {
-                                            "token": "",
-                                            UserData,
-                                            settings: {},
-                                            role_permission: [],
-                                            questions: [],
-                                            companydata: resultfind
-                                        };
-                                        var token = await common.generateJWT(resObject);
-                                        resLast.token = token;
-                                        resLast.role_permission = roles_tmp.role_permission;
-                                        res.send({ message: translator.getStr('UserListing'), data: resLast, status: true });
-
+                                        if (roles_tmp.role_name == config.PROCESSOR_ROLE) {
+                                            res.send({ message: translator.getStr('Processor_Restrict_Mobile_Login'), status: false });
+                                        } else {
+                                            var resObject_db = {
+                                                "DB_HOST": result.DB_HOST,
+                                                "DB_NAME": result.DB_NAME,
+                                                "DB_PORT": result.DB_PORT,
+                                                "DB_USERNAME": result.DB_USERNAME,
+                                                "DB_PASSWORD": result.DB_PASSWORD,
+                                                "companycode": result.companycode,
+                                                "token": ""
+                                            };
+                                            let resObject = {
+                                                ...resObject_db,
+                                                UserData
+                                            };
+                                            //console.log("resObject", resObject)
+                                            var resLast = {
+                                                "token": "",
+                                                UserData,
+                                                settings: {},
+                                                role_permission: [],
+                                                questions: [],
+                                                companydata: resultfind
+                                            };
+                                            var token = await common.generateJWT(resObject);
+                                            resLast.token = token;
+                                            resLast.role_permission = roles_tmp.role_permission;
+                                            res.send({ message: translator.getStr('UserListing'), data: resLast, status: true });
+                                        }
                                     } else {
                                         res.send({ message: translator.getStr('WrongPassword'), status: false });
                                     }
@@ -1224,60 +1227,64 @@ module.exports.submitEmailOTPforLogin = async function (req, res) {
                     UserData['user_languages_name'] = temp_languages;
                     var settingConnection = await connection_db_api.model(collectionConstant.INVOICE_SETTING, settingSchema);
                     let roleConnection = await connection_db_api.model(collectionConstant.INVOICE_ROLES, invoiceRoleSchema);
-                    let compnay_collection = await db_rest_api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
-                    let project_company = {
-                        billingpersonname: false,
-                        billingpersontitle: false,
-                        billingpersonemail: false,
-                        billingpersonphone: false,
-                        billingpersonaddress: false,
-                        billingpersoncity: false,
-                        billingpersonstate: false,
-                        billingpersonzipcode: false,
-                        cc_cvv: false,
-                        ccaddress: false,
-                        cccity: false,
-                        ccexpiry: false,
-                        ccname: false,
-                        ccnumber: false,
-                    };
-                    delete UserData['password'];
-                    let compnay_data = await db_rest_api.findOneField(compnay_collection, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: talnate_data.companycode, companystatus: 1 }, project_company);
-
-                    let obj = config.PAYROLL_CYCLE.find(o => o.value === Number(UserData['user_payroll_rules']));
-                    if (obj == null || obj == undefined || obj == "") {
-                        UserData['payroll_cycle_name'] = "";
-                    } else {
-                        UserData['payroll_cycle_name'] = obj['viewValue'];
-                    }
                     let roles_tmp = await roleConnection.findOne({ _id: ObjectID(UserData.userroleId) });
-                    var settings_tmp = await settingConnection.findOne({});
-                    // var questions_tmp = await questionscollection.find({ question_status: true });
-                    var resObject_db = {
-                        "DB_HOST": talnate_data.DB_HOST,
-                        "DB_NAME": talnate_data.DB_NAME,
-                        "DB_PORT": talnate_data.DB_PORT,
-                        "DB_USERNAME": talnate_data.DB_USERNAME,
-                        "DB_PASSWORD": talnate_data.DB_PASSWORD,
-                        "companycode": talnate_data.companycode,
-                        "companylanguage": compnay_data.companylanguage,
-                        "token": ""
-                    };
-                    let resObject = {
-                        ...resObject_db,
-                        UserData
-                    };
-                    var resLast = {
-                        token: '',
-                        UserData,
-                        // settings: settings_tmp.settings,
-                        // role_permission: roles_tmp.role_permission,
-                        // questions: questions_tmp,
-                        // companydata: compnay_data,
-                    };
-                    var token = await common.generateJWT(resObject);
-                    resLast.token = token;
-                    res.send({ message: 'One Time Password (OTP) matched successfully.', data: resLast, status: true });
+                    if (roles_tmp.role_name == config.PROCESSOR_ROLE) {
+                        res.send({ message: translator.getStr('Processor_Restrict_Mobile_Login'), status: false });
+                    } else {
+                        let compnay_collection = await db_rest_api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+                        let project_company = {
+                            billingpersonname: false,
+                            billingpersontitle: false,
+                            billingpersonemail: false,
+                            billingpersonphone: false,
+                            billingpersonaddress: false,
+                            billingpersoncity: false,
+                            billingpersonstate: false,
+                            billingpersonzipcode: false,
+                            cc_cvv: false,
+                            ccaddress: false,
+                            cccity: false,
+                            ccexpiry: false,
+                            ccname: false,
+                            ccnumber: false,
+                        };
+                        delete UserData['password'];
+                        let compnay_data = await db_rest_api.findOneField(compnay_collection, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: talnate_data.companycode, companystatus: 1 }, project_company);
+
+                        let obj = config.PAYROLL_CYCLE.find(o => o.value === Number(UserData['user_payroll_rules']));
+                        if (obj == null || obj == undefined || obj == "") {
+                            UserData['payroll_cycle_name'] = "";
+                        } else {
+                            UserData['payroll_cycle_name'] = obj['viewValue'];
+                        }
+                        var settings_tmp = await settingConnection.findOne({});
+                        // var questions_tmp = await questionscollection.find({ question_status: true });
+                        var resObject_db = {
+                            "DB_HOST": talnate_data.DB_HOST,
+                            "DB_NAME": talnate_data.DB_NAME,
+                            "DB_PORT": talnate_data.DB_PORT,
+                            "DB_USERNAME": talnate_data.DB_USERNAME,
+                            "DB_PASSWORD": talnate_data.DB_PASSWORD,
+                            "companycode": talnate_data.companycode,
+                            "companylanguage": compnay_data.companylanguage,
+                            "token": ""
+                        };
+                        let resObject = {
+                            ...resObject_db,
+                            UserData
+                        };
+                        var resLast = {
+                            token: '',
+                            UserData,
+                            // settings: settings_tmp.settings,
+                            // role_permission: roles_tmp.role_permission,
+                            // questions: questions_tmp,
+                            // companydata: compnay_data,
+                        };
+                        var token = await common.generateJWT(resObject);
+                        resLast.token = token;
+                        res.send({ message: 'One Time Password (OTP) matched successfully.', data: resLast, status: true });
+                    }
                 } else {
                     res.send({ message: 'Make sure you entered correct One Time Password (OTP).', status: false });
                 }
