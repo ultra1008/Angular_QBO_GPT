@@ -57,10 +57,8 @@ export class ShortcutsMenuComponent implements OnInit {
   getData() {
     let that = this;
     this.httpCall.httpGetCall(httproutes.SHORTCUTS_GET).subscribe(function (params) {
-      if (params.status)
-      {
-        if (params.data)
-        {
+      if (params.status) {
+        if (params.data) {
           that.selectedList = params.data.shortcusts;
         }
         that.otherAppObject = params.otherApp;
@@ -131,20 +129,16 @@ export class ShortcutsAddComponent implements OnInit {
     });
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off')
-    {
+    if (this.mode == 'off') {
       this.backIcon = icon.BACK;
-    } else
-    {
+    } else {
       this.backIcon = icon.BACK_WHITE;
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode)
-      {
+      if (mode) {
         this.mode = 'off';
         this.backIcon = icon.BACK;
-      } else
-      {
+      } else {
         this.mode = 'on';
         this.backIcon = icon.BACK_WHITE;
       }
@@ -163,10 +157,9 @@ export class ShortcutsAddComponent implements OnInit {
     this.usertype = sessionStorage.getItem(localstorageconstants.USERTYPE) ? sessionStorage.getItem(localstorageconstants.USERTYPE) : "invoice-portal";
     this.userrole = localStorage.getItem(localstorageconstants.USERROLE) ? localStorage.getItem(localstorageconstants.USERROLE) : 1;
     this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
-    this.translate.stream(["Sidebar-Dashboard", "Sidebar-invoice", "Sidebar-Templates", "Sidebar-Report",
+    this.translate.stream(["Sidebar-Dashboard", "Sidebar-Vendors", "iframe_tab_Documents", "Sidebar-invoice", "Sidebar-Templates", "Sidebar-Report",
       "Sidebar-Team", "Sidebar-Setting"]).subscribe((textarray) => {
-        if (that.usertype == "invoice-portal")
-        {
+        if (that.usertype == "invoice-portal") {
           that.menuList = [
             {
               name: textarray['Sidebar-Dashboard'],
@@ -175,6 +168,15 @@ export class ShortcutsAddComponent implements OnInit {
               url: '/dashboard',
               tmp_name: "dashboard",
               language_tmp: "Sidebar-Dashboard",
+              color: "#89CFF0"
+            },
+            {
+              name: textarray['Sidebar-Vendors'],
+              icon: 'fas fa-tachometer-alt',
+              image: './assets/diversityicon/vendors_icon.png',
+              url: '/vendors',
+              tmp_name: "vendors",
+              language_tmp: "Sidebar-Vendors",
               color: "#89CFF0"
             },
             {
@@ -187,12 +189,12 @@ export class ShortcutsAddComponent implements OnInit {
               color: "#96DED1"
             },
             {
-              name: textarray['Sidebar-Templates'],
+              name: textarray['iframe_tab_Documents'],
               icon: 'fas fa-file-pdf',
-              image: './assets/diversityicon/template_white.png',
-              url: '/template',
-              tmp_name: "template",
-              language_tmp: "Sidebar-Templates",
+              image: './assets/sidemenu/document_dark.png',
+              url: '/documents-list',
+              tmp_name: "documents",
+              language_tmp: "iframe_tab_Documents",
               color: "#2F2F4F"
             },
             {
@@ -204,15 +206,6 @@ export class ShortcutsAddComponent implements OnInit {
               language_tmp: "Sidebar-Report",
               color: "#33ccff"
             },
-            // {
-            //   name: textarray['Sidebar-Project'],
-            //   icon: 'fas fa-paste',
-            //   image: './assets/sidemenu/projects_icon.png',
-            //   url: '/project-list',
-            //   tmp_name: "project-list",
-            //   language_tmp: "Sidebar-Project",
-            //   color: "#008080"
-            // },
             {
               name: textarray['Sidebar-Team'],
               icon: 'fas fa-users',
@@ -222,42 +215,6 @@ export class ShortcutsAddComponent implements OnInit {
               language_tmp: "Sidebar-Team",
               color: "#FF7377"
             },
-            // {
-            //   name: textarray['Sidebar-Sponsor-ChangeOrders'],
-            //   icon: 'fas fa-envelope',
-            //   image: './assets/sidemenu/changeorders_icon.png',
-            //   url: '/changeorder',
-            //   tmp_name: "sponsorchangeorders",
-            //   language_tmp: "Sidebar-Sponsor-ChangeOrders",
-            //   color: "#708090"
-            // },
-            // {
-            //   name: textarray['Sidebar-Sponsor-Vendors'],
-            //   icon: 'fas fa-user-friends',
-            //   image: './assets/sidemenu/vendors_icon.png',
-            //   url: '/vendors',
-            //   tmp_name: "sponsorvendors",
-            //   language_tmp: "Sidebar-Sponsor-Vendors",
-            //   color: "#DDA0DD"
-            // },
-            // {
-            //   name: textarray['Sidebar-Sponsor-Contract'],
-            //   icon: 'fas fa-envelope',
-            //   image: './assets/diversityicon/darkmode/vendorsicons/vendor_note_dark.png',
-            //   url: '/contractlisting',
-            //   tmp_name: "sponsorcontract",
-            //   language_tmp: "Sidebar-Sponsor-Contract",
-            //   color: "pink"
-            // },
-            // {
-            //   name: textarray['Sidebar-Sponsor-EmailTemplate'],
-            //   icon: 'fas fa-envelope',
-            //   image: './assets/sidemenu/mail_icon.png',
-            //   url: '/emailtemplates',
-            //   tmp_name: "sponsoremailtemplate",
-            //   language_tmp: "Sidebar-Sponsor-EmailTemplate",
-            //   color: "#A0522D"
-            // },
             {
               name: textarray['Sidebar-Setting'],
               icon: 'fas fa-cog',
@@ -269,32 +226,26 @@ export class ShortcutsAddComponent implements OnInit {
             }
           ];
 
-          if (that.role_permission.role_permission.settings.View == false)
-          {
+          if (that.role_permission.role_permission.settings.View == false) {
             that.menuList = that.menuList.filter((person: any) => person.tmp_name != 'setting');
           }
 
-          if (that.role_permission.role_permission.dashboard.View == false)
-          {
+          if (that.role_permission.role_permission.dashboard.View == false) {
             that.menuList = that.menuList.filter((person: any) => person.tmp_name != 'dashboard');
           }
 
-          if (that.role_permission.role_permission.todayActivity.View == false)
-          {
+          if (that.role_permission.role_permission.todayActivity.View == false) {
             that.menuList = that.menuList.filter((person: any) => person.tmp_name != 'todayactivity');
           }
 
-          if (that.role_permission.role_permission.dailyReports.Add == false)
-          {
+          if (that.role_permission.role_permission.dailyReports.Add == false) {
             that.menuList = that.menuList.filter((person: any) => person.tmp_name != 'report');
           }
         }
       });
     this.httpCall.httpGetCall(httproutes.SHORTCUTS_GET).subscribe(function (params) {
-      if (params.status)
-      {
-        if (params.data)
-        {
+      if (params.status) {
+        if (params.data) {
           that.update_id = params.data._id;
           that.menuInfo = new FormGroup({
             menu_object: new FormControl(params.data.shortcusts.map((el: any) => el.tmp_name)),
@@ -309,8 +260,7 @@ export class ShortcutsAddComponent implements OnInit {
   menu_change(event: any) {
     let that = this;
     this.selectedList = [];
-    for (let m = 0; m < event.value.length; m++)
-    {
+    for (let m = 0; m < event.value.length; m++) {
       let obj = that.menuList.find((o: any) => o.tmp_name === event.value[m]);
       this.selectedList.push(obj);
     }
@@ -329,19 +279,16 @@ export class ShortcutsAddComponent implements OnInit {
       user_id: userData.UserData._id,
       shortcusts: this.selectedList
     };
-    if (this.update_id)
-    {
+    if (this.update_id) {
       reqObject['_id'] = this.update_id;
     }
     let that = this;
     this.httpCall.httpPostCall(httproutes.SHORTCUTS_SAVE, reqObject).subscribe(function (params) {
-      if (params.status)
-      {
+      if (params.status) {
         that.snackbarservice.openSnackBar(params.message, "success");
         that.dialogRef.close();
         that.selectedList = params.data.shortcusts;
-      } else
-      {
+      } else {
         that.snackbarservice.openSnackBar(params.message, "error");
       }
     });
