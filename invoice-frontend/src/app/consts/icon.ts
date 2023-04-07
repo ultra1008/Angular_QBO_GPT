@@ -162,8 +162,8 @@ export enum icon {
     MAILBOX_BLACK = "./assets/diversityicon/mailboxblack.png",
     MAILBOX_WHILE = "./assets/diversityicon/mailboxwhite.png",
 
-    MALE_PLACEHOLDER = "./assets/images/male-placeholder.png",
-    FEMALE_PLACEHOLDER = "./assets/images/female-placeholder.png",
+    MALE_PLACEHOLDER = "https://s3.us-west-1.wasabisys.com/rovukdata/male-placeholder.png",
+    FEMALE_PLACEHOLDER = "https://s3.us-west-1.wasabisys.com/rovukdata/female-placeholder.png",
 
     BADGE_ICON = './assets/logo/invoice_logo.png'
 }

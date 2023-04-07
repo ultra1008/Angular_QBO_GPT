@@ -134,7 +134,6 @@ export class EmployeeViewComponent implements OnInit {
   idcardinfo: FormGroup;
   load_table_userDocument: boolean = false;
   maxDate = new Date();
-  isUserImg: any;
   Employee: any = configdata.TEAM;
   printEnbale: boolean = false;
   step_index: number = 0;
@@ -208,7 +207,7 @@ export class EmployeeViewComponent implements OnInit {
   Empty_Temporary_Password: string;
 
 
-  constructor(private modeService: ModeDetectService, public sb: Snackbarservice, private location: Location, public dialog: MatDialog, public translate: TranslateService, public mostusedservice: Mostusedservice,
+  constructor (private modeService: ModeDetectService, public sb: Snackbarservice, private location: Location, public dialog: MatDialog, public translate: TranslateService, public mostusedservice: Mostusedservice,
     private formBuilder: FormBuilder, private http: HttpClient, public employeeservice: EmployeeService, public snackbarservice: Snackbarservice,
     private router: Router, public route: ActivatedRoute, public httpCall: HttpCall, public uiSpinner: UiSpinnerService) {
 
@@ -509,12 +508,33 @@ export class EmployeeViewComponent implements OnInit {
             that.user_data = data.data;
 
             if (that.user_data.userpicture != "") {
-              that.isUserImg = true;
-              that.defalut_image = that.user_data.userpicture;
+              if (that.user_data.usergender == 'Male') {
+                that.defalut_image = that.user_data.userpicture;
+                if (that.user_data.userpicture != icon.MALE_PLACEHOLDER) {
+                  that.defalut_female_image = that.user_data.userpicture;
+                }
+              }
+              if (that.user_data.usergender == 'Female') {
+                that.defalut_female_image = that.user_data.userpicture;
+                if (that.user_data.userpicture != icon.FEMALE_PLACEHOLDER) {
+                  that.defalut_image = that.user_data.userpicture;
+                }
+              }
             }
 
             if (that.user_data.usermobile_picture != "") {
-              that.defalut_image_mobile = that.user_data.usermobile_picture;
+              if (that.user_data.usergender == 'Male') {
+                that.defalut_image_mobile = that.user_data.usermobile_picture;
+                if (that.user_data.usermobile_picture != icon.MALE_PLACEHOLDER) {
+                  that.defalut_female_image_mobile = that.user_data.usermobile_picture;
+                }
+              }
+              if (that.user_data.usergender == 'Female') {
+                that.defalut_female_image_mobile = that.user_data.usermobile_picture;
+                if (that.user_data.usermobile_picture != icon.FEMALE_PLACEHOLDER) {
+                  that.defalut_image_mobile = that.user_data.usermobile_picture;
+                }
+              }
             }
 
             let complianceOfficer = "false";
@@ -1016,16 +1036,6 @@ export class EmployeeViewComponent implements OnInit {
         if (data.status) {
           if (data.data != null) {
             that.user_data = data.data;
-
-            if (that.user_data.userpicture != "") {
-              that.isUserImg = true;
-              that.defalut_image = that.user_data.userpicture;
-            }
-
-            if (that.user_data.usermobile_picture != "") {
-              that.defalut_image_mobile = that.user_data.usermobile_picture;
-            }
-
             that.userfullName = that.user_data.userfullname;
           }
         }
@@ -1047,40 +1057,6 @@ export class EmployeeViewComponent implements OnInit {
         this.snackbarservice.openSnackBar(result.message, "error");
       }
     });
-    /* this.imageError = null;
-    if (fileInput.target.files && fileInput.target.files[0]) {
-      // Size Filter Bytes
-      const max_size = 20971520;
-      const allowed_types = ['image/png', 'image/jpeg'];
-      const max_height = 15200;
-      const max_width = 25600;
-      this.filepath = fileInput.target.files[0];
-
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        const image = new Image();
-        image.src = e.target.result;
-        image.onload = rs => {
-          const img_height = rs.currentTarget['height'];
-          const img_width = rs.currentTarget['width'];
-
-          if (img_height > max_height && img_width > max_width) {
-            this.imageError =
-              'Maximum dimentions allowed ' +
-              max_height +
-              '*' +
-              max_width +
-              'px';
-            return false;
-          } else {
-            const imgBase64Path = e.target.result;
-            this.cardImageBase64 = imgBase64Path;
-            this.isImageSaved = true;
-          }
-        };
-      };
-      reader.readAsDataURL(fileInput.target.files[0]);
-    } */
   }
 
   fileChangeEvent_mobile(fileInput: any) {
@@ -1096,53 +1072,12 @@ export class EmployeeViewComponent implements OnInit {
         this.snackbarservice.openSnackBar(result.message, "error");
       }
     });
-    /* this.imageError = null;
-    this.change_mobile_pic = true;
-    if (fileInput.target.files && fileInput.target.files[0]) {
-
-      // Size Filter Bytes
-      const max_size = 20971520;
-      const allowed_types = ['image/png', 'image/jpeg'];
-      const max_height = 15200;
-      const max_width = 25600;
-      this.filepath_mobile = fileInput.target.files[0];
-
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        const image = new Image();
-        image.src = e.target.result;
-        image.onload = rs => {
-          const img_height = rs.currentTarget['height'];
-          const img_width = rs.currentTarget['width'];
-
-          if (img_height > max_height && img_width > max_width) {
-            this.imageError =
-              'Maximum dimentions allowed ' +
-              max_height +
-              '*' +
-              max_width +
-              'px';
-            return false;
-          } else {
-            const imgBase64Path = e.target.result;
-            this.cardImageBase64_mobile = imgBase64Path;
-            this.isImageSaved_mobile = true;
-          }
-        };
-      };
-      reader.readAsDataURL(fileInput.target.files[0]);
-    } */
   }
 
   documentChangeEvent(fileInput: any, index: any) {
     if (fileInput.target.files && fileInput.target.files[0]) {
       this.document_array[index] = fileInput.target.files[0];
     }
-  }
-
-  removeImage() {
-    this.cardImageBase64 = null;
-    this.isImageSaved = false;
   }
 
   openfilebox() {
@@ -1293,7 +1228,7 @@ export class EmployeeViewComponent implements OnInit {
 
     this.userpersonalinfo.markAllAsTouched();
     //that.useremployeeinfo.markAllAsTouched();
-
+    console.log("this.userpersonalinfo.valid: ", this.userpersonalinfo.valid, this.userpersonalinfo.value);
 
     if (this.userpersonalinfo.valid) {
       this.uiSpinner.spin$.next(true);
@@ -1326,10 +1261,22 @@ export class EmployeeViewComponent implements OnInit {
       let id = this.user_id.toString();
       if (this.isImageSaved) {
         formData.append('file', this.filepath);
+      } else {
+        if (reqObject.usergender == 'Male') {
+          reqObject.userpicture = that.defalut_image;
+        } else {
+          reqObject.userpicture = that.defalut_female_image;
+        }
+      }
+      if (!that.change_mobile_pic) {
+        if (reqObject.usergender == 'Male') {
+          reqObject.usermobile_picture = that.defalut_image_mobile;
+        } else {
+          reqObject.usermobile_picture = that.defalut_female_image_mobile;
+        }
       }
       formData.append("_id", id);
       formData.append('reqObject', JSON.stringify(reqObject));
-
 
       this.httpCall.httpPostCall(httproutes.EMPLOYEE_PERSONAL_EDIT, formData).subscribe(function (params) {
 
@@ -1583,7 +1530,7 @@ export class EmergencycontactFrom {
   variablesrelation_array: any = [];
   relation_array: any = this.variablesrelation_array.slice();
 
-  constructor(public dialogRef: MatDialogRef<EmergencycontactFrom>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
+  constructor (public dialogRef: MatDialogRef<EmergencycontactFrom>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
     private formBuilder: FormBuilder, public httpCall: HttpCall, public route: ActivatedRoute,
     @Inject(MAT_DIALOG_DATA) public data: any, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService) {
 
@@ -1712,7 +1659,7 @@ export class DocumentUpdateFrom {
   mode: any;
   backIcon: string;
   saveIcon: string;
-  constructor(public dialogRef: MatDialogRef<DocumentUpdateFrom>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
+  constructor (public dialogRef: MatDialogRef<DocumentUpdateFrom>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
     private formBuilder: FormBuilder, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService,
     public employeeservice: EmployeeService, public httpCall: HttpCall, @Inject(MAT_DIALOG_DATA) public data: any) {
 
@@ -1919,7 +1866,7 @@ export class UserDocumentHistoryComponent implements OnInit {
   backIcon: string;
   subscription: Subscription;
 
-  constructor(public httpCall: HttpCall, private modeService: ModeDetectService, public dialogRef: MatDialogRef<UserDocumentHistoryComponent>, private http: HttpClient,
+  constructor (public httpCall: HttpCall, private modeService: ModeDetectService, public dialogRef: MatDialogRef<UserDocumentHistoryComponent>, private http: HttpClient,
     @Inject(MAT_DIALOG_DATA) public data: any, public translate: TranslateService, public sb: Snackbarservice) {
     let that = this;
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);

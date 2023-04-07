@@ -89,7 +89,6 @@ module.exports.saveEmployee = async function (req, res) {
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
-
             let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
 
             var form = new formidable.IncomingForm();
@@ -227,7 +226,6 @@ module.exports.saveEmployee = async function (req, res) {
                                     action: 'Insert',
                                     action_from: 'Web',
                                 }, decodedToken);
-
                                 if (notFonud == 1) {
                                     var temp_path = newOpenFile[0].path;
                                     var file_name = newOpenFile[0].name;
@@ -239,10 +237,14 @@ module.exports.saveEmployee = async function (req, res) {
                                         if (err) {
                                             res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
                                         } else {
-
                                             urlProfile = config.wasabisys_url + "/" + LowerCase_bucket + "/" + dirKeyName;
                                             let update_user = await userConnection.updateOne({ _id: add._id }, { userpicture: urlProfile });
                                             history_object.userpicture = urlProfile;
+                                            if (body.usergender == "Male") {
+                                                await userConnection.updateOne({ _id: ObjectID(add._id) }, { usermobile_picture: config.DEFAULT_MALE_PICTURE });
+                                            } else if (body.usergender == "Female") {
+                                                await userConnection.updateOne({ _id: ObjectID(add._id) }, { usermobile_picture: config.DEFAULT_FEMALE_PICTURE });
+                                            }
                                             if (update_user) {
                                                 addInsertHistory(add._id, body, decodedToken, translator, connection_db_api);
                                                 //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
@@ -251,6 +253,11 @@ module.exports.saveEmployee = async function (req, res) {
                                         }
                                     });
                                 } else {
+                                    if (body.usergender == "Male") {
+                                        await userConnection.updateOne({ _id: ObjectID(add._id) }, { userpicture: config.DEFAULT_MALE_PICTURE, usermobile_picture: config.DEFAULT_MALE_PICTURE });
+                                    } else if (body.usergender == "Female") {
+                                        await userConnection.updateOne({ _id: ObjectID(add._id) }, { userpicture: config.DEFAULT_FEMALE_PICTURE, usermobile_picture: config.DEFAULT_FEMALE_PICTURE });
+                                    }
                                     addInsertHistory(add._id, body, decodedToken, translator, connection_db_api);
                                     //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
                                     res.send({ message: translator.getStr('UserAdded'), data: body, status: true });
@@ -1280,6 +1287,7 @@ module.exports.savePersonalInfo = async function (req, res) {
                         body.password = common.generateHash(body.password);
                     }
                     let one_user = await userConnection.findOne({ _id: ObjectID(user_edit_id) }, { userroleId: 1, useremail: 1, username: 1, usermiddlename: 1, userlastname: 1, userfullname: 1, userssn: 1, usergender: 1, userdob1: 1, userstatus: 1, user_no: 1, allow_for_projects: 1, });
+                    let get_user = await userConnection.findOne({ _id: ObjectID(user_edit_id) });
                     let checkEmailExist = await userConnection.findOne({ useremail: body.useremail });
                     let flg_update = false;
 
@@ -1347,8 +1355,8 @@ module.exports.savePersonalInfo = async function (req, res) {
                             Body: admin_qrCode,
                             ACL: 'public-read-write'
                         };
-                        if (One_User.userqrcode != undefined && One_User.userqrcode != "") {
-                            tmp_CodeArray = One_User.userqrcode.split("/");
+                        if (one_user.userqrcode != undefined && one_user.userqrcode != "") {
+                            tmp_CodeArray = one_user.userqrcode.split("/");
                             last_codearray = tmp_CodeArray.splice(0, 4);
                             console.log(tmp_CodeArray.join("/"));
                             let params_delete = {
@@ -1393,7 +1401,6 @@ module.exports.savePersonalInfo = async function (req, res) {
                             action: 'Update',
                             action_from: 'Web',
                         }, decodedToken);
-
                         if (notFonud == 1) {
                             var temp_path = newOpenFile[0].path;
                             var file_name = newOpenFile[0].name;
@@ -1402,8 +1409,8 @@ module.exports.savePersonalInfo = async function (req, res) {
                             var fileBody = fs.readFileSync(temp_path);
                             params = { Bucket: LowerCase_bucket, Key: dirKeyName, Body: fileBody, ACL: 'public-read-write' };
                             //condition
-                            if (One_User.userpicture != undefined && One_User.userpicture != "") {
-                                tmp_picArray = One_User.userpicture.split("/");
+                            if (get_user.userpicture != undefined && get_user.userpicture != "") {
+                                tmp_picArray = get_user.userpicture.split("/");
                                 last_picarray = tmp_picArray.splice(0, 4);
 
                                 let params_delete_pic = {
@@ -1423,6 +1430,15 @@ module.exports.savePersonalInfo = async function (req, res) {
                                     history_object.userpicture = urlProfile;
                                     let update_user = await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { userpicture: urlProfile });
                                     if (update_user) {
+                                        if (body.usergender == "Male") {
+                                            if (get_user.usermobile_picture == undefined || get_user.usermobile_picture == null || get_user.usermobile_picture == '') {
+                                                await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { usermobile_picture: config.DEFAULT_MALE_PICTURE });
+                                            }
+                                        } else if (body.usergender == "Female") {
+                                            if (get_user.usermobile_picture == undefined || get_user.usermobile_picture == null || get_user.usermobile_picture == '') {
+                                                await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { usermobile_picture: config.DEFAULT_FEMALE_PICTURE });
+                                            }
+                                        }
                                         addPersonalInfoHistory(user_edit_id, tempReqObj, one_user._doc, decodedToken, translator);
                                         //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
                                         res.send({ message: translator.getStr('UserUpdated'), data: body, status: true });
@@ -1430,6 +1446,21 @@ module.exports.savePersonalInfo = async function (req, res) {
                                 }
                             });
                         } else {
+                            if (body.usergender == "Male") {
+                                if (get_user.userpicture == undefined || get_user.userpicture == null || get_user.userpicture == '') {
+                                    await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { userpicture: config.DEFAULT_MALE_PICTURE });
+                                }
+                                if (get_user.usermobile_picture == undefined || get_user.usermobile_picture == null || get_user.usermobile_picture == '') {
+                                    await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { usermobile_picture: config.DEFAULT_MALE_PICTURE });
+                                }
+                            } else if (body.usergender == "Female") {
+                                if (get_user.userpicture == undefined || get_user.userpicture == null || get_user.userpicture == '') {
+                                    await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { userpicture: config.DEFAULT_FEMALE_PICTURE });
+                                }
+                                if (get_user.usermobile_picture == undefined || get_user.usermobile_picture == null || get_user.usermobile_picture == '') {
+                                    await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { usermobile_picture: config.DEFAULT_FEMALE_PICTURE });
+                                }
+                            }
                             addPersonalInfoHistory(user_edit_id, tempReqObj, one_user._doc, decodedToken, translator);
                             //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
                             res.send({ message: translator.getStr('UserUpdated'), data: body, status: true });
@@ -1481,7 +1512,7 @@ module.exports.saveMobilePhoto = async function (req, res) {
                 }).on('end', async function () {
                     let LowerCase_bucket = decodedToken.companycode.toLowerCase();
                     let user_edit_id = fields._id;
-                    let One_User = await userConnection.findOne({ _id: ObjectID(user_edit_id) });
+                    let one_user = await userConnection.findOne({ _id: ObjectID(user_edit_id) });
 
                     if (notFonud == 1) {
                         newOpenFile = this.openedFiles;
@@ -1491,8 +1522,8 @@ module.exports.saveMobilePhoto = async function (req, res) {
                         dirKeyName = config.INVOICE_WASABI_PATH + "/employee/" + user_edit_id + "/" + attachmentLocations.PROFILE_PICTURE + "/mobile_picture." + extension;
                         var fileBody = fs.readFileSync(temp_path);
                         params = { Bucket: LowerCase_bucket, Key: dirKeyName, Body: fileBody, ACL: 'public-read-write' };
-                        if (One_User.usermobile_picture != undefined && One_User.usermobile_picture != "") {
-                            tmp_picArray = One_User.usermobile_picture.split("/");
+                        if (one_user.usermobile_picture != undefined && one_user.usermobile_picture != "") {
+                            tmp_picArray = one_user.usermobile_picture.split("/");
                             last_picarray = tmp_picArray.splice(0, 4);
                             // console.log(tmp_picArray.join("/"));
                             let params_delete_pic = {
