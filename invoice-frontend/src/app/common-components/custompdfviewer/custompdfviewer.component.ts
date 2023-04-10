@@ -66,7 +66,7 @@ export class CustompdfviewerComponent implements OnInit {
   Archive_Orphan_Document: any;
   role_permission: any;
 
-  constructor(private location: Location, private modeService: ModeDetectService, public route: ActivatedRoute, private router: Router,
+  constructor (private location: Location, private modeService: ModeDetectService, public route: ActivatedRoute, private router: Router,
     public httpCall: HttpCall, public spinner: UiSpinnerService, public snackbarservice: Snackbarservice,
     public translate: TranslateService, public dialog: MatDialog) {
     this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
@@ -337,161 +337,6 @@ export class CustompdfviewerComponent implements OnInit {
         }
       });
   }
-  poApprove() {
-    let id = '';
-    let status = '';
-    let url = '';
-    let text = '';
-    let co_id = this.route.snapshot.queryParamMap.get('change_order_id');
-    let odp_id = this.route.snapshot.queryParamMap.get('odp_id');
-    if (co_id != null) {
-      let po_status = this.route.snapshot.queryParamMap.get('po_status');
-      if (po_status == 'Approve Pending') {
-        status = "Approved by Prime";
-      } else if (po_status == 'Approved by Prime') {
-        status = "Approved by Sponsor";
-      }
-      id = co_id;
-      url = httproutes.SUPPLIER_CHANGE_ORDER_CHANGE_STATUS;
-      text = this.Custom_Pdf_Viewer_Want_Approve_Change_Order;
-    } else if (odp_id != null) {
-      status = "Approved";
-      id = odp_id;
-      url = httproutes.SUPPLIER_ODP_CHANGE_STATUS;
-      text = this.Custom_Pdf_Viewer_Want_Approve_Owner_Direct_Purchase;
-    }
-
-    if (id != '' && status != '') {
-      let that = this;
-      swalWithBootstrapButtons.fire({
-        title: this.Custom_Pdf_Viewer_Please_Confirm,
-        text: text,
-        showDenyButton: true,
-        showCancelButton: false,
-        confirmButtonText: this.Compnay_Equipment_Delete_Yes,
-        denyButtonText: this.Compnay_Equipment_Delete_No,
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          that.spinner.spin$.next(true);
-          let params = await that.httpCall.httpPostCall(url, { _id: id, status: status }).toPromise();
-          if (params.status) {
-            that.spinner.spin$.next(false);
-            that.snackbarservice.openSnackBar(params.message, "success");
-            that.location.back();
-          } else {
-            that.spinner.spin$.next(false);
-            that.snackbarservice.openSnackBar(params.message, "error");
-          }
-        }
-      });
-    }
-  }
-
-  poDenied() {
-    let id = '';
-    let status = '';
-    let url = '';
-    let text = '';
-    let co_id = this.route.snapshot.queryParamMap.get('change_order_id');
-    let odp_id = this.route.snapshot.queryParamMap.get('odp_id');
-    if (co_id != null) {
-      let po_status = this.route.snapshot.queryParamMap.get('po_status');
-      if (po_status == 'Approve Pending') {
-        status = "Denied by Prime";
-      } else if (po_status == 'Approved by Prime') {
-        status = "Denied by Sponsor";
-      }
-      id = co_id;
-      url = httproutes.SUPPLIER_CHANGE_ORDER_CHANGE_STATUS;
-      text = this.Custom_Pdf_Viewer_Want_Deny_Change_Order;
-    } else if (odp_id != null) {
-      status = "Denied";
-      id = odp_id;
-      url = httproutes.SUPPLIER_ODP_CHANGE_STATUS;
-      text = this.Custom_Pdf_Viewer_Want_Deny_Owner_Direct_Purchase;
-    }
-
-    if (id != '' && status != '') {
-      let that = this;
-      swalWithBootstrapButtons.fire({
-        title: this.Custom_Pdf_Viewer_Please_Confirm,
-        text: text,
-        showDenyButton: true,
-        showCancelButton: false,
-        confirmButtonText: this.Compnay_Equipment_Delete_Yes,
-        denyButtonText: this.Compnay_Equipment_Delete_No,
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          that.spinner.spin$.next(true);
-          let params = await that.httpCall.httpPostCall(url, { _id: id, status: status }).toPromise();
-          if (params.status) {
-            that.spinner.spin$.next(false);
-            that.snackbarservice.openSnackBar(params.message, "success");
-            that.location.back();
-          } else {
-            that.spinner.spin$.next(false);
-            that.snackbarservice.openSnackBar(params.message, "error");
-          }
-        }
-      });
-    }
-  }
-
-  changeCertificateStatus(status: any) {
-    let that = this;
-    swalWithBootstrapButtons.fire({
-      title: that.Custom_Pdf_Viewer_Please_Confirm,
-      text: status == 'Accept' ? that.Custom_Pdf_Viewer_Want_Accept_Vendor_Certificate : that.Custom_Pdf_Viewer_Want_Reject_Vendor_Certificate,
-      showDenyButton: true,
-      showCancelButton: false,
-      confirmButtonText: that.Compnay_Equipment_Delete_Yes,
-      denyButtonText: that.Compnay_Equipment_Delete_No,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        let certificate_id = this.route.snapshot.queryParamMap.get('certificate_id');
-        let certificate_link = this.route.snapshot.queryParamMap.get('po_url');
-        let certificate_type_id = this.route.snapshot.queryParamMap.get('certificate_type_id');
-        let vendor_id = this.route.snapshot.queryParamMap.get('vendor_id');
-        let expiration_date = this.route.snapshot.queryParamMap.get('expiration_date');
-        let requestObject = {
-          vendor_certificate_id: certificate_id,
-          certificate_type_id: certificate_type_id,
-          vendor_id: vendor_id,
-          expiration_date: expiration_date,
-          certificate_link: certificate_link,
-          status: status,
-          reject_reason: '',
-        };
-        if (status == 'Accept') {
-          that.updateCertificateStatus(requestObject);
-        } else {
-          const dialogRef = this.dialog.open(RejectVendorCertificateForm, {
-            disableClose: true
-          });
-          dialogRef.afterClosed().subscribe(result => {
-            if (result.reason != '') {
-              requestObject.reject_reason = result.reason;
-              that.updateCertificateStatus(requestObject);
-            }
-          });
-        }
-      }
-    });
-  }
-
-  async updateCertificateStatus(requestObject: any) {
-    let that = this;
-    that.spinner.spin$.next(true);
-    let params = await that.httpCall.httpPostCall(httproutes.SPONSOR_PORTAL_UPDATE_VENDOR_CERTIFICATE_STATUS, requestObject).toPromise();
-    if (params.status) {
-      that.spinner.spin$.next(false);
-      that.snackbarservice.openSnackBar(params.message, "success");
-      that.back();
-    } else {
-      that.spinner.spin$.next(false);
-      that.snackbarservice.openSnackBar(params.message, "error");
-    }
-  }
 }
 
 /*
@@ -520,7 +365,7 @@ export class RejectVendorCertificateForm {
   mode: any;
   backIcon: string;
   saveIcon = icon.SAVE_WHITE;
-  constructor(public dialogRef: MatDialogRef<RejectVendorCertificateForm>, public httpCall: HttpCall, public uiSpinner: UiSpinnerService,
+  constructor (public dialogRef: MatDialogRef<RejectVendorCertificateForm>, public httpCall: HttpCall, public uiSpinner: UiSpinnerService,
     public translate: TranslateService, @Inject(MAT_DIALOG_DATA) public data: any, private formBuilder: FormBuilder,
     private modeService: ModeDetectService, public snackbarservice: Snackbarservice, public route: ActivatedRoute,) {
     this.rejectForm = this.formBuilder.group({
