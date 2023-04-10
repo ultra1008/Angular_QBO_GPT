@@ -13,7 +13,7 @@ import { HttpCall } from 'src/app/service/httpcall.service';
 import { Mostusedservice } from 'src/app/service/mostused.service';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
-import { commonFileChangeEvent, gallery_options, MMDDYYYY, MMDDYYYY_formet } from 'src/app/service/utils';
+import { commonFileChangeEvent, commonLocalThumbImage, commonNetworkThumbImage, commonNewtworkAttachmentViewer, gallery_options, MMDDYYYY, MMDDYYYY_formet } from 'src/app/service/utils';
 import { configdata } from 'src/environments/configData';
 import { ModeDetectService } from '../../map/mode-detect.service';
 
@@ -84,7 +84,7 @@ export class InvoiceOtherDocumentComponent implements OnInit {
   LOCAL_OFFSET: number;
   role_permission: any;
 
-  constructor(private sanitiser: DomSanitizer, public translate: TranslateService, private formBuilder: FormBuilder, public snackbarservice: Snackbarservice, public httpCall: HttpCall, public uiSpinner: UiSpinnerService, public dialog: MatDialog, private router: Router, private modeService: ModeDetectService, public route: ActivatedRoute,) {
+  constructor (private sanitiser: DomSanitizer, public translate: TranslateService, private formBuilder: FormBuilder, public snackbarservice: Snackbarservice, public httpCall: HttpCall, public uiSpinner: UiSpinnerService, public dialog: MatDialog, private router: Router, private modeService: ModeDetectService, public route: ActivatedRoute,) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.invoice_id = this.id;
     this._id = this.id;
@@ -487,93 +487,11 @@ export class InvoiceOtherDocumentComponent implements OnInit {
   }
 
   thumbImage(file) {
-    switch (file.type) {
-      case "application/pdf":
-        return "../../../../../../assets/images/pdf.png";
-        break;
-
-      case "image/png":
-        return this.sanitiser.bypassSecurityTrustUrl(URL.createObjectURL(file));
-        break;
-
-      case "image/jpeg":
-        return this.sanitiser.bypassSecurityTrustUrl(URL.createObjectURL(file));
-        break;
-
-      case "image/jpg":
-        return this.sanitiser.bypassSecurityTrustUrl(URL.createObjectURL(file));
-        break;
-
-      case "image/gif":
-        return this.sanitiser.bypassSecurityTrustUrl(URL.createObjectURL(file));
-        break;
-
-      case "application/msword":
-      case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-        return "../../../../../../assets/images/doc.png";
-        break;
-
-      case "application/vnd.ms-excel":
-      case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-        return "../../../../../../assets/images/xls.png";
-        break;
-
-      case "application/vnd.oasis.opendocument.text":
-        return "../../../../../../assets/images/odt.png";
-        break;
-
-      case "application/zip":
-        return "../../../../../../assets/images/zip.png";
-        break;
-
-      case "image/svg+xml":
-        return "../../../../../../assets/images/svg.png";
-        break;
-
-      case "text/plain":
-        return "../../../../../../assets/images/txt.png";
-        break;
-
-      case "application/vnd.ms-powerpoint":
-        return "../../../../../../assets/images/ppt.png";
-        break;
-
-      default:
-        return "../../../../../../assets/images/no-preview.png";
-        break;
-    }
+    return commonLocalThumbImage(this.sanitiser, file);
   }
 
   thumbNetworkImage(index) {
-    var extension = this.files_old[index].substring(
-      this.files_old[index].lastIndexOf(".") + 1
-    );
-
-    if (extension == "doc" || extension == "docx") {
-      return "https://s3.us-west-1.wasabisys.com/rovukdata/doc.png";
-    } else if (extension == "pdf") {
-      return "https://s3.us-west-1.wasabisys.com/rovukdata/pdf.png";
-    } else if (
-      extension == "xls" ||
-      extension == "xlsx" ||
-      extension == "csv"
-    ) {
-      return "https://s3.us-west-1.wasabisys.com/rovukdata/xls.png";
-    } else if (extension == "zip") {
-      return "https://s3.us-west-1.wasabisys.com/rovukdata/zip.png";
-    } else if (extension == "ppt") {
-      return "https://s3.us-west-1.wasabisys.com/rovukdata/ppt.png";
-    } else if (extension == "rtf") {
-      return "https://s3.us-west-1.wasabisys.com/rovukdata/rtf.png";
-    } else if (extension == "odt") {
-      return "https://s3.us-west-1.wasabisys.com/rovukdata/odt.png";
-    } else if (extension == "txt") {
-      return "https://s3.us-west-1.wasabisys.com/rovukdata/txt.png";
-    } else if (extension == "svg") {
-      return "https://s3.us-west-1.wasabisys.com/rovukdata/svg.png";
-    } else {
-      return this.files_old[index];
-    }
+    return commonNetworkThumbImage(this.last_files_array[index]);
   }
 
   downloadButtonPress(event, index): void {
@@ -581,95 +499,7 @@ export class InvoiceOtherDocumentComponent implements OnInit {
   }
 
   imageNetworkPreview(allAttachment, index) {
-    this.galleryImages = [];
-    for (let i = 0; i < allAttachment.length; i++) {
-      var extension = allAttachment[i]
-        .substring(allAttachment[i].lastIndexOf(".") + 1)
-        .toLowerCase();
-      if (
-        extension == "jpg" ||
-        extension == "png" ||
-        extension == "jpeg" ||
-        extension == "gif" ||
-        extension == "webp"
-      ) {
-        var srctmp: any = {
-          small: allAttachment[i],
-          medium: allAttachment[i],
-          big: allAttachment[i],
-        };
-        this.galleryImages.push(srctmp);
-      } else if (extension == "doc" || extension == "docx") {
-        var srctmp: any = {
-          small: "https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png",
-          medium: "https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png",
-          big: "https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png",
-        };
-        this.galleryImages.push(srctmp);
-      } else if (extension == "pdf") {
-        var srctmp: any = {
-          small: "https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png",
-          medium: "https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png",
-          big: "https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png",
-        };
-        this.galleryImages.push(srctmp);
-      } else if (extension == "odt") {
-        var srctmp: any = {
-          small: "https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png",
-          medium: "https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png",
-          big: "https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png",
-        };
-        this.galleryImages.push(srctmp);
-      } else if (extension == "rtf") {
-        var srctmp: any = {
-          small: "https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png",
-          medium: "https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png",
-          big: "https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png",
-        };
-        this.galleryImages.push(srctmp);
-      } else if (extension == "txt") {
-        var srctmp: any = {
-          small: "https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png",
-          medium: "https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png",
-          big: "https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png",
-        };
-        this.galleryImages.push(srctmp);
-      } else if (extension == "ppt") {
-        var srctmp: any = {
-          small: "https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png",
-          medium: "https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png",
-          big: "https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png",
-        };
-        this.galleryImages.push(srctmp);
-      } else if (
-        extension == "xls" ||
-        extension == "xlsx" ||
-        extension == "csv"
-      ) {
-        var srctmp: any = {
-          small: "https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png",
-          medium: "https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png",
-          big: "https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png",
-        };
-        this.galleryImages.push(srctmp);
-      } else if (extension == "zip") {
-        var srctmp: any = {
-          small: "https://s3.us-west-1.wasabisys.com/rovukdata/zip_big.png",
-          medium: "https://s3.us-west-1.wasabisys.com/rovukdata/zip_big.png",
-          big: "https://s3.us-west-1.wasabisys.com/rovukdata/zip_big.png",
-        };
-        this.galleryImages.push(srctmp);
-      } else {
-        var srctmp: any = {
-          small:
-            "https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png",
-          medium:
-            "https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png",
-          big: "https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png",
-        };
-        this.galleryImages.push(srctmp);
-      }
-    }
+    this.galleryImages = commonNewtworkAttachmentViewer(allAttachment);
     setTimeout(() => {
       this.gallery.openPreview(index);
     }, 0);
@@ -851,7 +681,7 @@ export class AddOtherFiles implements OnInit {
   FILE_NOT_SUPPORTED: string;
   Invoice_Add_Atleast_One_Document: string = '';
 
-  constructor(private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
+  constructor (private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
     public dialogRef: MatDialogRef<AddOtherFiles>,
     @Inject(MAT_DIALOG_DATA) public data: any, public sb: Snackbarservice, public translate: TranslateService, public dialog: MatDialog, private sanitiser: DomSanitizer,
     public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService,
@@ -956,57 +786,7 @@ export class AddOtherFiles implements OnInit {
     File/Image picker item is diplayed thmb based on file extensions.
   */
   thumbImage(file: any) {
-    switch (file.type) {
-      case 'application/pdf':
-        return '../../../../../../assets/images/pdf.png';
-        break;
-
-      case 'image/png':
-        return this.sanitiser.bypassSecurityTrustUrl(URL.createObjectURL(file));
-        break;
-
-      case 'image/jpeg':
-        return this.sanitiser.bypassSecurityTrustUrl(URL.createObjectURL(file));
-        break;
-
-      case 'image/jpg':
-        return this.sanitiser.bypassSecurityTrustUrl(URL.createObjectURL(file));
-        break;
-
-      case 'image/gif':
-        return this.sanitiser.bypassSecurityTrustUrl(URL.createObjectURL(file));
-        break;
-
-      case 'application/msword':
-      case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-        return '../../../../../../assets/images/doc.png';
-        break;
-
-      case 'application/vnd.ms-excel':
-      case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-        return '../../../../../../assets/images/xls.png';
-        break;
-
-      case 'application/vnd.oasis.opendocument.text':
-        return '../../../../../../assets/images/odt.png';
-        break;
-
-      case 'application/zip':
-        return '../../../../../../assets/images/zip.png';
-        break;
-
-      case 'image/svg+xml':
-        return '../../../../../../assets/images/svg.png';
-        break;
-
-      case 'application/vnd.ms-powerpoint':
-        return '../../../../../../assets/images/ppt.png';
-        break;
-
-      default:
-        return '../../../../../../assets/images/no-preview.png';
-        break;
-    }
+    return commonLocalThumbImage(this.sanitiser, file);
   }
 
   /*
@@ -1014,28 +794,7 @@ export class AddOtherFiles implements OnInit {
     Find extension from url and display it from Wasabi. So this thumb is prepared from network only.
   */
   thumbNetworkImage(index: any) {
-    var extension = this.last_files_array[index].substring(this.last_files_array[index].lastIndexOf('.') + 1);
-    if (extension == "doc" || extension == "docx") {
-      return 'https://s3.us-west-1.wasabisys.com/rovukdata/doc.png';
-    } else if (extension == "pdf") {
-      return 'https://s3.us-west-1.wasabisys.com/rovukdata/pdf.png';
-    } else if (extension == "xls" || extension == "xlsx" || extension == "csv") {
-      return 'https://s3.us-west-1.wasabisys.com/rovukdata/xls.png';
-    } else if (extension == "zip") {
-      return 'https://s3.us-west-1.wasabisys.com/rovukdata/zip.png';
-    } else if (extension == "ppt") {
-      return 'https://s3.us-west-1.wasabisys.com/rovukdata/ppt.png';
-    } else if (extension == "rtf") {
-      return 'https://s3.us-west-1.wasabisys.com/rovukdata/rtf.png';
-    } else if (extension == "odt") {
-      return 'https://s3.us-west-1.wasabisys.com/rovukdata/odt.png';
-    } else if (extension == "txt") {
-      return 'https://s3.us-west-1.wasabisys.com/rovukdata/txt.png';
-    } else if (extension == "jpg" || extension == "png" || extension == "jpeg" || extension == "gif" || extension == "webp") {
-      return this.last_files_array[index];
-    } else {
-      return 'https://s3.us-west-1.wasabisys.com/rovukdata/no-preview.png';
-    }
+    return commonNetworkThumbImage(this.last_files_array[index]);
   }
 
   /*
@@ -1043,73 +802,7 @@ export class AddOtherFiles implements OnInit {
     now improved as an open the Full size preview.
   */
   imageNetworkPreview(allAttachment: any, index: any) {
-    for (let i = 0; i < allAttachment.length; i++) {
-      var extension = allAttachment[i].substring(allAttachment[i].lastIndexOf('.') + 1);
-      if (extension == "jpg" || extension == "png" || extension == "jpeg" || extension == "gif" || extension == 'webp') {
-        var srctmp: any = {
-          small: allAttachment[i],
-          medium: allAttachment[i],
-          big: allAttachment[i]
-        };
-        this.galleryImages.push(srctmp);
-      } else if (extension == "doc" || extension == "docx") {
-        var srctmp: any = {
-          small: 'https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png',
-          medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png',
-          big: 'https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png'
-        };
-        this.galleryImages.push(srctmp);
-      } else if (extension == "pdf") {
-        var srctmp: any = {
-          small: 'https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png',
-          medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png',
-          big: 'https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png'
-        };
-        this.galleryImages.push(srctmp);
-      } else if (extension == "odt") {
-        var srctmp: any = {
-          small: 'https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png',
-          medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png',
-          big: 'https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png'
-        };
-        this.galleryImages.push(srctmp);
-      } else if (extension == "rtf") {
-        var srctmp: any = {
-          small: 'https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png',
-          medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png',
-          big: 'https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png'
-        };
-        this.galleryImages.push(srctmp);
-      } else if (extension == "txt") {
-        var srctmp: any = {
-          small: 'https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png',
-          medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png',
-          big: 'https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png'
-        };
-        this.galleryImages.push(srctmp);
-      } else if (extension == "ppt") {
-        var srctmp: any = {
-          small: 'https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png',
-          medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png',
-          big: 'https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png'
-        };
-        this.galleryImages.push(srctmp);
-      } else if (extension == "xls" || extension == "xlsx" || extension == "csv") {
-        var srctmp: any = {
-          small: 'https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png',
-          medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png',
-          big: 'https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png'
-        };
-        this.galleryImages.push(srctmp);
-      } else {
-        var srctmp: any = {
-          small: 'https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png',
-          medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png',
-          big: 'https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png'
-        };
-        this.galleryImages.push(srctmp);
-      }
-    }
+    this.galleryImages = commonNewtworkAttachmentViewer(allAttachment);
     setTimeout(() => {
       this.gallery.openPreview(index);
     }, 0
@@ -1174,7 +867,7 @@ export class OrphanFiles implements OnInit {
   _id!: string;
   viewIcon: any;
 
-  constructor(
+  constructor (
     private modeService: ModeDetectService,
     private router: Router,
     public dialogRef: MatDialogRef<OrphanFiles>,
@@ -1285,7 +978,7 @@ export class RequestFilesComponent implements OnInit {
   _id: any;
 
   /*Constructor*/
-  constructor(
+  constructor (
     private formBuilder: FormBuilder,
     public httpCall: HttpCall,
     private modeService: ModeDetectService,

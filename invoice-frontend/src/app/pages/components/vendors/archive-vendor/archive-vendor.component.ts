@@ -11,7 +11,7 @@ import { HttpCall } from 'src/app/service/httpcall.service';
 import { Mostusedservice } from 'src/app/service/mostused.service';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
-import { formatPhoneNumber, gallery_options, LanguageApp } from 'src/app/service/utils';
+import { commonNewtworkAttachmentViewer, formatPhoneNumber, gallery_options, LanguageApp } from 'src/app/service/utils';
 import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
 import { ModeDetectService } from '../../map/mode-detect.service';
@@ -220,107 +220,8 @@ export class ArchiveVendorComponent implements OnInit {
 
       drawCallback: () => {
         $(".button_attachment").on("click", (event) => {
-          this.imageObject = JSON.parse(
-            event.target.getAttribute("edit_tmp_id")
-          ).vendor_attachment;
-          this.galleryImages = [];
-          if (this.imageObject != undefined) {
-            for (let i = 0; i < this.imageObject.length; i++) {
-              var extension = this.imageObject[i].substring(
-                this.imageObject[i].lastIndexOf(".") + 1
-              );
-              if (
-                extension == "jpg" ||
-                extension == "png" ||
-                extension == "jpeg" ||
-                extension == "gif" ||
-                extension == "webp"
-              ) {
-                var srctmp: any = {
-                  small: this.imageObject[i],
-                  medium: this.imageObject[i],
-                  big: this.imageObject[i],
-                };
-                this.galleryImages.push(srctmp);
-              } else if (extension == "doc" || extension == "docx") {
-                var srctmp: any = {
-                  small:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png",
-                  medium:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png",
-                  big: "https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png",
-                };
-                this.galleryImages.push(srctmp);
-              } else if (extension == "pdf") {
-                var srctmp: any = {
-                  small:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png",
-                  medium:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png",
-                  big: "https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png",
-                };
-                this.galleryImages.push(srctmp);
-              } else if (extension == "odt") {
-                var srctmp: any = {
-                  small:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png",
-                  medium:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png",
-                  big: "https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png",
-                };
-                this.galleryImages.push(srctmp);
-              } else if (extension == "rtf") {
-                var srctmp: any = {
-                  small:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png",
-                  medium:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png",
-                  big: "https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png",
-                };
-                this.galleryImages.push(srctmp);
-              } else if (extension == "txt") {
-                var srctmp: any = {
-                  small:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png",
-                  medium:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png",
-                  big: "https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png",
-                };
-                this.galleryImages.push(srctmp);
-              } else if (extension == "ppt") {
-                var srctmp: any = {
-                  small:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png",
-                  medium:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png",
-                  big: "https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png",
-                };
-                this.galleryImages.push(srctmp);
-              } else if (
-                extension == "xls" ||
-                extension == "xlsx" ||
-                extension == "csv"
-              ) {
-                var srctmp: any = {
-                  small:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png",
-                  medium:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png",
-                  big: "https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png",
-                };
-                this.galleryImages.push(srctmp);
-              } else {
-                var srctmp: any = {
-                  small:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png",
-                  medium:
-                    "https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png",
-                  big: "https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png",
-                };
-                this.galleryImages.push(srctmp);
-              }
-            }
-          }
+          this.imageObject = JSON.parse(event.target.getAttribute("edit_tmp_id")).vendor_attachment;
+          this.galleryImages = commonNewtworkAttachmentViewer(this.imageObject);
           setTimeout(() => {
             this.gallery.openPreview(0);
           }, 0);

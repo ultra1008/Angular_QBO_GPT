@@ -68,7 +68,6 @@ import { CdkAccordionModule } from '@angular/cdk/accordion';
 
 import { InvoiceAttachment, InvoiceComponent, InvoiceReport } from './components/invoice/invoice.component';
 import { ReportsComponent } from './components/reports/reports.component';
-import { FileAttachment, TemplatesComponent } from './components/templates/templates.component';
 import { MailboxMonitorComponent } from './components/setting/mailbox-monitor/mailbox-monitor.component';
 import { AlertsComponent } from './components/setting/alerts/alerts.component';
 import { IntegrationsComponent } from './components/setting/integrations/integrations.component';
@@ -79,7 +78,6 @@ import { TaxRateComponent, TaxRateForm } from './components/setting/invoice-othe
 import { DocumentForm, DocumentsComponent } from './components/setting/invoice-other-settings/documents/documents.component';
 import { SettingsSecurityComponent } from './components/setting/settings-security/settings-security.component';
 import { InvoiceFormComponent, InvoiceHistoryComponent, InvoiceRejectReason } from './components/invoice/invoice-form/invoice-form.component';
-import { TemplateFormComponent } from './components/templates/template-form/template-form.component';
 import { InvoiceDetailPageComponent } from './components/invoice/invoice-detail-page/invoice-detail-page.component';
 import { InvoiceDashboardComponent } from './components/dashboard/invoice-dashboard.component';
 import { VendorHistoryComponent, VendorReportComponent, VendorsComponent } from './components/vendors/vendors.component';
@@ -142,7 +140,6 @@ import { MailboxFormComponent } from './components/setting/mailbox-monitor/mailb
     InvoiceDashboardComponent,
     InvoiceComponent,
     ReportsComponent,
-    TemplatesComponent,
     MailboxMonitorComponent,
     AlertsComponent,
     IntegrationsComponent,
@@ -159,8 +156,6 @@ import { MailboxFormComponent } from './components/setting/mailbox-monitor/mailb
     ImportOther,
     SettingsSecurityComponent,
     InvoiceFormComponent,
-    TemplateFormComponent,
-    FileAttachment,
     InvoiceAttachment,
     InvoiceReport,
     InvoiceDetailPageComponent,

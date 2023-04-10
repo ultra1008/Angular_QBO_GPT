@@ -688,3 +688,144 @@ export async function commonFileChangeEvent(fileInput: any, acceptFileType: stri
   });
 }
 
+export function commonNewtworkAttachmentViewer(attachements) {
+  var images = [];
+  if (attachements != undefined) {
+    for (let i = 0; i < attachements.length; i++) {
+      var extension = attachements[i].substring(attachements[i].lastIndexOf(".") + 1);
+      if (extension == "jpg" || extension == "png" || extension == "jpeg" || extension == "gif" || extension == "webp") {
+        var srctmp: any = {
+          small: attachements[i],
+          medium: attachements[i],
+          big: attachements[i],
+        };
+        images.push(srctmp);
+      } else if (extension == "doc" || extension == "docx") {
+        var srctmp: any = {
+          small: "https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png",
+          medium: "https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png",
+          big: "https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png",
+        };
+        images.push(srctmp);
+      } else if (extension == "pdf") {
+        var srctmp: any = {
+          small: "https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png",
+          medium: "https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png",
+          big: "https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png",
+        };
+        images.push(srctmp);
+      } else if (extension == "odt") {
+        var srctmp: any = {
+          small: "https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png",
+          medium: "https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png",
+          big: "https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png",
+        };
+        images.push(srctmp);
+      } else if (extension == "rtf") {
+        var srctmp: any = {
+          small: "https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png",
+          medium: "https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png",
+          big: "https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png",
+        };
+        images.push(srctmp);
+      } else if (extension == "txt") {
+        var srctmp: any = {
+          small: "https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png",
+          medium: "https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png",
+          big: "https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png",
+        };
+        images.push(srctmp);
+      } else if (extension == "ppt") {
+        var srctmp: any = {
+          small: "https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png",
+          medium: "https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png",
+          big: "https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png",
+        };
+        images.push(srctmp);
+      } else if (extension == "xls" || extension == "xlsx" || extension == "csv") {
+        var srctmp: any = {
+          small: "https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png",
+          medium: "https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png",
+          big: "https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png",
+        };
+        images.push(srctmp);
+      } else {
+        var srctmp: any = {
+          small: "https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png",
+          medium: "https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png",
+          big: "https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png",
+        };
+        images.push(srctmp);
+      }
+    }
+  }
+  return images;
+}
+
+export function commonNetworkThumbImage(url: String) {
+  var extension = url.substring(url.lastIndexOf(".") + 1);
+  if (extension == "doc" || extension == "docx") {
+    return "https://s3.us-west-1.wasabisys.com/rovukdata/doc.png";
+  } else if (extension == "pdf") {
+    return "https://s3.us-west-1.wasabisys.com/rovukdata/pdf.png";
+  } else if (extension == "xls" || extension == "xlsx" || extension == "csv") {
+    return "https://s3.us-west-1.wasabisys.com/rovukdata/xls.png";
+  } else if (extension == "zip") {
+    return "https://s3.us-west-1.wasabisys.com/rovukdata/zip.png";
+  } else if (extension == "ppt") {
+    return "https://s3.us-west-1.wasabisys.com/rovukdata/ppt.png";
+  } else if (extension == "rtf") {
+    return "https://s3.us-west-1.wasabisys.com/rovukdata/rtf.png";
+  } else if (extension == "odt") {
+    return "https://s3.us-west-1.wasabisys.com/rovukdata/odt.png";
+  } else if (extension == "txt") {
+    return "https://s3.us-west-1.wasabisys.com/rovukdata/txt.png";
+  } else if (extension == "jpg" || extension == "png" || extension == "jpeg" || extension == "gif" || extension == "webp") {
+    return url;
+  } else {
+    return "https://s3.us-west-1.wasabisys.com/rovukdata/no-preview.png";
+  }
+}
+
+export function commonLocalThumbImage(sanitiser, file) {
+  switch (file.type) {
+    case "application/pdf":
+      return "../../../../../../assets/images/pdf.png";
+      break;
+    case "image/png":
+      return sanitiser.bypassSecurityTrustUrl(URL.createObjectURL(file));
+      break;
+    case "image/jpeg":
+      return sanitiser.bypassSecurityTrustUrl(URL.createObjectURL(file));
+      break;
+    case "image/jpg":
+      return sanitiser.bypassSecurityTrustUrl(URL.createObjectURL(file));
+      break;
+    case "image/gif":
+      return sanitiser.bypassSecurityTrustUrl(URL.createObjectURL(file));
+      break;
+    case "application/msword":
+    case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+      return "../../../../../../assets/images/doc.png";
+      break;
+    case "application/vnd.ms-excel":
+    case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+      return "../../../../../../assets/images/xls.png";
+      break;
+    case "application/vnd.oasis.opendocument.text":
+      return "../../../../../../assets/images/odt.png";
+      break;
+    case "application/zip":
+      return "../../../../../../assets/images/zip.png";
+      break;
+    case "image/svg+xml":
+      return "../../../../../../assets/images/svg.png";
+      break;
+    case "application/vnd.ms-powerpoint":
+      return "../../../../../../assets/images/ppt.png";
+      break;
+    default:
+      return "../../../../../../assets/images/no-preview.png";
+      break;
+  }
+}

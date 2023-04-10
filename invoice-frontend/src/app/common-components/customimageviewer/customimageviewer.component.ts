@@ -4,6 +4,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NgxGalleryImage, NgxGalleryAnimation, NgxGalleryImageSize } from 'ngx-gallery-9';
+import { commonNewtworkAttachmentViewer } from 'src/app/service/utils';
 @Component({
   selector: 'app-customimageviewer',
   templateUrl: './customimageviewer.component.html',
@@ -17,87 +18,10 @@ export class CustomimageviewerComponent implements OnInit {
   galleryImages: NgxGalleryImage[] = [];
   @ViewChild('gallery') customgallery: any;
 
-  constructor(private location: Location, public domS: DomSanitizer, public route: ActivatedRoute, @Inject(MAT_DIALOG_DATA) public data: any) {
+  constructor (private location: Location, public domS: DomSanitizer, public route: ActivatedRoute, @Inject(MAT_DIALOG_DATA) public data: any) {
     this.tmpgallery = data.imageList;
     this.indexNo = data.openIndex;
-    if (this.tmpgallery != undefined) {
-      for (let i = 0; i < this.tmpgallery.length; i++) {
-        var extension = this.tmpgallery[i].substring(this.tmpgallery[i].lastIndexOf('.') + 1);
-        if (extension == "jpg" || extension == "png" || extension == "jpeg" || extension == "gif" || extension == 'webp') {
-          this.gallery.push(this.tmpgallery[i]);
-          var srctmp: any = {
-            small: this.tmpgallery[i],
-            medium: this.tmpgallery[i],
-            big: this.tmpgallery[i]
-          };
-          this.galleryImages.push(srctmp);
-        } else if (extension == "doc" || extension == "docx") {
-          this.gallery.push('https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png');
-          var srctmp: any = {
-            small: 'https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png',
-            medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png',
-            big: 'https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png'
-          };
-          this.galleryImages.push(srctmp);
-        } else if (extension == "pdf") {
-          this.gallery.push('https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png');
-          var srctmp: any = {
-            small: 'https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png',
-            medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png',
-            big: 'https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png'
-          };
-          this.galleryImages.push(srctmp);
-        } else if (extension == "odt") {
-          this.gallery.push('https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png');
-          var srctmp: any = {
-            small: 'https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png',
-            medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png',
-            big: 'https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png'
-          };
-          this.galleryImages.push(srctmp);
-        } else if (extension == "rtf") {
-          this.gallery.push('https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png');
-          var srctmp: any = {
-            small: 'https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png',
-            medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png',
-            big: 'https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png'
-          };
-          this.galleryImages.push(srctmp);
-        } else if (extension == "txt") {
-          this.gallery.push('https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png');
-          var srctmp: any = {
-            small: 'https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png',
-            medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png',
-            big: 'https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png'
-          };
-          this.galleryImages.push(srctmp);
-        } else if (extension == "ppt") {
-          this.gallery.push('https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png');
-          var srctmp: any = {
-            small: 'https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png',
-            medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png',
-            big: 'https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png'
-          };
-          this.galleryImages.push(srctmp);
-        } else if (extension == "xls" || extension == "xlsx" || extension == "csv") {
-          this.gallery.push('https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png');
-          var srctmp: any = {
-            small: 'https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png',
-            medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png',
-            big: 'https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png'
-          };
-          this.galleryImages.push(srctmp);
-        } else {
-          this.gallery.push('https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png');
-          var srctmp: any = {
-            small: 'https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png',
-            medium: 'https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png',
-            big: 'https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png'
-          };
-          this.galleryImages.push(srctmp);
-        }
-      }
-    }
+    this.galleryImages = commonNewtworkAttachmentViewer(this.tmpgallery);
   }
 
   print(image: any, index: any) {

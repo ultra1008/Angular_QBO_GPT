@@ -22,7 +22,6 @@ import { EmployeePayrollgroupComponent } from './components/setting/settings-emp
 import { EmployeeRelationshipComponent } from './components/setting/settings-employee/employee-relationship/employee-relationship.component';
 
 import { InvoiceComponent } from './components/invoice/invoice.component';
-import { TemplatesComponent } from './components/templates/templates.component';
 import { ReportsComponent } from './components/reports/reports.component';
 import { MailboxMonitorComponent } from './components/setting/mailbox-monitor/mailbox-monitor.component';
 import { AlertsComponent } from './components/setting/alerts/alerts.component';
@@ -34,7 +33,6 @@ import { TaxRateComponent } from './components/setting/invoice-other-settings/ta
 import { DocumentsComponent } from './components/setting/invoice-other-settings/documents/documents.component';
 import { ArchiveTeamListComponent } from './components/team/archive-team-list/archive-team-list.component';
 import { InvoiceFormComponent } from './components/invoice/invoice-form/invoice-form.component';
-import { TemplateFormComponent } from './components/templates/template-form/template-form.component';
 import { InvoiceDetailPageComponent } from './components/invoice/invoice-detail-page/invoice-detail-page.component';
 import { InvoiceOtherSettingsComponent } from './components/setting/invoice-other-settings/invoice-other-settings.component';
 import { InvoiceDashboardComponent } from './components/dashboard/invoice-dashboard.component';
@@ -85,12 +83,6 @@ const routes: Routes = [
         pathMatch: 'full',
         canActivate: [PortalAuthGuard],
         component: QuoteFormComponent
-      },
-      {
-        path: 'template-form',
-        pathMatch: 'full',
-        canActivate: [PortalAuthGuard],
-        component: TemplateFormComponent
       },
       {
         path: 'vendor-form',
@@ -164,12 +156,6 @@ const routes: Routes = [
         pathMatch: 'full',
         canActivate: [PortalAuthGuard],
         component: ArchiveVendorComponent
-      },
-      {
-        path: 'template',
-        pathMatch: 'full',
-        canActivate: [PortalAuthGuard],
-        component: TemplatesComponent
       },
       {
         path: 'reports',
