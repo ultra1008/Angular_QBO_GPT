@@ -711,10 +711,11 @@ module.exports.sendOTP = async function (req, res) {
         if (one_user) {
             let emailOTPConnection = connection_db_api.model(collectionConstant.EMAIL_OTP, emailOTPSchema);
             //let sixdidgitnumber = Math.floor(Math.random() * (9 * Math.pow(10, 6 - 1))) + Math.pow(10, 6 - 1);
-            let sixdidgitnumber = common.randomString(6);
+            let sixdidgitnumber = common.generateRandomOTP();
             requestObject.sent_on = Math.round(new Date().getTime() / 1000);
             requestObject.user_id = one_user._id;
             requestObject.otp = sixdidgitnumber;
+            console.log("OTP", sixdidgitnumber);
             let send_email_otp = new emailOTPConnection(requestObject);
             let save_email_otp = await send_email_otp.save();
             if (save_email_otp) {
@@ -726,7 +727,7 @@ module.exports.sendOTP = async function (req, res) {
                     ROVUK_TEAM: `${company_data.companyname} team`,
 
                     TITLE: 'One Time Password (OTP) verification',
-                    LINE1: new handlebars.SafeString(`Your One Time Password(OTP) is < b > ${sixdidgitnumber}</b >.`),
+                    LINE1: new handlebars.SafeString(`Your One Time Password(OTP) is <b> ${sixdidgitnumber}</b>.`),
                     LINE2: 'Make sure to enter it in the web browser, since your account can’t be accessed without it.',
 
                     COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname} `,

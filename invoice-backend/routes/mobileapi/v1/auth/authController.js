@@ -865,7 +865,7 @@ module.exports.sendOTPforLogin = async function (req, res) {
             let one_user = await userConnection.findOne({ useremail: requestObject.useremail });
             if (one_user) {
                 let emailOTPConnection = connection_db_api.model(collectionConstant.EMAIL_OTP, emailOTPSchema);
-                let sixdidgitnumber = common.randomString(6);
+                let sixdidgitnumber = common.generateRandomOTP();
                 requestObject.sent_on = Math.round(new Date().getTime() / 1000);
                 requestObject.user_id = one_user._id;
                 requestObject.otp = sixdidgitnumber;

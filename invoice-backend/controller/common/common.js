@@ -82,6 +82,35 @@ module.exports.rendomPassword = function (length) {
     return result;
 };
 
+//genrate Alphanumeric otp
+module.exports.generateRandomOTP = function () {
+    var result = '';
+    var digitString = '0123456789';
+    var alphabeticString = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    for (var i = 2; i > 0; --i) {
+        result += digitString[Math.floor(Math.random() * digitString.length)];
+    }
+    for (var i = 4; i > 0; --i) {
+        result += alphabeticString[Math.floor(Math.random() * alphabeticString.length)];
+    }
+    result = shuffleString(result);
+    return result;
+};
+
+function shuffleString(text) {
+    var array = text.split('');
+    var n = array.length;
+
+    for (var i = 0; i < n - 1; ++i) {
+        var j = Math.floor(Math.random() * n);
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    text = array.join('');
+    return text;
+}
+
 module.exports.timeDateToepoch = function (new_datetime) {
     var dateObj = new Date(new_datetime).getTime();
     return Math.round(dateObj / 1000);
@@ -2000,14 +2029,4 @@ module.exports.getCustomerStates = function (companycode) {
             }
         });
     });
-};
-
-//genrate Alphanumeric otp
-module.exports.randomString = function (length) {
-    var result = '';
-    var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    for (var i = length; i > 0; --i) {
-        result += chars[Math.floor(Math.random() * chars.length)];
-    }
-    return result;
 };
