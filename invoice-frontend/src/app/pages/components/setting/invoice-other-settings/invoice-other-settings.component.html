@@ -8,9 +8,9 @@
             </button>
 
             <input id="file-upload" type="file" style="display: none;" (click)="OpenFilebox.value = null"
-                 #OpenFilebox />
+                #OpenFilebox />
             <button class="import-export-btn-datatable button_workersEditClass cust-margin-div" aria-label="Left Align"
-                matTooltip="" >
+                matTooltip="">
                 <img src="{{importIcon}}" alt="" height="20px">
             </button>
         </div>
@@ -25,9 +25,7 @@
                 <mat-tab label="Documents">
                     <app-documents></app-documents>
                 </mat-tab>
-                <!-- <mat-tab label="{{'Employee-form-Payroll-Group' | translate }}">
-                    <app-employee-payrollgroup></app-employee-payrollgroup>
-                </mat-tab> -->
+
             </mat-tab-group>
         </div>
     </div>

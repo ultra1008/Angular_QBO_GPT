@@ -15,12 +15,6 @@ import { gallery_options, LanguageApp } from 'src/app/service/utils';
 import { configdata } from 'src/environments/configData';
 import { ModeDetectService } from '../map/mode-detect.service';
 
-class DataTablesResponse {
-  data: any[];
-  draw: number;
-  recordsFiltered: number;
-  recordsTotal: number;
-}
 
 @Component({
   selector: 'app-reports',
@@ -88,7 +82,7 @@ export class ReportsComponent implements OnInit {
   startDate: number = 0;
   endDate: number = 0;
 
-  constructor (private modeService: ModeDetectService,
+  constructor(private modeService: ModeDetectService,
     private router: Router,
     private http: HttpClient,
     public httpCall: HttpCall,

@@ -27,7 +27,6 @@ import { ImOtherDownload, ImportOther, InvoiceOtherSettingsComponent } from './c
 import { NgxMatColorPickerModule } from '@angular-material-components/color-picker';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { MatSelectFilterModule } from 'mat-select-filter';
-import { SettingsOtherComponent, otherSettingManually } from './components/setting/settings-other/settings-other.component';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { SignaturePadModule } from 'angular2-signaturepad';
 import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
@@ -113,9 +112,9 @@ import { MailboxFormComponent } from './components/setting/mailbox-monitor/mailb
     SettingComponent,
     SettingsCompanyinfoComponent,
     SettingsSmtpComponent,
-    SettingsOtherComponent,
+
     UserpublicDatatableComponent,
-    otherSettingManually,
+
     CustompdfviewerComponent,
     CustomimageviewerComponent,
     ShortcutsMenuComponent,

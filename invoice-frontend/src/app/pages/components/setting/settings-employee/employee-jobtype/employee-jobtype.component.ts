@@ -24,9 +24,9 @@ const swalWithBootstrapButtons = Swal.mixin({
 })
 export class EmployeeJobtypeComponent implements OnInit {
   allJobtitle: any = [];
-  Employee_Jobtype_Do_Want_Delete: string = ""
-  Compnay_Equipment_Delete_Yes: string = ""
-  Compnay_Equipment_Delete_No: string = ""
+  Employee_Jobtype_Do_Want_Delete: string = "";
+  Compnay_Equipment_Delete_Yes: string = "";
+  Compnay_Equipment_Delete_No: string = "";
 
   addIcon = icon.ADD_MY_SELF_WHITE;
   editIcon: string;
@@ -41,11 +41,11 @@ export class EmployeeJobtypeComponent implements OnInit {
   constructor(private modeService: ModeDetectService, public dialog: MatDialog, public httpCall: HttpCall, public snackbarservice: Snackbarservice,
     public translate: TranslateService) {
     this.translate.stream(['']).subscribe((textarray) => {
-      this.Employee_Jobtype_Do_Want_Delete = this.translate.instant('Employee_Jobtype_Do_Want_Delete')
-      this.Compnay_Equipment_Delete_Yes = this.translate.instant('Compnay_Equipment_Delete_Yes')
-      this.Compnay_Equipment_Delete_No = this.translate.instant('Compnay_Equipment_Delete_No')
+      this.Employee_Jobtype_Do_Want_Delete = this.translate.instant('Employee_Jobtype_Do_Want_Delete');
+      this.Compnay_Equipment_Delete_Yes = this.translate.instant('Compnay_Equipment_Delete_Yes');
+      this.Compnay_Equipment_Delete_No = this.translate.instant('Compnay_Equipment_Delete_No');
 
-    })
+    });
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
@@ -71,7 +71,7 @@ export class EmployeeJobtypeComponent implements OnInit {
         this.deleteIcon = icon.DELETE_WHITE;
 
       }
-      console.log("DARK MODE: " + this.mode);
+
     });
     let that = this;
     // this.uiSpinner.spin$.next(true);
@@ -84,7 +84,7 @@ export class EmployeeJobtypeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getDataJobType()
+    this.getDataJobType();
   }
 
   getDataJobType() {
@@ -93,7 +93,7 @@ export class EmployeeJobtypeComponent implements OnInit {
       if (params.status) {
         that.allJobtitle = params.data;
       }
-    })
+    });
   }
 
   deleteJobType(jobtitle: any) {
@@ -114,9 +114,9 @@ export class EmployeeJobtypeComponent implements OnInit {
           } else {
             that.snackbarservice.openSnackBar(params.message, "error");
           }
-        })
+        });
       }
-    })
+    });
   }
 
   addJobtype(reqData: any) {
@@ -125,7 +125,7 @@ export class EmployeeJobtypeComponent implements OnInit {
       disableClose: true
     });
     dialogRef.afterClosed().subscribe(result => {
-      this.getDataJobType()
+      this.getDataJobType();
     });
   }
 
@@ -176,7 +176,7 @@ export class EmployeeJobTypeForm implements OnInit {
         this.exitIcon = icon.BACK_WHITE;
 
       }
-      console.log("DARK MODE: " + this.mode);
+
 
     });
     //let that = this;
@@ -205,7 +205,7 @@ export class EmployeeJobTypeForm implements OnInit {
         } else {
           that.snackbarservice.openSnackBar(params.message, "error");
         }
-      })
+      });
     }
   }
 }

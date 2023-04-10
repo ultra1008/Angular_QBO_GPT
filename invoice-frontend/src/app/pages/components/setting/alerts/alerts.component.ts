@@ -5,8 +5,8 @@ import { Snackbarservice } from "src/app/service/snack-bar-service";
 import Swal from "sweetalert2";
 import { TranslateService } from "@ngx-translate/core";
 import { configdata } from "src/environments/configData";
-import { FormGroup, FormBuilder } from "@angular/forms";
-import { MatSelect } from "@angular/material/select";
+import { FormBuilder } from "@angular/forms";
+
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
     confirmButton: "btn btn-success margin-right-cust s2-confirm",
@@ -200,7 +200,7 @@ export class AlertsComponent implements OnInit {
     let reqObject = {
       [settingKey]: obj,
     };
-    console.log(reqObject);
+
     let that = this;
     swalWithBootstrapButtons
       .fire({
@@ -248,7 +248,7 @@ export class AlertsComponent implements OnInit {
     this.httpCall.httpGetCall(httproutes.PORTAL_SETTING_ROLES_ALL).subscribe(function (params) {
       if (params.status) {
         that.allRoles = params.data;
-        console.log("role", that.allRoles);
+
       }
     });
   }
@@ -258,7 +258,7 @@ export class AlertsComponent implements OnInit {
     this.httpCall.httpGetCall(httproutes.PORTAL_GET_ALL_USERS).subscribe(function (params) {
       if (params.status) {
         that.allUser = params.data;
-        console.log("role", that.allUser);
+
       }
     });
   }

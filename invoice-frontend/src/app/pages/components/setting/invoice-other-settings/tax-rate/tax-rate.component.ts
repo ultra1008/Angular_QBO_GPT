@@ -51,33 +51,29 @@ export class TaxRateComponent implements OnInit {
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off')
-    {
+    if (this.mode == 'off') {
       this.editIcon = icon.EDIT;
       this.deleteIcon = icon.DELETE;
 
-    } else
-    {
+    } else {
       this.editIcon = icon.EDIT_WHITE;
       this.deleteIcon = icon.DELETE_WHITE;
 
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode)
-      {
+      if (mode) {
         this.mode = 'off';
         this.editIcon = icon.EDIT;
         this.deleteIcon = icon.DELETE;
 
 
-      } else
-      {
+      } else {
         this.mode = 'on';
         this.editIcon = icon.EDIT_WHITE;
         this.deleteIcon = icon.DELETE_WHITE;
 
       }
-      console.log("DARK MODE: " + this.mode);
+
     });
   }
 
@@ -100,10 +96,9 @@ export class TaxRateComponent implements OnInit {
   getTaxrate() {
     let that = this;
     this.httpCall.httpGetCall(httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTINGS_GET_TEXT_RATE).subscribe(function (params) {
-      if (params.status)
-      {
+      if (params.status) {
         that.allTaxrate = params.data;
-        console.log("att text rate", that.allTaxrate);
+
       }
     });
   }
@@ -118,15 +113,12 @@ export class TaxRateComponent implements OnInit {
       denyButtonText: this.Compnay_Equipment_Delete_No,
       allowOutsideClick: false
     }).then((result) => {
-      if (result.isConfirmed)
-      {
+      if (result.isConfirmed) {
         that.httpCall.httpPostCall(httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTING_DELETE_TEXT_RATE, { _id: taxrate._id }).subscribe(function (params) {
-          if (params.status)
-          {
+          if (params.status) {
             that.snackbarservice.openSnackBar(params.message, "success");
             that.getTaxrate();
-          } else
-          {
+          } else {
             that.snackbarservice.openSnackBar(params.message, "error");
           }
         });
@@ -156,8 +148,7 @@ export class TaxRateForm implements OnInit {
     this.taxrate = new FormGroup({
       name: new FormControl("", [Validators.required]),
     });
-    if (this.data)
-    {
+    if (this.data) {
       this.taxrate = new FormGroup({
         name: new FormControl(this.data.name, [Validators.required]),
       });
@@ -165,32 +156,27 @@ export class TaxRateForm implements OnInit {
 
     var modeLocal = localStorage.getItem('');
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off')
-    {
+    if (this.mode == 'off') {
       this.exitIcon = icon.BACK;
 
-    } else
-    {
+    } else {
       this.exitIcon = icon.BACK_WHITE;
     }
 
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode)
-      {
+      if (mode) {
         this.mode = 'off';
         this.exitIcon = icon.BACK;
 
-      } else
-      {
+      } else {
         this.mode = 'on';
         this.exitIcon = icon.BACK_WHITE;
 
       }
-      console.log("DARK MODE: " + this.mode);
+
 
     });
-    //let that = this;
-    // this.uiSpinner.spin$.next(true);
+
     this.translate.stream(['']).subscribe((textarray) => {
       this.copyDataFromProject = this.translate.instant('Copy_Data_From_Project');
       this.yesButton = this.translate.instant('Compnay_Equipment_Delete_Yes');
@@ -205,20 +191,16 @@ export class TaxRateForm implements OnInit {
 
   saveData() {
     let that = this;
-    if (this.taxrate.valid)
-    {
+    if (this.taxrate.valid) {
       let reqData = this.taxrate.value;
-      if (this.data)
-      {
+      if (this.data) {
         reqData._id = this.data._id;
       }
       this.httpCall.httpPostCall(httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTING_SAVE_TEXT_RATE, reqData).subscribe(function (params) {
-        if (params.status)
-        {
+        if (params.status) {
           that.snackbarservice.openSnackBar(params.message, "success");
           that.dialogRef.close();
-        } else
-        {
+        } else {
           that.snackbarservice.openSnackBar(params.message, "error");
         }
       });

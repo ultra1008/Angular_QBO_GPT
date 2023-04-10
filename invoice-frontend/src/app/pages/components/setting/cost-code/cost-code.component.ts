@@ -3,8 +3,6 @@ import { httproutes, icon, localstorageconstants } from 'src/app/consts';
 import { Subscription } from 'rxjs';
 import { ModeDetectService } from "../../map/mode-detect.service";
 import Swal from 'sweetalert2';
-import { Input } from '@angular/core';
-import { Subject } from 'rxjs';
 import { fullDate_format, LanguageApp, logobase64 } from 'src/app/service/utils';
 import { HttpCall } from 'src/app/service/httpcall.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -70,7 +68,7 @@ export class CostCodeComponent implements OnInit {
   locallanguage: any;
   showTable: boolean = true;
 
-  constructor (private modeService: ModeDetectService, public httpCall: HttpCall, public http: HttpClient, public dialog: MatDialog,
+  constructor(private modeService: ModeDetectService, public httpCall: HttpCall, public http: HttpClient, public dialog: MatDialog,
     public sb: Snackbarservice, public translate: TranslateService, public mostusedservice: Mostusedservice,) {
     var modeLocal = localStorage.getItem('darkmood');
     this.mode = modeLocal === 'on' ? 'on' : 'off';
@@ -133,7 +131,7 @@ export class CostCodeComponent implements OnInit {
         $(".dataTables_processing").html(
           "<img  src=" + this.httpCall.getLoader() + ">"
         );
-        console.log("call r");
+
         dataTablesParameters.module = 'Invoice';
         that.http
           .post<DataTablesResponse>(
@@ -142,7 +140,7 @@ export class CostCodeComponent implements OnInit {
             { headers: headers }
           )
           .subscribe((resp) => {
-            console.log("call.....");
+
             callback({
               recordsTotal: resp.recordsTotal,
               recordsFiltered: resp.recordsFiltered,
@@ -492,7 +490,7 @@ export class CostCodeFormComponent implements OnInit {
   All_popup_Cancel: string;
   other_settings_Form_Submitting: string;
 
-  constructor (
+  constructor(
     private modeService: ModeDetectService,
     public dialogRef: MatDialogRef<CostCodeFormComponent>,
     public translate: TranslateService,
@@ -501,7 +499,7 @@ export class CostCodeFormComponent implements OnInit {
     public httpCall: HttpCall,
     public sb: Snackbarservice
   ) {
-    console.log("constrcutor");
+
     if (data.reqData._id) {
       this.costcodesave = new FormGroup({
         costcode: new FormControl(data.reqData.cost_code),
@@ -580,7 +578,7 @@ export class CostCodeFormComponent implements OnInit {
   }
 
   saveData() {
-    console.log("savedata");
+
     let that = this;
     if (this.costcodesave.valid) {
       that.uiSpinner.spin$.next(true);
@@ -628,7 +626,7 @@ export class CostcodeImportData {
   import_cancel_error: any;
   Compnay_Equipment_Delete_Yes: any;
   Compnay_Equipment_Delete_No: any;
-  constructor (
+  constructor(
     public sb: Snackbarservice,
     public dialogRef: MatDialogRef<CostcodeImportData>,
     public httpCall: HttpCall,

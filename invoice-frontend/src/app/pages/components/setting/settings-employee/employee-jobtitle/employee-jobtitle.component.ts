@@ -24,9 +24,9 @@ const swalWithBootstrapButtons = Swal.mixin({
 })
 export class EmployeeJobtitleComponent implements OnInit {
   allJobtitle: any = [];
-  Employee_Jobtitle_Do_Want_Delete: string = ""
-  Compnay_Equipment_Delete_Yes: string = ""
-  Compnay_Equipment_Delete_No: string = ""
+  Employee_Jobtitle_Do_Want_Delete: string = "";
+  Compnay_Equipment_Delete_Yes: string = "";
+  Compnay_Equipment_Delete_No: string = "";
 
   addIcon = icon.ADD_MY_SELF_WHITE;
   editIcon: string;
@@ -40,10 +40,10 @@ export class EmployeeJobtitleComponent implements OnInit {
   constructor(private modeService: ModeDetectService, public dialog: MatDialog, public httpCall: HttpCall, public snackbarservice: Snackbarservice,
     public translate: TranslateService) {
     this.translate.stream(['']).subscribe((textarray) => {
-      this.Employee_Jobtitle_Do_Want_Delete = this.translate.instant('Employee_Jobtitle_Do_Want_Delete')
-      this.Compnay_Equipment_Delete_Yes = this.translate.instant('Compnay_Equipment_Delete_Yes')
-      this.Compnay_Equipment_Delete_No = this.translate.instant('Compnay_Equipment_Delete_No')
-    })
+      this.Employee_Jobtitle_Do_Want_Delete = this.translate.instant('Employee_Jobtitle_Do_Want_Delete');
+      this.Compnay_Equipment_Delete_Yes = this.translate.instant('Compnay_Equipment_Delete_Yes');
+      this.Compnay_Equipment_Delete_No = this.translate.instant('Compnay_Equipment_Delete_No');
+    });
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
@@ -69,7 +69,7 @@ export class EmployeeJobtitleComponent implements OnInit {
         this.deleteIcon = icon.DELETE_WHITE;
 
       }
-      console.log("DARK MODE: " + this.mode);
+
     });
     let that = this;
     // this.uiSpinner.spin$.next(true);
@@ -82,7 +82,7 @@ export class EmployeeJobtitleComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getDataJobTitle()
+    this.getDataJobTitle();
   }
 
   getDataJobTitle() {
@@ -91,7 +91,7 @@ export class EmployeeJobtitleComponent implements OnInit {
       if (params.status) {
         that.allJobtitle = params.data;
       }
-    })
+    });
   }
 
   deleteJobTitle(jobtitle: any) {
@@ -112,9 +112,9 @@ export class EmployeeJobtitleComponent implements OnInit {
           } else {
             that.snackbarservice.openSnackBar(params.message, "error");
           }
-        })
+        });
       }
-    })
+    });
   }
 
   addJobtitle(reqData: any) {
@@ -123,7 +123,7 @@ export class EmployeeJobtitleComponent implements OnInit {
       disableClose: true
     });
     dialogRef.afterClosed().subscribe(result => {
-      this.getDataJobTitle()
+      this.getDataJobTitle();
     });
   }
 
@@ -174,11 +174,10 @@ export class EmployeeJobTitleForm implements OnInit {
         this.exitIcon = icon.BACK_WHITE;
 
       }
-      console.log("DARK MODE: " + this.mode);
+
 
     });
-    //let that = this;
-    // this.uiSpinner.spin$.next(true);
+
     this.translate.stream(['']).subscribe((textarray) => {
       this.copyDataFromProject = this.translate.instant('Copy_Data_From_Project');
       this.yesButton = this.translate.instant('Compnay_Equipment_Delete_Yes');
@@ -203,7 +202,7 @@ export class EmployeeJobTitleForm implements OnInit {
         } else {
           that.snackbarservice.openSnackBar(params.message, "error");
         }
-      })
+      });
     }
   }
 }

@@ -124,15 +124,9 @@ export class TemplatesComponent implements OnInit {
 
   ngOnInit(): void {
     let role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA) ?? '');
-    console.log("role", role_permission.UserData.role_name);
+
     this.role_to = role_permission.UserData.role_name;
-    // let role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
-    // if (role_permission.role_permission.team.team.Add == false) {
-    //   this.addTeamMember = false;
-    // }
-    // if (role_permission.role_permission.team.team.Delete == false) {
-    //   this.deleteTeamMember = false;
-    // }
+
     this.uiSpinner.spin$.next(true);
     let that = this;
 
@@ -193,7 +187,7 @@ export class TemplatesComponent implements OnInit {
   ngAfterViewInit() {
     this.dtTrigger.next();
   }
- 
+
 
 
   getAllRoles() {
@@ -366,7 +360,7 @@ export class FileAttachment {
         this.fileIcon = icon.REPORT_WHITE;
 
       }
-      console.log("DARK MODE: " + this.mode);
+
 
     });
 

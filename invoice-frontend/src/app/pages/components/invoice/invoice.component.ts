@@ -13,12 +13,12 @@ import { HttpCall } from 'src/app/service/httpcall.service';
 import { Mostusedservice } from 'src/app/service/mostused.service';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
-import { commonFileChangeEvent, formatPhoneNumber, gallery_options, LanguageApp, timeDateToepoch } from 'src/app/service/utils';
+import { commonFileChangeEvent, formatPhoneNumber, gallery_options, LanguageApp } from 'src/app/service/utils';
 import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
 import { ModeDetectService } from '../map/mode-detect.service';
 import moment from "moment";
-import { event } from 'jquery';
+
 
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
@@ -170,13 +170,7 @@ export class InvoiceComponent implements OnInit {
   ngOnInit(): void {
     let role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA) ?? '');
     this.role_to = role_permission.UserData.role_name;
-    // let role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
-    // if (role_permission.role_permission.team.team.Add == false) {
-    //   this.addTeamMember = false;
-    // }
-    // if (role_permission.role_permission.team.team.Delete == false) {
-    //   this.deleteTeamMember = false;
-    // }
+
     let that = this;
     this.getAllVendors();
     this.uiSpinner.spin$.next(true);
@@ -716,18 +710,6 @@ export class InvoiceAttachment {
 
   uploadDocuments() {
     let that = this;
-    /* that.httpCall
-      .httpPostCall(httproutes.INVOICE_SAVE_INVOICE_PROCESS, { pdf_urls: [] })
-      .subscribe(function (new_params) {
-        if (new_params.status) {
-          that.sb.openSnackBar(new_params.message, "success");
-          that.uiSpinner.spin$.next(false);
-          that.dialogRef.close();
-        } else {
-          that.sb.openSnackBar(new_params.message, "error");
-          that.uiSpinner.spin$.next(false);
-        }
-      }); */
     if (that.files.length == 0) {
       that.sb.openSnackBar(that.Invoice_Add_Atleast_One_Document, "error");
     } else {

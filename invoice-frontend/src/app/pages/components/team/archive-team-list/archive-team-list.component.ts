@@ -26,13 +26,11 @@ export class ArchiveTeamListComponent implements OnInit {
     let that = this;
     that.spinner.spin$.next(true);
     this.httpCall.httpGetCall(httproutes.TEAM_AECHIVE).subscribe(function (params) {
-      console.log('Params ====> ', params);
+
       that.spinner.spin$.next(false);
-      if (params.status)
-      {
+      if (params.status) {
         that.teamArray = params.data;
-        if (that.teamArray.length == 0)
-        {
+        if (that.teamArray.length == 0) {
           that.isEmpty = true;
         }
       }
@@ -41,24 +39,20 @@ export class ArchiveTeamListComponent implements OnInit {
 
     var modeLocal = localStorage.getItem('darkmood');
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off')
-    {
+    if (this.mode == 'off') {
       this.backIcon = icon.BACK;
       this.teamIcon = icon.ARCHIVE;
-    } else
-    {
+    } else {
       this.backIcon = icon.BACK_WHITE;
       this.teamIcon = icon.ARCHIVE_WHITE;
     }
 
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode)
-      {
+      if (mode) {
         this.mode = 'off';
         this.backIcon = icon.BACK;
         this.teamIcon = icon.ARCHIVE;
-      } else
-      {
+      } else {
         this.mode = 'on';
         this.backIcon = icon.BACK_WHITE;
         this.teamIcon = icon.ARCHIVE_WHITE;

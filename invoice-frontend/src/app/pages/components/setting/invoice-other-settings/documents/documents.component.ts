@@ -8,8 +8,7 @@ import { HttpCall } from 'src/app/service/httpcall.service';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import Swal from 'sweetalert2';
 import { ModeDetectService } from '../../../map/mode-detect.service';
-import { TaxRateForm } from '../tax-rate/tax-rate.component';
-import { TermsForm } from '../terms/terms.component';
+
 
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
@@ -51,33 +50,29 @@ export class DocumentsComponent implements OnInit {
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off')
-    {
+    if (this.mode == 'off') {
       this.editIcon = icon.EDIT;
       this.deleteIcon = icon.DELETE;
 
-    } else
-    {
+    } else {
       this.editIcon = icon.EDIT_WHITE;
       this.deleteIcon = icon.DELETE_WHITE;
 
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode)
-      {
+      if (mode) {
         this.mode = 'off';
         this.editIcon = icon.EDIT;
         this.deleteIcon = icon.DELETE;
 
 
-      } else
-      {
+      } else {
         this.mode = 'on';
         this.editIcon = icon.EDIT_WHITE;
         this.deleteIcon = icon.DELETE_WHITE;
 
       }
-      console.log("DARK MODE: " + this.mode);
+
     });
   }
 
@@ -100,8 +95,7 @@ export class DocumentsComponent implements OnInit {
   getDataDocutments() {
     let that = this;
     this.httpCall.httpGetCall(httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTINGS_GET_DOCUMENT).subscribe(function (params) {
-      if (params.status)
-      {
+      if (params.status) {
         that.allDocuments = params.data;
       }
     });
@@ -117,15 +111,12 @@ export class DocumentsComponent implements OnInit {
       denyButtonText: this.Compnay_Equipment_Delete_No,
       allowOutsideClick: false
     }).then((result) => {
-      if (result.isConfirmed)
-      {
+      if (result.isConfirmed) {
         that.httpCall.httpPostCall(httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTING_DELETE_DOCUMENT, { _id: docutments._id }).subscribe(function (params) {
-          if (params.status)
-          {
+          if (params.status) {
             that.snackbarservice.openSnackBar(params.message, "success");
             that.getDataDocutments();
-          } else
-          {
+          } else {
             that.snackbarservice.openSnackBar(params.message, "error");
           }
         });
@@ -155,8 +146,7 @@ export class DocumentForm implements OnInit {
     this.documentform = new FormGroup({
       name: new FormControl("", [Validators.required]),
     });
-    if (this.data)
-    {
+    if (this.data) {
       this.documentform = new FormGroup({
         name: new FormControl(this.data.name, [Validators.required]),
       });
@@ -164,28 +154,24 @@ export class DocumentForm implements OnInit {
 
     var modeLocal = localStorage.getItem('');
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off')
-    {
+    if (this.mode == 'off') {
       this.exitIcon = icon.BACK;
 
-    } else
-    {
+    } else {
       this.exitIcon = icon.BACK_WHITE;
     }
 
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
-      if (mode)
-      {
+      if (mode) {
         this.mode = 'off';
         this.exitIcon = icon.BACK;
 
-      } else
-      {
+      } else {
         this.mode = 'on';
         this.exitIcon = icon.BACK_WHITE;
 
       }
-      console.log("DARK MODE: " + this.mode);
+
 
     });
     //let that = this;
@@ -204,22 +190,18 @@ export class DocumentForm implements OnInit {
 
   saveData() {
     let that = this;
-    console.log("valid", that.documentform.valid)
-    if (that.documentform.valid)
-    {
-      console.log("if1")
+
+    if (that.documentform.valid) {
+
       let reqData = that.documentform.value;
-      if (that.data)
-      {
+      if (that.data) {
         reqData._id = that.data._id;
       }
       that.httpCall.httpPostCall(httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTING_SAVE_DOCUMENT, reqData).subscribe(function (params) {
-        if (params.status)
-        {
+        if (params.status) {
           that.snackbarservice.openSnackBar(params.message, "success");
           that.dialogRef.close();
-        } else
-        {
+        } else {
           that.snackbarservice.openSnackBar(params.message, "error");
         }
       });

@@ -117,8 +117,7 @@ export class MailboxFormComponent implements OnInit {
       })
       .then((result) => {
         if (result.isConfirmed) {
-          // Move to the Users listing
-          // console.log("this.vendorinfo.valid", this.vendorinfo.valid, this.vendorinfo.value);
+
           if (this.mailbpxform.valid) {
             // this.saveVendorData();
           } else {
@@ -135,7 +134,7 @@ export class MailboxFormComponent implements OnInit {
   onSelectTime(event) {
     let found = this.frequency.find((element) => element.time == event);
     this.cronTime = found.cron_time;
-    console.log(".cronTime", this.cronTime);
+
   }
 
   sendData() {

@@ -54,7 +54,7 @@ import { SettingsSmtpComponent } from './settings-smtp/settings-smtp.component';
 // import { MonthlyPayrollruleComponent } from './settings-payrollrules/monthly-payrollrule/monthly-payrollrule.component';
 // import { SemimonthlyPayrollruleComponent } from './settings-payrollrules/semimonthly-payrollrule/semimonthly-payrollrule.component';
 // import { SettingsCostcodeComponent } from './settings-costcode/settings-costcode.component';
-import { SettingsOtherComponent, otherSettingManually } from './settings-other/settings-other.component';
+
 import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { SettingRoleComponent } from './setting-role/setting-role.component';
 import { ImportDataErrorEmpSetting, ImportEmpSettingDownload, SettingsEmployeeComponent } from './settings-employee/settings-employee.component';
@@ -104,8 +104,7 @@ const maskConfig: Partial<IConfig> = {
     // MonthlyPayrollruleComponent,
     // SemimonthlyPayrollruleComponent,
     // SettingsCostcodeComponent,
-    SettingsOtherComponent,
-    otherSettingManually,
+
     SettingRoleComponent,
     SettingsEmployeeComponent,
     EmployeeDepartmentsComponent,
@@ -126,7 +125,7 @@ const maskConfig: Partial<IConfig> = {
     TermsComponent,
     TaxRateComponent,
     DocumentsComponent,
-    SettingsSecurityComponent,, DocumentViewComponent, MailboxFormComponent
+    SettingsSecurityComponent, , DocumentViewComponent, MailboxFormComponent
 
     ,
   ],

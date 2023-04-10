@@ -13,7 +13,7 @@ export class SettingRoleComponent implements OnInit {
   roleName: any;
   saveIcon = icon.SAVE_WHITE;
 
-  constructor (public httpCall: HttpCall, public snackbarservice: Snackbarservice) {
+  constructor(public httpCall: HttpCall, public snackbarservice: Snackbarservice) {
   }
 
   ngOnInit(): void {
@@ -41,8 +41,7 @@ export class SettingRoleComponent implements OnInit {
   }
 
   onTabNameChanged(rName: any) {
-    console.log("onTabNameChanged");
-    console.log(rName);
+
     if (rName == "Admin") {
       this.roleName = "Admin";
     } else if (rName == "Manager") {

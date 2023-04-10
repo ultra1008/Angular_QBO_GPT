@@ -207,7 +207,7 @@ export class EmployeeViewComponent implements OnInit {
   Empty_Temporary_Password: string;
 
 
-  constructor (private modeService: ModeDetectService, public sb: Snackbarservice, private location: Location, public dialog: MatDialog, public translate: TranslateService, public mostusedservice: Mostusedservice,
+  constructor(private modeService: ModeDetectService, public sb: Snackbarservice, private location: Location, public dialog: MatDialog, public translate: TranslateService, public mostusedservice: Mostusedservice,
     private formBuilder: FormBuilder, private http: HttpClient, public employeeservice: EmployeeService, public snackbarservice: Snackbarservice,
     private router: Router, public route: ActivatedRoute, public httpCall: HttpCall, public uiSpinner: UiSpinnerService) {
 
@@ -1222,13 +1222,12 @@ export class EmployeeViewComponent implements OnInit {
   }
 
   async savePersonalInfo() {
-    //userpersonalinfo
+
     let that = this;
     let tmp_data_emp_info = that.useremployeeinfo.value;
 
     this.userpersonalinfo.markAllAsTouched();
-    //that.useremployeeinfo.markAllAsTouched();
-    console.log("this.userpersonalinfo.valid: ", this.userpersonalinfo.valid, this.userpersonalinfo.value);
+
 
     if (this.userpersonalinfo.valid) {
       this.uiSpinner.spin$.next(true);
@@ -1377,7 +1376,7 @@ export class EmployeeViewComponent implements OnInit {
 
       reqObject.userqrcode = that.user_data.userqrcode;
       this.uiSpinner.spin$.next(true);
-      console.log("daaata", reqObject);
+
       this.httpCall.httpPostCall(httproutes.EMPLOYEE_EMPLOYEE_INFO, reqObject).subscribe(function (params) {
 
         if (params.status) {
@@ -1530,7 +1529,7 @@ export class EmergencycontactFrom {
   variablesrelation_array: any = [];
   relation_array: any = this.variablesrelation_array.slice();
 
-  constructor (public dialogRef: MatDialogRef<EmergencycontactFrom>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
+  constructor(public dialogRef: MatDialogRef<EmergencycontactFrom>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
     private formBuilder: FormBuilder, public httpCall: HttpCall, public route: ActivatedRoute,
     @Inject(MAT_DIALOG_DATA) public data: any, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService) {
 
@@ -1576,16 +1575,16 @@ export class EmergencycontactFrom {
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    console.log("this.mode main", this.mode);
+
     if (this.mode == 'off') {
-      console.log("this.mod", this.mode);
+
       this.backIcon = icon.CANCLE;
       this.saveIcon = icon.SAVE;
 
 
 
     } else {
-      console.log("this.mod else", this.mode);
+
       this.backIcon = icon.CANCLE_WHITE;
       this.saveIcon = icon.SAVE_WHITE;
 
@@ -1603,7 +1602,7 @@ export class EmergencycontactFrom {
         this.saveIcon = icon.SAVE_WHITE;
 
       }
-      console.log("DARK MODE: " + this.mode);
+
     });
   }
 
@@ -1659,7 +1658,7 @@ export class DocumentUpdateFrom {
   mode: any;
   backIcon: string;
   saveIcon: string;
-  constructor (public dialogRef: MatDialogRef<DocumentUpdateFrom>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
+  constructor(public dialogRef: MatDialogRef<DocumentUpdateFrom>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
     private formBuilder: FormBuilder, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService,
     public employeeservice: EmployeeService, public httpCall: HttpCall, @Inject(MAT_DIALOG_DATA) public data: any) {
 
@@ -1701,15 +1700,15 @@ export class DocumentUpdateFrom {
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    console.log("this.mode main", this.mode);
+
     if (this.mode == 'off') {
-      console.log("this.mod", this.mode);
+
       this.backIcon = icon.CANCLE;
       this.saveIcon = icon.SAVE;
 
 
     } else {
-      console.log("this.mod else", this.mode);
+
       this.backIcon = icon.CANCLE_WHITE;
       this.saveIcon = icon.SAVE_WHITE;
 
@@ -1728,7 +1727,7 @@ export class DocumentUpdateFrom {
 
 
       }
-      console.log("DARK MODE: " + this.mode);
+
     });
   }
 
@@ -1756,38 +1755,7 @@ export class DocumentUpdateFrom {
         this.snackbarservice.openSnackBar(result.message, "error");
       }
     });
-    /* this.imageError = null;
-   if (fileInput.target.files && fileInput.target.files[0]) {
-     const max_size = 20971520;
-     const allowed_types = ['image/png', 'image/jpeg'];
-     const max_height = 15200;
-     const max_width = 25600;
-     this.filepath = fileInput.target.files[0];
-     const reader = new FileReader();
-     reader.onload = (e: any) => {
-       const image = new Image();
-       image.src = e.target.result;
-       image.onload = rs => {
-         const img_height = rs.currentTarget['height'];
-         const img_width = rs.currentTarget['width'];
 
-         if (img_height > max_height && img_width > max_width) {
-           this.imageError =
-             'Maximum dimentions allowed ' +
-             max_height +
-             '*' +
-             max_width +
-             'px';
-           return false;
-         } else {
-           const imgBase64Path = e.target.result;
-           this.cardImageBase64 = imgBase64Path;
-           this.isImageSaved = true;
-         }
-       };
-     };
-     reader.readAsDataURL(fileInput.target.files[0]);
-   } */
   }
 
   /*
@@ -1866,7 +1834,7 @@ export class UserDocumentHistoryComponent implements OnInit {
   backIcon: string;
   subscription: Subscription;
 
-  constructor (public httpCall: HttpCall, private modeService: ModeDetectService, public dialogRef: MatDialogRef<UserDocumentHistoryComponent>, private http: HttpClient,
+  constructor(public httpCall: HttpCall, private modeService: ModeDetectService, public dialogRef: MatDialogRef<UserDocumentHistoryComponent>, private http: HttpClient,
     @Inject(MAT_DIALOG_DATA) public data: any, public translate: TranslateService, public sb: Snackbarservice) {
     let that = this;
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
@@ -1920,14 +1888,14 @@ export class UserDocumentHistoryComponent implements OnInit {
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    console.log("this.mode main", this.mode);
+
     if (this.mode == 'off') {
-      console.log("this.mod", this.mode);
+
       this.backIcon = icon.CANCLE;
 
 
     } else {
-      console.log("this.mod else", this.mode);
+
       this.backIcon = icon.CANCLE_WHITE;
 
 
@@ -1942,7 +1910,7 @@ export class UserDocumentHistoryComponent implements OnInit {
         this.backIcon = icon.CANCLE_WHITE;
 
       }
-      console.log("DARK MODE: " + this.mode);
+
     });
   }
   ngOnInit(): void {

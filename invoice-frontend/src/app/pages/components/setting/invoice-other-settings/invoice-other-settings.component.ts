@@ -1,32 +1,16 @@
-import { Component, OnInit, Inject, ViewChild, ElementRef, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { TranslateService } from '@ngx-translate/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { httproutes, icon, localstorageconstants } from 'src/app/consts';
+
+import { icon, localstorageconstants } from 'src/app/consts';
 import { HttpCall } from 'src/app/service/httpcall.service';
-import { DataTableDirective } from 'angular-datatables';
-import Swal from 'sweetalert2';
+
 import * as _ from 'lodash';
 import { Subscription } from 'rxjs';
 import { ModeDetectService } from '../../map/mode-detect.service';
-import { ImportDataErrorEmpSetting, ImportEmpSettingDownload } from '../settings-employee/settings-employee.component';
 
-const swalWithBootstrapButtons = Swal.mixin({
-  customClass: {
-    confirmButton: 'btn btn-success margin-right-cust',
-    denyButton: 'btn btn-danger'
-  },
-  buttonsStyling: false
-});
-
-class DataTablesResponse {
-  data: any;
-  draw: any;
-  recordsFiltered: any;
-  recordsTotal: any;
-}
 
 @Component({
   selector: 'app-invoice-other-settings',
@@ -57,30 +41,26 @@ export class InvoiceOtherSettingsComponent implements OnInit {
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
-    if (this.mode == 'off')
-    {
+    if (this.mode == 'off') {
       this.importIcon = icon.IMPORT;
 
-    } else
-    {
+    } else {
       this.importIcon = icon.IMPORT_WHITE;
 
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
 
-      if (mode)
-      {
+      if (mode) {
         this.mode = 'off';
         this.importIcon = icon.IMPORT;
 
-      } else
-      {
+      } else {
         this.mode = 'on';
         this.importIcon = icon.IMPORT_WHITE;
 
       }
 
-      console.log("DARK MODE: " + this.mode);
+
     });
 
     //let that = this;

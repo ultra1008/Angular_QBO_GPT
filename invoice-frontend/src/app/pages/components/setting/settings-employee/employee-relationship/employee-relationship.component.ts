@@ -72,7 +72,7 @@ export class EmployeeRelationshipComponent implements OnInit {
         this.deleteIcon = icon.DELETE_WHITE;
 
       }
-      console.log("DARK MODE: " + this.mode);
+
     });
     let that = this;
     // this.uiSpinner.spin$.next(true);
@@ -179,7 +179,7 @@ export class EmployeeRelationshipForm implements OnInit {
         this.exitIcon = icon.BACK_WHITE;
 
       }
-      console.log("DARK MODE: " + this.mode);
+
 
     });
     //let that = this;

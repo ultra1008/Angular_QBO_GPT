@@ -679,8 +679,7 @@ module.exports.getProfile = async function (req, res) {
                     }
                     var settingConnection = await connection_db_api.model(collectionConstant.INVOICE_SETTING, settingSchema);
                     let roleConnection = await connection_db_api.model(collectionConstant.INVOICE_ROLES, invoiceRoleSchema);
-                    let roles_tmp = await roleConnection.findOne({ role_name: 'Admin' });
-                    // let roles_tmp = await roleConnection.findOne({ role_id: ObjectID(one_user.userroleId) });
+                    let roles_tmp = await roleConnection.findOne({ role_id: ObjectID(one_user.userroleId) });
                     var settings_tmp = await settingConnection.findOne({});
                     var resLast = {
                         UserData: one_user,

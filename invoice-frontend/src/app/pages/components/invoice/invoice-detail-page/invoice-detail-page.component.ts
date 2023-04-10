@@ -1,4 +1,3 @@
-import { FlatTreeControl } from '@angular/cdk/tree';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatAccordion } from '@angular/material/expansion';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -100,13 +99,14 @@ export class InvoiceDetailPageComponent implements OnInit {
       this.noButton = this.translate.instant("Compnay_Equipment_Delete_No");
       this.Remove_Notes = this.translate.instant("Remove_Notes");
     });
-    var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
-    this.mode = modeLocal === "on" ? "on" : "off";
+
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.invoice_id = this.id;
     this._id = this.id;
     this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
     this.role_permission = this.role_permission.role_permission;
+    var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
+    this.mode = modeLocal === "on" ? "on" : "off";
     if (this.mode == "off") {
       this.downloadIcon = icon.DOWNLOAD_WHITE;
       this.printIcon = icon.PRINT_WHITE;
@@ -209,7 +209,7 @@ export class InvoiceDetailPageComponent implements OnInit {
               }
             });
         }
-        console.log("params", params);
+
 
       });
   }
@@ -241,7 +241,7 @@ export class InvoiceDetailPageComponent implements OnInit {
   }
 
   deleteFile_old(index: number) {
-    console.log("index", index);
+
     this.last_files_array.splice(index, 1);
     this.files_old.splice(index, 1);
     let that = this;
@@ -285,7 +285,7 @@ export class InvoiceDetailPageComponent implements OnInit {
               }
             });
         }
-        console.log("params", params);
+
 
       });
 
@@ -513,7 +513,7 @@ export class InvoiceDetailPageComponent implements OnInit {
     this.show_Nots = true;
   }
   saveNotes() {
-    console.log("call");
+
     let that = this;
     this.invoiceNoteform.markAllAsTouched();
     if (that.invoiceNoteform.valid) {
@@ -595,7 +595,7 @@ export class InvoiceDetailPageComponent implements OnInit {
           that.uiSpinner.spin$.next(false);
         }
 
-        console.log("last_files_array", that.last_files_array);
+
       });
   }
 
@@ -637,17 +637,17 @@ export class InvoiceDetailPageComponent implements OnInit {
     document.body.removeChild(a);
   }
   onKey(event: any) {
-    console.log(event.target.value);
+
     if (event.target.value.length == 0) {
-      console.log("emprty string");
+
       this.dashboardHistory = [];
       this.start = 0;
       this.getTodaysActivity();
     }
   }
   searchActivity() {
-    console.log("searchTodayActivity");
-    console.log("Entered email:", this.todayactivity_search);
+
+
     let that = this;
     that.isSearch = true;
     that.dashboardHistory = [];
@@ -691,7 +691,7 @@ export class InvoiceDetailPageComponent implements OnInit {
             self.is_httpCall = false;
           self.dashboardHistory = self.dashboardHistory.concat(params.data);
         }
-        console.log("dashboardHistory", self.dashboardHistory);
+
       });
   }
 

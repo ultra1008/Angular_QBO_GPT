@@ -464,7 +464,7 @@ export class TeamHistory {
     public snackbarservice: Snackbarservice,
     private modeService: ModeDetectService
   ) {
-    console.log("history call");
+
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === "on" ? "on" : "off";
     if (this.mode == "off") {
@@ -490,53 +490,17 @@ export class TeamHistory {
   }
 
   onKey(event: any) {
-    console.log(event.target.value);
+
     if (event.target.value.length == 0) {
-      console.log("emprty string");
+
       this.taskHistory = [];
       this.start = 0;
       this.getTodaysActivity();
     }
   }
 
-
-  // searchActivity() {
-  //   this.allHistory = [];
-  //   this.start = 0;
-  //   this.getAllHistory();
-  // }
-
-  // onKey(event: any) {
-  //   if (event.target.value.length == 0)
-  //   {
-  //     this.allHistory = [];
-  //     this.start = 0;
-  //     this.getAllHistory();
-  //   }
-  // }
-
-  // async getAllHistory() {
-  //   console.log("caall api. ((((((((((((((((((((((9");
-  //   let data = await this.httpCall
-  //     .httpPostCall(httproutes.PORTAL_ROVUK_GRID_PROJECT_NEW_HISTORY, {
-  //       start: this.start,
-  //       search: this.search,
-  //     })
-  //     .toPromise();
-  //   if (data.status)
-  //   {
-  //     this.allHistory = this.allHistory.concat(data.data);
-  //   }
-  // }
-
-  // onScroll() {
-  //   console.log("onScroll call");
-  //   this.start++;
-  //   this.getAllHistory();
-  // }
   searchActivity() {
-    console.log("searchTodayActivity");
-    console.log("Entered email:", this.todayactivity_search);
+
     let that = this;
     that.isSearch = true;
     that.taskHistory = [];
@@ -552,7 +516,7 @@ export class TeamHistory {
     let self = this;
     this.is_httpCall = true;
 
-    //this.uiSpinner.spin$.next(true)
+
     this.httpCall
       .httpPostCall(httproutes.PORTAL_ROVUK_INVOICE_TEAM_NEW_HISTORY, {
         start: this.start,
@@ -568,15 +532,7 @@ export class TeamHistory {
       });
   }
 
-  // userDetails(history:any): HistoryUser {
-  //   let user: HistoryUser = {
-  //     history_created_by: history?.history_created_by?._id,
-  //     history_created_by_name: history?.history_created_by?.userfullname,
-  //     history_created_at: history?.history_created_at,
-  //     userpicture: history?.history_created_by?.userpicture,
-  //   };
-  //   return user;
-  // }
+
 
   tmp_date(epoch: any) {
     return MMDDYYYY_formet(epoch);
@@ -589,9 +545,7 @@ export class TeamHistory {
     };
     return styles;
   }
-  // back() {
-  //   this.location.back();
-  // }
+
 }
 
 /**
@@ -784,7 +738,7 @@ export class TeamReportForm {
         this.saveIcon = icon.SAVE_WHITE;
 
       }
-      console.log("DARK MODE: " + this.mode);
+
 
     });
 
@@ -1004,31 +958,7 @@ export class ExportManagementUserComponent {
           that.snackbarservice.openSnackBar(params.message, "error");
         }
       });
-      /* console.log("test: ", final_users);
-      let admin_total = _.filter(final_users, function (p) {
-        return p.role_name != configdata.ROLE_VIEWER;
-      });
-      let viewer_total = _.filter(final_users, function (p) {
-        return p.role_name == configdata.ROLE_VIEWER;
-      });
-      if (admin_total.length > that.remainning_plan.all_admin || viewer_total.length > that.remainning_plan.viewer) {
-        that.snackbarservice.openSnackBar(that.UserLimitExceed, "error");
-      } else {
-        that.uiSpinner.spin$.next(true);
-        let requestObject = {
-          users: final_users
-        };
-        that.httpCall.httpPostCall(httproutes.PORTAL_IMPORT_MANAGEMENT_USERS, requestObject).subscribe(function (params: any) {
-          if (params.status) {
-            that.dialogRef.close();
-            that.uiSpinner.spin$.next(false);
-            that.snackbarservice.openSnackBar(params.message, "success");
-          } else {
-            that.uiSpinner.spin$.next(false);
-            that.snackbarservice.openSnackBar(params.message, "error");
-          }
-        });
-      } */
+
     }
   }
 }

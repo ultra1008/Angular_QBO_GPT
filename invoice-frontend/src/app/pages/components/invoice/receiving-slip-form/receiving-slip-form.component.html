@@ -14,10 +14,7 @@
                 </div>
             </div>
         </div>
-        <!-- <mat-card class="example-card"> -->
-        <!-- <div class="head-text" [ngClass]="mode == 'on'? 'carddark' : 'cardlight'">
-            
-        </div> -->
+
 
         <div class="row">
 
@@ -120,182 +117,7 @@
                                 </div>
 
 
-                                <!-- <div class="col ">
-                                    <b>{{'Customer_Id' | translate }}:</b>&nbsp;&nbsp;
-                                    <mat-form-field>
 
-                                        <input matInput placeholder="{{' ' | translate }}"
-                                            formControlName="customer_id" />
-                                    </mat-form-field>
-                                </div> -->
-
-
-                                <!-- <div class="col">
-                                    <b>{{'Invoice_Date' | translate }}:</b>&nbsp;&nbsp;
-                                    <mat-form-field>
-
-                                        <input matInput placeholder="{{'' | translate }}"
-                                            formControlName="invoice_date" />
-                                    </mat-form-field>
-                                </div>
-                                <div class="col">
-                                    <b>{{'due_date' | translate }}:</b>&nbsp;&nbsp;
-                                    <mat-form-field>
-
-                                        <input matInput placeholder="{{'' | translate }}" formControlName="due_date">
-                                    </mat-form-field>
-                                </div>
-                                <div class="col">
-                                    <b>{{'Order_Date' | translate }}:</b>&nbsp;&nbsp;
-                                    <mat-form-field>
-
-                                        <input matInput placeholder="{{'' | translate }}"
-                                            formControlName="order_date" />
-                                    </mat-form-field>
-                                </div>
-                                <div class="col">
-                                    <b>{{'Ship_date' | translate }}:</b>&nbsp;&nbsp;
-                                    <mat-form-field>
-
-                                        <input matInput placeholder="{{' ' | translate }}"
-                                            formControlName="ship_date" />
-                                    </mat-form-field>
-                                </div>
-                                <div class="col">
-                                    <b>{{'packing_slip_no' | translate }}:</b>&nbsp;&nbsp;
-                                    <mat-form-field>
-
-                                        <input matInput placeholder="{{'' | translate }}"
-                                            formControlName="packing_slip" />
-                                    </mat-form-field>
-                                </div>
-                                <div class="col">
-                                    <b>{{'Receiving_Slip' | translate }}:</b>&nbsp;&nbsp;
-                                    <mat-form-field>
-
-                                        <input matInput placeholder="{{'' | translate }}"
-                                            formControlName="receiving_slip" />
-                                    </mat-form-field>
-                                </div>
-                                <div class="col">
-                                    <b>{{'contract_status' | translate }}:</b>&nbsp;&nbsp;
-                                    <mat-form-field>
-
-                                        <mat-select formControlName="status">
-                                            <mat-option *ngFor="let status of statusList" [value]="status.value">
-                                                {{status.tmp_lanaguage | translate}}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-
-                                <div class="col">
-                                    <b>{{'terms' | translate }}:</b>&nbsp;&nbsp;
-                                    <mat-form-field>
-
-                                        <input matInput placeholder="{{'' | translate }}" formControlName="terms" />
-                                    </mat-form-field>
-                                </div>
-
-                                <div class="col">
-                                    <b>{{'Totle_to_be_Paid' | translate }}:</b>&nbsp;&nbsp;
-                                    <mat-form-field>
-
-                                        <input matInput placeholder="{{'' | translate }}" formControlName="total" />
-
-                                    </mat-form-field>
-                                </div> -->
-
-                                <!-- <div class="col">
-                                                <mat-form-field appearance="outline" class="main-one-input-field">
-                                                    <b>{{'Tax_Rate' | translate }}</b>
-                                                    <input matInput placeholder="{{'Tex_Rate' | translate }}" formControlName="tex_rate">
-                    
-                                                </mat-form-field>
-                                            </div> -->
-                                <!-- <div class="col">
-                                    <b>{{'Tax_Amount' | translate }}:</b>&nbsp;&nbsp;
-                                    <mat-form-field>
-
-                                        <input matInput placeholder="{{'' | translate }}" formControlName="tax_amount">
-                                    </mat-form-field>
-                                </div> -->
-                                <!-- <div class="col">
-                                    <b>{{'Tax_id' | translate }}:</b>&nbsp;&nbsp;
-                                    <mat-form-field>
-                                        <input matInput placeholder="{{'' | translate }}" formControlName="tax_id">
-                                    </mat-form-field>
-                                </div>
-
-                                <div class="col">
-                                    <b> {{'sub_totle' | translate }}:</b>&nbsp;&nbsp;
-                                    <mat-form-field>
-
-                                        <input matInput placeholder="{{'' | translate }}" formControlName=sub_total>
-                                    </mat-form-field>
-                                </div>
-                                <div class="col">
-                                    <b> {{'Amount_Due' | translate }}:</b>&nbsp;&nbsp;
-                                    <mat-form-field>
-
-                                        <input matInput placeholder="{{'' | translate }}" formControlName="amount_due">
-
-                                    </mat-form-field>
-                                </div>
-                                <div class="col">
-                                    <b>{{'Employee-form-Cost-Code' | translate }}:</b>&nbsp;&nbsp;
-                                    <mat-form-field>
-
-                                        <mat-select formControlName="cost_code" #db_costcodesSelect
-                                            class="dark-cust-color">
-                                            <mat-select-filter [placeholder]="'Filter'" [displayMember]="'cost_code'"
-                                                *ngIf="db_costcodesSelect.focused" [array]="variablesdb_costcodes"
-                                                (filteredReturn)="db_costcodes =$event">
-                                            </mat-select-filter>
-                                            <mat-option *ngFor="let costcode of db_costcodes" [value]="costcode._id">
-                                                {{costcode.cost_code}}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                                <div class="col">
-                                    <b>{{'GL_Account' | translate }}:</b>&nbsp;&nbsp;
-                                    <mat-form-field>
-
-                                        <input matInput placeholder="{{'' | translate }}"
-                                            formControlName="gl_account" />
-                                    </mat-form-field>
-                                </div> -->
-
-                                <!-- <div class="col">
-                                                    <mat-form-field >
-                                                        <b>{{'Assign_To' | translate }}</b>
-                                                        <input matInput 
-                                                            placeholder="{{'Assign_To' | translate }}" formControlName="assign_to" />
-                                                    </mat-form-field>
-                                                </div> -->
-                                <!-- <div class="col">
-                                    <b>{{'Assign_To' | translate }}:</b>&nbsp;&nbsp;
-                                    <mat-form-field>
-                                        <mat-select formControlName="assign_to" #usersArraySelect>
-                                            <mat-select-filter [placeholder]="'Filter'" [displayMember]="'userfullname'"
-                                                *ngIf="usersArraySelect.focused" [array]="variablesusersArray"
-                                                (filteredReturn)="usersArray =$event">
-                                            </mat-select-filter>
-                                            <mat-option *ngFor="let user of usersArray" [value]="user._id">
-                                                {{user.userfullname}}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                                <div class="col">
-                                    <b>{{'template_notes' | translate }}:</b>&nbsp;&nbsp;
-                                    <mat-form-field>
-
-                                        <textarea matInput placeholder="{{' ' | translate }}"
-                                            formControlName="notes"></textarea>
-                                    </mat-form-field>
-                                </div> -->
 
 
                             </div>
@@ -308,14 +130,7 @@
                         <button mat-raised-button (click)="saveData()" color="primary" class="cust-button-form"><img
                                 src="{{saveIcon}}" alt="" class="pr-1" height="15px">{{'All-save' |
                             translate}}</button>
-                        <!-- <button mat-raised-button (click)="invoiceApprove()" class="cust-button-form Approve"><img
-                                src="{{approveIcon}}" alt="" height="15px">
-                            {{'PO-View-Approve' | translate}}</button>
 
-                        <button mat-raised-button (click)="invoiceDenied()" class="cust-button-form Denied"><img
-                                src="{{denyIcon}}" alt="" height="15px">
-                            {{'reject_all' |
-                            translate}}</button> -->
                     </div>
                     <div class="col-6">
 

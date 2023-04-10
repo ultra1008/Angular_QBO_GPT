@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { httproutes, localstorageconstants } from 'src/app/consts';
+import { FormBuilder } from '@angular/forms';
+import { httproutes } from 'src/app/consts';
 import { HttpCall } from 'src/app/service/httpcall.service';
 import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { TranslateService } from "@ngx-translate/core";
@@ -32,7 +32,7 @@ export class DocumentViewComponent implements OnInit {
   Compnay_Equipment_Delete_Yes: string = "";
   Compnay_Equipment_Delete_No: string = "";
 
-  constructor (private formBuilder: FormBuilder, public httpCall: HttpCall, public snackbarservice: Snackbarservice,
+  constructor(private formBuilder: FormBuilder, public httpCall: HttpCall, public snackbarservice: Snackbarservice,
     public translate: TranslateService) {
     this.translate.stream([""]).subscribe((textarray) => {
       this.Document_Settings_Alert_Sure_Want_Change = this.translate.instant("Document_Settings_Alert_Sure_Want_Change");

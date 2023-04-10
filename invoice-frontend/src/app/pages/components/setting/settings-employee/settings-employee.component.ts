@@ -42,7 +42,7 @@ export class SettingsEmployeeComponent implements OnInit {
   noButton: string = '';
   show_tabs: boolean = true;
 
-  constructor (private modeService: ModeDetectService, public httpCall: HttpCall, public dialog: MatDialog,
+  constructor(private modeService: ModeDetectService, public httpCall: HttpCall, public dialog: MatDialog,
     public sb: Snackbarservice, public translate: TranslateService) {
     let that = this;
     this.translate.stream(['']).subscribe((textarray) => {
@@ -70,7 +70,7 @@ export class SettingsEmployeeComponent implements OnInit {
 
       }
 
-      console.log("DARK MODE: " + this.mode);
+
     });
 
     //let that = this;
@@ -170,7 +170,7 @@ export class ImportEmpSettingDownload {
   subscription: Subscription;
   exitIcon: string;
 
-  constructor (
+  constructor(
     public dialogRef: MatDialogRef<ImportEmpSettingDownload>, private modeService: ModeDetectService,
     @Inject(MAT_DIALOG_DATA) public data: any, public translate: TranslateService) {
     var modeLocal = localStorage.getItem("darkmode");
@@ -223,7 +223,7 @@ export class ImportDataErrorEmpSetting {
   import_cancel_error: any;
   Compnay_Equipment_Delete_Yes: any;
   Compnay_Equipment_Delete_No: any;
-  constructor (
+  constructor(
     public dialogRef: MatDialogRef<ImportDataErrorEmpSetting>, public httpCall: HttpCall, public uiSpinner: UiSpinnerService,
     @Inject(MAT_DIALOG_DATA) public data: any, public translate: TranslateService, public sb: Snackbarservice) {
     this.import_cancel_error = this.translate.instant('import_cancel_error');

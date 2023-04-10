@@ -24,9 +24,9 @@ const swalWithBootstrapButtons = Swal.mixin({
 })
 export class EmployeePayrollgroupComponent implements OnInit {
   allPayrollGroup: any = [];
-  Employee_Payrollgroup_Do_Want_Delete: string = ""
-  Compnay_Equipment_Delete_Yes: string = ""
-  Compnay_Equipment_Delete_No: string = ""
+  Employee_Payrollgroup_Do_Want_Delete: string = "";
+  Compnay_Equipment_Delete_Yes: string = "";
+  Compnay_Equipment_Delete_No: string = "";
 
   addIcon = icon.ADD_MY_SELF_WHITE;
   editIcon: string;
@@ -40,10 +40,10 @@ export class EmployeePayrollgroupComponent implements OnInit {
 
   constructor(private modeService: ModeDetectService, public dialog: MatDialog, public httpCall: HttpCall, public snackbarservice: Snackbarservice, public translate: TranslateService) {
     this.translate.stream(['']).subscribe((textarray) => {
-      this.Employee_Payrollgroup_Do_Want_Delete = this.translate.instant('Employee_Payrollgroup_Do_Want_Delete')
-      this.Compnay_Equipment_Delete_Yes = this.translate.instant('Compnay_Equipment_Delete_Yes')
-      this.Compnay_Equipment_Delete_No = this.translate.instant('Compnay_Equipment_Delete_No')
-    })
+      this.Employee_Payrollgroup_Do_Want_Delete = this.translate.instant('Employee_Payrollgroup_Do_Want_Delete');
+      this.Compnay_Equipment_Delete_Yes = this.translate.instant('Compnay_Equipment_Delete_Yes');
+      this.Compnay_Equipment_Delete_No = this.translate.instant('Compnay_Equipment_Delete_No');
+    });
 
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
@@ -68,7 +68,7 @@ export class EmployeePayrollgroupComponent implements OnInit {
         this.deleteIcon = icon.DELETE_WHITE;
 
       }
-      console.log("DARK MODE: " + this.mode);
+
     });
     let that = this;
     // this.uiSpinner.spin$.next(true);
@@ -82,7 +82,7 @@ export class EmployeePayrollgroupComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getDataPayRollGroup()
+    this.getDataPayRollGroup();
   }
 
   getDataPayRollGroup() {
@@ -91,7 +91,7 @@ export class EmployeePayrollgroupComponent implements OnInit {
       if (params.status) {
         that.allPayrollGroup = params.data;
       }
-    })
+    });
   }
 
   deletePayRollGroup(payroll: any) {
@@ -112,9 +112,9 @@ export class EmployeePayrollgroupComponent implements OnInit {
           } else {
             that.snackbarservice.openSnackBar(params.message, "error");
           }
-        })
+        });
       }
-    })
+    });
   }
 
   addPayrollGroup(reqData: any) {
@@ -123,7 +123,7 @@ export class EmployeePayrollgroupComponent implements OnInit {
       disableClose: true
     });
     dialogRef.afterClosed().subscribe(result => {
-      this.getDataPayRollGroup()
+      this.getDataPayRollGroup();
     });
   }
 
@@ -175,7 +175,7 @@ export class EmployeePayRollGroupForm implements OnInit {
         this.exitIcon = icon.BACK_WHITE;
 
       }
-      console.log("DARK MODE: " + this.mode);
+
 
     });
     //let that = this;
@@ -204,7 +204,7 @@ export class EmployeePayRollGroupForm implements OnInit {
         } else {
           that.snackbarservice.openSnackBar(params.message, "error");
         }
-      })
+      });
     }
   }
 }

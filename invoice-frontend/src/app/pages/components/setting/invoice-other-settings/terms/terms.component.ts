@@ -71,7 +71,7 @@ export class TermsComponent implements OnInit {
         this.deleteIcon = icon.DELETE_WHITE;
 
       }
-      console.log("DARK MODE: " + this.mode);
+
     });
   }
 
@@ -96,7 +96,7 @@ export class TermsComponent implements OnInit {
     this.httpCall.httpGetCall(httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTINGS_GET_TERMS).subscribe(function (params) {
       if (params.status) {
         that.allTerms = params.data;
-        console.log("allterms", that.allTerms);
+
       }
     });
   }
@@ -186,7 +186,7 @@ export class TermsForm implements OnInit {
         this.exitIcon = icon.BACK_WHITE;
 
       }
-      console.log("DARK MODE: " + this.mode);
+
 
     });
 

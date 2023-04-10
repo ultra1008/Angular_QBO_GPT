@@ -23,11 +23,11 @@ const swalWithBootstrapButtons = Swal.mixin({
   styleUrls: ['./employee-departments.component.scss']
 })
 export class EmployeeDepartmentsComponent implements OnInit {
-  Employee_Department_Do_Want_Delete: string = ""
-  Compnay_Equipment_Delete_Yes: string = ""
-  Compnay_Equipment_Delete_No: string = ""
+  Employee_Department_Do_Want_Delete: string = "";
+  Compnay_Equipment_Delete_Yes: string = "";
+  Compnay_Equipment_Delete_No: string = "";
 
-  addIcon = icon.ADD_MY_SELF_WHITE
+  addIcon = icon.ADD_MY_SELF_WHITE;
   editIcon: string;
   deleteIcon: string;
   mode: any;
@@ -39,9 +39,9 @@ export class EmployeeDepartmentsComponent implements OnInit {
   constructor(private modeService: ModeDetectService, public dialog: MatDialog, public httpCall: HttpCall, public snackbarservice: Snackbarservice,
     public translate: TranslateService) {
     this.translate.stream(['']).subscribe((textarray) => {
-      this.Employee_Department_Do_Want_Delete = this.translate.instant('Employee_Department_Do_Want_Delete')
-      this.Compnay_Equipment_Delete_Yes = this.translate.instant('Compnay_Equipment_Delete_Yes')
-      this.Compnay_Equipment_Delete_No = this.translate.instant('Compnay_Equipment_Delete_No')
+      this.Employee_Department_Do_Want_Delete = this.translate.instant('Employee_Department_Do_Want_Delete');
+      this.Compnay_Equipment_Delete_Yes = this.translate.instant('Compnay_Equipment_Delete_Yes');
+      this.Compnay_Equipment_Delete_No = this.translate.instant('Compnay_Equipment_Delete_No');
       this.copyDataFromProject = this.translate.instant('Copy_Data_From_Project');
       this.yesButton = this.translate.instant('Compnay_Equipment_Delete_Yes');
       this.noButton = this.translate.instant('Compnay_Equipment_Delete_No');
@@ -71,13 +71,13 @@ export class EmployeeDepartmentsComponent implements OnInit {
         this.deleteIcon = icon.DELETE_WHITE;
 
       }
-      console.log("DARK MODE: " + this.mode);
+
     });
   }
 
   public allDepartments: any;
   ngOnInit(): void {
-    this.getDataDepartments()
+    this.getDataDepartments();
   }
 
   addDepartment(reqData: any) {
@@ -87,7 +87,7 @@ export class EmployeeDepartmentsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.getDataDepartments()
+      this.getDataDepartments();
     });
   }
 
@@ -97,7 +97,7 @@ export class EmployeeDepartmentsComponent implements OnInit {
       if (params.status) {
         that.allDepartments = params.data;
       }
-    })
+    });
   }
 
   deleteDocumentType(department_data: any) {
@@ -118,9 +118,9 @@ export class EmployeeDepartmentsComponent implements OnInit {
           } else {
             that.snackbarservice.openSnackBar(params.message, "error");
           }
-        })
+        });
       }
-    })
+    });
   }
 
 }
@@ -173,11 +173,10 @@ export class EmployeedepartmentForm implements OnInit {
         this.exitIcon = icon.BACK_WHITE;
 
       }
-      console.log("DARK MODE: " + this.mode);
+
 
     });
-    //let that = this;
-    // this.uiSpinner.spin$.next(true);
+
     this.translate.stream(['']).subscribe((textarray) => {
       this.copyDataFromProject = this.translate.instant('Copy_Data_From_Project');
       this.yesButton = this.translate.instant('Compnay_Equipment_Delete_Yes');
@@ -204,7 +203,7 @@ export class EmployeedepartmentForm implements OnInit {
         } else {
           that.snackbarservice.openSnackBar(params.message, "error");
         }
-      })
+      });
     }
   }
 }

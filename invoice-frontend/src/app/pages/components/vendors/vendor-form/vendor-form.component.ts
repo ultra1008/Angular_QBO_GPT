@@ -85,7 +85,7 @@ export class VendorFormComponent implements OnInit {
   variablestermList: any = [];
   termList: any = this.variablestermList.slice();
 
-  constructor (private modeService: ModeDetectService,
+  constructor(private modeService: ModeDetectService,
     public dialog: MatDialog,
     private sanitiser: DomSanitizer,
     private location: Location,
@@ -258,8 +258,7 @@ export class VendorFormComponent implements OnInit {
       })
       .then((result) => {
         if (result.isConfirmed) {
-          // Move to the Users listing
-          // console.log("this.vendorinfo.valid", this.vendorinfo.valid, this.vendorinfo.value);
+
           if (this.vendorinfo.valid) {
             this.saveVendorData();
           } else {
