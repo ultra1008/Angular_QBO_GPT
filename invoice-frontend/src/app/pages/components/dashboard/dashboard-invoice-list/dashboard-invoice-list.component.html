@@ -38,7 +38,7 @@
 </div>
 
 <div class="wrapper-cust-admin cust-width">
-  <div class=" ml-3" *ngIf="gridtolist">
+  <div class=" row ml-3" *ngIf="gridtolist">
     <div class="mb-3 mr-4" *ngFor="let invoice of allInvoices">
       <app-invoice-card [invoice]="invoice" (invoiceUpdateCard)="invoiceUpdateCard()"></app-invoice-card>
     </div>
