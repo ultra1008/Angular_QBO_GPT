@@ -233,13 +233,14 @@ export class InvoiceDashboardComponent implements OnInit {
     this.router.navigateByUrl('/employee-view/' + user_id.user_id);
 
   }
-  goToInvoiceForm(user_id) {
-    if (user_id.module == 'Invoice') {
-      this.router.navigate(['/invoice-form'], { queryParams: { _id: user_id.data_id } });
-    } if (user_id.module == 'Vendor') {
-      this.router.navigate(['/vendor-form'], { queryParams: { _id: user_id.data_id } });
-    } if (user_id.module == 'User') {
-      this.router.navigate(['/employee-view'], { queryParams: { _id: user_id.data_id } });
+  goToInvoiceForm(item) {
+    if (item.module == 'Invoice') {
+
+      this.router.navigate(['/invoice-form'], { queryParams: { _id: item.data_id, pdf_url: item.invoice.pdf_url } });
+    } if (item.module == 'Vendor') {
+      this.router.navigate(['/vendor-form'], { queryParams: { _id: item.data_id } });
+    } if (item.module == 'User') {
+      this.router.navigate(['/employee-view'], { queryParams: { _id: item.data_id } });
     }
   }
   onKey(event: any) {

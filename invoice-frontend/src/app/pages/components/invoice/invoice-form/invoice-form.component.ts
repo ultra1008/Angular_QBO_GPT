@@ -89,6 +89,7 @@ export class InvoiceFormComponent implements OnInit {
   loadInvoice: boolean = false;
   document_id: any;
   invoiceStatus: any;
+  pdf_urls: any;
   documentTypes: any;
   badgeIcon = icon.BADGE_ICON;
   role_permission: any;
@@ -98,6 +99,7 @@ export class InvoiceFormComponent implements OnInit {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.document_id = this.route.snapshot.queryParamMap.get('document_id');
     this.invoiceStatus = this.route.snapshot.queryParamMap.get('status');
+    this.pdf_urls = this.route.snapshot.queryParamMap.get('pdf_url');
     this.documentTypes = this.route.snapshot.queryParamMap.get('documentTypes');
     this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
     this.role_permission = this.role_permission.role_permission;
@@ -197,6 +199,8 @@ export class InvoiceFormComponent implements OnInit {
     if (this.id) {
       if (this.invoiceStatus) {
         this.router.navigate(['/dashboard-invoice-list'], { queryParams: { status: this.invoiceStatus } });
+      } else if (this.pdf_urls) {
+        this.router.navigate(['/dashboard']);
       } else {
         this.router.navigate(['/invoice']);
       }
@@ -239,6 +243,7 @@ export class InvoiceFormComponent implements OnInit {
   }
 
   getIdFromVendor(event, Option) {
+    console.log("sagar:", event, Option);
     this.invoiceform.get('vendor').setValue(Option._id);
   }
 
@@ -441,6 +446,7 @@ export class InvoiceFormComponent implements OnInit {
       if (params.status) {
         that.status = params.data.status;
         if (params.data.data) {
+          console.log("idfff");
           that.invoiceData = params.data.data;
           if (that.invoiceData.pdf_url) {
             that.pdf_url = that.invoiceData.pdf_url;
@@ -455,6 +461,7 @@ export class InvoiceFormComponent implements OnInit {
             };
           }
         } else {
+          console.log("else");
           that.invoiceData = params.data;
           if (that.invoiceData.pdf_url) {
             that.pdf_url = that.invoiceData.pdf_url;
@@ -469,6 +476,7 @@ export class InvoiceFormComponent implements OnInit {
         if (that.invoiceData.vendor) {
           vendorId = that.invoiceData.vendor._id;
         }
+        that.vendor.setValue(that.invoiceData.vendor);
         that.loadInvoice = true;
         var invoiceDate;
         if (that.invoiceData.invoice_date_epoch != 0) {
