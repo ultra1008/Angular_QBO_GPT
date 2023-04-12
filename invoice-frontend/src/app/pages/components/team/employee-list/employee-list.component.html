@@ -1,11 +1,10 @@
 <div class="wrapper-cust-admin" fxLayout style="height: 95%">
-  <!-- <div class="head-text" [ngClass]="mode == 'on'? 'carddark' : 'cardlight'">
-    <h3 class="editing">{{'user_title' | translate}}</h3>
-  </div> -->
-  <div class="row">
-    <div class="col-md-6">
-      <h1 class="screen-title">{{'user_title' | translate}}</h1>
-    </div>
+  <div class="d-flex justify-content-between">
+    <h1 class="screen-title">
+      {{ "Sidebar-Team" | translate | titlecase }}
+    </h1>
+
+
     <div class="col-md-6">
       <div class="screen-title-section cust-user-heading-inline">
         <div *ngIf="addTeamMember" class="inner-search-bar cust-heght-textbox">
@@ -43,6 +42,7 @@
         </div>
       </div>
     </div>
+
   </div>
 
   <div class="wrapper-cust-admin">

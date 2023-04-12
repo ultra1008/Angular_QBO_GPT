@@ -103,8 +103,9 @@ export class EmployeeFormComponent implements OnInit {
 
   defalut_image: string = icon.MALE_PLACEHOLDER;
   defalut_female_mage: string = icon.FEMALE_PLACEHOLDER;
+  exitIcon: string;
 
-  constructor (private location: Location, private modeService: ModeDetectService, public mostusedservice: Mostusedservice, private formBuilder: FormBuilder,
+  constructor(private location: Location, private modeService: ModeDetectService, public mostusedservice: Mostusedservice, private formBuilder: FormBuilder,
     public spinner: UiSpinnerService, public employeeservice: EmployeeService, public snackbarservice: Snackbarservice,
     private router: Router, public httpCall: HttpCall, public translate: TranslateService, public dialog: MatDialog,) {
     let that = this;
@@ -123,12 +124,14 @@ export class EmployeeFormComponent implements OnInit {
       console.log("this.mod", this.mode);
       this.backIcon = icon.BACK;
       this.nextIcon = icon.NEXT_WHITE;
+      this.exitIcon = icon.CANCLE;
 
 
     } else {
       console.log("this.mod else", this.mode);
       this.backIcon = icon.BACK_WHITE;
       this.nextIcon = icon.NEXT_WHITE;
+      this.exitIcon = icon.CANCLE_WHITE;
 
 
     }
@@ -137,11 +140,13 @@ export class EmployeeFormComponent implements OnInit {
         this.mode = 'off';
         this.backIcon = icon.BACK;
         this.nextIcon = icon.NEXT_WHITE;
+        this.exitIcon = icon.CANCLE;
 
       } else {
         this.mode = 'on';
         this.backIcon = icon.BACK_WHITE;
         this.nextIcon = icon.NEXT_WHITE;
+        this.exitIcon = icon.CANCLE_WHITE;
 
       }
       console.log("DARK MODE: " + this.mode);
@@ -620,7 +625,7 @@ export class ScheduleFormEmployee {
   mode: any;
   backIcon: string;
   saveIcon = icon.SAVE_WHITE;
-  constructor (public dialogRef: MatDialogRef<ScheduleFormEmployee>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
+  constructor(public dialogRef: MatDialogRef<ScheduleFormEmployee>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
     private formBuilder: FormBuilder, public httpCall: HttpCall, public route: ActivatedRoute,
     @Inject(MAT_DIALOG_DATA) public data: any, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService) {
 

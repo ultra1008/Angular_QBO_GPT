@@ -1,7 +1,9 @@
 <div class="wrapper-cust-admin">
     <div class="row">
         <div class="col-10 dialog-head-left">
-
+            <h1 class="screen-title">
+                {{ "Add-Vendor" | translate | titlecase }}
+            </h1>
         </div>
 
         <div class="col-2 dialog-head-right">
@@ -14,9 +16,7 @@
     </div>
     <mat-card class="example-card">
         <!-- *ngIf="_id == null" -->
-        <div class="head-text">
-            <h3 class="editing">{{'Sidebar-Company-Vendor' | translate }}</h3>
-        </div>
+
         <div class="container">
             <div class="row mt-3">
                 <div class="col-xl-3 cust-margin">
@@ -40,7 +40,7 @@
                 <div class="col-xl-9">
                     <form [formGroup]="vendorinfo">
                         <div class="container">
-                            <div class="row">
+                            <div class="row mt-3">
                                 <div class="col">
                                     <mat-form-field appearance="outline" class="main-one-input-field">
                                         <mat-label>{{'Company-Vendor-Name' | translate }}</mat-label>
