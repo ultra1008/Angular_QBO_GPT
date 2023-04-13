@@ -94,7 +94,7 @@ export class InvoiceFormComponent implements OnInit {
   badgeIcon = icon.BADGE_ICON;
   role_permission: any;
 
-  constructor(public dialog: MatDialog, public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
+  constructor (public dialog: MatDialog, public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.document_id = this.route.snapshot.queryParamMap.get('document_id');
@@ -534,11 +534,10 @@ export class InvoiceFormComponent implements OnInit {
       this.saveProcessDocument();
     }
   }
-  saveInvoice() {
 
+  saveInvoice() {
     let that = this;
     if (that.invoiceform.valid) {
-
       let requestObject = that.invoiceform.value;
       if (requestObject.invoice_date_epoch == null) {
         requestObject.invoice_date_epoch = 0;
@@ -569,17 +568,14 @@ export class InvoiceFormComponent implements OnInit {
 
       that.uiSpinner.spin$.next(true);
       that.httpCall.httpPostCall(httproutes.INVOICE_SAVE_INVOICE, requestObject).subscribe(function (params) {
-
         if (params.status) {
 
           that.snackbarservice.openSnackBar(params.message, "success");
           that.uiSpinner.spin$.next(false);
           that.back();
         } else {
-
           that.snackbarservice.openSnackBar(params.message, "error");
         }
-
         that.uiSpinner.spin$.next(false);
       });
 
@@ -675,7 +671,7 @@ export class InvoiceHistoryComponent implements OnInit {
   isSearch: boolean = false;
   subscription: Subscription;
   dashboardHistory = [];
-  constructor(
+  constructor (
     public httpCall: HttpCall,
     public snackbarservice: Snackbarservice,
     private modeService: ModeDetectService,
@@ -775,7 +771,7 @@ export class InvoiceRejectReason {
   mode: any;
   subscription: Subscription;
 
-  constructor(private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
+  constructor (private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
     public dialogRef: MatDialogRef<InvoiceRejectReason>,
     @Inject(MAT_DIALOG_DATA) public data: any, public sb: Snackbarservice, public translate: TranslateService) {
 

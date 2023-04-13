@@ -20,9 +20,8 @@
                     <button mat-raised-button (click)="viewInvoice(id)" color="primary" class="cust-button-form"><img
                             src="{{viewIcon}}" alt="" class="pr-1" height="15px">{{'View_Related_Documents' |
                         translate}}</button>
-                    <button *ngIf="role_permission.invoice.Edit" mat-raised-button (click)="saveInvoice()"
-                        color="primary" class="cust-button-form"><img src="{{saveIcon}}" alt="" class="pr-1"
-                            height="15px">{{'All-save' |
+                    <button *ngIf="role_permission.invoice.Edit" mat-raised-button (click)="saveData()" color="primary"
+                        class="cust-button-form"><img src="{{saveIcon}}" alt="" class="pr-1" height="15px">{{'All-save' |
                         translate}}</button>
                     <button *ngIf="role_permission.invoice.Edit && status != 'Approved'" mat-raised-button
                         (click)="updateInvoice(id,'Approved')" class="cust-button-form Approve"><img
