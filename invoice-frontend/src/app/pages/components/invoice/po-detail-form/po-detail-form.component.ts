@@ -14,6 +14,7 @@ import { configdata } from 'src/environments/configData';
 import Swal from 'sweetalert2';
 import { EmployeeService } from '../../team/employee.service';
 import { map, startWith } from 'rxjs/operators';
+import { log } from 'console';
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
     confirmButton: 'btn btn-success s2-confirm margin-right-cust',
@@ -75,6 +76,7 @@ export class PoDetailFormComponent implements OnInit {
   vendorList: any = [];
   viewIcon: any;
   document_id: any;
+  document_type: any;
   badgeIcon = icon.BADGE_ICON;
 
 
@@ -82,6 +84,8 @@ export class PoDetailFormComponent implements OnInit {
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.document_id = this.route.snapshot.queryParamMap.get('document_id');
+    this.document_type = this.route.snapshot.queryParamMap.get('document_type');
+
     this.invoice_id = this.id;
     this.pdf_url = this.route.snapshot.queryParamMap.get('pdf_url');
     this.status = this.route.snapshot.queryParamMap.get('status');
@@ -167,10 +171,18 @@ export class PoDetailFormComponent implements OnInit {
   }
 
   back() {
+
     if (this.id) {
       this.router.navigate(['/invoice-detail'], { queryParams: { _id: this.invoice_id } });
     } else if (this.document_id) {
-      this.router.navigate(['/documents-list']);
+      var from = this.route.snapshot.queryParamMap.get('from');
+      if (from) {
+
+        this.router.navigate(['/app-custompdfviewer'], { queryParams: { po_url: this.pdf_url, document_id: this.document_id, document_type: this.document_type, is_delete: 0, status: 'status' } });
+      } else {
+
+        this.router.navigate(['/app-custompdfviewer'], { queryParams: { po_url: this.pdf_url, document_id: this.document_id, document_type: this.document_type, is_delete: 0, counts: 'counts' } });
+      }
     } else {
       this.location.back();
     }

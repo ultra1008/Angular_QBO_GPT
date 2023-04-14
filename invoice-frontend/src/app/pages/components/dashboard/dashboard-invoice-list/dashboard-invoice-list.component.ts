@@ -100,7 +100,7 @@ export class DashboardInvoiceListComponent implements OnInit {
   allInvoices: any = [];
   vendorsList = [];
 
-  constructor (private location: Location, private modeService: ModeDetectService,
+  constructor(private location: Location, private modeService: ModeDetectService,
     public dialog: MatDialog,
     private router: Router,
     private http: HttpClient,
@@ -180,9 +180,8 @@ export class DashboardInvoiceListComponent implements OnInit {
   }
 
   back() {
-    this.location.back();
+    this.router.navigate(['/dashboard']);
   }
-
   ngOnInit(): void {
     this.getAllVendors();
     const that = this;

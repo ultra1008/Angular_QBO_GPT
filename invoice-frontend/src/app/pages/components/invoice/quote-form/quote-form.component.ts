@@ -73,11 +73,13 @@ export class QuoteFormComponent implements OnInit {
   viewIcon: any;
   document_id: any;
   badgeIcon = icon.BADGE_ICON;
+  document_type: any;
 
   constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.document_id = this.route.snapshot.queryParamMap.get('document_id');
+    this.document_type = this.route.snapshot.queryParamMap.get('document_type');
     this.invoice_id = this.id;
     if (this.id) {
       this.uiSpinner.spin$.next(true);
@@ -152,16 +154,32 @@ export class QuoteFormComponent implements OnInit {
     }
   }
 
+  // back() {
+  //   if (this.id) {
+  //     this.router.navigate(['/invoice-detail'], { queryParams: { _id: this.invoice_id } });
+  //   } else if (this.document_id) {
+  //     this.router.navigate(['/documents-list']);
+  //   } else {
+  //     this.location.back();
+  //   }
+  // }
   back() {
+
     if (this.id) {
       this.router.navigate(['/invoice-detail'], { queryParams: { _id: this.invoice_id } });
     } else if (this.document_id) {
-      this.router.navigate(['/documents-list']);
+      var from = this.route.snapshot.queryParamMap.get('from');
+      if (from) {
+        console.log("call 2");
+        this.router.navigate(['/app-custompdfviewer'], { queryParams: { po_url: this.pdf_url, document_id: this.document_id, document_type: this.document_type, is_delete: 0, status: 'status' } });
+      } else {
+        console.log("call 1");
+        this.router.navigate(['/app-custompdfviewer'], { queryParams: { po_url: this.pdf_url, document_id: this.document_id, document_type: this.document_type, is_delete: 0, counts: 'counts' } });
+      }
     } else {
       this.location.back();
     }
   }
-
   ngOnInit(): void {
     let that = this;
     this.getAllVendorList();

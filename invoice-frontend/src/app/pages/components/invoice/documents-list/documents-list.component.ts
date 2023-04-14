@@ -348,6 +348,7 @@ export class DocumentSelectDialog {
     invoice: 'INVOICE'
   };
 
+
   constructor(private modeService: ModeDetectService, public dialogRef: MatDialogRef<DocumentSelectDialog>, public translate: TranslateService,
     private router: Router, @Inject(MAT_DIALOG_DATA) public data: any, private formBuilder: FormBuilder, public spinner: UiSpinnerService,
     public sb: Snackbarservice, public route: ActivatedRoute, public httpCall: HttpCall, public snackbarservice: Snackbarservice) {
@@ -386,6 +387,7 @@ export class DocumentSelectDialog {
 
   ngOnInit(): void {
     let that = this;
+
     that.selectdocumenttype = that.formBuilder.group({
       select_form: [""],
     });
@@ -396,15 +398,15 @@ export class DocumentSelectDialog {
     this.dialogRef.close();
     let that = this;
     if (event == that.documentTypes.po) {
-      that.router.navigate(['/po-detail-form'], { queryParams: { document_id: this.data._id } });
+      that.router.navigate(['/po-detail-form'], { queryParams: { document_id: this.data._id, document_type: event, from: 'select' } });
     } else if (event == that.documentTypes.packingSlip) {
-      that.router.navigate(['/packing-slip-form'], { queryParams: { document_id: this.data._id } });
+      that.router.navigate(['/packing-slip-form'], { queryParams: { document_id: this.data._id, document_type: event, from: 'select' } });
     } else if (event == that.documentTypes.receivingSlip) {
-      that.router.navigate(['/receiving-slip-form'], { queryParams: { document_id: this.data._id } });
+      that.router.navigate(['/receiving-slip-form'], { queryParams: { document_id: this.data._id, document_type: event, from: 'select' } });
     } else if (event == that.documentTypes.quote) {
-      that.router.navigate(['/quote-detail-form'], { queryParams: { document_id: this.data._id } });
+      that.router.navigate(['/quote-detail-form'], { queryParams: { document_id: this.data._id, document_type: event, from: 'select' } });
     } else if (event == that.documentTypes.invoice) {
-      that.router.navigate(['/invoice-form'], { queryParams: { document_id: this.data._id } });
+      that.router.navigate(['/invoice-form'], { queryParams: { document_id: this.data._id, document_type: event, from: 'select' } });
     }
   }
 }

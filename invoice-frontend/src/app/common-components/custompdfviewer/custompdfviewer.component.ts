@@ -66,7 +66,7 @@ export class CustompdfviewerComponent implements OnInit {
   Archive_Orphan_Document: any;
   role_permission: any;
 
-  constructor (private location: Location, private modeService: ModeDetectService, public route: ActivatedRoute, private router: Router,
+  constructor(private location: Location, private modeService: ModeDetectService, public route: ActivatedRoute, private router: Router,
     public httpCall: HttpCall, public spinner: UiSpinnerService, public snackbarservice: Snackbarservice,
     public translate: TranslateService, public dialog: MatDialog) {
     this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
@@ -147,6 +147,8 @@ export class CustompdfviewerComponent implements OnInit {
     let odp_id = this.route.snapshot.queryParamMap.get('odp_id');
     let certificate_id = this.route.snapshot.queryParamMap.get('certificate_id');
     let vendor_id = this.route.snapshot.queryParamMap.get('vendor_id');
+    let counts = this.route.snapshot.queryParamMap.get('counts');
+    let status = this.route.snapshot.queryParamMap.get('status');
 
     if (back_to == "incidentform") {
       let id = this.route.snapshot.queryParamMap.get('_id');
@@ -175,6 +177,12 @@ export class CustompdfviewerComponent implements OnInit {
       this.router.navigate(['/project-module'], { queryParams: { _id: project_id }, state: { value: 3 } });
     } else if (certificate_id != null && vendor_id != null) {
       this.router.navigate(['/editvendor-form'], { queryParams: { _id: vendor_id }, state: { value: 6 } });
+    }
+    else if (counts) {
+      this.router.navigate(['/dashboard-files-list']);
+    }
+    else if (status) {
+      this.router.navigate(['/documents-list']);
     } else {
       this.location.back();
     }
@@ -257,8 +265,10 @@ export class CustompdfviewerComponent implements OnInit {
     let that = this;
     let document_type = this.route.snapshot.queryParamMap.get('document_type');
     if (document_type == '') {
+      console.log(" Edit");
       that.selectDocumentType();
     } else {
+      console.log("call Edit");
       that.goToEdit(document_type);
     }
   }
@@ -266,9 +276,11 @@ export class CustompdfviewerComponent implements OnInit {
   selectDocumentType(): void {
     let that = this;
     let document_id = this.route.snapshot.queryParamMap.get('document_id');
+
     const dialogRef = this.dialog.open(DocumentSelectDialog, {
       data: {
-        _id: document_id
+        _id: document_id,
+
       },
       disableClose: true,
     });
@@ -279,16 +291,22 @@ export class CustompdfviewerComponent implements OnInit {
   goToEdit(document_type) {
     let that = this;
     let document_id = this.route.snapshot.queryParamMap.get('document_id');
+    console.log("document_type", document_type);
     if (document_type == that.documentTypes.invoice) {
-      that.router.navigate(['/invoice-form'], { queryParams: { document_id: document_id } });
+      console.log("IF 1");
+      that.router.navigate(['/invoice-form'], { queryParams: { document_id: document_id, document_type: document_type } });
     } else if (document_type == that.documentTypes.po) {
-      that.router.navigate(['/po-detail-form'], { queryParams: { document_id: document_id } });
+      console.log("IF 2");
+      that.router.navigate(['/po-detail-form'], { queryParams: { document_id: document_id, document_type: document_type } });
     } else if (document_type == that.documentTypes.packingSlip) {
-      that.router.navigate(['/packing-slip-form'], { queryParams: { document_id: document_id } });
+      console.log("IF 3");
+      that.router.navigate(['/packing-slip-form'], { queryParams: { document_id: document_id, document_type: document_type } });
     } else if (document_type == that.documentTypes.receivingSlip) {
-      that.router.navigate(['/receiving-slip-form'], { queryParams: { document_id: document_id } });
+      console.log("IF 4");
+      that.router.navigate(['/receiving-slip-form'], { queryParams: { document_id: document_id, document_type: document_type } });
     } else if (document_type == that.documentTypes.quote) {
-      that.router.navigate(['/quote-detail-form'], { queryParams: { document_id: document_id } });
+      console.log("IF 5");
+      that.router.navigate(['/quote-detail-form'], { queryParams: { document_id: document_id, document_type: document_type } });
     }
   }
 
@@ -297,6 +315,7 @@ export class CustompdfviewerComponent implements OnInit {
     let that = this;
 
     let document_id = this.route.snapshot.queryParamMap.get('document_id');
+    let counts = this.route.snapshot.queryParamMap.get('counts');
     swalWithBootstrapButtons
       .fire(
         {
@@ -313,7 +332,12 @@ export class CustompdfviewerComponent implements OnInit {
               .subscribe(function (params) {
                 if (params.status) {
                   that.snackbarservice.openSnackBar(params.message, "success");
-                  that.router.navigate(['/documents-list'], { queryParams: { _id: document_id }, state: { value: that.documentDeletValue } });
+                  if (counts) {
+                    that.router.navigate(['/dashboard-files-list'], { queryParams: { _id: document_id }, state: { value: that.documentDeletValue } });
+                  } else {
+                    that.router.navigate(['/documents-list'], { queryParams: { _id: document_id }, state: { value: that.documentDeletValue } });
+                  }
+
 
                   //-state:
                 } else {
@@ -365,7 +389,7 @@ export class RejectVendorCertificateForm {
   mode: any;
   backIcon: string;
   saveIcon = icon.SAVE_WHITE;
-  constructor (public dialogRef: MatDialogRef<RejectVendorCertificateForm>, public httpCall: HttpCall, public uiSpinner: UiSpinnerService,
+  constructor(public dialogRef: MatDialogRef<RejectVendorCertificateForm>, public httpCall: HttpCall, public uiSpinner: UiSpinnerService,
     public translate: TranslateService, @Inject(MAT_DIALOG_DATA) public data: any, private formBuilder: FormBuilder,
     private modeService: ModeDetectService, public snackbarservice: Snackbarservice, public route: ActivatedRoute,) {
     this.rejectForm = this.formBuilder.group({

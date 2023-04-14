@@ -163,7 +163,7 @@ export class DashboardFilesListComponent implements OnInit {
   }
 
   back() {
-    this.location.back();
+    this.router.navigate(['/dashboard']);
   }
 
   ngOnInit(): void {
@@ -263,6 +263,18 @@ export class DashboardFilesListComponent implements OnInit {
           });
       },
       columns: that.getColumName(),
+      rowCallback: (row: Node, data: any[] | Object, index: number) => {
+        $('td', row).off('click');
+        $('td', row).on('click', () => {
+          // this.router.navigate(['/invoice-detail'], { queryParams: { _id: data['_id'] } });
+          this.router.navigate(['/app-custompdfviewer'], {
+            queryParams: {
+              po_url: data['pdf_url'], document_id: data['_id'], document_type: data['document_type'], is_delete: data['is_delete'], counts: ['counts']
+            }
+          });
+        });
+        return row;
+      },
       drawCallback: () => {
         $(".button_viewDocViewClass").on("click", (event) => {
           let data = JSON.parse(event.target.getAttribute("edit_tmp_id"));
@@ -401,34 +413,34 @@ export class DashboardFilesListComponent implements OnInit {
         },
         defaultContent: "",
       },
-      {
-        title: 'Action',
-        render: function (data: any, type: any, full: any) {
-          let tmp_tmp = {
-            _id: full._id,
-            document_id: full._id,
-            pdf_url: full.pdf_url,
-            document_type: full.document_type
-          };
-          let view = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_viewDocViewClass" >` + '<img src="' + that.viewIcon + `" alt="" height="15px">View</a>`;
-          let archive = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_viewDocDeleteClass" >` + '<img src="' + that.deleteIcon + `" alt="" height="15px">Delete</a>`;
-          let edit = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_viewDocEditClass" >` + '<img src="' + that.editIcon + `" alt="" height="15px">Edit</a>`;
-          return (
-            `
-         <div class="dropdown">
-           <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust"  aria-haspopup="true" aria-expanded="false"  edit_tmp_id='` + JSON.stringify(full) + `' aria-hidden="true"></i>
-           <div class= "dropdown-content-cust" aria-labelledby="dropdownMenuButton">
-             ` + view + `
-             ` + edit + `
-             ` + archive + `
-             
-           </div>
-       </div>`
-          );
-        },
-        width: "1%",
-        orderable: false,
-      },
+      // {
+      //   title: 'Action',
+      //   render: function (data: any, type: any, full: any) {
+      //     let tmp_tmp = {
+      //       _id: full._id,
+      //       document_id: full._id,
+      //       pdf_url: full.pdf_url,
+      //       document_type: full.document_type
+      //     };
+      //     let view = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_viewDocViewClass" >` + '<img src="' + that.viewIcon + `" alt="" height="15px">View</a>`;
+      //     let archive = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_viewDocDeleteClass" >` + '<img src="' + that.deleteIcon + `" alt="" height="15px">Delete</a>`;
+      //     let edit = `<a edit_tmp_id='` + JSON.stringify(tmp_tmp) + `' class="dropdown-item button_viewDocEditClass" >` + '<img src="' + that.editIcon + `" alt="" height="15px">Edit</a>`;
+      //     return (
+      //       `
+      //    <div class="dropdown">
+      //      <i class="fas fa-ellipsis-v cust-fontsize-tmp float-right-cust"  aria-haspopup="true" aria-expanded="false"  edit_tmp_id='` + JSON.stringify(full) + `' aria-hidden="true"></i>
+      //      <div class= "dropdown-content-cust" aria-labelledby="dropdownMenuButton">
+      //        ` + view + `
+      //        ` + edit + `
+      //        ` + archive + `
+
+      //      </div>
+      //  </div>`
+      //     );
+      //   },
+      //   width: "1%",
+      //   orderable: false,
+      // },
     ];
   }
 
@@ -503,7 +515,7 @@ export class DashboardFilesListComponent implements OnInit {
       .then((result) => {
         if (result.isConfirmed) {
           that.httpCall
-            .httpPostCall(httproutes.PORTAL_DELETE_DOCUMENTS, { _id: _id })
+            .httpPostCall(httproutes.PORTAL_DELETE_DOCUMENTS, { _id: _id, is_delete: 1 })
             .subscribe(function (params) {
               if (params.status) {
                 that.snackbarservice.openSnackBar(params.message, "success");
