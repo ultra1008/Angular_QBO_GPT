@@ -310,6 +310,7 @@ export class PoDetailFormComponent implements OnInit {
         if (that.invoiceData.vendor) {
           vendorId = that.invoiceData.vendor._id;
         }
+        that.vendor.setValue(that.invoiceData.vendor);
         that.loadInvoice = true;
         var date;
         if (that.invoiceData.date_epoch != 0) {
@@ -326,7 +327,7 @@ export class PoDetailFormComponent implements OnInit {
         that.invoiceform = that.formBuilder.group({
           document_id: [that.invoiceData.document_id],
           document_type: [that.invoiceData.document_type],
-          vendor: [that.invoiceData.vendor],
+          vendor: [vendorId],
           customer_id: [that.invoiceData.customer_id],
           due_date_epoch: [dueDate],
           p_o: [that.invoiceData.p_o],
@@ -490,6 +491,7 @@ export class PoDetailFormComponent implements OnInit {
         'data.tax': formVal.tax,
         'data.po_total': formVal.po_total,
       };
+      console.log("requestObject: ", requestObject);
       that.uiSpinner.spin$.next(true);
       that.httpCall.httpPostCall(httproutes.INVOICE_DOCUMENT_PROCESS_SAVE, requestObject).subscribe(function (params) {
         if (params.status) {

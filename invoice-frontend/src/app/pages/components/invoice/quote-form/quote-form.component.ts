@@ -327,6 +327,7 @@ export class QuoteFormComponent implements OnInit {
         if (that.invoiceData.vendor) {
           vendorId = that.invoiceData.vendor._id;
         }
+        that.vendor.setValue(that.invoiceData.vendor);
         that.loadInvoice = true;
         var date;
         if (that.invoiceData.date_epoch != 0) {
@@ -335,7 +336,7 @@ export class QuoteFormComponent implements OnInit {
         that.invoiceform = that.formBuilder.group({
           terms: [that.invoiceData.terms],
           sub_total: [that.invoiceData.sub_total],
-          vendor: [that.invoiceData.vendor],
+          vendor: [vendorId],
           document_type: [that.invoiceData.document_type],
           tax: [that.invoiceData.tax],
           date_epoch: [date],

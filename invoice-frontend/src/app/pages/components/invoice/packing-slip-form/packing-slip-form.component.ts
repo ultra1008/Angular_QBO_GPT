@@ -60,9 +60,7 @@ export class PackingSlipFormComponent implements OnInit {
   // usersArray
   variablesusersArray: any = [];
   usersArray: any = this.variablesusersArray.slice();
-
   pdf_url = '';
-
   statusList = configdata.INVOICE_STATUS;
   approveIcon: string;
   denyIcon: string;
@@ -71,7 +69,6 @@ export class PackingSlipFormComponent implements OnInit {
   DocumentType = this.variablesDocumenttype.slice();
   invoice_id: any;
   loadInvoice: boolean = false;
-
   badge: any = [];
   status: any;
   filteredOptions: Observable<string[]>;
@@ -152,15 +149,7 @@ export class PackingSlipFormComponent implements OnInit {
     }
   }
 
-  // back() {
-  //   if (this.id) {
-  //     this.router.navigate(['/invoice-detail'], { queryParams: { _id: this.invoice_id } });
-  //   } else if (this.document_id) {
-  //     this.router.navigate(['/documents-list']);
-  //   } else {
-  //     this.location.back();
-  //   }
-  // }
+
   back() {
     console.log("document type", this.document_type);
     if (this.id) {
@@ -324,6 +313,7 @@ export class PackingSlipFormComponent implements OnInit {
         if (that.invoiceData.vendor) {
           vendorId = that.invoiceData.vendor._id;
         }
+        that.vendor.setValue(that.invoiceData.vendor);
         that.loadInvoice = true;
         var date;
         if (that.invoiceData.date_epoch != 0) {
@@ -331,7 +321,7 @@ export class PackingSlipFormComponent implements OnInit {
         }
         that.invoiceform = that.formBuilder.group({
           document_type: [that.invoiceData.document_type],
-          vendor: [that.invoiceData.vendor._id],
+          vendor: [vendorId],
           invoice_number: [that.invoiceData.invoice_number],
           po_number: [that.invoiceData.po_number],
           date_epoch: [date],
