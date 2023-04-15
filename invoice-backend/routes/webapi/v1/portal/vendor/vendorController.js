@@ -358,10 +358,12 @@ module.exports.getVendorDatatable = async function (req, res) {
 
             var match_query = { is_delete: requestObject.is_delete };
             if (requestObject.vendor_status) {
-                match_query = {
-                    is_delete: requestObject.is_delete,
-                    vendor_status: requestObject.vendor_status,
-                };
+                if (requestObject.vendor_status != '') {
+                    match_query = {
+                        is_delete: requestObject.is_delete,
+                        vendor_status: requestObject.vendor_status,
+                    };
+                }
             }
             var aggregateQuery = [
                 { $match: match_query },
