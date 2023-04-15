@@ -1601,10 +1601,12 @@ module.exports.getOrphanDocumentsDatatable = async function (req, res) {
 
             let all_vendors = await processInvoiceConnection.aggregate(aggregateQuery).collation({ locale: "en_US" });
             for (let i = 0; i < all_vendors.length; i++) {
-                let vendor = await getOneVendor(connection_db_api, all_vendors[i]['data_vendor_id']);
                 let vendorName = '';
-                if (vendor.status) {
-                    vendorName = vendor.data.vendor_name;
+                if (all_vendors[i]['data_vendor_id']) {
+                    let vendor = await getOneVendor(connection_db_api, all_vendors[i]['data_vendor_id']);
+                    if (vendor.status) {
+                        vendorName = vendor.data.vendor_name;
+                    }
                 }
                 all_vendors[i] = {
                     ...all_vendors[i],

@@ -326,7 +326,6 @@ module.exports.getVendorDatatable = async function (req, res) {
             var requestObject = req.body;
             var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
             var col = [];
-            var match_query = { is_delete: requestObject.is_delete };
             col.push("vendor_name", "vendor_id", "customer_id", "vendor_phone", "vendor_email", "vendor_address", "vendor_attachment", "vendor_status");
 
             var start = parseInt(requestObject.start) || 0;
@@ -355,6 +354,16 @@ module.exports.getVendorDatatable = async function (req, res) {
                         { "vendor_status": new RegExp(requestObject.search.value, 'i') },
                     ]
                 };
+            }
+
+            var match_query = { is_delete: requestObject.is_delete };
+            if (requestObject.vendor_status) {
+                if (requestObject.vendor_status != '') {
+                    match_query = {
+                        is_delete: requestObject.is_delete,
+                        vendor_status: requestObject.vendor_status,
+                    };
+                }
             }
             var aggregateQuery = [
                 { $match: match_query },
