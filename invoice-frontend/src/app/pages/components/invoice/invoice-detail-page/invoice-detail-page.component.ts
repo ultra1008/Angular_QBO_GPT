@@ -8,15 +8,15 @@ import { Snackbarservice } from 'src/app/service/snack-bar-service';
 import { UiSpinnerService } from 'src/app/service/spinner.service';
 import { ModeDetectService } from '../../map/mode-detect.service';
 import { Location } from '@angular/common';
-import { commonLocalThumbImage, commonNetworkThumbImage, commonNewtworkAttachmentViewer, gallery_options, MMDDYYYY_formet } from 'src/app/service/utils';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { commonLocalThumbImage, commonNetworkThumbImage, commonNewtworkAttachmentViewer, epochToDateTime, gallery_options, MMDDYYYY_formet } from 'src/app/service/utils';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { NgxGalleryComponent, NgxGalleryImage, NgxGalleryOptions } from 'ngx-gallery-9';
 import { DomSanitizer } from '@angular/platform-browser';
 import moment from 'moment';
-import { InvoiceHistoryComponent } from '../invoice-form/invoice-form.component';
+import { InvoiceHistoryComponent, InvoiceRejectReason } from '../invoice-form/invoice-form.component';
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
     confirmButton: 'btn btn-success s2-confirm margin-right-cust',
@@ -90,7 +90,15 @@ export class InvoiceDetailPageComponent implements OnInit {
   LOCAL_OFFSET: number;
   historyIcon: string;
   role_permission: any;
-
+  approveIcon: string;
+  denyIcon: string;
+  badge: any = [];
+  status: any;
+  invoiceform: FormGroup;
+  Approve_Invoice_massage: string = "";
+  Reject_Invoice_massage: string = "";
+  document_id: any;
+  vendor = new FormControl('');
   constructor(private sanitiser: DomSanitizer, private formBuilder: FormBuilder, public dialog: MatDialog, private location: Location, private modeService: ModeDetectService, private router: Router, public route: ActivatedRoute, public uiSpinner: UiSpinnerService, public httpCall: HttpCall,
     public snackbarservice: Snackbarservice, public translate: TranslateService,) {
     this.translate.stream([""]).subscribe((textarray) => {
@@ -98,6 +106,8 @@ export class InvoiceDetailPageComponent implements OnInit {
       this.yesButton = this.translate.instant("Compnay_Equipment_Delete_Yes");
       this.noButton = this.translate.instant("Compnay_Equipment_Delete_No");
       this.Remove_Notes = this.translate.instant("Remove_Notes");
+      this.Approve_Invoice_massage = this.translate.instant("Approve_Invoice_massage");
+      this.Reject_Invoice_massage = this.translate.instant("Reject_Invoice_massage");
     });
 
     this.id = this.route.snapshot.queryParamMap.get('_id');
@@ -114,6 +124,8 @@ export class InvoiceDetailPageComponent implements OnInit {
       this.backIcon = icon.BACK;
       this.exitIcon = icon.CANCLE;
       this.historyIcon = icon.HISTORY;
+      this.approveIcon = icon.APPROVE_WHITE;
+      this.denyIcon = icon.DENY_WHITE;
     } else {
       this.downloadIcon = icon.DOWNLOAD_WHITE;
       this.printIcon = icon.PRINT_WHITE;
@@ -121,6 +133,8 @@ export class InvoiceDetailPageComponent implements OnInit {
       this.backIcon = icon.BACK_WHITE;
       this.exitIcon = icon.CANCLE_WHITE;
       this.historyIcon = icon.HISTORY_WHITE;
+      this.approveIcon = icon.APPROVE_WHITE;
+      this.denyIcon = icon.DENY_WHITE;
     }
     this.subscription = this.modeService.onModeDetect().subscribe((mode) => {
       if (mode) {
@@ -131,6 +145,8 @@ export class InvoiceDetailPageComponent implements OnInit {
         this.backIcon = icon.BACK;
         this.exitIcon = icon.CANCLE;
         this.historyIcon = icon.HISTORY;
+        this.approveIcon = icon.APPROVE_WHITE;
+        this.denyIcon = icon.DENY_WHITE;
       } else {
         this.mode = "on";
         this.downloadIcon = icon.DOWNLOAD_WHITE;
@@ -139,6 +155,8 @@ export class InvoiceDetailPageComponent implements OnInit {
         this.backIcon = icon.BACK_WHITE;
         this.exitIcon = icon.CANCLE_WHITE;
         this.historyIcon = icon.HISTORY_WHITE;
+        this.approveIcon = icon.APPROVE_WHITE;
+        this.denyIcon = icon.DENY_WHITE;
       }
     });
     if (this.id) {
@@ -342,6 +360,160 @@ export class InvoiceDetailPageComponent implements OnInit {
   addNotes() {
     this.show_Nots = true;
   }
+  getOneProcessDocument() {
+    let that = this;
+    this.httpCall.httpPostCall(httproutes.INVOICE_DOCUMENT_PROCESS_GET, { _id: that.document_id }).subscribe(function (params) {
+      if (params.status) {
+        that.status = params.data.status;
+        if (params.data.data) {
+          console.log("idfff");
+          that.invoiceData = params.data.data;
+          if (that.invoiceData.pdf_url) {
+            that.pdf_url = that.invoiceData.pdf_url;
+          } else {
+            that.pdf_url = params.data.pdf_url;
+          }
+          if (that.invoiceData.badge) {
+            that.badge = that.invoiceData.badge;
+          } else {
+            that.badge = {
+              document_type: false,
+            };
+          }
+        } else {
+          console.log("else");
+          that.invoiceData = params.data;
+          if (that.invoiceData.pdf_url) {
+            that.pdf_url = that.invoiceData.pdf_url;
+          } else {
+            that.pdf_url = params.data.pdf_url;
+          }
+          that.badge = {
+            document_type: false,
+          };
+        }
+        let vendorId = '';
+        if (that.invoiceData.vendor) {
+          vendorId = that.invoiceData.vendor._id;
+        }
+        that.vendor.setValue(that.invoiceData.vendor);
+        that.loadInvoice = true;
+        var invoiceDate;
+        if (that.invoiceData.invoice_date_epoch != 0) {
+          invoiceDate = epochToDateTime(that.invoiceData.invoice_date_epoch);
+        }
+        var dueDate;
+        if (that.invoiceData.due_date_epoch != 0) {
+          dueDate = epochToDateTime(that.invoiceData.due_date_epoch);
+        }
+        var orderDate;
+        if (that.invoiceData.order_date_epoch != 0) {
+          orderDate = epochToDateTime(that.invoiceData.order_date_epoch);
+        }
+        var shipDate;
+        if (that.invoiceData.ship_date_epoch != 0) {
+          shipDate = epochToDateTime(that.invoiceData.ship_date_epoch);
+        }
+        that.invoiceform = that.formBuilder.group({
+          document_type: [params.data.document_type],
+          invoice_name: [that.invoiceData.invoice_name],
+          vendor: [vendorId],
+          vendor_id: [that.invoiceData.vendor_id],
+          customer_id: [that.invoiceData.customer_id],
+          invoice: [that.invoiceData.invoice],
+          p_o: [that.invoiceData.p_o],
+          job_number: [that.invoiceData.job_number],
+          invoice_date_epoch: [invoiceDate],
+          due_date_epoch: [dueDate],
+          order_date_epoch: [orderDate],
+          ship_date_epoch: [shipDate],
+          packing_slip: [that.invoiceData.packing_slip],
+          receiving_slip: [that.invoiceData.receiving_slip],
+          status: [that.invoiceData.status ?? 'Pending'],
+          terms: [that.invoiceData.terms],
+          total: [that.invoiceData.total],
+          tax_amount: [that.invoiceData.tax_amount],
+          tax_id: [that.invoiceData.tax_id],
+          sub_total: [that.invoiceData.sub_total],
+          amount_due: [that.invoiceData.amount_due],
+          cost_code: [that.invoiceData.cost_code],
+          gl_account: [that.invoiceData.gl_account],
+          assign_to: [that.invoiceData.assign_to],
+          notes: [that.invoiceData.notes],
+          pdf_url: [that.invoiceData.pdf_url],
+        });
+      }
+      that.uiSpinner.spin$.next(false);
+    });
+  }
+
+  updateInvoice(id, status) {
+    let that = this;
+    let title = '';
+    if (status == 'Approved') {
+      title = that.Approve_Invoice_massage;
+    } else {
+      title = that.Reject_Invoice_massage;
+    }
+    let requestObject = {
+      _id: id,
+      status: status,
+    };
+    swalWithBootstrapButtons
+      .fire({
+        title: title,
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: that.yesButton,
+        denyButtonText: that.noButton,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          if (status == 'Approved') {
+            that.updateInvoiceStatus(requestObject);
+          } else {
+            const dialogRef = this.dialog.open(InvoiceRejectReason, {
+              height: '350px',
+              width: '600px',
+              disableClose: true
+            });
+            dialogRef.afterClosed().subscribe(result => {
+              if (result.status) {
+                var reqObject = {
+                  _id: id,
+                  status: status,
+                  reject_reason: result.reject_reason,
+                };
+                that.updateInvoiceStatus(reqObject);
+              }
+            });
+          }
+        }
+      });
+  }
+
+
+  updateInvoiceStatus(requestObject) {
+    let that = this;
+    that.uiSpinner.spin$.next(true);
+    that.httpCall.httpPostCall(httproutes.INVOICE_UPDATE_INVOICE_STATUS, requestObject).subscribe(params => {
+      if (params.status) {
+        that.snackbarservice.openSnackBar(params.message, "success");
+        if (that.id) {
+          that.getOneInvoice();
+        }
+        if (that.document_id) {
+          that.getOneProcessDocument();
+        }
+        that.status = requestObject.status;
+        that.uiSpinner.spin$.next(false);
+      } else {
+        that.snackbarservice.openSnackBar(params.message, "error");
+        that.uiSpinner.spin$.next(false);
+      }
+    });
+  }
+
   saveNotes() {
 
     let that = this;
