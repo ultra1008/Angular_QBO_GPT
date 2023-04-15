@@ -97,6 +97,9 @@ import { CheckDateRangePipe, InvoiceListFilterPipe, InvoiceListFilterStatus } fr
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { DocumentsListComponent, DocumentSelectDialog } from './components/invoice/documents-list/documents-list.component';
 import { MailboxFormComponent } from './components/setting/mailbox-monitor/mailbox-form/mailbox-form.component';
+import { MatChipSelectionChange, MatChipsModule } from '@angular/material/chips';
+
+
 
 
 @NgModule({
@@ -215,6 +218,7 @@ import { MailboxFormComponent } from './components/setting/mailbox-monitor/mailb
     DataTablesModule,
     MatSortModule,
     MatTableModule,
+
     MatAutocompleteModule,
     CdkAccordionModule,
     // MatGridListModule,
@@ -230,7 +234,7 @@ import { MailboxFormComponent } from './components/setting/mailbox-monitor/mailb
     NgxPrintModule,
     ChartsModule,
     LazyLoadImageModule,
-
+    MatChipsModule,
 
   ],
   providers: [CurrencyPipe],

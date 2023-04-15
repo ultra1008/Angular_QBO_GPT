@@ -87,7 +87,10 @@ export class VendorsComponent implements OnInit {
   };
   role_permission: any;
 
-  constructor (private modeService: ModeDetectService,
+  selectedStatus: string = '';
+  approveIcon: string;
+
+  constructor(private modeService: ModeDetectService,
     public dialog: MatDialog,
     private router: Router,
     private http: HttpClient,
@@ -106,12 +109,14 @@ export class VendorsComponent implements OnInit {
       this.historyIcon = icon.HISTORY;
       this.archivedIcon = icon.ARCHIVE;
       this.editIcon = icon.EDIT;
+      this.approveIcon = icon.APPROVE_WHITE;
 
     } else {
       this.reportIcon = icon.REPORT_WHITE;
       this.historyIcon = icon.HISTORY_WHITE;
       this.archivedIcon = icon.ARCHIVE_WHITE;
       this.editIcon = icon.EDIT_WHITE;
+      this.approveIcon = icon.APPROVE_WHITE;
 
     }
     let j = 0;
@@ -122,6 +127,7 @@ export class VendorsComponent implements OnInit {
         this.historyIcon = icon.HISTORY;
         this.archivedIcon = icon.ARCHIVE;
         this.editIcon = icon.EDIT;
+        this.approveIcon = icon.APPROVE_WHITE;
 
       } else {
         this.mode = "on";
@@ -129,6 +135,7 @@ export class VendorsComponent implements OnInit {
         this.historyIcon = icon.HISTORY_WHITE;
         this.archivedIcon = icon.ARCHIVE_WHITE;
         this.editIcon = icon.EDIT_WHITE;
+        this.approveIcon = icon.APPROVE_WHITE;
 
       }
 
@@ -234,6 +241,11 @@ export class VendorsComponent implements OnInit {
           "<img  src=" + this.httpCall.getLoader() + ">"
         );
         dataTablesParameters.is_delete = 0;
+        if (this.selectedStatus == 'Active') {
+          dataTablesParameters.vendor_status = 1;
+        } else if (this.selectedStatus == 'Inactive') {
+          dataTablesParameters.vendor_status = 2;
+        }
         that.http
           .post<DataTablesResponse>(
             configdata.apiurl + httproutes.INVOICE_GET_VENDOR_DATATABLES,
@@ -288,6 +300,7 @@ export class VendorsComponent implements OnInit {
       },
     };
   }
+
   getColumName() {
     let that = this;
     let role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
@@ -429,6 +442,16 @@ export class VendorsComponent implements OnInit {
   downloadButtonPress(event, index): void {
     window.location.href = this.imageObject[index];
   }
+
+  statusFilter(status) {
+    if (this.selectedStatus == status) {
+      this.selectedStatus = '';
+    } else {
+      this.selectedStatus = status;
+    }
+    this.rerenderfunc();
+  }
+
   statusCount() {
     var that = this;
     that.httpCall
@@ -525,7 +548,7 @@ export class VendorHistoryComponent implements OnInit {
   activityIcon!: string;
   isSearch: boolean = false;
   subscription: Subscription;
-  constructor (
+  constructor(
     public httpCall: HttpCall,
     public snackbarservice: Snackbarservice,
     private modeService: ModeDetectService,
@@ -642,7 +665,7 @@ export class VendorReportComponent implements OnInit {
   statusList: any = configdata.INVOICES_STATUS;
 
   /*Constructor*/
-  constructor (
+  constructor(
     private formBuilder: FormBuilder,
     public httpCall: HttpCall,
     private modeService: ModeDetectService,
