@@ -29,6 +29,11 @@ export enum httproutes {
     QUICKBOOK_LOGOUT = "/webapi/v1/quickbookslogout",
     QUICKBOOK_ISCONNECT = "/webapi/v1/isConnecttoQBO",
 
+    //save to Database
+    SAVE_INVOICE_DATABASE = "/webapi/v1/portal/saveinvoicetoDB",
+    SAVE_GLACCOUNTS_DATABASE = "/webapi/v1/portal/saveglaccountstoDB",
+    SAVE_VENDORS_DATABASE = "/webapi/v1/portal/savevendorstoDB",
+
     //Document opration
     TEAM_DOCUMENT_DELETE = "/webapi/v1/portal/deleteuserdocument",
     TEAM_DOCUMENT_EDIT = "/webapi/v1/portal/edituserdocument",

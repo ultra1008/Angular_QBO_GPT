@@ -431,6 +431,99 @@ module.exports.getVendorDatatable = async function (req, res) {
     }
 };
 
+//save vendor from QBO to database
+module.exports.savevendorstoDB = async function(req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        const companycode = req.body.companycode
+        const client = await MongoClient.connect(url) 
+        var dbo = client.db("rovuk_admin");
+        var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
+        const result = await dbo.collection("tenants").findOne({companycode:decodedToken.companycode})
+        client_id = result.client_id ? result.client_id : '';
+        client_secret = result.client_secret ? result.client_secret : '';
+        access_token = result.access_token ? result.access_token : '';
+        realmId = result.realmId ? result.realmId : '';
+        refresh_token = result.refresh_token ? result.refresh_token : '';
+        qbo = new QuickBooks(client_id,
+            client_secret,
+            access_token,
+            false, // no token secret for oAuth 2.0
+            realmId,
+            true, // use the sandbox?
+            false, // enable debugging?
+            null, // set minorversion, or null for the latest version
+            '2.0', //oAuth version
+            refresh_token);
+        var dbo = client.db(`rovuk_${companycode.slice(2)}`);
+        var returndata = []
+        qbo.findAttachables({
+            desc: 'MetaData.LastUpdatedTime'
+        }, async (e, attachables) => {
+            if(attachables.hasOwnProperty("QueryResponse")&&attachables.QueryResponse.hasOwnProperty("Attachable")){
+                for(var k = 0;k < attachables.QueryResponse.Attachable.length;k++){
+                    var linkdata = attachables.QueryResponse.Attachable[k];
+                    if(linkdata.ContentType.includes("image/")&&linkdata.AttachableRef[0].EntityRef.type === "Vendor"){
+                        var data = {};
+                        data._id = linkdata.AttachableRef[0].EntityRef.value;
+                        data.url = linkdata.TempDownloadUri;
+                        vendors_link.push(data);
+                    }
+                }
+            }
+            qbo.findVendors({desc: 'MetaData.LastUpdatedTime'}, async (err, vendors) => {
+                isQuickBooksVendor = true;
+                console.log("I am no in error")
+                await dbo.collection("invoice_vendors").deleteMany({isVendorfromQBO:true});
+                if (vendors.queryResponse !== null)
+                    vendors.QueryResponse.Vendor.forEach(async function(vendorfromQB) {
+                        var vendordata = {};
+                        // vendordata._id = vendorfromQB.hasOwnProperty("Id") ? vendorfromQB.Id : '';
+                        vendordata.vendor_name = vendorfromQB.DisplayName ? vendorfromQB.DisplayName : '';
+                        vendordata.vendor_phone = vendorfromQB.hasOwnProperty("PrimaryPhone") ? vendorfromQB.PrimaryPhone.FreeFormNumber : '';
+                        vendordata.isVendorfromQBO = true
+                        vendordata.vendor_email = vendorfromQB.hasOwnProperty("PrimaryEmailAddr") ? vendorfromQB.PrimaryEmailAddr.hasOwnProperty("Address") ? vendorfromQB.PrimaryEmailAddr.Address : '' : '';
+                        vendordata.is_delete = 0;
+                        vendordata.gl_account = vendorfromQB.AcctNum ? vendorfromQB.AcctNum : '';
+                        vendordata.vendor_address = vendorfromQB.hasOwnProperty("BillAddr") ? vendorfromQB.BillAddr.hasOwnProperty("Line1") ? vendorfromQB.BillAddr.Line1 : '' : '';
+                        vendordata.vendor_address2 = vendorfromQB.hasOwnProperty("BillAddr") ? vendorfromQB.BillAddr.hasOwnProperty("Line2") ? vendorfromQB.BillAddr.Line2 : '' : '';
+                        vendordata.vendor_city = vendorfromQB.hasOwnProperty("BillAddr") ? vendorfromQB.BillAddr.hasOwnProperty("City") ? vendorfromQB.BillAddr.City : '' : '';
+                        vendordata.vendor_state = vendorfromQB.hasOwnProperty("BillAddr") ? vendorfromQB.BillAddr.hasOwnProperty("CountrySubDivisionCode") ? vendorfromQB.BillAddr.CountrySubDivisionCode : '' : '';
+                        vendordata.vendor_zipcode = vendorfromQB.hasOwnProperty("BillAddr") ? vendorfromQB.BillAddr.hasOwnProperty("PostalCode") ? vendorfromQB.BillAddr.PostalCode : '' : '';
+                        vendordata.vendor_country = vendorfromQB.hasOwnProperty("BillAddr") ? vendorfromQB.BillAddr.hasOwnProperty("Country") ? vendorfromQB.BillAddr.Country : '' : '';
+                        // vendordata.terms_id = vendorfromQB.hasOwnProperty("TermRef") ? vendorfromQB.TermRef.hasOwnProperty("value") ? vendorfromQB.TermRef.value : '' : '';
+                        vendordata.vendor_status = vendorfromQB.Activity ? 0:1;
+                        Math.round(new Date(vendorfromQB.MetaData.CreateTime).getTime() / 1000);
+                        vendordata.vendor_created_at = Math.round(new Date(vendorfromQB.MetaData.CreateTime).getTime() / 1000);
+                        vendordata.vendor_description = '';
+                        vendordata.vendor_image = '';
+                        vendordata.vendor_attachment = [];
+                        vendordata.vendor_id = vendorfromQB.hasOwnProperty("Id") ? vendorfromQB.Id : '';
+                        for(var j = 0;j < vendors_link.length;j ++){
+                            if(vendors_link[j]._id === vendordata.vendor_id)
+                                vendordata.attachment.push(vendors_link[j].url);
+                        }
+                        vendordata.customer_id = vendorfromQB.hasOwnProperty("BillAddr") ? vendorfromQB.BillAddr.hasOwnProperty("Id") ? vendorfromQB.BillAddr.Id : '' : '';
+                        returndata.push(vendordata);
+                        var add_vendor = new vendorConnection(vendordata);
+                        await add_vendor.save();
+                    })
+                if(returndata.length > 0){
+                    client.close();
+                }
+            })
+        })
+        
+        res.send({ status: true, message: 'success' });
+    }
+    else{
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+}
+
 //vendor active or inactive
 module.exports.updateVendorStatus = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);

@@ -1,81 +1,25 @@
 <div class="wrapper-cust-admin">
     <div class="container">
         <div class="row">
-            <div class="col-xl-6 cust-margin">
+            <div class="col-xl-12 cust-margin" style="margin-bottom:60px">
                 <div class="center-cust">
-                    <img src="./assets/img/quickbooks_logo.png" alt="" width="60%" height="60%" />
+                    <img src="./assets/img/quickbooks_logo.png" alt="" width="40%" height="40%" />
                 </div>
             </div>
             <div class="col-xl-6">
                 <form [formGroup]="integrationinfo">
                     <div class="container">
-
-                        <div class="row">
-                            <div class="col">
-                                <mat-form-field appearance="outline" class="main-one-input-field">
-                                    <mat-label>{{'Settings-Integration-Client-Id' | translate}}</mat-label>
-                                    <input matInput formControlName="quickbooks_client_id"
-                                        class="input-capitalized-textfield" placeholder="Client ID">
-                                </mat-form-field>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col">
-                                <mat-form-field appearance="outline" class="main-one-input-field">
-                                    <mat-label>{{'Settings-Integration-Client-Secret' | translate}}</mat-label>
-                                    <input matInput formControlName="quickbooks_client_secret"
-                                        class="input-capitalized-textfield" placeholder="Client Secret">
-                                </mat-form-field>
-                            </div>
-                        </div>
-
                     </div>
                 </form>
             </div>
-            <!-- comment by hemin s patel
-                date 24-05-2022
-                b'coz functionality is not complete
-            -->
-            <!-- <div class="card" style="width: 18rem;" (click)="clickOnCard('drive')">
-                <div class="card-body">
-                    <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px"
-                        viewBox="0 0 24 24" width="24px" fill="#000000">
-                        <rect fill="none" height="24" width="24" />
-                        <path
-                            d="M20,21v-3h3v-2h-3v-3h-2v3h-3v2h3v3H20z M15.03,21.5H5.66c-0.72,0-1.38-0.38-1.73-1L1.57,16.4c-0.36-0.62-0.35-1.38,0.01-2 L7.92,3.49C8.28,2.88,8.94,2.5,9.65,2.5h4.7c0.71,0,1.37,0.38,1.73,0.99l4.48,7.71C20.06,11.07,19.54,11,19,11 c-0.28,0-0.56,0.02-0.84,0.06L14.35,4.5h-4.7L3.31,15.41l2.35,4.09h7.89C13.9,20.27,14.4,20.95,15.03,21.5z M13.34,15 C13.12,15.63,13,16.3,13,17H7.25l-0.73-1.27l4.58-7.98h1.8l2.53,4.42c-0.56,0.42-1.05,0.93-1.44,1.51l-2-3.49L9.25,15H13.34z" />
-                    </svg>
-                    <h5 class="card-title mt-3 custom-card-title">Google Drive</h5>
-                    <h6 class="card-subtitle custom-card-description">Document Management</h6>
-                </div>
-            </div> -->
-
-
-
-
-            <!-- <div>
-                <h2>Google Drive</h2>
-            </div>
-            <div class="card-container">
-                <a class="card"
-                    href="https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive.appdata%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive.file%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive.metadata%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive.metadata.readonly%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive.photos.readonly%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive.readonly&response_type=code&client_id=87649972135-j6tt56ot5fu363pteja4kjeg156grbv7.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A4200/setting">
-                    <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px"
-                        viewBox="0 0 24 24" width="24px" fill="#000000">
-                        <rect fill="none" height="24" width="24" />
-                        <path
-                            d="M20,21v-3h3v-2h-3v-3h-2v3h-3v2h3v3H20z M15.03,21.5H5.66c-0.72,0-1.38-0.38-1.73-1L1.57,16.4c-0.36-0.62-0.35-1.38,0.01-2 L7.92,3.49C8.28,2.88,8.94,2.5,9.65,2.5h4.7c0.71,0,1.37,0.38,1.73,0.99l4.48,7.71C20.06,11.07,19.54,11,19,11 c-0.28,0-0.56,0.02-0.84,0.06L14.35,4.5h-4.7L3.31,15.41l2.35,4.09h7.89C13.9,20.27,14.4,20.95,15.03,21.5z M13.34,15 C13.12,15.63,13,16.3,13,17H7.25l-0.73-1.27l4.58-7.98h1.8l2.53,4.42c-0.56,0.42-1.05,0.93-1.44,1.51l-2-3.49L9.25,15H13.34z" />
-                    </svg>
-                    <span>Google Drive</span>
-                </a>
-            </div> -->
         </div>
         <div class="row cust-center-justify">
-            <button mat-raised-button (click)="back()" class="cust-button-form">
-                <img src="{{backIcon}}" alt="" height="15px">
-                {{'All-back' | translate}}</button>
-            <button mat-raised-button (click)="saveData()" color="primary">
-                <img src="{{saveIcon}}" alt="" height="15px">
-                {{'All-save' | translate }}</button>
+            <button mat-raised-button (click)="saveData()" id="blogin_id" color="primary">
+                <i class="fas fa-sign-in-alt button-icon-position"></i>
+                {{'Login' | translate }}</button>
+            <button mat-raised-button (click)="logout()" color="warn" id="blogout_id" style="background-color: red;display: none;">
+                <i class="fas fa-sign-out-alt button-icon-position"></i>
+                {{'Logout' | translate }}</button>
         </div>
     </div>
 </div>

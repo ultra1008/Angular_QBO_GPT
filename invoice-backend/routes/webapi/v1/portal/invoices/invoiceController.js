@@ -424,7 +424,19 @@ module.exports.getInvoice = async function (req, res) {
                         complete: get_count.complete,
                     };
                 }
-                res.send({ status: true, message: "Invoice data", data: get_data, is_management: isManagement, count });
+                await intuitOauth.refreshToken(decodedToken.companycode);
+                var client_id,client_secret,access_token,realmId,refresh_token;
+                const client = await MongoClient.connect(url) 
+                var dbo = client.db("rovuk_admin");
+                const result = await dbo.collection("tenants").findOne({companycode:decodedToken.companycode})
+                client_id = result.client_id ? result.client_id : '';
+                client_secret = result.client_secret ? result.client_secret : '';
+                access_token = result.access_token ? result.access_token : '';
+                realmId = result.realmId ? result.realmId : '';
+                refresh_token = result.refresh_token ? result.refresh_token : '';
+                client.close();   
+                all_invoices = await getInvoiceDataFromQB(client_id,client_secret,access_token,realmId,refresh_token,decodedToken.companycode)
+                res.send({ status: true, message: "Invoice data", data: all_invoices, is_management: isManagement, count });
             } else {
                 res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
             }
@@ -439,6 +451,231 @@ module.exports.getInvoice = async function (req, res) {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
+//save gl_accounts from QBO to database
+module.exports.saveglaccountstoDB = async function(req, res){
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+
+    if (decodedToken) {
+        const companycode = req.body.companycode
+        const client = await MongoClient.connect(url) 
+        var dbo = client.db("rovuk_admin");
+        const result = await dbo.collection("tenants").findOne({companycode:req.body.companycode})
+        client_id = result.client_id ? result.client_id : '';
+        client_secret = result.client_secret ? result.client_secret : '';
+        access_token = result.access_token ? result.access_token : '';
+        realmId = result.realmId ? result.realmId : '';
+        refresh_token = result.refresh_token ? result.refresh_token : '';
+        qbo = new QuickBooks(client_id,
+            client_secret,
+            access_token,
+            false, // no token secret for oAuth 2.0
+            realmId,
+            true, // use the sandbox?
+            false, // enable debugging?
+            null, // set minorversion, or null for the latest version
+            '2.0', //oAuth version
+            refresh_token);
+        var dbo = client.db(`rovuk_${companycode.slice(2)}`);
+        await dbo.collection("all_glaccounts").deleteMany({});
+        qbo.reportGeneralLedgerDetail({}, async (err, accounts) => {
+            // await dbo.collection("all_glaccounts").insertOne(accounts)
+            var result = []
+            for(var i = 0;i < accounts.Rows.Row.length;i++){
+                var insertData = {};
+                // insertData.Columns = accounts.Columns;
+                // insertData.Row = accounts.Rows.Row[i];
+                console.log(Object.keys(accounts.Rows.Row[i]).length + ":" + accounts.Columns.Column.length)
+                for(var j = 0;j < Object.keys(accounts.Rows.Row[i]).length-1;j ++){
+                    var key = Object.keys(accounts.Rows.Row[i])[j]
+                    insertData[key] = {};
+                    insertData.type = accounts.Rows.Row[i].type
+                    for(var k = 0;k < accounts.Columns.Column.length;k ++){
+                        var firstkey = accounts.Rows.Row[i][key][Object.keys(accounts.Rows.Row[i][key])[0]]
+                        insertData[key][accounts.Columns.Column[k].ColTitle] = firstkey[k]
+                    }
+                }
+                result.push(insertData);
+            }
+            await dbo.collection("all_glaccounts").insertMany(result);
+            client.close()
+        })
+        res.send({ status: true, message: 'success'})
+    }
+    else{
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+}
+
+var isQuickBooksInvoice = false;
+var invoices_pdf = []
+//get invoice datas from database
+function getInvoiceDataFromQB (client_id,client_secret,access_token,realmId,refresh_token,companycode) {
+    return new Promise(async (resolve, reject) => {
+        var returndata = [];
+        const client = await MongoClient.connect(url) 
+        var dbo = client.db(`rovuk_${companycode.slice(2)}`);
+        invoices_pdf = []
+        qbo = new QuickBooks(client_id,
+            client_secret,
+            access_token,
+            false, // no token secret for oAuth 2.0
+            realmId,
+            true, // use the sandbox?
+            false, // enable debugging?
+            null, // set minorversion, or null for the latest version
+            '2.0', //oAuth version
+            refresh_token);
+        qbo.findAttachables({
+            desc: 'MetaData.LastUpdatedTime'
+        }, async (e, attachables) => {
+            if(attachables.hasOwnProperty("QueryResponse")&&attachables.QueryResponse.hasOwnProperty("Attachable")){
+                for(var k = 0;k < attachables.QueryResponse.Attachable.length;k++){
+                    var data = attachables.QueryResponse.Attachable[k];
+                    if(data.ContentType === "application/pdf"&&data.AttachableRef[0].EntityRef.type === "Bill"){
+                        var pdfdata = {};
+                        pdfdata._id = data.AttachableRef[0].EntityRef.value;
+                        pdfdata.url = data.TempDownloadUri;
+                        invoices_pdf.push(pdfdata);
+                    }
+                }
+            }
+            isQuickBooksInvoice = true;
+            var all_invoices = await dbo.collection("invoice_invoices").find({}).toArray();
+            resolve(all_invoices);
+            })
+        })
+}
+
+
+//save invoice from QBO to database
+module.exports.saveinvoicetoDB = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+
+    if (decodedToken) {
+        const companycode = decodedToken.companycode
+        const client = await MongoClient.connect(url) 
+        var dbo = client.db("rovuk_admin");
+        const result = await dbo.collection("tenants").findOne({companycode:companycode})
+        client_id = result.client_id ? result.client_id : '';
+        client_secret = result.client_secret ? result.client_secret : '';
+        access_token = result.access_token ? result.access_token : '';
+        realmId = result.realmId ? result.realmId : '';
+        refresh_token = result.refresh_token ? result.refresh_token : '';
+        qbo = new QuickBooks(client_id,
+            client_secret,
+            access_token,
+            false, // no token secret for oAuth 2.0
+            realmId,
+            true, // use the sandbox?
+            false, // enable debugging?
+            null, // set minorversion, or null for the latest version
+            '2.0', //oAuth version
+            refresh_token);
+        var dbo = client.db(`rovuk_${companycode.slice(2)}`);
+        var returndata = [];
+        qbo.findBills({desc: 'MetaData.LastUpdatedTime'}, async (err, invoices) => { 
+            if (err) {
+                return;
+            }
+            await dbo.collection("invoice_invoices").deleteMany({isInvoicefromQBO:true});
+            if(invoices.queryResponse !== null)           
+                invoices.QueryResponse.Bill.forEach(function(invoicefromQB) {
+                    var invoicedata = {};
+                    invoicedata._id = invoicefromQB.hasOwnProperty('Id') ? invoicefromQB.Id : '';
+                    invoicedata.badge = {}
+                    invoicedata.assign_to = '';
+                    invoicedata.customer_id = invoicefromQB.hasOwnProperty('VendorRef') ? invoicefromQB.VendorRef.value : '';
+                    if(invoicedata.customer_id.length > 0)invoicedata.badge.customer_id = true
+                    invoicedata.invoice = invoicefromQB.hasOwnProperty('DocNumber') ? invoicefromQB.DocNumber : '';
+                    invoicedata.p_o = '';
+                    invoicedata.invoice_date = invoicefromQB.hasOwnProperty('TxnDate') ? invoicefromQB.TxnDate : '';
+                    if(invoicedata.invoice_date !== '')invoicedata.badge.invoice_date = true
+                    invoicedata.due_date= invoicefromQB.hasOwnProperty('DueDate') ? invoicefromQB.DueDate : '';
+                    if(invoicedata.due_date !== '')invoicedata.badge.due_date = true
+                    invoicedata.order_date = '';
+                    invoicedata.ship_date = '';
+                    invoicedata.vendor_name = "";
+                    invoicedata.badge.vendor = true
+                    invoicedata.badge.invoice = true
+                    invoicedata.badge.document_type = true
+                    invoicedata.terms = invoicefromQB.hasOwnProperty('SalesTermRef') ? invoicefromQB.SalesTermRef.value : '';
+                    if(invoicedata.terms !== '')invoicedata.badge.terms = true
+                    invoicedata.total = invoicefromQB.hasOwnProperty('TotalAmt') ? invoicefromQB.TotalAmt + invoicefromQB.CurrencyRef.value : 0;
+                    invoicedata.badge.total = true
+                    invoicedata.invoice_total = invoicefromQB.hasOwnProperty('TotalAmt') ? invoicefromQB.TotalAmt + invoicefromQB.CurrencyRef.value : 0;
+                    invoicedata.badge.invoice_total = true
+                    invoicedata.tax_amount = invoicefromQB.hasOwnProperty('TxnTaxDetail') ? invoicefromQB.TxnTaxDetail.TotalTax : 0;
+                    invoicedata.badge.tax_amount = true
+                    invoicedata.tax_id = '';
+                    invoicedata.sub_total = invoicefromQB.hasOwnProperty('TotalAmt') ? invoicefromQB.TotalAmt + invoicefromQB.CurrencyRef.value : 0;
+                    invoicedata.badge.sub_total = true
+                    invoicedata.amount_due = invoicefromQB.hasOwnProperty('DueDate') ? invoicefromQB.DueDate : '';
+                    if(invoicedata.amount_due !== '')invoicedata.badge.amount_due = true
+                    invoicedata.cost_code = invoicefromQB.hasOwnProperty('VendorAddr') ? invoicefromQB.VendorAddr.PostalCode : '';
+                    if(invoicedata.cost_code !== '')invoicedata.badge.cost_code = true
+                    invoicedata.receiving_date = '';
+                    invoicedata.notes = '';
+                    var invoice_status = "Pending";
+                    if(invoicefromQB.hasOwnProperty('SyncToken'))
+                        switch(invoicefromQB.SyncToken){
+                            case "1":
+                                invoice_status = "Overdue";
+                                break;
+                            case "2":
+                                invoice_status = "Paid";
+                                break;
+                            case "4":
+                                invoice_status = "Rejected";
+                                break;
+                            default:
+                                invoice_status = "Paid";
+                                break;
+                        }
+                    invoicedata.status = invoice_status;
+                    invoicedata.job_number = invoicefromQB.hasOwnProperty('Id') ? invoicefromQB.Id : '';
+                    if(invoicedata.job_number !== '')invoicedata.badge.job_number = true
+                    invoicedata.delivery_address = invoicefromQB.hasOwnProperty('VendorAddr') ? invoicefromQB.VendorAddr.Line1 : '';
+                    if(invoicedata.delivery_address !== '')invoicedata.badge.delivery_address = true
+                    invoicedata.contract_number = '';
+                    invoicedata.account_number = invoicefromQB.hasOwnProperty('DocNumber') ? invoicefromQB.DocNumber : '';
+                    invoicedata.discount = '';
+                    invoicedata.pdf_url = '';
+                    invoicedata.items = invoicefromQB.hasOwnProperty('Line') ? invoicefromQB.Line : [];
+                    invoicedata.packing_slip = '';
+                    invoicedata.receiving_slip = '';
+                    invoicedata.invoice_attachments = [];
+                    invoicedata.has_packing_slip = true;
+                    invoicedata.isInvoicefromQBO = true;
+                    invoicedata.packing_slip_data = {};
+                    invoicedata.gl_account = invoicefromQB.hasOwnProperty('APAccountRef') ? invoicefromQB.APAccountRef.name : '';
+                    if(invoicedata.gl_account !== '')invoicedata.badge.gl_account = true
+                    invoicedata.packing_slip_attachments = [];
+                    invoicedata.po_attachments = [];
+                    invoicedata.quote_attachments = [];
+                    invoicedata.vendor = {
+                        vendor_name : invoicefromQB.hasOwnProperty('VendorRef') ? invoicefromQB.VendorRef.name : '',
+                        _id : invoicefromQB.hasOwnProperty('VendorRef') ? invoicefromQB.VendorRef.value : ''
+                    };
+                    invoicedata.invoice_notes = [];
+                    invoicedata.packing_slip_notes = [];
+                    invoicedata.po_notes = [];
+                    invoicedata.quote_notes = [];
+                    returndata.push(invoicedata);
+                })
+            if(returndata.length > 0){
+                await dbo.collection("invoice_invoices").insertMany(returndata)
+                client.close();
+                }
+            })
+        
+        res.send({ status: true, message: 'success'})
+    }
+    else{
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+}
 
 //get invoice
 module.exports.getInvoiceList = async function (req, res) {

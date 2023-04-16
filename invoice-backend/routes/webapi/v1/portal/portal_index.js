@@ -63,6 +63,13 @@ router.post('/webapi/v1/saveimagesinwasabiv2', saveAttechment.saveImagesInWasabi
 router.post('/webapi/v1/saveAttechment', saveAttechment.saveAttechment);
 router.post('/webapi/v1/saveAttechmentv2', saveAttechment.saveAttechmentV2);
 
+var quickBookController = require('./quickbook/quickbookController');
+var quickBookValidation = require('./quickbook/quichbookValidation');
+router.post('/webapi/v1/savequickbookinfo', common.checkTokenExistOrNot, quickBookValidation.savequickBookValidation, quickBookController.savequickBookInfo);
+router.post('/webapi/v1/quickbookslogout', common.checkTokenExistOrNot,quickBookValidation.logoutValidation, quickBookController.logout);
+router.post('/webapi/v1/isConnecttoQBO', common.checkTokenExistOrNot, quickBookValidation.isConnecttoQBOValidation,  quickBookController.isConnectToQBO);
+router.get('/webapi/v1/callback/',  quickBookController.callback);
+
 var signatureUpload = require("./../../../../controller/common/signatureUpload");
 router.post('/webapi/v1/savesignaturewasabiv2', signatureUpload.saveSignatureWasabiv2);
 
@@ -300,6 +307,8 @@ router.post('/webapi/v1/portal/updatequoteattachment', common.checkTokenExistOrN
 router.post('/webapi/v1/portal/updateinvoicerelateddocument', common.checkTokenExistOrNot, invoiceValidation.updateInvoiceRelatedDocument, invoiceController.updateInvoiceRelatedDocument);
 router.post('/webapi/v1/portal/requestforinvoicefile', common.checkTokenExistOrNot, invoiceValidation.requestForInvoiceFile, invoiceController.requestForInvoiceFile);
 router.get('/webapi/v1/portal/deleteOrphanDocumentCronAPI', common.checkTokenExistOrNot, invoiceCron.deleteOrphanDocumentCronAPI);
+router.post('/webapi/v1/portal/saveinvoicetoDB', common.checkTokenExistOrNot, invoiceController.saveinvoicetoDB);
+router.post('/webapi/v1/portal/saveglaccountstoDB', common.checkTokenExistOrNot, invoiceController.saveglaccountstoDB);
 
 let invoiceDashboard = require('./dashboard/dashboardController');
 router.get('/webapi/v1/portal/getdashboardcount', common.checkTokenExistOrNot, invoiceDashboard.getDashboardCount);
@@ -317,6 +326,8 @@ router.post('/webapi/v1/portal/getvendordatatable', common.checkTokenExistOrNot,
 router.post('/webapi/v1/portal/vendorStatusUpdate', common.checkTokenExistOrNot, invoice_vendorValidation.updateVendorStatus, invoice_vendorController.updateVendorStatus);
 router.post('/webapi/v1/portal/getvendorhistory', common.checkTokenExistOrNot, invoice_vendorController.getVendorHistory);
 router.post('/webapi/v1/portal/getvendorreport', common.checkTokenExistOrNot, invoice_vendorController.getVendorExcelReport);
+router.post('/webapi/v1/portal/savevendorstoDB', common.checkTokenExistOrNot, invoice_vendorController.savevendorstoDB);
+
 
 let invoice_templateController = require('./template/templateController');
 let invoice_templateValidation = require('./template/templateValidation');
