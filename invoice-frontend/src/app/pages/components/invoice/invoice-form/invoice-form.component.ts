@@ -15,7 +15,6 @@ import Swal from 'sweetalert2';
 import { EmployeeService } from '../../team/employee.service';
 import { map, startWith } from 'rxjs/operators';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
     confirmButton: "btn btn-success margin-right-cust s2-confirm",
@@ -89,17 +88,15 @@ export class InvoiceFormComponent implements OnInit {
   loadInvoice: boolean = false;
   document_id: any;
   invoiceStatus: any;
-  pdf_urls: any;
   documentTypes: any;
   badgeIcon = icon.BADGE_ICON;
   role_permission: any;
 
-  constructor (public dialog: MatDialog, public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
+  constructor(public dialog: MatDialog, public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.document_id = this.route.snapshot.queryParamMap.get('document_id');
     this.invoiceStatus = this.route.snapshot.queryParamMap.get('status');
-    this.pdf_urls = this.route.snapshot.queryParamMap.get('pdf_url');
     this.documentTypes = this.route.snapshot.queryParamMap.get('documentTypes');
     this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
     this.role_permission = this.role_permission.role_permission;
@@ -199,8 +196,6 @@ export class InvoiceFormComponent implements OnInit {
     if (this.id) {
       if (this.invoiceStatus) {
         this.router.navigate(['/dashboard-invoice-list'], { queryParams: { status: this.invoiceStatus } });
-      } else if (this.pdf_urls) {
-        this.router.navigate(['/dashboard']);
       } else {
         this.router.navigate(['/invoice']);
       }
@@ -243,7 +238,6 @@ export class InvoiceFormComponent implements OnInit {
   }
 
   getIdFromVendor(event, Option) {
-    console.log("sagar:", event, Option);
     this.invoiceform.get('vendor').setValue(Option._id);
   }
 
@@ -385,26 +379,28 @@ export class InvoiceFormComponent implements OnInit {
     let that = this;
     this.httpCall.httpPostCall(httproutes.INVOICE_GET_ONE_INVOICE, { _id: that.id }).subscribe(function (params) {
       if (params.status) {
+        console.log("this is param in oneinvoice")
+        console.log(params)
         that.status = params.data.status;
         that.invoiceData = params.data;
         that.pdf_url = that.invoiceData.pdf_url;
         that.badge = that.invoiceData.badge;
         that.vendor.setValue(params.data.vendor);
         var invoiceDate;
-        if (params.data.invoice_date_epoch != 0) {
-          invoiceDate = epochToDateTime(params.data.invoice_date_epoch);
+        if (params.data.invoice_date != 0) {
+          invoiceDate = epochToDateTime(params.data.invoice_date);
         }
         var dueDate;
-        if (params.data.due_date_epoch != 0) {
-          dueDate = epochToDateTime(params.data.due_date_epoch);
+        if (params.data.due_date != 0) {
+          dueDate = epochToDateTime(params.data.due_date);
         }
         var orderDate;
-        if (params.data.order_date_epoch != 0) {
-          orderDate = epochToDateTime(params.data.order_date_epoch);
+        if (params.data.order_date != 0) {
+          orderDate = epochToDateTime(params.data.order_date);
         }
         var shipDate;
-        if (params.data.ship_date_epoch != 0) {
-          shipDate = epochToDateTime(params.data.ship_date_epoch);
+        if (params.data.ship_date != 0) {
+          shipDate = epochToDateTime(params.data.ship_date);
         }
         that.invoiceform = that.formBuilder.group({
           document_type: [params.data.document_type],
@@ -415,10 +411,10 @@ export class InvoiceFormComponent implements OnInit {
           invoice: [params.data.invoice],
           p_o: [params.data.p_o],
           job_number: [params.data.job_number],
-          invoice_date_epoch: [invoiceDate],
-          due_date_epoch: [dueDate],
-          order_date_epoch: [orderDate],
-          ship_date_epoch: [shipDate],
+          invoice_date_epoch: [params.data.invoice_date],
+          due_date_epoch: [params.data.due_date],
+          order_date_epoch: [params.data.order_date],
+          ship_date_epoch: [params.data.ship_date],
           packing_slip: [params.data.packing_slip],
           receiving_slip: [params.data.receiving_slip],
           status: [params.data.status],
@@ -446,7 +442,6 @@ export class InvoiceFormComponent implements OnInit {
       if (params.status) {
         that.status = params.data.status;
         if (params.data.data) {
-          console.log("idfff");
           that.invoiceData = params.data.data;
           if (that.invoiceData.pdf_url) {
             that.pdf_url = that.invoiceData.pdf_url;
@@ -461,7 +456,6 @@ export class InvoiceFormComponent implements OnInit {
             };
           }
         } else {
-          console.log("else");
           that.invoiceData = params.data;
           if (that.invoiceData.pdf_url) {
             that.pdf_url = that.invoiceData.pdf_url;
@@ -476,7 +470,6 @@ export class InvoiceFormComponent implements OnInit {
         if (that.invoiceData.vendor) {
           vendorId = that.invoiceData.vendor._id;
         }
-        that.vendor.setValue(that.invoiceData.vendor);
         that.loadInvoice = true;
         var invoiceDate;
         if (that.invoiceData.invoice_date_epoch != 0) {
@@ -534,17 +527,17 @@ export class InvoiceFormComponent implements OnInit {
       this.saveProcessDocument();
     }
   }
-
   saveInvoice() {
+
     let that = this;
     if (that.invoiceform.valid) {
+
       let requestObject = that.invoiceform.value;
       if (requestObject.invoice_date_epoch == null) {
         requestObject.invoice_date_epoch = 0;
       } else {
         requestObject.invoice_date_epoch = Math.round(requestObject.invoice_date_epoch.valueOf() / 1000);
       }
-
       if (requestObject.due_date_epoch == null) {
         requestObject.due_date_epoch = 0;
       } else {
@@ -568,14 +561,17 @@ export class InvoiceFormComponent implements OnInit {
 
       that.uiSpinner.spin$.next(true);
       that.httpCall.httpPostCall(httproutes.INVOICE_SAVE_INVOICE, requestObject).subscribe(function (params) {
+
         if (params.status) {
 
           that.snackbarservice.openSnackBar(params.message, "success");
           that.uiSpinner.spin$.next(false);
           that.back();
         } else {
+
           that.snackbarservice.openSnackBar(params.message, "error");
         }
+
         that.uiSpinner.spin$.next(false);
       });
 
@@ -671,7 +667,7 @@ export class InvoiceHistoryComponent implements OnInit {
   isSearch: boolean = false;
   subscription: Subscription;
   dashboardHistory = [];
-  constructor (
+  constructor(
     public httpCall: HttpCall,
     public snackbarservice: Snackbarservice,
     private modeService: ModeDetectService,
@@ -771,7 +767,7 @@ export class InvoiceRejectReason {
   mode: any;
   subscription: Subscription;
 
-  constructor (private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
+  constructor(private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
     public dialogRef: MatDialogRef<InvoiceRejectReason>,
     @Inject(MAT_DIALOG_DATA) public data: any, public sb: Snackbarservice, public translate: TranslateService) {
 
