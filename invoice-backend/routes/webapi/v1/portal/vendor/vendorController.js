@@ -366,7 +366,7 @@ module.exports.getVendorDatatable = async function (req, res) {
 
             var sort = {};
             if (requestObject.draw == 1) {
-                sort = { "vendor_name": 1 };
+                sort = { "isVendorfromQBO": 1 };
             } else {
                 sort[col[columnData]] = (columntype == 'asc') ? 1 : -1;
 
@@ -397,15 +397,15 @@ module.exports.getVendorDatatable = async function (req, res) {
             }
             var aggregateQuery = [
                 { $match: match_query },
-                {
-                    $lookup: {
-                        from: collectionConstant.INVOICE_TERM,
-                        localField: "vendor_terms",
-                        foreignField: "_id",
-                        as: "terms"
-                    }
-                },
-                { $unwind: "$terms" },
+                // {
+                //     $lookup: {
+                //         from: collectionConstant.INVOICE_TERM,
+                //         localField: "vendor_terms",
+                //         foreignField: "_id",
+                //         as: "terms"
+                //     }
+                // },
+                // { $unwind: "$terms" },
                 { $match: query },
                 { $sort: sort },
                 { $limit: start + perpage },
@@ -435,6 +435,7 @@ module.exports.getVendorDatatable = async function (req, res) {
 module.exports.savevendorstoDB = async function(req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
+    var vendors_link = []
 
     if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
@@ -504,7 +505,7 @@ module.exports.savevendorstoDB = async function(req, res) {
                         vendordata.vendor_id = vendorfromQB.hasOwnProperty("Id") ? vendorfromQB.Id : '';
                         for(var j = 0;j < vendors_link.length;j ++){
                             if(vendors_link[j]._id === vendordata.vendor_id)
-                                vendordata.attachment.push(vendors_link[j].url);
+                                vendordata.vendor_attachment.push(vendors_link[j].url);
                         }
                         vendordata.customer_id = vendorfromQB.hasOwnProperty("BillAddr") ? vendorfromQB.BillAddr.hasOwnProperty("Id") ? vendorfromQB.BillAddr.Id : '' : '';
                         returndata.push(vendordata);

@@ -13,6 +13,7 @@ const fs = require('fs');
 app.use(cors());
 app.use(bodyParser.json({ limit: '5mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '5mb' }));
+app.use(express.static(path.join(__dirname,'public')));
 app.use(require('express-session')({
 	secret: 'keyboard admin',
 	resave: false,

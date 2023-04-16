@@ -22,6 +22,13 @@ var fs = require('fs');
 var bucketOpration = require('../../../../../controller/common/s3-wasabi');
 var moment = require('moment');
 var alertController = require('./../alert/alertController');
+var QuickBooks = require('node-quickbooks')
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb://localhost:27017/";
+
+QuickBooks.setOauthVersion('2.0');//set the Oauth version
+
+var qbo; //QuickBooks Info
 
 // save invoice
 module.exports.saveInvoice = async function (req, res) {
@@ -485,7 +492,6 @@ module.exports.saveglaccountstoDB = async function(req, res){
                 var insertData = {};
                 // insertData.Columns = accounts.Columns;
                 // insertData.Row = accounts.Rows.Row[i];
-                console.log(Object.keys(accounts.Rows.Row[i]).length + ":" + accounts.Columns.Column.length)
                 for(var j = 0;j < Object.keys(accounts.Rows.Row[i]).length-1;j ++){
                     var key = Object.keys(accounts.Rows.Row[i])[j]
                     insertData[key] = {};
