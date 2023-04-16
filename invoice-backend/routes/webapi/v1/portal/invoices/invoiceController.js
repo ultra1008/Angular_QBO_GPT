@@ -22,6 +22,7 @@ var fs = require('fs');
 var bucketOpration = require('../../../../../controller/common/s3-wasabi');
 var moment = require('moment');
 var alertController = require('./../alert/alertController');
+let intuitOauth = require('../quickbook/quickbookController');
 var QuickBooks = require('node-quickbooks')
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";

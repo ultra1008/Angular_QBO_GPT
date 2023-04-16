@@ -478,7 +478,7 @@ module.exports.savevendorstoDB = async function(req, res) {
             qbo.findVendors({desc: 'MetaData.LastUpdatedTime'}, async (err, vendors) => {
                 isQuickBooksVendor = true;
                 console.log("I am no in error")
-                await dbo.collection("invoice_vendors").deleteMany({isVendorfromQBO:true});
+                await dbo.collection("vendor").deleteMany({isVendorfromQBO:true});
                 if (vendors.queryResponse !== null)
                     vendors.QueryResponse.Vendor.forEach(async function(vendorfromQB) {
                         var vendordata = {};
