@@ -328,6 +328,7 @@ export class VendorFormComponent implements OnInit {
   async saveVendorData() {
     let that = this;
     let req_temp = that.vendorinfo.value;
+    var isVendorfromQBO = false;
 
     if (this.vendorinfo.valid) {
       let reqObject = {
@@ -348,8 +349,9 @@ export class VendorFormComponent implements OnInit {
         vendor_attachment: "",
         vendor_id: req_temp.vendor_id,
         customer_id: req_temp.customer_id,
+        isVendorfromQBO: isVendorfromQBO
       };
-
+      
       if (this._id != null) {
         that.uiSpinner.spin$.next(true);
         const formData_profle = new FormData();

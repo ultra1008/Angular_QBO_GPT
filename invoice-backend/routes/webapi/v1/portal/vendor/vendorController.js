@@ -17,6 +17,13 @@ let sendEmail = require('./../../../../../controller/common/sendEmail');
 var fs = require('fs');
 var bucketOpration = require('../../../../../controller/common/s3-wasabi');
 var recentActivity = require('./../recent_activity/recentActivityController');
+var QuickBooks = require('node-quickbooks')
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb://localhost:27017/";
+
+QuickBooks.setOauthVersion('2.0');//set the Oauth version
+
+var qbo; //QuickBooks Info
 
 // save vendor
 module.exports.saveVendor = async function (req, res) {
@@ -96,6 +103,29 @@ module.exports.saveVendor = async function (req, res) {
                 requestObject.vendor_created_at = Math.round(new Date().getTime() / 1000);
                 requestObject.vendor_updated_by = decodedToken.UserData._id;
                 requestObject.vendor_updated_at = Math.round(new Date().getTime() / 1000);
+                if(qbo){ // if login QBO in integration tab of settings, the values are saved to QBO vendor.
+                    qbo.createVendor({
+                        DisplayName : requestObject.vendor_name,
+                        CompanyName : requestObject.vendor_name,
+                        Active : requestObject.status === 1 ? true : false,
+                        PrimaryPhone: {FreeFormNumber : requestObject.vendor_phone},
+                        PrimaryEmailAddr : {Address : requestObject.vendor_email},
+                        BillAddr : {
+                            Line1 : requestObject.vendor_address,
+                            Line2 : requestObject.hasOwnProperty("address2")?requestObject.vendor_address2:'',
+                            City : requestObject.vendor_city,
+                            Country : requestObject.hasOwnProperty("country")?requestObject.vendor_country:'',
+                            CountrySubDivisionCode : requestObject.vendor_state,
+                            PostalCode : requestObject.vendor_zipcode
+                        },
+                        AcctNum:requestObject.gl_account,
+                        MetaData : {
+                            CreateTime : new Date(),
+                            LastUpdatedTime : new Date()
+                        }
+                    },async function(err,result){
+                        if(err) return;
+                    })}
                 var add_vendor = new vendorConnection(requestObject);
                 var save_vendor = await add_vendor.save();
                 if (save_vendor) {
