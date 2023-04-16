@@ -561,9 +561,11 @@ module.exports.saveinvoicetoDB = async function (req, res) {
     var translator = new common.Language(req.headers.Language);
 
     if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
         const companycode = decodedToken.companycode
         const client = await MongoClient.connect(url) 
         var dbo = client.db("rovuk_admin");
+        var invoiceConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
         const result = await dbo.collection("tenants").findOne({companycode:companycode})
         client_id = result.client_id ? result.client_id : '';
         client_secret = result.client_secret ? result.client_secret : '';
@@ -588,9 +590,9 @@ module.exports.saveinvoicetoDB = async function (req, res) {
             }
             await dbo.collection("invoice_invoices").deleteMany({isInvoicefromQBO:true});
             if(invoices.queryResponse !== null)           
-                invoices.QueryResponse.Bill.forEach(function(invoicefromQB) {
+                invoices.QueryResponse.Bill.forEach(async function(invoicefromQB) {
                     var invoicedata = {};
-                    invoicedata._id = invoicefromQB.hasOwnProperty('Id') ? invoicefromQB.Id : '';
+                    // invoicedata._id = invoicefromQB.hasOwnProperty('Id') ? new ObjectID(invoicefromQB.Id) : '';
                     invoicedata.badge = {}
                     invoicedata.assign_to = '';
                     invoicedata.customer_id = invoicefromQB.hasOwnProperty('VendorRef') ? invoicefromQB.VendorRef.value : '';
@@ -603,7 +605,8 @@ module.exports.saveinvoicetoDB = async function (req, res) {
                     if(invoicedata.due_date !== '')invoicedata.badge.due_date = true
                     invoicedata.order_date = '';
                     invoicedata.ship_date = '';
-                    invoicedata.vendor_name = "";
+                    invoicedata.vendor_name = invoicefromQB.hasOwnProperty('VendorRef') ? invoicefromQB.VendorRef.name : '';
+                    invoicedata.vendor_id = invoicefromQB.hasOwnProperty('VendorRef') ? invoicefromQB.VendorRef.value : ''
                     invoicedata.badge.vendor = true
                     invoicedata.badge.invoice = true
                     invoicedata.badge.document_type = true
@@ -620,7 +623,7 @@ module.exports.saveinvoicetoDB = async function (req, res) {
                     invoicedata.badge.sub_total = true
                     invoicedata.amount_due = invoicefromQB.hasOwnProperty('DueDate') ? invoicefromQB.DueDate : '';
                     if(invoicedata.amount_due !== '')invoicedata.badge.amount_due = true
-                    invoicedata.cost_code = invoicefromQB.hasOwnProperty('VendorAddr') ? invoicefromQB.VendorAddr.PostalCode : '';
+                    invoicedata.cost_code = invoicefromQB.hasOwnProperty('VendorAddr') ? ObjectID(parseInt(invoicefromQB.VendorAddr.PostalCode)) : '';
                     if(invoicedata.cost_code !== '')invoicedata.badge.cost_code = true
                     invoicedata.receiving_date = '';
                     invoicedata.notes = '';
@@ -661,18 +664,15 @@ module.exports.saveinvoicetoDB = async function (req, res) {
                     invoicedata.packing_slip_attachments = [];
                     invoicedata.po_attachments = [];
                     invoicedata.quote_attachments = [];
-                    invoicedata.vendor = {
-                        vendor_name : invoicefromQB.hasOwnProperty('VendorRef') ? invoicefromQB.VendorRef.name : '',
-                        _id : invoicefromQB.hasOwnProperty('VendorRef') ? invoicefromQB.VendorRef.value : ''
-                    };
+                    invoicedata.vendor = invoicefromQB.hasOwnProperty('VendorRef') ? ObjectID(parseInt(invoicefromQB.VendorRef.value)) : ''
                     invoicedata.invoice_notes = [];
                     invoicedata.packing_slip_notes = [];
                     invoicedata.po_notes = [];
                     invoicedata.quote_notes = [];
-                    returndata.push(invoicedata);
+                    var add_invoice = new invoiceConnection(invoicedata);
+                    await add_invoice.save();
                 })
             if(returndata.length > 0){
-                await dbo.collection("invoice_invoices").insertMany(returndata)
                 client.close();
                 }
             })
@@ -874,29 +874,29 @@ module.exports.getOneInvoice = async function (req, res) {
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var get_data = await invoicesConnection.aggregate([
                 { $match: { _id: ObjectID(requestObject._id) } },
-                {
-                    $lookup: {
-                        from: collectionConstant.INVOICE_VENDOR,
-                        localField: "vendor",
-                        foreignField: "_id",
-                        as: "vendor"
-                    }
-                },
-                { $unwind: "$vendor" },
-                {
-                    $lookup: {
-                        from: collectionConstant.INVOICE_USER,
-                        localField: "created_by",
-                        foreignField: "_id",
-                        as: "created_by"
-                    }
-                },
-                {
-                    $unwind: {
-                        path: "$created_by",
-                        preserveNullAndEmptyArrays: true
-                    },
-                },
+                // {
+                //     $lookup: {
+                //         from: collectionConstant.INVOICE_VENDOR,
+                //         localField: "vendor",
+                //         foreignField: "_id",
+                //         as: "vendor"
+                //     }
+                // },
+                // { $unwind: "$vendor" },
+                // {
+                //     $lookup: {
+                //         from: collectionConstant.INVOICE_USER,
+                //         localField: "created_by",
+                //         foreignField: "_id",
+                //         as: "created_by"
+                //     }
+                // },
+                // {
+                //     $unwind: {
+                //         path: "$created_by",
+                //         preserveNullAndEmptyArrays: true
+                //     },
+                // },
                 {
                     $project: {
                         assign_to: 1,
@@ -1019,6 +1019,7 @@ module.exports.getOneInvoice = async function (req, res) {
             if (get_data.length > 0) {
                 get_data = get_data[0];
             }
+            console.log(get_data)
             res.send({ status: true, message: "Invoice data", data: get_data });
         } catch (e) {
             console.log(e);
