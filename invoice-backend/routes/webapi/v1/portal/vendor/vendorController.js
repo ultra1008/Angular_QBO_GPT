@@ -103,7 +103,7 @@ module.exports.saveVendor = async function (req, res) {
                 requestObject.vendor_created_at = Math.round(new Date().getTime() / 1000);
                 requestObject.vendor_updated_by = decodedToken.UserData._id;
                 requestObject.vendor_updated_at = Math.round(new Date().getTime() / 1000);
-                if(qbo){ // if login QBO in integration tab of settings, the values are saved to QBO vendor.
+                if(requestObject.isVendorfromQBO){ // if login QBO in integration tab of settings, the values are saved to QBO vendor.
                     qbo.createVendor({
                         DisplayName : requestObject.vendor_name,
                         CompanyName : requestObject.vendor_name,
@@ -356,7 +356,7 @@ module.exports.getVendorDatatable = async function (req, res) {
             var requestObject = req.body;
             var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
             var col = [];
-            col.push("vendor_name", "vendor_id", "customer_id", "vendor_phone", "vendor_email", "vendor_address", "vendor_attachment", "vendor_status");
+            col.push("isVendorfromQBO","vendor_name", "vendor_id", "customer_id", "vendor_phone", "vendor_email", "vendor_address", "vendor_attachment", "vendor_status");
 
             var start = parseInt(requestObject.start) || 0;
             var perpage = parseInt(requestObject.length);
@@ -414,7 +414,6 @@ module.exports.getVendorDatatable = async function (req, res) {
             let count = 0;
             count = await vendorConnection.countDocuments(match_query);
             let all_vendors = await vendorConnection.aggregate(aggregateQuery).collation({ locale: "en_US" });
-
             var dataResponce = {};
             dataResponce.data = all_vendors;
             dataResponce.draw = requestObject.draw;

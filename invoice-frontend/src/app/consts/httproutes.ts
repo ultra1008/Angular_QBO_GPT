@@ -24,6 +24,11 @@ export enum httproutes {
     EMERGENCY_CONTACT_USERS_DELETE = "/webapi/v1/portal/deleteemergencycontact",
     EMERGENCY_CONTACT_SEND_REMINDER = "/webapi/v1/portal/sendemergencycontactreminder",
 
+    //QuickBook Module
+    QUICKBOOK_SAVE_INFO = "/webapi/v1/savequickbookinfo",
+    QUICKBOOK_LOGOUT = "/webapi/v1/quickbookslogout",
+    QUICKBOOK_ISCONNECT = "/webapi/v1/isConnecttoQBO",
+
     //Document opration
     TEAM_DOCUMENT_DELETE = "/webapi/v1/portal/deleteuserdocument",
     TEAM_DOCUMENT_EDIT = "/webapi/v1/portal/edituserdocument",
