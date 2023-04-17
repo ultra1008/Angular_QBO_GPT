@@ -4,9 +4,10 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
 import { Subscription } from 'rxjs';
-import { icon, localstorageconstants } from 'src/app/consts';
+import { httproutes, icon, localstorageconstants } from 'src/app/consts';
 import { ModeDetectService } from 'src/app/pages/components/map/mode-detect.service';
 import { HttpCall } from 'src/app/service/httpcall.service';
+import { configdata } from 'src/environments/configData';
 
 
 
@@ -28,28 +29,7 @@ export class InvoiceProgressComponent implements OnInit {
 
   start: number = 0;
   is_httpCall: boolean = false;
-  progressList = [
-    {
-      total: 3,
-      final: 2,
-      ratio: 0.67,
-    },
-    {
-      total: 5,
-      final: 2,
-      ratio: 0.2,
-    },
-    {
-      total: 4,
-      final: 2,
-      ratio: 0.5,
-    },
-    {
-      total: 4,
-      final: 4,
-      ratio: 1,
-    }
-  ];
+  progressList = [];
   unseen_count: number = 0;
 
   mode: any;
@@ -57,7 +37,7 @@ export class InvoiceProgressComponent implements OnInit {
 
   showAllNotification: Boolean = true;
 
-  constructor(
+  constructor (
     public dialog: MatDialog,
     private router: Router,
     public httpCall: HttpCall,
@@ -81,13 +61,22 @@ export class InvoiceProgressComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-
     let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
     var userId = user_data.UserData._id;
     var companyCode = localStorage.getItem(localstorageconstants.COMPANYCODE);
 
+    var userId = user_data.UserData._id;
+    var companyCode = localStorage.getItem(localstorageconstants.COMPANYCODE);
+    var url = configdata.apiurl + httproutes.PORTAL_GET_INVOICE_PROGRESS + `/${companyCode}/${userId}`;
+    const events = new EventSource(url);
+    events.onmessage = (event: any) => {
+      const parsedData = JSON.parse(event.data);
+      // console.log("parsedData: ", parsedData);
+      this.progressList = parsedData.data;
+      // console.log("parsedData: ", parsedData);
+    };
   }
+
 
   onScroll() {
     console.log("onScroll call");
