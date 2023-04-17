@@ -99,6 +99,13 @@ export class InvoiceDetailPageComponent implements OnInit {
   Reject_Invoice_massage: string = "";
   document_id: any;
   vendor = new FormControl('');
+  has_document: boolean = false;
+  showPDF: boolean = true;
+  selectedDocumentType: any = this.documentTypes.po;
+  loadDocumentData: boolean = true;
+  downIcon: any;
+  upIcon: any;
+
   constructor(private sanitiser: DomSanitizer, private formBuilder: FormBuilder, public dialog: MatDialog, private location: Location, private modeService: ModeDetectService, private router: Router, public route: ActivatedRoute, public uiSpinner: UiSpinnerService, public httpCall: HttpCall,
     public snackbarservice: Snackbarservice, public translate: TranslateService,) {
     this.translate.stream([""]).subscribe((textarray) => {
@@ -126,6 +133,9 @@ export class InvoiceDetailPageComponent implements OnInit {
       this.historyIcon = icon.HISTORY;
       this.approveIcon = icon.APPROVE_WHITE;
       this.denyIcon = icon.DENY_WHITE;
+      this.downIcon = icon.DOWN_WHITE;
+      this.upIcon = icon.UP_WHITE;
+
     } else {
       this.downloadIcon = icon.DOWNLOAD_WHITE;
       this.printIcon = icon.PRINT_WHITE;
@@ -181,6 +191,26 @@ export class InvoiceDetailPageComponent implements OnInit {
       notes: [""],
 
     });
+  }
+  showHidePDF() {
+    this.showPDF = !this.showPDF;
+  }
+
+  onTabChanged(event) {
+    this.showPDF = true;
+  }
+
+  clickArrow() {
+    this.showPDF = !this.showPDF;
+  }
+
+  setDocumentType(type) {
+    this.selectedDocumentType = type;
+    this.showPDF = true;
+    this.loadDocumentData = false;
+    setTimeout(() => {
+      this.loadDocumentData = true;
+    }, 100);
   }
   // invoice attchment
   saveAttchment() {

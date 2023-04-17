@@ -85,7 +85,7 @@
 
 ::ng-deep .mat-expansion-panel-header {
 
-    height: 40px !important;
+    height: 35px !important;
     background-color: #023E8A !important;
     color: white;
 
@@ -93,7 +93,7 @@
 
 ::ng-deep .darkMode .mat-expansion-panel-header {
 
-    height: 40px !important;
+    height: 35px !important;
     background-color: #30343d !important;
     color: white;
 
@@ -501,4 +501,55 @@ hr.solid {
 
 .modal-body {
     min-height: 75%;
+}
+
+.tab-h {
+    ::ng-deep .mat-tab-label {
+        height: 35px !important;
+
+    }
+}
+
+.full-width {
+    width: 100%;
+}
+
+.custom-bg {
+    height: 37px;
+    text-align: center;
+    background-color: #023E8A !important;
+    border-left: grey 0.5px solid;
+    border-right: grey 0.5px solid;
+    padding-top: 6px;
+    color: white;
+
+
+}
+
+
+
+.border {
+    border-radius: 0px 6px 6px 0px;
+}
+
+.border-1 {
+    border-radius: 6px 0px 0px 6px;
+}
+
+.selected {
+    height: 37px;
+    text-align: center;
+    background-color: #028a3f !important;
+    border-left: grey 0.5px solid;
+    border-right: grey 0.5px solid;
+    padding-top: 6px;
+    color: white;
+}
+
+::ng-deep .rrr {
+    .mat-list-base {
+        padding-top: 0px !important;
+        display: block;
+        -webkit-tap-highlight-color: transparent;
+    }
 }

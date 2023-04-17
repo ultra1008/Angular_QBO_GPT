@@ -94,7 +94,7 @@ export class InvoiceFormComponent implements OnInit {
   badgeIcon = icon.BADGE_ICON;
   role_permission: any;
 
-  constructor (public dialog: MatDialog, public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
+  constructor(public dialog: MatDialog, public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.document_id = this.route.snapshot.queryParamMap.get('document_id');
@@ -243,7 +243,7 @@ export class InvoiceFormComponent implements OnInit {
   }
 
   getIdFromVendor(event, Option) {
-    console.log("sagar:", event, Option);
+
     this.invoiceform.get('vendor').setValue(Option._id);
   }
 
@@ -446,7 +446,7 @@ export class InvoiceFormComponent implements OnInit {
       if (params.status) {
         that.status = params.data.status;
         if (params.data.data) {
-          console.log("idfff");
+
           that.invoiceData = params.data.data;
           if (that.invoiceData.pdf_url) {
             that.pdf_url = that.invoiceData.pdf_url;
@@ -461,7 +461,7 @@ export class InvoiceFormComponent implements OnInit {
             };
           }
         } else {
-          console.log("else");
+
           that.invoiceData = params.data;
           if (that.invoiceData.pdf_url) {
             that.pdf_url = that.invoiceData.pdf_url;
@@ -671,7 +671,7 @@ export class InvoiceHistoryComponent implements OnInit {
   isSearch: boolean = false;
   subscription: Subscription;
   dashboardHistory = [];
-  constructor (
+  constructor(
     public httpCall: HttpCall,
     public snackbarservice: Snackbarservice,
     private modeService: ModeDetectService,
@@ -771,7 +771,7 @@ export class InvoiceRejectReason {
   mode: any;
   subscription: Subscription;
 
-  constructor (private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
+  constructor(private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
     public dialogRef: MatDialogRef<InvoiceRejectReason>,
     @Inject(MAT_DIALOG_DATA) public data: any, public sb: Snackbarservice, public translate: TranslateService) {
 
