@@ -312,4 +312,8 @@ export enum httproutes {
     PORTAL_ROVUK_INVOICE_SETTINGS_MAILBOX_MONITOR_GET_DATA_TABLE = "/webapi/v1/portal/getmailboxmonitordatatable",
     PORTAL_ROVUK_INVOICE_SETTINGS_MAILBOX_MONITOR_GET_ONE_DATA = "/webapi/v1/portal/getonemailboxmonitor",
     PORTAL_ROVUK_INVOICE_SETTINGS_MAILBOX_MONITOR_DELETE = "/webapi/v1/portal/deletemailboxmonitor",
+
+    // Invoice Progress
+    PORTAL_GET_ALL_INVOICE_PROGRESS = "/webapi/v1/portal/getallinvoiceprogress",
+    PORTAL_GET_INVOICE_PROGRESS = "/webapi/v1/portal/getinvoiceprogress",
 }

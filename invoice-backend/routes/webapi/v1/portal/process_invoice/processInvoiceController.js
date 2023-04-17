@@ -17,6 +17,7 @@ var handlebars = require('handlebars');
 let sendEmail = require('./../../../../../controller/common/sendEmail');
 var fs = require('fs');
 var alertController = require('./../alert/alertController');
+var invoiceProgressController = require('./../invoice_progress/invoiceProgressController');
 
 module.exports.getAllProcessInvoice = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -180,11 +181,13 @@ module.exports.saveInvoiceProcess = async function (req, res) {
                     }
                     let data = await common.sendInvoiceForProcess(apiObj);
                     let json = JSON.parse(data.body);
+                    invoiceProgressController.saveInvoiceProgress({ process_id: json.process_id }, decodedToken);
+                    /* 
                     for (const key in json) {
                         if (json[key] == 'ALREADY_EXISTS') {
                             await invoiceProcessCollection.updateOne({ _id: ObjectID(key) }, { status: 'Already Exists' });
                         }
-                    }
+                    } */
                     res.send({ message: 'Invoice for process added successfully.', data: apiObj, status: true });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });

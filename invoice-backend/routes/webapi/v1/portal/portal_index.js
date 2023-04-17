@@ -366,4 +366,10 @@ router.post('/webapi/v1/portal/savemailboxmonitor', common.checkTokenExistOrNot,
 router.post('/webapi/v1/portal/deletemailboxmonitor', common.checkTokenExistOrNot, mailboxMonitorValidation.deleteMailboxMonitor, mailboxMonitorController.deleteMailboxMonitor);
 // router.get('/webapi/v1/portal/mailboxMonitorCronAPI', mailBoxMonitorCron.mailboxMonitorCronAPI);
 
+// Invoice Progress
+let invoiceProgressController = require("./invoice_progress/invoiceProgressController");
+let invoiceProgressValidation = require("./invoice_progress/invoiceProgressValidation");
+router.get('/webapi/v1/portal/getallinvoiceprogress', invoiceProgressController.getAllInvoiceProgress);
+router.get('/webapi/v1/portal/getinvoiceprogress/:companycode/:userid', invoiceProgressController.getInvoiceProgress);
+
 module.exports = router;
