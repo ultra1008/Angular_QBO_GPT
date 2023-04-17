@@ -5,7 +5,7 @@
 
 
 
-            <div class="d-flex ">
+            <div class="d-flex chip ">
 
                 <div class=" cust-margin-div mr-1">
                     <div class="row d-flex px-2">
@@ -14,16 +14,22 @@
                         </h1>
                     </div>
                 </div>
-                <button mat-raised-button color="primary" class="sign-button cust-margin-div mr-1">
-                    <div class="row d-flex  px-2">
-                        <div class="mr-4">{{ 'Team-EmployeeList-Status-Active' | translate }}</div>
+                <button mat-raised-button class="btn-success sign-button cust-margin-div mr-1"
+                    (click)="statusFilter('Active')">
+                    <div class="d-flex  px-2">
+                        <img class="m-auto" *ngIf="selectedStatus == 'Active'" src="{{approveIcon}}" alt=""
+                            height="15px">
+                        <div class="mx-2">{{ 'Team-EmployeeList-Status-Active' | translate }}</div>
                         <div>{{count.active}}</div>
                     </div>
                 </button>
 
-                <button mat-raised-button class=" btn-danger sign-button cust-margin-div mr-1">
-                    <div class="row d-flex  px-2">
-                        <div class="mr-4">{{ 'Team-EmployeeList-Status-In-Active' | translate }}</div>
+                <button mat-raised-button class="btn-danger sign-button cust-margin-div mr-1"
+                    (click)="statusFilter('Inactive')">
+                    <div class="d-flex  px-2">
+                        <img class="m-auto" *ngIf="selectedStatus == 'Inactive'" src="{{approveIcon}}" alt=""
+                            height="15px">
+                        <div class="mx-2">{{ 'project_setting_inactive' | translate }}</div>
                         <div>{{count.inactive}}</div>
                     </div>
                 </button>

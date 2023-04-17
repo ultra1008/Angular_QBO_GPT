@@ -97,3 +97,9 @@ hr.solid {
     overflow-x: unset !important;
     margin-bottom: 50px !important;
 }
+
+.chip {
+    .mat-raised-button {
+        padding: unset !important;
+    }
+}

@@ -239,43 +239,131 @@
 
 
         <div class="col-sm-12 col-md-12 col-lg-6">
-            <div class="wrapper-cust-admin">
-
+            <div class="tab-h wrapper-cust-admin">
                 <div class="container">
-                    <div *ngIf="show_tabs">
-                        <mat-tab-group mat-align-tabs="center">
-                            <mat-tab label="{{'P.O' | translate }}">
-                                <app-invoice-other-document
-                                    [documentType]="documentTypes.po"></app-invoice-other-document>
+                    <!-- Invoice_preview -->
 
+                    <!-- <div class="d-flex flex-row">
+                        <mat-tab-group mat-align-tabs="center" *ngIf="show_tabs"
+                            (selectedTabChange)="onTabChanged($event)">
+                            <mat-tab label="{{'P.O' | translate }}">
+                                <app-invoice-other-document [documentType]="documentTypes.po"
+                                    [showPDF]="showPDF"></app-invoice-other-document>
                             </mat-tab>
                             <mat-tab label="{{ 'Packing Slip' | translate }}">
-                                <app-invoice-other-document
-                                    [documentType]="documentTypes.packingSlip"></app-invoice-other-document>
-
+                                <app-invoice-other-document [documentType]="documentTypes.packingSlip"
+                                    [showPDF]="showPDF"></app-invoice-other-document>
                             </mat-tab>
                             <mat-tab label="{{'Receiving Slip' | translate}} ">
-                                <app-invoice-other-document
-                                    [documentType]="documentTypes.receivingSlip"></app-invoice-other-document>
-
+                                <app-invoice-other-document [documentType]="documentTypes.receivingSlip"
+                                    [showPDF]="showPDF"></app-invoice-other-document>
                             </mat-tab>
 
                             <mat-tab label="{{'Quote' | translate }}">
-                                <app-invoice-other-document
-                                    [documentType]="documentTypes.quote"></app-invoice-other-document>
-
+                                <app-invoice-other-document [documentType]="documentTypes.quote"
+                                    [showPDF]="showPDF"></app-invoice-other-document>
                             </mat-tab>
-
                         </mat-tab-group>
 
+                        <button style="height: 35px;" mat-raised-button (click)="showHidePDF()" color="primary"
+                            class="cust-button-form"><img src="{{editIcon}}" alt="" class="pr-1"
+                                height="15px">{{'All-save' |
+                                            translate}}</button>
+                    </div> -->
+
+                    <div class="full-width">
+                        <div *ngIf="show_tabs" class=" d-flex  align-items-center flex-row">
+                            <div class="col border-1  custom-bg"
+                                [ngClass]="selectedDocumentType == documentTypes.po ? 'selected' : ''"
+                                (click)="setDocumentType(documentTypes.po)">
+                                {{'P.O' | translate }}
+                            </div>
+                            <div class="col custom-bg"
+                                [ngClass]="selectedDocumentType == documentTypes.packingSlip ? 'selected' : ''"
+                                (click)="setDocumentType(documentTypes.packingSlip)">
+                                {{'Packing Slip' | translate }}
+                            </div>
+                            <div class="col custom-bg"
+                                [ngClass]="selectedDocumentType == documentTypes.receivingSlip ? 'selected' : ''"
+                                (click)="setDocumentType(documentTypes.receivingSlip)">
+                                {{'Receiving Slip' | translate }}
+                            </div>
+                            <div class="col  custom-bg"
+                                [ngClass]="selectedDocumentType == documentTypes.quote ? 'selected' : ''"
+                                (click)="setDocumentType(documentTypes.quote)">
+                                {{'Quote' | translate }}
+                            </div>
+                            <!-- showPDF -->
+                            <div class="col border custom-bg text-right" (click)="clickArrow()">
+
+                                <div style="margin-bottom: 10px;" *ngIf="!showPDF"> <img src="{{downIcon}}" alt=""
+                                        class="" height="10px" style=" padding-right: 4px"></div>
+                                <div style="margin-top: 0px;" *ngIf="showPDF"> <img src="{{upIcon}}" alt="" class=""
+                                        height="10px" style=" padding-right: 4px"></div>
+
+
+                            </div>
+                            <!-- <mat-tab-group mat-align-tabs="center">
+                                <mat-tab label="{{'P.O' | translate }}">
+                                    <app-invoice-other-document [documentType]="documentTypes.po"></app-invoice-other-document>
+                    
+                                </mat-tab>
+                                <mat-tab label="{{ 'Packing Slip' | translate }}">
+                                    <app-invoice-other-document [documentType]="documentTypes.packingSlip"></app-invoice-other-document>
+                    
+                                </mat-tab>
+                                <mat-tab label="{{'Receiving Slip' | translate}} ">
+                                    <app-invoice-other-document [documentType]="documentTypes.receivingSlip"></app-invoice-other-document>
+                    
+                                </mat-tab>
+                    
+                                <mat-tab label="{{'Quote' | translate }}">
+                                    <app-invoice-other-document [documentType]="documentTypes.quote"></app-invoice-other-document>
+                    
+                                </mat-tab>
+                    
+                            </mat-tab-group> -->
+
+                        </div>
                     </div>
+
+                    <app-invoice-other-document [documentType]="selectedDocumentType" [showPDF]="showPDF"
+                        *ngIf="loadDocumentData"></app-invoice-other-document>
+                    <!-- <div class="container">
+                        <div *ngIf="show_tabs">
+                            <mat-tab-group mat-align-tabs="center">
+                                <mat-tab label="{{'P.O' | translate }}">
+                                    <app-invoice-other-document
+                                        [documentType]="documentTypes.po"></app-invoice-other-document>
+
+                                </mat-tab>
+                                <mat-tab label="{{ 'Packing Slip' | translate }}">
+                                    <app-invoice-other-document
+                                        [documentType]="documentTypes.packingSlip"></app-invoice-other-document>
+
+                                </mat-tab>
+                                <mat-tab label="{{'Receiving Slip' | translate}} ">
+                                    <app-invoice-other-document
+                                        [documentType]="documentTypes.receivingSlip"></app-invoice-other-document>
+
+                                </mat-tab>
+
+                                <mat-tab label="{{'Quote' | translate }}">
+                                    <app-invoice-other-document
+                                        [documentType]="documentTypes.quote"></app-invoice-other-document>
+
+                                </mat-tab>
+
+                            </mat-tab-group>
+
+                        </div>
+                    </div> -->
                 </div>
             </div>
+
         </div>
-
     </div>
-</div>
 
 
 
-<ngx-gallery [options]="galleryOptions" [images]="galleryImages" #gallery></ngx-gallery>
+    <ngx-gallery [options]="galleryOptions" [images]="galleryImages" #gallery></ngx-gallery>

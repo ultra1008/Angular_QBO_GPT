@@ -238,6 +238,7 @@ export class InvoiceFormComponent implements OnInit {
   }
 
   getIdFromVendor(event, Option) {
+
     this.invoiceform.get('vendor').setValue(Option._id);
   }
 
@@ -442,6 +443,7 @@ export class InvoiceFormComponent implements OnInit {
       if (params.status) {
         that.status = params.data.status;
         if (params.data.data) {
+
           that.invoiceData = params.data.data;
           if (that.invoiceData.pdf_url) {
             that.pdf_url = that.invoiceData.pdf_url;
@@ -456,6 +458,7 @@ export class InvoiceFormComponent implements OnInit {
             };
           }
         } else {
+
           that.invoiceData = params.data;
           if (that.invoiceData.pdf_url) {
             that.pdf_url = that.invoiceData.pdf_url;
