@@ -112,17 +112,17 @@
                             <h4 class="mt-3">{{ "Project-Timecard-Notes" |
                                 translate }}</h4>
                         </mat-expansion-panel-header>
-                        <div class="task-data">
+                        <div class="task-data  m-3">
                             <div class="d-flex justify-content-end">
                                 <button *ngIf="role_permission.invoice.Edit" mat-raised-button color="primary"
-                                    (click)="addNotes()" class="sign-button m-3"><img src="{{add_my_self_icon}}" alt=""
+                                    (click)="addNotes()" class="sign-button "><img src="{{add_my_self_icon}}" alt=""
                                         height="20px">
                                     {{'Project-Timecard-Notes' | translate }}
                                 </button>
                             </div>
-                            <div class="d-flex no-gutters m-3" *ngFor="let nots of notsList">
+                            <div class="d-flex no-gutters" *ngFor="let nots of notsList">
                                 <div class="col">
-                                    <div class=" note-card" style="justify-content: center;padding: 20px;"
+                                    <div class=" note-card  mt-2" style="justify-content: center;padding: 20px;"
                                         [ngClass]="mode == 'on'? 'text-cust-notes-dark' : 'text-cust-notes'">
                                         {{nots.notes}}<b
                                             style="font-size: 10px;float: inline-end;;">{{temp_MMDDYYY_format(nots.updated_at)}}</b>
@@ -138,7 +138,7 @@
 
                             </div>
                             <div *ngIf="show_Nots">
-                                <div class="mt-3">
+                                <div class="">
                                     <form class="form text-center p-2" [formGroup]="invoiceNoteform">
                                         <mat-form-field appearance="outline" class="main-one-input-field">
                                             <mat-label>{{'Project-Timecard-Notes' | translate }}</mat-label>
