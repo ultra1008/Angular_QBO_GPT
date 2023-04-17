@@ -328,6 +328,7 @@ export class VendorFormComponent implements OnInit {
   async saveVendorData() {
     let that = this;
     let req_temp = that.vendorinfo.value;
+    var isVendorfromQBO = false; // connection status of QBO
 
     if (this.vendorinfo.valid) {
       let reqObject = {
@@ -348,8 +349,17 @@ export class VendorFormComponent implements OnInit {
         vendor_attachment: "",
         vendor_id: req_temp.vendor_id,
         customer_id: req_temp.customer_id,
+        isVendorfromQBO: isVendorfromQBO
       };
 
+      this.httpCall.httpPostCall(httproutes.QUICKBOOK_ISCONNECT, {data:"request"}).subscribe(function (params) { //check the status of connection with QBO
+        if(params.isConnect === true){
+          reqObject.isVendorfromQBO = true;
+        } else {
+          delete reqObject.isVendorfromQBO;
+        }
+      });
+      
       if (this._id != null) {
         that.uiSpinner.spin$.next(true);
         const formData_profle = new FormData();

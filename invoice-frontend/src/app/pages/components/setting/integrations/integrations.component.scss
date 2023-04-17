@@ -1,3 +1,4 @@
+//scss
 @import 'src/app/styles/variables';
 @import 'src/app/styles/colors';
 @import 'src/app/styles/font';
@@ -49,4 +50,12 @@
     color: #737373;
     font-size: 14px;
     font-weight: inherit;
+}
+
+.button-icon-position {
+    color: white;
+    font-size: large;
+    position: relative;
+    top: -1.5px;
+    left: -3px;
 }

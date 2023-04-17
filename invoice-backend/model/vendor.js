@@ -33,6 +33,7 @@ var vendorSchema = new Schema({
     vendor_id: { type: String, default: "" },
     customer_id: { type: String, default: "" },
     gl_account: { type: String, default: "" },
+    isVendorfromQBO: { type: Boolean },
 }, { collection: 'vendor' }, { timestamps: false });
 
 module.exports = vendorSchema;
