@@ -405,7 +405,7 @@ export class InvoiceFormComponent implements OnInit {
         that.invoiceform = that.formBuilder.group({
           document_type: [params.data.document_type],
           invoice_name: [params.data.invoice_name],
-          vendor: [{vendor_name:params.data.vendor_name}],
+          vendor: [params.data.vendor_name],
           vendor_id: [params.data.vendor_id],
           customer_id: [params.data.customer_id],
           invoice: [params.data.invoice],

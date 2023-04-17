@@ -81,14 +81,8 @@
                                         width="20px" src="{{badgeIcon}}" />
 
                                     <mat-form-field>
-                                        <input type="text" matInput [formControl]="vendor"
-                                            [matAutocomplete]="auto">
-                                        <mat-autocomplete [displayWith]="displayOption" #auto="matAutocomplete">
-                                            <mat-option *ngFor="let option of filteredVendors | async" [value]="option"
-                                                (onSelectionChange)="getIdFromVendor($event, option)">
-                                                {{option.vendor_name}}
-                                            </mat-option>
-                                        </mat-autocomplete>
+                                        <input matInput placeholder="{{'' | translate }}"
+                                            formControlName="vendor" />
                                     </mat-form-field>
                                 </div>
 
@@ -97,7 +91,7 @@
 
 
                                     <mat-form-field>
-                                        <input matInput formControlName="vendor._id" />
+                                        <input matInput formControlName="customer_id" />
                                     </mat-form-field>
                                 </div>
 

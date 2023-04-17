@@ -902,6 +902,7 @@ module.exports.getOneInvoice = async function (req, res) {
                         assign_to: 1,
                         vendor: "$vendor",
                         vendor_id: 1,
+                        vendor_name: 1,
                         customer_id: 1,
                         invoice: 1,
                         p_o: 1,
