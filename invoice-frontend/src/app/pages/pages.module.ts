@@ -98,6 +98,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { DocumentsListComponent, DocumentSelectDialog } from './components/invoice/documents-list/documents-list.component';
 import { MailboxFormComponent } from './components/setting/mailbox-monitor/mailbox-form/mailbox-form.component';
 import { MatChipSelectionChange, MatChipsModule } from '@angular/material/chips';
+import { InvoiceProgressComponent } from './common/header/components/invoice-progress/invoice-progress.component';
 
 
 
@@ -189,7 +190,8 @@ import { MatChipSelectionChange, MatChipsModule } from '@angular/material/chips'
     DocumentsListComponent,
     RequestFilesComponent,
     DocumentSelectDialog,
-    MailboxFormComponent
+    MailboxFormComponent,
+    InvoiceProgressComponent
   ],
   imports: [
     PortalModule,
