@@ -17,7 +17,7 @@
      </div> -->
      <h2 class="text-center"> {{'Document progress'| translate}}</h2>
      <mat-divider></mat-divider>
-     <div class="container mt-2" style="width: 300px" *ngIf="progressList.length == 0 && !is_httpCall">
+     <div class="container mt-2" *ngIf="progressList.length == 0 && !is_httpCall">
           <div class="card flex-row ">
                <div class="card-body">
                     <div class="no-progress" [ngClass]="mode == 'on' ? 'dark-no-progress' : ''">

@@ -396,7 +396,7 @@ export class InvoiceDetailPageComponent implements OnInit {
       if (params.status) {
         that.status = params.data.status;
         if (params.data.data) {
-          console.log("idfff");
+
           that.invoiceData = params.data.data;
           if (that.invoiceData.pdf_url) {
             that.pdf_url = that.invoiceData.pdf_url;
@@ -411,7 +411,7 @@ export class InvoiceDetailPageComponent implements OnInit {
             };
           }
         } else {
-          console.log("else");
+
           that.invoiceData = params.data;
           if (that.invoiceData.pdf_url) {
             that.pdf_url = that.invoiceData.pdf_url;
