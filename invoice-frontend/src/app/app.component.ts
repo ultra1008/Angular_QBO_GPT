@@ -29,7 +29,7 @@ const swalWithBootstrapButtons = Swal.mixin({
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'Rovuk Invoicing';
+  title = 'Rovuk A/P';
   idleState = 'Not started.';
   timedOut = false;
   lastPing?: Date;
@@ -152,7 +152,7 @@ export class AppComponent implements OnInit {
     let that = this;
     that.httpCall
       .httpPostCallWithoutToken(httproutes.GET_GIF_LOADER, {
-        module_name: "Rovuk Invoicing",
+        module_name: "Rovuk A/P",
       })
       .subscribe(function (params) {
         if (params.status) {
@@ -239,8 +239,8 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.titleService.setTitle(this.title);
     this.metaService.addTags([
-      { name: 'Rovuk Invoicing', content: 'Rovuk Invoicing' },
-      { name: 'a construction application', content: 'Rovuk Invoicing' },
+      { name: 'Rovuk A/P', content: 'Rovuk A/P' },
+      { name: 'a construction application', content: 'Rovuk A/P' },
     ]);
   }
 }

@@ -1,12 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
 import { Subscription } from 'rxjs';
-import { icon, localstorageconstants } from 'src/app/consts';
+import { httproutes, icon, localstorageconstants } from 'src/app/consts';
 import { ModeDetectService } from 'src/app/pages/components/map/mode-detect.service';
 import { HttpCall } from 'src/app/service/httpcall.service';
+import { configdata } from 'src/environments/configData';
 
 
 
@@ -21,46 +22,26 @@ export class InvoiceProgressComponent implements OnInit {
 
   public useremail: string;
   public companycode: string;
-  notificationIcon = icon.HISTORY_WHITE;
+  progressIcon = icon.HISTORY_WHITE;
   selectedList: any;
   otherAppObject: any = [];
   //color_array: any = ['#536DFE', '#53abfe', '#5e53fe', '#33ccff', '#8f53fe', '#ea53fe', '#fe53a9', '#fe5353', '#ea53fe', '#fe53a9'];
 
   start: number = 0;
   is_httpCall: boolean = false;
-  progressList = [
-    {
-      total: 3,
-      final: 2,
-      ratio: 0.67,
-    },
-    {
-      total: 5,
-      final: 2,
-      ratio: 0.2,
-    },
-    {
-      total: 4,
-      final: 2,
-      ratio: 0.5,
-    },
-    {
-      total: 4,
-      final: 4,
-      ratio: 1,
-    }
-  ];
+  progressList = [];
   unseen_count: number = 0;
 
   mode: any;
   subscription: Subscription;
 
   showAllNotification: Boolean = true;
+  events: EventSource;
 
-  constructor(
+  constructor (
     public dialog: MatDialog,
     private router: Router,
-    public httpCall: HttpCall,
+    public httpCall: HttpCall, private _zone: NgZone,
     private modeService: ModeDetectService
   ) {
     let user_date = JSON.parse(
@@ -81,12 +62,31 @@ export class InvoiceProgressComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-
     let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
     var userId = user_data.UserData._id;
     var companyCode = localStorage.getItem(localstorageconstants.COMPANYCODE);
 
+    var userId = user_data.UserData._id;
+    var companyCode = localStorage.getItem(localstorageconstants.COMPANYCODE);
+    var url = configdata.apiurl + httproutes.PORTAL_GET_INVOICE_PROGRESS + `/${companyCode}/${userId}`;
+    this.events = new EventSource(url);
+    this.events.onmessage = (event: any) => {
+      const parsedData = JSON.parse(event.data);
+      // console.log("parsedData: ", parsedData);
+      this.progressList = parsedData.data;
+      console.log("this.events ", this.events);
+      // console.log("parsedData: ", parsedData);
+      if (parsedData.completed) {
+        console.log("close event");
+        this._zone.run(() => {
+          this.events.close();
+        });
+
+      }
+    };
+  }
+  closeEvent() {
+    this.events = null;
   }
 
   onScroll() {

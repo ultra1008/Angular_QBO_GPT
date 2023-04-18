@@ -1,9 +1,9 @@
 /*
  *
- * Rovuk Invoicing
+ * Rovuk A/P
  *
  * This class is the Language selection class and user can change language of the portal.
- * Language option is hide for Rovuk Invoicing. May be introduce in future.
+ * Language option is hide for Rovuk A/P. May be introduce in future.
  *
  * Created by Rovuk.
  * Copyright © 2022 Rovuk. All rights reserved.

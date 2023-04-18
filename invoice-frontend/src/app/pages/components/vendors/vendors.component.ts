@@ -89,6 +89,7 @@ export class VendorsComponent implements OnInit {
 
   selectedStatus: string = '';
   approveIcon: string;
+  invoicelog: icon.LOGOUT_IFRAME;
 
   constructor(private modeService: ModeDetectService,
     public dialog: MatDialog,
@@ -304,12 +305,29 @@ export class VendorsComponent implements OnInit {
   getColumName() {
     let that = this;
     let role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
-    console.log("role_permission", role_permission);
+
     return [
       {
-        title: "",
+        title: `<svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 379.1919 379.1978"
+        style="width: 16px;"
+        >
+        <g>
+            <g>
+            <path
+                d="M0,189.5991C0,84.8848,84.8936,0,189.59869,0,294.313,0,379.1919,84.8848,379.1919,189.5991c0,104.7081-84.87891,189.5987-189.59321,189.5987C84.8936,379.1978,0,294.3072,0,189.5991Z"
+                style="fill:#2da44a"
+            />
+            <path
+                d="M252.8169,115.8745H242.28179v27.3843H252.8169a46.3474,46.3474,0,1,1,0,92.6948H227.50829V92.7031a27.39433,27.39433,0,0,0-27.3911-27.3901V263.3286H252.8169a73.72705,73.72705,0,1,0,0-147.4541ZM52.645,189.5933a73.7257,73.7257,0,0,0,73.7359,73.7246h10.53219v-27.376H126.3809a46.3486,46.3486,0,1,1,0-92.6972h25.31249V286.4986a27.37664,27.37664,0,0,0,27.3877,27.3808V115.8633H126.3809a73.7303,73.7303,0,0,0-73.7359,73.73Z"
+                style="fill: #fff"
+            />
+            </g> 
+        </g>
+        </svg>`,
         render: function (data: any, type: any, full: any) {
-          if(full.hasOwnProperty("isVendorfromQBO"))
+          if (full.hasOwnProperty("isVendorfromQBO"))
             return `<svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 379.1919 379.1978"
@@ -327,10 +345,12 @@ export class VendorsComponent implements OnInit {
                 />
                 </g> 
             </g>
-            </svg>`
+            </svg>`;
           else
-            return `<i class = "fas fa-database" style="color:green" ></i>`
+            return `<i class = "fas fa-database" style="color:green" ></i>`;
         },
+        width: "1%",
+        orderable: false,
       },
       {
         title: that.Vendor_VendorName,

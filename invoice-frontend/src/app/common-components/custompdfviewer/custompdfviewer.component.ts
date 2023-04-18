@@ -364,7 +364,7 @@ export class CustompdfviewerComponent implements OnInit {
 }
 
 /*
-  Send Certifiacte Form - Inside Rovuk Invoicing Panel
+  Send Certifiacte Form - Inside Rovuk A/P Panel
   To send certificate via email.
   This dialog is come inside the vendor detail screen
 */
