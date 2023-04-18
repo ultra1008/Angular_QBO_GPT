@@ -1,10 +1,10 @@
 /*
  *
- * Rovuk Invoicing
+ * Rovuk A/P
  *
  * This class is the main header of the theme color which have action like
  * Weather, Shortcuts and User menu.
- * Language option id commented out in Rovuk Invoicing
+ * Language option id commented out in Rovuk A/P
  * Side Menu icon for Hide/Show the menu
  *
  * Created by Rovuk.

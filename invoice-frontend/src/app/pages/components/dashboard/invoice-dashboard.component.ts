@@ -1,6 +1,6 @@
 /*
  *
- * Rovuk Invoicing
+ * Rovuk A/P
  *
  * This component is used for Display all 8 charts on dashboard in 3 x 3 grid
  *

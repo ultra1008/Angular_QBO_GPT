@@ -1,6 +1,6 @@
 /*
  *
- * Rovuk Invoicing
+ * Rovuk A/P
  *
  * This component is used for change password.
  * User can change the password by clicking User icon on top left corner.
@@ -53,7 +53,7 @@ export class ChangepasswordComponent implements OnInit {
   /*
     constructor
   */
-  constructor (private location: Location, private modeService: ModeDetectService, public authservice: AuthService, public httpCall: HttpCall,
+  constructor(private location: Location, private modeService: ModeDetectService, public authservice: AuthService, public httpCall: HttpCall,
     public snackbarservice: Snackbarservice, public translate: TranslateService) {
     this.translate.stream(['']).subscribe((textarray) => {
       let that = this;

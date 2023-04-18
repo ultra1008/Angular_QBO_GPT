@@ -65,10 +65,10 @@ export class PortalLoginFormComponent implements OnInit {
   public ngOnInit(): void {
     this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
 
-    this.titleService.setTitle('Rovuk Invoicing');
+    this.titleService.setTitle('Rovuk A/P');
     this.metaService.addTags([
-      { name: 'Rovuk Invoicing', content: 'Rovuk Invoicing' },
-      { name: 'a construction application', content: 'Rovuk Invoicing' },
+      { name: 'Rovuk A/P', content: 'Rovuk A/P' },
+      { name: 'a construction application', content: 'Rovuk A/P' },
     ]);
     this.form = new FormGroup({
       email: new FormControl("", [Validators.required, Validators.email]),
