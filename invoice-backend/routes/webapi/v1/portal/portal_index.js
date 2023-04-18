@@ -64,7 +64,7 @@ router.post('/webapi/v1/saveAttechment', saveAttechment.saveAttechment);
 router.post('/webapi/v1/saveAttechmentv2', saveAttechment.saveAttechmentV2);
 
 var quickBookController = require('./quickbook/quickbookController');
-var quickBookValidation = require('./quickbook/quichbookValidation');
+var quickBookValidation = require('./quickbook/quickbookValidation');
 router.post('/webapi/v1/savequickbookinfo', common.checkTokenExistOrNot, quickBookValidation.savequickBookValidation, quickBookController.savequickBookInfo);
 router.post('/webapi/v1/quickbookslogout', common.checkTokenExistOrNot,quickBookValidation.logoutValidation, quickBookController.logout);
 router.post('/webapi/v1/isConnecttoQBO', common.checkTokenExistOrNot, quickBookValidation.isConnecttoQBOValidation,  quickBookController.isConnectToQBO);

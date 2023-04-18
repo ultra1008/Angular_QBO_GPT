@@ -1,19 +1,14 @@
 let common = require('../../../../../controller/common/common');
 var QuickBooks = require('node-quickbooks')
 var OAuthClient = require('intuit-oauth')
-var Tokens = require('csrf');
-var csrf = new Tokens();
-var request = require('request');
-var ejs = require('ejs')
 var QuickBooks = require('node-quickbooks')
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/";
-const puppeteer = require('puppeteer');
 let config = require('../../../../../config/config');
 
 QuickBooks.setOauthVersion('2.0');
 
 // Instance of client
+var url = `mongodb://${config.DB_HOST}:${config.DB_PORT}/`
 var oauthClient = null
 var companycode = ""
 const port = 4207
@@ -33,7 +28,7 @@ module.exports.savequickBookInfo = async function (req, res) {
             clientId: config.client_id,
             clientSecret: config.client_secret,
             environment: 'sandbox',                                // ‘sandbox’ or ‘production’
-            redirectUri: 'https://localhost:4207/webapi/v1/callback/'
+            redirectUri: config.redirectUri
         });
         var authUri = oauthClient.authorizeUri({scope:[OAuthClient.scopes.Accounting],state:'intuit-test'});
         res.send({status:true, authUri:authUri});
