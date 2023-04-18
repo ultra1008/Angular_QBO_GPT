@@ -1,6 +1,6 @@
 /*
  *
- * Rovuk Invoicing
+ * Rovuk A/P
  *
  * This component is used for display Terms & Condition.
  *

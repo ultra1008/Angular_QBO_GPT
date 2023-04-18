@@ -1,6 +1,6 @@
 /*
  *
- * Rovuk Invoicing
+ * Rovuk A/P
  *
  * This class is the use for mainatain shortcuts. 
  * Shortcuts are use to provide quick links to the modules. 
@@ -88,7 +88,7 @@ export class ShortcutsMenuComponent implements OnInit {
 
 /*
  *
- * Rovuk Invoicing
+ * Rovuk A/P
  *
  * This class is the use for ADD/REMOVE shortcuts.
  * Shortcust needs to checked and save in popup dialog.

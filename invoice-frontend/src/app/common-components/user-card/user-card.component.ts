@@ -1,6 +1,6 @@
 /*
  *
- * Rovuk Invoicing
+ * Rovuk A/P
  *
  * This is the component which is used for display User profile
  * User card contains info like User Profile picture, User First name and Last name,
