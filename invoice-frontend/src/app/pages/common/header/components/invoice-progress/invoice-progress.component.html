@@ -1,13 +1,13 @@
-<button class="btn email-button position-relative" mat-mini-fab [matMenuTriggerFor]="notifications"
+<button class="btn email-button position-relative" mat-mini-fab [matMenuTriggerFor]="progress"
      #menuTrigger="matMenuTrigger">
-     <img src="{{notificationIcon}}" alt="" height="20px" width="20px">
-     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-
-          <ng-template #elseBlock>{{unseen_count}}</ng-template>
-     </span>
+     <img src="{{progressIcon}}" alt="" height="20px" width="20px">
 </button>
-<mat-menu #notifications="matMenu" xPosition="before" class="progress-div">
-     <h2 class="text-center"> {{'Document progress'| translate}}</h2>
+<mat-menu #progress="matMenu" xPosition="before" class="progress-div">
+     <h2 class="text-center" [ngClass]="mode == 'on' ? 'progress-heding' : ''"> {{'Document progress'| translate}}
+     </h2>
+     <!--  <button class="btn email-button position-relative" (click)="closeEvent()">
+          <img src="{{progressIcon}}" alt="" height="20px" width="20px">
+     </button> -->
      <mat-divider></mat-divider>
      <div class="container mt-2" *ngIf="progressList.length == 0 && !is_httpCall">
           <div class="card flex-row ">
