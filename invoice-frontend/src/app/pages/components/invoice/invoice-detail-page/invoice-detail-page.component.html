@@ -63,22 +63,20 @@
                         <mat-expansion-panel-header class="hover">
                             <h4 class="mt-3">{{ "Invoice_preview" | translate }}</h4>
                         </mat-expansion-panel-header>
-                        <div class="pdf-data">
+                        <div class="pdf-data" *ngIf="loadInvoice">
                             <div class=" mt-1 pdf-header">
+
                                 <button style="background-color:green; color: white;"
                                     *ngIf="role_permission.invoice.Edit && invoiceData.status != 'Approved' "
-                                    mat-raised-button (click)="updateInvoice(id,'Approved')" class="
-                                                            cust-button-form Approve"><img src="{{approveIcon}}" alt=""
-                                        height="15px">
+                                    mat-raised-button (click)="updateInvoice(id,'Approved')"
+                                    class="cust-button-form Approve"><img src="{{approveIcon}}" alt="" height="15px">
                                     {{'PO-View-Approve' | translate}}</button>
-
                                 <button style="background-color: red; color: white;"
                                     *ngIf="role_permission.invoice.Edit && invoiceData.status != 'Rejected'"
-                                    mat-raised-button (click)="updateInvoice(id,'Rejected')" class="
-                                                            cust-button-form Denied"><img src="{{denyIcon}}" alt=""
-                                        height="15px">
-                                    {{'reject_all' |
-                                                            translate}}</button>
+                                    mat-raised-button (click)="updateInvoice(id,'Rejected')"
+                                    class="cust-button-form Denied">
+                                    <img src="{{denyIcon}}" alt="" height="15px"> {{'reject_all' | translate}}</button>
+
                                 <button *ngIf="role_permission.invoice.Edit" mat-raised-button color="primary"
                                     (click)="goToInvoiceEdit(invoiceData)" class="cust-button-form"><img
                                         src="{{editIcon}}" alt="" class="" height="20px"
@@ -294,7 +292,7 @@
                                 {{'Quote' | translate }}
                             </div>
                             <!-- showPDF -->
-                            <div class="col border custom-bg text-right" (click)="clickArrow()">
+                            <div class="px-3 border custom-bg text-right" style="height: 39px;" (click)="clickArrow()">
 
                                 <div style="margin-bottom: 10px;" *ngIf="!showPDF"> <img src="{{downIcon}}" alt=""
                                         class="" height="10px" style=" padding-right: 4px"></div>
