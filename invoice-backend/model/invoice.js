@@ -325,6 +325,8 @@ var invoiceSchema = new Schema({
     assign_to: { type: mongoose.ObjectId, default: "" }, //user
     vendor: { type: mongoose.ObjectId, default: "" },
     vendor_id: { type: String, default: "" },
+    vendor_name: { type: String, default: "" },
+    isInvoicefromQBO: {type: Boolean},
     customer_id: { type: String, default: "" },
     invoice: { type: String, default: "" },
     p_o: { type: String, default: "" },
