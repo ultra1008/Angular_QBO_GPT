@@ -2525,5 +2525,6 @@
     "INVOICE_NOT_ASSINED_SETTING": "Send a reminder of invoice is not assigned to anybody every",
     "User_Self_Delete": "You can not archive yourself.",
     "First_User_Self_Delete": "You can not archive default admin user.",
-    "No_Process_document": "No Process Document"
+    "No_Process_document": "No Process Document",
+    "Document_Progress": "Document Progress"
 }

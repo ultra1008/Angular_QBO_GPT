@@ -17,7 +17,7 @@ let sendEmail = require('./../../../../../controller/common/sendEmail');
 var fs = require('fs');
 var bucketOpration = require('../../../../../controller/common/s3-wasabi');
 var recentActivity = require('./../recent_activity/recentActivityController');
-var QuickBooks = require('node-quickbooks')
+var QuickBooks = require('node-quickbooks');
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
 
@@ -103,29 +103,30 @@ module.exports.saveVendor = async function (req, res) {
                 requestObject.vendor_created_at = Math.round(new Date().getTime() / 1000);
                 requestObject.vendor_updated_by = decodedToken.UserData._id;
                 requestObject.vendor_updated_at = Math.round(new Date().getTime() / 1000);
-                if(requestObject.isVendorfromQBO){ // if login QBO in integration tab of settings, the values are saved to QBO vendor.
+                if (requestObject.isVendorfromQBO) { // if login QBO in integration tab of settings, the values are saved to QBO vendor.
                     qbo.createVendor({
-                        DisplayName : requestObject.vendor_name,
-                        CompanyName : requestObject.vendor_name,
-                        Active : requestObject.status === 1 ? true : false,
-                        PrimaryPhone: {FreeFormNumber : requestObject.vendor_phone},
-                        PrimaryEmailAddr : {Address : requestObject.vendor_email},
-                        BillAddr : {
-                            Line1 : requestObject.vendor_address,
-                            Line2 : requestObject.hasOwnProperty("address2")?requestObject.vendor_address2:'',
-                            City : requestObject.vendor_city,
-                            Country : requestObject.hasOwnProperty("country")?requestObject.vendor_country:'',
-                            CountrySubDivisionCode : requestObject.vendor_state,
-                            PostalCode : requestObject.vendor_zipcode
+                        DisplayName: requestObject.vendor_name,
+                        CompanyName: requestObject.vendor_name,
+                        Active: requestObject.status === 1 ? true : false,
+                        PrimaryPhone: { FreeFormNumber: requestObject.vendor_phone },
+                        PrimaryEmailAddr: { Address: requestObject.vendor_email },
+                        BillAddr: {
+                            Line1: requestObject.vendor_address,
+                            Line2: requestObject.hasOwnProperty("address2") ? requestObject.vendor_address2 : '',
+                            City: requestObject.vendor_city,
+                            Country: requestObject.hasOwnProperty("country") ? requestObject.vendor_country : '',
+                            CountrySubDivisionCode: requestObject.vendor_state,
+                            PostalCode: requestObject.vendor_zipcode
                         },
-                        AcctNum:requestObject.gl_account,
-                        MetaData : {
-                            CreateTime : new Date(),
-                            LastUpdatedTime : new Date()
+                        AcctNum: requestObject.gl_account,
+                        MetaData: {
+                            CreateTime: new Date(),
+                            LastUpdatedTime: new Date()
                         }
-                    },async function(err,result){
-                        if(err) return;
-                    })}
+                    }, async function (err, result) {
+                        if (err) return;
+                    });
+                }
                 var add_vendor = new vendorConnection(requestObject);
                 var save_vendor = await add_vendor.save();
                 if (save_vendor) {
@@ -356,7 +357,7 @@ module.exports.getVendorDatatable = async function (req, res) {
             var requestObject = req.body;
             var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
             var col = [];
-            col.push("isVendorfromQBO","vendor_name", "vendor_id", "customer_id", "vendor_phone", "vendor_email", "vendor_address", "vendor_attachment", "vendor_status");
+            col.push("isVendorfromQBO", "vendor_name", "vendor_id", "customer_id", "vendor_phone", "vendor_email", "vendor_address", "vendor_attachment", "vendor_status");
 
             var start = parseInt(requestObject.start) || 0;
             var perpage = parseInt(requestObject.length);
@@ -432,18 +433,18 @@ module.exports.getVendorDatatable = async function (req, res) {
 };
 
 //save vendor from QBO to database
-module.exports.savevendorstoDB = async function(req, res) {
+module.exports.savevendorstoDB = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
-    var vendors_link = []
+    var vendors_link = [];
 
     if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
-        const companycode = req.body.companycode
-        const client = await MongoClient.connect(url) 
+        const companycode = req.body.companycode;
+        const client = await MongoClient.connect(url);
         var dbo = client.db("rovuk_admin");
         var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
-        const result = await dbo.collection("tenants").findOne({companycode:decodedToken.companycode})
+        const result = await dbo.collection("tenants").findOne({ companycode: decodedToken.companycode });
         client_id = result.client_id ? result.client_id : '';
         client_secret = result.client_secret ? result.client_secret : '';
         access_token = result.access_token ? result.access_token : '';
@@ -460,14 +461,14 @@ module.exports.savevendorstoDB = async function(req, res) {
             '2.0', //oAuth version
             refresh_token);
         var dbo = client.db(`rovuk_${companycode.slice(2)}`);
-        var returndata = []
+        var returndata = [];
         qbo.findAttachables({
             desc: 'MetaData.LastUpdatedTime'
         }, async (e, attachables) => {
-            if(attachables.hasOwnProperty("QueryResponse")&&attachables.QueryResponse.hasOwnProperty("Attachable")){
-                for(var k = 0;k < attachables.QueryResponse.Attachable.length;k++){
+            if (attachables.hasOwnProperty("QueryResponse") && attachables.QueryResponse.hasOwnProperty("Attachable")) {
+                for (var k = 0; k < attachables.QueryResponse.Attachable.length; k++) {
                     var linkdata = attachables.QueryResponse.Attachable[k];
-                    if(linkdata.ContentType.includes("image/")&&linkdata.AttachableRef[0].EntityRef.type === "Vendor"){
+                    if (linkdata.ContentType.includes("image/") && linkdata.AttachableRef[0].EntityRef.type === "Vendor") {
                         var data = {};
                         data._id = linkdata.AttachableRef[0].EntityRef.value;
                         data.url = linkdata.TempDownloadUri;
@@ -475,17 +476,17 @@ module.exports.savevendorstoDB = async function(req, res) {
                     }
                 }
             }
-            qbo.findVendors({desc: 'MetaData.LastUpdatedTime'}, async (err, vendors) => {
+            qbo.findVendors({ desc: 'MetaData.LastUpdatedTime' }, async (err, vendors) => {
                 isQuickBooksVendor = true;
-                console.log("I am no in error")
-                await dbo.collection("vendor").deleteMany({isVendorfromQBO:true});
+                console.log("I am no in error");
+                await dbo.collection("vendor").deleteMany({ isVendorfromQBO: true });
                 if (vendors.queryResponse !== null)
-                    vendors.QueryResponse.Vendor.forEach(async function(vendorfromQB) {
+                    vendors.QueryResponse.Vendor.forEach(async function (vendorfromQB) {
                         var vendordata = {};
                         // vendordata._id = vendorfromQB.hasOwnProperty("Id") ? vendorfromQB.Id : '';
                         vendordata.vendor_name = vendorfromQB.DisplayName ? vendorfromQB.DisplayName : '';
                         vendordata.vendor_phone = vendorfromQB.hasOwnProperty("PrimaryPhone") ? vendorfromQB.PrimaryPhone.FreeFormNumber : '';
-                        vendordata.isVendorfromQBO = true
+                        vendordata.isVendorfromQBO = true;
                         vendordata.vendor_email = vendorfromQB.hasOwnProperty("PrimaryEmailAddr") ? vendorfromQB.PrimaryEmailAddr.hasOwnProperty("Address") ? vendorfromQB.PrimaryEmailAddr.Address : '' : '';
                         vendordata.is_delete = 0;
                         vendordata.gl_account = vendorfromQB.AcctNum ? vendorfromQB.AcctNum : '';
@@ -496,34 +497,34 @@ module.exports.savevendorstoDB = async function(req, res) {
                         vendordata.vendor_zipcode = vendorfromQB.hasOwnProperty("BillAddr") ? vendorfromQB.BillAddr.hasOwnProperty("PostalCode") ? vendorfromQB.BillAddr.PostalCode : '' : '';
                         vendordata.vendor_country = vendorfromQB.hasOwnProperty("BillAddr") ? vendorfromQB.BillAddr.hasOwnProperty("Country") ? vendorfromQB.BillAddr.Country : '' : '';
                         // vendordata.terms_id = vendorfromQB.hasOwnProperty("TermRef") ? vendorfromQB.TermRef.hasOwnProperty("value") ? vendorfromQB.TermRef.value : '' : '';
-                        vendordata.vendor_status = vendorfromQB.Activity ? 0:1;
+                        vendordata.vendor_status = vendorfromQB.Activity ? 0 : 1;
                         Math.round(new Date(vendorfromQB.MetaData.CreateTime).getTime() / 1000);
                         vendordata.vendor_created_at = Math.round(new Date(vendorfromQB.MetaData.CreateTime).getTime() / 1000);
                         vendordata.vendor_description = '';
                         vendordata.vendor_image = '';
                         vendordata.vendor_attachment = [];
                         vendordata.vendor_id = vendorfromQB.hasOwnProperty("Id") ? vendorfromQB.Id : '';
-                        for(var j = 0;j < vendors_link.length;j ++){
-                            if(vendors_link[j]._id === vendordata.vendor_id)
+                        for (var j = 0; j < vendors_link.length; j++) {
+                            if (vendors_link[j]._id === vendordata.vendor_id)
                                 vendordata.vendor_attachment.push(vendors_link[j].url);
                         }
                         vendordata.customer_id = vendorfromQB.hasOwnProperty("BillAddr") ? vendorfromQB.BillAddr.hasOwnProperty("Id") ? vendorfromQB.BillAddr.Id : '' : '';
                         returndata.push(vendordata);
                         var add_vendor = new vendorConnection(vendordata);
                         await add_vendor.save();
-                    })
-                if(returndata.length > 0){
+                    });
+                if (returndata.length > 0) {
                     client.close();
                 }
-            })
-        })
-        
+            });
+        });
+
         res.send({ status: true, message: 'success' });
     }
-    else{
+    else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
-}
+};
 
 //vendor active or inactive
 module.exports.updateVendorStatus = async function (req, res) {
