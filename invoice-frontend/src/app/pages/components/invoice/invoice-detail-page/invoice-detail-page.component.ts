@@ -103,8 +103,8 @@ export class InvoiceDetailPageComponent implements OnInit {
   showPDF: boolean = true;
   selectedDocumentType: any = this.documentTypes.po;
   loadDocumentData: boolean = true;
-  downIcon: any;
-  upIcon: any;
+  downIcon = icon.DOWN_WHITE;
+  upIcon = icon.UP_WHITE;
 
   constructor(private sanitiser: DomSanitizer, private formBuilder: FormBuilder, public dialog: MatDialog, private location: Location, private modeService: ModeDetectService, private router: Router, public route: ActivatedRoute, public uiSpinner: UiSpinnerService, public httpCall: HttpCall,
     public snackbarservice: Snackbarservice, public translate: TranslateService,) {
@@ -133,8 +133,7 @@ export class InvoiceDetailPageComponent implements OnInit {
       this.historyIcon = icon.HISTORY;
       this.approveIcon = icon.APPROVE_WHITE;
       this.denyIcon = icon.DENY_WHITE;
-      this.downIcon = icon.DOWN_WHITE;
-      this.upIcon = icon.UP_WHITE;
+
 
     } else {
       this.downloadIcon = icon.DOWNLOAD_WHITE;
