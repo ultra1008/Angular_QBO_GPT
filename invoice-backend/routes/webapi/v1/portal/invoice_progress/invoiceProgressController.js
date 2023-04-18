@@ -71,7 +71,6 @@ module.exports.getInvoiceProgress = async function (req, res) {
                 created_by: ObjectID(req.params.userid),
                 is_delete: 0,
             };
-            console.log("query", query);
             let get_data = await invoiceProgressCollection.find(query);
             for (let i = 0; i < get_data.length; i++) {
                 let company_connection_db_api = connection_db_api;
