@@ -54,6 +54,7 @@ module.exports.getInvoiceProgress = async function (req, res) {
         var one_tenants = await tenantsConnection.findOne({ companycode: req.params.companycode });
 
         let connection_db_api = await db_connection.connection_db_api(one_tenants);
+        var processCompleted = true;
 
         res.writeHead(200, {
             'Content-Type': 'text/event-stream',
@@ -65,6 +66,7 @@ module.exports.getInvoiceProgress = async function (req, res) {
         });
 
         setInterval(async function () {
+            // console.log("call event source");
             let invoiceProgressCollection = connection_db_api.model(collectionConstant.INVOICE_PROGRESS, invoiceProgressSchema);
             let invoiceProcessCollection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
             let query = {
@@ -101,13 +103,27 @@ module.exports.getInvoiceProgress = async function (req, res) {
                         total: data.data.process_progress_total,
                     };
                     await invoiceProgressCollection.updateOne({ _id: ObjectID(get_data[i]._id) }, reqObj);
+                    /* if (data.data.process_progress_ratio == 1.0) { 
+                            await invoiceProcessCollection.updateMany({ _id: { $in: updateProcessIds } }, { status: 'PROCESS_STATUS_EXTRACTED' });
+                            importProcessData(req.params.companycode, req.params.userid, company_connection_db_api, translator); 
+                    }  */
                     if (data.data.process_progress_ratio == 1.0) {
-                        invoiceProcessCollection.updateMany({ _id: { $in: updateProcessIds } }, { status: 'PROCESS_STATUS_EXTRACTED' });
-                        importProcessData(req.params.companycode, req.params.userid, company_connection_db_api, translator);
+                        await invoiceProcessCollection.updateMany({ _id: { $in: updateProcessIds } }, { status: 'PROCESS_STATUS_EXTRACTED' });
+                    } else {
+                        processCompleted = false;
                     }
+                    if (i == get_data.length - 1) {
+                        // console.log("processCompleted: ", processCompleted);
+                        if (processCompleted) {
+                            // importProcessData(req.params.companycode, req.params.userid, company_connection_db_api, translator);
+                        }
+                    }
+                    /* else {
+                        processCompleted = false;
+                    } */
                 }
             }
-            Stream.emit('invoice-progress', 'message', { data: get_data });
+            Stream.emit('invoice-progress', 'message', { data: get_data, completed: processCompleted });
         }, 2000);
     } catch (e) {
         console.log(e);

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { Router } from '@angular/router';
@@ -22,7 +22,7 @@ export class InvoiceProgressComponent implements OnInit {
 
   public useremail: string;
   public companycode: string;
-  notificationIcon = icon.HISTORY_WHITE;
+  progressIcon = icon.HISTORY_WHITE;
   selectedList: any;
   otherAppObject: any = [];
   //color_array: any = ['#536DFE', '#53abfe', '#5e53fe', '#33ccff', '#8f53fe', '#ea53fe', '#fe53a9', '#fe5353', '#ea53fe', '#fe53a9'];
@@ -36,11 +36,12 @@ export class InvoiceProgressComponent implements OnInit {
   subscription: Subscription;
 
   showAllNotification: Boolean = true;
+  events: EventSource;
 
   constructor (
     public dialog: MatDialog,
     private router: Router,
-    public httpCall: HttpCall,
+    public httpCall: HttpCall, private _zone: NgZone,
     private modeService: ModeDetectService
   ) {
     let user_date = JSON.parse(
@@ -68,15 +69,25 @@ export class InvoiceProgressComponent implements OnInit {
     var userId = user_data.UserData._id;
     var companyCode = localStorage.getItem(localstorageconstants.COMPANYCODE);
     var url = configdata.apiurl + httproutes.PORTAL_GET_INVOICE_PROGRESS + `/${companyCode}/${userId}`;
-    const events = new EventSource(url);
-    events.onmessage = (event: any) => {
+    this.events = new EventSource(url);
+    this.events.onmessage = (event: any) => {
       const parsedData = JSON.parse(event.data);
       // console.log("parsedData: ", parsedData);
       this.progressList = parsedData.data;
+      console.log("this.events ", this.events);
       // console.log("parsedData: ", parsedData);
+      if (parsedData.completed) {
+        console.log("close event");
+        this._zone.run(() => {
+          this.events.close();
+        });
+
+      }
     };
   }
-
+  closeEvent() {
+    this.events = null;
+  }
 
   onScroll() {
     console.log("onScroll call");
