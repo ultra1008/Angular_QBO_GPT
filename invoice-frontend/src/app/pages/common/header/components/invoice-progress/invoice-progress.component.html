@@ -4,9 +4,9 @@
 </button>
 <mat-menu #progress="matMenu" xPosition="before" class="progress-div">
      <h2 class="text-center"> {{'Document progress'| translate}}</h2>
-     <button class="btn email-button position-relative" (click)="closeEvent()">
+     <!--  <button class="btn email-button position-relative" (click)="closeEvent()">
           <img src="{{progressIcon}}" alt="" height="20px" width="20px">
-     </button>
+     </button> -->
      <mat-divider></mat-divider>
      <div class="container mt-2" *ngIf="progressList.length == 0 && !is_httpCall">
           <div class="card flex-row ">
