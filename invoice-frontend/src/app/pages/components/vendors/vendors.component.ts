@@ -304,7 +304,7 @@ export class VendorsComponent implements OnInit {
   getColumName() {
     let that = this;
     let role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
-    console.log("role_permission", role_permission);
+
     return [
       {
         title: "",

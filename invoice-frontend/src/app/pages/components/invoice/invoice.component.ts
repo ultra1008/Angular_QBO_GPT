@@ -208,6 +208,7 @@ export class InvoiceComponent implements OnInit {
     };
 
     this.getAllInvoices();
+
   }
 
   dateRangeChange(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
