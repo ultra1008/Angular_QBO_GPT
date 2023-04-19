@@ -14,7 +14,6 @@
 
 import { Component, OnInit, Input, Inject, ViewEncapsulation } from '@angular/core';
 import { LayoutService } from '../../../shared/services/layout.service';
-import { Servicefoeweatherui } from '../../../service/servicefoeweatherui.service';
 import { Mostusedservice } from './../../../service/mostused.service';
 import { Router } from '@angular/router';
 import { httproutes, icon, localstorageconstants, routes } from 'src/app/consts';
@@ -69,7 +68,7 @@ export class HeaderComponent implements OnInit {
 
 
   constructor(private router: Router, private layoutService: LayoutService,
-    public servicefoeweatherui: Servicefoeweatherui, public dialog: MatDialog,
+    public dialog: MatDialog,
     public mostusedservice: Mostusedservice) {
     this.usertype = sessionStorage.getItem(localstorageconstants.USERTYPE) ? sessionStorage.getItem(localstorageconstants.USERTYPE) : "invoice-portal";
     // This code is commented out since we are reaching the daily weather requestes. 
@@ -194,10 +193,6 @@ export class HeaderComponent implements OnInit {
   }
 
   public signOut(): void { }
-
-  public showWeatherUI() {
-    this.servicefoeweatherui.emitData("call");
-  }
 }
 
 @Component({
