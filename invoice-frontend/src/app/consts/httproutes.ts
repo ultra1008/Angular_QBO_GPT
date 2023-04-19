@@ -326,4 +326,13 @@ export enum httproutes {
     // Invoice Progress
     PORTAL_GET_ALL_INVOICE_PROGRESS = "/webapi/v1/portal/getallinvoiceprogress",
     PORTAL_GET_INVOICE_PROGRESS = "/webapi/v1/portal/getinvoiceprogress",
+
+    // Alerts
+    PORTAL_GET_ALL_ALERTS = "/webapi/v1/portal/getallinvoicealert",
+    PORTAL_GET_UNSEEN_ALERT_COUNT = "/webapi/v1/portal/getinvoiceunseencount",
+    PORTAL_SAVE_ALERT = "/webapi/v1/portal/saveinvoicealert",
+    PORTAL_UPDATE_ALERT = "/webapi/v1/portal/updateinvoicealert",
+    ALERTS_DATATABLE = "/webapi/v1/portal/getinvoicealertdatatables",
+    ALERTS_REPORT_SEND = "/webapi/v1/portal/getinvoicealertexcelreport",
+    PORTAL_UPDATE_ALL_ALERT = "/webapi/v1/portal/updateallinvoicealert",
 }

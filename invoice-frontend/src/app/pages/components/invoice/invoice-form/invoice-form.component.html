@@ -2,59 +2,41 @@
     <div class="wrapper-cust-admin ">
         <div class="row ml-2 pt-2 mb-2">
             <div class="screen-title-section  cust-h1-inline">
-                <h1 class="screen-title">
-                    {{ "Invoice_Details" | translate | titlecase }}
-                </h1>
-
-
+                <h1 class="screen-title"> {{ "Invoice_Details" | translate | titlecase }} </h1>
                 <h1 class="screen-title ">
                     <p>Status:&nbsp;<span
                             [ngClass]="status == 'Pending'? 'pendingcss' : 'Approvedcss' && status == 'Approved'? 'Approvedcss' : 'Rejectcss'&& status == 'Rejected'? 'Rejectcss' : 'Rejectcss'">
                             {{status | translate}}</span></p>
                 </h1>
-
-
-
                 <div class="col-6 dialog-head-right">
-
                     <button mat-raised-button (click)="viewInvoice(id)" color="primary" class="cust-button-form"><img
-                            src="{{viewIcon}}" alt="" class="pr-1" height="15px">{{'View_Related_Documents' |
-                        translate}}</button>
+                            src="{{viewIcon}}" alt="" class="pr-1"
+                            height="15px">{{'View_Related_Documents' | translate}}</button>
                     <button *ngIf="role_permission.invoice.Edit" mat-raised-button (click)="saveInvoice()"
                         color="primary" class="cust-button-form"><img src="{{saveIcon}}" alt="" class="pr-1"
-                            height="15px">{{'All-save' |
-                        translate}}</button>
-                    <button *ngIf="role_permission.invoice.Edit && status != 'Approved'" mat-raised-button
-                        (click)="updateInvoice(id,'Approved')" class="cust-button-form Approve"><img
-                            src="{{approveIcon}}" alt="" height="15px">
-                        {{'PO-View-Approve' | translate}}</button>
-
-                    <button *ngIf="role_permission.invoice.Edit && status != 'Rejected' " mat-raised-button
-                        (click)="updateInvoice(id,'Rejected')" class="cust-button-form Denied"><img src="{{denyIcon}}"
-                            alt="" height="15px">
-                        {{'reject_all' |
-                        translate}}</button>
+                            height="15px">{{'All-save' | translate}}</button>
+                    <button *ngIf="role_permission.invoice.Edit && status != 'Approved' && showApproveButton"
+                        mat-raised-button (click)="updateInvoice(id,'Approved')" class="cust-button-form Approve"><img
+                            src="{{approveIcon}}" alt="" height="15px"> {{'PO-View-Approve' | translate}}</button>
+                    <button *ngIf="role_permission.invoice.Edit && status != 'Rejected' && showApproveButton"
+                        mat-raised-button (click)="updateInvoice(id,'Rejected')" class="cust-button-form Denied"><img
+                            src="{{denyIcon}}" alt="" height="15px"> {{'reject_all' | translate}}</button>
                     <button (click)="openHistoryDialog()"
-                        class="import-export-btn-datatable button_workersEditClass cust-margin-div mr-2 "
-                        matTooltip="{{ 'TOOLTIP_HISTORY' | translate }}">
-                        <img src="{{historyIcon}}" alt="" height="20px">
-                    </button>
+                        class="import-export-btn-datatable button_workersEditClass cust-margin-div mr-2"
+                        matTooltip="{{ 'TOOLTIP_HISTORY' | translate }}"> <img src="{{historyIcon}}" alt=""
+                            height="20px"> </button>
                     <button class="import-export-btn-datatable cust-margin-div" (click)="back()"
-                        matTooltip="{{ 'All-exit' | translate }}">
-                        <img src="{{exitIcon}}" alt="" class="far fa-paper-plane" height="20px">
-                    </button>
+                        matTooltip="{{ 'All-exit' | translate }}"> <img src="{{exitIcon}}" alt=""
+                            class="far fa-paper-plane" height="20px"> </button>
                 </div>
             </div>
         </div>
-
         <div class="row">
             <div class="rix">
                 <mat-card class="example-card" style=" box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);">
-
                     <div class=" paddings pt-3">
                         <form class="form invoice-form" [formGroup]="invoiceform">
                             <div class="main-cust-image pb-3">
-
                                 <div class="col">
                                     <b>{{'Document-type' | translate }}:</b>&nbsp;&nbsp;
                                     <img *ngIf="badge.document_type== true"
@@ -79,9 +61,15 @@
                                     <img *ngIf="badge.vendor== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
                                         width="20px" src="{{badgeIcon}}" />
-
                                     <mat-form-field>
-                                        <input matInput placeholder="{{'' | translate }}" formControlName="vendor" />
+                                        <input type="text" aria-label="Number" matInput [formControl]="vendor"
+                                            [matAutocomplete]="auto">
+                                        <mat-autocomplete [displayWith]="displayOption" #auto="matAutocomplete">
+                                            <mat-option *ngFor="let option of filteredVendors | async" [value]="option"
+                                                (onSelectionChange)="getIdFromVendor($event, option)">
+                                                {{option.vendor_name}}
+                                            </mat-option>
+                                        </mat-autocomplete>
                                     </mat-form-field>
                                 </div>
 
@@ -90,7 +78,7 @@
 
 
                                     <mat-form-field>
-                                        <input matInput formControlName="customer_id" />
+                                        <input matInput formControlName="vendor_id" />
                                     </mat-form-field>
                                 </div>
 
@@ -354,13 +342,13 @@
                         <button mat-raised-button (click)="saveData()" color="primary" class="cust-button-form"><img
                                 src="{{saveIcon}}" alt="" class="pr-1" height="15px">{{'All-save' |
                             translate}}</button>
-                        <button *ngIf="status != 'Approved' " mat-raised-button (click)="updateInvoice(id,'Approved')"
-                            class="
+                        <button *ngIf="status != 'Approved' && showApproveButton" mat-raised-button
+                            (click)="updateInvoice(id,'Approved')" class="
                             cust-button-form Approve"><img src="{{approveIcon}}" alt="" height="15px">
                             {{'PO-View-Approve' | translate}}</button>
 
-                        <button *ngIf="status != 'Rejected'" mat-raised-button (click)="updateInvoice(id,'Rejected')"
-                            class="
+                        <button *ngIf="status != 'Rejected' && showApproveButton" mat-raised-button
+                            (click)="updateInvoice(id,'Rejected')" class="
                             cust-button-form Denied"><img src="{{denyIcon}}" alt="" height="15px">
                             {{'reject_all' |
                             translate}}</button>

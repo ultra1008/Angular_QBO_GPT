@@ -542,7 +542,7 @@ module.exports.forgetpassword = async function (req, res) {
                             SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
                             ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                             THANKS: translator.getStr('EmailTemplateThanks'),
-                            ROVUK_TEAM: ` ${resultfind.companyname} ${translator.getStr('team_mail_all')}`,
+                            ROVUK_TEAM: ` Rovuk A/P ${translator.getStr('team_mail_all')}`,
 
                             TITLE: translator.getStr('MailForgotPassword_Title'),
                             HI_USERNAME: translator.getStr('Hello_mail'),

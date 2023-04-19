@@ -2526,5 +2526,16 @@
     "User_Self_Delete": "You can not archive yourself.",
     "First_User_Self_Delete": "You can not archive default admin user.",
     "No_Process_document": "No Process Document",
-    "Document_Progress": "Document Progress"
+    "Document_Progress": "Document Progress",
+    "Mark_all_as_read": "Mark all as read",
+    "Show_only_Unread": "Show only Unread",
+    "Show_All": "Show All",
+    "Invoice_Retainage": "Invoice Retainage",
+    "Mark_as_Unread": "Mark as Unread",
+    "Mark_as_Read": "Mark as Read ",
+    "Completed": "Completed",
+    "Mark_as_Complete": "Mark as Complete",
+    "Invoice_Greater_Than_Amount_Approve_Setting_Text_1": "If invoices greater than",
+    "Invoice_Greater_Than_Amount_Approve_Setting_Text_2": "then user",
+    "Invoice_Greater_Than_Amount_Approve_Setting_Text_3": "needs to approve."
 }

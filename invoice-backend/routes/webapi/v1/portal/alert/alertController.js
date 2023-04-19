@@ -3,6 +3,7 @@ let collectionConstant = require('../../../../../config/collectionConstant');
 let superadminCollection = require('../../../../../config/superadminCollection');
 var alertSchema = require('../../../../../model/alerts');
 var invoiceSchema = require('../../../../../model/invoice');
+var tenantSchema = require('../../../../../model/tenants');
 var ObjectID = require('mongodb').ObjectID;
 let common = require('../../../../../controller/common/common');
 let db_connection = require('../../../../../controller/common/connectiondb');
@@ -14,6 +15,8 @@ let rest_Api = require('../../../../../config/db_rest_api');
 var handlebars = require('handlebars');
 let sendEmail = require('../../../../../controller/common/sendEmail');
 var moment = require('moment');
+const EventEmitter = require('events');
+const Stream = new EventEmitter();
 
 module.exports.getAllAlert = async function (req, res) {
     var translator = new common.Language('en');
@@ -36,7 +39,7 @@ module.exports.getAllAlert = async function (req, res) {
                 },
                 {
                     $lookup: {
-                        from: collectionConstant.GRID_USER,
+                        from: collectionConstant.INVOICE_USER,
                         localField: "user_id",
                         foreignField: "_id",
                         as: "user"
@@ -69,6 +72,41 @@ module.exports.getAllAlert = async function (req, res) {
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.getUnseenCount = async function (req, res) {
+    var translator = new common.Language('en');
+    let admin_connection_db_api = await db_connection.connection_db_api(config.ADMIN_CONFIG);
+    try {
+        let tenantsConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_TENANTS, tenantSchema);
+        var one_tenants = await tenantsConnection.findOne({ companycode: req.params.companycode });
+
+        let connection_db_api = await db_connection.connection_db_api(one_tenants);
+        res.writeHead(200, {
+            'Content-Type': 'text/event-stream',
+            'Cache-Control': 'no-cache',
+            Connection: 'keep-alive'
+        });
+        Stream.on('invoice-alert', function (event, data) {
+            res.write('data:' + JSON.stringify(data) + '\n\n');
+        });
+
+        setInterval(async function () {
+            let alertConnection = connection_db_api.model(collectionConstant.INVOICE_ALERTS, alertSchema);
+            let count_query = {
+                user_id: ObjectID(req.params.userid),
+                is_delete: 0,
+                is_seen: false,
+            };
+            let unseen_count = await alertConnection.countDocuments(count_query);
+            Stream.emit('invoice-alert', 'message', { unseen_count });
+        }, 2000);
+    } catch (e) {
+        console.log(e);
+        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+    } finally {
+        // connection_db_api.close();
     }
 };
 
@@ -278,7 +316,7 @@ module.exports.getAlertExcelReport = async function (req, res) {
             let xlsx_data = [];
 
             let result = await common.urlToBase64(company_data.companylogo);
-            let logo_rovuk = await common.urlToBase64(config.GRID_LOGO);
+            let logo_rovuk = await common.urlToBase64(config.INVOICE_LOGO);
             for (let i = 0; i < get_alerts.length; i++) {
                 xlsx_data.push([
                     get_alerts[i].user.userfullname,

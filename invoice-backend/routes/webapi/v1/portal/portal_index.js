@@ -66,9 +66,9 @@ router.post('/webapi/v1/saveAttechmentv2', saveAttechment.saveAttechmentV2);
 var quickBookController = require('./quickbook/quickbookController');
 var quickBookValidation = require('./quickbook/quickbookValidation');
 router.post('/webapi/v1/savequickbookinfo', common.checkTokenExistOrNot, quickBookValidation.savequickBookValidation, quickBookController.savequickBookInfo);
-router.post('/webapi/v1/quickbookslogout', common.checkTokenExistOrNot,quickBookValidation.logoutValidation, quickBookController.logout);
-router.post('/webapi/v1/isConnecttoQBO', common.checkTokenExistOrNot, quickBookValidation.isConnecttoQBOValidation,  quickBookController.isConnectToQBO);
-router.get('/webapi/v1/callback/',  quickBookController.callback);
+router.post('/webapi/v1/quickbookslogout', common.checkTokenExistOrNot, quickBookValidation.logoutValidation, quickBookController.logout);
+router.post('/webapi/v1/isConnecttoQBO', common.checkTokenExistOrNot, quickBookValidation.isConnecttoQBOValidation, quickBookController.isConnectToQBO);
+router.get('/webapi/v1/callback/', quickBookController.callback);
 
 var signatureUpload = require("./../../../../controller/common/signatureUpload");
 router.post('/webapi/v1/savesignaturewasabiv2', signatureUpload.saveSignatureWasabiv2);
@@ -359,12 +359,13 @@ router.post('/webapi/v1/portal/getrecentactivity', common.checkTokenExistOrNot, 
 // Alert
 let alertController = require("./alert/alertController");
 let supplierAlertValidation = require("./alert/alertValidation");
-router.post('/webapi/v1/portal/getallgridalert', common.checkTokenExistOrNot, alertController.getAllAlert);
-router.post('/webapi/v1/portal/getgridalertdatatables', common.checkTokenExistOrNot, alertController.getAlertDatatables);
-router.post('/webapi/v1/portal/savegridalert', common.checkTokenExistOrNot, alertController.saveAlert);
-router.post('/webapi/v1/portal/updategridalert', common.checkTokenExistOrNot, alertController.updateAlert);
-router.post('/webapi/v1/portal/updateallgridalert', common.checkTokenExistOrNot, alertController.updateAllAlert);
-router.post('/webapi/v1/portal/getgridalertexcelreport', common.checkTokenExistOrNot, alertController.getAlertExcelReport);
+router.post('/webapi/v1/portal/getallinvoicealert', common.checkTokenExistOrNot, alertController.getAllAlert);
+router.get('/webapi/v1/portal/getinvoiceunseencount/:companycode/:userid', alertController.getUnseenCount);
+router.post('/webapi/v1/portal/getinvoicealertdatatables', common.checkTokenExistOrNot, alertController.getAlertDatatables);
+router.post('/webapi/v1/portal/saveinvoicealert', common.checkTokenExistOrNot, alertController.saveAlert);
+router.post('/webapi/v1/portal/updateinvoicealert', common.checkTokenExistOrNot, alertController.updateAlert);
+router.post('/webapi/v1/portal/updateallinvoicealert', common.checkTokenExistOrNot, alertController.updateAllAlert);
+router.post('/webapi/v1/portal/getinvoicealertexcelreport', common.checkTokenExistOrNot, alertController.getAlertExcelReport);
 
 // Mailbox Monitor
 let mailboxMonitorController = require("./mailbox_monitor/mailboxMonitorController");
