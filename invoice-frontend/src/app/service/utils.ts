@@ -333,6 +333,27 @@ export function MMDDYYYY_formet(epochTime: any) {
   return date_tmp + " " + strTime;
 }
 
+export function notificationDateTime(epochTime) {
+  if (epochTime == 0 || epochTime == undefined || epochTime == null) return " ";
+  var dateObj = epochTime * 1000;
+  let date = new Date(dateObj);
+  let date_tmp =
+    ("0" + date.getDate()).slice(-2) +
+    " " +
+    configdata.SHORT_MONTHS_ARRAY[date.getMonth()] +
+    ", " +
+    date.getFullYear();
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var ampm = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  var minutes_ = minutes < 10 ? "0" + minutes : minutes;
+  var strTime =
+    ("0" + hours).slice(-2) + ":" + ("0" + minutes_).slice(-2) + " " + ampm;
+  return date_tmp + " at " + strTime;
+}
+
 export function TimeFormat(epochTime: any) {
   var dateObj = epochTime * 1000;
   let date = new Date(dateObj);
@@ -829,3 +850,28 @@ export function commonLocalThumbImage(sanitiser, file) {
       break;
   }
 }
+
+export function notificationRoutes() {
+  return [
+    {
+      name: 'Invoice',
+      url: '/invoice-form',
+    },
+    {
+      name: 'PO',
+      url: '/po-detail-form',
+    },
+    {
+      name: 'Packing Slip',
+      url: '/packing-slip-form',
+    },
+    {
+      name: 'Receiving Slip',
+      url: '/receiving-slip-form',
+    },
+    {
+      name: 'Quote',
+      url: '/quote-detail-form',
+    },
+  ];
+};
