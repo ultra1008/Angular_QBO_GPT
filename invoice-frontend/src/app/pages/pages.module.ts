@@ -100,6 +100,7 @@ import { MailboxFormComponent } from './components/setting/mailbox-monitor/mailb
 import { MatChipSelectionChange, MatChipsModule } from '@angular/material/chips';
 import { InvoiceProgressComponent } from './common/header/components/invoice-progress/invoice-progress.component';
 import { InvoicProgressFilterPipe } from './common/header/components/invoice-progress/invoic-progress-filter.pipe';
+import { NotificationsComponent } from './common/header/components/notifications/notifications.component';
 
 
 
@@ -193,7 +194,8 @@ import { InvoicProgressFilterPipe } from './common/header/components/invoice-pro
     DocumentSelectDialog,
     MailboxFormComponent,
     InvoiceProgressComponent,
-    InvoicProgressFilterPipe
+    InvoicProgressFilterPipe,
+    NotificationsComponent
   ],
   imports: [
     PortalModule,

@@ -2503,5 +2503,12 @@
     "User_Self_Delete": "You can not archive yourself.",
     "First_User_Self_Delete": "You can not archive default admin user.",
     "No_Process_document": "No Process Document",
-    "Document_Progress": "Document Progress"
+    "Document_Progress": "Document Progress",
+    "Mark_all_as_read": "Marcar todo como leído",
+    "Show_only_Unread": "Mostrar sólo los no leídos",
+    "Show_All": "Mostrar todo",
+    "Mark_as_Unread": "Marcar como no leído",
+    "Mark_as_Read": "Marcar como leído",
+    "Completed": "completado",
+    "Mark_as_Complete": "Marcar como completado"
 }

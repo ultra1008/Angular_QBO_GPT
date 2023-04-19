@@ -12,7 +12,7 @@ const puppeteer = require('puppeteer');
 let config = require('../../../../../config/config');
 let collectionConstant = require('../../../../../config/collectionConstant');
 let tenantsSchema = require('../../../../../model/tenants');
-
+let db_connection = require('../../../../../controller/common/connectiondb');
 QuickBooks.setOauthVersion('2.0');
 
 // Instance of client
