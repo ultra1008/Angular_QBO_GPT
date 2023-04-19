@@ -117,6 +117,27 @@
             </mat-select>
         </mat-form-field>
     </div>
+    <div class="decorate-div">
+        <mat-slide-toggle color="primary" [(ngModel)]="Invoice_Greater_Than_Amount_Approve"
+            (ngModelChange)="modelChangeSwitch($event,'Invoice_Greater_Than_Amount_Approve')">
+            {{'Invoice_Greater_Than_Amount_Approve_Setting_Text_1' | translate}}
+        </mat-slide-toggle>
+        <mat-form-field appearance="outline" class="ml-2">
+            <input (keypress)="numberOnly($event)" class="input" matInput placeholder="{{'' | translate }}"
+                [(ngModel)]="Invoice_Greater_Than_Amount_Approve_amount_value"
+                (keyup.enter)="modelChangeLocationText($event.target.value,'Invoice_Greater_Than_Amount_Approve')" />
+        </mat-form-field>
+        <span> {{'Invoice_Greater_Than_Amount_Approve_Setting_Text_2' | translate}}</span>
+        <mat-form-field appearance="outline" class="ml-2">
+            <!-- (ngModelChange)="modelChangeDropdown($event,'Invoice_Greater_Than_Amount_Approve',true)" -->
+            <mat-select #drop [(ngModel)]="Invoice_Greater_Than_Amount_Approve_value" class="dark-cust-color" multiple>
+                <mat-option *ngFor="let user of allUser" [value]="user._id">
+                    {{user.userfullname}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <span> {{'Invoice_Greater_Than_Amount_Approve_Setting_Text_3' | translate}}</span>
+    </div>
     <div class="cust-center-justify">
         <button mat-raised-button (click)="saveSettings()" color="primary">
             <img src="{{saveIcon}}" alt="" height="20px">

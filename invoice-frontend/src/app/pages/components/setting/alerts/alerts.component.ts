@@ -52,6 +52,10 @@ export class AlertsComponent implements OnInit {
   daily_productivity_report: boolean = false;
   daily_productivity_report_value!: [];
 
+  Invoice_Greater_Than_Amount_Approve: boolean = false;
+  Invoice_Greater_Than_Amount_Approve_amount_value!: number;
+  Invoice_Greater_Than_Amount_Approve_value!: [];
+
   pendingdata: any = configdata.PENDING_ITEM_ALERT;
   duetime: any = configdata.INVOICE_DUE_TIME_ALERT;
   duedate: any = configdata.INVOICE_DUE_DAY_ALERT;
@@ -61,6 +65,7 @@ export class AlertsComponent implements OnInit {
 
 
   Project_Settings_Alert_Sure_Want_Change: string = "";
+  Document_Settings_Alert_Sure_Want_Change: string = '';
   Compnay_Equipment_Delete_Yes: string = "";
   Compnay_Equipment_Delete_No: string = "";
   allRoles: any = [];
@@ -70,17 +75,13 @@ export class AlertsComponent implements OnInit {
 
   saveIcon = icon.SAVE_WHITE;
 
-  constructor(private formBuilder: FormBuilder, public httpCall: HttpCall, public snackbarservice: Snackbarservice, public translate: TranslateService) {
+  constructor (private formBuilder: FormBuilder, public httpCall: HttpCall, public snackbarservice: Snackbarservice, public translate: TranslateService) {
     this.translate.stream([""]).subscribe((textarray) => {
-      this.Project_Settings_Alert_Sure_Want_Change = this.translate.instant(
-        "Project_Settings_Alert_Sure_Want_Change"
-      );
-      this.Compnay_Equipment_Delete_Yes = this.translate.instant(
-        "Compnay_Equipment_Delete_Yes"
-      );
-      this.Compnay_Equipment_Delete_No = this.translate.instant(
-        "Compnay_Equipment_Delete_No"
-      );
+      this.Project_Settings_Alert_Sure_Want_Change = this.translate.instant("Project_Settings_Alert_Sure_Want_Change");
+      this.Compnay_Equipment_Delete_Yes = this.translate.instant("Compnay_Equipment_Delete_Yes");
+      this.Compnay_Equipment_Delete_No = this.translate.instant("Compnay_Equipment_Delete_No");
+
+      this.Document_Settings_Alert_Sure_Want_Change = this.translate.instant("Document_Settings_Alert_Sure_Want_Change");
     });
   }
 
@@ -132,7 +133,7 @@ export class AlertsComponent implements OnInit {
             } else {
               that.Invoice_modified = false;
             }
-            that.daily_productivity_report_value = params.data.settings.daily_productivity_report.setting_value;
+            that.Invoice_Greater_Than_Amount_Approve_value = params.data.settings.daily_productivity_report.setting_value;
             if (params.data.settings.daily_productivity_report.setting_status == "Active") {
               that.daily_productivity_report = true;
             } else {
@@ -144,9 +145,55 @@ export class AlertsComponent implements OnInit {
             } else {
               that.Invoice_sent_to_batch = false;
             }
+
+            that.Invoice_Greater_Than_Amount_Approve_amount_value = Number(params.data.settings.Invoice_Greater_Than_Amount_Approve.setting_value);
+            that.Invoice_Greater_Than_Amount_Approve_value = params.data.settings.Invoice_Greater_Than_Amount_Approve.setting_value2;
+            if (params.data.settings.Invoice_Greater_Than_Amount_Approve.setting_status == "Active") {
+              that.Invoice_Greater_Than_Amount_Approve = true;
+            } else {
+              that.Invoice_Greater_Than_Amount_Approve = false;
+            }
           }
         }
       });
+  }
+
+  modelChangeLocationText(event, checkoption) {
+    let settingKey = "settings." + checkoption;
+    let obj = this.settingObject[checkoption];
+    obj.setting_value = event;
+    let reqObject = {
+      [settingKey]: obj,
+    };
+    let that = this;
+    swalWithBootstrapButtons
+      .fire({
+        title: this.Document_Settings_Alert_Sure_Want_Change,
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: this.Compnay_Equipment_Delete_Yes,
+        denyButtonText: this.Compnay_Equipment_Delete_No,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          that.updateSetting(reqObject);
+        } else {
+          console.log("checkoption", checkoption);
+          console.log("Invoice_Greater_Than_Amount_Approve_amount_value", that.Invoice_Greater_Than_Amount_Approve_amount_value);
+          console.log("settingObject", that.settingObject.Invoice_Greater_Than_Amount_Approve.setting_value);
+          if (checkoption == "Invoice_Greater_Than_Amount_Approve") {
+            that.Invoice_Greater_Than_Amount_Approve_amount_value = that.settingObject.Invoice_Greater_Than_Amount_Approve.setting_value;
+          }
+        }
+      });
+  }
+
+  numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
   }
 
   modelChangeSwitch(event: any, checkoption: any) {
@@ -183,6 +230,8 @@ export class AlertsComponent implements OnInit {
             that.Invoice_arrive = !event;
           } else if (checkoption == "Invoice_modified") {
             that.Invoice_modified = !event;
+          } else if (checkoption == "Invoice_Greater_Than_Amount_Approve") {
+            that.Invoice_Greater_Than_Amount_Approve = !event;
           }
         }
       });
@@ -222,22 +271,19 @@ export class AlertsComponent implements OnInit {
             that.Invoice_Not_Assigned_value =
               that.settingObject.Invoice_Not_Assigned.setting_value;
           } else if (checkoption == "Invoice_due_date_value") {
-            that.Invoice_due_time_value =
-              that.settingObject.Invoice_due_date.setting_value;
-            that.Invoice_due_day_value =
-              that.settingObject.Invoice_due_date.setting_value2;
+            that.Invoice_due_time_value = that.settingObject.Invoice_due_date.setting_value;
+            that.Invoice_due_day_value = that.settingObject.Invoice_due_date.setting_value2;
           } else if (checkoption == "Invoice_arrive") {
-            that.Invoice_arrive_value =
-              that.settingObject.Invoice_arrive.setting_value;
+            that.Invoice_arrive_value = that.settingObject.Invoice_arrive.setting_value;
           } else if (checkoption == "Invoice_modified") {
-            that.Invoice_modified =
-              that.settingObject.Invoice_modified.setting_value;
+            that.Invoice_modified = that.settingObject.Invoice_modified.setting_value;
           } else if (checkoption == "Invoice_sent_to_batch_value") {
-            that.Invoice_sent_to_batch_value =
-              that.settingObject.Invoice_sent_to_batch_value.setting_value;
+            that.Invoice_sent_to_batch_value = that.settingObject.Invoice_sent_to_batch_value.setting_value;
           } else if (checkoption == "daily_productivity_report_value") {
-            that.daily_productivity_report_value =
-              that.settingObject.daily_productivity_report_value.setting_value;
+            that.daily_productivity_report_value = that.settingObject.daily_productivity_report_value.setting_value;
+          } else if (checkoption == "Invoice_Greater_Than_Amount_Approve") {
+            that.Invoice_Greater_Than_Amount_Approve_amount_value = that.settingObject.Invoice_Greater_Than_Amount_Approve.setting_value;
+            that.Invoice_Greater_Than_Amount_Approve_value = that.settingObject.Invoice_Greater_Than_Amount_Approve.setting_value2;
           }
         }
       });
@@ -288,6 +334,9 @@ export class AlertsComponent implements OnInit {
     tempSettings.Invoice_modified.setting_value = that.Invoice_modified_value;
     tempSettings.Invoice_sent_to_batch.setting_value = that.Invoice_sent_to_batch_value;
     tempSettings.daily_productivity_report.setting_value = that.daily_productivity_report_value;
+    tempSettings.Invoice_Greater_Than_Amount_Approve.setting_value = that.Invoice_Greater_Than_Amount_Approve_amount_value;
+    tempSettings.Invoice_Greater_Than_Amount_Approve.setting_value2 = that.Invoice_Greater_Than_Amount_Approve_value;
+
     let reqObject = {
       _id: that.setting_id,
       settings: tempSettings

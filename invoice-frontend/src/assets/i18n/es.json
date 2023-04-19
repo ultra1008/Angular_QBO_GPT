@@ -2510,5 +2510,8 @@
     "Mark_as_Unread": "Marcar como no leído",
     "Mark_as_Read": "Marcar como leído",
     "Completed": "completado",
-    "Mark_as_Complete": "Marcar como completado"
+    "Mark_as_Complete": "Marcar como completado",
+    "Invoice_Greater_Than_Amount_Approve_Setting_Text_1": "If invoices greater than",
+    "Invoice_Greater_Than_Amount_Approve_Setting_Text_2": "then user",
+    "Invoice_Greater_Than_Amount_Approve_Setting_Text_3": "needs to approve."
 }

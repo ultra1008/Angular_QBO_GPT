@@ -91,17 +91,20 @@ export class InvoiceFormComponent implements OnInit {
   invoiceStatus: any;
   documentTypes: any;
   badgeIcon = icon.BADGE_ICON;
+  userData: any;
   role_permission: any;
 
-  constructor(public dialog: MatDialog, public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
+  showApproveButton: boolean = false;
+
+  constructor (public dialog: MatDialog, public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.document_id = this.route.snapshot.queryParamMap.get('document_id');
     this.invoiceStatus = this.route.snapshot.queryParamMap.get('status');
     this.documentTypes = this.route.snapshot.queryParamMap.get('documentTypes');
     this.pdf_urls = this.route.snapshot.queryParamMap.get('pdf_url');
-    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
-    this.role_permission = this.role_permission.role_permission;
+    this.userData = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
+    this.role_permission = this.userData.role_permission;
     if (this.id) {
       this.getOneInvoice();
     }
@@ -437,9 +440,39 @@ export class InvoiceFormComponent implements OnInit {
           pdf_url: [params.data.pdf_url],
           reject_reason: [params.data.reject_reason],
         });
+        that.getSettings();
       }
       that.uiSpinner.spin$.next(false);
     });
+  }
+
+  getSettings() {
+    let that = this;
+    //TODO need amount field withour dollor sign.
+    that.showApproveButton = true;
+    /* 
+   this.httpCall
+     .httpGetCall(httproutes.PORTAL_ROVUK_INVOICE__SETTINGS_GET_ALL_ALERTS)
+     .subscribe(function (params) {
+       if (params.status) {
+         if (params.data) {
+           var settingObject = params.data.settings.Invoice_Greater_Than_Amount_Approve;
+           if (settingObject.setting_status == "Active") {
+             if (1000 > Number(settingObject.setting_value)) {
+               if (settingObject.setting_value2.indexOf(that.userData.UserData._id) !== -1) {
+                 that.showApproveButton = true;
+               } else {
+                 that.showApproveButton = false;
+               }
+             } else {
+               that.showApproveButton = false;
+             }
+           } else {
+             that.showApproveButton = false;
+           }
+         }
+       }
+     }); */
   }
 
   getOneProcessDocument() {
@@ -676,7 +709,7 @@ export class InvoiceHistoryComponent implements OnInit {
   isSearch: boolean = false;
   subscription: Subscription;
   dashboardHistory = [];
-  constructor(
+  constructor (
     public httpCall: HttpCall,
     public snackbarservice: Snackbarservice,
     private modeService: ModeDetectService,
@@ -776,7 +809,7 @@ export class InvoiceRejectReason {
   mode: any;
   subscription: Subscription;
 
-  constructor(private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
+  constructor (private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
     public dialogRef: MatDialogRef<InvoiceRejectReason>,
     @Inject(MAT_DIALOG_DATA) public data: any, public sb: Snackbarservice, public translate: TranslateService) {
 
