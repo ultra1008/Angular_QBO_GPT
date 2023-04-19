@@ -79,9 +79,15 @@
                                     <img *ngIf="badge.vendor== true"
                                         class="crl  card-img-left example-card-img-responsive mr-2" height="20px"
                                         width="20px" src="{{badgeIcon}}" />
-
                                     <mat-form-field>
-                                        <input matInput placeholder="{{'' | translate }}" formControlName="vendor" />
+                                        <input type="text" aria-label="Number" matInput [formControl]="vendor"
+                                            [matAutocomplete]="auto">
+                                        <mat-autocomplete [displayWith]="displayOption" #auto="matAutocomplete">
+                                            <mat-option *ngFor="let option of filteredVendors | async" [value]="option"
+                                                (onSelectionChange)="getIdFromVendor($event, option)">
+                                                {{option.vendor_name}}
+                                            </mat-option>
+                                        </mat-autocomplete>
                                     </mat-form-field>
                                 </div>
 
@@ -90,7 +96,7 @@
 
 
                                     <mat-form-field>
-                                        <input matInput formControlName="customer_id" />
+                                        <input matInput formControlName="vendor_id" />
                                     </mat-form-field>
                                 </div>
 

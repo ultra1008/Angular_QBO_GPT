@@ -60,6 +60,7 @@ export class InvoiceFormComponent implements OnInit {
   vendorList: any = [];
   filteredVendors: Observable<any[]>;
   isEmployeeData: Boolean = false;
+  pdf_urls: any;
 
   // db_costcodes
   variablesdb_costcodes: any = [];
@@ -98,6 +99,7 @@ export class InvoiceFormComponent implements OnInit {
     this.document_id = this.route.snapshot.queryParamMap.get('document_id');
     this.invoiceStatus = this.route.snapshot.queryParamMap.get('status');
     this.documentTypes = this.route.snapshot.queryParamMap.get('documentTypes');
+    this.pdf_urls = this.route.snapshot.queryParamMap.get('pdf_url');
     this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
     this.role_permission = this.role_permission.role_permission;
     if (this.id) {
@@ -196,6 +198,9 @@ export class InvoiceFormComponent implements OnInit {
     if (this.id) {
       if (this.invoiceStatus) {
         this.router.navigate(['/dashboard-invoice-list'], { queryParams: { status: this.invoiceStatus } });
+      }
+      else if (this.pdf_urls) {
+        this.router.navigate(['/dashboard']);
       } else {
         this.router.navigate(['/invoice']);
       }
@@ -380,8 +385,8 @@ export class InvoiceFormComponent implements OnInit {
     let that = this;
     this.httpCall.httpPostCall(httproutes.INVOICE_GET_ONE_INVOICE, { _id: that.id }).subscribe(function (params) {
       if (params.status) {
-        console.log("this is param in oneinvoice")
-        console.log(params)
+        console.log("this is param in oneinvoice");
+        console.log(params);
         that.status = params.data.status;
         that.invoiceData = params.data;
         that.pdf_url = that.invoiceData.pdf_url;
@@ -406,7 +411,7 @@ export class InvoiceFormComponent implements OnInit {
         that.invoiceform = that.formBuilder.group({
           document_type: [params.data.document_type],
           invoice_name: [params.data.invoice_name],
-          vendor: [params.data.vendor_name],
+          vendor: [params.data.vendor._id],
           vendor_id: [params.data.vendor_id],
           customer_id: [params.data.customer_id],
           invoice: [params.data.invoice],
@@ -473,6 +478,7 @@ export class InvoiceFormComponent implements OnInit {
         if (that.invoiceData.vendor) {
           vendorId = that.invoiceData.vendor._id;
         }
+        that.vendor.setValue(that.invoiceData.vendor);
         that.loadInvoice = true;
         var invoiceDate;
         if (that.invoiceData.invoice_date_epoch != 0) {
