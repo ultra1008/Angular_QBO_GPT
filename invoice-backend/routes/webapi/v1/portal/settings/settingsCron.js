@@ -29,48 +29,50 @@ async function setPendingInvoiceCronTime() {
             let connection_db_api = await db_connection.connection_db_api(item);
             let invoiceSettingsCollection = connection_db_api.model(collectionConstant.INVOICE_SETTING, invoiceSettingsSchema);
             var get_setting = await invoiceSettingsCollection.findOne({});
-            var settings = get_setting.settings;
-            // Pending Invoice Assigned To
-            if (settings.Pending_items) {
-                if (settings.Pending_items.setting_status == 'Active') {
-                    var tempCron = settings.Pending_items.setting_value.split(" ");
-                    if (tempCron.length == 2) {
-                        var cronTime = '';
-                        if (tempCron[1] == 'hours') {
-                            cronTime = `0 */${tempCron[0]} * * *`;
-                        } else if (tempCron[1] == 'days') {
-                            cronTime = `0 0 */${tempCron[0]} * *`;
-                        }
-                        // console.log(item_new.companycode, "Pending Invoice Assigned To **************************cronTime ", cronTime);
-                        if (cronTime != '') {
-                            // '*/1 * * * *'
-                            var pendingInvoiceAssignedToCron = new CronJob(cronTime, async function () {
-                                pendingInvoiceToAssignedToUserCronFunction(item_new.companycode);
-                            });
-                            pendingInvoiceAssignedToCron.start();
+            if (get_setting) {
+                var settings = get_setting.settings;
+                // Pending Invoice Assigned To
+                if (settings.Pending_items) {
+                    if (settings.Pending_items.setting_status == 'Active') {
+                        var tempCron = settings.Pending_items.setting_value.split(" ");
+                        if (tempCron.length == 2) {
+                            var cronTime = '';
+                            if (tempCron[1] == 'hours') {
+                                cronTime = `0 */${tempCron[0]} * * *`;
+                            } else if (tempCron[1] == 'days') {
+                                cronTime = `0 0 */${tempCron[0]} * *`;
+                            }
+                            // console.log(item_new.companycode, "Pending Invoice Assigned To **************************cronTime ", cronTime);
+                            if (cronTime != '') {
+                                // '*/1 * * * *'
+                                var pendingInvoiceAssignedToCron = new CronJob(cronTime, async function () {
+                                    pendingInvoiceToAssignedToUserCronFunction(item_new.companycode);
+                                });
+                                pendingInvoiceAssignedToCron.start();
+                            }
                         }
                     }
                 }
-            }
 
-            // Pending Invoice Not Assigned
-            if (settings.Invoice_Not_Assigned) {
-                if (settings.Invoice_Not_Assigned.setting_status == 'Active') {
-                    var tempCron = settings.Invoice_Not_Assigned.setting_value.split(" ");
-                    if (tempCron.length == 2) {
-                        var cronTime = '';
-                        if (tempCron[1] == 'hours') {
-                            cronTime = `0 */${tempCron[0]} * * *`;
-                        } else if (tempCron[1] == 'days') {
-                            cronTime = `0 0 */${tempCron[0]} * *`;
-                        }
-                        // console.log(item_new.companycode, "Pending Invoice Not Assigned **************************cronTime ", cronTime);
-                        if (cronTime != '') {
-                            // '*/1 * * * *'
-                            var pendingInvoiceNotAssignedToCron = new CronJob(cronTime, async function () {
-                                pendingInvoiceNotAssignedToUserCronFunction(item_new.companycode);
-                            });
-                            pendingInvoiceNotAssignedToCron.start();
+                // Pending Invoice Not Assigned
+                if (settings.Invoice_Not_Assigned) {
+                    if (settings.Invoice_Not_Assigned.setting_status == 'Active') {
+                        var tempCron = settings.Invoice_Not_Assigned.setting_value.split(" ");
+                        if (tempCron.length == 2) {
+                            var cronTime = '';
+                            if (tempCron[1] == 'hours') {
+                                cronTime = `0 */${tempCron[0]} * * *`;
+                            } else if (tempCron[1] == 'days') {
+                                cronTime = `0 0 */${tempCron[0]} * *`;
+                            }
+                            // console.log(item_new.companycode, "Pending Invoice Not Assigned **************************cronTime ", cronTime);
+                            if (cronTime != '') {
+                                // '*/1 * * * *'
+                                var pendingInvoiceNotAssignedToCron = new CronJob(cronTime, async function () {
+                                    pendingInvoiceNotAssignedToUserCronFunction(item_new.companycode);
+                                });
+                                pendingInvoiceNotAssignedToCron.start();
+                            }
                         }
                     }
                 }
