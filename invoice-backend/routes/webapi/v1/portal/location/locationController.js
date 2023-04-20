@@ -165,7 +165,7 @@ async function sendLocationUpdateMail(locationData, decodedToken, translator) {
         let firebaseTokenList = [];
         for (let i = 0; i < all_user.length; i++) {
             userEmailList.push(all_user[i]['useremail']);
-            firebaseTokenList.push(all_user[i]['userfirebase_token']);
+            firebaseTokenList.push(all_user[i]['invoice_firebase_token']);
             let alertObject = {
                 user_id: all_user[i]._id,
                 module_name: 'Location',

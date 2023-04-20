@@ -138,6 +138,19 @@
         </mat-form-field>
         <span> {{'Invoice_Greater_Than_Amount_Approve_Setting_Text_3' | translate}}</span>
     </div>
+    <div class="decorate-div">
+        <mat-slide-toggle color="primary" [(ngModel)]="User_Notify_By"
+            (ngModelChange)="modelChangeSwitch($event,'User_Notify_By')">
+            {{'User_Notify_By_Setting' | translate}}
+        </mat-slide-toggle>
+        <mat-form-field appearance="outline" class="ml-2">
+            <mat-select #drop [(ngModel)]="User_Notify_By_value" class="dark-cust-color" multiple>
+                <mat-option *ngFor="let notify of notifyList" [value]="notify.key">
+                    {{notify.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
     <div class="cust-center-justify">
         <button mat-raised-button (click)="saveSettings()" color="primary">
             <img src="{{saveIcon}}" alt="" height="20px">

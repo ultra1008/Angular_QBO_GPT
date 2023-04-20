@@ -102,6 +102,8 @@ var userSchema = new Schema({
     project_email_group: { type: String, default: "none", enum: ['none', 'prime_member', 'sponsor_member'] },
     compliance_officer: { type: Boolean, default: false },
     vendors: { type: [mongoose.ObjectId], default: [] },
+    grid_firebase_token: { type: String, default: "" },
+    invoice_firebase_token: { type: String, default: "" },
 });
 
 module.exports = userSchema;;
