@@ -30,6 +30,9 @@ const swalWithBootstrapButtons = Swal.mixin({
   },
   buttonsStyling: false,
   allowOutsideClick: false,
+  imageUrl: './assets/logo/invoice_logo.png',
+  imageHeight: 50,
+  imageAlt: 'A branding image'
 });
 
 @Component({
@@ -74,7 +77,7 @@ export class ArchiveVendorComponent implements OnInit {
   backIcon: string;
   restoreIcon: string;
 
-  constructor (private modeService: ModeDetectService,
+  constructor(private modeService: ModeDetectService,
     private location: Location,
     public dialog: MatDialog,
     private router: Router,

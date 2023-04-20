@@ -14,7 +14,10 @@ const swalWithBootstrapButtons = Swal.mixin({
     confirmButton: 'btn btn-success margin-right-cust',
     denyButton: 'btn btn-danger'
   },
-  buttonsStyling: false
+  buttonsStyling: false,
+  imageUrl: './assets/logo/invoice_logo.png',
+  imageHeight: 50,
+  imageAlt: 'A branding image'
 });
 
 @Component({

@@ -21,7 +21,10 @@ const swalWithBootstrapButtons = Swal.mixin({
     denyButton: 'btn btn-danger',
     cancelButton: 's2-confirm btn btn-gray ml-2'
   },
-  buttonsStyling: false
+  buttonsStyling: false,
+  imageUrl: './assets/logo/invoice_logo.png',
+  imageHeight: 50,
+  imageAlt: 'A branding image'
 });
 @Component({
   selector: 'app-po-detail-form',

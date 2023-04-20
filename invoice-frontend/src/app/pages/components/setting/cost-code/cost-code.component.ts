@@ -20,11 +20,15 @@ import * as fs from "file-saver";
 
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
-    confirmButton: 'btn btn-success margin-right-cust',
-    denyButton: 'btn btn-danger'
+    confirmButton: "btn btn-success s2-confirm margin-right-cust",
+    denyButton: "btn btn-danger s2-confirm",
+    cancelButton: "s2-confirm btn btn-gray ml-2",
   },
   buttonsStyling: false,
-  allowOutsideClick: false
+  allowOutsideClick: false,
+  imageUrl: './assets/logo/invoice_logo.png',
+  imageHeight: 50,
+  imageAlt: 'A branding image'
 });
 
 class DataTablesResponse {

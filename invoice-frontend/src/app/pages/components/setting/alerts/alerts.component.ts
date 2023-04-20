@@ -14,6 +14,9 @@ const swalWithBootstrapButtons = Swal.mixin({
   },
   buttonsStyling: false,
   allowOutsideClick: false,
+  imageUrl: './assets/logo/invoice_logo.png',
+  imageHeight: 50,
+  imageAlt: 'A branding image'
 });
 
 
@@ -76,7 +79,7 @@ export class AlertsComponent implements OnInit {
 
   saveIcon = icon.SAVE_WHITE;
 
-  constructor (private formBuilder: FormBuilder, public httpCall: HttpCall, public snackbarservice: Snackbarservice, public translate: TranslateService) {
+  constructor(private formBuilder: FormBuilder, public httpCall: HttpCall, public snackbarservice: Snackbarservice, public translate: TranslateService) {
     this.translate.stream([""]).subscribe((textarray) => {
       this.Project_Settings_Alert_Sure_Want_Change = this.translate.instant("Project_Settings_Alert_Sure_Want_Change");
       this.Compnay_Equipment_Delete_Yes = this.translate.instant("Compnay_Equipment_Delete_Yes");

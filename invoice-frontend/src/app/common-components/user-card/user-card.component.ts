@@ -38,7 +38,10 @@ const swalWithBootstrapButtons = Swal.mixin({
     denyButton: 'btn btn-danger'
   },
   allowOutsideClick: false,
-  buttonsStyling: false
+  buttonsStyling: false,
+  imageUrl: './assets/logo/invoice_logo.png',
+  imageHeight: 50,
+  imageAlt: 'A branding image'
 });
 
 @Component({
