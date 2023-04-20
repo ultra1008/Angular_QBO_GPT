@@ -96,9 +96,20 @@ export class InvoiceFormComponent implements OnInit {
   badgeIcon = icon.BADGE_ICON;
   userData: any;
   role_permission: any;
-
+  hideToggle = false;
+  hide: Boolean = true;
+  disabled = false;
+  multi = false;
+  displayMode: string = 'default';
   showApproveButton: boolean = false;
   defalut_image = icon.MALE_PLACEHOLDER;
+  module: any = {
+    Invoice: 'Invoice',
+    Po: 'PO',
+    PackingSlip: 'Packing Slip',
+    ReceivingSlip: 'Receiving Slip',
+    Quote: 'Quote',
+  };
 
   constructor(public dialog: MatDialog, public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
@@ -240,6 +251,16 @@ export class InvoiceFormComponent implements OnInit {
     });
     that.getAllCostCode();
     this.getAllVendorList();
+  }
+
+  documentUpdate() {
+    this.loadInvoice = false;
+    if (this.id) {
+      this.getOneInvoice();
+    }
+    if (this.document_id) {
+      this.getOneProcessDocument();
+    }
   }
 
   private _filterVendor(value: any): any[] {
@@ -415,6 +436,7 @@ export class InvoiceFormComponent implements OnInit {
         if (params.data.ship_date != 0) {
           shipDate = epochToDateTime(params.data.ship_date);
         }
+        that.loadInvoice = true;
         that.invoiceform = that.formBuilder.group({
           document_type: [params.data.document_type],
           invoice_name: [params.data.invoice_name],

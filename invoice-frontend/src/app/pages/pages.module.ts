@@ -101,6 +101,7 @@ import { MatChipSelectionChange, MatChipsModule } from '@angular/material/chips'
 import { InvoiceProgressComponent } from './common/header/components/invoice-progress/invoice-progress.component';
 import { InvoicProgressFilterPipe } from './common/header/components/invoice-progress/invoic-progress-filter.pipe';
 import { NotificationsComponent } from './common/header/components/notifications/notifications.component';
+import { CommonDocumentComponent } from './components/invoice/common-document/common-document.component';
 
 
 
@@ -195,7 +196,8 @@ import { NotificationsComponent } from './common/header/components/notifications
     MailboxFormComponent,
     InvoiceProgressComponent,
     InvoicProgressFilterPipe,
-    NotificationsComponent
+    NotificationsComponent,
+    CommonDocumentComponent
   ],
   imports: [
     PortalModule,

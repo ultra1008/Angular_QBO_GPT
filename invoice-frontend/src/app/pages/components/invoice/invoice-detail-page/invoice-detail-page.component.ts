@@ -111,7 +111,9 @@ export class InvoiceDetailPageComponent implements OnInit {
   upIcon = icon.UP_WHITE;
   defalut_image = icon.MALE_PLACEHOLDER;
 
-  constructor (private sanitiser: DomSanitizer, private formBuilder: FormBuilder, public dialog: MatDialog, private location: Location, private modeService: ModeDetectService, private router: Router, public route: ActivatedRoute, public uiSpinner: UiSpinnerService, public httpCall: HttpCall,
+
+
+  constructor(private sanitiser: DomSanitizer, private formBuilder: FormBuilder, public dialog: MatDialog, private location: Location, private modeService: ModeDetectService, private router: Router, public route: ActivatedRoute, public uiSpinner: UiSpinnerService, public httpCall: HttpCall,
     public snackbarservice: Snackbarservice, public translate: TranslateService,) {
     this.translate.stream([""]).subscribe((textarray) => {
 
