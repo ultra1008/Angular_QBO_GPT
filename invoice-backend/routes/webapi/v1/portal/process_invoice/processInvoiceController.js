@@ -98,10 +98,12 @@ module.exports.updateProcessInvoice = async function (req, res) {
                     }
                 }
             }
+            var get_data = await invoiceProcessCollection.findOne({ _id: ObjectID(id) });
             var update_data = await invoiceProcessCollection.updateOne({ _id: ObjectID(id) }, requestObject);
             if (update_data) {
+                // Send update Assigned alert 
+                await sendProcessDocumentUpdateAlert(decodedToken, id, module, translator);
                 // Update badges
-                console.log("updateBadgeObject", updateBadgeObject);
                 await invoiceProcessCollection.updateOne({ _id: ObjectID(id) }, updateBadgeObject);
                 res.send({ message: `Document updated successfully.`, status: true });
             } else {
@@ -1642,6 +1644,76 @@ function sendInvoiceInsertAlerts(decodedToken, id, translator) {
                                 talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
                             resolve();
                         }
+                    }
+                } else {
+                    resolve();
+                }
+            } else {
+                resolve();
+            }
+        } else {
+            resolve();
+        }
+    });
+};
+
+function sendProcessDocumentUpdateAlert(decodedToken, id, module, translator) {
+    return new Promise(async function (resolve, reject) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        let invoiceProcessCollection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
+        let userCollection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+        let one_invoice = await invoiceProcessCollection.findOne({ _id: ObjectID(id) });
+        if (one_invoice) {
+            if (one_invoice.data) {
+                if (one_invoice.data.assign_to) {
+                    let get_user = await userCollection.findOne({ _id: ObjectID(one_invoice.data.assign_to) });
+                    if (get_user) {
+                        let title = `Invoice Assigned Alert`;
+                        let description = `Invoice is assigned to you.`;
+
+                        // Alert
+                        let alertObject = {
+                            user_id: get_user._id,
+                            module_name: module,
+                            module_route: { document_id: id, document_type: module, from: 'select' },
+                            notification_title: title,
+                            notification_description: description,
+                        };
+                        alertController.saveAlert(alertObject, connection_db_api);
+
+                        var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+                        let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
+                        let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
+                        // Email
+                        const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/commonEmailTemplate.html', 'utf8');
+                        let emailTmp = {
+                            HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
+                            SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
+                            ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                            THANKS: translator.getStr('EmailTemplateThanks'),
+                            ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                            ROVUK_TEAM_SEC: translator.getStr('EmailTemplateRovukTeamSec'),
+                            VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
+
+                            TITLE: `${title}`,
+                            TEXT: new handlebars.SafeString(`<h4>Hello,</h4><h4>${description}</h4>
+                            <div style="text-align: center;">
+                                <a style="background-color: #023E8A;border: #0077bc solid;color: white;padding: 15px 32px;
+                                            text-align: center;text-decoration: none;display: inline-block;font-size: 16px; width: 20%;" 
+                                            target="_blank" href="${config.SITE_URL}/invoice-form?document_id=${id}&document_type=${module}&from=select">View Invoice</a>
+                            </div>`),
+
+                            COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
+                            COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
+                        };
+                        var template = handlebars.compile(file_data);
+                        var HtmlData = await template(emailTmp);
+                        sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, [get_user.useremail], title, HtmlData,
+                            talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
+                            talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                        resolve();
+                    } else {
+                        resolve();
                     }
                 } else {
                     resolve();
