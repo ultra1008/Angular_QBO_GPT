@@ -310,6 +310,10 @@
                                                 (filteredReturn)="usersArray =$event">
                                             </mat-select-filter>
                                             <mat-option *ngFor="let user of usersArray" [value]="user._id">
+                                                <img style="border-radius: 50%;"
+                                                    class="crl  card-img-left example-card-img-responsive mr-2"
+                                                    height="30px" width="30px"
+                                                    src="{{user.userpicture || defalut_image}}" />
                                                 {{user.userfullname}}
                                             </mat-option>
                                         </mat-select>

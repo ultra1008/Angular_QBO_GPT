@@ -37,7 +37,7 @@ export class NotificationsComponent implements OnInit {
 
   showAllNotification: Boolean = true;
 
-  constructor (
+  constructor(
     public dialog: MatDialog,
     private router: Router,
     public httpCall: HttpCall,
