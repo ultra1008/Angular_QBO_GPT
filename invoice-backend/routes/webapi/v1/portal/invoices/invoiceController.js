@@ -872,6 +872,7 @@ module.exports.getOneInvoice = async function (req, res) {
         try {
             var requestObject = req.body;
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+            var userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             var get_data = await invoicesConnection.aggregate([
                 { $match: { _id: ObjectID(requestObject._id) } },
                 {
@@ -1020,7 +1021,11 @@ module.exports.getOneInvoice = async function (req, res) {
             if (get_data.length > 0) {
                 get_data = get_data[0];
             }
-            console.log(get_data);
+            get_data.invoice_notes = await getNotesUserDetails(get_data.invoice_notes, userConnection);
+            get_data.packing_slip_notes = await getNotesUserDetails(get_data.packing_slip_notes, userConnection);
+            get_data.receiving_slip_notes = await getNotesUserDetails(get_data.receiving_slip_notes, userConnection);
+            get_data.po_notes = await getNotesUserDetails(get_data.po_notes, userConnection);
+            get_data.quote_notes = await getNotesUserDetails(get_data.quote_notes, userConnection);
             res.send({ status: true, message: "Invoice data", data: get_data });
         } catch (e) {
             console.log(e);
@@ -1033,6 +1038,32 @@ module.exports.getOneInvoice = async function (req, res) {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
+
+function getNotesUserDetails(notes, userConnection) {
+    return new Promise(async function (resolve, reject) {
+        if (notes) {
+            if (notes.length == 0) {
+                resolve([]);
+            } else {
+                let tempData = [];
+                for (let i = 0; i < notes.length; i++) {
+                    var one_user = await userConnection.findOne({ _id: ObjectID(notes[i].created_by) });
+                    tempData.push({
+                        ...notes[i],
+                        userfullname: one_user.userfullname,
+                        usermobile_picture: one_user.usermobile_picture,
+                        userpicture: one_user.userpicture,
+                    });
+                    if (i == notes.length - 1) {
+                        resolve(tempData);
+                    }
+                }
+            }
+        } else {
+            resolve([]);
+        }
+    });
+}
 
 //get invoice
 module.exports.getInvoiceForReport = async function (req, res) {
