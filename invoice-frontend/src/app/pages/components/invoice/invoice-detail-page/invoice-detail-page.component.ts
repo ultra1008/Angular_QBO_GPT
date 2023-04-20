@@ -53,7 +53,7 @@ export class InvoiceDetailPageComponent implements OnInit {
   invoiceData: any;
   loadInvoice: boolean = false;
   has_packing_slip: any = [];
-  notsList: any = [];
+  notesList: any = [];
   invoiceNoteform: FormGroup;
   poDocumentType = 'PO';
   packingSlipDocumentType = 'Packing Slip';
@@ -105,8 +105,9 @@ export class InvoiceDetailPageComponent implements OnInit {
   loadDocumentData: boolean = true;
   downIcon = icon.DOWN_WHITE;
   upIcon = icon.UP_WHITE;
+  defalut_image = icon.MALE_PLACEHOLDER;
 
-  constructor(private sanitiser: DomSanitizer, private formBuilder: FormBuilder, public dialog: MatDialog, private location: Location, private modeService: ModeDetectService, private router: Router, public route: ActivatedRoute, public uiSpinner: UiSpinnerService, public httpCall: HttpCall,
+  constructor (private sanitiser: DomSanitizer, private formBuilder: FormBuilder, public dialog: MatDialog, private location: Location, private modeService: ModeDetectService, private router: Router, public route: ActivatedRoute, public uiSpinner: UiSpinnerService, public httpCall: HttpCall,
     public snackbarservice: Snackbarservice, public translate: TranslateService,) {
     this.translate.stream([""]).subscribe((textarray) => {
 
@@ -173,6 +174,10 @@ export class InvoiceDetailPageComponent implements OnInit {
       this.getOneInvoice();
     }
 
+  }
+
+  setNote(note) {
+    return note;
   }
 
   ngOnInit(): void {
@@ -612,7 +617,7 @@ export class InvoiceDetailPageComponent implements OnInit {
         if (params.status) {
           that.invoiceData = params.data;
           that.has_packing_slip = that.invoiceData.has_packing_slip;
-          that.notsList = that.invoiceData.invoice_notes;
+          that.notesList = that.invoiceData.invoice_notes;
           that.files_old = [];
           for (let loop_i = 0; loop_i < params.data.invoice_attachments.length; loop_i++) {
             that.files_old.push(params.data.invoice_attachments[loop_i]);

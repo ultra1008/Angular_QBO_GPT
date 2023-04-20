@@ -183,12 +183,10 @@
 .crl {
     border-radius: 100%;
     background-color: rgb(250, 250, 250);
-    height: 24px;
-    width: 24px;
+    height: 35px;
+    width: 35px;
     margin-top: 6px;
     margin-left: 6px;
-
-
 }
 
 .Approvedcss {
@@ -220,14 +218,33 @@ hr.solid {
 .note-card {
 
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    margin-bottom: 10px;
+    // margin-bottom: 10px;
     color: black;
-    border-radius: 15px;
-    margin-left: 30px;
-    margin-top: 5px;
+    border-radius: 10px;
+    // margin-left: 30px;
+    // margin-top: 5px;
+    // justify-content: center;
+    padding: 10px;
 
+    .details {
+        width: 100%;
+
+        .user-info {
+            font-weight: 500;
+            font-size: 11.5px;
+            margin-bottom: 2px;
+        }
+
+        .note {
+            color: black;
+            font: 400 14px/20px Roboto, "Helvetica Neue", sans-serif;
+        }
+
+        .dark-note {
+            color: white;
+        }
+    }
 }
-
 
 
 //  ATTCHMENT CSS
