@@ -81,8 +81,13 @@ module.exports.saveInvoice = async function (req, res) {
 
                     requestObject.invoice_id = id;
 
+                    // Send Update to as per settings
                     await sendInvoiceUpdateAlerts(decodedToken, id, 'Invoice', translator);
 
+                    // Send update Assigned alert
+                    if (requestObject.assign_to != get_invoice.assign_to) {
+                        await sendInvoiceAssignUpdateAlerts(decodedToken, id, 'Invoice', translator);
+                    }
                     addchangeInvoice_History("Update", requestObject, decodedToken, requestObject.updated_at);
 
                     recentActivity.saveRecentActivity({
@@ -233,6 +238,91 @@ function sendInvoiceUpdateAlerts(decodedToken, id, module, translator) {
         } else {
             resolve();
         }
+    });
+};
+
+function sendInvoiceAssignUpdateAlerts(decodedToken, id, module, translator) {
+    return new Promise(async function (resolve, reject) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        let invoiceCollection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+        let settingsCollection = connection_db_api.model(collectionConstant.INVOICE_SETTING, settingsSchema);
+        let userCollection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+        let one_invoice = await invoiceCollection.findOne({ _id: ObjectID(id) });
+        if (one_invoice) {
+            if (one_invoice.assign_to) {
+                let get_users = await userCollection.findOne({ _id: ObjectID(one_invoice.assign_to) });
+                let title = `${module} #${one_invoice.invoice} Assigned Alert`;
+                let description = `${module} #${one_invoice.invoice} has been assigned to you.`;
+
+                let viewRoute = `${config.SITE_URL}/invoice-form?_id=${id}`;
+                if (module == 'Invoice') {
+                    viewRoute = `${config.SITE_URL}/invoice-form?_id=${id}`;
+                } else if (module == 'PO') {
+                    viewRoute = `${config.SITE_URL}/po-detail-form?_id=${id}`;
+                } else if (module == 'Packing Slip') {
+                    viewRoute = `${config.SITE_URL}/packing-slip-form?_id=${id}`;
+                } else if (module == 'Receiving Slip') {
+                    viewRoute = `${config.SITE_URL}/receiving-slip-form?_id=${id}`;
+                } else if (module == 'Quote') {
+                    viewRoute = `${config.SITE_URL}/quote-detail-form?_id=${id}`;
+                }
+                // Alert
+                let alertObject = {
+                    user_id: get_users._id,
+                    module_name: module,
+                    module_route: { _id: id },
+                    notification_title: title,
+                    notification_description: description,
+                };
+                alertController.saveAlert(alertObject, connection_db_api);
+
+                var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+                let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
+                let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
+                // Email
+                const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/commonEmailTemplate.html', 'utf8');
+                let emailTmp = {
+                    HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
+                    SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
+                    ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                    THANKS: translator.getStr('EmailTemplateThanks'),
+                    ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                    ROVUK_TEAM_SEC: translator.getStr('EmailTemplateRovukTeamSec'),
+                    VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
+
+                    TITLE: `${title}`,
+                    TEXT: new handlebars.SafeString(`<h4>Hello,</h4><h4>${description}</h4>
+                            <div style="text-align: center;">
+                                <a style="background-color: #023E8A;border: #0077bc solid;color: white;padding: 15px 32px;
+                                            text-align: center;text-decoration: none;display: inline-block;font-size: 16px; width: 20%;" 
+                                            target="_blank" href="${viewRoute}">View ${module}</a>
+                            </div>`),
+
+                    COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
+                    COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
+                };
+                var template = handlebars.compile(file_data);
+                var HtmlData = await template(emailTmp);
+                sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, [get_users.useremail], title, HtmlData,
+                    talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
+                    talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                resolve();
+            } else {
+                resolve();
+            }
+        } else {
+            resolve();
+        }
+        // let get_settings = await settingsCollection.findOne({});
+        // if (get_settings) {
+        //     if (get_settings.settings.Invoice_modified.setting_status == 'Active') {  
+
+        //     } else {
+        //         resolve();
+        //     }
+        // } else {
+        //     resolve();
+        // } 
     });
 };
 

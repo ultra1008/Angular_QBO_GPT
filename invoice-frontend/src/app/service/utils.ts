@@ -858,6 +858,10 @@ export function notificationRoutes() {
       url: '/invoice-form',
     },
     {
+      name: 'INVOICE',
+      url: '/invoice-form',
+    },
+    {
       name: 'PO',
       url: '/po-detail-form',
     },

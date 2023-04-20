@@ -98,6 +98,7 @@ export class InvoiceFormComponent implements OnInit {
   role_permission: any;
 
   showApproveButton: boolean = false;
+  defalut_image = icon.MALE_PLACEHOLDER;
 
   constructor(public dialog: MatDialog, public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
