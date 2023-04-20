@@ -38,7 +38,7 @@ export class InvoiceProgressComponent implements OnInit {
   showAllNotification: Boolean = true;
   events: EventSource;
 
-  constructor (
+  constructor(
     public dialog: MatDialog,
     private router: Router,
     public httpCall: HttpCall, private _zone: NgZone,
