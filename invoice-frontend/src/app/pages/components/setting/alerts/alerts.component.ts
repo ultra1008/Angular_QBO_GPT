@@ -59,12 +59,13 @@ export class AlertsComponent implements OnInit {
   Invoice_Greater_Than_Amount_Approve_amount_value!: number;
   Invoice_Greater_Than_Amount_Approve_value!: [];
 
+  User_Notify_By: boolean = false;
+  User_Notify_By_value!: [];
+
   pendingdata: any = configdata.PENDING_ITEM_ALERT;
   duetime: any = configdata.INVOICE_DUE_TIME_ALERT;
   duedate: any = configdata.INVOICE_DUE_DAY_ALERT;
-
-
-
+  notifyList: any = configdata.USER_NOTIFY_BY;
 
 
   Project_Settings_Alert_Sure_Want_Change: string = "";
@@ -156,6 +157,13 @@ export class AlertsComponent implements OnInit {
             } else {
               that.Invoice_Greater_Than_Amount_Approve = false;
             }
+
+            that.User_Notify_By_value = params.data.settings.User_Notify_By.setting_value;
+            if (params.data.settings.User_Notify_By.setting_status == "Active") {
+              that.User_Notify_By = true;
+            } else {
+              that.User_Notify_By = false;
+            }
           }
         }
       });
@@ -181,9 +189,6 @@ export class AlertsComponent implements OnInit {
         if (result.isConfirmed) {
           that.updateSetting(reqObject);
         } else {
-          console.log("checkoption", checkoption);
-          console.log("Invoice_Greater_Than_Amount_Approve_amount_value", that.Invoice_Greater_Than_Amount_Approve_amount_value);
-          console.log("settingObject", that.settingObject.Invoice_Greater_Than_Amount_Approve.setting_value);
           if (checkoption == "Invoice_Greater_Than_Amount_Approve") {
             that.Invoice_Greater_Than_Amount_Approve_amount_value = that.settingObject.Invoice_Greater_Than_Amount_Approve.setting_value;
           }
@@ -235,6 +240,8 @@ export class AlertsComponent implements OnInit {
             that.Invoice_modified = !event;
           } else if (checkoption == "Invoice_Greater_Than_Amount_Approve") {
             that.Invoice_Greater_Than_Amount_Approve = !event;
+          } else if (checkoption == "User_Notify_By") {
+            that.User_Notify_By = !event;
           }
         }
       });
@@ -287,6 +294,8 @@ export class AlertsComponent implements OnInit {
           } else if (checkoption == "Invoice_Greater_Than_Amount_Approve") {
             that.Invoice_Greater_Than_Amount_Approve_amount_value = that.settingObject.Invoice_Greater_Than_Amount_Approve.setting_value;
             that.Invoice_Greater_Than_Amount_Approve_value = that.settingObject.Invoice_Greater_Than_Amount_Approve.setting_value2;
+          } else if (checkoption == "User_Notify_By") {
+            that.User_Notify_By_value = that.settingObject.User_Notify_By.setting_value;
           }
         }
       });
@@ -339,6 +348,7 @@ export class AlertsComponent implements OnInit {
     tempSettings.daily_productivity_report.setting_value = that.daily_productivity_report_value;
     tempSettings.Invoice_Greater_Than_Amount_Approve.setting_value = that.Invoice_Greater_Than_Amount_Approve_amount_value;
     tempSettings.Invoice_Greater_Than_Amount_Approve.setting_value2 = that.Invoice_Greater_Than_Amount_Approve_value;
+    tempSettings.User_Notify_By.setting_value = that.User_Notify_By_value;
 
     let reqObject = {
       _id: that.setting_id,

@@ -425,8 +425,8 @@ module.exports.sendNotificationWithData = async function (registration_ids, noti
             "registration_ids": registration_ids,
             "notification": notification,
             "data": data,
-        })
-
+        }),
+        badge: '1'
     };;
     return new Promise(function (resolve, reject) {
         request(options, function (err, resp, body) {

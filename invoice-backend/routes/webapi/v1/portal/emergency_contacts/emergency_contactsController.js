@@ -181,7 +181,7 @@ module.exports.sendEmergencyContactReminder = async function (req, res) {
             let temp_data = {
                 "module": "Emergency Contact",
             };
-            await common.sendNotificationWithData([tmp_user['userfirebase_token']], notification_data, temp_data);
+            await common.sendNotificationWithData([tmp_user['invoice_firebase_token']], notification_data, temp_data);
 
             let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, tmp_user['useremail'], translator.getStr("Emergency_Contact_Email_Subject"), HtmlData,
                 talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
