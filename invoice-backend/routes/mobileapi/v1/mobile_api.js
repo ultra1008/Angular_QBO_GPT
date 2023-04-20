@@ -49,4 +49,12 @@ let gifLoaderController = require('./gif_loader/gifLoaderController');
 let gifLoaderValidation = require('./gif_loader/gifLoaderValidation');
 router.get('/mobile/v1/getgifloader', gifLoaderController.getGIFLoader);
 
+// Invoice Alert
+let alertController = require("./alert/alertController");
+let alertValidation = require("./alert/alertValidation");
+router.post('/mobile/v1/alert/getall', common.checkTokenExistOrNot, alertController.getAllAlert);
+router.post('/mobile/v1/alert/save', common.checkTokenExistOrNot, alertController.saveAlert);
+router.post('/mobile/v1/alert/update', common.checkTokenExistOrNot, alertController.updateAlert);
+router.post('/mobile/v1/alert/updateall', common.checkTokenExistOrNot, alertController.updateAllAlert);
+
 module.exports = router;

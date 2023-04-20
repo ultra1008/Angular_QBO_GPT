@@ -1708,12 +1708,7 @@ function sendProcessDocumentUpdateAlert(decodedToken, id, module, translator) {
                                         title: title,
                                         body: description,
                                     };
-                                    let temp_data = {
-                                        "module": module,
-                                        "_id": id,
-                                        "status": one_invoice.data.status,
-                                    };
-                                    await common.sendNotificationWithData([get_user.invoice_firebase_token], notification_data, temp_data);
+                                    await common.sendNotificationWithData([get_user.invoice_firebase_token], notification_data, {});
                                 }
 
                                 // Alert

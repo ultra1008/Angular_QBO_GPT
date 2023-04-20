@@ -6,6 +6,7 @@ let collectionConstant = require('../../../../../config/collectionConstant');
 let rest_Api = require("../../../../../config/db_rest_api");
 var invoiceSchema = require('../../../../../model/invoice');
 var invoiceSettingsSchema = require('../../../../../model/settings');
+var settingsSchema = require('../../../../../model/settings');
 var invoiceRoleSchema = require('../../../../../model/invoice_roles');
 var userSchema = require('../../../../../model/user');
 var ObjectID = require('mongodb').ObjectID;
