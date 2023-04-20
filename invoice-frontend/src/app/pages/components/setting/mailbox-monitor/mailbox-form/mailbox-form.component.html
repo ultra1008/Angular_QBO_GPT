@@ -1,10 +1,8 @@
-<div class="wrapper-cust-admin">
-
-     <div class="row">
-          <div class="col-10 dialog-head-left">
-
-          </div>
-
+<div class="wrapper-cust-admin" fxLayout style="height: 95%">
+     <div class="d-flex justify-content-between">
+          <h1 class="screen-title">
+               {{ "Mailbox" | translate | titlecase }}
+          </h1>
           <div class="col-2 dialog-head-right">
                <!-- *ngIf="_id == null" -->
                <button class="import-export-btn-datatable cust-margin-div" (click)="confirmexit()"
@@ -14,9 +12,9 @@
           </div>
      </div>
      <mat-card class="example-card">
-          <div class="head-text">
+          <!-- <div class="head-text">
                <h3 class="editing">{{'Mailbox' | translate }}</h3>
-          </div>
+          </div> -->
           <div class="container">
                <div class="col-xl-12">
                     <form [formGroup]="mailbpxform">

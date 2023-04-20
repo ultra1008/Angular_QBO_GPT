@@ -22,6 +22,9 @@ const swalWithBootstrapButtons = Swal.mixin({
   },
   buttonsStyling: false,
   allowOutsideClick: false,
+  imageUrl: './assets/logo/invoice_logo.png',
+  imageHeight: 50,
+  imageAlt: 'A branding image'
 });
 
 @Component({
@@ -96,7 +99,7 @@ export class InvoiceFormComponent implements OnInit {
 
   showApproveButton: boolean = false;
 
-  constructor (public dialog: MatDialog, public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
+  constructor(public dialog: MatDialog, public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.document_id = this.route.snapshot.queryParamMap.get('document_id');
@@ -709,7 +712,7 @@ export class InvoiceHistoryComponent implements OnInit {
   isSearch: boolean = false;
   subscription: Subscription;
   dashboardHistory = [];
-  constructor (
+  constructor(
     public httpCall: HttpCall,
     public snackbarservice: Snackbarservice,
     private modeService: ModeDetectService,
@@ -809,7 +812,7 @@ export class InvoiceRejectReason {
   mode: any;
   subscription: Subscription;
 
-  constructor (private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
+  constructor(private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
     public dialogRef: MatDialogRef<InvoiceRejectReason>,
     @Inject(MAT_DIALOG_DATA) public data: any, public sb: Snackbarservice, public translate: TranslateService) {
 

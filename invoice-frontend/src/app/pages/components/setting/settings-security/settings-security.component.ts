@@ -14,6 +14,9 @@ const swalWithBootstrapButtons = Swal.mixin({
   },
   buttonsStyling: false,
   allowOutsideClick: false,
+  imageUrl: './assets/logo/invoice_logo.png',
+  imageHeight: 50,
+  imageAlt: 'A branding image'
 });
 @Component({
   selector: 'app-settings-security',

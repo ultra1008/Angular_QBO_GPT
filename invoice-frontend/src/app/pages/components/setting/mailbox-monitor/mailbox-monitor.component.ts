@@ -26,6 +26,9 @@ const swalWithBootstrapButtons = Swal.mixin({
     cancelButton: "s2-confirm btn btn-gray ml-2",
   },
   buttonsStyling: false,
+  imageUrl: './assets/logo/invoice_logo.png',
+  imageHeight: 50,
+  imageAlt: 'A branding image'
 });
 @Component({
   selector: 'app-mailbox-monitor',
