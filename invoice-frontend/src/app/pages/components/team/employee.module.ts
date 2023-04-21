@@ -42,7 +42,7 @@ import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-mat
 import { NgxMatMomentModule } from '@angular-material-components/moment-adapter';
 import { MatSelectFilterModule } from 'mat-select-filter';
 // import { OnlySelectedPipe } from './schedule/only-selected.pipe';
-import { EmpListFilterPipe, EmpListFilterStatusPipe } from './employee-list/emp-list-filter.pipe';
+import { EmpListFilterPipe, EmpListFilterStatusPipe, ImportManagementUserFilterPipe } from './employee-list/emp-list-filter.pipe';
 import { NgxPrintModule } from 'ngx-print';
 import { CapitalTeamDirective } from './directive/capital.directive';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
@@ -75,6 +75,7 @@ registerLocaleData(localeFr);
     TeamHistory,
     EmpListFilterPipe,
     EmpListFilterStatusPipe,
+    ImportManagementUserFilterPipe,
     TeamReportForm,
     ArchiveTeamListComponent,
     ExportManagementUserComponent,

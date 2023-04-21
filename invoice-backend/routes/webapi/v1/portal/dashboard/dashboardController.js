@@ -18,6 +18,7 @@ module.exports.getDashboardCount = async function (req, res) {
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             var invoicesProcessConnection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, invoiceProcessSchema);
             var get_data = await invoicesConnection.aggregate([
+                { $match: { is_delete: 0 } },
                 {
                     $project: {
                         pending: { $cond: [{ $eq: ["$status", "Pending"] }, 1, 0] },
@@ -38,7 +39,7 @@ module.exports.getDashboardCount = async function (req, res) {
                     }
                 },
             ]);
-            let get_process = await invoicesProcessConnection.find({ status: 'Process' }).count();
+            let get_process = await invoicesProcessConnection.find({ status: 'Process', is_delete: 0 }).count();
             if (get_data) {
                 if (get_data.length > 0) {
                     get_data = get_data[0];

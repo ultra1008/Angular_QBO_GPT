@@ -71,7 +71,7 @@ export class CustompdfviewerComponent implements OnInit {
   archivedIcon: any;
 
 
-  constructor(private location: Location, private modeService: ModeDetectService, public route: ActivatedRoute, private router: Router,
+  constructor (private location: Location, private modeService: ModeDetectService, public route: ActivatedRoute, private router: Router,
     public httpCall: HttpCall, public spinner: UiSpinnerService, public snackbarservice: Snackbarservice,
     public translate: TranslateService, public dialog: MatDialog) {
     this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
@@ -274,11 +274,9 @@ export class CustompdfviewerComponent implements OnInit {
   goToDocumentEdit() {
     let that = this;
     let document_type = this.route.snapshot.queryParamMap.get('document_type');
-    if (document_type == '') {
-      console.log(" Edit");
+    if (document_type == '' || document_type == 'UNKNOWN') {
       that.selectDocumentType();
     } else {
-      console.log("call Edit");
       that.goToEdit(document_type);
     }
   }
@@ -399,7 +397,7 @@ export class RejectVendorCertificateForm {
   mode: any;
   backIcon: string;
   saveIcon = icon.SAVE_WHITE;
-  constructor(public dialogRef: MatDialogRef<RejectVendorCertificateForm>, public httpCall: HttpCall, public uiSpinner: UiSpinnerService,
+  constructor (public dialogRef: MatDialogRef<RejectVendorCertificateForm>, public httpCall: HttpCall, public uiSpinner: UiSpinnerService,
     public translate: TranslateService, @Inject(MAT_DIALOG_DATA) public data: any, private formBuilder: FormBuilder,
     private modeService: ModeDetectService, public snackbarservice: Snackbarservice, public route: ActivatedRoute,) {
     this.rejectForm = this.formBuilder.group({

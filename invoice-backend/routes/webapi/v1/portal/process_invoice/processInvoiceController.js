@@ -1,6 +1,7 @@
 var processInvoiceSchema = require('./../../../../../model/process_invoice');
 var invoiceSchema = require('./../../../../../model/invoice');
 var vendorSchema = require('./../../../../../model/vendor');
+var invoiceProgressSchema = require('./../../../../../model/invoice_progress');
 var managementInvoiceSchema = require('./../../../../../model/management_invoice');
 var managementPOSchema = require('./../../../../../model/management_po');
 var vendorSchema = require('./../../../../../model/vendor');
@@ -79,15 +80,23 @@ module.exports.updateProcessInvoice = async function (req, res) {
             var module = requestObject.module;
             delete requestObject.module;
             let invoiceProcessCollection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             let updateBadgeObject = {};
+            var vendorId = '';
+            let newReqObj = {};
             if (module == 'INVOICE' || module == 'PO' || module == 'Quote' || module == 'Packing Slip' || module == 'Receiving Slip') {
                 // Find changed data of module
                 let findKeys = {};
-                let newReqObj = {};
+
                 for (const property in requestObject) {
                     let key = property.toString().split(".")[1];
-                    newReqObj[key] = requestObject[property];
-                    findKeys[property] = 1;
+                    if (requestObject[property] != null && requestObject[property] != undefined) {
+                        newReqObj[key] = requestObject[property];
+                        findKeys[property] = 1;
+                    }
+                    if (key == 'vendor') {
+                        vendorId = requestObject[property];
+                    }
                 }
                 var get_data = await invoiceProcessCollection.findOne({ _id: ObjectID(id) }, findKeys);
                 if (get_data.data) {
@@ -98,9 +107,35 @@ module.exports.updateProcessInvoice = async function (req, res) {
                     }
                 }
             }
+            if (requestObject.document_type == '' || requestObject.document_type == null || requestObject.document_type == undefined) {
+                if (module == 'INVOICE') {
+                    requestObject.document_type = 'INVOICE';
+                } else if (module == 'PO') {
+                    requestObject.document_type = 'PURCHASE_ORDER';
+                } else if (module == 'Quote') {
+                    requestObject.document_type = 'QUOTE';
+                } else if (module == 'Packing Slip') {
+                    requestObject.document_type = 'PACKING_SLIP';
+                } else if (module == 'Receiving Slip') {
+                    requestObject.document_type = 'RECEIVING_SLIP';
+                }
+            }
             var get_data = await invoiceProcessCollection.findOne({ _id: ObjectID(id) });
             var update_data = await invoiceProcessCollection.updateOne({ _id: ObjectID(id) }, requestObject);
             if (update_data) {
+                // Insert Process Document as Invoice
+                if (module == 'INVOICE') {
+                    console.log("vendorId", vendorId, newReqObj);
+                    if (vendorId != '') {
+                        let add_invoice = new invoicesConnection(newReqObj);
+                        let save_invoice = await add_invoice.save();
+                        if (save_invoice) {
+                            await invoiceProcessCollection.updateOne({ _id: ObjectID(id) }, { status: 'Complete', invoice_id: ObjectID(save_invoice._id) });
+                        }
+                    }
+                    // requestObject.is_delete=0;
+                }
+
                 // Send update Assigned alert 
                 await sendProcessDocumentUpdateAlert(decodedToken, id, module, translator);
                 // Update badges
@@ -370,6 +405,85 @@ module.exports.importManagementPO = async function (req, res) {
     }
 };
 
+module.exports.checkProcessProgress = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            let invoiceProgressCollection = connection_db_api.model(collectionConstant.INVOICE_PROGRESS, invoiceProgressSchema);
+            let invoiceProcessCollection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
+            let query = {
+                created_by: ObjectID(decodedToken.UserData._id),
+                is_delete: 0,
+                status: { $ne: 'Complete' }
+            };
+            let get_data = await invoiceProgressCollection.find(query);
+            console.log("get_data", get_data.length);
+            if (get_data.length > 0) {
+                for (let i = 0; i < get_data.length; i++) {
+                    var processCompleted = true;
+                    var queryString = `?customer_id=${decodedToken.companycode.toLowerCase()}&process_id=${get_data[i].process_id}`;
+                    let data = await common.getInvoiceProcessStatus(queryString);
+                    if (data.status) {
+                        var statusData = [];
+                        var updateProcessIds = [];
+                        var updateAlreadyProcessIds = [];
+                        for (const key in data.data.process_status) {
+                            statusData.push({
+                                document_id: key,
+                                document_status: data.data.process_status[key],
+                            });
+                            if (data.data.process_status[key] == 'PROCESS_STATUS_EXTRACTED') {
+                                updateProcessIds.push(ObjectID(key));
+                            } else if (data.data.process_status[key] == 'PROCESS_STATUS_ERROR_DUPLICATE_HASH') {
+                                updateAlreadyProcessIds.push(ObjectID(key));
+                            }
+                        }
+
+                        get_data[i].process_status = statusData;
+                        get_data[i].ratio = data.data.process_progress_ratio;
+                        get_data[i].final = data.data.process_progress_final;
+                        get_data[i].total = data.data.process_progress_total;
+
+                        let reqObj = {
+                            process_status: statusData,
+                            ratio: data.data.process_progress_ratio,
+                            final: data.data.process_progress_final,
+                            total: data.data.process_progress_total,
+                        };
+                        await invoiceProgressCollection.updateOne({ _id: ObjectID(get_data[i]._id) }, reqObj);
+                        console.log("data.data.process_progress_ratio", data.data.process_progress_ratio);
+                        if (data.data.process_progress_ratio == 1) {
+                            await invoiceProcessCollection.updateMany({ _id: { $in: updateProcessIds } }, { status: 'PROCESS_STATUS_EXTRACTED' });
+                            await invoiceProcessCollection.updateMany({ _id: { $in: updateAlreadyProcessIds } }, { status: 'Already Exists' });
+                        } else {
+                            processCompleted = false;
+                        }
+                    }
+                    if (i == get_data.length - 1) {
+                        if (processCompleted) {
+                            await invoiceProgressCollection.updateOne({ _id: ObjectID(get_data[i]._id) }, { status: 'Complete' });
+                            res.send({ status: true, message: 'Process is completed.' });
+                        } else {
+                            res.send({ status: false, message: 'Process is incompleted.' });
+                        }
+                    }
+                }
+            } else {
+                res.send({ status: true, message: 'Process is completed.' });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
 module.exports.importProcessData = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
@@ -378,7 +492,7 @@ module.exports.importProcessData = async function (req, res) {
         try {
             let invoiceProcessCollection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
             let invoiceCollection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
-            let get_invoice = await invoiceProcessCollection.find({ is_delete: 0, status: 'Pending' });
+            let get_invoice = await invoiceProcessCollection.find({ is_delete: 0, status: 'PROCESS_STATUS_EXTRACTED' });
             // var queryString = `?customer_id=tempinvoice`;
             var queryString = `?customer_id=${decodedToken.companycode.toLowerCase()}`;
             let temp = [];

@@ -94,8 +94,7 @@ export class PoDetailFormComponent implements OnInit {
     Quote: 'Quote',
   };
 
-
-  constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
+  constructor (public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.document_id = this.route.snapshot.queryParamMap.get('document_id');
@@ -328,16 +327,19 @@ export class PoDetailFormComponent implements OnInit {
         that.vendor.setValue(that.invoiceData.vendor);
         that.loadInvoice = true;
         var date;
-        if (that.invoiceData.date_epoch != 0) {
+        if (that.invoiceData.date_epoch != 0 && that.invoiceData.date_epoch != undefined && that.invoiceData.date_epoch != null) {
           date = epochToDateTime(that.invoiceData.date_epoch);
         }
         var dueDate;
-        if (that.invoiceData.due_date_epoch != 0) {
+        if (that.invoiceData.due_date_epoch != 0 && that.invoiceData.due_date_epoch != undefined && that.invoiceData.due_date_epoch != null) {
           dueDate = epochToDateTime(that.invoiceData.due_date_epoch);
         }
         var deliveryDate;
-        if (that.invoiceData.delivery_date_epoch != 0) {
+        if (that.invoiceData.delivery_date_epoch != 0 && that.invoiceData.delivery_date_epoch != undefined && that.invoiceData.delivery_date_epoch != null) {
           deliveryDate = epochToDateTime(that.invoiceData.delivery_date_epoch);
+        }
+        if (that.invoiceData.document_type == undefined || that.invoiceData.document_type == null || that.invoiceData.document_type == '' || that.invoiceData.document_type == 'UNKNOWN') {
+          that.invoiceData.document_type = that.document_type;
         }
         that.invoiceform = that.formBuilder.group({
           document_id: [that.invoiceData.document_id],
@@ -471,7 +473,6 @@ export class PoDetailFormComponent implements OnInit {
   saveProcessDocument() {
     let that = this;
     if (that.invoiceform.valid) {
-
       let formVal = that.invoiceform.value;
       if (formVal.date_epoch == null) {
         formVal.date_epoch = 0;
@@ -506,7 +507,6 @@ export class PoDetailFormComponent implements OnInit {
         'data.tax': formVal.tax,
         'data.po_total': formVal.po_total,
       };
-      console.log("requestObject: ", requestObject);
       that.uiSpinner.spin$.next(true);
       that.httpCall.httpPostCall(httproutes.INVOICE_DOCUMENT_PROCESS_SAVE, requestObject).subscribe(function (params) {
         if (params.status) {
@@ -520,4 +520,3 @@ export class PoDetailFormComponent implements OnInit {
     }
   }
 }
-

@@ -5,6 +5,11 @@
         </h1>
         <div class="row mr-2 action-button">
             <button *ngIf="role_permission.invoice.Add" m mat-raised-button color="primary"
+                (click)="checkProcessProgress()" class="sign-button ml-2"><img src="{{add_my_self_icon}}" alt=""
+                    height="20px">
+                Check Process Progress
+            </button>
+            <button *ngIf="role_permission.invoice.Add" m mat-raised-button color="primary"
                 (click)="importProcessData()" class="sign-button ml-2"><img src="{{add_my_self_icon}}" alt=""
                     height="20px">
                 Import Data

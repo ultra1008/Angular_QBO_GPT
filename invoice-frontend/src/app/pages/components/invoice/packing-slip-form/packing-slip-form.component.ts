@@ -98,7 +98,7 @@ export class PackingSlipFormComponent implements OnInit {
 
 
 
-  constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
+  constructor (public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.document_id = this.route.snapshot.queryParamMap.get('document_id');
@@ -298,6 +298,7 @@ export class PackingSlipFormComponent implements OnInit {
       that.uiSpinner.spin$.next(false);
     });
   }
+
   getOneProcessDocument() {
     let that = this;
     this.httpCall.httpPostCall(httproutes.INVOICE_DOCUMENT_PROCESS_GET, { _id: that.document_id }).subscribe(function (params) {
@@ -334,8 +335,11 @@ export class PackingSlipFormComponent implements OnInit {
         that.vendor.setValue(that.invoiceData.vendor);
         that.loadInvoice = true;
         var date;
-        if (that.invoiceData.date_epoch != 0) {
+        if (that.invoiceData.date_epoch != 0 && that.invoiceData.date_epoch != undefined && that.invoiceData.date_epoch != null) {
           date = epochToDateTime(that.invoiceData.date_epoch);
+        }
+        if (that.invoiceData.document_type == undefined || that.invoiceData.document_type == null || that.invoiceData.document_type == '' || that.invoiceData.document_type == 'UNKNOWN') {
+          that.invoiceData.document_type = that.document_type;
         }
         that.invoiceform = that.formBuilder.group({
           document_type: [that.invoiceData.document_type],
