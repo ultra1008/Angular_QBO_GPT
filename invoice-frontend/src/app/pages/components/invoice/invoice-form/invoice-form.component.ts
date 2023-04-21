@@ -253,16 +253,6 @@ export class InvoiceFormComponent implements OnInit {
     this.getAllVendorList();
   }
 
-  documentUpdate() {
-    this.loadInvoice = false;
-    if (this.id) {
-      this.getOneInvoice();
-    }
-    if (this.document_id) {
-      this.getOneProcessDocument();
-    }
-  }
-
   private _filterVendor(value: any): any[] {
     return this.vendorList.filter(one_vendor => {
       let vendor_name = value.vendor_name ? value.vendor_name : value;

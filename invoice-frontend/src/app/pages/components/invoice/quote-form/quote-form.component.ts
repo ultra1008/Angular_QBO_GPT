@@ -14,8 +14,19 @@ import { configdata } from 'src/environments/configData';
 
 import { EmployeeService } from '../../team/employee.service';
 import { map, startWith } from 'rxjs/operators';
+import Swal from 'sweetalert2';
 
-
+const swalWithBootstrapButtons = Swal.mixin({
+  customClass: {
+    confirmButton: "btn btn-success margin-right-cust s2-confirm",
+    denyButton: "btn btn-danger s2-confirm",
+  },
+  buttonsStyling: false,
+  allowOutsideClick: false,
+  imageUrl: './assets/logo/invoice_logo.png',
+  imageHeight: 50,
+  imageAlt: 'A branding image'
+});
 
 @Component({
   selector: 'app-quote-form',
@@ -74,6 +85,20 @@ export class QuoteFormComponent implements OnInit {
   document_id: any;
   badgeIcon = icon.BADGE_ICON;
   document_type: any;
+  hideToggle = false;
+  hide: Boolean = true;
+  disabled = false;
+  multi = false;
+  displayMode: string = 'default';
+  showApproveButton: boolean = false;
+  defalut_image = icon.MALE_PLACEHOLDER;
+  module: any = {
+    Invoice: 'Invoice',
+    Po: 'PO',
+    PackingSlip: 'Packing Slip',
+    ReceivingSlip: 'Receiving Slip',
+    Quote: 'Quote',
+  };
 
   constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {

@@ -87,11 +87,15 @@ export class InvoiceOtherDocumentComponent implements OnInit {
   _id: string;
   LOCAL_OFFSET: number;
   role_permission: any;
+  Remove_Attchment: any;
+  saveAttachmentObj: any;
+  loadingGIF: string = './assets/images/rovuk-gif.gif';
 
   constructor(private sanitiser: DomSanitizer, public translate: TranslateService, private formBuilder: FormBuilder, public snackbarservice: Snackbarservice, public httpCall: HttpCall, public uiSpinner: UiSpinnerService, public dialog: MatDialog, private router: Router, private modeService: ModeDetectService, public route: ActivatedRoute,) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.invoice_id = this.id;
     this._id = this.id;
+    this.loadingGIF = this.httpCall.getLoader();
     this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
     this.role_permission = this.role_permission.role_permission;
     this.translate.stream([""]).subscribe((textarray) => {
@@ -99,6 +103,7 @@ export class InvoiceOtherDocumentComponent implements OnInit {
       this.yesButton = this.translate.instant("Compnay_Equipment_Delete_Yes");
       this.noButton = this.translate.instant("Compnay_Equipment_Delete_No");
       this.Remove_Notes = this.translate.instant("Remove_Notes");
+      this.Remove_Attchment = this.translate.instant("Remove_Attchment");
     });
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === "on" ? "on" : "off";
@@ -222,6 +227,8 @@ export class InvoiceOtherDocumentComponent implements OnInit {
 
   }
   deleteNote(_id, invoice_id) {
+    console.log
+      ("call");
     let that = this;
     let document_Delet_Url;
     swalWithBootstrapButtons
@@ -245,22 +252,17 @@ export class InvoiceOtherDocumentComponent implements OnInit {
           } else if (that.documentType == that.documentTypes.quote) {
             document_Delet_Url = httproutes.PORTAL_DELETE_Quote_NOTES;
           }
-          that.httpCall
-            .httpPostCall(document_Delet_Url, {
-              _id: _id,
-              invoice_id: invoice_id
-            })
-            .subscribe(function (params) {
-              that.uiSpinner.spin$.next(false);
-              if (params.status) {
+          that.httpCall.httpPostCall(document_Delet_Url, { _id: _id, invoice_id: invoice_id }).subscribe(function (params) {
+            that.uiSpinner.spin$.next(false);
+            if (params.status) {
 
-                that.snackbarservice.openSnackBar(params.message, "success");
-                that.dialog.closeAll();
-                that.getOneInvoice();
-              } else {
-                that.snackbarservice.openSnackBar(params.message, "error");
-              }
-            });
+              that.snackbarservice.openSnackBar(params.message, "success");
+              that.dialog.closeAll();
+              that.getOneInvoice();
+            } else {
+              that.snackbarservice.openSnackBar(params.message, "error");
+            }
+          });
         }
       });
   }
@@ -268,14 +270,6 @@ export class InvoiceOtherDocumentComponent implements OnInit {
   saveAttchment() {
     let that = this;
     let attchment_Url;
-    let reqObject = {
-      // _id: this._id,
-      // _id: "",
-      // packing_slip_attachments: "",
-      // po_attachments: "",
-      // quote_attachments: "",
-      // reciving_slip_attachments: "",
-    };
     const formData = new FormData();
     for (var i = 0; i < that.files.length; i++) {
       formData.append("file[]", that.files[i]);
@@ -292,30 +286,27 @@ export class InvoiceOtherDocumentComponent implements OnInit {
 
     formData.append("local_date", moment().format("DD/MM/YYYY hh:mmA"));
     that.uiSpinner.spin$.next(true);
-    reqObject["local_offset"] = that.LOCAL_OFFSET;
     that.httpCall
       .httpPostCall(httproutes.PORTAL_ATTECHMENT, formData)
       .subscribe(function (params) {
         if (params.status) {
-
-          // reqObject._id = that._id;
           if (that.documentType == that.documentTypes.po) {
-            reqObject = {
+            that.saveAttachmentObj = {
               _id: that._id,
               po_attachments: params.data.concat(that.last_files_array),
             };
           } else if (that.documentType == that.documentTypes.packingSlip) {
-            reqObject = {
+            that.saveAttachmentObj = {
               _id: that._id,
               packing_slip_attachments: params.data.concat(that.last_files_array),
             };
           } else if (that.documentType == that.documentTypes.receivingSlip) {
-            reqObject = {
+            that.saveAttachmentObj = {
               _id: that._id,
               receiving_slip_attachments: params.data.concat(that.last_files_array),
             };
           } else if (that.documentType == that.documentTypes.quote) {
-            reqObject = {
+            that.saveAttachmentObj = {
               _id: that._id,
               quote_attachments: params.data.concat(that.last_files_array),
             };
@@ -329,7 +320,7 @@ export class InvoiceOtherDocumentComponent implements OnInit {
           } else if (that.documentType == that.documentTypes.quote) {
             attchment_Url = httproutes.PORTAL_Quote_ATTCHMENTS;
           }
-          that.httpCall.httpPostCall(attchment_Url, reqObject).subscribe(function (params_new) {
+          that.httpCall.httpPostCall(attchment_Url, that.saveAttachmentObj).subscribe(function (params_new) {
 
             if (params_new.status) {
               that.snackbarservice.openSnackBar(
@@ -381,91 +372,99 @@ export class InvoiceOtherDocumentComponent implements OnInit {
   }
 
   deleteFile_old(index: number) {
-
-    this.last_files_array.splice(index, 1);
-    this.files_old.splice(index, 1);
     let that = this;
-    let attchment_Url;
-    let reqObject = {
-      // _id: this._id,
-      _id: "",
-      packing_slip_attachments: "",
-      po_attachments: "",
-      quote_attachments: "",
-      reciving_slip_attachments: "",
-    };
-    const formData = new FormData();
-    for (var i = 0; i < that.files.length; i++) {
-      formData.append("file[]", that.files[i]);
-    }
-    if (that.documentType == that.documentTypes.po) {
-      formData.append("dir_name", wasabiImagePath.Po_attachments);
-    } else if (that.documentType == that.documentTypes.packingSlip) {
-      formData.append("dir_name", wasabiImagePath.Packing_slip_attachments);
-    } else if (that.documentType == that.documentTypes.receivingSlip) {
-      formData.append("dir_name", wasabiImagePath.Reciving_slip_attachments);
-    } else if (that.documentType == that.documentTypes.quote) {
-      formData.append("dir_name", wasabiImagePath.Quote_attachments);
-    }
+    swalWithBootstrapButtons
+      .fire({
+        title: that.Remove_Attchment,
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: this.yesButton,
+        denyButtonText: this.noButton,
 
-    formData.append("local_date", moment().format("DD/MM/YYYY hh:mmA"));
-    that.uiSpinner.spin$.next(true);
-    reqObject["local_offset"] = that.LOCAL_OFFSET;
-    that.httpCall
-      .httpPostCall(httproutes.PORTAL_ATTECHMENT, formData)
-      .subscribe(function (params) {
-        if (params.status) {
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
 
-          reqObject._id = that._id;
-          if (that.documentType == that.documentTypes.po) {
-            reqObject.po_attachments = params.data.concat(
-              that.last_files_array);
-          } else if (that.documentType == that.documentTypes.packingSlip) {
-            reqObject.packing_slip_attachments = params.data.concat(
-              that.last_files_array);
-          } else if (that.documentType == that.documentTypes.receivingSlip) {
-            reqObject.reciving_slip_attachments = params.data.concat(
-              that.last_files_array);
-          } else if (that.documentType == that.documentTypes.quote) {
-            reqObject.quote_attachments = params.data.concat(
-              that.last_files_array
-
-            );
+          this.last_files_array.splice(index, 1);
+          this.files_old.splice(index, 1);
+          let that = this;
+          let attchment_Url;
+          const formData = new FormData();
+          for (var i = 0; i < that.files.length; i++) {
+            formData.append("file[]", that.files[i]);
           }
           if (that.documentType == that.documentTypes.po) {
-            attchment_Url = httproutes.PORTAL_P_O_ATTCHMENTS;
+            formData.append("dir_name", wasabiImagePath.Po_attachments);
           } else if (that.documentType == that.documentTypes.packingSlip) {
-            attchment_Url = httproutes.PACKING_PACKING_SLIP_ATTCHMENTS;
+            formData.append("dir_name", wasabiImagePath.Packing_slip_attachments);
           } else if (that.documentType == that.documentTypes.receivingSlip) {
-            attchment_Url = httproutes.PORTAL_Receiving_Slip_ATTCHMENTS;
+            formData.append("dir_name", wasabiImagePath.Reciving_slip_attachments);
           } else if (that.documentType == that.documentTypes.quote) {
-            attchment_Url = httproutes.PORTAL_Quote_ATTCHMENTS;
+            formData.append("dir_name", wasabiImagePath.Quote_attachments);
           }
-          that.httpCall.httpPostCall(attchment_Url, reqObject).subscribe(function (params_new) {
 
-            if (params_new.status) {
-              that.snackbarservice.openSnackBar(
-                params_new.message,
-                "success"
-              );
-              that.files = [];
-              that.files_old = [];
-              that.last_files_array = [];
-              that.getOneInvoice();
-              that.uiSpinner.spin$.next(false);
-            } else {
-              that.snackbarservice.openSnackBar(
-                params_new.message,
-                "error"
-              );
-              that.uiSpinner.spin$.next(false);
-            }
-          });
+          formData.append("local_date", moment().format("DD/MM/YYYY hh:mmA"));
+          that.uiSpinner.spin$.next(true);
+          that.httpCall
+            .httpPostCall(httproutes.PORTAL_ATTECHMENT, formData)
+            .subscribe(function (params) {
+              if (params.status) {
+                if (that.documentType == that.documentTypes.po) {
+                  that.saveAttachmentObj = {
+                    _id: that._id,
+                    po_attachments: params.data.concat(that.last_files_array),
+                  };
+                } else if (that.documentType == that.documentTypes.packingSlip) {
+                  that.saveAttachmentObj = {
+                    _id: that._id,
+                    packing_slip_attachments: params.data.concat(that.last_files_array),
+                  };
+                } else if (that.documentType == that.documentTypes.receivingSlip) {
+                  that.saveAttachmentObj = {
+                    _id: that._id,
+                    receiving_slip_attachments: params.data.concat(that.last_files_array),
+                  };
+                } else if (that.documentType == that.documentTypes.quote) {
+                  that.saveAttachmentObj = {
+                    _id: that._id,
+                    quote_attachments: params.data.concat(that.last_files_array),
+                  };
+                }
+                if (that.documentType == that.documentTypes.po) {
+                  attchment_Url = httproutes.PORTAL_P_O_ATTCHMENTS;
+                } else if (that.documentType == that.documentTypes.packingSlip) {
+                  attchment_Url = httproutes.PACKING_PACKING_SLIP_ATTCHMENTS;
+                } else if (that.documentType == that.documentTypes.receivingSlip) {
+                  attchment_Url = httproutes.PORTAL_Receiving_Slip_ATTCHMENTS;
+                } else if (that.documentType == that.documentTypes.quote) {
+                  attchment_Url = httproutes.PORTAL_Quote_ATTCHMENTS;
+                }
+                that.httpCall.httpPostCall(attchment_Url, that.saveAttachmentObj).subscribe(function (params_new) {
 
+                  if (params_new.status) {
+                    that.snackbarservice.openSnackBar(
+                      params_new.message,
+                      "success"
+                    );
+                    that.files = [];
+                    that.files_old = [];
+                    that.last_files_array = [];
+                    that.getOneInvoice();
+                    that.uiSpinner.spin$.next(false);
+                  } else {
+                    that.snackbarservice.openSnackBar(
+                      params_new.message,
+                      "error"
+                    );
+                    that.uiSpinner.spin$.next(false);
+                  }
+                });
+              }
+
+
+            });
         }
       });
-
-
   }
   /**
    * Convert Files list to normal array list

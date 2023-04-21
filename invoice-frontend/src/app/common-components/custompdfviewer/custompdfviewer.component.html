@@ -8,7 +8,7 @@
                     class="" height="15px" style=" padding-right: 4px;">{{'Listing_Action_Edit' |
                 translate}}</button>
             <button *ngIf="isDocumentDelete && documentDeletValue == 0 && role_permission.documents.Delete"
-                mat-raised-button (click)="deleteDocument()" class="cust-button-form"><img src="{{deleteIcon}}" alt=""
+                mat-raised-button (click)="deleteDocument()" class="cust-button-form"><img src="{{archivedIcon}}" alt=""
                     class="" height="15px" style=" padding-right: 4px;">{{'Archive_all' |
                 translate}}</button>
             <button *ngIf="isDocumentDelete && documentDeletValue == 1 && role_permission.documents.Delete"

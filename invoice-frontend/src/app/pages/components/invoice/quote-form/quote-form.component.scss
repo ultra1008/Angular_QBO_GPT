@@ -260,3 +260,40 @@ b {
     font-size: 11px !important;
     line-height: unset !important;
 }
+
+// expansion-panel
+
+::ng-deep .mat-expansion-panel-header {
+
+    height: 35px !important;
+    background-color: #023E8A !important;
+    color: white;
+
+}
+
+::ng-deep .darkMode .mat-expansion-panel-header {
+
+    height: 35px !important;
+    background-color: #30343d !important;
+    color: white;
+
+}
+
+::ng-deep .mat-expansion-indicator::after {
+    color: white;
+    height: 11px;
+    width: 11px;
+}
+
+::ng-deep .mat-expansion-panel-body {
+    padding: 0px !important;
+}
+
+::ng-deep .s2-confirm {
+    width: 130px !important;
+}
+
+::ng-deep .btn-gray {
+    background-color: grey !important;
+    color: white !important;
+}

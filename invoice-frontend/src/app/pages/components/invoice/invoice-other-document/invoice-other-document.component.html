@@ -7,45 +7,51 @@
             <mat-expansion-panel [expanded]="showPDF" [hideToggle]="hideToggle">
 
                 <div class="pdf-data">
+                    <div *ngIf="loadInvoice">
+                        <div class="mt-1 pdf-header" *ngIf="has_document">
+                            <button *ngIf="role_permission.invoice.Edit" mat-raised-button color="primary"
+                                (click)="goToEdit()" class="cust-button-form"><img src="{{editIcon}}" alt="" class=""
+                                    height="20px" style=" padding-right: 4px;">{{'All-Edit' |
+    translate}}</button>
+                            <button mat-raised-button color="primary" (click)="download()" class="cust-button-form"><img
+                                    src="{{downloadIcon}}" alt="" class="" height="20px"
+                                    style=" padding-right: 4px;">{{'PO-View-Download' |
+    translate}}</button>
+                            <button mat-raised-button color="primary" (click)="print()" class="cust-button-form"><img
+                                    src="{{printIcon}}" alt="" class="" height="15px"
+                                    style=" padding-right: 4px;">{{'PO-View-Print'
+    |
+    translate}}</button>
+                        </div>
+                        <div class="pdf-viewer" *ngIf="has_document">
+                            <pdf-viewer id="pdf" [src]="otherDocument.pdf_url" [rotation]="0" [original-size]="false"
+                                [show-all]="true" [fit-to-page]="false" [zoom]="1" [zoom-scale]="'page-width'"
+                                [stick-to-page]="false" [render-text]="true" [external-link-target]="'blank'"
+                                [autoresize]="true" [show-borders]="false" [external-link-target]="'blank'"
+                                style="display: block;"></pdf-viewer>
+                        </div>
+                        <div class="empty-document text-center" *ngIf="!has_document">
+                            <button mat-raised-button color="primary" style="margin-right: 10px;width: 180px; "
+                                (click)="openAddDialog()" class="sign-button ml-1 mb-2">
+                                {{'Add_files' | translate }}
+                            </button>
+                            <p>OR</p>
+                            <button mat-raised-button color="primary" style="margin-right: 10px; width: 180px;"
+                                (click)="openOrphanFilesDialog()" class="sign-button ml-1 mb-2">
+                                {{'Orphan_Vendor_files' | translate }}
+                            </button>
+                            <p>OR</p>
+                            <button mat-raised-button color="primary" (click)="requestFilesDialog()"
+                                style="margin-right: 10px;width: 180px; " class="sign-button ml-1">
+                                {{'Request_For_Files' | translate }}
+                            </button>
+                        </div>
+                    </div>
+                    <div style="text-align: center;" *ngIf="!loadInvoice">
+                        <img height="100px" src="{{loadingGIF}}" />
+                    </div>
 
-                    <div class="mt-1 pdf-header" *ngIf="has_document">
-                        <button *ngIf="role_permission.invoice.Edit" mat-raised-button color="primary"
-                            (click)="goToEdit()" class="cust-button-form"><img src="{{editIcon}}" alt="" class=""
-                                height="20px" style=" padding-right: 4px;">{{'All-Edit' |
-                        translate}}</button>
-                        <button mat-raised-button color="primary" (click)="download()" class="cust-button-form"><img
-                                src="{{downloadIcon}}" alt="" class="" height="20px"
-                                style=" padding-right: 4px;">{{'PO-View-Download' |
-                        translate}}</button>
-                        <button mat-raised-button color="primary" (click)="print()" class="cust-button-form"><img
-                                src="{{printIcon}}" alt="" class="" height="15px"
-                                style=" padding-right: 4px;">{{'PO-View-Print'
-                        |
-                        translate}}</button>
-                    </div>
-                    <div class="pdf-viewer" *ngIf="has_document">
-                        <pdf-viewer id="pdf" [src]="otherDocument.pdf_url" [rotation]="0" [original-size]="false"
-                            [show-all]="true" [fit-to-page]="false" [zoom]="1" [zoom-scale]="'page-width'"
-                            [stick-to-page]="false" [render-text]="true" [external-link-target]="'blank'"
-                            [autoresize]="true" [show-borders]="false" [external-link-target]="'blank'"
-                            style="display: block;"></pdf-viewer>
-                    </div>
-                    <div class="empty-document text-center" *ngIf="!has_document">
-                        <button mat-raised-button color="primary" style="margin-right: 10px;width: 180px; "
-                            (click)="openAddDialog()" class="sign-button ml-1 mb-2">
-                            {{'Add_files' | translate }}
-                        </button>
-                        <p>OR</p>
-                        <button mat-raised-button color="primary" style="margin-right: 10px; width: 180px;"
-                            (click)="openOrphanFilesDialog()" class="sign-button ml-1 mb-2">
-                            {{'Orphan_Vendor_files' | translate }}
-                        </button>
-                        <p>OR</p>
-                        <button mat-raised-button color="primary" (click)="requestFilesDialog()"
-                            style="margin-right: 10px;width: 180px; " class="sign-button ml-1">
-                            {{'Request_For_Files' | translate }}
-                        </button>
-                    </div>
+
                 </div>
 
             </mat-expansion-panel>
@@ -82,12 +88,11 @@
                                     <pre class="note" [ngClass]="mode == 'on'? 'dark-note' : ''">{{note.notes}}</pre>
                                 </div>
                             </div>
-                            <!-- {{nots.notes}}<b class="update-date">{{temp_MMDDYYY_format(nots.updated_at)}}</b> -->
                         </div>
                     </div>
                     <div class="cust-margin mx-1 pt-2">
                         <a mat-icon-button aria-label="Example icon button with a vertical three dot icon"
-                            (click)="deleteNote(nots._id,invoice_id)">
+                            (click)="deleteNote(note._id,invoice_id)">
                             <mat-icon>delete</mat-icon>
                         </a>
                     </div>

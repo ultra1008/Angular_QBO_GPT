@@ -68,6 +68,8 @@ export class CustompdfviewerComponent implements OnInit {
   Archive_Orphan_Document_value: any = [];
   Archive_Orphan_Document: any;
   role_permission: any;
+  archivedIcon: any;
+
 
   constructor(private location: Location, private modeService: ModeDetectService, public route: ActivatedRoute, private router: Router,
     public httpCall: HttpCall, public spinner: UiSpinnerService, public snackbarservice: Snackbarservice,
@@ -104,6 +106,8 @@ export class CustompdfviewerComponent implements OnInit {
       this.editIcon = icon.EDIT;
       this.deleteIcon = icon.DELETE;
       this.restoreIcon = icon.RESTORE;
+      this.archivedIcon = icon.ARCHIVE;
+
     } else {
       this.denyIcon = icon.DENY_WHITE;
       this.approveIcon = icon.APPROVE_WHITE;
@@ -113,6 +117,7 @@ export class CustompdfviewerComponent implements OnInit {
       this.editIcon = icon.EDIT_WHITE;
       this.deleteIcon = icon.DELETE_WHITE;
       this.restoreIcon = icon.RESTORE_WHITE;
+      this.archivedIcon = icon.ARCHIVE_WHITE;
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
       if (mode) {
@@ -125,6 +130,7 @@ export class CustompdfviewerComponent implements OnInit {
         this.editIcon = icon.EDIT;
         this.deleteIcon = icon.DELETE;
         this.restoreIcon = icon.RESTORE;
+        this.archivedIcon = icon.ARCHIVE;
       } else {
         this.mode = 'on';
         this.denyIcon = icon.DENY_WHITE;
@@ -135,6 +141,7 @@ export class CustompdfviewerComponent implements OnInit {
         this.editIcon = icon.EDIT_WHITE;
         this.deleteIcon = icon.DELETE_WHITE;
         this.restoreIcon = icon.RESTORE_WHITE;
+        this.archivedIcon = icon.ARCHIVE_WHITE;
       }
     });
   }

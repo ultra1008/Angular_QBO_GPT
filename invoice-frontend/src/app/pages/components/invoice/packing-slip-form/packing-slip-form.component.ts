@@ -16,11 +16,11 @@ import { EmployeeService } from '../../team/employee.service';
 import { map, startWith } from 'rxjs/operators';
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
-    confirmButton: 'btn btn-success s2-confirm margin-right-cust',
-    denyButton: 'btn btn-danger',
-    cancelButton: 's2-confirm btn btn-gray ml-2'
+    confirmButton: "btn btn-success margin-right-cust s2-confirm",
+    denyButton: "btn btn-danger s2-confirm",
   },
   buttonsStyling: false,
+  allowOutsideClick: false,
   imageUrl: './assets/logo/invoice_logo.png',
   imageHeight: 50,
   imageAlt: 'A branding image'
@@ -81,6 +81,21 @@ export class PackingSlipFormComponent implements OnInit {
   viewIcon: any;
   document_id: any;
   document_type: any;
+  hideToggle = false;
+  hide: Boolean = true;
+  disabled = false;
+  multi = false;
+  displayMode: string = 'default';
+  showApproveButton: boolean = false;
+  defalut_image = icon.MALE_PLACEHOLDER;
+  module: any = {
+    Invoice: 'Invoice',
+    Po: 'PO',
+    PackingSlip: 'Packing Slip',
+    ReceivingSlip: 'Receiving Slip',
+    Quote: 'Quote',
+  };
+
 
 
   constructor(public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,

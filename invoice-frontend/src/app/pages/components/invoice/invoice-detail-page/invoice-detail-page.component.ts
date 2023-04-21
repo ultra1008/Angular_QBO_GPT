@@ -110,7 +110,7 @@ export class InvoiceDetailPageComponent implements OnInit {
   downIcon = icon.DOWN_WHITE;
   upIcon = icon.UP_WHITE;
   defalut_image = icon.MALE_PLACEHOLDER;
-
+  Remove_Attchment: any;
 
 
   constructor(private sanitiser: DomSanitizer, private formBuilder: FormBuilder, public dialog: MatDialog, private location: Location, private modeService: ModeDetectService, private router: Router, public route: ActivatedRoute, public uiSpinner: UiSpinnerService, public httpCall: HttpCall,
@@ -122,6 +122,7 @@ export class InvoiceDetailPageComponent implements OnInit {
       this.Remove_Notes = this.translate.instant("Remove_Notes");
       this.Approve_Invoice_massage = this.translate.instant("Approve_Invoice_massage");
       this.Reject_Invoice_massage = this.translate.instant("Reject_Invoice_massage");
+      this.Remove_Attchment = this.translate.instant("Remove_Attchment");
     });
 
     this.id = this.route.snapshot.queryParamMap.get('_id');
@@ -299,55 +300,66 @@ export class InvoiceDetailPageComponent implements OnInit {
   }
 
   deleteFile_old(index: number) {
-
-    this.last_files_array.splice(index, 1);
-    this.files_old.splice(index, 1);
     let that = this;
-    let reqObject = {
-      // _id: this._id,
-      _id: "",
-      invoice_attachments: "",
-    };
-    const formData = new FormData();
-    for (var i = 0; i < that.files.length; i++) {
-      formData.append("file[]", that.files[i]);
-    } formData.append("dir_name", wasabiImagePath.INVOICE_ATTCHMENT);
-    formData.append("local_date", moment().format("DD/MM/YYYY hh:mmA"));
-    that.uiSpinner.spin$.next(true);
-    reqObject["local_offset"] = that.LOCAL_OFFSET;
-    that.httpCall
-      .httpPostCall(httproutes.PORTAL_ATTECHMENT, formData)
-      .subscribe(function (params) {
-        if (params.status) {
+    swalWithBootstrapButtons
+      .fire({
+        title: that.Remove_Attchment,
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: this.yesButton,
+        denyButtonText: this.noButton,
 
-          reqObject._id = that._id;
-          reqObject.invoice_attachments = that.last_files_array;
-          that.httpCall.httpPostCall(httproutes.PORTAL_INVOICE_ATTCHMENTS, reqObject)
-            .subscribe(function (params_new) {
-              if (params_new.status) {
-                that.snackbarservice.openSnackBar(
-                  params_new.message,
-                  "success"
-                );
-                that.files = [];
-                that.files_old = [];
-                that.last_files_array = [];
-                that.getOneInvoice();
-                that.uiSpinner.spin$.next(false);
-              } else {
-                that.snackbarservice.openSnackBar(
-                  params_new.message,
-                  "error"
-                );
-                that.uiSpinner.spin$.next(false);
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          this.last_files_array.splice(index, 1);
+          this.files_old.splice(index, 1);
+          let that = this;
+          let reqObject = {
+            // _id: this._id,
+            _id: "",
+            invoice_attachments: "",
+          };
+          const formData = new FormData();
+          for (var i = 0; i < that.files.length; i++) {
+            formData.append("file[]", that.files[i]);
+          } formData.append("dir_name", wasabiImagePath.INVOICE_ATTCHMENT);
+          formData.append("local_date", moment().format("DD/MM/YYYY hh:mmA"));
+          that.uiSpinner.spin$.next(true);
+          reqObject["local_offset"] = that.LOCAL_OFFSET;
+          that.httpCall
+            .httpPostCall(httproutes.PORTAL_ATTECHMENT, formData)
+            .subscribe(function (params) {
+              if (params.status) {
+
+                reqObject._id = that._id;
+                reqObject.invoice_attachments = that.last_files_array;
+                that.httpCall.httpPostCall(httproutes.PORTAL_INVOICE_ATTCHMENTS, reqObject)
+                  .subscribe(function (params_new) {
+                    if (params_new.status) {
+                      that.snackbarservice.openSnackBar(
+                        params_new.message,
+                        "success"
+                      );
+                      that.files = [];
+                      that.files_old = [];
+                      that.last_files_array = [];
+                      that.getOneInvoice();
+                      that.uiSpinner.spin$.next(false);
+                    } else {
+                      that.snackbarservice.openSnackBar(
+                        params_new.message,
+                        "error"
+                      );
+                      that.uiSpinner.spin$.next(false);
+                    }
+                  });
               }
+
+
             });
         }
-
-
       });
-
-
   }
   /**
    * Convert Files list to normal array list

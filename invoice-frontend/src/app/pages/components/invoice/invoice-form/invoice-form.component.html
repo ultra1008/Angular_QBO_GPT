@@ -427,8 +427,7 @@
                     </div>
                 </mat-expansion-panel>
             </mat-nav-list>
-            <app-common-document [module]="module.Invoice" [data]="invoiceData" *ngIf="loadInvoice"
-                (documentUpdate)="documentUpdate()">
+            <app-common-document [module]="module.Invoice" [data]="invoiceData" *ngIf="loadInvoice">
             </app-common-document>
         </mat-accordion>
     </div>
