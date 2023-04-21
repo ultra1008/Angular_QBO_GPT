@@ -31,3 +31,15 @@ export class EmpListFilterStatusPipe implements PipeTransform {
   }
 }
 
+@Pipe({
+  name: 'importManagementFilter'
+})
+export class ImportManagementUserFilterPipe implements PipeTransform {
+
+  transform(items: any[], searchTerm: string): any {
+    if (!items || !searchTerm) {
+      return items;
+    }
+    return items.filter(item => item.userfullname.toUpperCase().indexOf(searchTerm.toUpperCase()) !== -1);
+  }
+}
