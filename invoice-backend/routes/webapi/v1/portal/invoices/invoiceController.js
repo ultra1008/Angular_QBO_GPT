@@ -419,6 +419,7 @@ module.exports.getInvoice = async function (req, res) {
                     $project: {
                         assign_to: 1,
                         vendor: "$vendor",
+                        vendor_name: "$vendor.vendor_name",
                         vendor_id: 1,
                         customer_id: 1,
                         invoice: 1,
@@ -587,8 +588,8 @@ module.exports.getInvoice = async function (req, res) {
                 realmId = result.realmId ? result.realmId : '';
                 refresh_token = result.refresh_token ? result.refresh_token : '';
                 client.close();
-                all_invoices = await getInvoiceDataFromQB(client_id, client_secret, access_token, realmId, refresh_token, decodedToken.companycode);
-                res.send({ status: true, message: "Invoice data", data: all_invoices, is_management: isManagement, count });
+                // all_invoices = await getInvoiceDataFromQB(client_id, client_secret, access_token, realmId, refresh_token, decodedToken.companycode);
+                res.send({ status: true, message: "Invoice data", data: get_data, is_management: isManagement, count });
             } else {
                 res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
             }
@@ -692,7 +693,7 @@ function getInvoiceDataFromQB(client_id, client_secret, access_token, realmId, r
                 }
             }
             isQuickBooksInvoice = true;
-            var all_invoices = await dbo.collection("invoice_invoices").find({}).toArray();
+            var all_invoices = await dbo.collection("invoice_invoices").find({ is_delete: 0 }).toArray();
             resolve(all_invoices);
         });
     });
@@ -2226,7 +2227,25 @@ module.exports.getViewDocumentsDatatable = async function (req, res) {
                     ]
                 };
             }
-            var match_query = { is_delete: requestObject.is_delete, status: { $ne: 'Complete' } };
+            var match_query = {
+                is_delete: requestObject.is_delete,
+                status: { $ne: 'Complete' },
+            };
+            if (requestObject.document_type) {
+                if (requestObject.document_type == 'Other') {
+                    match_query = {
+                        document_type: { $nin: ['INVOICE', 'PURCHASE_ORDER', 'PACKING_SLIP', 'RECEIVING_SLIP', 'QUOTE'] },
+                        is_delete: requestObject.is_delete,
+                        status: { $ne: 'Complete' },
+                    };
+                } else {
+                    match_query = {
+                        document_type: requestObject.document_type,
+                        is_delete: requestObject.is_delete,
+                        status: { $ne: 'Complete' },
+                    };
+                }
+            }
             var aggregateQuery = [
                 { $match: match_query },
                 {

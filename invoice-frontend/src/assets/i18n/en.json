@@ -2538,5 +2538,7 @@
     "Invoice_Greater_Than_Amount_Approve_Setting_Text_1": "If invoices greater than",
     "Invoice_Greater_Than_Amount_Approve_Setting_Text_2": "then user",
     "Invoice_Greater_Than_Amount_Approve_Setting_Text_3": "needs to approve.",
-    "User_Notify_By_Setting": "Notify by"
+    "User_Notify_By_Setting": "Notify by",
+    "Invoice": "Invoice",
+    "Other_Documents": "Other Documents"
 }

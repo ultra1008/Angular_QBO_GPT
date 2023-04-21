@@ -350,6 +350,7 @@ router.post('/webapi/v1/portal/updateinvoiceprocess', common.checkTokenExistOrNo
 router.post('/webapi/v1/portal/saveinvoiceprocess', common.checkTokenExistOrNot, processInvoiceController.saveInvoiceProcess);
 router.get('/webapi/v1/portal/importmanagementinvoice', common.checkTokenExistOrNot, processInvoiceController.importManagementInvoice);
 router.get('/webapi/v1/portal/importmanagementpo', common.checkTokenExistOrNot, processInvoiceController.importManagementPO);
+router.get('/webapi/v1/portal/getprocessprogress', common.checkTokenExistOrNot, processInvoiceController.checkProcessProgress);
 router.get('/webapi/v1/portal/importprocessinvoice', common.checkTokenExistOrNot, processInvoiceController.importProcessData);
 router.post('/webapi/v1/portal/deleteinvoiceprocess', common.checkTokenExistOrNot, processInvoiceValidation.deleteInvoiceProcess, processInvoiceController.deleteInvoiceProcess);
 

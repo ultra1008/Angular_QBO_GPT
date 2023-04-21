@@ -63,7 +63,9 @@ export class DocumentsListComponent implements OnInit {
   Archived_By: string;
   Archived_At: string;
 
-  constructor(public dialog: MatDialog, private http: HttpClient, private location: Location, public httpCall: HttpCall, private modeService: ModeDetectService,
+  tab_Array: any = ['INVOICE', 'PURCHASE_ORDER', 'PACKING_SLIP', 'RECEIVING_SLIP', 'QUOTE', 'Other', 'Delete'];
+
+  constructor (public dialog: MatDialog, private http: HttpClient, private location: Location, public httpCall: HttpCall, private modeService: ModeDetectService,
     public snackbarservice: Snackbarservice, private router: Router, public translate: TranslateService,) {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     let that = this;
@@ -147,12 +149,12 @@ export class DocumentsListComponent implements OnInit {
         $(".dataTables_processing").html(
           "<img  src=" + this.httpCall.getLoader() + ">"
         );
-        if (that.step_index == 1) {
+        if (that.step_index == this.tab_Array.length - 1) {
           dataTablesParameters.is_delete = 1;
         } else {
           dataTablesParameters.is_delete = 0;
+          dataTablesParameters.document_type = this.tab_Array[that.step_index];
         }
-
         that.http
           .post<DataTablesResponse>(
             configdata.apiurl + httproutes.PORTAL_VIEW_DOCUMENTS_DATATABLE,
@@ -252,13 +254,13 @@ export class DocumentsListComponent implements OnInit {
         defaultContent: "",
       },
       {
-        title: that.step_index == 0 ? that.Uploaded_By : that.Archived_By,
+        title: that.step_index == that.tab_Array.length - 1 ? that.Archived_By : that.Uploaded_By,
         data: "updated_by",
 
         defaultContent: "",
       },
       {
-        title: that.step_index == 0 ? that.Uploaded_At : that.Archived_At,
+        title: that.step_index == that.tab_Array.length - 1 ? that.Archived_At : that.Uploaded_At,
         render: function (data: any, type: any, full: any) {
           return MMDDYYYY(full.updated_at);
         },
@@ -352,7 +354,7 @@ export class DocumentSelectDialog {
   };
 
 
-  constructor(private modeService: ModeDetectService, public dialogRef: MatDialogRef<DocumentSelectDialog>, public translate: TranslateService,
+  constructor (private modeService: ModeDetectService, public dialogRef: MatDialogRef<DocumentSelectDialog>, public translate: TranslateService,
     private router: Router, @Inject(MAT_DIALOG_DATA) public data: any, private formBuilder: FormBuilder, public spinner: UiSpinnerService,
     public sb: Snackbarservice, public route: ActivatedRoute, public httpCall: HttpCall, public snackbarservice: Snackbarservice) {
     this.projectId = data.project_id;

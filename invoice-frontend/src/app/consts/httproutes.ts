@@ -261,6 +261,7 @@ export enum httproutes {
     // invoice module
     INVOICE_SAVE_INVOICE_PROCESS = "/webapi/v1/portal/saveinvoiceprocess",
     INVOICE_GET_INVOICE_PROCESS = "/webapi/v1/portal/getinvoiceprocess",
+    INVOICE_PROCESS_PROGRESS = "/webapi/v1/portal/getprocessprogress",
     INVOICE_PROCESS_INVOICE_DATA = "/webapi/v1/portal/importprocessinvoice",
     INVOICE_IMPORT_MANAGEMENT_INVOICE = "/webapi/v1/portal/importmanagementinvoice",
     INVOICE_IMPORT_MANAGEMENT_PO = "/webapi/v1/portal/importmanagementpo",
