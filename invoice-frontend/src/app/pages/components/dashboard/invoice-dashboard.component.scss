@@ -425,3 +425,12 @@
     margin-top: auto;
     margin-bottom: auto;
 }
+
+::ng-deep .s2-confirm {
+    width: 130px !important;
+}
+
+::ng-deep .btn-gray {
+    background-color: grey !important;
+    color: white !important;
+}

@@ -24,11 +24,11 @@ import { MatChipInputEvent } from '@angular/material/chips';
 
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
-    confirmButton: 'btn btn-success s2-confirm margin-right-cust',
-    denyButton: 'btn btn-danger',
-    cancelButton: 's2-confirm btn btn-gray ml-2'
+    confirmButton: "btn btn-success margin-right-cust s2-confirm",
+    denyButton: "btn btn-danger s2-confirm",
   },
   buttonsStyling: false,
+  allowOutsideClick: false,
   imageUrl: './assets/logo/invoice_logo.png',
   imageHeight: 50,
   imageAlt: 'A branding image'

@@ -2541,5 +2541,6 @@
     "User_Notify_By_Setting": "Notify by",
     "Remove_Attchment": "Are you sure you want to remove this attachment?",
     "Invoice": "Invoice",
-    "Other_Documents": "Other Documents"
+    "Other_Documents": "Other Documents",
+    "Import_Management_User_Missing_Role": "Please select role of user."
 }
