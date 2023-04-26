@@ -905,7 +905,6 @@ export class ExportManagementUserComponent {
   }
 
   ngOnInit(): void {
-
     this.getAllUserList();
     this.getAllRoles();
 
@@ -913,10 +912,17 @@ export class ExportManagementUserComponent {
   async getAllUserList() {
     let data = await this.httpCall.httpGetCall(httproutes.PORTAL_GET_MANAGEMENT_USERS).toPromise();
     if (data.status) {
+      var index = 0;
+      this.userList = [];
       data.data.forEach((element: any) => {
-        this.newUserList.push({ check: false, _id: element._id, role_id: '', role_name: '' });
+        this.newUserList.push({ check: false, _id: element._id, index: index, role_id: '', role_name: '' });
+        var tempObj = {
+          ...element,
+          index: index,
+        };
+        this.userList.push(tempObj);
+        index++;
       });
-      this.userList = data.data;
       this.showLoader = false;
     }
   }

@@ -38,8 +38,8 @@
         <div class="box" *ngFor="let user of userList | importManagementFilter : user_search; let i = index">
             <div class="row">
                 <div class="check-box cust-checkbox-margin">
-                    <input type="checkbox" class="checkbox" color="primary" [checked]="newUserList[i].check"
-                        (change)="checkboxChange(i,user)" />
+                    <input type="checkbox" class="checkbox" color="primary" [checked]="newUserList[user.index].check"
+                        (change)="checkboxChange(user.index,user)" />
                 </div>
                 <div class="col-7 row">
                     <div class="user">
