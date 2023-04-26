@@ -1,7 +1,6 @@
 var validator = require("../../../../../controller/common/validationforrequest");
 
-const smtpUpdateValidation = (req, res, next) =>
-{
+const smtpUpdateValidation = (req, res, next) => {
     const validationRule = {
         "tenant_smtp_password": "required",
         "tenant_smtp_port": "required",
@@ -10,92 +9,73 @@ const smtpUpdateValidation = (req, res, next) =>
         "tenant_smtp_server": "required",
         "tenant_smtp_timeout": "required",
         "tenant_smtp_username": "required"
-    }
+    };
 
-    validator(req.body, validationRule, {}, (err, status) =>
-    {
-        if (!status)
-        {
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
             res.send({
                 status: false,
                 message: err,
             });
-        } else
-        {
-            console.log("else")
+        } else {
             next();
         }
     });
-}
-const companyValidation = (req, res, next) =>
-{
+};
+const companyValidation = (req, res, next) => {
     const validationRule = {
         "companyname": "required",
         "companyphone": "required",
         "companyemail": "required"
-    }
-    validator(req.body, validationRule, {}, (err, status) =>
-    {
-        if (!status)
-        {
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
             res.send({
                 status: false,
                 message: err,
             });
-        } else
-        {
-            console.log("else")
+        } else {
             next();
         }
     });
-}
+};
 
-const smtpGetValidation = (req, res, next) =>
-{
+const smtpGetValidation = (req, res, next) => {
     const validationRule = {
         "_id": "required"
-    }
-    validator(req.body, validationRule, {}, (err, status) =>
-    {
-        if (!status)
-        {
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
             res.send({
                 status: false,
                 message: err,
             });
-        } else
-        {
-            console.log("else")
+        } else {
             next();
         }
     });
-}
+};
 
-const sendIframeCode = (req, res, next) =>
-{
+const sendIframeCode = (req, res, next) => {
     const validationRule = {
         "iframecode": "required",
         "emailsList": "required"
-    }
-    validator(req.body, validationRule, {}, (err, status) =>
-    {
-        if (!status)
-        {
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
             res.send({
                 status: false,
                 message: err,
             });
-        } else
-        {
-            console.log("else")
+        } else {
             next();
         }
     });
-}
+};
 
 module.exports = {
     smtpUpdateValidation,
     smtpGetValidation,
     companyValidation,
     sendIframeCode
-}
+};

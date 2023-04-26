@@ -45,7 +45,7 @@ export class AuthPageComponent implements OnInit {
   otpTimer: any;
   subscription!: Subscription;
 
-  constructor(public httpCall: HttpCall, private service: PortalAuthService, private router: Router,
+  constructor (public httpCall: HttpCall, private service: PortalAuthService, private router: Router,
     public myapp: AppComponent, public uiSpinner: UiSpinnerService,
     public translate: TranslateService, public authservice: PortalAuthService, public snackbarservice: Snackbarservice) {
     this.translate.stream(['']).subscribe((textarray) => {
@@ -65,7 +65,6 @@ export class AuthPageComponent implements OnInit {
             temp_show = true;
           }
         }
-        console.log("temp: ", that.showOTPOption);
         setTimeout(() => {
           that.showOTPOption = temp_show;
           that.showCompanyCode = false;
@@ -101,18 +100,14 @@ export class AuthPageComponent implements OnInit {
   public savecompnaycode(): void {
     let that = this;
     if (that.form.valid) {
-      /*   */
       that.httpCall.httpPostCallWithoutToken(httproutes.GET_COMPANY_SETTINGS, { companycode: "R-" + that.form.value.companycode }).subscribe((params) => {
         let temp_show = false;
         if (params.status) {
-          //showOTPOption
           let otp_setting = params.data.Enable_OTP;
-          console.log("otp_setting ", otp_setting);
           if (otp_setting.setting_status == 'Active' && otp_setting.setting_value == 'Yes') {
             temp_show = true;
           }
         }
-        console.log("temp: ", temp_show);
         setTimeout(() => {
           that.showOTPOption = temp_show;
           localStorage.setItem(localstorageconstants.COMPANYCODE, "R-" + that.form.value.companycode);

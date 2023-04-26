@@ -111,7 +111,7 @@ export class InvoiceFormComponent implements OnInit {
     Quote: 'Quote',
   };
 
-  constructor(public dialog: MatDialog, public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
+  constructor (public dialog: MatDialog, public employeeservice: EmployeeService, private location: Location, private modeService: ModeDetectService, public snackbarservice: Snackbarservice, private formBuilder: FormBuilder,
     public httpCall: HttpCall, public uiSpinner: UiSpinnerService, private router: Router, public route: ActivatedRoute, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.document_id = this.route.snapshot.queryParamMap.get('document_id');
@@ -403,7 +403,6 @@ export class InvoiceFormComponent implements OnInit {
     let that = this;
     this.httpCall.httpPostCall(httproutes.INVOICE_GET_ONE_INVOICE, { _id: that.id }).subscribe(function (params) {
       if (params.status) {
-        console.log("this is param in oneinvoice");
         console.log(params);
         that.status = params.data.status;
         that.invoiceData = params.data;
@@ -725,7 +724,7 @@ export class InvoiceHistoryComponent implements OnInit {
   isSearch: boolean = false;
   subscription: Subscription;
   dashboardHistory = [];
-  constructor(
+  constructor (
     public httpCall: HttpCall,
     public snackbarservice: Snackbarservice,
     private modeService: ModeDetectService,
@@ -825,7 +824,7 @@ export class InvoiceRejectReason {
   mode: any;
   subscription: Subscription;
 
-  constructor(private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
+  constructor (private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
     public dialogRef: MatDialogRef<InvoiceRejectReason>,
     @Inject(MAT_DIALOG_DATA) public data: any, public sb: Snackbarservice, public translate: TranslateService) {
 

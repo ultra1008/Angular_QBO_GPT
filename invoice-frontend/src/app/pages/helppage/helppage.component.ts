@@ -32,7 +32,7 @@ export class HelppageComponent implements OnInit {
   mode: any;
 
 
-  constructor(public authservice: AuthService, private modeService: ModeDetectService, public snackbarservice: Snackbarservice,
+  constructor (public authservice: AuthService, private modeService: ModeDetectService, public snackbarservice: Snackbarservice,
     public uiSpinner: UiSpinnerService,
     public translate: TranslateService) {
     this.translate.stream(['']).subscribe((textarray) => {
@@ -41,9 +41,9 @@ export class HelppageComponent implements OnInit {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
     if (this.mode == 'off') {
-      console.log("this.mod", this.mode);
+
     } else {
-      console.log("this.mod else", this.mode);
+
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
       if (mode) {
@@ -51,7 +51,6 @@ export class HelppageComponent implements OnInit {
       } else {
         this.mode = 'on';
       }
-      console.log("DARK MODE: " + this.mode);
     });
 
   }

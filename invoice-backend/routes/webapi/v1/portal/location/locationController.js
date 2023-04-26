@@ -221,10 +221,9 @@ async function sendLocationUpdateMail(locationData, decodedToken, translator) {
             const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/locationAlert.html', 'utf8');
             var template = handlebars.compile(file_data);
             var HtmlData = await template(emailTmp);
-            let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, userEmailList, translator.getStr('Location_Mail_Subject'), HtmlData,
+            sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, userEmailList, translator.getStr('Location_Mail_Subject'), HtmlData,
                 talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
                 talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
-            console.log("send mail:", mailsend);
         }
     } catch (e) {
         console.log(e);

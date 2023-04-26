@@ -299,21 +299,15 @@ export class CustompdfviewerComponent implements OnInit {
   goToEdit(document_type) {
     let that = this;
     let document_id = this.route.snapshot.queryParamMap.get('document_id');
-    console.log("document_type", document_type);
     if (document_type == that.documentTypes.invoice) {
-      console.log("IF 1");
       that.router.navigate(['/invoice-form'], { queryParams: { document_id: document_id, document_type: document_type } });
     } else if (document_type == that.documentTypes.po) {
-      console.log("IF 2");
       that.router.navigate(['/po-detail-form'], { queryParams: { document_id: document_id, document_type: document_type } });
     } else if (document_type == that.documentTypes.packingSlip) {
-      console.log("IF 3");
       that.router.navigate(['/packing-slip-form'], { queryParams: { document_id: document_id, document_type: document_type } });
     } else if (document_type == that.documentTypes.receivingSlip) {
-      console.log("IF 4");
       that.router.navigate(['/receiving-slip-form'], { queryParams: { document_id: document_id, document_type: document_type } });
     } else if (document_type == that.documentTypes.quote) {
-      console.log("IF 5");
       that.router.navigate(['/quote-detail-form'], { queryParams: { document_id: document_id, document_type: document_type } });
     }
   }

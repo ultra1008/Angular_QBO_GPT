@@ -38,7 +38,7 @@ export class InvoiceProgressComponent implements OnInit {
   showAllNotification: Boolean = true;
   events: EventSource;
 
-  constructor(
+  constructor (
     public dialog: MatDialog,
     private router: Router,
     public httpCall: HttpCall, private _zone: NgZone,
@@ -72,12 +72,8 @@ export class InvoiceProgressComponent implements OnInit {
     this.events = new EventSource(url);
     this.events.onmessage = (event: any) => {
       const parsedData = JSON.parse(event.data);
-      // console.log("parsedData: ", parsedData);
       this.progressList = parsedData.data;
-      console.log("this.events ", this.events);
-      // console.log("parsedData: ", parsedData);
       if (parsedData.completed) {
-        console.log("close event");
         this._zone.run(() => {
           this.events.close();
         });
@@ -90,7 +86,6 @@ export class InvoiceProgressComponent implements OnInit {
   }
 
   onScroll() {
-    console.log("onScroll call");
     this.start++;
     // this.getData();
   }

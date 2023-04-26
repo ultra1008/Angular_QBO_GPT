@@ -195,10 +195,8 @@ export class QuoteFormComponent implements OnInit {
     } else if (this.document_id) {
       var from = this.route.snapshot.queryParamMap.get('from');
       if (from) {
-        console.log("call 2");
         this.router.navigate(['/app-custompdfviewer'], { queryParams: { po_url: this.pdf_url, document_id: this.document_id, document_type: this.document_type, is_delete: 0, status: 'status' } });
       } else {
-        console.log("call 1");
         this.router.navigate(['/app-custompdfviewer'], { queryParams: { po_url: this.pdf_url, document_id: this.document_id, document_type: this.document_type, is_delete: 0, counts: 'counts' } });
       }
     } else {

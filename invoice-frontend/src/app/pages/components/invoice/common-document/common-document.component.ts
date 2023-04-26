@@ -72,7 +72,7 @@ export class CommonDocumentComponent implements OnInit {
   saveAttachmentObj: any;
   Remove_Attchment: any;
 
-  constructor(public dialog: MatDialog, private formBuilder: FormBuilder, private sanitiser: DomSanitizer, public uiSpinner: UiSpinnerService, public httpCall: HttpCall, public snackbarservice: Snackbarservice, public translate: TranslateService, public route: ActivatedRoute,) {
+  constructor (public dialog: MatDialog, private formBuilder: FormBuilder, private sanitiser: DomSanitizer, public uiSpinner: UiSpinnerService, public httpCall: HttpCall, public snackbarservice: Snackbarservice, public translate: TranslateService, public route: ActivatedRoute,) {
     this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA));
     this.role_permission = this.role_permission.role_permission;
     this.translate.stream([""]).subscribe((textarray) => {
@@ -97,7 +97,6 @@ export class CommonDocumentComponent implements OnInit {
       notes: [""],
 
     });
-    console.log("data", this.data);
     var tempAttachments = [];
     if (that.module == that.documentTypes.Invoice) {
       // Note

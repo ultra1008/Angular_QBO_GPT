@@ -39,7 +39,7 @@ export class TermsComponent implements OnInit {
   noButton: string = '';
   public allTerms: any;
 
-  constructor(private modeService: ModeDetectService, public dialog: MatDialog, public httpCall: HttpCall, public snackbarservice: Snackbarservice,
+  constructor (private modeService: ModeDetectService, public dialog: MatDialog, public httpCall: HttpCall, public snackbarservice: Snackbarservice,
     public translate: TranslateService) {
     this.translate.stream(['']).subscribe((textarray) => {
       this.Employee_Terms_Do_Want_Delete = this.translate.instant('Employee_Terms_Do_Want_Delete');
@@ -144,7 +144,7 @@ export class TermsForm implements OnInit {
   subscription: Subscription;
   copyDataFromProject: string = '';
 
-  constructor(private modeService: ModeDetectService, public dialogRef: MatDialogRef<TermsForm>, public translate: TranslateService,
+  constructor (private modeService: ModeDetectService, public dialogRef: MatDialogRef<TermsForm>, public translate: TranslateService,
     @Inject(MAT_DIALOG_DATA) public data: any, public httpCall: HttpCall, public snackbarservice: Snackbarservice) {
 
     this.term = new FormGroup({
@@ -154,7 +154,6 @@ export class TermsForm implements OnInit {
       discount: new FormControl('', []),
     });
     if (this.data) {
-      console.log("data", this.data);
       this.term = new FormGroup({
         name: new FormControl(this.data.name, [Validators.required]),
         due_days: new FormControl(this.data.due_days, [Validators.required]),

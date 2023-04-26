@@ -210,7 +210,7 @@ export class EmployeeViewComponent implements OnInit {
   Empty_Temporary_Password: string;
 
 
-  constructor(private modeService: ModeDetectService, public sb: Snackbarservice, private location: Location, public dialog: MatDialog, public translate: TranslateService, public mostusedservice: Mostusedservice,
+  constructor (private modeService: ModeDetectService, public sb: Snackbarservice, private location: Location, public dialog: MatDialog, public translate: TranslateService, public mostusedservice: Mostusedservice,
     private formBuilder: FormBuilder, private http: HttpClient, public employeeservice: EmployeeService, public snackbarservice: Snackbarservice,
     private router: Router, public route: ActivatedRoute, public httpCall: HttpCall, public uiSpinner: UiSpinnerService) {
 
@@ -305,7 +305,6 @@ export class EmployeeViewComponent implements OnInit {
         this.exitIcon = icon.CANCLE_WHITE;
         this.rerenderfunc();
       }
-      // console.log("DARK MODE: " + this.mode);
     });
     this.userpersonalinfo = this.formBuilder.group({
       username: ['', Validators.required],
@@ -650,8 +649,6 @@ export class EmployeeViewComponent implements OnInit {
           });
         }
       };
-      // console.log("onInit",that.user_documents)
-
 
       let userData = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
       this.httpCall.httpPostCall(httproutes.PORTAL_SETTING_COMPANY_GET, { _id: userData.companydata._id }).subscribe(function (params) {
@@ -1250,7 +1247,6 @@ export class EmployeeViewComponent implements OnInit {
       reqObject.userfullname = fname + " " + mname + " " + lname;
 
       // let userstreet1 = reqObject.userstreet1 != undefined && reqObject.userstreet1 != "" ? reqObject.userstreet1 : reqObject.userstreet1
-      // console.log("userstreet1",userstreet1)
       // let userstreet2 = reqObject.userstreet2 != undefined && reqObject.userstreet2 != "" ? reqObject.userstreet2 : reqObject.userstreet2
       // let usercity = reqObject.usercity != undefined && reqObject.usercity != "" ? reqObject.usercity : reqObject.usercity;
       // let user_state =  reqObject.user_state != undefined && reqObject.user_state != "" ? reqObject.user_state : "";
@@ -1532,7 +1528,7 @@ export class EmergencycontactFrom {
   variablesrelation_array: any = [];
   relation_array: any = this.variablesrelation_array.slice();
 
-  constructor(public dialogRef: MatDialogRef<EmergencycontactFrom>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
+  constructor (public dialogRef: MatDialogRef<EmergencycontactFrom>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
     private formBuilder: FormBuilder, public httpCall: HttpCall, public route: ActivatedRoute,
     @Inject(MAT_DIALOG_DATA) public data: any, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService) {
 
@@ -1661,7 +1657,7 @@ export class DocumentUpdateFrom {
   mode: any;
   backIcon: string;
   saveIcon: string;
-  constructor(public dialogRef: MatDialogRef<DocumentUpdateFrom>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
+  constructor (public dialogRef: MatDialogRef<DocumentUpdateFrom>, private modeService: ModeDetectService, public mostusedservice: Mostusedservice,
     private formBuilder: FormBuilder, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService,
     public employeeservice: EmployeeService, public httpCall: HttpCall, @Inject(MAT_DIALOG_DATA) public data: any) {
 
@@ -1837,7 +1833,7 @@ export class UserDocumentHistoryComponent implements OnInit {
   backIcon: string;
   subscription: Subscription;
 
-  constructor(public httpCall: HttpCall, private modeService: ModeDetectService, public dialogRef: MatDialogRef<UserDocumentHistoryComponent>, private http: HttpClient,
+  constructor (public httpCall: HttpCall, private modeService: ModeDetectService, public dialogRef: MatDialogRef<UserDocumentHistoryComponent>, private http: HttpClient,
     @Inject(MAT_DIALOG_DATA) public data: any, public translate: TranslateService, public sb: Snackbarservice) {
     let that = this;
     var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);

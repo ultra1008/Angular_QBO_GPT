@@ -39,7 +39,7 @@ export class SettingsSecurityComponent implements OnInit {
   otp = "Yes";
   tempOtpSwitch: string = "";
 
-  constructor(
+  constructor (
     public myapp: AppComponent,
     public snackbarservice: Snackbarservice,
     public httpCall: HttpCall,
@@ -116,12 +116,9 @@ export class SettingsSecurityComponent implements OnInit {
           that.timeoutSwitch = event;
           that.updateSetting(reqObject);
         } else {
-          console.log("I am here");
           if (that.tempTimerSwitch == "Active") {
-            console.log("I am here 1");
             that.timeoutSwitch = true;
           } else {
-            console.log("I am here 2");
             that.timeoutSwitch = false;
           }
         }
@@ -159,7 +156,6 @@ export class SettingsSecurityComponent implements OnInit {
   }
 
   updateSetting(objectForEdit: any) {
-    console.log("~~~~~~~ objectForEdit", objectForEdit);
     let that = this;
     objectForEdit._id = that.setting_id;
     this.httpCall
@@ -227,12 +223,9 @@ export class SettingsSecurityComponent implements OnInit {
           that.otpSwitch = event;
           that.updateSetting(reqObject);
         } else {
-          console.log("I am here");
           if (that.tempOtpSwitch == "Active") {
-            console.log("I am here 1");
             that.otpSwitch = true;
           } else {
-            console.log("I am here 2");
             that.otpSwitch = false;
           }
         }

@@ -85,7 +85,6 @@ async function customerMonthlyStateCronFunction() {
 
 // '*/1 * * * *'
 var customerMonthlyStateCron = new CronJob(config.CRON_JOB.CUSTOMER_STATES, async function () {
-    console.log("call cron job");
     customerMonthlyStateCronFunction();
 });
 customerMonthlyStateCron.start();

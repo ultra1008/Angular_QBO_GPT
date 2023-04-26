@@ -1822,10 +1822,10 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
                     };
                     var template = handlebars.compile(file_data);
                     var HtmlData = await template(emailTmp);
-                    let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, email_list, translator.getStr('Invoice_Report_Title'), HtmlData,
+                    sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, email_list, translator.getStr('Invoice_Report_Title'), HtmlData,
                         talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
                         talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
-                    console.log("mailsend: ", mailsend);
+
                     res.send({ message: translator.getStr('Report_Sent_Successfully'), status: true });
                 }
             });

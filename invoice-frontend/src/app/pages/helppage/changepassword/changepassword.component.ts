@@ -53,7 +53,7 @@ export class ChangepasswordComponent implements OnInit {
   /*
     constructor
   */
-  constructor(private location: Location, private modeService: ModeDetectService, public authservice: AuthService, public httpCall: HttpCall,
+  constructor (private location: Location, private modeService: ModeDetectService, public authservice: AuthService, public httpCall: HttpCall,
     public snackbarservice: Snackbarservice, public translate: TranslateService) {
     this.translate.stream(['']).subscribe((textarray) => {
       let that = this;
@@ -63,9 +63,9 @@ export class ChangepasswordComponent implements OnInit {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
     if (this.mode == 'off') {
-      console.log("this.mod", this.mode);
+
     } else {
-      console.log("this.mod else", this.mode);
+
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
       if (mode) {
@@ -73,7 +73,6 @@ export class ChangepasswordComponent implements OnInit {
       } else {
         this.mode = 'on';
       }
-      console.log("DARK MODE: " + this.mode);
     });
   }
 

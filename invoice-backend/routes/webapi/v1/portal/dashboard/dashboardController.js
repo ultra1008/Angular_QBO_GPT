@@ -146,7 +146,6 @@ module.exports.getDashboardChart = async function (req, res) {
             }
             // epoch = _(epoch).sort();
             epoch = _.reverse(epoch);
-            console.log("epoch: ", epoch);
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
             let get_invoice = await invoicesConnection.aggregate([
                 {

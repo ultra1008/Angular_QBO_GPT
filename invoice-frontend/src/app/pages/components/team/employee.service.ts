@@ -18,10 +18,8 @@ export class EmployeeService {
     headers = headers.set('Authorization', token);
     headers = headers.set('language', portal_language);
     var url = configdata.apiurl;
-    console.log("2");
     return this.http.post(url + "/webapi/v1/portal/saveemployee", userobject, { headers: headers }).pipe(
       map((res) => {
-        console.log("res", res);
         return res;
       }),
       catchError(this.handleError));

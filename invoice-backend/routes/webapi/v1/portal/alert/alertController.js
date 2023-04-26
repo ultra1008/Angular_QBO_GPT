@@ -435,7 +435,6 @@ module.exports.getAlertExcelReport = async function (req, res) {
                 start_dst = start_dst.isDST();
                 let end_dst = moment(check_end.getTime() * 1000).tz(timezone);
                 end_dst = end_dst.isDST();
-                // console.log("sagar check: ", start_dst, end_dst);
                 let temp_start = start_dst ? common.MMDDYYYY_DST(requestObject.start_date + local_offset) : common.MMDDYYYY(requestObject.start_date + local_offset);
                 let temp_end = end_dst ? common.MMDDYYYY_DST(requestObject.end_date + local_offset) : common.MMDDYYYY(requestObject.end_date + local_offset);
                 date_range = `${translator.getStr('EmailDate')} ${temp_start} - ${temp_end}`;
@@ -486,10 +485,9 @@ module.exports.getAlertExcelReport = async function (req, res) {
                     };
                     var template = handlebars.compile(file_data);
                     var HtmlData = await template(emailTmp);
-                    let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, email_list, 'Supplier Diversity Alert Report', HtmlData,
+                    sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, email_list, 'Supplier Diversity Alert Report', HtmlData,
                         talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
                         talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
-                    console.log("mailsend: ", mailsend);
                     res.send({ message: translator.getStr('Report_Sent_Successfully'), status: true });
                 }
             });

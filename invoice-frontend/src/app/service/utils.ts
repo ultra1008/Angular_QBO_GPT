@@ -638,7 +638,6 @@ export async function commonFileChangeEvent(fileInput: any, acceptFileType: stri
       if (filepath.type == "image/webp" || filepath.type == "image/WEBP" || file_extention.toLowerCase() == "webp") {
         resolve({ status: false, message: 'File not supported' });
       } else {
-        console.log("sagar: ", filepath.type);
         let fileType = filepath.type.split("/");
         // Check file is supported or not
         if (acceptFileType == "pdf") {

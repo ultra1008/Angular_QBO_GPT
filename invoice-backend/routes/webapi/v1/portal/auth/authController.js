@@ -464,7 +464,7 @@ module.exports.savelogindetails = async function (req, res) {
                 const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/loginFromNewDevice.html', 'utf8');
                 var template = handlebars.compile(file_data);
                 var HtmlData = await template(emailTmp);
-                let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [decodedToken.UserData.useremail], "Login from a new device", HtmlData,
+                sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [decodedToken.UserData.useremail], "Login from a new device", HtmlData,
                     talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
                     talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
                 res.send({ message: translator.getStr('LoginDetails'), status: true });
@@ -736,7 +736,7 @@ module.exports.sendOTP = async function (req, res) {
                 const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/emailOTP.html', 'utf8');
                 var template = handlebars.compile(file_data);
                 var HtmlData = await template(emailTmp);
-                let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [requestObject.useremail], "OTP Verification", HtmlData,
+                sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [requestObject.useremail], "OTP Verification", HtmlData,
                     talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
                     talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
                 res.send({ message: 'One Time Password (OTP) sent successfully.', status: true });

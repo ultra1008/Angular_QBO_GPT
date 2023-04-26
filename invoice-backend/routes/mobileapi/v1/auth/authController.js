@@ -337,7 +337,6 @@ module.exports.login = async function (req, res) {
                                                 ...resObject_db,
                                                 UserData
                                             };
-                                            //console.log("resObject", resObject)
                                             var resLast = {
                                                 "token": "",
                                                 UserData,
@@ -362,7 +361,7 @@ module.exports.login = async function (req, res) {
                             }
 
                         } catch (e) {
-                            console.log("-----", e);
+                            console.log(e);
                             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
                         } finally {
                             //connection_db_api.close()
@@ -798,7 +797,7 @@ module.exports.saveLoginDetails = async function (req, res) {
                 const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/loginFromNewDevice.html', 'utf8');
                 var template = handlebars.compile(file_data);
                 var HtmlData = await template(emailTmp);
-                let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [decodedToken.UserData.useremail], "Login from a new device", HtmlData,
+                sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [decodedToken.UserData.useremail], "Login from a new device", HtmlData,
                     talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
                     talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
                 res.send({ message: translator.getStr('LoginDetails'), status: true });
@@ -906,7 +905,7 @@ module.exports.sendOTPforLogin = async function (req, res) {
         }
 
     } catch (e) {
-        console.log("-----", e);
+        console.log(e);
         res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
     } finally {
     }
@@ -1294,7 +1293,7 @@ module.exports.submitEmailOTPforLogin = async function (req, res) {
             res.send({ message: translator.getStr('UserNotFound'), status: false });
         }
     } catch (e) {
-        console.log("-----", e);
+        console.log(e);
         res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
     } finally {
         //connection_db_api.close()

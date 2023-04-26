@@ -167,14 +167,12 @@ async function userDocumentExpiryAlertCronFunction() {
                         var HtmlData_user = await template(emailTmp_user);
                         var HTML_ADMIN = await templateAdmin(emailTmp_Admin);
 
-                        let mailsend = await sendEmail.sendEmail_client(item.tenant_smtp_username, [get_employee_document[aa].useremail], "Contact admin: Documents about to expire ", HtmlData_user,
+                        sendEmail.sendEmail_client(item.tenant_smtp_username, [get_employee_document[aa].useremail], "Contact admin: Documents about to expire ", HtmlData_user,
                             item.tenant_smtp_server, item.tenant_smtp_port, item.tenant_smtp_reply_to_mail,
                             item.tenant_smtp_password, item.tenant_smtp_timeout, item.tenant_smtp_security);
-                        console.log("mailsend", mailsend);
-                        let mailsendAdmin = await sendEmail.sendEmail_client(item.tenant_smtp_username, employee_list, "Documents are about to expire for one of your employee", HTML_ADMIN,
+                        sendEmail.sendEmail_client(item.tenant_smtp_username, employee_list, "Documents are about to expire for one of your employee", HTML_ADMIN,
                             item.tenant_smtp_server, item.tenant_smtp_port, item.tenant_smtp_reply_to_mail,
                             item.tenant_smtp_password, item.tenant_smtp_timeout, item.tenant_smtp_security);
-                        console.log("mailsendAdmin", mailsendAdmin);
 
                         let alertObject = {
                             user_id: get_employee_document[aa]._id,
@@ -244,22 +242,10 @@ async function userEmergencyContactAlertCronFunction() {
                 };
                 // supplierAlertController.saveSupplierAlert(alertObject, connection_db_api);
 
-                let mailsend = await sendEmail.sendEmail_client(item.tenant_smtp_username, [all_user[i]['useremail']], `Important message about contact information`, HtmlData,
+                sendEmail.sendEmail_client(item.tenant_smtp_username, [all_user[i]['useremail']], `Important message about contact information`, HtmlData,
                     item.tenant_smtp_server, item.tenant_smtp_port, item.tenant_smtp_reply_to_mail,
                     item.tenant_smtp_password, item.tenant_smtp_timeout, item.tenant_smtp_security);
-                console.log("mailsend: ", mailsend);
 
-                //Mobile Notification
-                /* let notification_data = {
-                    body: translator.getStr("Emergency_Contact_Info_Update"),
-                    title: translator.getStr('Emergency_Contact_Update')
-                };
-                common.sendNotification(all_user[i]['useremail'], notification_data);
-
-                let mailsend = await sendEmail.sendEmail_client(item.tenant_smtp_username, [all_user[i]['useremail']], translator.getStr("Emergency_Contact_Email_Subject"), HtmlData,
-                    item.tenant_smtp_server, item.tenant_smtp_port, item.tenant_smtp_reply_to_mail,
-                    item.tenant_smtp_password, item.tenant_smtp_timeout, item.tenant_smtp_security);
-                console.log("mailsend:", mailsend); */
             }
         }
     } catch (e) {

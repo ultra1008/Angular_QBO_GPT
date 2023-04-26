@@ -23,13 +23,13 @@ export class TermspageComponent implements OnInit {
   subscription: Subscription;
   mode: any;
 
-  constructor(private modeService: ModeDetectService,) {
+  constructor (private modeService: ModeDetectService,) {
     var modeLocal = localStorage.getItem(localstorageconstants.DARKMODE);
     this.mode = modeLocal === 'on' ? 'on' : 'off';
     if (this.mode == 'off') {
-      console.log("this.mod", this.mode);
+
     } else {
-      console.log("this.mod else", this.mode);
+
     }
     this.subscription = this.modeService.onModeDetect().subscribe(mode => {
       if (mode) {
@@ -37,7 +37,6 @@ export class TermspageComponent implements OnInit {
       } else {
         this.mode = 'on';
       }
-      console.log("DARK MODE: " + this.mode);
     });
   }
 

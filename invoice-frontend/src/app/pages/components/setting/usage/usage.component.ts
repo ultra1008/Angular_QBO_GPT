@@ -65,7 +65,6 @@ export class UsageComponent implements OnInit {
             { headers: headers }
           )
           .subscribe((resp) => {
-            console.log("resp: ", resp);
             callback({
               recordsTotal: resp.recordsTotal,
               recordsFiltered: resp.recordsFiltered,

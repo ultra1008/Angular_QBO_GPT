@@ -212,7 +212,7 @@ module.exports.saveEmployee = async function (req, res) {
                             history_object.usercostcode = usercostcode;
                             let updateuser = await userConnection.updateOne({ _id: ObjectID(add._id) }, { usercostcode: usercostcode });
                             if (updateuser) {
-                                let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, body.useremail, "Rovuk Registration", HtmlData,
+                                sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, body.useremail, "Rovuk Registration", HtmlData,
                                     talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
                                     talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
 
@@ -1845,10 +1845,9 @@ module.exports.sendappinvitation = async function (req, res) {
             const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/appinvitation.html', 'utf8');
             var template = handlebars.compile(file_data);
             var HtmlData = await template(emailTmp);
-            let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [requestObject.recipient], "App Download Invitation", HtmlData,
+            sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [requestObject.recipient], "App Download Invitation", HtmlData,
                 talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
                 talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
-            console.log("send mail:", mailsend);
             res.send({ message: translator.getStr('AppInvitationSent'), status: true });
         }
         catch (e) {
@@ -2084,10 +2083,9 @@ module.exports.senddocumentexpiration = async function (req, res) {
                 } else if (sendResponse == 2) {
                     subject = "Documents about to expire";
                 }
-                let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, recipients, subject, HtmlData,
+                sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, recipients, subject, HtmlData,
                     talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
                     talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
-                console.log("send mail:", mailsend);
                 res.send({ message: translator.getStr('DocumentExpirationWarningSent'), status: true });
             }
         }
@@ -3414,10 +3412,9 @@ module.exports.getAllEmployeeReport = async function (req, res) {
                     };
                     var template = handlebars.compile(file_data);
                     var HtmlData = await template(emailTmp);
-                    let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, email_list, translator.getStr('EmailUserReportSubject'), HtmlData,
+                    sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, email_list, translator.getStr('EmailUserReportSubject'), HtmlData,
                         talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
                         talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
-                    console.log("mailsend: ", mailsend);
                     res.send({ message: translator.getStr('Report_Sent_Successfully'), status: true });
                 }
             });
@@ -3553,18 +3550,13 @@ module.exports.checkAndInsertImportData = async function (req, res) {
                         COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
                         COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
                     };
-                    //translator.getStr('SomethingWrong')
                     var template = handlebars.compile(file_data);
                     var HtmlData = await template(emailTmp);
 
-
-                    let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, requestObject.data[m].useremail, "Rovuk Registration", HtmlData,
+                    sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, requestObject.data[m].useremail, "Rovuk Registration", HtmlData,
                         talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
                         talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
-
-                    //console.l
                 }
-                //console.log("mailsend", mailsend)
 
             }
             res.send({ status: true, message: translator.getStr('Data_Insert_message') });
@@ -4268,7 +4260,6 @@ module.exports.listManagementUser = async function (req, res) {
                 users.push(user.useremail);
             });
             match.useremail = { $nin: users };
-            console.log("match", match);
             let get_user = await managementUserConnection.find(match);
             res.send({ status: true, data: get_user });
         } catch (e) {
