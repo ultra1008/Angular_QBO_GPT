@@ -6,5 +6,15 @@ import { Component } from '@angular/core';
   styleUrls: ['./allsettings.component.scss']
 })
 export class AllsettingsComponent {
+  breadscrums = [
+    {
+      title: 'Profile',
+      items: ['Extra'],
+      active: 'Profile',
+    },
+  ];
 
+  constructor() {
+    //constructor
+  }
 }
