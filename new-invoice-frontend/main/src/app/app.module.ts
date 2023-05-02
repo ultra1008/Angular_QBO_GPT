@@ -52,7 +52,7 @@ import { MomentModule } from 'angular2-moment'; // optional, provides moment-sty
     MomentModule,
   ],
   providers: [
-    { provide: LocationStrategy, useClass: HashLocationStrategy },
+    // { provide: LocationStrategy, useClass: HashLocationStrategy },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     fakeBackendProvider,
