@@ -34,7 +34,7 @@ export const ROUTES: RouteInfo[] = [
     submenu: [],
   },
   {
-    path: 'vendors',
+    path: 'invoice',
     title: 'Invoices',
     iconType: 'material-icons-two-tone',
     icon: 'table_view',
@@ -45,7 +45,7 @@ export const ROUTES: RouteInfo[] = [
     submenu: [],
   },
   {
-    path: 'advance-table',
+    path: 'documents',
     title: 'Documents',
     iconType: 'material-icons-two-tone',
     icon: 'table_view',
@@ -56,7 +56,7 @@ export const ROUTES: RouteInfo[] = [
     submenu: [],
   },
   {
-    path: 'advance-table',
+    path: 'reports',
     title: 'Reports',
     iconType: 'material-icons-two-tone',
     icon: 'table_view',
@@ -67,7 +67,7 @@ export const ROUTES: RouteInfo[] = [
     submenu: [],
   },
   {
-    path: 'advance-table',
+    path: 'users',
     title: 'Users',
     iconType: 'material-icons-two-tone',
     icon: 'table_view',
@@ -78,7 +78,7 @@ export const ROUTES: RouteInfo[] = [
     submenu: [],
   },
   {
-    path: 'advance-table',
+    path: 'settings',
     title: 'Settings',
     iconType: 'material-icons-two-tone',
     icon: 'table_view',

@@ -31,6 +31,41 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'invoice',
+        loadChildren: () =>
+          import('./invoice/invoice.module').then(
+            (m) => m.InvoiceModule
+          ),
+      },
+      {
+        path: 'documents',
+        loadChildren: () =>
+          import('./documents/documents.module').then(
+            (m) => m.DocumentsModule
+          ),
+      },
+      {
+        path: 'reports',
+        loadChildren: () =>
+          import('./reports/reports.module').then(
+            (m) => m.ReportsModule
+          ),
+      },
+      {
+        path: 'users',
+        loadChildren: () =>
+          import('./users/users.module').then(
+            (m) => m.UsersModule
+          ),
+      },
+      {
+        path: 'settings',
+        loadChildren: () =>
+          import('./settings/settings.module').then(
+            (m) => m.SettingsModule
+          ),
+      },
+      {
         path: 'calendar',
         loadChildren: () =>
           import('./calendar/calendar.module').then((m) => m.CalendarsModule),
