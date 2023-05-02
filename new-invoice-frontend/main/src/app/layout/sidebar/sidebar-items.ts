@@ -23,7 +23,7 @@ export const ROUTES: RouteInfo[] = [
     submenu: [],
   },
   {
-    path: 'vendors',
+    path: '/vendors',
     title: 'Vendors',
     iconType: 'material-icons-two-tone',
     icon: 'table_view',

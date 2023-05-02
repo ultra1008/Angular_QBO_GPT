@@ -26,44 +26,32 @@ const routes: Routes = [
       {
         path: 'vendors',
         loadChildren: () =>
-          import('./vendors/vendors.module').then(
-            (m) => m.VendorsModule
-          ),
+          import('./vendors/vendors.module').then((m) => m.VendorsModule),
       },
       {
         path: 'invoice',
         loadChildren: () =>
-          import('./invoice/invoice.module').then(
-            (m) => m.InvoiceModule
-          ),
+          import('./invoice/invoice.module').then((m) => m.InvoiceModule),
       },
       {
         path: 'documents',
         loadChildren: () =>
-          import('./documents/documents.module').then(
-            (m) => m.DocumentsModule
-          ),
+          import('./documents/documents.module').then((m) => m.DocumentsModule),
       },
       {
         path: 'reports',
         loadChildren: () =>
-          import('./reports/reports.module').then(
-            (m) => m.ReportsModule
-          ),
+          import('./reports/reports.module').then((m) => m.ReportsModule),
       },
       {
         path: 'users',
         loadChildren: () =>
-          import('./users/users.module').then(
-            (m) => m.UsersModule
-          ),
+          import('./users/users.module').then((m) => m.UsersModule),
       },
       {
         path: 'settings',
         loadChildren: () =>
-          import('./settings/settings.module').then(
-            (m) => m.SettingsModule
-          ),
+          import('./settings/settings.module').then((m) => m.SettingsModule),
       },
       {
         path: 'calendar',
