@@ -1,0 +1,637 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header mt-n3">
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+          <ul class="breadcrumb breadcrumb-style ">
+            <li class="breadcrumb-item">
+              <h4 class="fw-bold">Hi, Welcome back!</h4>
+              <h5 class="font-weight-normal mb-0">Axen Dashboard,</h5>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xl-5">
+        <div class="w-100">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="card">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col mt-0">
+                      <h5 class="card-title">New Customers</h5>
+                    </div>
+                    <div class="col-auto">
+                      <div class="col-green">
+                        <i class="fas fa-user-friends pull-left card-icon col-orange font-30"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <h1 class="mt-1 mb-3">456</h1>
+                  <div class="mb-0">
+                    <span class="text-success m-r-10"><i class="material-icons col-green align-middle">trending_up</i>
+                      10.32%
+                    </span>
+                    <span class="text-muted">Since last week</span>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col mt-0">
+                      <h5 class="card-title">Orders Received</h5>
+                    </div>
+                    <div class="col-auto">
+                      <div class="col-purple">
+                        <i class="fas fa-cart-plus pull-left card-icon font-30"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <h1 class="mt-1 mb-3">103</h1>
+                  <div class="mb-0">
+                    <span class="text-danger m-r-10"><i class="material-icons col-red align-middle">trending_down</i>
+                      -10.64%
+                    </span>
+                    <span class="text-muted">Since last week</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="card">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col mt-0">
+                      <h5 class="card-title">Inquiry</h5>
+                    </div>
+                    <div class="col-auto">
+                      <div class="col-blue">
+                        <i class="fas fa-headset pull-left card-icon font-30"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <h1 class="mt-1 mb-3">3,423</h1>
+                  <div class="mb-0">
+                    <span class="text-success m-r-10"><i class="material-icons col-green align-middle">trending_up</i>
+                      21..19%
+                    </span>
+                    <span class="text-muted">Since last week</span>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col mt-0">
+                      <h5 class="card-title">Revenue</h5>
+                    </div>
+                    <div class="col-auto">
+                      <div class="col-green">
+                        <i class="fas fa-dollar-sign pull-left card-icon font-30"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <h1 class="mt-1 mb-3">$2,352</h1>
+                  <div class="mb-0">
+                    <span class="text-danger m-r-10"><i class="material-icons col-red align-middle">trending_down</i>
+                      -4.27%
+                    </span>
+                    <span class="text-muted">Since last week</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-7">
+        <div class="card">
+          <div class="header">
+            <h2>Daily Booking Chart</h2>
+          </div>
+          <div class="body">
+            <div id="chart">
+              <apx-chart [series]="areaChartOptions.series!" [chart]="areaChartOptions.chart!"
+                [xaxis]="areaChartOptions.xaxis!" [yaxis]="areaChartOptions.yaxis!" [colors]="areaChartOptions.colors!"
+                [stroke]="areaChartOptions.stroke!" [legend]="areaChartOptions.legend!"
+                [tooltip]="areaChartOptions.tooltip!" [dataLabels]="areaChartOptions.dataLabels!"></apx-chart>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="header">
+            <h2>
+              Income Survay</h2>
+          </div>
+          <div class="body">
+            <div class="row">
+              <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12">
+                <apx-chart [series]="barChartOptions.series!" [chart]="barChartOptions.chart!"
+                  [dataLabels]="barChartOptions.dataLabels!" [plotOptions]="barChartOptions.plotOptions!"
+                  [yaxis]="barChartOptions.yaxis!" [legend]="barChartOptions.legend!" [colors]="barChartOptions.colors!"
+                  [stroke]="barChartOptions.stroke!" [tooltip]="barChartOptions.tooltip!"
+                  [xaxis]="barChartOptions.xaxis!">
+                </apx-chart>
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                <h5>Top Selling Products</h5>
+                <hr>
+                <ul class="list-unstyled list-unstyled-noborder">
+                  <li class="sales-group-list top-sell">
+                    <i class="fas fa-mobile-alt bg-purple sell-icon"></i>
+                    <div class="set-flex">
+                      <div class="sell-price">
+                        <div class="font-weight-600 text-muted text-small">112 Sales</div>
+                      </div>
+                      <div class="product-title">Mobile</div>
+                      <div class="product-price">
+                        <div class="budget-price-label col-green">$24,897</div>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="sales-group-list top-sell">
+                    <i class="fas fa-laptop bg-blue sell-icon"></i>
+                    <div class="set-flex">
+                      <div class="sell-price">
+                        <div class="font-weight-600 text-muted text-small">79 Sales</div>
+                      </div>
+                      <div class="product-title">Laptop</div>
+                      <div class="product-price">
+                        <div class="budget-price-label col-green">$12,629</div>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="sales-group-list top-sell">
+                    <i class="fas fa-headset bg-teal sell-icon"></i>
+                    <div class="set-flex">
+                      <div class="sell-price">
+                        <div class="font-weight-600 text-muted text-small">325 Sales</div>
+                      </div>
+                      <div class="product-title">Headphone</div>
+                      <div class="product-price">
+                        <div class="budget-price-label col-green">$34,782</div>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="sales-group-list top-sell">
+                    <i class="fas fa-camera bg-green sell-icon"></i>
+                    <div class="set-flex">
+                      <div class="sell-price">
+                        <div class="font-weight-600 text-muted text-small">98 Sales</div>
+                      </div>
+                      <div class="product-title">Camera</div>
+                      <div class="product-price">
+                        <div class="budget-price-label col-green">$11,523</div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4">
+        <div class="card">
+          <div class="header">
+            <h2>Project Team</h2>
+          </div>
+          <div class="card-body">
+            <div class="media-list position-relative">
+              <div class="table-responsive" id="project-team-scroll">
+                <table class="table table-hover table-xl mb-0">
+                  <thead>
+                    <tr>
+                      <th>Project Name</th>
+                      <th>Employees</th>
+                      <th>Cost</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="text-truncate">Project X</td>
+                      <td class="text-truncate">
+                        <ul class="list-unstyled order-list">
+                          <li class="avatar avatar-sm"><img class="rounded-circle" src="assets/images/user/user8.jpg"
+                              alt="user" title="" matTooltip="Wildan Ahdian"></li>
+                          <li class="avatar avatar-sm"><img class="rounded-circle" src="assets/images/user/user9.jpg"
+                              alt="user" title="" matTooltip="John Deo"></li>
+                          <li class="avatar avatar-sm"><img class="rounded-circle" src="assets/images/user/user10.jpg"
+                              alt="user" title="" matTooltip="Sarah Smith"></li>
+                          <li class="avatar avatar-sm"><span class="badge badge-primary">+3</span></li>
+                        </ul>
+                      </td>
+                      <td class="text-truncate">$8999</td>
+                    </tr>
+                    <tr>
+                      <td class="text-truncate">Project AB2</td>
+                      <td class="text-truncate">
+                        <ul class="list-unstyled order-list m-b-0">
+                          <li class="avatar avatar-sm"><img class="rounded-circle" src="assets/images/user/user1.jpg"
+                              alt="user" title="" matTooltip="Wildan Ahdian"></li>
+                          <li class="avatar avatar-sm"><img class="rounded-circle" src="assets/images/user/user3.jpg"
+                              alt="user" title="" matTooltip="John Deo"></li>
+                          <li class="avatar avatar-sm"><img class="rounded-circle" src="assets/images/user/user2.jpg"
+                              alt="user" title="" matTooltip="Sarah Smith"></li>
+                          <li class="avatar avatar-sm"><span class="badge badge-primary">+1</span></li>
+                        </ul>
+                      </td>
+                      <td class="text-truncate">$5550</td>
+                    </tr>
+                    <tr>
+                      <td class="text-truncate">Project DS3</td>
+                      <td class="text-truncate">
+                        <ul class="list-unstyled order-list m-b-0">
+                          <li class="avatar avatar-sm"><img class="rounded-circle" src="assets/images/user/user5.jpg"
+                              alt="user" title="" matTooltip="Wildan Ahdian"></li>
+                          <li class="avatar avatar-sm"><img class="rounded-circle" src="assets/images/user/user9.jpg"
+                              alt="user" title="" matTooltip="Sarah Smith"></li>
+                          <li class="avatar avatar-sm"><span class="badge badge-primary">+4</span></li>
+                        </ul>
+                      </td>
+                      <td class="text-truncate">$9000</td>
+                    </tr>
+                    <tr>
+                      <td class="text-truncate">Project XCD</td>
+                      <td class="text-truncate">
+                        <ul class="list-unstyled order-list m-b-0">
+                          <li class="avatar avatar-sm"><img class="rounded-circle" src="assets/images/user/user8.jpg"
+                              alt="user" title="" matTooltip="Wildan Ahdian"></li>
+                          <li class="avatar avatar-sm"><img class="rounded-circle" src="assets/images/user/user3.jpg"
+                              alt="user" title="" matTooltip="John Deo"></li>
+                          <li class="avatar avatar-sm"><img class="rounded-circle" src="assets/images/user/user5.jpg"
+                              alt="user" title="" matTooltip="Sarah Smith"></li>
+                          <li class="avatar avatar-sm"><span class="badge badge-primary">+2</span></li>
+                        </ul>
+                      </td>
+                      <td class="text-truncate">$7500</td>
+                    </tr>
+                    <tr>
+                      <td class="text-truncate">Project Z2</td>
+                      <td class="text-truncate">
+                        <ul class="list-unstyled order-list m-b-0">
+                          <li class="avatar avatar-sm"><img class="rounded-circle" src="assets/images/user/user8.jpg"
+                              alt="user" title="" matTooltip="Wildan Ahdian"></li>
+                          <li class="avatar avatar-sm"><img class="rounded-circle" src="assets/images/user/user10.jpg"
+                              alt="user" title="" matTooltip="Sarah Smith"></li>
+                          <li class="avatar avatar-sm"><span class="badge badge-primary">+3</span></li>
+                        </ul>
+                      </td>
+                      <td class="text-truncate">$8500</td>
+                    </tr>
+                    <tr>
+                      <td class="text-truncate">Project GTe</td>
+                      <td class="text-truncate">
+                        <ul class="list-unstyled order-list m-b-0">
+                          <li class="avatar avatar-sm"><img class="rounded-circle" src="assets/images/user/user3.jpg"
+                              alt="user" title="" matTooltip="Wildan Ahdian"></li>
+                          <li class="avatar avatar-sm"><img class="rounded-circle" src="assets/images/user/user5.jpg"
+                              alt="user" title="" matTooltip="Sarah Smith"></li>
+                          <li class="avatar avatar-sm"><span class="badge badge-primary">+3</span></li>
+                        </ul>
+                      </td>
+                      <td class="text-truncate">$8500</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <div class="card">
+          <div class="card-body">
+            <mat-tab-group>
+              <mat-tab>
+                <ng-template mat-tab-label>
+                  <mat-icon class="example-tab-icon m-2">computer</mat-icon>
+                  Computer
+                </ng-template>
+                <div class="mt-5">
+                  <ngx-gauge [value]="gaugeValue" [size]="gaugeSize" [type]="gaugeType" [thick]="guageThick"
+                    [thresholds]="thresholdConfig" class="guage-chart-center">
+                    <ngx-gauge-value>
+                      <span class="font-27"> {{gaugeValue}}</span>
+                    </ngx-gauge-value>
+                    <ngx-gauge-label>
+                      <span class="font-15 text-muted">'Qty'</span>
+                    </ngx-gauge-label>
+                  </ngx-gauge>
+                </div>
+                <div class="d-flex w-100 text-center mt-5 ml-0 mr-0 pb-3">
+                  <div class="col-6">
+                    <div class="col-6 border-right">
+                      <div class="h4 fw-bold mb-0">28%</div><span class="small text-gray">Last week</span>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="h4 fw-bold mb-0">70%</div><span class="small text-gray">Last month</span>
+                  </div>
+                </div>
+              </mat-tab>
+
+              <mat-tab>
+                <ng-template mat-tab-label>
+                  <mat-icon class="example-tab-icon m-2">photo_camera</mat-icon>
+                  Camera
+                </ng-template>
+                <div class="mt-5">
+                  <ngx-gauge [value]="gaugeValue2" [size]="gaugeSize2" [type]="gaugeType2" [thick]="guageThick2"
+                    [thresholds]="thresholdConfig2" class="guage-chart-center">
+                    <ngx-gauge-value>
+                      <span class="font-27"> {{gaugeValue2}}</span>
+                    </ngx-gauge-value>
+                    <ngx-gauge-label>
+                      <span class="font-15 text-muted">'Qty'</span>
+                    </ngx-gauge-label>
+                  </ngx-gauge>
+                </div>
+                <div class="d-flex w-100 text-center mt-5 ml-0 mr-0 pb-3">
+                  <div class="col-6">
+                    <div class="col-6 border-right">
+                      <div class="h4 fw-bold mb-0">33%</div><span class="small text-gray">Last week</span>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="h4 fw-bold mb-0">68%</div><span class="small text-gray">Last month</span>
+                  </div>
+                </div>
+              </mat-tab>
+            </mat-tab-group>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <div class="card">
+          <div class="header">
+            <h2>Chart Sample</h2>
+          </div>
+          <div class="body">
+            <div id="chart">
+              <apx-chart [series]="circleChartOptions.series2!" [chart]="circleChartOptions.chart!"
+                [plotOptions]="circleChartOptions.plotOptions!" [labels]="circleChartOptions.labels!"
+                [legend]="circleChartOptions.legend!" [colors]="circleChartOptions.colors!"
+                [responsive]="circleChartOptions.responsive!"></apx-chart>
+            </div>
+            <div class="row">
+              <div class="col-4">
+                <p class="text-muted font-15 text-truncate">Target</p>
+                <h5>
+                  <i class="fas fa-arrow-circle-up col-green m-r-5"></i>$15.3k
+                </h5>
+              </div>
+              <div class="col-4">
+                <p class="text-muted font-15 text-truncate">Last
+                  week</p>
+                <h5>
+                  <i class="fas fa-arrow-circle-down col-red m-r-5"></i>$2.8k
+                </h5>
+              </div>
+              <div class="col-4">
+                <p class="text-muted text-truncate">Last
+                  Month</p>
+                <h5>
+                  <i class="fas fa-arrow-circle-up col-green m-r-5"></i>$12.5k
+                </h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="header">
+            <h2>Chart Sample</h2>
+          </div>
+          <div class="body">
+            <div id="chart">
+              <apx-chart [series]="pieChartOptions.series2!" [chart]="pieChartOptions.chart!"
+                [labels]="pieChartOptions.labels!" [responsive]="pieChartOptions.responsive!"
+                [dataLabels]="pieChartOptions.dataLabels!" [legend]="pieChartOptions.legend!" class="apex-pie-center">
+              </apx-chart>
+            </div>
+            <div class="table-responsive m-t-15">
+              <table class="table align-items-center">
+                <tbody>
+                  <tr>
+                    <td><i class="fa fa-circle col-blue msr-2"></i>Science</td>
+                    <td>32</td>
+                    <td class="col-green">+12%</td>
+                  </tr>
+                  <tr>
+                    <td><i class="fa fa-circle col-orange msr-2"></i>Economics</td>
+                    <td>12</td>
+                    <td class="col-orange">-12%</td>
+                  </tr>
+                  <tr>
+                    <td><i class="fa fa-circle col-green msr-2"></i>Mathes</td>
+                    <td>32</td>
+                    <td class="col-green">+3%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row clearfix">
+      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <div class="card">
+          <div class="header">
+            <h2>Documents</h2>
+          </div>
+          <div class="body">
+            <div class="doc-file-type">
+              <ng-scrollbar style="height: 370px" visibility="hover">
+                <ul class="list-unstyled">
+                  <li class="d-flex mb-3">
+                    <span class="msr-3 align-self-center img-icon primary-rgba text-primary"><i
+                        class="far fa-file-word"></i></span>
+                    <div class="set-flex">
+                      <h5 class="font-16 mb-1">Java Programming</h5>
+                      <p>.doc, 4.3 MB</p>
+                    </div>
+                    <div class="ms-auto">
+                      <td>
+                        <i class="far fa-trash-alt psr-3"></i>
+                        <i class="far fa-arrow-alt-circle-down"></i>
+                      </td>
+                    </div>
+                  </li>
+                  <li class="d-flex mb-3">
+                    <span class="msr-3 align-self-center img-icon success-rgba text-success"><i
+                        class="far fa-file-excel"></i></span>
+                    <div class="set-flex">
+                      <h5 class="font-16 mb-1">Angular Theory</h5>
+                      <p>.xls, 2.5 MB</p>
+                    </div>
+                    <div class="ms-auto">
+                      <td>
+                        <i class="far fa-trash-alt psr-3"></i>
+                        <i class="far fa-arrow-alt-circle-down"></i>
+                      </td>
+                    </div>
+                  </li>
+                  <li class="d-flex mb-3">
+                    <span class="msr-3 align-self-center img-icon danger-rgba text-danger"><i
+                        class="far fa-file-pdf"></i></span>
+                    <div class="set-flex">
+                      <h5 class="font-16 mb-1">Maths Sums Solution</h5>
+                      <p>.pdf, 10.5 MB</p>
+                    </div>
+                    <div class="ms-auto">
+                      <td>
+                        <i class="far fa-trash-alt psr-3"></i>
+                        <i class="far fa-arrow-alt-circle-down"></i>
+                      </td>
+                    </div>
+                  </li>
+                  <li class="d-flex mb-3">
+                    <span class="msr-3 align-self-center img-icon info-rgba text-info"><i
+                        class="far fa-file-archive"></i></span>
+                    <div class="set-flex">
+                      <h5 class="font-16 mb-1">Submit Science Journal</h5>
+                      <p>.zip, 53.2 MB</p>
+                    </div>
+                    <div class="ms-auto">
+                      <td>
+                        <i class="far fa-trash-alt psr-3"></i>
+                        <i class="far fa-arrow-alt-circle-down"></i>
+                      </td>
+                    </div>
+                  </li>
+                  <li class="d-flex mb-3">
+                    <span class="msr-3 align-self-center img-icon primary-rgba text-primary"><i
+                        class="far fa-file-word"></i></span>
+                    <div class="set-flex">
+                      <h5 class="font-16 mb-1">Marketing Instructions</h5>
+                      <p>.doc, 5.3 MB</p>
+                    </div>
+                    <div class="ms-auto">
+                      <td>
+                        <i class="far fa-trash-alt psr-3"></i>
+                        <i class="far fa-arrow-alt-circle-down"></i>
+                      </td>
+                    </div>
+                  </li>
+                </ul>
+              </ng-scrollbar>
+              <div class="text-center p-t-20">
+                <button mat-stroked-button color="primary">More Documents</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-12 col-md-12 col-lg-8 col-xl-8">
+        <div class="card">
+          <div class="header">
+            <h2>Recent Order</h2>
+          </div>
+          <div class="card-body">
+            <div class="tableBody" id="client-details">
+              <div class="table-responsive">
+                <table class="table table-hover dashboard-task-infos">
+                  <thead>
+                    <tr>
+                      <th>Img</th>
+                      <th>Order No</th>
+                      <th>Customer Name</th>
+                      <th>Order Date</th>
+                      <th>Status</th>
+                      <th>Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="table-img">
+                        <img src="assets/images/user/user5.jpg" alt="">
+                      </td>
+                      <td>XY56987</td>
+                      <td>Alis Smith</td>
+                      <td>22-09-2019</td>
+                      <td><span class="badge col-orange">Cancelled</span></td>
+                      <td>$223</td>
+                    </tr>
+                    <tr>
+                      <td class="table-img">
+                        <img src="assets/images/user/user1.jpg" alt="">
+                      </td>
+                      <td>XY12587</td>
+                      <td>Pooja Sarma</td>
+                      <td>11-09-2019</td>
+                      <td><span class="badge col-blue">Pending</span></td>
+                      <td>$124</td>
+                    </tr>
+                    <tr>
+                      <td class="table-img">
+                        <img src="assets/images/user/user4.jpg" alt="">
+                      </td>
+                      <td>XY58987</td>
+                      <td>John Doe</td>
+                      <td>18-09-2019</td>
+                      <td><span class="badge col-green">Completed</span></td>
+                      <td>$178</td>
+                    </tr>
+                    <tr>
+                      <td class="table-img">
+                        <img src="assets/images/user/user6.jpg" alt="">
+                      </td>
+                      <td>XY56987</td>
+                      <td>Cara Stevens</td>
+                      <td>16-09-2019</td>
+                      <td><span class="badge col-orange">Cancelled</span></td>
+                      <td>$265</td>
+                    </tr>
+                    <tr>
+                      <td class="table-img">
+                        <img src="assets/images/user/user9.jpg" alt="">
+                      </td>
+                      <td>XY12587</td>
+                      <td>Priya Mehta</td>
+                      <td>23-09-2019</td>
+                      <td><span class="badge col-green">Completed</span></td>
+                      <td>$321</td>
+                    </tr>
+                    <tr>
+                      <td class="table-img">
+                        <img src="assets/images/user/user3.jpg" alt="">
+                      </td>
+                      <td>XY58987</td>
+                      <td>Ashton Cox</td>
+                      <td>28-09-2019</td>
+                      <td><span class="badge col-orange">Cancelled</span></td>
+                      <td>$321</td>
+                    </tr>
+                    <tr>
+                      <td class="table-img">
+                        <img src="assets/images/user/user7.jpg" alt="">
+                      </td>
+                      <td>XY3785</td>
+                      <td>Cara Stevens</td>
+                      <td>19-09-2019</td>
+                      <td><span class="badge col-blue">Pending</span></td>
+                      <td>$152</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
