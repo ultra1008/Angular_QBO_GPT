@@ -29,14 +29,15 @@ import { VendorTable } from '../vendor-table.model';
 export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
   displayedColumns = [
     'select',
-    'img',
+    // 'img',
     'fName',
     'lName',
+    'mName',
+    'mobile',
     'email',
+    'address',
     'gender',
     'bDate',
-    'mobile',
-    'address',
     'country',
     'actions',
   ];

@@ -60,6 +60,27 @@
                         <div class="right">
                             <ul class="tbl-export-btn">
                                 <li class="tbl-header-btn">
+                                    <div class="m-l-10" matTooltip="HISTORY">
+                                        <button mat-mini-fab color="primary" (click)="addNew()">
+                                            <mat-icon class="col-white">history</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" matTooltip="REPORT">
+                                        <button mat-mini-fab color="primary" (click)="addNew()">
+                                            <mat-icon class="col-white">insert_drive_file</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" matTooltip="ARCHIVE">
+                                        <button mat-mini-fab color="primary" (click)="addNew()">
+                                            <mat-icon class="col-white">archive</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="tbl-header-btn">
                                     <div class="m-l-10" matTooltip="ADD">
                                         <button mat-mini-fab color="primary" (click)="addNew()">
                                             <mat-icon class="col-white">add</mat-icon>
@@ -74,10 +95,9 @@
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn">
-                                    <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="DELETE">
+                                    <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="MULTI ARCHIVE">
                                         <button mat-mini-fab color="warn" (click)="removeSelectedRows()">
-                                            <mat-icon class="col-white">delete
-                                            </mat-icon>
+                                            <mat-icon class="col-white">archive </mat-icon>
                                         </button>
                                     </div>
                                 </li>
@@ -113,7 +133,7 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
                                     <mat-cell *matCellDef="let row">{{row.id}}</mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="img">
+                                <!-- <ng-container matColumnDef="img">
                                     <mat-header-cell mat-header-cell *matHeaderCellDef
                                         [ngClass]="'tbl-col-width-per-7'"> Image
                                     </mat-header-cell>
@@ -121,29 +141,49 @@
                                             class="mobile-label">Image:</span>
                                         <img [src]="row.img" />
                                     </mat-cell>
-                                </ng-container>
+                                </ng-container> -->
                                 <ng-container matColumnDef="fName">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>First Name
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Vendor Name
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">First Name:</span>{{row.fName}}</mat-cell>
+                                        <span class="mobile-label">Vendor Name:</span>{{row.fName}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="lName">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Last Name
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Vendor ID
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Last Name:</span>{{row.lName}}</mat-cell>
+                                        <span class="mobile-label">Vendor ID:</span>{{row.lName}}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="mName">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Customer ID
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
+                                        <span class="mobile-label">Customer ID:</span>{{row.lName}}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="mobile">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Phone</mat-header-cell>
+                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
+                                        <span class="mobile-label">Phone:</span> {{row.mobile}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="email">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Email</mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Email:</span> {{row.email}}</mat-cell>
                                 </ng-container>
+                                <ng-container matColumnDef="address">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Address
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
+                                        matTooltip="{{row.address}}">
+                                        <span class="truncate-text"><span class="mobile-label">Address:</span>
+                                            {{row.address}}</span>
+                                    </mat-cell>
+                                </ng-container>
                                 <ng-container matColumnDef="gender">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header> Gender
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header> Status
                                     </mat-header-cell>
                                     <mat-cell mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Gender:</span>
+                                        <span class="mobile-label">Status:</span>
                                         <div *ngIf="row.gender==='male'">
                                             <span class="badge badge-solid-green">
                                                 {{row.gender}}</span>
@@ -155,47 +195,41 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="bDate">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Birth Date</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Attachments</mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Birth Date:</span>
+                                        <span class="mobile-label">Attachments:</span>
                                         {{row.bDate | date: 'MM/dd/yyyy' }}
                                     </mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="mobile">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Mobile</mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Mobile:</span> {{row.mobile}}</mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="address">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Address
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
-                                        matTooltip="{{row.address}}">
-                                        <span class="truncate-text"><span class="mobile-label">Address:</span>
-                                            {{row.address}}</span>
-                                    </mat-cell>
-                                </ng-container>
+
+
                                 <ng-container matColumnDef="country">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Country</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Quick Book</mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Country:</span> {{row.country}}</mat-cell>
+                                        <span class="mobile-label">Quick Book:</span> {{row.country}}</mat-cell>
                                 </ng-container>
                                 <!-- actions -->
                                 <ng-container matColumnDef="actions">
-                                    <mat-header-cell class="pr-0" *matHeaderCellDef>Actions</mat-header-cell>
-                                    <mat-cell *matCellDef="let row; let i=index;" class="pr-0">
-                                        <button mat-icon-button color="accent" (click)="$event.stopPropagation()"
-                                            (click)="editCall(row)" class="tbl-action-btn">
-                                            <app-feather-icons [icon]="'edit'"
-                                                [class]="'tbl-fav-edit'"></app-feather-icons>
+                                    <mat-header-cell class="psl-3" *matHeaderCellDef>Actions
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row; let i=index;" class="psl-3">
+                                        <button mat-icon-button [matMenuTriggerFor]="menu"
+                                            (click)="$event.stopPropagation()">
+                                            <mat-icon>more_vert</mat-icon>
                                         </button>
-                                        <button mat-icon-button color="accent" (click)="$event.stopPropagation()"
-                                            (click)="deleteItem(row)" class="tbl-action-btn">
-                                            <app-feather-icons [icon]="'trash-2'"
-                                                [class]="'tbl-fav-delete'"></app-feather-icons>
-                                        </button>
+                                        <mat-menu #menu="matMenu">
+                                            <button mat-menu-item (click)="editCall(row)">
+                                                <i class="material-icons-two-tone align-middle msr-2">create</i>
+                                                <span>Edit</span>
+                                            </button>
+                                            <button mat-menu-item (click)="deleteItem(row)">
+                                                <i class="material-icons-two-tone align-middle msr-2">archive</i>
+                                                <span>Archive</span>
+                                            </button>
+                                        </mat-menu>
                                     </mat-cell>
                                 </ng-container>
+
                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                                 <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="editCall(row)"
                                     [style.cursor]="'pointer'" matRipple>
