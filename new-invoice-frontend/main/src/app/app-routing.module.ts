@@ -150,7 +150,7 @@ const routes: Routes = [
   { path: '**', component: Page404Component },
 ];
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {})],
+  imports: [RouterModule.forRoot(routes, { useHash: false })],
   exports: [RouterModule],
 })
 export class AppRoutingModule { }
