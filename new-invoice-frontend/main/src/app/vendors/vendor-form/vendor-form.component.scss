@@ -1,0 +1,22 @@
+::ng-deep .s2-confirm {
+    width: 130px !important;
+    margin: 2px;
+}
+
+::ng-deep .btn-gray {
+    background-color: grey !important;
+    color: white !important;
+}
+
+.mat-mdc-mini-fab:not(.mdc-fab--extended) {
+    border-radius: 0px
+}
+
+.mat-mdc-form-field-infix {
+    min-height: 10px !important;
+}
+
+.mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+    padding-top: 8px !important;
+    padding-bottom: 0px !important;
+}

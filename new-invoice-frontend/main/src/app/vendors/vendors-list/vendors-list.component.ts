@@ -19,6 +19,7 @@ import { FormComponent } from 'src/app/advance-table/form/form.component';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { VendorsService } from '../vendors.service';
 import { VendorTable } from '../vendor-table.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-vendors-list',
@@ -29,7 +30,6 @@ import { VendorTable } from '../vendor-table.model';
 export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
   displayedColumns = [
     'select',
-    // 'img',
     'fName',
     'lName',
     'mName',
@@ -59,7 +59,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     public httpClient: HttpClient,
     public dialog: MatDialog,
     public vendorTableService: VendorsService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar, private router: Router
   ) {
     super();
   }
@@ -75,36 +75,33 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   refresh() {
     this.loadData();
   }
+  // addNew() {
+  //   let tempDirection: Direction;
+  //   if (localStorage.getItem('isRtl') === 'true') {
+  //     tempDirection = 'rtl';
+  //   } else {
+  //     tempDirection = 'ltr';
+  //   }
+  //   const dialogRef = this.dialog.open(FormComponent, {
+  //     data: {
+  //       advanceTable: this.advanceTable,
+  //       action: 'add',
+  //     },
+  //     direction: tempDirection,
+  //   });
+  //   this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
+  //     if (result === 1) {
+  //       // After dialog is closed we're doing frontend updates
+  //       // For add we're just pushing a new row inside DataService
+  //       this.exampleDatabase?.dataChange.value.unshift(this.vendorTableService.getDialogData());
+  //       this.refreshTable();
+  //       this.showNotification('snackbar-success', 'Add Record Successfully...!!!', 'bottom', 'center');
+  //     }
+  //   });
+  // }
+
   addNew() {
-    let tempDirection: Direction;
-    if (localStorage.getItem('isRtl') === 'true') {
-      tempDirection = 'rtl';
-    } else {
-      tempDirection = 'ltr';
-    }
-    const dialogRef = this.dialog.open(FormComponent, {
-      data: {
-        advanceTable: this.advanceTable,
-        action: 'add',
-      },
-      direction: tempDirection,
-    });
-    this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-      if (result === 1) {
-        // After dialog is closed we're doing frontend updates
-        // For add we're just pushing a new row inside DataService
-        this.exampleDatabase?.dataChange.value.unshift(
-          this.vendorTableService.getDialogData()
-        );
-        this.refreshTable();
-        this.showNotification(
-          'snackbar-success',
-          'Add Record Successfully...!!!',
-          'bottom',
-          'center'
-        );
-      }
-    });
+    this.router.navigate(['/vendors/vendor-form']);
   }
   editCall(row: VendorTable) {
     this.id = row.id;

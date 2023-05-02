@@ -24,11 +24,13 @@ import { AdvanceTableRoutingModule } from '../advance-table/advance-table-routin
 import { ComponentsModule } from '../shared/components/components.module';
 import { SharedModule } from '../shared/shared.module';
 import { VendorsService } from './vendors.service';
+import { VendorFormComponent } from './vendor-form/vendor-form.component';
 
 
 @NgModule({
   declarations: [
-    VendorsListComponent
+    VendorsListComponent,
+    VendorFormComponent
   ],
   providers: [VendorsService],
   imports: [

@@ -1,9 +1,5 @@
 import { Component } from '@angular/core';
-import {
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators,
-} from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators, } from '@angular/forms';
 
 @Component({
   selector: 'app-form-validations',
@@ -25,7 +21,7 @@ export class FormValidationsComponent {
     },
   ];
 
-  constructor(private fb: UntypedFormBuilder) {
+  constructor (private fb: UntypedFormBuilder) {
     this.register = this.fb.group({
       first: ['', [Validators.required, Validators.pattern('[a-zA-Z]+')]],
       last: [''],

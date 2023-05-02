@@ -1,0 +1,218 @@
+<section class="content">
+    <div class="content-block">
+        <!-- <div class="block-header" *ngFor="let breadscrum of breadscrums">
+           
+            <app-breadcrumb [title]="breadscrum.title" [items]="breadscrum.items" [active_item]="breadscrum.active">
+            </app-breadcrumb>
+        </div> -->
+        <!-- Basic Validation -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="row">
+                        <div class="header d-flex justify-content-between">
+                            <h2 class="my-auto">Add Vendors</h2>
+
+                            <button matTooltip="Close" color="primary" (click)="confirmexit()" mat-mini-fab> <mat-icon
+                                    class="col-white">close</mat-icon></button>
+                        </div>
+                    </div>
+                    <div class="body">
+                        <form class="register-form m-4" [formGroup]="register" (ngSubmit)="onRegister()">
+                            <div class="row">
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>Vendor name</mat-label>
+                                        <input matInput formControlName="vendor_name" required>
+
+                                        <mat-error *ngIf="register.get('vendor_name')?.hasError('required')">
+                                            Vendor name is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>Phone</mat-label>
+
+                                        <input required formControlName="phone" matInput
+                                            placeholder="EX: (435) 345 34 54" prefix="+91 " mask="(000) 000 00 00" />
+                                        <mat-error *ngIf="register.get('Phone')?.hasError('required')">
+                                            Phone Number is required
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>Email</mat-label>
+                                        <input matInput formControlName="email" required>
+
+                                        <mat-error
+                                            *ngIf="register.get('email')?.hasError('required') || register.get('email')?.touched">
+                                            Please enter a valid email address
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>GCL Accounts</mat-label>
+                                        <input matInput formControlName="gcl_account">
+
+                                        <mat-error
+                                            *ngIf="register.get('gcl_account')?.hasError('required') || register.get('email')?.touched">
+                                            Please enter a valid GCL Accounts
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 mb-2">
+                                    <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>Vendor ID</mat-label>
+                                        <input matInput formControlName="vendor_id">
+
+
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 mb-2">
+                                    <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>Customrt ID</mat-label>
+                                        <input matInput formControlName="Customer_id">
+
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>Address</mat-label>
+                                        <textarea matInput formControlName="address"></textarea>
+                                        <mat-error *ngIf="register.get('address')?.hasError('required')">
+                                            address is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>Address 2</mat-label>
+                                        <textarea matInput formControlName="address2"></textarea>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>City</mat-label>
+                                        <input matInput formControlName="city" required>
+
+                                        <mat-error *ngIf="register.get('city')?.hasError('required')">
+                                            City name is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>State</mat-label>
+                                        <input matInput formControlName="state" required>
+
+                                        <mat-error *ngIf="register.get('state')?.hasError('required')">
+                                            State name is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>Zip Code</mat-label>
+                                        <input matInput formControlName="zip_code" required>
+
+                                        <mat-error *ngIf="register.get('zip_code')?.hasError('required')">
+                                            Zip Code is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 mb-2">
+                                    <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>Country</mat-label>
+                                        <mat-select formControlName="country">
+                                            <mat-option [value]="'India'">
+                                                India
+                                            </mat-option>
+                                            <mat-option [value]="'Algeria'">
+                                                Algeria
+                                            </mat-option>
+                                            <mat-option [value]="'Brazil'">
+                                                Brazil
+                                            </mat-option>
+                                            <mat-option [value]="'Poland'">
+                                                Poland
+                                            </mat-option>
+                                            <mat-option [value]="'Sri Lanka'">
+                                                Sri Lanka
+                                            </mat-option>
+                                            <mat-option [value]="'Thailand'">
+                                                Thailand
+                                            </mat-option>
+                                            <mat-option [value]="'Japan'">
+                                                Japan
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-icon matSuffix>flag</mat-icon>
+
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>Terms</mat-label>
+                                        <input matInput formControlName="terms">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>Status</mat-label>
+                                        <input matInput formControlName="Status">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>Discripction</mat-label>
+                                        <textarea matInput formControlName="discripction"></textarea>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>Temparary password</mat-label>
+                                        <input matInput formControlName="tmp_password">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                    <button class="btn-space" mat-raised-button color="primary"
+                                        [disabled]="!register.valid">Save</button>
+                                    <button type="button" mat-raised-button color="warn">Cancel</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# Basic Validation -->
+    </div>
+</section>
