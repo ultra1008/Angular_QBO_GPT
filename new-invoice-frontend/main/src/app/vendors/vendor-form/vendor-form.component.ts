@@ -3,6 +3,8 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators, } from '@angular/form
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { VendorsService } from '../vendors.service';
+import { TermModel } from '../vendor-table.model';
 
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
@@ -24,47 +26,63 @@ const swalWithBootstrapButtons = Swal.mixin({
 })
 export class VendorFormComponent {
   // Form 1
-  register: UntypedFormGroup;
+  vendorForm: UntypedFormGroup;
   hide = true;
   agree = false;
   customForm?: UntypedFormGroup;
+  termsList: Array<TermModel> = [];
 
   breadscrums = [
     {
-      title: 'Validation',
-      items: ['Forms'],
-      active: 'Validation',
+      title: 'Vendor',
+      items: ['Add Vendor'],
+      active: 'Add Vendor',
     },
   ];
 
-  constructor (private fb: UntypedFormBuilder, private router: Router, private snackBar: MatSnackBar) {
-    this.register = this.fb.group({
+  constructor (private fb: UntypedFormBuilder, private router: Router, private snackBar: MatSnackBar, public vendorService: VendorsService,) {
+    this.vendorForm = this.fb.group({
       vendor_name: ['', [Validators.required, Validators.pattern('[a-zA-Z]+')]],
-      phone: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email, Validators.minLength(5)],],
+      vendor_phone: ['', [Validators.required]],
+      vendor_email: ['', [Validators.required, Validators.email, Validators.minLength(5)],],
       gcl_account: ['', [Validators.required]],
       vendor_id: [''],
-      Customer_id: [''],
-      address: ['', [Validators.required]],
-      address2: [''],
-      city: ['', [Validators.required]],
-      state: ['', [Validators.required]],
-      country: [''],
-      zip_code: ['', [Validators.required]],
-      terms: ['', [Validators.required]],
-      Status: ['', [Validators.required]],
-      discripction: [''],
-      tmp_password: [''],
+      customer_id: [''],
+      vendor_address: ['', [Validators.required]],
+      vendor_address2: [''],
+      vendor_city: ['', [Validators.required]],
+      vendor_state: ['', [Validators.required]],
+      vendor_zipcode: ['', [Validators.required]],
+      vendor_country: [''],
+      vendor_terms: ['', [Validators.required]],
+      vendor_status: ['', [Validators.required]],
+      vendor_description: [''],
+      password: [''],
     });
+    this.getTerms();
   }
-  onRegister() {
-    console.log('Form Value', this.register.value);
-  }
-  saveData() {
-    // rgf
-  }
-  confirmexit() {
 
+  async getTerms() {
+    const data = await this.vendorService.getTerms();
+    if (data.status) {
+      this.termsList = data.data;
+    }
+  }
+
+  async saveVendor() {
+    if (this.vendorForm.valid) {
+      const requestObject = this.vendorForm.value;
+      const data = await this.vendorService.saveVendor(requestObject);
+      if (data.status) {
+        this.showNotification(data.message, 'snackbar-success');
+        this.router.navigate(['/vendors']);
+      } else {
+        this.showNotification(data.message, 'snackbar-danger');
+      }
+    }
+  }
+
+  confirmExit() {
     swalWithBootstrapButtons
       .fire({
         title: "Are you sure you want to close this window without saving changes?",
@@ -78,11 +96,11 @@ export class VendorFormComponent {
       .then((result) => {
         if (result.isConfirmed) {
           // Move to the vendor listing
-          if (this.register.valid) {
-            this.saveData();
+          if (this.vendorForm.valid) {
+            this.saveVendor();
           } else {
             // alert form invalidation
-            this.showNotification("Please complete the vendor form before submitting.");
+            this.showNotification("Please complete the vendor form before submitting.", 'white');
           }
         } else if (result.isDenied) {
           // ;
@@ -94,12 +112,15 @@ export class VendorFormComponent {
       });
   }
 
-  showNotification(text: string) {
+  showNotification(
+    text: string,
+    colorName: string,
+  ) {
     this.snackBar.open(text, '', {
       duration: 2000,
       verticalPosition: 'top',
       horizontalPosition: 'right',
-      panelClass: 'white',
+      panelClass: colorName,
     });
   }
 }

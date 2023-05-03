@@ -48,7 +48,7 @@
                         <div class="left">
                             <ul class="header-buttons-left ms-0">
                                 <li class="tbl-title">
-                                    <h2>Vendors</h2>
+                                    <h2>Vendor</h2>
                                 </li>
                                 <li class="tbl-search-box">
                                     <label for="search-input"><i class="material-icons search-icon">search</i></label>
@@ -114,14 +114,14 @@
                             <table mat-table #table [dataSource]="dataSource" matSort class="table mat-cell">
                                 <!-- Checkbox Column -->
                                 <ng-container matColumnDef="select">
-                                    <mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-6'">
+                                    <mat-header-cell *matHeaderCellDef>
                                         <mat-checkbox (change)="$event ? masterToggle() : null"
                                             [checked]="selection.hasValue() && isAllSelected()"
                                             [indeterminate]="selection.hasValue() && !isAllSelected()"
                                             [ngClass]="'tbl-checkbox'">
                                         </mat-checkbox>
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" [ngClass]="'tbl-col-width-per-6'">
+                                    <mat-cell *matCellDef="let row">
                                         <mat-checkbox (click)="$event.stopPropagation()"
                                             (change)="$event ? selection.toggle(row) : null"
                                             [checked]="selection.isSelected(row)" [ngClass]="'tbl-checkbox'">
@@ -142,73 +142,88 @@
                                         <img [src]="row.img" />
                                     </mat-cell>
                                 </ng-container> -->
-                                <ng-container matColumnDef="fName">
+                                <ng-container matColumnDef="vendor_name">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Vendor Name
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Vendor Name:</span>{{row.fName}}</mat-cell>
+                                        <span class="mobile-label">Vendor Name:</span>{{row.vendor_name}}</mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="lName">
+                                <ng-container matColumnDef="vendor_id">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Vendor ID
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Vendor ID:</span>{{row.lName}}</mat-cell>
+                                        <span class="mobile-label">Vendor ID:</span>{{row.vendor_id}}</mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="mName">
+                                <ng-container matColumnDef="customer_id">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Customer ID
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Customer ID:</span>{{row.lName}}</mat-cell>
+                                        <span class="mobile-label">Customer ID:</span>{{row.customer_id}}</mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="mobile">
+                                <ng-container matColumnDef="vendor_phone">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Phone</mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Phone:</span> {{row.mobile}}</mat-cell>
+                                        <span class="mobile-label">Phone:</span> {{row.vendor_phone}}</mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="email">
+                                <ng-container matColumnDef="vendor_email">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Email</mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Email:</span> {{row.email}}</mat-cell>
+                                        <span class="mobile-label">Email:</span> {{row.vendor_email}}</mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="address">
+                                <ng-container matColumnDef="vendor_address">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Address
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
-                                        matTooltip="{{row.address}}">
+                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
                                         <span class="truncate-text"><span class="mobile-label">Address:</span>
-                                            {{row.address}}</span>
+                                            {{row.vendor_address}}</span>
                                     </mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="gender">
+                                <ng-container matColumnDef="vendor_status">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header> Status
                                     </mat-header-cell>
                                     <mat-cell mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Status:</span>
-                                        <div *ngIf="row.gender==='male'">
+                                        <div *ngIf="row.vendor_status===1" (click)="updateStatus(row)">
                                             <span class="badge badge-solid-green">
-                                                {{row.gender}}</span>
+                                                Active</span>
                                         </div>
-                                        <div *ngIf="row.gender==='female'">
-                                            <span class="badge badge-solid-purple">
-                                                {{row.gender}}</span>
+                                        <div *ngIf="row.vendor_status===2" (click)="updateStatus(row)">
+                                            <span class="badge badge-solid-red">
+                                                Inactive</span>
                                         </div>
                                     </mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="bDate">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Attachments</mat-header-cell>
+                                <ng-container matColumnDef="vendor_attachment">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Attachment
+                                    </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Attachments:</span>
-                                        {{row.bDate | date: 'MM/dd/yyyy' }}
+                                        <span class="truncate-text"><span class="mobile-label">Attachment:</span>
+                                            <div *ngIf="row.vendor_attachment.length > 0">
+                                                <i class="fas fa-paperclip" style="color:grey"></i>
+                                            </div>
+                                        </span>
                                     </mat-cell>
                                 </ng-container>
-
-
-                                <ng-container matColumnDef="country">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Quick Book</mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Quick Book:</span> {{row.country}}</mat-cell>
+                                <ng-container matColumnDef="vendor_from">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        <img src='assets/images/icons/quickbooks.svg' alt="" height="25" width="25" />
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
+                                        matTooltip="{{row.isVendorfromQBO}}">
+                                        <span class="truncate-text"><span class="mobile-label">
+                                                <img src='assets/images/icons/quickbooks.svg' alt="" height="25"
+                                                    width="25" />:</span>
+                                            <div *ngIf="row.isVendorfromQBO">
+                                                <img src='assets/images/icons/quickbooks.svg' alt="" height="25"
+                                                    width="25" />
+                                            </div>
+                                            <div *ngIf="!row.isVendorfromQBO">
+                                                <img src='assets/images/icons/grey-quickbooks.svg' alt="" height="25"
+                                                    width="25" />
+                                            </div>
+                                        </span>
+                                    </mat-cell>
                                 </ng-container>
-                                <!-- actions -->
                                 <ng-container matColumnDef="actions">
                                     <mat-header-cell class="psl-3" *matHeaderCellDef>Actions
                                     </mat-header-cell>
@@ -218,11 +233,11 @@
                                             <mat-icon>more_vert</mat-icon>
                                         </button>
                                         <mat-menu #menu="matMenu">
-                                            <button mat-menu-item (click)="editCall(row)">
+                                            <button mat-menu-item (click)="editVendor(row)">
                                                 <i class="material-icons-two-tone align-middle msr-2">create</i>
                                                 <span>Edit</span>
                                             </button>
-                                            <button mat-menu-item (click)="deleteItem(row)">
+                                            <button mat-menu-item (click)="deleteVendor(row)">
                                                 <i class="material-icons-two-tone align-middle msr-2">archive</i>
                                                 <span>Archive</span>
                                             </button>
@@ -231,8 +246,8 @@
                                 </ng-container>
 
                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                                <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="editCall(row)"
-                                    [style.cursor]="'pointer'" matRipple>
+                                <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'"
+                                    matRipple>
                                 </mat-row>
                             </table>
                         </div>

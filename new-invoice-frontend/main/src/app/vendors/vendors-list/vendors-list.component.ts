@@ -18,8 +18,9 @@ import { DeleteComponent } from 'src/app/advance-table/delete/delete.component';
 import { FormComponent } from 'src/app/advance-table/form/form.component';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { VendorsService } from '../vendors.service';
-import { VendorTable } from '../vendor-table.model';
+import { DataTablesResponse, VendorTable } from '../vendor-table.model';
 import { Router } from '@angular/router';
+import { HttpCall } from 'src/app/services/httpcall.service';
 
 @Component({
   selector: 'app-vendors-list',
@@ -30,15 +31,15 @@ import { Router } from '@angular/router';
 export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
   displayedColumns = [
     'select',
-    'fName',
-    'lName',
-    'mName',
-    'mobile',
-    'email',
-    'address',
-    'gender',
-    'bDate',
-    'country',
+    'vendor_name',
+    'vendor_id',
+    'customer_id',
+    'vendor_phone',
+    'vendor_email',
+    'vendor_address',
+    'vendor_status',
+    'vendor_attachment',
+    'vendor_from',
     'actions',
   ];
   exampleDatabase?: VendorsService;
@@ -56,7 +57,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   ];
 
   constructor (
-    public httpClient: HttpClient,
+    public httpClient: HttpClient, private httpCall: HttpCall,
     public dialog: MatDialog,
     public vendorTableService: VendorsService,
     private snackBar: MatSnackBar, private router: Router
@@ -103,8 +104,13 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   addNew() {
     this.router.navigate(['/vendors/vendor-form']);
   }
+
+  editVendor(vendor: DataTablesResponse) {
+    this.router.navigate(['/vendors/vendor-form'], { queryParams: { _id: vendor._id } });
+  }
+
   editCall(row: VendorTable) {
-    this.id = row.id;
+    /* this.id = row.id;
     let tempDirection: Direction;
     if (localStorage.getItem('isRtl') === 'true') {
       tempDirection = 'rtl';
@@ -138,10 +144,10 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
           );
         }
       }
-    });
+    }); */
   }
   deleteItem(row: VendorTable) {
-    this.id = row.id;
+    /* this.id = row.id;
     let tempDirection: Direction;
     if (localStorage.getItem('isRtl') === 'true') {
       tempDirection = 'rtl';
@@ -169,7 +175,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
           );
         }
       }
-    });
+    }); */
   }
   private refreshTable() {
     this.paginator._changePageSize(this.paginator.pageSize);
@@ -183,14 +189,14 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
-    this.isAllSelected()
+    /* this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.renderedData.forEach((row) =>
         this.selection.select(row)
-      );
+      ); */
   }
   removeSelectedRows() {
-    const totalSelect = this.selection.selected.length;
+    /* const totalSelect = this.selection.selected.length;
     this.selection.selected.forEach((item) => {
       const index: number = this.dataSource.renderedData.findIndex(
         (d) => d === item
@@ -205,10 +211,10 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
       totalSelect + ' Record Delete Successfully...!!!',
       'bottom',
       'center'
-    );
+    ); */
   }
   public loadData() {
-    this.exampleDatabase = new VendorsService(this.httpClient);
+    this.exampleDatabase = new VendorsService(this.httpClient, this.httpCall);
     this.dataSource = new ExampleDataSource(
       this.exampleDatabase,
       this.paginator,
@@ -226,13 +232,11 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   showNotification(
     colorName: string,
     text: string,
-    placementFrom: MatSnackBarVerticalPosition,
-    placementAlign: MatSnackBarHorizontalPosition
   ) {
     this.snackBar.open(text, '', {
       duration: 2000,
-      verticalPosition: placementFrom,
-      horizontalPosition: placementAlign,
+      verticalPosition: 'top',
+      horizontalPosition: 'right',
       panelClass: colorName,
     });
   }
@@ -242,14 +246,13 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     // key name with space add in brackets
     const exportData: Partial<TableElement>[] =
       this.dataSource.filteredData.map((x) => ({
-        'First Name': x.fName,
-        'Last Name': x.lName,
-        Email: x.email,
-        Gender: x.gender,
-        'Birth Date': formatDate(new Date(x.bDate), 'yyyy-MM-dd', 'en') || '',
-        Mobile: x.mobile,
-        Address: x.address,
-        Country: x.country,
+        'Vendor Name': x.vendor_name || '',
+        'Vendor ID': x.vendor_id || '',
+        'Customer ID': x.customer_id || '',
+        'Phone': x.vendor_phone || '',
+        'Email': x.vendor_email || '',
+        'Address': x.vendor_address || '',
+        'Status': x.vendor_status === 1 ? 'Active' : 'Inactive',
       }));
 
     TableExportUtil.exportToExcel(exportData, 'excel');
@@ -266,8 +269,44 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
       this.contextMenu.openMenu();
     }
   }
+  async updateStatus(vendor: DataTablesResponse) {
+    let status = 1;
+    if (vendor.vendor_status == 1) {
+      status = 2;
+    }
+    const data = await this.vendorTableService.updateVendorStatus({ _id: vendor._id, vendor_status: status });
+    if (data.status) {
+      this.showNotification('snackbar-success', data.message);
+      const foundIndex = this.exampleDatabase?.dataChange.value.findIndex(
+        (x) => x._id === vendor._id
+      );
+      if (foundIndex != null && this.exampleDatabase) {
+        this.exampleDatabase.dataChange.value[foundIndex].vendor_status = status;
+        this.refreshTable();
+      }
+    } else {
+      this.showNotification('snackbar-danger', data.message);
+    }
+  }
+
+  async deleteVendor(vendor: DataTablesResponse) {
+    const data = await this.vendorTableService.deleteVendor({ _id: vendor._id, is_delete: 1 });
+    if (data.status) {
+      this.showNotification('snackbar-success', data.message);
+      const foundIndex = this.exampleDatabase?.dataChange.value.findIndex(
+        (x) => x._id === vendor._id
+      );
+      // for delete we use splice in order to remove single object from DataService
+      if (foundIndex != null && this.exampleDatabase) {
+        this.exampleDatabase.dataChange.value.splice(foundIndex, 1);
+        this.refreshTable();
+      }
+    } else {
+      this.showNotification('snackbar-danger', data.message);
+    }
+  }
 }
-export class ExampleDataSource extends DataSource<VendorTable> {
+export class ExampleDataSource extends DataSource<DataTablesResponse> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -275,8 +314,8 @@ export class ExampleDataSource extends DataSource<VendorTable> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: VendorTable[] = [];
-  renderedData: VendorTable[] = [];
+  filteredData: DataTablesResponse[] = [];
+  renderedData: DataTablesResponse[] = [];
   constructor (
     public exampleDatabase: VendorsService,
     public paginator: MatPaginator,
@@ -287,7 +326,7 @@ export class ExampleDataSource extends DataSource<VendorTable> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<VendorTable[]> {
+  connect(): Observable<DataTablesResponse[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this.exampleDatabase.dataChange,
@@ -298,19 +337,18 @@ export class ExampleDataSource extends DataSource<VendorTable> {
     this.exampleDatabase.getAllVendorTables();
     return merge(...displayDataChanges).pipe(
       map(() => {
+
         // Filter data
         this.filteredData = this.exampleDatabase.data
           .slice()
-          .filter((advanceTable: VendorTable) => {
+          .filter((advanceTable: DataTablesResponse) => {
             const searchStr = (
-              advanceTable.fName +
-              advanceTable.lName +
-              advanceTable.email +
-              advanceTable.mobile +
-              advanceTable.gender +
-              advanceTable.bDate +
-              advanceTable.address +
-              advanceTable.country
+              advanceTable.vendor_name +
+              advanceTable.vendor_id +
+              advanceTable.customer_id +
+              advanceTable.vendor_phone +
+              advanceTable.vendor_email +
+              advanceTable.vendor_address
             ).toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
@@ -330,7 +368,7 @@ export class ExampleDataSource extends DataSource<VendorTable> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: VendorTable[]): VendorTable[] {
+  sortData(data: DataTablesResponse[]): DataTablesResponse[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }
@@ -338,23 +376,29 @@ export class ExampleDataSource extends DataSource<VendorTable> {
       let propertyA: number | string = '';
       let propertyB: number | string = '';
       switch (this._sort.active) {
-        case 'id':
-          [propertyA, propertyB] = [a.id, b.id];
+        case '_id':
+          [propertyA, propertyB] = [a._id, b._id];
           break;
-        case 'fName':
-          [propertyA, propertyB] = [a.fName, b.fName];
+        case 'vendor_name':
+          [propertyA, propertyB] = [a.vendor_name, b.vendor_name];
           break;
-        case 'lName':
-          [propertyA, propertyB] = [a.lName, b.lName];
+        case 'vendor_id':
+          [propertyA, propertyB] = [a.vendor_id, b.vendor_id];
           break;
-        case 'email':
-          [propertyA, propertyB] = [a.email, b.email];
+        case 'customer_id':
+          [propertyA, propertyB] = [a.customer_id, b.customer_id];
           break;
-        case 'address':
-          [propertyA, propertyB] = [a.address, b.address];
+        case 'vendor_phone':
+          [propertyA, propertyB] = [a.vendor_phone, b.vendor_phone];
           break;
-        case 'mobile':
-          [propertyA, propertyB] = [a.mobile, b.mobile];
+        case 'vendor_email':
+          [propertyA, propertyB] = [a.vendor_email, b.vendor_email];
+          break;
+        case 'vendor_address':
+          [propertyA, propertyB] = [a.vendor_address, b.vendor_address];
+          break;
+        case 'vendor_status':
+          [propertyA, propertyB] = [a.vendor_status, b.vendor_status];
           break;
       }
       const valueA = isNaN(+propertyA) ? propertyA : +propertyA;
