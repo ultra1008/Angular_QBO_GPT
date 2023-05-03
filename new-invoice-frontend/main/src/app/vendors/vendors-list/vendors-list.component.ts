@@ -14,7 +14,7 @@ import { TableExportUtil } from 'src/app/shared/tableExportUtil';
 import { TableElement } from 'src/app/shared/TableElement';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { VendorsService } from '../vendors.service';
-import { DataTablesResponse, VendorTable } from '../vendor-table.model';
+import { Vendor } from '../vendor-table.model';
 import { Router } from '@angular/router';
 import { HttpCall } from 'src/app/services/httpcall.service';
 
@@ -40,9 +40,9 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   ];
   exampleDatabase?: VendorsService;
   dataSource!: ExampleDataSource;
-  selection = new SelectionModel<VendorTable>(true, []);
+  selection = new SelectionModel<Vendor>(true, []);
   id?: number;
-  advanceTable?: VendorTable;
+  advanceTable?: Vendor;
 
   breadscrums = [
     {
@@ -80,7 +80,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     this.router.navigate(['/vendors/vendor-form']);
   }
 
-  editVendor(vendor: DataTablesResponse) {
+  editVendor(vendor: Vendor) {
     this.router.navigate(['/vendors/vendor-form'], { queryParams: { _id: vendor._id } });
   }
 
@@ -148,7 +148,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: VendorTable) {
+  onContextMenu(event: MouseEvent, item: Vendor) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -158,7 +158,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
       this.contextMenu.openMenu();
     }
   }
-  async updateStatus(vendor: DataTablesResponse) {
+  async updateStatus(vendor: Vendor) {
     let status = 1;
     if (vendor.vendor_status == 1) {
       status = 2;
@@ -178,7 +178,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     }
   }
 
-  async deleteVendor(vendor: DataTablesResponse, is_delete: number) {
+  async deleteVendor(vendor: Vendor, is_delete: number) {
     const data = await this.vendorTableService.deleteVendor({ _id: vendor._id, is_delete: is_delete });
     if (data.status) {
       this.showNotification('snackbar-success', data.message);
@@ -200,7 +200,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     this.loadData();
   }
 }
-export class ExampleDataSource extends DataSource<DataTablesResponse> {
+export class ExampleDataSource extends DataSource<Vendor> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -208,8 +208,8 @@ export class ExampleDataSource extends DataSource<DataTablesResponse> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: DataTablesResponse[] = [];
-  renderedData: DataTablesResponse[] = [];
+  filteredData: Vendor[] = [];
+  renderedData: Vendor[] = [];
   constructor (
     public exampleDatabase: VendorsService,
     public paginator: MatPaginator,
@@ -221,7 +221,7 @@ export class ExampleDataSource extends DataSource<DataTablesResponse> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<DataTablesResponse[]> {
+  connect(): Observable<Vendor[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this.exampleDatabase.dataChange,
@@ -229,14 +229,14 @@ export class ExampleDataSource extends DataSource<DataTablesResponse> {
       this.filterChange,
       this.paginator.page,
     ];
-    this.exampleDatabase.getAllVendorTables(this.isDelete);
+    this.exampleDatabase.getAllVendorTable(this.isDelete);
     return merge(...displayDataChanges).pipe(
       map(() => {
 
         // Filter data
         this.filteredData = this.exampleDatabase.data
           .slice()
-          .filter((advanceTable: DataTablesResponse) => {
+          .filter((advanceTable: Vendor) => {
             const searchStr = (
               advanceTable.vendor_name +
               advanceTable.vendor_id +
@@ -263,7 +263,7 @@ export class ExampleDataSource extends DataSource<DataTablesResponse> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: DataTablesResponse[]): DataTablesResponse[] {
+  sortData(data: Vendor[]): Vendor[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }
