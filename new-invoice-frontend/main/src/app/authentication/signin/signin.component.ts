@@ -1,11 +1,12 @@
 import { AuthService } from 'src/app/core/service/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import {
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators,
-} from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators, } from '@angular/forms';
+export interface ChipColor {
+  name: string;
+  color: string;
+}
+
 @Component({
   selector: 'app-signin',
   templateUrl: './signin.component.html',
@@ -18,20 +19,46 @@ export class SigninComponent implements OnInit {
   returnUrl!: string;
   error = '';
   hide = true;
+  removable = true;
+  showLogin = false;
+
+  availableColors: ChipColor[] = [
+    { name: 'none', color: '' },
+    { name: 'Primary', color: 'primary' },
+    { name: 'Accent', color: 'accent' },
+    { name: 'Warn', color: 'warn' },
+  ];
   constructor(
     private formBuilder: UntypedFormBuilder,
     private router: Router,
     private authService: AuthService
-  ) {}
+  ) { }
   ngOnInit() {
     this.authForm = this.formBuilder.group({
       username: ['admin', Validators.required],
       password: ['admin', Validators.required],
+      companycode: ['', Validators.required],
     });
   }
   get f() {
     return this.authForm.controls;
   }
+  showLoginForm() {
+    this.showLogin = true
+  }
+  public removacode() {
+    // localStorage.removeItem(localstorageconstants.COMPANYCODE);
+    // this.showCompanyCode = true;
+    // this.showLogin = false;
+    // this.showForgotPassword = false;
+    // this.showOTP = false;
+    // this.showOTPOption = false;
+  }
+  langurl() {
+
+    window.open('https://www.rovuk.us/mobile-terms-of-service-2', '_blank');
+  }
+
   onSubmit() {
     this.submitted = true;
     this.error = '';

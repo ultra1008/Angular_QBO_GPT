@@ -40,7 +40,7 @@ export class VendorFormComponent {
     },
   ];
 
-  constructor (private fb: UntypedFormBuilder, private router: Router, private snackBar: MatSnackBar, public vendorService: VendorsService,) {
+  constructor(private fb: UntypedFormBuilder, private router: Router, private snackBar: MatSnackBar, public vendorService: VendorsService,) {
     this.vendorForm = this.fb.group({
       vendor_name: ['', [Validators.required, Validators.pattern('[a-zA-Z]+')]],
       vendor_phone: ['', [Validators.required]],
@@ -88,7 +88,7 @@ export class VendorFormComponent {
         title: "Are you sure you want to close this window without saving changes?",
         showDenyButton: true,
         showCancelButton: true,
-        confirmButtonText: "Save And Exite",
+        confirmButtonText: "Save And Exit",
         cancelButtonText: "Dont Save",
         denyButtonText: "Cancel",
         allowOutsideClick: false,
