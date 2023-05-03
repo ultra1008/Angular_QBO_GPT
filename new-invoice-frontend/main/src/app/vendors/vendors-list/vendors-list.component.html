@@ -265,7 +265,7 @@
                             </table>
                         </div>
                         <!-- Loading spinner -->
-                        <div *ngIf="exampleDatabase?.isTblLoading" class="tbl-spinner">
+                        <div *ngIf="vendorService?.isTblLoading" class="tbl-spinner">
                             <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
                             </mat-progress-spinner>
                         </div>
@@ -316,7 +316,7 @@
                             </button>
                         </mat-menu>   -->
                         <!-- context menu end -->
-                        <div *ngIf="!exampleDatabase?.isTblLoading" class="no-results"
+                        <div *ngIf="!vendorService?.isTblLoading" class="no-results"
                             [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
                             No results
                         </div>

@@ -17,6 +17,7 @@ import { VendorsService } from '../vendors.service';
 import { Vendor } from '../vendor-table.model';
 import { Router } from '@angular/router';
 import { HttpCall } from 'src/app/services/httpcall.service';
+import { showNotification } from 'src/consts/utils';
 
 @Component({
   selector: 'app-vendors-list',
@@ -38,7 +39,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     'vendor_from',
     'actions',
   ];
-  exampleDatabase?: VendorsService;
+  vendorService?: VendorsService;
   dataSource!: ExampleDataSource;
   selection = new SelectionModel<Vendor>(true, []);
   id?: number;
@@ -102,9 +103,9 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     // 
   }
   public loadData() {
-    this.exampleDatabase = new VendorsService(this.httpClient, this.httpCall);
+    this.vendorService = new VendorsService(this.httpClient, this.httpCall);
     this.dataSource = new ExampleDataSource(
-      this.exampleDatabase,
+      this.vendorService,
       this.paginator,
       this.sort,
       this.isDelete,
@@ -117,17 +118,6 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
         this.dataSource.filter = this.filter.nativeElement.value;
       }
     );
-  }
-  showNotification(
-    colorName: string,
-    text: string,
-  ) {
-    this.snackBar.open(text, '', {
-      duration: 2000,
-      verticalPosition: 'top',
-      horizontalPosition: 'right',
-      panelClass: colorName,
-    });
   }
 
   // export table data in excel file
@@ -165,33 +155,33 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     }
     const data = await this.vendorTableService.updateVendorStatus({ _id: vendor._id, vendor_status: status });
     if (data.status) {
-      this.showNotification('snackbar-success', data.message);
-      const foundIndex = this.exampleDatabase?.dataChange.value.findIndex(
+      showNotification(this.snackBar, data.message, 'success');
+      const foundIndex = this.vendorService?.dataChange.value.findIndex(
         (x) => x._id === vendor._id
       );
-      if (foundIndex != null && this.exampleDatabase) {
-        this.exampleDatabase.dataChange.value[foundIndex].vendor_status = status;
+      if (foundIndex != null && this.vendorService) {
+        this.vendorService.dataChange.value[foundIndex].vendor_status = status;
         this.refreshTable();
       }
     } else {
-      this.showNotification('snackbar-danger', data.message);
+      showNotification(this.snackBar, data.message, 'error');
     }
   }
 
   async deleteVendor(vendor: Vendor, is_delete: number) {
     const data = await this.vendorTableService.deleteVendor({ _id: vendor._id, is_delete: is_delete });
     if (data.status) {
-      this.showNotification('snackbar-success', data.message);
-      const foundIndex = this.exampleDatabase?.dataChange.value.findIndex(
+      showNotification(this.snackBar, data.message, 'success');
+      const foundIndex = this.vendorService?.dataChange.value.findIndex(
         (x) => x._id === vendor._id
       );
       // for delete we use splice in order to remove single object from DataService
-      if (foundIndex != null && this.exampleDatabase) {
-        this.exampleDatabase.dataChange.value.splice(foundIndex, 1);
+      if (foundIndex != null && this.vendorService) {
+        this.vendorService.dataChange.value.splice(foundIndex, 1);
         this.refreshTable();
       }
     } else {
-      this.showNotification('snackbar-danger', data.message);
+      showNotification(this.snackBar, data.message, 'error');
     }
   }
 
@@ -211,7 +201,7 @@ export class ExampleDataSource extends DataSource<Vendor> {
   filteredData: Vendor[] = [];
   renderedData: Vendor[] = [];
   constructor (
-    public exampleDatabase: VendorsService,
+    public vendorService: VendorsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
     public isDelete: number,
@@ -224,17 +214,16 @@ export class ExampleDataSource extends DataSource<Vendor> {
   connect(): Observable<Vendor[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this.exampleDatabase.dataChange,
+      this.vendorService.dataChange,
       this._sort.sortChange,
       this.filterChange,
       this.paginator.page,
     ];
-    this.exampleDatabase.getAllVendorTable(this.isDelete);
+    this.vendorService.getAllVendorTable(this.isDelete);
     return merge(...displayDataChanges).pipe(
       map(() => {
-
         // Filter data
-        this.filteredData = this.exampleDatabase.data
+        this.filteredData = this.vendorService.data
           .slice()
           .filter((advanceTable: Vendor) => {
             const searchStr = (

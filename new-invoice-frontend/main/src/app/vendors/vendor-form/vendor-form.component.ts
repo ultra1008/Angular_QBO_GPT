@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { VendorsService } from '../vendors.service';
 import { TermModel } from '../vendor-table.model';
+import { showNotification } from 'src/consts/utils';
 
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
@@ -62,7 +63,6 @@ export class VendorFormComponent {
       vendor_terms: ['', [Validators.required]],
       vendor_status: ['', [Validators.required]],
       vendor_description: [''],
-      password: [''],
     });
     this.getTerms();
     if (this.id) {
@@ -90,7 +90,6 @@ export class VendorFormComponent {
         vendor_terms: [vendorData.vendor_terms, [Validators.required]],
         vendor_status: [vendorData.vendor_status, [Validators.required]],
         vendor_description: [vendorData.vendor_description],
-        password: [],
       });
       this.vendorForm.markAllAsTouched();
     }
@@ -111,10 +110,10 @@ export class VendorFormComponent {
       }
       const data = await this.vendorService.saveVendor(requestObject);
       if (data.status) {
-        this.showNotification(data.message, 'snackbar-success');
+        showNotification(this.snackBar, data.message, 'success');
         this.router.navigate(['/vendors']);
       } else {
-        this.showNotification(data.message, 'snackbar-danger');
+        showNotification(this.snackBar, data.message, 'error');
       }
     }
   }
@@ -137,7 +136,7 @@ export class VendorFormComponent {
             this.saveVendor();
           } else {
             // alert form invalidation
-            this.showNotification("Please complete the vendor form before submitting.", 'white');
+            showNotification(this.snackBar, 'Please complete the vendor form before submitting.', 'error');
           }
         } else if (result.isDenied) {
           // ;
@@ -149,15 +148,5 @@ export class VendorFormComponent {
       });
   }
 
-  showNotification(
-    text: string,
-    colorName: string,
-  ) {
-    this.snackBar.open(text, '', {
-      duration: 2000,
-      verticalPosition: 'top',
-      horizontalPosition: 'right',
-      panelClass: colorName,
-    });
-  }
+
 }
