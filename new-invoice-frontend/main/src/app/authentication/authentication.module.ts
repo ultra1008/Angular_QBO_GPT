@@ -16,6 +16,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatListModule } from '@angular/material/list';
+import { AuthenticationService } from './authentication.service';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 @NgModule({
   declarations: [
     Page500Component,
@@ -25,6 +27,7 @@ import { MatListModule } from '@angular/material/list';
     LockedComponent,
     ForgotPasswordComponent
   ],
+  providers: [AuthenticationService],
   imports: [
     CommonModule,
     FormsModule,
@@ -36,7 +39,8 @@ import { MatListModule } from '@angular/material/list';
     MatButtonModule,
     MatCheckboxModule,
     MatChipsModule,
-    MatListModule
+    MatListModule,
+    MatSnackBarModule,
   ]
 })
 export class AuthenticationModule { }
