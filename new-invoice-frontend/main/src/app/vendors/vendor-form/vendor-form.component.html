@@ -4,15 +4,36 @@
             <app-breadcrumb [title]="breadscrum.title" [items]="breadscrum.items" [active_item]="breadscrum.active">
             </app-breadcrumb>
         </div> -->
+        <div class="m-4"></div>
         <!-- Basic Validation -->
         <div class="row clearfix">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
-                    <div class="row">
-                        <div class="header d-flex justify-content-between">
-                            <h2 class="my-auto">Add Vendors</h2>
-                            <button matTooltip="Close" color="primary" (click)="confirmExit()" mat-mini-fab> <mat-icon
-                                    class="col-white">close</mat-icon></button>
+                    <div class="materialTableHeader">
+                        <div class="left">
+                            <ul class="header-buttons-left ms-0">
+                                <li class="tbl-title">
+                                    <h2>Add Vendor</h2>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- <div class="right">
+                            <div class="m-l-10" matTooltip="MULTI ARCHIVE">
+                                <button mat-mini-fab color="warn" (click)="confirmExit()">
+                                    <mat-icon class="col-white">close </mat-icon>
+                                </button>
+                            </div>
+                        </div> -->
+                        <div class="right">
+                            <ul class="tbl-export-btn">
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" matTooltip="CLOSE">
+                                        <button mat-mini-fab color="warn" (click)="confirmExit()">
+                                            <mat-icon class="col-white">close </mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                     <div class="body">
@@ -42,7 +63,7 @@
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>GCL Accounts</mat-label>
-                                        <input matInput formControlName="gcl_account">
+                                        <input matInput formControlName="gl_account">
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -61,18 +82,16 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>Address</mat-label>
-                                        <textarea matInput formControlName="vendor_address"></textarea>
+                                        <input matInput formControlName="vendor_address">
                                     </mat-form-field>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>Address 2</mat-label>
-                                        <textarea matInput formControlName="vendor_address2"></textarea>
+                                        <input matInput formControlName="vendor_address2">
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -106,7 +125,7 @@
 
                             </div>
                             <div class="row">
-                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>Terms</mat-label>
                                         <mat-select formControlName="vendor_terms">
@@ -116,9 +135,7 @@
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>Status</mat-label>
                                         <mat-select formControlName="vendor_status">
@@ -137,14 +154,6 @@
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>Discripction</mat-label>
                                         <textarea matInput formControlName="vendor_description"></textarea>
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                                    <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Temparary password</mat-label>
-                                        <input matInput formControlName="password">
                                     </mat-form-field>
                                 </div>
                             </div>

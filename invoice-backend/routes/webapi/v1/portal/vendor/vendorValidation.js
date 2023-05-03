@@ -14,6 +14,20 @@ const getOneVendor = (req, res, next) => {
     });
 };
 
+const getVendorForTable = (req, res, next) => {
+    const validationRule = {
+        "is_delete": "required",
+    };
+    validator(req.body, validationRule, {}, (error, status) => {
+        if (!status) {
+            res.send({ status: false, error: error });
+        }
+        else {
+            next();
+        }
+    });
+};
+
 const saveVendor = (req, res, next) => {
     const validationRule = {
         "vendor_name": "required",
@@ -67,6 +81,7 @@ const updateVendorStatus = (req, res, next) => {
 
 module.exports = {
     getOneVendor,
+    getVendorForTable,
     saveVendor,
     deleteVendor,
     updateVendorStatus

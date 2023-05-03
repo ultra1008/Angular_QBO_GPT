@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import { Observable, catchError, map, throwError } from 'rxjs';
-import { UpdateResponse } from '../vendors/vendor-table.model';
 
 @Injectable({
   providedIn: 'root'
