@@ -4,18 +4,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { DataSource } from '@angular/cdk/collections';
-import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition, } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject, fromEvent, merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Direction } from '@angular/cdk/bidi';
 import { TableExportUtil } from 'src/app/shared/tableExportUtil';
 import { TableElement } from 'src/app/shared/TableElement';
-import { formatDate } from '@angular/common';
-import { DeleteComponent } from 'src/app/advance-table/delete/delete.component';
-import { FormComponent } from 'src/app/advance-table/form/form.component';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { VendorsService } from '../vendors.service';
 import { DataTablesResponse, VendorTable } from '../vendor-table.model';
@@ -30,7 +26,7 @@ import { HttpCall } from 'src/app/services/httpcall.service';
 })
 export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
   displayedColumns = [
-    'select',
+    // 'select',
     'vendor_name',
     'vendor_id',
     'customer_id',
@@ -55,6 +51,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
       active: 'Table',
     },
   ];
+  isDelete = 0;
 
   constructor (
     public httpClient: HttpClient, private httpCall: HttpCall,
@@ -70,36 +67,14 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   @ViewChild(MatMenuTrigger)
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
+
   ngOnInit() {
     this.loadData();
   }
+
   refresh() {
     this.loadData();
   }
-  // addNew() {
-  //   let tempDirection: Direction;
-  //   if (localStorage.getItem('isRtl') === 'true') {
-  //     tempDirection = 'rtl';
-  //   } else {
-  //     tempDirection = 'ltr';
-  //   }
-  //   const dialogRef = this.dialog.open(FormComponent, {
-  //     data: {
-  //       advanceTable: this.advanceTable,
-  //       action: 'add',
-  //     },
-  //     direction: tempDirection,
-  //   });
-  //   this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-  //     if (result === 1) {
-  //       // After dialog is closed we're doing frontend updates
-  //       // For add we're just pushing a new row inside DataService
-  //       this.exampleDatabase?.dataChange.value.unshift(this.vendorTableService.getDialogData());
-  //       this.refreshTable();
-  //       this.showNotification('snackbar-success', 'Add Record Successfully...!!!', 'bottom', 'center');
-  //     }
-  //   });
-  // }
 
   addNew() {
     this.router.navigate(['/vendors/vendor-form']);
@@ -109,74 +84,6 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     this.router.navigate(['/vendors/vendor-form'], { queryParams: { _id: vendor._id } });
   }
 
-  editCall(row: VendorTable) {
-    /* this.id = row.id;
-    let tempDirection: Direction;
-    if (localStorage.getItem('isRtl') === 'true') {
-      tempDirection = 'rtl';
-    } else {
-      tempDirection = 'ltr';
-    }
-    const dialogRef = this.dialog.open(FormComponent, {
-      data: {
-        advanceTable: row,
-        action: 'edit',
-      },
-      direction: tempDirection,
-    });
-    this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-      if (result === 1) {
-        // When using an edit things are little different, firstly we find record inside DataService by id
-        const foundIndex = this.exampleDatabase?.dataChange.value.findIndex(
-          (x) => x.id === this.id
-        );
-        // Then you update that record using data from dialogData (values you enetered)
-        if (foundIndex != null && this.exampleDatabase) {
-          this.exampleDatabase.dataChange.value[foundIndex] =
-            this.vendorTableService.getDialogData();
-          // And lastly refresh table
-          this.refreshTable();
-          this.showNotification(
-            'black',
-            'Edit Record Successfully...!!!',
-            'bottom',
-            'center'
-          );
-        }
-      }
-    }); */
-  }
-  deleteItem(row: VendorTable) {
-    /* this.id = row.id;
-    let tempDirection: Direction;
-    if (localStorage.getItem('isRtl') === 'true') {
-      tempDirection = 'rtl';
-    } else {
-      tempDirection = 'ltr';
-    }
-    const dialogRef = this.dialog.open(DeleteComponent, {
-      data: row,
-      direction: tempDirection,
-    });
-    this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-      if (result === 1) {
-        const foundIndex = this.exampleDatabase?.dataChange.value.findIndex(
-          (x) => x.id === this.id
-        );
-        // for delete we use splice in order to remove single object from DataService
-        if (foundIndex != null && this.exampleDatabase) {
-          this.exampleDatabase.dataChange.value.splice(foundIndex, 1);
-          this.refreshTable();
-          this.showNotification(
-            'snackbar-danger',
-            'Delete Record Successfully...!!!',
-            'bottom',
-            'center'
-          );
-        }
-      }
-    }); */
-  }
   private refreshTable() {
     this.paginator._changePageSize(this.paginator.pageSize);
   }
@@ -189,36 +96,18 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
-    /* this.isAllSelected()
-      ? this.selection.clear()
-      : this.dataSource.renderedData.forEach((row) =>
-        this.selection.select(row)
-      ); */
+    //  
   }
   removeSelectedRows() {
-    /* const totalSelect = this.selection.selected.length;
-    this.selection.selected.forEach((item) => {
-      const index: number = this.dataSource.renderedData.findIndex(
-        (d) => d === item
-      );
-      // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
-      this.exampleDatabase?.dataChange.value.splice(index, 1);
-      this.refreshTable();
-      this.selection = new SelectionModel<VendorTable>(true, []);
-    });
-    this.showNotification(
-      'snackbar-danger',
-      totalSelect + ' Record Delete Successfully...!!!',
-      'bottom',
-      'center'
-    ); */
+    // 
   }
   public loadData() {
     this.exampleDatabase = new VendorsService(this.httpClient, this.httpCall);
     this.dataSource = new ExampleDataSource(
       this.exampleDatabase,
       this.paginator,
-      this.sort
+      this.sort,
+      this.isDelete,
     );
     this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
       () => {
@@ -289,8 +178,8 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     }
   }
 
-  async deleteVendor(vendor: DataTablesResponse) {
-    const data = await this.vendorTableService.deleteVendor({ _id: vendor._id, is_delete: 1 });
+  async deleteVendor(vendor: DataTablesResponse, is_delete: number) {
+    const data = await this.vendorTableService.deleteVendor({ _id: vendor._id, is_delete: is_delete });
     if (data.status) {
       this.showNotification('snackbar-success', data.message);
       const foundIndex = this.exampleDatabase?.dataChange.value.findIndex(
@@ -304,6 +193,11 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     } else {
       this.showNotification('snackbar-danger', data.message);
     }
+  }
+
+  gotoArchiveUnarchive() {
+    this.isDelete = this.isDelete == 1 ? 0 : 1;
+    this.loadData();
   }
 }
 export class ExampleDataSource extends DataSource<DataTablesResponse> {
@@ -319,7 +213,8 @@ export class ExampleDataSource extends DataSource<DataTablesResponse> {
   constructor (
     public exampleDatabase: VendorsService,
     public paginator: MatPaginator,
-    public _sort: MatSort
+    public _sort: MatSort,
+    public isDelete: number,
   ) {
     super();
     // Reset to the first page when the user changes the filter.
@@ -334,7 +229,7 @@ export class ExampleDataSource extends DataSource<DataTablesResponse> {
       this.filterChange,
       this.paginator.page,
     ];
-    this.exampleDatabase.getAllVendorTables();
+    this.exampleDatabase.getAllVendorTables(this.isDelete);
     return merge(...displayDataChanges).pipe(
       map(() => {
 

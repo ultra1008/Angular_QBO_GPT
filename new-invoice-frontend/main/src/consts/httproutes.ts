@@ -5,7 +5,7 @@ export enum httpversion {
 export enum httproutes {
     // Vendor
     PORTAL_VENDOR_GET_FOR_TABLE = "/getvendorfortable",
-    PORTAL_VENDOR_GET_ONE = "/getvendor",
+    PORTAL_VENDOR_GET_ONE = "/getonevendor",
     PORTAL_VENDOR_SAVE = "/savevendor",
     PORTAL_VENDOR_STATUS_UPDATE = "/vendorStatusUpdate",
     PORTAL_VENDOR_DELETE = "/deletevendor",

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '../shared/UnsubscribeOnDestroyAdapter';
-import { DataTablesResponse, UpdateResponse, VendorTable } from './vendor-table.model';
+import { DataTablesResponse } from './vendor-table.model';
 import { HttpCall } from '../services/httpcall.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 @Injectable()
@@ -19,53 +19,20 @@ export class VendorsService extends UnsubscribeOnDestroyAdapter {
   get data(): DataTablesResponse[] {
     return this.dataChange.value;
   }
+
   getDialogData() {
     return this.dialogData;
   }
-  /** CRUD METHODS */
-  async getAllVendorTables(): Promise<void> {
-    const data = await this.httpCall.httpGetCall(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_GET_FOR_TABLE).toPromise();
+
+  async getAllVendorTables(is_delete: number): Promise<void> {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_GET_FOR_TABLE, { is_delete: is_delete }).toPromise();
     this.isTblLoading = false;
     this.dataChange.next(data);
   }
-  addVendorTable(advanceTable: DataTablesResponse): void {
-    this.dialogData = advanceTable;
 
-    // this.httpClient.post(this.API_URL, advanceTable)
-    //   .subscribe({
-    //     next: (data) => {
-    //       this.dialogData = advanceTable;
-    //     },
-    //     error: (error: HttpErrorResponse) => {
-    //        // error code here
-    //     },
-    //   });
-  }
-  updateVendorTable(advanceTable: DataTablesResponse): void {
-    this.dialogData = advanceTable;
-
-    // this.httpClient.put(this.API_URL + advanceTable.id, advanceTable)
-    //     .subscribe({
-    //       next: (data) => {
-    //         this.dialogData = advanceTable;
-    //       },
-    //       error: (error: HttpErrorResponse) => {
-    //          // error code here
-    //       },
-    //     });
-  }
-  deleteVendorTable(id: number): void {
-    console.log(id);
-
-    // this.httpClient.delete(this.API_URL + id)
-    //     .subscribe({
-    //       next: (data) => {
-    //         console.log(id);
-    //       },
-    //       error: (error: HttpErrorResponse) => {
-    //          // error code here
-    //       },
-    //     });
+  async getOneVendor(id: string) {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_GET_ONE, { _id: id }).toPromise();
+    return data;
   }
 
   async saveVendor(requestObject: any) {
