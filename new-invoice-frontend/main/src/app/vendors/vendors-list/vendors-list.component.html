@@ -77,7 +77,7 @@
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
                                     <div class="m-l-10" matTooltip="HISTORY">
-                                        <button mat-mini-fab color="primary">
+                                        <button mat-mini-fab color="primary" (click)="openHistory()">
                                             <mat-icon class="col-white">history</mat-icon>
                                         </button>
                                     </div>

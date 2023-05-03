@@ -24,7 +24,8 @@ import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive'; // this includes the core NgIdleModule but includes keepalive providers for easy wireup
-import { MomentModule } from 'angular2-moment'; // optional, provides moment-style pipes for date formatting
+import { MomentModule } from 'angular2-moment';
+import { CommonComponentsModule } from './common-components/common-components.module';
 
 
 @NgModule({
@@ -50,6 +51,7 @@ import { MomentModule } from 'angular2-moment'; // optional, provides moment-sty
     SharedModule,
     NgIdleKeepaliveModule.forRoot(),
     MomentModule,
+    CommonComponentsModule,
   ],
   providers: [
     // { provide: LocationStrategy, useClass: HashLocationStrategy },

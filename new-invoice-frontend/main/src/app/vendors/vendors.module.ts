@@ -25,12 +25,16 @@ import { ComponentsModule } from '../shared/components/components.module';
 import { SharedModule } from '../shared/shared.module';
 import { VendorsService } from './vendors.service';
 import { VendorFormComponent } from './vendor-form/vendor-form.component';
-
+import { VendorHistoryComponent } from './vendor-history/vendor-history.component';
+import { InfiniteScrollModule } from "ngx-infinite-scroll";
+import { NgScrollbarModule } from 'ngx-scrollbar';
+import { CommonComponentsModule } from '../common-components/common-components.module';
 
 @NgModule({
   declarations: [
     VendorsListComponent,
-    VendorFormComponent
+    VendorFormComponent,
+    VendorHistoryComponent
   ],
   providers: [VendorsService],
   imports: [
@@ -59,6 +63,9 @@ import { VendorFormComponent } from './vendor-form/vendor-form.component';
     MatMenuModule,
     SharedModule,
     ComponentsModule,
+    InfiniteScrollModule,
+    NgScrollbarModule,
+    CommonComponentsModule,
   ]
 })
 export class VendorsModule { }

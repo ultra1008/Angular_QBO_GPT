@@ -85,6 +85,10 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     this.router.navigate(['/vendors/vendor-form'], { queryParams: { _id: vendor._id } });
   }
 
+  openHistory() {
+    this.router.navigate(['/vendors/vendor-history']);
+  }
+
   private refreshTable() {
     this.paginator._changePageSize(this.paginator.pageSize);
   }

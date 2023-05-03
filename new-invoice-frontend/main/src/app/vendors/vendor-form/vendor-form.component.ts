@@ -33,7 +33,7 @@ export class VendorFormComponent {
   customForm?: UntypedFormGroup;
   termsList: Array<TermModel> = [];
 
-  id: any = '';
+  id = '';
 
   breadscrums = [
     {
@@ -45,7 +45,7 @@ export class VendorFormComponent {
 
   constructor(private fb: UntypedFormBuilder, private router: Router, private snackBar: MatSnackBar,
     public route: ActivatedRoute, public vendorService: VendorsService,) {
-    this.id = this.route.snapshot.queryParamMap.get("_id");
+    this.id = this.route.snapshot.queryParamMap.get("_id") ?? '';
 
     this.vendorForm = this.fb.group({
       vendor_name: ['', [Validators.required, Validators.pattern('[a-zA-Z]+')]],
