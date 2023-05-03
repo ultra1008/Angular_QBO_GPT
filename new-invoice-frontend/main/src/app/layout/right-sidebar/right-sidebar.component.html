@@ -1,7 +1,7 @@
 <div class="settingSidebar" [ngClass]="isOpenSidebar ? 'showSettingPanel' : ''">
-  <a href="javascript:void(0)" class="settingPanelToggle" (click)="toggleRightSidebar()">
+  <!-- <a href="javascript:void(0)" class="settingPanelToggle" (click)="toggleRightSidebar()">
     <app-feather-icons [icon]="'settings'" [class]="'setting-sidebar-icon'"></app-feather-icons>
-  </a>
+  </a> -->
   <ng-scrollbar [style.height]="maxHeight + 'px'" visibility="hover">
     <div class="settingSidebar-body ps-container ps-theme-default">
       <div class=" fade show active">
@@ -27,14 +27,14 @@
             </div>
           </div>
         </div>
-        <div class="rightSetting">
+        <!-- <div class="rightSetting">
           <h6 class="font-medium m-b-10">Sidebar Menu Color</h6>
           <mat-button-toggle-group class="mt-2" [value]="isDarkSidebar ? 'dark' : 'light'">
             <mat-button-toggle (click)="lightSidebarBtnClick()" value="light">Light</mat-button-toggle>
             <mat-button-toggle (click)="darkSidebarBtnClick()" value="dark">Dark</mat-button-toggle>
           </mat-button-toggle-group>
-        </div>
-        <div class="p-15 border-bottom">
+        </div> -->
+        <!-- <div class="p-15 border-bottom">
           <h6 class="font-medium m-b-10">Color Theme</h6>
           <div class="theme-setting-options">
             <ul class="choose-theme list-unstyled mb-0">
@@ -63,11 +63,11 @@
               </li>
             </ul>
           </div>
-        </div>
-        <div class="rightSetting">
+        </div> -->
+        <!-- <div class="rightSetting">
           <h6 class="font-medium m-b-10">RTL Layout</h6>
           <mat-slide-toggle class="mt-2" [checked]="isRtl" (change)="switchDirection($event)"></mat-slide-toggle>
-        </div>
+        </div> -->
       </div>
     </div>
   </ng-scrollbar>
