@@ -62,7 +62,7 @@ export class VendorFormComponent {
     this.id = this.route.snapshot.queryParamMap.get("_id") ?? '';
 
     this.vendorForm = this.fb.group({
-      vendor_name: ['', [Validators.required, Validators.pattern('[a-zA-Z]+')]],
+      vendor_name: ['', [Validators.required]],
       vendor_phone: ['', [Validators.required]],
       vendor_email: ['', [Validators.required, Validators.email, Validators.minLength(5)],],
       gl_account: ['', [Validators.required]],
@@ -99,7 +99,7 @@ export class VendorFormComponent {
     if (data.status) {
       const vendorData = data.data;
       this.vendorForm = this.fb.group({
-        vendor_name: [vendorData.vendor_name, [Validators.required, Validators.pattern('[a-zA-Z]+')]],
+        vendor_name: [vendorData.vendor_name, [Validators.required]],
         vendor_phone: [vendorData.vendor_phone, [Validators.required]],
         vendor_email: [vendorData.vendor_email, [Validators.required, Validators.email, Validators.minLength(5)],],
         gl_account: [vendorData.gl_account, [Validators.required]],

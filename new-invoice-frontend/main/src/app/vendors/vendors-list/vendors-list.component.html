@@ -122,7 +122,8 @@
                                 <ng-container matColumnDef="vendor_phone">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Phone</mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Phone:</span> {{row.vendor_phone}}</mat-cell>
+                                        <span class="mobile-label">Phone:</span>
+                                        {{row.vendor_phone | phoneFormatPipe}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_email">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Email</mat-header-cell>
@@ -211,7 +212,7 @@
 
                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                                 <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'"
-                                    matRipple>
+                                    (click)="editVendor(row)" matRipple>
                                 </mat-row>
                             </table>
                         </div>
