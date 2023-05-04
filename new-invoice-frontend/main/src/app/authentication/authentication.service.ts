@@ -17,7 +17,14 @@ export class AuthenticationService {
   async userLogin(reqObject: any) {
     const data = await this.httpCall.httpPostCall(httpversion.V1 + httproutes.USER_LOGIN, reqObject).toPromise();
     return data;
-
+  }
+  async sendOTP(reqObject: any) {
+    const data = await this.httpCall.httpPostCall(httpversion.V1 + httproutes.SEND_OTP_EMAIL, reqObject).toPromise();
+    return data;
+  }
+  async forgotPasswordPress(reqObject: any) {
+    const data = await this.httpCall.httpPostCall(httpversion.V1 + httproutes.USER_FORGET_PASSWORD, reqObject).toPromise();
+    return data;
   }
 
 }
