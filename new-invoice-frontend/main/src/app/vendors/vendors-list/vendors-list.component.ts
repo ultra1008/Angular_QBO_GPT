@@ -47,7 +47,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     'actions',
   ];
   vendorService?: VendorsService;
-  dataSource!: ExampleDataSource;
+  dataSource!: VendorDataSource;
   selection = new SelectionModel<Vendor>(true, []);
   id?: number;
   advanceTable?: Vendor;
@@ -61,7 +61,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   ];
   isDelete = 0;
 
-  constructor (
+  constructor(
     public httpClient: HttpClient, private httpCall: HttpCall,
     public dialog: MatDialog,
     public vendorTableService: VendorsService,
@@ -124,7 +124,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   }
   public loadData() {
     this.vendorService = new VendorsService(this.httpClient, this.httpCall);
-    this.dataSource = new ExampleDataSource(
+    this.dataSource = new VendorDataSource(
       this.vendorService,
       this.paginator,
       this.sort,
@@ -222,7 +222,9 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     window.location.href = this.imageObject[index];
   }
 }
-export class ExampleDataSource extends DataSource<Vendor> {
+
+// This class is used for datatable sorting and searching
+export class VendorDataSource extends DataSource<Vendor> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -232,7 +234,7 @@ export class ExampleDataSource extends DataSource<Vendor> {
   }
   filteredData: Vendor[] = [];
   renderedData: Vendor[] = [];
-  constructor (
+  constructor(
     public vendorService: VendorsService,
     public paginator: MatPaginator,
     public _sort: MatSort,

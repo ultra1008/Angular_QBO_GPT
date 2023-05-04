@@ -2,13 +2,22 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import { Observable, catchError, map, throwError } from 'rxjs';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { configData } from 'src/environments/configData';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpCall {
 
+  temp_gif = localStorage.getItem(localstorageconstants.INVOICE_GIF);
+  gif = configData.DEFAULT_LOADER_GIF;
+
   constructor (private http: HttpClient) {
+  }
+
+  getLoader(): string {
+    return this.temp_gif != null && this.temp_gif != undefined && this.temp_gif != "" ? this.temp_gif : this.gif;
   }
 
   public httpGetCall(apiRoute: string): Observable<any> {

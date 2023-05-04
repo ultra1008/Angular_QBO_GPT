@@ -10,6 +10,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { NgxGalleryComponent, NgxGalleryImage, NgxGalleryOptions } from 'ngx-gallery-9';
 import { CommonService } from 'src/app/services/common.service';
 import { wasabiImagePath } from 'src/consts/wasabiImagePath';
+import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
@@ -56,12 +57,12 @@ export class VendorFormComponent {
   imageObject = [];
   tmp_gallery: any;
 
-  constructor (private fb: UntypedFormBuilder, private router: Router, private snackBar: MatSnackBar,
+  constructor (private fb: UntypedFormBuilder, private router: Router, private snackBar: MatSnackBar, public uiSpinner: UiSpinnerService,
     public route: ActivatedRoute, public vendorService: VendorsService, private sanitiser: DomSanitizer, public commonService: CommonService) {
     this.id = this.route.snapshot.queryParamMap.get("_id") ?? '';
 
     this.vendorForm = this.fb.group({
-      vendor_name: ['', [Validators.required, Validators.pattern('[a-zA-Z]+')]],
+      vendor_name: ['', [Validators.required]],
       vendor_phone: ['', [Validators.required]],
       vendor_email: ['', [Validators.required, Validators.email, Validators.minLength(5)],],
       gl_account: ['', [Validators.required]],
@@ -98,7 +99,7 @@ export class VendorFormComponent {
     if (data.status) {
       const vendorData = data.data;
       this.vendorForm = this.fb.group({
-        vendor_name: [vendorData.vendor_name, [Validators.required, Validators.pattern('[a-zA-Z]+')]],
+        vendor_name: [vendorData.vendor_name, [Validators.required]],
         vendor_phone: [vendorData.vendor_phone, [Validators.required]],
         vendor_email: [vendorData.vendor_email, [Validators.required, Validators.email, Validators.minLength(5)],],
         gl_account: [vendorData.gl_account, [Validators.required]],
@@ -143,16 +144,18 @@ export class VendorFormComponent {
         formData.append("file[]", this.files[i]);
       }
       formData.append("folder_name", wasabiImagePath.VENDOR_ATTACHMENT);
-      // that.spinner.spin$.next(true);
+      this.uiSpinner.spin$.next(true);
       const attachment = await this.commonService.saveAttachment(formData);
       if (attachment.status) {
         requestObject.vendor_attachment = attachment.data.concat(this.last_files_array);
       }
       const data = await this.vendorService.saveVendor(requestObject);
       if (data.status) {
+        this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
         this.router.navigate(['/vendors']);
       } else {
+        this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');
       }
     }

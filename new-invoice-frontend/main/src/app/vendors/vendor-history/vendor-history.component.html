@@ -31,8 +31,9 @@
                                 [title]="vendorHistory[i].vendor.vendor_name" class="full-width"></app-history>
                         </ul>
                         <div *ngIf="historyLoading" class="tbl-spinner">
-                            <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
-                            </mat-progress-spinner>
+                            <!-- <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
+                            </mat-progress-spinner> -->
+                            <app-loading></app-loading>
                         </div>
                     </div>
                 </div>
