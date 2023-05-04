@@ -40,3 +40,9 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+/new-invoice-frontend/main/node_modules
+/new-invoice-frontend/main/dist
+/new-invoice-frontend/main/src/environments
+/new-invoice-frontend/main/config/.angular
+/new-invoice-frontend/main/package-lock.json
