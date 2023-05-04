@@ -33,7 +33,6 @@
           "clone-deep",
           "fast-deep-equal",
           "bezier-easing",
-          "@ckeditor/ckeditor5-build-classic",
           "sweetalert2",
           "xlsx",
           "rfdc"

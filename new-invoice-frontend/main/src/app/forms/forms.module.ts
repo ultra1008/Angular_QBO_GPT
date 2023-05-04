@@ -9,7 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormControlsComponent } from './form-controls/form-controls.component';
 import { AdvanceControlsComponent } from './advance-controls/advance-controls.component';
 
-import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+// import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -53,7 +53,7 @@ import { ComponentsModule } from '../shared/components/components.module';
     FormsRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    CKEditorModule,
+    // CKEditorModule,
     MatAutocompleteModule,
     MatButtonModule,
     MatButtonToggleModule,
@@ -82,4 +82,4 @@ import { ComponentsModule } from '../shared/components/components.module';
     ComponentsModule,
   ],
 })
-export class FormModule {}
+export class FormModule { }

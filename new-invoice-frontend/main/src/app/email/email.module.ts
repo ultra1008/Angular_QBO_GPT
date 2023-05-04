@@ -4,7 +4,7 @@ import { EmailRoutingModule } from './email-routing.module';
 import { ComposeComponent } from './compose/compose.component';
 import { InboxComponent } from './inbox/inbox.component';
 import { ReadMailComponent } from './read-mail/read-mail.component';
-import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+// import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,7 +17,7 @@ import { ComponentsModule } from '../shared/components/components.module';
     CommonModule,
     EmailRoutingModule,
     MatCheckboxModule,
-    CKEditorModule,
+    // CKEditorModule,
     MatIconModule,
     MatButtonModule,
     MatFormFieldModule,
@@ -25,4 +25,4 @@ import { ComponentsModule } from '../shared/components/components.module';
     ComponentsModule,
   ],
 })
-export class EmailModule {}
+export class EmailModule { }
