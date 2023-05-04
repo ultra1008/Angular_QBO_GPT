@@ -29,6 +29,7 @@ import { VendorHistoryComponent } from './vendor-history/vendor-history.componen
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { CommonComponentsModule } from '../common-components/common-components.module';
+import { NgxGalleryModule } from 'ngx-gallery-9';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,8 @@ import { CommonComponentsModule } from '../common-components/common-components.m
     InfiniteScrollModule,
     NgScrollbarModule,
     CommonComponentsModule,
+    NgxGalleryModule,
   ]
+
 })
 export class VendorsModule { }

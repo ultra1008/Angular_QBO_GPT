@@ -60,7 +60,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   ];
   isDelete = 0;
 
-  constructor (
+  constructor(
     public httpClient: HttpClient, private httpCall: HttpCall,
     public dialog: MatDialog,
     public vendorTableService: VendorsService,
@@ -78,13 +78,13 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   ngOnInit() {
     this.loadData();
     const tmp_gallery = gallery_options();
-    tmp_gallery.actions = [
-      {
-        icon: "fas fa-download",
-        onClick: this.downloadButtonPress.bind(this),
-        titleText: "download",
-      },
-    ];
+    // tmp_gallery.actions = [
+    //   {
+    //     icon: "fas fa-download",
+    //     onClick: this.downloadButtonPress.bind(this),
+    //     titleText: "download",
+    //   },
+    // ];
     this.galleryOptions = [tmp_gallery];
   }
 
@@ -303,7 +303,7 @@ export class ExampleDataSource extends DataSource<Vendor> {
   }
   filteredData: Vendor[] = [];
   renderedData: Vendor[] = [];
-  constructor (
+  constructor(
     public vendorService: VendorsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
