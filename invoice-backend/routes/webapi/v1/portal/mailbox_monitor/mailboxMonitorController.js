@@ -187,4 +187,71 @@ module.exports.deleteMailboxMonitor = async function (req, res) {
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
-}; 
+};
+
+//get cost code pangination,search and start page this all includes in thi api
+module.exports.getMailboxMonitorForTable = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            let mailboxMonitorCollection = connection_db_api.model(collectionConstant.INVOICE_MAILBOX_MONITORS, mailboxMonitorSchema);
+            var col = [];
+            match = { is_delete: requestObject.is_delete, module: requestObject.module };
+            col.push("email", "imap", "port", "time");
+            var start = parseInt(req.body.start);
+            var perpage = parseInt(req.body.length);
+            var columnData = (req.body.order != undefined && req.body.order != '') ? req.body.order[0].column : '';
+            var columntype = (req.body.order != undefined && req.body.order != '') ? req.body.order[0].dir : '';
+            var sort = {};
+            sort[col[columnData]] = (columntype == 'asc') ? 1 : -1;
+            var query = {
+                $or: [
+                    { "email": new RegExp(req.body.search.value, 'i') },
+                    { "imap": new RegExp(req.body.search.value, 'i') },
+                    { "port": new RegExp(req.body.search.value, 'i') },
+                    { "time": new RegExp(req.body.search.value, 'i') },
+                ]
+            };
+            var aggregateQuery = [
+                { $match: match },
+                {
+                    $project: {
+                        email: 1,
+                        imap: 1,
+                        port: 1,
+                        time: 1,
+                        cron_time: 1,
+                        created_at: 1,
+                        created_by: 1,
+                        updated_at: 1,
+                        updated_by: 1,
+                        is_delete: 1,
+                    }
+                },
+                { $match: query },
+                { $limit: perpage },
+                { $skip: start },
+                { $sort: sort },
+            ];
+            let count = 0;
+            count = await mailboxMonitorCollection.countDocuments(match);
+            let get_shift = await mailboxMonitorCollection.aggregate(aggregateQuery);
+            console.log("aggregateQuery===========", aggregateQuery);
+            var dataResponce = {};
+            dataResponce = get_shift;
+            dataResponce.draw = req.body.draw;
+            dataResponce.recordsTotal = count;
+            dataResponce.recordsFiltered = (req.body.search.value) ? get_shift.length : count;
+            res.json(dataResponce);
+        } catch (e) {
+            res.send([]);
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};

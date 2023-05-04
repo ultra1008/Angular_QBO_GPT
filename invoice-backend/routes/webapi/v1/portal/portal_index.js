@@ -133,6 +133,8 @@ router.get('/webapi/v1/portal/getarchiveteams', common.checkTokenExistOrNot, emp
 router.post('/webapi/v1/portal/recoverteam', common.checkTokenExistOrNot, employeeController.recoverteam);
 router.get('/webapi/v1/portal/listManagementUser', common.checkTokenExistOrNot, employeeController.listManagementUser);
 router.post('/webapi/v1/portal/importManagementUser', common.checkTokenExistOrNot, employeeController.importManagementUser);
+router.post('/webapi/v1/portal/getUserForTable', common.checkTokenExistOrNot, employeeValidation.getUserForTableValidation, employeeController.getUserForTable);
+
 
 let employeeCron = require("./employee/employeeCron");
 router.post('/webapi/v1/portal/userdocumentexpiryalert', common.checkTokenExistOrNot, employeeCron.userDocumentExpiryAlert);
@@ -213,6 +215,7 @@ router.post('/webapi/v1/portal/deletecostcode', common.checkTokenExistOrNot, cos
 router.post('/webapi/v1/portal/getcostcodefordatatable', common.checkTokenExistOrNot, costCodeController.getCostCodeForDatatable);
 router.post('/webapi/v1/portal/savexlsxcostcode', common.checkTokenExistOrNot, costCodeController.savexlsxcostcode);
 router.post('/webapi/v1/portal/savecostcodeindb', common.checkTokenExistOrNot, costCodeController.savecostcodeindb);
+router.post('/webapi/v1/portal/getCostCodeForTable', common.checkTokenExistOrNot, costCodeValidation.getCostCodeForTableValidation, costCodeController.getCostCodeForTable);
 
 let creditcardsettingsController = require("./creditcardsettings/creditcardsettingsController");
 let creditcardsettingsValidation = require('./creditcardsettings/creditcardsettingsValidation');
@@ -310,6 +313,12 @@ router.get('/webapi/v1/portal/deleteOrphanDocumentCronAPI', common.checkTokenExi
 router.post('/webapi/v1/portal/saveinvoicetoDB', common.checkTokenExistOrNot, invoiceController.saveinvoicetoDB);
 router.post('/webapi/v1/portal/saveglaccountstoDB', common.checkTokenExistOrNot, invoiceController.saveglaccountstoDB);
 
+router.post('/webapi/v1/portal/getInvoiceTableForReport', common.checkTokenExistOrNot, invoiceValidation.getInvoiceTableForReportValidation, invoiceController.getInvoiceTableForReport);
+router.post('/webapi/v1/portal/getViewDocumentsDatatableForTable', common.checkTokenExistOrNot, invoiceValidation.getViewDocumentsDatatableForTableValidation, invoiceController.getViewDocumentsDatatableForTable);
+
+
+
+
 let invoiceDashboard = require('./dashboard/dashboardController');
 router.get('/webapi/v1/portal/getdashboardcount', common.checkTokenExistOrNot, invoiceDashboard.getDashboardCount);
 router.get('/webapi/v1/portal/getdashboardinvoice', common.checkTokenExistOrNot, invoiceDashboard.dashboardInvoiceList);
@@ -379,6 +388,8 @@ router.post('/webapi/v1/portal/getonemailboxmonitor', common.checkTokenExistOrNo
 router.post('/webapi/v1/portal/savemailboxmonitor', common.checkTokenExistOrNot, mailboxMonitorValidation.saveMailboxMonitor, mailboxMonitorController.saveMailboxMonitor);
 router.post('/webapi/v1/portal/deletemailboxmonitor', common.checkTokenExistOrNot, mailboxMonitorValidation.deleteMailboxMonitor, mailboxMonitorController.deleteMailboxMonitor);
 // router.get('/webapi/v1/portal/mailboxMonitorCronAPI', mailBoxMonitorCron.mailboxMonitorCronAPI);
+router.post('/webapi/v1/portal/getMailboxMonitorForTable', common.checkTokenExistOrNot, mailboxMonitorValidation.getMailboxMonitorForTableValidation, mailboxMonitorController.getMailboxMonitorForTable);
+
 
 // Invoice Progress
 let invoiceProgressController = require("./invoice_progress/invoiceProgressController");

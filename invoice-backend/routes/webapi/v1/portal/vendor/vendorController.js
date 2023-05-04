@@ -272,11 +272,11 @@ module.exports.getVendorForTable = async function (req, res) {
             if (getdata) {
                 res.send(getdata);
             } else {
-                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                res.send([]);
             }
         } catch (e) {
             console.log(e);
-            res.send({ message: translator.getStr('SomethingWrong'), status: false, error: e });
+            res.send([]);
         } finally {
             connection_db_api.close();
         }

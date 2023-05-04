@@ -72,9 +72,23 @@ const userIdCardFlagUpdateValidation = (req, res, next) => {
     });
 };
 
+const getUserForTableValidation = (req, res, next) => {
+    const validationRule = {
+        "is_delete": "required",
+    };
+    validator(req.body, validationRule, {}, (error, status) => {
+        if (!status) {
+            res.send({ status: false, error: error });
+        }
+        else {
+            next();
+        }
+    });
+};
 module.exports = {
     sendAppInvitationValidation,
     sendDocumentExpirationValidation,
     saveSignatureValidation,
-    userIdCardFlagUpdateValidation
+    userIdCardFlagUpdateValidation,
+    getUserForTableValidation
 };
