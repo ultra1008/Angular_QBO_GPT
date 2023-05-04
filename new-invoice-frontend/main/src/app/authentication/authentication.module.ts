@@ -18,6 +18,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatListModule } from '@angular/material/list';
 import { AuthenticationService } from './authentication.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { NgxMaskModule } from 'ngx-mask';
 @NgModule({
   declarations: [
     Page500Component,
@@ -41,6 +42,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatChipsModule,
     MatListModule,
     MatSnackBarModule,
+    NgxMaskModule,
   ]
 })
 export class AuthenticationModule { }

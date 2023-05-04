@@ -45,8 +45,8 @@ export class SigninComponent implements OnInit {
   ngOnInit() {
     // this.c_code = localStorage.getItem(localstorageconstants.COMPANYCODE);
     this.authForm = this.formBuilder.group({
-      useremail: ['admin', [Validators.required, Validators.email]],
-      password: ['admin', Validators.required],
+      useremail: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required],
       companycode: ['', Validators.required],
       terms: ['', Validators.required],
     });
@@ -67,13 +67,13 @@ export class SigninComponent implements OnInit {
     return this.authForm.controls;
   }
   showLoginForm() {
-    this.getCompunySettings()
+    this.getCompunySettings();
 
   }
   public removacode() {
     this.companyCode = '';
     this.showLogin = false;
-    this.authForm.reset()
+    this.authForm.reset();
   }
   langurl() {
 
@@ -88,7 +88,7 @@ export class SigninComponent implements OnInit {
     this.companyCode = 'R-' + formValues.companycode;
     const data = await this.AuthenticationService.getCompunySettings(this.companyCode);
     if (data.status) {
-      this.showLogin = true
+      this.showLogin = true;
     }
   }
   async userLogin() {
