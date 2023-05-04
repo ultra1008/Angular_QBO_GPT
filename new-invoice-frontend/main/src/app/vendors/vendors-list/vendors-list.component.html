@@ -208,7 +208,8 @@
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
                                         <span class="truncate-text"><span class="mobile-label">Attachment:</span>
                                             <div *ngIf="row.vendor_attachment.length > 0">
-                                                <i class="fas fa-paperclip" style="color:grey"></i>
+                                                <i class="fas fa-paperclip" style="color:grey"
+                                                    (click)="viewAttachment(row)"></i>
                                             </div>
                                         </span>
                                     </mat-cell>
@@ -329,3 +330,4 @@
         </div>
     </div>
 </section>
+<ngx-gallery [options]="galleryOptions" [images]="galleryImages" #gallery></ngx-gallery>

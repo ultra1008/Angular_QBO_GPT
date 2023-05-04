@@ -56,6 +56,7 @@
     "ng2-charts": "^4.1.1",
     "ngx-dropzone-wrapper": "^13.0.0",
     "ngx-echarts": "^15.0.1",
+    "ngx-gallery-9": "^1.0.6",
     "ngx-gauge": "^7.0.0",
     "ngx-infinite-scroll": "^15.0.0",
     "ngx-mask": "^14.2.4",
