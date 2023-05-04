@@ -12,11 +12,33 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ComponentsModule } from '../shared/components/components.module';
+import { MailboxComponent } from './mailbox/mailbox.component';
+import { EmployeesettingsComponent } from './employeesettings/employeesettings.component';
+import { RolesettingsComponent } from './rolesettings/rolesettings.component';
+import { AlertsComponent } from './alerts/alerts.component';
+import { SmtpComponent } from './smtp/smtp.component';
+import { IntegrationComponent } from './integration/integration.component';
+import { UsageComponent } from './usage/usage.component';
+import { OthersettingsComponent } from './othersettings/othersettings.component';
+import { SecurityComponent } from './security/security.component';
+import { CostcodeComponent } from './costcode/costcode.component';
+import { DocumentviewComponent } from './documentview/documentview.component';
 
 
 @NgModule({
   declarations: [
-    AllsettingsComponent
+    AllsettingsComponent,
+    MailboxComponent,
+    EmployeesettingsComponent,
+    RolesettingsComponent,
+    AlertsComponent,
+    SmtpComponent,
+    IntegrationComponent,
+    UsageComponent,
+    OthersettingsComponent,
+    SecurityComponent,
+    CostcodeComponent,
+    DocumentviewComponent
   ],
   imports: [
     CommonModule,
