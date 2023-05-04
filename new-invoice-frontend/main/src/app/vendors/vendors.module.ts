@@ -30,12 +30,17 @@ import { InfiniteScrollModule } from "ngx-infinite-scroll";
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { CommonComponentsModule } from '../common-components/common-components.module';
 import { NgxGalleryModule } from 'ngx-gallery-9';
+import { VendorReportComponent } from './vendor-report/vendor-report.component';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatListModule } from '@angular/material/list';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
     VendorsListComponent,
     VendorFormComponent,
-    VendorHistoryComponent
+    VendorHistoryComponent,
+    VendorReportComponent
   ],
   providers: [VendorsService],
   imports: [
@@ -68,6 +73,9 @@ import { NgxGalleryModule } from 'ngx-gallery-9';
     NgScrollbarModule,
     CommonComponentsModule,
     NgxGalleryModule,
+    MatChipsModule,
+    MatListModule,
+
   ]
 
 })

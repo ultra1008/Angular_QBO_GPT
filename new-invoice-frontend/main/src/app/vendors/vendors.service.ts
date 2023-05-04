@@ -59,4 +59,9 @@ export class VendorsService extends UnsubscribeOnDestroyAdapter {
     const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_GET_HISTORY, requestObject).toPromise();
     return data;
   }
+
+  async sendVendorReport(requestObject: any) {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_REPORT, requestObject).toPromise();
+    return data;
+  }
 }

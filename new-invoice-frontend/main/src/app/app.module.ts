@@ -26,6 +26,7 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive'; // this includes the core NgIdleModule but includes keepalive providers for easy wireup
 import { MomentModule } from 'angular2-moment';
 import { CommonComponentsModule } from './common-components/common-components.module';
+import { MatChipsModule } from '@angular/material/chips';
 
 
 @NgModule({
@@ -52,6 +53,7 @@ import { CommonComponentsModule } from './common-components/common-components.mo
     NgIdleKeepaliveModule.forRoot(),
     MomentModule,
     CommonComponentsModule,
+    MatChipsModule
   ],
   providers: [
     // { provide: LocationStrategy, useClass: HashLocationStrategy },

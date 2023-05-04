@@ -42,7 +42,7 @@
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" matTooltip="REPORT">
+                                    <div class="m-l-10" matTooltip="REPORT" (click)="vendorReport()">
                                         <button mat-mini-fab color="primary">
                                             <mat-icon class="col-white">insert_drive_file</mat-icon>
                                         </button>

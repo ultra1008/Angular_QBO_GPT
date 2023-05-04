@@ -181,4 +181,12 @@ export function commonLocalThumbImage(sanitiser: DomSanitizer, file: File) {
             return "https://s3.us-west-1.wasabisys.com/rovukdata/no-preview.png";
             break;
     }
-}  
+}
+
+export function isValidMailFormat(email: string): any {
+    const EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
+    if (email != "" && EMAIL_REGEXP.test(email)) {
+        return { "Please provide a valid email": true };
+    }
+    return null;
+}

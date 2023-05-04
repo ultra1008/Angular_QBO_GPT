@@ -14,11 +14,12 @@ import { TableExportUtil } from 'src/app/shared/tableExportUtil';
 import { TableElement } from 'src/app/shared/TableElement';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { VendorsService } from '../vendors.service';
-import { Vendor } from '../vendor-table.model';
+import { TermModel, Vendor } from '../vendor-table.model';
 import { Router } from '@angular/router';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { commonNewtworkAttachmentViewer, gallery_options, showNotification } from 'src/consts/utils';
 import { NgxGalleryComponent, NgxGalleryImage, NgxGalleryOptions } from 'ngx-gallery-9';
+import { VendorReportComponent } from '../vendor-report/vendor-report.component';
 
 @Component({
   selector: 'app-vendors-list',
@@ -60,8 +61,9 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     },
   ];
   isDelete = 0;
+  termsList: Array<TermModel> = [];
 
-  constructor(
+  constructor (
     public httpClient: HttpClient, private httpCall: HttpCall,
     public dialog: MatDialog,
     public vendorTableService: VendorsService,
@@ -87,6 +89,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
       },
     ];
     this.galleryOptions = [this.tmp_gallery];
+    this.getTerms();
   }
 
   refresh() {
@@ -221,6 +224,26 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   downloadButtonPress(event: any, index: number): void {
     window.location.href = this.imageObject[index];
   }
+
+  async getTerms() {
+    const data = await this.vendorService?.getTerms();
+    if (data.status) {
+      this.termsList = data.data;
+    }
+  }
+
+  vendorReport() {
+    const dialogRef = this.dialog.open(VendorReportComponent, {
+      width: '700px',
+      data: {
+        termsList: this.termsList,
+        invoiceStatus: '',
+      },
+    });
+    this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
+      //  
+    });
+  }
 }
 
 // This class is used for datatable sorting and searching
@@ -234,7 +257,7 @@ export class VendorDataSource extends DataSource<Vendor> {
   }
   filteredData: Vendor[] = [];
   renderedData: Vendor[] = [];
-  constructor(
+  constructor (
     public vendorService: VendorsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
