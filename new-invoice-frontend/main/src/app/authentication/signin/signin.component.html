@@ -6,19 +6,21 @@
         <div class="auth-wrapper">
           <h2 class="welcome-msg cust-center"> Welcome to Rovuk A/P </h2>
           <div class="cust-center mb-2" *ngIf="showLogin">
-            <mat-chip>
-              <!-- {{c_code}} -->
-              1234
-              <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            <!-- <mat-chip-list style="display: inline-flex;"> -->
+            <mat-chip [removable]="removable" (removed)="removacode()">
+              {{companyCode}}
+              <mat-icon matChipRemove *ngIf=" removable">cancel</mat-icon>
             </mat-chip>
+            <!-- </mat-chip-list> -->
           </div>
 
-          <form class="validate-form" [formGroup]="authForm" (ngSubmit)="onSubmit()">
+          <form class="validate-form" [formGroup]="authForm">
             <div class="row" *ngIf="!showLogin">
               <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                 <mat-form-field class="example-full-width" appearance="outline">
                   <mat-label>Company Code</mat-label>
-                  <input prefix="R-" mask="000000" type="number" matInput formControlName="companycode" />
+                  <span matPrefix>R-</span>
+                  <input mask="000000" type="number" matInput formControlName="companycode" maxlength="6" />
                 </mat-form-field>
               </div>
             </div>
@@ -29,8 +31,8 @@
             <div class="row" *ngIf="showLogin">
               <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                 <mat-form-field class="example-full-width" appearance="outline">
-                  <mat-label>Username</mat-label>
-                  <input matInput formControlName="username" />
+                  <mat-label>Email</mat-label>
+                  <input matInput formControlName="useremail" />
 
                 </mat-form-field>
               </div>
@@ -48,7 +50,7 @@
                 </mat-form-field>
               </div>
             </div>
-            <div class="d-flex justify-content-between align-items-center mb-5" *ngIf="showLogin">
+            <!-- <div class="d-flex justify-content-between align-items-center mb-5" *ngIf="showLogin">
               <div class="form-check">
                 <label class="form-check-label">
                   <input class="form-check-input" type="checkbox" value=""> <a class="welcome-msg">I agree to the</a>
@@ -59,12 +61,18 @@
                 </label>
               </div>
 
+            </div> -->
+            <div *ngIf="showLogin">
+              <mat-checkbox labelPosition="after" #saveUserNameCheckBox (change)="onSaveUsernameChanged($event.checked)"
+                [(ngModel)]="checked" formControlName="terms" class="auth-page__group-title">I agree to the
+                <span><a (click)="langurl()" class="term-condition" target="_blank">terms & conditions</a></span>
+              </mat-checkbox>
             </div>
             <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
             <div class="container-auth-form-btn" *ngIf="showLogin">
               <div style="text-align:center">
-                <button mat-raised-button color="primary" class="auth-form-btn" [disabled]="!authForm.valid "
-                  type="submit">Login</button>
+                <button mat-raised-button color="primary" (click)="userLogin()" class="auth-form-btn"
+                  type=" submit">Login</button>
               </div>
             </div>
           </form>
@@ -79,6 +87,5 @@
       <div class="left-img">
       </div>
     </div>
-
   </div>
 </div>
