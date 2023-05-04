@@ -1,47 +1,6 @@
 <section class="content">
     <div class="content-block">
-        <!-- <div class="block-header" *ngFor="let breadscrum of breadscrums">
-            <app-breadcrumb [title]="breadscrum.title" [items]="breadscrum.items" [active_item]="breadscrum.active">
-            </app-breadcrumb>
-        </div> -->
         <div class="m-4"></div>
-        <!-- <div class="alert alert-primary">
-            Advance table component is develop using <strong>Angular Material Table</strong>. Main
-            features are:<br><br>
-            <ul class="fa-ul">
-                <li class="font-15"><span class="fa-li"><i class="fas fa-angle-double-right"></i></span>Searching
-                    Records In Table
-                </li>
-                <li class="font-15"><span class="fa-li"><i class="fas fa-angle-double-right"></i></span>Sorting Records
-                    In Table
-                </li>
-                <li class="font-15"><span class="fa-li"><i class="fas fa-angle-double-right"></i></span>Add, Update,
-                    Delete In Table Record
-                </li>
-                <li class="font-15"><span class="fa-li"><i class="fas fa-angle-double-right"></i></span>Row Click Edit
-                    Table Record
-                </li>
-                <li class="font-15"><span class="fa-li"><i class="fas fa-angle-double-right"></i></span>Context Menu,
-                    And Nested Context Menu
-                </li>
-                <li class="font-15"><span class="fa-li"><i class="fas fa-angle-double-right"></i></span>Crud Operations
-                    Using Context Menu </li>
-                <li class="font-15"><span class="fa-li"><i class="fas fa-angle-double-right"></i></span>Multi select row
-                    using checkbox </li>
-                <li class="font-15"><span class="fa-li"><i class="fas fa-angle-double-right"></i></span>Multiple delete
-                    rows using checkbox </li>
-                <li class="font-15"><span class="fa-li"><i class="fas fa-angle-double-right"></i></span>Refresh Table
-                    Data</li>
-                <li class="font-15"><span class="fa-li"><i class="fas fa-angle-double-right"></i></span>Pagination
-                    Supported</li>
-                <li class="font-15"><span class="fa-li"><i class="fas fa-angle-double-right"></i></span>Row Per Page
-                    Options</li>
-                <li class="font-15"><span class="fa-li"><i class="fas fa-angle-double-right"></i></span>Export table
-                    data in
-                    xlsx file.</li>
-            </ul>
-        </div> -->
-
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
@@ -142,15 +101,6 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
                                     <mat-cell *matCellDef="let row">{{row.id}}</mat-cell>
                                 </ng-container>
-                                <!-- <ng-container matColumnDef="img">
-                                    <mat-header-cell mat-header-cell *matHeaderCellDef
-                                        [ngClass]="'tbl-col-width-per-7'"> Image
-                                    </mat-header-cell>
-                                    <mat-cell mat-cell *matCellDef="let row" class="table-img tbl-col-width-per-7"><span
-                                            class="mobile-label">Image:</span>
-                                        <img [src]="row.img" />
-                                    </mat-cell>
-                                </ng-container> -->
                                 <ng-container matColumnDef="vendor_name">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Vendor Name
                                     </mat-header-cell>

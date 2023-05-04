@@ -3,7 +3,7 @@ import { configData } from "src/environments/configData";
 export const httpversion = {
     PORTAL_V1: configData.API_URL + "webapi/v1/portal/",
     V1: configData.API_URL + "webapi/v1/",
-}
+};
 
 export enum httproutes {
     // auth
@@ -23,4 +23,7 @@ export enum httproutes {
     PORTAL_TERM_GET = "getinvoiceterm",
     PORTAL_TERM_SAVE = "saveinvoiceterm",
     PORTAL_TERM_DELETE = "deleteinvoiceterm",
+
+    // Attachment
+    PORTAL_SAVE_ATTACHMENT = "saveattechment",
 }

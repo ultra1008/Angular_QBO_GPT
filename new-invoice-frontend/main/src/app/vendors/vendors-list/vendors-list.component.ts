@@ -17,7 +17,7 @@ import { VendorsService } from '../vendors.service';
 import { Vendor } from '../vendor-table.model';
 import { Router } from '@angular/router';
 import { HttpCall } from 'src/app/services/httpcall.service';
-import { gallery_options, showNotification } from 'src/consts/utils';
+import { commonNewtworkAttachmentViewer, gallery_options, showNotification } from 'src/consts/utils';
 import { NgxGalleryComponent, NgxGalleryImage, NgxGalleryOptions } from 'ngx-gallery-9';
 
 @Component({
@@ -31,6 +31,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   galleryOptions!: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[] = [];
   imageObject = [];
+  tmp_gallery: any;
 
   displayedColumns = [
     // 'select',
@@ -60,7 +61,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   ];
   isDelete = 0;
 
-  constructor(
+  constructor (
     public httpClient: HttpClient, private httpCall: HttpCall,
     public dialog: MatDialog,
     public vendorTableService: VendorsService,
@@ -77,15 +78,15 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
 
   ngOnInit() {
     this.loadData();
-    const tmp_gallery = gallery_options();
-    // tmp_gallery.actions = [
-    //   {
-    //     icon: "fas fa-download",
-    //     onClick: this.downloadButtonPress.bind(this),
-    //     titleText: "download",
-    //   },
-    // ];
-    this.galleryOptions = [tmp_gallery];
+    this.tmp_gallery = gallery_options();
+    this.tmp_gallery.actions = [
+      {
+        icon: "fas fa-download",
+        onClick: this.downloadButtonPress.bind(this),
+        titleText: "download",
+      },
+    ];
+    this.galleryOptions = [this.tmp_gallery];
   }
 
   refresh() {
@@ -209,81 +210,9 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     this.loadData();
   }
 
+  // View Network Attachment
   viewAttachment(vendor: Vendor) {
-    const imageObject = vendor.vendor_attachment;
-    console.log(" imageObject", imageObject);
-    this.galleryImages = [];
-    if (imageObject != undefined) {
-      for (let i = 0; i < imageObject.length; i++) {
-        const extension = imageObject[i].substring(imageObject[i].lastIndexOf(".") + 1);
-        if (extension == "jpg" || extension == "png" || extension == "jpeg" || extension == "gif" || extension == "webp"
-        ) {
-          const srctmp = {
-            small: imageObject[i],
-            medium: imageObject[i],
-            big: imageObject[i],
-          };
-          this.galleryImages.push(srctmp);
-        } else if (extension == "doc" || extension == "docx") {
-          const srctmp = {
-            small: "https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png",
-            medium: "https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png",
-            big: "https://s3.us-west-1.wasabisys.com/rovukdata/doc_big.png",
-          };
-          this.galleryImages.push(srctmp);
-        } else if (extension == "pdf") {
-          const srctmp = {
-            small: "https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png",
-            medium: "https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png",
-            big: "https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png",
-          };
-          this.galleryImages.push(srctmp);
-        } else if (extension == "odt") {
-          const srctmp = {
-            small: "https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png",
-            medium: "https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png",
-            big: "https://s3.us-west-1.wasabisys.com/rovukdata/odt_big.png",
-          };
-          this.galleryImages.push(srctmp);
-        } else if (extension == "rtf") {
-          const srctmp = {
-            small: "https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png",
-            medium: "https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png",
-            big: "https://s3.us-west-1.wasabisys.com/rovukdata/rtf_big.png",
-          };
-          this.galleryImages.push(srctmp);
-        } else if (extension == "txt") {
-          const srctmp = {
-            small: "https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png",
-            medium: "https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png",
-            big: "https://s3.us-west-1.wasabisys.com/rovukdata/txt_big.png",
-          };
-          this.galleryImages.push(srctmp);
-        } else if (extension == "ppt") {
-          const srctmp = {
-            small: "https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png",
-            medium: "https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png",
-            big: "https://s3.us-west-1.wasabisys.com/rovukdata/ppt_big.png",
-          };
-          this.galleryImages.push(srctmp);
-        } else if (extension == "xls" || extension == "xlsx" || extension == "csv"
-        ) {
-          const srctmp = {
-            small: "https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png",
-            medium: "https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png",
-            big: "https://s3.us-west-1.wasabisys.com/rovukdata/xls_big.png",
-          };
-          this.galleryImages.push(srctmp);
-        } else {
-          const srctmp = {
-            small: "https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png",
-            medium: "https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png",
-            big: "https://s3.us-west-1.wasabisys.com/rovukdata/nopreview_big.png",
-          };
-          this.galleryImages.push(srctmp);
-        }
-      }
-    }
+    this.galleryImages = commonNewtworkAttachmentViewer(vendor.vendor_attachment);
     setTimeout(() => {
       this.gallery.openPreview(0);
     }, 0);
@@ -303,7 +232,7 @@ export class ExampleDataSource extends DataSource<Vendor> {
   }
   filteredData: Vendor[] = [];
   renderedData: Vendor[] = [];
-  constructor(
+  constructor (
     public vendorService: VendorsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
