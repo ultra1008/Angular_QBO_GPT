@@ -73,6 +73,9 @@ export class SigninComponent implements OnInit {
     this.router.navigate(['/authentication/forgot-password']);
 
   }
+  goSendOtpForm() {
+    this.router.navigate(['/authentication/send-otp']);
+  }
   public removacode() {
     this.companyCode = '';
     this.showLogin = false;

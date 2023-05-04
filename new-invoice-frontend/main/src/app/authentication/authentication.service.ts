@@ -22,6 +22,10 @@ export class AuthenticationService {
     const data = await this.httpCall.httpPostCall(httpversion.V1 + httproutes.SEND_OTP_EMAIL, reqObject).toPromise();
     return data;
   }
+  async submitOTP(reqObject: any) {
+    const data = await this.httpCall.httpPostCall(httpversion.V1 + httproutes.SUBMITT_OTP, reqObject).toPromise();
+    return data;
+  }
   async forgotPasswordPress(reqObject: any) {
     const data = await this.httpCall.httpPostCall(httpversion.V1 + httproutes.USER_FORGET_PASSWORD, reqObject).toPromise();
     return data;

@@ -19,6 +19,9 @@ import { MatListModule } from '@angular/material/list';
 import { AuthenticationService } from './authentication.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NgxMaskModule } from 'ngx-mask';
+import { SendOtpComponent } from './send-otp/send-otp.component';
+import { NgOtpInputModule } from 'ng-otp-input';
+
 @NgModule({
   declarations: [
     Page500Component,
@@ -26,7 +29,8 @@ import { NgxMaskModule } from 'ngx-mask';
     SigninComponent,
     SignupComponent,
     LockedComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    SendOtpComponent
   ],
   providers: [AuthenticationService],
   imports: [
@@ -43,6 +47,7 @@ import { NgxMaskModule } from 'ngx-mask';
     MatListModule,
     MatSnackBarModule,
     NgxMaskModule,
+    NgOtpInputModule,
   ]
 })
 export class AuthenticationModule { }
