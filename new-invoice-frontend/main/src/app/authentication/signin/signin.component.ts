@@ -68,6 +68,9 @@ export class SigninComponent implements OnInit {
   }
   showLoginForm() {
     this.getCompunySettings();
+  }
+  goResetPasswordForm() {
+    this.router.navigate(['/authentication/forgot-password']);
 
   }
   public removacode() {
