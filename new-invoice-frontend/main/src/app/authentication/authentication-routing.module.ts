@@ -7,6 +7,7 @@ import { LockedComponent } from './locked/locked.component';
 import { Page404Component } from './page404/page404.component';
 import { Page500Component } from './page500/page500.component';
 import { SendOtpComponent } from './send-otp/send-otp.component';
+import { ForcefullChangePasswordComponent } from './forcefull-change-password/forcefull-change-password.component';
 const routes: Routes = [
   {
     path: '',
@@ -24,6 +25,10 @@ const routes: Routes = [
   {
     path: 'forgot-password',
     component: ForgotPasswordComponent
+  },
+  {
+    path: 'change-password',
+    component: ForcefullChangePasswordComponent
   },
   {
     path: 'send-otp',

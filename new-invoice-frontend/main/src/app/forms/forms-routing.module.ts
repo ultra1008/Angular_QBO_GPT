@@ -16,6 +16,7 @@ const routes: Routes = [
     path: 'form-controls',
     component: FormControlsComponent
   },
+
   {
     path: 'advance-controls',
     component: AdvanceControlsComponent
@@ -41,4 +42,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class FormsRoutingModule {}
+export class FormsRoutingModule { }

@@ -30,5 +30,9 @@ export class AuthenticationService {
     const data = await this.httpCall.httpPostCall(httpversion.V1 + httproutes.USER_FORGET_PASSWORD, reqObject).toPromise();
     return data;
   }
+  async changePassword(reqObject: any) {
+    const data = await this.httpCall.httpPostCall(httpversion.V1 + httproutes.CHANGEPASSWORD, reqObject).toPromise();
+    return data;
+  }
 
 }

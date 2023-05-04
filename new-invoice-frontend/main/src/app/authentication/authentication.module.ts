@@ -21,6 +21,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NgxMaskModule } from 'ngx-mask';
 import { SendOtpComponent } from './send-otp/send-otp.component';
 import { NgOtpInputModule } from 'ng-otp-input';
+import { ForcefullChangePasswordComponent } from './forcefull-change-password/forcefull-change-password.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { NgOtpInputModule } from 'ng-otp-input';
     SignupComponent,
     LockedComponent,
     ForgotPasswordComponent,
-    SendOtpComponent
+    SendOtpComponent,
+    ForcefullChangePasswordComponent
   ],
   providers: [AuthenticationService],
   imports: [

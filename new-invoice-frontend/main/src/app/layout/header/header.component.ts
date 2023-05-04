@@ -199,6 +199,9 @@ export class HeaderComponent implements OnInit, AfterViewInit {
       }
     });
   }
+  goChangePassword() {
+    this.router.navigate(['/authentication/change-password']);
+  }
 
   callFullscreen() {
     if (!this.isFullScreen) {

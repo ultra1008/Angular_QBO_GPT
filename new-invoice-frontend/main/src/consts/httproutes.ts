@@ -12,6 +12,7 @@ export enum httproutes {
     SEND_OTP_EMAIL = "sendotp",
     USER_FORGET_PASSWORD = "forgetpassword",
     SUBMITT_OTP = "submitemailotp",
+    CHANGEPASSWORD = "changepassword",
 
 
     // Vendor

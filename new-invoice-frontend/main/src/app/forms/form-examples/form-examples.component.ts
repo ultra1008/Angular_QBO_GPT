@@ -1,9 +1,5 @@
 import { Component } from '@angular/core';
-import {
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators,
-} from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators, } from '@angular/forms';
 @Component({
   selector: 'app-form-examples',
   templateUrl: './form-examples.component.html',
