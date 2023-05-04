@@ -17,6 +17,7 @@ export enum httproutes {
     PORTAL_VENDOR_SAVE = "savevendor",
     PORTAL_VENDOR_STATUS_UPDATE = "vendorStatusUpdate",
     PORTAL_VENDOR_DELETE = "deletevendor",
+    PORTAL_VENDOR_GET_HISTORY = "getvendorhistory",
 
     // Terms
     PORTAL_TERM_GET = "getinvoiceterm",

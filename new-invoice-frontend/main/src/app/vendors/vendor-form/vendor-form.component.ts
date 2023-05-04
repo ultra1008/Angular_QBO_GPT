@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators, } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { VendorsService } from '../vendors.service';
+import { TermModel } from '../vendor-table.model';
 
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
@@ -24,10 +26,13 @@ const swalWithBootstrapButtons = Swal.mixin({
 })
 export class VendorFormComponent {
   // Form 1
-  register: UntypedFormGroup;
+  vendorForm: UntypedFormGroup;
   hide = true;
   agree = false;
   customForm?: UntypedFormGroup;
+  termsList: Array<TermModel> = [];
+
+  id = '';
 
   breadscrums = [
     {
@@ -37,8 +42,11 @@ export class VendorFormComponent {
     },
   ];
 
-  constructor(private fb: UntypedFormBuilder, private router: Router, private snackBar: MatSnackBar) {
-    this.register = this.fb.group({
+  constructor(private fb: UntypedFormBuilder, private router: Router, private snackBar: MatSnackBar,
+    public route: ActivatedRoute, public vendorService: VendorsService,) {
+    this.id = this.route.snapshot.queryParamMap.get("_id") ?? '';
+
+    this.vendorForm = this.fb.group({
       vendor_name: ['', [Validators.required, Validators.pattern('[a-zA-Z]+')]],
       phone: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email, Validators.minLength(5)],],
@@ -58,7 +66,7 @@ export class VendorFormComponent {
     });
   }
   onRegister() {
-    console.log('Form Value', this.register.value);
+    console.log('Form Value', this.vendorForm.value);
   }
   saveData() {
     // rgf
@@ -78,7 +86,7 @@ export class VendorFormComponent {
       .then((result) => {
         if (result.isConfirmed) {
           // Move to the vendor listing
-          if (this.register.valid) {
+          if (this.vendorForm.valid) {
             this.saveData();
           } else {
             // alert form invalidation

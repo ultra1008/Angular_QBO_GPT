@@ -12,6 +12,7 @@ import {
 import { Router } from '@angular/router';
 import { ConfigService } from 'src/app/config/config.service';
 import { InConfiguration } from 'src/app/core/models/config.interface';
+import { FormControl } from '@angular/forms';
 
 interface Notifications {
   message: string;
@@ -32,6 +33,9 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   isOpenSidebar?: boolean;
   docElement: HTMLElement | undefined;
   isFullScreen = false;
+  isDarTheme = false;
+  toggleControl = new FormControl(false);
+  darkIcon?: string;
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private renderer: Renderer2,
@@ -40,7 +44,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     private configService: ConfigService,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
   notifications: Notifications[] = [
     {
       message: 'Please check your mail',
@@ -98,6 +102,44 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // set theme on startup
     if (localStorage.getItem('theme')) {
+      if (localStorage.getItem('theme') === 'dark') {
+        this.isDarTheme = true;
+        this.darkIcon = 'moon';
+      } else if (localStorage.getItem('theme') === 'light') {
+        this.isDarTheme = false;
+        this.darkIcon = 'sun';
+      } else {
+        this.isDarTheme = this.config.layout.variant === 'dark' ? true : false;
+        if (this.isDarTheme) {
+          this.darkIcon = 'moon';
+        } else {
+          this.darkIcon = 'sun';
+        }
+      }
+    } else {
+      this.isDarTheme = this.config.layout.variant === 'dark' ? true : false;
+      if (this.isDarTheme) {
+        this.darkIcon = 'moon';
+      } else {
+        this.darkIcon = 'sun';
+      }
+    }
+
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      // dark mode
+      console.log('dark mode');
+      this.isDarTheme = true;
+      this.darkIcon = 'moon';
+    } else {
+      //Light mode
+      console.log('Light mode');
+      this.isDarTheme = false;
+      this.darkIcon = 'sun';
+    }
+
+
+
+    if (localStorage.getItem('theme')) {
       this.renderer.removeClass(this.document.body, this.config.layout.variant);
       this.renderer.addClass(
         this.document.body,
@@ -145,7 +187,19 @@ export class HeaderComponent implements OnInit, AfterViewInit {
         this.renderer.addClass(this.document.body, 'submenu-closed');
       }
     }
+
+    this.toggleControl.valueChanges.subscribe((darkMode) => {
+      console.log(darkMode);
+      if (darkMode) {
+        // dark mode
+        this.darkThemeBtnClick();
+      } else {
+        // light mode
+        this.lightThemeBtnClick();
+      }
+    });
   }
+
   callFullscreen() {
     if (!this.isFullScreen) {
       this.docElement?.requestFullscreen();
@@ -180,5 +234,67 @@ export class HeaderComponent implements OnInit, AfterViewInit {
         this.router.navigate(['/authentication/signin']);
       }
     });
+  }
+
+  lightThemeBtnClick() {
+    this.renderer.removeClass(this.document.body, 'dark');
+    this.renderer.removeClass(this.document.body, 'submenu-closed');
+    this.renderer.removeClass(this.document.body, 'menu_dark');
+    this.renderer.removeClass(this.document.body, 'logo-black');
+    if (localStorage.getItem('choose_skin')) {
+      this.renderer.removeClass(
+        this.document.body,
+        localStorage.getItem('choose_skin') as string
+      );
+    } else {
+      this.renderer.removeClass(
+        this.document.body,
+        'theme-' + this.config.layout.theme_color
+      );
+    }
+
+    this.renderer.addClass(this.document.body, 'light');
+    this.renderer.addClass(this.document.body, 'submenu-closed');
+    this.renderer.addClass(this.document.body, 'menu_light');
+    this.renderer.addClass(this.document.body, 'logo-white');
+    this.renderer.addClass(this.document.body, 'theme-white');
+    const theme = 'light';
+    const menuOption = 'menu_light';
+    // this.selectedBgColor = 'white';
+    // this.isDarkSidebar = false;
+    localStorage.setItem('choose_logoheader', 'logo-white');
+    localStorage.setItem('choose_skin', 'theme-white');
+    localStorage.setItem('theme', theme);
+    localStorage.setItem('menuOption', menuOption);
+  }
+  darkThemeBtnClick() {
+    this.renderer.removeClass(this.document.body, 'light');
+    this.renderer.removeClass(this.document.body, 'submenu-closed');
+    this.renderer.removeClass(this.document.body, 'menu_light');
+    this.renderer.removeClass(this.document.body, 'logo-white');
+    if (localStorage.getItem('choose_skin')) {
+      this.renderer.removeClass(
+        this.document.body,
+        localStorage.getItem('choose_skin') as string
+      );
+    } else {
+      this.renderer.removeClass(
+        this.document.body,
+        'theme-' + this.config.layout.theme_color
+      );
+    }
+    this.renderer.addClass(this.document.body, 'dark');
+    this.renderer.addClass(this.document.body, 'submenu-closed');
+    this.renderer.addClass(this.document.body, 'menu_dark');
+    this.renderer.addClass(this.document.body, 'logo-black');
+    this.renderer.addClass(this.document.body, 'theme-black');
+    const theme = 'dark';
+    const menuOption = 'menu_dark';
+    // this.selectedBgColor = 'black';
+    // this.isDarkSidebar = true;
+    localStorage.setItem('choose_logoheader', 'logo-black');
+    localStorage.setItem('choose_skin', 'theme-black');
+    localStorage.setItem('theme', theme);
+    localStorage.setItem('menuOption', menuOption);
   }
 }

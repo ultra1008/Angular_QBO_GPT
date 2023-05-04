@@ -93,6 +93,12 @@
                   <button mat-menu-item>
                     <app-feather-icons [icon]="'settings'" [class]="'user-menu-icons'"></app-feather-icons>Settings
                   </button>
+                  <div mat-menu-item class="user-menu__item-title">
+                    <app-feather-icons [icon]="'sun'" [class]="'user-menu-icons'"></app-feather-icons>
+                    <app-feather-icons [icon]="'moon'" [class]="'user-menu-icons'"></app-feather-icons> &nbsp;
+                    <mat-slide-toggle [(ngModel)]="isDarTheme" [formControl]="toggleControl" color="primary">Dark Mode
+                    </mat-slide-toggle>
+                  </div>
                   <button mat-menu-item (click)="logout()">
                     <app-feather-icons [icon]="'log-out'" [class]="'user-menu-icons'"></app-feather-icons>Logout
                   </button>

@@ -1,0 +1,34 @@
+<li class="lecture-list">
+    <div class="d-flex">
+        <img alt="" class="msr-3 rounded-circle" height="40" width="40"
+            src="{{history.history_created_by.userpicture}}">
+        <div class="set-flex my-auto">
+            <div class="media-title font-16"><b>{{history.history_created_by.userfullname}}</b> {{history.action}}
+                <b>{{title}}</b> at <b>{{history.history_created_at * 1000 | date: 'MM/dd/yyyy hh:mm a' }}</b> from
+                <b>{{history.taken_device}}</b>.
+            </div>
+            <!-- <div class="text-job text-muted mb-0">Mathematics</div> -->
+        </div>
+        <!-- <div class="ms-auto">
+        <div class="media-title font-16">12 June '20</div>
+    </div> -->
+    </div>
+    <div class="mt-2 history-data" *ngIf="history.data.length > 0">
+        <div class="body table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of history.data">
+                        <td>{{data.key}}</td>
+                        <td>{{data.value}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</li>

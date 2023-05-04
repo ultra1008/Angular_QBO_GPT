@@ -57,6 +57,7 @@
     "ngx-dropzone-wrapper": "^13.0.0",
     "ngx-echarts": "^15.0.1",
     "ngx-gauge": "^7.0.0",
+    "ngx-infinite-scroll": "^15.0.0",
     "ngx-mask": "^14.2.4",
     "ngx-scrollbar": "^11.0.0",
     "rxjs": "~7.8.0",
