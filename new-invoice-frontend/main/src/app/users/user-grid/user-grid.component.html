@@ -8,7 +8,8 @@
                         <div class="left">
                             <ul class="header-buttons-left ms-0">
                                 <li class="tbl-title">
-                                    <h2>User</h2>
+                                    <h2 *ngIf="isDelete === 0">User</h2>
+                                    <h2 *ngIf="isDelete === 1">Archived User</h2>
                                 </li>
                             </ul>
                         </div>
@@ -17,6 +18,20 @@
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10" matTooltip="GRID TO LIST">
                                         <button mat-mini-fab color="warn" (click)="gotoUser()">
+                                            <mat-icon class="col-white">view_list </mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                                    <div class="m-l-10" matTooltip="ARCHIVE">
+                                        <button mat-mini-fab color="primary" (click)="gotoArchiveUnarchive()">
+                                            <mat-icon class="col-white">archive</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="tbl-header-btn" *ngIf="isDelete === 1">
+                                    <div class="m-l-10" matTooltip="BACK">
+                                        <button mat-mini-fab color="warn" (click)="gotoArchiveUnarchive()">
                                             <mat-icon class="col-white">close </mat-icon>
                                         </button>
                                     </div>
