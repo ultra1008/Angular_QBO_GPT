@@ -337,6 +337,34 @@ const requestForInvoiceFile = (req, res, next) => {
     });
 };
 
+const getInvoiceTableForReportValidation = (req, res, next) => {
+    const validationRule = {
+        "is_delete": "required",
+    };
+    validator(req.body, validationRule, {}, (error, status) => {
+        if (!status) {
+            res.send({ status: false, error: error });
+        }
+        else {
+            next();
+        }
+    });
+};
+
+const getViewDocumentsDatatableForTableValidation = (req, res, next) => {
+    const validationRule = {
+        "is_delete": "required",
+    };
+    validator(req.body, validationRule, {}, (error, status) => {
+        if (!status) {
+            res.send({ status: false, error: error });
+        }
+        else {
+            next();
+        }
+    });
+};
+
 module.exports = {
     getOneInvoice,
     deleteInvoice,
@@ -361,4 +389,6 @@ module.exports = {
     updateInvoiceRelatedDocument,
     deleteViewDocument,
     requestForInvoiceFile,
+    getInvoiceTableForReportValidation,
+    getViewDocumentsDatatableForTableValidation
 };

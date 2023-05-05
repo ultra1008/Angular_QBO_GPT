@@ -3432,3 +3432,236 @@ module.exports.requestForInvoiceFile = async function (req, res) {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
+
+//changes for new theams
+//get invoice 
+module.exports.getInvoiceTableForReport = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+            let date_query = {};
+            if (requestObject.start_date != 0 && requestObject.end_date != 0) {
+                date_query = { created_at: { $gte: requestObject.start_date, $lt: requestObject.end_date } };
+            }
+            console.log("date_query", requestObject.start_date != 0 && requestObject.end_date != 0);
+            var get_data = await invoicesConnection.aggregate([
+                { $match: { is_delete: requestObject.is_delete } },
+                { $match: date_query },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_VENDOR,
+                        localField: "vendor",
+                        foreignField: "_id",
+                        as: "vendor"
+                    }
+                },
+                { $unwind: "$vendor" },
+            ]);
+            console.log("get_data", get_data);
+            if (get_data) {
+                res.send(get_data);
+            } else {
+                res.send([]);
+            }
+        } catch (e) {
+            console.log(e);
+            res.send([]);
+        } finally {
+            connection_db_api.close();
+        }
+    }
+    else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+// View Document
+module.exports.getViewDocumentsDatatableForTable = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var processInvoiceConnection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
+            var col = [];
+            col.push("document_type", "po_no", "invoice_no", "vendor_name", "updated_by", "updated_at");
+            var start = parseInt(requestObject.start) || 0;
+            var perpage = parseInt(requestObject.length);
+            var columnData = (requestObject.order != undefined && requestObject.order != '') ? requestObject.order[0].column : '';
+            var columntype = (requestObject.order != undefined && requestObject.order != '') ? requestObject.order[0].dir : '';
+            var sort = {};
+            if (requestObject.draw == 1) {
+                sort = { "document_type": 1 };
+            } else {
+                sort[col[columnData]] = (columntype == 'asc') ? 1 : -1;
+            }
+            let query = {};
+            if (requestObject.search.value) {
+                query = {
+                    $or: [
+                        { "document_type": new RegExp(requestObject.search.value, 'i') },
+                        { "po_no": new RegExp(requestObject.search.value, 'i') },
+                        { "invoice_no": new RegExp(requestObject.search.value, 'i') },
+                        { "vendor_name": new RegExp(requestObject.search.value, 'i') },
+                        { "updated_by": new RegExp(requestObject.search.value, 'i') },
+                    ]
+                };
+            }
+            var match_query = {
+                is_delete: requestObject.is_delete,
+                status: { $ne: 'Complete' },
+            };
+            if (requestObject.document_type) {
+                if (requestObject.document_type == 'Other') {
+                    match_query = {
+                        document_type: { $nin: ['INVOICE', 'PURCHASE_ORDER', 'PACKING_SLIP', 'RECEIVING_SLIP', 'QUOTE'] },
+                        is_delete: requestObject.is_delete,
+                        status: { $ne: 'Complete' },
+                    };
+                } else {
+                    match_query = {
+                        document_type: requestObject.document_type,
+                        is_delete: requestObject.is_delete,
+                        status: { $ne: 'Complete' },
+                    };
+                }
+            }
+            var aggregateQuery = [
+                { $match: match_query },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "created_by",
+                        foreignField: "_id",
+                        as: "created_by"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$created_by",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "updated_by",
+                        foreignField: "_id",
+                        as: "updated_by"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$updated_by",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $project: {
+                        document_type: {
+                            $cond: [
+                                { $eq: ["$status", 'Already Exists'] },
+                                'Already Exists', "$document_type"
+                            ]
+                        },
+                        po_no: {
+                            $cond: [
+                                { $eq: ["$document_type", 'INVOICE'] },
+                                '$data.p_o',
+                                {
+                                    $cond: [
+                                        { $in: ['$document_type', ['PURCHASE_ORDER', 'PACKING_SLIP', 'RECEIVING_SLIP', 'UNKNOWN']] },
+                                        '$data.po_number', ''
+                                    ]
+                                }
+                            ]
+                        },
+                        invoice_no: {
+                            $cond: [
+                                { $eq: ["$document_type", 'INVOICE'] },
+                                '$data.invoice',
+                                {
+                                    $cond: [
+                                        { $in: ['$document_type', ['PACKING_SLIP', 'RECEIVING_SLIP', 'UNKNOWN']] },
+                                        '$data.invoice_number',
+                                        {
+                                            $cond: [
+                                                { $eq: ["$document_type", 'UNKNOWN'] },
+                                                '$data.invoice_no', ''
+                                            ]
+                                        },
+                                    ]
+                                }
+                            ]
+                        },
+                        data_vendor_id: '$data.vendor',
+                        status: 1,
+                        process_data: 1,
+                        data: 1,
+                        pdf_url: 1,
+                        is_delete: 1,
+                        created_at: 1,
+                        updated_at: 1,
+                        updated_by: {
+                            $cond: [
+                                { $eq: [requestObject.is_delete, 0] },
+                                { $ifNull: ["$created_by.userfullname", "$created_by_mail"] },
+                                { $ifNull: ["$updated_by.userfullname", "$updated_by_mail"] },
+                            ]
+                        },
+                        updated_at: {
+                            $cond: [
+                                { $eq: [requestObject.is_delete, 0] },
+                                "$created_at",
+                                "$updated_at"
+                            ]
+                        },
+                    }
+                },
+                { $match: query },
+                { $sort: sort },
+                { $limit: start + perpage },
+                { $skip: start },
+            ];
+            let count = 0;
+            count = await processInvoiceConnection.countDocuments(match_query);
+            let all_vendors = await processInvoiceConnection.aggregate(aggregateQuery).collation({ locale: "en_US" });
+            for (let i = 0; i < all_vendors.length; i++) {
+                let vendor = await getOneVendor(connection_db_api, all_vendors[i]['data_vendor_id']);
+                let vendorName = '';
+                if (vendor.status) {
+                    vendorName = vendor.data.vendor_name;
+                }
+                all_vendors[i] = {
+                    ...all_vendors[i],
+                    vendor_name: vendorName,
+                };
+            }
+            var dataResponce = {};
+            dataResponce = all_vendors;
+            dataResponce.draw = requestObject.draw;
+            dataResponce.recordsTotal = count;
+            dataResponce.recordsFiltered = (requestObject.search.value) ? all_vendors.length : count;
+            res.json(dataResponce);
+        } catch (e) {
+            console.log(e);
+            res.send([]);
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+
+
+
+
+
