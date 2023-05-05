@@ -140,11 +140,9 @@
                                         <span class="mobile-label">Department:</span>{{row.department_name}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="userstatus">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        [ngClass]="'tbl-col-width-per-7'">Status
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Status
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" class=" psl-3 table-img tbl-col-width-per-7"
-                                        (contextmenu)="onContextMenu($event, row)">
+                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Status:</span>
                                         <div *ngIf="row.userstatus===1">
                                             <span class="badge badge-solid-green">
