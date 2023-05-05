@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { ConfigService } from 'src/app/config/config.service';
 import { InConfiguration } from 'src/app/core/models/config.interface';
 import { FormControl } from '@angular/forms';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
 
 interface Notifications {
   message: string;
@@ -44,7 +45,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     private configService: ConfigService,
     private authService: AuthService,
     private router: Router
-  ) { }
+  ) {}
   notifications: Notifications[] = [
     {
       message: 'Please check your mail',
@@ -125,7 +126,10 @@ export class HeaderComponent implements OnInit, AfterViewInit {
       }
     }
 
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    if (
+      window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches
+    ) {
       // dark mode
       console.log('dark mode');
       this.isDarTheme = true;
@@ -136,8 +140,6 @@ export class HeaderComponent implements OnInit, AfterViewInit {
       this.isDarTheme = false;
       this.darkIcon = 'sun';
     }
-
-
 
     if (localStorage.getItem('theme')) {
       this.renderer.removeClass(this.document.body, this.config.layout.variant);
@@ -234,6 +236,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   logout() {
     this.authService.logout().subscribe((res) => {
       if (!res.success) {
+        localStorage.setItem(localstorageconstants.THEME, 'dark');
         this.router.navigate(['/authentication/signin']);
       }
     });
