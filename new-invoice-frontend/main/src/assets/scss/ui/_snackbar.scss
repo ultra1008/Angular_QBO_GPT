@@ -1,7 +1,7 @@
 .mat-mdc-snack-bar-container.snackbar-success .mdc-snackbar__surface {
   background-color: rgba(24, 206, 15, 0.8);
   color: #ffffff;
-  text-align: center !important;
+  text-align: left !important;
   position: relative;
   padding-left: 45px !important;
 }
@@ -19,7 +19,7 @@
 .mat-mdc-snack-bar-container.snackbar-danger .mdc-snackbar__surface {
   background-color: rgba(255, 0, 0, 0.8);
   color: #ffffff;
-  text-align: center !important;
+  text-align: left !important;
   position: relative;
   padding-left: 45px !important;
 }

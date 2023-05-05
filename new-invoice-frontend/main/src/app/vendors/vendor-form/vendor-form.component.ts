@@ -5,26 +5,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { VendorsService } from '../vendors.service';
 import { CountryModel, TermModel } from '../vendor-table.model';
-import { commonLocalThumbImage, commonNetworkThumbImage, commonNewtworkAttachmentViewer, gallery_options, showNotification } from 'src/consts/utils';
+import { commonLocalThumbImage, commonNetworkThumbImage, commonNewtworkAttachmentViewer, gallery_options, showNotification, swalWithBootstrapButtons } from 'src/consts/utils';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NgxGalleryComponent, NgxGalleryImage, NgxGalleryOptions } from 'ngx-gallery-9';
 import { CommonService } from 'src/app/services/common.service';
 import { wasabiImagePath } from 'src/consts/wasabiImagePath';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { WEB_ROUTES } from 'src/consts/routes';
-
-const swalWithBootstrapButtons = Swal.mixin({
-  customClass: {
-    confirmButton: "btn btn-success s2-confirm margin-right-cust",
-    denyButton: "btn btn-danger s2-confirm",
-    cancelButton: "s2-confirm btn btn-gray ml-2",
-  },
-  buttonsStyling: false,
-  allowOutsideClick: false,
-  imageUrl: './assets/images/rovukinvoice.png',
-  imageHeight: 50,
-  imageAlt: 'A branding image'
-});
 
 @Component({
   selector: 'app-vendor-form',
