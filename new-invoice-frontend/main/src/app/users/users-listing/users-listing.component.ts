@@ -27,6 +27,7 @@ import { localstorageconstants } from 'src/consts/localstorageconstants';
 export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
   displayedColumns = [
     // 'select',
+    'img',
     'userfullname',
     'useremail',
     'userphone',
@@ -48,7 +49,7 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
 
-  constructor (
+  constructor(
     public httpClient: HttpClient, private httpCall: HttpCall,
     public dialog: MatDialog,
     private snackBar: MatSnackBar, private router: Router
@@ -121,7 +122,7 @@ export class UserDataSource extends DataSource<User> {
   }
   filteredData: User[] = [];
   renderedData: User[] = [];
-  constructor (
+  constructor(
     public userService: UserService,
     public paginator: MatPaginator,
     public _sort: MatSort,

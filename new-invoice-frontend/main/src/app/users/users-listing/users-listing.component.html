@@ -93,8 +93,17 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
                                     <mat-cell *matCellDef="let row">{{row.id}}</mat-cell>
                                 </ng-container>
+                                <ng-container matColumnDef="img">
+                                    <mat-header-cell mat-header-cell *matHeaderCellDef
+                                        [ngClass]="'tbl-col-width-per-7'"> Image
+                                    </mat-header-cell>
+                                    <mat-cell mat-cell *matCellDef="let row" class="table-img tbl-col-width-per-7"><span
+                                            class="mobile-label">Image:</span>
+                                        <img [src]="row.userpicture" />
+                                    </mat-cell>
+                                </ng-container>
                                 <ng-container matColumnDef="userfullname">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Name
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>User Name
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Name:</span>{{row.userfullname}}</mat-cell>
@@ -131,9 +140,11 @@
                                         <span class="mobile-label">Department:</span>{{row.department_name}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="userstatus">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Status
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                                        [ngClass]="'tbl-col-width-per-7'">Status
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
+                                    <mat-cell *matCellDef="let row" class=" psl-3 table-img tbl-col-width-per-7"
+                                        (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Status:</span>
                                         <div *ngIf="row.userstatus===1">
                                             <span class="badge badge-solid-green">
@@ -146,9 +157,11 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="actions">
-                                    <mat-header-cell class="psl-3" *matHeaderCellDef>Actions
+                                    <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-7'"
+                                        *matHeaderCellDef>Actions
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row; let i=index;" class="psl-3">
+                                    <mat-cell *matCellDef="let row; let i=index;"
+                                        class=" psl-3 table-img tbl-col-width-per-7">
                                         <button mat-icon-button [matMenuTriggerFor]="menu"
                                             (click)="$event.stopPropagation()">
                                             <mat-icon>more_vert</mat-icon>
