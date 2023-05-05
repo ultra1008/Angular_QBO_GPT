@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { VendorsListComponent } from './vendors-list/vendors-list.component';
 import { VendorFormComponent } from './vendor-form/vendor-form.component';
 import { VendorHistoryComponent } from './vendor-history/vendor-history.component';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 const routes: Routes = [
   {
@@ -10,11 +11,11 @@ const routes: Routes = [
     component: VendorsListComponent
   },
   {
-    path: 'vendor-form',
+    path: WEB_ROUTES.FORM,
     component: VendorFormComponent
   },
   {
-    path: 'vendor-history',
+    path: WEB_ROUTES.HISTORY,
     component: VendorHistoryComponent
   },
 ];

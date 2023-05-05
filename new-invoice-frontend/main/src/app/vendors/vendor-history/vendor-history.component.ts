@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { VendorsService } from '../vendors.service';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-vendor-history',
@@ -9,8 +10,6 @@ import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroy
   styleUrls: ['./vendor-history.component.scss']
 })
 export class VendorHistoryComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
-  apiRoute = '';
-  backRoute = '/vendors';
   start = 0;
   vendorHistory: any;
   historyLoading = true;
@@ -41,7 +40,7 @@ export class VendorHistoryComponent extends UnsubscribeOnDestroyAdapter implemen
   }
 
   back() {
-    this.router.navigate(['/vendors']);
+    this.router.navigate([WEB_ROUTES.VENDOR]);
   }
 
   setHeightStyles() {

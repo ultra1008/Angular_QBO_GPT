@@ -1,3 +1,4 @@
+import { WEB_ROUTES } from 'src/consts/routes';
 import { RouteInfo } from './sidebar.metadata';
 export const ROUTES: RouteInfo[] = [
   // {
@@ -23,8 +24,8 @@ export const ROUTES: RouteInfo[] = [
     submenu: [],
   },
   {
-    path: '/vendors',
-    title: 'Vendors',
+    path: WEB_ROUTES.VENDOR,
+    title: 'Vendor',
     iconType: 'material-icons-two-tone',
     icon: 'local_shipping',
     class: '',

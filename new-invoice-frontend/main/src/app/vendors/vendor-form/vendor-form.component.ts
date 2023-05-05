@@ -11,6 +11,7 @@ import { NgxGalleryComponent, NgxGalleryImage, NgxGalleryOptions } from 'ngx-gal
 import { CommonService } from 'src/app/services/common.service';
 import { wasabiImagePath } from 'src/consts/wasabiImagePath';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
@@ -153,7 +154,7 @@ export class VendorFormComponent {
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        this.router.navigate(['/vendors']);
+        this.router.navigate([WEB_ROUTES.VENDOR]);
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');
@@ -185,7 +186,7 @@ export class VendorFormComponent {
           // ;
         } else {
           setTimeout(() => {
-            this.router.navigate(["/vendors"]);
+            this.router.navigate([WEB_ROUTES.VENDOR]);
           }, 100);
         }
       });
