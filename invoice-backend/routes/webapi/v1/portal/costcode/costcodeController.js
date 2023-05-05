@@ -303,7 +303,7 @@ module.exports.getCostCodeForTable = async function (req, res) {
 
             let costcodeCollection = connection_db_api.model(collectionConstant.COSTCODES, costcodeSchema);
 
-            var getdata = await costcodeCollection.find({ is_delete: requestObject.is_delete });
+            var getdata = await costcodeCollection.find({ is_delete: requestObject.is_delete, module: requestObject.module });
             if (getdata) {
                 res.send(getdata);
             }

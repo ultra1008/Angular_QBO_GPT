@@ -3599,11 +3599,7 @@ module.exports.getViewDocumentsDatatableForTable = async function (req, res) {
                         },
                     }
                 },
-                { $match: query },
-
             ];
-            let count = 0;
-            count = await processInvoiceConnection.countDocuments(match_query);
             let all_vendors = await processInvoiceConnection.aggregate(aggregateQuery).collation({ locale: "en_US" });
             for (let i = 0; i < all_vendors.length; i++) {
                 let vendor = await getOneVendor(connection_db_api, all_vendors[i]['data_vendor_id']);
@@ -3651,7 +3647,6 @@ module.exports.getOrphanDocumentsForTable = async function (req, res) {
                 { $unwind: "$vendor" },
             ]);
             if (one_invoice) {
-                console.log("one_invoice", one_invoice);
                 if (one_invoice.length > 0) {
                     one_invoice = one_invoice[0];
                 }

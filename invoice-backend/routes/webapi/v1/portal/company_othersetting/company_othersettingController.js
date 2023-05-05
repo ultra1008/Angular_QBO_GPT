@@ -399,8 +399,6 @@ module.exports.getCustomerStatesDatatableForTable = async function (req, res) {
                 { $match: match_query },
                 // { $match: query },
             ];
-            let count = 0;
-            count = await customerStateCollection.countDocuments(match_query);
             let get_data = await customerStateCollection.aggregate(aggregateQuery).collation({ locale: "en_US" });
             res.send(get_data);
         } catch (e) {
