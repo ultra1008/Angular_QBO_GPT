@@ -68,7 +68,7 @@ export const ROUTES: RouteInfo[] = [
     submenu: [],
   },
   {
-    path: 'users',
+    path: WEB_ROUTES.SIDEMENU_USER,
     title: 'Users',
     iconType: 'material-icons-two-tone',
     icon: 'people',

@@ -11,5 +11,7 @@ export enum localstorageconstants {
     VENDORINFO = "vendor-userinfo",
     IFRAMETOKEN = "ocps-token",
     VENDORCOMPANYINFO = "vendor-compnayinfo",
-    LOGOUT = "invoicelogout"
+    LOGOUT = "invoicelogout",
+
+    USER_DISPLAY = 'list'
 }

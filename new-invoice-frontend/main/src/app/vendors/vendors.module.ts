@@ -20,7 +20,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { AdvanceTableRoutingModule } from '../advance-table/advance-table-routing.module';
 import { ComponentsModule } from '../shared/components/components.module';
 import { SharedModule } from '../shared/shared.module';
 import { VendorsService } from './vendors.service';
@@ -33,7 +32,6 @@ import { NgxGalleryModule } from 'ngx-gallery-9';
 import { VendorReportComponent } from './vendor-report/vendor-report.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatListModule } from '@angular/material/list';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -49,7 +47,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    AdvanceTableRoutingModule,
     MatTableModule,
     MatPaginatorModule,
     MatFormFieldModule,

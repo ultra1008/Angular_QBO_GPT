@@ -127,7 +127,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     // 
   }
   public loadData() {
-    this.vendorService = new VendorsService(this.httpClient, this.httpCall);
+    this.vendorService = new VendorsService(this.httpCall);
     this.dataSource = new VendorDataSource(
       this.vendorService,
       this.paginator,

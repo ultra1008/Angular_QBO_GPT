@@ -9,7 +9,7 @@ export class Vendor {
     vendor_status: number;
     vendor_attachment: Array<string>;
     isVendorfromQBO: boolean;
-    constructor(response: Vendor) {
+    constructor (response: Vendor) {
         {
             this._id = response._id;
             this.vendor_name = response.vendor_name;
@@ -31,7 +31,7 @@ export class TermModel {
     is_dicount: boolean;
     discount: number;
     due_days: string;
-    constructor(response: TermModel) {
+    constructor (response: TermModel) {
         {
             this._id = response._id;
             this.name = response.name;
@@ -45,7 +45,7 @@ export class TermModel {
 export class CountryModel {
     _id: string;
     name: string;
-    constructor(response: TermModel) {
+    constructor (response: TermModel) {
         {
             this._id = response._id;
             this.name = response.name;
