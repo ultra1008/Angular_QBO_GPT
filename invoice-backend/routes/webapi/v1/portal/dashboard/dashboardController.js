@@ -217,3 +217,31 @@ module.exports.getDashboardChart = async function (req, res) {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
+
+//panding invoice
+module.exports.dashboardInvoiceListForTable = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+            var pending_data = await invoicesConnection.find({ is_delete: 0, status: 'Pending' }).sort({ created_at: -1 }).limit(3);
+            // var process_data = await invoicesConnection.find({ is_delete: 0, status: 'Generated' }).sort({ created_at: -1 }).limit(3);
+            var cancel_data = await invoicesConnection.find({ is_delete: 0, status: 'Rejected' }).sort({ created_at: -1 }).limit(3);
+            let data = {
+                pending_invoices: pending_data,
+                process_invoices: [],
+                cancelled_invoices: cancel_data,
+            };
+            res.send(data);
+        } catch (e) {
+            console.log(e);
+            res.send([]);
+        } finally {
+
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
