@@ -3483,36 +3483,11 @@ module.exports.getInvoiceTableForReport = async function (req, res) {
 module.exports.getViewDocumentsDatatableForTable = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
-
     if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
             var processInvoiceConnection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
-            var col = [];
-            col.push("document_type", "po_no", "invoice_no", "vendor_name", "updated_by", "updated_at");
-            var start = parseInt(requestObject.start) || 0;
-            var perpage = parseInt(requestObject.length);
-            var columnData = (requestObject.order != undefined && requestObject.order != '') ? requestObject.order[0].column : '';
-            var columntype = (requestObject.order != undefined && requestObject.order != '') ? requestObject.order[0].dir : '';
-            var sort = {};
-            if (requestObject.draw == 1) {
-                sort = { "document_type": 1 };
-            } else {
-                sort[col[columnData]] = (columntype == 'asc') ? 1 : -1;
-            }
-            let query = {};
-            if (requestObject.search.value) {
-                query = {
-                    $or: [
-                        { "document_type": new RegExp(requestObject.search.value, 'i') },
-                        { "po_no": new RegExp(requestObject.search.value, 'i') },
-                        { "invoice_no": new RegExp(requestObject.search.value, 'i') },
-                        { "vendor_name": new RegExp(requestObject.search.value, 'i') },
-                        { "updated_by": new RegExp(requestObject.search.value, 'i') },
-                    ]
-                };
-            }
             var match_query = {
                 is_delete: requestObject.is_delete,
                 status: { $ne: 'Complete' },
@@ -3625,9 +3600,7 @@ module.exports.getViewDocumentsDatatableForTable = async function (req, res) {
                     }
                 },
                 { $match: query },
-                { $sort: sort },
-                { $limit: start + perpage },
-                { $skip: start },
+
             ];
             let count = 0;
             count = await processInvoiceConnection.countDocuments(match_query);
@@ -3643,12 +3616,7 @@ module.exports.getViewDocumentsDatatableForTable = async function (req, res) {
                     vendor_name: vendorName,
                 };
             }
-            var dataResponce = {};
-            dataResponce = all_vendors;
-            dataResponce.draw = requestObject.draw;
-            dataResponce.recordsTotal = count;
-            dataResponce.recordsFiltered = (requestObject.search.value) ? all_vendors.length : count;
-            res.json(dataResponce);
+            res.send(all_vendors);
         } catch (e) {
             console.log(e);
             res.send([]);
@@ -3661,6 +3629,317 @@ module.exports.getViewDocumentsDatatableForTable = async function (req, res) {
 };
 
 
+module.exports.getOrphanDocumentsForTable = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var invoiceConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+            var processInvoiceConnection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
+            var one_invoice = await invoiceConnection.aggregate([
+                { $match: { _id: ObjectID(requestObject._id) } },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_VENDOR,
+                        localField: "vendor",
+                        foreignField: "_id",
+                        as: "vendor"
+                    }
+                },
+                { $unwind: "$vendor" },
+            ]);
+            if (one_invoice) {
+                console.log("one_invoice", one_invoice);
+                if (one_invoice.length > 0) {
+                    one_invoice = one_invoice[0];
+                }
+                let query = {
+                    status: 'Process',
+                    document_type: { $ne: 'INVOICE' },
+                    "process_data.document_pages.fields.VENDOR_NAME": { $regex: one_invoice.vendor.vendor_name, $options: 'i' },
+                    "process_data.document_pages.fields.INVOICE_NUMBER": { $regex: one_invoice.invoice, $options: 'i' },
+                    // "process_data.document_pages.fields.VENDOR_NAME": /CN SOLUTIONS GROUP LLc/i
+                };
+                let get_process = await processInvoiceConnection.find(query);
+                res.send(get_process);
+            } else {
+                res.send([]);
+            }
+        } catch (e) {
+            console.log(e);
+            res.send([]);
+        } finally {
+            connection_db_api.close();
+        }
+    }
+    else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+// Orphan Document
+module.exports.getOrphanDocumentsDatatableForTable = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var processInvoiceConnection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
+            var settingsConnection = connection_db_api.model(collectionConstant.INVOICE_SETTING, settingsSchema);
+            let one_settings = await settingsConnection.findOne({});
+            let settings = one_settings.settings.Document_View;
+            let query = {};
+            var match_query = {
+                is_delete: requestObject.is_delete,
+                status: { $eq: 'Process' }
+            };
+            var pending_count_query = {
+                is_delete: requestObject.is_delete,
+                status: { $eq: 'Process' }
+            };
+            let currentEpoch = Math.round(new Date().getTime() / 1000);
+            let settingDays = Number(settings.setting_value);
+            let settingDate = moment(currentEpoch * 1000);
+            settingDate.hours(0);
+            settingDate.minutes(0);
+            settingDate.seconds(0);
+            settingDate.milliseconds(0);
+            settingDate.subtract(settingDays, 'days');
+            settingEpoch = settingDate.unix();
+            if (requestObject.view_option) {
+                match_query.created_at = { $lte: settingEpoch };
+            } else {
+                match_query.created_at = { $gte: settingEpoch };
+            }
+            var aggregateQuery = [
+                { $match: match_query },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "created_by",
+                        foreignField: "_id",
+                        as: "created_by_user"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$created_by_user",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $project: {
+                        document_type: {
+                            $cond: [
+                                { $eq: ["$status", 'Already Exists'] },
+                                'Already Exists', "$document_type"
+                            ]
+                        },
+                        po_no: {
+                            $cond: [
+                                { $eq: ["$document_type", 'INVOICE'] },
+                                '$data.p_o',
+                                {
+                                    $cond: [
+                                        { $in: ['$document_type', ['PURCHASE_ORDER', 'PACKING_SLIP', 'RECEIVING_SLIP', 'UNKNOWN']] },
+                                        '$data.po_number', ''
+                                    ]
+                                }
+                            ]
+                        },
+                        invoice_no: {
+                            $cond: [
+                                { $eq: ["$document_type", 'INVOICE'] },
+                                '$data.invoice',
+                                {
+                                    $cond: [
+                                        { $in: ['$document_type', ['PACKING_SLIP', 'RECEIVING_SLIP']] },
+                                        '$data.invoice_number',
+                                        {
+                                            $cond: [
+                                                { $eq: ["$document_type", 'UNKNOWN'] },
+                                                '$data.invoice_no', ''
+                                            ]
+                                        },
+                                    ]
+                                }
+                            ]
+                        },
+                        data_vendor_id: '$data.vendor',
+                        status: 1,
+                        process_data: 1,
+                        data: 1,
+                        pdf_url: 1,
+                        created_at: 1,
+                        created_by_user: { $ifNull: ["$created_by_user.userfullname", "$created_by_mail"] },
+                        is_delete: 1,
+                    }
+                },
+                { $match: query },
+            ];
+            let all_vendors = await processInvoiceConnection.aggregate(aggregateQuery).collation({ locale: "en_US" });
+            for (let i = 0; i < all_vendors.length; i++) {
+                let vendorName = '';
+                if (all_vendors[i]['data_vendor_id']) {
+                    let vendor = await getOneVendor(connection_db_api, all_vendors[i]['data_vendor_id']);
+                    if (vendor.status) {
+                        vendorName = vendor.data.vendor_name;
+                    }
+                }
+                all_vendors[i] = {
+                    ...all_vendors[i],
+                    vendor_name: vendorName,
+                };
+            }
+            res.send(all_vendors);
+        } catch (e) {
+            console.log(e);
+            res.send([]);
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+// Duplicate Documents
+module.exports.getDuplicateDocumentsDatatableForTable = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var processInvoiceConnection = connection_db_api.model(collectionConstant.INVOICE_PROCESS, processInvoiceSchema);
+            var col = [];
+            col.push("created_by_user", "created_at");
+            var start = parseInt(requestObject.start) || 0;
+            var perpage = parseInt(requestObject.length);
+            var columnData = (requestObject.order != undefined && requestObject.order != '') ? requestObject.order[0].column : '';
+            var columntype = (requestObject.order != undefined && requestObject.order != '') ? requestObject.order[0].dir : '';
+            var sort = {};
+            if (requestObject.draw == 1) {
+                sort = { "created_at": -1 };
+            } else {
+                sort[col[columnData]] = (columntype == 'asc') ? 1 : -1;
+            }
+            let query = {};
+            if (requestObject.search.value) {
+                query = {
+                    $or: [
+                        { "created_by_user": new RegExp(requestObject.search.value, 'i') },
+                    ]
+                };
+            }
+            var match_query = {
+                is_delete: 0,
+                status: { $eq: 'Already Exists' }
+            };
+            var pending_count_query = {
+                is_delete: 0,
+                status: { $eq: 'Process' }
+            };
+            var aggregateQuery = [
+                { $match: match_query },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "created_by",
+                        foreignField: "_id",
+                        as: "created_by_user"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$created_by_user",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $project: {
+                        document_type: {
+                            $cond: [
+                                { $eq: ["$status", 'Already Exists'] },
+                                'Already Exists', "$document_type"
+                            ]
+                        },
+                        po_no: {
+                            $cond: [
+                                { $eq: ["$document_type", 'INVOICE'] },
+                                '$data.p_o',
+                                {
+                                    $cond: [
+                                        { $in: ['$document_type', ['PURCHASE_ORDER', 'PACKING_SLIP', 'RECEIVING_SLIP', 'UNKNOWN']] },
+                                        '$data.po_number', ''
+                                    ]
+                                }
+                            ]
+                        },
+                        invoice_no: {
+                            $cond: [
+                                { $eq: ["$document_type", 'INVOICE'] },
+                                '$data.invoice',
+                                {
+                                    $cond: [
+                                        { $in: ['$document_type', ['PACKING_SLIP', 'RECEIVING_SLIP']] },
+                                        '$data.invoice_number',
+                                        {
+                                            $cond: [
+                                                { $eq: ["$document_type", 'UNKNOWN'] },
+                                                '$data.invoice_no', ''
+                                            ]
+                                        },
+                                    ]
+                                }
+                            ]
+                        },
+                        data_vendor_id: '$data.vendor',
+                        status: 1,
+                        process_data: 1,
+                        data: 1,
+                        pdf_url: 1,
+                        created_at: 1,
+                        created_by_user: { $ifNull: ["$created_by_user.userfullname", "$created_by_mail"] },
+                    }
+                },
+                { $match: query },
+                { $sort: sort },
+                { $limit: start + perpage },
+                { $skip: start },
+            ];
+            let count = 0;
+            count = await processInvoiceConnection.countDocuments(match_query);
+            let pendingCount = await processInvoiceConnection.countDocuments(pending_count_query);
+
+            let all_vendors = await processInvoiceConnection.aggregate(aggregateQuery).collation({ locale: "en_US" });
+            for (let i = 0; i < all_vendors.length; i++) {
+                let vendor = await getOneVendor(connection_db_api, all_vendors[i]['data_vendor_id']);
+                let vendorName = '';
+                if (vendor.status) {
+                    vendorName = vendor.data.vendor_name;
+                }
+                all_vendors[i] = {
+                    ...all_vendors[i],
+                    vendor_name: vendorName,
+                };
+            }
+            res.send(all_vendors);
+        } catch (e) {
+            console.log(e);
+            res.send([]);
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
 
 
 

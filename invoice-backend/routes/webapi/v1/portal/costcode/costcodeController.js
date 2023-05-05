@@ -292,7 +292,7 @@ module.exports.savecostcodeindb = async function (req, res) {
     }
 };
 
-//get cost code pangination,search and start page this all includes in thi api
+//get cost code
 module.exports.getCostCodeForTable = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
@@ -302,37 +302,15 @@ module.exports.getCostCodeForTable = async function (req, res) {
             var requestObject = req.body;
 
             let costcodeCollection = connection_db_api.model(collectionConstant.COSTCODES, costcodeSchema);
-            var col = [];
-            match = { is_delete: requestObject.is_delete };
-            col.push("division", "value", "description");
-            var start = parseInt(req.body.start);
-            var perpage = parseInt(req.body.length);
-            var columnData = (req.body.order != undefined && req.body.order != '') ? req.body.order[0].column : '';
-            var columntype = (req.body.order != undefined && req.body.order != '') ? req.body.order[0].dir : '';
-            var sort = {};
-            sort[col[columnData]] = (columntype == 'asc') ? 1 : -1;
-            var query = {
-                $or: [{ "division": new RegExp(req.body.search.value, 'i') },
-                { "value": new RegExp(req.body.search.value, 'i') },
-                { "description": new RegExp(req.body.search.value, 'i') }]
-            };
-            var aggregateQuery = [
-                { $match: match },
-                { $match: query },
-                { $limit: perpage },
-                { $skip: start },
-                { $sort: sort },
-            ];
-            let count = 0;
-            count = await costcodeCollection.countDocuments(match);
-            let get_shift = await costcodeCollection.aggregate(aggregateQuery);
-            console.log("aggregateQuery", aggregateQuery);
-            var dataResponce = {};
-            dataResponce = get_shift;
-            dataResponce.draw = req.body.draw;
-            dataResponce.recordsTotal = count;
-            dataResponce.recordsFiltered = (req.body.search.value) ? get_shift.length : count;
-            res.json(dataResponce);
+
+            var getdata = await costcodeCollection.find({ is_delete: requestObject.is_delete });
+            if (getdata) {
+                res.send(getdata);
+            }
+            else {
+                res.send([]);
+            }
+
         } catch (e) {
             res.send([]);
         } finally {
