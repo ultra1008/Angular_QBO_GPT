@@ -103,6 +103,8 @@ router.post('/webapi/v1/sendiframecode', common.checkTokenExistOrNot, company_ot
 router.get('/webapi/v1/portal/compnayusage', common.checkTokenExistOrNot, company_othersettingController.compnayUsage);
 router.post('/webapi/v1/portal/getcustomerstatesdatatable', common.checkTokenExistOrNot, company_othersettingController.getCustomerStatesDatatable);
 router.get('/webapi/v1/portal/customerMonthlyState', common.checkTokenExistOrNot, otherSettingCron.customerMonthlyState);
+router.post('/webapi/v1/portal/getCustomerStatesDatatableForTable', common.checkTokenExistOrNot, company_othersettingController.getCustomerStatesDatatableForTable);
+
 
 var employeeController = require('./employee/employeeController');
 var employeeValidation = require('./employee/employeeValidation');
@@ -315,7 +317,9 @@ router.post('/webapi/v1/portal/saveglaccountstoDB', common.checkTokenExistOrNot,
 
 router.post('/webapi/v1/portal/getInvoiceTableForReport', common.checkTokenExistOrNot, invoiceValidation.getInvoiceTableForReportValidation, invoiceController.getInvoiceTableForReport);
 router.post('/webapi/v1/portal/getViewDocumentsDatatableForTable', common.checkTokenExistOrNot, invoiceValidation.getViewDocumentsDatatableForTableValidation, invoiceController.getViewDocumentsDatatableForTable);
-
+router.post('/webapi/v1/portal/getOrphanDocumentsForTable', common.checkTokenExistOrNot, invoiceController.getOrphanDocumentsForTable);
+router.post('/webapi/v1/portal/getOrphanDocumentsDatatableForTable', common.checkTokenExistOrNot, invoiceController.getOrphanDocumentsDatatableForTable);
+router.post('/webapi/v1/portal/getDuplicateDocumentsDatatableForTable', common.checkTokenExistOrNot, invoiceController.getDuplicateDocumentsDatatableForTable);
 
 
 
@@ -323,6 +327,8 @@ let invoiceDashboard = require('./dashboard/dashboardController');
 router.get('/webapi/v1/portal/getdashboardcount', common.checkTokenExistOrNot, invoiceDashboard.getDashboardCount);
 router.get('/webapi/v1/portal/getdashboardinvoice', common.checkTokenExistOrNot, invoiceDashboard.dashboardInvoiceList);
 router.post('/webapi/v1/portal/getdashboardchart', common.checkTokenExistOrNot, invoiceDashboard.getDashboardChart);
+router.get('/webapi/v1/portal/dashboardInvoiceListForTable', common.checkTokenExistOrNot, invoiceDashboard.dashboardInvoiceListForTable);
+
 
 let invoice_vendorController = require('./vendor/vendorController');
 let invoice_vendorValidation = require('./vendor/vendorValidation');

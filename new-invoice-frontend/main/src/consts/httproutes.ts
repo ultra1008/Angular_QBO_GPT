@@ -31,4 +31,7 @@ export enum httproutes {
 
     // Attachment
     PORTAL_SAVE_ATTACHMENT = "saveattechment",
+
+    // User
+    PORTAL_USER_GET_FOR_TABLE = "getUserForTable",
 }

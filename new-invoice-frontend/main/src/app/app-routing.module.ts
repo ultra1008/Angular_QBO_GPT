@@ -45,7 +45,7 @@ const routes: Routes = [
           import('./reports/reports.module').then((m) => m.ReportsModule),
       },
       {
-        path: 'users',
+        path: WEB_ROUTES.SIDEMENU_USER,
         loadChildren: () =>
           import('./users/users.module').then((m) => m.UsersModule),
       },

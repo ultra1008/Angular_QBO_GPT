@@ -56,7 +56,7 @@
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 1">
-                                    <div class="m-l-10" matTooltip="MULTI ARCHIVE">
+                                    <div class="m-l-10" matTooltip="BACK">
                                         <button mat-mini-fab color="warn" (click)="gotoArchiveUnarchive()">
                                             <mat-icon class="col-white">close </mat-icon>
                                         </button>
@@ -104,36 +104,42 @@
                                 <ng-container matColumnDef="vendor_name">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Vendor Name
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
+                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
+                                        (click)="editVendor(row)">
                                         <span class="mobile-label">Vendor Name:</span>{{row.vendor_name}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_id">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Vendor ID
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
+                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
+                                        (click)="editVendor(row)">
                                         <span class="mobile-label">Vendor ID:</span>{{row.vendor_id}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="customer_id">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Customer ID
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
+                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
+                                        (click)="editVendor(row)">
                                         <span class="mobile-label">Customer ID:</span>{{row.customer_id}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_phone">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Phone</mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
+                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
+                                        (click)="editVendor(row)">
                                         <span class="mobile-label">Phone:</span>
                                         {{row.vendor_phone | phoneFormatPipe}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_email">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Email</mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
+                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
+                                        (click)="editVendor(row)">
                                         <span class="mobile-label">Email:</span> {{row.vendor_email}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_address">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Address
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
+                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
+                                        (click)="editVendor(row)">
                                         <span class="truncate-text"><span class="mobile-label">Address:</span>
                                             {{row.vendor_address}}</span>
                                     </mat-cell>
@@ -212,7 +218,7 @@
 
                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                                 <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'"
-                                    (click)="editVendor(row)" matRipple>
+                                    matRipple>
                                 </mat-row>
                             </table>
                         </div>

@@ -1,0 +1,127 @@
+<section class="content">
+    <div class="content-block">
+        <div class="m-4"></div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="materialTableHeader">
+                        <div class="left">
+                            <ul class="header-buttons-left ms-0">
+                                <li class="tbl-title">
+                                    <h2 *ngIf="isDelete === 0">User</h2>
+                                    <h2 *ngIf="isDelete === 1">Archived User</h2>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <ul class="tbl-export-btn">
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" matTooltip="GRID TO LIST">
+                                        <button mat-mini-fab color="warn" (click)="gotoUser()">
+                                            <mat-icon class="col-white">view_list </mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                                    <div class="m-l-10" matTooltip="ARCHIVE">
+                                        <button mat-mini-fab color="primary" (click)="gotoArchiveUnarchive()">
+                                            <mat-icon class="col-white">archive</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="tbl-header-btn" *ngIf="isDelete === 1">
+                                    <div class="m-l-10" matTooltip="BACK">
+                                        <button mat-mini-fab color="warn" (click)="gotoArchiveUnarchive()">
+                                            <mat-icon class="col-white">close </mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                                <!-- <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                                    <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="MULTI ARCHIVE">
+                                        <button mat-mini-fab color="warn" (click)="removeSelectedRows()">
+                                            <mat-icon class="col-white">archive </mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                                    <div class="m-l-10" matTooltip="REFRESH">
+                                        <button mat-mini-fab color="primary" (click)="refresh()">
+                                            <mat-icon class="col-white">refresh</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                                    <div class="m-l-10" matTooltip="HISTORY">
+                                        <button mat-mini-fab color="primary" (click)="openHistory()">
+                                            <mat-icon class="col-white">history</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                                    <div class="m-l-10" matTooltip="REPORT" (click)="vendorReport()">
+                                        <button mat-mini-fab color="primary">
+                                            <mat-icon class="col-white">insert_drive_file</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                              
+                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                                    <div class="m-l-10" matTooltip="ADD">
+                                        <button mat-mini-fab color="primary" (click)="addNew()">
+                                            <mat-icon class="col-white">add</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li *ngIf="isDelete === 0">
+                                    <div class="export-button m-l-10" matTooltip="XLSX">
+                                        <img src="assets/images/icons/xlsx.png" alt="" (click)="exportExcel()" />
+                                    </div>
+                                </li> -->
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="body overflow-auto">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-12" *ngFor="let user of userList">
+                                <div class="card">
+                                    <div class="m-b-20">
+                                        <div class="contact-grid">
+                                            <div class="profile-header bg-dark">
+                                                <div class="user-name">{{user.userfullname}}</div>
+                                                <div class="name-center">Software Engineer</div>
+                                            </div>
+                                            <img src="assets/images/user/usrbig3.jpg" class="user-img" alt="">
+                                            <p>
+                                                456, Estern evenue, Courtage area,
+                                                <br />New York
+                                            </p>
+                                            <div>
+                                                <span class="phone">
+                                                    <i class="material-icons">phone</i>264-625-2583</span>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <h5>564</h5>
+                                                    <small>Following</small>
+                                                </div>
+                                                <div class="col-4">
+                                                    <h5>18k</h5>
+                                                    <small>Followers</small>
+                                                </div>
+                                                <div class="col-4">
+                                                    <h5>565</h5>
+                                                    <small>Post</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div>{{user.userfullname}}</div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -41,3 +41,14 @@ export class TermModel {
         }
     }
 }
+
+export class CountryModel {
+    _id: string;
+    name: string;
+    constructor (response: TermModel) {
+        {
+            this._id = response._id;
+            this.name = response.name;
+        }
+    }
+}

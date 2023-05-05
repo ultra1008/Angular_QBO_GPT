@@ -17,7 +17,7 @@ import { VendorsService } from '../vendors.service';
 import { TermModel, Vendor } from '../vendor-table.model';
 import { Router } from '@angular/router';
 import { HttpCall } from 'src/app/services/httpcall.service';
-import { commonNewtworkAttachmentViewer, gallery_options, showNotification } from 'src/consts/utils';
+import { commonNewtworkAttachmentViewer, gallery_options, showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
 import { NgxGalleryComponent, NgxGalleryImage, NgxGalleryOptions } from 'ngx-gallery-9';
 import { VendorReportComponent } from '../vendor-report/vendor-report.component';
 import { WEB_ROUTES } from 'src/consts/routes';
@@ -63,8 +63,9 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   ];
   isDelete = 0;
   termsList: Array<TermModel> = [];
+  titleMessage: string = "";
 
-  constructor (
+  constructor(
     public httpClient: HttpClient, private httpCall: HttpCall,
     public dialog: MatDialog,
     public vendorTableService: VendorsService,
@@ -127,7 +128,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     // 
   }
   public loadData() {
-    this.vendorService = new VendorsService(this.httpClient, this.httpCall);
+    this.vendorService = new VendorsService(this.httpCall);
     this.dataSource = new VendorDataSource(
       this.vendorService,
       this.paginator,
@@ -192,7 +193,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     }
   }
 
-  async deleteVendor(vendor: Vendor, is_delete: number) {
+  async archiveRecover(vendor: Vendor, is_delete: number) {
     const data = await this.vendorTableService.deleteVendor({ _id: vendor._id, is_delete: is_delete });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
@@ -207,6 +208,27 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     } else {
       showNotification(this.snackBar, data.message, 'error');
     }
+  }
+
+  async deleteVendor(vendor: Vendor, is_delete: number) {
+    if (is_delete == 1) {
+      this.titleMessage = "Are you sure you want to archive this vendor?";
+    } else {
+      this.titleMessage = "Are you sure you want to restore this vendor?";
+    }
+    swalWithBootstrapTwoButtons
+      .fire({
+        title: this.titleMessage,
+        showDenyButton: true,
+        confirmButtonText: "Yes",
+        denyButtonText: "No",
+        allowOutsideClick: false,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          this.archiveRecover(vendor, is_delete);
+        }
+      });
   }
 
   gotoArchiveUnarchive() {
@@ -258,7 +280,7 @@ export class VendorDataSource extends DataSource<Vendor> {
   }
   filteredData: Vendor[] = [];
   renderedData: Vendor[] = [];
-  constructor (
+  constructor(
     public vendorService: VendorsService,
     public paginator: MatPaginator,
     public _sort: MatSort,

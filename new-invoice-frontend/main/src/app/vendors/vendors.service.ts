@@ -13,7 +13,7 @@ export class VendorsService extends UnsubscribeOnDestroyAdapter {
   dataChange: BehaviorSubject<Vendor[]> = new BehaviorSubject<Vendor[]>([]);
   // Temporarily stores data from dialogs
   dialogData!: Vendor;
-  constructor (private httpClient: HttpClient, private httpCall: HttpCall) {
+  constructor (private httpCall: HttpCall) {
     super();
   }
   get data(): Vendor[] {

@@ -12,6 +12,6 @@ export enum localstorageconstants {
   IFRAMETOKEN = 'ocps-token',
   VENDORCOMPANYINFO = 'vendor-compnayinfo',
   LOGOUT = 'invoicelogout',
-
   THEME = 'theme',
+  USER_DISPLAY = 'list',
 }
