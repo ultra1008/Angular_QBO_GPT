@@ -13,19 +13,19 @@ export const swalWithBootstrapButtons = Swal.mixin({
     allowOutsideClick: false,
     imageUrl: './assets/images/rovukinvoice.png',
     imageHeight: 50,
-    imageAlt: 'A branding image'
+    imageAlt: 'ROVUK A/P'
 });
 
 export const swalWithBootstrapTwoButtons = Swal.mixin({
     customClass: {
-        confirmButton: "btn btn-success s2-confirm mr-2",
+        confirmButton: "btn btn-success s2-confirm",
         denyButton: "btn btn-danger s2-confirm ml-2",
     },
     buttonsStyling: false,
     allowOutsideClick: false,
     imageUrl: './assets/images/rovukinvoice.png',
     imageHeight: 50,
-    imageAlt: 'A branding image'
+    imageAlt: 'ROVUK A/P'
 });
 
 export function showNotification(snackBar: MatSnackBar, text: string, colorName: string) {
