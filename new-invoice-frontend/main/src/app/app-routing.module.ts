@@ -4,6 +4,7 @@ import { MainLayoutComponent } from './layout/app-layout/main-layout/main-layout
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from './core/guard/auth.guard';
+import { WEB_ROUTES } from 'src/consts/routes';
 const routes: Routes = [
   {
     path: '',
@@ -24,7 +25,7 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'vendors',
+        path: WEB_ROUTES.SIDEMENU_VENDOR,
         loadChildren: () =>
           import('./vendors/vendors.module').then((m) => m.VendorsModule),
       },

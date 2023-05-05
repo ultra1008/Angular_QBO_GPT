@@ -344,18 +344,15 @@ module.exports.login = async function (req, res) {
                                         var token = await common.generateJWT(resObject);
                                         resLast.token = token;
                                         resLast.role_permission = roles_tmp.role_permission;
-                                        res.send({ message: translator.getStr('UserListing'), data: resLast, status: true });
-
+                                        res.send({ message: translator.getStr('LoginSuccess'), data: resLast, status: true });
                                     } else {
                                         res.send({ message: translator.getStr('WrongPassword'), status: false });
                                     }
                                     // }
-
                                 }
                             } else {
                                 res.send({ message: translator.getStr('CompanyNotFound'), status: false });
                             }
-
                         } catch (e) {
                             console.log("-----", e);
                             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });

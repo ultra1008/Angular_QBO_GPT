@@ -20,6 +20,7 @@ import { HttpCall } from 'src/app/services/httpcall.service';
 import { commonNewtworkAttachmentViewer, gallery_options, showNotification } from 'src/consts/utils';
 import { NgxGalleryComponent, NgxGalleryImage, NgxGalleryOptions } from 'ngx-gallery-9';
 import { VendorReportComponent } from '../vendor-report/vendor-report.component';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-vendors-list',
@@ -97,15 +98,15 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   }
 
   addNew() {
-    this.router.navigate(['/vendors/vendor-form']);
+    this.router.navigate([WEB_ROUTES.VENDOR_FORM]);
   }
 
   editVendor(vendor: Vendor) {
-    this.router.navigate(['/vendors/vendor-form'], { queryParams: { _id: vendor._id } });
+    this.router.navigate([WEB_ROUTES.VENDOR_FORM], { queryParams: { _id: vendor._id } });
   }
 
   openHistory() {
-    this.router.navigate(['/vendors/vendor-history']);
+    this.router.navigate([WEB_ROUTES.VENDOR_HISTORY]);
   }
 
   private refreshTable() {
