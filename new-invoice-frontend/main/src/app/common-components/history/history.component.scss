@@ -2,9 +2,9 @@
     display: block !important;
 }
 
-.history-data {
-    background-color: white;
-}
+// .history-data {
+//     background-color: white;
+// }
 
 .table {
 
@@ -12,4 +12,9 @@
     td {
         width: 50%;
     }
+}
+
+.table-bordered tbody tr td,
+.table-bordered tbody tr th {
+    border-left: none !important;
 }

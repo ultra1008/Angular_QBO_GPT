@@ -120,10 +120,21 @@
                                         <input matInput formControlName="vendor_zipcode" required>
                                     </mat-form-field>
                                 </div>
-                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                <!-- <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>Country</mat-label>
                                         <input matInput formControlName="vendor_country" required>
+                                    </mat-form-field>
+                                </div> -->
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>Country</mat-label>
+                                        <mat-select formControlName="vendor_country">
+                                            <mat-option *ngFor="let country of countryList" [value]="country._id">
+                                                {{country.name}}
+                                            </mat-option>
+
+                                        </mat-select>
                                     </mat-form-field>
                                 </div>
 
