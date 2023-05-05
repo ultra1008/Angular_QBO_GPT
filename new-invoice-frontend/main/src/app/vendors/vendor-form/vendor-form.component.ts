@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { VendorsService } from '../vendors.service';
-import { TermModel } from '../vendor-table.model';
+import { CountryModel, TermModel } from '../vendor-table.model';
 import { commonLocalThumbImage, commonNetworkThumbImage, commonNewtworkAttachmentViewer, gallery_options, showNotification } from 'src/consts/utils';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NgxGalleryComponent, NgxGalleryImage, NgxGalleryOptions } from 'ngx-gallery-9';
@@ -38,6 +38,7 @@ export class VendorFormComponent {
   agree = false;
   customForm?: UntypedFormGroup;
   termsList: Array<TermModel> = [];
+  countryList: Array<CountryModel> = [{ _id: 'USA', name: 'USA' }];
 
   id = '';
 
@@ -58,7 +59,7 @@ export class VendorFormComponent {
   imageObject = [];
   tmp_gallery: any;
 
-  constructor (private fb: UntypedFormBuilder, private router: Router, private snackBar: MatSnackBar, public uiSpinner: UiSpinnerService,
+  constructor(private fb: UntypedFormBuilder, private router: Router, private snackBar: MatSnackBar, public uiSpinner: UiSpinnerService,
     public route: ActivatedRoute, public vendorService: VendorsService, private sanitiser: DomSanitizer, public commonService: CommonService) {
     this.id = this.route.snapshot.queryParamMap.get("_id") ?? '';
 
@@ -74,7 +75,7 @@ export class VendorFormComponent {
       vendor_city: ['', [Validators.required]],
       vendor_state: ['', [Validators.required]],
       vendor_zipcode: ['', [Validators.required]],
-      vendor_country: [''],
+      vendor_country: ['USA'],
       vendor_terms: ['', [Validators.required]],
       vendor_status: ['', [Validators.required]],
       vendor_description: [''],

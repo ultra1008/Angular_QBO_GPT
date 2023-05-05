@@ -4,7 +4,7 @@ import { NgxGalleryAnimation, NgxGalleryImageSize } from "ngx-gallery-9";
 
 export function showNotification(snackBar: MatSnackBar, text: string, colorName: string) {
     snackBar.open(text, '', {
-        duration: 2000,
+        duration: 5000,
         verticalPosition: 'top',
         horizontalPosition: 'right',
         panelClass: colorName == 'success' ? 'snackbar-success' : 'snackbar-danger',
