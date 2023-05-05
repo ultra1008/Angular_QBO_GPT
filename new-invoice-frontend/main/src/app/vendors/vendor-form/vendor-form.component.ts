@@ -37,7 +37,8 @@ export class VendorFormComponent {
   hide = true;
   agree = false;
   customForm?: UntypedFormGroup;
-  termsList: Array<TermModel> = [];
+  variablestermList: any = [];
+  termsList: Array<TermModel> = this.variablestermList.slice();
   countryList: Array<CountryModel> = [{ _id: 'USA', name: 'USA' }];
 
   id = '';
@@ -58,6 +59,7 @@ export class VendorFormComponent {
   galleryImages: NgxGalleryImage[] = [];
   imageObject = [];
   tmp_gallery: any;
+
 
   constructor(private fb: UntypedFormBuilder, private router: Router, private snackBar: MatSnackBar, public uiSpinner: UiSpinnerService,
     public route: ActivatedRoute, public vendorService: VendorsService, private sanitiser: DomSanitizer, public commonService: CommonService) {
@@ -130,7 +132,8 @@ export class VendorFormComponent {
   async getTerms() {
     const data = await this.vendorService.getTerms();
     if (data.status) {
-      this.termsList = data.data;
+      this.variablestermList = data.data;
+      this.termsList = this.variablestermList.slice();
     }
   }
 

@@ -33,8 +33,7 @@ import { NgxGalleryModule } from 'ngx-gallery-9';
 import { VendorReportComponent } from './vendor-report/vendor-report.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatListModule } from '@angular/material/list';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { MatSelectFilterModule } from 'mat-select-filter';
 @NgModule({
   declarations: [
     VendorsListComponent,
@@ -75,7 +74,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     NgxGalleryModule,
     MatChipsModule,
     MatListModule,
-
+    MatSelectFilterModule
   ]
 
 })

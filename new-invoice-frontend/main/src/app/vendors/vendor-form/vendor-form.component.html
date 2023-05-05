@@ -144,6 +144,10 @@
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>Terms</mat-label>
                                         <mat-select formControlName="vendor_terms">
+                                            <mat-select-filter #termListSelect [placeholder]="'Filter'"
+                                                [displayMember]="'name'" [array]="variablestermList"
+                                                (filteredReturn)="termsList =$event">
+                                            </mat-select-filter>
                                             <mat-option *ngFor="let term of termsList" [value]="term._id">
                                                 {{term.name}}
                                             </mat-option>
