@@ -7,6 +7,9 @@
                 <div class="card">
                     <div class="m-b-20">
                         <div class="contact-grid">
+                            <div class="editButton">
+                                <i class="fas fa-pen pull-left card-icon col-white font-20"></i>
+                            </div>
                             <div class="profile-header bg-dark">
                                 <div class="user-name">Centurion infotech</div>
                                 <div class="name-center">R-988514</div>
@@ -15,59 +18,49 @@
                             <p>
                                 American University Park, Washington, District of Columbia, 35268
                             </p>
-                            <!-- <div>
-                                <span class="phone">
-                                    <i class="material-icons">phone</i>(846) 987-8567</span>
-                            </div> -->
-                            <!-- <div class="row">
-                                <div class="col-4">
-                                    <h5>564</h5>
-                                    <small>Following</small>
-                                </div>
-                                <div class="col-4">
-                                    <h5>18k</h5>
-                                    <small>Followers</small>
-                                </div>
-                                <div class="col-4">
-                                    <h5>565</h5>
-                                    <small>Post</small>
-                                </div>
-                            </div> -->
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="col-lg-4 col-md-12">
                 <div class="card">
                     <div class="p-4">
-                        <!-- <p class="text-default">Lorem Ipsum is simply dummy text of the printing and
-                                    typesetting industry. Lorem Ipsum has
-                                    been the industry's standard dummy text ever since the 1500s, when an unknown
-                                    printer
-                                    took a galley of type and scrambled it to make a type specimen book. It has
-                                    survived
-                                    not only five centuries, but also the leap into electronic typesetting, remaining
-                                    essentially
-                                    unchanged.</p> -->
-                        <small class="text-muted">Email address: </small>
-                        <p>cisagarp@gmail.com</p>
-                        <hr>
-                        <small class="text-muted">Phone: </small>
-                        <p>(846) 987-8567</p>
-                        <hr>
-                        <small class="text-muted">Website: </small>
-                        <p>https://centurioninfotech.com</p>
-                        <hr>
+                        <h4><strong>Contact information</strong></h4>
+                        <strong>Email address</strong>
+                        <br>
+                        <p class="text-muted">cisagarp@gmail.com</p>
+                        <strong>Phone</strong>
+                        <br>
+                        <p class="text-muted">(846) 987-8567</p>
+                        <strong>Phone2</strong>
+                        <br>
+                        <p class="text-muted">(846) 987-8567</p>
+                        <strong>Website</strong>
+                        <br>
+                        <p class="text-muted">https://centurioninfotech.com</p>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-8 col-md-12">
-
-
-
-
-
-
-
-
+            <div class="col-lg-4 col-md-12">
+                <div class="card">
+                    <div class="p-4">
+                        <h4><strong>Company information</strong></h4>
+                        <strong>Type of Company</strong>
+                        <br>
+                        <p class="text-muted">General Contractor</p>
+                        <strong>NIGP Code</strong>
+                        <br>
+                        <p class="text-muted">03 - Concrete</p>
+                        <strong>Company Size</strong>
+                        <br>
+                        <p class="text-muted">10-19 employees</p>
+                        <strong>Company Active Since</strong>
+                        <br>
+                        <p class="text-muted">2020</p>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="col-lg-8 col-md-12">
                 <div class="row">
                     <div class="col-lg-4 col-md-6 col-sm-12">
                         <div class="card card-statistic-2">
@@ -233,10 +226,10 @@
                     </div>
 
                 </div>
-            </div>
+            </div> -->
             <div class="row">
-                <div class="col-lg-3">
-                    <div class="info-box7 order-info-box7">
+                <div class="col-lg-4">
+                    <div class="info-box7 order-info-box7" (click)="openMailboxListing()">
                         <ul class="list-unstyled list-unstyled-noborder">
                             <li class="sales-group-list top-sell">
                                 <i class="fas fa-inbox bg-red sell-icon"></i>
@@ -248,8 +241,8 @@
                     </div>
 
                 </div>
-                <div class="col-lg-3">
-                    <div class="info-box7 order-info-box7">
+                <div class="col-lg-4">
+                    <div class="info-box7 order-info-box7" (click)="openEmployeeSettings()">
                         <ul class="list-unstyled list-unstyled-noborder">
                             <li class="sales-group-list top-sell">
                                 <i class="fas fa-user bg-pink sell-icon"></i>
@@ -260,8 +253,8 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-lg-3">
-                    <div class="info-box7 order-info-box7">
+                <div class="col-lg-4">
+                    <div class="info-box7 order-info-box7" (click)="openRolesSettings()">
                         <ul class="list-unstyled list-unstyled-noborder">
                             <li class="sales-group-list top-sell">
                                 <i class="fas fa-sliders-h bg-purple sell-icon"></i>
@@ -272,18 +265,117 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-lg-3">
-                    <div class="info-box7 order-info-box7">
+            </div>
+
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="info-box7 order-info-box7" (click)="openAlertsSettings()">
                         <ul class="list-unstyled list-unstyled-noborder">
                             <li class="sales-group-list top-sell">
-                                <i class="fas fa-sliders-h bg-purple sell-icon"></i>
+                                <i class="fas fa-bell bg-indigo sell-icon"></i>
                                 <div class="set-flex">
-                                    <div class="product-title">Role</div>
+                                    <div class="product-title">Alerts</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+                <div class="col-lg-4">
+                    <div class="info-box7 order-info-box7" (click)="openSMTPSettings()">
+                        <ul class="list-unstyled list-unstyled-noborder">
+                            <li class="sales-group-list top-sell">
+                                <i class="fas fa-envelope bg-blue sell-icon"></i>
+                                <div class="set-flex">
+                                    <div class="product-title">SMTP</div>
                                 </div>
                             </li>
                         </ul>
                     </div>
                 </div>
+                <div class="col-lg-4">
+                    <div class="info-box7 order-info-box7" (click)="openIntegrations()">
+                        <ul class="list-unstyled list-unstyled-noborder">
+                            <li class="sales-group-list top-sell">
+                                <i class="fas fa-puzzle-piece bg-cyan sell-icon"></i>
+                                <div class="set-flex">
+                                    <div class="product-title">Integration</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="info-box7 order-info-box7" (click)="openUsage()">
+                        <ul class="list-unstyled list-unstyled-noborder">
+                            <li class="sales-group-list top-sell">
+                                <i class="fas fa-database bg-teal sell-icon"></i>
+                                <div class="set-flex">
+                                    <div class="product-title">Usage</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+                <div class="col-lg-4">
+                    <div class="info-box7 order-info-box7" (click)="openOtherSettings()">
+                        <ul class="list-unstyled list-unstyled-noborder">
+                            <li class="sales-group-list top-sell">
+                                <i class="fas fa-cog bg-green sell-icon"></i>
+                                <div class="set-flex">
+                                    <div class="product-title">Other Settings</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="info-box7 order-info-box7" (click)="openSecurity()">
+                        <ul class="list-unstyled list-unstyled-noborder">
+                            <li class="sales-group-list top-sell">
+                                <i class="fas fa-lock bg-yellow sell-icon"></i>
+                                <div class="set-flex">
+                                    <div class="product-title">Security</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="info-box7 order-info-box7" (click)="openCostcode()">
+                        <ul class="list-unstyled list-unstyled-noborder">
+                            <li class="sales-group-list top-sell">
+                                <i class="fas fa-dollar-sign bg-orange sell-icon"></i>
+                                <div class="set-flex">
+                                    <div class="product-title">Cost Code</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+                <div class="col-lg-4">
+                    <div class="info-box7 order-info-box7" (click)="openDocumentView()">
+                        <ul class="list-unstyled list-unstyled-noborder">
+                            <li class="sales-group-list top-sell">
+                                <i class="fas fa-file-invoice bg-brown sell-icon"></i>
+                                <div class="set-flex">
+                                    <div class="product-title">Document View</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

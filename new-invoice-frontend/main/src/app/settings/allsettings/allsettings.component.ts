@@ -36,7 +36,7 @@ export class AllsettingsComponent {
   }
 
   openSMTPSettings() {
-    this.router.navigate(['/settings/alerts']);
+    this.router.navigate(['/settings/smtp']);
   }
 
   openIntegrations() {
@@ -61,5 +61,9 @@ export class AllsettingsComponent {
 
   openDocumentView() {
     this.router.navigate(['/settings/documentview']);
+  }
+
+  editPress() {
+
   }
 }
