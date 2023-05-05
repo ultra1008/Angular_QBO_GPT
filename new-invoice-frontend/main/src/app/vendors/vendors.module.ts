@@ -32,7 +32,7 @@ import { NgxGalleryModule } from 'ngx-gallery-9';
 import { VendorReportComponent } from './vendor-report/vendor-report.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatListModule } from '@angular/material/list';
-
+import { MatSelectFilterModule } from 'mat-select-filter';
 @NgModule({
   declarations: [
     VendorsListComponent,
@@ -72,7 +72,7 @@ import { MatListModule } from '@angular/material/list';
     NgxGalleryModule,
     MatChipsModule,
     MatListModule,
-
+    MatSelectFilterModule
   ]
 
 })
