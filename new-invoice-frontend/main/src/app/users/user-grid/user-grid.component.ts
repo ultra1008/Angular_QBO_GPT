@@ -21,6 +21,8 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
   userList: any = [];
   dataSource!: UserDataSource;
   @ViewChild('filter', { static: true }) filter!: ElementRef;
+  active_word: string = "Active";
+  inactive_word: string = "Inactive";
 
   constructor(
     public httpClient: HttpClient, private httpCall: HttpCall,
