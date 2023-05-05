@@ -1,6 +1,32 @@
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { DomSanitizer } from "@angular/platform-browser";
 import { NgxGalleryAnimation, NgxGalleryImageSize } from "ngx-gallery-9";
+import Swal from "sweetalert2";
+
+export const swalWithBootstrapButtons = Swal.mixin({
+    customClass: {
+        confirmButton: "btn btn-success s2-confirm margin-right-cust",
+        denyButton: "btn btn-danger s2-confirm",
+        cancelButton: "s2-confirm btn btn-gray ml-2",
+    },
+    buttonsStyling: false,
+    allowOutsideClick: false,
+    imageUrl: './assets/images/rovukinvoice.png',
+    imageHeight: 50,
+    imageAlt: 'ROVUK A/P'
+});
+
+export const swalWithBootstrapTwoButtons = Swal.mixin({
+    customClass: {
+        confirmButton: "btn btn-success s2-confirm",
+        denyButton: "btn btn-danger s2-confirm ml-2",
+    },
+    buttonsStyling: false,
+    allowOutsideClick: false,
+    imageUrl: './assets/images/rovukinvoice.png',
+    imageHeight: 50,
+    imageAlt: 'ROVUK A/P'
+});
 
 export function showNotification(snackBar: MatSnackBar, text: string, colorName: string) {
     snackBar.open(text, '', {

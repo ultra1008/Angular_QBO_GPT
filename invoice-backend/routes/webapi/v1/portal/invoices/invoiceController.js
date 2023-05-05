@@ -3653,8 +3653,8 @@ module.exports.getOrphanDocumentsForTable = async function (req, res) {
                 let query = {
                     status: 'Process',
                     document_type: { $ne: 'INVOICE' },
-                    "process_data.document_pages.fields.VENDOR_NAME": { $regex: one_invoice.vendor.vendor_name, $options: 'i' },
-                    "process_data.document_pages.fields.INVOICE_NUMBER": { $regex: one_invoice.invoice, $options: 'i' },
+                    // "process_data.document_pages.fields.VENDOR_NAME": { $regex: one_invoice.vendor.vendor_name, $options: 'i' },
+                    // "process_data.document_pages.fields.INVOICE_NUMBER": { $regex: one_invoice.invoice, $options: 'i' },
                     // "process_data.document_pages.fields.VENDOR_NAME": /CN SOLUTIONS GROUP LLc/i
                 };
                 let get_process = await processInvoiceConnection.find(query);
