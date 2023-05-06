@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "axen": {
+    "rovukap": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -15,9 +15,13 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
-            "outputPath": "dist/axen",
+            "customWebpackConfig": {
+              "path": "src/custom-webpack.config.js",
+              "replaceDuplicatePlugins": true
+            },
+            "outputPath": "dist/rovukap",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -99,10 +103,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "axen:build:production"
+              "browserTarget": "rovukap:build:production"
             },
             "development": {
-              "browserTarget": "axen:build:development"
+              "browserTarget": "rovukap:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -110,7 +114,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "axen:build"
+            "browserTarget": "rovukap:build"
           }
         },
         "test": {
