@@ -15,7 +15,14 @@
         "ACTIONS": {
             "EDIT": "Edit",
             "ARCHIVE": "Archive",
-            "RESTORE": "Restore"
+            "RESTORE": "Restore",
+            "SAVE": "Save",
+            "CANCEL": "Cancel",
+            "ATTACHMENT": "Attachment"
+        },
+        "HISTORY": {
+            "KEY": "Key",
+            "VALUE": "Value"
         }
     },
     "VENDOR": {
@@ -34,7 +41,28 @@
             "ATTACHMENT": "Attachment",
             "ACTIONS": "Actions"
         },
-        "ADD_EDIT": {}
+        "ADD_EDIT": {
+            "ADD_TITLE": "Add Vendor",
+            "EDIT_TITLE": "Edit Vendor",
+            "VENDOR_NAME": "Vendor name",
+            "PHONE": "Phone",
+            "EMAIL": "Email",
+            "GL_ACCOUNTS": "GL Accounts",
+            "VENDOR_ID": "Vendor ID",
+            "CUSTOMER_ID": "Customer ID",
+            "ADDRESS": "Address",
+            "ADDRESS2": "Address2",
+            "CITY": "City",
+            "STATE": "State",
+            "ZIP_CODE": "Zip Code",
+            "COUNTRY": "Country",
+            "TERMS": "Terms",
+            "STATUS": "Status",
+            "DESCRIPTION": "Description"
+        },
+        "HISTORY": {
+            "TITLE": "Vendor History"
+        }
     },
     "USERS": {
         "VIEW": {

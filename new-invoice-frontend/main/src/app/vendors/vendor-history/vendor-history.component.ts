@@ -14,7 +14,7 @@ export class VendorHistoryComponent extends UnsubscribeOnDestroyAdapter implemen
   vendorHistory: any;
   historyLoading = true;
 
-  constructor (private router: Router, public vendorService: VendorsService,) {
+  constructor(private router: Router, public vendorService: VendorsService,) {
     super();
   }
 
@@ -46,7 +46,6 @@ export class VendorHistoryComponent extends UnsubscribeOnDestroyAdapter implemen
   setHeightStyles() {
     const styles = {
       height: '770px',
-      // height: window.screen.height + "px",
       "overflow-y": "scroll",
     };
     return styles;

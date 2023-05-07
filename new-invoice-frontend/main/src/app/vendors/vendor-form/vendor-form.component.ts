@@ -2,7 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators, } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import Swal from 'sweetalert2';
 import { VendorsService } from '../vendors.service';
 import { CountryModel, TermModel } from '../vendor-table.model';
 import { commonLocalThumbImage, commonNetworkThumbImage, commonNewtworkAttachmentViewer, gallery_options, showNotification, swalWithBootstrapButtons } from 'src/consts/utils';
@@ -19,7 +18,6 @@ import { WEB_ROUTES } from 'src/consts/routes';
   styleUrls: ['./vendor-form.component.scss']
 })
 export class VendorFormComponent {
-  // Form 1
   vendorForm: UntypedFormGroup;
   hide = true;
   agree = false;
@@ -27,16 +25,7 @@ export class VendorFormComponent {
   variablestermList: any = [];
   termsList: Array<TermModel> = this.variablestermList.slice();
   countryList: Array<CountryModel> = [{ _id: 'USA', name: 'USA' }];
-
   id = '';
-
-  breadscrums = [
-    {
-      title: 'Vendor',
-      items: ['Add Vendor'],
-      active: 'Add Vendor',
-    },
-  ];
 
   files_old: string[] = [];
   last_files_array: string[] = [];

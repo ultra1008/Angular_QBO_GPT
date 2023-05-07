@@ -15,7 +15,14 @@
         "ACTIONS": {
             "EDIT": "Editar",
             "ARCHIVE": "Archivo",
-            "RESTORE": "Restaurar"
+            "RESTORE": "Restaurar",
+            "SAVE": "Ahorrar",
+            "CANCEL": "Cancelar",
+            "ATTACHMENT": "Archivo adjunto"
+        },
+        "HISTORY": {
+            "KEY": "Llave",
+            "VALUE": "Valor"
         }
     },
     "VENDOR": {
@@ -34,7 +41,28 @@
             "ATTACHMENT": "Archivo adjunto",
             "ACTIONS": "Acciones"
         },
-        "ADD_EDIT": {}
+        "ADD_EDIT": {
+            "ADD_TITLE": "Agregar vendedor",
+            "EDIT_TITLE": "Editar proveedor",
+            "VENDOR_NAME": "Nombre del proveedor",
+            "PHONE": "Teléfono",
+            "EMAIL": "Correo electrónico",
+            "GL_ACCOUNTS": "Cuentas GL",
+            "VENDOR_ID": "ID de proveedor",
+            "CUSTOMER_ID": "ID de cliente",
+            "ADDRESS": "Dirección",
+            "ADDRESS2": "Dirección2",
+            "CITY": "Ciudad",
+            "STATE": "Estado",
+            "ZIP_CODE": "Código postal",
+            "COUNTRY": "País",
+            "TERMS": "Letra chica",
+            "STATUS": "Estado",
+            "DESCRIPTION": "Descripción"
+        },
+        "HISTORY": {
+            "TITLE": "Historial del proveedor"
+        }
     },
     "USERS": {
         "VIEW": {

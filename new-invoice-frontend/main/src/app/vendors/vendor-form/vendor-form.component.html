@@ -1,11 +1,6 @@
 <section class="content">
     <div class="content-block">
-        <!-- <div class="block-header" *ngFor="let breadscrum of breadscrums">
-            <app-breadcrumb [title]="breadscrum.title" [items]="breadscrum.items" [active_item]="breadscrum.active">
-            </app-breadcrumb>
-        </div> -->
         <div class="m-4"></div>
-        <!-- Basic Validation -->
         <div class="row clearfix">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
@@ -13,23 +8,19 @@
                         <div class="left">
                             <ul class="header-buttons-left ms-0">
                                 <li class="tbl-title">
-                                    <h2>Add Vendor</h2>
+                                    <h2 *ngIf="id.length == 0">{{'VENDOR.ADD_EDIT.ADD_TITLE' | translate}}</h2>
+                                    <h2 *ngIf="id.length > 0">{{'VENDOR.ADD_EDIT.EDIT_TITLE' |
+                                        translate}}</h2>
                                 </li>
                             </ul>
                         </div>
-                        <!-- <div class="right">
-                            <div class="m-l-10" matTooltip="MULTI ARCHIVE">
-                                <button mat-mini-fab color="warn" (click)="confirmExit()">
-                                    <mat-icon class="col-white">close </mat-icon>
-                                </button>
-                            </div>
-                        </div> -->
                         <div class="right">
                             <ul class="tbl-export-btn">
                                 <li class="tbl-header-btn">
-                                    <div class="m-l-10" matTooltip="CLOSE">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' |
+                                        translate}}">
                                         <button mat-mini-fab color="warn" (click)="confirmExit()">
-                                            <mat-icon class="col-white">close </mat-icon>
+                                            <mat-icon class="col-white">close</mat-icon>
                                         </button>
                                     </div>
                                 </li>
@@ -41,14 +32,14 @@
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Vendor name</mat-label>
+                                        <mat-label>{{'VENDOR.ADD_EDIT.VENDOR_NAME' | translate}}</mat-label>
                                         <input matInput formControlName="vendor_name"
                                             style="text-transform:capitalize !important;" required>
                                     </mat-form-field>
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Phone</mat-label>
+                                        <mat-label>{{'VENDOR.ADD_EDIT.PHONE' | translate}}</mat-label>
                                         <input required formControlName="vendor_phone" matInput mask="(000) 000 0000" />
                                     </mat-form-field>
                                 </div>
@@ -56,13 +47,13 @@
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Email</mat-label>
+                                        <mat-label>{{'VENDOR.ADD_EDIT.EMAIL' | translate}}</mat-label>
                                         <input matInput formControlName="vendor_email" required>
                                     </mat-form-field>
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>GL Accounts</mat-label>
+                                        <mat-label>{{'VENDOR.ADD_EDIT.GL_ACCOUNTS' | translate}}</mat-label>
                                         <input matInput formControlName="gl_account">
                                     </mat-form-field>
                                 </div>
@@ -70,13 +61,13 @@
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Vendor ID</mat-label>
+                                        <mat-label>{{'VENDOR.ADD_EDIT.VENDOR_ID' | translate}}</mat-label>
                                         <input matInput formControlName="vendor_id">
                                     </mat-form-field>
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Customer ID</mat-label>
+                                        <mat-label>{{'VENDOR.ADD_EDIT.CUSTOMER_ID' | translate}}</mat-label>
                                         <input matInput formControlName="customer_id">
                                     </mat-form-field>
                                 </div>
@@ -84,14 +75,14 @@
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Address</mat-label>
+                                        <mat-label>{{'VENDOR.ADD_EDIT.ADDRESS' | translate}}</mat-label>
                                         <input style="text-transform:capitalize !important;" matInput
                                             formControlName="vendor_address">
                                     </mat-form-field>
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Address 2</mat-label>
+                                        <mat-label>{{'VENDOR.ADD_EDIT.ADDRESS2' | translate}}</mat-label>
                                         <input style="text-transform:capitalize !important;" matInput
                                             formControlName="vendor_address2">
                                     </mat-form-field>
@@ -100,14 +91,14 @@
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>City</mat-label>
+                                        <mat-label>{{'VENDOR.ADD_EDIT.CITY' | translate}}</mat-label>
                                         <input style="text-transform:capitalize !important;" matInput
                                             formControlName="vendor_city" required>
                                     </mat-form-field>
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>State</mat-label>
+                                        <mat-label>{{'VENDOR.ADD_EDIT.STATE' | translate}}</mat-label>
                                         <input matInput style="text-transform:capitalize !important;"
                                             formControlName="vendor_state" required>
                                     </mat-form-field>
@@ -116,33 +107,25 @@
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Zip Code</mat-label>
+                                        <mat-label>{{'VENDOR.ADD_EDIT.ZIP_CODE' | translate}}</mat-label>
                                         <input matInput formControlName="vendor_zipcode" required>
                                     </mat-form-field>
                                 </div>
-                                <!-- <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                    <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Country</mat-label>
-                                        <input matInput formControlName="vendor_country" required>
-                                    </mat-form-field>
-                                </div> -->
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Country</mat-label>
+                                        <mat-label>{{'VENDOR.ADD_EDIT.COUNTRY' | translate}}</mat-label>
                                         <mat-select formControlName="vendor_country">
                                             <mat-option *ngFor="let country of countryList" [value]="country._id">
                                                 {{country.name}}
                                             </mat-option>
-
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
-
                             </div>
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Terms</mat-label>
+                                        <mat-label>{{'VENDOR.ADD_EDIT.TERMS' | translate}}</mat-label>
                                         <mat-select formControlName="vendor_terms">
                                             <mat-select-filter #termListSelect [placeholder]="'Filter'"
                                                 [displayMember]="'name'" [array]="variablestermList"
@@ -156,7 +139,7 @@
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Status</mat-label>
+                                        <mat-label>{{'VENDOR.ADD_EDIT.STATUS' | translate}}</mat-label>
                                         <mat-select formControlName="vendor_status">
                                             <mat-option [value]="1">
                                                 Active
@@ -171,24 +154,16 @@
                             <div class="row">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Description</mat-label>
+                                        <mat-label>{{'VENDOR.ADD_EDIT.DESCRIPTION' | translate}}</mat-label>
                                         <textarea matInput formControlName="vendor_description"></textarea>
                                     </mat-form-field>
                                 </div>
                             </div>
-
-                            <!-- <div class="row">
-                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-5">
-                                    <label>Upload</label>
-                                    <app-file-upload formControlName="uploadFile" (fileDropped)="onFileDropped($event)"></app-file-upload>
-                                </div>
-                            </div> -->
                             <div class="attachment-button" appDnd (fileDropped)="onFileDropped($event)" color="primary">
                                 <input type="file" #fileDropRef id="fileDropRef" multiple
                                     (change)="fileChange($event)" />
-                                <!-- (change)="fileBrowseHandler($event.target.files)" -->
                                 <label for="fileDropRef">
-                                    Attachment</label>
+                                    {{'COMMON.ACTIONS.ATTACHMENT' | translate}}</label>
                             </div>
 
                             <div class="row cust-margin mt-2">
@@ -216,7 +191,6 @@
 
                             <div class="row cust-margin" *ngIf="id">
                                 <div class="files-list">
-
                                     <div class="single-file" *ngFor="let file of last_files_array; let i = index">
                                         <div class="file-icon" (click)="imageNetworkPreview(last_files_array, i)">
                                             <img [src]="thumbNetworkImage(i)" alt="">
@@ -226,7 +200,6 @@
                                                 {{ file.split('/').pop() }}
                                             </h4>
                                         </div>
-
                                         <div class="delete" (click)="deleteFile_old(i)">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="18"
                                                 viewBox="0 0 14 18">
@@ -241,9 +214,10 @@
                             <div class="row">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                     <button class="btn-space" mat-raised-button color="primary"
-                                        [disabled]="!vendorForm.valid" (click)="saveVendor()">Save</button>
+                                        [disabled]="!vendorForm.valid" (click)="saveVendor()">{{'COMMON.ACTIONS.SAVE'|
+                                        translate}}</button>
                                     <button type="button" mat-raised-button color="warn"
-                                        (click)="confirmExit()">Cancel</button>
+                                        (click)="confirmExit()">{{'COMMON.ACTIONS.CANCEL'| translate}}</button>
                                 </div>
                             </div>
 
@@ -252,7 +226,6 @@
                 </div>
             </div>
         </div>
-        <!-- #END# Basic Validation -->
     </div>
 </section>
 <ngx-gallery [options]="galleryOptions" [images]="galleryImages" #gallery></ngx-gallery>

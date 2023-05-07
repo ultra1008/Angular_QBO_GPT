@@ -7,19 +7,15 @@
                 <b>{{title}}</b> at <b>{{history.history_created_at * 1000 | date: 'MM/dd/yyyy hh:mm a' }}</b> from
                 <b>{{history.taken_device}}</b>.
             </div>
-            <!-- <div class="text-job text-muted mb-0">Mathematics</div> -->
         </div>
-        <!-- <div class="ms-auto">
-        <div class="media-title font-16">12 June '20</div>
-    </div> -->
     </div>
     <div class="mt-2 history-data" *ngIf="history.data.length > 0">
         <div class="body table-responsive">
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Key</th>
-                        <th>Value</th>
+                        <th>{{'COMMON.HISTORY.KEY' | translate}}</th>
+                        <th>{{'COMMON.HISTORY.VALUE' | translate}}</th>
                     </tr>
                 </thead>
                 <tbody>
