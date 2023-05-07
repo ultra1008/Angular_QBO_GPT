@@ -37,7 +37,8 @@
             "XLSX": "XLSX",
             "BACK": "BACK",
             "SEARCH": "Search",
-            "MULTI_ARCHIVE": "MULTI ARCHIVE"
+            "MULTI_ARCHIVE": "MULTI ARCHIVE",
+            "LIST_TO_GRID": "LIST TO GRID"
         },
         "ACTIONS": {
             "EDIT": "Edit",
@@ -59,6 +60,24 @@
             "ADDRESS": "Address",
             "STATUS": "Status",
             "ATTACHMENT": "Attachment",
+            "ACTIONS": "Actions"
+        },
+        "ADD_EDIT": {}
+    },
+    "USERS": {
+        "VIEW": {
+            "TITLE": "User",
+            "ARCHIVED_TITLE": "Archived User"
+        },
+        "TABLE": {
+            "IMAGE": "Image",
+            "USER_NAME": "User Name",
+            "EMAIL": "Email",
+            "PHONE": "Phone",
+            "ROLE": "Role",
+            "JOB_TITLE": "Job Title",
+            "DEPARTMENT": "Department",
+            "STATUS": "Status",
             "ACTIONS": "Actions"
         },
         "ADD_EDIT": {}

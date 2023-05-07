@@ -17,6 +17,7 @@ import { map } from 'rxjs/operators';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { local } from 'd3';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-users-listing',
@@ -52,7 +53,7 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
   constructor(
     public httpClient: HttpClient, private httpCall: HttpCall,
     public dialog: MatDialog,
-    private snackBar: MatSnackBar, private router: Router
+    private snackBar: MatSnackBar, private router: Router, public translate: TranslateService
   ) {
     super();
   }
@@ -214,4 +215,4 @@ export class UserDataSource extends DataSource<User> {
       );
     });
   }
-} 
+}

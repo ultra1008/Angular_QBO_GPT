@@ -31,6 +31,7 @@ import { ComponentsModule } from '../shared/components/components.module';
 import { SharedModule } from '../shared/shared.module';
 import { UserService } from './user.service';
 import { UserGridComponent } from './user-grid/user-grid.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -70,6 +71,7 @@ import { UserGridComponent } from './user-grid/user-grid.component';
     NgxGalleryModule,
     MatChipsModule,
     MatListModule,
+    TranslateModule
   ]
 })
 export class UsersModule { }

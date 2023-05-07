@@ -37,7 +37,8 @@
             "XLSX": "XLSX",
             "BACK": "ATRÁS",
             "SEARCH": "Buscar",
-            "MULTI_ARCHIVE": "ARCHIVO MULTI"
+            "MULTI_ARCHIVE": "ARCHIVO MULTI",
+            "LIST_TO_GRID": "LISTA A CUADRO"
         },
         "ACTIONS": {
             "EDIT": "Editar",
@@ -59,6 +60,24 @@
             "ADDRESS": "Dirección",
             "STATUS": "Estado",
             "ATTACHMENT": "Archivo adjunto",
+            "ACTIONS": "Acciones"
+        },
+        "ADD_EDIT": {}
+    },
+    "USERS": {
+        "VIEW": {
+            "TITLE": "Usuario",
+            "ARCHIVED_TITLE": "Usuario archivado"
+        },
+        "TABLE": {
+            "IMAGE": "Imagen",
+            "USER_NAME": "Nombre de usuario",
+            "EMAIL": "Correo electrónico",
+            "PHONE": "Teléfono",
+            "ROLE": "Rol",
+            "JOB_TITLE": "Título del trabajo",
+            "DEPARTMENT": "Departamento",
+            "STATUS": "Estado",
             "ACTIONS": "Acciones"
         },
         "ADD_EDIT": {}
