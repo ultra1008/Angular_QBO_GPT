@@ -226,15 +226,18 @@
                                         <mat-menu #menu="matMenu">
                                             <button mat-menu-item (click)="editVendor(row)" *ngIf="isDelete === 0">
                                                 <i class="material-icons-two-tone align-middle msr-2">create</i>
-                                                <span>Edit</span>
+                                                <span>{{'COMMON.ACTIONS.EDIT' |
+                                                    translate}}</span>
                                             </button>
                                             <button mat-menu-item (click)="deleteVendor(row,1)" *ngIf="isDelete === 0">
                                                 <i class="material-icons-two-tone align-middle msr-2">archive</i>
-                                                <span>Archive</span>
+                                                <span>{{'COMMON.ACTIONS.ARCHIVE' |
+                                                    translate}}</span>
                                             </button>
                                             <button mat-menu-item (click)="deleteVendor(row,0)" *ngIf="isDelete === 1">
                                                 <i class="material-icons-two-tone align-middle msr-2">archive</i>
-                                                <span>Restore</span>
+                                                <span>{{'COMMON.ACTIONS.RESTORE' |
+                                                    translate}}</span>
                                             </button>
                                         </mat-menu>
                                     </mat-cell>

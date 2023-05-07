@@ -38,6 +38,11 @@
             "BACK": "ATRÁS",
             "SEARCH": "Buscar",
             "MULTI_ARCHIVE": "ARCHIVO MULTI"
+        },
+        "ACTIONS": {
+            "EDIT": "Editar",
+            "ARCHIVE": "Archivo",
+            "RESTORE": "Restaurar"
         }
     },
     "VENDOR": {
