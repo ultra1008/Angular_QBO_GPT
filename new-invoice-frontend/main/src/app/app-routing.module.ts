@@ -13,16 +13,9 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: '/authentication/signin', pathMatch: 'full' },
       {
-        path: 'dashboard',
+        path: WEB_ROUTES.SIDEMENU_DASHBOARD,
         loadChildren: () =>
           import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
-      },
-      {
-        path: 'advance-table',
-        loadChildren: () =>
-          import('./advance-table/advance-table.module').then(
-            (m) => m.AdvanceTableModule
-          ),
       },
       {
         path: WEB_ROUTES.SIDEMENU_VENDOR,
@@ -30,12 +23,18 @@ const routes: Routes = [
           import('./vendors/vendors.module').then((m) => m.VendorsModule),
       },
       {
-        path: 'documents',
+        path: WEB_ROUTES.SIDEMENU_INVOICES,
+        loadChildren: () =>
+          import('./invoice/invoice.module').then((m) => m.InvoiceModule),
+      },
+
+      {
+        path: WEB_ROUTES.SIDEMENU_DOCUMENTS,
         loadChildren: () =>
           import('./documents/documents.module').then((m) => m.DocumentsModule),
       },
       {
-        path: 'reports',
+        path: WEB_ROUTES.SIDEMENU_REPORTS,
         loadChildren: () =>
           import('./reports/reports.module').then((m) => m.ReportsModule),
       },
@@ -45,7 +44,7 @@ const routes: Routes = [
           import('./users/users.module').then((m) => m.UsersModule),
       },
       {
-        path: 'settings',
+        path: WEB_ROUTES.SIDEMENU_SETTINGS,
         loadChildren: () =>
           import('./settings/settings.module').then((m) => m.SettingsModule),
       },
