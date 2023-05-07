@@ -8,12 +8,15 @@
                         <div class="left">
                             <ul class="header-buttons-left ms-0">
                                 <li class="tbl-title">
-                                    <h2 *ngIf="isDelete === 0">Vendor</h2>
-                                    <h2 *ngIf="isDelete === 1">Archived Vendor</h2>
+                                    <h2 *ngIf="isDelete === 0">{{'VENDOR.VIEW.TITLE' |
+                                        translate}}</h2>
+                                    <h2 *ngIf="isDelete === 1">{{'VENDOR.VIEW.ARCHIVED_TITLE' |
+                                        translate}}</h2>
                                 </li>
                                 <li class="tbl-search-box">
                                     <label for="search-input"><i class="material-icons search-icon">search</i></label>
-                                    <input placeholder="Search" type="text" #filter class="browser-default search-field"
+                                    <input placeholder="{{'COMMON.TOOL_TIP.SEARCH' |
+                                        translate}}" type="text" #filter class="browser-default search-field"
                                         aria-label="Search box">
                                 </li>
                             </ul>
@@ -21,56 +24,64 @@
                         <div class="right">
                             <ul class="tbl-export-btn">
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="MULTI ARCHIVE">
+                                    <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="{{'COMMON.TOOL_TIP.MULTI_ARCHIVE' |
+                                        translate}}">
                                         <button mat-mini-fab color="warn" (click)="removeSelectedRows()">
                                             <mat-icon class="col-white">archive </mat-icon>
                                         </button>
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" matTooltip="REFRESH">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.REFRESH' |
+                                        translate}}">
                                         <button mat-mini-fab color="primary" (click)="refresh()">
                                             <mat-icon class="col-white">refresh</mat-icon>
                                         </button>
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" matTooltip="HISTORY">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.HISTORY' |
+                                        translate}}">
                                         <button mat-mini-fab color="primary" (click)="openHistory()">
                                             <mat-icon class="col-white">history</mat-icon>
                                         </button>
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" matTooltip="REPORT" (click)="vendorReport()">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.REPORT' |
+                                        translate}}" (click)="vendorReport()">
                                         <button mat-mini-fab color="primary">
                                             <mat-icon class="col-white">insert_drive_file</mat-icon>
                                         </button>
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" matTooltip="ARCHIVE">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ARCHIVE' |
+                                        translate}}">
                                         <button mat-mini-fab color="primary" (click)="gotoArchiveUnarchive()">
                                             <mat-icon class="col-white">archive</mat-icon>
                                         </button>
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 1">
-                                    <div class="m-l-10" matTooltip="BACK">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' |
+                                        translate}}">
                                         <button mat-mini-fab color="warn" (click)="gotoArchiveUnarchive()">
                                             <mat-icon class="col-white">close </mat-icon>
                                         </button>
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" matTooltip="ADD">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ADD' |
+                                        translate}}">
                                         <button mat-mini-fab color="primary" (click)="addNew()">
                                             <mat-icon class="col-white">add</mat-icon>
                                         </button>
                                     </div>
                                 </li>
                                 <li *ngIf="isDelete === 0">
-                                    <div class="export-button m-l-10" matTooltip="XLSX">
+                                    <div class="export-button m-l-10" matTooltip="{{'COMMON.TOOL_TIP.XLSX' |
+                                        translate}}">
                                         <img src="assets/images/icons/xlsx.png" alt="" (click)="exportExcel()" />
                                     </div>
                                 </li>
@@ -80,7 +91,6 @@
                     <div class="body overflow-auto">
                         <div class="table-responsive">
                             <table mat-table #table [dataSource]="dataSource" matSort class="table mat-cell">
-                                <!-- Checkbox Column -->
                                 <ng-container matColumnDef="select">
                                     <mat-header-cell *matHeaderCellDef>
                                         <mat-checkbox (change)="$event ? masterToggle() : null"
@@ -102,41 +112,52 @@
                                     <mat-cell *matCellDef="let row">{{row.id}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_name">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Vendor Name
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.VENDOR_NAME' |
+                                        translate}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
                                         (click)="editVendor(row)">
-                                        <span class="mobile-label">Vendor Name:</span>{{row.vendor_name}}</mat-cell>
+                                        <span class="mobile-label">Vendor Name:</span>{{row.vendor_name}}
+                                    </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_id">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Vendor ID
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.VENDOR_ID' |
+                                        translate}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
                                         (click)="editVendor(row)">
-                                        <span class="mobile-label">Vendor ID:</span>{{row.vendor_id}}</mat-cell>
+                                        <span class="mobile-label">Vendor ID:</span>{{row.vendor_id}}
+                                    </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="customer_id">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Customer ID
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.CUSTOMER_ID' |
+                                        translate}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
                                         (click)="editVendor(row)">
-                                        <span class="mobile-label">Customer ID:</span>{{row.customer_id}}</mat-cell>
+                                        <span class="mobile-label">Customer ID:</span>{{row.customer_id}}
+                                    </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_phone">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Phone</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.PHONE' |
+                                        translate}}</mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
                                         (click)="editVendor(row)">
                                         <span class="mobile-label">Phone:</span>
-                                        {{row.vendor_phone | phoneFormatPipe}}</mat-cell>
+                                        {{row.vendor_phone | phoneFormatPipe}}
+                                    </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_email">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Email</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.EMAIL' |
+                                        translate}}</mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
                                         (click)="editVendor(row)">
-                                        <span class="mobile-label">Email:</span> {{row.vendor_email}}</mat-cell>
+                                        <span class="mobile-label">Email:</span> {{row.vendor_email}}
+                                    </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_address">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Address
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.ADDRESS' |
+                                        translate}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
                                         (click)="editVendor(row)">
@@ -145,7 +166,8 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_status">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header> Status
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.STATUS' |
+                                        translate}}
                                     </mat-header-cell>
                                     <mat-cell mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Status:</span>
@@ -160,7 +182,8 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_attachment">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Attachment
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.ATTACHMENT' |
+                                        translate}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
                                         <span class="truncate-text"><span class="mobile-label">Attachment:</span>
@@ -192,7 +215,8 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="actions">
-                                    <mat-header-cell class="psl-3" *matHeaderCellDef>Actions
+                                    <mat-header-cell class="psl-3" *matHeaderCellDef>{{'VENDOR.TABLE.ACTIONS' |
+                                        translate}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row; let i=index;" class="psl-3">
                                         <button mat-icon-button [matMenuTriggerFor]="menu"
@@ -224,57 +248,8 @@
                         </div>
                         <!-- Loading spinner -->
                         <div *ngIf="vendorService?.isTblLoading" class="tbl-spinner">
-                            <!-- <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
-                            </mat-progress-spinner> -->
                             <app-loading></app-loading>
                         </div>
-                        <!-- context menu start -->
-                        <!-- <div style="visibility: hidden; position: fixed" [style.left]="contextMenuPosition.x"
-                            [style.top]="contextMenuPosition.y" [matMenuTriggerFor]="contextMenu">
-                        </div>
-                        <mat-menu #contextMenu="matMenu">
-                            <ng-template matMenuContent let-item="item">
-                                <button mat-menu-item (click)="addNew()">
-                                    <mat-icon>add_box</mat-icon>
-                                    <span>Add Record</span>
-                                </button>
-                                <button mat-menu-item (click)="editCall(item)">
-                                    <mat-icon>create</mat-icon>
-                                    <span>Edit Record</span>
-                                </button>
-                                <button mat-menu-item (click)="deleteItem(item)">
-                                    <mat-icon>delete</mat-icon>
-                                    <span>Delete Record</span>
-                                </button>
-                                <button mat-menu-item (click)="refresh()">
-                                    <mat-icon>refresh</mat-icon>
-                                    <span>Refresh Record</span>
-                                </button>
-                                <button mat-menu-item disabled>
-                                    <mat-icon>no_encryption</mat-icon>
-                                    <span>Disable</span>
-                                </button>
-                                <button mat-menu-item [matMenuTriggerFor]="nestedmenu">
-                                    <mat-icon>list_alt</mat-icon>
-                                    <span> Nested Menu</span>
-                                </button>
-                            </ng-template>
-                        </mat-menu>
-                        <mat-menu #nestedmenu="matMenu">
-                            <button mat-menu-item>
-                                <mat-icon>mail_outline</mat-icon>
-                                <span>Item 1</span>
-                            </button>
-                            <button mat-menu-item>
-                                <mat-icon>call</mat-icon>
-                                <span>Item 2</span>
-                            </button>
-                            <button mat-menu-item>
-                                <mat-icon>chat</mat-icon>
-                                <span>Item 3</span>
-                            </button>
-                        </mat-menu>   -->
-                        <!-- context menu end -->
                         <div *ngIf="!vendorService?.isTblLoading" class="no-results"
                             [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
                             No results

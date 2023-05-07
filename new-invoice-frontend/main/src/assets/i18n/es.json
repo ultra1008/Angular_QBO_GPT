@@ -26,5 +26,36 @@
             "DOCUMENT_VIEW": "Vista de documento"
         },
         "EDIT": {}
+    },
+    "COMMON": {
+        "TOOL_TIP": {
+            "REFRESH": "ACTUALIZAR",
+            "HISTORY": "HISTORIA",
+            "REPORT": "INFORME",
+            "ARCHIVE": "ARCHIVO",
+            "ADD": "AGREGAR",
+            "XLSX": "XLSX",
+            "BACK": "ATRÁS",
+            "SEARCH": "Buscar",
+            "MULTI_ARCHIVE": "ARCHIVO MULTI"
+        }
+    },
+    "VENDOR": {
+        "VIEW": {
+            "TITLE": "Vendedor",
+            "ARCHIVED_TITLE": "Proveedor archivado"
+        },
+        "TABLE": {
+            "VENDOR_NAME": "Nombre del proveedor",
+            "VENDOR_ID": "ID de proveedor",
+            "CUSTOMER_ID": "ID de cliente",
+            "PHONE": "Teléfono",
+            "EMAIL": "Correo electrónico",
+            "ADDRESS": "Dirección",
+            "STATUS": "Estado",
+            "ATTACHMENT": "Archivo adjunto",
+            "ACTIONS": "Acciones"
+        },
+        "ADD_EDIT": {}
     }
 }

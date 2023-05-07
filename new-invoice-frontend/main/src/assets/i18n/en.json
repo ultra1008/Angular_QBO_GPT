@@ -26,5 +26,36 @@
             "DOCUMENT_VIEW": "Document View"
         },
         "EDIT": {}
+    },
+    "COMMON": {
+        "TOOL_TIP": {
+            "REFRESH": "REFRESH",
+            "HISTORY": "HISTORY",
+            "REPORT": "REPORT",
+            "ARCHIVE": "ARCHIVE",
+            "ADD": "ADD",
+            "XLSX": "XLSX",
+            "BACK": "BACK",
+            "SEARCH": "Search",
+            "MULTI_ARCHIVE": "MULTI ARCHIVE"
+        }
+    },
+    "VENDOR": {
+        "VIEW": {
+            "TITLE": "Vendor",
+            "ARCHIVED_TITLE": "Archived Vendor"
+        },
+        "TABLE": {
+            "VENDOR_NAME": "Vendor Name",
+            "VENDOR_ID": "Vendor ID",
+            "CUSTOMER_ID": "Customer ID",
+            "PHONE": "Phone",
+            "EMAIL": "Email",
+            "ADDRESS": "Address",
+            "STATUS": "Status",
+            "ATTACHMENT": "Attachment",
+            "ACTIONS": "Actions"
+        },
+        "ADD_EDIT": {}
     }
 }

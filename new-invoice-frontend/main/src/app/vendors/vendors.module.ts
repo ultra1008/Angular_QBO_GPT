@@ -33,6 +33,7 @@ import { VendorReportComponent } from './vendor-report/vendor-report.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatListModule } from '@angular/material/list';
 import { MatSelectFilterModule } from 'mat-select-filter';
+import { TranslateModule } from '@ngx-translate/core';
 @NgModule({
   declarations: [
     VendorsListComponent,
@@ -72,7 +73,8 @@ import { MatSelectFilterModule } from 'mat-select-filter';
     NgxGalleryModule,
     MatChipsModule,
     MatListModule,
-    MatSelectFilterModule
+    MatSelectFilterModule,
+    TranslateModule
   ]
 
 })

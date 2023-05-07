@@ -21,6 +21,7 @@ import { commonNewtworkAttachmentViewer, gallery_options, showNotification, swal
 import { NgxGalleryComponent, NgxGalleryImage, NgxGalleryOptions } from 'ngx-gallery-9';
 import { VendorReportComponent } from '../vendor-report/vendor-report.component';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-vendors-list',
@@ -54,13 +55,6 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   id?: number;
   advanceTable?: Vendor;
 
-  breadscrums = [
-    {
-      title: 'Table',
-      items: ['Home'],
-      active: 'Table',
-    },
-  ];
   isDelete = 0;
   termsList: Array<TermModel> = [];
   titleMessage: string = "";
@@ -69,7 +63,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     public httpClient: HttpClient, private httpCall: HttpCall,
     public dialog: MatDialog,
     public vendorTableService: VendorsService,
-    private snackBar: MatSnackBar, private router: Router
+    private snackBar: MatSnackBar, private router: Router, public translate: TranslateService
   ) {
     super();
   }
