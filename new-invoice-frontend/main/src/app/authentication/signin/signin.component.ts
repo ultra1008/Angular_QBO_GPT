@@ -147,7 +147,7 @@ export class SigninComponent implements OnInit {
         JSON.stringify(data.data)
       );
       localStorage.setItem(
-        localstorageconstants.SUPPLIERID,
+        localstorageconstants.COMPANYID,
         data.data.companydata._id
       );
       localStorage.setItem(localstorageconstants.LOGOUT, 'false');

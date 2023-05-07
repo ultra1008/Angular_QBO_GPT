@@ -76,7 +76,7 @@ export class SendOtpComponent {
         showNotification(this.snackBar, data.message, 'success');
         localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.data.token);
         localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.data));
-        localStorage.setItem(localstorageconstants.SUPPLIERID, data.data.companydata._id);
+        localStorage.setItem(localstorageconstants.COMPANYID, data.data.companydata._id);
         localStorage.setItem(localstorageconstants.LOGOUT, 'false');
 
         sessionStorage.setItem(localstorageconstants.USERTYPE, "invoice-portal");
