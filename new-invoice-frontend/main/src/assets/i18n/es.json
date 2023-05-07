@@ -1,32 +1,4 @@
 {
-    "SETTINGS": {
-        "VIEW": {
-            "CONTACT_INFORMATION": "Información de contacto",
-            "EMAIL_ADDRESS": "Dirección de correo electrónico",
-            "PHONE": "Teléfono",
-            "PHONE2": "Teléfono2",
-            "WEBSITE": "Sitio web",
-            "COMPANY_INFORMATION": "Información de la empresa",
-            "TYPE_OF_COMPANY": "Tipo de empresa",
-            "NIGP_CODE": "Código NIGP",
-            "COMPANY_SIZE": "Tamaño de la empresa",
-            "COMPANY_ACTIVE_SINCE": "Empresa activa desde"
-        },
-        "SETTINGS_OTHER_OPTION": {
-            "MAIL_BOXES": "Buzones",
-            "EMPLOYEE": "Empleado",
-            "ROLE": "Rol",
-            "ALERTS": "Alertas",
-            "SMTP": "SMTP",
-            "INTEGRATION": "Integración",
-            "USAGE": "Uso",
-            "OTHER_SETTINGS": "Otras configuraciones",
-            "SECURITY": "Seguridad",
-            "COST_CODE": "Código de costo",
-            "DOCUMENT_VIEW": "Vista de documento"
-        },
-        "EDIT": {}
-    },
     "COMMON": {
         "TOOL_TIP": {
             "REFRESH": "ACTUALIZAR",
@@ -81,5 +53,39 @@
             "ACTIONS": "Acciones"
         },
         "ADD_EDIT": {}
+    },
+    "SETTINGS": {
+        "VIEW": {
+            "CONTACT_INFORMATION": "Información de contacto",
+            "EMAIL_ADDRESS": "Dirección de correo electrónico",
+            "PHONE": "Teléfono",
+            "PHONE2": "Teléfono2",
+            "WEBSITE": "Sitio web",
+            "COMPANY_INFORMATION": "Información de la empresa",
+            "TYPE_OF_COMPANY": "Tipo de empresa",
+            "NIGP_CODE": "Código NIGP",
+            "COMPANY_SIZE": "Tamaño de la empresa",
+            "COMPANY_ACTIVE_SINCE": "Empresa activa desde"
+        },
+        "SETTINGS_OTHER_OPTION": {
+            "MAIL_BOXES": "Buzones",
+            "EMPLOYEE": "Empleado",
+            "ROLE": "Rol",
+            "ALERTS": "Alertas",
+            "SMTP": "SMTP",
+            "INTEGRATION": "Integración",
+            "USAGE": "Uso",
+            "OTHER_SETTINGS": "Otras configuraciones",
+            "SECURITY": "Seguridad",
+            "COST_CODE": "Código de costo",
+            "DOCUMENT_VIEW": "Vista de documento"
+        },
+        "EDIT": {},
+        "DOCUMENT_VIEW": {
+            "TITLE": "Document View",
+            "DOCUMENT_VIEW_TEXT": "Display documents older then",
+            "ARCHIVE_ORPHAN_DOCUMENT_TEXT": "Archive after",
+            "DAYS_ALL": "days"
+        }
     }
 }
