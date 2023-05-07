@@ -4,6 +4,7 @@ import { Event, Router, NavigationStart, NavigationEnd } from '@angular/router';
 import { Idle, DEFAULT_INTERRUPTSOURCES } from '@ng-idle/core';
 import { Keepalive } from '@ng-idle/keepalive';
 import Swal from 'sweetalert2';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -26,7 +27,9 @@ export class AppComponent {
     buttonsStyling: false,
   });
 
-  constructor(public _router: Router, private idle: Idle, private keepalive: Keepalive) {
+  constructor(public translate: TranslateService, public _router: Router, private idle: Idle, private keepalive: Keepalive) {
+    this.translate.addLangs(['en', 'es']);
+    this.translate.setDefaultLang('en');
     this._router.events.subscribe((routerEvent: Event) => {
       if (routerEvent instanceof NavigationStart) {
         this.currentUrl = routerEvent.url.substring(

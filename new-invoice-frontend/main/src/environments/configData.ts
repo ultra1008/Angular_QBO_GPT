@@ -10,4 +10,10 @@ export const configData = {
         { name: 'Unpaid', key: 'Unpaid' },
         { name: 'Overdue', key: 'Overdue' },
     ],
+    SITELANGUAGES: ["es", "en"],
+    INITIALLANGUAGE: "en",
+    LANGUAGE_ARRAY: [
+        { name: 'English', value: 'en' },
+        { name: 'Español', value: 'es' }
+    ],
 };

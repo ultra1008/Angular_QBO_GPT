@@ -7,6 +7,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatBadgeModule } from '@angular/material/badge';
 import { NgScrollbarModule } from 'ngx-scrollbar';
+import { LanguageComponent } from './language/language.component';
+import { TranslateModule } from '@ngx-translate/core';
 @NgModule({
   imports: [
     CommonModule,
@@ -17,7 +19,14 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
     MatInputModule,
     MatBadgeModule,
     NgScrollbarModule,
+    TranslateModule
   ],
-  declarations: [],
+  declarations: [
+    LanguageComponent
+  ],
+  exports: [
+    LanguageComponent,
+    TranslateModule
+  ]
 })
-export class LayoutModule {}
+export class LayoutModule { }

@@ -14,6 +14,8 @@ import { ConfigService } from 'src/app/config/config.service';
 import { InConfiguration } from 'src/app/core/models/config.interface';
 import { FormControl } from '@angular/forms';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { TranslateService } from '@ngx-translate/core';
+import { configData } from 'src/environments/configData';
 
 interface Notifications {
   message: string;
@@ -44,8 +46,9 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     private rightSidebarService: RightSidebarService,
     private configService: ConfigService,
     private authService: AuthService,
-    private router: Router
-  ) {}
+    private router: Router,
+    public translate: TranslateService
+  ) { }
   notifications: Notifications[] = [
     {
       message: 'Please check your mail',
@@ -99,6 +102,12 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   ];
   ngOnInit() {
     this.config = this.configService.configData;
+    var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
+    tmp_locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configData.INITIALLANGUAGE : tmp_locallanguage;
+    this.translate.use(tmp_locallanguage);
+    this.translate.stream(['']).subscribe((textarray) => {
+
+    });
   }
   ngAfterViewInit() {
     // set theme on startup
@@ -203,6 +212,10 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   }
   goChangePassword() {
     this.router.navigate(['/authentication/change-password']);
+  }
+
+  languageSwitcher() {
+    console.log('Language switcher call');
   }
 
   callFullscreen() {

@@ -18,7 +18,7 @@ import { fakeBackendProvider } from './core/interceptor/fake-backend';
 import { ErrorInterceptor } from './core/interceptor/error.interceptor';
 import { JwtInterceptor } from './core/interceptor/jwt.interceptor';
 
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
 import { NgScrollbarModule } from 'ngx-scrollbar';
@@ -28,6 +28,10 @@ import { MomentModule } from 'angular2-moment';
 import { CommonComponentsModule } from './common-components/common-components.module';
 import { MatChipsModule } from '@angular/material/chips';
 
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { LanguageComponent } from './layout/language/language.component';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -38,6 +42,7 @@ import { MatChipsModule } from '@angular/material/chips';
     RightSidebarComponent,
     AuthLayoutComponent,
     MainLayoutComponent,
+    LanguageComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +58,15 @@ import { MatChipsModule } from '@angular/material/chips';
     NgIdleKeepaliveModule.forRoot(),
     MomentModule,
     CommonComponentsModule,
-    MatChipsModule
+    MatSelectModule,
+    MatChipsModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: httpTranslateLoader,
+        deps: [HttpClient]
+      }
+    })
   ],
   providers: [
     // { provide: LocationStrategy, useClass: HashLocationStrategy },
@@ -64,3 +77,7 @@ import { MatChipsModule } from '@angular/material/chips';
   bootstrap: [AppComponent],
 })
 export class AppModule { }
+// AOT compilation support
+export function httpTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}

@@ -23,6 +23,7 @@ import { OthersettingsComponent } from './othersettings/othersettings.component'
 import { SecurityComponent } from './security/security.component';
 import { CostcodeComponent } from './costcode/costcode.component';
 import { DocumentviewComponent } from './documentview/documentview.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -54,7 +55,8 @@ import { DocumentviewComponent } from './documentview/documentview.component';
     MatButtonModule,
     MatCheckboxModule,
     MatTabsModule,
-    ComponentsModule
+    ComponentsModule,
+    TranslateModule
   ]
 })
 export class SettingsModule { }
