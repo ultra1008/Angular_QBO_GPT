@@ -1,3 +1,30 @@
 {
-    "contact_information": "Contact information"
+    "SETTINGS": {
+        "VIEW": {
+            "CONTACT_INFORMATION": "Contact information",
+            "EMAIL_ADDRESS": "Email address",
+            "PHONE": "Phone",
+            "PHONE2": "Phone2",
+            "WEBSITE": "Website",
+            "COMPANY_INFORMATION": "Company information",
+            "TYPE_OF_COMPANY": "Type of Company",
+            "NIGP_CODE": "NIGP Code",
+            "COMPANY_SIZE": "Company Size",
+            "COMPANY_ACTIVE_SINCE": "Company Active Since"
+        },
+        "SETTINGS_OTHER_OPTION": {
+            "MAIL_BOXES": "Mailboxes",
+            "EMPLOYEE": "Employee",
+            "ROLE": "Role",
+            "ALERTS": "Alerts",
+            "SMTP": "SMTP",
+            "INTEGRATION": "Integration",
+            "USAGE": "Usage",
+            "OTHER_SETTINGS": "Other Settings",
+            "SECURITY": "Security",
+            "COST_CODE": "Cost Code",
+            "DOCUMENT_VIEW": "Document View"
+        },
+        "EDIT": {}
+    }
 }
