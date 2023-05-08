@@ -1,12 +1,7 @@
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Component, Inject } from '@angular/core';
 import { AdvanceTableService } from '../advance-table.service';
-import {
-  UntypedFormControl,
-  Validators,
-  UntypedFormGroup,
-  UntypedFormBuilder,
-} from '@angular/forms';
+import { UntypedFormControl, Validators, UntypedFormGroup, UntypedFormBuilder, } from '@angular/forms';
 import { AdvanceTable } from '../advance-table.model';
 import { formatDate } from '@angular/common';
 
@@ -53,8 +48,8 @@ export class FormComponent {
     return this.formControl.hasError('required')
       ? 'Required field'
       : this.formControl.hasError('email')
-      ? 'Not a valid email'
-      : '';
+        ? 'Not a valid email'
+        : '';
   }
   createContactForm(): UntypedFormGroup {
     return this.fb.group({

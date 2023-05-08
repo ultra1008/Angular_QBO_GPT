@@ -28,16 +28,20 @@ export enum httproutes {
   PORTAL_TERM_SAVE = 'saveinvoiceterm',
   PORTAL_TERM_DELETE = 'deleteinvoiceterm',
 
-  // Attachment
-  PORTAL_SAVE_ATTACHMENT = 'saveattechment',
-
   GET_COMPNAY_INFO = 'compnayinformation',
   GET_COMPNAY_TYPE = 'getcompanytype',
   GET_COMPNAY_NIGP = 'getcsidivision',
   GET_COMPNAY_SIZE = 'getcompanysize ',
   SAVE_COMPNAY_INFO = 'editcompany',
+  // Attachment
+  PORTAL_SAVE_ATTACHMENT = 'saveattechment',
+
+  GET_COMPNAY_ACTIVE_SINEC = 'compnayinformation',
 
   // User
   PORTAL_USER_GET_FOR_TABLE = 'getUserForTable',
   USER_DELETE = 'deleteteammember',
+  USER_SETTING_ROLES_ALL = 'getallrolespermission',
+  USER_RECOVER = 'recoverteam',
+  TEAM_HISTORY = 'getuserhistory',
 }
