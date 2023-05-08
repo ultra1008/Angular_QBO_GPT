@@ -31,11 +31,12 @@ export enum httproutes {
   // Attachment
   PORTAL_SAVE_ATTACHMENT = 'saveattechment',
 
-  // User
-  PORTAL_USER_GET_FOR_TABLE = 'getUserForTable',
-
   GET_COMPNAY_TYPE = 'getcompanytype',
   GET_COMPNAY_NIGP = 'getcsidivision',
   GET_COMPNAY_SIZE = 'getcompanysize ',
   GET_COMPNAY_ACTIVE_SINEC = 'compnayinformation',
+
+  // User
+  PORTAL_USER_GET_FOR_TABLE = 'getUserForTable',
+  USER_DELETE = 'deleteteammember',
 }

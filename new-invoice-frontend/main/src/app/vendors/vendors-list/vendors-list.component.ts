@@ -54,7 +54,6 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   selection = new SelectionModel<Vendor>(true, []);
   id?: number;
   advanceTable?: Vendor;
-
   isDelete = 0;
   termsList: Array<TermModel> = [];
   titleMessage: string = "";

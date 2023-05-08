@@ -17,6 +17,7 @@ import { map } from 'rxjs/operators';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { local } from 'd3';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -42,6 +43,8 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
   dataSource!: UserDataSource;
   selection = new SelectionModel<User>(true, []);
   isDelete = 0;
+  advanceTable?: User;
+  titleMessage: string = "";
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -53,7 +56,9 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
   constructor(
     public httpClient: HttpClient, private httpCall: HttpCall,
     public dialog: MatDialog,
-    private snackBar: MatSnackBar, private router: Router, public translate: TranslateService
+    private snackBar: MatSnackBar, private router: Router,
+    public userTableService: UserService,
+    public translate: TranslateService
   ) {
     super();
   }
@@ -110,7 +115,52 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
     localStorage.setItem(localstorageconstants.USER_DISPLAY, 'grid');
     this.router.navigate([WEB_ROUTES.USER_GRID]);
   }
+  async archiveRecover(user: User, is_delete: number) {
+    const data = await this.userTableService.deleteUser({ _id: user._id, is_delete: is_delete });
+    if (data.status) {
+      showNotification(this.snackBar, data.message, 'success');
+      const foundIndex = this.userService?.dataChange.value.findIndex(
+        (x) => x._id === user._id
+      );
+      // for delete we use splice in order to remove single object from DataService
+      if (foundIndex != null && this.userService) {
+        this.userService.dataChange.value.splice(foundIndex, 1);
+        this.refreshTable();
+      }
+    } else {
+      showNotification(this.snackBar, data.message, 'error');
+    }
+  }
+
+  async deleteUser(user: User, is_delete: number) {
+    if (is_delete == 1) {
+      this.titleMessage = "Are you sure you want to archive this user?";
+    } else {
+      this.titleMessage = "Are you sure you want to restore this user?";
+    }
+    swalWithBootstrapTwoButtons
+      .fire({
+        title: this.titleMessage,
+        showDenyButton: true,
+        confirmButtonText: "Yes",
+        denyButtonText: "No",
+        allowOutsideClick: false,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          this.archiveRecover(user, is_delete);
+        }
+      });
+  }
+
+  editUser(user: User) {
+    this.router.navigate([WEB_ROUTES.VENDOR_FORM], { queryParams: { _id: user._id } });
+  }
+
 }
+
+
+
 
 // This class is used for datatable sorting and searching
 export class UserDataSource extends DataSource<User> {
@@ -215,4 +265,4 @@ export class UserDataSource extends DataSource<User> {
       );
     });
   }
-}
+} 

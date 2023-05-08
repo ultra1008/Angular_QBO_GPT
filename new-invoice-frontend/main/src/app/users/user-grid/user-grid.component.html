@@ -84,11 +84,6 @@
                         <div class="row">
                             <div class="col-lg-3 col-md-12" *ngFor="let user of userList">
                                 <div class="card">
-                                    <div class="ribbon-wrapper">
-                                        <div class="ribbon-tag" [ngClass]="user.userstatus == 1 ? 'active' :'inactive'">
-                                            {{user.userstatus == 1 ? active_word :inactive_word }}
-                                        </div>
-                                    </div>
                                     <div class="m-b-20">
                                         <div class="contact-grid" style="height: 350px;">
                                             <div class="profile-header bg-indigo">
