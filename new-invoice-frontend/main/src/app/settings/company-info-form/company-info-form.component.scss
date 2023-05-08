@@ -1,0 +1,125 @@
+::ng-deep .s2-confirm {
+    width: 130px !important;
+    margin: 2px;
+}
+
+::ng-deep .btn-gray {
+    background-color: grey !important;
+    color: white !important;
+}
+
+.capitalize {
+    text-transform: capitalize !important;
+}
+
+.input-capitalized-textfield {
+    text-transform: none;
+}
+
+
+
+
+/* ::ng-deep .mat-mdc-form-field {
+    height: 45px !important;
+} */
+
+/* ::ng-deep .mat-mdc-text-field-wrapper {
+   height: 45px !important;
+}
+
+::ng-deep .mat-mdc-text-field-wrapper .mat-mdc-form-field-infix {
+      min-height: 45px !important;
+}
+
+::ng-deep .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+::ng-deep .mdc-floating-label {
+    font-size: 14px !important
+}
+
+// ::ng-deep .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label {
+//     top: 24px !important
+// }
+
+::ng-deep .mat-mdc-text-field-wrapper .mdc-text-field--outlined .mat-mdc-form-field-infix {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+::ng-deep .mat-mdc-select-value-text {
+    font-size: 14px !important
+}
+
+::ng-deep .mat-mdc-option {
+    min-height: 40px;
+    font-size: 14px !important
+} */
+
+.inner-image-cust:hover .middle {
+    opacity: 1;
+}
+
+.fileInputProfile {
+    display: none;
+}
+
+.logo-div {
+    height: 150px;
+    width: 300px;
+    padding: 0 15px;
+    line-height: 49px;
+    padding-left: 15px;
+    display: block;
+    margin: auto;
+    padding-bottom: 19px;
+}
+
+.flux-brand {
+    width: 300px;
+    padding: 0 15px;
+    line-height: 49px;
+    z-index: 1025;
+    padding-left: 15px;
+    display: block;
+    margin: auto;
+    padding-bottom: 19px;
+}
+
+.flux-brand-logo {
+    display: inline-block;
+    vertical-align: middle;
+    z-index: 1;
+    padding: 5px;
+    object-fit: contain;
+    -webkit-transition: all 0.2s linear;
+    -moz-transition: all 0.2s linear;
+    -o-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+    height: 110px;
+    width: 100%;
+}
+
+.inner-image-cust {
+    border: 2px gray solid;
+    text-align: center;
+    border-radius: 15px;
+}
+
+.inner-image-cust:hover {
+    opacity: 0.3;
+}
+
+.middle {
+    transition: .5s ease;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+}
+

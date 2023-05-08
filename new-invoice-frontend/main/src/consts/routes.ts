@@ -15,5 +15,6 @@ export enum WEB_ROUTES {
   SIDEMENU_DOCUMENTS = 'documents',
   SIDEMENU_REPORTS = 'reports',
   SIDEMENU_USER = 'user',
-  SIDEMENU_SETTINGS = 'settings'
+  SIDEMENU_SETTINGS = 'settings',
+  COMPANY_INFO_FORM = 'company-info-form',
 }

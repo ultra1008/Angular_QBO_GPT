@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-allsettings',
   templateUrl: './allsettings.component.html',
-  styleUrls: ['./allsettings.component.scss']
+  styleUrls: ['./allsettings.component.scss'],
 })
 export class AllsettingsComponent {
-
   constructor(private router: Router, public translate: TranslateService) {
     //constructor
   }
@@ -58,6 +58,7 @@ export class AllsettingsComponent {
   }
 
   editPress() {
-
+    console.log('call');
+    this.router.navigate(['/settings/company-info-form']);
   }
 }
