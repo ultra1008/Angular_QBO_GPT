@@ -32,12 +32,15 @@ import { SharedModule } from '../shared/shared.module';
 import { UserService } from './user.service';
 import { UserGridComponent } from './user-grid/user-grid.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { UserRestoreFormComponent } from './user-restore-form/user-restore-form.component';
+import { MatSelectFilterModule } from 'mat-select-filter';
 
 
 @NgModule({
   declarations: [
     UsersListingComponent,
-    UserGridComponent
+    UserGridComponent,
+    UserRestoreFormComponent
   ],
   providers: [UserService],
   imports: [
@@ -71,7 +74,8 @@ import { TranslateModule } from '@ngx-translate/core';
     NgxGalleryModule,
     MatChipsModule,
     MatListModule,
-    TranslateModule
+    TranslateModule,
+    MatSelectFilterModule
   ]
 })
 export class UsersModule { }

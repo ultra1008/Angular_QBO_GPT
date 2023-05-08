@@ -35,4 +35,6 @@ export enum httproutes {
     // User
     PORTAL_USER_GET_FOR_TABLE = "getUserForTable",
     USER_DELETE = "deleteteammember",
+    USER_SETTING_ROLES_ALL = "getallrolespermission",
+    USER_RECOVER = "recoverteam",
 }

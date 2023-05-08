@@ -10,6 +10,11 @@ import { WEB_ROUTES } from 'src/consts/routes';
 import { UserService } from '../user.service';
 import { UserDataSource } from '../users-listing/users-listing.component';
 import { fromEvent } from 'rxjs';
+import { showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
+import { SelectionModel } from '@angular/cdk/collections';
+import { AdvanceTable, User } from '../user.model';
+import { UserRestoreFormComponent } from '../user-restore-form/user-restore-form.component';
+import { Direction } from '@angular/cdk/bidi';
 
 @Component({
   selector: 'app-user-grid',
@@ -23,6 +28,10 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
   @ViewChild('filter', { static: true }) filter!: ElementRef;
   active_word: string = "Active";
   inactive_word: string = "Inactive";
+  titleMessage: string = "";
+  selection = new SelectionModel<User>(true, []);
+  advanceTable?: AdvanceTable;
+
 
   constructor(
     public httpClient: HttpClient, private httpCall: HttpCall,
@@ -43,6 +52,89 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
   gotoArchiveUnarchive() {
     this.isDelete = this.isDelete == 1 ? 0 : 1;
     this.getUser();
+
+  }
+  async archiveRecover(user: User, is_delete: number) {
+    const data = await this.userService.deleteUser({ _id: user, is_delete: is_delete });
+    if (data.status) {
+      showNotification(this.snackBar, data.message, 'success');
+      this.getUser();
+
+    } else {
+      showNotification(this.snackBar, data.message, 'error');
+    }
+  }
+  async deleteUser(user: User, is_delete: number) {
+
+    if (is_delete == 1) {
+      this.titleMessage = "Are you sure you want to archive this user?";
+    } else {
+      this.titleMessage = "Are you sure you want to restore this user?";
+    }
+    swalWithBootstrapTwoButtons
+      .fire({
+        title: this.titleMessage,
+        showDenyButton: true,
+        confirmButtonText: "Yes",
+        denyButtonText: "No",
+        allowOutsideClick: false,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          this.archiveRecover(user, is_delete);
+        }
+      });
+  }
+
+  addNew(user: User) {
+
+
+    let that = this;
+    this.titleMessage = "Are you sure you want to restore this user?";
+
+    swalWithBootstrapTwoButtons
+      .fire({
+        title: this.titleMessage,
+        showDenyButton: true,
+        confirmButtonText: "Yes",
+        denyButtonText: "No",
+        allowOutsideClick: false,
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          console.log("user", user);
+          let _id = user._id;
+
+
+          let tempDirection: Direction;
+          if (localStorage.getItem('isRtl') === 'true') {
+            tempDirection = 'rtl';
+          } else {
+            tempDirection = 'ltr';
+          }
+          const dialogRef = this.dialog.open(UserRestoreFormComponent, {
+            data: _id
+          });
+          this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
+            if (result === 1) {
+              // After dialog is closed we're doing frontend updates
+              // For add we're just pushing a new row inside DataService
+              // this.exampleDatabase?.dataChange.value.unshift(
+              //   this.advanceTableService.getDialogData()
+              // );
+
+              // this.showNotification(
+              //   'snackbar-success',
+              //   'Add Record Successfully...!!!',
+              //   'bottom',
+              //   'center'
+              // );
+            }
+          });
+
+        }
+      });
+
 
   }
 

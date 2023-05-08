@@ -19,6 +19,8 @@ import { local } from 'd3';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
 import { TranslateService } from '@ngx-translate/core';
+import { Direction } from '@angular/cdk/bidi';
+import { UserRestoreFormComponent } from '../user-restore-form/user-restore-form.component';
 
 @Component({
   selector: 'app-users-listing',
@@ -147,10 +149,52 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
         allowOutsideClick: false,
       })
       .then((result) => {
+
         if (result.isConfirmed) {
-          this.archiveRecover(user, is_delete);
+          if (is_delete == 1) {
+            this.archiveRecover(user, is_delete);
+          } else {
+            this.addNew(user);
+          }
+
         }
       });
+  }
+  addNew(user: User) {
+
+
+    let that = this;
+
+    console.log("user", user);
+    let _id = user._id;
+
+
+    let tempDirection: Direction;
+    if (localStorage.getItem('isRtl') === 'true') {
+      tempDirection = 'rtl';
+    } else {
+      tempDirection = 'ltr';
+    }
+    const dialogRef = this.dialog.open(UserRestoreFormComponent, {
+      data: _id
+    });
+    this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
+      if (result === 1) {
+        // After dialog is closed we're doing frontend updates
+        // For add we're just pushing a new row inside DataService
+        // this.exampleDatabase?.dataChange.value.unshift(
+        //   this.advanceTableService.getDialogData()
+        // );
+
+        // this.showNotification(
+        //   'snackbar-success',
+        //   'Add Record Successfully...!!!',
+        //   'bottom',
+        //   'center'
+        // );
+      }
+    });
+
   }
 
   editUser(user: User) {

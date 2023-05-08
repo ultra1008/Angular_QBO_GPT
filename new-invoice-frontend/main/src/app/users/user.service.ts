@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { HttpCall } from '../services/httpcall.service';
 import { UnsubscribeOnDestroyAdapter } from '../shared/UnsubscribeOnDestroyAdapter';
-import { User } from './user.model';
+import { AdvanceTable, User } from './user.model';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
@@ -11,6 +11,7 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
   dataChange: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
   // Temporarily stores data from dialogs
   dialogData!: User;
+
   constructor(private httpCall: HttpCall) {
     super();
   }
@@ -38,6 +39,28 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
   async deleteUser(requestObject: any) {
     const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.USER_DELETE, requestObject).toPromise();
     return data;
+  }
+  async getRole() {
+    const data = await this.httpCall.httpGetCall(httpversion.PORTAL_V1 + httproutes.USER_SETTING_ROLES_ALL).toPromise();
+    return data;
+  }
+  async restoreUser(requestObject: any) {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.USER_RECOVER, requestObject).toPromise();
+    return data;
+  }
+
+  addAdvanceTable(User: User): void {
+    this.dialogData = User;
+
+    // this.httpClient.post(this.API_URL, advanceTable)
+    //   .subscribe({
+    //     next: (data) => {
+    //       this.dialogData = advanceTable;
+    //     },
+    //     error: (error: HttpErrorResponse) => {
+    //        // error code here
+    //     },
+    //   });
   }
 
 }
