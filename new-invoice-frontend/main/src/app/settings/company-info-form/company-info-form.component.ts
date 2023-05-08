@@ -71,6 +71,9 @@ export class CompanyInfoFormComponent {
 
   range: any = [];
   year: number = new Date().getFullYear();
+  selectedVendorType = '';
+  compnay_code: any;
+  compnay_id: any;
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -85,6 +88,7 @@ export class CompanyInfoFormComponent {
     this.getCompanyType();
     this.getCompanyNigp();
     this.getCompanySize();
+    this.getOneVendor();
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
     this.vendorForm = this.fb.group({
       companyname: ['', [Validators.required]],
@@ -134,42 +138,52 @@ export class CompanyInfoFormComponent {
   }
 
   async getOneVendor() {
-    //   const data = await this.vendorService.getOneVendor(this.id);
-    //   if (data.status) {
-    //     const vendorData = data.data;
-    //     this.vendorForm = this.fb.group({
-    //       vendor_name: [vendorData.vendor_name, [Validators.required]],
-    //       vendor_phone: [vendorData.vendor_phone, [Validators.required]],
-    //       vendor_email: [
-    //         vendorData.vendor_email,
-    //         [Validators.required, Validators.email, Validators.minLength(5)],
-    //       ],
-    //       gl_account: [vendorData.gl_account, [Validators.required]],
-    //       vendor_id: [vendorData.vendor_id],
-    //       customer_id: [vendorData.customer_id],
-    //       vendor_address: [vendorData.vendor_address, [Validators.required]],
-    //       vendor_address2: [vendorData.vendor_address2],
-    //       vendor_city: [vendorData.vendor_city, [Validators.required]],
-    //       vendor_state: [vendorData.vendor_state, [Validators.required]],
-    //       vendor_zipcode: [vendorData.vendor_zipcode, [Validators.required]],
-    //       vendor_country: [vendorData.vendor_country],
-    //       vendor_terms: [vendorData.vendor_terms, [Validators.required]],
-    //       vendor_status: [vendorData.vendor_status, [Validators.required]],
-    //       vendor_description: [vendorData.vendor_description],
-    //     });
-    //     this.files_old = [];
-    //     for (
-    //       let loop_i = 0;
-    //       loop_i < vendorData.vendor_attachment.length;
-    //       loop_i++
-    //     ) {
-    //       const tmpArray = vendorData.vendor_attachment[loop_i].split('/');
-    //       this.files_old.push(tmpArray[tmpArray.length - 1]);
-    //     }
-    //     this.last_files_array = vendorData.vendor_attachment;
-    //     this.vendorForm.markAllAsTouched();
-    //   }
-    // }
+    let that = this;
+    const data = await this.SettingsServices.getCompanyInfo();
+    console.log('data', data);
+    if (data.status) {
+      const vendorData = data.data;
+      that.compnay_code = vendorData.companycode;
+      that.compnay_id = vendorData._id;
+      if (
+        vendorData.companylogo == undefined ||
+        vendorData.companylogo == null ||
+        vendorData.companylogo == ''
+      ) {
+        that.company_logo = '../assets/images/placeholder_logo.png';
+      } else {
+        that.company_logo = vendorData.companylogo;
+      }
+      this.vendorForm = this.fb.group({
+        companyname: [vendorData.companyname, Validators.required],
+        companywebsite: [vendorData.companywebsite],
+        companycode: [{ value: vendorData.companycode, disabled: true }],
+        companyphone: [vendorData.companyphone, [Validators.required]],
+        companyemail: [
+          vendorData.companyemail,
+          [Validators.email, Validators.required],
+        ],
+        companyphone2: [vendorData.companyphone2],
+        companyactivesince: [vendorData.companyactivesince],
+        companydivision: [vendorData.companydivision],
+        companysize: [vendorData.companysize],
+        companytype: [vendorData.companytype],
+        companyaddress: [vendorData.companyaddress],
+        companyaddresscity: [vendorData.companyaddresscity],
+        companyaddressstate: [vendorData.companyaddressstate],
+        companyaddresszip: [vendorData.companyaddresszip],
+      });
+      let found = that.CompnayTypes_data.find(
+        (element: any) => element._id == vendorData.companytype
+      );
+      // that.selectedVendorType = found.name
+      //   ? found.name
+      //   : configdata.PRIME_VENDOR_TYPE;
+      // that.getCISDivision(
+      //   that.selectedVendorType == configdata.PRIME_VENDOR_TYPE
+      // );
+    }
+
     // async getTerms() {
     //   const data = await this.vendorService.getTerms();
     //   if (data.status) {
