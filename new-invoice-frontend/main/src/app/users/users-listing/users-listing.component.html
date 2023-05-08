@@ -23,6 +23,21 @@
                         <div class="right">
                             <ul class="tbl-export-btn">
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                                    <div class="m-l-10" matTooltip="REFRESH">
+                                        <button mat-mini-fab color="primary" (click)="refresh()">
+                                            <mat-icon class="col-white">refresh</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                                    <div class="m-l-10" matTooltip="HISTORY">
+                                        <button mat-mini-fab color="primary" (click)="openHistory()">
+                                            <mat-icon class="col-white">history</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+
+                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.LIST_TO_GRID' |
                                     translate}}">
                                         <button mat-mini-fab color="primary" (click)="listToGrid()">
@@ -46,6 +61,7 @@
                                         </button>
                                     </div>
                                 </li>
+
                                 <!-- <li class="tbl-header-btn" *ngIf="isDelete === 0">
                                     <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="MULTI ARCHIVE">
                                         <button mat-mini-fab color="warn" (click)="removeSelectedRows()">
@@ -60,13 +76,7 @@
                                         </button>
                                     </div>
                                 </li>
-                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" matTooltip="HISTORY">
-                                        <button mat-mini-fab color="primary" (click)="openHistory()">
-                                            <mat-icon class="col-white">history</mat-icon>
-                                        </button>
-                                    </div>
-                                </li>
+                             
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
                                     <div class="m-l-10" matTooltip="REPORT" (click)="vendorReport()">
                                         <button mat-mini-fab color="primary">

@@ -34,13 +34,17 @@ import { UserGridComponent } from './user-grid/user-grid.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { UserRestoreFormComponent } from './user-restore-form/user-restore-form.component';
 import { MatSelectFilterModule } from 'mat-select-filter';
+import { UserHistoryComponent } from './user-history/user-history.component';
+import { UserReportComponent } from './user-report/user-report.component';
 
 
 @NgModule({
   declarations: [
     UsersListingComponent,
     UserGridComponent,
-    UserRestoreFormComponent
+    UserRestoreFormComponent,
+    UserHistoryComponent,
+    UserReportComponent
   ],
   providers: [UserService],
   imports: [

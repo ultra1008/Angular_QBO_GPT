@@ -49,6 +49,11 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
     return data;
   }
 
+  async getUserHistory(requestObject: any) {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.TEAM_HISTORY, requestObject).toPromise();
+    return data;
+  }
+
   addAdvanceTable(User: User): void {
     this.dialogData = User;
 

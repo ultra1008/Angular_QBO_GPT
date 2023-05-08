@@ -77,7 +77,13 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
   private refreshTable() {
     this.paginator._changePageSize(this.paginator.pageSize);
   }
+  openHistory() {
+    this.router.navigate([WEB_ROUTES.USER_HISTORY]);
+  }
 
+  refresh() {
+    this.loadData();
+  }
   public loadData() {
     this.userService = new UserService(this.httpCall);
     this.dataSource = new UserDataSource(

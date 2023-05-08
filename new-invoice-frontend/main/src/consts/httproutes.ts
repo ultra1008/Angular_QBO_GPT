@@ -28,6 +28,7 @@ export enum httproutes {
     PORTAL_TERM_SAVE = 'saveinvoiceterm',
     PORTAL_TERM_DELETE = 'deleteinvoiceterm',
 
+
     // Attachment
     PORTAL_SAVE_ATTACHMENT = 'saveattechment',
 
@@ -41,5 +42,6 @@ export enum httproutes {
     USER_DELETE = "deleteteammember",
     USER_SETTING_ROLES_ALL = "getallrolespermission",
     USER_RECOVER = "recoverteam",
+    TEAM_HISTORY = "getuserhistory",
 
 }
