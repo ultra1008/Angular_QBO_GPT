@@ -8,15 +8,12 @@
                         <div class="left">
                             <ul class="header-buttons-left ms-0">
                                 <li class="tbl-title">
-                                    <h2 *ngIf="isDelete === 0">{{'USERS.VIEW.TITLE' |
-                                        translate}}</h2>
-                                    <h2 *ngIf="isDelete === 1">{{'USERS.VIEW.ARCHIVED_TITLE' |
-                                        translate}}</h2>
+                                    <h2 *ngIf="isDelete === 0">User</h2>
+                                    <h2 *ngIf="isDelete === 1">Archived User</h2>
                                 </li>
                                 <li class="tbl-search-box">
                                     <label for="search-input"><i class="material-icons search-icon">search</i></label>
-                                    <input placeholder="{{'COMMON.TOOL_TIP.SEARCH' |
-                                        translate}}" type="text" #filter class="browser-default search-field"
+                                    <input placeholder="Search" type="text" #filter class="browser-default search-field"
                                         aria-label="Search box">
                                 </li>
                             </ul>
@@ -24,24 +21,21 @@
                         <div class="right">
                             <ul class="tbl-export-btn">
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.LIST_TO_GRID' |
-                                        translate}}">
+                                    <div class="m-l-10" matTooltip="LIST TO GRID">
                                         <button mat-mini-fab color="primary" (click)="listToGrid()">
                                             <mat-icon class="col-white">grid_on </mat-icon>
                                         </button>
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ARCHIVE' |
-                                        translate}}">
+                                    <div class="m-l-10" matTooltip="ARCHIVE">
                                         <button mat-mini-fab color="primary" (click)="gotoArchiveUnarchive()">
                                             <mat-icon class="col-white">archive</mat-icon>
                                         </button>
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 1">
-                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' |
-                                        translate}}">
+                                    <div class="m-l-10" matTooltip="BACK">
                                         <button mat-mini-fab color="warn" (click)="gotoArchiveUnarchive()">
                                             <mat-icon class="col-white">close </mat-icon>
                                         </button>
@@ -101,8 +95,7 @@
                                 </ng-container>
                                 <ng-container matColumnDef="img">
                                     <mat-header-cell mat-header-cell *matHeaderCellDef
-                                        [ngClass]="'tbl-col-width-per-7'"> {{'USERS.TABLE.IMAGE' |
-                                        translate}}
+                                        [ngClass]="'tbl-col-width-per-7'"> Image
                                     </mat-header-cell>
                                     <mat-cell mat-cell *matCellDef="let row" class="table-img tbl-col-width-per-7"><span
                                             class="mobile-label">Image:</span>
@@ -110,57 +103,44 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="userfullname">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.USER_NAME' |
-                                        translate}}
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>User Name
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Name:</span>{{row.userfullname}}
-                                    </mat-cell>
+                                        <span class="mobile-label">Name:</span>{{row.userfullname}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="userphone">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.PHONE' |
-                                        translate}}
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Phone
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Phone:</span>{{row.userphone}}
-                                    </mat-cell>
+                                        <span class="mobile-label">Phone:</span>{{row.userphone}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="useremail">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.EMAIL' |
-                                        translate}}
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Email
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Email:</span>{{row.useremail}}
-                                    </mat-cell>
+                                        <span class="mobile-label">Email:</span>{{row.useremail}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="role_name">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.ROLE' |
-                                        translate}}
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Role
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Role:</span>{{row.role_name}}
-                                    </mat-cell>
+                                        <span class="mobile-label">Role:</span>{{row.role_name}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="userjob_title_name">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.JOB_TITLE' |
-                                        translate}}
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Job Title
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Job
-                                            Title:</span>{{row.userjob_title_name}}
-                                    </mat-cell>
+                                            Title:</span>{{row.userjob_title_name}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="department_name">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.DEPARTMENT' |
-                                        translate}}
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Department
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Department:</span>{{row.department_name}}
-                                    </mat-cell>
+                                        <span class="mobile-label">Department:</span>{{row.department_name}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="userstatus">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.STATUS' |
-                                        translate}}
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Status
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Status:</span>
@@ -175,9 +155,8 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="actions">
-                                    <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-7'" *matHeaderCellDef>
-                                        {{'USERS.TABLE.ACTIONS' |
-                                        translate}}
+                                    <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-7'"
+                                        *matHeaderCellDef>Actions
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row; let i=index;"
                                         class=" psl-3 table-img tbl-col-width-per-7">
@@ -186,18 +165,18 @@
                                             <mat-icon>more_vert</mat-icon>
                                         </button>
                                         <mat-menu #menu="matMenu">
-                                            <!-- <button mat-menu-item (click)="editVendor(row)" *ngIf="isDelete === 0">
+                                            <button mat-menu-item (click)="editUser(row)" *ngIf="isDelete === 0">
                                                 <i class="material-icons-two-tone align-middle msr-2">create</i>
                                                 <span>Edit</span>
                                             </button>
-                                            <button mat-menu-item (click)="deleteVendor(row,1)" *ngIf="isDelete === 0">
+                                            <button mat-menu-item (click)="deleteUser(row,1)" *ngIf="isDelete === 0">
                                                 <i class="material-icons-two-tone align-middle msr-2">archive</i>
                                                 <span>Archive</span>
                                             </button>
-                                            <button mat-menu-item (click)="deleteVendor(row,0)" *ngIf="isDelete === 1">
+                                            <button mat-menu-item (click)="deleteUser(row,0)" *ngIf="isDelete === 1">
                                                 <i class="material-icons-two-tone align-middle msr-2">archive</i>
                                                 <span>Restore</span>
-                                            </button> -->
+                                            </button>
                                         </mat-menu>
                                     </mat-cell>
                                 </ng-container>

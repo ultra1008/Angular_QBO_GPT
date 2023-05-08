@@ -11,7 +11,7 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
   dataChange: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
   // Temporarily stores data from dialogs
   dialogData!: User;
-  constructor (private httpCall: HttpCall) {
+  constructor(private httpCall: HttpCall) {
     super();
   }
   get data(): User[] {
@@ -34,4 +34,10 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
     const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_USER_GET_FOR_TABLE, { is_delete: is_delete }).toPromise();
     return data;
   }
+
+  async deleteUser(requestObject: any) {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.USER_DELETE, requestObject).toPromise();
+    return data;
+  }
+
 }
