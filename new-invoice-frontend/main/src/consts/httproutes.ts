@@ -42,6 +42,7 @@ export enum httproutes {
     USER_DELETE = "deleteteammember",
     USER_SETTING_ROLES_ALL = "getallrolespermission",
     USER_RECOVER = "recoverteam",
-    TEAM_HISTORY = "getuserhistory",
+    USER_HISTORY = "getuserhistory",
+    USER_REPORT = "getallemployeereport",
 
 }

@@ -50,7 +50,11 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
   }
 
   async getUserHistory(requestObject: any) {
-    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.TEAM_HISTORY, requestObject).toPromise();
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.USER_HISTORY, requestObject).toPromise();
+    return data;
+  }
+  async sendUserReport(requestObject: any) {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.USER_REPORT, requestObject).toPromise();
     return data;
   }
 

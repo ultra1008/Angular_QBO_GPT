@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
-import { User } from './../user.model';
+import { RoleModel, User } from './../user.model';
 import { UserService } from '../user.service';
 import { BehaviorSubject, Observable, fromEvent, merge } from 'rxjs';
 import { DataSource, SelectionModel } from '@angular/cdk/collections';
@@ -21,6 +21,7 @@ import { showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils'
 import { TranslateService } from '@ngx-translate/core';
 import { Direction } from '@angular/cdk/bidi';
 import { UserRestoreFormComponent } from '../user-restore-form/user-restore-form.component';
+import { UserReportComponent } from '../user-report/user-report.component';
 
 @Component({
   selector: 'app-users-listing',
@@ -47,6 +48,9 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
   isDelete = 0;
   advanceTable?: User;
   titleMessage: string = "";
+  roleLists: Array<RoleModel> = [];
+
+
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -66,6 +70,7 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
   }
 
   ngOnInit() {
+    this.getRole();
     const userDisplay = localStorage.getItem(localstorageconstants.USER_DISPLAY) ?? 'list';
     if (userDisplay == 'list') {
       this.loadData();
@@ -79,6 +84,20 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
   }
   openHistory() {
     this.router.navigate([WEB_ROUTES.USER_HISTORY]);
+  }
+  userReport() {
+    console.log("roleList", this.roleLists);
+
+    const dialogRef = this.dialog.open(UserReportComponent, {
+      width: '700px',
+      data: {
+        roleList: this.roleLists,
+        invoiceStatus: '',
+      },
+    });
+    this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
+      //  
+    });
   }
 
   refresh() {
@@ -117,6 +136,13 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
   gotoArchiveUnarchive() {
     this.isDelete = this.isDelete == 1 ? 0 : 1;
     this.loadData();
+  }
+  async getRole() {
+    const data = await this.userTableService.getRole();
+    if (data.status) {
+      this.roleLists = data.data;
+
+    }
   }
 
   listToGrid() {
@@ -167,14 +193,9 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
       });
   }
   addNew(user: User) {
-
-
     let that = this;
-
     console.log("user", user);
     let _id = user._id;
-
-
     let tempDirection: Direction;
     if (localStorage.getItem('isRtl') === 'true') {
       tempDirection = 'rtl';

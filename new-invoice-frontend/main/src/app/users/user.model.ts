@@ -56,3 +56,20 @@ export class AdvanceTable {
         return S4() + S4();
     }
 }
+
+export class RoleModel {
+    _id: string;
+    role_name: string;
+    is_delete: boolean;
+    role_id: string;
+
+    constructor(response: RoleModel) {
+        {
+            this._id = response._id;
+            this.role_name = response.role_name;
+            this.is_delete = response.is_delete;
+            this.role_id = response.role_id;
+
+        }
+    }
+}

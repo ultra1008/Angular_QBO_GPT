@@ -30,6 +30,13 @@
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                                    <div class="m-l-10" matTooltip="REPORT" (click)="userReport()">
+                                        <button mat-mini-fab color="primary">
+                                            <mat-icon class="col-white">insert_drive_file</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
                                     <div class="m-l-10" matTooltip="HISTORY">
                                         <button mat-mini-fab color="primary" (click)="openHistory()">
                                             <mat-icon class="col-white">history</mat-icon>
