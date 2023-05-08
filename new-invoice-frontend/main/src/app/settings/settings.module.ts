@@ -25,7 +25,28 @@ import { CostcodeComponent } from './costcode/costcode.component';
 import { DocumentviewComponent } from './documentview/documentview.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-
+import { CompanyInfoFormComponent } from './company-info-form/company-info-form.component';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSelectFilterModule } from 'mat-select-filter';
+import { NgxGalleryModule } from 'ngx-gallery-9';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { NgScrollbarModule } from 'ngx-scrollbar';
+import { CommonComponentsModule } from '../common-components/common-components.module';
+import { SharedModule } from '../shared/shared.module';
+import { SettingsService } from './settings.service';
 
 @NgModule({
   declarations: [
@@ -40,12 +61,13 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     OthersettingsComponent,
     SecurityComponent,
     CostcodeComponent,
-    DocumentviewComponent
+    DocumentviewComponent,
+    CompanyInfoFormComponent,
   ],
+  providers: [SettingsService],
   imports: [
     CommonModule,
     SettingsRoutingModule,
-
 
     FormsModule,
     ReactiveFormsModule,
@@ -58,7 +80,32 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatTabsModule,
     ComponentsModule,
     TranslateModule,
-    MatSlideToggleModule
-  ]
+    MatSlideToggleModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSnackBarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatRadioModule,
+    MatSelectModule,
+    MatCheckboxModule,
+    MatCardModule,
+    MatDatepickerModule,
+    MatProgressSpinnerModule,
+    MatDialogModule,
+    MatSortModule,
+    MatToolbarModule,
+    MatMenuModule,
+    SharedModule,
+    ComponentsModule,
+    InfiniteScrollModule,
+    NgScrollbarModule,
+    CommonComponentsModule,
+    NgxGalleryModule,
+    MatChipsModule,
+    MatListModule,
+    MatSelectFilterModule,
+    TranslateModule,
+  ],
 })
-export class SettingsModule { }
+export class SettingsModule {}

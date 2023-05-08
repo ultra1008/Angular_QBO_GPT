@@ -12,60 +12,66 @@ import { RolesettingsComponent } from './rolesettings/rolesettings.component';
 import { SecurityComponent } from './security/security.component';
 import { SmtpComponent } from './smtp/smtp.component';
 import { UsageComponent } from './usage/usage.component';
+import { WEB_ROUTES } from 'src/consts/routes';
+import { CompanyInfoFormComponent } from './company-info-form/company-info-form.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: AllsettingsComponent
+    component: AllsettingsComponent,
   },
   {
     path: 'mailbox',
-    component: MailboxComponent
+    component: MailboxComponent,
   },
   {
     path: 'employeesettings',
-    component: EmployeesettingsComponent
+    component: EmployeesettingsComponent,
   },
   {
     path: 'rolesettings',
-    component: RolesettingsComponent
+    component: RolesettingsComponent,
   },
   {
     path: 'alerts',
-    component: AlertsComponent
+    component: AlertsComponent,
   },
   {
     path: 'smtp',
-    component: SmtpComponent
+    component: SmtpComponent,
   },
   {
     path: 'integration',
-    component: IntegrationComponent
+    component: IntegrationComponent,
   },
   {
     path: 'usage',
-    component: UsageComponent
+    component: UsageComponent,
   },
   {
     path: 'othersettings',
-    component: OthersettingsComponent
+    component: OthersettingsComponent,
   },
   {
     path: 'security',
-    component: SecurityComponent
+    component: SecurityComponent,
   },
   {
     path: 'costcode',
-    component: CostcodeComponent
+    component: CostcodeComponent,
   },
   {
     path: 'documentview',
-    component: DocumentviewComponent
-  }
+    component: DocumentviewComponent,
+  },
+  {
+    path: 'company-info-form',
+    component: CompanyInfoFormComponent,
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class SettingsRoutingModule { }
+export class SettingsRoutingModule {}

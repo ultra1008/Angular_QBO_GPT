@@ -83,6 +83,9 @@
         "ADD_EDIT": {}
     },
     "SETTINGS": {
+        "COMPANY_INFO_FORM": {
+            "EDIT_TITLE": "Edit Company Information"
+        },
         "VIEW": {
             "CONTACT_INFORMATION": "Contact information",
             "EMAIL_ADDRESS": "Email address",

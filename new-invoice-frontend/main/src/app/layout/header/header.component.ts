@@ -48,7 +48,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     private authService: AuthService,
     private router: Router,
     public translate: TranslateService
-  ) { }
+  ) {}
   notifications: Notifications[] = [
     {
       message: 'Please check your mail',
@@ -102,12 +102,17 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   ];
   ngOnInit() {
     this.config = this.configService.configData;
-    var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
-    tmp_locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configData.INITIALLANGUAGE : tmp_locallanguage;
+    var tmp_locallanguage = localStorage.getItem(
+      localstorageconstants.LANGUAGE
+    );
+    tmp_locallanguage =
+      tmp_locallanguage == '' ||
+      tmp_locallanguage == undefined ||
+      tmp_locallanguage == null
+        ? configData.INITIALLANGUAGE
+        : tmp_locallanguage;
     this.translate.use(tmp_locallanguage);
-    this.translate.stream(['']).subscribe((textarray) => {
-
-    });
+    this.translate.stream(['']).subscribe((textarray) => {});
   }
   ngAfterViewInit() {
     // set theme on startup
