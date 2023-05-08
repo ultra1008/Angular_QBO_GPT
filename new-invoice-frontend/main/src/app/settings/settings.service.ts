@@ -36,9 +36,26 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     return data;
   }
 
-  async getCompanyActiveSince() {
+  async getCompanyInfo() {
     const data = await this.httpCall
-      .httpGetCall(httpversion.V1 + httproutes.GET_COMPNAY_ACTIVE_SINEC)
+      .httpGetCall(httpversion.V1 + httproutes.GET_COMPNAY_INFO)
+      .toPromise();
+    return data;
+  }
+
+  //   async getCompanyActiveSince() {
+  //     const data = await this.httpCall
+  //       .httpGetCall(httpversion.V1 + httproutes.GET_COMPNAY_ACTIVE_SINEC)
+  //       .toPromise();
+  //     return data;
+  //   }
+
+  async saveCompanyInfo(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.V1 + httproutes.SAVE_COMPNAY_INFO,
+        requestObject
+      )
       .toPromise();
     return data;
   }
