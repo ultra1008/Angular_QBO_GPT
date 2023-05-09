@@ -3705,11 +3705,12 @@ module.exports.getOrphanDocumentsDatatableForTable = async function (req, res) {
             settingDate.milliseconds(0);
             settingDate.subtract(settingDays, 'days');
             settingEpoch = settingDate.unix();
-            if (requestObject.view_option) {
-                match_query.created_at = { $lte: settingEpoch };
-            } else {
-                match_query.created_at = { $gte: settingEpoch };
-            }
+            // if (requestObject.view_option != null) {
+            //     match_query.created_at = { $lte: settingEpoch };
+            // } else {
+            //     match_query.created_at = { $gte: settingEpoch };
+            // }
+            console.log("match_query", match_query);
             var aggregateQuery = [
                 { $match: match_query },
                 {
