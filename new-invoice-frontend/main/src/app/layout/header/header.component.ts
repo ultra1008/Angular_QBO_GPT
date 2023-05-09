@@ -39,7 +39,8 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   isDarTheme = false;
   toggleControl = new FormControl(false);
   darkIcon?: string;
-  userData: any;
+  userName?: string;
+  userPicture?: string;
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private renderer: Renderer2,
@@ -103,8 +104,12 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   ];
   ngOnInit() {
     this.config = this.configService.configData;
-    this.userData = localStorage.getItem(localstorageconstants.USERDATA);
-    console.log(this.userData);
+    let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    console.log(user_data.UserData);
+
+    this.userName = user_data.UserData.userfullname;
+    this.userPicture = user_data.UserData.userpicture;
+
     var tmp_locallanguage = localStorage.getItem(
       localstorageconstants.LANGUAGE
     );
