@@ -2963,7 +2963,9 @@ module.exports.getAllEmployeeReport = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-            let logo_url = requestObject.logo_url;
+            // let logo_url = await common.urlToBase64(config.INVOICE_LOGO);
+
+            // let logo_url = requestObject.logo_url;
             let email_list = requestObject.email_list;
             var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
             let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
@@ -3253,7 +3255,7 @@ module.exports.getAllEmployeeReport = async function (req, res) {
             let title_tmp = translator.getStr('EmployeeTitle');
             let worksheet = workbook.addWorksheet(title_tmp);
             let xlsx_data = [];
-            let result = await common.urlToBase64(logo_url);
+            let result = await common.urlToBase64(config.INVOICE_LOGO);
             let logo_rovuk = await common.urlToBase64(config.INVOICE_LOGO);
             var languageSchema = require('./../../../../../model/language');
             let languageCollection = connection_db_api.model(collectionConstant.LANGUAGE, languageSchema);
@@ -3383,6 +3385,7 @@ module.exports.getAllEmployeeReport = async function (req, res) {
                 Body: tmpResultExcel,
                 ACL: 'public-read-write'
             };
+
             const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/excelReport.html', 'utf8');
 
             bucketOpration.uploadFile(PARAMS, async function (err, resultUpload) {
@@ -3412,9 +3415,10 @@ module.exports.getAllEmployeeReport = async function (req, res) {
                     };
                     var template = handlebars.compile(file_data);
                     var HtmlData = await template(emailTmp);
-                    sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, email_list, translator.getStr('EmailUserReportSubject'), HtmlData,
+                    let send_Email = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, email_list, translator.getStr('EmailUserReportSubject'), HtmlData,
                         talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
                         talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                    console.log("send_Email", send_Email);
                     res.send({ message: translator.getStr('Report_Sent_Successfully'), status: true });
                 }
             });

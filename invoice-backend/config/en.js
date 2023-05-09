@@ -715,7 +715,7 @@ module.exports = {
     Company_Maintains_Information: "It's Important that the company maintains this kind of informatio up to date.",
     Following_Data_Text: "Please be aware that we might need the following data; name, relationship, phone number, email address and physical address.",
 
-    EmailUserReportSubject: "Rovuk Supplier & Diversity Users Report",
+    EmailUserReportSubject: "Rovuk A/P Users Report",
     EmailProjectReportSubject: "Supplier & Diversity Project Report",
 
     // Supplier Schedule of Item
