@@ -5,7 +5,7 @@
                     <!-- <img [src]='advanceTable.img' alt="avatar"> -->
                     <div class="modal-about">
                          <div class="fw-bold p-t-5 p-l-10 font-17">
-                              Usre Report
+                              User Report
                          </div>
                     </div>
                </div>
@@ -28,7 +28,7 @@
                     <mat-label>Role</mat-label>
                     <mat-select formControlName="role_ids" multiple>
                          <mat-option *ngFor="let role of roleLists" [value]="role._id">
-                              <!-- {{role.name}} -->
+                              {{role.role_name}}
                          </mat-option>
                     </mat-select>
                </mat-form-field>
@@ -49,8 +49,12 @@
                     </mat-select>
                </mat-form-field>
 
+
                <div class="fw-bold p-t-5 p-l-10 font-15">
                     Send report to the following emails
+                    <button mat-raised-button color="primary" *ngIf="is_oneOnly" (click)="addmyself()">
+                         <mat-icon>add</mat-icon>
+                         Add Myself </button>
                </div>
                <mat-form-field class="example-chip-list full-width mt-2" appearance="outline">
                     <mat-label>Email</mat-label>

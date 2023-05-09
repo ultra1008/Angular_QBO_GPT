@@ -4,12 +4,12 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { VendorsService } from '../vendors.service';
 import { TermModel } from '../vendor-table.model';
 import { configData } from 'src/environments/configData';
-import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
+import { MatChipInputEvent } from '@angular/material/chips';
 import { isValidMailFormat, showNotification } from 'src/consts/utils';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
-import { CommonService } from 'src/app/services/common.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
 
 export interface DialogData {
   termsList: Array<any>;
@@ -26,13 +26,13 @@ export class VendorReportComponent implements OnInit {
   termsList: Array<TermModel> = [];
   statusList: Array<any> = configData.INVOICES_STATUS;
   emailsList: string[] = [];
-
+  is_oneOnly: boolean = true;
   selectable = true;
   removable = true;
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
-  constructor (public uiSpinner: UiSpinnerService, public dialogRef: MatDialogRef<VendorReportComponent>, private snackBar: MatSnackBar,
+  constructor(public uiSpinner: UiSpinnerService, public dialogRef: MatDialogRef<VendorReportComponent>, private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: DialogData, public vendorService: VendorsService, private fb: UntypedFormBuilder,
   ) {
     // Set the defaults
@@ -111,12 +111,23 @@ export class VendorReportComponent implements OnInit {
     // Clear the input value
     event.chipInput!.clear();
   }
+  addmyself() {
+    if (this.is_oneOnly) {
+      let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+      this.emailsList.push(user_data.UserData.useremail);
+      this.is_oneOnly = false;
+    }
+  }
 
-  removeEmail(fruit: string): void {
-    const index = this.emailsList.indexOf(fruit);
+  removeEmail(email: string): void {
+    let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    const index = this.emailsList.indexOf(email);
 
     if (index >= 0) {
       this.emailsList.splice(index, 1);
+      if (email == user_data.UserData.useremail) {
+        this.is_oneOnly = true;
+      }
     }
   }
 

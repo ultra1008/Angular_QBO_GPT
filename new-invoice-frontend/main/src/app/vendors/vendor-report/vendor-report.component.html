@@ -50,6 +50,9 @@
 
             <div class="fw-bold p-t-5 p-l-10 font-15">
                 Send report to the following emails
+                <button mat-raised-button color="primary" *ngIf="is_oneOnly" (click)="addmyself()">
+                    <mat-icon>add</mat-icon>
+                    Add Myself </button>
             </div>
             <mat-form-field class="example-chip-list full-width mt-2" appearance="outline">
                 <mat-label>Email</mat-label>

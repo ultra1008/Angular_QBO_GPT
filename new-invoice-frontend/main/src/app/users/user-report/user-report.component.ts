@@ -10,6 +10,7 @@ import { CommonService } from 'src/app/services/common.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../user.service';
 import { RoleModel } from '../user.model';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
 
 export interface DialogData {
   termsList: Array<any>;
@@ -26,16 +27,16 @@ export class UserReportComponent {
   roleLists: Array<RoleModel> = [];
   statusList: Array<any> = configData.INVOICES_STATUS;
   emailsList: string[] = [];
-
+  is_oneOnly: boolean = true;
   selectable = true;
   removable = true;
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
   constructor(public uiSpinner: UiSpinnerService, public dialogRef: MatDialogRef<UserReportComponent>, private snackBar: MatSnackBar,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData, public UserReporService: UserService, private fb: UntypedFormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data: any, public UserReporService: UserService, private fb: UntypedFormBuilder,
   ) {
-    console.log("data", data);
+    console.log("data", data.roleList);
 
     // Set the defaults
     /* this.action = 'insert';
@@ -48,8 +49,8 @@ export class UserReportComponent {
       const blankObject = {} as AdvanceTable;
       this.advanceTable = new AdvanceTable(blankObject);
     } */
-    // this.roleLists = userData.roleList;
-
+    this.roleLists = data.roleList;
+    console.log("this.roleLists", this.roleLists);
     this.userInfo = this.fb.group({
       All_Roles: [true],
       role_ids: [this.roleLists.map((el) => el._id)],
@@ -97,6 +98,13 @@ export class UserReportComponent {
   onNoClick(): void {
     this.dialogRef.close();
   }
+  addmyself() {
+    if (this.is_oneOnly) {
+      let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+      this.emailsList.push(user_data.UserData.useremail);
+      this.is_oneOnly = false;
+    }
+  }
 
   addEmail(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
@@ -115,12 +123,17 @@ export class UserReportComponent {
     event.chipInput!.clear();
   }
 
-  removeEmail(fruit: string): void {
-    const index = this.emailsList.indexOf(fruit);
+  removeEmail(email: string): void {
+    let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    const index = this.emailsList.indexOf(email);
 
     if (index >= 0) {
       this.emailsList.splice(index, 1);
+      if (email == user_data.UserData.useremail) {
+        this.is_oneOnly = true;
+      }
     }
+
   }
 
   async sendReport(): Promise<void> {
@@ -132,7 +145,7 @@ export class UserReportComponent {
       setTimeout(() => {
         this.uiSpinner.spin$.next(false);
         this.dialogRef.close();
-        showNotification(this.snackBar, 'Vendor report is sent to your email.', 'success');
+        showNotification(this.snackBar, 'User report is sent to your email.', 'success');
       }, 1000);
     } else {
       showNotification(this.snackBar, 'Please enter email.', 'error');
