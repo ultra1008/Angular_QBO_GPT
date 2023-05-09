@@ -5,10 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { BehaviorSubject, Observable, fromEvent, map, merge } from 'rxjs';
 import { SettingsService } from '../settings.service';
-import { Direction } from '@angular/cdk/bidi';
 import { SelectionModel, DataSource } from '@angular/cdk/collections';
-import { formatDate } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
 import {
@@ -16,9 +13,6 @@ import {
   MatSnackBarVerticalPosition,
   MatSnackBarHorizontalPosition,
 } from '@angular/material/snack-bar';
-import { AdvanceTableService } from 'src/app/advance-table/advance-table.service';
-import { DeleteComponent } from 'src/app/contacts/delete/delete.component';
-import { FormComponent } from 'src/app/contacts/form/form.component';
 import { TableElement } from 'src/app/shared/TableElement';
 import { TableExportUtil } from 'src/app/shared/tableExportUtil';
 import { HttpCall } from 'src/app/services/httpcall.service';
