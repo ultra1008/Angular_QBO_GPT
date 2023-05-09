@@ -173,11 +173,11 @@
                                         <span class="mobile-label">Status:</span>
                                         <div *ngIf="row.vendor_status===1" (click)="updateStatus(row)">
                                             <span class="badge badge-solid-green">
-                                                Active</span>
+                                                {{'COMMON.STATUS.ACTIVE' | translate}}</span>
                                         </div>
                                         <div *ngIf="row.vendor_status===2" (click)="updateStatus(row)">
                                             <span class="badge badge-solid-red">
-                                                Inactive</span>
+                                                {{'COMMON.STATUS.INACTIVE' | translate}}</span>
                                         </div>
                                     </mat-cell>
                                 </ng-container>

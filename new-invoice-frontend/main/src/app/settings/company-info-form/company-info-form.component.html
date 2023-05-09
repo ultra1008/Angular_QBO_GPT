@@ -27,7 +27,7 @@
                         </div>
                     </div>
                     <div class="body">
-                        <form class="register-form m-4" [formGroup]="vendorForm">
+                        <form class="register-form m-4" [formGroup]="companyinfoForm">
                             <div class="row">
                                 <div class="col">
                                     <div class="logo-div">
@@ -53,14 +53,14 @@
                             <div class="row mt-2">
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Compnay Name</mat-label>
+                                        <mat-label>{{'SETTINGS.VIEW.COMPANY_NAME' | translate}}</mat-label>
                                         <input matInput formControlName="companyname"
                                             style="text-transform:capitalize !important;" required>
                                     </mat-form-field>
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Company Code</mat-label>
+                                        <mat-label>{{'SETTINGS.VIEW.COMPANY_CODE' | translate}}</mat-label>
                                         <input required formControlName="companycode" readOnly matInput />
                                     </mat-form-field>
                                 </div>
@@ -68,13 +68,13 @@
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Website</mat-label>
+                                        <mat-label>{{'SETTINGS.VIEW.WEBSITE' | translate}}</mat-label>
                                         <input matInput formControlName="companywebsite" required>
                                     </mat-form-field>
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Phone</mat-label>
+                                        <mat-label>{{'SETTINGS.VIEW.PHONE' | translate}}</mat-label>
                                         <input matInput mask="(000) 000-0000" formControlName="companyphone">
                                     </mat-form-field>
                                 </div>
@@ -82,13 +82,13 @@
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Email</mat-label>
+                                        <mat-label>{{'SETTINGS.VIEW.EMAIL_ADDRESS' | translate}}</mat-label>
                                         <input matInput formControlName="companyemail">
                                     </mat-form-field>
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Phone 2</mat-label>
+                                        <mat-label>{{'SETTINGS.VIEW.PHONE2' | translate}}</mat-label>
                                         <input matInput mask="(000) 000-0000" formControlName="companyphone2">
                                     </mat-form-field>
                                 </div>
@@ -96,7 +96,7 @@
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Type of Company</mat-label>
+                                        <mat-label>{{'SETTINGS.VIEW.TYPE_OF_COMPANY' | translate}}</mat-label>
                                         <mat-select formControlName="companytype" #CompnayTypes_dataSelect required>
                                             <mat-select-filter [placeholder]="'Filter'" [displayMember]="'name'"
                                                 *ngIf="CompnayTypes_dataSelect.focused" [array]="variablesCompnayTypes_data"
@@ -112,7 +112,7 @@
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>NIGP Code(CSI Divison associate with / Work Perfomed)</mat-label>
+                                        <mat-label>{{'SETTINGS.VIEW.NIGP_CODE' | translate}}</mat-label>
                                         <mat-select formControlName="companydivision" #csiDivisionsSelect multiple required
                                         placeholder="{{'VendorForm_Vendor_NIGP_Code' | translate}}">
                                         <mat-select-filter [placeholder]="'Filter'" [displayMember]="'name'"
@@ -129,9 +129,9 @@
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Company Size</mat-label>
+                                        <mat-label>{{'SETTINGS.VIEW.COMPANY_SIZE' | translate}}</mat-label>
                                         <mat-select class="dark-cust-color" formControlName="companysize"
-                                        #CompnaySizes_dataSelect required>
+                                        #CompnaySizes_dataSelect  required>
                                         <mat-select-filter [placeholder]="'Filter'" [displayMember]="'name'"
                                             *ngIf="CompnaySizes_dataSelect.focused" [array]="variablesCompnaySizes_data"
                                             (filteredReturn)="CompnaySizes_data =$event">
@@ -145,9 +145,9 @@
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Company Active Since</mat-label>
+                                        <mat-label>{{'SETTINGS.VIEW.COMPANY_ACTIVE_SINCE' | translate}}</mat-label>
                                         <mat-select class="dark-cust-color" formControlName="companyactivesince" 
-                                        readonly required>
+                                         readonly required>
                                         <mat-option *ngFor="let value of range" [value]="value">
                                             {{value}}
                                         </mat-option>
@@ -189,7 +189,7 @@
                             <div class="row">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                     <button class="btn-space" mat-raised-button color="primary"
-                                        [disabled]="!vendorForm.valid" (click)="saveVendor()">{{'COMMON.ACTIONS.SAVE'|
+                                        [disabled]="!companyinfoForm.valid" (click)="saveVendor()">{{'COMMON.ACTIONS.SAVE'|
                                         translate}}</button>
                                     <button type="button" mat-raised-button color="warn"
                                         (click)="confirmExit()">{{'COMMON.ACTIONS.CANCEL'| translate}}</button>

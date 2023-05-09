@@ -34,15 +34,20 @@ export enum httproutes {
   GET_COMPNAY_SIZE = 'getcompanysize ',
   GET_COMPNAY_ACTIVE_SINEC = 'compnayinformation',
   SAVE_COMPNAY_INFO = 'editcompany',
+  PORTAL_ROVUK_SPONSOR_GET_PRIME_WORK_PERFORMED = 'getsupplierprimeworkperformed',
+  PORTAL_ROVUK_SPONSOR_GET_CSIDIVISION_WORK_PERFORMED = 'getcsidivision',
   // Attachment
   PORTAL_SAVE_ATTACHMENT = 'saveattechment',
 
   // User
-  PORTAL_USER_GET_FOR_TABLE = "getUserForTable",
-  USER_DELETE = "deleteteammember",
-  USER_SETTING_ROLES_ALL = "getallrolespermission",
-  USER_RECOVER = "recoverteam",
-  USER_HISTORY = "getuserhistory",
-  USER_REPORT = "getallemployeereport",
+  PORTAL_USER_GET_FOR_TABLE = 'getUserForTable',
+  USER_DELETE = 'deleteteammember',
+  USER_SETTING_ROLES_ALL = 'getallrolespermission',
+  USER_RECOVER = 'recoverteam',
+  USER_HISTORY = 'getuserhistory',
+  USER_REPORT = 'getallemployeereport',
   TEAM_HISTORY = 'getuserhistory',
+
+  //Mail box
+  MAILBOX_DATA_TABLE = 'getMailboxMonitorForTable',
 }

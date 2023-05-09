@@ -18,11 +18,17 @@
             "RESTORE": "Restore",
             "SAVE": "Save",
             "CANCEL": "Cancel",
-            "ATTACHMENT": "Attachment"
+            "ATTACHMENT": "Attachment",
+            "YES": "Yes",
+            "NO": "No"
         },
         "HISTORY": {
             "KEY": "Key",
             "VALUE": "Value"
+        },
+        "STATUS": {
+            "ACTIVE": "Active",
+            "INACTIVE": "Inactive"
         }
     },
     "VENDOR": {
@@ -62,6 +68,10 @@
         },
         "HISTORY": {
             "TITLE": "Vendor History"
+        },
+        "CONFIRMATION_DIALOG": {
+            "ARCHIVE": "Are you sure you want to archive this vendor?",
+            "RESTORE": "Are you sure you want to restore this vendor?"
         }
     },
     "USERS": {
@@ -114,9 +124,11 @@
             "WEBSITE": "Website",
             "COMPANY_INFORMATION": "Company information",
             "TYPE_OF_COMPANY": "Type of Company",
-            "NIGP_CODE": "NIGP Code",
+            "NIGP_CODE": "NIGP Code(CSI Divison associate with / Work Perfomed)",
             "COMPANY_SIZE": "Company Size",
-            "COMPANY_ACTIVE_SINCE": "Company Active Since"
+            "COMPANY_ACTIVE_SINCE": "Company Active Since",
+            "COMPANY_NAME": "Company Name",
+            "COMPANY_CODE": "Company Code"
         },
         "SETTINGS_OTHER_OPTION": {
             "MAIL_BOXES": "Mailboxes",

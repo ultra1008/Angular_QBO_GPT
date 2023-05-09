@@ -205,16 +205,16 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
 
   async deleteVendor(vendor: Vendor, is_delete: number) {
     if (is_delete == 1) {
-      this.titleMessage = "Are you sure you want to archive this vendor?";
+      this.titleMessage = this.translate.instant('VENDOR.CONFIRMATION_DIALOG.ARCHIVE');
     } else {
-      this.titleMessage = "Are you sure you want to restore this vendor?";
+      this.titleMessage = this.translate.instant('VENDOR.CONFIRMATION_DIALOG.RESTORE');
     }
     swalWithBootstrapTwoButtons
       .fire({
         title: this.titleMessage,
         showDenyButton: true,
-        confirmButtonText: "Yes",
-        denyButtonText: "No",
+        confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+        denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
         allowOutsideClick: false,
       })
       .then((result) => {
