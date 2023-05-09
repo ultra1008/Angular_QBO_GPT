@@ -12,6 +12,7 @@ import {
 import { ROUTES } from './sidebar-items';
 import { AuthService } from 'src/app/core/service/auth.service';
 import { RouteInfo } from './sidebar.metadata';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
@@ -23,9 +24,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
   public bodyTag!: HTMLElement;
   listMaxHeight?: string;
   listMaxWidth?: string;
-  userFullName?: string;
-  userImg?: string;
-  userType?: string;
+  companyName?: string;
+  companyLogo?: string;
+  companyCode?: string;
   headerHeight = 60;
   currentRoute?: string;
   routerObj;
@@ -67,6 +68,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
     }
   }
   ngOnInit() {
+    let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    this.companyName = user_data.companydata.companyname;
+    this.companyLogo = user_data.companydata.companylogo;
+    this.companyCode = user_data.companydata.companycode;
     if (this.authService.currentUserValue) {
       this.sidebarItems = ROUTES.filter((sidebarItem) => sidebarItem);
     }

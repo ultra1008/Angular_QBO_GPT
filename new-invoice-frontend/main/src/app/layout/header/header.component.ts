@@ -105,8 +105,6 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.config = this.configService.configData;
     let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
-    console.log(user_data.UserData);
-
     this.userName = user_data.UserData.userfullname;
     this.userPicture = user_data.UserData.userpicture;
 
