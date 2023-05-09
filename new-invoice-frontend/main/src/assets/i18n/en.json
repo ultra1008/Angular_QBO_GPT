@@ -18,11 +18,17 @@
             "RESTORE": "Restore",
             "SAVE": "Save",
             "CANCEL": "Cancel",
-            "ATTACHMENT": "Attachment"
+            "ATTACHMENT": "Attachment",
+            "YES": "Yes",
+            "NO": "No"
         },
         "HISTORY": {
             "KEY": "Key",
             "VALUE": "Value"
+        },
+        "STATUS": {
+            "ACTIVE": "Active",
+            "INACTIVE": "Inactive"
         }
     },
     "VENDOR": {
@@ -62,6 +68,10 @@
         },
         "HISTORY": {
             "TITLE": "Vendor History"
+        },
+        "CONFIRMATION_DIALOG": {
+            "ARCHIVE": "Are you sure you want to archive this vendor?",
+            "RESTORE": "Are you sure you want to restore this vendor?"
         }
     },
     "USERS": {

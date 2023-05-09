@@ -18,11 +18,17 @@
             "RESTORE": "Restaurar",
             "SAVE": "Ahorrar",
             "CANCEL": "Cancelar",
-            "ATTACHMENT": "Archivo adjunto"
+            "ATTACHMENT": "Archivo adjunto",
+            "YES": "Sí",
+            "NO": "No"
         },
         "HISTORY": {
             "KEY": "Llave",
             "VALUE": "Valor"
+        },
+        "STATUS": {
+            "ACTIVE": "Activo",
+            "INACTIVE": "Inactivo"
         }
     },
     "VENDOR": {
@@ -62,6 +68,10 @@
         },
         "HISTORY": {
             "TITLE": "Historial del proveedor"
+        },
+        "CONFIRMATION_DIALOG": {
+            "ARCHIVE": "¿Está seguro de que desea archivar a este proveedor?",
+            "RESTORE": "¿Estás seguro de que quieres restaurar este proveedor?"
         }
     },
     "USERS": {
