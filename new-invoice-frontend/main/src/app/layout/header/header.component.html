@@ -99,10 +99,10 @@
                   <button (click)="goChangePassword()" mat-menu-item>
                     <app-feather-icons [icon]="'key'" [class]="'user-menu-icons'"></app-feather-icons>Change Password
                   </button>
-                  <button mat-menu-item>
+                  <!-- <button mat-menu-item>
                     <app-feather-icons [icon]="'mail'" [class]="'user-menu-icons'"></app-feather-icons>Inbox
-                  </button>
-                  <button mat-menu-item>
+                  </button> -->
+                  <button mat-menu-item (click)="gotoSettings()">
                     <app-feather-icons [icon]="'settings'" [class]="'user-menu-icons'"></app-feather-icons>Settings
                   </button>
                   <div mat-menu-item class="user-menu__item-title">
