@@ -85,8 +85,8 @@
         <li class="nav-item user_profile">
           <button mat-button [matMenuTriggerFor]="profilemenu">
             <div class="chip dropdown-toggle" ngbDropdownToggle class="">
-              <span>Ella Jones</span>
-              <img src="assets/images/user.jpg" class="user_img" width="32" height="32" alt="User">
+              <span>{{userName}}</span>
+              <img src="{{userPicture}}" class="user_img" width="32" height="32" alt="User">
             </div>
           </button>
           <mat-menu #profilemenu="matMenu" class="profile-menu">
@@ -99,10 +99,10 @@
                   <button (click)="goChangePassword()" mat-menu-item>
                     <app-feather-icons [icon]="'key'" [class]="'user-menu-icons'"></app-feather-icons>Change Password
                   </button>
-                  <button mat-menu-item>
+                  <!-- <button mat-menu-item>
                     <app-feather-icons [icon]="'mail'" [class]="'user-menu-icons'"></app-feather-icons>Inbox
-                  </button>
-                  <button mat-menu-item>
+                  </button> -->
+                  <button mat-menu-item (click)="gotoSettings()">
                     <app-feather-icons [icon]="'settings'" [class]="'user-menu-icons'"></app-feather-icons>Settings
                   </button>
                   <div mat-menu-item class="user-menu__item-title">

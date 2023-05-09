@@ -39,6 +39,8 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   isDarTheme = false;
   toggleControl = new FormControl(false);
   darkIcon?: string;
+  userName?: string;
+  userPicture?: string;
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private renderer: Renderer2,
@@ -48,7 +50,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     private authService: AuthService,
     private router: Router,
     public translate: TranslateService
-  ) {}
+  ) { }
   notifications: Notifications[] = [
     {
       message: 'Please check your mail',
@@ -102,17 +104,21 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   ];
   ngOnInit() {
     this.config = this.configService.configData;
+    let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    this.userName = user_data.UserData.userfullname;
+    this.userPicture = user_data.UserData.userpicture;
+
     var tmp_locallanguage = localStorage.getItem(
       localstorageconstants.LANGUAGE
     );
     tmp_locallanguage =
       tmp_locallanguage == '' ||
-      tmp_locallanguage == undefined ||
-      tmp_locallanguage == null
+        tmp_locallanguage == undefined ||
+        tmp_locallanguage == null
         ? configData.INITIALLANGUAGE
         : tmp_locallanguage;
     this.translate.use(tmp_locallanguage);
-    this.translate.stream(['']).subscribe((textarray) => {});
+    this.translate.stream(['']).subscribe((textarray) => { });
   }
   ngAfterViewInit() {
     // set theme on startup
@@ -215,8 +221,13 @@ export class HeaderComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
   goChangePassword() {
     this.router.navigate(['/authentication/change-password']);
+  }
+
+  gotoSettings() {
+    this.router.navigate(['/settings']);
   }
 
   languageSwitcher() {

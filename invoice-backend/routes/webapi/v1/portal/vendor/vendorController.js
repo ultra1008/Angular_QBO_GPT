@@ -928,6 +928,7 @@ module.exports.getVendorExcelReport = async function (req, res) {
                 ACL: 'public-read-write'
             };
             const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/excelReport.html', 'utf8');
+
             bucketOpration.uploadFile(PARAMS, async function (err, resultUpload) {
                 if (err) {
                     res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
