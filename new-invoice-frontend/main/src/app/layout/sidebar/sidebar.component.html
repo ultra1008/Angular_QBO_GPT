@@ -5,33 +5,18 @@
     <div class="menu">
       <ng-scrollbar [style.height]="listMaxHeight + 'px'" visibility="hover">
         <ul class="list">
-          <!-- <li class="sidebar-user-panel">
+          <li class="sidebar-user-panel">
             <div class="user-panel">
               <div class=" image">
-                <img src="assets/images/usrbig.jpg" class="img-circle user-img-circle" alt="User Image" />
+                <img src="{{companyLogo}}" class="img-circle user-img-circle" alt="User Image" height="50px"
+                  width="50px" />
               </div>
             </div>
             <div class="profile-usertitle">
-              <div class="sidebar-userpic-name">Emily Smith </div>
-              <div class="profile-usertitle-job ">Manager </div>
+              <div class="sidebar-userpic-name">{{companyName}}</div>
+              <div class="profile-usertitle-job ">{{companyCode}}</div>
             </div>
-            <div class="sidebar-userpic-btn">
-              <a mat-icon-button disabled routerLink="extra-pages/profile" matTooltip="Profile"
-                [matTooltipPosition]="'above'">
-                <i class="material-icons-two-tone">account_circle</i>
-              </a>
-              <a mat-icon-button disabled routerLink="email/inbox" matTooltip="Email" [matTooltipPosition]="'above'">
-                <i class="material-icons-two-tone">mark_email_unread</i>
-              </a>
-              <a mat-icon-button disabled routerLink="calendar" matTooltip="Calendar" [matTooltipPosition]="'above'">
-                <i class="material-icons-two-tone">event</i>
-              </a>
-              <a mat-icon-button disabled routerLink="authentication/locked" matTooltip="Lock"
-                [matTooltipPosition]="'above'">
-                <i class="material-icons-two-tone">lock</i>
-              </a>
-            </div>
-          </li> -->
+          </li>
           <!-- Top Most level menu -->
           <li *ngFor="let sidebarItem of sidebarItems"
             [routerLinkActive]="sidebarItem.submenu.length !== 0 ? 'active' : 'active-top'">

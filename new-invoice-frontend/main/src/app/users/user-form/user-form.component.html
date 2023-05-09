@@ -1,0 +1,30 @@
+<section class="content">
+     <div class="content-block">
+          <div class="row clearfix">
+               <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                         <div class="header">
+                              <h2>
+                                   <strong>Stepper Horizontal</strong>
+                              </h2>
+                         </div>
+                         <div class="body">
+                              <mat-horizontal-stepper [linear]="isLinear" #stepper>
+                                   <mat-step [stepControl]="HFormGroup1!">
+                                        <ng-template matStepLabel>Done1</ng-template>
+
+                                   </mat-step>
+                                   <mat-step [stepControl]="HFormGroup2!">
+                                        <ng-template matStepLabel>Done2</ng-template>
+                                   </mat-step>
+                                   <mat-step>
+                                        <ng-template matStepLabel>Done3</ng-template>
+
+                                   </mat-step>
+                              </mat-horizontal-stepper>
+                         </div>
+                    </div>
+               </div>
+          </div>
+     </div>
+</section>
