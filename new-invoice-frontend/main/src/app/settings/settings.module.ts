@@ -47,6 +47,7 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 import { CommonComponentsModule } from '../common-components/common-components.module';
 import { SharedModule } from '../shared/shared.module';
 import { SettingsService } from './settings.service';
+import { MailboxFormComponent } from './mailbox/mailbox-form/mailbox-form.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { SettingsService } from './settings.service';
     CostcodeComponent,
     DocumentviewComponent,
     CompanyInfoFormComponent,
+    MailboxFormComponent,
   ],
   providers: [SettingsService],
   imports: [

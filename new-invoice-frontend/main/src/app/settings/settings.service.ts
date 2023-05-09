@@ -96,4 +96,14 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
       .toPromise();
     return data;
   }
+
+  async AddMailbox(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.SAVE_MAILBOX,
+        requestObject
+      )
+      .toPromise();
+    return data;
+  }
 }

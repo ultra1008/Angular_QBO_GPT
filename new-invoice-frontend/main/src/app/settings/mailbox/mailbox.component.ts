@@ -76,6 +76,7 @@ export class MailboxComponent
     this.loadData();
   }
   addNew() {
+    this.router.navigate(['/settings/mailbox-form']);
     // let tempDirection: Direction;
     // if (localStorage.getItem('isRtl') === 'true') {
     //   tempDirection = 'rtl';

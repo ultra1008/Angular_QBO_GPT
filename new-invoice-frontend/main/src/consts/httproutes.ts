@@ -50,4 +50,5 @@ export enum httproutes {
 
   //Mail box
   MAILBOX_DATA_TABLE = 'getMailboxMonitorForTable',
+  SAVE_MAILBOX = 'savemailboxmonitor',
 }
