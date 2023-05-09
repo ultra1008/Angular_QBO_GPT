@@ -8,7 +8,7 @@
               <div class="left">
                 <ul class="header-buttons-left ms-0">
                   <li class="tbl-title">
-                    <h2>Table Name</h2>
+                    <h2>Mailboxes to Monitor</h2>
                   </li>
                   <li class="tbl-search-box">
                     <label for="search-input"><i class="material-icons search-icon">search</i></label>
@@ -41,11 +41,11 @@
                       </button>
                     </div>
                   </li>
-                  <li>
+                  <!-- <li>
                     <div class="export-button m-l-10" matTooltip="XLSX">
                       <img src="assets/images/icons/xlsx.png" alt="" (click)="exportExcel()" />
                     </div>
-                  </li>
+                  </li> -->
                 </ul>
               </div>
             </div>
@@ -114,20 +114,20 @@
                   <ng-container matColumnDef="imap">
                     <mat-header-cell *matHeaderCellDef mat-sort-header>IMAP</mat-header-cell>
                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                      <span class="mobile-label">IMAP:</span> {{row.bDate | date: 'MM/dd/yyyy' }}
+                      <span class="mobile-label">IMAP:</span> {{row.imap }}
                     </mat-cell>
                   </ng-container>
                   <ng-container matColumnDef="port">
                     <mat-header-cell *matHeaderCellDef mat-sort-header>Port</mat-header-cell>
                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                      <span class="mobile-label">Port:</span> {{row.mobile}}</mat-cell>
+                      <span class="mobile-label">Port:</span> {{row.port}}</mat-cell>
                   </ng-container>
                   <ng-container matColumnDef="time">
                     <mat-header-cell *matHeaderCellDef mat-sort-header>Time
                     </mat-header-cell>
                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
                       matTooltip="{{row.address}}">
-                      <span class="truncate-text"><span class="mobile-label">Time:</span> {{row.address}}</span>
+                      <span class="truncate-text"><span class="mobile-label">Time:</span> {{row.time}}</span>
                     </mat-cell>
                   </ng-container>
                   <!-- <ng-container matColumnDef="country">
@@ -137,18 +137,33 @@
                   </ng-container> -->
                   <!-- actions -->
                   <ng-container matColumnDef="actions">
-                    <mat-header-cell class="pr-0" *matHeaderCellDef>Actions</mat-header-cell>
-                    <mat-cell *matCellDef="let row; let i=index;" class="pr-0">
-                      <button mat-icon-button color="accent" (click)="$event.stopPropagation()" (click)="editCall(row)"
-                        class="tbl-action-btn">
-                        <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'"></app-feather-icons>
-                      </button>
-                      <button mat-icon-button color="accent" (click)="$event.stopPropagation()" (click)="deleteItem(row)"
-                        class="tbl-action-btn">
-                        <app-feather-icons [icon]="'trash-2'" [class]="'tbl-fav-delete'"></app-feather-icons>
-                      </button>
+                    <mat-header-cell class="psl-3" *matHeaderCellDef>{{'VENDOR.TABLE.ACTIONS' |
+                        translate}}
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row; let i=index;" class="psl-3">
+                        <button mat-icon-button [matMenuTriggerFor]="menu"
+                            (click)="$event.stopPropagation()">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu">
+                            <button mat-menu-item  *ngIf="isDelete === 0">
+                                <i class="material-icons-two-tone align-middle msr-2">create</i>
+                                <span>{{'COMMON.ACTIONS.EDIT' |
+                                    translate}}</span>
+                            </button>
+                            <button mat-menu-item  *ngIf="isDelete === 0">
+                                <i class="material-icons-two-tone align-middle msr-2">archive</i>
+                                <span>{{'COMMON.ACTIONS.ARCHIVE' |
+                                    translate}}</span>s
+                            </button>
+                            <button mat-menu-item  *ngIf="isDelete === 1">
+                                <i class="material-icons-two-tone align-middle msr-2">archive</i>
+                                <span>{{'COMMON.ACTIONS.RESTORE' |
+                                    translate}}</span>
+                            </button>
+                        </mat-menu>
                     </mat-cell>
-                  </ng-container>
+                </ng-container>
                   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                   <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="editCall(row)"
                     [style.cursor]="'pointer'" matRipple>

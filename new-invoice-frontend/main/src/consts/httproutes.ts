@@ -49,5 +49,5 @@ export enum httproutes {
   TEAM_HISTORY = 'getuserhistory',
 
   //Mail box
-  MAILBOX_DATA_TABLE = 'getmailboxmonitordatatable',
+  MAILBOX_DATA_TABLE = 'getMailboxMonitorForTable',
 }
