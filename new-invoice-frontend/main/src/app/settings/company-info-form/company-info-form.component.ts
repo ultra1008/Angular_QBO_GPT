@@ -29,6 +29,10 @@ import {
 import { wasabiImagePath } from 'src/consts/wasabiImagePath';
 import { SettingsService } from '../settings.service';
 import { MatDatepicker } from '@angular/material/datepicker';
+import { httproutes } from 'src/consts/httproutes';
+import { configData } from 'src/environments/configData';
+import { HttpCall } from 'src/app/services/httpcall.service';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
 
 @Component({
   selector: 'app-company-info-form',
@@ -37,7 +41,7 @@ import { MatDatepicker } from '@angular/material/datepicker';
 })
 export class CompanyInfoFormComponent {
   @ViewChild('OpenFilebox') OpenFilebox: any;
-  vendorForm: UntypedFormGroup;
+  companyinfoForm!: UntypedFormGroup;
   hide = true;
   agree = false;
   customForm?: UntypedFormGroup;
@@ -82,6 +86,7 @@ export class CompanyInfoFormComponent {
     public uiSpinner: UiSpinnerService,
     public route: ActivatedRoute,
     private sanitiser: DomSanitizer,
+    public httpCall: HttpCall,
     // public commonService: CommonService,
     public SettingsServices: SettingsService
   ) {
@@ -90,7 +95,7 @@ export class CompanyInfoFormComponent {
     this.getCompanySize();
     this.getOneVendor();
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
-    this.vendorForm = this.fb.group({
+    this.companyinfoForm = this.fb.group({
       companyname: ['', [Validators.required]],
       companycode: ['', [Validators.required]],
       companyemail: [
@@ -133,7 +138,7 @@ export class CompanyInfoFormComponent {
     el.click();
   }
   chosenYearHandler(normalizedYear: any, datepicker: MatDatepicker<any>) {
-    this.vendorForm.get('companyactivesince')!.setValue(normalizedYear);
+    this.companyinfoForm.get('companyactivesince')!.setValue(normalizedYear);
     datepicker.close();
   }
 
@@ -142,46 +147,48 @@ export class CompanyInfoFormComponent {
     const data = await this.SettingsServices.getCompanyInfo();
     console.log('data', data);
     if (data.status) {
-      const vendorData = data.data;
-      that.compnay_code = vendorData.companycode;
-      that.compnay_id = vendorData._id;
+      const CompanyInfoData = data.data;
+      that.compnay_code = CompanyInfoData.companycode;
+      that.compnay_id = CompanyInfoData._id;
       if (
-        vendorData.companylogo == undefined ||
-        vendorData.companylogo == null ||
-        vendorData.companylogo == ''
+        CompanyInfoData.companylogo == undefined ||
+        CompanyInfoData.companylogo == null ||
+        CompanyInfoData.companylogo == ''
       ) {
         that.company_logo = '../assets/images/placeholder_logo.png';
       } else {
-        that.company_logo = vendorData.companylogo;
+        that.company_logo = CompanyInfoData.companylogo;
       }
-      this.vendorForm = this.fb.group({
-        companyname: [vendorData.companyname, Validators.required],
-        companywebsite: [vendorData.companywebsite],
-        companycode: [{ value: vendorData.companycode, disabled: true }],
-        companyphone: [vendorData.companyphone, [Validators.required]],
+      this.companyinfoForm = this.fb.group({
+        companyname: [CompanyInfoData.companyname, Validators.required],
+        companywebsite: [CompanyInfoData.companywebsite],
+        companycode: [{ value: CompanyInfoData.companycode, disabled: true }],
+        companyphone: [CompanyInfoData.companyphone, [Validators.required]],
         companyemail: [
-          vendorData.companyemail,
+          CompanyInfoData.companyemail,
           [Validators.email, Validators.required],
         ],
-        companyphone2: [vendorData.companyphone2],
-        companyactivesince: [vendorData.companyactivesince],
-        companydivision: [vendorData.companydivision],
-        companysize: [vendorData.companysize],
-        companytype: [vendorData.companytype],
-        companyaddress: [vendorData.companyaddress],
-        companyaddresscity: [vendorData.companyaddresscity],
-        companyaddressstate: [vendorData.companyaddressstate],
-        companyaddresszip: [vendorData.companyaddresszip],
+        companyphone2: [CompanyInfoData.companyphone2],
+        companyactivesince: [
+          { value: CompanyInfoData.companyactivesince, disabled: true },
+        ],
+        companydivision: [CompanyInfoData.companydivision],
+        companysize: [CompanyInfoData.companysize],
+        companytype: [CompanyInfoData.companytype],
+        companyaddress: [CompanyInfoData.companyaddress],
+        companyaddresscity: [CompanyInfoData.companyaddresscity],
+        companyaddressstate: [CompanyInfoData.companyaddressstate],
+        companyaddresszip: [CompanyInfoData.companyaddresszip],
       });
       let found = that.CompnayTypes_data.find(
-        (element: any) => element._id == vendorData.companytype
+        (element: any) => element._id == CompanyInfoData.companytype
       );
-      // that.selectedVendorType = found.name
-      //   ? found.name
-      //   : configdata.PRIME_VENDOR_TYPE;
-      // that.getCISDivision(
-      //   that.selectedVendorType == configdata.PRIME_VENDOR_TYPE
-      // );
+      that.selectedVendorType = found.name
+        ? found.name
+        : configData.PRIME_VENDOR_TYPE;
+      that.getCISDivision(
+        that.selectedVendorType == configData.PRIME_VENDOR_TYPE
+      );
     }
 
     // async getTerms() {
@@ -193,32 +200,60 @@ export class CompanyInfoFormComponent {
   }
 
   async saveVendor() {
-    // if (this.vendorForm.valid) {
-    //   const requestObject = this.vendorForm.value;
-    //   if (this.id) {
-    //     requestObject._id = this.id;
-    //   }
-    //   const formData = new FormData();
-    //   for (let i = 0; i < this.files.length; i++) {
-    //     formData.append('file[]', this.files[i]);
-    //   }
-    //   formData.append('folder_name', wasabiImagePath.VENDOR_ATTACHMENT);
-    //   this.uiSpinner.spin$.next(true);
-    //   const attachment = await this.commonService.saveAttachment(formData);
-    //   if (attachment.status) {
-    //     requestObject.vendor_attachment = attachment.data.concat(
-    //       this.last_files_array
-    //     );
-    //   }
-    //   const data = await this.vendorService.saveVendor(requestObject);
-    //   if (data.status) {
-    //     this.uiSpinner.spin$.next(false);
-    //     showNotification(this.snackBar, data.message, 'success');
-    //     this.router.navigate([WEB_ROUTES.VENDOR]);
-    //   } else {
-    //     this.uiSpinner.spin$.next(false);
-    //     showNotification(this.snackBar, data.message, 'error');
-    //   }
+    let that = this;
+    if (this.companyinfoForm.valid) {
+      let requestObject = this.companyinfoForm.value;
+      let userData = JSON.parse(
+        localStorage.getItem(localstorageconstants.USERDATA)!
+      );
+      const formData = new FormData();
+      formData.append('file', this.filepath);
+      formData.append('reqObject', JSON.stringify(requestObject));
+      formData.append('editcopmanycode', this.compnay_code);
+      formData.append('_id', this.compnay_id);
+      this.uiSpinner.spin$.next(true);
+      requestObject = formData;
+      const data = await this.SettingsServices.saveCompanyInfo(requestObject);
+      if (data.status) {
+        this.uiSpinner.spin$.next(false);
+        showNotification(this.snackBar, data.message, 'success');
+      } else {
+        this.uiSpinner.spin$.next(false);
+        showNotification(this.snackBar, data.message, 'error');
+      }
+
+      // this.httpCall
+      //   .httpPostCall(httproutes.COMPNAY_INFO_OTHER_SETTING_UPDATE, formData)
+      //   .subscribe(function (params) {
+      //     that.uiSpinner.spin$.next(false);
+      //     if (params.status) {
+      //       that.snackbarservice.openSnackBar(params.message, "success");
+      //       that.httpCall
+      //         .httpGetCall(httproutes.COMPNAY_INFO_OTHER_SETTING_GET)
+      //         .subscribe(function (compnayData: any) {
+      //           if (compnayData.status) {
+      //             userData.companydata = compnayData.data;
+      //             localStorage.setItem(
+      //               localstorageconstants.USERDATA,
+      //               JSON.stringify(userData)
+      //             );
+      //             that.mostusedservice.userupdatecompnayEmit();
+      //           }
+      //         });
+      //     } else {
+      //       that.snackbarservice.openSnackBar(params.message, "error");
+      //     }
+      //   });
+    }
+
+    // const data = await this.vendorService.saveVendor(requestObject);
+    // if (data.status) {
+    //   this.uiSpinner.spin$.next(false);
+    //   showNotification(this.snackBar, data.message, 'success');
+    //   this.router.navigate([WEB_ROUTES.VENDOR]);
+    // } else {
+    //   this.uiSpinner.spin$.next(false);
+    //   showNotification(this.snackBar, data.message, 'error');
     // }
   }
 
@@ -246,6 +281,33 @@ export class CompanyInfoFormComponent {
     }
   }
 
+  onVendorTypeSelect(event: any) {
+    let found = this.CompnayTypes_data.find(
+      (element: any) => element._id == event
+    );
+    this.selectedVendorType = found.name
+      ? found.name
+      : configData.PRIME_VENDOR_TYPE;
+    this.companyinfoForm.get('companydivision')!.setValue([]);
+    this.getCISDivision(
+      this.selectedVendorType == configData.PRIME_VENDOR_TYPE
+    );
+  }
+
+  async getCISDivision(isPrimeVendor: any) {
+    let url = '';
+    if (isPrimeVendor) {
+      url = httproutes.PORTAL_ROVUK_SPONSOR_GET_PRIME_WORK_PERFORMED;
+    } else {
+      url = httproutes.PORTAL_ROVUK_SPONSOR_GET_CSIDIVISION_WORK_PERFORMED;
+    }
+    let data = await this.httpCall.httpGetCall(url).toPromise();
+    if (data.status) {
+      this.variablesCSIDivisions = data.data;
+      this.csiDivisions = this.variablesCSIDivisions.slice();
+    }
+  }
+
   confirmExit() {
     swalWithBootstrapButtons
       .fire({
@@ -261,7 +323,7 @@ export class CompanyInfoFormComponent {
       .then((result) => {
         if (result.isConfirmed) {
           // Move to the vendor listing
-          if (this.vendorForm.valid) {
+          if (this.companyinfoForm.valid) {
             this.saveVendor();
           } else {
             // alert form invalidation

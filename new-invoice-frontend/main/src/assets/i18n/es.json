@@ -83,6 +83,9 @@
         "ADD_EDIT": {}
     },
     "SETTINGS": {
+        "COMPANY_INFO_FORM": {
+            "EDIT_TITLE": "Editar información de la empresa"
+        },
         "VIEW": {
             "CONTACT_INFORMATION": "Información de contacto",
             "EMAIL_ADDRESS": "Dirección de correo electrónico",
@@ -91,9 +94,11 @@
             "WEBSITE": "Sitio web",
             "COMPANY_INFORMATION": "Información de la empresa",
             "TYPE_OF_COMPANY": "Tipo de empresa",
-            "NIGP_CODE": "Código NIGP",
+            "NIGP_CODE": "Código NIGP (socio de la División CSI / trabajo realizado)",
             "COMPANY_SIZE": "Tamaño de la empresa",
-            "COMPANY_ACTIVE_SINCE": "Empresa activa desde"
+            "COMPANY_ACTIVE_SINCE": "Empresa activa desde",
+            "COMPANY_NAME": "nombre de empresa",
+            "COMPANY_CODE": "Codigo de compañia"
         },
         "SETTINGS_OTHER_OPTION": {
             "MAIL_BOXES": "Buzones",

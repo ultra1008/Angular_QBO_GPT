@@ -94,9 +94,11 @@
             "WEBSITE": "Website",
             "COMPANY_INFORMATION": "Company information",
             "TYPE_OF_COMPANY": "Type of Company",
-            "NIGP_CODE": "NIGP Code",
+            "NIGP_CODE": "NIGP Code(CSI Divison associate with / Work Perfomed)",
             "COMPANY_SIZE": "Company Size",
-            "COMPANY_ACTIVE_SINCE": "Company Active Since"
+            "COMPANY_ACTIVE_SINCE": "Company Active Since",
+            "COMPANY_NAME": "Company Name",
+            "COMPANY_CODE": "Company Code"
         },
         "SETTINGS_OTHER_OPTION": {
             "MAIL_BOXES": "Mailboxes",

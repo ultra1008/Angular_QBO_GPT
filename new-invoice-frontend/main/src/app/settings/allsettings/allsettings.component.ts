@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { SettingsService } from '../settings.service';
 
 @Component({
   selector: 'app-allsettings',
@@ -9,8 +10,21 @@ import { WEB_ROUTES } from 'src/consts/routes';
   styleUrls: ['./allsettings.component.scss'],
 })
 export class AllsettingsComponent {
-  constructor(private router: Router, public translate: TranslateService) {
+  CompanyData: any;
+  constructor(
+    private router: Router,
+    public translate: TranslateService,
+    public SettingsServices: SettingsService
+  ) {
+    this.getOneCompany();
     //constructor
+  }
+
+  async getOneCompany() {
+    let that = this;
+    const data = await this.SettingsServices.getCompanyInfo();
+    console.log('data', data);
+    that.CompanyData = data.data;
   }
 
   openMailboxListing() {
@@ -58,7 +72,6 @@ export class AllsettingsComponent {
   }
 
   editPress() {
-    console.log('call');
     this.router.navigate(['/settings/company-info-form']);
   }
 }

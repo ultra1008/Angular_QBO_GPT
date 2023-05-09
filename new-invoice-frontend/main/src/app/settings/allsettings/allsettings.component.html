@@ -10,13 +10,13 @@
                             <div class="editButton" (click)="editPress()">
                                 <i class="fas fa-pen pull-left card-icon col-white font-20 mt-2"></i>
                             </div>
-                            <div class="profile-header bg-dark">
-                                <div class="user-name">Centurion infotech</div>
-                                <div class="name-center">R-988514</div>
+                            <div class="profile-header bg-indigo">
+                                <div class="user-name">{{CompanyData.companyname}}</div>
+                                <div class="name-center">{{CompanyData.companycode}}</div>
                             </div>
-                            <img src="assets/images/user/usrbig3.jpg" class="user-img" alt="">
-                            <p>
-                                American University Park, Washington, District of Columbia, 35268
+                            <img src="{{CompanyData.companylogo}}" width="112px" height="112px" class="user-img img-color" alt="">
+                            <p> 
+                                {{CompanyData.companyaddress}}, {{CompanyData.companyaddresscity}}, {{CompanyData.companyaddressstate}}, {{CompanyData.companyaddresszip}}
                             </p>
                         </div>
                     </div>
@@ -28,16 +28,16 @@
                         <h4><strong>{{'SETTINGS.VIEW.CONTACT_INFORMATION' | translate}}</strong></h4>
                         <strong>{{'SETTINGS.VIEW.EMAIL_ADDRESS' | translate}}</strong>
                         <br>
-                        <p class="text-muted">cisagarp@gmail.com</p>
+                        <p class="text-muted">{{CompanyData.companyemail}}</p>
                         <strong>{{'SETTINGS.VIEW.PHONE' | translate}}</strong>
                         <br>
-                        <p class="text-muted">(846) 987-8567</p>
+                        <p class="text-muted">{{CompanyData.companyphone}}</p>
                         <strong>{{'SETTINGS.VIEW.PHONE2' | translate}}</strong>
                         <br>
-                        <p class="text-muted">(846) 987-8567</p>
+                        <p class="text-muted">{{CompanyData.companyphone2}}</p>
                         <strong>{{'SETTINGS.VIEW.WEBSITE' | translate}}</strong>
                         <br>
-                        <p class="text-muted">https://centurioninfotech.com</p>
+                        <p class="text-muted">{{CompanyData.companywebsite}}</p>
                     </div>
                 </div>
             </div>
@@ -47,16 +47,16 @@
                         <h4><strong>{{'SETTINGS.VIEW.COMPANY_INFORMATION' | translate}}</strong></h4>
                         <strong>{{'SETTINGS.VIEW.TYPE_OF_COMPANY' | translate}}</strong>
                         <br>
-                        <p class="text-muted">General Contractor</p>
+                        <p class="text-muted">{{CompanyData.companytype}}</p>
                         <strong>{{'SETTINGS.VIEW.NIGP_CODE' | translate}}</strong>
                         <br>
-                        <p class="text-muted">03 - Concrete</p>
+                        <p class="text-muted">{{CompanyData.companydivision}}</p>
                         <strong>{{'SETTINGS.VIEW.COMPANY_SIZE' | translate}}</strong>
                         <br>
-                        <p class="text-muted">10-19 employees</p>
+                        <p class="text-muted">{{CompanyData.companysize}}</p>
                         <strong>{{'SETTINGS.VIEW.COMPANY_ACTIVE_SINCE' | translate}}</strong>
                         <br>
-                        <p class="text-muted">2020</p>
+                        <p class="text-muted">{{CompanyData.companyactivesince}}</p>
                     </div>
                 </div>
             </div>
