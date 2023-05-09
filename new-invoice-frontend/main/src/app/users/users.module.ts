@@ -38,6 +38,9 @@ import { UserHistoryComponent } from './user-history/user-history.component';
 import { UserReportComponent } from './user-report/user-report.component';
 import { UserFormComponent } from './user-form/user-form.component';
 import { MatStepperModule } from '@angular/material/stepper';
+import { PersonalInformationComponent } from './user-form/personal-information/personal-information.component';
+import { ContactInformationComponent } from './user-form/contact-information/contact-information.component';
+import { EmployeeInformationComponent } from './user-form/employee-information/employee-information.component';
 
 
 @NgModule({
@@ -47,7 +50,10 @@ import { MatStepperModule } from '@angular/material/stepper';
     UserRestoreFormComponent,
     UserHistoryComponent,
     UserReportComponent,
-    UserFormComponent
+    UserFormComponent,
+    PersonalInformationComponent,
+    ContactInformationComponent,
+    EmployeeInformationComponent
   ],
   providers: [UserService],
   imports: [
@@ -84,6 +90,7 @@ import { MatStepperModule } from '@angular/material/stepper';
     TranslateModule,
     MatSelectFilterModule,
     MatStepperModule,
+
   ]
 })
 export class UsersModule { }

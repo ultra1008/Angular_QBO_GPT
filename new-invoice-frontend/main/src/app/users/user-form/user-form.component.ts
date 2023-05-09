@@ -10,8 +10,11 @@ export class UserFormComponent {
   isLinear = false;
   HFormGroup1?: UntypedFormGroup;
   HFormGroup2?: UntypedFormGroup;
+  HFormGroup3?: UntypedFormGroup;
   VFormGroup1?: UntypedFormGroup;
   VFormGroup2?: UntypedFormGroup;
+  VFormGroup3?: UntypedFormGroup;
+
 
   breadscrums = [
     {
