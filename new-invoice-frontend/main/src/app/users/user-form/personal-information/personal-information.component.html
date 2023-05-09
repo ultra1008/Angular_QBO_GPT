@@ -1,0 +1,173 @@
+<form [formGroup]="userpersonalinfo">
+     <div class="main-cust-emp-from">
+          <div class="main-cust-emp-profile">
+               <div class="form-group">
+                    <div class="form-group">
+                         <div class="custom-file fileInputProfileWrap">
+                              <input type="file" class="fileInputProfile" #OpenFilebox
+                                   (change)="fileChangeEvent($event)">
+                              <div class="circular--landscape" (click)="openfilebox()">
+                                   <ng-container *ngIf="isImageSaved; else elseTemplate">
+                                        <img [src]="cardImageBase64" alt="" />
+                                   </ng-container>
+                                   <ng-template #elseTemplate>
+                                        <!-- <img *ngIf="userpersonalinfo.get('usergender').value != 'Female'"
+                                             src="{{defalut_image}}" class="circular--landscape img" alt="">
+                                        <img *ngIf="userpersonalinfo.get('usergender').value == 'Female'"
+                                             src="{{defalut_female_mage}}" class="circular--landscape img" alt=""> -->
+                                   </ng-template>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="padding-left-cust main-cust-emp-inputpersonal">
+               <div class="row mt-3">
+                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                         <mat-form-field class="example-full-width" appearance="outline">
+                              <mat-label>{{'USERS.ADD_EDIT.FIRST_NAME' | translate}}</mat-label>
+                              <input matInput formControlName="username" capitalOnly required>
+                         </mat-form-field>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                         <mat-form-field class="example-full-width" appearance="outline">
+                              <mat-label>{{'USERS.ADD_EDIT.M_NAME' | translate}}</mat-label>
+                              <input matInput formControlName="usermiddlename" capitalOnly>
+                         </mat-form-field>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                         <mat-form-field class="example-full-width" appearance="outline">
+                              <mat-label>{{'USERS.ADD_EDIT.L_NAME' | translate}}</mat-label>
+                              <input matInput class="input-capitalized-textfield" formControlName="userlastname"
+                                   required>
+                         </mat-form-field>
+                    </div>
+               </div>
+               <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                         <mat-form-field class="example-full-width" appearance="outline">
+                              <mat-label>{{'USERS.ADD_EDIT.EMAIL' | translate}}</mat-label>
+                              <input matInput formControlName="useremail" required>
+                         </mat-form-field>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                         <mat-form-field class="example-full-width" appearance="outline">
+                              <mat-label>{{'USERS.ADD_EDIT.TEMPORARY_PASSWORD' | translate}}</mat-label>
+                              <input matInput formControlName="password" required>
+                         </mat-form-field>
+                    </div>
+               </div>
+               <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                         <mat-form-field class="example-full-width" appearance="outline">
+                              <mat-label>{{'USERS.ADD_EDIT.SSN' | translate}}</mat-label>
+                              <input matInput formControlName="userssn" mask="000 00 0000" maxlength="11">
+                         </mat-form-field>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                         <mat-form-field class="example-full-width" appearance="outline">
+                              <mat-label>{{'USERS.ADD_EDIT.EMP_NUMBER' | translate}}</mat-label>
+                              <input matInput formControlName="user_no" type="number"
+                                   onkeypress="return String.fromCharCode(event.charCode).match(/[^0-9]/g) === null">
+                         </mat-form-field>
+                    </div>
+               </div>
+               <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                         <mat-form-field class="example-full-width" appearance="outline">
+                              <mat-label>{{'USERS.ADD_EDIT.USER_ROLE' | translate}}</mat-label>
+                              <mat-select formControlName="userroleId" class="dark-cust-color" required>
+                                   <!-- *ngFor="let db_role of db_roles"  [value]="db_role.role_id"  -->
+                                   <mat-option>
+                                        <!-- {{db_role.role_name}} -->
+                                   </mat-option>
+                              </mat-select>
+                         </mat-form-field>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                         <mat-form-field class="example-full-width" appearance="outline">
+                              <mat-label>{{'USERS.ADD_EDIT.GENDER' | translate}}</mat-label>
+                              <mat-select formControlName="usergender" class="dark-cust-color" required>
+                                   <!-- *ngFor="let gender of gender_array" [value]="gender.value" -->
+                                   <mat-option>
+                                        <!-- {{gender.tmp_lanaguage | translate}} -->
+                                   </mat-option>
+                              </mat-select>
+                         </mat-form-field>
+                    </div>
+               </div>
+               <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                         <mat-form-field appearance="outline" class="example-full-width">
+                              <mat-label>{{'USERS.ADD_EDIT.DATE_OF_BIRTH' | translate}}</mat-label>
+                              <!-- disabled -->
+                              <input matInput [max]="maxDate" [matDatepicker]="picker" formControlName="userdob">
+                              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                              <mat-datepicker #picker disabled="false"></mat-datepicker>
+                         </mat-form-field>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                         <mat-form-field class="example-full-width" appearance="outline">
+                              <mat-label>{{'USERS.ADD_EDIT.STATUS' | translate}}</mat-label>
+                              <mat-select formControlName="userstatus" class="dark-cust-color" required>
+                                   <!-- *ngFor="let status of statuss" [value]="status.value" -->
+                                   <mat-option>
+                                        <!-- {{status.tmp_lanaguage | translate }} -->
+                                   </mat-option>
+                              </mat-select>
+                         </mat-form-field>
+                    </div>
+               </div>
+               <div class="main-first-row">
+
+               </div>
+               <div>
+                    {{'Employee-form-Document' | translate }}
+                    <hr />
+                    <!-- <mat-chip-list> -->
+                    <mat-chip (click)="addDoc()" color="accent">+ {{'Employee-form-Doc' | translate }}
+                    </mat-chip>
+                    <!-- </mat-chip-list> -->
+                    <!-- <div *ngFor="let usersDocument of U_D.controls; let i = index">
+                         <div [formGroup]="usersDocument" class="main-cust-doc">
+                              <div class="inner-cust-doc">
+                                   <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>{{'Employee-form-Document-Type' | translate }}</mat-label>
+                                        <mat-select formControlName="userdocument_type_id"
+                                             (ngModelChange)="showHideExpirationDate($event,i)" class="dark-cust-color">
+                                            *ngFor="let Doc_type of db_Doc_types" [value]="Doc_type._id"
+                                             <mat-option>
+                                                 {{Doc_type.document_type_name}}
+                                             </mat-option>
+                                        </mat-select>
+                                   </mat-form-field>
+                              </div>
+                              <div class="inner-cust-doc padding-left-cust">
+                                   <div class="doc-upload-cust">
+                                        <input type="file" (change)="documentChangeEvent($event,i)">
+                                   </div>
+                              </div>
+                              <div class="inner-cust-doc padding-left-cust" *ngIf="showHideExpiration[i]">
+                                   <mat-form-field appearance="outline" class="example-full-width">
+                                        <mat-label>{{'Employee-form-Document-Expiration' | translate }}</mat-label>
+                                         disabled 
+                                        <input formControlName="userdocument_expire_date" matInput
+                                             [matDatepicker]="picker">
+                                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                        <mat-datepicker disabled="false" #picker></mat-datepicker>
+                                   </mat-form-field>
+                              </div>
+                         </div>
+                    </div> -->
+               </div>
+               <!-- <div class="">
+                 <div style="margin-top: 10px; margin-bottom: 10px;">
+                     <mat-slide-toggle size="large" color="primary" formControlName="allow_for_projects">
+                         {{'Team_Allow_employee' | translate}}
+                     </mat-slide-toggle>
+                 </div>
+             </div> -->
+          </div>
+     </div>
+</form>

@@ -80,7 +80,27 @@
             "STATUS": "Status",
             "ACTIONS": "Actions"
         },
-        "ADD_EDIT": {}
+        "ADD_EDIT": {
+            "FIRST_NAME": "First Name",
+            "M_NAME": "Middle Name",
+            "L_NAME": "Last Name",
+            "EMAIL": "Email",
+            "TEMPORARY_PASSWORD": "Temporary Password",
+            "SSN": "SSN",
+            "EMP_NUMBER": "Employee Number",
+            "USER_ROLE": "User Name",
+            "GENDER": "Gender",
+            "DATE_OF_BIRTH": "Date OF Birth",
+            "STATUS": "Status",
+            "USER_PHONE": "Phone",
+            "S_EMAIL": "Secondary Email",
+            "STREET1": "Street1",
+            "STREET2": "Street2",
+            "USER_CITY": "City",
+            "USER_STATE": "State",
+            "USER_ZIPCODE": "Zipcode",
+            "USER_COUNTRY": "Coyntry"
+        }
     },
     "SETTINGS": {
         "COMPANY_INFO_FORM": {

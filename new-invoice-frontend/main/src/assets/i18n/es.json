@@ -80,7 +80,19 @@
             "STATUS": "Estado",
             "ACTIONS": "Acciones"
         },
-        "ADD_EDIT": {}
+        "ADD_EDIT": {
+            "FIRST_NAME": "First Name",
+            "M_NAME": "Middle Name",
+            "L_NAME": "Last Name",
+            "EMAIL": "Email",
+            "TEMPORARY_PASSWORD": "Temporary Password",
+            "SSN": "SSN",
+            "EMP_NUMBER": "Employee Number",
+            "USER_ROLE": "User Name",
+            "GENDER": "Gender",
+            "DATE_OF_BIRTH": "Date OF Birth",
+            "STATUS": "Status"
+        }
     },
     "SETTINGS": {
         "VIEW": {
