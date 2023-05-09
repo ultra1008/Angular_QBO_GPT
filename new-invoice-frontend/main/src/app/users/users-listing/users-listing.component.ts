@@ -223,7 +223,9 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
     });
 
   }
-
+  addNewUser() {
+    this.router.navigate([WEB_ROUTES.USER_FORM]);
+  }
   editUser(user: User) {
     this.router.navigate([WEB_ROUTES.VENDOR_FORM], { queryParams: { _id: user._id } });
   }

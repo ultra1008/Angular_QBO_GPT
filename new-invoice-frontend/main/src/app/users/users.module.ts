@@ -36,6 +36,8 @@ import { UserRestoreFormComponent } from './user-restore-form/user-restore-form.
 import { MatSelectFilterModule } from 'mat-select-filter';
 import { UserHistoryComponent } from './user-history/user-history.component';
 import { UserReportComponent } from './user-report/user-report.component';
+import { UserFormComponent } from './user-form/user-form.component';
+import { MatStepperModule } from '@angular/material/stepper';
 
 
 @NgModule({
@@ -44,7 +46,8 @@ import { UserReportComponent } from './user-report/user-report.component';
     UserGridComponent,
     UserRestoreFormComponent,
     UserHistoryComponent,
-    UserReportComponent
+    UserReportComponent,
+    UserFormComponent
   ],
   providers: [UserService],
   imports: [
@@ -79,7 +82,8 @@ import { UserReportComponent } from './user-report/user-report.component';
     MatChipsModule,
     MatListModule,
     TranslateModule,
-    MatSelectFilterModule
+    MatSelectFilterModule,
+    MatStepperModule,
   ]
 })
 export class UsersModule { }

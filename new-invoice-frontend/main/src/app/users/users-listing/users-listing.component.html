@@ -68,6 +68,13 @@
                                         </button>
                                     </div>
                                 </li>
+                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                                    <div class="m-l-10" matTooltip="ADD">
+                                        <button mat-mini-fab color="primary" (click)="addNewUser()">
+                                            <mat-icon class="col-white">add</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
 
                                 <!-- <li class="tbl-header-btn" *ngIf="isDelete === 0">
                                     <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="MULTI ARCHIVE">
