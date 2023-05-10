@@ -24,7 +24,94 @@
                             </ul>
                         </div>
                     </div>
-
+                    <div class="body">
+                        <form class="register-form m-4" [formGroup]="companyinfoForm">
+                            <div class="row mt-2">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field appearance="outline" class="example-full-width">
+                                        <mat-label>SMTP Server</mat-label>
+                                        <input matInput formControlName="tenant_smtp_server"
+                                            class="input-capitalized-textfield"
+                                            placeholder="SMTP Server">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field appearance="outline" class="example-full-width">
+                                        <mat-label>SMTP Username</mat-label>
+                                        <input matInput formControlName="tenant_smtp_username"
+                                            class="input-capitalized-textfield"
+                                            placeholder="SMTP Username">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field appearance="outline" class="example-full-width">
+                                        <mat-label>SMTP Port</mat-label>
+                                        <input matInput
+                                            onkeypress="return String.fromCharCode(event.charCode).match(/[^0-9]/g) === null"
+                                            formControlName="tenant_smtp_port" class="input-capitalized-textfield"
+                                            placeholder="SMTP Port">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field appearance="outline" class="example-full-width">
+                                        <mat-label>SMTP Server Timeout</mat-label>
+                                        <input matInput
+                                            onkeypress="return String.fromCharCode(event.charCode).match(/[^0-9]/g) === null"
+                                            formControlName="tenant_smtp_timeout" class="input-capitalized-textfield"
+                                            placeholder="SMTP Server Timeout">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field appearance="outline" class="example-full-width">
+                                        <mat-label>SMTP Password</mat-label>
+                                        <input type="password" matInput formControlName="tenant_smtp_password"
+                                            class="input-capitalized-textfield"
+                                            placeholder="SMTP Password">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field appearance="outline" class="example-full-width">
+                                        <mat-label>Active Transport Layer Security(TLS)
+                                        </mat-label>
+                                        <mat-select formControlName="tenant_smtp_security" class="dark-cust-color" required>
+                                            <mat-option *ngFor="let lts of LTS_ACTIVE" [value]="lts.value">
+                                                {{lts.viewValue}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field appearance="outline" class="example-full-width">
+                                        <mat-label>Auto Eail reply to-email</mat-label>
+                                        <input matInput formControlName="tenant_smtp_reply_to_mail"
+                                            class="input-capitalized-textfield"
+                                            placeholder="Auto Eail reply to-email">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                    <button type="button" class="btn-space" mat-raised-button color="warn"
+                                    (click)="confirmExit()">Verify</button>
+                                    <button  mat-raised-button color="primary"
+                                        [disabled]="!companyinfoForm.valid" (click)="saveVendor()">{{'COMMON.ACTIONS.SAVE'|
+                                        translate}}</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

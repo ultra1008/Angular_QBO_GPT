@@ -80,6 +80,12 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     return data;
   }
 
+  async getCompanysmtp() {
+    const data = await this.httpCall
+      .httpGetCall(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP)
+      .toPromise();
+    return data;
+  }
   //   async getCompanyActiveSince() {
   //     const data = await this.httpCall
   //       .httpGetCall(httpversion.V1 + httproutes.GET_COMPNAY_ACTIVE_SINEC)
@@ -101,6 +107,25 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     const data = await this.httpCall
       .httpPostCall(
         httpversion.PORTAL_V1 + httproutes.SAVE_MAILBOX,
+        requestObject
+      )
+      .toPromise();
+    return data;
+  }
+
+  async getOneMailBox(id: string) {
+    const data = await this.httpCall
+      .httpPostCall(httpversion.PORTAL_V1 + httproutes.GET_ONE_MAILBOX, {
+        _id: id,
+      })
+      .toPromise();
+    return data;
+  }
+
+  async deleteMailbox(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.DELETE_MAILBOX,
         requestObject
       )
       .toPromise();

@@ -17,4 +17,20 @@ export const configData = {
     { name: 'Español', value: 'es' },
   ],
   PRIME_VENDOR_TYPE: 'Prime',
+  MAILBOX_MONITOR_TIME: [
+    { time: '5 minutes', value: 'Every 5 min', cron_time: '*/5 * * * *' },
+    { time: '10 minutes', value: 'Every 10 min', cron_time: '*/10 * * * *' },
+    { time: '15 minutes', value: 'Every 15 min', cron_time: '*/15 * * * *' },
+    { time: '20 minutes', value: 'Every 20 min', cron_time: '*/20 * * * *' },
+    { time: '30 minutes', value: 'Every 30 min', cron_time: '*/30 * * * *' },
+    { time: '1 hours', value: 'Every 1 hours', cron_time: '*/60 * * * *' },
+    { time: '4 hours', value: 'Every 4 hours', cron_time: '0 */4 * * *' },
+    { time: '8 hours', value: 'Every 8 hours', cron_time: '0 */8 * * *' },
+    { time: '12 hours', value: 'Every 12 hours', cron_time: '0 */12 * * *' },
+    { time: '24 hours', value: 'Every 24 hours', cron_time: '0 */24 * * *' },
+  ],
+  LTS_ACTIVE: [
+    { value: 'Yes', viewValue: 'Yes' },
+    { value: 'No', viewValue: 'No' },
+  ],
 };

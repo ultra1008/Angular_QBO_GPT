@@ -45,7 +45,7 @@
             "ADDRESS": "Address",
             "STATUS": "Status",
             "ATTACHMENT": "Attachment",
-            "ACTIONS": "Actions"
+            "ACTIONS": "Action"
         },
         "ADD_EDIT": {
             "ADD_TITLE": "Add Vendor",
@@ -141,7 +141,19 @@
             "OTHER_SETTINGS": "Other Settings",
             "SECURITY": "Security",
             "COST_CODE": "Cost Code",
-            "DOCUMENT_VIEW": "Document View"
+            "DOCUMENT_VIEW": "Document View",
+            "MAIL_BOX": {
+                "HEADER": "Mailboxes to Monitor",
+                "EMAIL": "Email",
+                "IMAP": "IMAP",
+                "PORT": "Port",
+                "TIME": "Time",
+                "ACTIONS": "Actions",
+                "CONFIRMATION_DIALOG": {
+                    "ARCHIVE": "Are you sure you want to archive this mailbox?",
+                    "RESTORE": "Are you sure you want to restore this mailbox?"
+                }
+            }
         },
         "EDIT": {},
         "DOCUMENT_VIEW": {
