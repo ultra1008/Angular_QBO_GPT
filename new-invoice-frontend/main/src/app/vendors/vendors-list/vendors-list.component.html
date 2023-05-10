@@ -166,10 +166,12 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_status">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.STATUS' |
+                                    <mat-header-cell class="psl-1" [ngClass]="'tbl-col-width-per-7'" *matHeaderCellDef
+                                        mat-sort-header>{{'VENDOR.TABLE.STATUS' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
+                                    <mat-cell mat-cell class=" psl-1 tbl-col-width-per-7" *matCellDef="let row"
+                                        (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Status:</span>
                                         <div *ngIf="row.vendor_status===1" (click)="updateStatus(row)">
                                             <span class="badge badge-solid-green">
@@ -182,10 +184,12 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_attachment">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.ATTACHMENT' |
+                                    <mat-header-cell class="psl-1" [ngClass]="'tbl-col-width-per-7'" *matHeaderCellDef
+                                        mat-sort-header>{{'VENDOR.TABLE.ATTACHMENT' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
+                                    <mat-cell class=" psl-6 tbl-col-width-per-7" *matCellDef="let row"
+                                        (contextmenu)="onContextMenu($event, row)">
                                         <span class="truncate-text"><span class="mobile-label">Attachment:</span>
                                             <div *ngIf="row.vendor_attachment.length > 0">
                                                 <i class="fas fa-paperclip" style="color:grey"
@@ -195,11 +199,12 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_from">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-7'" *matHeaderCellDef
+                                        mat-sort-header>
                                         <img src='assets/images/icons/quickbooks.svg' alt="" height="25" width="25" />
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
-                                        matTooltip="{{row.isVendorfromQBO}}">
+                                    <mat-cell class=" psl-3 tbl-col-width-per-7" *matCellDef="let row"
+                                        (contextmenu)="onContextMenu($event, row)" matTooltip="{{row.isVendorfromQBO}}">
                                         <span class="truncate-text"><span class="mobile-label">
                                                 <img src='assets/images/icons/quickbooks.svg' alt="" height="25"
                                                     width="25" />:</span>
@@ -215,10 +220,11 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="actions">
-                                    <mat-header-cell class="psl-3" *matHeaderCellDef>{{'VENDOR.TABLE.ACTIONS' |
+                                    <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-7'" *matHeaderCellDef>
+                                        {{'VENDOR.TABLE.ACTIONS' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row; let i=index;" class="psl-3">
+                                    <mat-cell class=" psl-3 tbl-col-width-per-7" *matCellDef="let row; let i=index;">
                                         <button mat-icon-button [matMenuTriggerFor]="menu"
                                             (click)="$event.stopPropagation()">
                                             <mat-icon>more_vert</mat-icon>

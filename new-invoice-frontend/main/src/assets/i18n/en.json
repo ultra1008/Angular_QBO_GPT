@@ -45,7 +45,7 @@
             "ADDRESS": "Address",
             "STATUS": "Status",
             "ATTACHMENT": "Attachment",
-            "ACTIONS": "Actions"
+            "ACTIONS": "Action"
         },
         "ADD_EDIT": {
             "ADD_TITLE": "Add Vendor",

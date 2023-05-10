@@ -45,7 +45,7 @@
             "ADDRESS": "Dirección",
             "STATUS": "Estado",
             "ATTACHMENT": "Archivo adjunto",
-            "ACTIONS": "Acciones"
+            "ACTIONS": "Acción"
         },
         "ADD_EDIT": {
             "ADD_TITLE": "Agregar vendedor",
