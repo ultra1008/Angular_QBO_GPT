@@ -17,4 +17,9 @@ export const configData = {
     { name: 'Español', value: 'es' },
   ],
   PRIME_VENDOR_TYPE: 'Prime',
+  gender: [{ value: "Male", tmp_lanaguage: "COMMON.GENDER_ALL.Male_All" },
+  { value: "Female", tmp_lanaguage: "COMMON.GENDER_ALL.Female_All" }],
+  Status: [
+    { value: 1, viewValue: "Active", tmp_lanaguage: "COMMON.STATUS.ACTIVE" },
+    { value: 2, viewValue: "Inactive", tmp_lanaguage: "COMMON.STATUS.INACTIVE" }],
 };

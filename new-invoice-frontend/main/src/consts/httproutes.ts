@@ -47,6 +47,13 @@ export enum httproutes {
   USER_HISTORY = 'getuserhistory',
   USER_REPORT = 'getallemployeereport',
   TEAM_HISTORY = 'getuserhistory',
+  GET_ALL_USER = 'getalluser',
+  GET_LOCATION = 'getalllocation',
+  GET_JOB_TITLE = 'getAlljobtitle',
+  GET_JOB_TYPE = 'getAlljobtype',
+  GET_LANGUAGE = "getlanguage",
+  GET_DEPARTMENT = "getalldepartment",
+  SAVE_USER = "saveemployee",
 
   //Mail box
   MAILBOX_DATA_TABLE = 'getMailboxMonitorForTable',

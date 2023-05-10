@@ -2,8 +2,11 @@ import { Injectable } from '@angular/core';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { HttpCall } from '../services/httpcall.service';
 import { UnsubscribeOnDestroyAdapter } from '../shared/UnsubscribeOnDestroyAdapter';
-import { AdvanceTable, User } from './user.model';
+import { User } from './user.model';
 import { BehaviorSubject } from 'rxjs';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { HttpHeaders } from '@angular/common/http';
+
 
 @Injectable()
 export class UserService extends UnsubscribeOnDestroyAdapter {
@@ -44,6 +47,34 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
     const data = await this.httpCall.httpGetCall(httpversion.PORTAL_V1 + httproutes.USER_SETTING_ROLES_ALL).toPromise();
     return data;
   }
+  async getManeger() {
+    const data = await this.httpCall.httpGetCall(httpversion.PORTAL_V1 + httproutes.GET_ALL_USER).toPromise();
+    return data;
+  }
+  async getSupervisor() {
+    const data = await this.httpCall.httpGetCall(httpversion.PORTAL_V1 + httproutes.GET_ALL_USER).toPromise();
+    return data;
+  }
+  async getLocation() {
+    const data = await this.httpCall.httpGetCall(httpversion.PORTAL_V1 + httproutes.GET_LOCATION).toPromise();
+    return data;
+  }
+  async getJobTitle() {
+    const data = await this.httpCall.httpGetCall(httpversion.PORTAL_V1 + httproutes.GET_JOB_TITLE).toPromise();
+    return data;
+  }
+  async getAlljobtype() {
+    const data = await this.httpCall.httpGetCall(httpversion.PORTAL_V1 + httproutes.GET_JOB_TYPE).toPromise();
+    return data;
+  }
+  async getLanguage() {
+    const data = await this.httpCall.httpGetCall(httpversion.PORTAL_V1 + httproutes.GET_LANGUAGE).toPromise();
+    return data;
+  }
+  async getDepartment() {
+    const data = await this.httpCall.httpGetCall(httpversion.PORTAL_V1 + httproutes.GET_DEPARTMENT).toPromise();
+    return data;
+  }
   async restoreUser(requestObject: any) {
     const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.USER_RECOVER, requestObject).toPromise();
     return data;
@@ -55,6 +86,16 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
   }
   async sendUserReport(requestObject: any) {
     const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.USER_REPORT, requestObject).toPromise();
+    return data;
+  }
+  async saveUsers(requestObject: any) {
+    console.log("requestObject", requestObject);
+    const token = localStorage.getItem(localstorageconstants.INVOICE_TOKEN);
+    let portal_language = localStorage.getItem(localstorageconstants.LANGUAGE);
+    let headers: any = new HttpHeaders();
+    headers = headers.set('Authorization', token);
+    headers = headers.set('language', portal_language);
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.SAVE_USER, requestObject).toPromise();
     return data;
   }
 

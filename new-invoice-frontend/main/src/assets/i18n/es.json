@@ -29,6 +29,10 @@
         "STATUS": {
             "ACTIVE": "Activo",
             "INACTIVE": "Inactivo"
+        },
+        "GENDER_ALL": {
+            "Male_All": "Masculino",
+            "Female_All": "Femenino"
         }
     },
     "VENDOR": {
@@ -98,10 +102,18 @@
             "TEMPORARY_PASSWORD": "Temporary Password",
             "SSN": "SSN",
             "EMP_NUMBER": "Employee Number",
-            "USER_ROLE": "User Name",
+            "USER_ROLE": "User Role",
             "GENDER": "Gender",
             "DATE_OF_BIRTH": "Date OF Birth",
-            "STATUS": "Status"
+            "STATUS": "Status",
+            "USER_PHONE": "Phone",
+            "S_EMAIL": "Secondary Email",
+            "STREET1": "Street1",
+            "STREET2": "Street2",
+            "USER_CITY": "City",
+            "USER_STATE": "State",
+            "USER_ZIPCODE": "Zipcode",
+            "USER_COUNTRY": "Coyntry"
         }
     },
     "SETTINGS": {

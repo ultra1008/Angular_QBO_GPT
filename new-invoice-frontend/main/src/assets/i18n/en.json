@@ -29,6 +29,10 @@
         "STATUS": {
             "ACTIVE": "Active",
             "INACTIVE": "Inactive"
+        },
+        "GENDER_ALL": {
+            "Male_All": "Male",
+            "Female_All": "Female"
         }
     },
     "VENDOR": {
@@ -98,7 +102,7 @@
             "TEMPORARY_PASSWORD": "Temporary Password",
             "SSN": "SSN",
             "EMP_NUMBER": "Employee Number",
-            "USER_ROLE": "User Name",
+            "USER_ROLE": "User Role",
             "GENDER": "Gender",
             "DATE_OF_BIRTH": "Date OF Birth",
             "STATUS": "Status",
