@@ -14,6 +14,7 @@ import { SmtpComponent } from './smtp/smtp.component';
 import { UsageComponent } from './usage/usage.component';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { CompanyInfoFormComponent } from './company-info-form/company-info-form.component';
+import { MailboxFormComponent } from './mailbox/mailbox-form/mailbox-form.component';
 
 const routes: Routes = [
   {
@@ -23,6 +24,10 @@ const routes: Routes = [
   {
     path: 'mailbox',
     component: MailboxComponent,
+  },
+  {
+    path: 'mailbox-form',
+    component: MailboxFormComponent,
   },
   {
     path: 'employeesettings',

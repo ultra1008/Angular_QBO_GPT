@@ -35,18 +35,6 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     return this.dialogData;
   }
   /** CRUD METHODS */
-  getAllAdvanceTables(): void {
-    this.subs.sink = this.httpCall.httpGetCall(this.API_URL).subscribe({
-      next: (data: AdvanceTable[]) => {
-        this.isTblLoading = false;
-        this.dataChange.next(data);
-      },
-      error: (error: HttpErrorResponse) => {
-        this.isTblLoading = false;
-        console.log(error.name + ' ' + error.message);
-      },
-    });
-  }
 
   async getAllMailboxTable(is_delete: number): Promise<void> {
     const data = await this.httpCall
@@ -80,17 +68,60 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     return data;
   }
 
-  //   async getCompanyActiveSince() {
-  //     const data = await this.httpCall
-  //       .httpGetCall(httpversion.V1 + httproutes.GET_COMPNAY_ACTIVE_SINEC)
-  //       .toPromise();
-  //     return data;
-  //   }
+  async getCompanysmtp() {
+    const data = await this.httpCall
+      .httpGetCall(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP)
+      .toPromise();
+    return data;
+  }
+
+  async VerifySmtp(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(httpversion.V1 + httproutes.VERIFY_SMTP, requestObject)
+      .toPromise();
+    return data;
+  }
+
+  async SaveSmtp(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(httpversion.V1 + httproutes.SAVE_SMTP, requestObject)
+      .toPromise();
+    return data;
+  }
 
   async saveCompanyInfo(requestObject: any) {
     const data = await this.httpCall
       .httpPostCall(
         httpversion.V1 + httproutes.SAVE_COMPNAY_INFO,
+        requestObject
+      )
+      .toPromise();
+    return data;
+  }
+
+  async AddMailbox(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.SAVE_MAILBOX,
+        requestObject
+      )
+      .toPromise();
+    return data;
+  }
+
+  async getOneMailBox(id: string) {
+    const data = await this.httpCall
+      .httpPostCall(httpversion.PORTAL_V1 + httproutes.GET_ONE_MAILBOX, {
+        _id: id,
+      })
+      .toPromise();
+    return data;
+  }
+
+  async deleteMailbox(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.DELETE_MAILBOX,
         requestObject
       )
       .toPromise();

@@ -158,10 +158,13 @@ module.exports.deleteMailboxMonitor = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
     if (decodedToken) {
+        var requestObject = req.body;
+
+
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = {
-                is_delete: 1,
+                is_delete: requestObject.is_delete,
                 updated_by: decodedToken.UserData._id,
                 updated_at: Math.round(new Date().getTime() / 1000),
             };
@@ -172,9 +175,16 @@ module.exports.deleteMailboxMonitor = async function (req, res) {
                 if (isDelete == 0) {
                     res.send({ message: translator.getStr('NoDataWithId'), status: false });
                 } else {
-                    res.send({ message: translator.getStr('MailboxMonitorDeleted'), status: true });
+                    let message = '';
+                    if (requestObject.is_delete == 0) {
+                        message = 'MailboxMonitor restored successfully.';
+                    } else {
+                        message = 'MailboxMonitor archived successfully.';
+                    }
+                    res.send({ message, status: true, data: deleteObject });
                 }
             } else {
+
                 console.log(e);
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
             }
@@ -204,6 +214,7 @@ module.exports.getMailboxMonitorForTable = async function (req, res) {
             ];
             let get_shift = await mailboxMonitorCollection.aggregate(aggregateQuery);
             res.send(get_shift);
+
         } catch (e) {
             res.send([]);
         } finally {

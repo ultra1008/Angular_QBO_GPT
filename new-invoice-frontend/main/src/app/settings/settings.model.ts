@@ -50,7 +50,7 @@ export class settingTable {
 }
 
 export class AdvanceTable {
-  id: number;
+  _id: number;
   email: string;
   imap: string;
   port: number;
@@ -58,7 +58,7 @@ export class AdvanceTable {
 
   constructor(advanceTable: AdvanceTable) {
     {
-      this.id = advanceTable.id || this.getRandomID();
+      this._id = advanceTable._id || this.getRandomID();
       this.email = advanceTable.email || '';
       this.imap = advanceTable.imap || '';
       this.port = advanceTable.port;

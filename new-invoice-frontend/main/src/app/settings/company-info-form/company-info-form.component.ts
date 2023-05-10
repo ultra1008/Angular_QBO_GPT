@@ -217,6 +217,7 @@ export class CompanyInfoFormComponent {
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
+        this.router.navigate(['/settings']);
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');
@@ -329,7 +330,7 @@ export class CompanyInfoFormComponent {
             // alert form invalidation
             showNotification(
               this.snackBar,
-              'Please complete the vendor form before submitting.',
+              'Please complete the company inforamtion form before submitting.',
               'error'
             );
           }
@@ -337,7 +338,7 @@ export class CompanyInfoFormComponent {
           // ;
         } else {
           setTimeout(() => {
-            this.router.navigate([WEB_ROUTES.VENDOR]);
+            this.router.navigate(['/settings']);
           }, 100);
         }
       });

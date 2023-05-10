@@ -49,7 +49,7 @@
             "ADDRESS": "Dirección",
             "STATUS": "Estado",
             "ATTACHMENT": "Archivo adjunto",
-            "ACTIONS": "Acciones"
+            "ACTIONS": "Acción"
         },
         "ADD_EDIT": {
             "ADD_TITLE": "Agregar vendedor",
@@ -145,7 +145,19 @@
             "OTHER_SETTINGS": "Otras configuraciones",
             "SECURITY": "Seguridad",
             "COST_CODE": "Código de costo",
-            "DOCUMENT_VIEW": "Vista de documento"
+            "DOCUMENT_VIEW": "Vista de documento",
+            "MAIL_BOX": {
+                "HEADER": "Buzones a monitorear",
+                "EMAIL": "Correo electrónico",
+                "IMAP": "IMAP",
+                "PORT": "Puerto",
+                "TIME": "Tiempo",
+                "ACTIONS": "Acciones",
+                "CONFIRMATION_DIALOG": {
+                    "ARCHIVE": "¿Estás seguro de que quieres archivar este buzón?",
+                    "RESTORE": "¿Estás seguro de que quieres restaurar este buzón?"
+                }
+            }
         },
         "EDIT": {},
         "DOCUMENT_VIEW": {

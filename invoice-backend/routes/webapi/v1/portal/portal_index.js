@@ -403,4 +403,13 @@ let invoiceProgressValidation = require("./invoice_progress/invoiceProgressValid
 router.get('/webapi/v1/portal/getallinvoiceprogress', invoiceProgressController.getAllInvoiceProgress);
 router.get('/webapi/v1/portal/getinvoiceprogress/:companycode/:userid', invoiceProgressController.getInvoiceProgress);
 
+
+
+let vendor_typeController = require('./vendor_type/vendor_typeController');
+let vendor_typeValidation = require('./vendor_type/vendor_typeValidation');
+
+router.post('/webapi/v1/portal/savevendortype', common.checkTokenExistOrNot, vendor_typeValidation.savevendortype, vendor_typeController.savevendortype);
+router.get('/webapi/v1/portal/getvendortype', common.checkTokenExistOrNot, vendor_typeController.getvendortype);
+router.post('/webapi/v1/portal/deletevendortype', common.checkTokenExistOrNot, vendor_typeValidation.deletevendortype, vendor_typeController.deletevendortype);
+
 module.exports = router;

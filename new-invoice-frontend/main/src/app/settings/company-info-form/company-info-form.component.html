@@ -114,7 +114,7 @@
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>{{'SETTINGS.VIEW.NIGP_CODE' | translate}}</mat-label>
                                         <mat-select formControlName="companydivision" #csiDivisionsSelect multiple required
-                                        placeholder="{{'VendorForm_Vendor_NIGP_Code' | translate}}">
+                                        placeholder="{{'SETTINGS.VIEW.NIGP_CODE' | translate}}">
                                         <mat-select-filter [placeholder]="'Filter'" [displayMember]="'name'"
                                             *ngIf="csiDivisionsSelect.focused" [array]="variablesCSIDivisions"
                                             (filteredReturn)="csiDivisions =$event">

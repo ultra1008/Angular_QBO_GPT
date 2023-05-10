@@ -57,4 +57,12 @@ export enum httproutes {
 
   //Mail box
   MAILBOX_DATA_TABLE = 'getMailboxMonitorForTable',
+  SAVE_MAILBOX = 'savemailboxmonitor',
+  GET_ONE_MAILBOX = 'getonemailboxmonitor',
+  DELETE_MAILBOX = 'deletemailboxmonitor',
+
+  //SMTP
+  GET_COMPNAY_SMTP = 'compnaysmtp',
+  VERIFY_SMTP = 'compnayverifysmtp',
+  SAVE_SMTP = 'compnayupdatesmtp',
 }
