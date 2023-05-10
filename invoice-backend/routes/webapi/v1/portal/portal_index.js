@@ -405,11 +405,11 @@ router.get('/webapi/v1/portal/getinvoiceprogress/:companycode/:userid', invoiceP
 
 
 
-let vender_typeController = require('./vender_type/vender_typeController');
-let vender_typeValidation = require('./vender_type/vender_typeValidation');
+let vendor_typeController = require('./vendor_type/vendor_typeController');
+let vendor_typeValidation = require('./vendor_type/vendor_typeValidation');
 
-router.post('/webapi/v1/portal/savevendertype', common.checkTokenExistOrNot, vender_typeValidation.savevendertype, vender_typeController.savevendertype);
-router.get('/webapi/v1/portal/getvendertype', common.checkTokenExistOrNot, vender_typeController.getvendertype);
-router.post('/webapi/v1/portal/deletevendertype', common.checkTokenExistOrNot, vender_typeValidation.deletevendertype, vender_typeController.deletevendertype);
+router.post('/webapi/v1/portal/savevendortype', common.checkTokenExistOrNot, vendor_typeValidation.savevendortype, vendor_typeController.savevendortype);
+router.get('/webapi/v1/portal/getvendortype', common.checkTokenExistOrNot, vendor_typeController.getvendortype);
+router.post('/webapi/v1/portal/deletevendortype', common.checkTokenExistOrNot, vendor_typeValidation.deletevendortype, vendor_typeController.deletevendortype);
 
 module.exports = router;

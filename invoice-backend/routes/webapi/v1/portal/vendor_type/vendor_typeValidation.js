@@ -1,6 +1,6 @@
 var validator = require("../../../../../controller/common/validationforrequest");
 
-const savevendertype = (req, res, next) => {
+const savevendortype = (req, res, next) => {
     const validationRule = {
         "name": "required"
     };
@@ -17,7 +17,7 @@ const savevendertype = (req, res, next) => {
     });
 };
 
-const deletevendertype = (req, res, next) => {
+const deletevendortype = (req, res, next) => {
     const validationRule = {
         "_id": "required"
     };
@@ -33,4 +33,4 @@ const deletevendertype = (req, res, next) => {
         }
     });
 };
-module.exports = { savevendertype, deletevendertype };
+module.exports = { savevendortype, deletevendortype };
