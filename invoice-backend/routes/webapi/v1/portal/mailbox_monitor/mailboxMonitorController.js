@@ -177,9 +177,9 @@ module.exports.deleteMailboxMonitor = async function (req, res) {
                 } else {
                     let message = '';
                     if (requestObject.is_delete == 0) {
-                        message = 'Document restored successfully.';
+                        message = 'MailboxMonitor restored successfully.';
                     } else {
-                        message = 'Document archived successfully.';
+                        message = 'MailboxMonitor archived successfully.';
                     }
                     res.send({ message, status: true, data: deleteObject });
                 }
