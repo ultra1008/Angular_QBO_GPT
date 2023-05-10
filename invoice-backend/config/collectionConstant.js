@@ -99,5 +99,5 @@ module.exports = {
 
     MANAGEMENT_INVOICE: "invoices",
     MANAGEMENT_PO: "project_po",
-    VENDER_TYPE: "vender_types"
+    VENDOR_TYPE: "vendor_types"
 };
