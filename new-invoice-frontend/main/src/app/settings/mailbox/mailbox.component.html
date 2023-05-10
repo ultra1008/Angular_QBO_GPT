@@ -1,254 +1,194 @@
 <section class="content">
-    <div class="content-block"> 
-      <div class="m-4"></div>
-      <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-          <div class="card">
-            <div class="materialTableHeader">
-              <div class="left">
-                <ul class="header-buttons-left ms-0">
-                  <li class="tbl-title">
-                    <h2>{{'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOX.HEADER' | translate}}</h2>
-                  </li>
-                  <li class="tbl-search-box">
-                    <label for="search-input"><i class="material-icons search-icon">search</i></label>
-                    <input placeholder="Search" type="text" #filter class="browser-default search-field"
-                      aria-label="Search box">
-                  </li>
-                </ul>
-              </div>
-              <div class="right">
-                <ul class="tbl-export-btn">
-                  <li class="tbl-header-btn">
-                    <div class="m-l-10" matTooltip="REFRESH" *ngIf="isDelete === 0">
-                      <button mat-mini-fab color="primary" (click)="refresh()">
-                        <mat-icon class="col-white">refresh</mat-icon>
-                      </button>
-                    </div>
-                  </li>
-                  <li class="tbl-header-btn">
-                    <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="DELETE">
-                      <button mat-mini-fab color="primary" (click)="removeSelectedRows()">
-                        <mat-icon class="col-white">delete
-                        </mat-icon>
-                      </button>
-                    </div>
-                  </li>
-                  <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                    <div class="m-l-10"matTooltip="ARCHIVE">
-                      <button mat-mini-fab color="primary" (click)="gotoArchiveUnarchive()">
-                        <mat-icon class="col-white">archive
-                        </mat-icon>
-                      </button>
-                    </div>
-                  </li>
-                  <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                    <div class="m-l-10" matTooltip="ADD">
-                      <button mat-mini-fab color="primary" (click)="addNew()">
-                        <mat-icon class="col-white">add</mat-icon>
-                      </button>
-                    </div>
-                  </li>
-                  <li class="tbl-header-btn" *ngIf="isDelete === 1">
-                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' |
-                        translate}}">
-                        <button mat-mini-fab color="warn" (click)="gotoArchiveUnarchive()">
-                            <mat-icon class="col-white">close </mat-icon>
-                        </button>
-                    </div>
+  <div class="content-block">
+    <div class="m-4"></div>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="materialTableHeader">
+            <div class="left">
+              <ul class="header-buttons-left ms-0">
+                <li class="tbl-title">
+                  <h2>{{'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOX.HEADER' | translate}}</h2>
                 </li>
-                  <!-- <li>
-                    <div class="export-button m-l-10" matTooltip="XLSX">
-                      <img src="assets/images/icons/xlsx.png" alt="" (click)="exportExcel()" />
-                    </div>
-                  </li> -->
-                </ul>
-              </div>
+                <li class="tbl-search-box">
+                  <label for="search-input"><i class="material-icons search-icon">search</i></label>
+                  <input placeholder="Search" type="text" #filter class="browser-default search-field"
+                    aria-label="Search box">
+                </li>
+              </ul>
             </div>
-            <div class="body overflow-auto">
-              <div class="table-responsive">
-                <table mat-table #table [dataSource]="dataSource" matSort class="table mat-cell">
-                  <!-- Checkbox Column -->
-                  <!-- <ng-container matColumnDef="select">
-                    <mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-6'">
-                      <mat-checkbox (change)="$event ? masterToggle() : null"
-                        [checked]="selection.hasValue() && isAllSelected()"
-                        [indeterminate]="selection.hasValue() && !isAllSelected()" [ngClass]="'tbl-checkbox'">
-                      </mat-checkbox>
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let row" [ngClass]="'tbl-col-width-per-6'">
-                      <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                        [checked]="selection.isSelected(row)" [ngClass]="'tbl-checkbox'">
-                      </mat-checkbox>
-                    </mat-cell>
-                  </ng-container> -->
-                  <!-- ID Column -->
-                  <!-- <ng-container matColumnDef="id">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
-                    <mat-cell *matCellDef="let row">{{row.id}}</mat-cell>
-                  </ng-container> -->
-                  <!-- <ng-container matColumnDef="img">
-                    <mat-header-cell mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-7'"> Image
-                    </mat-header-cell>
-                    <mat-cell mat-cell *matCellDef="let row" class="table-img tbl-col-width-per-7"><span
-                        class="mobile-label">Image:</span>
-                      <img [src]="row.img" />
-                    </mat-cell>
-                  </ng-container> -->
-                  <!-- <ng-container matColumnDef="fName">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>First Name
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                      <span class="mobile-label">First Name:</span>{{row.fName}}</mat-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="lName">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>Last Name
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                      <span class="mobile-label">Last Name:</span>{{row.lName}}</mat-cell>
-                  </ng-container> -->
-                  <ng-container matColumnDef="email">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOX.EMAIL' | translate}}</mat-header-cell>
-                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                      <span class="mobile-label">Email:</span> {{row.email}}</mat-cell>
-                  </ng-container>
-                  <!-- <ng-container matColumnDef="gender">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> Gender
-                    </mat-header-cell>
-                    <mat-cell mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                      <span class="mobile-label">Gender:</span>
-                      <div *ngIf="row.gender==='male'">
-                        <span class="badge badge-solid-green">
-                          {{row.gender}}</span>
-                      </div>
-                      <div *ngIf="row.gender==='female'">
-                        <span class="badge badge-solid-purple">
-                          {{row.gender}}</span>
-                      </div>
-                    </mat-cell> -->
-                  <!-- </ng-container> -->
-                  <ng-container matColumnDef="imap">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOX.IMAP' | translate}}</mat-header-cell>
-                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                      <span class="mobile-label">IMAP:</span> {{row.imap }}
-                    </mat-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="port">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOX.PORT' | translate}}</mat-header-cell>
-                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                      <span class="mobile-label">Port:</span> {{row.port}}</mat-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="time">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOX.TIME' | translate}}
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
-                      matTooltip="{{row.address}}">
-                      <span class="truncate-text"><span class="mobile-label">Time:</span> {{row.time}}</span>
-                    </mat-cell>
-                  </ng-container>
-                  <!-- <ng-container matColumnDef="country">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>Country</mat-header-cell>
-                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                      <span class="mobile-label">Country:</span> {{row.country}}</mat-cell>
-                  </ng-container> -->
-                  <!-- actions -->
-                  <ng-container matColumnDef="actions">
-                    <mat-header-cell class="psl-3" *matHeaderCellDef>{{'VENDOR.TABLE.ACTIONS' |
-                        translate}}
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let row; let i=index;" class="psl-3">
-                        <button mat-icon-button [matMenuTriggerFor]="menu"
-                            (click)="$event.stopPropagation()">
-                            <mat-icon>more_vert</mat-icon>
-                        </button>
-                        <mat-menu #menu="matMenu">
-                            <button mat-menu-item  *ngIf="isDelete === 0" (click)="editMailbox(row)">
-                                <i class="material-icons-two-tone align-middle msr-2">create</i>
-                                <span>{{'COMMON.ACTIONS.EDIT' |
-                                    translate}}</span>
-                            </button>
-                            <button mat-menu-item  *ngIf="isDelete === 0" (click)="deleteVendor(row,1)">
-                                <i class="material-icons-two-tone align-middle msr-2">archive</i>
-                                <span>{{'COMMON.ACTIONS.ARCHIVE' |
-                                    translate}}</span>s
-                            </button>
-                            <button mat-menu-item  *ngIf="isDelete === 1" (click)="deleteVendor(row,0)">
-                                <i class="material-icons-two-tone align-middle msr-2">archive</i>
-                                <span>{{'COMMON.ACTIONS.RESTORE' |
-                                    translate}}</span>
-                            </button>
-                        </mat-menu>
-                    </mat-cell>
+            <div class="right">
+              <ul class="tbl-export-btn">
+                <li class="tbl-header-btn">
+                  <div class="m-l-10" matTooltip="REFRESH" *ngIf="isDelete === 0">
+                    <button mat-mini-fab color="primary" (click)="refresh()">
+                      <mat-icon class="col-white">refresh</mat-icon>
+                    </button>
+                  </div>
+                </li>
+                <li class="tbl-header-btn">
+                  <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="DELETE">
+                    <button mat-mini-fab color="primary" (click)="removeSelectedRows()">
+                      <mat-icon class="col-white">delete
+                      </mat-icon>
+                    </button>
+                  </div>
+                </li>
+                <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                  <div class="m-l-10" matTooltip="ARCHIVE">
+                    <button mat-mini-fab color="primary" (click)="gotoArchiveUnarchive()">
+                      <mat-icon class="col-white">archive
+                      </mat-icon>
+                    </button>
+                  </div>
+                </li>
+                <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                  <div class="m-l-10" matTooltip="ADD">
+                    <button mat-mini-fab color="primary" (click)="addNew()">
+                      <mat-icon class="col-white">add</mat-icon>
+                    </button>
+                  </div>
+                </li>
+                <li class="tbl-header-btn" *ngIf="isDelete === 1">
+                  <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' |
+                        translate}}">
+                    <button mat-mini-fab color="warn" (click)="gotoArchiveUnarchive()">
+                      <mat-icon class="col-white">close </mat-icon>
+                    </button>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="body overflow-auto">
+            <div class="table-responsive">
+              <table mat-table #table [dataSource]="dataSource" matSort class="table mat-cell">
+                <ng-container matColumnDef="email">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOX.EMAIL' |
+                    translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
+                    <span class="mobile-label">Email:</span> {{row.email}}
+                  </mat-cell>
                 </ng-container>
-                  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                  <mat-row *matRowDef="let row; columns: displayedColumns;" 
-                    [style.cursor]="'pointer'" matRipple>
-                  </mat-row>
-                </table>
-              </div>
-              <!-- Loading spinner -->
-              <div *ngIf="exampleDatabase?.isTblLoading" class="tbl-spinner">
-                <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
-                </mat-progress-spinner>
-              </div>
-              <!-- context menu start -->
-              <div style="visibility: hidden; position: fixed" [style.left]="contextMenuPosition.x"
-                [style.top]="contextMenuPosition.y" [matMenuTriggerFor]="contextMenu">
-              </div>
-              <mat-menu #contextMenu="matMenu">
-                <ng-template matMenuContent let-item="item">
-                  <button mat-menu-item (click)="addNew()">
-                    <mat-icon>add_box</mat-icon>
-                    <span>Add Record</span>
-                  </button>
-                  <button mat-menu-item >
-                    <mat-icon>create</mat-icon>
-                    <span>Edit Record</span>
-                  </button>
-                  <button mat-menu-item>
-                    <mat-icon>delete</mat-icon>
-                    <span>Delete Record</span>
-                  </button>
-                  <button mat-menu-item (click)="refresh()">
-                    <mat-icon>refresh</mat-icon>
-                    <span>Refresh Record</span>
-                  </button>
-                  <button mat-menu-item disabled>
-                    <mat-icon>no_encryption</mat-icon>
-                    <span>Disable</span>
-                  </button>
-                  <button mat-menu-item [matMenuTriggerFor]="nestedmenu">
-                    <mat-icon>list_alt</mat-icon>
-                    <span> Nested Menu</span>
-                  </button>
-                </ng-template>
-              </mat-menu>
-              <mat-menu #nestedmenu="matMenu">
-                <button mat-menu-item>
-                  <mat-icon>mail_outline</mat-icon>
-                  <span>Item 1</span>
-                </button>
-                <button mat-menu-item>
-                  <mat-icon>call</mat-icon>
-                  <span>Item 2</span>
-                </button>
-                <button mat-menu-item>
-                  <mat-icon>chat</mat-icon>
-                  <span>Item 3</span>
-                </button>
-              </mat-menu>
-              <!-- context menu end -->
-              <div *ngIf="!exampleDatabase?.isTblLoading" class="no-results"
-                [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-                No results
-              </div>
-              <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="10"
-                [pageSizeOptions]="[5, 10, 25, 100]">
-              </mat-paginator>
+                <ng-container matColumnDef="imap">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOX.IMAP' |
+                    translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
+                    <span class="mobile-label">IMAP:</span> {{row.imap }}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="port">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOX.PORT' |
+                    translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
+                    <span class="mobile-label">Port:</span> {{row.port}}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="time">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOX.TIME' |
+                    translate}}
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
+                    matTooltip="{{row.address}}">
+                    <span class="truncate-text"><span class="mobile-label">Time:</span> {{row.time}}</span>
+                  </mat-cell>
+                </ng-container>
+
+                <!-- actions -->
+                <ng-container matColumnDef="actions">
+                  <mat-header-cell class="psl-3" *matHeaderCellDef>{{'VENDOR.TABLE.ACTIONS' |
+                    translate}}
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let row; let i=index;" class="psl-3">
+                    <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+                      <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                      <button mat-menu-item *ngIf="isDelete === 0" (click)="editMailbox(row)">
+                        <i class="material-icons-two-tone align-middle msr-2">create</i>
+                        <span>{{'COMMON.ACTIONS.EDIT' |
+                          translate}}</span>
+                      </button>
+                      <button mat-menu-item *ngIf="isDelete === 0" (click)="deleteVendor(row,1)">
+                        <i class="material-icons-two-tone align-middle msr-2">archive</i>
+                        <span>{{'COMMON.ACTIONS.ARCHIVE' |
+                          translate}}</span>s
+                      </button>
+                      <button mat-menu-item *ngIf="isDelete === 1" (click)="deleteVendor(row,0)">
+                        <i class="material-icons-two-tone align-middle msr-2">archive</i>
+                        <span>{{'COMMON.ACTIONS.RESTORE' |
+                          translate}}</span>
+                      </button>
+                    </mat-menu>
+                  </mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'" matRipple>
+                </mat-row>
+              </table>
             </div>
+            <!-- Loading spinner -->
+            <div *ngIf="mailboxDatabase?.isTblLoading" class="tbl-spinner">
+              <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
+              </mat-progress-spinner>
+            </div>
+            <!-- context menu start -->
+            <div style="visibility: hidden; position: fixed" [style.left]="contextMenuPosition.x"
+              [style.top]="contextMenuPosition.y" [matMenuTriggerFor]="contextMenu">
+            </div>
+            <mat-menu #contextMenu="matMenu">
+              <ng-template matMenuContent let-item="item">
+                <button mat-menu-item (click)="addNew()">
+                  <mat-icon>add_box</mat-icon>
+                  <span>Add Record</span>
+                </button>
+                <button mat-menu-item>
+                  <mat-icon>create</mat-icon>
+                  <span>Edit Record</span>
+                </button>
+                <button mat-menu-item>
+                  <mat-icon>delete</mat-icon>
+                  <span>Delete Record</span>
+                </button>
+                <button mat-menu-item (click)="refresh()">
+                  <mat-icon>refresh</mat-icon>
+                  <span>Refresh Record</span>
+                </button>
+                <button mat-menu-item disabled>
+                  <mat-icon>no_encryption</mat-icon>
+                  <span>Disable</span>
+                </button>
+                <button mat-menu-item [matMenuTriggerFor]="nestedmenu">
+                  <mat-icon>list_alt</mat-icon>
+                  <span> Nested Menu</span>
+                </button>
+              </ng-template>
+            </mat-menu>
+            <mat-menu #nestedmenu="matMenu">
+              <button mat-menu-item>
+                <mat-icon>mail_outline</mat-icon>
+                <span>Item 1</span>
+              </button>
+              <button mat-menu-item>
+                <mat-icon>call</mat-icon>
+                <span>Item 2</span>
+              </button>
+              <button mat-menu-item>
+                <mat-icon>chat</mat-icon>
+                <span>Item 3</span>
+              </button>
+            </mat-menu>
+            <!-- context menu end -->
+            <div *ngIf="!mailboxDatabase?.isTblLoading" class="no-results"
+              [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
+              No results
+            </div>
+            <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="10"
+              [pageSizeOptions]="[5, 10, 25, 100]">
+            </mat-paginator>
           </div>
         </div>
       </div>
     </div>
-  </section>
-  
+  </div>
+</section>

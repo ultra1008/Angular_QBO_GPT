@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { AdvanceTable, settingTable } from '../settings.model';
+import { AdvanceTable } from '../settings.model';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { BehaviorSubject, Observable, fromEvent, map, merge } from 'rxjs';
@@ -30,35 +30,21 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class MailboxComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit
-{
+  implements OnInit {
   displayedColumns = [
-    // 'img',
-    // 'fName',
-    // 'lName',
     'email',
-    // 'gender',
     'imap',
     'port',
     'time',
-    // 'country',
     'actions',
   ];
-  exampleDatabase?: SettingsService;
-  dataSource!: ExampleDataSource;
+  mailboxDatabase?: SettingsService;
+  dataSource!: MailboxDataSource;
   selection = new SelectionModel<AdvanceTable>(true, []);
   id?: number;
   advanceTable?: AdvanceTable;
   isDelete = 0;
   titleMessage: string = '';
-
-  breadscrums = [
-    {
-      title: 'Table',
-      items: ['Home'],
-      active: 'Table',
-    },
-  ];
 
   constructor(
     public dialog: MatDialog,
@@ -84,73 +70,13 @@ export class MailboxComponent
   }
   addNew() {
     this.router.navigate(['/settings/mailbox-form']);
-    // let tempDirection: Direction;
-    // if (localStorage.getItem('isRtl') === 'true') {
-    //   tempDirection = 'rtl';
-    // } else {
-    //   tempDirection = 'ltr';
-    // }
-    // const dialogRef = this.dialog.open(FormComponent, {
-    //   data: {
-    //     advanceTable: this.advanceTable,
-    //     action: 'add',
-    //   },
-    //   direction: tempDirection,
-    // });
-    // this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-    //   if (result === 1) {
-    //     // After dialog is closed we're doing frontend updates
-    //     // For add we're just pushing a new row inside DataService
-    //     this.exampleDatabase?.dataChange.value.unshift(
-    //       this.SettingsService.getDialogData()
-    //     );
-    //     this.refreshTable();
-    //     this.showNotification(
-    //       'snackbar-success',
-    //       'Add Record Successfully...!!!',
-    //       'bottom',
-    //       'center'
-    //     );
-    //   }
-    // });
   }
+
   editMailbox(settings: AdvanceTable) {
     this.router.navigate(['/settings/mailbox-form'], {
       queryParams: { _id: settings._id },
     });
   }
-  // async deleteItem(settings: AdvanceTable) {
-  //   const data = await this.SettingsService.deleteMailbox(settings._id);
-  // this.id = row.id;
-  // let tempDirection: Direction;
-  // if (localStorage.getItem('isRtl') === 'true') {
-  //   tempDirection = 'rtl';
-  // } else {
-  //   tempDirection = 'ltr';
-  // }
-  // const dialogRef = this.dialog.open(DeleteComponent, {
-  //   data: row,
-  //   direction: tempDirection,
-  // });
-  // this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-  //   if (result === 1) {
-  //     const foundIndex = this.exampleDatabase?.dataChange.value.findIndex(
-  //       (x) => x.id === this.id
-  //     );
-  //     // for delete we use splice in order to remove single object from DataService
-  //     if (foundIndex != null && this.exampleDatabase) {
-  //       this.exampleDatabase.dataChange.value.splice(foundIndex, 1);
-  //       this.refreshTable();
-  //       this.showNotification(
-  //         'snackbar-danger',
-  //         'Delete Record Successfully...!!!',
-  //         'bottom',
-  //         'center'
-  //       );
-  //     }
-  //   }
-  // });
-  // }
 
   async archiveRecover(vendor: AdvanceTable, is_delete: number) {
     const data = await this.SettingsService.deleteMailbox({
@@ -219,8 +145,8 @@ export class MailboxComponent
     this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.renderedData.forEach((row) =>
-          this.selection.select(row)
-        );
+        this.selection.select(row)
+      );
   }
   removeSelectedRows() {
     const totalSelect = this.selection.selected.length;
@@ -229,7 +155,7 @@ export class MailboxComponent
         (d) => d === item
       );
       // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
-      this.exampleDatabase?.dataChange.value.splice(index, 1);
+      this.mailboxDatabase?.dataChange.value.splice(index, 1);
       this.refreshTable();
       this.selection = new SelectionModel<AdvanceTable>(true, []);
     });
@@ -241,9 +167,9 @@ export class MailboxComponent
     );
   }
   public loadData() {
-    this.exampleDatabase = new SettingsService(this.httpCall);
-    this.dataSource = new ExampleDataSource(
-      this.exampleDatabase,
+    this.mailboxDatabase = new SettingsService(this.httpCall);
+    this.dataSource = new MailboxDataSource(
+      this.mailboxDatabase,
       this.paginator,
       this.sort,
       this.isDelete
@@ -274,19 +200,6 @@ export class MailboxComponent
   back() {
     this.router.navigate(['/settings']);
   }
-  // export table data in excel file
-  exportExcel() {
-    // key name with space add in brackets
-    const exportData: Partial<TableElement>[] =
-      this.dataSource.filteredData.map((x) => ({
-        Email: x.email,
-        Imap: x.imap,
-        Port: x.port,
-        Time: x.time,
-      }));
-
-    TableExportUtil.exportToExcel(exportData, 'excel');
-  }
 
   // context menu
   onContextMenu(event: MouseEvent, item: AdvanceTable) {
@@ -300,7 +213,7 @@ export class MailboxComponent
     }
   }
 }
-export class ExampleDataSource extends DataSource<AdvanceTable> {
+export class MailboxDataSource extends DataSource<AdvanceTable> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -311,7 +224,7 @@ export class ExampleDataSource extends DataSource<AdvanceTable> {
   filteredData: AdvanceTable[] = [];
   renderedData: AdvanceTable[] = [];
   constructor(
-    public exampleDatabase: SettingsService,
+    public mailboxDatabase: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
     public isDelete: number
@@ -324,16 +237,16 @@ export class ExampleDataSource extends DataSource<AdvanceTable> {
   connect(): Observable<AdvanceTable[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this.exampleDatabase.dataChange,
+      this.mailboxDatabase.dataChange,
       this._sort.sortChange,
       this.filterChange,
       this.paginator.page,
     ];
-    this.exampleDatabase.getAllMailboxTable(this.isDelete);
+    this.mailboxDatabase.getAllMailboxTable(this.isDelete);
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
-        this.filteredData = this.exampleDatabase.data
+        this.filteredData = this.mailboxDatabase.data
           .slice()
           .filter((advanceTable: AdvanceTable) => {
             const searchStr = (
