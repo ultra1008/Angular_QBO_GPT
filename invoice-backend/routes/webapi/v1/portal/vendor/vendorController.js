@@ -142,6 +142,7 @@ module.exports.saveVendor = async function (req, res) {
                     let insertedData = await common.setInsertedFieldHistory(requestObject);
                     // Check for object id fields and if it changed then replace id with specific value
                     let found_term = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'vendor_terms'; });
+
                     if (found_term != -1) {
                         let one_term = await termConnection.findOne({ _id: ObjectID(insertedData[found_term].value) });
                         insertedData[found_term].value = one_term.name;
@@ -383,7 +384,7 @@ module.exports.getVendorDatatable = async function (req, res) {
             var requestObject = req.body;
             var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
             var col = [];
-            col.push("isVendorfromQBO", "vendor_name", "vendor_id", "customer_id", "vendor_phone", "vendor_email", "vendor_address", "vendor_attachment", "vendor_status");
+            col.push("isVendorfromQBO", "vendor_name", "vendor_id", "customer_id", "vendor_phone", "vendor_email", "vendor_address", "vendor_attachment", "vendor_status", "vendor_type_id");
 
             var start = parseInt(requestObject.start) || 0;
             var perpage = parseInt(requestObject.length);
@@ -409,6 +410,7 @@ module.exports.getVendorDatatable = async function (req, res) {
                         { "vendor_email": new RegExp(requestObject.search.value, 'i') },
                         { "vendor_address": new RegExp(requestObject.search.value, 'i') },
                         { "vendor_status": new RegExp(requestObject.search.value, 'i') },
+                        { "vendor_type_id": new RegExp(requestObject.search.value, 'i') },
                     ]
                 };
             }

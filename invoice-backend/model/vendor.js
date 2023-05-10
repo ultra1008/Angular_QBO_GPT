@@ -32,6 +32,7 @@ var vendorSchema = new Schema({
     password: { type: String, default: "" },
     vendor_id: { type: String, default: "" },
     customer_id: { type: String, default: "" },
+    vendor_type_id: { type: mongoose.ObjectId },
     gl_account: { type: String, default: "" },
     isVendorfromQBO: { type: Boolean },
 }, { collection: 'vendor' }, { timestamps: false });
