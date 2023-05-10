@@ -56,4 +56,6 @@ export enum httproutes {
 
   //SMTP
   GET_COMPNAY_SMTP = 'compnaysmtp',
+  VERIFY_SMTP = 'compnayverifysmtp',
+  SAVE_SMTP = 'compnayupdatesmtp',
 }

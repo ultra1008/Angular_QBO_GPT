@@ -29,6 +29,7 @@ export class SmtpComponent {
   LTS_ACTIVE: any = configData.LTS_ACTIVE;
   frequency = configData.MAILBOX_MONITOR_TIME;
   cronTime: any;
+  compnay_id: any;
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -64,6 +65,7 @@ export class SmtpComponent {
 
     if (data.status) {
       let stmp = data.data;
+      this.compnay_id = stmp.company_id;
       console.log('data', stmp);
       this.companyinfoForm = this.fb.group({
         tenant_smtp_server: [stmp.tenant_smtp_server, Validators.required],
@@ -119,54 +121,33 @@ export class SmtpComponent {
     let that = this;
     if (this.companyinfoForm.valid) {
       let requestObject = this.companyinfoForm.value;
-      requestObject.cron_time = this.cronTime;
-      if (this.id) {
-        requestObject._id = this.id;
-      }
+      requestObject._id = this.compnay_id;
       this.uiSpinner.spin$.next(true);
-      const data = await this.SettingsServices.AddMailbox(requestObject);
+      const data = await this.SettingsServices.SaveSmtp(requestObject);
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        this.router.navigate(['/settings/mailbox']);
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');
       }
-
-      // this.httpCall
-      //   .httpPostCall(httproutes.COMPNAY_INFO_OTHER_SETTING_UPDATE, formData)
-      //   .subscribe(function (params) {
-      //     that.uiSpinner.spin$.next(false);
-      //     if (params.status) {
-      //       that.snackbarservice.openSnackBar(params.message, "success");
-      //       that.httpCall
-      //         .httpGetCall(httproutes.COMPNAY_INFO_OTHER_SETTING_GET)
-      //         .subscribe(function (compnayData: any) {
-      //           if (compnayData.status) {
-      //             userData.companydata = compnayData.data;
-      //             localStorage.setItem(
-      //               localstorageconstants.USERDATA,
-      //               JSON.stringify(userData)
-      //             );
-      //             that.mostusedservice.userupdatecompnayEmit();
-      //           }
-      //         });
-      //     } else {
-      //       that.snackbarservice.openSnackBar(params.message, "error");
-      //     }
-      //   });
     }
+  }
 
-    // const data = await this.vendorService.saveVendor(requestObject);
-    // if (data.status) {
-    //   this.uiSpinner.spin$.next(false);
-    //   showNotification(this.snackBar, data.message, 'success');
-    //   this.router.navigate([WEB_ROUTES.VENDOR]);
-    // } else {
-    //   this.uiSpinner.spin$.next(false);
-    //   showNotification(this.snackBar, data.message, 'error');
-    // }
+  async VerifySmtp() {
+    let that = this;
+    if (this.companyinfoForm.valid) {
+      let requestObject = this.companyinfoForm.value;
+      this.uiSpinner.spin$.next(true);
+      const data = await this.SettingsServices.VerifySmtp(requestObject);
+      if (data.status) {
+        this.uiSpinner.spin$.next(false);
+        showNotification(this.snackBar, data.message, 'success');
+      } else {
+        this.uiSpinner.spin$.next(false);
+        showNotification(this.snackBar, data.message, 'error');
+      }
+    }
   }
 
   back() {
