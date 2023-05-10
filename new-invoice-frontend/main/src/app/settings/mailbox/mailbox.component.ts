@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { AdvanceTable } from '../settings.model';
+import { AdvanceTable, settingTable } from '../settings.model';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { BehaviorSubject, Observable, fromEvent, map, merge } from 'rxjs';
@@ -17,6 +17,11 @@ import { TableElement } from 'src/app/shared/TableElement';
 import { TableExportUtil } from 'src/app/shared/tableExportUtil';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
+import {
+  showNotification,
+  swalWithBootstrapTwoButtons,
+} from 'src/consts/utils';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-mailbox',
@@ -45,6 +50,7 @@ export class MailboxComponent
   id?: number;
   advanceTable?: AdvanceTable;
   isDelete = 0;
+  titleMessage: string = '';
 
   breadscrums = [
     {
@@ -59,7 +65,8 @@ export class MailboxComponent
     public SettingsService: SettingsService,
     private snackBar: MatSnackBar,
     public router: Router,
-    private httpCall: HttpCall
+    private httpCall: HttpCall,
+    public translate: TranslateService
   ) {
     super();
   }
@@ -107,74 +114,96 @@ export class MailboxComponent
     //   }
     // });
   }
-  editCall(row: AdvanceTable) {
-    // this.id = row.id;
-    // let tempDirection: Direction;
-    // if (localStorage.getItem('isRtl') === 'true') {
-    //   tempDirection = 'rtl';
-    // } else {
-    //   tempDirection = 'ltr';
-    // }
-    // const dialogRef = this.dialog.open(FormComponent, {
-    //   data: {
-    //     advanceTable: row,
-    //     action: 'edit',
-    //   },
-    //   direction: tempDirection,
-    // });
-    // this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-    //   if (result === 1) {
-    //     // When using an edit things are little different, firstly we find record inside DataService by id
-    //     const foundIndex = this.exampleDatabase?.dataChange.value.findIndex(
-    //       (x) => x.id === this.id
-    //     );
-    //     // Then you update that record using data from dialogData (values you enetered)
-    //     if (foundIndex != null && this.exampleDatabase) {
-    //       this.exampleDatabase.dataChange.value[foundIndex] =
-    //         this.SettingsService.getDialogData();
-    //       // And lastly refresh table
-    //       this.refreshTable();
-    //       this.showNotification(
-    //         'black',
-    //         'Edit Record Successfully...!!!',
-    //         'bottom',
-    //         'center'
-    //       );
-    //     }
-    //   }
-    // });
+  editMailbox(settings: AdvanceTable) {
+    this.router.navigate(['/settings/mailbox-form'], {
+      queryParams: { _id: settings._id },
+    });
   }
-  deleteItem(row: AdvanceTable) {
-    // this.id = row.id;
-    // let tempDirection: Direction;
-    // if (localStorage.getItem('isRtl') === 'true') {
-    //   tempDirection = 'rtl';
-    // } else {
-    //   tempDirection = 'ltr';
-    // }
-    // const dialogRef = this.dialog.open(DeleteComponent, {
-    //   data: row,
-    //   direction: tempDirection,
-    // });
-    // this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-    //   if (result === 1) {
-    //     const foundIndex = this.exampleDatabase?.dataChange.value.findIndex(
-    //       (x) => x.id === this.id
-    //     );
-    //     // for delete we use splice in order to remove single object from DataService
-    //     if (foundIndex != null && this.exampleDatabase) {
-    //       this.exampleDatabase.dataChange.value.splice(foundIndex, 1);
-    //       this.refreshTable();
-    //       this.showNotification(
-    //         'snackbar-danger',
-    //         'Delete Record Successfully...!!!',
-    //         'bottom',
-    //         'center'
-    //       );
-    //     }
-    //   }
-    // });
+  // async deleteItem(settings: AdvanceTable) {
+  //   const data = await this.SettingsService.deleteMailbox(settings._id);
+  // this.id = row.id;
+  // let tempDirection: Direction;
+  // if (localStorage.getItem('isRtl') === 'true') {
+  //   tempDirection = 'rtl';
+  // } else {
+  //   tempDirection = 'ltr';
+  // }
+  // const dialogRef = this.dialog.open(DeleteComponent, {
+  //   data: row,
+  //   direction: tempDirection,
+  // });
+  // this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
+  //   if (result === 1) {
+  //     const foundIndex = this.exampleDatabase?.dataChange.value.findIndex(
+  //       (x) => x.id === this.id
+  //     );
+  //     // for delete we use splice in order to remove single object from DataService
+  //     if (foundIndex != null && this.exampleDatabase) {
+  //       this.exampleDatabase.dataChange.value.splice(foundIndex, 1);
+  //       this.refreshTable();
+  //       this.showNotification(
+  //         'snackbar-danger',
+  //         'Delete Record Successfully...!!!',
+  //         'bottom',
+  //         'center'
+  //       );
+  //     }
+  //   }
+  // });
+  // }
+
+  async archiveRecover(vendor: AdvanceTable, is_delete: number) {
+    const data = await this.SettingsService.deleteMailbox({
+      _id: vendor._id,
+      is_delete: is_delete,
+    });
+    if (data.status) {
+      showNotification(this.snackBar, data.message, 'success');
+      const foundIndex = this.SettingsService?.dataChange.value.findIndex(
+        (x) => x._id === vendor._id
+      );
+
+      // for delete we use splice in order to remove single object from DataService
+      if (foundIndex != null && this.SettingsService) {
+        this.SettingsService.dataChange.value.splice(foundIndex, 1);
+
+        this.refreshTable();
+      }
+    } else {
+      showNotification(this.snackBar, data.message, 'error');
+    }
   }
+
+  async deleteVendor(vendor: AdvanceTable, is_delete: number) {
+    if (is_delete == 1) {
+      this.titleMessage = this.translate.instant(
+        'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOX.CONFIRMATION_DIALOG.ARCHIVE'
+      );
+    } else {
+      this.titleMessage = this.translate.instant(
+        'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOX.CONFIRMATION_DIALOG.RESTORE'
+      );
+    }
+    swalWithBootstrapTwoButtons
+      .fire({
+        title: this.titleMessage,
+        showDenyButton: true,
+        confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+        denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+        allowOutsideClick: false,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          this.archiveRecover(vendor, is_delete);
+        }
+      });
+  }
+
+  gotoArchiveUnarchive() {
+    this.isDelete = this.isDelete == 1 ? 0 : 1;
+    this.loadData();
+  }
+
   private refreshTable() {
     this.paginator._changePageSize(this.paginator.pageSize);
   }
@@ -340,7 +369,7 @@ export class ExampleDataSource extends DataSource<AdvanceTable> {
       let propertyB: number | string = '';
       switch (this._sort.active) {
         case 'id':
-          [propertyA, propertyB] = [a.id, b.id];
+          [propertyA, propertyB] = [a._id, b._id];
           break;
         case 'email':
           [propertyA, propertyB] = [a.email, b.email];

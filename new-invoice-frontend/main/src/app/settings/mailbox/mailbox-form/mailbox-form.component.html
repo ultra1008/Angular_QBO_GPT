@@ -8,7 +8,8 @@
                         <div class="left">
                             <ul class="header-buttons-left ms-0">
                                 <li class="tbl-title">
-                                    <h2>Add Mailbox</h2>
+                                    <h2 *ngIf="id.length == 0">Add Mailbox</h2>
+                                    <h2 *ngIf="id.length > 0">Edit Mailbox</h2>
                                 </li>
                             </ul>
                         </div>
@@ -69,10 +70,10 @@
                                     <mat-form-field appearance="outline" class="example-full-width">
                                         <mat-label>Frequency
                                         </mat-label>
-                                        <mat-select formControlName="time" 
+                                        <mat-select formControlName="time" (ngModelChange)="onSelectTime($event)"
                                              class="dark-cust-color" required>
-                                             <mat-option value="Every 5 min" >
-                                                  Every 5 min
+                                             <mat-option *ngFor="let f of frequency" [value]="f.time">
+                                                  {{f.value}}
                                              </mat-option>
                                         </mat-select>
                                    </mat-form-field>

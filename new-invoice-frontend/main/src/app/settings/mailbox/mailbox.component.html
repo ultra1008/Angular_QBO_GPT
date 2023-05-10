@@ -1,6 +1,6 @@
 <section class="content">
     <div class="content-block"> 
-  
+      <div class="m-4"></div>
       <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
           <div class="card">
@@ -8,7 +8,7 @@
               <div class="left">
                 <ul class="header-buttons-left ms-0">
                   <li class="tbl-title">
-                    <h2>Mailboxes to Monitor</h2>
+                    <h2>{{'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOX.HEADER' | translate}}</h2>
                   </li>
                   <li class="tbl-search-box">
                     <label for="search-input"><i class="material-icons search-icon">search</i></label>
@@ -20,14 +20,7 @@
               <div class="right">
                 <ul class="tbl-export-btn">
                   <li class="tbl-header-btn">
-                    <div class="m-l-10" matTooltip="ADD">
-                      <button mat-mini-fab color="primary" (click)="addNew()">
-                        <mat-icon class="col-white">add</mat-icon>
-                      </button>
-                    </div>
-                  </li>
-                  <li class="tbl-header-btn">
-                    <div class="m-l-10" matTooltip="REFRESH">
+                    <div class="m-l-10" matTooltip="REFRESH" *ngIf="isDelete === 0">
                       <button mat-mini-fab color="primary" (click)="refresh()">
                         <mat-icon class="col-white">refresh</mat-icon>
                       </button>
@@ -35,12 +28,35 @@
                   </li>
                   <li class="tbl-header-btn">
                     <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="DELETE">
-                      <button mat-mini-fab color="warn" (click)="removeSelectedRows()">
+                      <button mat-mini-fab color="primary" (click)="removeSelectedRows()">
                         <mat-icon class="col-white">delete
                         </mat-icon>
                       </button>
                     </div>
                   </li>
+                  <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                    <div class="m-l-10"matTooltip="ARCHIVE">
+                      <button mat-mini-fab color="primary" (click)="gotoArchiveUnarchive()">
+                        <mat-icon class="col-white">archive
+                        </mat-icon>
+                      </button>
+                    </div>
+                  </li>
+                  <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                    <div class="m-l-10" matTooltip="ADD">
+                      <button mat-mini-fab color="primary" (click)="addNew()">
+                        <mat-icon class="col-white">add</mat-icon>
+                      </button>
+                    </div>
+                  </li>
+                  <li class="tbl-header-btn" *ngIf="isDelete === 1">
+                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' |
+                        translate}}">
+                        <button mat-mini-fab color="warn" (click)="gotoArchiveUnarchive()">
+                            <mat-icon class="col-white">close </mat-icon>
+                        </button>
+                    </div>
+                </li>
                   <!-- <li>
                     <div class="export-button m-l-10" matTooltip="XLSX">
                       <img src="assets/images/icons/xlsx.png" alt="" (click)="exportExcel()" />
@@ -92,7 +108,7 @@
                       <span class="mobile-label">Last Name:</span>{{row.lName}}</mat-cell>
                   </ng-container> -->
                   <ng-container matColumnDef="email">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>Email</mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOX.EMAIL' | translate}}</mat-header-cell>
                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
                       <span class="mobile-label">Email:</span> {{row.email}}</mat-cell>
                   </ng-container>
@@ -112,18 +128,18 @@
                     </mat-cell> -->
                   <!-- </ng-container> -->
                   <ng-container matColumnDef="imap">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>IMAP</mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOX.IMAP' | translate}}</mat-header-cell>
                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
                       <span class="mobile-label">IMAP:</span> {{row.imap }}
                     </mat-cell>
                   </ng-container>
                   <ng-container matColumnDef="port">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>Port</mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOX.PORT' | translate}}</mat-header-cell>
                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
                       <span class="mobile-label">Port:</span> {{row.port}}</mat-cell>
                   </ng-container>
                   <ng-container matColumnDef="time">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>Time
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOX.TIME' | translate}}
                     </mat-header-cell>
                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
                       matTooltip="{{row.address}}">
@@ -146,17 +162,17 @@
                             <mat-icon>more_vert</mat-icon>
                         </button>
                         <mat-menu #menu="matMenu">
-                            <button mat-menu-item  *ngIf="isDelete === 0">
+                            <button mat-menu-item  *ngIf="isDelete === 0" (click)="editMailbox(row)">
                                 <i class="material-icons-two-tone align-middle msr-2">create</i>
                                 <span>{{'COMMON.ACTIONS.EDIT' |
                                     translate}}</span>
                             </button>
-                            <button mat-menu-item  *ngIf="isDelete === 0">
+                            <button mat-menu-item  *ngIf="isDelete === 0" (click)="deleteVendor(row,1)">
                                 <i class="material-icons-two-tone align-middle msr-2">archive</i>
                                 <span>{{'COMMON.ACTIONS.ARCHIVE' |
                                     translate}}</span>s
                             </button>
-                            <button mat-menu-item  *ngIf="isDelete === 1">
+                            <button mat-menu-item  *ngIf="isDelete === 1" (click)="deleteVendor(row,0)">
                                 <i class="material-icons-two-tone align-middle msr-2">archive</i>
                                 <span>{{'COMMON.ACTIONS.RESTORE' |
                                     translate}}</span>
@@ -165,7 +181,7 @@
                     </mat-cell>
                 </ng-container>
                   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                  <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="editCall(row)"
+                  <mat-row *matRowDef="let row; columns: displayedColumns;" 
                     [style.cursor]="'pointer'" matRipple>
                   </mat-row>
                 </table>
@@ -185,11 +201,11 @@
                     <mat-icon>add_box</mat-icon>
                     <span>Add Record</span>
                   </button>
-                  <button mat-menu-item (click)="editCall(item)">
+                  <button mat-menu-item >
                     <mat-icon>create</mat-icon>
                     <span>Edit Record</span>
                   </button>
-                  <button mat-menu-item (click)="deleteItem(item)">
+                  <button mat-menu-item>
                     <mat-icon>delete</mat-icon>
                     <span>Delete Record</span>
                   </button>

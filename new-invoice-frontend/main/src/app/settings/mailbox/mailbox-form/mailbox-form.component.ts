@@ -19,6 +19,7 @@ import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { showNotification, swalWithBootstrapButtons } from 'src/consts/utils';
 import { SettingsService } from '../../settings.service';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { configData } from 'src/environments/configData';
 
 @Component({
   selector: 'app-mailbox-form',
@@ -32,38 +33,10 @@ export class MailboxFormComponent {
   agree = false;
   customForm?: UntypedFormGroup;
   variablestermList: any = [];
-  termsList: Array<TermModel> = this.variablestermList.slice();
-  countryList: Array<CountryModel> = [{ _id: 'USA', name: 'USA' }];
-  id = '';
-  company_logo: any;
-  imageError: any;
-  isImageSaved: any;
-  defalut_image: string = '../assets/images/placeholder_logo.png';
-  cardImageBase64: any;
-  files_old: string[] = [];
-  last_files_array: string[] = [];
-  files: File[] = [];
-  @ViewChild('gallery') gallery!: NgxGalleryComponent;
-  galleryOptions!: NgxGalleryOptions[];
-  galleryImages: NgxGalleryImage[] = [];
-  imageObject = [];
-  tmp_gallery: any;
-  filepath: any;
-  variablesCompnayTypes_data: any = [];
-  CompnayTypes_data: any = this.variablesCompnayTypes_data.slice();
+  id: any;
 
-  variablesCSIDivisions: any = [];
-  csiDivisions: any = this.variablesCSIDivisions.slice();
-
-  // CompnaySizes_data: any;
-  variablesCompnaySizes_data: any = [];
-  CompnaySizes_data: any = this.variablesCompnaySizes_data.slice();
-
-  range: any = [];
-  year: number = new Date().getFullYear();
-  selectedVendorType = '';
-  compnay_code: any;
-  compnay_id: any;
+  frequency = configData.MAILBOX_MONITOR_TIME;
+  cronTime: any;
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -76,8 +49,11 @@ export class MailboxFormComponent {
     // public commonService: CommonService,
     public SettingsServices: SettingsService
   ) {
-    this.getOneVendor();
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
+    if (this.id) {
+      this.getOneMailbox();
+    }
+
     this.companyinfoForm = this.fb.group({
       password: ['', [Validators.required]],
       email: [
@@ -87,58 +63,32 @@ export class MailboxFormComponent {
       imap: ['', [Validators.required]],
       port: [''],
       time: [''],
-      cron_time: ['*/20 * * * *'],
     });
   }
 
-  async getOneVendor() {
-    // let that = this;
-    // const data = await this.SettingsServices.getCompanyInfo();
-    // console.log('data', data);
-    // if (data.status) {
-    //   const CompanyInfoData = data.data;
-    //   that.compnay_code = CompanyInfoData.companycode;
-    //   that.compnay_id = CompanyInfoData._id;
-    //   if (
-    //     CompanyInfoData.companylogo == undefined ||
-    //     CompanyInfoData.companylogo == null ||
-    //     CompanyInfoData.companylogo == ''
-    //   ) {
-    //     that.company_logo = '../assets/images/placeholder_logo.png';
-    //   } else {
-    //     that.company_logo = CompanyInfoData.companylogo;
-    //   }
-    //   this.companyinfoForm = this.fb.group({
-    //     companyname: [CompanyInfoData.companyname, Validators.required],
-    //     companywebsite: [CompanyInfoData.companywebsite],
-    //     companycode: [{ value: CompanyInfoData.companycode, disabled: true }],
-    //     companyphone: [CompanyInfoData.companyphone, [Validators.required]],
-    //     companyemail: [
-    //       CompanyInfoData.companyemail,
-    //       [Validators.email, Validators.required],
-    //     ],
-    //     companyphone2: [CompanyInfoData.companyphone2],
-    //     companyactivesince: [
-    //       { value: CompanyInfoData.companyactivesince, disabled: true },
-    //     ],
-    //     companydivision: [CompanyInfoData.companydivision],
-    //     companysize: [CompanyInfoData.companysize],
-    //     companytype: [CompanyInfoData.companytype],
-    //     companyaddress: [CompanyInfoData.companyaddress],
-    //     companyaddresscity: [CompanyInfoData.companyaddresscity],
-    //     companyaddressstate: [CompanyInfoData.companyaddressstate],
-    //     companyaddresszip: [CompanyInfoData.companyaddresszip],
-    //   });
-    //   let found = that.CompnayTypes_data.find(
-    //     (element: any) => element._id == CompanyInfoData.companytype
-    //   );
-    //   that.selectedVendorType = found.name
-    //     ? found.name
-    //     : configData.PRIME_VENDOR_TYPE;
-    //   that.getCISDivision(
-    //     that.selectedVendorType == configData.PRIME_VENDOR_TYPE
-    //   );
-    // }
+  onSelectTime(event: any) {
+    console.log('element', this.frequency, event);
+    let found = this.frequency.find((element) => element.time == event);
+    console.log('found', found);
+    this.cronTime = found?.cron_time;
+    console.log('crontime', this.cronTime);
+  }
+
+  async getOneMailbox() {
+    const data = await this.SettingsServices.getOneMailBox(this.id);
+
+    if (data.status) {
+      let mailBox = data.data;
+      console.log('data', mailBox);
+      this.companyinfoForm = this.fb.group({
+        email: [mailBox.email, [Validators.required, Validators.email]],
+        password: ['', Validators.required],
+        imap: [mailBox.imap, Validators.required],
+        port: [mailBox.port, Validators.required],
+        time: [mailBox.time, Validators.required],
+      });
+      this.cronTime = mailBox.cron_time;
+    }
   }
 
   confirmExit() {
@@ -180,11 +130,16 @@ export class MailboxFormComponent {
     let that = this;
     if (this.companyinfoForm.valid) {
       let requestObject = this.companyinfoForm.value;
+      requestObject.cron_time = this.cronTime;
+      if (this.id) {
+        requestObject._id = this.id;
+      }
       this.uiSpinner.spin$.next(true);
       const data = await this.SettingsServices.AddMailbox(requestObject);
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
+        this.router.navigate(['/settings/mailbox']);
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');
