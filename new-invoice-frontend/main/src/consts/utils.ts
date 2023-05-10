@@ -208,6 +208,61 @@ export function commonLocalThumbImage(sanitiser: DomSanitizer, file: File) {
             break;
     }
 }
+export function amountChange(params: any) {
+    params = params.target.value;
+    if (params == "") {
+        return "00.00";
+    } else {
+        var tempText = "";
+        if (params.match(numbers!)) {
+            var numbers = /^[0-9]+$/;
+            var a = params;
+            a = a.replace(/\,/g, '');
+            let dotIndex = a.indexOf(".");
+            let count = a.substring(dotIndex + 1).length;
+            let multiply;
+            if (count == 1) {
+                multiply = 10;
+            } else {
+                multiply = 1000;
+            }
+            var temp = (Number(a) * multiply) / 100;
+            tempText = temp.toFixed(2);
+        }
+        var dotSplit = tempText.split(".");
+        if (dotSplit[0].length > 3) {
+            var code = dotSplit[0];
+            var modules = code.length % 3 == 0
+                ? 0
+                : code.length + (3 - (code.length % 3));
+            var newCode: any = code.padStart(modules, 'X');
+            var finalCode = newCode.match(/.{1,3}/g).join(",");
+            finalCode = finalCode.toString().replace(/X/g, "");
+            tempText = `${finalCode}.${dotSplit[1]}`;
+        }
+        return tempText;
+        /*  params = params.target.value;
+         if (params == "") {
+           return "00.00";
+         } else {
+           if (params.match(numbers)) {
+             var numbers = /^[0-9]+$/;
+             let dotIndex = params.indexOf(".");
+             let count = params.substring(dotIndex + 1).length;
+             let multiply;
+             if (count == 1) {
+               multiply = 10;
+             } else {
+               multiply = 1000;
+             }
+             var temp = (Number(params) * multiply) / 100;
+             return temp.toFixed(2);
+           } else {
+             return "00.00";
+           }
+         } */
+    }
+}
 
 export function isValidMailFormat(email: string): any {
     const EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;

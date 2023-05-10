@@ -12,7 +12,7 @@ export class HttpCall {
   temp_gif = localStorage.getItem(localstorageconstants.INVOICE_GIF);
   gif = configData.DEFAULT_LOADER_GIF;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getLoader(): string {
     return this.temp_gif != null &&
@@ -53,9 +53,14 @@ export class HttpCall {
     headers = headers.set('language', language);
 
     // var url = configdata.apiurl;
+    console.log("apiRoute", apiRoute);
+    console.log("userdata", userdata);
+
     return this.http.post(apiRoute, userdata, { headers: headers }).pipe(
       map((res) => {
+        console.log("res", res);
         return res;
+
       }),
       catchError(this.handleError)
     );
