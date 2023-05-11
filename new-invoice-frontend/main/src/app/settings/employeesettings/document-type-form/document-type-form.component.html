@@ -1,0 +1,47 @@
+<div class="addContainer">
+    <div class="modalHeader">
+         <div class="editRowModal">
+              <div class="modalHeader clearfix">
+
+                   <div class="modal-about">
+                        <div class="fw-bold p-t-5 p-l-10 font-17">
+                             Document Type
+                        </div>
+                   </div>
+              </div>
+         </div>
+         <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
+              <mat-icon>close</mat-icon>
+         </button>
+    </div>
+    <div mat-dialog-content>
+         <form class="register-form m-4" [formGroup]="DocumentInfo" (ngSubmit)="submit">
+
+              <div class="row">
+                   <div class=" col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field appearance="outline" class="example-full-width">
+                        <mat-label>Document Type</mat-label>
+                        <input matInput placeholder="Document Type"
+                            formControlName="document_type_name" required>
+                    </mat-form-field>
+                   </div>
+              </div>
+              <div class="row">
+                   <div class=" col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                        <mat-slide-toggle formControlName="is_expiration" color="primary">Expiration Date</mat-slide-toggle>
+                   </div>
+              </div>
+
+
+              <div class="row">
+                   <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                        <div class="example-button-row">
+                             <button mat-raised-button color="primary" [disabled]="!DocumentInfo.valid"
+                                  [mat-dialog-close]="1" >Save</button>
+                             <button mat-raised-button color="warn" tabindex="-1">Cancel</button>
+                        </div>
+                   </div>
+              </div>
+         </form>
+    </div>
+</div>

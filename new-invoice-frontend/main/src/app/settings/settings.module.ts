@@ -48,6 +48,7 @@ import { CommonComponentsModule } from '../common-components/common-components.m
 import { SharedModule } from '../shared/shared.module';
 import { SettingsService } from './settings.service';
 import { MailboxFormComponent } from './mailbox/mailbox-form/mailbox-form.component';
+import { DocumentTypeFormComponent } from './employeesettings/document-type-form/document-type-form.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import { MailboxFormComponent } from './mailbox/mailbox-form/mailbox-form.compon
     DocumentviewComponent,
     CompanyInfoFormComponent,
     MailboxFormComponent,
+    DocumentTypeFormComponent,
   ],
   providers: [SettingsService],
   imports: [

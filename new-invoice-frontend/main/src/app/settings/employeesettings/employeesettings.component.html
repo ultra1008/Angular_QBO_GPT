@@ -17,7 +17,7 @@
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ADD' |
                                     translate}}">
-                                        <button mat-mini-fab color="primary">
+                                        <button mat-mini-fab color="primary" (click)="add()">
                                             <mat-icon class="col-white">add</mat-icon>
                                         </button>
                                     </div>
@@ -34,9 +34,9 @@
                         </div>
                     </div>
 
-                    <div class="body overflow-auto">
+                    <div class="body">
                         <div class="main-cust-setting-div">
-                            <mat-tab-group>
+                            <mat-tab-group (selectedTabChange)="onTabChanged($event)">
                                 <mat-tab label="{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.DOCUMENT_TYPE' |  translate}}">
                                     <br>
                                     <div class="row mt-3">

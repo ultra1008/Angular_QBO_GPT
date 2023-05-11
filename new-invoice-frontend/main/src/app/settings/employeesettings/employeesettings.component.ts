@@ -1,9 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { SettingsService } from '../settings.service';
 import { showNotification, swalWithBootstrapButtons } from 'src/consts/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DocumentTypeFormComponent } from './document-type-form/document-type-form.component';
+import { MatDialog } from '@angular/material/dialog';
+import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
+import { LogOut } from 'angular-feather/icons';
 
 @Component({
   selector: 'app-employeesettings',
@@ -18,11 +22,23 @@ export class EmployeesettingsComponent {
   AllRelationship: any;
   AllLanguage: any;
 
+  currrent_tab: any;
+
+  tab_Array: any = [
+    'document',
+    'department',
+    'jobtitle',
+    'jobtype',
+    'relationship',
+    'language',
+  ];
+
   constructor(
     private router: Router,
     public translate: TranslateService,
     public SettingsServices: SettingsService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -34,11 +50,38 @@ export class EmployeesettingsComponent {
     this.getDataLanguage();
   }
 
+  onTabChanged($event: { index: string | number }) {
+    this.currrent_tab = this.tab_Array[$event.index];
+    console.log('currrent_tab', this.currrent_tab);
+  }
+
+  add() {
+    console.log('call', this.currrent_tab == 'document');
+
+    if (this.currrent_tab == 'document') {
+      console.log('document');
+      const dialogRef = this.dialog.open(DocumentTypeFormComponent, {
+        width: '350px',
+        data: {
+          // roleList: this.roleLists,
+          // invoiceStatus: '',
+        },
+      });
+      dialogRef.afterClosed().subscribe((result) => {
+        //
+      });
+    } else if (this.currrent_tab == 'department') {
+    } else if (this.currrent_tab == 'jobtitle') {
+    } else if (this.currrent_tab == 'jobtype') {
+    } else if (this.currrent_tab == 'relationship') {
+    } else if (this.currrent_tab == 'language') {
+    }
+  }
+
   async getDataDocumentType() {
     const data = await this.SettingsServices.getDocumentType();
     if (data.status) {
       this.AllDocument = data.data;
-      console.log('AllDocument', this.AllDocument);
     }
   }
 
@@ -46,7 +89,6 @@ export class EmployeesettingsComponent {
     const data = await this.SettingsServices.getDepartment();
     if (data.status) {
       this.AllDepartment = data.data;
-      console.log('AllDepartment', this.AllDepartment);
     }
   }
 
@@ -54,7 +96,6 @@ export class EmployeesettingsComponent {
     const data = await this.SettingsServices.getJobTitle();
     if (data.status) {
       this.AllJobTitle = data.data;
-      console.log('AllJobTitle', this.AllJobTitle);
     }
   }
 
@@ -62,7 +103,6 @@ export class EmployeesettingsComponent {
     const data = await this.SettingsServices.getJobType();
     if (data.status) {
       this.AllJobType = data.data;
-      console.log('AllJobType', this.AllJobType);
     }
   }
 
@@ -70,7 +110,6 @@ export class EmployeesettingsComponent {
     const data = await this.SettingsServices.getRelationship();
     if (data.status) {
       this.AllRelationship = data.data;
-      console.log('AllRelationship', this.AllRelationship);
     }
   }
 
@@ -78,7 +117,6 @@ export class EmployeesettingsComponent {
     const data = await this.SettingsServices.getLanguage();
     if (data.status) {
       this.AllLanguage = data.data;
-      console.log('AllLanguage', this.AllLanguage);
     }
   }
 
