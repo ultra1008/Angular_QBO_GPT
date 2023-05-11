@@ -8,6 +8,7 @@ import { DocumentTypeFormComponent } from './document-type-form/document-type-fo
 import { MatDialog } from '@angular/material/dialog';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { LogOut } from 'angular-feather/icons';
+import { DepartmentFormComponent } from './department-form/department-form.component';
 
 @Component({
   selector: 'app-employeesettings',
@@ -22,7 +23,7 @@ export class EmployeesettingsComponent {
   AllRelationship: any;
   AllLanguage: any;
 
-  currrent_tab: any;
+  currrent_tab: any = 'document';
 
   tab_Array: any = [
     'document',
@@ -62,15 +63,19 @@ export class EmployeesettingsComponent {
       console.log('document');
       const dialogRef = this.dialog.open(DocumentTypeFormComponent, {
         width: '350px',
-        data: {
-          // roleList: this.roleLists,
-          // invoiceStatus: '',
-        },
+        data: {},
       });
       dialogRef.afterClosed().subscribe((result) => {
-        //
+        this.getDataDocumentType();
       });
     } else if (this.currrent_tab == 'department') {
+      const dialogRef = this.dialog.open(DepartmentFormComponent, {
+        width: '350px',
+        data: {},
+      });
+      dialogRef.afterClosed().subscribe((result) => {
+        this.getDataDepartment();
+      });
     } else if (this.currrent_tab == 'jobtitle') {
     } else if (this.currrent_tab == 'jobtype') {
     } else if (this.currrent_tab == 'relationship') {
@@ -78,6 +83,36 @@ export class EmployeesettingsComponent {
     }
   }
 
+  edit(Document: any) {
+    if (this.currrent_tab == 'document') {
+      console.log('document');
+      const dialogRef = this.dialog.open(DocumentTypeFormComponent, {
+        data: Document,
+        disableClose: true,
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        this.getDataDocumentType();
+      });
+    }
+  }
+
+  editDepartment(Department: any) {
+    if (this.currrent_tab == 'department') {
+      const dialogRef = this.dialog.open(DepartmentFormComponent, {
+        data: Department,
+        disableClose: true,
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        this.getDataDepartment();
+      });
+    } else if (this.currrent_tab == 'jobtitle') {
+    } else if (this.currrent_tab == 'jobtype') {
+    } else if (this.currrent_tab == 'relationship') {
+    } else if (this.currrent_tab == 'language') {
+    }
+  }
   async getDataDocumentType() {
     const data = await this.SettingsServices.getDocumentType();
     if (data.status) {

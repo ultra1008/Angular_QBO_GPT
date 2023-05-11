@@ -249,44 +249,27 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     return data;
   }
 
-  async getRole() {
-    const data = await this.httpCall
-      .httpGetCall(httpversion.PORTAL_V1 + httproutes.USER_SETTING_ROLES_ALL)
-      .toPromise();
-    return data;
+  addAdvanceTable(Document: Settings): void {
+    this.dialogData = Document;
   }
 
-  async restoreUser(requestObject: any) {
+  async saveDocumentType(requestObject: any) {
     const data = await this.httpCall
       .httpPostCall(
-        httpversion.PORTAL_V1 + httproutes.USER_RECOVER,
+        httpversion.PORTAL_V1 + httproutes.SETTING_DOCUMENT_TYPE_SAVE,
         requestObject
       )
       .toPromise();
     return data;
   }
 
-  async getUser(is_delete: number) {
+  async saveDepartment(requestObject: any) {
     const data = await this.httpCall
       .httpPostCall(
-        httpversion.PORTAL_V1 + httproutes.PORTAL_USER_GET_FOR_TABLE,
-        { is_delete: is_delete }
+        httpversion.PORTAL_V1 + httproutes.SETTING_DEPARTMENTS_SAVE,
+        requestObject
       )
       .toPromise();
     return data;
-  }
-
-  addAdvanceTable(User: Settings): void {
-    this.dialogData = User;
-
-    // this.httpClient.post(this.API_URL, advanceTable)
-    //   .subscribe({
-    //     next: (data) => {
-    //       this.dialogData = advanceTable;
-    //     },
-    //     error: (error: HttpErrorResponse) => {
-    //        // error code here
-    //     },
-    //   });
   }
 }

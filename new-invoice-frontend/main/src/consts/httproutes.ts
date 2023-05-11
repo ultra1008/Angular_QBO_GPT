@@ -69,8 +69,10 @@ export enum httproutes {
   //employee
   SETTING_DOCUMENT_TYPE_GET = 'getalldoctype',
   SETTING_DOCUMENT_TYPE_DELETE = 'deletedoctype',
+  SETTING_DOCUMENT_TYPE_SAVE = 'savedoctype',
   SETTING_DEPARTMENTS_GET = 'getalldepartment',
   SETTING_DEPARTMENTS_DELETE = 'deletedepartment',
+  SETTING_DEPARTMENTS_SAVE = 'savedepartment',
   SETTING_JOB_TITLE_ALL = 'getAlljobtitle',
   SETTING_JOB_TITLE_DELETE = 'deletejobtitle',
   SETTING_JOB_TYPE_ALL = 'getAlljobtype',

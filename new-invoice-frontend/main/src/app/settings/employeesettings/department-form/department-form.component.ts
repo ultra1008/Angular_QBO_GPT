@@ -1,32 +1,30 @@
-import { SelectionModel } from '@angular/cdk/collections';
 import { Component, Inject } from '@angular/core';
 import {
   UntypedFormGroup,
   UntypedFormBuilder,
-  UntypedFormControl,
-  Validators,
-  FormControl,
   FormGroup,
+  FormControl,
+  Validators,
+  UntypedFormControl,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { UserRestoreFormComponent } from 'src/app/users/user-restore-form/user-restore-form.component';
+import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { AdvanceTable } from 'src/app/users/user.model';
-import { UserService } from 'src/app/users/user.service';
 import { showNotification } from 'src/consts/utils';
 import { SettingsService } from '../../settings.service';
-import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
+import { DocumentTypeFormComponent } from '../document-type-form/document-type-form.component';
 
 @Component({
-  selector: 'app-document-type-form',
-  templateUrl: './document-type-form.component.html',
-  styleUrls: ['./document-type-form.component.scss'],
+  selector: 'app-department-form',
+  templateUrl: './department-form.component.html',
+  styleUrls: ['./department-form.component.scss'],
 })
-export class DocumentTypeFormComponent {
+export class DepartmentFormComponent {
   action: string;
   dialogTitle: string;
-  DocumentInfo: UntypedFormGroup;
+  DepartmentInfo!: UntypedFormGroup;
   advanceTable: AdvanceTable;
   variablesRoleList: any = [];
 
@@ -44,30 +42,18 @@ export class DocumentTypeFormComponent {
     private router: Router,
     public uiSpinner: UiSpinnerService
   ) {
-    this.DocumentInfo = new FormGroup({
-      document_type_name: new FormControl('', [Validators.required]),
-      is_expiration: new FormControl(false),
+    this.DepartmentInfo = new FormGroup({
+      department_name: new FormControl('', [Validators.required]),
     });
     console.log('data', data);
-    // if (this.data) {
-    //   console.log('this.data.document_type_name', document_data.is_expiration);
-
-    //   this.DocumentInfo = new FormGroup({
-    //     document_type_name: new FormControl(document_data.document_type_name, [
-    //       Validators.required,
-    //     ]),
-    //     is_expiration: new FormControl(document_data.is_expiration),
-    //   });
-    // }
+    const document_data = data.data;
 
     if (this.data) {
       console.log('call');
-
-      this.DocumentInfo = new FormGroup({
-        document_type_name: new FormControl(this.data.document_type_name, [
+      this.DepartmentInfo = new FormGroup({
+        department_name: new FormControl(this.data.department_name, [
           Validators.required,
         ]),
-        is_expiration: new FormControl(this.data.is_expiration),
       });
     }
 
@@ -82,7 +68,6 @@ export class DocumentTypeFormComponent {
       const blankObject = {} as AdvanceTable;
       this.advanceTable = new AdvanceTable(blankObject);
     }
-    // this.DocumentInfo = this.createDocumentForm();
   }
   formControl = new UntypedFormControl('', [
     Validators.required, // Validators.email,
@@ -94,20 +79,15 @@ export class DocumentTypeFormComponent {
       ? 'Not a valid email'
       : '';
   }
-  // createDocumentForm(): UntypedFormGroup {
-  //   return this.fb.group({
-  //     document_type_name: ['', [Validators.required]],
-  //     is_expiration: new FormControl(false),
-  //   });
-  // }
+
   async submit() {
-    if (this.DocumentInfo.valid) {
-      let requestObject = this.DocumentInfo.value;
+    if (this.DepartmentInfo.valid) {
+      let requestObject = this.DepartmentInfo.value;
       if (this.data) {
         requestObject._id = this.data._id;
       }
       this.uiSpinner.spin$.next(true);
-      const data = await this.SettingsServices.saveDocumentType(requestObject);
+      const data = await this.SettingsServices.saveDepartment(requestObject);
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
@@ -123,6 +103,6 @@ export class DocumentTypeFormComponent {
     this.dialogRef.close();
   }
   public confirmAdd(): void {
-    this.advanceTableService.addAdvanceTable(this.DocumentInfo.getRawValue());
+    this.advanceTableService.addAdvanceTable(this.DepartmentInfo.getRawValue());
   }
 }
