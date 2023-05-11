@@ -20,7 +20,8 @@
             <div class="right">
               <ul class="tbl-export-btn">
                 <li class="tbl-header-btn">
-                  <div class="m-l-10" matTooltip="REFRESH" *ngIf="isDelete === 0">
+                  <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.REFRESH' |
+                                        translate}}" *ngIf="isDelete === 0">
                     <button mat-mini-fab color="primary" (click)="refresh()">
                       <mat-icon class="col-white">refresh</mat-icon>
                     </button>
@@ -35,7 +36,8 @@
                   </div>
                 </li>
                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                  <div class="m-l-10" matTooltip="ARCHIVE">
+                  <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ARCHIVE' |
+                                        translate}}">
                     <button mat-mini-fab color="primary" (click)="gotoArchiveUnarchive()">
                       <mat-icon class="col-white">archive
                       </mat-icon>
@@ -43,9 +45,18 @@
                   </div>
                 </li>
                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                  <div class="m-l-10" matTooltip="ADD">
+                  <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ADD' |
+                                        translate}}">
                     <button mat-mini-fab color="primary" (click)="addNew()">
                       <mat-icon class="col-white">add</mat-icon>
+                    </button>
+                  </div>
+                </li>
+                <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                  <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' |
+                                          translate}}">
+                    <button mat-mini-fab color="warn" (click)="back()">
+                      <mat-icon class="col-white">close </mat-icon>
                     </button>
                   </div>
                 </li>
@@ -109,12 +120,12 @@
                         <span>{{'COMMON.ACTIONS.EDIT' |
                           translate}}</span>
                       </button>
-                      <button mat-menu-item *ngIf="isDelete === 0" (click)="deleteVendor(row,1)">
+                      <button mat-menu-item *ngIf="isDelete === 0" (click)="deleteMailbox(row,1)">
                         <i class="material-icons-two-tone align-middle msr-2">archive</i>
                         <span>{{'COMMON.ACTIONS.ARCHIVE' |
-                          translate}}</span>s
+                          translate}}</span>
                       </button>
-                      <button mat-menu-item *ngIf="isDelete === 1" (click)="deleteVendor(row,0)">
+                      <button mat-menu-item *ngIf="isDelete === 1" (click)="deleteMailbox(row,0)">
                         <i class="material-icons-two-tone align-middle msr-2">archive</i>
                         <span>{{'COMMON.ACTIONS.RESTORE' |
                           translate}}</span>
@@ -128,15 +139,18 @@
               </table>
             </div>
             <!-- Loading spinner -->
-            <div *ngIf="mailboxDatabase?.isTblLoading" class="tbl-spinner">
+            <div *ngIf="mailboxService?.isTblLoading" class="tbl-spinner">
+              <app-loading></app-loading>
+            </div>
+            <!-- <div *ngIf="mailboxService?.isTblLoading" class="tbl-spinner">
               <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
               </mat-progress-spinner>
-            </div>
+            </div> -->
             <!-- context menu start -->
-            <div style="visibility: hidden; position: fixed" [style.left]="contextMenuPosition.x"
+            <!-- <div style="visibility: hidden; position: fixed" [style.left]="contextMenuPosition.x"
               [style.top]="contextMenuPosition.y" [matMenuTriggerFor]="contextMenu">
-            </div>
-            <mat-menu #contextMenu="matMenu">
+            </div> -->
+            <!-- <mat-menu #contextMenu="matMenu">
               <ng-template matMenuContent let-item="item">
                 <button mat-menu-item (click)="addNew()">
                   <mat-icon>add_box</mat-icon>
@@ -163,8 +177,8 @@
                   <span> Nested Menu</span>
                 </button>
               </ng-template>
-            </mat-menu>
-            <mat-menu #nestedmenu="matMenu">
+            </mat-menu> -->
+            <!-- <mat-menu #nestedmenu="matMenu">
               <button mat-menu-item>
                 <mat-icon>mail_outline</mat-icon>
                 <span>Item 1</span>
@@ -177,11 +191,11 @@
                 <mat-icon>chat</mat-icon>
                 <span>Item 3</span>
               </button>
-            </mat-menu>
+            </mat-menu> -->
             <!-- context menu end -->
-            <div *ngIf="!mailboxDatabase?.isTblLoading" class="no-results"
+            <div *ngIf="!mailboxService?.isTblLoading" class="no-results"
               [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-              No results
+              No matching records found
             </div>
             <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="10"
               [pageSizeOptions]="[5, 10, 25, 100]">

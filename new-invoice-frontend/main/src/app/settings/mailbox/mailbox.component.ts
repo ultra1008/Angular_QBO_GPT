@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { AdvanceTable } from '../settings.model';
+import { MailboxTable } from '../settings.model';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { BehaviorSubject, Observable, fromEvent, map, merge } from 'rxjs';
@@ -13,8 +13,6 @@ import {
   MatSnackBarVerticalPosition,
   MatSnackBarHorizontalPosition,
 } from '@angular/material/snack-bar';
-import { TableElement } from 'src/app/shared/TableElement';
-import { TableExportUtil } from 'src/app/shared/tableExportUtil';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import {
@@ -38,11 +36,11 @@ export class MailboxComponent
     'time',
     'actions',
   ];
-  mailboxDatabase?: SettingsService;
+  mailboxService?: SettingsService;
   dataSource!: MailboxDataSource;
-  selection = new SelectionModel<AdvanceTable>(true, []);
+  selection = new SelectionModel<MailboxTable>(true, []);
   id?: number;
-  advanceTable?: AdvanceTable;
+  // advanceTable?: MailboxTable;
   isDelete = 0;
   titleMessage: string = '';
 
@@ -72,35 +70,35 @@ export class MailboxComponent
     this.router.navigate(['/settings/mailbox-form']);
   }
 
-  editMailbox(settings: AdvanceTable) {
+  editMailbox(mailbox: MailboxTable) {
     this.router.navigate(['/settings/mailbox-form'], {
-      queryParams: { _id: settings._id },
+      queryParams: { _id: mailbox._id },
     });
   }
 
-  async archiveRecover(vendor: AdvanceTable, is_delete: number) {
+  async archiveRecover(mailbox: MailboxTable, is_delete: number) {
     const data = await this.SettingsService.deleteMailbox({
-      _id: vendor._id,
+      _id: mailbox._id,
       is_delete: is_delete,
     });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       const foundIndex = this.SettingsService?.dataChange.value.findIndex(
-        (x) => x._id === vendor._id
+        (x) => x._id === mailbox._id
       );
 
       // for delete we use splice in order to remove single object from DataService
       if (foundIndex != null && this.SettingsService) {
         this.SettingsService.dataChange.value.splice(foundIndex, 1);
-
         this.refreshTable();
+        location.reload();
       }
     } else {
       showNotification(this.snackBar, data.message, 'error');
     }
   }
 
-  async deleteVendor(vendor: AdvanceTable, is_delete: number) {
+  async deleteMailbox(mailbox: MailboxTable, is_delete: number) {
     if (is_delete == 1) {
       this.titleMessage = this.translate.instant(
         'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOX.CONFIRMATION_DIALOG.ARCHIVE'
@@ -120,7 +118,7 @@ export class MailboxComponent
       })
       .then((result) => {
         if (result.isConfirmed) {
-          this.archiveRecover(vendor, is_delete);
+          this.archiveRecover(mailbox, is_delete);
         }
       });
   }
@@ -133,6 +131,7 @@ export class MailboxComponent
   private refreshTable() {
     this.paginator._changePageSize(this.paginator.pageSize);
   }
+
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -155,9 +154,9 @@ export class MailboxComponent
         (d) => d === item
       );
       // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
-      this.mailboxDatabase?.dataChange.value.splice(index, 1);
+      this.mailboxService?.dataChange.value.splice(index, 1);
       this.refreshTable();
-      this.selection = new SelectionModel<AdvanceTable>(true, []);
+      this.selection = new SelectionModel<MailboxTable>(true, []);
     });
     this.showNotification(
       'snackbar-danger',
@@ -167,9 +166,10 @@ export class MailboxComponent
     );
   }
   public loadData() {
-    this.mailboxDatabase = new SettingsService(this.httpCall);
+    console.log('loadData call');
+    this.mailboxService = new SettingsService(this.httpCall);
     this.dataSource = new MailboxDataSource(
-      this.mailboxDatabase,
+      this.mailboxService,
       this.paginator,
       this.sort,
       this.isDelete
@@ -202,7 +202,7 @@ export class MailboxComponent
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: AdvanceTable) {
+  onContextMenu(event: MouseEvent, item: MailboxTable) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -213,7 +213,7 @@ export class MailboxComponent
     }
   }
 }
-export class MailboxDataSource extends DataSource<AdvanceTable> {
+export class MailboxDataSource extends DataSource<MailboxTable> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -221,10 +221,10 @@ export class MailboxDataSource extends DataSource<AdvanceTable> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: AdvanceTable[] = [];
-  renderedData: AdvanceTable[] = [];
+  filteredData: MailboxTable[] = [];
+  renderedData: MailboxTable[] = [];
   constructor(
-    public mailboxDatabase: SettingsService,
+    public mailboxService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
     public isDelete: number
@@ -234,26 +234,26 @@ export class MailboxDataSource extends DataSource<AdvanceTable> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<AdvanceTable[]> {
+  connect(): Observable<MailboxTable[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this.mailboxDatabase.dataChange,
+      this.mailboxService.dataChange,
       this._sort.sortChange,
       this.filterChange,
       this.paginator.page,
     ];
-    this.mailboxDatabase.getAllMailboxTable(this.isDelete);
+    this.mailboxService.getAllMailboxTable(this.isDelete);
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
-        this.filteredData = this.mailboxDatabase.data
+        this.filteredData = this.mailboxService.data
           .slice()
-          .filter((advanceTable: AdvanceTable) => {
+          .filter((mailboxTable: MailboxTable) => {
             const searchStr = (
-              advanceTable.email +
-              advanceTable.imap +
-              advanceTable.port +
-              advanceTable.time
+              mailboxTable.email +
+              mailboxTable.imap +
+              mailboxTable.port +
+              mailboxTable.time
             ).toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
@@ -273,7 +273,7 @@ export class MailboxDataSource extends DataSource<AdvanceTable> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: AdvanceTable[]): AdvanceTable[] {
+  sortData(data: MailboxTable[]): MailboxTable[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }
