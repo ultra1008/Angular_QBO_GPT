@@ -167,7 +167,9 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     const data = await this.httpCall
       .httpGetCall(httpversion.PORTAL_V1 + httproutes.OTHER_LANGUAGE_GET)
       .toPromise();
+    return data;
   }
+
   async updateSetting(requestObject: any) {
     const data = await this.httpCall
       .httpPostCall(
