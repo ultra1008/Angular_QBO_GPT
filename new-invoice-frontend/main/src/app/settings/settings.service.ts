@@ -3,24 +3,24 @@ import { UnsubscribeOnDestroyAdapter } from '../shared/UnsubscribeOnDestroyAdapt
 import { HttpCall } from '../services/httpcall.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { BehaviorSubject } from 'rxjs';
-import { AdvanceTable, Settings } from './settings.model';
+import { MailboxTable, Settings } from './settings.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 @Injectable()
 export class SettingsService extends UnsubscribeOnDestroyAdapter {
-  private readonly API_URL = 'assets/data/advanceTable.json';
+  // private readonly API_URL = 'assets/data/advanceTable.json';
   // dataChange: BehaviorSubject<Settings[]> = new BehaviorSubject<Settings[]>([]);
   // Temporarily stores data from dialogs
   dialogData!: any;
   isTblLoading = true;
-  dataChange: BehaviorSubject<AdvanceTable[]> = new BehaviorSubject<
-    AdvanceTable[]
+  dataChange: BehaviorSubject<MailboxTable[]> = new BehaviorSubject<
+    MailboxTable[]
   >([]);
 
   constructor(private httpCall: HttpCall) {
     super();
   }
-  get data(): AdvanceTable[] {
+  get data(): MailboxTable[] {
     return this.dataChange.value;
   }
   async getCompanyType() {
@@ -122,6 +122,58 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     const data = await this.httpCall
       .httpPostCall(
         httpversion.PORTAL_V1 + httproutes.DELETE_MAILBOX,
+        requestObject
+      )
+      .toPromise();
+    return data;
+  }
+
+  async getDocumentType() {
+    const data = await this.httpCall
+      .httpGetCall(httpversion.PORTAL_V1 + httproutes.SETTING_DOCUMENT_TYPE_GET)
+      .toPromise();
+    return data;
+  }
+
+  async getDepartment() {
+    const data = await this.httpCall
+      .httpGetCall(httpversion.PORTAL_V1 + httproutes.SETTING_DEPARTMENTS_GET)
+      .toPromise();
+    return data;
+  }
+
+  async getJobTitle() {
+    const data = await this.httpCall
+      .httpGetCall(httpversion.PORTAL_V1 + httproutes.SETTING_JOB_TITLE_ALL)
+      .toPromise();
+    return data;
+  }
+
+  async getJobType() {
+    const data = await this.httpCall
+      .httpGetCall(httpversion.PORTAL_V1 + httproutes.SETTING_JOB_TYPE_ALL)
+      .toPromise();
+    return data;
+  }
+
+  async getRelationship() {
+    const data = await this.httpCall
+      .httpGetCall(httpversion.PORTAL_V1 + httproutes.SETTING_RELATIONSHIP_ALL)
+      .toPromise();
+    return data;
+  }
+
+  async getLanguage() {
+    const data = await this.httpCall
+      .httpGetCall(httpversion.PORTAL_V1 + httproutes.OTHER_LANGUAGE_GET)
+      .toPromise();
+    return data;
+  }
+
+  async updateSetting(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.INVOICE_OTHER_SETTING_UPDATE_ALERTS,
         requestObject
       )
       .toPromise();

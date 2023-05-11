@@ -51,9 +51,9 @@ export enum httproutes {
   GET_LOCATION = 'getalllocation',
   GET_JOB_TITLE = 'getAlljobtitle',
   GET_JOB_TYPE = 'getAlljobtype',
-  GET_LANGUAGE = "getlanguage",
-  GET_DEPARTMENT = "getalldepartment",
-  SAVE_USER = "saveemployee",
+  GET_LANGUAGE = 'getlanguage',
+  GET_DEPARTMENT = 'getalldepartment',
+  SAVE_USER = 'saveemployee',
 
   //Mail box
   MAILBOX_DATA_TABLE = 'getMailboxMonitorForTable',
@@ -65,4 +65,16 @@ export enum httproutes {
   GET_COMPNAY_SMTP = 'compnaysmtp',
   VERIFY_SMTP = 'compnayverifysmtp',
   SAVE_SMTP = 'compnayupdatesmtp',
+
+  //employee
+  SETTING_DOCUMENT_TYPE_GET = 'getalldoctype',
+  SETTING_DEPARTMENTS_GET = 'getalldepartment',
+  SETTING_JOB_TITLE_ALL = 'getAlljobtitle',
+  SETTING_JOB_TYPE_ALL = 'getAlljobtype',
+  SETTING_RELATIONSHIP_ALL = 'getallrelationships',
+  OTHER_LANGUAGE_GET = 'getlanguage',
+
+  // Document_View
+  INVOICE_OTHER_SETTING_UPDATE_ALERTS = 'getupdatesetting',
+  PORTAL_ROVUK_INVOICE__SETTINGS_GET_ALL_ALERTS = 'getallsetting',
 }

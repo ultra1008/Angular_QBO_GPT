@@ -49,26 +49,20 @@ export class settingTable {
   }
 }
 
-export class AdvanceTable {
-  _id: number;
+export class MailboxTable {
+  _id: string;
   email: string;
   imap: string;
   port: number;
   time: string;
 
-  constructor(advanceTable: AdvanceTable) {
+  constructor(mailboxTable: MailboxTable) {
     {
-      this._id = advanceTable._id || this.getRandomID();
-      this.email = advanceTable.email || '';
-      this.imap = advanceTable.imap || '';
-      this.port = advanceTable.port;
-      this.time = advanceTable.time || '';
+      this._id = mailboxTable._id;
+      this.email = mailboxTable.email;
+      this.imap = mailboxTable.imap;
+      this.port = mailboxTable.port;
+      this.time = mailboxTable.time;
     }
-  }
-  public getRandomID(): number {
-    const S4 = () => {
-      return ((1 + Math.random()) * 0x10000) | 0;
-    };
-    return S4() + S4();
   }
 }
