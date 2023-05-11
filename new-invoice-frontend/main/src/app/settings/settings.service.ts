@@ -127,4 +127,46 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
       .toPromise();
     return data;
   }
+
+  async getDocumentType() {
+    const data = await this.httpCall
+      .httpGetCall(httpversion.PORTAL_V1 + httproutes.SETTING_DOCUMENT_TYPE_GET)
+      .toPromise();
+    return data;
+  }
+
+  async getDepartment() {
+    const data = await this.httpCall
+      .httpGetCall(httpversion.PORTAL_V1 + httproutes.SETTING_DEPARTMENTS_GET)
+      .toPromise();
+    return data;
+  }
+
+  async getJobTitle() {
+    const data = await this.httpCall
+      .httpGetCall(httpversion.PORTAL_V1 + httproutes.SETTING_JOB_TITLE_ALL)
+      .toPromise();
+    return data;
+  }
+
+  async getJobType() {
+    const data = await this.httpCall
+      .httpGetCall(httpversion.PORTAL_V1 + httproutes.SETTING_JOB_TYPE_ALL)
+      .toPromise();
+    return data;
+  }
+
+  async getRelationship() {
+    const data = await this.httpCall
+      .httpGetCall(httpversion.PORTAL_V1 + httproutes.SETTING_RELATIONSHIP_ALL)
+      .toPromise();
+    return data;
+  }
+
+  async getLanguage() {
+    const data = await this.httpCall
+      .httpGetCall(httpversion.PORTAL_V1 + httproutes.OTHER_LANGUAGE_GET)
+      .toPromise();
+    return data;
+  }
 }
