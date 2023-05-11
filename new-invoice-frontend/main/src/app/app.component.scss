@@ -1,51 +1,9 @@
-
-// ::ng-deep .mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs>.mat-mdc-tab-header .mat-mdc-tab {
-//     background-color: #023E8A !important;
-//     height: 35px;
-// }
-
-// ::ng-deep .mat-mdc-tab .mdc-tab__text-label, .mat-mdc-tab-link .mdc-tab__text-label {
-//     color: aliceblue;
-
-// }
-
-
-  
-//   ::ng-deep  .content--active {
-//     display: block;
-//     color: palegreen ;
-//     background-color: aqua !important;
-//   }
-
-// ::ng-deep .mdc-tab--active .mdc-tab-indicator--active {
-//     background-color: green !important;
-// }
-
-
-// ::ng-deep .mat-mdc-tab:not(.mat-mdc-tab-disabled).mdc-tab--active .mdc-tab__text-label, .mat-mdc-tab-link:not(.mat-mdc-tab-disabled).mdc-tab--active .mdc-tab__text-label {
-//     color: aliceblue;
-
-// }
-
-::ng-deep .mat-tab-label {
-    opacity: unset !important;
+::ng-deep .s2-confirm {
+     width: 130px !important;
+     margin: 2px;
 }
 
-
-::ng-deep .mdc-tab .mat-mdc-tab .mat-mdc-focus-indicator .ng-star-inserted {
-    color: rgb(255, 255, 255) !important;
-    background-color: green !important;
-    border: 2px;
-    border-color: azure;
-}
-
-::ng-deep .mat-tab-label-active{
-    color: green !important
-   }
-
-
-::ng-deep .mat-tab-label-content {
-    color: white !important;
-    padding-bottom: 9px !important;
-
+::ng-deep .btn-gray {
+     background-color: grey !important;
+     color: white !important;
 }

@@ -53,7 +53,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   dataSource!: VendorDataSource;
   selection = new SelectionModel<Vendor>(true, []);
   id?: number;
-  advanceTable?: Vendor;
+  // advanceTable?: Vendor;
   isDelete = 0;
   termsList: Array<TermModel> = [];
   titleMessage: string = "";
@@ -121,6 +121,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     // 
   }
   public loadData() {
+    console.log('Vendor loadData call');
     this.vendorService = new VendorsService(this.httpCall);
     this.dataSource = new VendorDataSource(
       this.vendorService,
@@ -298,14 +299,14 @@ export class VendorDataSource extends DataSource<Vendor> {
         // Filter data
         this.filteredData = this.vendorService.data
           .slice()
-          .filter((advanceTable: Vendor) => {
+          .filter((vendorTable: Vendor) => {
             const searchStr = (
-              advanceTable.vendor_name +
-              advanceTable.vendor_id +
-              advanceTable.customer_id +
-              advanceTable.vendor_phone +
-              advanceTable.vendor_email +
-              advanceTable.vendor_address
+              vendorTable.vendor_name +
+              vendorTable.vendor_id +
+              vendorTable.customer_id +
+              vendorTable.vendor_phone +
+              vendorTable.vendor_email +
+              vendorTable.vendor_address
             ).toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });

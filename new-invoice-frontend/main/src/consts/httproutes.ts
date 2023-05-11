@@ -73,4 +73,8 @@ export enum httproutes {
   SETTING_JOB_TYPE_ALL = 'getAlljobtype',
   SETTING_RELATIONSHIP_ALL = 'getallrelationships',
   OTHER_LANGUAGE_GET = 'getlanguage',
+
+  // Document_View
+  INVOICE_OTHER_SETTING_UPDATE_ALERTS = 'getupdatesetting',
+  PORTAL_ROVUK_INVOICE__SETTINGS_GET_ALL_ALERTS = 'getallsetting',
 }
