@@ -33,7 +33,7 @@ export class JobTitleFormComponent {
   userList: any = [];
   isDelete = 0;
   constructor(
-    public dialogRef: MatDialogRef<DocumentTypeFormComponent>,
+    public dialogRef: MatDialogRef<JobTitleFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: SettingsService,
     private fb: UntypedFormBuilder,
@@ -43,7 +43,7 @@ export class JobTitleFormComponent {
     public uiSpinner: UiSpinnerService
   ) {
     this.jobtitleInfo = new FormGroup({
-      department_name: new FormControl('', [Validators.required]),
+      job_title_name: new FormControl('', [Validators.required]),
     });
     console.log('data', data);
     const document_data = data.data;
@@ -51,7 +51,7 @@ export class JobTitleFormComponent {
     if (this.data) {
       console.log('call');
       this.jobtitleInfo = new FormGroup({
-        department_name: new FormControl(this.data.department_name, [
+        job_title_name: new FormControl(this.data.job_title_name, [
           Validators.required,
         ]),
       });

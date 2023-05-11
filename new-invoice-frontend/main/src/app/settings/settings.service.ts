@@ -272,4 +272,14 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
       .toPromise();
     return data;
   }
+
+  async saveJobTitle(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.SETTING_JOB_TITLE_SAVE,
+        requestObject
+      )
+      .toPromise();
+    return data;
+  }
 }

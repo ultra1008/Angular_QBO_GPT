@@ -75,6 +75,7 @@ export enum httproutes {
   SETTING_DEPARTMENTS_SAVE = 'savedepartment',
   SETTING_JOB_TITLE_ALL = 'getAlljobtitle',
   SETTING_JOB_TITLE_DELETE = 'deletejobtitle',
+  SETTING_JOB_TITLE_SAVE = 'savejobtitle',
   SETTING_JOB_TYPE_ALL = 'getAlljobtype',
   SETTING_JOB_TYPE_DELETE = 'deletejobtype',
   SETTING_RELATIONSHIP_ALL = 'getallrelationships',

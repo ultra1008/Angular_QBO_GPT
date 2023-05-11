@@ -33,7 +33,7 @@ export class DepartmentFormComponent {
   userList: any = [];
   isDelete = 0;
   constructor(
-    public dialogRef: MatDialogRef<DocumentTypeFormComponent>,
+    public dialogRef: MatDialogRef<DepartmentFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: SettingsService,
     private fb: UntypedFormBuilder,

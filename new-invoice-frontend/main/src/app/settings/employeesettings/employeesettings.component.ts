@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { LogOut } from 'angular-feather/icons';
 import { DepartmentFormComponent } from './department-form/department-form.component';
+import { JobTitleFormComponent } from './job-title-form/job-title-form.component';
 
 @Component({
   selector: 'app-employeesettings',
@@ -77,6 +78,13 @@ export class EmployeesettingsComponent {
         this.getDataDepartment();
       });
     } else if (this.currrent_tab == 'jobtitle') {
+      const dialogRef = this.dialog.open(JobTitleFormComponent, {
+        width: '350px',
+        data: {},
+      });
+      dialogRef.afterClosed().subscribe((result) => {
+        this.getDataJobTitle();
+      });
     } else if (this.currrent_tab == 'jobtype') {
     } else if (this.currrent_tab == 'relationship') {
     } else if (this.currrent_tab == 'language') {
@@ -108,6 +116,21 @@ export class EmployeesettingsComponent {
         this.getDataDepartment();
       });
     } else if (this.currrent_tab == 'jobtitle') {
+    } else if (this.currrent_tab == 'jobtype') {
+    } else if (this.currrent_tab == 'relationship') {
+    } else if (this.currrent_tab == 'language') {
+    }
+  }
+
+  editJobtitle(JobTitle: any) {
+    if (this.currrent_tab == 'jobtitle') {
+      const dialogRef = this.dialog.open(JobTitleFormComponent, {
+        data: JobTitle,
+        disableClose: true,
+      });
+      dialogRef.afterClosed().subscribe((result) => {
+        this.getDataJobTitle();
+      });
     } else if (this.currrent_tab == 'jobtype') {
     } else if (this.currrent_tab == 'relationship') {
     } else if (this.currrent_tab == 'language') {
