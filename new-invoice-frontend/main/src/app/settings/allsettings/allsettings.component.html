@@ -11,12 +11,12 @@
                                 <i class="fas fa-pen pull-left card-icon col-white font-20 mt-2"></i>
                             </div>
                             <div class="profile-header bg-indigo">
-                                <div class="user-name">{{CompanyData.companyname}}</div>
-                                <div class="name-center">{{CompanyData.companycode}}</div>
+                                <div class="user-name">{{CompanyData?.companyname}}</div>
+                                <div class="name-center">{{CompanyData?.companycode}}</div>
                             </div>
-                            <img src="{{CompanyData.companylogo}}" width="112px" height="112px" class="user-img img-color" alt="">
+                            <img src="{{CompanyData?.companylogo}}" width="112px" height="112px" class="user-img img-color" alt="">
                             <p> 
-                                {{CompanyData.companyaddress}}, {{CompanyData.companyaddresscity}}, {{CompanyData.companyaddressstate}}, {{CompanyData.companyaddresszip}}
+                                {{CompanyData?.companyaddress}}, {{CompanyData?.companyaddresscity}}, {{CompanyData?.companyaddressstate}}, {{CompanyData?.companyaddresszip}}
                             </p>
                         </div>
                     </div>
@@ -28,16 +28,16 @@
                         <h4><strong>{{'SETTINGS.VIEW.CONTACT_INFORMATION' | translate}}</strong></h4>
                         <strong>{{'SETTINGS.VIEW.EMAIL_ADDRESS' | translate}}</strong>
                         <br>
-                        <p class="text-muted">{{CompanyData.companyemail}}</p>
+                        <p class="text-muted">{{CompanyData?.companyemail}}</p>
                         <strong>{{'SETTINGS.VIEW.PHONE' | translate}}</strong>
                         <br>
-                        <p class="text-muted">{{CompanyData.companyphone}}</p>
+                        <p class="text-muted">{{CompanyData?.companyphone}}</p>
                         <strong>{{'SETTINGS.VIEW.PHONE2' | translate}}</strong>
                         <br>
-                        <p class="text-muted">{{CompanyData.companyphone2}}</p>
+                        <p class="text-muted">{{CompanyData?.companyphone2}}</p>
                         <strong>{{'SETTINGS.VIEW.WEBSITE' | translate}}</strong>
                         <br>
-                        <p class="text-muted">{{CompanyData.companywebsite}}</p>
+                        <p class="text-muted">{{CompanyData?.companywebsite}}</p>
                     </div>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                         <p class="text-muted">{{companySizeName}}</p>
                         <strong>{{'SETTINGS.VIEW.COMPANY_ACTIVE_SINCE' | translate}}</strong>
                         <br>
-                        <p class="text-muted">{{CompanyData.companyactivesince}}</p>
+                        <p class="text-muted">{{CompanyData?.companyactivesince}}</p>
                     </div>
                 </div>
             </div>
