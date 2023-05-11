@@ -9,6 +9,7 @@
                             <ul class="header-buttons-left ms-0">
                                 <li class="tbl-title">
                                     <h2>Employee</h2>
+                                    
                                 </li>
                             </ul>
                         </div>
@@ -28,10 +29,50 @@
                     <div class="body overflow-auto">
                         <div class="main-cust-setting-div">
                             <mat-tab-group>
-                                <mat-tab label="Document Type">
+                                <mat-tab  label="Document Type"  >
                                     <br>
-                                    <b>Home Content</b>
-
+                                    <div class="materialTableHeader">
+                                        <div class="left">
+                                            <ul class="header-buttons-left ms-0">
+                                                <li class="tbl-title">
+                                                    
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="right">
+                                            <ul class="tbl-export-btn">
+                                                <li class="tbl-header-btn">
+                                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ADD' |
+                                                    translate}}">
+                                                    <button mat-mini-fab color="primary" >
+                                                        <mat-icon class="col-white">add</mat-icon>
+                                                    </button>
+                                                </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3" >
+                                        <div  class="col-lg-3 col-md-4 col-sm-6 col-xs-12"  *ngFor="let country of [1,2,3,4,5,6,7,8,9]">
+                                            <div class="card " style="height: 112px;">
+                                              <div class="card-body">
+                                                <div class="row">
+                                                  <div class="col mt-0">
+                                                    <h5 class="card-title">New Customers</h5>
+                                                  </div>
+                                                  <div class="col-auto">
+                                                    <div class="col-green">
+                                                      <i class="fas fa-ellipsis-v"></i>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                               
+                                              </div>
+                                            </div>
+                                            
+                                          </div>
+                                    </div>
+                                    
                                 </mat-tab>
                                 <mat-tab label="Departments">
                                     <br>
