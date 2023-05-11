@@ -27,8 +27,9 @@ export class UserRestoreFormComponent {
   dialogTitle: string;
   userRoleInfo: UntypedFormGroup;
   advanceTable: AdvanceTable;
-  variablesRoleList: any = [];
   selection = new SelectionModel<User>(true, []);
+  variablesRoleList: any = [];
+
   roleList: any = this.variablesRoleList.slice();
   titleMessage: string = "";
   userList: any = [];
