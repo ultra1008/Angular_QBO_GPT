@@ -165,6 +165,16 @@
             "DOCUMENT_VIEW_TEXT": "Display documents older then",
             "ARCHIVE_ORPHAN_DOCUMENT_TEXT": "Archive after",
             "DAYS_ALL": "days"
+        },
+        "SMTP": {
+            "SMTP_TITLE": "SMTP",
+            "SMTP_SERVER": "Servidor SMTP",
+            "SMTP_USERNAME": "Nombre de usuario SMTP",
+            "SMTP_PORT": "Puerto SMTP",
+            "SMTP_SERVER_TIMEOUT": "Tiempo de espera del servidor SMTP",
+            "SMTP_PASSWORD": "Contraseña SMTP",
+            "SMTP_TLS": "Seguridad de la capa de transporte activa (TLS)",
+            "SMTP_AUTO_EMAIL": "Respuesta automática por correo electrónico al correo electrónico"
         }
     }
 }

@@ -5,11 +5,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
-import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
+import { showNotification } from 'src/consts/utils';
 import { configData } from 'src/environments/configData';
 import { SettingsService } from '../settings.service';
 
@@ -37,9 +36,7 @@ export class SmtpComponent {
     private snackBar: MatSnackBar,
     public uiSpinner: UiSpinnerService,
     public route: ActivatedRoute,
-    private sanitiser: DomSanitizer,
     public httpCall: HttpCall,
-    // public commonService: CommonService,
     public SettingsServices: SettingsService
   ) {
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
@@ -57,16 +54,13 @@ export class SmtpComponent {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   async getCompanySmtp() {
     const data = await this.SettingsServices.getCompanysmtp();
-    console.log('data', data);
-
     if (data.status) {
       let stmp = data.data;
       this.compnay_id = stmp.company_id;
-      console.log('data', stmp);
       this.companyinfoForm = this.fb.group({
         tenant_smtp_server: [stmp.tenant_smtp_server, Validators.required],
         tenant_smtp_username: [stmp.tenant_smtp_username, Validators.required],
@@ -82,43 +76,7 @@ export class SmtpComponent {
     }
   }
 
-  confirmExit() {
-    swalWithBootstrapButtons
-      .fire({
-        title:
-          'Are you sure you want to close this window without saving changes?',
-        showDenyButton: true,
-        showCancelButton: true,
-        confirmButtonText: 'Save And Exit',
-        cancelButtonText: 'Dont Save',
-        denyButtonText: 'Cancel',
-        allowOutsideClick: false,
-      })
-      .then((result) => {
-        if (result.isConfirmed) {
-          // Move to the vendor listing
-          if (this.companyinfoForm.valid) {
-            this.saveVendor();
-          } else {
-            // alert form invalidation
-            showNotification(
-              this.snackBar,
-              'Please complete the vendor form before submitting.',
-              'error'
-            );
-          }
-        } else if (result.isDenied) {
-          // ;
-        } else {
-          setTimeout(() => {
-            this.router.navigate(['/settings/mailbox']);
-          }, 100);
-        }
-      });
-  }
-
-  async saveVendor() {
-    let that = this;
+  async saveSMTP() {
     if (this.companyinfoForm.valid) {
       let requestObject = this.companyinfoForm.value;
       requestObject._id = this.compnay_id;
@@ -134,8 +92,7 @@ export class SmtpComponent {
     }
   }
 
-  async VerifySmtp() {
-    let that = this;
+  async verifySMTP() {
     if (this.companyinfoForm.valid) {
       let requestObject = this.companyinfoForm.value;
       this.uiSpinner.spin$.next(true);
