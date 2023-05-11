@@ -923,5 +923,13 @@ module.exports = {
     MailboxMonitorUpdated: 'Mailbox Monitor updated successfully.',
     MailboxMonitorDeleted: 'Mailbox Monitor deleted successfully.',
 
+
     Processor_Restrict_Mobile_Login: 'Your role does not have login permission in mobile application.  Kindly contact admin of your company to access in the mobile app.',
+
+    //Language
+    LanguageListing: "Language listing",
+    LanguageUpdated: "Language updated successfully.",
+    LanguageAdded: "Language added successfully.",
+    LanguageDeleted: "Language deleted successfully."
+
 };

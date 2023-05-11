@@ -8,14 +8,15 @@
                         <div class="left">
                             <ul class="header-buttons-left ms-0">
                                 <li class="tbl-title">
-                                    <h2>SMTP</h2>
+                                    <h2>{{'SETTINGS.SMTP.SMTP_TITLE' | translate}}</h2>
                                 </li>
                             </ul>
                         </div>
                         <div class="right">
                             <ul class="tbl-export-btn">
                                 <li class="tbl-header-btn">
-                                    <div class="m-l-10" matTooltip="CLOSE">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' |
+                                          translate}}">
                                         <button mat-mini-fab color="warn" (click)="back()">
                                             <mat-icon class="col-white">close </mat-icon>
                                         </button>
@@ -29,61 +30,62 @@
                             <div class="row mt-2">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field appearance="outline" class="example-full-width">
-                                        <mat-label>SMTP Server</mat-label>
+                                        <mat-label>{{'SETTINGS.SMTP.SMTP_SERVER' | translate}}</mat-label>
                                         <input matInput formControlName="tenant_smtp_server"
                                             class="input-capitalized-textfield"
-                                            placeholder="SMTP Server">
+                                            placeholder="{{'SETTINGS.SMTP.SMTP_SERVER' | translate}}">
                                     </mat-form-field>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field appearance="outline" class="example-full-width">
-                                        <mat-label>SMTP Username</mat-label>
+                                        <mat-label>{{'SETTINGS.SMTP.SMTP_USERNAME' | translate}}</mat-label>
                                         <input matInput formControlName="tenant_smtp_username"
                                             class="input-capitalized-textfield"
-                                            placeholder="SMTP Username">
+                                            placeholder="{{'SETTINGS.SMTP.SMTP_USERNAME' | translate}}">
                                     </mat-form-field>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field appearance="outline" class="example-full-width">
-                                        <mat-label>SMTP Port</mat-label>
+                                        <mat-label>{{'SETTINGS.SMTP.SMTP_PORT' | translate}}</mat-label>
                                         <input matInput
                                             onkeypress="return String.fromCharCode(event.charCode).match(/[^0-9]/g) === null"
                                             formControlName="tenant_smtp_port" class="input-capitalized-textfield"
-                                            placeholder="SMTP Port">
+                                            placeholder="{{'SETTINGS.SMTP.SMTP_PORT' | translate}}">
                                     </mat-form-field>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field appearance="outline" class="example-full-width">
-                                        <mat-label>SMTP Server Timeout</mat-label>
+                                        <mat-label>{{'SETTINGS.SMTP.SMTP_SERVER_TIMEOUT' | translate}}</mat-label>
                                         <input matInput
                                             onkeypress="return String.fromCharCode(event.charCode).match(/[^0-9]/g) === null"
                                             formControlName="tenant_smtp_timeout" class="input-capitalized-textfield"
-                                            placeholder="SMTP Server Timeout">
+                                            placeholder="{{'SETTINGS.SMTP.SMTP_SERVER_TIMEOUT' | translate}}">
                                     </mat-form-field>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field appearance="outline" class="example-full-width">
-                                        <mat-label>SMTP Password</mat-label>
+                                        <mat-label>{{'SETTINGS.SMTP.SMTP_PASSWORD' | translate}}</mat-label>
                                         <input type="password" matInput formControlName="tenant_smtp_password"
                                             class="input-capitalized-textfield"
-                                            placeholder="SMTP Password">
+                                            placeholder="{{'SETTINGS.SMTP.SMTP_PASSWORD' | translate}}">
                                     </mat-form-field>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field appearance="outline" class="example-full-width">
-                                        <mat-label>Active Transport Layer Security(TLS)
+                                        <mat-label>{{'SETTINGS.SMTP.SMTP_TLS' | translate}}
                                         </mat-label>
-                                        <mat-select formControlName="tenant_smtp_security" class="dark-cust-color" required>
+                                        <mat-select formControlName="tenant_smtp_security" class="dark-cust-color"
+                                            required>
                                             <mat-option *ngFor="let lts of LTS_ACTIVE" [value]="lts.value">
                                                 {{lts.viewValue}}
                                             </mat-option>
@@ -94,19 +96,19 @@
                             <div class="row">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field appearance="outline" class="example-full-width">
-                                        <mat-label>Auto Eail reply to-email</mat-label>
+                                        <mat-label>{{'SETTINGS.SMTP.SMTP_AUTO_EMAIL' | translate}}</mat-label>
                                         <input matInput formControlName="tenant_smtp_reply_to_mail"
                                             class="input-capitalized-textfield"
-                                            placeholder="Auto Eail reply to-email">
+                                            placeholder="{{'SETTINGS.SMTP.SMTP_AUTO_EMAIL' | translate}}">
                                     </mat-form-field>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                     <button type="button" class="btn-space" mat-raised-button color="warn"
-                                    (click)="VerifySmtp()">Verify</button>
-                                    <button  mat-raised-button color="primary"
-                                        [disabled]="!companyinfoForm.valid" (click)="saveVendor()">{{'COMMON.ACTIONS.SAVE'|
+                                        (click)="verifySMTP()">Verify</button>
+                                    <button mat-raised-button color="primary" [disabled]="!companyinfoForm.valid"
+                                        (click)="saveSMTP()">{{'COMMON.ACTIONS.SAVE'|
                                         translate}}</button>
                                 </div>
                             </div>
