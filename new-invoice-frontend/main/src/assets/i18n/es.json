@@ -10,7 +10,8 @@
             "BACK": "ATRÁS",
             "SEARCH": "Buscar",
             "MULTI_ARCHIVE": "ARCHIVO MULTI",
-            "LIST_TO_GRID": "LISTA A CUADRO"
+            "LIST_TO_GRID": "LISTA A CUADRO",
+            "CLOSE": "Cerca"
         },
         "ACTIONS": {
             "EDIT": "Editar",
@@ -156,6 +157,24 @@
                 "CONFIRMATION_DIALOG": {
                     "ARCHIVE": "¿Estás seguro de que quieres archivar este buzón?",
                     "RESTORE": "¿Estás seguro de que quieres restaurar este buzón?"
+                }
+            },
+            "EMPLOYEE_MODULE": {
+                "DOCUMENT_TYPE": "Tipo de Documento",
+                "DEPARTMENT": "Departamentos",
+                "JOBTITLE": "Título profesional",
+                "JOBTYPE": "El tipo de trabajo",
+                "RELATIONSHIP": "Relación",
+                "LANGUAGE": "Idioma",
+                "DELETE": "Borrar",
+                "EXPIRATION_DATE": "Fecha de caducidad",
+                "CONFIRMATION_DIALOG": {
+                    "DOCUMENT": "¿Está seguro de que desea eliminar el tipo de documento?",
+                    "DEPARTMENT": "¿Está seguro de que desea eliminar el departamento?",
+                    "JOBTYPE": "¿Estás seguro de que quieres eliminar tipo de trabajo?",
+                    "JOBTITLE": "¿Estás seguro de que quieres eliminar el título del trabajo?",
+                    "RELATIONSHIP": "¿Estás seguro de que quieres eliminar la relación?",
+                    "LANGUAGE": "¿Está seguro de que desea eliminar el idioma?"
                 }
             }
         },

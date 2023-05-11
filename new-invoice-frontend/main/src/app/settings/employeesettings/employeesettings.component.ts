@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { SettingsService } from '../settings.service';
+import { showNotification, swalWithBootstrapButtons } from 'src/consts/utils';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-employeesettings',
@@ -19,7 +21,8 @@ export class EmployeesettingsComponent {
   constructor(
     private router: Router,
     public translate: TranslateService,
-    public SettingsServices: SettingsService
+    public SettingsServices: SettingsService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -77,6 +80,168 @@ export class EmployeesettingsComponent {
       this.AllLanguage = data.data;
       console.log('AllLanguage', this.AllLanguage);
     }
+  }
+
+  async deleteDocumentType(Document: any) {
+    let that = this;
+    swalWithBootstrapButtons
+      .fire({
+        title: this.translate.instant(
+          'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.CONFIRMATION_DIALOG.DOCUMENT'
+        ),
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+        denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+        allowOutsideClick: false,
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          const data = await this.SettingsServices.DeleteDocumentType(
+            Document._id
+          );
+          if (data.status) {
+            showNotification(this.snackBar, data.message, 'success');
+            that.getDataDocumentType();
+          } else {
+            showNotification(this.snackBar, data.message, 'error');
+          }
+        }
+      });
+  }
+
+  async deleteDepartment(Department: any) {
+    let that = this;
+    swalWithBootstrapButtons
+      .fire({
+        title: this.translate.instant(
+          'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.CONFIRMATION_DIALOG.DEPARTMENT'
+        ),
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+        denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+        allowOutsideClick: false,
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          const data = await this.SettingsServices.DeleteDepartments(
+            Department._id
+          );
+          if (data.status) {
+            showNotification(this.snackBar, data.message, 'success');
+            that.getDataDepartment();
+          } else {
+            showNotification(this.snackBar, data.message, 'error');
+          }
+        }
+      });
+  }
+
+  async deleteJobType(JobType: any) {
+    let that = this;
+    swalWithBootstrapButtons
+      .fire({
+        title: this.translate.instant(
+          'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.CONFIRMATION_DIALOG.JOBTYPE'
+        ),
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+        denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+        allowOutsideClick: false,
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          const data = await this.SettingsServices.DeleteJobType(JobType._id);
+          if (data.status) {
+            showNotification(this.snackBar, data.message, 'success');
+            that.getDataJobType();
+          } else {
+            showNotification(this.snackBar, data.message, 'error');
+          }
+        }
+      });
+  }
+
+  async deleteJobTitle(JobTitle: any) {
+    let that = this;
+    swalWithBootstrapButtons
+      .fire({
+        title: this.translate.instant(
+          'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.CONFIRMATION_DIALOG.JOBTITLE'
+        ),
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+        denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+        allowOutsideClick: false,
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          const data = await this.SettingsServices.DeleteJobTitle(JobTitle._id);
+          if (data.status) {
+            showNotification(this.snackBar, data.message, 'success');
+            that.getDataJobTitle();
+          } else {
+            showNotification(this.snackBar, data.message, 'error');
+          }
+        }
+      });
+  }
+
+  async deleteRelationship(Relationship: any) {
+    let that = this;
+    swalWithBootstrapButtons
+      .fire({
+        title: this.translate.instant(
+          'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.CONFIRMATION_DIALOG.RELATIONSHIP'
+        ),
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+        denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+        allowOutsideClick: false,
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          const data = await this.SettingsServices.DeleteRelationship(
+            Relationship._id
+          );
+          if (data.status) {
+            showNotification(this.snackBar, data.message, 'success');
+            that.getDataRelationship();
+          } else {
+            showNotification(this.snackBar, data.message, 'error');
+          }
+        }
+      });
+  }
+
+  async deleteLanguage(Language: any) {
+    let that = this;
+    swalWithBootstrapButtons
+      .fire({
+        title: this.translate.instant(
+          'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.CONFIRMATION_DIALOG.LANGUAGE'
+        ),
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+        denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+        allowOutsideClick: false,
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          const data = await this.SettingsServices.DeleteLanguage(Language._id);
+          if (data.status) {
+            showNotification(this.snackBar, data.message, 'success');
+            that.getDataLanguage();
+          } else {
+            showNotification(this.snackBar, data.message, 'error');
+          }
+        }
+      });
   }
 
   back() {

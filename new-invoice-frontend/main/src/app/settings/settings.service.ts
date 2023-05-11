@@ -179,4 +179,73 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
       .toPromise();
     return data;
   }
+
+  async DeleteDocumentType(_id: string) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.SETTING_DOCUMENT_TYPE_DELETE,
+        {
+          _id: _id,
+        }
+      )
+      .toPromise();
+    return data;
+  }
+
+  async DeleteDepartments(_id: string) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.SETTING_DEPARTMENTS_DELETE,
+        {
+          _id: _id,
+        }
+      )
+      .toPromise();
+    return data;
+  }
+
+  async DeleteJobType(_id: string) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.SETTING_JOB_TYPE_DELETE,
+        {
+          _id: _id,
+        }
+      )
+      .toPromise();
+    return data;
+  }
+
+  async DeleteJobTitle(_id: string) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.SETTING_JOB_TITLE_DELETE,
+        {
+          _id: _id,
+        }
+      )
+      .toPromise();
+    return data;
+  }
+
+  async DeleteRelationship(_id: string) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.SETTING_RELATIONSHIP_DELETE,
+        {
+          _id: _id,
+        }
+      )
+      .toPromise();
+    return data;
+  }
+
+  async DeleteLanguage(_id: string) {
+    const data = await this.httpCall
+      .httpPostCall(httpversion.PORTAL_V1 + httproutes.OTHER_LANGUAGE_DELETE, {
+        _id: _id,
+      })
+      .toPromise();
+    return data;
+  }
 }

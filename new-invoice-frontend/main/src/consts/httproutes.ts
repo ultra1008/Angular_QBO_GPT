@@ -68,11 +68,17 @@ export enum httproutes {
 
   //employee
   SETTING_DOCUMENT_TYPE_GET = 'getalldoctype',
+  SETTING_DOCUMENT_TYPE_DELETE = 'deletedoctype',
   SETTING_DEPARTMENTS_GET = 'getalldepartment',
+  SETTING_DEPARTMENTS_DELETE = 'deletedepartment',
   SETTING_JOB_TITLE_ALL = 'getAlljobtitle',
+  SETTING_JOB_TITLE_DELETE = 'deletejobtitle',
   SETTING_JOB_TYPE_ALL = 'getAlljobtype',
+  SETTING_JOB_TYPE_DELETE = 'deletejobtype',
   SETTING_RELATIONSHIP_ALL = 'getallrelationships',
+  SETTING_RELATIONSHIP_DELETE = 'deleterelationship',
   OTHER_LANGUAGE_GET = 'getlanguage',
+  OTHER_LANGUAGE_DELETE = 'deletelanguage',
 
   // Document_View
   INVOICE_OTHER_SETTING_UPDATE_ALERTS = 'getupdatesetting',

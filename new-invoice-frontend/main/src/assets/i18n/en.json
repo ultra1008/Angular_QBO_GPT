@@ -10,7 +10,8 @@
             "BACK": "BACK",
             "SEARCH": "Search",
             "MULTI_ARCHIVE": "MULTI ARCHIVE",
-            "LIST_TO_GRID": "LIST TO GRID"
+            "LIST_TO_GRID": "LIST TO GRID",
+            "CLOSE": "Close"
         },
         "ACTIONS": {
             "EDIT": "Edit",
@@ -156,6 +157,24 @@
                 "CONFIRMATION_DIALOG": {
                     "ARCHIVE": "Are you sure you want to archive this mailbox?",
                     "RESTORE": "Are you sure you want to restore this mailbox?"
+                }
+            },
+            "EMPLOYEE_MODULE": {
+                "DOCUMENT_TYPE": "Document Type",
+                "DEPARTMENT": "Departments",
+                "JOBTITLE": "Job Title",
+                "JOBTYPE": "Job Type",
+                "RELATIONSHIP": "Relationship",
+                "LANGUAGE": "Language",
+                "DELETE": "Delete",
+                "EXPIRATION_DATE": "Expiration Date",
+                "CONFIRMATION_DIALOG": {
+                    "DOCUMENT": "are you sure you want to delete document type?",
+                    "DEPARTMENT": "are you sure you want to delete Department?",
+                    "JOBTYPE": "are you sure you want to delete jobtype?",
+                    "JOBTITLE": "are you sure you want to delete jobtitle?",
+                    "RELATIONSHIP": "are you sure you want to delete relationship?",
+                    "LANGUAGE": "are you sure you want to delete language?"
                 }
             }
         },

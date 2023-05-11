@@ -8,8 +8,7 @@
                         <div class="left">
                             <ul class="header-buttons-left ms-0">
                                 <li class="tbl-title">
-                                    <h2>Employee</h2>
-
+                                    <h2>{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE' |  translate}}</h2>
                                 </li>
                             </ul>
                         </div>
@@ -24,7 +23,8 @@
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn">
-                                    <div class="m-l-10" matTooltip="CLOSE">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.CLOSE' |
+                                    translate}}">
                                         <button mat-mini-fab color="warn" (click)="back()">
                                             <mat-icon class="col-white">close </mat-icon>
                                         </button>
@@ -37,7 +37,7 @@
                     <div class="body overflow-auto">
                         <div class="main-cust-setting-div">
                             <mat-tab-group>
-                                <mat-tab label="Document Type">
+                                <mat-tab label="{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.DOCUMENT_TYPE' |  translate}}">
                                     <br>
                                     <div class="row mt-3">
                                         <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12"
@@ -60,10 +60,10 @@
                                                                         <span>{{'COMMON.ACTIONS.EDIT' |
                                                                             translate}}</span>
                                                                     </button>
-                                                                    <button mat-menu-item>
+                                                                    <button mat-menu-item (click)="deleteDocumentType(Document)">
                                                                         <i
                                                                             class="material-icons-two-tone align-middle msr-2">delete</i>
-                                                                        <span>Delete</span>
+                                                                        <span>{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.DELETE' |  translate}}</span>
                                                                     </button>
                                                                 </mat-menu>
 
@@ -71,7 +71,7 @@
 
                                                         </div>
                                                         <mat-slide-toggle [(ngModel)]="Document.is_expiration"
-                                                            [disabled]="true" color="primary"><span class="text-muted">Expiration Date</span></mat-slide-toggle>
+                                                            [disabled]="true" color="primary"><span class="text-muted">{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.EXPIRATION_DATE' |  translate}}</span></mat-slide-toggle>
                                                     </div>
 
                                                 </div>
@@ -81,7 +81,7 @@
                                     </div>
 
                                 </mat-tab>
-                                <mat-tab label="Departments">
+                                <mat-tab label="{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.DEPARTMENT' |  translate}}">
                                     <br>
                                     <div class="row mt-3">
                                         <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12"
@@ -104,10 +104,10 @@
                                                                         <span>{{'COMMON.ACTIONS.EDIT' |
                                                                             translate}}</span>
                                                                     </button>
-                                                                    <button mat-menu-item>
+                                                                    <button mat-menu-item (click)="deleteDepartment(Department)">
                                                                         <i
                                                                             class="material-icons-two-tone align-middle msr-2">delete</i>
-                                                                        <span>Delete</span>
+                                                                        <span>{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.DELETE' |  translate}}</span>
                                                                     </button>
                                                                 </mat-menu>
                                                             </div>
@@ -118,7 +118,7 @@
                                         </div>
                                     </div>
                                 </mat-tab>
-                                <mat-tab label="Job Title">
+                                <mat-tab label="{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.JOBTITLE' |  translate}}">
                                     <br>
                                     <div class="row mt-3">
                                         <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12"
@@ -141,10 +141,10 @@
                                                                         <span>{{'COMMON.ACTIONS.EDIT' |
                                                                             translate}}</span>
                                                                     </button>
-                                                                    <button mat-menu-item>
+                                                                    <button mat-menu-item (click)="deleteJobTitle(JobTitle)">
                                                                         <i
                                                                             class="material-icons-two-tone align-middle msr-2">delete</i>
-                                                                        <span>Delete</span>
+                                                                        <span>{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.DELETE' |  translate}}</span>
                                                                     </button>
                                                                 </mat-menu>
                                                             </div>
@@ -156,7 +156,7 @@
                                     </div>
 
                                 </mat-tab>
-                                <mat-tab label="Job Type">
+                                <mat-tab label="{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.JOBTYPE' |  translate}}">
                                     <br>
                                     <div class="row mt-3">
                                         <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12"
@@ -179,10 +179,10 @@
                                                                         <span>{{'COMMON.ACTIONS.EDIT' |
                                                                             translate}}</span>
                                                                     </button>
-                                                                    <button mat-menu-item>
+                                                                    <button mat-menu-item (click)="deleteJobType(JobType)">
                                                                         <i
                                                                             class="material-icons-two-tone align-middle msr-2">delete</i>
-                                                                        <span>Delete</span>
+                                                                        <span>{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.DELETE' |  translate}}</span>
                                                                     </button>
                                                                 </mat-menu>
                                                             </div>
@@ -194,7 +194,7 @@
                                     </div>
 
                                 </mat-tab>
-                                <mat-tab label="Relationship">
+                                <mat-tab label="{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.RELATIONSHIP' |  translate}}">
                                     <br>
                                     <div class="row mt-3">
                                         <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12"
@@ -217,10 +217,10 @@
                                                                         <span>{{'COMMON.ACTIONS.EDIT' |
                                                                             translate}}</span>
                                                                     </button>
-                                                                    <button mat-menu-item>
+                                                                    <button mat-menu-item (click)="deleteRelationship(Relationship)">
                                                                         <i
                                                                             class="material-icons-two-tone align-middle msr-2">delete</i>
-                                                                        <span>Delete</span>
+                                                                        <span>{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.DELETE' |  translate}}</span>
                                                                     </button>
                                                                 </mat-menu>
                                                             </div>
@@ -232,7 +232,7 @@
                                     </div>
 
                                 </mat-tab>
-                                <mat-tab label="Language">
+                                <mat-tab label="{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.LANGUAGE' |  translate}}">
                                     <br>
                                     <div class="row mt-3">
                                         <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12"
@@ -255,10 +255,10 @@
                                                                         <span>{{'COMMON.ACTIONS.EDIT' |
                                                                             translate}}</span>
                                                                     </button>
-                                                                    <button mat-menu-item>
+                                                                    <button mat-menu-item (click)="deleteLanguage(Language)">
                                                                         <i
                                                                             class="material-icons-two-tone align-middle msr-2">delete</i>
-                                                                        <span>Delete</span>
+                                                                        <span>{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.DELETE' |  translate}}</span>
                                                                     </button>
                                                                 </mat-menu>
                                                             </div>
