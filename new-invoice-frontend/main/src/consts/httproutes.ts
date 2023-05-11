@@ -85,4 +85,8 @@ export enum httproutes {
   // Document_View
   INVOICE_OTHER_SETTING_UPDATE_ALERTS = 'getupdatesetting',
   PORTAL_ROVUK_INVOICE__SETTINGS_GET_ALL_ALERTS = 'getallsetting',
+
+
+  // Report
+  INVOICE_FOR_REPORT = "getinvoiceforreport",
 }
