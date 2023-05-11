@@ -33,7 +33,8 @@
                                 </mat-slide-toggle>{{'SETTINGS.DOCUMENT_VIEW.DOCUMENT_VIEW_TEXT' | translate}}&nbsp;
                                 <mat-form-field appearance="outline" class="ml-2">
                                     <input maxlength="2" (keypress)="numberOnly($event)" class="input" matInput
-                                        placeholder="{{'' | translate }}" [(ngModel)]="Document_View_time_value" />
+                                        placeholder="{{'' | translate }}" [(ngModel)]="Document_View_time_value"
+                                        (keyup.enter)="modelChangeLocationText($any($event.target).value,'Document_View')" />
                                 </mat-form-field>
                             </div>
                             <div class="decorate-div">
@@ -44,7 +45,8 @@
                                 <mat-form-field appearance="outline" class="ml-2">
                                     <input maxlength="2" (keypress)="numberOnly($event)" class="input" matInput
                                         placeholder="{{'' | translate }}"
-                                        [(ngModel)]="Archive_Orphan_Document_time_value" />
+                                        [(ngModel)]="Archive_Orphan_Document_time_value"
+                                        (keyup.enter)="modelChangeLocationText($any($event.target).value,'Archive_Orphan_Document')" />
                                 </mat-form-field>
                                 &nbsp;{{'SETTINGS.DOCUMENT_VIEW.DAYS_ALL' | translate}}
                             </div>

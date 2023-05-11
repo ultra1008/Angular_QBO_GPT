@@ -46,6 +46,7 @@ export class MailboxComponent
   isDelete = 0;
   titleMessage: string = '';
 
+
   constructor(
     public dialog: MatDialog,
     public SettingsService: SettingsService,
@@ -92,8 +93,8 @@ export class MailboxComponent
       // for delete we use splice in order to remove single object from DataService
       if (foundIndex != null && this.SettingsService) {
         this.SettingsService.dataChange.value.splice(foundIndex, 1);
-
-        this.refreshTable();
+        // this.refreshTable();
+        location.reload();
       }
     } else {
       showNotification(this.snackBar, data.message, 'error');
@@ -149,22 +150,7 @@ export class MailboxComponent
       );
   }
   removeSelectedRows() {
-    const totalSelect = this.selection.selected.length;
-    this.selection.selected.forEach((item) => {
-      const index: number = this.dataSource.renderedData.findIndex(
-        (d) => d === item
-      );
-      // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
-      this.mailboxDatabase?.dataChange.value.splice(index, 1);
-      this.refreshTable();
-      this.selection = new SelectionModel<AdvanceTable>(true, []);
-    });
-    this.showNotification(
-      'snackbar-danger',
-      totalSelect + ' Record Delete Successfully...!!!',
-      'bottom',
-      'center'
-    );
+
   }
   public loadData() {
     this.mailboxDatabase = new SettingsService(this.httpCall);
@@ -184,19 +170,7 @@ export class MailboxComponent
     );
   }
 
-  showNotification(
-    colorName: string,
-    text: string,
-    placementFrom: MatSnackBarVerticalPosition,
-    placementAlign: MatSnackBarHorizontalPosition
-  ) {
-    this.snackBar.open(text, '', {
-      duration: 2000,
-      verticalPosition: placementFrom,
-      horizontalPosition: placementAlign,
-      panelClass: colorName,
-    });
-  }
+
   back() {
     this.router.navigate(['/settings']);
   }

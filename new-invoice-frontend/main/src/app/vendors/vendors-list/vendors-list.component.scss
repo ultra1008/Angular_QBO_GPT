@@ -2,15 +2,8 @@
     height: unset;
 }
 
-::ng-deep .s2-confirm {
-    width: 130px !important;
-    margin: 2px;
-}
 
-::ng-deep .btn-gray {
-    background-color: grey !important;
-    color: white !important;
-}
+
 
 .capitalize {
     text-transform: capitalize !important;
@@ -22,4 +15,4 @@
 
 .psl-6 {
     padding-left: 2rem !important;
-  }
+}
