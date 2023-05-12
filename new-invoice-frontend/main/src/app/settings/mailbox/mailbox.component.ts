@@ -167,7 +167,6 @@ export class MailboxComponent
     //   );
   }
   public loadData() {
-    console.log('loadData call');
     this.mailboxService = new SettingsService(this.httpCall);
     this.dataSource = new MailboxDataSource(
       this.mailboxService,

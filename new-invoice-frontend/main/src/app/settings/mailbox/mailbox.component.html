@@ -142,57 +142,6 @@
             <div *ngIf="mailboxService?.isTblLoading" class="tbl-spinner">
               <app-loading></app-loading>
             </div>
-            <!-- <div *ngIf="mailboxService?.isTblLoading" class="tbl-spinner">
-              <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
-              </mat-progress-spinner>
-            </div> -->
-            <!-- context menu start -->
-            <!-- <div style="visibility: hidden; position: fixed" [style.left]="contextMenuPosition.x"
-              [style.top]="contextMenuPosition.y" [matMenuTriggerFor]="contextMenu">
-            </div> -->
-            <!-- <mat-menu #contextMenu="matMenu">
-              <ng-template matMenuContent let-item="item">
-                <button mat-menu-item (click)="addNew()">
-                  <mat-icon>add_box</mat-icon>
-                  <span>Add Record</span>
-                </button>
-                <button mat-menu-item>
-                  <mat-icon>create</mat-icon>
-                  <span>Edit Record</span>
-                </button>
-                <button mat-menu-item>
-                  <mat-icon>delete</mat-icon>
-                  <span>Delete Record</span>
-                </button>
-                <button mat-menu-item (click)="refresh()">
-                  <mat-icon>refresh</mat-icon>
-                  <span>Refresh Record</span>
-                </button>
-                <button mat-menu-item disabled>
-                  <mat-icon>no_encryption</mat-icon>
-                  <span>Disable</span>
-                </button>
-                <button mat-menu-item [matMenuTriggerFor]="nestedmenu">
-                  <mat-icon>list_alt</mat-icon>
-                  <span> Nested Menu</span>
-                </button>
-              </ng-template>
-            </mat-menu> -->
-            <!-- <mat-menu #nestedmenu="matMenu">
-              <button mat-menu-item>
-                <mat-icon>mail_outline</mat-icon>
-                <span>Item 1</span>
-              </button>
-              <button mat-menu-item>
-                <mat-icon>call</mat-icon>
-                <span>Item 2</span>
-              </button>
-              <button mat-menu-item>
-                <mat-icon>chat</mat-icon>
-                <span>Item 3</span>
-              </button>
-            </mat-menu> -->
-            <!-- context menu end -->
             <div *ngIf="!mailboxService?.isTblLoading" class="no-results"
               [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
               No matching records found
