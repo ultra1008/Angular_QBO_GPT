@@ -151,6 +151,10 @@
             "SECURITY": "Seguridad",
             "COST_CODE": "Código de costo",
             "DOCUMENT_VIEW": "Vista de documento",
+            "SECURITY_MODULE": {
+                "AMOUNT_MINUTES": "Cantidad de minutos antes del cierre de sesión automático",
+                "ENABLE_OTP": "Habilitar OTP"
+            },
             "MAIL_BOX": {
                 "HEADER": "Buzones a monitorear",
                 "EMAIL": "Correo electrónico",

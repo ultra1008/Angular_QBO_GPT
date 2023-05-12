@@ -106,4 +106,8 @@ export enum httproutes {
 
   // Report
   INVOICE_FOR_REPORT = 'getinvoiceforreport',
+
+  //security
+  PORTAL_SETTING_GET = 'getallsetting',
+  PORTAL_SETTING_UPDATE = 'getupdatesetting',
 }

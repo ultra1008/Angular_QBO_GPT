@@ -151,6 +151,10 @@
             "SECURITY": "Security",
             "COST_CODE": "Cost Code",
             "DOCUMENT_VIEW": "Document View",
+            "SECURITY_MODULE": {
+                "AMOUNT_MINUTES": "Amount of minutes before auto log off",
+                "ENABLE_OTP": "Enable OTP"
+            },
             "MAIL_BOX": {
                 "HEADER": "Mailboxes to Monitor",
                 "EMAIL": "Email",
