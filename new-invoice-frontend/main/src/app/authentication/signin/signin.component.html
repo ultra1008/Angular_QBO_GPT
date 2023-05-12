@@ -7,7 +7,7 @@
           <h2 class="welcome-msg cust-center"> Welcome to ROVUK A/P </h2>
           <div class="cust-center mb-2" *ngIf="showLogin">
             <!-- <mat-chip-list style="display: inline-flex;"> -->
-            <mat-chip [removable]="removable" (removed)="removacode()">
+            <mat-chip [removable]="removable" (removed)="removeCompanyCode()">
               {{companyCode}}
               <mat-icon matChipRemove *ngIf=" removable">cancel</mat-icon>
             </mat-chip>
@@ -17,7 +17,7 @@
           <form class="validate-form" [formGroup]="authForm">
             <div class="row" *ngIf="!showLogin">
               <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                <mat-form-field class="example-full-width"  appearance="outline">
+                <mat-form-field class="example-full-width" appearance="outline">
                   <mat-label>Company Code</mat-label>
                   <span class="m-1" matPrefix>R-</span>
                   <input matInput mask="000000" type="text" formControlName="companycode" />
@@ -64,8 +64,9 @@
 
             </div> -->
             <div *ngIf="showLogin">
-              <mat-checkbox labelPosition="after" color="primary" #saveUserNameCheckBox (change)="onSaveUsernameChanged($event.checked)"
-                [(ngModel)]="checked" formControlName="terms" class="auth-page__group-title">I agree to the
+              <mat-checkbox labelPosition="after" color="primary" #saveUserNameCheckBox
+                (change)="onSaveUsernameChanged($event.checked)" [checked]="checked" formControlName="terms"
+                class="auth-page__group-title">I agree to the
                 <span><a (click)="langurl()" class="term-condition" target="_blank">terms & conditions</a></span>
               </mat-checkbox>
             </div>

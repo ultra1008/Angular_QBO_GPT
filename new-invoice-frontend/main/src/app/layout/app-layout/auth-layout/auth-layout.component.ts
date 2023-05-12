@@ -4,6 +4,7 @@ import { InConfiguration } from 'src/app/core/models/config.interface';
 import { DirectionService } from 'src/app/core/service/direction.service';
 import { ConfigService } from 'src/app/config/config.service';
 import { DOCUMENT } from '@angular/common';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
 
 @Component({
   selector: 'app-auth-layout',
@@ -45,11 +46,11 @@ export class AuthLayoutComponent {
     });
 
     // set theme on startup
-    if (localStorage.getItem('theme')) {
+    if (localStorage.getItem(localstorageconstants.DARKMODE)) {
       this.renderer.removeClass(this.document.body, this.config.layout.variant);
       this.renderer.addClass(
         this.document.body,
-        localStorage.getItem('theme') as string
+        localStorage.getItem(localstorageconstants.DARKMODE) as string
       );
     } else {
       this.renderer.addClass(this.document.body, this.config.layout.variant);

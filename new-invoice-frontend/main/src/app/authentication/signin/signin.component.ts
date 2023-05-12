@@ -25,7 +25,6 @@ export interface ChipColor {
   styleUrls: ['./signin.component.scss'],
 })
 export class SigninComponent implements OnInit {
-  public config!: InConfiguration;
   authForm!: UntypedFormGroup;
   submitted = false;
   loading = false;
@@ -34,7 +33,7 @@ export class SigninComponent implements OnInit {
   hide = true;
   removable = true;
   showLogin = false;
-  companyCode = '';
+  companyCode!: string;
   checked = false;
 
   availableColors: ChipColor[] = [
@@ -54,13 +53,13 @@ export class SigninComponent implements OnInit {
     private renderer: Renderer2,
     @Inject(DOCUMENT) private document: Document
   ) {
-    localStorage.setItem(localstorageconstants.THEME, 'dark');
+    //localStorage.setItem(localstorageconstants.DARKMODE, 'dark');
     setTimeout(() => {
       this.showForm = true;
     }, 100);
   }
   ngOnInit() {
-    // this.c_code = localStorage.getItem(localstorageconstants.COMPANYCODE);
+
     this.authForm = this.formBuilder.group({
       useremail: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
@@ -68,23 +67,35 @@ export class SigninComponent implements OnInit {
       terms: ['', Validators.required],
     });
 
-    // this.AuthenticationService.userLogin(reqObject).subscribe(function (data) {
-    //   if (data.status) {
-    //     localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.data.token);
-    //     localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.data));
-    //     localStorage.setItem(localstorageconstants.SUPPLIERID, data.data.companydata._id);
-    //     localStorage.setItem(localstorageconstants.LOGOUT, 'false');
+    this.companyCode = localStorage.getItem(localstorageconstants.COMPANYCODE)!;
+    if (this.companyCode != null) {
+      const removeFirst2 = this.companyCode.slice(2);
+      this.showLogin = true;
+      this.authForm = this.formBuilder.group({
+        useremail: ['', [Validators.required, Validators.email]],
+        password: ['', Validators.required],
+        companycode: [removeFirst2, Validators.required],
+        terms: ['', Validators.required],
+      });
+    }
+    this.lightThemeBtnClick();
 
-    //     sessionStorage.setItem(localstorageconstants.USERTYPE, "invoice-portal");
-    //     localStorage.setItem(localstorageconstants.USERTYPE, "invoice-portal");
-    //   }
-    // });
+    // if (
+    //   window.matchMedia &&
+    //   window.matchMedia('(prefers-color-scheme: dark)').matches
+    // ) {
+    //   // dark mode
+    //   this.darkThemeBtnClick();
+    // } else {
+    //   //Light mode
+    //   this.lightThemeBtnClick();
+    // }
   }
   get f() {
     return this.authForm.controls;
   }
   showLoginForm() {
-    this.getCompunySettings();
+    this.getCompanySettings();
   }
   goResetPasswordForm() {
     this.router.navigate(['/authentication/forgot-password']);
@@ -92,9 +103,10 @@ export class SigninComponent implements OnInit {
   goSendOtpForm() {
     this.router.navigate(['/authentication/send-otp']);
   }
-  public removacode() {
+  public removeCompanyCode() {
     this.companyCode = '';
     this.showLogin = false;
+    localStorage.removeItem(localstorageconstants.COMPANYCODE);
     this.authForm.reset();
   }
   langurl() {
@@ -104,14 +116,15 @@ export class SigninComponent implements OnInit {
     this.checked = value;
   }
 
-  async getCompunySettings() {
+  async getCompanySettings() {
     const formValues = this.authForm.value;
     this.companyCode = 'R-' + formValues.companycode;
-    const data = await this.AuthenticationService.getCompunySettings(
+    const data = await this.AuthenticationService.getCompanySettings(
       this.companyCode
     );
     if (data.status) {
       this.showLogin = true;
+      localStorage.setItem(localstorageconstants.COMPANYCODE, this.companyCode);
     }
   }
   async userLogin() {
@@ -154,25 +167,12 @@ export class SigninComponent implements OnInit {
 
       sessionStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
       localStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
-
-      if (
-        window.matchMedia &&
-        window.matchMedia('(prefers-color-scheme: dark)').matches
-      ) {
-        this.darkThemeBtnClick();
-        // dark mode
-        console.log('dark mode');
-      } else {
-        //Light mode
-        this.lightThemeBtnClick();
-        console.log('Light mode');
-      }
-
       // for delete we use splice in order to remove single object from DataService
     } else {
       showNotification(this.snackBar, data.message, 'error');
     }
   }
+
   lightThemeBtnClick() {
     this.renderer.removeClass(this.document.body, 'dark');
     this.renderer.removeClass(this.document.body, 'submenu-closed');
@@ -186,7 +186,7 @@ export class SigninComponent implements OnInit {
     } else {
       this.renderer.removeClass(
         this.document.body,
-        'theme-' + this.config.layout.theme_color
+        'theme-dark'
       );
     }
 
@@ -201,9 +201,10 @@ export class SigninComponent implements OnInit {
     // this.isDarkSidebar = false;
     localStorage.setItem('choose_logoheader', 'logo-white');
     localStorage.setItem('choose_skin', 'theme-white');
-    localStorage.setItem('theme', theme);
+    localStorage.setItem(localstorageconstants.DARKMODE, theme);
     localStorage.setItem('menuOption', menuOption);
   }
+
   darkThemeBtnClick() {
     this.renderer.removeClass(this.document.body, 'light');
     this.renderer.removeClass(this.document.body, 'submenu-closed');
@@ -217,7 +218,7 @@ export class SigninComponent implements OnInit {
     } else {
       this.renderer.removeClass(
         this.document.body,
-        'theme-' + this.config.layout.theme_color
+        'theme-light'
       );
     }
     this.renderer.addClass(this.document.body, 'dark');
@@ -231,7 +232,7 @@ export class SigninComponent implements OnInit {
     // this.isDarkSidebar = true;
     localStorage.setItem('choose_logoheader', 'logo-black');
     localStorage.setItem('choose_skin', 'theme-black');
-    localStorage.setItem('theme', theme);
+    localStorage.setItem(localstorageconstants.DARKMODE, theme);
     localStorage.setItem('menuOption', menuOption);
   }
 

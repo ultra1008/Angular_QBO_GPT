@@ -8,7 +8,7 @@ export enum localstorageconstants {
   INVOICE_GIF = 'invoice-gif',
   COMPANYCODE = 'companycode',
   LOGOUT = 'invoicelogout',
-  THEME = 'thinvoicetheme',
+  //THEME = 'thinvoicetheme',
   USER_DISPLAY = 'invoiceuserlist',
   COMPANYID = 'invoicecompanyid',
   COMPANYDATA = 'invoicecompanydata'
