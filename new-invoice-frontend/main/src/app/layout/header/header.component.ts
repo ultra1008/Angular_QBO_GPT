@@ -122,11 +122,11 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit() {
     // set theme on startup
-    if (localStorage.getItem('theme')) {
-      if (localStorage.getItem('theme') === 'dark') {
+    if (localStorage.getItem(localstorageconstants.DARKMODE)) {
+      if (localStorage.getItem(localstorageconstants.DARKMODE) === 'dark') {
         this.isDarTheme = true;
         this.darkIcon = 'moon';
-      } else if (localStorage.getItem('theme') === 'light') {
+      } else if (localStorage.getItem(localstorageconstants.DARKMODE) === 'light') {
         this.isDarTheme = false;
         this.darkIcon = 'sun';
       } else {
@@ -161,11 +161,11 @@ export class HeaderComponent implements OnInit, AfterViewInit {
       this.darkIcon = 'sun';
     }
 
-    if (localStorage.getItem('theme')) {
+    if (localStorage.getItem(localstorageconstants.DARKMODE)) {
       this.renderer.removeClass(this.document.body, this.config.layout.variant);
       this.renderer.addClass(
         this.document.body,
-        localStorage.getItem('theme') as string
+        localStorage.getItem(localstorageconstants.DARKMODE) as string
       );
     } else {
       this.renderer.addClass(this.document.body, this.config.layout.variant);
@@ -265,7 +265,11 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   logout() {
     this.authService.logout().subscribe((res) => {
       if (!res.success) {
-        localStorage.setItem(localstorageconstants.THEME, 'dark');
+        localStorage.removeItem(localstorageconstants.DARKMODE);
+        localStorage.removeItem('choose_logoheader');
+        localStorage.removeItem('choose_skin');
+        localStorage.removeItem('menuOption');
+
         this.router.navigate(['/authentication/signin']);
       }
     });
@@ -299,7 +303,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     // this.isDarkSidebar = false;
     localStorage.setItem('choose_logoheader', 'logo-white');
     localStorage.setItem('choose_skin', 'theme-white');
-    localStorage.setItem('theme', theme);
+    localStorage.setItem(localstorageconstants.DARKMODE, theme);
     localStorage.setItem('menuOption', menuOption);
   }
   darkThemeBtnClick() {
@@ -329,7 +333,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     // this.isDarkSidebar = true;
     localStorage.setItem('choose_logoheader', 'logo-black');
     localStorage.setItem('choose_skin', 'theme-black');
-    localStorage.setItem('theme', theme);
+    localStorage.setItem(localstorageconstants.DARKMODE, theme);
     localStorage.setItem('menuOption', menuOption);
   }
 }

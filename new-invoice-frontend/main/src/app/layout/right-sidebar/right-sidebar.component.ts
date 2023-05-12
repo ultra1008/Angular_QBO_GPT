@@ -14,6 +14,7 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { DirectionService } from 'src/app/core/service/direction.service';
 import { InConfiguration } from 'src/app/core/models/config.interface';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,8 +24,7 @@ import { InConfiguration } from 'src/app/core/models/config.interface';
 })
 export class RightSidebarComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   selectedBgColor = 'white';
   maxHeight!: string;
   maxWidth!: string;
@@ -89,10 +89,10 @@ export class RightSidebarComponent
         this.config.layout.sidebar.backgroundColor === 'dark' ? true : false;
     }
 
-    if (localStorage.getItem('theme')) {
-      if (localStorage.getItem('theme') === 'dark') {
+    if (localStorage.getItem(localstorageconstants.DARKMODE)) {
+      if (localStorage.getItem(localstorageconstants.DARKMODE) === 'dark') {
         this.isDarTheme = true;
-      } else if (localStorage.getItem('theme') === 'light') {
+      } else if (localStorage.getItem(localstorageconstants.DARKMODE) === 'light') {
         this.isDarTheme = false;
       } else {
         this.isDarTheme = this.config.layout.variant === 'dark' ? true : false;
@@ -172,7 +172,7 @@ export class RightSidebarComponent
     this.isDarkSidebar = false;
     localStorage.setItem('choose_logoheader', 'logo-white');
     localStorage.setItem('choose_skin', 'theme-white');
-    localStorage.setItem('theme', theme);
+    localStorage.setItem(localstorageconstants.DARKMODE, theme);
     localStorage.setItem('menuOption', menuOption);
   }
   darkThemeBtnClick() {
@@ -202,7 +202,7 @@ export class RightSidebarComponent
     this.isDarkSidebar = true;
     localStorage.setItem('choose_logoheader', 'logo-black');
     localStorage.setItem('choose_skin', 'theme-black');
-    localStorage.setItem('theme', theme);
+    localStorage.setItem(localstorageconstants.DARKMODE, theme);
     localStorage.setItem('menuOption', menuOption);
   }
   setRightSidebarWindowHeight() {

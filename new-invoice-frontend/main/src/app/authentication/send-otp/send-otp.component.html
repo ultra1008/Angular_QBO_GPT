@@ -13,7 +13,6 @@
                                         <mat-form-field class="example-full-width" appearance="outline">
                                              <mat-label>Email</mat-label>
                                              <input matInput formControlName="useremail" required>
-                                             <mat-icon matSuffix>mail</mat-icon>
                                         </mat-form-field>
                                    </div>
                               </div>
@@ -28,9 +27,9 @@
                                         platform</div>
                                    <div class="text-center mt-2">
                                         <label>Didn't get a verification code? </label>
-                                        <label style="color: blue;" class="resend-otp ml-2" (click)="sendOTP()">Send
-                                             Again</label>
-
+                                        <a class="txt1" (click)="sendOTP()">
+                                             Send Again
+                                        </a>
                                    </div>
                               </div>
                               <div *ngIf="sentOTP" class="container-auth-form-btn mt-5">
@@ -47,7 +46,7 @@
                               </div>
                               <div class="w-full p-t-25 text-center">
                                    <div>
-                                        <a routerLink="/authentication/signin" style="color: blue;" class="txt1">
+                                        <a routerLink="/authentication/signin" class="txt1">
                                              Or use Email Password
                                         </a>
                                    </div>

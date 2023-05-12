@@ -10,7 +10,7 @@ export class AuthenticationService {
 
   constructor(private httpClient: HttpClient, private httpCall: HttpCall) { }
 
-  async getCompunySettings(companycode: string) {
+  async getCompanySettings(companycode: string) {
     const data = await this.httpCall.httpPostCall(httpversion.V1 + httproutes.GET_COMPANY_SETTINGS, { companycode: companycode }).toPromise();
     return data;
   }

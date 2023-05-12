@@ -12,6 +12,15 @@ body.dark {
   color: #96a2b4;
   padding-top: 1px;
 
+  .auth-form-section {
+    background-color: white !important;
+    opacity: 0.7;
+  }
+
+  .welcome-msg {
+    color: white !important;
+  }
+
   .list-unstyled {
     background-color: #1a202e !important;
   }
