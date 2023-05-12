@@ -10,6 +10,9 @@ import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroy
 import { LogOut } from 'angular-feather/icons';
 import { DepartmentFormComponent } from './department-form/department-form.component';
 import { JobTitleFormComponent } from './job-title-form/job-title-form.component';
+import { JobTypeFormComponent } from './job-type-form/job-type-form.component';
+import { RelationshipFormComponent } from './relationship-form/relationship-form.component';
+import { LanguageFormComponent } from './language-form/language-form.component';
 
 @Component({
   selector: 'app-employeesettings',
@@ -86,8 +89,29 @@ export class EmployeesettingsComponent {
         this.getDataJobTitle();
       });
     } else if (this.currrent_tab == 'jobtype') {
+      const dialogRef = this.dialog.open(JobTypeFormComponent, {
+        width: '350px',
+        data: {},
+      });
+      dialogRef.afterClosed().subscribe((result) => {
+        this.getDataJobType();
+      });
     } else if (this.currrent_tab == 'relationship') {
+      const dialogRef = this.dialog.open(RelationshipFormComponent, {
+        width: '350px',
+        data: {},
+      });
+      dialogRef.afterClosed().subscribe((result) => {
+        this.getDataRelationship();
+      });
     } else if (this.currrent_tab == 'language') {
+      const dialogRef = this.dialog.open(LanguageFormComponent, {
+        width: '350px',
+        data: {},
+      });
+      dialogRef.afterClosed().subscribe((result) => {
+        this.getDataLanguage();
+      });
     }
   }
 
@@ -95,6 +119,7 @@ export class EmployeesettingsComponent {
     if (this.currrent_tab == 'document') {
       console.log('document');
       const dialogRef = this.dialog.open(DocumentTypeFormComponent, {
+        width: '350px',
         data: Document,
         disableClose: true,
       });
@@ -108,6 +133,7 @@ export class EmployeesettingsComponent {
   editDepartment(Department: any) {
     if (this.currrent_tab == 'department') {
       const dialogRef = this.dialog.open(DepartmentFormComponent, {
+        width: '350px',
         data: Department,
         disableClose: true,
       });
@@ -115,25 +141,58 @@ export class EmployeesettingsComponent {
       dialogRef.afterClosed().subscribe((result) => {
         this.getDataDepartment();
       });
-    } else if (this.currrent_tab == 'jobtitle') {
-    } else if (this.currrent_tab == 'jobtype') {
-    } else if (this.currrent_tab == 'relationship') {
-    } else if (this.currrent_tab == 'language') {
     }
   }
 
   editJobtitle(JobTitle: any) {
     if (this.currrent_tab == 'jobtitle') {
       const dialogRef = this.dialog.open(JobTitleFormComponent, {
+        width: '350px',
         data: JobTitle,
         disableClose: true,
       });
       dialogRef.afterClosed().subscribe((result) => {
         this.getDataJobTitle();
       });
-    } else if (this.currrent_tab == 'jobtype') {
-    } else if (this.currrent_tab == 'relationship') {
-    } else if (this.currrent_tab == 'language') {
+    }
+  }
+
+  editJobtype(JobType: any) {
+    if (this.currrent_tab == 'jobtype') {
+      const dialogRef = this.dialog.open(JobTypeFormComponent, {
+        width: '350px',
+        data: JobType,
+        disableClose: true,
+      });
+      dialogRef.afterClosed().subscribe((result) => {
+        this.getDataJobType();
+      });
+    }
+  }
+
+  editRelationship(Relationship: any) {
+    if (this.currrent_tab == 'relationship') {
+      const dialogRef = this.dialog.open(RelationshipFormComponent, {
+        width: '350px',
+        data: Relationship,
+        disableClose: true,
+      });
+      dialogRef.afterClosed().subscribe((result) => {
+        this.getDataRelationship();
+      });
+    }
+  }
+
+  editLanguage(Language: any) {
+    if (this.currrent_tab == 'language') {
+      const dialogRef = this.dialog.open(LanguageFormComponent, {
+        width: '350px',
+        data: Language,
+        disableClose: true,
+      });
+      dialogRef.afterClosed().subscribe((result) => {
+        this.getDataLanguage();
+      });
     }
   }
   async getDataDocumentType() {

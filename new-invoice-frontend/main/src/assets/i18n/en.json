@@ -19,6 +19,8 @@
             "RESTORE": "Restore",
             "SAVE": "Save",
             "CANCEL": "Cancel",
+            "SAVE_EXIT": "Save And Exit",
+            "DONT_SAVE": "Don't Save",
             "ATTACHMENT": "Attachment",
             "YES": "Yes",
             "NO": "No"
@@ -75,6 +77,8 @@
             "TITLE": "Vendor History"
         },
         "CONFIRMATION_DIALOG": {
+            "SUBMIT": "Please complete the vendor form before submitting.",
+            "SAVING": "Are you sure you want to close this window without saving changes?",
             "ARCHIVE": "Are you sure you want to archive this vendor?",
             "RESTORE": "Are you sure you want to restore this vendor?"
         }
@@ -169,12 +173,12 @@
                 "DELETE": "Delete",
                 "EXPIRATION_DATE": "Expiration Date",
                 "CONFIRMATION_DIALOG": {
-                    "DOCUMENT": "are you sure you want to delete document type?",
-                    "DEPARTMENT": "are you sure you want to delete Department?",
-                    "JOBTYPE": "are you sure you want to delete jobtype?",
-                    "JOBTITLE": "are you sure you want to delete jobtitle?",
-                    "RELATIONSHIP": "are you sure you want to delete relationship?",
-                    "LANGUAGE": "are you sure you want to delete language?"
+                    "DOCUMENT": "Are you sure you want to delete document type?",
+                    "DEPARTMENT": "Are you sure you want to delete Department?",
+                    "JOBTYPE": "Are you sure you want to delete jobtype?",
+                    "JOBTITLE": "Are you sure you want to delete jobtitle?",
+                    "RELATIONSHIP": "Are you sure you want to delete relationship?",
+                    "LANGUAGE": "Are you sure you want to delete language?"
                 }
             }
         },

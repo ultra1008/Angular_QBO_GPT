@@ -19,6 +19,8 @@
             "RESTORE": "Restaurar",
             "SAVE": "Ahorrar",
             "CANCEL": "Cancelar",
+            "SAVE_EXIT": "Guardar y salir",
+            "DONT_SAVE": "No guardar",
             "ATTACHMENT": "Archivo adjunto",
             "YES": "Sí",
             "NO": "No"
@@ -75,6 +77,8 @@
             "TITLE": "Historial del proveedor"
         },
         "CONFIRMATION_DIALOG": {
+            "SUBMIT": "Complete el formulario de proveedor antes de enviarlo.",
+            "SAVING": "¿Está seguro de que desea cerrar esta ventana sin guardar los cambios?",
             "ARCHIVE": "¿Está seguro de que desea archivar a este proveedor?",
             "RESTORE": "¿Estás seguro de que quieres restaurar este proveedor?"
         }

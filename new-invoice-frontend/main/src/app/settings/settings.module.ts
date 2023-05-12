@@ -51,6 +51,9 @@ import { MailboxFormComponent } from './mailbox/mailbox-form/mailbox-form.compon
 import { DocumentTypeFormComponent } from './employeesettings/document-type-form/document-type-form.component';
 import { DepartmentFormComponent } from './employeesettings/department-form/department-form.component';
 import { JobTitleFormComponent } from './employeesettings/job-title-form/job-title-form.component';
+import { JobTypeFormComponent } from './employeesettings/job-type-form/job-type-form.component';
+import { RelationshipFormComponent } from './employeesettings/relationship-form/relationship-form.component';
+import { LanguageFormComponent } from './employeesettings/language-form/language-form.component';
 
 @NgModule({
   declarations: [
@@ -71,6 +74,9 @@ import { JobTitleFormComponent } from './employeesettings/job-title-form/job-tit
     DocumentTypeFormComponent,
     DepartmentFormComponent,
     JobTitleFormComponent,
+    JobTypeFormComponent,
+    RelationshipFormComponent,
+    LanguageFormComponent,
   ],
   providers: [SettingsService],
   imports: [

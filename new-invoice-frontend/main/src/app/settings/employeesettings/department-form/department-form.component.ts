@@ -15,6 +15,7 @@ import { AdvanceTable } from 'src/app/users/user.model';
 import { showNotification } from 'src/consts/utils';
 import { SettingsService } from '../../settings.service';
 import { DocumentTypeFormComponent } from '../document-type-form/document-type-form.component';
+import { icon } from 'src/consts/icon';
 
 @Component({
   selector: 'app-department-form',
@@ -27,6 +28,7 @@ export class DepartmentFormComponent {
   DepartmentInfo!: UntypedFormGroup;
   advanceTable: AdvanceTable;
   variablesRoleList: any = [];
+  invoice_logo = icon.INVOICE_LOGO;
 
   roleList: any = this.variablesRoleList.slice();
   titleMessage: string = '';

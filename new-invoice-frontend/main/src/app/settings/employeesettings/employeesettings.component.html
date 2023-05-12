@@ -173,7 +173,7 @@
                                                                     <i class="fas fa-ellipsis-v"></i>
                                                                 </button>
                                                                 <mat-menu #menu="matMenu">
-                                                                    <button mat-menu-item>
+                                                                    <button mat-menu-item (click)="editJobtype(JobType)">
                                                                         <i
                                                                             class="material-icons-two-tone align-middle msr-2">create</i>
                                                                         <span>{{'COMMON.ACTIONS.EDIT' |
@@ -211,7 +211,7 @@
                                                                     <i class="fas fa-ellipsis-v"></i>
                                                                 </button>
                                                                 <mat-menu #menu="matMenu">
-                                                                    <button mat-menu-item>
+                                                                    <button mat-menu-item (click)="editRelationship(Relationship)">
                                                                         <i
                                                                             class="material-icons-two-tone align-middle msr-2">create</i>
                                                                         <span>{{'COMMON.ACTIONS.EDIT' |
@@ -249,7 +249,7 @@
                                                                     <i class="fas fa-ellipsis-v"></i>
                                                                 </button>
                                                                 <mat-menu #menu="matMenu">
-                                                                    <button mat-menu-item>
+                                                                    <button mat-menu-item (click)="editLanguage(Language)">
                                                                         <i
                                                                             class="material-icons-two-tone align-middle msr-2">create</i>
                                                                         <span>{{'COMMON.ACTIONS.EDIT' |

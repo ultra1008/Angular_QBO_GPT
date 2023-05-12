@@ -78,16 +78,18 @@ export enum httproutes {
   SETTING_JOB_TITLE_SAVE = 'savejobtitle',
   SETTING_JOB_TYPE_ALL = 'getAlljobtype',
   SETTING_JOB_TYPE_DELETE = 'deletejobtype',
+  SETTING_JOB_TYPE_SAVE = 'savejobtype',
   SETTING_RELATIONSHIP_ALL = 'getallrelationships',
   SETTING_RELATIONSHIP_DELETE = 'deleterelationship',
+  SETTING_RELATIONSHIP_SAVE = 'saverelationship',
   OTHER_LANGUAGE_GET = 'getlanguage',
   OTHER_LANGUAGE_DELETE = 'deletelanguage',
+  OTHER_LANGUAGE_SAVE = 'savelanguage',
 
   // Document_View
   INVOICE_OTHER_SETTING_UPDATE_ALERTS = 'getupdatesetting',
   PORTAL_ROVUK_INVOICE__SETTINGS_GET_ALL_ALERTS = 'getallsetting',
 
-
   // Report
-  INVOICE_FOR_REPORT = "getinvoiceforreport",
+  INVOICE_FOR_REPORT = 'getinvoiceforreport',
 }

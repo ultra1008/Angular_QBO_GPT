@@ -15,6 +15,7 @@ import { AdvanceTable } from 'src/app/users/user.model';
 import { showNotification } from 'src/consts/utils';
 import { SettingsService } from '../../settings.service';
 import { DocumentTypeFormComponent } from '../document-type-form/document-type-form.component';
+import { icon } from 'src/consts/icon';
 
 @Component({
   selector: 'app-job-title-form',
@@ -32,6 +33,7 @@ export class JobTitleFormComponent {
   titleMessage: string = '';
   userList: any = [];
   isDelete = 0;
+  invoice_logo = icon.INVOICE_LOGO;
   constructor(
     public dialogRef: MatDialogRef<JobTitleFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -87,7 +89,7 @@ export class JobTitleFormComponent {
         requestObject._id = this.data._id;
       }
       this.uiSpinner.spin$.next(true);
-      const data = await this.SettingsServices.saveDepartment(requestObject);
+      const data = await this.SettingsServices.saveJobTitle(requestObject);
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');

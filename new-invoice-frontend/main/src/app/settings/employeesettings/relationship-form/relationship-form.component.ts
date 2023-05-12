@@ -1,33 +1,31 @@
-import { SelectionModel } from '@angular/cdk/collections';
 import { Component, Inject } from '@angular/core';
 import {
   UntypedFormGroup,
   UntypedFormBuilder,
-  UntypedFormControl,
-  Validators,
-  FormControl,
   FormGroup,
+  FormControl,
+  Validators,
+  UntypedFormControl,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { UserRestoreFormComponent } from 'src/app/users/user-restore-form/user-restore-form.component';
+import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { AdvanceTable } from 'src/app/users/user.model';
-import { UserService } from 'src/app/users/user.service';
 import { showNotification } from 'src/consts/utils';
 import { SettingsService } from '../../settings.service';
-import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
+import { JobTitleFormComponent } from '../job-title-form/job-title-form.component';
 import { icon } from 'src/consts/icon';
 
 @Component({
-  selector: 'app-document-type-form',
-  templateUrl: './document-type-form.component.html',
-  styleUrls: ['./document-type-form.component.scss'],
+  selector: 'app-relationship-form',
+  templateUrl: './relationship-form.component.html',
+  styleUrls: ['./relationship-form.component.scss'],
 })
-export class DocumentTypeFormComponent {
+export class RelationshipFormComponent {
   action: string;
   dialogTitle: string;
-  DocumentInfo: UntypedFormGroup;
+  relationshipInfo!: UntypedFormGroup;
   advanceTable: AdvanceTable;
   variablesRoleList: any = [];
 
@@ -37,7 +35,7 @@ export class DocumentTypeFormComponent {
   isDelete = 0;
   invoice_logo = icon.INVOICE_LOGO;
   constructor(
-    public dialogRef: MatDialogRef<DocumentTypeFormComponent>,
+    public dialogRef: MatDialogRef<JobTitleFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: SettingsService,
     private fb: UntypedFormBuilder,
@@ -46,20 +44,18 @@ export class DocumentTypeFormComponent {
     private router: Router,
     public uiSpinner: UiSpinnerService
   ) {
-    this.DocumentInfo = new FormGroup({
-      document_type_name: new FormControl('', [Validators.required]),
-      is_expiration: new FormControl(false),
+    this.relationshipInfo = new FormGroup({
+      relationship_name: new FormControl('', [Validators.required]),
     });
     console.log('data', data);
+    const document_data = data.data;
 
     if (this.data) {
       console.log('call');
-
-      this.DocumentInfo = new FormGroup({
-        document_type_name: new FormControl(this.data.document_type_name, [
+      this.relationshipInfo = new FormGroup({
+        relationship_name: new FormControl(this.data.relationship_name, [
           Validators.required,
         ]),
-        is_expiration: new FormControl(this.data.is_expiration),
       });
     }
 
@@ -74,7 +70,6 @@ export class DocumentTypeFormComponent {
       const blankObject = {} as AdvanceTable;
       this.advanceTable = new AdvanceTable(blankObject);
     }
-    // this.DocumentInfo = this.createDocumentForm();
   }
   formControl = new UntypedFormControl('', [
     Validators.required, // Validators.email,
@@ -88,13 +83,13 @@ export class DocumentTypeFormComponent {
   }
 
   async submit() {
-    if (this.DocumentInfo.valid) {
-      let requestObject = this.DocumentInfo.value;
+    if (this.relationshipInfo.valid) {
+      let requestObject = this.relationshipInfo.value;
       if (this.data) {
         requestObject._id = this.data._id;
       }
       this.uiSpinner.spin$.next(true);
-      const data = await this.SettingsServices.saveDocumentType(requestObject);
+      const data = await this.SettingsServices.saveRelatioship(requestObject);
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
@@ -110,6 +105,8 @@ export class DocumentTypeFormComponent {
     this.dialogRef.close();
   }
   public confirmAdd(): void {
-    this.advanceTableService.addAdvanceTable(this.DocumentInfo.getRawValue());
+    this.advanceTableService.addAdvanceTable(
+      this.relationshipInfo.getRawValue()
+    );
   }
 }

@@ -282,4 +282,34 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
       .toPromise();
     return data;
   }
+
+  async saveJobType(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.SETTING_JOB_TYPE_SAVE,
+        requestObject
+      )
+      .toPromise();
+    return data;
+  }
+
+  async saveRelatioship(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.SETTING_RELATIONSHIP_SAVE,
+        requestObject
+      )
+      .toPromise();
+    return data;
+  }
+
+  async saveLanguage(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.OTHER_LANGUAGE_SAVE,
+        requestObject
+      )
+      .toPromise();
+    return data;
+  }
 }
