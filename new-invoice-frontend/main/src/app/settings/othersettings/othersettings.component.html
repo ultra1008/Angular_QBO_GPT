@@ -8,12 +8,20 @@
                         <div class="left">
                             <ul class="header-buttons-left ms-0">
                                 <li class="tbl-title">
-                                    <h2>Other Settings</h2>
+                                    <h2>{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.OTHER_SETTINGS' | translate}}</h2>
                                 </li>
                             </ul>
                         </div>
                         <div class="right">
                             <ul class="tbl-export-btn">
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ADD' |
+                                    translate}}">
+                                        <button mat-mini-fab color="primary" (click)="add()">
+                                            <mat-icon class="col-white">add</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10" matTooltip="CLOSE">
                                         <button mat-mini-fab color="warn" (click)="back()">
@@ -24,7 +32,183 @@
                             </ul>
                         </div>
                     </div>
+                    <div class="body">
+                        <div class="main-cust-setting-div">
+                            <mat-tab-group (selectedTabChange)="onTabChanged($event)">
+                                <mat-tab label="{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.TERMS' | translate}}">
+                                    <br>
+                                    <div class="row mt-3">
+                                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12"
+                                            *ngFor="let Terms of AllTerms">
+                                            <div class="card " style="height: 112px;">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col mt-0">
+                                                            <h6 class="card-title">{{Terms.name}}</h6>
+                                                            <h6 class="card-title">{{Terms.due_days}}</h6>
+                                                            <h6 class="card-title">{{Terms.discount}}% {{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.DISCOUNT' | translate}}</h6>
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <div class="col-green">
+                                                                <button mat-icon-button [matMenuTriggerFor]="menu">
+                                                                    <i class="fas fa-ellipsis-v"></i>
+                                                                </button>
+                                                                <mat-menu #menu="matMenu">
+                                                                    <button mat-menu-item (click)="editTerms(Terms)">
+                                                                        <i
+                                                                            class="material-icons-two-tone align-middle msr-2">create</i>
+                                                                        <span>{{'COMMON.ACTIONS.EDIT' |
+                                                                            translate}}</span>
+                                                                    </button>
+                                                                    <button mat-menu-item (click)="deleteTerms(Terms)">
+                                                                        <i
+                                                                            class="material-icons-two-tone align-middle msr-2">delete</i>
+                                                                        <span>{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.DELETE'
+                                                                            | translate}}</span>
+                                                                    </button>
+                                                                </mat-menu>
 
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-tab>
+                                <mat-tab label="{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.TAX_RATE' | translate}}">
+                                    <br>
+                                    <div class="row mt-3">
+                                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12"
+                                            *ngFor="let Taxrate of AllTaxrate">
+                                            <div class="card " style="height: 112px;">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col mt-0">
+                                                            <h6 class="card-title">{{Taxrate.name}}</h6>
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <div class="col-green">
+                                                                <button mat-icon-button [matMenuTriggerFor]="menu">
+                                                                    <i class="fas fa-ellipsis-v"></i>
+                                                                </button>
+                                                                <mat-menu #menu="matMenu">
+                                                                    <button mat-menu-item (click)="editTaxRate(Taxrate)">
+                                                                        <i
+                                                                            class="material-icons-two-tone align-middle msr-2">create</i>
+                                                                        <span>{{'COMMON.ACTIONS.EDIT' |
+                                                                            translate}}</span>
+                                                                    </button>
+                                                                    <button mat-menu-item
+                                                                        (click)="deleteTaxRate(Taxrate)">
+                                                                        <i
+                                                                            class="material-icons-two-tone align-middle msr-2">delete</i>
+                                                                        <span>{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.DELETE'
+                                                                            | translate}}</span>
+                                                                    </button>
+                                                                </mat-menu>
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </mat-tab>
+                                <mat-tab label="{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.DOCUMENT' | translate}}">
+                                    <br>
+                                    <div class="row mt-3">
+                                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12"
+                                            *ngFor="let Document of AllDocument">
+                                            <div class="card " style="height: 112px;">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col mt-0">
+                                                            <h6 class="card-title">{{Document.name}}</h6>
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <div class="col-green">
+                                                                <button mat-icon-button [matMenuTriggerFor]="menu">
+                                                                    <i class="fas fa-ellipsis-v"></i>
+                                                                </button>
+                                                                <mat-menu #menu="matMenu">
+                                                                    <button mat-menu-item (click)="editDocument(Document)">
+                                                                        <i
+                                                                            class="material-icons-two-tone align-middle msr-2">create</i>
+                                                                        <span>{{'COMMON.ACTIONS.EDIT' |
+                                                                            translate}}</span>
+                                                                    </button>
+                                                                    <button mat-menu-item
+                                                                        (click)="deleteDocument(Document)">
+                                                                        <i
+                                                                            class="material-icons-two-tone align-middle msr-2">delete</i>
+                                                                        <span>{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.DELETE'
+                                                                            | translate}}</span>
+                                                                    </button>
+                                                                </mat-menu>
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </mat-tab>
+                                <mat-tab label="{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.VENDOR_TYPE' | translate}}">
+                                    <br>
+                                    <div class="row mt-3">
+                                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12"
+                                            *ngFor="let VendorType of AllVendorType">
+                                            <div class="card" style="height: 112px;">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col mt-0">
+                                                            <h6 class="card-title">{{VendorType.name}}</h6>
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <div class="col-green">
+                                                                <button mat-icon-button [matMenuTriggerFor]="menu">
+                                                                    <i class="fas fa-ellipsis-v"></i>
+                                                                </button>
+                                                                <mat-menu #menu="matMenu">
+                                                                    <button mat-menu-item (click)="editVendorType(VendorType)">
+                                                                        <i
+                                                                            class="material-icons-two-tone align-middle msr-2">create</i>
+                                                                        <span>{{'COMMON.ACTIONS.EDIT' |
+                                                                            translate}}</span>
+                                                                    </button>
+                                                                    <button mat-menu-item
+                                                                        (click)="deleteVendorType(VendorType)">
+                                                                        <i
+                                                                            class="material-icons-two-tone align-middle msr-2">delete</i>
+                                                                        <span>{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.DELETE'
+                                                                            | translate}}</span>
+                                                                    </button>
+                                                                </mat-menu>
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </mat-tab>
+                            </mat-tab-group>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

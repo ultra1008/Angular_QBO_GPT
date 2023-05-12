@@ -86,6 +86,20 @@ export enum httproutes {
   OTHER_LANGUAGE_DELETE = 'deletelanguage',
   OTHER_LANGUAGE_SAVE = 'savelanguage',
 
+  //other settings
+  OTHER_SETTINGS_GET_TERMS = 'getinvoiceterm',
+  OTHER_SETTING_SAVE_TERMS = 'saveinvoiceterm',
+  OTHER_SETTING_DELETE_TERMS = 'deleteinvoiceterm',
+  OTHER_SETTINGS_GET_VENDOR_TYPE = 'getvendortype',
+  OTHER_SETTINGS_SAVE_VENDOR_TYPE = 'savevendortype',
+  OTHER_SETTINGS_DELETE_VENDOR_TYPE = 'deletevendortype',
+  OTHER_SETTINGS_GET_TEXT_RATE = 'gettaxrate',
+  OTHER_SETTING_SAVE_TEXT_RATE = 'savetaxrate',
+  OTHER_SETTING_DELETE_TEXT_RATE = 'deletetaxrate',
+  OTHER_SETTINGS_GET_DOCUMENT = 'getinvoicedocument',
+  OTHER_SETTING_SAVE_DOCUMENT = 'saveinvoicedocument',
+  OTHER_SETTING_DELETE_DOCUMENT = 'deleteInvoiceDocument',
+
   // Document_View
   INVOICE_OTHER_SETTING_UPDATE_ALERTS = 'getupdatesetting',
   PORTAL_ROVUK_INVOICE__SETTINGS_GET_ALL_ALERTS = 'getallsetting',

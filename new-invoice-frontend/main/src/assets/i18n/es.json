@@ -163,6 +163,23 @@
                     "RESTORE": "¿Estás seguro de que quieres restaurar este buzón?"
                 }
             },
+            "OTHER_SETTINGS_MODULE": {
+                "OTHER_SETTINGS": "Otros ajustes",
+                "DISCOUNT": "Descuento",
+                "TERMS": "Términos",
+                "TAX_RATE": "Tasa de impuesto",
+                "DOCUMENT": "Documentos",
+                "VENDOR_TYPE": "Tipo de proveedor",
+                "DUE_DAYS": "Días de vencimiento",
+                "ADD_DISCOUNT": "Agregar descuento",
+                "DISCOUNT_PERCENTAGE": "Descuento%",
+                "CONFIRMATION_DIALOG": {
+                    "TERMS": "¿Está seguro de que desea eliminar términos?",
+                    "TAX_RATE": "¿Está seguro de que desea eliminar la tasa impositiva?",
+                    "DOCUMENT": "¿Está seguro de que desea eliminar el documento?",
+                    "VENDOR_TYPE": "¿Está seguro de que desea eliminar el tipo de proveedor?"
+                }
+            },
             "EMPLOYEE_MODULE": {
                 "DOCUMENT_TYPE": "Tipo de Documento",
                 "DEPARTMENT": "Departamentos",

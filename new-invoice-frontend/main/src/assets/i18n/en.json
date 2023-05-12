@@ -163,6 +163,23 @@
                     "RESTORE": "Are you sure you want to restore this mailbox?"
                 }
             },
+            "OTHER_SETTINGS_MODULE": {
+                "OTHER_SETTINGS": "Other Settings",
+                "DISCOUNT": "Discount",
+                "TERMS": "Terms",
+                "TAX_RATE": "Tax Rate",
+                "DOCUMENT": "Documents",
+                "VENDOR_TYPE": "Vendor Type",
+                "DUE_DAYS": "Due Days",
+                "ADD_DISCOUNT": "Add Discount",
+                "DISCOUNT_PERCENTAGE": "Discount%",
+                "CONFIRMATION_DIALOG": {
+                    "TERMS": "Are you sure you want to delete terms?",
+                    "TAX_RATE": "Are you sure you want to delete tax rate?",
+                    "DOCUMENT": "Are you sure you want to delete Document?",
+                    "VENDOR_TYPE": "Are you sure you want to delete vendor type?"
+                }
+            },
             "EMPLOYEE_MODULE": {
                 "DOCUMENT_TYPE": "Document Type",
                 "DEPARTMENT": "Departments",

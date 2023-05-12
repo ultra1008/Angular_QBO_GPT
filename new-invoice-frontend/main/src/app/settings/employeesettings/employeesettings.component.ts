@@ -195,6 +195,7 @@ export class EmployeesettingsComponent {
       });
     }
   }
+
   async getDataDocumentType() {
     const data = await this.SettingsServices.getDocumentType();
     if (data.status) {

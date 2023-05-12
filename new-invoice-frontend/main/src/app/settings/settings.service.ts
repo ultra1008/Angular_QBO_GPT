@@ -170,6 +170,40 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     return data;
   }
 
+  async getTerms() {
+    const data = await this.httpCall
+      .httpGetCall(httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_GET_TERMS)
+      .toPromise();
+    return data;
+  }
+
+  async getTaxRate() {
+    const data = await this.httpCall
+      .httpGetCall(
+        httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_GET_TEXT_RATE
+      )
+      .toPromise();
+    return data;
+  }
+
+  async getDocuments() {
+    const data = await this.httpCall
+      .httpGetCall(
+        httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_GET_DOCUMENT
+      )
+      .toPromise();
+    return data;
+  }
+
+  async getVendorType() {
+    const data = await this.httpCall
+      .httpGetCall(
+        httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_GET_VENDOR_TYPE
+      )
+      .toPromise();
+    return data;
+  }
+
   async updateSetting(requestObject: any) {
     const data = await this.httpCall
       .httpPostCall(
@@ -249,6 +283,54 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     return data;
   }
 
+  async DeleteTerms(_id: string) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.OTHER_SETTING_DELETE_TERMS,
+        {
+          _id: _id,
+        }
+      )
+      .toPromise();
+    return data;
+  }
+
+  async DeleteTaxrate(_id: string) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.OTHER_SETTING_DELETE_TEXT_RATE,
+        {
+          _id: _id,
+        }
+      )
+      .toPromise();
+    return data;
+  }
+
+  async DeleteDocuments(_id: string) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.OTHER_SETTING_DELETE_DOCUMENT,
+        {
+          _id: _id,
+        }
+      )
+      .toPromise();
+    return data;
+  }
+
+  async DeleteVendorType(_id: string) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_DELETE_VENDOR_TYPE,
+        {
+          _id: _id,
+        }
+      )
+      .toPromise();
+    return data;
+  }
+
   addAdvanceTable(Document: Settings): void {
     this.dialogData = Document;
   }
@@ -307,6 +389,46 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     const data = await this.httpCall
       .httpPostCall(
         httpversion.PORTAL_V1 + httproutes.OTHER_LANGUAGE_SAVE,
+        requestObject
+      )
+      .toPromise();
+    return data;
+  }
+
+  async saveTerms(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.OTHER_SETTING_SAVE_TERMS,
+        requestObject
+      )
+      .toPromise();
+    return data;
+  }
+
+  async saveTaxrate(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.OTHER_SETTING_SAVE_TEXT_RATE,
+        requestObject
+      )
+      .toPromise();
+    return data;
+  }
+
+  async saveDocument(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.OTHER_SETTING_SAVE_DOCUMENT,
+        requestObject
+      )
+      .toPromise();
+    return data;
+  }
+
+  async saveVendorType(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_SAVE_VENDOR_TYPE,
         requestObject
       )
       .toPromise();

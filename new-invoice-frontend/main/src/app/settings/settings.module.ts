@@ -54,6 +54,10 @@ import { JobTitleFormComponent } from './employeesettings/job-title-form/job-tit
 import { JobTypeFormComponent } from './employeesettings/job-type-form/job-type-form.component';
 import { RelationshipFormComponent } from './employeesettings/relationship-form/relationship-form.component';
 import { LanguageFormComponent } from './employeesettings/language-form/language-form.component';
+import { TermsFormComponent } from './othersettings/terms-form/terms-form.component';
+import { TaxRateFormComponent } from './othersettings/tax-rate-form/tax-rate-form.component';
+import { DocumentFormComponent } from './othersettings/document-form/document-form.component';
+import { VendorTypeFormComponent } from './othersettings/vendor-type-form/vendor-type-form.component';
 
 @NgModule({
   declarations: [
@@ -77,6 +81,10 @@ import { LanguageFormComponent } from './employeesettings/language-form/language
     JobTypeFormComponent,
     RelationshipFormComponent,
     LanguageFormComponent,
+    TermsFormComponent,
+    TaxRateFormComponent,
+    DocumentFormComponent,
+    VendorTypeFormComponent,
   ],
   providers: [SettingsService],
   imports: [
