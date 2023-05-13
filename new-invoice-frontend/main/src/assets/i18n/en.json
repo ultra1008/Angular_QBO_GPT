@@ -153,7 +153,8 @@
             "DOCUMENT_VIEW": "Document View",
             "SECURITY_MODULE": {
                 "AMOUNT_MINUTES": "Amount of minutes before auto log off",
-                "ENABLE_OTP": "Enable OTP"
+                "ENABLE_OTP": "Enable OTP",
+                "TIMEROPTIONS": "min"
             },
             "MAIL_BOX": {
                 "HEADER": "Mailboxes to Monitor",

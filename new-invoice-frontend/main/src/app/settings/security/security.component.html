@@ -35,7 +35,7 @@
                                 <mat-select [(ngModel)]="timer" (ngModelChange)="modelChangeTimeout($event)" class="dark-cust-color"
                                     required>
                                     <mat-option *ngFor="let option of timerOptions" [value]="option.key">
-                                        {{option.name}}
+                                        {{option.name}}{{option.tmp_language | translate}}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>

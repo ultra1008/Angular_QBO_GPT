@@ -153,7 +153,8 @@
             "DOCUMENT_VIEW": "Vista de documento",
             "SECURITY_MODULE": {
                 "AMOUNT_MINUTES": "Cantidad de minutos antes del cierre de sesión automático",
-                "ENABLE_OTP": "Habilitar OTP"
+                "ENABLE_OTP": "Habilitar OTP",
+                "TIMEROPTIONS": "min"
             },
             "MAIL_BOX": {
                 "HEADER": "Buzones a monitorear",
