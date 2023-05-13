@@ -110,4 +110,9 @@ export enum httproutes {
   //security
   PORTAL_SETTING_GET = 'getallsetting',
   PORTAL_SETTING_UPDATE = 'getupdatesetting',
+
+  //Alerts
+  PORTAL_ROVUK_INVOICE_OTHER_SETTING_UPDATE_ALERTS = 'getupdatesetting',
+  PORTAL_SETTING_ROLES_ALL = 'getallrolespermission',
+  PORTAL_GET_ALL_USERS = 'getalluser',
 }

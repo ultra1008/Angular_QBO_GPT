@@ -156,6 +156,25 @@
                 "ENABLE_OTP": "Enable OTP",
                 "TIMEROPTIONS": "min"
             },
+            "ALERTS_MODULE": {
+                "PRESS_ENTER": "Please press enter after updating any value on any field",
+                "ASSIGNED_PERSON": "Send a reminder of pending items to an assigned person every",
+                "ASSIGNED_ANYBODY": "Send a reminder of invoice is not assigned to anybody every",
+                "ALERTS_EVERY": "Send alert every",
+                "INVOICE_DUE": "when invoice due date is less then",
+                "INVOICE_ARRIVE": "Send alert when new invoice arrive to",
+                "BASED_ON": "(based on role members)",
+                "DOCUMENT_MODIFIED": "Send alert when the document is modified",
+                "SEND_AN_ALERT": "send an alert to",
+                "SENT_BATCH": "when an invoice is sent to batch",
+                "SEND_DAILY": "Send daily productivity report to",
+                "INVOICE_GREATER": "If invoice greater than",
+                "THEN_USER": "then user",
+                "NEEDS_APPROVE": "needs to approve",
+                "NOTIFY": "Notify by",
+                "ALL_DOCUMENT": "This is a global setting that will affect all document. Are you sure you want to make the change?",
+                "ALL_PROJECT": "This is a global setting that will affect all projects. Are you sure you want to make the change?"
+            },
             "MAIL_BOX": {
                 "HEADER": "Mailboxes to Monitor",
                 "EMAIL": "Email",

@@ -156,6 +156,25 @@
                 "ENABLE_OTP": "Habilitar OTP",
                 "TIMEROPTIONS": "min"
             },
+            "ALERTS_MODULE": {
+                "PRESS_ENTER": "Pulse Intro después de actualizar cualquier valor en cualquier campo",
+                "ASSIGNED_PERSON": "Enviar un recordatorio de los elementos pendientes a una persona asignada cada",
+                "ASSIGNED_ANYBODY": "Enviar un recordatorio de factura no está asignado a nadie cada",
+                "ALERTS_EVERY": "Enviar alerta cada",
+                "INVOICE_DUE": "Cuando la fecha de vencimiento de la factura es inferior a",
+                "INVOICE_ARRIVE": "Enviar una alerta cuando llegue una nueva factura a",
+                "BASED_ON": "(basado en los miembros del rol)",
+                "DOCUMENT_MODIFIED": "Enviar alerta cuando se modifica el documento",
+                "SEND_AN_ALERT": "Enviar una alerta a",
+                "SENT_BATCH": "Cuando se envía una factura a Batch",
+                "SEND_DAILY": "Enviar informe diario de productividad a",
+                "INVOICE_GREATER": "Si la factura es mayor que",
+                "THEN_USER": "luego usuario",
+                "NEEDS_APPROVE": "necesita aprobar",
+                "NOTIFY": "Notificar por",
+                "ALL_DOCUMENT": "Esta es una configuración global que afectará a todos los documentos. ¿Está seguro de que desea hacer el cambio?",
+                "ALL_PROJECT": "Esta es una configuración global que afectará a todos los proyectos. ¿Está seguro de que desea realizar el cambio?"
+            },
             "MAIL_BOX": {
                 "HEADER": "Buzones a monitorear",
                 "EMAIL": "Correo electrónico",
