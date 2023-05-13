@@ -1,4 +1,3 @@
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <section class="content">
     <div class="content-block">
         <div class="m-4"></div>
@@ -22,7 +21,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="right">
+                        <div class="right" *ngIf="show">
                             <ul class="tbl-export-btn">
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
                                     <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="{{'COMMON.TOOL_TIP.MULTI_ARCHIVE' |

@@ -35,7 +35,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   galleryImages: NgxGalleryImage[] = [];
   imageObject = [];
   tmp_gallery: any;
-
+  show: boolean = false;
   displayedColumns = [
     // 'select',
     'vendor_name',
@@ -128,7 +128,9 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
       this.paginator,
       this.sort,
       this.isDelete,
+
     );
+    this.show = true;
     this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
       () => {
         if (!this.dataSource) {
