@@ -45,7 +45,7 @@ export class ReportsListingComponent {
 
   invoice = this.form.get('invoice');
   p_o = this.form.get('p_o');
-  vendor_name = this.form.get('invoice');
+  vendor_name = this.form.get('vendor_name');
   packing_slip = this.form.get('packing_slip');
   receiving_slip = this.form.get('receiving_slip');
   status = this.form.get('status');
@@ -65,6 +65,7 @@ export class ReportsListingComponent {
     { def: 'packing_slip', label: 'Packing Slip', hide: this.packing_slip!.value },
     { def: 'receiving_slip', label: 'Receiving Slip', hide: this.receiving_slip!.value },
     { def: 'status', label: 'Status', hide: this.status!.value }
+
   ];
 
   async getDisplayedColumns() {
@@ -108,16 +109,28 @@ export class ReportsListingComponent {
       start_date: 0,
       end_date: 0,
     };
-    this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.INVOICE_FOR_REPORT, requestObject)
+    that.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.INVOICE_FOR_REPORT, requestObject)
       .subscribe(function (params) {
-
+        console.log('$$$$$$$$$$$$', params);
         if (params.status) {
 
           if (params.data.length > 0) {
             that.allInvoices = [];
+            // for (let i = 0; i < params.data.length; i++) {
+            //   let tmpData = [{ invoice: params.data[i].invoice, p_o: params.data[i].p_o, vendor_name: params.data[i].vendor_name, packing_slip: params.data[i].packing_slip, receiving_slip: params.data[i].receiving_slip, status: params.data[i].status }];
+            //   that.allInvoices.push(tmpData);
+            // }
             for (let i = 0; i < params.data.length; i++) {
-              let tmpData = [{ invoice: params.data[i].invoice, p_o: params.data[i].p_o, vendor_name: params.data[i].vendor_name, packing_slip: params.data[i].packing_slip, receiving_slip: params.data[i].receiving_slip, status: params.data[i].status }];
-              that.allInvoices.push(tmpData);
+              // let tmpData = [{ invoice: params.data[i].invoice, p_o: params.data[i].p_o, vendor_name: params.data[i].vendor_name, packing_slip: params.data[i].packing_slip, receiving_slip: params.data[i].receiving_slip, status: params.data[i].status }];
+              // that.allInvoices.push(tmpData);
+              that.allInvoices.push({
+                'invoice': params.data[i].invoice,
+                'p_o': params.data[i].p_o,
+                'vendor_name': params.data[i].vendor.vendor_name,
+                'packing_slip': params.data[i].packing_slip,
+                'receiving_slip': params.data[i].receiving_slip,
+                'status': params.data[i].status,
+              });
             }
             console.log('###################', that.allInvoices);
             that.dataSource = new MatTableDataSource(that.allInvoices);

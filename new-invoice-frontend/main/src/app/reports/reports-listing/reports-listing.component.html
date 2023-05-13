@@ -1,7 +1,8 @@
 <section class="content">
      <div class="content-block">
           <form [formGroup]="form">
-               <mat-checkbox *ngFor="let cd of columnDefinitions" [formControlName]="cd.def">{{cd.label}}</mat-checkbox>
+               <mat-checkbox *ngFor="let cd of columnDefinitions  |slice:2; " type="hidden"
+                    [formControlName]="cd.def">{{cd.label}}</mat-checkbox>
           </form>
           <mat-table class="mat-elevation-z8" [dataSource]="dataSource">
                <ng-container matColumnDef="invoice">
