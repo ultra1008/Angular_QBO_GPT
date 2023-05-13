@@ -117,4 +117,9 @@ export enum httproutes {
   PORTAL_GET_ALL_USERS = 'getalluser',
   // DOCUMENT
   DOCUMENTS_DATATABLE = "getViewDocumentsDatatableForTable",
+
+  //costcode
+  COSTCODE_DATA_TABLE = 'getCostCodeForTable',
+  DELETE_COST_CODE = 'deletecostcode',
+  COST_CODE_SAVE = 'savecostcode',
 }

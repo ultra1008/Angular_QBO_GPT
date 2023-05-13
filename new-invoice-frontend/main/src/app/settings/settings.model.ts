@@ -22,6 +22,21 @@ export class Settings {
     }
   }
 }
+export class CostCodeTable {
+  _id: string;
+  description: string;
+  value: string;
+  division: string;
+
+  constructor(costcodeTable: CostCodeTable) {
+    {
+      this._id = costcodeTable._id;
+      this.description = costcodeTable.description;
+      this.value = costcodeTable.value;
+      this.division = costcodeTable.division;
+    }
+  }
+}
 export class settingTable {
   _id: string;
   vendor_name: string;

@@ -3,7 +3,7 @@ import { UnsubscribeOnDestroyAdapter } from '../shared/UnsubscribeOnDestroyAdapt
 import { HttpCall } from '../services/httpcall.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { BehaviorSubject } from 'rxjs';
-import { MailboxTable, Settings } from './settings.model';
+import { CostCodeTable, MailboxTable, Settings } from './settings.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 @Injectable()
@@ -17,11 +17,19 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     MailboxTable[]
   >([]);
 
+  dataCostCodeChange: BehaviorSubject<CostCodeTable[]> = new BehaviorSubject<
+    CostCodeTable[]
+  >([]);
+
   constructor(private httpCall: HttpCall) {
     super();
   }
   get data(): MailboxTable[] {
     return this.dataChange.value;
+  }
+
+  get datacostcode(): CostCodeTable[] {
+    return this.dataCostCodeChange.value;
   }
   async getCompanyType() {
     const data = await this.httpCall
@@ -45,6 +53,18 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     // Only write this for datatable api otherwise return data
     this.isTblLoading = false;
     this.dataChange.next(data);
+  }
+
+  async getAllCostCodeTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall
+      .httpPostCall(httpversion.PORTAL_V1 + httproutes.COSTCODE_DATA_TABLE, {
+        is_delete: is_delete,
+        module: 'Invoice',
+      })
+      .toPromise();
+    // Only write this for datatable api otherwise return data
+    this.isTblLoading = false;
+    this.dataCostCodeChange.next(data);
   }
 
   async getCompanyNigp() {
@@ -122,6 +142,16 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     const data = await this.httpCall
       .httpPostCall(
         httpversion.PORTAL_V1 + httproutes.DELETE_MAILBOX,
+        requestObject
+      )
+      .toPromise();
+    return data;
+  }
+
+  async deleteCostCode(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.DELETE_COST_CODE,
         requestObject
       )
       .toPromise();
@@ -429,6 +459,16 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     const data = await this.httpCall
       .httpPostCall(
         httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_SAVE_VENDOR_TYPE,
+        requestObject
+      )
+      .toPromise();
+    return data;
+  }
+
+  async saveCostCode(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.COST_CODE_SAVE,
         requestObject
       )
       .toPromise();

@@ -58,6 +58,7 @@ import { TermsFormComponent } from './othersettings/terms-form/terms-form.compon
 import { TaxRateFormComponent } from './othersettings/tax-rate-form/tax-rate-form.component';
 import { DocumentFormComponent } from './othersettings/document-form/document-form.component';
 import { VendorTypeFormComponent } from './othersettings/vendor-type-form/vendor-type-form.component';
+import { CostCodeFormComponent } from './costcode/cost-code-form/cost-code-form.component';
 
 @NgModule({
   declarations: [
@@ -85,6 +86,7 @@ import { VendorTypeFormComponent } from './othersettings/vendor-type-form/vendor
     TaxRateFormComponent,
     DocumentFormComponent,
     VendorTypeFormComponent,
+    CostCodeFormComponent,
   ],
   providers: [SettingsService],
   imports: [
