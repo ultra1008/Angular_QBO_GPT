@@ -11,9 +11,9 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Observable } from 'rxjs/internal/Observable';
 import { fromEvent } from 'rxjs/internal/observable/fromEvent';
 import { HttpCall } from 'src/app/services/httpcall.service';
-import { MailboxTable } from 'src/app/settings/settings.model';
-import { SettingsService } from 'src/app/settings/settings.service';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
+import { DocumentTable } from '../documents.model';
+import { DocumentsService } from '../documents.service';
 
 @Component({
   selector: 'app-documents-listing',
@@ -24,28 +24,39 @@ export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter
   implements OnInit {
 
   displayedColumns = [
-    'email',
-    'imap',
-    'port',
-    'time',
+    'document_type',
+    'po_no',
+    'invoice_no',
+    'vendor_name',
+    'updated_by',
   ];
-  mailboxService?: SettingsService;
-  dataSource!: MailDataSource;
-  selection = new SelectionModel<MailboxTable>(true, []);
+  DocumentsServices?: DocumentsService;
+  dataSource!: DocumentDataSource;
+  selection = new SelectionModel<DocumentTable>(true, []);
   id?: number;
   isDelete = 0;
+  step_index: number = 0;
   titleMessage: string = '';
-
+  showTable: boolean = true;
+  tab_Array: any = ['INVOICE', 'PURCHASE_ORDER', 'PACKING_SLIP', 'RECEIVING_SLIP', 'QUOTE', 'Other', 'Delete'];
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   @ViewChild('filter', { static: true }) filter!: ElementRef;
   @ViewChild(MatMenuTrigger)
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
+  documentTypes: any = {
+    po: 'PURCHASE_ORDER',
+    packingSlip: 'PACKING_SLIP',
+    receivingSlip: 'RECEIVING_SLIP',
+    quote: 'QUOTE',
+    invoice: 'INVOICE'
+  };
+
 
   constructor(
     public dialog: MatDialog,
-    public SettingsService: SettingsService,
+    public DocumentsService: DocumentsService,
     public router: Router,
     private httpCall: HttpCall,
     public translate: TranslateService) {
@@ -56,16 +67,28 @@ export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter
     this.loadData();
   }
   refresh() {
+    this.showTable = false;
     this.loadData();
+    this.showTable = true;
   }
 
   public loadData() {
-    this.mailboxService = new SettingsService(this.httpCall);
-    this.dataSource = new MailDataSource(
-      this.mailboxService,
+    console.log("this.t", this.tab_Array[this.step_index]);
+    if (this.step_index == this.tab_Array.length - 1) {
+      this.isDelete = 1;
+    } else {
+      this.isDelete = 0;
+      // this.document_type = this.tab_Array[this.step_index];
+    }
+
+    this.DocumentsServices = new DocumentsService(this.httpCall);
+    this.dataSource = new DocumentDataSource(
+      this.DocumentsServices,
       this.paginator,
       this.sort,
-      this.isDelete
+      this.isDelete,
+      this.tab_Array[this.step_index]
+
     );
     this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
       () => {
@@ -76,13 +99,16 @@ export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter
       }
     );
   }
-
+  onTabChanged($event: any) {
+    // this.rerenderfunc();
+    this.loadData();
+  }
 
   back() {
     this.router.navigate(['/settings']);
   }
   // context menu
-  onContextMenu(event: MouseEvent, item: MailboxTable) {
+  onContextMenu(event: MouseEvent, item: DocumentTable) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -95,7 +121,7 @@ export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter
 
 }
 
-export class MailDataSource extends DataSource<MailboxTable> {
+export class DocumentDataSource extends DataSource<DocumentTable> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -103,39 +129,42 @@ export class MailDataSource extends DataSource<MailboxTable> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: MailboxTable[] = [];
-  renderedData: MailboxTable[] = [];
+  filteredData: DocumentTable[] = [];
+  renderedData: DocumentTable[] = [];
   constructor(
-    public mailboxService: SettingsService,
+    public DocumentsService: DocumentsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
-    public isDelete: number
+    public isDelete: number,
+    public tab_Array: string,
+
   ) {
     super();
     // Reset to the first page when the user changes the filter.
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<MailboxTable[]> {
+  connect(): Observable<DocumentTable[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this.mailboxService.dataChange,
+      this.DocumentsService.dataChange,
       this._sort.sortChange,
       this.filterChange,
       this.paginator.page,
     ];
-    this.mailboxService.getAllMailboxTable(this.isDelete);
+    this.DocumentsService.getDocumentTable(this.isDelete, this.tab_Array);
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
-        this.filteredData = this.mailboxService.data
+        this.filteredData = this.DocumentsService.data
           .slice()
-          .filter((mailboxTable: MailboxTable) => {
+          .filter((DocumentTable: DocumentTable) => {
             const searchStr = (
-              mailboxTable.email +
-              mailboxTable.imap +
-              mailboxTable.port +
-              mailboxTable.time
+              DocumentTable.document_type +
+              DocumentTable.po_no +
+              DocumentTable.invoice_no +
+              DocumentTable.vendor_name +
+              DocumentTable.updated_by
             ).toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
@@ -155,7 +184,7 @@ export class MailDataSource extends DataSource<MailboxTable> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: MailboxTable[]): MailboxTable[] {
+  sortData(data: DocumentTable[]): DocumentTable[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }
@@ -164,20 +193,22 @@ export class MailDataSource extends DataSource<MailboxTable> {
       let propertyB: number | string = '';
       switch (this._sort.active) {
         case 'id':
-          [propertyA, propertyB] = [a._id, b._id];
+          [propertyA, propertyB] = [a.document_type, b.document_type];
           break;
         case 'email':
-          [propertyA, propertyB] = [a.email, b.email];
+          [propertyA, propertyB] = [a.po_no, b.po_no];
           break;
         case 'imap':
-          [propertyA, propertyB] = [a.imap, b.imap];
+          [propertyA, propertyB] = [a.invoice_no, b.invoice_no];
           break;
         case 'port':
-          [propertyA, propertyB] = [a.port, b.port];
+          [propertyA, propertyB] = [a.vendor_name, b.vendor_name];
           break;
         case 'time':
-          [propertyA, propertyB] = [a.time, b.time];
+          [propertyA, propertyB] = [a.updated_by, b.updated_by];
           break;
+
+
       }
       const valueA = isNaN(+propertyA) ? propertyA : +propertyA;
       const valueB = isNaN(+propertyB) ? propertyB : +propertyB;

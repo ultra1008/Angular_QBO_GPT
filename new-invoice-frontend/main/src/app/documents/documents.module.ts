@@ -17,12 +17,13 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { SettingsService } from '../settings/settings.service';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSelectModule } from '@angular/material/select';
+import { DocumentsService } from './documents.service';
 
 @NgModule({
   declarations: [
     DocumentsListingComponent
   ],
-  providers: [SettingsService],
+  providers: [DocumentsService],
   imports: [
     CommonModule,
     DocumentsRoutingModule,

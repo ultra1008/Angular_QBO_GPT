@@ -115,4 +115,6 @@ export enum httproutes {
   PORTAL_ROVUK_INVOICE_OTHER_SETTING_UPDATE_ALERTS = 'getupdatesetting',
   PORTAL_SETTING_ROLES_ALL = 'getallrolespermission',
   PORTAL_GET_ALL_USERS = 'getalluser',
+  // DOCUMENT
+  DOCUMENTS_DATATABLE = "getViewDocumentsDatatableForTable",
 }
