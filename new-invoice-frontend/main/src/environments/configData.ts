@@ -46,65 +46,360 @@ export const configData = {
     { value: 'No', viewValue: 'No' },
   ],
   TIMEROPTIONS: [
-    { name: '1 min', key: '1' },
-    { name: '2 min', key: '2' },
-    { name: '3 min', key: '3' },
-    { name: '4 min', key: '4' },
-    { name: '5 min', key: '5' },
-    { name: '6 min', key: '6' },
-    { name: '7 min', key: '7' },
-    { name: '8 min', key: '8' },
-    { name: '9 min', key: '9' },
-    { name: '10 min', key: '10' },
-    { name: '11 min', key: '11' },
-    { name: '12 min', key: '12' },
-    { name: '13 min', key: '13' },
-    { name: '14 min', key: '14' },
-    { name: '15 min', key: '15' },
-    { name: '16 min', key: '16' },
-    { name: '17 min', key: '17' },
-    { name: '18 min', key: '18' },
-    { name: '19 min', key: '19' },
-    { name: '20 min', key: '20' },
-    { name: '21 min', key: '21' },
-    { name: '22 min', key: '22' },
-    { name: '23 min', key: '23' },
-    { name: '24 min', key: '24' },
-    { name: '25 min', key: '25' },
-    { name: '26 min', key: '26' },
-    { name: '27 min', key: '27' },
-    { name: '28 min', key: '28' },
-    { name: '29 min', key: '29' },
-    { name: '30 min', key: '30' },
-    { name: '31 min', key: '31' },
-    { name: '32 min', key: '32' },
-    { name: '33 min', key: '33' },
-    { name: '34 min', key: '34' },
-    { name: '35 min', key: '35' },
-    { name: '36 min', key: '36' },
-    { name: '37 min', key: '37' },
-    { name: '38 min', key: '38' },
-    { name: '39 min', key: '39' },
-    { name: '40 min', key: '40' },
-    { name: '41 min', key: '41' },
-    { name: '42 min', key: '42' },
-    { name: '43 min', key: '43' },
-    { name: '44 min', key: '44' },
-    { name: '45 min', key: '45' },
-    { name: '46 min', key: '46' },
-    { name: '47 min', key: '47' },
-    { name: '48 min', key: '48' },
-    { name: '49 min', key: '49' },
-    { name: '50 min', key: '50' },
-    { name: '51 min', key: '51' },
-    { name: '52 min', key: '52' },
-    { name: '53 min', key: '53' },
-    { name: '54 min', key: '54' },
-    { name: '55 min', key: '55' },
-    { name: '56 min', key: '56' },
-    { name: '57 min', key: '57' },
-    { name: '58 min', key: '58' },
-    { name: '59 min', key: '59' },
+    {
+      name: '1',
+      key: '1',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '2',
+      key: '2',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '3',
+      key: '3',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '4',
+      key: '4',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '5',
+      key: '5',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '6',
+      key: '6',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '7',
+      key: '7',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '8',
+      key: '8',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '9',
+      key: '9',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '10',
+      key: '10',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '11',
+      key: '11',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '12',
+      key: '12',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '13',
+      key: '13',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '14',
+      key: '14',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '15',
+      key: '15',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '16',
+      key: '16',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '17',
+      key: '17',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '18',
+      key: '18',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '19',
+      key: '19',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '20',
+      key: '20',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '21',
+      key: '21',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '22',
+      key: '22',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '23',
+      key: '23',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '24',
+      key: '24',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '25',
+      key: '25',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '26',
+      key: '26',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '27',
+      key: '27',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '28',
+      key: '28',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '29',
+      key: '29',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '30',
+      key: '30',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '31',
+      key: '31',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '32',
+      key: '32',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '33',
+      key: '33',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '34',
+      key: '34',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '35',
+      key: '35',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '36',
+      key: '36',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '37',
+      key: '37',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '38',
+      key: '38',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '39',
+      key: '39',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '40',
+      key: '40',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '41',
+      key: '41',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '42',
+      key: '42',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '43',
+      key: '43',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '44',
+      key: '44',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '45',
+      key: '45',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '46',
+      key: '46',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '47',
+      key: '47',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '48',
+      key: '48',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '49',
+      key: '49',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '50',
+      key: '50',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '51',
+      key: '51',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '52',
+      key: '52',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '53',
+      key: '53',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '54',
+      key: '54',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '55',
+      key: '55',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '56',
+      key: '56',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '57',
+      key: '57',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '58',
+      key: '58',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
+    {
+      name: '59',
+      key: '59',
+      tmp_language:
+        'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.TIMEROPTIONS',
+    },
   ],
   OTPOPTIONS: [
     { name: 'Yes', key: 'Yes', tmp_language: 'COMMON.ACTIONS.YES' },
