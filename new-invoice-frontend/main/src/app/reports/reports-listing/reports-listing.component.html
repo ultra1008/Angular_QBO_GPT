@@ -6,28 +6,29 @@
           </form>
           <mat-table class="mat-elevation-z8" [dataSource]="dataSource">
                <ng-container matColumnDef="invoice">
-                    <mat-header-cell *matHeaderCellDef>Invoice</mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef>{{'REPORT.TABLE.INVOICE' |translate}}</mat-header-cell>
                     <mat-cell *matCellDef="let row;">{{row.invoice}}</mat-cell>
                </ng-container>
                <ng-container matColumnDef="p_o">
-                    <mat-header-cell *matHeaderCellDef>PO</mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef>{{'REPORT.TABLE.PO' |translate}}</mat-header-cell>
                     <mat-cell *matCellDef="let row;">{{row.p_o}}</mat-cell>
                </ng-container>
                <ng-container matColumnDef="vendor_name">
-                    <mat-header-cell *matHeaderCellDef>Vendor Name</mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef>{{'REPORT.TABLE.VENDOR_NAME' |translate}}</mat-header-cell>
                     <mat-cell *matCellDef="let row;">{{row.vendor_name}}</mat-cell>
                </ng-container>
 
                <ng-container matColumnDef="packing_slip">
-                    <mat-header-cell *matHeaderCellDef>Packing Slip</mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef>{{'REPORT.TABLE.PACKING_SLIP' |translate}}</mat-header-cell>
                     <mat-cell *matCellDef="let row;">{{row.packing_slip}}</mat-cell>
                </ng-container>
                <ng-container matColumnDef="receiving_slip">
-                    <mat-header-cell *matHeaderCellDef>Receiving Slip</mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef>{{'REPORT.TABLE.RECEIVING_SLIP' |translate}}
+                         Slip</mat-header-cell>
                     <mat-cell *matCellDef="let row;">{{row.receiving_slip}}</mat-cell>
                </ng-container>
                <ng-container matColumnDef="status">
-                    <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef>{{'REPORT.TABLE.STATUS' |translate}}</mat-header-cell>
                     <mat-cell *matCellDef="let row;">{{row.status}}</mat-cell>
                </ng-container>
 

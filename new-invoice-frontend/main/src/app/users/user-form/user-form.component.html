@@ -9,7 +9,7 @@
                                    <ul class="header-buttons-left ms-0">
                                         <li class="tbl-title">
                                              <h2>
-                                                  <strong>Add User</strong>
+                                                  <strong>{{'USERS.VIEW.ADD_USER' | translate}}</strong>
                                              </h2>
                                         </li>
                                    </ul>
@@ -17,8 +17,7 @@
                               <div class="right">
                                    <ul class="tbl-export-btn">
                                         <li class="tbl-header-btn">
-                                             <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' |
-                                               translate}}">
+                                             <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' | translate}}">
                                                   <button mat-mini-fab color="warn" (click)="back()">
                                                        <mat-icon class="col-white">close</mat-icon>
                                                   </button>
@@ -34,7 +33,7 @@
                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                                         <div class="card">
                                              <div class="header">
-                                                  <h2>Personal Information</h2>
+                                                  <h2>{{'USERS.ADD_EDIT.PERSONAL_INFORMATION' | translate}}</h2>
 
                                              </div>
                                              <div class="body">
@@ -274,9 +273,10 @@
                                                        <div class=" col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2 ">
 
                                                             <button class="btn-space" mat-raised-button
-                                                                 matStepperPrevious color="primary">Back</button>
+                                                                 matStepperPrevious
+                                                                 color="primary">{{'COMMON.ACTIONS.BACK'| translate}}</button>
                                                             <button matStepperNext type="button" mat-raised-button
-                                                                 color="warn">Next</button>
+                                                                 color="warn">{{'COMMON.ACTIONS.NEXT'| translate}}</button>
 
                                                        </div>
                                                   </div>
@@ -289,7 +289,7 @@
                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                                         <div class="card">
                                              <div class="header">
-                                                  <h2>Contact Information</h2>
+                                                  <h2>{{'USERS.ADD_EDIT.CONTACT_INFORMATION' | translate}}</h2>
 
                                              </div>
                                              <div class="body">
@@ -370,9 +370,10 @@
                                                        <div class="row">
                                                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                                                  <button matStepperPrevious class="btn-space"
-                                                                      mat-raised-button color="primary">back</button>
+                                                                      mat-raised-button
+                                                                      color="primary">{{'COMMON.ACTIONS.BACK'| translate}}</button>
                                                                  <button matStepperNext type="button" mat-raised-button
-                                                                      color="warn">Next</button>
+                                                                      color="warn">{{'COMMON.ACTIONS.NEXT'| translate}}</button>
 
                                                             </div>
                                                        </div>
@@ -386,7 +387,7 @@
                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                                         <div class="card">
                                              <div class="header">
-                                                  <h2>Employee Information</h2>
+                                                  <h2>{{'USERS.ADD_EDIT.EMPLOYEE_INFORMATION' | translate}}</h2>
 
                                              </div>
                                              <div class="body">
@@ -396,7 +397,7 @@
                                                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'Employee Salary (Hourly Rate)' | translate}}</mat-label>
+                                                                      <mat-label>{{'USERS.ADD_EDIT.EMPLOYEE_SALARY' | translate}}</mat-label>
                                                                       <span matPrefix>$ &nbsp;</span>
                                                                       <input matInput
                                                                            placeholder="{{'Employee-form-Salary-Hourly-Rate' | translate }}"
@@ -410,7 +411,7 @@
                                                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'Start Date' | translate}}</mat-label>
+                                                                      <mat-label>{{'USERS.ADD_EDIT.START_DATE' | translate}}</mat-label>
                                                                       <input matInput formControlName="userstartdate"
                                                                            [matDatepicker]="picker_startDate">
                                                                       <mat-datepicker-toggle matSuffix
@@ -425,7 +426,7 @@
                                                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>Manager</mat-label>
+                                                                      <mat-label>{{'USERS.ADD_EDIT.MANAGER' | translate}}</mat-label>
                                                                       <mat-select formControlName="usermanager_id"
                                                                            #db_manager_usersSelect
                                                                            class="dark-cust-color">
@@ -448,7 +449,7 @@
                                                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>Supervisor</mat-label>
+                                                                      <mat-label>{{'USERS.ADD_EDIT.MANAGER' | translate}}</mat-label>
                                                                       <mat-select formControlName="usersupervisor_id"
                                                                            #db_supervisor_usersSelect
                                                                            class="dark-cust-color">
@@ -471,7 +472,7 @@
                                                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>Location</mat-label>
+                                                                      <mat-label>{{'USERS.ADD_EDIT.LOCATION' | translate}}</mat-label>
                                                                       <mat-select formControlName="userlocation_id"
                                                                            #db_locationsSelect class="dark-cust-color">
                                                                            <mat-select-filter [placeholder]="'Filter'"
@@ -493,7 +494,7 @@
                                                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>Department</mat-label>
+                                                                      <mat-label>{{'USERS.ADD_EDIT.DEPARTMENT' | translate}}</mat-label>
                                                                       <mat-select formControlName="userdepartment_id"
                                                                            class="dark-cust-color"
                                                                            #db_DepartmaentsSelect required>
@@ -517,7 +518,7 @@
                                                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>Job Title</mat-label>
+                                                                      <mat-label>{{'USERS.ADD_EDIT.JOB_TITLE' | translate}}</mat-label>
                                                                       <mat-select formControlName="userjob_title_id"
                                                                            class="dark-cust-color" #db_jobtitleSelect
                                                                            required>
@@ -540,7 +541,7 @@
                                                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>Job Type</mat-label>
+                                                                      <mat-label>{{'USERS.ADD_EDIT.JOB_TYPE' | translate}}</mat-label>
                                                                       <mat-select formControlName="userjob_type_id"
                                                                            class="dark-cust-color" #db_jobtypeSelect
                                                                            required>
@@ -565,7 +566,7 @@
                                                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>Language Spoken</mat-label>
+                                                                      <mat-label>{{'USERS.ADD_EDIT.LANGUAGE_SPOKEN' | translate}}</mat-label>
                                                                       <mat-select formControlName="user_languages"
                                                                            #languageListSelect
                                                                            (selectionChange)="language_change($event)"
@@ -590,9 +591,11 @@
                                                             <div class=" col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2 ">
 
                                                                  <button class="btn-space" mat-raised-button
-                                                                      matStepperPrevious color="primary">Back</button>
+                                                                      matStepperPrevious
+                                                                      color="primary">{{'COMMON.ACTIONS.BACK'| translate}}</button>
                                                                  <button class="btn-space" type="button" matStepperNext
-                                                                      mat-raised-button color="warn">Next</button>
+                                                                      mat-raised-button
+                                                                      color="warn">{{'COMMON.ACTIONS.NEXT'| translate}}</button>
 
                                                                  <button class="btn-space" mat-raised-button
                                                                       (click)="savedata()"
@@ -613,7 +616,7 @@
 
                                    <mat-icon *ngIf="index == 1" class="Icon-h">contact_phone</mat-icon>
 
-                                   <mat-icon *ngIf="index == 2" class=" Icon-h fas fa-address-card"></mat-icon>
+                                   <div *ngIf="index == 2" class="fa fa-address-card"></div>
                               </ng-template>
                               <ng-template matStepperIcon="person">
                                    <mat-icon class="Icon-h">account_box</mat-icon>
@@ -622,7 +625,7 @@
                                    <mat-icon class="Icon-h">contact_phone</mat-icon>
                               </ng-template>
                               <ng-template matStepperIcon="employee">
-                                   <mat-icon class=" Icon-h fas fa-address-card"></mat-icon>
+                                   <div class="fa fa-address-card"></div>
                               </ng-template>
                          </mat-horizontal-stepper>
                     </div>

@@ -24,12 +24,27 @@
                         <div class="right" *ngIf="show">
                             <ul class="tbl-export-btn">
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="{{'COMMON.TOOL_TIP.MULTI_ARCHIVE' |
+                                    <mat-form-field [hidden]=!selection.hasValue() class="example-full-width"
+                                        appearance="outline">
+                                        <mat-label>Action for selected</mat-label>
+                                        <mat-select formControlName="vendor_status">
+                                            <mat-option [value]="1">
+                                                Active
+                                            </mat-option>
+                                            <mat-option [value]="2">
+                                                Inactive
+                                            </mat-option>
+                                            <mat-option [value]="3">
+                                                Archive
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <!-- <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="{{'COMMON.TOOL_TIP.MULTI_ARCHIVE' |
                                         translate}}">
                                         <button mat-mini-fab color="warn" (click)="removeSelectedRows()">
                                             <mat-icon class="col-white">archive</mat-icon>
                                         </button>
-                                    </div>
+                                    </div> -->
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.REFRESH' |
@@ -92,14 +107,14 @@
                         <div class="table-responsive">
                             <table mat-table #table [dataSource]="dataSource" matSort class="table mat-cell">
                                 <ng-container matColumnDef="select">
-                                    <mat-header-cell *matHeaderCellDef>
+                                    <mat-header-cell *matHeaderCellDef class="psl-1" [ngClass]="'tbl-col-width-per-7'">
                                         <mat-checkbox (change)="$event ? masterToggle() : null"
                                             [checked]="selection.hasValue() && isAllSelected()"
                                             [indeterminate]="selection.hasValue() && !isAllSelected()"
                                             [ngClass]="'tbl-checkbox'">
                                         </mat-checkbox>
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row">
+                                    <mat-cell *matCellDef="let row" class="psl-1" [ngClass]="'tbl-col-width-per-7'">
                                         <mat-checkbox (click)="$event.stopPropagation()"
                                             (change)="$event ? selection.toggle(row) : null"
                                             [checked]="selection.isSelected(row)" [ngClass]="'tbl-checkbox'">
@@ -108,8 +123,9 @@
                                 </ng-container>
                                 <!-- ID Column -->
                                 <ng-container matColumnDef="id">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
-                                    <mat-cell *matCellDef="let row">{{row.id}}</mat-cell>
+                                    <mat-header-cell class="psl-1" *matHeaderCellDef mat-sort-header>Id
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row" class="psl-1">{{row.id}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_name">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.VENDOR_NAME' |
@@ -198,7 +214,7 @@
                                         </span>
                                     </mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="vendor_from">
+                                <ng-container matColumnDef="vendor_from" *ngIf="isQBSyncedCompany">
                                     <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-7'" *matHeaderCellDef
                                         mat-sort-header>
                                         <img src='assets/images/icons/quickbooks.svg' alt="" height="25" width="25" />
@@ -220,7 +236,7 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="actions">
-                                    <mat-header-cell class="pr-0" *matHeaderCellDef>{{'VENDOR.TABLE.ACTIONS' |
+                                    <mat-header-cell class="psl-3" *matHeaderCellDef>{{'VENDOR.TABLE.ACTIONS' |
                                         translate}}</mat-header-cell>
                                     <mat-cell *matCellDef="let row; let i=index;" class="pr-0">
                                         <button matTooltip="{{'COMMON.ACTIONS.EDIT' |

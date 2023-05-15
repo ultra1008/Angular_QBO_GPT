@@ -405,6 +405,7 @@ export const configData = {
     { name: 'Yes', key: 'Yes', tmp_language: 'COMMON.ACTIONS.YES' },
     { name: 'No', key: 'No', tmp_language: 'COMMON.ACTIONS.NO' },
   ],
+
   PENDING_ITEM_ALERT: [
     { name: '1 hours', key: '1 hours' },
     { name: '2 hours', key: '2 hours' },

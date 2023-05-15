@@ -83,14 +83,18 @@ module.exports.deleteinvoicecostCode = async function (req, res) {
             var requestObject = req.body;
             var id = requestObject._id;
             delete requestObject._id;
-
+            console.log("requestObject", requestObject);
             var costCodeConnection = connection_db_api.model(collectionConstant.INVOICE_COST_CODE, invoice_cost_code_Schema);
-            let update_data = await costCodeConnection.updateOne({ _id: ObjectID(id) }, { is_delete: 1 });
+            let update_data = await costCodeConnection.updateOne({ _id: ObjectID(id) }, { is_delete: requestObject.is_delete });
             let isDelete = update_data.nModified;
             if (isDelete == 0) {
                 res.send({ status: false, message: 'There is no data with this id.' });
             } else {
-                res.send({ status: true, message: 'Cost code deleted successfully.', data: update_data });
+                if (requestObject.is_delete == 0) {
+                    res.send({ status: true, message: 'Cost code deleted successfully.', data: update_data });
+                } else {
+                    res.send({ status: true, message: 'Cost code restore successfully.', data: update_data });
+                }
             }
         } catch (e) {
             console.log(e);

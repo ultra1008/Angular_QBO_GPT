@@ -3493,6 +3493,7 @@ module.exports.getViewDocumentsDatatableForTable = async function (req, res) {
                 status: { $ne: 'Complete' },
             };
             if (requestObject.document_type) {
+                console.log("in 88888");
                 if (requestObject.document_type == 'Other') {
                     match_query = {
                         document_type: { $nin: ['INVOICE', 'PURCHASE_ORDER', 'PACKING_SLIP', 'RECEIVING_SLIP', 'QUOTE'] },
@@ -3507,6 +3508,7 @@ module.exports.getViewDocumentsDatatableForTable = async function (req, res) {
                     };
                 }
             }
+            console.log("match_query", match_query);
             var aggregateQuery = [
                 { $match: match_query },
                 {
