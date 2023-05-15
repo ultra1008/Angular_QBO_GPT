@@ -11,7 +11,8 @@
             "SEARCH": "Search",
             "MULTI_ARCHIVE": "MULTI ARCHIVE",
             "LIST_TO_GRID": "LIST TO GRID",
-            "CLOSE": "Close"
+            "CLOSE": "Close",
+            "CHANGE_LANGUAGE": "Change Language"
         },
         "ACTIONS": {
             "EDIT": "Edit",
@@ -282,6 +283,11 @@
             "UPDATED_AT": "Updated At",
             "ARCHIVE_BY": "Archive By",
             "ARCHIVE_AT": "Archive At"
+        }
+    },
+    "AUTHNITICATION": {
+        "VIEW": {
+            "TITLE": "Change Password"
         }
     }
 }
