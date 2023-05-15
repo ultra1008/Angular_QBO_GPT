@@ -12,9 +12,10 @@ import { UserDataSource } from '../users-listing/users-listing.component';
 import { fromEvent } from 'rxjs';
 import { showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
 import { SelectionModel } from '@angular/cdk/collections';
-import { AdvanceTable, User } from '../user.model';
+import { AdvanceTable, RoleModel, User } from '../user.model';
 import { UserRestoreFormComponent } from '../user-restore-form/user-restore-form.component';
 import { Direction } from '@angular/cdk/bidi';
+import { UserReportComponent } from '../user-report/user-report.component';
 
 @Component({
   selector: 'app-user-grid',
@@ -31,6 +32,7 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
   titleMessage: string = "";
   selection = new SelectionModel<User>(true, []);
   advanceTable?: AdvanceTable;
+  roleLists: Array<RoleModel> = [];
 
 
   constructor(
@@ -52,7 +54,37 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
   gotoArchiveUnarchive() {
     this.isDelete = this.isDelete == 1 ? 0 : 1;
     this.getUser();
+  }
+  addNewUser() {
+    this.router.navigate([WEB_ROUTES.USER_FORM]);
+  }
+  openHistory() {
+    this.router.navigate([WEB_ROUTES.USER_HISTORY]);
+  }
+  userReport() {
+    console.log("roleList", this.roleLists);
 
+    const dialogRef = this.dialog.open(UserReportComponent, {
+      width: '700px',
+      data: {
+        roleList: this.roleLists,
+        invoiceStatus: '',
+      },
+    });
+    this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
+      //  
+    });
+  }
+  async getRole() {
+    const data = await this.userService.getRole();
+    if (data.status) {
+      this.roleLists = data.data;
+
+    }
+  }
+
+  refresh() {
+    this.getUser();
   }
   async archiveRecover(user: User, is_delete: number) {
     const data = await this.userService.deleteUser({ _id: user, is_delete: is_delete });
@@ -87,11 +119,8 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
   }
 
   addNew(user: User) {
-
-
     let that = this;
     this.titleMessage = "Are you sure you want to restore this user?";
-
     swalWithBootstrapTwoButtons
       .fire({
         title: this.titleMessage,
@@ -137,8 +166,6 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
 
 
   }
-
-
   gotoUser() {
     console.log("call");
     localStorage.setItem(localstorageconstants.USER_DISPLAY, 'list');

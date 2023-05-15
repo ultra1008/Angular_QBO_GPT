@@ -15,6 +15,28 @@
                         </div>
                         <div class="right">
                             <ul class="tbl-export-btn">
+
+                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                                    <div class="m-l-10" matTooltip="REFRESH">
+                                        <button mat-mini-fab color="primary" (click)="refresh()">
+                                            <mat-icon class="col-white">refresh</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                                    <div class="m-l-10" matTooltip="REPORT" (click)="userReport()">
+                                        <button mat-mini-fab color="primary">
+                                            <mat-icon class="col-white">insert_drive_file</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                                    <div class="m-l-10" matTooltip="HISTORY">
+                                        <button mat-mini-fab color="primary" (click)="openHistory()">
+                                            <mat-icon class="col-white">history</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
                                     <div class="m-l-10" matTooltip="GRID TO LIST">
                                         <button mat-mini-fab color="warn" (click)="gotoUser()">
@@ -33,6 +55,13 @@
                                     <div class="m-l-10" matTooltip="BACK">
                                         <button mat-mini-fab color="warn" (click)="gotoArchiveUnarchive()">
                                             <mat-icon class="col-white">close </mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                                    <div class="m-l-10" matTooltip="ADD">
+                                        <button mat-mini-fab color="primary" (click)="addNewUser()">
+                                            <mat-icon class="col-white">add</mat-icon>
                                         </button>
                                     </div>
                                 </li>

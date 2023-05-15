@@ -33,50 +33,49 @@
                                    </ul>
                               </div>
                          </div>
-                         <div class="content-block">
-                              <form [formGroup]="form">
-                                   <mat-checkbox *ngFor="let cd of columnDefinitions  |slice:2; " type="hidden"
-                                        [formControlName]="cd.def">{{cd.label}}</mat-checkbox>
-                              </form>
-                              <mat-table class="mat-elevation-z8" [dataSource]="dataSource">
-                                   <ng-container matColumnDef="invoice">
-                                        <mat-header-cell
-                                             *matHeaderCellDef>{{'REPORT.TABLE.INVOICE' |translate}}</mat-header-cell>
-                                        <mat-cell *matCellDef="let row;">{{row.invoice}}</mat-cell>
-                                   </ng-container>
-                                   <ng-container matColumnDef="p_o">
-                                        <mat-header-cell
-                                             *matHeaderCellDef>{{'REPORT.TABLE.PO' |translate}}</mat-header-cell>
-                                        <mat-cell *matCellDef="let row;">{{row.p_o}}</mat-cell>
-                                   </ng-container>
-                                   <ng-container matColumnDef="vendor_name">
-                                        <mat-header-cell
-                                             *matHeaderCellDef>{{'REPORT.TABLE.VENDOR_NAME' |translate}}</mat-header-cell>
-                                        <mat-cell *matCellDef="let row;">{{row.vendor_name}}</mat-cell>
-                                   </ng-container>
 
-                                   <ng-container matColumnDef="packing_slip">
-                                        <mat-header-cell
-                                             *matHeaderCellDef>{{'REPORT.TABLE.PACKING_SLIP' |translate}}</mat-header-cell>
-                                        <mat-cell *matCellDef="let row;">{{row.packing_slip}}</mat-cell>
-                                   </ng-container>
-                                   <ng-container matColumnDef="receiving_slip">
-                                        <mat-header-cell *matHeaderCellDef>{{'REPORT.TABLE.RECEIVING_SLIP' |translate}}
-                                             Slip</mat-header-cell>
-                                        <mat-cell *matCellDef="let row;">{{row.receiving_slip}}</mat-cell>
-                                   </ng-container>
-                                   <ng-container matColumnDef="status">
-                                        <mat-header-cell
-                                             *matHeaderCellDef>{{'REPORT.TABLE.STATUS' |translate}}</mat-header-cell>
-                                        <mat-cell *matCellDef="let row;">{{row.status}}</mat-cell>
-                                   </ng-container>
+                         <form [formGroup]="form">
+                              <mat-checkbox *ngFor="let cd of columnDefinitions  |slice:2; " type="hidden"
+                                   [formControlName]="cd.def">{{cd.label}}</mat-checkbox>
+                         </form>
+                         <mat-table class="mat-elevation-z8" [dataSource]="dataSource">
+                              <ng-container matColumnDef="invoice">
+                                   <mat-header-cell
+                                        *matHeaderCellDef>{{'REPORT.TABLE.INVOICE' |translate}}</mat-header-cell>
+                                   <mat-cell *matCellDef="let row;">{{row.invoice}}</mat-cell>
+                              </ng-container>
+                              <ng-container matColumnDef="p_o">
+                                   <mat-header-cell *matHeaderCellDef>{{'REPORT.TABLE.PO' |translate}}</mat-header-cell>
+                                   <mat-cell *matCellDef="let row;">{{row.p_o}}</mat-cell>
+                              </ng-container>
+                              <ng-container matColumnDef="vendor_name">
+                                   <mat-header-cell
+                                        *matHeaderCellDef>{{'REPORT.TABLE.VENDOR_NAME' |translate}}</mat-header-cell>
+                                   <mat-cell *matCellDef="let row;">{{row.vendor_name}}</mat-cell>
+                              </ng-container>
 
-                                   <mat-header-row *matHeaderRowDef="columns">
-                                   </mat-header-row>
-                                   <mat-row *matRowDef="let row; columns: columns"></mat-row>
+                              <ng-container matColumnDef="packing_slip">
+                                   <mat-header-cell
+                                        *matHeaderCellDef>{{'REPORT.TABLE.PACKING_SLIP' |translate}}</mat-header-cell>
+                                   <mat-cell *matCellDef="let row;">{{row.packing_slip}}</mat-cell>
+                              </ng-container>
+                              <ng-container matColumnDef="receiving_slip">
+                                   <mat-header-cell *matHeaderCellDef>{{'REPORT.TABLE.RECEIVING_SLIP' |translate}}
+                                        Slip</mat-header-cell>
+                                   <mat-cell *matCellDef="let row;">{{row.receiving_slip}}</mat-cell>
+                              </ng-container>
+                              <ng-container matColumnDef="status">
+                                   <mat-header-cell
+                                        *matHeaderCellDef>{{'REPORT.TABLE.STATUS' |translate}}</mat-header-cell>
+                                   <mat-cell *matCellDef="let row;">{{row.status}}</mat-cell>
+                              </ng-container>
 
-                              </mat-table>
-                         </div>
+                              <mat-header-row *matHeaderRowDef="columns">
+                              </mat-header-row>
+                              <mat-row *matRowDef="let row; columns: columns"></mat-row>
+
+                         </mat-table>
+
                     </div>
                </div>
           </div>
