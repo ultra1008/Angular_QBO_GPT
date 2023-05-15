@@ -11,7 +11,8 @@
             "SEARCH": "Search",
             "MULTI_ARCHIVE": "MULTI ARCHIVE",
             "LIST_TO_GRID": "LIST TO GRID",
-            "CLOSE": "Close"
+            "CLOSE": "Close",
+            "CHANGE_LANGUAGE": "Change Language"
         },
         "ACTIONS": {
             "EDIT": "Edit",
@@ -257,6 +258,9 @@
         }
     },
     "REPORT": {
+        "VIEW": {
+            "TITLE": "Report"
+        },
         "TABLE": {
             "INVOICE": "Invoice",
             "PO": "PO",
