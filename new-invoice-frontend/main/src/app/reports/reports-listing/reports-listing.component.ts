@@ -6,6 +6,7 @@ import { ReportService } from '../report.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
+import { TranslateService } from '@ngx-translate/core';
 
 class Todo {
   invoice: string = '';
@@ -25,7 +26,7 @@ class Todo {
 export class ReportsListingComponent {
   allInvoices: any = [];
   dataSource!: any;
-  constructor(public ReportServices: ReportService, public httpCall: HttpCall, public uiSpinner: UiSpinnerService,) {
+  constructor(public ReportServices: ReportService, public httpCall: HttpCall, public uiSpinner: UiSpinnerService, public translate: TranslateService) {
 
   }
 

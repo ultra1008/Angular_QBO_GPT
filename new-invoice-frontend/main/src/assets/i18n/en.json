@@ -255,5 +255,15 @@
             "SMTP_TLS": "Active Transport Layer Security(TLS)",
             "SMTP_AUTO_EMAIL": "Auto email reply to-email"
         }
+    },
+    "REPORT": {
+        "TABLE": {
+            "INVOICE": "Invoice",
+            "PO": "PO",
+            "VENDOR_NAME": "Vendor Name",
+            "PACKING_SLIP": "Packing Slip",
+            "RECEIVING_SLIP": "Receiving Slip",
+            "STATUS": "Status"
+        }
     }
 }

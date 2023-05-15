@@ -255,5 +255,15 @@
             "SMTP_TLS": "Seguridad de la capa de transporte activa (TLS)",
             "SMTP_AUTO_EMAIL": "Respuesta automática por correo electrónico al correo electrónico"
         }
+    },
+    "REPORT": {
+        "TABLE": {
+            "INVOICE": "Factura",
+            "PO": "DESPUÉS",
+            "VENDOR_NAME": "Nombre del proveedor",
+            "PACKING_SLIP": "Albarán",
+            "RECEIVING_SLIP": "Recibo",
+            "STATUS": "Estado"
+        }
     }
 }
