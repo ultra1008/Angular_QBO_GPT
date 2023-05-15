@@ -22,6 +22,8 @@ import { NgxMaskModule } from 'ngx-mask';
 import { SendOtpComponent } from './send-otp/send-otp.component';
 import { NgOtpInputModule } from 'ng-otp-input';
 import { ForcefullChangePasswordComponent } from './forcefull-change-password/forcefull-change-password.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -50,6 +52,8 @@ import { ForcefullChangePasswordComponent } from './forcefull-change-password/fo
     MatSnackBarModule,
     NgxMaskModule,
     NgOtpInputModule,
+    TranslateModule,
+    MatTooltipModule
   ]
 })
 export class AuthenticationModule { }

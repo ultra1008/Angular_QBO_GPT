@@ -257,9 +257,6 @@
         }
     },
     "REPORT": {
-        "VIEW": {
-            "TITLE": "Report"
-        },
         "TABLE": {
             "INVOICE": "Invoice",
             "PO": "PO",
@@ -282,6 +279,11 @@
             "UPDATED_AT": "Updated At",
             "ARCHIVE_BY": "Archive By",
             "ARCHIVE_AT": "Archive At"
+        }
+    },
+    "AUTHNITICATION": {
+        "VIEW": {
+            "TITLE": "Change Password"
         }
     }
 }

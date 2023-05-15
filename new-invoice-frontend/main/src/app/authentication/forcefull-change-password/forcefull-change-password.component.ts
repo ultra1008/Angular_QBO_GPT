@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from '../authentication.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { showNotification } from 'src/consts/utils';
+import { Location } from '@angular/common';
+import { icon } from 'src/consts/icon';
 
 @Component({
   selector: 'app-forcefull-change-password',
@@ -25,7 +27,7 @@ export class ForcefullChangePasswordComponent {
   eyeButtonForOldPassword() {
     this.hideOld = !this.hideOld;
   }
-
+  logo = icon.INVOICE_LOGO
   eyeButtonForNewPassword() {
     this.hideNew = !this.hideNew;
   }
@@ -45,9 +47,14 @@ export class ForcefullChangePasswordComponent {
     private fb: UntypedFormBuilder,
     private router: Router,
     private authenticationService: AuthenticationService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private location: Location,
   ) {
     this.initForm();
+  }
+
+  back() {
+    this.location.back()
   }
   initForm() {
     this.forcefullyPasswordInfo = this.fb.group(
