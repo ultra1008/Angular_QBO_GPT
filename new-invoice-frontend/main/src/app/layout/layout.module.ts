@@ -9,6 +9,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { LanguageComponent } from './language/language.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatTooltipModule } from '@angular/material/tooltip';
 @NgModule({
   imports: [
     CommonModule,
@@ -26,7 +27,8 @@ import { TranslateModule } from '@ngx-translate/core';
   ],
   exports: [
     LanguageComponent,
-    TranslateModule
+    TranslateModule,
+    MatTooltipModule
   ]
 })
 export class LayoutModule { }
