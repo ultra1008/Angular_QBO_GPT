@@ -268,5 +268,20 @@
             "RECEIVING_SLIP": "Receiving Slip",
             "STATUS": "Status"
         }
+    },
+    "DOCUMENTS": {
+        "VIEW": {
+            "TITLE": "Documents"
+        },
+        "TABLE": {
+            "DOCUMENT_TYPE": "Document Type",
+            "PO_NO": "PO NO",
+            "INVOICE_NO": "Invoice No",
+            "VENDOR_NAME": "Vendor Name",
+            "UPDATED_BY": "Updated By",
+            "UPDATED_AT": "Updated At",
+            "ARCHIVE_BY": "Archive By",
+            "ARCHIVE_AT": "Archive At"
+        }
     }
 }
