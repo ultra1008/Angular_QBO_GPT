@@ -102,7 +102,7 @@ export class ReportsListingComponent {
       this.columnDefinitions[4].hide = this.receiving_slip!.value;
       this.columnDefinitions[5].hide = this.status!.value;
 
-      console.log(this.columnDefinitions);
+      console.log('123435456676', this.columnDefinitions);
 
       this.getDisplayedColumns();
     });
@@ -112,6 +112,30 @@ export class ReportsListingComponent {
   // export table data in excel file
   exportExcel() {
     // key name with space add in brackets
+
+    let tmp = [
+      'invoice',
+      'PO',
+    ];
+
+    if (!this.columnDefinitions[2].hide) {
+      tmp.push(" x.vendor_name || '',");
+
+    }
+
+    if (!this.columnDefinitions[3].hide) {
+      tmp.push('Packing Slip');
+    }
+
+    if (!this.columnDefinitions[4].hide) {
+      tmp.push('Receiving Slip');
+    }
+
+    if (!this.columnDefinitions[5].hide) {
+      tmp.push('status');
+    }
+
+    console.log(tmp);
     const exportData: Partial<Report>[] =
       this.dataSource.filteredData.map((x: any) => ({
         'invoice': x.invoice || '',
@@ -120,7 +144,6 @@ export class ReportsListingComponent {
         'Packing Slip': x.packing_slip || '',
         'Receiving Slip': x.vendor_receiving_slip || '',
         'status': x.status || '',
-
       }));
 
     TableExportUtil.exportToExcel(exportData, 'excel');

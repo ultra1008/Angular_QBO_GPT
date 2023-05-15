@@ -82,71 +82,33 @@
                     </div>
                     <div class="body overflow-auto">
                         <div class="row">
-                            <div class="col-lg-3 col-md-12" *ngFor="let user of userList">
+                            <!-- <div class="col-lg-2 col-md-12" *ngFor="let user of userList"> -->
+                            <div class="test col-xs-12 col-sm-6 col-md-4 col-xl-2" *ngFor="let user of userList">
                                 <div class="card">
+                                    <div class="ribbon-wrapper">
+                                        <div class="ribbon-tag" [ngClass]="user.userstatus == 1 ? 'active' :'inactive'">
+                                            {{user.userstatus == 1 ? active_word :inactive_word }}
+                                        </div>
+                                    </div>
                                     <div class="m-b-20">
-                                        <div class="contact-grid" style="height: 250px;">
+                                        <div class="contact-grid" style="height: 240px;">
                                             <div class="profile-header bg-indigo">
-                                                <div class="row">
-                                                    <div class="col-8">
-                                                        <img src={{user.userpicture}}
-                                                            style="background-color: white; margin-top: 5px;"
-                                                            width="112px" height="112px" alt="">
-                                                    </div>
-
-                                                    <div class="col-4">
-                                                        <div class="row">
-                                                            <div class="col-3">
-                                                                <button
-                                                                    matTooltip="{{'COMMON.ACTIONS.EDIT' |
-                                                                                                                                                                            translate}}"
-                                                                    mat-icon-button (click)="$event.stopPropagation()"
-                                                                    *ngIf="isDelete === 0" class="col-white">
-                                                                    <mat-icon>edit</mat-icon>
-                                                                </button>
-                                                            </div>
-                                                            <div class="col-3">
-                                                                <button mat-icon-button
-                                                                    matTooltip="{{'COMMON.ACTIONS.ARCHIVE' |
-                                                                                                                                                                            translate}}"
-                                                                    (click)="$event.stopPropagation()"
-                                                                    *ngIf="isDelete === 0" class="col-white">
-                                                                    <mat-icon>archive</mat-icon>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-
-
-                                                    </div>
-                                                </div>
-
-                                                <!-- <div class="user-name">{{user.userfullname}}</div>
-                                                <div class="name-center">{{user.role_name}}</div> -->
+                                                <div class="user-name">{{user.userfullname}}</div>
+                                                <div class="name-center">{{user.role_name}}</div>
                                             </div>
-                                            <!-- <div>
-                                                <img src={{user.userpicture}} class="user-img"
-                                                    style="background-color: white;" width="112px" height="112px"
-                                                    alt="">
-                                            </div> -->
-                                            <div class="user-name">{{user.userfullname}}</div>
-                                            <div class="name-center">{{user.role_name}}</div>
-                                            <p>
-                                                {{user.useremail}}
-
-                                            </p>
+                                            <img src={{user.userpicture}} class="user-img"
+                                                style="background-color: white;" width="80px" height="80px " alt="">
+                                            <p style="height: 10px;"> {{user.useremail}} </p>
                                             <div *ngIf="user.userphone!=0">
                                                 <span class="phone">
                                                     <i class="material-icons">phone</i>{{user.userphone}}</span>
                                             </div>
-
-
-                                            <!-- <div style="position:absolute;bottom:0px; font-size: 15px;"
+                                            <!-- <div style="position:absolute;bottom:30px; font-size: 15px;"
                                                 class="col-12 align-items-end  status"
                                                 [ngClass]="user.userstatus == 1 ? 'active' :'inactive'">
                                                 {{user.userstatus == 1 ? active_word :inactive_word }}
                                             </div> -->
-
-                                            <!-- <div class="Action col-12 bg-indigo d-flex justify-content-between ">
+                                            <div class="Action col-12 bg-indigo d-flex justify-content-between ">
                                                 <div class="col-6 pt-2" matTooltip="EDIT" *ngIf="isDelete === 0">
                                                     <mat-icon class="col-white">edit </mat-icon>
                                                 </div>
@@ -158,15 +120,10 @@
                                                     *ngIf="isDelete === 1">
                                                     <mat-icon class="col-white">archive </mat-icon>
                                                 </div>
-                                            </div> -->
-
-
-
+                                            </div>
                                         </div>
-
                                     </div>
                                 </div>
-                                <!-- <div>{{user.userfullname}}</div> -->
                             </div>
                         </div>
                     </div>
