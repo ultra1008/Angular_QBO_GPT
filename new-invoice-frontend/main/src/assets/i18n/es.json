@@ -23,7 +23,9 @@
             "DONT_SAVE": "No guardar",
             "ATTACHMENT": "Archivo adjunto",
             "YES": "Sí",
-            "NO": "No"
+            "NO": "No",
+            "BACK": "Atrás",
+            "NEXT": "Próxima"
         },
         "HISTORY": {
             "KEY": "Llave",
@@ -85,6 +87,7 @@
     },
     "USERS": {
         "VIEW": {
+            "ADD_USER": "Agregar usuario",
             "TITLE": "Usuario",
             "ARCHIVED_TITLE": "Usuario archivado"
         },
@@ -100,25 +103,37 @@
             "ACTIONS": "Acciones"
         },
         "ADD_EDIT": {
-            "FIRST_NAME": "First Name",
-            "M_NAME": "Middle Name",
-            "L_NAME": "Last Name",
-            "EMAIL": "Email",
-            "TEMPORARY_PASSWORD": "Temporary Password",
+            "FIRST_NAME": "Nombre",
+            "M_NAME": "Segundo nombre",
+            "L_NAME": "Apellido",
+            "EMAIL": "Correo electrónico",
+            "TEMPORARY_PASSWORD": "Contraseña temporal",
             "SSN": "SSN",
-            "EMP_NUMBER": "Employee Number",
-            "USER_ROLE": "User Role",
-            "GENDER": "Gender",
-            "DATE_OF_BIRTH": "Date OF Birth",
-            "STATUS": "Status",
-            "USER_PHONE": "Phone",
-            "S_EMAIL": "Secondary Email",
-            "STREET1": "Street1",
-            "STREET2": "Street2",
-            "USER_CITY": "City",
-            "USER_STATE": "State",
-            "USER_ZIPCODE": "Zipcode",
-            "USER_COUNTRY": "Coyntry"
+            "EMP_NUMBER": "Número de empleado",
+            "USER_ROLE": "Rol del usuario",
+            "GENDER": "Género",
+            "DATE_OF_BIRTH": "Fecha de nacimiento",
+            "STATUS": "Estado",
+            "USER_PHONE": "Teléfono",
+            "S_EMAIL": "Email secundario",
+            "STREET1": "Calle2",
+            "STREET2": "Calle2",
+            "USER_CITY": "Ciudad",
+            "USER_STATE": "Estado",
+            "USER_ZIPCODE": "Código postal",
+            "USER_COUNTRY": "País",
+            "EMPLOYEE_SALARY": "Salario del empleado (Tarifa por hora)",
+            "START_DATE": "Fecha de inicio",
+            "MANAGER": "Gerente",
+            "SUPERVISOR": "Supervisora",
+            "LOCATION": "Ubicación",
+            "DEPARTMENT": "Departamento",
+            "JOB_TITLE": "Título profesional",
+            "JOB_TYPE": "El tipo de trabajo",
+            "LANGUAGE_SPOKEN": "Lenguaje hablado",
+            "PERSONAL_INFORMATION": "Informacion personal",
+            "CONTACT_INFORMATION": "Información del contacto",
+            "EMPLOYEE_INFORMATION": "información del empleado"
         }
     },
     "SETTINGS": {
