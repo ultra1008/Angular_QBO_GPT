@@ -109,9 +109,9 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="body overflow-auto">
+                    <!-- <div class="body overflow-auto">
                         <div class="row">
-                            <!-- <div class="col-lg-2 col-md-12" *ngFor="let user of userList"> -->
+                        
                             <div class="test col-xs-12 col-sm-6 col-md-4 col-xl-2" *ngFor="let user of userList">
                                 <div class="card">
                                     <div class="ribbon-wrapper">
@@ -131,12 +131,7 @@
                                             <div *ngIf="user.userphone!=0">
                                                 <span class="phone">
                                                     <i class="material-icons">phone</i>{{user.userphone}}</span>
-                                            </div>
-                                            <!-- <div style="position:absolute;bottom:30px; font-size: 15px;"
-                                                class="col-12 align-items-end  status"
-                                                [ngClass]="user.userstatus == 1 ? 'active' :'inactive'">
-                                                {{user.userstatus == 1 ? active_word :inactive_word }}
-                                            </div> -->
+                                            </div>                                          
                                             <div class="Action col-12 bg-indigo d-flex justify-content-between ">
                                                 <div class="col-6 pt-2" matTooltip="EDIT" *ngIf="isDelete === 0">
                                                     <mat-icon class="col-white">edit </mat-icon>
@@ -150,6 +145,81 @@
                                                     <mat-icon class="col-white">archive </mat-icon>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="body overflow-auto">
+                        <div class="row">
+
+                            <div class="test col-xs-12 col-sm-6 col-md-4 col-xl-2" *ngFor="let user of userList">
+                                <div class="card">
+                                    <!-- <div class="ribbon-wrapper"> -->
+                                    <!-- <div class="ribbon-tag" [ngClass]="user.userstatus == 1 ? 'active' :'inactive'">
+                                            {{user.userstatus == 1 ? active_word :inactive_word }}
+                                        </div> -->
+                                    <!-- </div> -->
+                                    <div class="m-b-20">
+                                        <div class="contact-grid" style="height: 220px;">
+                                            <div class="profile-header bg-indigo ">
+                                                <div class="col-12 d-flex justify-content-between">
+                                                    <div style="margin: auto;">
+                                                        <img src={{user.userpicture}} class="user-img"
+                                                            style="background-color: white;" width="80px" height="80px "
+                                                            alt="">
+                                                    </div>
+                                                    <div style="margin: auto;">
+                                                        <div style="text-align: initial;" matTooltip="EDIT"
+                                                            *ngIf="isDelete === 0">
+                                                            <mat-icon class=" pt-1 col-white">edit </mat-icon>
+                                                            <span>EDIT</span>
+                                                        </div>
+                                                        <div class="pb-1" (click)="deleteUser(user._id,1)"
+                                                            matTooltip="ARCHIVE" *ngIf="isDelete === 0">
+                                                            <mat-icon class="  pt-1 col-white">archive </mat-icon>
+                                                            <span>ARCHIVE</span>
+                                                        </div>
+                                                        <div class="pb-1" (click)="addNew(user)" matTooltip="RESTORE"
+                                                            *ngIf="isDelete === 1">
+                                                            <mat-icon class="col-white">archive </mat-icon>
+                                                        </div>
+                                                        <div class=""
+                                                            [ngClass]="user.userstatus == 1 ? 'active' :'inactive'">
+                                                            {{user.userstatus == 1 ? active_word :inactive_word }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <!-- <img src={{user.userpicture}} class="user-img"
+                                                style="background-color: white;" width="80px" height="80px " alt=""> -->
+                                            <div style="text-align:initial ;" class="user-name">{{user.userfullname}}
+                                            </div>
+                                            <div style="text-align:initial ;" class="name-center m-1">{{user.role_name}}
+                                            </div>
+                                            <p style="height: 10px;text-align:initial" class="m-1"> {{user.useremail}}
+                                            </p>
+                                            <div class="m-1 pt-1" style="text-align:initial ;"
+                                                *ngIf="user.userphone!=0">
+                                                <span class="phone">
+                                                    <i style="text-align:initial ;"
+                                                        class="material-icons">phone</i>{{user.userphone}}</span>
+                                            </div>
+                                            <!-- <div class="Action col-12 bg-indigo d-flex justify-content-between ">
+                                                <div class="col-6 pt-2" matTooltip="EDIT" *ngIf="isDelete === 0">
+                                                    <mat-icon class="col-white">edit </mat-icon>
+                                                </div>
+                                                <div class="col-6 pt-2" (click)="deleteUser(user._id,1)"
+                                                    matTooltip="ARCHIVE" *ngIf="isDelete === 0">
+                                                    <mat-icon class="col-white">archive </mat-icon>
+                                                </div>
+                                                <div class="col-12 pt-2" (click)="addNew(user)" matTooltip="RESTORE"
+                                                    *ngIf="isDelete === 1">
+                                                    <mat-icon class="col-white">archive </mat-icon>
+                                                </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                 </div>
