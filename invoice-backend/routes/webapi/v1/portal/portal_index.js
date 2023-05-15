@@ -104,6 +104,7 @@ router.get('/webapi/v1/portal/compnayusage', common.checkTokenExistOrNot, compan
 router.post('/webapi/v1/portal/getcustomerstatesdatatable', common.checkTokenExistOrNot, company_othersettingController.getCustomerStatesDatatable);
 router.get('/webapi/v1/portal/customerMonthlyState', common.checkTokenExistOrNot, otherSettingCron.customerMonthlyState);
 router.post('/webapi/v1/portal/getCustomerStatesDatatableForTable', common.checkTokenExistOrNot, company_othersettingController.getCustomerStatesDatatableForTable);
+router.get('/webapi/v1/portal/getCustomerStates', common.checkTokenExistOrNot, company_othersettingController.getCustomerStates);
 
 
 var employeeController = require('./employee/employeeController');
