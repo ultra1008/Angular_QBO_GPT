@@ -24,9 +24,99 @@
                             </ul>
                         </div>
                     </div>
+                    <div class="body overflow-auto">
+                        <mat-table #table [dataSource]="dataSource">
 
+                            <!--- Note that these columns can be defined in any order.
+                                  The actual rendered columns are set as a property on the row definition" -->
+
+                            <!-- Position Column -->
+                            <ng-container matColumnDef="position">
+                                <mat-header-cell *matHeaderCellDef> Date </mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.position}} </mat-cell>
+                            </ng-container>
+
+                            <!-- Name Column -->
+                            <!-- <ng-container matColumnDef="name">
+                                <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+                            </ng-container> -->
+
+                            <!-- Weight Column -->
+                            <!-- <ng-container matColumnDef="weight">
+                                <mat-header-cell *matHeaderCellDef> Weight </mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.weight}} </mat-cell>
+                            </ng-container> -->
+
+                            <!-- Expanded Content Column - The detail row is made up of this one column -->
+                            <ng-container matColumnDef="expandedDetail">
+                                <mat-cell *matCellDef="let detail">
+                                    <div class="row clearfix" style="width: 100%;">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                          <div class="card">
+                                            <div class="header">
+                                            </div>
+                                            <div class="body table-responsive">
+                                              <table class="table" >
+                                            
+                                                <tbody>
+                                                  <tr>
+                                                    
+                                                    <td>Invoice</td>
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                  </tr>
+                                                  <tr>
+                                                    
+                                                    <td>Purchase Order</td>
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                  </tr>
+                                                  <tr>
+                                                  
+                                                    <td>Quote</td>
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                  </tr>
+                                                  <tr>
+                                                  
+                                                    <td>Packing Slip</td>
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                  </tr>
+                                                  <tr>
+                                                    
+                                                    <td>Receiving Slip</td>
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                  </tr>
+                                                  <tr>
+                                                    
+                                                    <td>Unkown</td>
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                </mat-cell>
+                            </ng-container>
+
+                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumns;" matRipple class="element-row"
+                                [class.expanded]="expandedElement == row" (click)="expandedElement = row"></mat-row>
+                            <mat-row *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow"
+                                [@detailExpand]="row.element == expandedElement ? 'expanded' : 'collapsed'"
+                                style="overflow: hidden">
+                            </mat-row>
+                        </mat-table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+   
 </section>

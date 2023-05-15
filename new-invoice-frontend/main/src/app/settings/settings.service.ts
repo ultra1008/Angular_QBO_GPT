@@ -3,7 +3,12 @@ import { UnsubscribeOnDestroyAdapter } from '../shared/UnsubscribeOnDestroyAdapt
 import { HttpCall } from '../services/httpcall.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { BehaviorSubject } from 'rxjs';
-import { CostCodeTable, MailboxTable, Settings } from './settings.model';
+import {
+  CostCodeTable,
+  MailboxTable,
+  Settings,
+  UsageTable,
+} from './settings.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 @Injectable()
@@ -21,6 +26,10 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     CostCodeTable[]
   >([]);
 
+  dataUsageChange: BehaviorSubject<UsageTable[]> = new BehaviorSubject<
+    UsageTable[]
+  >([]);
+
   constructor(private httpCall: HttpCall) {
     super();
   }
@@ -30,6 +39,10 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
 
   get datacostcode(): CostCodeTable[] {
     return this.dataCostCodeChange.value;
+  }
+
+  get datausage(): UsageTable[] {
+    return this.dataUsageChange.value;
   }
   async getCompanyType() {
     const data = await this.httpCall
@@ -65,6 +78,17 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     // Only write this for datatable api otherwise return data
     this.isTblLoading = false;
     this.dataCostCodeChange.next(data);
+  }
+
+  async getAllUsageTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall
+      .httpPostCall(httpversion.PORTAL_V1 + httproutes.USAGE_DATA_TABLE, {
+        is_delete: is_delete,
+      })
+      .toPromise();
+    // Only write this for datatable api otherwise return data
+    this.isTblLoading = false;
+    this.dataUsageChange.next(data);
   }
 
   async getCompanyNigp() {
@@ -471,6 +495,13 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
         httpversion.PORTAL_V1 + httproutes.COST_CODE_SAVE,
         requestObject
       )
+      .toPromise();
+    return data;
+  }
+
+  async getusage() {
+    const data = await this.httpCall
+      .httpGetCall(httpversion.PORTAL_V1 + httproutes.USAGE_DATA_TABLE)
       .toPromise();
     return data;
   }
