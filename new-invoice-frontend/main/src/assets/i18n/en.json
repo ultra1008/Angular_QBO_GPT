@@ -257,6 +257,9 @@
         }
     },
     "REPORT": {
+        "VIEW": {
+            "TITLE": "Report"
+        },
         "TABLE": {
             "INVOICE": "Invoice",
             "PO": "PO",

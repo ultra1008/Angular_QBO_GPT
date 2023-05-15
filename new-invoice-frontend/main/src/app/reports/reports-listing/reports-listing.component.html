@@ -1,41 +1,84 @@
 <section class="content">
      <div class="content-block">
-          <form [formGroup]="form">
-               <mat-checkbox *ngFor="let cd of columnDefinitions  |slice:2; " type="hidden"
-                    [formControlName]="cd.def">{{cd.label}}</mat-checkbox>
-          </form>
-          <mat-table class="mat-elevation-z8" [dataSource]="dataSource">
-               <ng-container matColumnDef="invoice">
-                    <mat-header-cell *matHeaderCellDef>{{'REPORT.TABLE.INVOICE' |translate}}</mat-header-cell>
-                    <mat-cell *matCellDef="let row;">{{row.invoice}}</mat-cell>
-               </ng-container>
-               <ng-container matColumnDef="p_o">
-                    <mat-header-cell *matHeaderCellDef>{{'REPORT.TABLE.PO' |translate}}</mat-header-cell>
-                    <mat-cell *matCellDef="let row;">{{row.p_o}}</mat-cell>
-               </ng-container>
-               <ng-container matColumnDef="vendor_name">
-                    <mat-header-cell *matHeaderCellDef>{{'REPORT.TABLE.VENDOR_NAME' |translate}}</mat-header-cell>
-                    <mat-cell *matCellDef="let row;">{{row.vendor_name}}</mat-cell>
-               </ng-container>
+          <div class="m-4"></div>
+          <div class="row">
+               <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                         <div class="materialTableHeader">
+                              <div class="left">
+                                   <ul class="header-buttons-left ms-0">
+                                        <li class="tbl-title">
+                                             <h2>{{'REPORT.VIEW.TITLE' |
+                                         translate}}</h2>
 
-               <ng-container matColumnDef="packing_slip">
-                    <mat-header-cell *matHeaderCellDef>{{'REPORT.TABLE.PACKING_SLIP' |translate}}</mat-header-cell>
-                    <mat-cell *matCellDef="let row;">{{row.packing_slip}}</mat-cell>
-               </ng-container>
-               <ng-container matColumnDef="receiving_slip">
-                    <mat-header-cell *matHeaderCellDef>{{'REPORT.TABLE.RECEIVING_SLIP' |translate}}
-                         Slip</mat-header-cell>
-                    <mat-cell *matCellDef="let row;">{{row.receiving_slip}}</mat-cell>
-               </ng-container>
-               <ng-container matColumnDef="status">
-                    <mat-header-cell *matHeaderCellDef>{{'REPORT.TABLE.STATUS' |translate}}</mat-header-cell>
-                    <mat-cell *matCellDef="let row;">{{row.status}}</mat-cell>
-               </ng-container>
+                                        </li>
+                                        <li class="tbl-search-box">
+                                             <label for="search-input"><i
+                                                       class="material-icons search-icon">search</i></label>
+                                             <input placeholder="{{'COMMON.TOOL_TIP.SEARCH' |
+                                         translate}}" type="text" #filter class="browser-default search-field"
+                                                  aria-label="Search box">
+                                        </li>
+                                   </ul>
+                              </div>
+                              <div class="right">
+                                   <ul class="tbl-export-btn">
 
-               <mat-header-row *matHeaderRowDef="columns">
-               </mat-header-row>
-               <mat-row *matRowDef="let row; columns: columns"></mat-row>
+                                        <li>
+                                             <div class="export-button m-l-10">
+                                                  <img src="assets/images/icons/xlsx.png" alt=""
+                                                       (click)="exportExcel()" />
+                                             </div>
+                                        </li>
+                                   </ul>
+                              </div>
+                         </div>
+                         <div class="content-block">
+                              <form [formGroup]="form">
+                                   <mat-checkbox *ngFor="let cd of columnDefinitions  |slice:2; " type="hidden"
+                                        [formControlName]="cd.def">{{cd.label}}</mat-checkbox>
+                              </form>
+                              <mat-table class="mat-elevation-z8" [dataSource]="dataSource">
+                                   <ng-container matColumnDef="invoice">
+                                        <mat-header-cell
+                                             *matHeaderCellDef>{{'REPORT.TABLE.INVOICE' |translate}}</mat-header-cell>
+                                        <mat-cell *matCellDef="let row;">{{row.invoice}}</mat-cell>
+                                   </ng-container>
+                                   <ng-container matColumnDef="p_o">
+                                        <mat-header-cell
+                                             *matHeaderCellDef>{{'REPORT.TABLE.PO' |translate}}</mat-header-cell>
+                                        <mat-cell *matCellDef="let row;">{{row.p_o}}</mat-cell>
+                                   </ng-container>
+                                   <ng-container matColumnDef="vendor_name">
+                                        <mat-header-cell
+                                             *matHeaderCellDef>{{'REPORT.TABLE.VENDOR_NAME' |translate}}</mat-header-cell>
+                                        <mat-cell *matCellDef="let row;">{{row.vendor_name}}</mat-cell>
+                                   </ng-container>
 
-          </mat-table>
+                                   <ng-container matColumnDef="packing_slip">
+                                        <mat-header-cell
+                                             *matHeaderCellDef>{{'REPORT.TABLE.PACKING_SLIP' |translate}}</mat-header-cell>
+                                        <mat-cell *matCellDef="let row;">{{row.packing_slip}}</mat-cell>
+                                   </ng-container>
+                                   <ng-container matColumnDef="receiving_slip">
+                                        <mat-header-cell *matHeaderCellDef>{{'REPORT.TABLE.RECEIVING_SLIP' |translate}}
+                                             Slip</mat-header-cell>
+                                        <mat-cell *matCellDef="let row;">{{row.receiving_slip}}</mat-cell>
+                                   </ng-container>
+                                   <ng-container matColumnDef="status">
+                                        <mat-header-cell
+                                             *matHeaderCellDef>{{'REPORT.TABLE.STATUS' |translate}}</mat-header-cell>
+                                        <mat-cell *matCellDef="let row;">{{row.status}}</mat-cell>
+                                   </ng-container>
+
+                                   <mat-header-row *matHeaderRowDef="columns">
+                                   </mat-header-row>
+                                   <mat-row *matRowDef="let row; columns: columns"></mat-row>
+
+                              </mat-table>
+                         </div>
+                    </div>
+               </div>
+          </div>
      </div>
 </section>

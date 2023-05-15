@@ -74,7 +74,8 @@ import { TranslateModule } from '@ngx-translate/core';
     MatChipsModule,
     MatListModule,
     MatSelectFilterModule,
-    TranslateModule
+    TranslateModule,
+
   ]
 
 })

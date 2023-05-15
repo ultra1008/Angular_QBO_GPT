@@ -257,6 +257,9 @@
         }
     },
     "REPORT": {
+        "VIEW": {
+            "TITLE": "Informe"
+        },
         "TABLE": {
             "INVOICE": "Factura",
             "PO": "DESPUÉS",

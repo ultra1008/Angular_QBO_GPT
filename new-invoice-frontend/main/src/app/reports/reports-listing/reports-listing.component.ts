@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable, merge } from 'rxjs';
@@ -7,6 +7,10 @@ import { httproutes, httpversion } from 'src/consts/httproutes';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { TranslateService } from '@ngx-translate/core';
+import { Report } from './reports-table.model';
+import { TableExportUtil } from 'src/app/shared/tableExportUtil';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatMenuTrigger } from '@angular/material/menu';
 
 class Todo {
   invoice: string = '';
@@ -21,11 +25,16 @@ class Todo {
 @Component({
   selector: 'app-reports-listing',
   templateUrl: './reports-listing.component.html',
-  styleUrls: ['./reports-listing.component.scss']
+  styleUrls: ['./reports-listing.component.scss'],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
 })
 export class ReportsListingComponent {
   allInvoices: any = [];
   dataSource!: any;
+  contextMenuPosition = { x: '0px', y: '0px' };
+  @ViewChild(MatMenuTrigger)
+  contextMenu?: MatMenuTrigger;
+
   constructor(public ReportServices: ReportService, public httpCall: HttpCall, public uiSpinner: UiSpinnerService, public translate: TranslateService) {
 
   }
@@ -71,7 +80,6 @@ export class ReportsListingComponent {
   async getDisplayedColumns() {
     this.columns = this.columnDefinitions.filter(cd => !cd.hide).map(cd => cd.def);
     await this.getReportTable();
-
   }
 
   // dataSource: MatTableDataSource<allInvoices>;
@@ -100,6 +108,33 @@ export class ReportsListingComponent {
     });
 
     this.getDisplayedColumns();
+  }
+  // export table data in excel file
+  exportExcel() {
+    // key name with space add in brackets
+    const exportData: Partial<Report>[] =
+      this.dataSource.filteredData.map((x: any) => ({
+        'invoice': x.invoice || '',
+        'PO': x.p_o || '',
+        'Vendor Name': x.vendor_name || '',
+        'Packing Slip': x.packing_slip || '',
+        'Receiving Slip': x.vendor_receiving_slip || '',
+        'status': x.status || '',
+
+      }));
+
+    TableExportUtil.exportToExcel(exportData, 'excel');
+  }
+  // context menu
+  onContextMenu(event: MouseEvent, item: Report) {
+    event.preventDefault();
+    this.contextMenuPosition.x = event.clientX + 'px';
+    this.contextMenuPosition.y = event.clientY + 'px';
+    if (this.contextMenu !== undefined && this.contextMenu.menu !== null) {
+      this.contextMenu.menuData = { item: item };
+      this.contextMenu.menu.focusFirstItem('mouse');
+      this.contextMenu.openMenu();
+    }
   }
 
   async getReportTable() {

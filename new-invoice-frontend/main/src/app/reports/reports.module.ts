@@ -10,6 +10,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { MatMenuModule } from '@angular/material/menu';
 import { ReportService } from './report.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { TranslateModule } from '@ngx-translate/core';
     ReactiveFormsModule,
     MatMenuModule,
     TranslateModule,
+    MatToolbarModule,
 
   ]
 })
