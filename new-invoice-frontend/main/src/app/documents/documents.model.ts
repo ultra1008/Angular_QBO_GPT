@@ -4,6 +4,7 @@ export class DocumentTable {
      invoice_no: string;
      vendor_name: number;
      updated_by: string;
+     updated_at: string;
 
      constructor(DocumentTable: DocumentTable) {
           {
@@ -12,6 +13,7 @@ export class DocumentTable {
                this.invoice_no = DocumentTable.invoice_no;
                this.vendor_name = DocumentTable.vendor_name;
                this.updated_by = DocumentTable.updated_by;
+               this.updated_at = DocumentTable.updated_at;
 
           }
      }

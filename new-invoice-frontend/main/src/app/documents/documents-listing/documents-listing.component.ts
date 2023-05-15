@@ -14,6 +14,7 @@ import { HttpCall } from 'src/app/services/httpcall.service';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { DocumentTable } from '../documents.model';
 import { DocumentsService } from '../documents.service';
+import { MMDDYYYY } from 'src/consts/utils';
 
 @Component({
   selector: 'app-documents-listing',
@@ -29,6 +30,7 @@ export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter
     'invoice_no',
     'vendor_name',
     'updated_by',
+    'updated_at',
   ];
   DocumentsServices?: DocumentsService;
   dataSource!: DocumentDataSource;
@@ -54,6 +56,7 @@ export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter
   };
 
 
+
   constructor(
     public dialog: MatDialog,
     public DocumentsService: DocumentsService,
@@ -71,16 +74,21 @@ export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter
     this.loadData();
     this.showTable = true;
   }
+  tmp_date(epoch: any) {
+    return MMDDYYYY(epoch);
+  }
+
 
   public loadData() {
+
     console.log("this.t", this.tab_Array[this.step_index]);
     if (this.step_index == this.tab_Array.length - 1) {
-      this.isDelete = 1;
+      // this.isDelete = 1;
     } else {
-      this.isDelete = 0;
+      // this.isDelete = 0;
       // this.document_type = this.tab_Array[this.step_index];
     }
-
+    this.isDelete = 1;
     this.DocumentsServices = new DocumentsService(this.httpCall);
     this.dataSource = new DocumentDataSource(
       this.DocumentsServices,
@@ -88,7 +96,6 @@ export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter
       this.sort,
       this.isDelete,
       this.tab_Array[this.step_index]
-
     );
     this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
       () => {
@@ -164,7 +171,8 @@ export class DocumentDataSource extends DataSource<DocumentTable> {
               DocumentTable.po_no +
               DocumentTable.invoice_no +
               DocumentTable.vendor_name +
-              DocumentTable.updated_by
+              DocumentTable.updated_by +
+              DocumentTable.updated_at
             ).toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
@@ -192,20 +200,23 @@ export class DocumentDataSource extends DataSource<DocumentTable> {
       let propertyA: number | string = '';
       let propertyB: number | string = '';
       switch (this._sort.active) {
-        case 'id':
+        case 'document_type':
           [propertyA, propertyB] = [a.document_type, b.document_type];
           break;
-        case 'email':
+        case 'po_no':
           [propertyA, propertyB] = [a.po_no, b.po_no];
           break;
-        case 'imap':
+        case 'invoice_no':
           [propertyA, propertyB] = [a.invoice_no, b.invoice_no];
           break;
-        case 'port':
+        case 'vendor_name':
           [propertyA, propertyB] = [a.vendor_name, b.vendor_name];
           break;
-        case 'time':
+        case 'updated_by':
           [propertyA, propertyB] = [a.updated_by, b.updated_by];
+          break;
+        case 'updated_at':
+          [propertyA, propertyB] = [a.updated_at, b.updated_at];
           break;
 
 
@@ -217,4 +228,8 @@ export class DocumentDataSource extends DataSource<DocumentTable> {
       );
     });
   }
+}
+
+function MMDDYYYY_formet(epoch: any) {
+  throw new Error('Function not implemented.');
 }

@@ -79,6 +79,17 @@
                                                             {{row.updated_by}}</span>
                                                     </mat-cell>
                                                 </ng-container>
+                                                <ng-container matColumnDef="updated_at">
+                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                        {{'Updated At' | translate}}
+                                                    </mat-header-cell>
+                                                    <mat-cell *matCellDef="let row"
+                                                        (contextmenu)="onContextMenu($event, row)">
+                                                        <span class="truncate-text"><span
+                                                                class="mobile-label">updated_at:</span>
+                                                            {{tmp_date(row.updated_at)}}</span>
+                                                    </mat-cell>
+                                                </ng-container>
 
 
                                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -159,6 +170,17 @@
                                                         <span class="truncate-text"><span
                                                                 class="mobile-label">updated_by:</span>
                                                             {{row.updated_by}}</span>
+                                                    </mat-cell>
+                                                </ng-container>
+                                                <ng-container matColumnDef="updated_at">
+                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                        {{'Updated At' | translate}}
+                                                    </mat-header-cell>
+                                                    <mat-cell *matCellDef="let row"
+                                                        (contextmenu)="onContextMenu($event, row)">
+                                                        <span class="truncate-text"><span
+                                                                class="mobile-label">updated_at:</span>
+                                                            {{tmp_date(row.updated_at)}}</span>
                                                     </mat-cell>
                                                 </ng-container>
 
@@ -243,6 +265,17 @@
                                                             {{row.updated_by}}</span>
                                                     </mat-cell>
                                                 </ng-container>
+                                                <ng-container matColumnDef="updated_at">
+                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                        {{'Updated At' | translate}}
+                                                    </mat-header-cell>
+                                                    <mat-cell *matCellDef="let row"
+                                                        (contextmenu)="onContextMenu($event, row)">
+                                                        <span class="truncate-text"><span
+                                                                class="mobile-label">updated_at:</span>
+                                                            {{tmp_date(row.updated_at)}}</span>
+                                                    </mat-cell>
+                                                </ng-container>
 
 
                                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -323,6 +356,17 @@
                                                         <span class="truncate-text"><span
                                                                 class="mobile-label">updated_by:</span>
                                                             {{row.updated_by}}</span>
+                                                    </mat-cell>
+                                                </ng-container>
+                                                <ng-container matColumnDef="updated_at">
+                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                        {{'Updated At' | translate}}
+                                                    </mat-header-cell>
+                                                    <mat-cell *matCellDef="let row"
+                                                        (contextmenu)="onContextMenu($event, row)">
+                                                        <span class="truncate-text"><span
+                                                                class="mobile-label">updated_at:</span>
+                                                            {{tmp_date(row.updated_at)}}</span>
                                                     </mat-cell>
                                                 </ng-container>
 
@@ -406,6 +450,17 @@
                                                             {{row.updated_by}}</span>
                                                     </mat-cell>
                                                 </ng-container>
+                                                <ng-container matColumnDef="updated_at">
+                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                        {{'Updated At' | translate}}
+                                                    </mat-header-cell>
+                                                    <mat-cell *matCellDef="let row"
+                                                        (contextmenu)="onContextMenu($event, row)">
+                                                        <span class="truncate-text"><span
+                                                                class="mobile-label">updated_at:</span>
+                                                            {{tmp_date(row.updated_at)}}</span>
+                                                    </mat-cell>
+                                                </ng-container>
 
 
                                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -487,6 +542,17 @@
                                                             {{row.updated_by}}</span>
                                                     </mat-cell>
                                                 </ng-container>
+                                                <ng-container matColumnDef="updated_at">
+                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                        {{'Updated At' | translate}}
+                                                    </mat-header-cell>
+                                                    <mat-cell *matCellDef="let row"
+                                                        (contextmenu)="onContextMenu($event, row)">
+                                                        <span class="truncate-text"><span
+                                                                class="mobile-label">updated_at:</span>
+                                                            {{tmp_date(row.updated_at)}}</span>
+                                                    </mat-cell>
+                                                </ng-container>
 
 
                                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -558,7 +624,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_by">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Updated By' |
+                                                        {{'Archive By' |
                                                         translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
@@ -566,6 +632,17 @@
                                                         <span class="truncate-text"><span
                                                                 class="mobile-label">updated_by:</span>
                                                             {{row.updated_by}}</span>
+                                                    </mat-cell>
+                                                </ng-container>
+                                                <ng-container matColumnDef="updated_at">
+                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                        {{'Archive At' | translate}}
+                                                    </mat-header-cell>
+                                                    <mat-cell *matCellDef="let row"
+                                                        (contextmenu)="onContextMenu($event, row)">
+                                                        <span class="truncate-text"><span
+                                                                class="mobile-label">updated_at:</span>
+                                                            {{tmp_date(row.updated_at)}}</span>
                                                     </mat-cell>
                                                 </ng-container>
 

@@ -25,8 +25,6 @@ export class DocumentsService extends UnsubscribeOnDestroyAdapter {
       .httpPostCall(httpversion.PORTAL_V1 + httproutes.DOCUMENTS_DATATABLE, {
         is_delete: is_delete,
         document_type: tab_Array
-
-
       })
       .toPromise();
     // Only write this for datatable api otherwise return data

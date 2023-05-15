@@ -263,6 +263,13 @@ export function amountChange(params: any) {
          } */
     }
 }
+export function MMDDYYYY(epochTime: any) {
+    if (epochTime == 0) return '';
+    var dateObj = epochTime * 1000;
+    let date = new Date(dateObj);
+    let date_tmp = ("0" + (date.getMonth() + 1)).slice(-2) + "/" + ("0" + date.getDate()).slice(-2) + "/" + date.getFullYear();
+    return date_tmp;
+}
 
 export function isValidMailFormat(email: string): any {
     const EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
