@@ -201,6 +201,31 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="actions">
+                                    <mat-header-cell class="psl-3" *matHeaderCellDef>{{'USERS.TABLE.ACTIONS' |
+                                        translate}}</mat-header-cell>
+                                    <mat-cell *matCellDef="let row; let i=index;" class="pr-0">
+                                        <button matTooltip="{{'COMMON.ACTIONS.EDIT' |
+                                                                                    translate}}" mat-icon-button
+                                            color="accent" (click)="$event.stopPropagation()" (click)="editUser(row)"
+                                            *ngIf="isDelete === 0" class="col-blue">
+                                            <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'">
+                                            </app-feather-icons>
+                                        </button>
+                                        <button mat-icon-button matTooltip="{{'COMMON.ACTIONS.ARCHIVE' |
+                                                                                    translate}}" color="accent"
+                                            (click)="$event.stopPropagation()" (click)="deleteUser(row, 1)"
+                                            *ngIf="isDelete === 0" class="col-red">
+                                            <mat-icon>archive</mat-icon>
+                                        </button>
+                                        <button mat-icon-button matTooltip="{{'COMMON.ACTIONS.RESTORE' |
+                                                                                    translate}}" color="accent"
+                                            (click)="$event.stopPropagation()" (click)="deleteUser(row, 0)"
+                                            *ngIf="isDelete === 1" class="col-red">
+                                            <mat-icon>archive</mat-icon>
+                                        </button>
+                                    </mat-cell>
+                                </ng-container>
+                                <!-- <ng-container matColumnDef="actions">
                                     <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-7'" *matHeaderCellDef>
                                         {{'USERS.TABLE.ACTIONS' |
                                         translate}}
@@ -226,7 +251,7 @@
                                             </button>
                                         </mat-menu>
                                     </mat-cell>
-                                </ng-container>
+                                </ng-container> -->
 
                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                                 <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'"

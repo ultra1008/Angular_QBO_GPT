@@ -227,7 +227,7 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
     this.router.navigate([WEB_ROUTES.USER_FORM]);
   }
   editUser(user: User) {
-    this.router.navigate([WEB_ROUTES.VENDOR_FORM], { queryParams: { _id: user._id } });
+    this.router.navigate([WEB_ROUTES.USER_FORM], { queryParams: { _id: user._id } });
   }
 
 }
@@ -338,4 +338,4 @@ export class UserDataSource extends DataSource<User> {
       );
     });
   }
-} 
+}

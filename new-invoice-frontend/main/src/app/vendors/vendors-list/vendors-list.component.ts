@@ -37,7 +37,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   tmp_gallery: any;
   show: boolean = false;
   displayedColumns = [
-    // 'select',
+    'select',
     'vendor_name',
     'vendor_id',
     'customer_id',
@@ -53,10 +53,10 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   dataSource!: VendorDataSource;
   selection = new SelectionModel<Vendor>(true, []);
   id?: number;
-  // advanceTable?: Vendor;
   isDelete = 0;
   termsList: Array<TermModel> = [];
   titleMessage: string = "";
+  isQBSyncedCompany: boolean = false;
 
   constructor(
     public httpClient: HttpClient, private httpCall: HttpCall,
@@ -74,6 +74,38 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   contextMenuPosition = { x: '0px', y: '0px' };
 
   ngOnInit() {
+
+    // Use this flag or variable for the Quickbook synce time. this fflag is help to display
+    // the column of quickbooks. If company synced the Quickbooks account then in datatable only 
+    // QB - svg column display.
+    if (this.isQBSyncedCompany) {
+      this.displayedColumns = [
+        'select',
+        'vendor_name',
+        'vendor_id',
+        'customer_id',
+        'vendor_phone',
+        'vendor_email',
+        'vendor_address',
+        'vendor_status',
+        'vendor_attachment',
+        'vendor_from',
+        'actions',
+      ];
+    } else {
+      this.displayedColumns = [
+        'select',
+        'vendor_name',
+        'vendor_id',
+        'customer_id',
+        'vendor_phone',
+        'vendor_email',
+        'vendor_address',
+        'vendor_status',
+        'vendor_attachment',
+        'actions',
+      ];
+    }
     this.loadData();
     this.tmp_gallery = gallery_options();
     this.tmp_gallery.actions = [
@@ -115,10 +147,14 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
-    //  
+    this.isAllSelected()
+      ? this.selection.clear()
+      : this.dataSource.renderedData.forEach((row) =>
+        this.selection.select(row)
+      );
   }
   removeSelectedRows() {
-    // 
+    console.log('All Selected removed option selected');
   }
   public loadData() {
     console.log('Vendor loadData call');
