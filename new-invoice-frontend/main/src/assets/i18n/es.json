@@ -265,5 +265,20 @@
             "RECEIVING_SLIP": "Recibo",
             "STATUS": "Estado"
         }
+    },
+    "DOCUMENTS": {
+        "VIEW": {
+            "TITLE": "Documentos"
+        },
+        "TABLE": {
+            "DOCUMENT_TYPE": "Tipo de documento",
+            "PO_NO": "DESPUÉS DE NO",
+            "INVOICE_NO": "Número de factura",
+            "VENDOR_NAME": "Nombre del proveedor",
+            "UPDATED_BY": "Actualizado por",
+            "UPDATED_AT": "Actualizado en",
+            "ARCHIVE_BY": "Archivo por",
+            "ARCHIVE_AT": "Archivo en"
+        }
     }
 }

@@ -8,8 +8,7 @@
                         <div class="left">
                             <ul class="header-buttons-left ms-0">
                                 <li class="tbl-title">
-                                    <h2>Documents</h2>
-
+                                    <h2>{{'DOCUMENTS.VIEW.TITLE' |translate}}</h2>
                                 </li>
                             </ul>
                         </div>
@@ -26,8 +25,7 @@
                                                 class="table mat-cell">
                                                 <ng-container matColumnDef="document_type">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-
-                                                        {{'Document Type' | translate}}
+                                                        {{'DOCUMENTS.TABLE.DOCUMENT_TYPE' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -40,8 +38,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="po_no">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'PO NO'|
-                                                        translate}}</mat-header-cell>
+                                                        {{'DOCUMENTS.TABLE.PO_NO' |translate}}</mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="mobile-label">PO NO:</span> {{row.po_no }}
@@ -49,8 +46,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="invoice_no">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Invoice No' |
-                                                        translate}}</mat-header-cell>
+                                                        {{'DOCUMENTS.TABLE.INVOICE_NO' |translate}}</mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="mobile-label">Invoice No:</span> {{row.invoice_no}}
@@ -58,8 +54,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="vendor_name">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Vendor Name' |
-                                                        translate}}
+                                                        {{'DOCUMENTS.TABLE.VENDOR_NAME' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -69,8 +64,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_by">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Updated By' |
-                                                        translate}}
+                                                        {{'DOCUMENTS.TABLE.UPDATED_BY' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -81,7 +75,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_at">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Updated At' | translate}}
+                                                        {{'DOCUMENTS.TABLE.UPDATED_AT' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -119,8 +113,7 @@
                                                 class="table mat-cell">
                                                 <ng-container matColumnDef="document_type">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-
-                                                        {{'Document Type' | translate}}
+                                                        {{'DOCUMENTS.TABLE.DOCUMENT_TYPE' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -133,8 +126,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="po_no">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'PO NO'|
-                                                        translate}}</mat-header-cell>
+                                                        {{'DOCUMENTS.TABLE.PO_NO' |translate}}</mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="mobile-label">PO NO:</span> {{row.po_no }}
@@ -142,8 +134,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="invoice_no">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Invoice No' |
-                                                        translate}}</mat-header-cell>
+                                                        {{'DOCUMENTS.TABLE.INVOICE_NO' |translate}}</mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="mobile-label">Invoice No:</span> {{row.invoice_no}}
@@ -151,8 +142,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="vendor_name">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Vendor Name' |
-                                                        translate}}
+                                                        {{'DOCUMENTS.TABLE.VENDOR_NAME' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -162,8 +152,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_by">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Updated By' |
-                                                        translate}}
+                                                        {{'DOCUMENTS.TABLE.UPDATED_BY' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -174,7 +163,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_at">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Updated At' | translate}}
+                                                        {{'DOCUMENTS.TABLE.UPDATED_AT' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -213,7 +202,7 @@
                                                 <ng-container matColumnDef="document_type">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
 
-                                                        {{'Document Type' | translate}}
+                                                        {{'DOCUMENTS.TABLE.DOCUMENT_TYPE' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -226,8 +215,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="po_no">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'PO NO'|
-                                                        translate}}</mat-header-cell>
+                                                        {{'DOCUMENTS.TABLE.PO_NO' |translate}}</mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="mobile-label">PO NO:</span> {{row.po_no }}
@@ -235,8 +223,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="invoice_no">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Invoice No' |
-                                                        translate}}</mat-header-cell>
+                                                        {{'DOCUMENTS.TABLE.INVOICE_NO' |translate}}</mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="mobile-label">Invoice No:</span> {{row.invoice_no}}
@@ -244,8 +231,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="vendor_name">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Vendor Name' |
-                                                        translate}}
+                                                        {{'DOCUMENTS.TABLE.VENDOR_NAME' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -255,8 +241,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_by">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Updated By' |
-                                                        translate}}
+                                                        {{'DOCUMENTS.TABLE.UPDATED_BY' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -267,7 +252,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_at">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Updated At' | translate}}
+                                                        {{'DOCUMENTS.TABLE.UPDATED_AT' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -306,7 +291,7 @@
                                                 <ng-container matColumnDef="document_type">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
 
-                                                        {{'Document Type' | translate}}
+                                                        {{'DOCUMENTS.TABLE.DOCUMENT_TYPE' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -319,8 +304,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="po_no">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'PO NO'|
-                                                        translate}}</mat-header-cell>
+                                                        {{'DOCUMENTS.TABLE.PO_NO' |translate}}</mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="mobile-label">PO NO:</span> {{row.po_no }}
@@ -328,8 +312,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="invoice_no">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Invoice No' |
-                                                        translate}}</mat-header-cell>
+                                                        {{'DOCUMENTS.TABLE.INVOICE_NO' |translate}}</mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="mobile-label">Invoice No:</span> {{row.invoice_no}}
@@ -337,8 +320,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="vendor_name">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Vendor Name' |
-                                                        translate}}
+                                                        {{'DOCUMENTS.TABLE.VENDOR_NAME' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -348,8 +330,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_by">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Updated By' |
-                                                        translate}}
+                                                        {{'DOCUMENTS.TABLE.UPDATED_BY' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -360,7 +341,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_at">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Updated At' | translate}}
+                                                        {{'DOCUMENTS.TABLE.UPDATED_AT' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -398,7 +379,7 @@
                                                 <ng-container matColumnDef="document_type">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
 
-                                                        {{'Document Type' | translate}}
+                                                        {{'DOCUMENTS.TABLE.DOCUMENT_TYPE' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -411,8 +392,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="po_no">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'PO NO'|
-                                                        translate}}</mat-header-cell>
+                                                        {{'DOCUMENTS.TABLE.PO_NO' |translate}}</mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="mobile-label">PO NO:</span> {{row.po_no }}
@@ -420,8 +400,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="invoice_no">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Invoice No' |
-                                                        translate}}</mat-header-cell>
+                                                        {{'DOCUMENTS.TABLE.INVOICE_NO' |translate}}</mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="mobile-label">Invoice No:</span> {{row.invoice_no}}
@@ -429,8 +408,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="vendor_name">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Vendor Name' |
-                                                        translate}}
+                                                        {{'DOCUMENTS.TABLE.VENDOR_NAME' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -440,8 +418,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_by">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Updated By' |
-                                                        translate}}
+                                                        {{'DOCUMENTS.TABLE.UPDATED_BY' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -452,7 +429,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_at">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Updated At' | translate}}
+                                                        {{'DOCUMENTS.TABLE.UPDATED_AT' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -490,7 +467,7 @@
                                                 <ng-container matColumnDef="document_type">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
 
-                                                        {{'Document Type' | translate}}
+                                                        {{'DOCUMENTS.TABLE.DOCUMENT_TYPE' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -503,8 +480,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="po_no">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'PO NO'|
-                                                        translate}}</mat-header-cell>
+                                                        {{'DOCUMENTS.TABLE.PO_NO' |translate}}</mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="mobile-label">PO NO:</span> {{row.po_no }}
@@ -512,8 +488,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="invoice_no">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Invoice No' |
-                                                        translate}}</mat-header-cell>
+                                                        {{'DOCUMENTS.TABLE.INVOICE_NO' |translate}}</mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="mobile-label">Invoice No:</span> {{row.invoice_no}}
@@ -521,8 +496,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="vendor_name">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Vendor Name' |
-                                                        translate}}
+                                                        {{'DOCUMENTS.TABLE.VENDOR_NAME' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -532,8 +506,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_by">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Updated By' |
-                                                        translate}}
+                                                        {{'DOCUMENTS.TABLE.UPDATED_BY' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -544,7 +517,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_at">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Updated At' | translate}}
+                                                        {{'DOCUMENTS.TABLE.UPDATED_AT' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -582,7 +555,7 @@
                                                 <ng-container matColumnDef="document_type">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
 
-                                                        {{'Document Type' | translate}}
+                                                        {{'DOCUMENTS.TABLE.DOCUMENT_TYPE' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -595,8 +568,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="po_no">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'PO NO'|
-                                                        translate}}</mat-header-cell>
+                                                        {{'DOCUMENTS.TABLE.PO_NO' |translate}}</mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="mobile-label">PO NO:</span> {{row.po_no }}
@@ -604,8 +576,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="invoice_no">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Invoice No' |
-                                                        translate}}</mat-header-cell>
+                                                        {{'DOCUMENTS.TABLE.INVOICE_NO' |translate}}</mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="mobile-label">Invoice No:</span> {{row.invoice_no}}
@@ -613,8 +584,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="vendor_name">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Vendor Name' |
-                                                        translate}}
+                                                        {{'DOCUMENTS.TABLE.VENDOR_NAME' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -624,8 +594,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_by">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Archive By' |
-                                                        translate}}
+                                                        {{'DOCUMENTS.TABLE.ARCHIVE_BY' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
@@ -636,7 +605,7 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_at">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'Archive At' | translate}}
+                                                        {{'DOCUMENTS.TABLE.ARCHIVE_AT' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
