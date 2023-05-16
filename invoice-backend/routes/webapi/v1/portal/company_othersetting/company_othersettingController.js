@@ -412,7 +412,7 @@ module.exports.getCustomerStatesDatatableForTable = async function (req, res) {
     }
 };
 
-// Customer Monthly States
+// getCustomerStates
 module.exports.getCustomerStates = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
