@@ -1224,7 +1224,7 @@ module.exports.submitEmailOTPforLogin = async function (req, res) {
                     UserData['user_languages_name'] = temp_languages;
                     var settingConnection = await connection_db_api.model(collectionConstant.INVOICE_SETTING, settingSchema);
                     let roleConnection = await connection_db_api.model(collectionConstant.INVOICE_ROLES, invoiceRoleSchema);
-                    let roles_tmp = await roleConnection.findOne({ _id: ObjectID(UserData.userroleId) });
+                    let roles_tmp = await roleConnection.findOne({ role_id: ObjectID(UserData.userroleId) });
                     if (roles_tmp.role_name == config.PROCESSOR_ROLE) {
                         res.send({ message: translator.getStr('Processor_Restrict_Mobile_Login'), status: false });
                     } else {
