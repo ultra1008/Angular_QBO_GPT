@@ -10,7 +10,7 @@ router.post('/mobile/v1/auth/login', authValidation.login, authController.login)
 router.post("/mobile/v1/auth/sendotp", authValidation.sendOTPforLoginValidation, authController.sendOTPforLogin);
 router.post("/mobile/v1/auth/submitotp", authValidation.submitEmailOTPforLoginValidation, authController.submitEmailOTPforLogin);
 router.post("/mobile/v1/auth/changepassword", authValidation.changePasswordValidation, authController.changePassword);
-router.post("/mobile/v1/auth/forgetpassword", common.checkTokenExistOrNot, authValidation.forgetPasswordValidation, authController.forgetPassword);
+router.post("/mobile/v1/auth/forgetpassword", authValidation.forgetPasswordValidation, authController.forgetPassword);
 router.get("/mobile/v1/auth/getprofile", common.checkTokenExistOrNot, authController.getProfile);
 router.post("/mobile/v1/auth/updateuser", common.checkTokenExistOrNot, authController.updateUser);
 router.post("/mobile/v1/auth/userlogout", common.checkTokenExistOrNot, authController.userLogout);

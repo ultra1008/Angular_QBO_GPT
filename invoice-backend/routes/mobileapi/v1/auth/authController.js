@@ -313,7 +313,6 @@ module.exports.login = async function (req, res) {
                                     }
                                 ]);
                                 UserData = UserData[0];
-
                                 if (UserData == null) {
                                     res.send({ message: translator.getStr('UserNotFound'), status: false });
                                 } else {
@@ -1274,10 +1273,10 @@ module.exports.submitEmailOTPforLogin = async function (req, res) {
                         var resLast = {
                             token: '',
                             UserData,
-                            // settings: settings_tmp.settings,
-                            // role_permission: roles_tmp.role_permission,
-                            // questions: questions_tmp,
-                            // companydata: compnay_data,
+                            settings: settings_tmp.settings,
+                            role_permission: roles_tmp.role_permission,
+                            //questions: questions_tmp,
+                            companydata: compnay_data,
                         };
                         var token = await common.generateJWT(resObject);
                         resLast.token = token;
