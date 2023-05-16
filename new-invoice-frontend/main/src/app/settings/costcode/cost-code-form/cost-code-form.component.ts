@@ -45,7 +45,7 @@ export class CostCodeFormComponent {
     public uiSpinner: UiSpinnerService
   ) {
     this.costcodesave = new FormGroup({
-      costcode: new FormControl('', [Validators.required]),
+      cost_code: new FormControl('', [Validators.required]),
       division: new FormControl('', [Validators.required]),
       description: new FormControl(''),
     });
@@ -55,7 +55,7 @@ export class CostCodeFormComponent {
     if (this.data) {
       console.log('call');
       this.costcodesave = new FormGroup({
-        costcode: new FormControl(this.data.cost_code),
+        cost_code: new FormControl(this.data.cost_code),
         division: new FormControl(this.data.division),
         description: new FormControl(this.data.description),
       });
@@ -87,6 +87,7 @@ export class CostCodeFormComponent {
   async submit() {
     if (this.costcodesave.valid) {
       let requestObject = this.costcodesave.value;
+      requestObject.module = 'Invoice';
       if (this.data) {
         requestObject._id = this.data._id;
       }
