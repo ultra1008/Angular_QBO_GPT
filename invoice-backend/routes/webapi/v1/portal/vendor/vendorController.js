@@ -322,43 +322,46 @@ module.exports.deleteVendor = async function (req, res) {
         try {
             var requestObject = req.body;
             var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
-            var id = requestObject._id;
-            delete requestObject._id;
+            // var id = requestObject._id;
+            // delete requestObject._id;
             requestObject.vendor_updated_by = decodedToken.UserData._id;
             requestObject.vendor_updated_at = Math.round(new Date().getTime() / 1000);
-            var one_vendor = await vendorConnection.findOne({ _id: ObjectID(id) });
-            var delete_vendor = await vendorConnection.updateOne({ _id: ObjectID(id) }, requestObject);
+            var delete_vendor = await vendorConnection.updateMany({ _id: { $in: requestObject._id } }, { is_delete: requestObject.is_delete });
+
             if (delete_vendor) {
-                let histioryObject = {
-                    data: [],
-                    vendor_id: id,
-                };
-                if (delete_vendor.nModified == 1) {
-                    let action = '';
-                    let message = '';
-                    if (requestObject.is_delete == 1) {
-                        action = "Archive";
-                        message = "Vendor archive successfully";
-                    } else {
-                        action = "Restore";
-                        message = "Vendor restore successfully";
-                    }
+                let action = '';
+                let message = '';
+                if (requestObject.is_delete == 1) {
+                    action = "Archive";
+                    message = "Vendor archive successfully";
+                } else {
+                    action = "Restore";
+                    message = "Vendor restore successfully";
+                }
+
+                for (let i = 0; i < requestObject._id.length; i++) {
+                    var one_vendor = await vendorConnection.findOne({ _id: ObjectID(requestObject._id[i]) });
+
+                    let histioryObject = {
+                        data: [],
+                        vendor_id: requestObject._id[i],
+                    };
+
                     addVendorHistory(action, histioryObject, decodedToken);
                     recentActivity.saveRecentActivity({
                         user_id: decodedToken.UserData._id,
                         username: decodedToken.UserData.userfullname,
                         userpicture: decodedToken.UserData.userpicture,
-                        data_id: id,
+                        data_id: requestObject._id[i],
                         title: one_vendor.vendor_name,
                         module: 'Vendor',
                         action: action,
                         action_from: 'Web',
                     }, decodedToken);
-                    res.send({ message: message, status: true });
-                } else {
-                    res.send({ message: "No data with this id", status: false });
 
                 }
+                res.send({ message: message, status: true });
+
             } else {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
             }
@@ -564,40 +567,46 @@ module.exports.updateVendorStatus = async function (req, res) {
         try {
             var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
             var requestObject = req.body;
-            var id = requestObject._id;
-            delete requestObject._id;
-            var one_vendor = await vendorConnection.findOne({ _id: ObjectID(id) });
-            var updateStatus = await vendorConnection.updateOne({ _id: ObjectID(id) }, requestObject);
+            // var id = requestObject._id;
+            // delete requestObject._id;
+
+
+            var updateStatus = await vendorConnection.updateMany({ _id: { $in: requestObject._id } }, { vendor_status: requestObject.vendor_status });
+
             if (updateStatus) {
-                if (updateStatus.nModified == 1) {
-                    let action = '';
-                    let message = '';
+                let action = '';
+                let message = '';
+                if (requestObject.vendor_status == 1) {
+                    action = "Active";
+                    message = "Vendor status active successfully.";
+                } else {
+                    action = "Inactive";
+                    message = "Vendor status inactive successfully.";
+                }
+                for (let i = 0; i < requestObject._id.length; i++) {
+
+                    var one_vendor = await vendorConnection.findOne({ _id: ObjectID(requestObject._id[i]) });
+
                     let histioryObject = {
                         data: [],
-                        vendor_id: id,
+                        vendor_id: requestObject._id[i],
                     };
-                    if (requestObject.vendor_status == 1) {
-                        action = "Active";
-                        message = "Vendor status active successfully.";
-                    } else {
-                        action = "Inactive";
-                        message = "Vendor status inactive successfully.";
-                    }
+
                     addVendorHistory(action, histioryObject, decodedToken);
                     recentActivity.saveRecentActivity({
                         user_id: decodedToken.UserData._id,
                         username: decodedToken.UserData.userfullname,
                         userpicture: decodedToken.UserData.userpicture,
-                        data_id: id,
+                        data_id: requestObject._id[i],
                         title: one_vendor.vendor_name,
                         module: 'Vendor',
                         action: action,
                         action_from: 'Web',
                     }, decodedToken);
-                    res.send({ message: message, status: true });
-                } else {
-                    res.send({ message: "No data with this id", status: false });
                 }
+
+                res.send({ message: message, status: true });
+
             } else {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
             }

@@ -137,6 +137,7 @@ router.post('/webapi/v1/portal/recoverteam', common.checkTokenExistOrNot, employ
 router.get('/webapi/v1/portal/listManagementUser', common.checkTokenExistOrNot, employeeController.listManagementUser);
 router.post('/webapi/v1/portal/importManagementUser', common.checkTokenExistOrNot, employeeController.importManagementUser);
 router.post('/webapi/v1/portal/getUserForTable', common.checkTokenExistOrNot, employeeValidation.getUserForTableValidation, employeeController.getUserForTable);
+router.post('/webapi/v1/portal/updateUserStatus', common.checkTokenExistOrNot, employeeController.updateUserStatus);
 
 
 let employeeCron = require("./employee/employeeCron");

@@ -8,27 +8,33 @@
 .theme-white {
   .navbar {
     background-color: transparent;
+
     .icon-color {
       color: #0d091d;
     }
+
     .navbar-nav.navbar-right .user_profile span {
       color: #0d091d;
     }
   }
+
   .navbar.active {
     background-color: $theme-white !important;
     border-bottom: 1px solid #dee4ec;
     box-shadow: 5px 7px 26px -5px #cdd4e7;
+
     .nav {
-      > li {
-        > a {
+      >li {
+        >a {
           color: #3a2c70;
         }
       }
     }
+
     .collapse-menu-icon .mat-icon {
       color: #3a2c70;
     }
+
     .nav-notification-icons .mat-icon {
       color: #3a2c70;
     }
@@ -51,8 +57,8 @@
   }
 
   .nav {
-    > li {
-      > a {
+    >li {
+      >a {
         &:hover {
           background-color: $theme-white-nav-anchor_hover;
           text-decoration: none;
@@ -66,7 +72,7 @@
     }
 
     .open {
-      > a {
+      >a {
         background-color: $theme-white-nav-anchor-opened;
 
         &:hover {
@@ -91,11 +97,13 @@
           &.active {
             background-color: $theme-white-menu-list-active;
           }
+
           a {
             -moz-transition: all 0.3s;
             -o-transition: all 0.3s;
             -webkit-transition: all 0.3s;
             transition: all 0.3s;
+
             i,
             span {
               -moz-transition: all 0.3s;
@@ -153,49 +161,59 @@
     background-color: $theme-white-active-color !important;
     color: #fff !important;
     border-color: $theme-white-active-color !important;
+
     &:hover {
       background-color: $theme-white-active-color !important;
       color: #fff !important;
     }
+
     &:active {
       background-color: $theme-white-active-color !important;
       color: #fff !important;
     }
+
     &:focus {
       background-color: $theme-white-active-color !important;
       color: #fff !important;
     }
+
     &:disabled {
       background-color: $theme-white-active-color !important;
       color: #fff !important;
     }
   }
+
   .btn-outline-primary {
     background: 0 0 !important;
     color: $theme-white-bar !important;
     border: 1px solid $theme-white-active-color !important;
+
     &:hover {
       background: $theme-white-active-color !important;
       color: #fff !important;
       border: 1px solid $theme-white !important;
     }
   }
+
   .timelineLabelColor strong {
     color: $theme-white-active-color !important;
   }
+
   .top-sidebar {
     .horizontal-menu {
       li {
         &.active {
-          > a {
+          >a {
             color: $theme-white-active-color;
           }
         }
+
         a {
           -moz-transition: all 0.3s;
           -o-transition: all 0.3s;
           -webkit-transition: all 0.3s;
           transition: all 0.3s;
+
           &:hover {
             color: $theme-white-active-color;
           }
@@ -203,21 +221,25 @@
       }
     }
   }
+
   .demo-choose-skin li.actived:after {
     color: #000;
   }
 
-  .nav-tabs > li > a:before {
+  .nav-tabs>li>a:before {
     border-bottom: 2px solid $theme-white-active-color;
   }
+
   .search-box input#search {
     color: gray;
     background: #edecec;
   }
+
   .settingSidebar ul.choose-theme li.active div::after {
     color: #000;
   }
 }
+
 /*Logo Header Background Color*/
 .logo-white {
   .navbar-header {
@@ -226,5 +248,9 @@
     .logo-name {
       color: #000;
     }
+  }
+
+  .font-white {
+    color: rgb(0, 0, 0);
   }
 }
