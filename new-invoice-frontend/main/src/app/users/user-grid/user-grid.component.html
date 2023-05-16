@@ -155,7 +155,7 @@
                         <div class="row">
 
                             <div class="test col-xs-12 col-sm-6 col-md-4 col-xl-2" *ngFor="let user of userList">
-                                <div class="card">
+                                <div class="card rixit " style="border: 2px solid rgb(182, 182, 182);">
                                     <!-- <div class="ribbon-wrapper"> -->
                                     <!-- <div class="ribbon-tag" [ngClass]="user.userstatus == 1 ? 'active' :'inactive'">
                                             {{user.userstatus == 1 ? active_word :inactive_word }}
@@ -163,23 +163,23 @@
                                     <!-- </div> -->
                                     <div class="m-b-20">
                                         <div class="contact-grid" style="height: 220px;">
-                                            <div class="profile-header bg-indigo ">
+                                            <div class="profile-header">
                                                 <div class="col-12 d-flex justify-content-between">
                                                     <div style="margin: auto;">
-                                                        <img src={{user.userpicture}} class="user-img"
+                                                        <img src={{user.userpicture}} class="user-img1"
                                                             style="background-color: white;" width="80px" height="80px "
                                                             alt="">
                                                     </div>
                                                     <div style="margin: auto;">
                                                         <div style="text-align: initial;" matTooltip="EDIT"
                                                             *ngIf="isDelete === 0">
-                                                            <mat-icon class=" pt-1 col-white">edit </mat-icon>
-                                                            <span>EDIT</span>
+                                                            <mat-icon class=" pt-1 font-white">edit </mat-icon>
+                                                            <span class="font-white">Edit</span>
                                                         </div>
                                                         <div class="pb-1" (click)="deleteUser(user._id,1)"
                                                             matTooltip="ARCHIVE" *ngIf="isDelete === 0">
-                                                            <mat-icon class="  pt-1 col-white">archive </mat-icon>
-                                                            <span>ARCHIVE</span>
+                                                            <mat-icon class="  pt-1 font-white">archive </mat-icon>
+                                                            <span class="font-white">Archive</span>
                                                         </div>
                                                         <div class="pb-1" (click)="addNew(user)" matTooltip="RESTORE"
                                                             *ngIf="isDelete === 1">
@@ -199,12 +199,15 @@
                                             </div>
                                             <div style="text-align:initial ;" class="name-center m-1">{{user.role_name}}
                                             </div>
-                                            <p style="height: 10px;text-align:initial" class="m-1"> {{user.useremail}}
-                                            </p>
-                                            <div class="m-1 pt-1" style="text-align:initial ;"
-                                                *ngIf="user.userphone!=0">
-                                                <span class="phone">
-                                                    <i style="text-align:initial ;"
+                                            <div style="text-align:initial;margin: auto;">
+                                                <span style="font-size: 12px;">
+                                                    <i style="padding-left: 4px;text-align:initial;font-size: 12px;"
+                                                        class="material-icons ">email</i>
+                                                    {{user.useremail}}</span>
+                                            </div>
+                                            <div class="" style="text-align:initial ;" *ngIf="user.userphone!=0">
+                                                <span style="font-size: 12px;">
+                                                    <i style="text-align:initial ;font-size: 12px;padding-left: 4px;"
                                                         class="material-icons">phone</i>{{user.userphone}}</span>
                                             </div>
                                             <!-- <div class="Action col-12 bg-indigo d-flex justify-content-between ">
