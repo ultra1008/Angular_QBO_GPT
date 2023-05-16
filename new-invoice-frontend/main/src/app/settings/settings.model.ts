@@ -121,3 +121,18 @@ export class UsageTable {
     }
   }
 }
+
+export class Element {
+  name!: string;
+  position!: number;
+  weight!: number;
+  symbol!: string;
+  constructor(Element: Element) {
+    {
+      this.name = Element.name;
+      this.position = Element.position;
+      this.weight = Element.weight;
+      this.symbol = Element.symbol;
+    }
+  }
+}

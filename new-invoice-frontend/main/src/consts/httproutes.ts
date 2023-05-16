@@ -125,4 +125,5 @@ export enum httproutes {
 
   //usage
   USAGE_DATA_TABLE = 'getCustomerStates',
+  PORTAL_SETTING_USEAGE = 'compnayusage',
 }

@@ -241,6 +241,10 @@
                     "RELATIONSHIP": "Are you sure you want to delete relationship?",
                     "LANGUAGE": "Are you sure you want to delete language?"
                 }
+            },
+            "USAGE_MODULE": {
+                "NUMBER": "Number of invoice per calendar month",
+                "STORAGE": "Storage size"
             }
         },
         "EDIT": {},

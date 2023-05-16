@@ -76,7 +76,6 @@ export class MailboxFormComponent {
 
   async getOneMailbox() {
     const data = await this.SettingsServices.getOneMailBox(this.id);
-
     if (data.status) {
       let mailBox = data.data;
       console.log('data', mailBox);
