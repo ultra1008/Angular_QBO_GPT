@@ -203,6 +203,10 @@
                     "RESTORE": "Are you sure you want to restore this mailbox?"
                 }
             },
+            "COST_CODE_MODULE": {
+                "DIVISON": "Divison",
+                "DISCRIPTION": "Description"
+            },
             "OTHER_SETTINGS_MODULE": {
                 "OTHER_SETTINGS": "Other Settings",
                 "DISCOUNT": "Discount",

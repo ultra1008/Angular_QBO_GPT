@@ -168,7 +168,7 @@ export class CostcodeComponent
   edit(event: any) {
     const dialogRef = this.dialog.open(CostCodeFormComponent, {
       width: '350px',
-      data: {},
+      data: event,
     });
     dialogRef.afterClosed().subscribe((result) => {});
   }

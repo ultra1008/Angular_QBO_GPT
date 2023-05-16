@@ -203,6 +203,10 @@
                     "RESTORE": "¿Estás seguro de que quieres restaurar este buzón?"
                 }
             },
+            "COST_CODE_MODULE": {
+                "DIVISON": "División",
+                "DISCRIPTION": "Descripción"
+            },
             "OTHER_SETTINGS_MODULE": {
                 "OTHER_SETTINGS": "Otros ajustes",
                 "DISCOUNT": "Descuento",
