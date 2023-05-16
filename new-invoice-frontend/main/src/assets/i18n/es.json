@@ -241,6 +241,30 @@
                     "RELATIONSHIP": "¿Estás seguro de que quieres eliminar la relación?",
                     "LANGUAGE": "¿Está seguro de que desea eliminar el idioma?"
                 }
+            },
+            "USAGE_MODULE": {
+                "NUMBER": "Número de factura por mes calendario",
+                "STORAGE": "Tamaño de almacenamiento"
+            },
+            "ROLE_MODULE": {
+                "DASHBORD": "Panel",
+                "VIEW": "Vista",
+                "INVOICE": "Factura",
+                "REPORT": "Informe",
+                "TEMPLATES": "Plantillas",
+                "USERS": "Usuarios",
+                "SETTING": "Configuración",
+                "All": "Todo",
+                "ADD": "Agregar",
+                "DOCUMENTS": "Documentos",
+                "PERMISSION": "Acción de permiso",
+                "LISTING_EDIT": "Editar",
+                "ARCHIVED": "Archivado",
+                "EMPLOYEE_PERSONAL": "Informacion personal",
+                "CONTACT_HEADING": "Información del contacto",
+                "EMPLOYEE_INFORMATION": "información del empleado",
+                "EMERGENCY_CONTACT": "Emergency contact",
+                "EMPLOYEE_DOCUMENT": "Documento"
             }
         },
         "EDIT": {},

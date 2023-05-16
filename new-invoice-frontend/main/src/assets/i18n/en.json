@@ -245,6 +245,26 @@
             "USAGE_MODULE": {
                 "NUMBER": "Number of invoice per calendar month",
                 "STORAGE": "Storage size"
+            },
+            "ROLE_MODULE": {
+                "DASHBORD": "Dashboard",
+                "VIEW": "View",
+                "INVOICE": "Invoice",
+                "REPORT": "Report",
+                "TEMPLATES": "Templates",
+                "USERS": "Users",
+                "SETTING": "Setting",
+                "All": "All",
+                "ADD": "Add",
+                "DOCUMENTS": "Documents",
+                "PERMISSION": "Permission Action",
+                "LISTING_EDIT": "Edit",
+                "ARCHIVED": "Archived",
+                "EMPLOYEE_PERSONAL": "Personal Information",
+                "CONTACT_HEADING": "Contact Information",
+                "EMPLOYEE_INFORMATION": "Employee Information",
+                "EMERGENCY_CONTACT": "Emergency contact",
+                "EMPLOYEE_DOCUMENT": "Document"
             }
         },
         "EDIT": {},
