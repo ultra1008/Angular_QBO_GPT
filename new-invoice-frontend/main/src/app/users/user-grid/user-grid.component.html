@@ -171,13 +171,12 @@
                                                             alt="">
                                                     </div>
                                                     <div style="margin: auto;">
-                                                        <div style="text-align: initial;" matTooltip="EDIT"
-                                                            *ngIf="isDelete === 0">
+                                                        <div style="text-align: initial;" *ngIf="isDelete === 0">
                                                             <mat-icon class=" pt-1 font-white">edit </mat-icon>
                                                             <span class="font-white">Edit</span>
                                                         </div>
                                                         <div class="pb-1" (click)="deleteUser(user._id,1)"
-                                                            matTooltip="ARCHIVE" *ngIf="isDelete === 0">
+                                                            *ngIf="isDelete === 0">
                                                             <mat-icon class="  pt-1 font-white">archive </mat-icon>
                                                             <span class="font-white">Archive</span>
                                                         </div>

@@ -167,6 +167,7 @@ export class SigninComponent implements OnInit {
 
       sessionStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
       localStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
+
       // for delete we use splice in order to remove single object from DataService
     } else {
       showNotification(this.snackBar, data.message, 'error');

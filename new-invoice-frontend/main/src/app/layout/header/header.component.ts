@@ -269,7 +269,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
         localStorage.removeItem('choose_logoheader');
         localStorage.removeItem('choose_skin');
         localStorage.removeItem('menuOption');
-
+        localStorage.removeItem('thinvoicetheme');
         this.router.navigate(['/authentication/signin']);
       }
     });

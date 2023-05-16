@@ -19,9 +19,15 @@
   }
 
   .navbar.active {
-    background-color: $theme-white !important;
+    // background-color: $theme-white !important;
     border-bottom: 1px solid #dee4ec;
     box-shadow: 5px 7px 26px -5px #cdd4e7;
+
+
+
+    background: linear-gradient(to right, #ffffff, #ffffff);
+
+
 
     .nav {
       >li {
