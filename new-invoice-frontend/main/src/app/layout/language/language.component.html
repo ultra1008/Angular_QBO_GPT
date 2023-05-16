@@ -1,8 +1,8 @@
-<button mat-button matTooltip="{{'COMMON.TOOL_TIP.CHANGE_LANGUAGE' | translate}}" class=" nav-notification-icons"
+<!-- <button mat-button matTooltip="{{'COMMON.TOOL_TIP.CHANGE_LANGUAGE' | translate}}" class=" nav-notification-icons"
     [matMenuTriggerFor]="languages"> <i class="material-icons-outlined icon-color">
         language
     </i>
-</button>
+</button> -->
 
 <mat-menu #languages="matMenu" xPosition="before">
     <div *ngFor="let language of languages_new, let i = index"
