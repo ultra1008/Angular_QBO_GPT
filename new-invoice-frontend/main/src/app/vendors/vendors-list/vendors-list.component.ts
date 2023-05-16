@@ -17,11 +17,12 @@ import { VendorsService } from '../vendors.service';
 import { TermModel, Vendor } from '../vendor-table.model';
 import { Router } from '@angular/router';
 import { HttpCall } from 'src/app/services/httpcall.service';
-import { commonNewtworkAttachmentViewer, gallery_options, showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
+import { commonNewtworkAttachmentViewer, gallery_options, showNotification, swalWithBootstrapButtons, swalWithBootstrapTwoButtons } from 'src/consts/utils';
 import { NgxGalleryComponent, NgxGalleryImage, NgxGalleryOptions } from 'ngx-gallery-9';
 import { VendorReportComponent } from '../vendor-report/vendor-report.component';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { TranslateService } from '@ngx-translate/core';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-vendors-list',
@@ -57,12 +58,17 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   termsList: Array<TermModel> = [];
   titleMessage: string = "";
   isQBSyncedCompany: boolean = false;
+  rform?: any;
+  selectedValue!: string;
+
+
 
   constructor(
     public httpClient: HttpClient, private httpCall: HttpCall,
     public dialog: MatDialog,
     public vendorTableService: VendorsService,
-    private snackBar: MatSnackBar, private router: Router, public translate: TranslateService
+    private snackBar: MatSnackBar, private router: Router, public translate: TranslateService,
+    private fb: UntypedFormBuilder,
   ) {
     super();
   }
@@ -72,8 +78,27 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   @ViewChild(MatMenuTrigger)
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
+  vendor_status: any = [''];
 
   ngOnInit() {
+    // var myValue = this.rform.querySelector('[vendor_status]').value;
+    // console.log('qqqqqqqqqqq', myValue);
+
+    this.rform = this.fb.group({
+      vendor_status: [''],
+    });
+    // if (this.rform!.value('vendor_status') == 'Active') {
+    //   console.log('call');
+
+    // }
+    // if (this.rform!.value('vendor_status') == ' Inactive') {
+    //   console.log('call1');
+
+    // }
+    // if (this.rform!.value('vendor_status') == 'Archive') {
+    //   console.log('call2');
+
+    // }
 
     // Use this flag or variable for the Quickbook synce time. this fflag is help to display
     // the column of quickbooks. If company synced the Quickbooks account then in datatable only 
@@ -121,6 +146,61 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
 
   refresh() {
     this.loadData();
+  }
+  onBookChange(ob: any) {
+
+
+    console.log('Book changed...');
+    let selectedBook = ob.value;
+    console.log(selectedBook);
+    if (selectedBook == 1) {
+      swalWithBootstrapTwoButtons
+        .fire({
+          title: 'Are you sure you want to active all vendor?',
+          showDenyButton: true,
+          confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+          denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+          allowOutsideClick: false,
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+
+          }
+        });
+
+    }
+    else if (selectedBook == 2) {
+      swalWithBootstrapTwoButtons
+        .fire({
+          title: 'Are you sure you want to Inactive all vendor?',
+          showDenyButton: true,
+          confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+          denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+          allowOutsideClick: false,
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+
+          }
+        });
+
+
+    } else if (selectedBook == 3) {
+      swalWithBootstrapTwoButtons
+        .fire({
+          title: 'Are you sure you want to archive all vendor?',
+          showDenyButton: true,
+          confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+          denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+          allowOutsideClick: false,
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+
+          }
+        });
+
+    }
   }
 
   addNew() {

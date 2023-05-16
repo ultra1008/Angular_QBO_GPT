@@ -24,27 +24,33 @@
                         <div class="right" *ngIf="show">
                             <ul class="tbl-export-btn">
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <mat-form-field [hidden]=!selection.hasValue() class="example-full-width"
-                                        appearance="outline">
-                                        <mat-label>Action for selected</mat-label>
-                                        <mat-select formControlName="vendor_status">
-                                            <mat-option [value]="1">
-                                                Active
-                                            </mat-option>
-                                            <mat-option [value]="2">
-                                                Inactive
-                                            </mat-option>
-                                            <mat-option [value]="3">
-                                                Archive
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
+                                    <form [formGroup]="rform">
+                                        <mat-form-field [hidden]=!selection.hasValue() class="example-full-width"
+                                            appearance="outline">
+                                            <mat-label>Action for selected</mat-label>
+                                            <mat-select [(ngModel)]="selectedValue" name="food"
+                                                (selectionChange)="onBookChange($event)"
+                                                formControlName=" vendor_status">
+                                                <mat-option [value]="1">
+                                                    Active
+                                                </mat-option>
+                                                <mat-option [value]="2">
+                                                    Inactive
+                                                </mat-option>
+                                                <mat-option [value]="3">
+                                                    Archive
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </form>
                                     <!-- <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="{{'COMMON.TOOL_TIP.MULTI_ARCHIVE' |
                                         translate}}">
                                         <button mat-mini-fab color="warn" (click)="removeSelectedRows()">
                                             <mat-icon class="col-white">archive</mat-icon>
                                         </button>
                                     </div> -->
+
+
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.REFRESH' |
