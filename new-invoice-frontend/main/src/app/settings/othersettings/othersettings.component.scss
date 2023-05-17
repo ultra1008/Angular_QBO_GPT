@@ -22,3 +22,14 @@
 ::ng-deep .mat-mdc-tab-body-content {
 overflow: hidden !important;
 }
+
+@media only screen and (max-width: 1600px) and (min-width: 1200px) {
+    .test {
+         width: 33.33%;
+    }
+}
+@media only screen and (max-width: 1280px) and (min-width: 700px) {
+    .test {
+         width: 50%;
+    }
+}

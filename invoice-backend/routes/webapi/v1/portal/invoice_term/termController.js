@@ -4,6 +4,8 @@ let config = require('./../../../../../config/config');
 let collectionConstant = require('./../../../../../config/collectionConstant');
 let common = require('./../../../../../controller/common/common');
 var ObjectID = require('mongodb').ObjectID;
+var formidable = require('formidable');
+const reader = require('xlsx');
 
 //save term
 module.exports.saveTerm = async function (req, res) {
@@ -116,5 +118,71 @@ module.exports.deleteTerm = async function (req, res) {
         }
     } else {
         res.send({ status: false, message: "invalid user" });
+    }
+};
+
+// bulk upload 
+module.exports.importterm = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var termConnection = connection_db_api.model(collectionConstant.INVOICE_TERM, termSchema);
+
+            var form = new formidable.IncomingForm();
+            var fields = [];
+            var notFonud = 0;
+            var newOpenFile;
+            var fileName;
+            form.parse(req)
+                .on('file', function (name, file) {
+                    notFonud = 1;
+                    fileName = file;
+                }).on('field', function (name, field) {
+                    fields[name] = field;
+                })
+                .on('error', function (err) {
+                    throw err;
+                }).on('end', async function () {
+                    newOpenFile = this.openedFiles;
+
+                    if (notFonud == 1) {
+
+                        const file = reader.readFile(newOpenFile[0].path);
+                        const sheets = file.SheetNames;
+                        let data = [];
+                        for (let i = 0; i < sheets.length; i++) {
+                            const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
+                            temp.forEach((ress) => {
+                                data.push(ress);
+                            });
+                        }
+                        for (let m = 0; m < data.length; m++) {
+                            requestObject = {};
+                            let onecategory_main = await termConnection.findOne({ name: data[m].name, due_days: data[m].due_days, });
+                            if (onecategory_main == null) {
+                                requestObject.name = data[m].name;
+                                requestObject.due_days = data[m].due_days;
+                                requestObject.is_discount = data[m].is_discount;
+                                requestObject.discount = data[m].discount;
+                                let add_term = new termConnection(requestObject);
+                                let save_term = await add_term.save();
+                            } else {
+                                res.send({ status: true, message: "term info name or due_days contact is allready exist." });
+                            }
+                        }
+                        res.send({ status: true, message: "term info add successfully." });
+
+                    } else {
+                        res.send({ status: false, message: translator.getStr('SomethingWrong'), rerror: e });
+                    }
+                });
+        } catch (error) {
+            console.log(error);
+            res.send({ status: false, message: translator.getStr('SomethingWrong'), rerror: e });
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };

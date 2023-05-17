@@ -240,9 +240,8 @@ $extra-large: 1200px;
 .circular--landscape img {
      width: 200px;
      height: 200px;
-     object-fit: cover;
-     border: #023e8a solid 1px;
-     border: solid 1px red;
+     object-fit: contain;
+     background-color: #fff;
 }
 
 .circular--landscape {
@@ -255,7 +254,7 @@ $extra-large: 1200px;
      display: block;
      margin-right: auto;
      margin-left: auto;
-     border: solid 1px red;
+     border: solid 1px black;
 
      @media (max-width: $medium) {
           min-height: 100px;

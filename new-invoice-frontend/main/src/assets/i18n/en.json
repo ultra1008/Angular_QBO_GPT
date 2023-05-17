@@ -214,6 +214,8 @@
                 "TAX_RATE": "Tax Rate",
                 "DOCUMENT": "Documents",
                 "VENDOR_TYPE": "Vendor Type",
+                "JOB_NAME": "Job Name",
+                "JOB_CONTACT_EMAIL": "Job Contact Email",
                 "DUE_DAYS": "Due Days",
                 "ADD_DISCOUNT": "Add Discount",
                 "DISCOUNT_PERCENTAGE": "Discount%",
@@ -221,7 +223,8 @@
                     "TERMS": "Are you sure you want to delete terms?",
                     "TAX_RATE": "Are you sure you want to delete tax rate?",
                     "DOCUMENT": "Are you sure you want to delete Document?",
-                    "VENDOR_TYPE": "Are you sure you want to delete vendor type?"
+                    "VENDOR_TYPE": "Are you sure you want to delete vendor type?",
+                    "JOB_NAME": "Are you sure you want to delete job name?"
                 }
             },
             "EMPLOYEE_MODULE": {
@@ -249,15 +252,18 @@
             "ROLE_MODULE": {
                 "DASHBORD": "Dashboard",
                 "VIEW": "View",
+                "VENDORS": "Vendors",
                 "INVOICE": "Invoice",
                 "REPORT": "Report",
                 "TEMPLATES": "Templates",
                 "USERS": "Users",
                 "SETTING": "Setting",
                 "All": "All",
-                "ADD": "Add",
+                "ADD_ROLE": "Add",
                 "DOCUMENTS": "Documents",
                 "PERMISSION": "Permission Action",
+                "PERMISSION_TOOLTIP": "Disable the role change action",
+                "TODAYS_ACTiVITY": "Today's Activity",
                 "LISTING_EDIT": "Edit",
                 "ARCHIVED": "Archived",
                 "EMPLOYEE_PERSONAL": "Personal Information",

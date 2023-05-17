@@ -214,6 +214,8 @@
                 "TAX_RATE": "Tasa de impuesto",
                 "DOCUMENT": "Documentos",
                 "VENDOR_TYPE": "Tipo de proveedor",
+                "JOB_NAME": "Nombre del trabajo",
+                "JOB_CONTACT_EMAIL": "Correo electrónico de contacto laboral",
                 "DUE_DAYS": "Días de vencimiento",
                 "ADD_DISCOUNT": "Agregar descuento",
                 "DISCOUNT_PERCENTAGE": "Descuento%",
@@ -221,7 +223,8 @@
                     "TERMS": "¿Está seguro de que desea eliminar términos?",
                     "TAX_RATE": "¿Está seguro de que desea eliminar la tasa impositiva?",
                     "DOCUMENT": "¿Está seguro de que desea eliminar el documento?",
-                    "VENDOR_TYPE": "¿Está seguro de que desea eliminar el tipo de proveedor?"
+                    "VENDOR_TYPE": "¿Está seguro de que desea eliminar el tipo de proveedor?",
+                    "JOB_NAME": "¿Estás seguro de que quieres eliminar el nombre del trabajo?"
                 }
             },
             "EMPLOYEE_MODULE": {
@@ -249,15 +252,18 @@
             "ROLE_MODULE": {
                 "DASHBORD": "Panel",
                 "VIEW": "Vista",
+                "VENDORS": "Proveedores",
                 "INVOICE": "Factura",
                 "REPORT": "Informe",
                 "TEMPLATES": "Plantillas",
                 "USERS": "Usuarios",
                 "SETTING": "Configuración",
                 "All": "Todo",
-                "ADD": "Agregar",
+                "ADD_ROLE": "Agregar",
                 "DOCUMENTS": "Documentos",
                 "PERMISSION": "Acción de permiso",
+                "PERMISSION_TOOLTIP": "Deshabilitar la acción de cambio de rol",
+                "TODAYS_ACTiVITY": "Actividad de Hoy",
                 "LISTING_EDIT": "Editar",
                 "ARCHIVED": "Archivado",
                 "EMPLOYEE_PERSONAL": "Informacion personal",
