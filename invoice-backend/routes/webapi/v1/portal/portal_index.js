@@ -324,7 +324,7 @@ router.post('/webapi/v1/portal/getViewDocumentsDatatableForTable', common.checkT
 router.post('/webapi/v1/portal/getOrphanDocumentsForTable', common.checkTokenExistOrNot, invoiceController.getOrphanDocumentsForTable);
 router.post('/webapi/v1/portal/getOrphanDocumentsDatatableForTable', common.checkTokenExistOrNot, invoiceController.getOrphanDocumentsDatatableForTable);
 router.post('/webapi/v1/portal/getDuplicateDocumentsDatatableForTable', common.checkTokenExistOrNot, invoiceController.getDuplicateDocumentsDatatableForTable);
-router.post('/webapi/v1/portal/sendInvoiceEmail', common.checkTokenExistOrNot, invoiceController.sendInvoiceEmail);
+// router.post('/webapi/v1/portal/sendInvoiceEmail', common.checkTokenExistOrNot, invoiceController.sendInvoiceEmail);
 
 
 
