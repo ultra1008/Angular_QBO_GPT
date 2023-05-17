@@ -138,6 +138,8 @@ router.get('/webapi/v1/portal/listManagementUser', common.checkTokenExistOrNot, 
 router.post('/webapi/v1/portal/importManagementUser', common.checkTokenExistOrNot, employeeController.importManagementUser);
 router.post('/webapi/v1/portal/getUserForTable', common.checkTokenExistOrNot, employeeValidation.getUserForTableValidation, employeeController.getUserForTable);
 router.post('/webapi/v1/portal/updateUserStatus', common.checkTokenExistOrNot, employeeController.updateUserStatus);
+router.post('/webapi/v1/portal/deleteMultipleTeamMember', common.checkTokenExistOrNot, employeeController.deleteMultipleTeamMember);
+router.post('/webapi/v1/portal/updateMultipleUserStatus', common.checkTokenExistOrNot, employeeController.updateMultipleUserStatus);
 
 
 let employeeCron = require("./employee/employeeCron");
@@ -346,7 +348,7 @@ router.post('/webapi/v1/portal/getvendorhistory', common.checkTokenExistOrNot, i
 router.post('/webapi/v1/portal/getvendorreport', common.checkTokenExistOrNot, invoice_vendorController.getVendorExcelReport);
 router.post('/webapi/v1/portal/savevendorstoDB', common.checkTokenExistOrNot, invoice_vendorController.savevendorstoDB);
 router.post('/webapi/v1/portal/updateMultipleVendorStatus', common.checkTokenExistOrNot, invoice_vendorValidation.updateMultipleVendorStatus, invoice_vendorController.updateMultipleVendorStatus);
-router.post('/webapi/v1/portal/deleteMultipleVendor', common.checkTokenExistOrNot, invoice_vendorValidation.deleteVendor, invoice_vendorController.deleteMultipleVendor);
+router.post('/webapi/v1/portal/deleteMultipleVendor', common.checkTokenExistOrNot, invoice_vendorValidation.deleteMultipleVendor, invoice_vendorController.deleteMultipleVendor);
 
 
 

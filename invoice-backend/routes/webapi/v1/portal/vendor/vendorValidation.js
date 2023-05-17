@@ -51,7 +51,6 @@ const saveVendor = (req, res, next) => {
 
 const deleteVendor = (req, res, next) => {
     const validationRule = {
-        "_id": "required",
         "is_delete": "required|integer"
     };
     validator(req.body, validationRule, {}, (error, status) => {
@@ -81,7 +80,6 @@ const deleteMultipleVendor = (req, res, next) => {
 
 const updateVendorStatus = (req, res, next) => {
     const validationRule = {
-        "_id": "required",
         "vendor_status": "required"
     };
     validator(req.body, validationRule, {}, (error, status) => {
