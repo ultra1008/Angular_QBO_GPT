@@ -17,6 +17,7 @@ import * as XLSX from 'xlsx';
 import { ImportOtherSettingsComponent } from './import-other-settings/import-other-settings.component';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { HttpCall } from 'src/app/services/httpcall.service';
+import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 
 @Component({
   selector: 'app-othersettings',
@@ -45,7 +46,8 @@ export class OthersettingsComponent {
     private snackBar: MatSnackBar,
     public translate: TranslateService,
     public dialog: MatDialog,
-    public httpCall: HttpCall
+    public httpCall: HttpCall,
+    public uiSpinner: UiSpinnerService
   ) {}
 
   ngOnInit() {
@@ -350,62 +352,119 @@ export class OthersettingsComponent {
   }
 
   onFileChange(ev: any) {
-    // let that = this;
-    // let workBook = null;
-    // let jsonData = null;
-    // let header_;
-    // const reader = new FileReader();
-    // const file = ev.target.files[0];
-    // reader.onload = (event) => {
-    //   const data = reader.result;
-    //   workBook = XLSX.read(data, { type: 'binary' }) || '';
-    //   jsonData = workBook.SheetNames.reduce((initial, name) => {
-    //     const sheet = workBook.Sheets[name];
-    //     initial[name] = XLSX.utils.sheet_to_json(sheet);
-    //     let data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-    //     header_ = data.shift();
-    //     return initial;
-    //   }, {});
-    //   const formData_profle = new FormData();
-    //   formData_profle.append('file', file);
-    //   let apiurl = '';
-    //   if (that.currrent_tab == 'Terms') {
-    //   } else if (that.currrent_tab == 'Tax rate') {
-    //   } else if (that.currrent_tab == 'Documents') {
-    //   } else if (that.currrent_tab == 'Vendor type') {
-    //   } else if (that.currrent_tab == 'Job name') {
-    //     apiurl = httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_IMPORT;
-    //   }
-    //   // that.spinner.spin$.next(true);
-    //   that.httpCall
-    //     .httpPostCall(apiurl, formData_profle)
-    //     .subscribe(function (params) {
-    //       if (params.status) {
-    //         if (that.currrent_tab == 'Terms') {
-    //         } else if (that.currrent_tab == 'Tax rate') {
-    //         } else if (that.currrent_tab == 'Documents') {
-    //         } else if (that.currrent_tab == 'Vendor type') {
-    //         } else if (that.currrent_tab == 'Job name') {
-    //           that.getDataJobName();
-    //         }
-    //         // that.openErrorDataDialog(params);
-    //         showNotification(this.snackBar,params.message, 'success');
-    //         // that.spinner.spin$.next(false);
-    //       } else {
-    //         showNotification(this.snackBar,params.message, 'error');
-    //         // that.spinner.spin$.next(false);
-    //       }
-    //     });
-    //   // }
-    // };
-    // reader.readAsBinaryString(file);
+    let that = this;
+    let workBook: any;
+    let jsonData = null;
+    let header_;
+    const reader = new FileReader();
+    const file = ev.target.files[0];
+    reader.onload = (event) => {
+      const data = reader.result;
+      workBook = XLSX.read(data, { type: 'binary' }) || '';
+      jsonData = workBook.SheetNames.reduce((initial: any, name: any) => {
+        const sheet = workBook.Sheets[name];
+        initial[name] = XLSX.utils.sheet_to_json(sheet);
+        let data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        header_ = data.shift();
+
+        return initial;
+      }, {});
+      // const dataString = JSON.stringify(jsonData);
+      // const keys_OLD = ["item_type_name", "packaging_name", "terms_name"];
+      // if (JSON.stringify(keys_OLD.sort()) != JSON.stringify(header_.sort())) {
+      //   that.sb.openSnackBar(that.Company_Equipment_File_Not_Match, "error");
+      //   return;
+      // } else {
+      const formData_profle = new FormData();
+      formData_profle.append('file', file);
+      let apiurl = '';
+
+      if (that.currrent_tab == 'Terms') {
+        apiurl = httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_IMPORT_TERMS;
+      } else if (that.currrent_tab == 'Tax rate') {
+        apiurl =
+          httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_IMPORT_TEXT_RATE;
+      } else if (that.currrent_tab == 'Documents') {
+        apiurl =
+          httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_IMPORT_DOCUMENT;
+      } else if (that.currrent_tab == 'Vendor type') {
+        apiurl =
+          httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_IMPORT_VENDOR_TYPE;
+      } else if (that.currrent_tab == 'Job name') {
+        apiurl = httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_IMPORT;
+      }
+
+      that.uiSpinner.spin$.next(true);
+      that.httpCall
+        .httpPostCall(apiurl, formData_profle)
+        .subscribe(function (params) {
+          if (params.status) {
+            if (that.currrent_tab == 'Terms') {
+              that.getDataTerms();
+            } else if (that.currrent_tab == 'Tax rate') {
+              that.getDataTaxRate();
+            } else if (that.currrent_tab == 'Documents') {
+              that.getDataDocuments();
+            } else if (that.currrent_tab == 'Vendor type') {
+              that.getDataVendorType();
+            } else if (that.currrent_tab == 'Job name') {
+              that.getDataJobName();
+            }
+            // that.openErrorDataDialog(params);
+
+            showNotification(that.snackBar, params.message, 'success');
+            that.uiSpinner.spin$.next(false);
+          } else {
+            showNotification(that.snackBar, params.message, 'error');
+            that.uiSpinner.spin$.next(false);
+          }
+        });
+      // }
+    };
+    reader.readAsBinaryString(file);
   }
 
   downloadImport() {
     if (this.currrent_tab == 'Terms') {
+      const dialogRef = this.dialog.open(ImportOtherSettingsComponent, {
+        width: '500px',
+        data: this.currrent_tab,
+        disableClose: true,
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        this.getDataTerms();
+      });
     } else if (this.currrent_tab == 'Tax rate') {
+      const dialogRef = this.dialog.open(ImportOtherSettingsComponent, {
+        width: '500px',
+        data: this.currrent_tab,
+        disableClose: true,
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        this.getDataTaxRate();
+      });
     } else if (this.currrent_tab == 'Documents') {
+      const dialogRef = this.dialog.open(ImportOtherSettingsComponent, {
+        width: '500px',
+        data: this.currrent_tab,
+        disableClose: true,
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        this.getDataDocuments();
+      });
     } else if (this.currrent_tab == 'Vendor type') {
+      const dialogRef = this.dialog.open(ImportOtherSettingsComponent, {
+        width: '500px',
+        data: this.currrent_tab,
+        disableClose: true,
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        this.getDataVendorType();
+      });
     } else if (this.currrent_tab == 'Job name') {
       const dialogRef = this.dialog.open(ImportOtherSettingsComponent, {
         width: '500px',

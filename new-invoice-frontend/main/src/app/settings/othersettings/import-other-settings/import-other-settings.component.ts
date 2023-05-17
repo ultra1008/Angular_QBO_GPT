@@ -63,9 +63,22 @@ export class ImportOtherSettingsComponent {
   downloadImport() {
     this.dialogRef.close();
     if (this.currrent_tab == 'Terms') {
+      return saveAs('./assets/files/importterms.xlsx', 'importterms.xlsx');
     } else if (this.currrent_tab == 'Tax rate') {
+      return saveAs(
+        './assets/files/importtax_rate.xlsx',
+        'importtax_rate.xlsx'
+      );
     } else if (this.currrent_tab == 'Documents') {
+      return saveAs(
+        './assets/files/importdocument.xlsx',
+        'importdocument.xlsx'
+      );
     } else if (this.currrent_tab == 'Vendor type') {
+      return saveAs(
+        './assets/files/importvendortype.xlsx',
+        'importvendortype.xlsx'
+      );
     } else if (this.currrent_tab == 'Job name') {
       return saveAs('./assets/files/jobnameimport.xlsx', 'jobnameimport.xlsx');
     }
