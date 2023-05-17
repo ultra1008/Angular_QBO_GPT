@@ -419,4 +419,14 @@ router.post('/webapi/v1/portal/savevendortype', common.checkTokenExistOrNot, ven
 router.get('/webapi/v1/portal/getvendortype', common.checkTokenExistOrNot, vendor_typeController.getvendortype);
 router.post('/webapi/v1/portal/deletevendortype', common.checkTokenExistOrNot, vendor_typeValidation.deletevendortype, vendor_typeController.deletevendortype);
 
+
+
+let job_nameController = require('./job_name/job_nameController');
+let job_nameValidation = require('./job_name/job_nameValidation');
+
+router.post('/webapi/v1/portal/savejobname', common.checkTokenExistOrNot, job_nameValidation.savejobname, job_nameController.savejobname);
+router.get('/webapi/v1/portal/getjobname', common.checkTokenExistOrNot, job_nameController.getjobname);
+router.post('/webapi/v1/portal/deletejobname', common.checkTokenExistOrNot, job_nameValidation.deletejobname, job_nameController.deletejobname);
+router.post('/webapi/v1/portal/importjobname', common.checkTokenExistOrNot, job_nameController.importjobname);
+
 module.exports = router;
