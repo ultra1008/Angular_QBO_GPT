@@ -258,6 +258,15 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     return data;
   }
 
+  async getJobName() {
+    const data = await this.httpCall
+      .httpGetCall(
+        httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_GET_JOB_NAME
+      )
+      .toPromise();
+    return data;
+  }
+
   async updateSetting(requestObject: any) {
     const data = await this.httpCall
       .httpPostCall(
@@ -385,6 +394,18 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     return data;
   }
 
+  async DeleteJobName(_id: string) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.OTHER_SETTING_DELETE_JOB_NAME,
+        {
+          _id: _id,
+        }
+      )
+      .toPromise();
+    return data;
+  }
+
   addAdvanceTable(Document: Settings): void {
     this.dialogData = Document;
   }
@@ -463,6 +484,16 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     const data = await this.httpCall
       .httpPostCall(
         httpversion.PORTAL_V1 + httproutes.OTHER_SETTING_SAVE_TEXT_RATE,
+        requestObject
+      )
+      .toPromise();
+    return data;
+  }
+
+  async saveJobName(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.OTHER_SETTING_SAVE_JOB_NAME,
         requestObject
       )
       .toPromise();

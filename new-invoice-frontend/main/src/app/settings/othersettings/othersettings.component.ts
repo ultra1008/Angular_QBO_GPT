@@ -10,6 +10,7 @@ import { TaxRateFormComponent } from './tax-rate-form/tax-rate-form.component';
 import { DocumentFormComponent } from './document-form/document-form.component';
 import { VendorFormComponent } from 'src/app/vendors/vendor-form/vendor-form.component';
 import { VendorTypeFormComponent } from './vendor-type-form/vendor-type-form.component';
+import { JobNameFormComponent } from './job-name-form/job-name-form.component';
 
 @Component({
   selector: 'app-othersettings',
@@ -21,8 +22,15 @@ export class OthersettingsComponent {
   AllTaxrate: any;
   AllDocument: any;
   AllVendorType: any;
+  AllJobName: any;
   currrent_tab: any = 'Terms';
-  tab_Array: any = ['Terms', 'Tax rate', 'Documents', 'Vendor type'];
+  tab_Array: any = [
+    'Terms',
+    'Tax rate',
+    'Documents',
+    'Vendor type',
+    'Job name',
+  ];
 
   constructor(
     private router: Router,
@@ -37,6 +45,7 @@ export class OthersettingsComponent {
     this.getDataTaxRate();
     this.getDataDocuments();
     this.getDataVendorType();
+    this.getDataJobName();
   }
 
   onTabChanged($event: { index: string | number }) {
@@ -68,6 +77,14 @@ export class OthersettingsComponent {
     const data = await this.SettingsServices.getVendorType();
     if (data.status) {
       this.AllVendorType = data.data;
+    }
+  }
+
+  async getDataJobName() {
+    const data = await this.SettingsServices.getJobName();
+    if (data.status) {
+      this.AllJobName = data.data;
+      console.log('AllJobName', this.AllJobName);
     }
   }
 
@@ -103,6 +120,14 @@ export class OthersettingsComponent {
       });
       dialogRef.afterClosed().subscribe((result) => {
         this.getDataVendorType();
+      });
+    } else if (this.currrent_tab == 'Job name') {
+      const dialogRef = this.dialog.open(JobNameFormComponent, {
+        width: '350px',
+        data: {},
+      });
+      dialogRef.afterClosed().subscribe((result) => {
+        this.getDataJobName();
       });
     }
   }
@@ -159,6 +184,20 @@ export class OthersettingsComponent {
 
       dialogRef.afterClosed().subscribe((result) => {
         this.getDataVendorType();
+      });
+    }
+  }
+
+  editJobName(JobName: any) {
+    if (this.currrent_tab == 'Job name') {
+      const dialogRef = this.dialog.open(JobNameFormComponent, {
+        width: '350px',
+        data: JobName,
+        disableClose: true,
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        this.getDataJobName();
       });
     }
   }
@@ -264,6 +303,32 @@ export class OthersettingsComponent {
           if (data.status) {
             showNotification(this.snackBar, data.message, 'success');
             that.getDataVendorType();
+          } else {
+            showNotification(this.snackBar, data.message, 'error');
+          }
+        }
+      });
+  }
+
+  async deleteJobName(JobName: any) {
+    let that = this;
+    swalWithBootstrapButtons
+      .fire({
+        title: this.translate.instant(
+          'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CONFIRMATION_DIALOG.JOB_NAME'
+        ),
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+        denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+        allowOutsideClick: false,
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          const data = await this.SettingsServices.DeleteJobName(JobName._id);
+          if (data.status) {
+            showNotification(this.snackBar, data.message, 'success');
+            that.getDataJobName();
           } else {
             showNotification(this.snackBar, data.message, 'error');
           }

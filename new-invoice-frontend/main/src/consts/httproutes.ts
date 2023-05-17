@@ -101,6 +101,9 @@ export enum httproutes {
   OTHER_SETTINGS_GET_DOCUMENT = 'getinvoicedocument',
   OTHER_SETTING_SAVE_DOCUMENT = 'saveinvoicedocument',
   OTHER_SETTING_DELETE_DOCUMENT = 'deleteInvoiceDocument',
+  OTHER_SETTING_SAVE_JOB_NAME = 'savejobname',
+  OTHER_SETTINGS_GET_JOB_NAME = 'getjobname',
+  OTHER_SETTING_DELETE_JOB_NAME = 'deletejobname',
 
   // Document_View
   INVOICE_OTHER_SETTING_UPDATE_ALERTS = 'getupdatesetting',
