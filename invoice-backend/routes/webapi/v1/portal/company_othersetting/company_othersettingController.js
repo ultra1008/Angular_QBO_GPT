@@ -421,20 +421,59 @@ module.exports.getCustomerStates = async function (req, res) {
         try {
             var requestObject = req.body;
             let customerStateCollection = connection_db_api.model(collectionConstant.INVOICE_CUSTOMER_STATES, customerStateSchema);
-            var getData = await customerStateCollection.find({});
-            if (getData) {
+            var match_query = { is_delete: 0 };
+            var getData = await customerStateCollection.aggregate([
+                { $match: match_query },
+                {
+                    $project: {
+                        title: { $concat: [{ $toString: "$month" }, " ", { $toString: "$year" }] },
+                        tmpObject: {
+                            month_name: { $concat: [{ $toString: "$month" }, " ", { $toString: "$year" }] },
+                            year: "$year",
+                            month: "$month",
+                            po_expense: "$po_expense",
+                            po_forms: "$po_forms",
+                            packing_slip_expense: "$packing_slip_expense",
+                            packing_slip_forms: "$packing_slip_forms",
+                            receiving_slip_expense: "$receiving_slip_expense",
+                            receiving_slip_forms: "$receiving_slip_forms",
+                            quote_expense: "$quote_expense",
+                            quote_forms: "$quote_forms",
+                            invoice_expense: "$invoice_expense",
+                            invoice_forms: "$invoice_forms",
+                            unknown_expense: "$unknown_expense",
+                            unknown_forms: "$unknown_forms",
+                        },
 
-                var resobj = "";
-                var year = [];
-                for (let i = 0; i < getData.length; i++) {
-                    resobj += getData[i];
+                    }
+                },
+                {
+                    $group: {
+                        _id: "$title",
+                        data: { $push: "$tmpObject" },
+                    }
+                },
 
-                }
-                res.send(getData);
-            }
-            else {
-                res.send([]);
-            }
+            ]);
+            console.log("getData", getData);
+            var dataResponce = {};
+            dataResponce.data = getData;
+            res.json(dataResponce);
+
+            // if (getData) {
+
+            //     var resobj = new Array();
+            //     var year = "year";
+            //     for (let i = 0; i < getData.length; i++) {
+            //         resobj = year.getData[i];
+            //         console.log("resobj", resobj);
+            //     }
+            //     // getData.concat(resobj);
+            //     res.send(resobj);
+            // }
+            // else {
+            //     res.send([]);
+            // }
 
         } catch (e) {
             console.log(e);
