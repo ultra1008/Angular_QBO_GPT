@@ -117,7 +117,7 @@
                                         <mat-checkbox (change)="$event ? masterToggle() : null"
                                             [checked]="selection.hasValue() && isAllSelected()"
                                             [indeterminate]="selection.hasValue() && !isAllSelected()"
-                                            [ngClass]="'tbl-checkbox'">
+                                            [ngClass]="'tbl-checkbox' ">
                                         </mat-checkbox>
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" class="psl-1" [ngClass]="'tbl-col-width-per-7'">
@@ -188,12 +188,11 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_status">
-                                    <mat-header-cell class="psl-1" [ngClass]="'tbl-col-width-per-7'" *matHeaderCellDef
+                                    <mat-header-cell class="psl-1" *matHeaderCellDef
                                         mat-sort-header>{{'VENDOR.TABLE.STATUS' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell mat-cell class=" psl-1 tbl-col-width-per-7" *matCellDef="let row"
-                                        (contextmenu)="onContextMenu($event, row)">
+                                    <mat-cell mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Status:</span>
                                         <div *ngIf="row.vendor_status===1" (click)="updateStatus(row)">
                                             <span class="badge badge-solid-green">

@@ -196,7 +196,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
         })
         .then((result) => {
           if (result.isConfirmed) {
-
+            // this.deleteVendor("");
           }
         });
 
@@ -220,9 +220,13 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   }
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
+
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.renderedData.length;
+
+
     return numSelected === numRows;
+
   }
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
@@ -232,6 +236,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
       : this.dataSource.renderedData.forEach((row) =>
         this.selection.select(row)
       );
+    console.log('numRows', this.selection.selected);
   }
   removeSelectedRows() {
     console.log('All Selected removed option selected');
