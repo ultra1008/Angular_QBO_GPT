@@ -3951,7 +3951,7 @@ module.exports.sendInvoiceEmail = async function (req, res) {
             var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
             let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
             let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
-            let loginHistoryConnection = connection_db_api.model(collectionConstant.INVOICE_LOGINHISTORY, loginHistorySchema);
+            // let loginHistoryConnection = connection_db_api.model(collectionConstant.INVOICE_LOGINHISTORY, loginHistorySchema);
 
             let MAP_DIV = "<div></div>";
             // let MAP_LINK = config.SITE_URL + "/#/map-for-all?user_lat=" + requestObject.location_lat + "&user_lng=" + requestObject.location_lng;
@@ -3964,7 +3964,7 @@ module.exports.sendInvoiceEmail = async function (req, res) {
                 ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                 THANKS: translator.getStr('EmailTemplateThanks'),
                 ROVUK_TEAM: `${company_data.companyname} team`,
-                EMAILTITLE: translator.getStr('Invoice_Report_Title'),
+                EMAILTITLE: translator.getStr('invoice_send_title'),
                 // USERNAME: `${translator.getStr('EmailLoginHello')} ${decodedToken.UserData.userfullname}`,
                 // LOGINLOCATION: `${translator.getStr('EmailLoginLoginFromNewDevice')} ${requestObject.location}`,
                 // TIME: `${translator.getStr('EmailLoginTime')} ${requestObject.created_date}`,
@@ -3973,17 +3973,26 @@ module.exports.sendInvoiceEmail = async function (req, res) {
                 // IF_NOT_YOU: translator.getStr('EmailLoginIfNotYou'),
                 // CHANGE_PASSWORD: translator.getStr('EmailLoginChangePassword'),
                 ANY_QUESTION: translator.getStr('EmailLoginAnyQuestion'),
-
                 COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
                 COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
+                VENDOR_NAME: `${translator.getStr('VendorExcel_VendorName')} ${requestObject.vendor_name}`,
+                INVOICE_NUMBER: `${translator.getStr('invoice_number')} ${requestObject.vendor_name}`,
+
             };
-            const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/loginFromNewDevice.html', 'utf8');
+            // require('../invoice-backend/controller/emailtemplates/invoicesend.html.html')
+            // const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/invoicesend.html.html', 'utf8');
+            const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/invoicesend.html', 'utf8');
+
             var template = handlebars.compile(file_data);
             var HtmlData = await template(emailTmp);
-            sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, ["divyesh@centurioninfotech.com"], "Invoice email", HtmlData,
+            let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [requestObject.to], "Invoice email", HtmlData,
                 talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
                 talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
-            res.send({ message: translator.getStr('LoginDetails'), status: true });
+            if (mailsend) {
+                res.send({ message: translator.getStr('invoice_send'), status: true });
+            } else {
+                res.send({ message: translator.getStr('invoice_not_send'), status: false });
+            }
 
         } catch (e) {
             console.log(e);

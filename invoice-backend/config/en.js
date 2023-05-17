@@ -17,6 +17,11 @@ module.exports = {
     CompanyNotFound: "Company not found.",
     LoginDetails: 'Login details stored successfully.',
     Regitration_Link: "Registration Link",
+    invoice_send: "Invoice Send",
+    invoice_not_send: "Invoice Not Send",
+    invoice_send_title: "This message was sent from ROVUK A/P invoice automation.",
+    invoice_number: "Invoice Number",
+    Total_amount: "Total Amount",
 
     //Email Templates
     EmailTemplateHi: 'Hi',
