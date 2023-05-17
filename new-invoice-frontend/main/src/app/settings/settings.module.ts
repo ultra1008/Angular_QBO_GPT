@@ -60,6 +60,7 @@ import { DocumentFormComponent } from './othersettings/document-form/document-fo
 import { VendorTypeFormComponent } from './othersettings/vendor-type-form/vendor-type-form.component';
 import { CostCodeFormComponent } from './costcode/cost-code-form/cost-code-form.component';
 import { JobNameFormComponent } from './othersettings/job-name-form/job-name-form.component';
+import { ImportOtherSettingsComponent } from './othersettings/import-other-settings/import-other-settings.component';
 
 @NgModule({
   declarations: [
@@ -89,6 +90,7 @@ import { JobNameFormComponent } from './othersettings/job-name-form/job-name-for
     VendorTypeFormComponent,
     CostCodeFormComponent,
     JobNameFormComponent,
+    ImportOtherSettingsComponent,
   ],
   providers: [SettingsService],
   imports: [

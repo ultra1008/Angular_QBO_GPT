@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { SettingsService } from '../settings.service';
 import { showNotification, swalWithBootstrapButtons } from 'src/consts/utils';
@@ -11,6 +11,12 @@ import { DocumentFormComponent } from './document-form/document-form.component';
 import { VendorFormComponent } from 'src/app/vendors/vendor-form/vendor-form.component';
 import { VendorTypeFormComponent } from './vendor-type-form/vendor-type-form.component';
 import { JobNameFormComponent } from './job-name-form/job-name-form.component';
+import { saveAs } from 'file-saver';
+import * as fs from 'file-saver';
+import * as XLSX from 'xlsx';
+import { ImportOtherSettingsComponent } from './import-other-settings/import-other-settings.component';
+import { httproutes, httpversion } from 'src/consts/httproutes';
+import { HttpCall } from 'src/app/services/httpcall.service';
 
 @Component({
   selector: 'app-othersettings',
@@ -31,13 +37,15 @@ export class OthersettingsComponent {
     'Vendor type',
     'Job name',
   ];
+  @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
 
   constructor(
     private router: Router,
     public SettingsServices: SettingsService,
     private snackBar: MatSnackBar,
     public translate: TranslateService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public httpCall: HttpCall
   ) {}
 
   ngOnInit() {
@@ -334,6 +342,81 @@ export class OthersettingsComponent {
           }
         }
       });
+  }
+
+  importFileAction() {
+    let el: HTMLElement = this.OpenFilebox.nativeElement;
+    el.click();
+  }
+
+  onFileChange(ev: any) {
+    // let that = this;
+    // let workBook = null;
+    // let jsonData = null;
+    // let header_;
+    // const reader = new FileReader();
+    // const file = ev.target.files[0];
+    // reader.onload = (event) => {
+    //   const data = reader.result;
+    //   workBook = XLSX.read(data, { type: 'binary' }) || '';
+    //   jsonData = workBook.SheetNames.reduce((initial, name) => {
+    //     const sheet = workBook.Sheets[name];
+    //     initial[name] = XLSX.utils.sheet_to_json(sheet);
+    //     let data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+    //     header_ = data.shift();
+    //     return initial;
+    //   }, {});
+    //   const formData_profle = new FormData();
+    //   formData_profle.append('file', file);
+    //   let apiurl = '';
+    //   if (that.currrent_tab == 'Terms') {
+    //   } else if (that.currrent_tab == 'Tax rate') {
+    //   } else if (that.currrent_tab == 'Documents') {
+    //   } else if (that.currrent_tab == 'Vendor type') {
+    //   } else if (that.currrent_tab == 'Job name') {
+    //     apiurl = httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_IMPORT;
+    //   }
+    //   // that.spinner.spin$.next(true);
+    //   that.httpCall
+    //     .httpPostCall(apiurl, formData_profle)
+    //     .subscribe(function (params) {
+    //       if (params.status) {
+    //         if (that.currrent_tab == 'Terms') {
+    //         } else if (that.currrent_tab == 'Tax rate') {
+    //         } else if (that.currrent_tab == 'Documents') {
+    //         } else if (that.currrent_tab == 'Vendor type') {
+    //         } else if (that.currrent_tab == 'Job name') {
+    //           that.getDataJobName();
+    //         }
+    //         // that.openErrorDataDialog(params);
+    //         showNotification(this.snackBar,params.message, 'success');
+    //         // that.spinner.spin$.next(false);
+    //       } else {
+    //         showNotification(this.snackBar,params.message, 'error');
+    //         // that.spinner.spin$.next(false);
+    //       }
+    //     });
+    //   // }
+    // };
+    // reader.readAsBinaryString(file);
+  }
+
+  downloadImport() {
+    if (this.currrent_tab == 'Terms') {
+    } else if (this.currrent_tab == 'Tax rate') {
+    } else if (this.currrent_tab == 'Documents') {
+    } else if (this.currrent_tab == 'Vendor type') {
+    } else if (this.currrent_tab == 'Job name') {
+      const dialogRef = this.dialog.open(ImportOtherSettingsComponent, {
+        width: '500px',
+        data: this.currrent_tab,
+        disableClose: true,
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        this.getDataJobName();
+      });
+    }
   }
 
   back() {

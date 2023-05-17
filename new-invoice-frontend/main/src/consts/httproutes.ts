@@ -104,6 +104,7 @@ export enum httproutes {
   OTHER_SETTING_SAVE_JOB_NAME = 'savejobname',
   OTHER_SETTINGS_GET_JOB_NAME = 'getjobname',
   OTHER_SETTING_DELETE_JOB_NAME = 'deletejobname',
+  OTHER_SETTINGS_IMPORT = 'importjobname',
 
   // Document_View
   INVOICE_OTHER_SETTING_UPDATE_ALERTS = 'getupdatesetting',

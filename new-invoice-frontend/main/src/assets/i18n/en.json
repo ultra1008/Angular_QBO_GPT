@@ -12,7 +12,9 @@
             "MULTI_ARCHIVE": "MULTI ARCHIVE",
             "LIST_TO_GRID": "LIST TO GRID",
             "CLOSE": "Close",
-            "CHANGE_LANGUAGE": "CHANGE LANGUAGE"
+            "CHANGE_LANGUAGE": "CHANGE LANGUAGE",
+            "IMPORT_TEMPLATE": "Download Import Template",
+            "IMPORT": "Import"
         },
         "ACTIONS": {
             "EDIT": "Edit",
@@ -219,6 +221,9 @@
                 "DUE_DAYS": "Due Days",
                 "ADD_DISCOUNT": "Add Discount",
                 "DISCOUNT_PERCENTAGE": "Discount%",
+                "FILE_DOWNLOAD_INSTRUCTION": "Instruction for import file",
+                "OK_TO_IMPORT": "Ok to import",
+                "DOWNLOAD_IMPORT_INSTRUCTION": "Please 'Do Not' delete or edit the first row of this template file to avoid errors when uploading the file again in to ROVUK platform",
                 "CONFIRMATION_DIALOG": {
                     "TERMS": "Are you sure you want to delete terms?",
                     "TAX_RATE": "Are you sure you want to delete tax rate?",
