@@ -322,6 +322,76 @@ module.exports.deleteVendor = async function (req, res) {
         try {
             var requestObject = req.body;
             var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
+            var id = requestObject._id;
+            delete requestObject._id;
+            requestObject.vendor_updated_by = decodedToken.UserData._id;
+            requestObject.vendor_updated_at = Math.round(new Date().getTime() / 1000);
+
+            var one_vendor = await vendorConnection.findOne({ _id: ObjectID(id) });
+
+            if (one_vendor) {
+                var delete_vendor = await vendorConnection.updateMany({ _id: id }, { is_delete: requestObject.is_delete });
+
+                if (delete_vendor) {
+                    let action = '';
+                    let message = '';
+                    if (requestObject.is_delete == 1) {
+                        action = "Archive";
+                        message = "Vendor archive successfully";
+                    } else {
+                        action = "Restore";
+                        message = "Vendor restore successfully";
+                    }
+
+
+
+                    let histioryObject = {
+                        data: [],
+                        vendor_id: id,
+                    };
+
+                    addVendorHistory(action, histioryObject, decodedToken);
+                    recentActivity.saveRecentActivity({
+                        user_id: decodedToken.UserData._id,
+                        username: decodedToken.UserData.userfullname,
+                        userpicture: decodedToken.UserData.userpicture,
+                        data_id: id,
+                        title: one_vendor.vendor_name,
+                        module: 'Vendor',
+                        action: action,
+                        action_from: 'Web',
+                    }, decodedToken);
+
+
+                    res.send({ message: message, status: true });
+
+                } else {
+                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                }
+            } else {
+                res.send({ message: "Vendor not found with this id.", status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+//multiple delete vendor
+module.exports.deleteMultipleVendor = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
             // var id = requestObject._id;
             // delete requestObject._id;
             requestObject.vendor_updated_by = decodedToken.UserData._id;
@@ -559,6 +629,74 @@ module.exports.savevendorstoDB = async function (req, res) {
 
 //vendor active or inactive
 module.exports.updateVendorStatus = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
+            var requestObject = req.body;
+            var id = requestObject._id;
+            delete requestObject._id;
+
+            var one_vendor = await vendorConnection.findOne({ _id: ObjectID(id) });
+            if (one_vendor) {
+                var updateStatus = await vendorConnection.updateMany({ _id: ObjectID(id) }, { vendor_status: requestObject.vendor_status });
+
+                if (updateStatus) {
+                    let action = '';
+                    let message = '';
+                    if (requestObject.vendor_status == 1) {
+                        action = "Active";
+                        message = "Vendor status active successfully.";
+                    } else {
+                        action = "Inactive";
+                        message = "Vendor status inactive successfully.";
+                    }
+
+
+
+                    let histioryObject = {
+                        data: [],
+                        vendor_id: id,
+                    };
+
+                    addVendorHistory(action, histioryObject, decodedToken);
+                    recentActivity.saveRecentActivity({
+                        user_id: decodedToken.UserData._id,
+                        username: decodedToken.UserData.userfullname,
+                        userpicture: decodedToken.UserData.userpicture,
+                        data_id: id,
+                        title: one_vendor.vendor_name,
+                        module: 'Vendor',
+                        action: action,
+                        action_from: 'Web',
+                    }, decodedToken);
+
+
+                    res.send({ message: message, status: true });
+
+                } else {
+                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                }
+            } else {
+                res.send({ message: "Venor not found with this id.", status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false, error: e });
+
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+//multiple vendor active or inactive
+module.exports.updateMultipleVendorStatus = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
 

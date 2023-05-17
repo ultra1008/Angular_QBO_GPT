@@ -421,8 +421,15 @@ module.exports.getCustomerStates = async function (req, res) {
         try {
             var requestObject = req.body;
             let customerStateCollection = connection_db_api.model(collectionConstant.INVOICE_CUSTOMER_STATES, customerStateSchema);
-            let getData = await customerStateCollection.find({});
+            var getData = await customerStateCollection.find({});
             if (getData) {
+
+                var resobj = "";
+                var year = [];
+                for (let i = 0; i < getData.length; i++) {
+                    resobj += getData[i];
+
+                }
                 res.send(getData);
             }
             else {

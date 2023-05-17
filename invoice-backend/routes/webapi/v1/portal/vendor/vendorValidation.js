@@ -51,6 +51,20 @@ const saveVendor = (req, res, next) => {
 
 const deleteVendor = (req, res, next) => {
     const validationRule = {
+        "is_delete": "required|integer"
+    };
+    validator(req.body, validationRule, {}, (error, status) => {
+        if (!status) {
+            res.send({ status: false, error: error });
+        }
+        else {
+            next();
+        }
+    });
+};
+
+const deleteMultipleVendor = (req, res, next) => {
+    const validationRule = {
         "_id": "required",
         "is_delete": "required|integer"
     };
@@ -65,6 +79,20 @@ const deleteVendor = (req, res, next) => {
 };
 
 const updateVendorStatus = (req, res, next) => {
+    const validationRule = {
+        "vendor_status": "required"
+    };
+    validator(req.body, validationRule, {}, (error, status) => {
+        if (!status) {
+            res.send({ status: false, error: error });
+        }
+        else {
+            next();
+        }
+    });
+};
+
+const updateMultipleVendorStatus = (req, res, next) => {
     const validationRule = {
         "_id": "required",
         "vendor_status": "required"
@@ -84,5 +112,7 @@ module.exports = {
     getVendorForTable,
     saveVendor,
     deleteVendor,
-    updateVendorStatus
+    updateVendorStatus,
+    updateMultipleVendorStatus,
+    deleteMultipleVendor
 };

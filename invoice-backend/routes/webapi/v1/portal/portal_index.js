@@ -138,6 +138,8 @@ router.get('/webapi/v1/portal/listManagementUser', common.checkTokenExistOrNot, 
 router.post('/webapi/v1/portal/importManagementUser', common.checkTokenExistOrNot, employeeController.importManagementUser);
 router.post('/webapi/v1/portal/getUserForTable', common.checkTokenExistOrNot, employeeValidation.getUserForTableValidation, employeeController.getUserForTable);
 router.post('/webapi/v1/portal/updateUserStatus', common.checkTokenExistOrNot, employeeController.updateUserStatus);
+router.post('/webapi/v1/portal/deleteMultipleTeamMember', common.checkTokenExistOrNot, employeeController.deleteMultipleTeamMember);
+router.post('/webapi/v1/portal/updateMultipleUserStatus', common.checkTokenExistOrNot, employeeController.updateMultipleUserStatus);
 
 
 let employeeCron = require("./employee/employeeCron");
@@ -345,6 +347,9 @@ router.post('/webapi/v1/portal/vendorStatusUpdate', common.checkTokenExistOrNot,
 router.post('/webapi/v1/portal/getvendorhistory', common.checkTokenExistOrNot, invoice_vendorController.getVendorHistory);
 router.post('/webapi/v1/portal/getvendorreport', common.checkTokenExistOrNot, invoice_vendorController.getVendorExcelReport);
 router.post('/webapi/v1/portal/savevendorstoDB', common.checkTokenExistOrNot, invoice_vendorController.savevendorstoDB);
+router.post('/webapi/v1/portal/updateMultipleVendorStatus', common.checkTokenExistOrNot, invoice_vendorValidation.updateMultipleVendorStatus, invoice_vendorController.updateMultipleVendorStatus);
+router.post('/webapi/v1/portal/deleteMultipleVendor', common.checkTokenExistOrNot, invoice_vendorValidation.deleteMultipleVendor, invoice_vendorController.deleteMultipleVendor);
+
 
 
 let invoice_templateController = require('./template/templateController');
@@ -413,5 +418,15 @@ let vendor_typeValidation = require('./vendor_type/vendor_typeValidation');
 router.post('/webapi/v1/portal/savevendortype', common.checkTokenExistOrNot, vendor_typeValidation.savevendortype, vendor_typeController.savevendortype);
 router.get('/webapi/v1/portal/getvendortype', common.checkTokenExistOrNot, vendor_typeController.getvendortype);
 router.post('/webapi/v1/portal/deletevendortype', common.checkTokenExistOrNot, vendor_typeValidation.deletevendortype, vendor_typeController.deletevendortype);
+
+
+
+let job_nameController = require('./job_name/job_nameController');
+let job_nameValidation = require('./job_name/job_nameValidation');
+
+router.post('/webapi/v1/portal/savejobname', common.checkTokenExistOrNot, job_nameValidation.savejobname, job_nameController.savejobname);
+router.get('/webapi/v1/portal/getjobname', common.checkTokenExistOrNot, job_nameController.getjobname);
+router.post('/webapi/v1/portal/deletejobname', common.checkTokenExistOrNot, job_nameValidation.deletejobname, job_nameController.deletejobname);
+router.post('/webapi/v1/portal/importjobname', common.checkTokenExistOrNot, job_nameController.importjobname);
 
 module.exports = router;
