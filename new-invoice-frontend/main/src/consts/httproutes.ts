@@ -126,4 +126,8 @@ export enum httproutes {
   //usage
   USAGE_DATA_TABLE = 'getCustomerStates',
   PORTAL_SETTING_USEAGE = 'compnayusage',
+
+  //role
+  SETTING_ROLES_ALL = 'getallrolespermission',
+  SETTING_ROLES_SAVE = 'saveRoles',
 }
