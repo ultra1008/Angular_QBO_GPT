@@ -71,6 +71,8 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     private fb: UntypedFormBuilder,
   ) {
     super();
+
+
   }
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -131,7 +133,9 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
         'actions',
       ];
     }
+
     this.loadData();
+
     this.tmp_gallery = gallery_options();
     this.tmp_gallery.actions = [
       {
@@ -145,11 +149,11 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   }
 
   refresh() {
+
     this.loadData();
+
   }
   onBookChange(ob: any) {
-
-
     console.log('Book changed...');
     let selectedBook = ob.value;
     console.log(selectedBook);
@@ -164,7 +168,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
         })
         .then((result) => {
           if (result.isConfirmed) {
-
+            this.allActive();
           }
         });
 
@@ -180,6 +184,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
         })
         .then((result) => {
           if (result.isConfirmed) {
+            this.allInactive();
 
           }
         });
@@ -196,10 +201,63 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
         })
         .then((result) => {
           if (result.isConfirmed) {
-            // this.deleteVendor("");
+            this.allArchive();
           }
         });
 
+    }
+  }
+
+
+  async allArchive() {
+    let tmp_ids = [];
+    for (let i = 0; i < this.selection.selected.length; i++) {
+      tmp_ids.push(this.selection.selected[i]._id);
+    }
+    const data = await this.vendorTableService.allDeleteVendor({ _id: tmp_ids, is_delete: 1 });
+    if (data.status) {
+      showNotification(this.snackBar, data.message, 'success');
+      this.refresh();
+      // const foundIndex = this.vendorService?.dataChange.value.findIndex(
+      //   (x) => x._id === vendor._id
+      // );
+      // for delete we use splice in order to remove single object from DataService
+      // if (foundIndex != null && this.vendorService) {
+      //   this.vendorService.dataChange.value.splice(foundIndex, 1);
+
+      // }
+    } else {
+      showNotification(this.snackBar, data.message, 'error');
+    }
+  }
+
+  async allActive() {
+    let tmp_ids = [];
+    for (let i = 0; i < this.selection.selected.length; i++) {
+      tmp_ids.push(this.selection.selected[i]._id);
+    }
+    const data = await this.vendorTableService.updateAllVendorStatus({ _id: tmp_ids, vendor_status: 1 });
+    if (data.status) {
+      showNotification(this.snackBar, data.message, 'success');
+      this.refresh();
+
+    } else {
+      showNotification(this.snackBar, data.message, 'error');
+    }
+  }
+
+  async allInactive() {
+    let tmp_ids = [];
+    for (let i = 0; i < this.selection.selected.length; i++) {
+      tmp_ids.push(this.selection.selected[i]._id);
+    }
+    const data = await this.vendorTableService.updateAllVendorStatus({ _id: tmp_ids, vendor_status: 2 });
+    if (data.status) {
+      showNotification(this.snackBar, data.message, 'success');
+      this.refresh();
+
+    } else {
+      showNotification(this.snackBar, data.message, 'error');
     }
   }
 
@@ -220,11 +278,8 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   }
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
-
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.renderedData.length;
-
-
     return numSelected === numRows;
 
   }
@@ -242,6 +297,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     console.log('All Selected removed option selected');
   }
   public loadData() {
+    this.show = false;
     console.log('Vendor loadData call');
     this.vendorService = new VendorsService(this.httpCall);
     this.dataSource = new VendorDataSource(
@@ -249,9 +305,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
       this.paginator,
       this.sort,
       this.isDelete,
-
     );
-    this.show = true;
     this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
       () => {
         if (!this.dataSource) {
@@ -260,6 +314,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
         this.dataSource.filter = this.filter.nativeElement.value;
       }
     );
+    this.show = true;
   }
 
   // export table data in excel file
@@ -344,13 +399,14 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
       .then((result) => {
         if (result.isConfirmed) {
           this.archiveRecover(vendor, is_delete);
+          this.show = false;
         }
       });
   }
 
   gotoArchiveUnarchive() {
     this.isDelete = this.isDelete == 1 ? 0 : 1;
-    this.loadData();
+    this.refresh();
   }
 
   // View Network Attachment

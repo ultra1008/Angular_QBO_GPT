@@ -13,7 +13,7 @@ export class VendorsService extends UnsubscribeOnDestroyAdapter {
   dataChange: BehaviorSubject<Vendor[]> = new BehaviorSubject<Vendor[]>([]);
   // Temporarily stores data from dialogs
   dialogData!: Vendor;
-  constructor (private httpCall: HttpCall) {
+  constructor(private httpCall: HttpCall) {
     super();
   }
   get data(): Vendor[] {
@@ -28,8 +28,9 @@ export class VendorsService extends UnsubscribeOnDestroyAdapter {
   async getAllVendorTable(is_delete: number): Promise<void> {
     const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_GET_FOR_TABLE, { is_delete: is_delete }).toPromise();
     // Only write this for datatable api otherwise return data
-    this.isTblLoading = false;
+
     this.dataChange.next(data);
+    this.isTblLoading = false;
   }
 
   async getOneVendor(id: string) {
@@ -46,12 +47,20 @@ export class VendorsService extends UnsubscribeOnDestroyAdapter {
     const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_STATUS_UPDATE, requestObject).toPromise();
     return data;
   }
+  async updateAllVendorStatus(requestObject: any) {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_ALL_VENDOR_STATUS_UPDATE, requestObject).toPromise();
+    return data;
+  }
 
   async deleteVendor(requestObject: any) {
     const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_DELETE, requestObject).toPromise();
     return data;
   }
 
+  async allDeleteVendor(requestObject: any) {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_ALL_DELETE, requestObject).toPromise();
+    return data;
+  }
   async getTerms() {
     const data = await this.httpCall.httpGetCall(httpversion.PORTAL_V1 + httproutes.PORTAL_TERM_GET).toPromise();
     return data;
