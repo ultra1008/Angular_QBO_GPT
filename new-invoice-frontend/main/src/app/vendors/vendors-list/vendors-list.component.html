@@ -110,17 +110,19 @@
                         </div>
                     </div>
                     <div class="body overflow-auto">
-                        <div class="table-responsive">
+                        <div class="table-responsive ">
                             <table mat-table #table [dataSource]="dataSource" matSort class="table mat-cell">
                                 <ng-container matColumnDef="select">
-                                    <mat-header-cell *matHeaderCellDef class="psl-1" [ngClass]="'tbl-col-width-per-7'">
+                                    <mat-header-cell *matHeaderCellDef class="psl-1"
+                                        [ngClass]="'tbl-col-width-per-selected'">
                                         <mat-checkbox (change)="$event ? masterToggle() : null"
                                             [checked]="selection.hasValue() && isAllSelected()"
                                             [indeterminate]="selection.hasValue() && !isAllSelected()"
                                             [ngClass]="'tbl-checkbox' ">
                                         </mat-checkbox>
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" class="psl-1" [ngClass]="'tbl-col-width-per-7'">
+                                    <mat-cell *matCellDef="let row" class="psl-1"
+                                        [ngClass]="'tbl-col-width-per-selected'">
                                         <mat-checkbox (click)="$event.stopPropagation()"
                                             (change)="$event ? selection.toggle(row) : null"
                                             [checked]="selection.isSelected(row)" [ngClass]="'tbl-checkbox'">
@@ -188,11 +190,12 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_status">
-                                    <mat-header-cell class="psl-1" *matHeaderCellDef
-                                        mat-sort-header>{{'VENDOR.TABLE.STATUS' |
+                                    <mat-header-cell class="psl-1" [ngClass]="'tbl-col-width-per-action'"
+                                        *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.STATUS' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
+                                    <mat-cell mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row) "
+                                        class="tbl-col-width-per-action">
                                         <span class="mobile-label">Status:</span>
                                         <div *ngIf="row.vendor_status===1" (click)="updateStatus(row)">
                                             <span class="badge badge-solid-green">
@@ -205,15 +208,16 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_attachment">
-                                    <mat-header-cell class="psl-1" [ngClass]="'tbl-col-width-per-7'" *matHeaderCellDef
-                                        mat-sort-header>{{'VENDOR.TABLE.ATTACHMENT' |
-                                        translate}}
+                                    <mat-header-cell class="psl-1" [ngClass]="'tbl-col-width-per-selected'"
+                                        *matHeaderCellDef> <i class="fas fa-paperclip"
+                                            style="color:grey;padding-left: 19px !important;"></i>
                                     </mat-header-cell>
-                                    <mat-cell class=" psl-6 tbl-col-width-per-7" *matCellDef="let row"
+                                    <mat-cell class=" tbl-col-width-per-selected" *matCellDef="let row"
                                         (contextmenu)="onContextMenu($event, row)">
-                                        <span class="truncate-text"><span class="mobile-label">Attachment:</span>
+                                        <span class="truncate-text"><span class="mobile-label"
+                                                style="padding-left: 14px;">Attachment:</span>
                                             <div *ngIf="row.vendor_attachment.length > 0">
-                                                <i class="fas fa-paperclip" style="color:grey"
+                                                <i class="fas fa-paperclip" style="color:grey; padding-left: 14px;"
                                                     (click)="viewAttachment(row)"></i>
                                             </div>
                                         </span>
@@ -241,9 +245,10 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="actions">
-                                    <mat-header-cell class="psl-3" *matHeaderCellDef>{{'VENDOR.TABLE.ACTIONS' |
+                                    <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-action'"
+                                        *matHeaderCellDef>{{'VENDOR.TABLE.ACTIONS' |
                                         translate}}</mat-header-cell>
-                                    <mat-cell *matCellDef="let row; let i=index;" class="pr-0">
+                                    <mat-cell *matCellDef="let row; let i=index;" class="pr-0 tbl-col-width-per-action">
                                         <button matTooltip="{{'COMMON.ACTIONS.EDIT' |
                                                     translate}}" mat-icon-button color="accent"
                                             (click)="$event.stopPropagation()" (click)="editVendor(row)"

@@ -201,9 +201,10 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="actions">
-                                    <mat-header-cell class="psl-3" *matHeaderCellDef>{{'USERS.TABLE.ACTIONS' |
+                                    <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-action'"
+                                        *matHeaderCellDef>{{'USERS.TABLE.ACTIONS' |
                                         translate}}</mat-header-cell>
-                                    <mat-cell *matCellDef="let row; let i=index;" class="pr-0">
+                                    <mat-cell *matCellDef="let row; let i=index;" class="pr-0 tbl-col-width-per-action">
                                         <button matTooltip="{{'COMMON.ACTIONS.EDIT' |
                                                                                     translate}}" mat-icon-button
                                             color="accent" (click)="$event.stopPropagation()" (click)="editUser(row)"
