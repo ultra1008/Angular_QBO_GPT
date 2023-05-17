@@ -4,6 +4,9 @@ let config = require('./../../../../../config/config');
 let collectionConstant = require('./../../../../../config/collectionConstant');
 let common = require('./../../../../../controller/common/common');
 var ObjectID = require('mongodb').ObjectID;
+var formidable = require('formidable');
+const reader = require('xlsx');
+
 
 module.exports.getTaxRate = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -108,6 +111,69 @@ module.exports.deleteTaxRate = async function (req, res) {
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         } finally {
             connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+// bulk upload 
+module.exports.importtax_rate = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            let taxRateConnection = connection_db_api.model(collectionConstant.INVOICE_TAX_RATE, taxRateSchema);
+
+            var form = new formidable.IncomingForm();
+            var fields = [];
+            var notFonud = 0;
+            var newOpenFile;
+            var fileName;
+            form.parse(req)
+                .on('file', function (name, file) {
+                    notFonud = 1;
+                    fileName = file;
+                }).on('field', function (name, field) {
+                    fields[name] = field;
+                })
+                .on('error', function (err) {
+                    throw err;
+                }).on('end', async function () {
+                    newOpenFile = this.openedFiles;
+
+                    if (notFonud == 1) {
+
+                        const file = reader.readFile(newOpenFile[0].path);
+                        const sheets = file.SheetNames;
+                        let data = [];
+                        for (let i = 0; i < sheets.length; i++) {
+                            const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
+                            temp.forEach((ress) => {
+                                data.push(ress);
+                            });
+                        }
+                        for (let m = 0; m < data.length; m++) {
+                            requestObject = {};
+                            let onecategory_main = await taxRateConnection.findOne({ name: data[m].name });
+                            if (onecategory_main == null) {
+                                requestObject.name = data[m].name;
+                                let add_taxrate = new taxRateConnection(requestObject);
+                                let save_taxrate = await add_taxrate.save();
+                            } else {
+                                res.send({ status: true, message: "tax rate info name is allready exist." });
+                            }
+                        }
+                        res.send({ status: true, message: "tax rate info add successfully." });
+
+                    } else {
+                        res.send({ status: false, message: translator.getStr('SomethingWrong'), rerror: e });
+                    }
+                });
+        } catch (error) {
+            console.log(error);
+            res.send({ status: false, message: translator.getStr('SomethingWrong'), rerror: e });
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
