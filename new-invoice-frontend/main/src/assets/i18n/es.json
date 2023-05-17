@@ -12,7 +12,9 @@
             "MULTI_ARCHIVE": "ARCHIVO MULTI",
             "LIST_TO_GRID": "LISTA A CUADRO",
             "CLOSE": "Cerca",
-            "CHANGE_LANGUAGE": "CAMBIAR IDIOMA"
+            "CHANGE_LANGUAGE": "CAMBIAR IDIOMA",
+            "IMPORT_TEMPLATE": "Descargar plantilla de importación",
+            "IMPORT": "Importar"
         },
         "ACTIONS": {
             "EDIT": "Editar",
@@ -219,6 +221,9 @@
                 "DUE_DAYS": "Días de vencimiento",
                 "ADD_DISCOUNT": "Agregar descuento",
                 "DISCOUNT_PERCENTAGE": "Descuento%",
+                "FILE_DOWNLOAD_INSTRUCTION": "Instrucciones para el archivo de importación",
+                "OK_TO_IMPORT": "ok para importar",
+                "DOWNLOAD_IMPORT_INSTRUCTION": "Por favor no elimine ni modifique la primera linea de este archivo modelo para evitar cualquier error al momento de subirlo en la plataforma de ROVUK",
                 "CONFIRMATION_DIALOG": {
                     "TERMS": "¿Está seguro de que desea eliminar términos?",
                     "TAX_RATE": "¿Está seguro de que desea eliminar la tasa impositiva?",
