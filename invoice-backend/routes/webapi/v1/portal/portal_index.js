@@ -159,7 +159,6 @@ router.post('/webapi/v1/portal/savejobtype', common.checkTokenExistOrNot, jobtyp
 router.post('/webapi/v1/portal/deletejobtype', common.checkTokenExistOrNot, jobtypeValidation.jobTypeDeleteValidation, jobtypeController.deletejobtype);
 router.post('/webapi/v1/portal/getjobtypefortable', common.checkTokenExistOrNot, jobtypeValidation.getjobtypeForTableValidation, jobtypeController.getJobTypeForTable);
 
-
 let jobtitleController = require('./job_title/jobtitleController');
 let jobtitleValidation = require('./job_title/jobtitleValidation');
 router.get('/webapi/v1/portal/getAlljobtitle', common.checkTokenExistOrNot, jobtitleController.getAlljob_title);
@@ -340,7 +339,7 @@ router.post('/webapi/v1/portal/getViewDocumentsDatatableForTable', common.checkT
 router.post('/webapi/v1/portal/getOrphanDocumentsForTable', common.checkTokenExistOrNot, invoiceController.getOrphanDocumentsForTable);
 router.post('/webapi/v1/portal/getOrphanDocumentsDatatableForTable', common.checkTokenExistOrNot, invoiceController.getOrphanDocumentsDatatableForTable);
 router.post('/webapi/v1/portal/getDuplicateDocumentsDatatableForTable', common.checkTokenExistOrNot, invoiceController.getDuplicateDocumentsDatatableForTable);
-// router.post('/webapi/v1/portal/sendInvoiceEmail', common.checkTokenExistOrNot, invoiceController.sendInvoiceEmail);
+router.post('/webapi/v1/portal/sendInvoiceEmail', common.checkTokenExistOrNot, invoiceController.sendInvoiceEmail);
 
 
 

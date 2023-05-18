@@ -37,16 +37,29 @@
                     <hr />
                     <div class="display">
                         <div>
-                            <div style="padding: 0px 50px;margin: auto;width: 70%;text-align: left">
-                                <p>{{USERNAME}},</p>
-                                <p>{{LOGINLOCATION}}.</p>
-                            </div>
                             <div style="padding: 0px 50px;margin: auto;width: 70%;text-align: left; font-weight: bold;">
                                 <div>{{COMPANYNAME}}</div>
                                 <div>{{COMPANYCODE}}</div>
                                 <div>{{VENDOR_NAME}}</div>
                                 <div>{{INVOICE_NUMBER}}</div>
                                 <div>{{TOTAL_AMOUNT}}</div>
+                                <div style="text-align: center;">
+                                    <div style="text-align: center;">
+                                        <img src="https://s3.us-west-1.wasabisys.com/rovukdata/pdf_big.png" width="10%"
+                                            style="padding-top: 15px;" />
+                                    </div>
+                                    <p></p>
+
+                                    <a style="background-color: #023E8A; /* Green */
+                                                border: #0077bc solid;
+                                                    color: white;
+                                                    padding: 15px 32px;
+                                                    text-align: center;
+                                                    text-decoration: none;
+                                                    display: inline-block;
+                                                    font-size: 16px; width: 20%;" target="_blank"
+                                        href="{{FILE_LINK}}">{{VIEW_PDF}}</a>
+                                </div>
                             </div>
                             <div style="padding: 0px 50px;margin: auto;width: 70%;text-align: left">
                                 <p>{{IF_NOT_YOU}}</p>
