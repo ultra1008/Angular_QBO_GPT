@@ -242,6 +242,8 @@ var relationshipsValidation = require('./relationships/relationshipsValidation')
 router.get('/webapi/v1/portal/getallrelationships', common.checkTokenExistOrNot, relationshipsController.getAllRelationships);
 router.post('/webapi/v1/portal/saverelationship', common.checkTokenExistOrNot, relationshipsValidation.relationshipValidation, relationshipsController.saveRelationship);
 router.post('/webapi/v1/portal/deleterelationship', common.checkTokenExistOrNot, relationshipsValidation.relationshipDeleteValidation, relationshipsController.deleteRelationship);
+router.post('/webapi/v1/portal/getrelationshipfortable', common.checkTokenExistOrNot, relationshipsValidation.getrelationshipForTableValidation, relationshipsController.getRelationshipForTable);
+
 
 let shortcustsController = require("./shortcusts/shortcustsController");
 router.get('/webapi/v1/portal/getshortcusts', common.checkTokenExistOrNot, shortcustsController.getusershortcuts);
