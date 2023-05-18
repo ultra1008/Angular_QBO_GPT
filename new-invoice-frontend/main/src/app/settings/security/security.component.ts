@@ -22,9 +22,6 @@ export class SecurityComponent {
   setting_id!: string;
   otpSwitch: boolean = false;
   timeoutSwitch: boolean = false;
-  Project_Settings_Alert_Sure_Want_Change: string = '';
-  Compnay_Equipment_Delete_Yes: string = '';
-  Compnay_Equipment_Delete_No: string = '';
   timer: string = '';
   tempTimer: string = '';
   tempTimerSwitch: string = '';
@@ -88,11 +85,13 @@ export class SecurityComponent {
     let that = this;
     swalWithBootstrapButtons
       .fire({
-        title: this.Project_Settings_Alert_Sure_Want_Change,
+        title: that.translate.instant(
+          'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.ALERT_SURE_WANT_CHANGE'
+        ),
         showDenyButton: true,
         showCancelButton: false,
-        confirmButtonText: this.Compnay_Equipment_Delete_Yes,
-        denyButtonText: this.Compnay_Equipment_Delete_No,
+        confirmButtonText: that.translate.instant('COMMON.ACTIONS.YES'),
+        denyButtonText: that.translate.instant('COMMON.ACTIONS.NO'),
       })
       .then((result) => {
         if (result.isConfirmed) {
@@ -121,11 +120,13 @@ export class SecurityComponent {
     let that = this;
     swalWithBootstrapButtons
       .fire({
-        title: this.Project_Settings_Alert_Sure_Want_Change,
+        title: that.translate.instant(
+          'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.ALERT_SURE_WANT_CHANGE'
+        ),
         showDenyButton: true,
         showCancelButton: false,
-        confirmButtonText: this.Compnay_Equipment_Delete_Yes,
-        denyButtonText: this.Compnay_Equipment_Delete_No,
+        confirmButtonText: that.translate.instant('COMMON.ACTIONS.YES'),
+        denyButtonText: that.translate.instant('COMMON.ACTIONS.NO'),
       })
       .then((result) => {
         if (result.isConfirmed) {
@@ -141,17 +142,17 @@ export class SecurityComponent {
   updateSetting(objectForEdit: any) {
     let that = this;
     objectForEdit._id = that.setting_id;
-    this.httpCall
+    that.httpCall
       .httpPostCall(
         httpversion.PORTAL_V1 + httproutes.PORTAL_SETTING_UPDATE,
         objectForEdit
       )
       .subscribe(function (data) {
         if (data.status) {
-          showNotification(this.snackBar, data.message, 'success');
+          showNotification(that.snackBar, data.message, 'success');
           // that.myapp.updateIdealTimeout();
         } else {
-          showNotification(this.snackBar, data.message, 'error');
+          showNotification(that.snackBar, data.message, 'error');
         }
       });
   }
@@ -169,18 +170,20 @@ export class SecurityComponent {
     let that = this;
     swalWithBootstrapButtons
       .fire({
-        title: this.Project_Settings_Alert_Sure_Want_Change,
+        title: that.translate.instant(
+          'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.ALERT_SURE_WANT_CHANGE'
+        ),
         showDenyButton: true,
         showCancelButton: false,
-        confirmButtonText: this.Compnay_Equipment_Delete_Yes,
-        denyButtonText: this.Compnay_Equipment_Delete_No,
+        confirmButtonText: that.translate.instant('COMMON.ACTIONS.YES'),
+        denyButtonText: that.translate.instant('COMMON.ACTIONS.NO'),
       })
       .then((result) => {
         if (result.isConfirmed) {
           that.otp = event;
           that.updateSetting(reqObject);
         } else {
-          console.log(this.timer);
+          console.log(that.timer);
           that.otp = that.tempOtpSwitch;
         }
       });
@@ -198,11 +201,13 @@ export class SecurityComponent {
     let that = this;
     swalWithBootstrapButtons
       .fire({
-        title: this.Project_Settings_Alert_Sure_Want_Change,
+        title: that.translate.instant(
+          'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.ALERT_SURE_WANT_CHANGE'
+        ),
         showDenyButton: true,
         showCancelButton: false,
-        confirmButtonText: this.Compnay_Equipment_Delete_Yes,
-        denyButtonText: this.Compnay_Equipment_Delete_No,
+        confirmButtonText: that.translate.instant('COMMON.ACTIONS.YES'),
+        denyButtonText: that.translate.instant('COMMON.ACTIONS.NO'),
       })
       .then((result) => {
         if (result.isConfirmed) {

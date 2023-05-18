@@ -136,3 +136,17 @@ export class Element {
     }
   }
 }
+
+export class DocumentTable {
+  _id: string;
+  is_expiration!: boolean;
+  document_type_name!: string;
+
+  constructor(DocumentTable: DocumentTable) {
+    {
+      this._id = DocumentTable._id;
+      this.is_expiration = DocumentTable.is_expiration;
+      this.document_type_name = DocumentTable.document_type_name;
+    }
+  }
+}
