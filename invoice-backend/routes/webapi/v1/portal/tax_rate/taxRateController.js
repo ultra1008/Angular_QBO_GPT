@@ -179,3 +179,28 @@ module.exports.importtax_rate = async function (req, res) {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
+
+module.exports.gettax_rateForTable = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            let taxRateConnection = connection_db_api.model(collectionConstant.INVOICE_TAX_RATE, taxRateSchema);
+            var getdata = await taxRateConnection.find({ is_delete: requestObject.is_delete });
+            if (getdata) {
+                res.send(getdata);
+            } else {
+                res.send([]);
+            }
+        } catch (e) {
+            console.log(e);
+            res.send([]);
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
