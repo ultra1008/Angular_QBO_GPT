@@ -157,7 +157,6 @@ let jobtypeValidation = require('./jobtype/jobtypeValidation');
 router.get('/webapi/v1/portal/getAlljobtype', common.checkTokenExistOrNot, jobtypeController.getAlljob_type);
 router.post('/webapi/v1/portal/savejobtype', common.checkTokenExistOrNot, jobtypeValidation.jobTypeValidation, jobtypeController.savejobtype);
 router.post('/webapi/v1/portal/deletejobtype', common.checkTokenExistOrNot, jobtypeValidation.jobTypeDeleteValidation, jobtypeController.deletejobtype);
-router.post('/webapi/v1/portal/getjobtypefortable', common.checkTokenExistOrNot, jobtypeValidation.getjobtypeForTableValidation, jobtypeController.getJobTypeForTable);
 
 let jobtitleController = require('./job_title/jobtitleController');
 let jobtitleValidation = require('./job_title/jobtitleValidation');
