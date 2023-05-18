@@ -11,6 +11,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { ReportService } from './report.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 
 @NgModule({
@@ -28,6 +30,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatMenuModule,
     TranslateModule,
     MatToolbarModule,
+    MatDatepickerModule,
+    MatFormFieldModule
 
   ]
 })
