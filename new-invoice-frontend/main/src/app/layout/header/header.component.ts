@@ -146,20 +146,20 @@ export class HeaderComponent implements OnInit, AfterViewInit {
       }
     }
 
-    if (
-      window.matchMedia &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-    ) {
-      // dark mode
-      console.log('dark mode');
-      this.isDarTheme = true;
-      this.darkIcon = 'moon';
-    } else {
-      //Light mode
-      console.log('Light mode');
-      this.isDarTheme = false;
-      this.darkIcon = 'sun';
-    }
+    // if (
+    //   window.matchMedia &&
+    //   window.matchMedia('(prefers-color-scheme: dark)').matches
+    // ) {
+    //   // dark mode
+    //   console.log('dark mode');
+    //   this.isDarTheme = true;
+    //   this.darkIcon = 'moon';
+    // } else {
+    //   //Light mode
+    //   console.log('Light mode');
+    //   this.isDarTheme = false;
+    //   this.darkIcon = 'sun';
+    // }
 
     if (localStorage.getItem(localstorageconstants.DARKMODE)) {
       this.renderer.removeClass(this.document.body, this.config.layout.variant);

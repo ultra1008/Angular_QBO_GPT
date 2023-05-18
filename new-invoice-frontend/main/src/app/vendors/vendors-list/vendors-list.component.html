@@ -1,7 +1,7 @@
 <section class="content">
     <div class="content-block">
         <div class="m-4"></div>
-        <div class="row">
+        <div class="row " style="display: unset !important;">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="materialTableHeader">
@@ -110,7 +110,7 @@
                         </div>
                     </div>
                     <div class="body overflow-auto">
-                        <div class="table-responsive ">
+                        <div class="table-responsive">
                             <table mat-table #table [dataSource]="dataSource" matSort class="table mat-cell">
                                 <ng-container matColumnDef="select">
                                     <mat-header-cell *matHeaderCellDef class="psl-1"
@@ -136,11 +136,12 @@
                                     <mat-cell *matCellDef="let row" class="psl-1">{{row.id}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_name">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.VENDOR_NAME' |
+                                    <mat-header-cell [ngClass]="'tbl-col-width-per-max'" *matHeaderCellDef
+                                        mat-sort-header>{{'VENDOR.TABLE.VENDOR_NAME' |
                                         translate}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
-                                        (click)="editVendor(row)">
+                                        class="tbl-col-width-per-max" (click)="editVendor(row)">
                                         <span class="mobile-label">Vendor Name:</span>{{row.vendor_name}}
                                     </mat-cell>
                                 </ng-container>

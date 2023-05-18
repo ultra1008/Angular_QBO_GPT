@@ -14,11 +14,7 @@
     padding-left: 2rem !important;
 }
 
-
 .rix {
-
-
-
     ::ng-deep .mdc-text-field--outlined {
         // c
     }
@@ -60,7 +56,6 @@
 
 ::ng-deep .mat-mdc-table .mdc-data-table__row {
     height: 35px !important;
-
 }
 
 ::ng-deep .mat-mdc-table .mdc-data-table__header-row {
@@ -97,7 +92,37 @@
     max-width: 7% !important;
 }
 
+.tbl-col-width-per-max {
+    min-width: 300px !important;
+    max-width: 18% !important;
+}
+
 ::ng-deep .mat-sort-header-content {
 
     padding-left: 19px !important;
+}
+
+@media only screen and (max-width:50px) and (min-width: 610px) {
+    ::ng-deep .mdc-text-field--outlined {
+        // c
+    }
+
+    ::ng-deep .mat-row1 {
+        display: unset !important;
+    }
+
+    .tbl-col-width-per-selected {
+        min-width: unset !important;
+        max-width: unset !important;
+    }
+
+    .tbl-col-width-per-action {
+        min-width: unset !important;
+        max-width: unset !important;
+    }
+
+    .tbl-col-width-per-max {
+        min-width: unset !important;
+        max-width: unset !important;
+    }
 }

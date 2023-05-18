@@ -927,21 +927,21 @@ mat-cell>span.truncate-text {
 }
 
 @media (max-width: 600px) {
-  .mobile-label {
-    width: 100px;
-    display: inline-block;
-    font-weight: bold;
-  }
+  // .mobile-label {
+  //   width: 100px;
+  //   display: inline-block;
+  //   font-weight: bold;
+  // }
 
-  .mat-mdc-table .mdc-data-table__header-row {
-    display: none;
-  }
+  // .mat-mdc-table .mdc-data-table__header-row {
+  //   display: none;
+  // }
 
-  .mat-mdc-table .mdc-data-table__row {
-    flex-direction: column;
-    align-items: start;
-    padding: 8px 24px;
-  }
+  // .mat-mdc-table .mdc-data-table__row {
+  //   flex-direction: column;
+  //   align-items: start;
+  //   padding: 8px 24px;
+  // }
 
   mat-cell:first-of-type,
   mat-header-cell:first-of-type,
