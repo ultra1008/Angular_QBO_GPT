@@ -198,17 +198,26 @@
                                             </div>
                                             <div style="text-align:initial ;" class="name-center m-1">{{user.role_name}}
                                             </div>
-                                            <div style="text-align:initial;margin: auto;">
+                                            <!-- <div style="text-align:initial;">
                                                 <span style="font-size: 12px;">
-                                                    <i style="padding-left: 4px;text-align:initial;font-size: 12px;"
+                                                    <i style="padding-left: 4px;text-align:initial;font-size: 14px;"
                                                         class="material-icons ">email</i>
                                                     {{user.useremail}}</span>
+                                            </div> -->
+                                            <div class="" style="text-align:initial;font-size: 12px;">
+                                                <mat-icon class="pt-1" style="font-size: 17px;">email </mat-icon>
+                                                <span> {{user.useremail}}</span>
                                             </div>
-                                            <div class="" style="text-align:initial ;" *ngIf="user.userphone!=0">
+                                            <div class="" style="text-align:initial;font-size: 12px;"
+                                                *ngIf="user.userphone!=0">
+                                                <mat-icon class="pt-1" style="font-size: 17px;">phone </mat-icon>
+                                                <span>{{user.userphone}}</span>
+                                            </div>
+                                            <!-- <div class="" style="text-align:initial ;" *ngIf="user.userphone!=0">
                                                 <span style="font-size: 12px;">
-                                                    <i style="text-align:initial ;font-size: 12px;padding-left: 4px;"
+                                                    <i style="text-align:initial ;font-size: 14px;padding-left: 4px;"
                                                         class="material-icons">phone</i>{{user.userphone}}</span>
-                                            </div>
+                                            </div> -->
                                             <!-- <div class="Action col-12 bg-indigo d-flex justify-content-between ">
                                                 <div class="col-6 pt-2" matTooltip="EDIT" *ngIf="isDelete === 0">
                                                     <mat-icon class="col-white">edit </mat-icon>

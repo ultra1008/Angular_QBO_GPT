@@ -9,7 +9,6 @@ import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { UserService } from '../user.service';
 import { UserDataSource } from '../users-listing/users-listing.component';
-import { fromEvent } from 'rxjs';
 import { showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AdvanceTable, RoleModel, User } from '../user.model';
