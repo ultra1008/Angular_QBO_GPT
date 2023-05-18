@@ -271,8 +271,7 @@ router.post('/webapi/v1/portal/savetaxrate', common.checkTokenExistOrNot, taxRat
 router.get('/webapi/v1/portal/gettaxrate', common.checkTokenExistOrNot, taxRateController.getTaxRate);
 router.post('/webapi/v1/portal/deletetaxrate', common.checkTokenExistOrNot, taxRateValidation.deleteTaxRate, taxRateController.deleteTaxRate);
 router.post('/webapi/v1/portal/importtax_rate', common.checkTokenExistOrNot, taxRateController.importtax_rate);
-
-
+router.post('/webapi/v1/portal/gettax_ratefortable', common.checkTokenExistOrNot, taxRateValidation.getTaxRateForTableValidation, taxRateController.gettax_rateForTable);
 
 let invoice_documentController = require('./invoice_document/documentController');
 let invoice_documentValidation = require('./invoice_document/documentValidation');
@@ -288,6 +287,7 @@ router.post('/webapi/v1/portal/saveinvoiceterm', common.checkTokenExistOrNot, in
 router.get('/webapi/v1/portal/getinvoiceterm', common.checkTokenExistOrNot, invoice_termController.getTerm);
 router.post('/webapi/v1/portal/deleteinvoiceterm', common.checkTokenExistOrNot, invoice_termValidation.deleteTerm, invoice_termController.deleteTerm);
 router.post('/webapi/v1/portal/importterm', common.checkTokenExistOrNot, invoice_termController.importterm);
+router.post('/webapi/v1/portal/gettermfortable', common.checkTokenExistOrNot, invoice_termValidation.getTermForTableValidation, invoice_termController.gettermForTable);
 
 
 let invoice_costcodeController = require('./invoice_cost_code/cost_code.Controller');
