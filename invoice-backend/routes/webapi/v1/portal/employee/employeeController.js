@@ -1790,7 +1790,7 @@ module.exports.deleteTeamMember = async function (req, res) {
             let get_user = await userConnection.findOne({ _id: ObjectID(requestObject._id) });
 
             if (get_user) {
-                let update_user_1 = await userConnection.updateMany({ _id: ObjectID(requestObject._id) }, { is_delete: 1, userstatus: 2, userroleId: '' });
+                let update_user_1 = await userConnection.updateMany({ _id: ObjectID(requestObject._id), is_first: { $eq: false }, _id: { $ne: ObjectID(decodedToken.UserData._id) } }, { is_delete: 1, userstatus: 2, userroleId: '' });
 
                 if (update_user_1) {
 
@@ -4738,7 +4738,7 @@ module.exports.updateUserStatus = async function (req, res) {
 
             var get_user = await userConnection.findOne({ _id: ObjectID(id) });
             if (get_user) {
-                var updateStatus = await userConnection.updateMany({ _id: ObjectID(id) }, { userstatus: requestObject.userstatus });
+                var updateStatus = await userConnection.updateMany({ _id: ObjectID(id), is_first: { $eq: false }, _id: { $ne: ObjectID(decodedToken.UserData._id) } }, { userstatus: requestObject.userstatus });
 
                 if (updateStatus) {
                     let action = '';
