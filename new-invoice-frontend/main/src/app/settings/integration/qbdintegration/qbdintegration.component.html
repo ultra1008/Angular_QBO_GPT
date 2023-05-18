@@ -1,0 +1,118 @@
+<section class="content">
+    <div class="content-block">
+        <div class="m-4"></div>
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="materialTableHeader">
+                        <div class="left">
+                            <ul class="header-buttons-left ms-0">
+                                <li class="tbl-title">
+                                    <h2>Quickbooks Desktop Integration</h2>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <ul class="tbl-export-btn">
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" matTooltip="CLOSE">
+                                        <button mat-mini-fab color="warn" (click)="back()">
+                                            <mat-icon class="col-white">close </mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="body overflow-auto">
+                        <div class="main-cust-setting-div">
+
+                            <div class="main-search-bar" *ngIf="showConnectionButton">
+                                <div class="cust-button-margin">
+                                    <button mat-stroked-button class="sign-button cust-padding-top padding-left-cust"
+                                        (click)="connect()">
+                                        <div *ngIf="!qboIntegrated">Connect</div>
+                                        <div *ngIf="qboIntegrated">Disconnect</div>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-xl-4">
+                                        <div class="card custom-background-color">
+                                            <div class="card-body">
+                                                <div class="row justify-content-center">
+                                                    <img src="{{qboIcon}}" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-8">
+                                        <div class="card custom-background-color">
+                                            <div class="card-body cust-card-body mt-3">
+
+                                                <div class="row">
+                                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                                                        <div class="card">
+                                                            <div class="header">
+                                                                <h2>Import from QuickBooks Desktop</h2>
+                                                            </div>
+                                                            <div class="body">
+                                                                <div class="example-container">
+                                                                    <mat-form-field class="example-full-width"
+                                                                        appearance="outline">
+                                                                        <mat-label>Running interval (in minutes)
+                                                                        </mat-label>
+                                                                        <input matInput>
+                                                                    </mat-form-field>
+                                                                    <br>
+                                                                    <mat-form-field class="example-full-width"
+                                                                        appearance="outline">
+                                                                        <mat-label>Path to company file</mat-label>
+                                                                        <input matInput>
+                                                                    </mat-form-field>
+                                                                    <br>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                                                        <div class="card">
+                                                            <div class="header">
+                                                                <h2>Export to QuickBooks Desktop</h2>
+                                                            </div>
+                                                            <div class="body">
+                                                                <div class="example-container">
+                                                                    <mat-form-field class="example-full-width"
+                                                                        appearance="outline">
+                                                                        <mat-label>Running interval (in minutes)
+                                                                        </mat-label>
+                                                                        <input matInput>
+                                                                    </mat-form-field>
+                                                                    <br>
+                                                                    <mat-form-field class="example-full-width"
+                                                                        appearance="outline">
+                                                                        <mat-label>Path to company file</mat-label>
+                                                                        <input matInput>
+                                                                    </mat-form-field>
+                                                                    <br>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -62,6 +62,8 @@ import { CostCodeFormComponent } from './costcode/cost-code-form/cost-code-form.
 import { JobNameFormComponent } from './othersettings/job-name-form/job-name-form.component';
 import { ImportOtherSettingsComponent } from './othersettings/import-other-settings/import-other-settings.component';
 import { DocumentTypeListComponent } from './employeesettings/document-type-list/document-type-list.component';
+import { QbointegrationComponent } from './integration/qbointegration/qbointegration.component';
+import { QbdintegrationComponent } from './integration/qbdintegration/qbdintegration.component';
 
 @NgModule({
   declarations: [
@@ -93,6 +95,8 @@ import { DocumentTypeListComponent } from './employeesettings/document-type-list
     JobNameFormComponent,
     ImportOtherSettingsComponent,
     DocumentTypeListComponent,
+    QbointegrationComponent,
+    QbdintegrationComponent,
   ],
   providers: [SettingsService],
   imports: [
@@ -138,4 +142,4 @@ import { DocumentTypeListComponent } from './employeesettings/document-type-list
     TranslateModule,
   ],
 })
-export class SettingsModule {}
+export class SettingsModule { }
