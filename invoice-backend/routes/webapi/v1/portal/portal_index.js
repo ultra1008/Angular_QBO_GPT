@@ -218,6 +218,7 @@ let languageValidation = require("./language/languageValidation");
 router.get('/webapi/v1/portal/getlanguage', common.checkTokenExistOrNot, languageController.getlanguage);
 router.post('/webapi/v1/portal/savelanguage', common.checkTokenExistOrNot, languageValidation.languageValidation, languageController.savelanguage);
 router.post('/webapi/v1/portal/deletelanguage', common.checkTokenExistOrNot, languageValidation.languageDeleteValidation, languageController.deletelanguage);
+router.post('/webapi/v1/portal/getlanguageForTable', common.checkTokenExistOrNot, languageValidation.getlanguageForTableValidation, languageController.getlanguageForTable);
 
 let costCodeController = require('./costcode/costcodeController');
 let costCodeValidation = require('./costcode/costCodeValidation');
