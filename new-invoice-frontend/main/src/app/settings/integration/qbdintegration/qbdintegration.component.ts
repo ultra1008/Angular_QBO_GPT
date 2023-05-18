@@ -25,6 +25,10 @@ export class QbdintegrationComponent {
     this.router.navigate(['/settings/integration']);
   }
 
+  download() {
+
+  }
+
   connect() {
 
   }
