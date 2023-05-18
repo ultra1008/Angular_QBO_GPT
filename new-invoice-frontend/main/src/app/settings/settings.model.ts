@@ -150,3 +150,63 @@ export class DocumentTable {
     }
   }
 }
+
+export class DepartmentTable {
+  _id: string;
+  department_name!: string;
+
+  constructor(DepartmentTable: DepartmentTable) {
+    {
+      this._id = DepartmentTable._id;
+      this.department_name = DepartmentTable.department_name;
+    }
+  }
+}
+
+export class JobTitleTable {
+  _id: string;
+  job_title_name!: string;
+
+  constructor(JobTitleTable: JobTitleTable) {
+    {
+      this._id = JobTitleTable._id;
+      this.job_title_name = JobTitleTable.job_title_name;
+    }
+  }
+}
+
+export class JobTypeTable {
+  _id: string;
+  job_type_name!: string;
+
+  constructor(JobTypeTable: JobTypeTable) {
+    {
+      this._id = JobTypeTable._id;
+      this.job_type_name = JobTypeTable.job_type_name;
+    }
+  }
+}
+
+export class RelationshipTable {
+  _id: string;
+  relationship_name!: string;
+
+  constructor(RelationshipTable: RelationshipTable) {
+    {
+      this._id = RelationshipTable._id;
+      this.relationship_name = RelationshipTable.relationship_name;
+    }
+  }
+}
+
+export class LanguageTable {
+  _id: string;
+  name!: string;
+
+  constructor(LanguageTable: LanguageTable) {
+    {
+      this._id = LanguageTable._id;
+      this.name = LanguageTable.name;
+    }
+  }
+}

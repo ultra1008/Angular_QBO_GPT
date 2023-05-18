@@ -5,8 +5,13 @@ import { httproutes, httpversion } from 'src/consts/httproutes';
 import { BehaviorSubject } from 'rxjs';
 import {
   CostCodeTable,
+  DepartmentTable,
   DocumentTable,
+  JobTitleTable,
+  JobTypeTable,
+  LanguageTable,
   MailboxTable,
+  RelationshipTable,
   Settings,
   UsageTable,
 } from './settings.model';
@@ -33,6 +38,25 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
 
   dataDocumentTypeChange: BehaviorSubject<DocumentTable[]> =
     new BehaviorSubject<DocumentTable[]>([]);
+
+  dataDepartmentChange: BehaviorSubject<DepartmentTable[]> =
+    new BehaviorSubject<DepartmentTable[]>([]);
+
+  dataJobTitleChange: BehaviorSubject<JobTitleTable[]> = new BehaviorSubject<
+    JobTitleTable[]
+  >([]);
+
+  dataJobTypeChange: BehaviorSubject<JobTypeTable[]> = new BehaviorSubject<
+    JobTypeTable[]
+  >([]);
+
+  dataRelationShipChange: BehaviorSubject<RelationshipTable[]> =
+    new BehaviorSubject<RelationshipTable[]>([]);
+
+  dataLanguageChange: BehaviorSubject<LanguageTable[]> = new BehaviorSubject<
+    LanguageTable[]
+  >([]);
+
   constructor(private httpCall: HttpCall) {
     super();
   }
@@ -51,6 +75,27 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
   get datadocumenttype(): DocumentTable[] {
     return this.dataDocumentTypeChange.value;
   }
+
+  get datadepartment(): DepartmentTable[] {
+    return this.dataDepartmentChange.value;
+  }
+
+  get datajobtitle(): JobTitleTable[] {
+    return this.dataJobTitleChange.value;
+  }
+
+  get datajobtype(): JobTypeTable[] {
+    return this.dataJobTypeChange.value;
+  }
+
+  get dataRelationship(): RelationshipTable[] {
+    return this.dataRelationShipChange.value;
+  }
+
+  get dataLanguage(): LanguageTable[] {
+    return this.dataLanguageChange.value;
+  }
+
   async getCompanyType() {
     const data = await this.httpCall
       .httpGetCall(httpversion.V1 + httproutes.GET_COMPNAY_TYPE)
@@ -87,6 +132,76 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     // Only write this for datatable api otherwise return data
     this.isTblLoading = false;
     this.dataDocumentTypeChange.next(data);
+  }
+
+  async getAllDepartmentTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.SETTING_DEPARTMENTS_DATA_TABLE,
+        {
+          is_delete: is_delete,
+        }
+      )
+      .toPromise();
+    // Only write this for datatable api otherwise return data
+    this.isTblLoading = false;
+    this.dataDepartmentChange.next(data);
+  }
+
+  async getAlljobtitleTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.SETTING_JOB_TITLE_DATA_TABLE,
+        {
+          is_delete: is_delete,
+        }
+      )
+      .toPromise();
+    // Only write this for datatable api otherwise return data
+    this.isTblLoading = false;
+    this.dataJobTitleChange.next(data);
+  }
+
+  async getAlljobtypeTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.SETTING_JOB_TYPE_DATA_TABLE,
+        {
+          is_delete: is_delete,
+        }
+      )
+      .toPromise();
+    // Only write this for datatable api otherwise return data
+    this.isTblLoading = false;
+    this.dataJobTypeChange.next(data);
+  }
+
+  async getAllRelationshipTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.SETTING_RELATIONSHIP_DATA_TABLE,
+        {
+          is_delete: is_delete,
+        }
+      )
+      .toPromise();
+    // Only write this for datatable api otherwise return data
+    this.isTblLoading = false;
+    this.dataRelationShipChange.next(data);
+  }
+
+  async getAllLanguageTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.OTHER_LANGUAGE_DATA_TABLE,
+        {
+          is_delete: is_delete,
+        }
+      )
+      .toPromise();
+    // Only write this for datatable api otherwise return data
+    this.isTblLoading = false;
+    this.dataLanguageChange.next(data);
   }
 
   async getAllCostCodeTable(is_delete: number): Promise<void> {

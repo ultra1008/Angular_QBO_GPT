@@ -64,6 +64,11 @@ import { ImportOtherSettingsComponent } from './othersettings/import-other-setti
 import { DocumentTypeListComponent } from './employeesettings/document-type-list/document-type-list.component';
 import { QbointegrationComponent } from './integration/qbointegration/qbointegration.component';
 import { QbdintegrationComponent } from './integration/qbdintegration/qbdintegration.component';
+import { DepartmentListComponent } from './employeesettings/department-list/department-list.component';
+import { JobTitleListComponent } from './employeesettings/job-title-list/job-title-list.component';
+import { JobTypeListComponent } from './employeesettings/job-type-list/job-type-list.component';
+import { RelationshipListComponent } from './employeesettings/relationship-list/relationship-list.component';
+import { LanguageListComponent } from './employeesettings/language-list/language-list.component';
 
 @NgModule({
   declarations: [
@@ -97,6 +102,11 @@ import { QbdintegrationComponent } from './integration/qbdintegration/qbdintegra
     DocumentTypeListComponent,
     QbointegrationComponent,
     QbdintegrationComponent,
+    DepartmentListComponent,
+    JobTitleListComponent,
+    JobTypeListComponent,
+    RelationshipListComponent,
+    LanguageListComponent,
   ],
   providers: [SettingsService],
   imports: [
@@ -142,4 +152,4 @@ import { QbdintegrationComponent } from './integration/qbdintegration/qbdintegra
     TranslateModule,
   ],
 })
-export class SettingsModule { }
+export class SettingsModule {}
