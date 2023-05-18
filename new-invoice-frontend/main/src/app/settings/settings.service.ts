@@ -13,6 +13,7 @@ import {
   MailboxTable,
   RelationshipTable,
   Settings,
+  TermsTable,
   UsageTable,
 } from './settings.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
@@ -57,6 +58,10 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     LanguageTable[]
   >([]);
 
+  dataTermsChange: BehaviorSubject<TermsTable[]> = new BehaviorSubject<
+    TermsTable[]
+  >([]);
+
   constructor(private httpCall: HttpCall) {
     super();
   }
@@ -94,6 +99,10 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
 
   get dataLanguage(): LanguageTable[] {
     return this.dataLanguageChange.value;
+  }
+
+  get dataTerms(): TermsTable[] {
+    return this.dataTermsChange.value;
   }
 
   async getCompanyType() {
@@ -202,6 +211,17 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     // Only write this for datatable api otherwise return data
     this.isTblLoading = false;
     this.dataLanguageChange.next(data);
+  }
+
+  async getAllTermsTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall
+      .httpPostCall(httpversion.PORTAL_V1 + httproutes.TERMS_DATA_TABLE, {
+        is_delete: is_delete,
+      })
+      .toPromise();
+    // Only write this for datatable api otherwise return data
+    this.isTblLoading = false;
+    this.dataTermsChange.next(data);
   }
 
   async getAllCostCodeTable(is_delete: number): Promise<void> {

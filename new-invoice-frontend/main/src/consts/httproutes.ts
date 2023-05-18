@@ -95,6 +95,7 @@ export enum httproutes {
   OTHER_LANGUAGE_SAVE = 'savelanguage',
 
   //other settings
+  TERMS_DATA_TABLE = 'gettermfortable',
   OTHER_SETTINGS_GET_TERMS = 'getinvoiceterm',
   OTHER_SETTING_SAVE_TERMS = 'saveinvoiceterm',
   OTHER_SETTING_DELETE_TERMS = 'deleteinvoiceterm',
