@@ -69,6 +69,7 @@ export enum httproutes {
   SAVE_SMTP = 'compnayupdatesmtp',
 
   //employee
+  SETTING_DOCUMENT_TYPE_DATA_TABLE = 'getdoctypefortable',
   SETTING_DOCUMENT_TYPE_GET = 'getalldoctype',
   SETTING_DOCUMENT_TYPE_DELETE = 'deletedoctype',
   SETTING_DOCUMENT_TYPE_SAVE = 'savedoctype',

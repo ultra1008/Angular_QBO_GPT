@@ -279,6 +279,7 @@ router.post('/webapi/v1/portal/saveinvoicedocument', common.checkTokenExistOrNot
 router.get('/webapi/v1/portal/getinvoicedocument', common.checkTokenExistOrNot, invoice_documentController.getInvoiceDocument);
 router.post('/webapi/v1/portal/deleteInvoiceDocument', common.checkTokenExistOrNot, invoice_documentValidation.deleteInvoice_Document, invoice_documentController.deleteInvoiceDocument);
 router.post('/webapi/v1/portal/importInvoiceDocument', common.checkTokenExistOrNot, invoice_documentController.importInvoiceDocument);
+router.post('/webapi/v1/portal/getInvoiceDocumentForTable', common.checkTokenExistOrNot, invoice_documentValidation.getInvoice_DocumentForTableValidation, invoice_documentController.getInvoiceDocumentForTable);
 
 
 let invoice_termController = require('./invoice_term/termController');
@@ -436,6 +437,7 @@ router.post('/webapi/v1/portal/savevendortype', common.checkTokenExistOrNot, ven
 router.get('/webapi/v1/portal/getvendortype', common.checkTokenExistOrNot, vendor_typeController.getvendortype);
 router.post('/webapi/v1/portal/deletevendortype', common.checkTokenExistOrNot, vendor_typeValidation.deletevendortype, vendor_typeController.deletevendortype);
 router.post('/webapi/v1/portal/importvendortype', common.checkTokenExistOrNot, vendor_typeController.importvendortype);
+router.post('/webapi/v1/portal/getvendortypefortable', common.checkTokenExistOrNot, vendor_typeValidation.getVendorTypeForTableValidation, vendor_typeController.getVendorTypeForTable);
 
 
 let job_nameController = require('./job_name/job_nameController');
@@ -445,5 +447,6 @@ router.post('/webapi/v1/portal/savejobname', common.checkTokenExistOrNot, job_na
 router.get('/webapi/v1/portal/getjobname', common.checkTokenExistOrNot, job_nameController.getjobname);
 router.post('/webapi/v1/portal/deletejobname', common.checkTokenExistOrNot, job_nameValidation.deletejobname, job_nameController.deletejobname);
 router.post('/webapi/v1/portal/importjobname', common.checkTokenExistOrNot, job_nameController.importjobname);
+router.post('/webapi/v1/portal/getjobnamefortable', common.checkTokenExistOrNot, job_nameValidation.getJobNameForTableValidation, job_nameController.getJobNameForTable);
 
 module.exports = router;
