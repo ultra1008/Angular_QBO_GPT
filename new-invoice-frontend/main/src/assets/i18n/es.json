@@ -28,7 +28,8 @@
             "YES": "Sí",
             "NO": "No",
             "BACK": "Atrás",
-            "NEXT": "Próxima"
+            "NEXT": "Próxima",
+            "DELETE": "Eliminar"
         },
         "HISTORY": {
             "KEY": "Llave",
@@ -170,6 +171,7 @@
             "COST_CODE": "Código de costo",
             "DOCUMENT_VIEW": "Vista de documento",
             "SECURITY_MODULE": {
+                "ALERT_SURE_WANT_CHANGE": "Esta es una configuración global que afectará a todos los proyectos. ¿Está seguro de que desea realizar el cambio?",
                 "AMOUNT_MINUTES": "Cantidad de minutos antes del cierre de sesión automático",
                 "ENABLE_OTP": "Habilitar OTP",
                 "TIMEROPTIONS": "min"

@@ -5,6 +5,7 @@ import { httproutes, httpversion } from 'src/consts/httproutes';
 import { BehaviorSubject } from 'rxjs';
 import {
   CostCodeTable,
+  DocumentTable,
   MailboxTable,
   Settings,
   UsageTable,
@@ -30,6 +31,8 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     UsageTable[]
   >([]);
 
+  dataDocumentTypeChange: BehaviorSubject<DocumentTable[]> =
+    new BehaviorSubject<DocumentTable[]>([]);
   constructor(private httpCall: HttpCall) {
     super();
   }
@@ -43,6 +46,10 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
 
   get datausage(): UsageTable[] {
     return this.dataUsageChange.value;
+  }
+
+  get datadocumenttype(): DocumentTable[] {
+    return this.dataDocumentTypeChange.value;
   }
   async getCompanyType() {
     const data = await this.httpCall
@@ -66,6 +73,20 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     // Only write this for datatable api otherwise return data
     this.isTblLoading = false;
     this.dataChange.next(data);
+  }
+
+  async getAllDocumentTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.SETTING_DOCUMENT_TYPE_DATA_TABLE,
+        {
+          is_delete: is_delete,
+        }
+      )
+      .toPromise();
+    // Only write this for datatable api otherwise return data
+    this.isTblLoading = false;
+    this.dataDocumentTypeChange.next(data);
   }
 
   async getAllCostCodeTable(is_delete: number): Promise<void> {
