@@ -34,4 +34,21 @@ const deletejobname = (req, res, next) => {
         }
     });
 };
-module.exports = { savejobname, deletejobname };
+
+const getJobNameForTableValidation = (req, res, next) => {
+    const validationRule = {
+        "is_delete": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({
+                status: false,
+                message: err
+            });
+        } else {
+            next();
+        }
+    });
+};
+
+module.exports = { savejobname, deletejobname, getJobNameForTableValidation };

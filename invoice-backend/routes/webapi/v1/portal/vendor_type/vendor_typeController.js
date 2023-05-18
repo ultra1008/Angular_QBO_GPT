@@ -198,3 +198,28 @@ module.exports.importvendortype = async function (req, res) {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
+
+module.exports.getVendorTypeForTable = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var vendortypeConnection = connection_db_api.model(collectionConstant.VENDOR_TYPE, vendortypeSchema);
+            var getdata = await vendortypeConnection.find({ is_delete: requestObject.is_delete });
+            if (getdata) {
+                res.send(getdata);
+            } else {
+                res.send([]);
+            }
+        } catch (e) {
+            console.log(e);
+            res.send([]);
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};

@@ -33,4 +33,21 @@ const deleteInvoice_Document = (req, res, next) => {
         }
     });
 };
-module.exports = { saveInvoice_Document, deleteInvoice_Document };
+
+const getInvoice_DocumentForTableValidation = (req, res, next) => {
+    const validationRule = {
+        "is_delete": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({
+                status: false,
+                message: err
+            });
+        } else {
+            next();
+        }
+    });
+};
+
+module.exports = { saveInvoice_Document, deleteInvoice_Document, getInvoice_DocumentForTableValidation };
