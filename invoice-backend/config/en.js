@@ -17,11 +17,14 @@ module.exports = {
     CompanyNotFound: "Company not found.",
     LoginDetails: 'Login details stored successfully.',
     Regitration_Link: "Registration Link",
-    // invoice_send: "Invoice Send",
-    // invoice_not_send: "Invoice Not Send",
-    // invoice_send_title: "This message was sent from ROVUK A/P invoice automation.",
-    // invoice_number: "Invoice Number",
-    // Total_amount: "Total Amount",
+    INVOICE_SEND: "Invoice Send",
+    INVOICE_NOT_SEND: "Invoice Not Send",
+    INVOICE_SEND_TITLE: "This message was sent from ROVUK A/P invoice automation.",
+    INVOICE_NUMBER: "Invoice Number: ",
+    TOTAL_AMOUNT: "Total Amount: ",
+    VENDOR_NAME: "Vendor Name: ",
+    VIEW_PDF: "View PDF",
+
 
     //Email Templates
     EmailTemplateHi: 'Hi',

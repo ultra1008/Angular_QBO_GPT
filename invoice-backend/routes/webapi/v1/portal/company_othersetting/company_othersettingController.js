@@ -424,6 +424,7 @@ module.exports.getCustomerStates = async function (req, res) {
             var match_query = { is_delete: 0 };
             var getData = await customerStateCollection.aggregate([
                 { $match: match_query },
+
                 {
                     $project: {
                         title: { $concat: [{ $toString: "$month" }, " ", { $toString: "$year" }] },
@@ -450,7 +451,42 @@ module.exports.getCustomerStates = async function (req, res) {
                 {
                     $group: {
                         _id: "$title",
-                        data: { $push: "$tmpObject" },
+                        invoice: {
+                            $min: {
+                                invoice_expense: "$tmpObject.invoice_expense",
+                                invoice_forms: "$tmpObject.invoice_forms",
+                            }
+                        },
+                        Purchase_Order: {
+                            $min: {
+                                po_expense: "$tmpObject.po_expense",
+                                po_forms: "$tmpObject.po_forms",
+                            }
+                        },
+                        Quote: {
+                            $min: {
+                                quote_expense: "$tmpObject.quote_expense",
+                                quote_forms: "$tmpObject.quote_forms",
+                            }
+                        },
+                        Packing_Slip: {
+                            $min: {
+                                packing_slip_expense: "$tmpObject.packing_slip_expense",
+                                packing_slip_forms: "$tmpObject.packing_slip_forms",
+                            }
+                        },
+                        Receiving_Slip: {
+                            $min: {
+                                unknown_expense: "$tmpObject.unknown_expense",
+                                unknown_forms: "$tmpObject.unknown_forms",
+                            }
+                        },
+                        Unkown: {
+                            $min: {
+                                receiving_slip_expense: "$tmpObject.receiving_slip_expense",
+                                receiving_slip_forms: "$tmpObject.receiving_slip_forms",
+                            }
+                        },
                     }
                 },
 
@@ -459,21 +495,6 @@ module.exports.getCustomerStates = async function (req, res) {
             var dataResponce = {};
             dataResponce.data = getData;
             res.json(dataResponce);
-
-            // if (getData) {
-
-            //     var resobj = new Array();
-            //     var year = "year";
-            //     for (let i = 0; i < getData.length; i++) {
-            //         resobj = year.getData[i];
-            //         console.log("resobj", resobj);
-            //     }
-            //     // getData.concat(resobj);
-            //     res.send(resobj);
-            // }
-            // else {
-            //     res.send([]);
-            // }
 
         } catch (e) {
             console.log(e);

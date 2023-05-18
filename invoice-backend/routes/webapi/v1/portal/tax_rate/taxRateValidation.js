@@ -32,7 +32,23 @@ const deleteTaxRate = (req, res, next) => {
     });
 };
 
+const getTaxRateForTableValidation = (req, res, next) => {
+    const validationRule = {
+        "is_delete": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({
+                status: false,
+                message: err
+            });
+        } else {
+            next();
+        }
+    });
+};
 module.exports = {
     saveTaxRate,
-    deleteTaxRate
+    deleteTaxRate,
+    getTaxRateForTableValidation
 };

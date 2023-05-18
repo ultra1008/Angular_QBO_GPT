@@ -32,7 +32,23 @@ const languageDeleteValidation = (req, res, next) => {
     });
 };
 
+const getlanguageForTableValidation = (req, res, next) => {
+    const validationRule = {
+        "is_delete": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({
+                status: false,
+                message: err
+            });
+        } else {
+            next();
+        }
+    });
+};
 module.exports = {
     languageValidation,
-    languageDeleteValidation
+    languageDeleteValidation,
+    getlanguageForTableValidation
 };
