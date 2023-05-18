@@ -157,24 +157,32 @@ let jobtypeValidation = require('./jobtype/jobtypeValidation');
 router.get('/webapi/v1/portal/getAlljobtype', common.checkTokenExistOrNot, jobtypeController.getAlljob_type);
 router.post('/webapi/v1/portal/savejobtype', common.checkTokenExistOrNot, jobtypeValidation.jobTypeValidation, jobtypeController.savejobtype);
 router.post('/webapi/v1/portal/deletejobtype', common.checkTokenExistOrNot, jobtypeValidation.jobTypeDeleteValidation, jobtypeController.deletejobtype);
+router.post('/webapi/v1/portal/getjobtypefortable', common.checkTokenExistOrNot, jobtypeValidation.getjobtypeForTableValidation, jobtypeController.getJobTypeForTable);
+
 
 let jobtitleController = require('./job_title/jobtitleController');
 let jobtitleValidation = require('./job_title/jobtitleValidation');
 router.get('/webapi/v1/portal/getAlljobtitle', common.checkTokenExistOrNot, jobtitleController.getAlljob_title);
 router.post('/webapi/v1/portal/savejobtitle', common.checkTokenExistOrNot, jobtitleValidation.jobtitleValidation, jobtitleController.saveJobTitle);
 router.post('/webapi/v1/portal/deletejobtitle', common.checkTokenExistOrNot, jobtitleValidation.jobtitleDeleteValidation, jobtitleController.deleteJobTitle);
+router.post('/webapi/v1/portal/getjobtitlefortable', common.checkTokenExistOrNot, jobtitleValidation.getjobtitleForTableValidation, jobtitleController.getJobTitleForTable);
+
 
 var departmentController = require("./department/departmentController");
 var departmentValidation = require("./department/departmentValidation");
 router.get('/webapi/v1/portal/getalldepartment', common.checkTokenExistOrNot, departmentController.getalldepartment);
 router.post('/webapi/v1/portal/savedepartment', common.checkTokenExistOrNot, departmentValidation.departmentValidation, departmentController.savedepartment);
 router.post('/webapi/v1/portal/deletedepartment', common.checkTokenExistOrNot, departmentValidation.departmentDeleteValidation, departmentController.deleteDepartment);
+router.post('/webapi/v1/portal/getdepartmentfortable', common.checkTokenExistOrNot, departmentValidation.getdepartmentForTableValidation, departmentController.getdepartmentForTable);
+
 
 var documenttypeController = require('./documenttype/documenttypeController');
 var documenttypeValidation = require('./documenttype/documenttypeValidation');
 router.get('/webapi/v1/portal/getalldoctype', common.checkTokenExistOrNot, documenttypeController.getalldoctype);
 router.post('/webapi/v1/portal/savedoctype', common.checkTokenExistOrNot, documenttypeValidation.documentTypeValidation, documenttypeController.saveDocType);
 router.post('/webapi/v1/portal/deletedoctype', common.checkTokenExistOrNot, documenttypeValidation.documentTypeDeleteValidation, documenttypeController.deleteDocType);
+router.post('/webapi/v1/portal/getdoctypefortable', common.checkTokenExistOrNot, documenttypeValidation.getdocumentTypeForTableValidation, documenttypeController.getdoctypeForTable);
+
 
 let rolespermissionController = require("./roles/rolesandpermissionController");
 router.get('/webapi/v1/portal/getallroles', common.checkTokenExistOrNot, rolespermissionController.getAllRoles);
