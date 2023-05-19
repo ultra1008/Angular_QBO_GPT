@@ -15,13 +15,13 @@ import { Router } from '@angular/router';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { map } from 'rxjs/operators';
 import { WEB_ROUTES } from 'src/consts/routes';
-import { local } from 'd3';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { Direction } from '@angular/cdk/bidi';
 import { UserRestoreFormComponent } from '../user-restore-form/user-restore-form.component';
 import { UserReportComponent } from '../user-report/user-report.component';
+import { UntypedFormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-users-listing',
@@ -31,7 +31,7 @@ import { UserReportComponent } from '../user-report/user-report.component';
 })
 export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
   displayedColumns = [
-    // 'select',
+    'select',
     'img',
     'userfullname',
     'useremail',
@@ -49,9 +49,8 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
   advanceTable?: User;
   titleMessage: string = "";
   roleLists: Array<RoleModel> = [];
-
-
-
+  userSelectForm?: any;
+  selectedValue!: string;
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   @ViewChild('filter', { static: true }) filter!: ElementRef;
@@ -64,12 +63,16 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
     public dialog: MatDialog,
     private snackBar: MatSnackBar, private router: Router,
     public userTableService: UserService,
-    public translate: TranslateService
+    public translate: TranslateService,
+    private fb: UntypedFormBuilder,
   ) {
     super();
   }
 
   ngOnInit() {
+    this.userSelectForm = this.fb.group({
+      userstatus: [''],
+    });
     this.getRole();
     const userDisplay = localStorage.getItem(localstorageconstants.USER_DISPLAY) ?? 'list';
     if (userDisplay == 'list') {
@@ -84,6 +87,137 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
   }
   openHistory() {
     this.router.navigate([WEB_ROUTES.USER_HISTORY]);
+  }
+  onBookChange(ob: any) {
+    console.log('Book changed...');
+    let selectedBook = ob.value;
+    console.log(selectedBook);
+    if (selectedBook == 1) {
+      swalWithBootstrapTwoButtons
+        .fire({
+          title: 'Are you sure you want to active all user?',
+          showDenyButton: true,
+          confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+          denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+          allowOutsideClick: false,
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.allUserActive();
+          }
+        });
+    }
+    else if (selectedBook == 2) {
+      swalWithBootstrapTwoButtons
+        .fire({
+          title: 'Are you sure you want to Inactive all user?',
+          showDenyButton: true,
+          confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+          denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+          allowOutsideClick: false,
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.allUserInactive();
+
+          }
+        });
+    } else if (selectedBook == 3) {
+      swalWithBootstrapTwoButtons
+        .fire({
+          title: 'Are you sure you want to archive all user?',
+          showDenyButton: true,
+          confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+          denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+          allowOutsideClick: false,
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.allArchiveUser();
+          }
+        });
+    }
+  }
+  async allArchiveUser() {
+    console.log('call1');
+    let tmp_ids = [];
+    for (let i = 0; i < this.selection.selected.length; i++) {
+      tmp_ids.push(this.selection.selected[i]._id);
+    }
+    const data = await this.userTableService.allArchiveUser({ _id: tmp_ids, is_delete: 1 });
+    if (data.status) {
+      showNotification(this.snackBar, data.message, 'success');
+      this.refresh();
+    } else {
+      showNotification(this.snackBar, data.message, 'error');
+    }
+  }
+
+  async allUserActive() {
+    console.log('call2');
+    let tmp_ids = [];
+    for (let i = 0; i < this.selection.selected.length; i++) {
+      tmp_ids.push(this.selection.selected[i]._id);
+      console.log("tmp_ids", tmp_ids);
+    }
+    const data = await this.userTableService.updateAllUserStatus({ _id: tmp_ids, userstatus: 1 });
+    if (data.status) {
+      showNotification(this.snackBar, data.message, 'success');
+      this.refresh();
+    } else {
+      showNotification(this.snackBar, data.message, 'error');
+    }
+  }
+
+  async allUserInactive() {
+    console.log('call3');
+    let tmp_ids = [];
+    for (let i = 0; i < this.selection.selected.length; i++) {
+      tmp_ids.push(this.selection.selected[i]._id);
+    }
+    const data = await this.userTableService.updateAllUserStatus({ _id: tmp_ids, userstatus: 2 });
+    if (data.status) {
+      showNotification(this.snackBar, data.message, 'success');
+      this.refresh();
+    } else {
+      showNotification(this.snackBar, data.message, 'error');
+    }
+  }
+
+
+  async updateStatus(User: User) {
+    console.log("user", User);
+    let status = 1;
+    if (User.userstatus == 1) {
+      status = 2;
+    }
+    const data = await this.userTableService.updateStatus({ _id: User._id, userstatus: status });
+    if (data.status) {
+      showNotification(this.snackBar, data.message, 'success');
+      const foundIndex = this.userService?.dataChange.value.findIndex(
+        (x) => x._id === User._id
+      );
+      if (foundIndex != null && this.userService) {
+        this.userService.dataChange.value[foundIndex].userstatus = status;
+        this.refreshTable();
+      }
+    } else {
+      showNotification(this.snackBar, data.message, 'error');
+    }
+  }
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.renderedData.length;
+    return numSelected === numRows;
+  }
+  masterToggle() {
+    this.isAllSelected()
+      ? this.selection.clear()
+      : this.dataSource.renderedData.forEach((row) =>
+        this.selection.select(row)
+      );
+    console.log('numRows123', this.selection.selected);
   }
   userReport() {
     console.log("roleList", this.roleLists);

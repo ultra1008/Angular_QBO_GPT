@@ -29,7 +29,9 @@ export enum httproutes {
   PORTAL_TERM_GET = 'getinvoiceterm',
   PORTAL_TERM_SAVE = 'saveinvoiceterm',
   PORTAL_TERM_DELETE = 'deleteinvoiceterm',
-
+  PORTAL_TERM_ALL_DELETE = 'deleteMultipleTeamMember',
+  PORTAL_ALL_USER_STATUS_CHANGE = 'updateMultipleUserStatus',
+  PORTAL_USER_STATUS_UPDATE = 'updateUserStatus',
   GET_COMPNAY_INFO = 'compnayinformation',
   GET_COMPNAY_TYPE = 'getcompanytype',
   GET_COMPNAY_NIGP = 'getcsidivision',

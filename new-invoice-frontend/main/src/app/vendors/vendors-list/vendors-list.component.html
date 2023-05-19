@@ -146,28 +146,31 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_id">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.VENDOR_ID' |
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                                        [ngClass]="'tbl-col-width-per-mid'">{{'VENDOR.TABLE.VENDOR_ID' |
                                         translate}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
-                                        (click)="editVendor(row)">
+                                        class="tbl-col-width-per-mid" (click)="editVendor(row)">
                                         <span class="mobile-label">Vendor ID:</span>{{row.vendor_id}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="customer_id">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.CUSTOMER_ID' |
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                                        [ngClass]="'tbl-col-width-per-mid'">{{'VENDOR.TABLE.CUSTOMER_ID' |
                                         translate}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
-                                        (click)="editVendor(row)">
+                                        class="tbl-col-width-per-mid" (click)="editVendor(row)">
                                         <span class="mobile-label">Customer ID:</span>{{row.customer_id}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_phone">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.PHONE' |
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                                        [ngClass]="'tbl-col-width-per-mid'">{{'VENDOR.TABLE.PHONE' |
                                         translate}}</mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
-                                        (click)="editVendor(row)">
+                                        class="tbl-col-width-per-mid" (click)="editVendor(row)">
                                         <span class="mobile-label">Phone:</span>
                                         {{row.vendor_phone | phoneFormatPipe}}
                                     </mat-cell>
