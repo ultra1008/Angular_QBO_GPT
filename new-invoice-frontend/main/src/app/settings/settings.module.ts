@@ -69,6 +69,11 @@ import { JobTitleListComponent } from './employeesettings/job-title-list/job-tit
 import { JobTypeListComponent } from './employeesettings/job-type-list/job-type-list.component';
 import { RelationshipListComponent } from './employeesettings/relationship-list/relationship-list.component';
 import { LanguageListComponent } from './employeesettings/language-list/language-list.component';
+import { TermsListingComponent } from './othersettings/terms-listing/terms-listing.component';
+import { TaxRateListingComponent } from './othersettings/tax-rate-listing/tax-rate-listing.component';
+import { DocumentsListingComponent } from './othersettings/documents-listing/documents-listing.component';
+import { VendorTypeListingComponent } from './othersettings/vendor-type-listing/vendor-type-listing.component';
+import { JobNameListingComponent } from './othersettings/job-name-listing/job-name-listing.component';
 
 @NgModule({
   declarations: [
@@ -107,6 +112,11 @@ import { LanguageListComponent } from './employeesettings/language-list/language
     JobTypeListComponent,
     RelationshipListComponent,
     LanguageListComponent,
+    TermsListingComponent,
+    TaxRateListingComponent,
+    DocumentsListingComponent,
+    VendorTypeListingComponent,
+    JobNameListingComponent,
   ],
   providers: [SettingsService],
   imports: [

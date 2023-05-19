@@ -16,6 +16,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { async } from 'rxjs';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 
 @Component({
   selector: 'app-usage',
@@ -69,7 +70,8 @@ export class UsageComponent {
     public router: Router,
     public translate: TranslateService,
     public httpCall: HttpCall,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    public uiSpinner: UiSpinnerService
   ) {
     this.usageinfo = this.formBuilder.group({
       totalSuervisor: [{ value: '' }],
@@ -87,7 +89,6 @@ export class UsageComponent {
     row.hasOwnProperty('position');
   };
   ngOnInit() {
-    console.log('loggggg', this.AllUsage);
     this.getcompanyusage();
     this.getusagedata();
 
@@ -98,10 +99,12 @@ export class UsageComponent {
 
   async getcompanyusage() {
     let that = this;
+    that.uiSpinner.spin$.next(true);
     that.httpCall
       .httpGetCall(httpversion.PORTAL_V1 + httproutes.PORTAL_SETTING_USEAGE)
       .subscribe(function (params) {
         if (params.status) {
+          that.uiSpinner.spin$.next(false);
           that.usageinfo = that.formBuilder.group({
             totalSuervisor: [params.data.totalSuervisor],
             bucket_size: [params.data.bucket_size],
@@ -115,7 +118,6 @@ export class UsageComponent {
     that.httpCall
       .httpGetCall(httpversion.PORTAL_V1 + httproutes.USAGE_DATA_TABLE)
       .subscribe(function (params) {
-        console.log('$$$$$$$$$$$$', params);
         if (params.length > 0) {
           that.AllUsage = [];
           for (let i = 0; i < params.length; i++) {

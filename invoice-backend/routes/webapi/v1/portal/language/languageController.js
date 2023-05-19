@@ -5,6 +5,8 @@ var common = require("../../../../../controller/common/common");
 let db_connection = require('../../../../../controller/common/connectiondb');
 let collectionConstant = require('../../../../../config/collectionConstant');
 //let activityController = require("../todaysActivity/todaysActivityController");
+var formidable = require('formidable');
+const reader = require('xlsx');
 
 module.exports.getlanguage = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -120,5 +122,68 @@ module.exports.getlanguageForTable = async function (req, res) {
         }
     } else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+// bulk upload 
+module.exports.importlanguage = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            let lanaguageCollection = connection_db_api.model(collectionConstant.LANGUAGE, languageSchema);
+
+            var form = new formidable.IncomingForm();
+            var fields = [];
+            var notFonud = 0;
+            var newOpenFile;
+            var fileName;
+            form.parse(req)
+                .on('file', function (name, file) {
+                    notFonud = 1;
+                    fileName = file;
+                }).on('field', function (name, field) {
+                    fields[name] = field;
+                })
+                .on('error', function (err) {
+                    throw err;
+                }).on('end', async function () {
+                    newOpenFile = this.openedFiles;
+
+                    if (notFonud == 1) {
+
+                        const file = reader.readFile(newOpenFile[0].path);
+                        const sheets = file.SheetNames;
+                        let data = [];
+                        for (let i = 0; i < sheets.length; i++) {
+                            const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
+                            temp.forEach((ress) => {
+                                data.push(ress);
+                            });
+                        }
+                        for (let m = 0; m < data.length; m++) {
+                            requestObject = {};
+                            let getdata = await lanaguageCollection.findOne({ name: data[m].name });
+                            if (getdata == null) {
+                                requestObject.name = data[m].name;
+                                let add_lanaguage = new lanaguageCollection(requestObject);
+                                let save_lanaguage = await add_lanaguage.save();
+                            } else {
+                                res.send({ status: true, message: "lanaguage name is allready exist." });
+                            }
+                        }
+                        res.send({ status: true, message: "lanaguage info add successfully." });
+
+                    } else {
+                        res.send({ status: false, message: translator.getStr('SomethingWrong') });
+                    }
+                });
+        } catch (error) {
+            console.log(error);
+            res.send({ status: false, message: translator.getStr('SomethingWrong'), error: error });
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };

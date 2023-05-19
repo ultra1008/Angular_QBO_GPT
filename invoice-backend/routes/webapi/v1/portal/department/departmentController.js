@@ -5,6 +5,8 @@ var ObjectID = require('mongodb').ObjectID;
 var common = require("./../../../../../controller/common/common");
 let db_connection = require('./../../../../../controller/common/connectiondb');
 let collectionConstant = require('./../../../../../config/collectionConstant');
+var formidable = require('formidable');
+const reader = require('xlsx');
 
 module.exports.getalldepartment = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -132,5 +134,67 @@ module.exports.getdepartmentForTable = async function (req, res) {
         }
     } else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+// bulk upload 
+module.exports.importdepartment = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            let departmentCollection = connection_db_api.model(collectionConstant.DEPARTMENTS, departmentSchema);
+            var form = new formidable.IncomingForm();
+            var fields = [];
+            var notFonud = 0;
+            var newOpenFile;
+            var fileName;
+            form.parse(req)
+                .on('file', function (name, file) {
+                    notFonud = 1;
+                    fileName = file;
+                }).on('field', function (name, field) {
+                    fields[name] = field;
+                })
+                .on('error', function (err) {
+                    throw err;
+                }).on('end', async function () {
+                    newOpenFile = this.openedFiles;
+
+                    if (notFonud == 1) {
+
+                        const file = reader.readFile(newOpenFile[0].path);
+                        const sheets = file.SheetNames;
+                        let data = [];
+                        for (let i = 0; i < sheets.length; i++) {
+                            const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
+                            temp.forEach((ress) => {
+                                data.push(ress);
+                            });
+                        }
+                        for (let m = 0; m < data.length; m++) {
+                            requestObject = {};
+                            let getdata = await departmentCollection.findOne({ department_name: data[m].department_name });
+                            if (getdata == null) {
+                                requestObject.department_name = data[m].department_name;
+                                let add_job_type = new departmentCollection(requestObject);
+                                let save_job_type = await add_job_type.save();
+                            } else {
+                                res.send({ status: true, message: "department name is allready exist." });
+                            }
+                        }
+                        res.send({ status: true, message: "department info add successfully." });
+
+                    } else {
+                        res.send({ status: false, message: translator.getStr('SomethingWrong') });
+                    }
+                });
+        } catch (error) {
+            console.log(error);
+            res.send({ status: false, message: translator.getStr('SomethingWrong'), error: error });
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
