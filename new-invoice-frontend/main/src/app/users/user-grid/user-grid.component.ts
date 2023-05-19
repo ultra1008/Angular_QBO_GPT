@@ -33,6 +33,7 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
   advanceTable?: AdvanceTable;
   roleLists: Array<RoleModel> = [];
   username_search: any;
+  username_status: any;
 
 
   constructor(
@@ -45,6 +46,9 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
 
   ngOnInit() {
     this.getUser();
+  }
+  changeStatus(event: any) {
+
   }
 
   async getUser() {
