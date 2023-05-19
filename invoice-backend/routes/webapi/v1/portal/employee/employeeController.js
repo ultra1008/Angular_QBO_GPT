@@ -1783,40 +1783,48 @@ module.exports.deleteTeamMember = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
     if (decodedToken) {
+        console.log("decodedToken", decodedToken);
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             let requestObject = req.body;
             let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
-            let get_user = await userConnection.findOne({ _id: ObjectID(requestObject._id) });
-
-            if (get_user) {
-                let update_user_1 = await userConnection.updateMany({ _id: ObjectID(requestObject._id), is_first: { $eq: false }, _id: { $ne: ObjectID(decodedToken.UserData._id) } }, { is_delete: 1, userstatus: 2, userroleId: '' });
-
-                if (update_user_1) {
-
-
-                    let histioryObject = {
-                        data: [],
-                        user_id: requestObject._id,
-                    };
-
-                    recentActivity.saveRecentActivity({
-                        user_id: decodedToken.UserData._id,
-                        username: decodedToken.UserData.userfullname,
-                        userpicture: decodedToken.UserData.userpicture,
-                        data_id: requestObject._id,
-                        title: get_user.userfullname,
-                        module: 'User',
-                        action: 'Archive',
-                        action_from: 'Web',
-                    }, decodedToken);
-                    addUSER_History("Archive", histioryObject, decodedToken);
-
-                    res.send({ message: translator.getStr('UserDeleted'), status: true });
-                }
+            // let get_loginuser = await userConnection.findOne({ _id: ObjectID(decodedToken.UserData._id) });
+            if (requestObject._id == decodedToken.UserData._id) {
+                res.send({ message: "Logged user can't be archive. ", status: false });
             } else {
 
+                let get_user = await userConnection.findOne({ _id: ObjectID(requestObject._id) });
+                if (get_user) {
+                    let update_user_1 = await userConnection.updateMany({ _id: { $eq: ObjectID(requestObject._id), $ne: ObjectID(decodedToken.UserData._id) }, is_first: { $eq: false } }, { is_delete: 1, userstatus: 2, userroleId: '' });
+
+                    if (update_user_1) {
+
+
+                        let histioryObject = {
+                            data: [],
+                            user_id: requestObject._id,
+                        };
+
+                        recentActivity.saveRecentActivity({
+                            user_id: decodedToken.UserData._id,
+                            username: decodedToken.UserData.userfullname,
+                            userpicture: decodedToken.UserData.userpicture,
+                            data_id: requestObject._id,
+                            title: get_user.userfullname,
+                            module: 'User',
+                            action: 'Archive',
+                            action_from: 'Web',
+                        }, decodedToken);
+                        addUSER_History("Archive", histioryObject, decodedToken);
+
+                        res.send({ message: translator.getStr('UserDeleted'), status: true });
+                    }
+                } else {
+                    res.send({ message: "User is not found with this id.", status: true });
+
+                }
             }
+
         } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
@@ -1837,8 +1845,10 @@ module.exports.deleteMultipleTeamMember = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             let requestObject = req.body;
+            console.log("requestObject", requestObject);
             let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             let update_user_1 = await userConnection.updateMany({ _id: { $in: requestObject._id, $ne: ObjectID(decodedToken.UserData._id) }, is_first: { $eq: false } }, { is_delete: 1, userstatus: 2, userroleId: '' });
+            console.log("update_user_1", update_user_1);
 
             if (update_user_1) {
                 for (let i = 0; i < requestObject._id.length; i++) {
@@ -4736,47 +4746,50 @@ module.exports.updateUserStatus = async function (req, res) {
             var id = requestObject._id;
             delete requestObject._id;
             console.log("requestObject", requestObject);
-            var get_user = await userConnection.findOne({ _id: ObjectID(id) });
-            if (get_user) {
-                var updateStatus = await userConnection.updateMany({ _id: ObjectID(id), is_first: { $eq: false }, _id: { $ne: ObjectID(decodedToken.UserData._id) } }, { userstatus: requestObject.userstatus });
-                console.log("updateStatus", updateStatus);
-
-                if (updateStatus) {
-                    let action = '';
-                    let message = '';
-                    if (requestObject.userstatus == 1) {
-                        action = "Active";
-                        message = "User status active successfully.";
-                    } else {
-                        action = "Inactive";
-                        message = "User status inactive successfully.";
-                    }
-
-
-                    let histioryObject = {
-                        data: [],
-                        user_id: id,
-                    };
-
-                    recentActivity.saveRecentActivity({
-                        user_id: decodedToken.UserData._id,
-                        username: decodedToken.UserData.userfullname,
-                        userpicture: decodedToken.UserData.userpicture,
-                        data_id: id,
-                        title: get_user.userfullname,
-                        module: 'User',
-                        action: action,
-                        action_from: 'Web',
-                    }, decodedToken);
-
-                    res.send({ message: message, status: true });
-
-                } else {
-                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
-                }
+            if (id == decodedToken.UserData._id) {
+                res.send({ message: "Logged user can't be inactive. ", status: false });
             } else {
-                res.send({ message: "User not found with this id.", status: false, error: e });
+                var get_user = await userConnection.findOne({ _id: ObjectID(id) });
+                if (get_user) {
+                    var updateStatus = await userConnection.updateMany({ _id: { $eq: ObjectID(id), $ne: ObjectID(decodedToken.UserData._id) }, is_first: { $eq: false } }, { userstatus: requestObject.userstatus });
+                    console.log("updateStatus", updateStatus);
 
+                    if (updateStatus) {
+                        let action = '';
+                        let message = '';
+                        if (requestObject.userstatus == 1) {
+                            action = "Active";
+                            message = "User status active successfully.";
+                        } else {
+                            action = "Inactive";
+                            message = "User status inactive successfully.";
+                        }
+
+
+                        let histioryObject = {
+                            data: [],
+                            user_id: id,
+                        };
+
+                        recentActivity.saveRecentActivity({
+                            user_id: decodedToken.UserData._id,
+                            username: decodedToken.UserData.userfullname,
+                            userpicture: decodedToken.UserData.userpicture,
+                            data_id: id,
+                            title: get_user.userfullname,
+                            module: 'User',
+                            action: action,
+                            action_from: 'Web',
+                        }, decodedToken);
+
+                        res.send({ message: message, status: true });
+
+                    } else {
+                        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    }
+                } else {
+                    res.send({ message: "User not found with this id.", status: false, error: e });
+                }
             }
         } catch (e) {
             console.log(e);
