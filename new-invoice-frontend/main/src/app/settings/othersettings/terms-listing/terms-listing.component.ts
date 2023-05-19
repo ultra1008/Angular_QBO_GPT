@@ -101,11 +101,6 @@ export class TermsListingComponent
       });
   }
 
-  // gotoArchiveUnarchive() {
-  //   this.isDelete = this.isDelete == 1 ? 0 : 1;
-  //   this.loadData();
-  // }
-
   private refreshTable() {
     this.paginator._changePageSize(this.paginator.pageSize);
   }
@@ -125,24 +120,7 @@ export class TermsListingComponent
           this.selection.select(row)
         );
   }
-  removeSelectedRows() {
-    //   const totalSelect = this.selection.selected.length;
-    //   this.selection.selected.forEach((item) => {
-    //     const index: number = this.dataSource.renderedData.findIndex(
-    //       (d) => d === item
-    //     );
-    //     // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
-    //     this.termsService?.dataChange.value.splice(index, 1);
-    //     this.refreshTable();
-    //     this.selection = new SelectionModel<TermsTable>(true, []);
-    //   });
-    //  showNotification(
-    //     'snackbar-danger',
-    //     totalSelect + ' Record Delete Successfully...!!!',
-    //     'bottom',
-    //     'center'
-    //   );
-  }
+
   public loadData() {
     this.termsService = new SettingsService(this.httpCall);
     this.dataSource = new TermsDataSource(
