@@ -7,14 +7,18 @@ import {
   CostCodeTable,
   DepartmentTable,
   DocumentTable,
+  DocumentsTable,
+  JobNameTable,
   JobTitleTable,
   JobTypeTable,
   LanguageTable,
   MailboxTable,
   RelationshipTable,
   Settings,
+  TaxrateTable,
   TermsTable,
   UsageTable,
+  VendorTypeTable,
 } from './settings.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
@@ -62,6 +66,21 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     TermsTable[]
   >([]);
 
+  dataTaxrateChange: BehaviorSubject<TaxrateTable[]> = new BehaviorSubject<
+    TaxrateTable[]
+  >([]);
+
+  dataDocumentsChange: BehaviorSubject<DocumentsTable[]> = new BehaviorSubject<
+    DocumentsTable[]
+  >([]);
+
+  dataVendortypeChange: BehaviorSubject<VendorTypeTable[]> =
+    new BehaviorSubject<VendorTypeTable[]>([]);
+
+  dataJobnameChange: BehaviorSubject<JobNameTable[]> = new BehaviorSubject<
+    JobNameTable[]
+  >([]);
+
   constructor(private httpCall: HttpCall) {
     super();
   }
@@ -105,6 +124,21 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     return this.dataTermsChange.value;
   }
 
+  get dataTaxrate(): TaxrateTable[] {
+    return this.dataTaxrateChange.value;
+  }
+
+  get dataDocuments(): DocumentsTable[] {
+    return this.dataDocumentsChange.value;
+  }
+
+  get dataVendortype(): VendorTypeTable[] {
+    return this.dataVendortypeChange.value;
+  }
+
+  get dataJobname(): JobNameTable[] {
+    return this.dataJobnameChange.value;
+  }
   async getCompanyType() {
     const data = await this.httpCall
       .httpGetCall(httpversion.V1 + httproutes.GET_COMPNAY_TYPE)
@@ -222,6 +256,50 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     // Only write this for datatable api otherwise return data
     this.isTblLoading = false;
     this.dataTermsChange.next(data);
+  }
+
+  async getAllTaxrateTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall
+      .httpPostCall(httpversion.PORTAL_V1 + httproutes.TEXT_RATE_DATA_TABLE, {
+        is_delete: is_delete,
+      })
+      .toPromise();
+    // Only write this for datatable api otherwise return data
+    this.isTblLoading = false;
+    this.dataTaxrateChange.next(data);
+  }
+
+  async getAllDocumentsTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall
+      .httpPostCall(httpversion.PORTAL_V1 + httproutes.DOCUMENTS_DATA_TABLE, {
+        is_delete: is_delete,
+      })
+      .toPromise();
+    // Only write this for datatable api otherwise return data
+    this.isTblLoading = false;
+    this.dataDocumentsChange.next(data);
+  }
+
+  async getAllVendorTypeTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall
+      .httpPostCall(httpversion.PORTAL_V1 + httproutes.VENDOR_TYPE_DATA_TABLE, {
+        is_delete: is_delete,
+      })
+      .toPromise();
+    // Only write this for datatable api otherwise return data
+    this.isTblLoading = false;
+    this.dataVendortypeChange.next(data);
+  }
+
+  async getAllJobNameTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall
+      .httpPostCall(httpversion.PORTAL_V1 + httproutes.JOB_NAME_DATA_TABLE, {
+        is_delete: is_delete,
+      })
+      .toPromise();
+    // Only write this for datatable api otherwise return data
+    this.isTblLoading = false;
+    this.dataJobnameChange.next(data);
   }
 
   async getAllCostCodeTable(is_delete: number): Promise<void> {

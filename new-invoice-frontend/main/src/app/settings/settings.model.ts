@@ -228,3 +228,55 @@ export class TermsTable {
     }
   }
 }
+
+export class TaxrateTable {
+  _id: string;
+  name!: string;
+
+  constructor(TaxrateTable: TaxrateTable) {
+    {
+      this._id = TaxrateTable._id;
+      this.name = TaxrateTable.name;
+    }
+  }
+}
+
+export class DocumentsTable {
+  _id: string;
+  is_expiration!: boolean;
+  name!: string;
+
+  constructor(DocumentsTable: DocumentsTable) {
+    {
+      this._id = DocumentsTable._id;
+      this.name = DocumentsTable.name;
+      this.is_expiration = DocumentsTable.is_expiration;
+    }
+  }
+}
+
+export class VendorTypeTable {
+  _id: string;
+  name!: string;
+
+  constructor(VendorTypeTable: VendorTypeTable) {
+    {
+      this._id = VendorTypeTable._id;
+      this.name = VendorTypeTable.name;
+    }
+  }
+}
+
+export class JobNameTable {
+  _id: string;
+  name!: string;
+  email_contact!: string;
+
+  constructor(JobNameTable: JobNameTable) {
+    {
+      this._id = JobNameTable._id;
+      this.name = JobNameTable.name;
+      this.email_contact = JobNameTable.email_contact;
+    }
+  }
+}
