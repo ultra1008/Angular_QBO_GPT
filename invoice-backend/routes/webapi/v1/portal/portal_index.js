@@ -158,6 +158,7 @@ router.get('/webapi/v1/portal/getAlljobtype', common.checkTokenExistOrNot, jobty
 router.post('/webapi/v1/portal/savejobtype', common.checkTokenExistOrNot, jobtypeValidation.jobTypeValidation, jobtypeController.savejobtype);
 router.post('/webapi/v1/portal/deletejobtype', common.checkTokenExistOrNot, jobtypeValidation.jobTypeDeleteValidation, jobtypeController.deletejobtype);
 router.post('/webapi/v1/portal/getjobtypefortable', common.checkTokenExistOrNot, jobtypeValidation.getjobtypeForTableValidation, jobtypeController.getJobTypeForTable);
+router.post('/webapi/v1/portal/importjob_type', common.checkTokenExistOrNot, jobtypeController.importjob_type);
 
 let jobtitleController = require('./job_title/jobtitleController');
 let jobtitleValidation = require('./job_title/jobtitleValidation');
@@ -219,6 +220,7 @@ router.get('/webapi/v1/portal/getlanguage', common.checkTokenExistOrNot, languag
 router.post('/webapi/v1/portal/savelanguage', common.checkTokenExistOrNot, languageValidation.languageValidation, languageController.savelanguage);
 router.post('/webapi/v1/portal/deletelanguage', common.checkTokenExistOrNot, languageValidation.languageDeleteValidation, languageController.deletelanguage);
 router.post('/webapi/v1/portal/getlanguageForTable', common.checkTokenExistOrNot, languageValidation.getlanguageForTableValidation, languageController.getlanguageForTable);
+router.post('/webapi/v1/portal/importlanguage', common.checkTokenExistOrNot, languageController.importlanguage);
 
 let costCodeController = require('./costcode/costcodeController');
 let costCodeValidation = require('./costcode/costCodeValidation');
@@ -243,7 +245,7 @@ router.get('/webapi/v1/portal/getallrelationships', common.checkTokenExistOrNot,
 router.post('/webapi/v1/portal/saverelationship', common.checkTokenExistOrNot, relationshipsValidation.relationshipValidation, relationshipsController.saveRelationship);
 router.post('/webapi/v1/portal/deleterelationship', common.checkTokenExistOrNot, relationshipsValidation.relationshipDeleteValidation, relationshipsController.deleteRelationship);
 router.post('/webapi/v1/portal/getrelationshipfortable', common.checkTokenExistOrNot, relationshipsValidation.getrelationshipForTableValidation, relationshipsController.getRelationshipForTable);
-
+router.post('/webapi/v1/portal/importrelationship', common.checkTokenExistOrNot, relationshipsController.importRelationship);
 
 let shortcustsController = require("./shortcusts/shortcustsController");
 router.get('/webapi/v1/portal/getshortcusts', common.checkTokenExistOrNot, shortcustsController.getusershortcuts);

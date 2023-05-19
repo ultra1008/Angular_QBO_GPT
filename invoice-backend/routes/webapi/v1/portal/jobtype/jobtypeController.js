@@ -5,6 +5,8 @@ var ObjectID = require('mongodb').ObjectID;
 let db_connection = require('./../../../../../controller/common/connectiondb');
 let common = require('./../../../../../controller/common/common');
 let collectionConstant = require('./../../../../../config/collectionConstant');
+var formidable = require('formidable');
+const reader = require('xlsx');
 
 module.exports.getAlljob_type = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -133,5 +135,67 @@ module.exports.getJobTypeForTable = async function (req, res) {
         }
     } else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+// bulk upload 
+module.exports.importjob_type = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            let jobtypeCollection = connection_db_api.model(collectionConstant.JOB_TYPE, jobtypeSchema);
+            var form = new formidable.IncomingForm();
+            var fields = [];
+            var notFonud = 0;
+            var newOpenFile;
+            var fileName;
+            form.parse(req)
+                .on('file', function (name, file) {
+                    notFonud = 1;
+                    fileName = file;
+                }).on('field', function (name, field) {
+                    fields[name] = field;
+                })
+                .on('error', function (err) {
+                    throw err;
+                }).on('end', async function () {
+                    newOpenFile = this.openedFiles;
+
+                    if (notFonud == 1) {
+
+                        const file = reader.readFile(newOpenFile[0].path);
+                        const sheets = file.SheetNames;
+                        let data = [];
+                        for (let i = 0; i < sheets.length; i++) {
+                            const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
+                            temp.forEach((ress) => {
+                                data.push(ress);
+                            });
+                        }
+                        for (let m = 0; m < data.length; m++) {
+                            requestObject = {};
+                            let getdata = await jobtypeCollection.findOne({ job_type_name: data[m].job_type_name });
+                            if (getdata == null) {
+                                requestObject.job_type_name = data[m].job_type_name;
+                                let add_job_type = new jobtypeCollection(requestObject);
+                                let save_job_type = await add_job_type.save();
+                            } else {
+                                res.send({ status: true, message: "job_type  job type name is allready exist." });
+                            }
+                        }
+                        res.send({ status: true, message: "job type info add successfully." });
+
+                    } else {
+                        res.send({ status: false, message: translator.getStr('SomethingWrong'), rerror: e });
+                    }
+                });
+        } catch (error) {
+            console.log(error);
+            res.send({ status: false, message: translator.getStr('SomethingWrong'), rerror: e });
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
