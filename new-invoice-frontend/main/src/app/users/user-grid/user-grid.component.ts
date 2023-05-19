@@ -32,6 +32,7 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
   selection = new SelectionModel<User>(true, []);
   advanceTable?: AdvanceTable;
   roleLists: Array<RoleModel> = [];
+  username_search: any;
 
 
   constructor(

@@ -11,6 +11,12 @@
                                     <h2 *ngIf="isDelete === 0">User</h2>
                                     <h2 *ngIf="isDelete === 1">Archived User</h2>
                                 </li>
+                                <li class="tbl-search-box">
+                                    <label for="search-input"><i class="material-icons search-icon">search</i></label>
+                                    <input [(ngModel)]="username_search"
+                                        placeholder="{{'COMMON.TOOL_TIP.SEARCH' | translate}}" type="text" #filter
+                                        class="browser-default search-field" aria-label="Search box">
+                                </li>
                             </ul>
                         </div>
                         <div class="right">
@@ -154,7 +160,8 @@
                     <div class="body overflow-auto">
                         <div class="row">
 
-                            <div class="test col-xs-12 col-sm-6 col-md-4 col-xl-2" *ngFor="let user of userList">
+                            <div class="test col-xs-12 col-sm-6 col-md-4 col-xl-2"
+                                *ngFor="let user of userList | empListFilter : username_search">
                                 <div class="card rixit " style="border: 2px solid rgb(182, 182, 182);">
                                     <!-- <div class="ribbon-wrapper"> -->
                                     <!-- <div class="ribbon-tag" [ngClass]="user.userstatus == 1 ? 'active' :'inactive'">
