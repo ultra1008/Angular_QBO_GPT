@@ -57,6 +57,15 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
       .toPromise();
     return data;
   }
+  async allArchiveUser(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.PORTAL_TERM_ALL_DELETE,
+        requestObject
+      )
+      .toPromise();
+    return data;
+  }
   async getRole() {
     const data = await this.httpCall
       .httpGetCall(httpversion.PORTAL_V1 + httproutes.USER_SETTING_ROLES_ALL)
@@ -145,6 +154,17 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
       .toPromise();
     return data;
   }
+  async updateAllUserStatus(requestObject: any) {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_ALL_USER_STATUS_CHANGE, requestObject).toPromise();
+    return data;
+  }
+  async updateStatus(requestObject: any) {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_USER_STATUS_UPDATE, requestObject).toPromise();
+    console.log('111111111', data);
+    return data;
+
+  }
+
 
   addAdvanceTable(User: User): void {
     this.dialogData = User;

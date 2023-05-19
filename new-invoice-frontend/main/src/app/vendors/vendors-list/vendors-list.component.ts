@@ -83,28 +83,11 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   vendor_status: any = [''];
 
   ngOnInit() {
-    // var myValue = this.rform.querySelector('[vendor_status]').value;
-    // console.log('qqqqqqqqqqq', myValue);
 
     this.rform = this.fb.group({
       vendor_status: [''],
     });
-    // if (this.rform!.value('vendor_status') == 'Active') {
-    //   console.log('call');
 
-    // }
-    // if (this.rform!.value('vendor_status') == ' Inactive') {
-    //   console.log('call1');
-
-    // }
-    // if (this.rform!.value('vendor_status') == 'Archive') {
-    //   console.log('call2');
-
-    // }
-
-    // Use this flag or variable for the Quickbook synce time. this fflag is help to display
-    // the column of quickbooks. If company synced the Quickbooks account then in datatable only 
-    // QB - svg column display.
     if (this.isQBSyncedCompany) {
       this.displayedColumns = [
         'select',
@@ -281,7 +264,6 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.renderedData.length;
     return numSelected === numRows;
-
   }
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */

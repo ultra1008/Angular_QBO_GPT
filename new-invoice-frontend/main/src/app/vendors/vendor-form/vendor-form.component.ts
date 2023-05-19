@@ -69,11 +69,8 @@ export class VendorFormComponent {
     this.vendorForm = this.fb.group({
       vendor_name: ['', [Validators.required]],
       vendor_phone: ['', [Validators.required]],
-      vendor_email: [
-        '',
-        [Validators.required, Validators.email, Validators.minLength(5)],
-      ],
-      gl_account: ['', [Validators.required]],
+      vendor_email: ['', [Validators.required, Validators.email, Validators.minLength(5)],],
+      gl_account: [''],
       vendor_id: [''],
       customer_id: [''],
       vendor_address: ['', [Validators.required]],
@@ -109,11 +106,8 @@ export class VendorFormComponent {
       this.vendorForm = this.fb.group({
         vendor_name: [vendorData.vendor_name, [Validators.required]],
         vendor_phone: [vendorData.vendor_phone, [Validators.required]],
-        vendor_email: [
-          vendorData.vendor_email,
-          [Validators.required, Validators.email, Validators.minLength(5)],
-        ],
-        gl_account: [vendorData.gl_account, [Validators.required]],
+        vendor_email: [vendorData.vendor_email, [Validators.required, Validators.email, Validators.minLength(5)],],
+        gl_account: [vendorData.gl_account],
         vendor_id: [vendorData.vendor_id],
         customer_id: [vendorData.customer_id],
         vendor_address: [vendorData.vendor_address, [Validators.required]],

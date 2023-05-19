@@ -20,8 +20,34 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="right">
+                        <div class="right rix">
                             <ul class="tbl-export-btn">
+                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                                    <form [formGroup]="userSelectForm">
+                                        <mat-form-field [hidden]=!selection.hasValue() class="example-full-width"
+                                            appearance="outline">
+                                            <mat-label>Action for selected</mat-label>
+                                            <mat-select [(ngModel)]="selectedValue" name="food"
+                                                (selectionChange)="onBookChange($event)" formControlName="userstatus">
+                                                <mat-option [value]="1">
+                                                    Active
+                                                </mat-option>
+                                                <mat-option [value]="2">
+                                                    Inactive
+                                                </mat-option>
+                                                <mat-option [value]="3">
+                                                    Archive
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </form>
+                                    <!-- <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="{{'COMMON.TOOL_TIP.MULTI_ARCHIVE' |
+                                        translate}}">
+                                        <button mat-mini-fab color="warn" (click)="removeSelectedRows()">
+                                            <mat-icon class="col-white">archive</mat-icon>
+                                        </button>
+                                    </div> -->
+                                </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
                                     <div class="m-l-10" matTooltip="REFRESH">
                                         <button mat-mini-fab color="primary" (click)="refresh()">
@@ -117,6 +143,24 @@
                     <div class="body overflow-auto">
                         <div class="table-responsive">
                             <table mat-table #table [dataSource]="dataSource" matSort class="table mat-cell">
+
+                                <ng-container matColumnDef="select">
+                                    <mat-header-cell *matHeaderCellDef class="psl-1"
+                                        [ngClass]="'tbl-col-width-per-selected'">
+                                        <mat-checkbox (change)="$event ? masterToggle() : null"
+                                            [checked]="selection.hasValue() && isAllSelected()"
+                                            [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                            [ngClass]="'tbl-checkbox' ">
+                                        </mat-checkbox>
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row" class="psl-1"
+                                        [ngClass]="'tbl-col-width-per-selected'">
+                                        <mat-checkbox (click)="$event.stopPropagation()"
+                                            (change)="$event ? selection.toggle(row) : null"
+                                            [checked]="selection.isSelected(row)" [ngClass]="'tbl-checkbox'">
+                                        </mat-checkbox>
+                                    </mat-cell>
+                                </ng-container>
                                 <!-- ID Column -->
                                 <ng-container matColumnDef="id">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
@@ -181,7 +225,7 @@
                                         <span class="mobile-label">Department:</span>{{row.department_name}}
                                     </mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="userstatus">
+                                <!-- <ng-container matColumnDef="userstatus">
                                     <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-7'" *matHeaderCellDef
                                         mat-sort-header>
                                         {{'USERS.TABLE.STATUS' |
@@ -197,6 +241,24 @@
                                         <div *ngIf="row.userstatus===2">
                                             <span class="badge badge-solid-red">
                                                 Inactive</span>
+                                        </div>
+                                    </mat-cell>
+                                </ng-container> -->
+                                <ng-container matColumnDef="userstatus">
+                                    <mat-header-cell class="psl-1" [ngClass]="'tbl-col-width-per-action'"
+                                        *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.STATUS' |
+                                        translate}}
+                                    </mat-header-cell>
+                                    <mat-cell mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row) "
+                                        class="tbl-col-width-per-action">
+                                        <span class="mobile-label">Status:</span>
+                                        <div *ngIf="row.userstatus===1" (click)="updateStatus(row)">
+                                            <span class="badge badge-solid-green">
+                                                {{'COMMON.STATUS.ACTIVE' | translate}}</span>
+                                        </div>
+                                        <div *ngIf="row.userstatus===2" (click)="updateStatus(row)">
+                                            <span class="badge badge-solid-red">
+                                                {{'COMMON.STATUS.INACTIVE' | translate}}</span>
                                         </div>
                                     </mat-cell>
                                 </ng-container>
