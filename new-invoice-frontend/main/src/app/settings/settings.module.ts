@@ -23,7 +23,6 @@ import { OthersettingsComponent } from './othersettings/othersettings.component'
 import { SecurityComponent } from './security/security.component';
 import { CostcodeComponent } from './costcode/costcode.component';
 import { DocumentviewComponent } from './documentview/documentview.component';
-import { TranslateModule } from '@ngx-translate/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { CompanyInfoFormComponent } from './company-info-form/company-info-form.component';
 import { MatCardModule } from '@angular/material/card';
@@ -74,6 +73,8 @@ import { TaxRateListingComponent } from './othersettings/tax-rate-listing/tax-ra
 import { DocumentsListingComponent } from './othersettings/documents-listing/documents-listing.component';
 import { VendorTypeListingComponent } from './othersettings/vendor-type-listing/vendor-type-listing.component';
 import { JobNameListingComponent } from './othersettings/job-name-listing/job-name-listing.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { ImportEmployeeSettingsComponent } from './employeesettings/import-employee-settings/import-employee-settings.component';
 
 @NgModule({
   declarations: [
@@ -117,6 +118,7 @@ import { JobNameListingComponent } from './othersettings/job-name-listing/job-na
     DocumentsListingComponent,
     VendorTypeListingComponent,
     JobNameListingComponent,
+    ImportEmployeeSettingsComponent,
   ],
   providers: [SettingsService],
   imports: [
@@ -133,7 +135,6 @@ import { JobNameListingComponent } from './othersettings/job-name-listing/job-na
     MatCheckboxModule,
     MatTabsModule,
     ComponentsModule,
-    TranslateModule,
     MatSlideToggleModule,
     MatTableModule,
     MatPaginatorModule,
