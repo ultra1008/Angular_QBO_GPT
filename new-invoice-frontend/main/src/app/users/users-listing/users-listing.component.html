@@ -196,7 +196,8 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.EMAIL' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
+                                    <mat-cell *matCellDef="let row" [matTooltip]="getTooltip(row)"
+                                        (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Email:</span>{{row.useremail}}
                                     </mat-cell>
                                 </ng-container>

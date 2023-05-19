@@ -178,17 +178,18 @@
                                 <ng-container matColumnDef="vendor_email">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.EMAIL' |
                                         translate}}</mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
-                                        (click)="editVendor(row)">
-                                        <span class="mobile-label">Email:</span> {{row.vendor_email}}
+                                    <mat-cell *matCellDef="let row" [matTooltip]="getTooltip(row)"
+                                        (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">
+                                        <span class="mobile-label">Email:</span>
+                                        {{row.vendor_email}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_address">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.ADDRESS' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
-                                        (click)="editVendor(row)">
+                                    <mat-cell *matCellDef="let row" [matTooltip]="getAddTooltip(row)"
+                                        (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">
                                         <span class="truncate-text"><span class="mobile-label">Address:</span>
                                             {{row.vendor_address}}</span>
                                     </mat-cell>

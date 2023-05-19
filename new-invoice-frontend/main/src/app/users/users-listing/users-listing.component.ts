@@ -278,7 +278,9 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
 
     }
   }
-
+  getTooltip(row: any) {
+    return row.useremail;
+  }
   listToGrid() {
     localStorage.setItem(localstorageconstants.USER_DISPLAY, 'grid');
     this.router.navigate([WEB_ROUTES.USER_GRID]);
@@ -431,6 +433,7 @@ export class UserDataSource extends DataSource<User> {
   disconnect() {
     //disconnect
   }
+
   /** Returns a sorted copy of the database data. */
   sortData(data: User[]): User[] {
     if (!this._sort.active || this._sort.direction === '') {

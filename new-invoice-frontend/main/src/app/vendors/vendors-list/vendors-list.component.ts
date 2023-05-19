@@ -130,11 +130,14 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     this.galleryOptions = [this.tmp_gallery];
     this.getTerms();
   }
-
+  getTooltip(row: any) {
+    return row.vendor_email;
+  }
+  getAddTooltip(row: any) {
+    return row.vendor_address;
+  }
   refresh() {
-
     this.loadData();
-
   }
   onBookChange(ob: any) {
     console.log('Book changed...');
