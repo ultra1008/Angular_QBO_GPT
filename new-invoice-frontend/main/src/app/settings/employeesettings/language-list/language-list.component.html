@@ -8,7 +8,7 @@
                         <ng-container matColumnDef="name">
                           <mat-header-cell *matHeaderCellDef mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.LANGUAGE' |
                             translate}}</mat-header-cell>
-                          <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
+                          <mat-cell *matCellDef="let row" (click)="edit(row)" (contextmenu)="onContextMenu($event, row)">
                             <span class="mobile-label">name:</span> {{row.name}}
                           </mat-cell>
                         </ng-container>

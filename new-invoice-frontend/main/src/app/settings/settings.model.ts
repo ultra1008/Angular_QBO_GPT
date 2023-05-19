@@ -210,3 +210,21 @@ export class LanguageTable {
     }
   }
 }
+
+export class TermsTable {
+  _id: string;
+  name!: string;
+  due_days!: number;
+  is_discount!: boolean;
+  discount!: number;
+
+  constructor(TermsTable: TermsTable) {
+    {
+      this._id = TermsTable._id;
+      this.name = TermsTable.name;
+      this.due_days = TermsTable.due_days;
+      this.is_discount = TermsTable.is_discount;
+      this.discount = TermsTable.discount;
+    }
+  }
+}

@@ -1838,7 +1838,7 @@ module.exports.deleteMultipleTeamMember = async function (req, res) {
         try {
             let requestObject = req.body;
             let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
-            let update_user_1 = await userConnection.updateMany({ _id: { $in: requestObject._id }, is_first: { $eq: false }, _id: { $ne: ObjectID(decodedToken.UserData._id) } }, { is_delete: 1, userstatus: 2, userroleId: '' });
+            let update_user_1 = await userConnection.updateMany({ _id: { $in: requestObject._id, $ne: ObjectID(decodedToken.UserData._id) }, is_first: { $eq: false } }, { is_delete: 1, userstatus: 2, userroleId: '' });
 
             if (update_user_1) {
                 for (let i = 0; i < requestObject._id.length; i++) {
@@ -4735,10 +4735,11 @@ module.exports.updateUserStatus = async function (req, res) {
             var requestObject = req.body;
             var id = requestObject._id;
             delete requestObject._id;
-
+            console.log("requestObject", requestObject);
             var get_user = await userConnection.findOne({ _id: ObjectID(id) });
             if (get_user) {
                 var updateStatus = await userConnection.updateMany({ _id: ObjectID(id), is_first: { $eq: false }, _id: { $ne: ObjectID(decodedToken.UserData._id) } }, { userstatus: requestObject.userstatus });
+                console.log("updateStatus", updateStatus);
 
                 if (updateStatus) {
                     let action = '';
@@ -4793,6 +4794,7 @@ module.exports.updateUserStatus = async function (req, res) {
 module.exports.updateMultipleUserStatus = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
+    console.log("decodedToken", decodedToken);
     if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
@@ -4800,8 +4802,11 @@ module.exports.updateMultipleUserStatus = async function (req, res) {
             var requestObject = req.body;
             // var id = requestObject._id;
             // delete requestObject._id;
+            console.log("requestObject", requestObject);
 
-            var updateStatus = await userConnection.updateMany({ _id: { $in: requestObject._id }, is_first: { $eq: false }, _id: { $ne: ObjectID(decodedToken.UserData._id) } }, { userstatus: requestObject.userstatus });
+            var updateStatus = await userConnection.updateMany({ _id: { $in: requestObject._id, $ne: ObjectID(decodedToken.UserData._id) }, is_first: { $eq: false } }, { userstatus: requestObject.userstatus });
+
+            console.log("updateStatus", updateStatus);
 
             if (updateStatus) {
                 let action = '';
