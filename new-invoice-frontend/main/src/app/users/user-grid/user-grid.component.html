@@ -21,7 +21,16 @@
                         </div>
                         <div class="right">
                             <ul class="tbl-export-btn">
-
+                                <li *ngIf="isDelete === 0" class="rix">
+                                    <mat-form-field class="cust-padding-top" appearance="outline">
+                                        <mat-label>{{'status' | translate }}</mat-label>
+                                        <mat-select (change)="changeStatus($event)" [(ngModel)]="username_status">
+                                            <mat-option value="All">{{'All' | translate}}</mat-option>
+                                            <mat-option value="1">{{'Active' | translate}}</mat-option>
+                                            <mat-option value="2">{{'In-Active' | translate}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
                                     <div class="m-l-10" matTooltip="REFRESH">
                                         <button mat-mini-fab color="primary" (click)="refresh()">
@@ -71,47 +80,7 @@
                                         </button>
                                     </div>
                                 </li>
-                                <!-- <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="MULTI ARCHIVE">
-                                        <button mat-mini-fab color="warn" (click)="removeSelectedRows()">
-                                            <mat-icon class="col-white">archive </mat-icon>
-                                        </button>
-                                    </div>
-                                </li>
-                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" matTooltip="REFRESH">
-                                        <button mat-mini-fab color="primary" (click)="refresh()">
-                                            <mat-icon class="col-white">refresh</mat-icon>
-                                        </button>
-                                    </div>
-                                </li>
-                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" matTooltip="HISTORY">
-                                        <button mat-mini-fab color="primary" (click)="openHistory()">
-                                            <mat-icon class="col-white">history</mat-icon>
-                                        </button>
-                                    </div>
-                                </li>
-                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" matTooltip="REPORT" (click)="vendorReport()">
-                                        <button mat-mini-fab color="primary">
-                                            <mat-icon class="col-white">insert_drive_file</mat-icon>
-                                        </button>
-                                    </div>
-                                </li>
-                              
-                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" matTooltip="ADD">
-                                        <button mat-mini-fab color="primary" (click)="addNew()">
-                                            <mat-icon class="col-white">add</mat-icon>
-                                        </button>
-                                    </div>
-                                </li>
-                                <li *ngIf="isDelete === 0">
-                                    <div class="export-button m-l-10" matTooltip="XLSX">
-                                        <img src="assets/images/icons/xlsx.png" alt="" (click)="exportExcel()" />
-                                    </div>
-                                </li> -->
+
                             </ul>
                         </div>
                     </div>
@@ -161,7 +130,7 @@
                         <div class="row">
 
                             <div class="test col-xs-12 col-sm-6 col-md-4 col-xl-2"
-                                *ngFor="let user of userList | empListFilter : username_search">
+                                *ngFor="let user of userList | empListFilter : username_search| empListFilterStatus : username_status">
                                 <div class="card rixit " style="border: 2px solid rgb(182, 182, 182);">
                                     <!-- <div class="ribbon-wrapper"> -->
                                     <!-- <div class="ribbon-tag" [ngClass]="user.userstatus == 1 ? 'active' :'inactive'">

@@ -41,7 +41,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { PersonalInformationComponent } from './user-form/personal-information/personal-information.component';
 import { ContactInformationComponent } from './user-form/contact-information/contact-information.component';
 import { EmployeeInformationComponent } from './user-form/employee-information/employee-information.component';
-import { EmpListFilterPipe } from './users-filter.pipe';
+import { EmpListFilterPipe, EmpListFilterStatusPipe } from './users-filter.pipe';
 
 
 @NgModule({
@@ -55,7 +55,8 @@ import { EmpListFilterPipe } from './users-filter.pipe';
     PersonalInformationComponent,
     ContactInformationComponent,
     EmployeeInformationComponent,
-    EmpListFilterPipe
+    EmpListFilterPipe,
+    EmpListFilterStatusPipe
   ],
   providers: [UserService],
   imports: [

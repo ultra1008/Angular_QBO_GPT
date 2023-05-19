@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core'; public;
 import { ActivatedRoute, Router } from '@angular/router';
 import { EmployeeService } from '../employee.service';
 import { Subject, Subscription } from 'rxjs';
@@ -93,7 +93,7 @@ export class EmployeeListComponent implements OnInit {
   dtTrigger: Subject<any> = new Subject<any>();
   @ViewChild('OpenFilebox') OpenFilebox: any;
   Company_Equipment_File_Not_Match: any;
-  constructor (private modeService: ModeDetectService, private router: Router, public mostusedservice: Mostusedservice,
+  constructor(private modeService: ModeDetectService, private router: Router, public mostusedservice: Mostusedservice,
     public employeeservice: EmployeeService, public translate: TranslateService, public dialog: MatDialog,
     public httpCall: HttpCall, public snackbarservice: Snackbarservice, public uiSpinner: UiSpinnerService,) {
     var userdata = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
@@ -462,7 +462,7 @@ export class TeamHistory {
   activityIcon!: string;
   isSearch: boolean = false;
   subscription: Subscription;
-  constructor (
+  constructor(
     public httpCall: HttpCall,
     public snackbarservice: Snackbarservice,
     private modeService: ModeDetectService
@@ -574,7 +574,7 @@ export class BulkUploadErrorData {
   import_cancel_error: string;
   Compnay_Equipment_Delete_Yes: string = "";
   Compnay_Equipment_Delete_No: string = "";
-  constructor (
+  constructor(
     public dialogRef: MatDialogRef<BulkUploadErrorData>, public httpCall: HttpCall, public snackbarservice: Snackbarservice,
     public uiSpinner: UiSpinnerService,
     @Inject(MAT_DIALOG_DATA) public data: any, public translate: TranslateService) {
@@ -648,7 +648,7 @@ export class BulkUploadErrorData {
 export class ImportButtonDownload {
   dtOptions: DataTables.Settings = {};
 
-  constructor (
+  constructor(
     public dialogRef: MatDialogRef<ImportButtonDownload>,
     @Inject(MAT_DIALOG_DATA) public data: any, public translate: TranslateService) {
   }
@@ -703,7 +703,7 @@ export class TeamReportForm {
   copyDataFromProject: string = '';
   add_my_self_icon = icon.ADD_MY_SELF_WHITE;
 
-  constructor (private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
+  constructor(private modeService: ModeDetectService, private formBuilder: FormBuilder, public httpCall: HttpCall,
     public dialogRef: MatDialogRef<TeamReportForm>,
     @Inject(MAT_DIALOG_DATA) public data: any, public sb: Snackbarservice, public translate: TranslateService) {
 
@@ -864,7 +864,7 @@ export class ExportManagementUserComponent {
   UserLimitExceed: string = '';
   user_search: any;
 
-  constructor (
+  constructor(
     private modeService: ModeDetectService,
     public dialogRef: MatDialogRef<ExportManagementUserComponent>,
     public mostusedservice: Mostusedservice,
