@@ -16,7 +16,7 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { map } from 'rxjs/operators';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
-import { showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
+import { formatPhoneNumber, showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { Direction } from '@angular/cdk/bidi';
 import { UserRestoreFormComponent } from '../user-restore-form/user-restore-form.component';
@@ -266,6 +266,10 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
       this.contextMenu.openMenu();
     }
   }
+  phonenoFormat(data: any) {
+    return formatPhoneNumber(data);
+  }
+
 
   gotoArchiveUnarchive() {
     this.isDelete = this.isDelete == 1 ? 0 : 1;

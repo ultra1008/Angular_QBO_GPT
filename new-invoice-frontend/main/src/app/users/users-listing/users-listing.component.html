@@ -189,7 +189,7 @@
                                         translate}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Phone:</span>{{row.userphone}}
+                                        <span class="mobile-label">Phone:</span>{{phonenoFormat(row.userphone)}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="useremail">
