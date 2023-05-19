@@ -138,16 +138,28 @@
                                         </div> -->
                                     <!-- </div> -->
                                     <div class="m-b-20">
-                                        <div class="contact-grid" style="height: 220px;">
+                                        <div class="contact-grid" style="height: 260px;">
                                             <div class="profile-header">
-                                                <div class="col-12 d-flex justify-content-between">
-                                                    <div style="margin: auto;">
+                                                <div class="col-12 m-1 d-flex">
+                                                    <div class="col-4">
                                                         <img src={{user.userpicture}} class="user-img1"
                                                             style="background-color: white;" width="80px" height="80px "
                                                             alt="">
                                                     </div>
-                                                    <div style="margin: auto;">
-                                                        <div style="text-align: initial;" *ngIf="isDelete === 0">
+                                                    <div class="mt-4 m-1 col-8">
+                                                        <div style="text-align:initial;" class="name-cente font-white">
+                                                            <div>
+                                                                <span class="badge font-white">
+                                                                    {{user.role_name}}</span>
+                                                            </div>
+
+
+                                                        </div>
+                                                        <div style="text-align:initial ; font-size: 14px;"
+                                                            class="m-1 font-white">
+                                                            {{user.userfullname}}
+                                                        </div>
+                                                        <!-- <div style="text-align: initial;" *ngIf="isDelete === 0">
                                                             <mat-icon class=" pt-1 font-white">edit </mat-icon>
                                                             <span class="font-white">Edit</span>
                                                         </div>
@@ -163,50 +175,46 @@
                                                         <div class=""
                                                             [ngClass]="user.userstatus == 1 ? 'active' :'inactive'">
                                                             {{user.userstatus == 1 ? active_word :inactive_word }}
-                                                        </div>
+                                                        </div> -->
                                                     </div>
                                                 </div>
-
                                             </div>
-                                            <!-- <img src={{user.userpicture}} class="user-img"
-                                                style="background-color: white;" width="80px" height="80px " alt=""> -->
-                                            <div style="text-align:initial ;" class="user-name">{{user.userfullname}}
-                                            </div>
-                                            <div style="text-align:initial ;" class="name-center m-1">{{user.role_name}}
-                                            </div>
-                                            <!-- <div style="text-align:initial;">
-                                                <span style="font-size: 12px;">
+                                            <div class="m-1" style="text-align:initial;">
+                                                <span style="font-size: 14px;">
                                                     <i style="padding-left: 4px;text-align:initial;font-size: 14px;"
                                                         class="material-icons ">email</i>
                                                     {{user.useremail}}</span>
-                                            </div> -->
-                                            <div class="" style="text-align:initial;font-size: 12px;">
-                                                <mat-icon class="pt-1" style="font-size: 17px;">email </mat-icon>
-                                                <span> {{user.useremail}}</span>
                                             </div>
-                                            <div class="" style="text-align:initial;font-size: 12px;"
-                                                *ngIf="user.userphone!=0">
-                                                <mat-icon class="pt-1" style="font-size: 17px;">phone </mat-icon>
-                                                <span>{{user.userphone}}</span>
-                                            </div>
-                                            <!-- <div class="" style="text-align:initial ;" *ngIf="user.userphone!=0">
-                                                <span style="font-size: 12px;">
+                                            <div class="m-1" style="text-align:initial ;" *ngIf="user.userphone!=0">
+                                                <span style="font-size: 14px;">
                                                     <i style="text-align:initial ;font-size: 14px;padding-left: 4px;"
                                                         class="material-icons">phone</i>{{user.userphone}}</span>
-                                            </div> -->
-                                            <!-- <div class="Action col-12 bg-indigo d-flex justify-content-between ">
-                                                <div class="col-6 pt-2" matTooltip="EDIT" *ngIf="isDelete === 0">
-                                                    <mat-icon class="col-white">edit </mat-icon>
+                                            </div>
+                                            <div class="m-1" style="text-align:initial ;" *ngIf="user.userstartdate!=0">
+                                                <span style="font-size: 16px;">
+                                                    <i style="text-align:initial ;font-size: 14px;padding-left: 6px;"
+                                                        class="material-icons">insert_invitation</i>{{convertDate(user.userstartdate) | dateString }}</span>
+                                            </div>
+                                            <div class="col-12 m-1 d-flex">
+                                                <div class="col-6">
+                                                    Manager:
+                                                    <P> {{user.manager_name}}</P>
                                                 </div>
-                                                <div class="col-6 pt-2" (click)="deleteUser(user._id,1)"
-                                                    matTooltip="ARCHIVE" *ngIf="isDelete === 0">
-                                                    <mat-icon class="col-white">archive </mat-icon>
+                                                <div class=" col-6">
+                                                    Supervisor:
+                                                    <P> {{user.supervisor_name}}</P>
                                                 </div>
-                                                <div class="col-12 pt-2" (click)="addNew(user)" matTooltip="RESTORE"
-                                                    *ngIf="isDelete === 1">
-                                                    <mat-icon class="col-white">archive </mat-icon>
-                                                </div>
-                                            </div> -->
+                                            </div>
+                                            <div style="position: absolute;
+                                            bottom: 5px;
+                                            font-size: 15px;
+                                            width: 90%;
+                                            color: white;
+                                            border-radius: 18px;margin-left: 14px;"
+                                                [ngClass]="user.userstatus == 1 ? 'active' :'inactive'">
+                                                {{user.userstatus == 1 ? active_word :inactive_word }}
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>

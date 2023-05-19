@@ -1,4 +1,6 @@
+import { DatePipe } from '@angular/common';
 import { Pipe, PipeTransform } from '@angular/core';
+import * as moment from 'moment';
 
 @Pipe({ name: 'empListFilter' })
 export class EmpListFilterPipe implements PipeTransform {
@@ -28,3 +30,30 @@ export class EmpListFilterStatusPipe implements PipeTransform {
      }
 }
 
+@Pipe({
+     name: 'dateMMDDYY',
+})
+export class FormateDateDDMMYYPipe implements PipeTransform {
+     transform(value: number) {
+          if (value == 0 || value == undefined || value == null) return '';
+          var dateObj = value * 1000;
+          var datePipe = new DatePipe('en-US');
+          let date = new Date(dateObj);
+          return datePipe.transform(new Date(dateObj), 'short');
+     }
+}
+@Pipe({
+     name: 'dateString',
+})
+export class FormateDateStringPipe implements PipeTransform {
+     transform(epoch: number) {
+          var age;
+          var date = new Date(epoch * 1000);
+          var year = date.getFullYear();
+          var month = date.getMonth() + 1;
+          var day = date.getDay();
+
+          age = moment([year, month, day]).fromNow();
+          return age;
+     }
+}

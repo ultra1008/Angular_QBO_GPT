@@ -278,3 +278,8 @@ export function isValidMailFormat(email: string): any {
     }
     return null;
 }
+
+export function timeDateToepoch(new_datetime: any) {
+    var dateObj = new Date(new_datetime).getTime();
+    return Math.round(dateObj / 1000);
+}

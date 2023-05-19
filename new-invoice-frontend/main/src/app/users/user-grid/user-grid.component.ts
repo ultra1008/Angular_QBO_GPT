@@ -9,17 +9,19 @@ import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { UserService } from '../user.service';
 import { UserDataSource } from '../users-listing/users-listing.component';
-import { showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
+import { showNotification, swalWithBootstrapTwoButtons, timeDateToepoch } from 'src/consts/utils';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AdvanceTable, RoleModel, User } from '../user.model';
 import { UserRestoreFormComponent } from '../user-restore-form/user-restore-form.component';
 import { Direction } from '@angular/cdk/bidi';
 import { UserReportComponent } from '../user-report/user-report.component';
+import { FormateDateDDMMYYPipe, FormateDateStringPipe } from '../users-filter.pipe';
 
 @Component({
   selector: 'app-user-grid',
   templateUrl: './user-grid.component.html',
-  styleUrls: ['./user-grid.component.scss']
+  styleUrls: ['./user-grid.component.scss'],
+  providers: [FormateDateStringPipe],
 })
 export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
   isDelete = 0;
@@ -34,7 +36,7 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
   roleLists: Array<RoleModel> = [];
   username_search: any;
   username_status: any;
-
+  tweet_epochs: any = [];
 
   constructor(
     public httpClient: HttpClient, private httpCall: HttpCall,
@@ -55,6 +57,12 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
     const data = await this.userService.getUser(this.isDelete);
     this.userList = data;
   }
+
+  convertDate(date: any) {
+    return timeDateToepoch(date);
+  }
+
+
   gotoArchiveUnarchive() {
     this.isDelete = this.isDelete == 1 ? 0 : 1;
     this.getUser();
