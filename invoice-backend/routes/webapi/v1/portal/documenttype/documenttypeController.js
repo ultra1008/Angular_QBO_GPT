@@ -189,12 +189,12 @@ module.exports.importdoctype = async function (req, res) {
                         res.send({ status: true, message: "department info add successfully." });
 
                     } else {
-                        res.send({ status: false, message: translator.getStr('SomethingWrong'), rerror: e });
+                        res.send({ status: false, message: translator.getStr('SomethingWrong') });
                     }
                 });
         } catch (error) {
             console.log(error);
-            res.send({ status: false, message: translator.getStr('SomethingWrong'), rerror: e });
+            res.send({ status: false, message: translator.getStr('SomethingWrong'), error: error });
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
