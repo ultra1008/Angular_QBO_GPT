@@ -100,5 +100,8 @@ module.exports = {
     MANAGEMENT_INVOICE: "invoices",
     MANAGEMENT_PO: "project_po",
     VENDOR_TYPE: "vendor_types",
-    JOB_NAME: 'job_names'
+    JOB_NAME: 'job_names',
+
+    VIEW_CAPTURE: "view_captures",
+
 };

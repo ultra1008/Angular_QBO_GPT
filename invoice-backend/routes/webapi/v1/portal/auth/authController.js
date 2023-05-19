@@ -13,6 +13,7 @@ var loginHistorySchema = require('./../../../../../model/loginHistory');
 var emailOTPSchema = require('./../../../../../model/email_otp');
 let rest_Api = require('./../../../../../config/db_rest_api');
 var roleSchema = require('./../../../../../model/diversity_roles');
+var view_capture_Schema = require('./../../../../../model/view_capture');
 
 module.exports.login = async function (req, res) {
     var requestObject = req.body;
@@ -1061,3 +1062,164 @@ module.exports.submitEmailOTP = async function (req, res) {
         //connection_db_api.close()
     }
 };;;;;;;;;;;;
+
+
+//view capture
+module.exports.view_capture = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    if (decodedToken) {
+        try {
+            console.log('decodedToken', decodedToken);
+            var requestBody = req.body;
+            let connection_db_api = await db_connection.connection_db_api(decodedToken);
+            let view_capture_Connection = await connection_db_api.model(collectionConstant.VIEW_CAPTURE, view_capture_Schema);
+            requestBody.update_date = Math.floor(new Date().getTime() / 1000.0);
+            requestBody.create_date = Math.floor(new Date().getTime() / 1000.0);
+            requestBody.performby_id = decodedToken.UserData._id;
+
+            var add_view_capture = new view_capture_Connection(requestBody);
+            var save_view_capture = await add_view_capture.save();
+            if (save_view_capture) {
+                res.send({ message: "View capture save successfull.", data: save_view_capture, status: true });
+            } else {
+                res.send({ message: "View capture not save.", status: true });
+            }
+        }
+        catch (error) {
+            console.log('error', error);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+//get view capture
+module.exports.get_view_capture = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    if (decodedToken) {
+        try {
+
+            var requestBody = req.body;
+            let connection_db_api = await db_connection.connection_db_api(decodedToken);
+            // let tenants_Connection = await connection_db_api.model(collectionConstant.TENANTS, tenant_Schema);
+
+            // if (requestBody._id != "") {
+            //     var one_tenant = await tenants_Connection.findOne({ company_id: ObjectID(requestBody._id) });
+            //     connection_db_api = await db_connection.connection_db_api(one_tenant);
+            // }
+
+            let view_capture_Connection = await connection_db_api.model(collectionConstant.VIEW_CAPTURE, view_capture_Schema);
+
+            let perpage = 10;
+            let current_page = requestBody.current_page;
+            var start = (parseInt(requestBody.current_page) - 1) * perpage;
+
+            var query_where = {};
+            var performby_ids = new Array();
+
+            if (requestBody.performby_id.length > 0) {
+
+                if (requestBody.start_date != 0 && requestBody.end_date != 0) {
+
+                    for (let i = 0; i < requestBody.performby_id.length; i++) {
+                        performby_ids[i] = ObjectID(requestBody.performby_id[i]);
+                    }
+
+                    query_where = {
+                        performby_id: { $in: performby_ids },
+                        create_date: { $gte: requestBody.start_date, $lte: requestBody.end_date }
+                    };
+
+                } else {
+                    for (let i = 0; i < requestBody.performby_id.length; i++) {
+                        performby_ids[i] = ObjectID(requestBody.performby_id[i]);
+                    }
+                    query_where = {
+                        performby_id: { $in: performby_ids }
+                    };
+                }
+
+            } else if (requestBody.start_date != 0 && requestBody.end_date != 0) {
+
+                query_where = {
+                    create_date: { $gte: requestBody.start_date, $lte: requestBody.end_date }
+                };
+
+            }
+
+            let get_view_capture = await view_capture_Connection.aggregate([
+                {
+                    $match: query_where
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.USER,
+                        localField: "performby_id",
+                        foreignField: "_id",
+                        as: "user"
+                    }
+                },
+                {
+                    $unwind: {
+                        preserveNullAndEmptyArrays: true,
+                        path: "$user"
+                    }
+                },
+
+                {
+                    $project: {
+                        performby_id: 1,
+                        performby: {
+                            _id: {
+                                $ifNull: [
+                                    "$user._id",
+                                    ""
+                                ]
+                            },
+                            username: {
+                                $ifNull: [
+                                    "$user.username",
+                                    ""
+                                ]
+                            },
+                            user_picture: {
+                                $ifNull: [
+                                    "$user.userpicture",
+                                    ""
+                                ]
+                            },
+                        },
+                        create_date: 1,
+                        update_date: 1,
+                        module: 1,
+                        data_name: 1,
+                        action: 1,
+                        text: 1,
+                        reason: 1,
+                        extra: 1,
+                        for: 1
+                    }
+                },
+                { $sort: { create_date: -1 } },
+                { $limit: perpage + start },
+                { $skip: start }
+            ]);
+            let count = 0;
+            count = await view_capture_Connection.countDocuments(query_where);
+            pager = {
+                current_page: requestBody.current_page,
+                last_page: Math.ceil(count / perpage),
+                total_records: count,
+            };
+            res.send({ status: true, data: get_view_capture, pager: pager });
+
+        } catch (error) {
+            console.log(error);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
