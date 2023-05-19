@@ -166,6 +166,7 @@ router.get('/webapi/v1/portal/getAlljobtitle', common.checkTokenExistOrNot, jobt
 router.post('/webapi/v1/portal/savejobtitle', common.checkTokenExistOrNot, jobtitleValidation.jobtitleValidation, jobtitleController.saveJobTitle);
 router.post('/webapi/v1/portal/deletejobtitle', common.checkTokenExistOrNot, jobtitleValidation.jobtitleDeleteValidation, jobtitleController.deleteJobTitle);
 router.post('/webapi/v1/portal/getjobtitlefortable', common.checkTokenExistOrNot, jobtitleValidation.getjobtitleForTableValidation, jobtitleController.getJobTitleForTable);
+router.post('/webapi/v1/portal/importjobtitle', common.checkTokenExistOrNot, jobtitleController.importJobTitle);
 
 
 var departmentController = require("./department/departmentController");
@@ -174,6 +175,8 @@ router.get('/webapi/v1/portal/getalldepartment', common.checkTokenExistOrNot, de
 router.post('/webapi/v1/portal/savedepartment', common.checkTokenExistOrNot, departmentValidation.departmentValidation, departmentController.savedepartment);
 router.post('/webapi/v1/portal/deletedepartment', common.checkTokenExistOrNot, departmentValidation.departmentDeleteValidation, departmentController.deleteDepartment);
 router.post('/webapi/v1/portal/getdepartmentfortable', common.checkTokenExistOrNot, departmentValidation.getdepartmentForTableValidation, departmentController.getdepartmentForTable);
+router.post('/webapi/v1/portal/getdepartmentfortable', common.checkTokenExistOrNot, departmentValidation.getdepartmentForTableValidation, departmentController.getdepartmentForTable);
+router.post('/webapi/v1/portal/importdepartment', common.checkTokenExistOrNot, departmentController.importdepartment);
 
 
 var documenttypeController = require('./documenttype/documenttypeController');
@@ -182,6 +185,7 @@ router.get('/webapi/v1/portal/getalldoctype', common.checkTokenExistOrNot, docum
 router.post('/webapi/v1/portal/savedoctype', common.checkTokenExistOrNot, documenttypeValidation.documentTypeValidation, documenttypeController.saveDocType);
 router.post('/webapi/v1/portal/deletedoctype', common.checkTokenExistOrNot, documenttypeValidation.documentTypeDeleteValidation, documenttypeController.deleteDocType);
 router.post('/webapi/v1/portal/getdoctypefortable', common.checkTokenExistOrNot, documenttypeValidation.getdocumentTypeForTableValidation, documenttypeController.getdoctypeForTable);
+router.post('/webapi/v1/portal/importdoctype', common.checkTokenExistOrNot, documenttypeController.importdoctype);
 
 
 let rolespermissionController = require("./roles/rolesandpermissionController");
