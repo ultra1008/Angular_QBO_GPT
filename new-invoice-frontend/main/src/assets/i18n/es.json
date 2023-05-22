@@ -202,6 +202,7 @@
             },
             "MAIL_BOX": {
                 "HEADER": "Buzones a monitorear",
+                "HEADER_ARCHIVE": "Archivar buzones para supervisar",
                 "EMAIL": "Correo electrónico",
                 "IMAP": "IMAP",
                 "PORT": "Puerto",
@@ -214,7 +215,12 @@
             },
             "COST_CODE_MODULE": {
                 "DIVISON": "División",
-                "DISCRIPTION": "Descripción"
+                "DISCRIPTION": "Descripción",
+                "HEADER_ARCHIVE": "Código de costo de archivo",
+                "CONFIRMATION_DIALOG": {
+                    "ARCHIVE": "¿Está seguro de que desea archivar este código de costo?",
+                    "RESTORE": "¿Está seguro de que desea restaurar este código de costo?"
+                }
             },
             "OTHER_SETTINGS_MODULE": {
                 "OTHER_SETTINGS": "Otros ajustes",

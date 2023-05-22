@@ -75,6 +75,7 @@ import { VendorTypeListingComponent } from './othersettings/vendor-type-listing/
 import { JobNameListingComponent } from './othersettings/job-name-listing/job-name-listing.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { ImportEmployeeSettingsComponent } from './employeesettings/import-employee-settings/import-employee-settings.component';
+import { QuickbooksAuthorizationComponent } from './integration/qbointegration/quickbooks-authorization/quickbooks-authorization.component';
 
 @NgModule({
   declarations: [
@@ -119,6 +120,7 @@ import { ImportEmployeeSettingsComponent } from './employeesettings/import-emplo
     VendorTypeListingComponent,
     JobNameListingComponent,
     ImportEmployeeSettingsComponent,
+    QuickbooksAuthorizationComponent,
   ],
   providers: [SettingsService],
   imports: [

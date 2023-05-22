@@ -140,37 +140,40 @@
                                         mat-sort-header>{{'VENDOR.TABLE.VENDOR_NAME' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
-                                        class="tbl-col-width-per-max" (click)="editVendor(row)">
-                                        <span class="mobile-label">Vendor Name:</span>{{row.vendor_name}}
+                                    <mat-cell *matCellDef="let row" [matTooltip]="getNameTooltip(row)"
+                                        (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-max"
+                                        (click)="editVendor(row)">
+                                        <span class="truncate-text"> <span class="mobile-label">Vendor
+                                                Name:</span>{{row.vendor_name}}</span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_id">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        [ngClass]="'tbl-col-width-per-mid'">{{'VENDOR.TABLE.VENDOR_ID' |
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.VENDOR_ID' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
-                                        class="tbl-col-width-per-mid" (click)="editVendor(row)">
-                                        <span class="mobile-label">Vendor ID:</span>{{row.vendor_id}}
+                                    <mat-cell *matCellDef="let row" [matTooltip]="getVendorIdTooltip(row)"
+                                        (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">
+                                        <span class="truncate-text"> <span class="mobile-label">Vendor
+                                                ID:</span>{{row.vendor_id}}</span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="customer_id">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        [ngClass]="'tbl-col-width-per-mid'">{{'VENDOR.TABLE.CUSTOMER_ID' |
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.CUSTOMER_ID' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
-                                        class="tbl-col-width-per-mid" (click)="editVendor(row)">
-                                        <span class="mobile-label">Customer ID:</span>{{row.customer_id}}
+                                    <mat-cell *matCellDef="let row" [matTooltip]="getCustomerIdTooltip(row)"
+                                        (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">
+                                        <span class="truncate-text"> <span class="mobile-label">Customer
+                                                ID:</span>{{row.customer_id}}</span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_phone">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
                                         [ngClass]="'tbl-col-width-per-mid'">{{'VENDOR.TABLE.PHONE' |
                                         translate}}</mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
-                                        class="tbl-col-width-per-mid" (click)="editVendor(row)">
+                                    <mat-cell *matCellDef="let row" [matTooltip]="getPhonTooltip(row)"
+                                        (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-mid"
+                                        (click)="editVendor(row)">
                                         <span class="mobile-label">Phone:</span>
                                         {{row.vendor_phone | phoneFormatPipe}}
                                     </mat-cell>
@@ -180,8 +183,8 @@
                                         translate}}</mat-header-cell>
                                     <mat-cell *matCellDef="let row" [matTooltip]="getTooltip(row)"
                                         (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">
-                                        <span class="mobile-label">Email:</span>
-                                        {{row.vendor_email}}
+                                        <span class="truncate-text"> <span class="mobile-label">Email:</span>
+                                            {{row.vendor_email}}</span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_address">

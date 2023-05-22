@@ -61,12 +61,6 @@ export class CostcodeComponent
     this.router.navigate(['/settings/mailbox-form']);
   }
 
-  editMailbox(costcodeTable: CostCodeTable) {
-    this.router.navigate(['/settings/mailbox-form'], {
-      queryParams: { _id: costcodeTable._id },
-    });
-  }
-
   async archiveRecover(costcodeTable: CostCodeTable, is_delete: number) {
     const data = await this.SettingsService.deleteCostCode({
       _id: costcodeTable._id,
@@ -93,11 +87,11 @@ export class CostcodeComponent
   async deleteCostCode(costcodeTable: CostCodeTable, is_delete: number) {
     if (is_delete == 1) {
       this.titleMessage = this.translate.instant(
-        'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOX.CONFIRMATION_DIALOG.ARCHIVE'
+        'SETTINGS.SETTINGS_OTHER_OPTION.COST_CODE_MODULE.CONFIRMATION_DIALOG.ARCHIVE'
       );
     } else {
       this.titleMessage = this.translate.instant(
-        'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOX.CONFIRMATION_DIALOG.RESTORE'
+        'SETTINGS.SETTINGS_OTHER_OPTION.COST_CODE_MODULE.CONFIRMATION_DIALOG.RESTORE'
       );
     }
     swalWithBootstrapTwoButtons
@@ -139,24 +133,7 @@ export class CostcodeComponent
           this.selection.select(row)
         );
   }
-  removeSelectedRows() {
-    //   const totalSelect = this.selection.selected.length;
-    //   this.selection.selected.forEach((item) => {
-    //     const index: number = this.dataSource.renderedData.findIndex(
-    //       (d) => d === item
-    //     );
-    //     // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
-    //     this.mailboxService?.dataChange.value.splice(index, 1);
-    //     this.refreshTable();
-    //     this.selection = new SelectionModel<MailboxTable>(true, []);
-    //   });
-    //  showNotification(
-    //     'snackbar-danger',
-    //     totalSelect + ' Record Delete Successfully...!!!',
-    //     'bottom',
-    //     'center'
-    //   );
-  }
+
   add() {
     const dialogRef = this.dialog.open(CostCodeFormComponent, {
       width: '350px',

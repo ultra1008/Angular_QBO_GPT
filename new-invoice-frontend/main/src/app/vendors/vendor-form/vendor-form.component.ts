@@ -7,7 +7,7 @@ import {
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { VendorsService } from '../vendors.service';
-import { CountryModel, TermModel } from '../vendor-table.model';
+import { CountryModel, TermModel, Vendor } from '../vendor-table.model';
 import {
   commonLocalThumbImage,
   commonNetworkThumbImage,
@@ -15,6 +15,7 @@ import {
   gallery_options,
   showNotification,
   swalWithBootstrapButtons,
+  swalWithBootstrapTwoButtons,
 } from 'src/consts/utils';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
@@ -42,7 +43,7 @@ export class VendorFormComponent {
   termsList: Array<TermModel> = this.variablestermList.slice();
   countryList: Array<CountryModel> = [{ _id: 'USA', name: 'USA' }];
   id = '';
-
+  isDelete = 1;
   files_old: string[] = [];
   last_files_array: string[] = [];
   files: File[] = [];
@@ -52,6 +53,8 @@ export class VendorFormComponent {
   imageObject = [];
   tmp_gallery: any;
   submitting_text: string = '';
+  titleMessage: string = "";
+  show: boolean = false;
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -140,6 +143,47 @@ export class VendorFormComponent {
       this.variablestermList = data.data;
       this.termsList = this.variablestermList.slice();
     }
+  }
+
+  // async archiveRecover(vendor: Vendor, is_delete: number) {
+  //   this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
+  //   const data = await this.vendorService.deleteVendor({id });
+  //   if (data.status) {
+  //     showNotification(this.snackBar, data.message, 'success');
+  //     const foundIndex = this.vendorService?.dataChange.value.findIndex(
+  //       (x) => x._id === vendor._id
+  //     );
+  //     // for delete we use splice in order to remove single object from DataService
+  //     if (foundIndex != null && this.vendorService) {
+  //       this.vendorService.dataChange.value.splice(foundIndex, 1);
+
+  //       this.router.navigate([WEB_ROUTES.VENDOR], { queryParams: { isDelete: this.isDelete } });
+
+
+  //     }
+  //   } else {
+  //     showNotification(this.snackBar, data.message, 'error');
+  //   }
+  // }
+
+  async deleteVendor() {
+
+    //   this.titleMessage = this.translate.instant('VENDOR.CONFIRMATION_DIALOG.ARCHIVE');
+
+    // swalWithBootstrapTwoButtons
+    //   .fire({
+    //     title: this.titleMessage,
+    //     showDenyButton: true,
+    //     confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+    //     denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+    //     allowOutsideClick: false,
+    //   })
+    //   .then((result) => {
+    //     if (result.isConfirmed) {
+    //       this.archiveRecover(vendor, is_delete);
+    //       this.show = false;
+    //     }
+    //   });
   }
 
   async saveVendor() {

@@ -25,7 +25,7 @@
                             [ngClass]="'max-h'"  mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.DISCOUNT' |
                                 translate}}</mat-header-cell>
                             <mat-cell *matCellDef="let row" (click)="edit(row)" (contextmenu)="onContextMenu($event, row)">
-                                <span class="mobile-label">discount:</span> {{row.discount }}%
+                                <span class="mobile-label">discount:</span><span *ngIf="row.is_discount">{{row.discount }}%</span>
                             </mat-cell>
                         </ng-container>
                         <!-- actions -->
