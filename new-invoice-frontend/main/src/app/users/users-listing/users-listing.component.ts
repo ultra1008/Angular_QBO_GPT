@@ -88,6 +88,25 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
   openHistory() {
     this.router.navigate([WEB_ROUTES.USER_HISTORY]);
   }
+  // TOOLTIP
+  getEmailTooltip(row: any) {
+    return row.useremail;
+  }
+  getNameTooltip(row: any) {
+    return row.userfullname;
+  }
+  getPhoneTooltip(row: any) {
+    return row.userphone;
+  }
+  getRoleTooltip(row: any) {
+    return row.role_name;
+  }
+  getJobTitleTooltip(row: any) {
+    return row.userjob_title_name;
+  }
+  getDepartmentTooltip(row: any) {
+    return row.department_name;
+  }
   onBookChange(ob: any) {
     console.log('Book changed...');
     let selectedBook = ob.value;
@@ -282,9 +301,7 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
 
     }
   }
-  getTooltip(row: any) {
-    return row.useremail;
-  }
+
   listToGrid() {
     localStorage.setItem(localstorageconstants.USER_DISPLAY, 'grid');
     this.router.navigate([WEB_ROUTES.USER_GRID]);

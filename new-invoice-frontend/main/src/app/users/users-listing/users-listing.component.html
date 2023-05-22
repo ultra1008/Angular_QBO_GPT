@@ -180,40 +180,48 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.USER_NAME' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Name:</span>{{row.userfullname}}
+                                    <mat-cell [matTooltip]="getNameTooltip(row)" *matCellDef="let row"
+                                        (contextmenu)="onContextMenu($event, row)">
+                                        <span class="truncate-text"> <span
+                                                class="mobile-label">Name:</span>{{row.userfullname}}</span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="userphone">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.PHONE' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Phone:</span>{{phonenoFormat(row.userphone)}}
+                                    <mat-cell [matTooltip]="getPhoneTooltip(row)" *matCellDef="let row"
+                                        (contextmenu)="onContextMenu($event, row)">
+                                        <span class="truncate-text"> <span
+                                                class="mobile-label">Phone:</span>{{phonenoFormat(row.userphone)}}</span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="useremail">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.EMAIL' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" [matTooltip]="getTooltip(row)"
+                                    <mat-cell *matCellDef="let row" [matTooltip]="getEmailTooltip(row)"
                                         (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Email:</span>{{row.useremail}}
+                                        <span class="truncate-text"> <span
+                                                class="mobile-label">Email:</span>{{row.useremail}}</span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="role_name">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.ROLE' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Role:</span>{{row.role_name}}
+                                    <mat-cell [matTooltip]="getRoleTooltip(row)" *matCellDef="let row"
+                                        (contextmenu)="onContextMenu($event, row)">
+                                        <span class="truncate-text"> <span
+                                                class="mobile-label">Role:</span>{{row.role_name}}</span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="userjob_title_name">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.JOB_TITLE' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
+                                    <mat-cell [matTooltip]="getJobTitleTooltip(row)" *matCellDef="let row"
+                                        (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Job
                                             Title:</span>{{row.userjob_title_name}}
                                     </mat-cell>
@@ -222,8 +230,10 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.DEPARTMENT' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Department:</span>{{row.department_name}}
+                                    <mat-cell [matTooltip]="getDepartmentTooltip(row)" *matCellDef="let row"
+                                        (contextmenu)="onContextMenu($event, row)">
+                                        <span class="truncate-text"> <span
+                                                class="mobile-label">Department:</span>{{row.department_name}}</span>
                                     </mat-cell>
                                 </ng-container>
                                 <!-- <ng-container matColumnDef="userstatus">

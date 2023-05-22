@@ -23,11 +23,11 @@
                             <ul class="tbl-export-btn">
                                 <li *ngIf="isDelete === 0" class="rix">
                                     <mat-form-field class="cust-padding-top" appearance="outline">
-                                        <mat-label>{{'status' | translate }}</mat-label>
+                                        <mat-label>{{'Status' | translate }}</mat-label>
                                         <mat-select (change)="changeStatus($event)" [(ngModel)]="username_status">
                                             <mat-option value="All">{{'All' | translate}}</mat-option>
                                             <mat-option value="1">{{'Active' | translate}}</mat-option>
-                                            <mat-option value="2">{{'In-Active' | translate}}</mat-option>
+                                            <mat-option value="2">{{'Inactive' | translate}}</mat-option>
                                         </mat-select>
                                     </mat-form-field>
                                 </li>
@@ -84,59 +84,11 @@
                             </ul>
                         </div>
                     </div>
-                    <!-- <div class="body overflow-auto">
-                        <div class="row">
-                        
-                            <div class="test col-xs-12 col-sm-6 col-md-4 col-xl-2" *ngFor="let user of userList">
-                                <div class="card">
-                                    <div class="ribbon-wrapper">
-                                        <div class="ribbon-tag" [ngClass]="user.userstatus == 1 ? 'active' :'inactive'">
-                                            {{user.userstatus == 1 ? active_word :inactive_word }}
-                                        </div>
-                                    </div>
-                                    <div class="m-b-20">
-                                        <div class="contact-grid" style="height: 240px;">
-                                            <div class="profile-header bg-indigo">
-                                                <div class="user-name">{{user.userfullname}}</div>
-                                                <div class="name-center">{{user.role_name}}</div>
-                                            </div>
-                                            <img src={{user.userpicture}} class="user-img"
-                                                style="background-color: white;" width="80px" height="80px " alt="">
-                                            <p style="height: 10px;"> {{user.useremail}} </p>
-                                            <div *ngIf="user.userphone!=0">
-                                                <span class="phone">
-                                                    <i class="material-icons">phone</i>{{user.userphone}}</span>
-                                            </div>                                          
-                                            <div class="Action col-12 bg-indigo d-flex justify-content-between ">
-                                                <div class="col-6 pt-2" matTooltip="EDIT" *ngIf="isDelete === 0">
-                                                    <mat-icon class="col-white">edit </mat-icon>
-                                                </div>
-                                                <div class="col-6 pt-2" (click)="deleteUser(user._id,1)"
-                                                    matTooltip="ARCHIVE" *ngIf="isDelete === 0">
-                                                    <mat-icon class="col-white">archive </mat-icon>
-                                                </div>
-                                                <div class="col-12 pt-2" (click)="addNew(user)" matTooltip="RESTORE"
-                                                    *ngIf="isDelete === 1">
-                                                    <mat-icon class="col-white">archive </mat-icon>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
                     <div class="body overflow-auto">
                         <div class="row">
-
                             <div class="test col-xs-12 col-sm-6 col-md-4 col-xl-2"
                                 *ngFor="let user of userList | empListFilter : username_search| empListFilterStatus : username_status">
                                 <div class="card rixit " style="border: 2px solid rgb(182, 182, 182);">
-                                    <!-- <div class="ribbon-wrapper"> -->
-                                    <!-- <div class="ribbon-tag" [ngClass]="user.userstatus == 1 ? 'active' :'inactive'">
-                                            {{user.userstatus == 1 ? active_word :inactive_word }}
-                                        </div> -->
-                                    <!-- </div> -->
                                     <div class="m-b-20">
                                         <div class="contact-grid" style="height: 260px;">
                                             <div class="profile-header">
@@ -147,71 +99,49 @@
                                                             alt="">
                                                     </div>
                                                     <div class="mt-4 m-1 col-8">
-                                                        <div style="text-align:initial;" class="name-cente font-white">
+                                                        <div *ngIf="isDelete === 0" style="text-align:initial;"
+                                                            class="name-cente font-white">
                                                             <div>
                                                                 <span class="badge font-white">
                                                                     {{user.role_name}}</span>
                                                             </div>
-
-
                                                         </div>
-                                                        <div style="text-align:initial ; font-size: 14px;"
-                                                            class="m-1 font-white">
+                                                        <div class="m-1 font-white font-s" style="text-align:initial;">
                                                             {{user.userfullname}}
                                                         </div>
-                                                        <!-- <div style="text-align: initial;" *ngIf="isDelete === 0">
-                                                            <mat-icon class=" pt-1 font-white">edit </mat-icon>
-                                                            <span class="font-white">Edit</span>
-                                                        </div>
-                                                        <div class="pb-1" (click)="deleteUser(user._id,1)"
-                                                            *ngIf="isDelete === 0">
-                                                            <mat-icon class="  pt-1 font-white">archive </mat-icon>
-                                                            <span class="font-white">Archive</span>
-                                                        </div>
-                                                        <div class="pb-1" (click)="addNew(user)" matTooltip="RESTORE"
-                                                            *ngIf="isDelete === 1">
-                                                            <mat-icon class="col-white">archive </mat-icon>
-                                                        </div>
-                                                        <div class=""
-                                                            [ngClass]="user.userstatus == 1 ? 'active' :'inactive'">
-                                                            {{user.userstatus == 1 ? active_word :inactive_word }}
-                                                        </div> -->
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="m-1" style="text-align:initial;">
-                                                <span style="font-size: 14px;">
-                                                    <i style="padding-left: 4px;text-align:initial;font-size: 14px;"
-                                                        class="material-icons ">email</i>
-                                                    {{user.useremail}}</span>
+                                            <div class="m-1 text-a">
+                                                <div class="d-flex font-s">
+                                                    <i class="material-icons my-auto font-s">email</i>
+                                                    <span class="font-sp"> {{user.useremail}}</span>
+                                                </div>
                                             </div>
-                                            <div class="m-1" style="text-align:initial ;" *ngIf="user.userphone!=0">
-                                                <span style="font-size: 14px;">
-                                                    <i style="text-align:initial ;font-size: 14px;padding-left: 4px;"
-                                                        class="material-icons">phone</i>{{user.userphone}}</span>
+                                            <div class="m-1 text-a" *ngIf="user.userphone!=0">
+                                                <div class="d-flex font-s">
+                                                    <i class="material-icons my-auto font-s">phone</i>
+                                                    <span class="font-sp"> {{user.userphone}}</span>
+                                                </div>
                                             </div>
-                                            <div class="m-1" style="text-align:initial ;" *ngIf="user.userstartdate!=0">
-                                                <span style="font-size: 16px;">
-                                                    <i style="text-align:initial ;font-size: 14px;padding-left: 6px;"
-                                                        class="material-icons">insert_invitation</i>{{convertDate(user.userstartdate) | dateString }}</span>
+                                            <div class="m-1 text-a" *ngIf="user.userstartdate!=0">
+                                                <div class="d-flex font-s">
+                                                    <i class="material-icons my-auto font-s">insert_invitation</i>
+                                                    <span
+                                                        class="font-sp">{{convertDate(user.userstartdate) | dateString }}</span>
+                                                </div>
                                             </div>
                                             <div class="col-12 m-1 d-flex">
                                                 <div class="col-6">
-                                                    Manager:
+                                                    <b> Manager</b>
                                                     <P> {{user.manager_name}}</P>
                                                 </div>
                                                 <div class=" col-6">
-                                                    Supervisor:
+                                                    <b> Supervisor</b>
                                                     <P> {{user.supervisor_name}}</P>
                                                 </div>
                                             </div>
-                                            <div style="position: absolute;
-                                            bottom: 5px;
-                                            font-size: 15px;
-                                            width: 90%;
-                                            color: white;
-                                            border-radius: 18px;margin-left: 14px;"
-                                                [ngClass]="user.userstatus == 1 ? 'active' :'inactive'">
+                                            <div class="chip" [ngClass]="user.userstatus == 1 ? 'active' :'inactive'">
                                                 {{user.userstatus == 1 ? active_word :inactive_word }}
                                             </div>
 
@@ -220,6 +150,9 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div *ngIf="cardLoading" class="tbl-spinner">
+                        <app-loading></app-loading>
                     </div>
                 </div>
             </div>
