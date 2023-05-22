@@ -130,12 +130,28 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     this.galleryOptions = [this.tmp_gallery];
     this.getTerms();
   }
+
+  // TOOLTIPS
   getTooltip(row: any) {
     return row.vendor_email;
   }
   getAddTooltip(row: any) {
     return row.vendor_address;
   }
+  getNameTooltip(row: any) {
+    return row.vendor_name;
+  }
+  getCustomerIdTooltip(row: any) {
+    return row.customer_id;
+  }
+  getVendorIdTooltip(row: any) {
+    return row.vendor_id;
+  }
+  getPhonTooltip(row: any) {
+    return row.vendor_phone;
+  }
+
+
   refresh() {
     this.loadData();
   }

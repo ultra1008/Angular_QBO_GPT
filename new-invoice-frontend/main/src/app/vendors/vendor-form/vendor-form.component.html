@@ -19,11 +19,20 @@
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' |
                                         translate}}">
+                                        <button mat-mini-fab color="warn" (click)="deleteVendor()">
+                                            <mat-icon class="col-white">archive</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' |
+                                        translate}}">
                                         <button mat-mini-fab color="warn" (click)="confirmExit()">
                                             <mat-icon class="col-white">close</mat-icon>
                                         </button>
                                     </div>
                                 </li>
+
                             </ul>
                         </div>
                     </div>

@@ -1,4 +1,5 @@
 .other {
+
     ::ng-deep .mat-row,
     ::ng-deep.mat-footer-row {
         min-height: unset;
@@ -30,7 +31,7 @@
 
     ::ng-deep .mdc-data-table__cell,
     .mdc-data-table__header-cell {
-        border: 1px solid #d2d2d2 !important;
+        border: 1px solid #f8f8f8 !important;
         // padding: 0 16px 0 10px !important;
     }
 
@@ -48,9 +49,4 @@
         min-width: 100px !important;
         max-width: 7% !important;
     }
-
-    ::ng-deep .mat-sort-header-content {
-        padding-left: 19px !important;
-    }
-
 }
