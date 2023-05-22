@@ -99,12 +99,14 @@
           .menu-top {
             background-color: #f0f3fb;
           }
+
           > :first-child {
             span {
               font-weight: 500;
             }
           }
         }
+
         &.active-top {
           .menu-top {
             background-color: #f0f3fb;
@@ -154,18 +156,22 @@
         .ml-menu {
           display: block;
         }
+
         .ml-sub-menu {
           display: block;
         }
+
         .ml-sub-menu2 {
           display: block;
         }
+
         .ml-sub-menu3 {
           display: block;
         }
       }
 
       .menu-toggle {
+
         &:after,
         &:before {
           position: absolute;
@@ -189,8 +195,7 @@
 
       .material-icons-two-tone {
         vertical-align: middle;
-        filter: invert(43%) sepia(4%) saturate(19%) hue-rotate(342deg)
-          brightness(94%) contrast(88%);
+        filter: invert(43%) sepia(4%) saturate(19%) hue-rotate(342deg) brightness(94%) contrast(88%);
       }
 
       .active .menu-toggle {
@@ -204,6 +209,7 @@
       }
 
       .ml-sub-menu {
+
         &:after,
         &:before {
           position: absolute;
@@ -226,6 +232,7 @@
       }
 
       .ml-sub-menu2 {
+
         &:after,
         &:before {
           position: absolute;
@@ -248,6 +255,7 @@
       }
 
       .ml-sub-menu3 {
+
         &:after,
         &:before {
           position: absolute;
@@ -357,6 +365,7 @@
                 top: calc(50% - 15px);
               }
             }
+
             .ml-menu-2 {
               display: block;
             }
@@ -378,15 +387,18 @@
             }
           }
         }
+
         .activeSub {
           .ml-menu-2 {
             display: block;
           }
+
           .ml-menu-3 {
             display: block;
           }
         }
       }
+
       .ml-menu-2 {
         list-style: none;
         display: none;
@@ -405,9 +417,11 @@
             padding-bottom: 4px;
           }
         }
+
         li.active .ml-menu-3 {
           display: block;
         }
+
         li.active .ml-menu2:before {
           content: '\f105';
           font-family: 'Font Awesome 5 Free';
@@ -421,6 +435,7 @@
           top: calc(50% - 15px);
         }
       }
+
       .ml-menu-3 {
         list-style: none;
         display: none;
@@ -439,6 +454,7 @@
             padding-bottom: 4px;
           }
         }
+
         li.active .ml-menu3:before {
           content: '\f105';
           font-family: 'Font Awesome 5 Free';
@@ -454,6 +470,7 @@
       }
     }
   }
+
   .sidebar-badge {
     position: absolute;
     right: 35px;
@@ -466,11 +483,13 @@
     font-weight: 300 !important;
   }
 }
+
 .ml-menu {
   .ml-sub-menu {
     &:before {
       @include transform(scale(1));
     }
+
     &:after {
       @include transform(scale(0));
     }
@@ -480,6 +499,7 @@
     &:before {
       @include transform(scale(1));
     }
+
     &:after {
       @include transform(scale(0));
     }
@@ -489,6 +509,7 @@
     &:before {
       @include transform(scale(1));
     }
+
     &:after {
       @include transform(scale(0));
     }
@@ -528,6 +549,7 @@
     }
   }
 }
+
 .right-sidebar {
   width: 280px;
   height: calc(100vh - 60px);
@@ -553,7 +575,7 @@
     li {
       text-align: center;
 
-      > a {
+      >a {
         margin-right: 0;
       }
 
@@ -620,7 +642,7 @@
       position: relative;
       padding: 20px 20px;
 
-      &:hover > ul {
+      &:hover>ul {
         display: block !important;
         position: absolute;
         top: 63px;
@@ -727,6 +749,7 @@
   .menu .list {
     a {
       color: #cfd8e3;
+
       span {
         color: #cfd8e3;
       }
@@ -761,8 +784,7 @@
     }
 
     .material-icons-two-tone {
-      filter: invert(86%) sepia(3%) saturate(2995%) hue-rotate(185deg)
-        brightness(79%) contrast(78%);
+      filter: invert(86%) sepia(3%) saturate(2995%) hue-rotate(185deg) brightness(79%) contrast(78%);
     }
 
     .ml-menu {
@@ -777,6 +799,7 @@
           background-color: rgba(0, 0, 0, 0.4);
         }
       }
+
       &.active-top {
         .menu-top {
           background-color: rgba(0, 0, 0, 0.4);
@@ -813,6 +836,7 @@
   width: 100%;
   color: #ccc;
   padding: 25px 0px 10px 0;
+
   .image {
     width: 35%;
     max-width: 75px;
