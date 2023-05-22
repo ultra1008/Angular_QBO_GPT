@@ -90,8 +90,16 @@
         }
     },
     "USERS": {
+        "TABS": {
+            "PERSONAL_INFORMATION": "Informacion personal",
+            "CONTACT_INFORMATION": "Información del contacto",
+            "EMPLOYEE_INFORMATION": "información del empleado",
+            "EMERGENCY_CONTACT": "Emergency Contact",
+            "DOCUMENT": "Document"
+        },
         "VIEW": {
             "ADD_USER": "Agregar usuario",
+            "EDIT_USER": "Edit User",
             "TITLE": "Usuario",
             "ARCHIVED_TITLE": "Usuario archivado"
         },
@@ -134,10 +142,7 @@
             "DEPARTMENT": "Departamento",
             "JOB_TITLE": "Título profesional",
             "JOB_TYPE": "El tipo de trabajo",
-            "LANGUAGE_SPOKEN": "Lenguaje hablado",
-            "PERSONAL_INFORMATION": "Informacion personal",
-            "CONTACT_INFORMATION": "Información del contacto",
-            "EMPLOYEE_INFORMATION": "información del empleado"
+            "LANGUAGE_SPOKEN": "Lenguaje hablado"
         }
     },
     "SETTINGS": {

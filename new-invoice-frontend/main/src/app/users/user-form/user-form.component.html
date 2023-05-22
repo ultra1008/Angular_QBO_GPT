@@ -9,7 +9,10 @@
                                    <ul class="header-buttons-left ms-0">
                                         <li class="tbl-title">
                                              <h2>
-                                                  <strong>{{'USERS.VIEW.ADD_USER' | translate}}</strong>
+                                                  <strong
+                                                       *ngIf="id === null">{{'USERS.VIEW.ADD_USER' | translate}}</strong>
+                                                  <strong *ngIf="id !== null">{{'USERS.VIEW.EDIT_USER' | translate}}
+                                                       {{userfullName}}</strong>
                                              </h2>
                                         </li>
                                    </ul>
@@ -33,8 +36,7 @@
                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                                         <div class="card">
                                              <div class="header">
-                                                  <h2>{{'USERS.ADD_EDIT.PERSONAL_INFORMATION' | translate}}</h2>
-
+                                                  <h2>{{'USERS.TABS.PERSONAL_INFORMATION' | translate}}</h2>
                                              </div>
                                              <div class="body">
                                                   <form [formGroup]="userpersonalinfo!">
@@ -61,7 +63,32 @@
                                                                                                class="circular--landscape img"
                                                                                                alt="">
                                                                                           <img *ngIf="userpersonalinfo.get('usergender')?.value == 'Female'"
-                                                                                               src="{{defalut_female_mage}}"
+                                                                                               src="{{defalut_female_image}}"
+                                                                                               class="circular--landscape img"
+                                                                                               alt="">
+                                                                                     </ng-template>
+                                                                                </div>
+                                                                           </div>
+                                                                           <div *ngIf="id !== null"
+                                                                                class="custom-file fileInputProfileWrap mt-4">
+                                                                                <input type="file"
+                                                                                     class="fileInputProfile"
+                                                                                     #OpenFilebox_mobile
+                                                                                     (change)="fileChangeEvent_Mobile($event)">
+                                                                                <div class="circular--landscape"
+                                                                                     (click)="openfilebox_mobile()">
+                                                                                     <ng-container
+                                                                                          *ngIf="isImageSaved_Mobile; else elseTemplate_Mobile">
+                                                                                          <img [src]="cardImageBase64_Mobile"
+                                                                                               alt="" />
+                                                                                     </ng-container>
+                                                                                     <ng-template #elseTemplate_Mobile>
+                                                                                          <img *ngIf="userpersonalinfo.get('usergender')?.value != 'Female'"
+                                                                                               src="{{defalut_image_mobile}}"
+                                                                                               class="circular--landscape img"
+                                                                                               alt="">
+                                                                                          <img *ngIf="userpersonalinfo.get('usergender')?.value == 'Female'"
+                                                                                               src="{{defalut_female_image_mobile}}"
                                                                                                class="circular--landscape img"
                                                                                                alt="">
                                                                                      </ng-template>
@@ -82,7 +109,6 @@
                                                                                      capitalOnly required>
                                                                            </mat-form-field>
                                                                       </div>
-
                                                                       <div
                                                                            class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                            <mat-form-field class="example-full-width"
@@ -123,7 +149,7 @@
                                                                                 <mat-label>{{'USERS.ADD_EDIT.TEMPORARY_PASSWORD' | translate}}</mat-label>
                                                                                 <input matInput
                                                                                      formControlName="password"
-                                                                                     required>
+                                                                                     [required]="id === null">
                                                                            </mat-form-field>
                                                                       </div>
                                                                  </div>
@@ -271,13 +297,14 @@
                                                   </form>
                                                   <div class="row">
                                                        <div class=" col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2 ">
-
-                                                            <button class="btn-space" mat-raised-button
-                                                                 matStepperPrevious
-                                                                 color="primary">{{'COMMON.ACTIONS.BACK'| translate}}</button>
-                                                            <button matStepperNext type="button" mat-raised-button
+                                                            <button class="btn-space" mat-raised-button color="primary"
+                                                                 (click)="back()">{{'COMMON.ACTIONS.BACK'| translate}}</button>
+                                                            <button class="btn-space" matStepperNext type="button"
+                                                                 mat-raised-button
                                                                  color="warn">{{'COMMON.ACTIONS.NEXT'| translate}}</button>
-
+                                                            <button *ngIf="id !== null" mat-raised-button
+                                                                 color="primary"
+                                                                 (click)="savePersonalInfo()">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                        </div>
                                                   </div>
                                              </div>
@@ -289,7 +316,7 @@
                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                                         <div class="card">
                                              <div class="header">
-                                                  <h2>{{'USERS.ADD_EDIT.CONTACT_INFORMATION' | translate}}</h2>
+                                                  <h2>{{'USERS.TABS.CONTACT_INFORMATION' | translate}}</h2>
 
                                              </div>
                                              <div class="body">
@@ -301,9 +328,11 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>{{'USERS.ADD_EDIT.USER_PHONE' | translate}}</mat-label>
-                                                                      <input matInput formControlName="userphone">
-
-
+                                                                      <!-- <input matInput formControlName="userphone">  -->
+                                                                      <input matInput mask="(000) 000-0000"
+                                                                           maxlength="14"
+                                                                           onkeypress="return String.fromCharCode(event.charCode).match(/[^0-9]/g) === null"
+                                                                           formControlName="userphone">
                                                                  </mat-form-field>
                                                             </div>
                                                        </div>
@@ -372,9 +401,12 @@
                                                                  <button matStepperPrevious class="btn-space"
                                                                       mat-raised-button
                                                                       color="primary">{{'COMMON.ACTIONS.BACK'| translate}}</button>
-                                                                 <button matStepperNext type="button" mat-raised-button
+                                                                 <button class="btn-space" matStepperNext type="button"
+                                                                      mat-raised-button
                                                                       color="warn">{{'COMMON.ACTIONS.NEXT'| translate}}</button>
-
+                                                                 <button *ngIf="id !== null" mat-raised-button
+                                                                      color="primary"
+                                                                      (click)="saveContactInfo()">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                             </div>
                                                        </div>
                                                   </form>
@@ -387,7 +419,7 @@
                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                                         <div class="card">
                                              <div class="header">
-                                                  <h2>{{'USERS.ADD_EDIT.EMPLOYEE_INFORMATION' | translate}}</h2>
+                                                  <h2>{{'USERS.TABS.EMPLOYEE_INFORMATION' | translate}}</h2>
 
                                              </div>
                                              <div class="body">
@@ -534,8 +566,6 @@
                                                                                 {{db_job_title.job_title_name}}
                                                                            </mat-option>
                                                                       </mat-select>
-
-
                                                                  </mat-form-field>
                                                             </div>
                                                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
@@ -557,8 +587,6 @@
                                                                                 {{db_job_type.job_type_name}}
                                                                            </mat-option>
                                                                       </mat-select>
-
-
                                                                  </mat-form-field>
                                                             </div>
                                                        </div>
@@ -584,39 +612,61 @@
                                                                       </mat-select>
                                                                  </mat-form-field>
                                                             </div>
-
                                                        </div>
-
                                                        <div class="row">
                                                             <div class=" col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2 ">
-
                                                                  <button class="btn-space" mat-raised-button
                                                                       matStepperPrevious
                                                                       color="primary">{{'COMMON.ACTIONS.BACK'| translate}}</button>
                                                                  <button class="btn-space" type="button" matStepperNext
-                                                                      mat-raised-button
-                                                                      color="warn">{{'COMMON.ACTIONS.NEXT'| translate}}</button>
-
-                                                                 <button class="btn-space" mat-raised-button
-                                                                      (click)="savedata()"
+                                                                      mat-raised-button color="warn"
+                                                                      *ngIf="id !== null">{{'COMMON.ACTIONS.NEXT'| translate}}</button>
+                                                                 <button *ngIf="id === null" class="btn-space"
+                                                                      mat-raised-button (click)="savedata()"
                                                                       color="primary">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
+                                                                 <button *ngIf="id !== null" mat-raised-button
+                                                                      color="primary"
+                                                                      (click)="saveEmployeeInfo()">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                             </div>
                                                        </div>
-
                                                   </form>
                                              </div>
                                         </div>
                                    </div>
 
                               </mat-step>
-
+                              <mat-step state="emergency_contact" [completed]="false" [stepControl]="HFormGroup4!"
+                                   *ngIf="id !== null">
+                                   <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                        <div class="card">
+                                             <div class="header">
+                                                  <h2>{{'USERS.TABS.EMERGENCY_CONTACT' | translate}}</h2>
+                                             </div>
+                                             <div class="body">
+                                                  <app-user-emergency-contact></app-user-emergency-contact>
+                                             </div>
+                                        </div>
+                                   </div>
+                              </mat-step>
+                              <mat-step state="document" [completed]="false" [stepControl]="HFormGroup5!"
+                                   *ngIf="id !== null">
+                                   <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                        <div class="card">
+                                             <div class="header">
+                                                  <h2>{{'USERS.TABS.DOCUMENT' | translate}}</h2>
+                                             </div>
+                                             <div class="body">
+                                                  <app-user-document></app-user-document>
+                                             </div>
+                                        </div>
+                                   </div>
+                              </mat-step>
                               <ng-template matStepperIcon="edit" let-index="index">
-
                                    <mat-icon *ngIf="index == 0" class="Icon-h">account_box</mat-icon>
-
                                    <mat-icon *ngIf="index == 1" class="Icon-h">contact_phone</mat-icon>
-
                                    <div *ngIf="index == 2" class="fa fa-address-card"></div>
+                                   <div *ngIf="index == 3" class="fa fa-address-card"></div>
+                                   <div *ngIf="index == 4" class="fa fa-address-card"></div>
                               </ng-template>
                               <ng-template matStepperIcon="person">
                                    <mat-icon class="Icon-h">account_box</mat-icon>
@@ -625,6 +675,12 @@
                                    <mat-icon class="Icon-h">contact_phone</mat-icon>
                               </ng-template>
                               <ng-template matStepperIcon="employee">
+                                   <div class="fa fa-address-card"></div>
+                              </ng-template>
+                              <ng-template matStepperIcon="emergency_contact">
+                                   <div class="fa fa-address-card"></div>
+                              </ng-template>
+                              <ng-template matStepperIcon="document">
                                    <div class="fa fa-address-card"></div>
                               </ng-template>
                          </mat-horizontal-stepper>
