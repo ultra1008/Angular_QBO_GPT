@@ -153,6 +153,7 @@ export enum httproutes {
   DOCUMENTS_DATATABLE = 'getViewDocumentsDatatableForTable',
 
   //costcode
+  SETTINGS_IMPORT_COSTCODE_DATA = 'importCostCode ',
   COSTCODE_DATA_TABLE = 'getCostCodeForTable',
   DELETE_COST_CODE = 'deletecostcode',
   COST_CODE_SAVE = 'savecostcode',
