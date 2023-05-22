@@ -200,6 +200,7 @@ var emergencycontactsValidation = require('./emergency_contacts/emergency_contac
 router.post('/webapi/v1/portal/saveemergencycontact', common.checkTokenExistOrNot, emergencycontactsValidation.emergencycontactsValidation, emergencycontactsController.saveemergencycontact);
 router.post('/webapi/v1/portal/deleteemergencycontact', common.checkTokenExistOrNot, emergencycontactsValidation.emergencycontactsDeleteValidation, emergencycontactsController.deleteemergencycontact);
 router.post('/webapi/v1/portal/getemergencycontact', common.checkTokenExistOrNot, emergencycontactsController.getemergencycontact);
+router.post('/webapi/v1/portal/getoneemergencycontact', common.checkTokenExistOrNot, emergencycontactsController.getoneemergencycontact);
 router.post('/webapi/v1/portal/sendemergencycontactreminder', common.checkTokenExistOrNot, emergencycontactsValidation.emergencycontactsSendReminderValidation, emergencycontactsController.sendEmergencyContactReminder);
 
 let userDocumentController = require('./document/documentController');

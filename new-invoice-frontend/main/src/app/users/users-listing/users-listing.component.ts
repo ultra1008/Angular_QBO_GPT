@@ -47,7 +47,7 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
   selection = new SelectionModel<User>(true, []);
   isDelete = 0;
   advanceTable?: User;
-  titleMessage: string = "";
+  titleMessage = "";
   roleLists: Array<RoleModel> = [];
   userSelectForm?: any;
   selectedValue!: string;
@@ -58,7 +58,7 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
 
-  constructor(
+  constructor (
     public httpClient: HttpClient, private httpCall: HttpCall,
     public dialog: MatDialog,
     private snackBar: MatSnackBar, private router: Router,
@@ -90,7 +90,7 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
   }
   onBookChange(ob: any) {
     console.log('Book changed...');
-    let selectedBook = ob.value;
+    const selectedBook = ob.value;
     console.log(selectedBook);
     if (selectedBook == 1) {
       swalWithBootstrapTwoButtons
@@ -140,7 +140,7 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
   }
   async allArchiveUser() {
     console.log('call1');
-    let tmp_ids = [];
+    const tmp_ids = [];
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
     }
@@ -155,7 +155,7 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
 
   async allUserActive() {
     console.log('call2');
-    let tmp_ids = [];
+    const tmp_ids = [];
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
       console.log("tmp_ids", tmp_ids);
@@ -171,7 +171,7 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
 
   async allUserInactive() {
     console.log('call3');
-    let tmp_ids = [];
+    const tmp_ids = [];
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
     }
@@ -332,16 +332,10 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
         }
       });
   }
+
   addNew(user: User) {
-    let that = this;
     console.log("user", user);
-    let _id = user._id;
-    let tempDirection: Direction;
-    if (localStorage.getItem('isRtl') === 'true') {
-      tempDirection = 'rtl';
-    } else {
-      tempDirection = 'ltr';
-    }
+    const _id = user._id;
     const dialogRef = this.dialog.open(UserRestoreFormComponent, {
       data: _id
     });
@@ -386,7 +380,7 @@ export class UserDataSource extends DataSource<User> {
   }
   filteredData: User[] = [];
   renderedData: User[] = [];
-  constructor(
+  constructor (
     public userService: UserService,
     public paginator: MatPaginator,
     public _sort: MatSort,

@@ -1,5 +1,5 @@
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, UntypedFormBuilder, UntypedFormGroup, Validators, } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,6 +11,7 @@ import { configData } from 'src/environments/configData';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { Location } from '@angular/common';
 import { icon } from 'src/consts/icon';
+import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 @Component({
   selector: 'app-user-form',
   templateUrl: './user-form.component.html',
@@ -19,7 +20,7 @@ import { icon } from 'src/consts/icon';
     provide: STEPPER_GLOBAL_OPTIONS, useValue: { displayDefaultIndicatorType: false }
   }]
 })
-export class UserFormComponent {
+export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
   isLinear = false;
 
   HFormGroup1?: UntypedFormGroup;
@@ -37,8 +38,8 @@ export class UserFormComponent {
   useremployeeinfo!: UntypedFormGroup;
   showHideExpiration: any = [];
   db_Doc_types: any = [];
-  doc_controller: number = 0;
-  document_array: any = Array(Array());
+  doc_controller = 0;
+  document_array = Array(Array());
   sample_img = '/assets/images/image-gallery/logo.png';
 
   defalut_image: string = icon.MALE_PLACEHOLDER;
@@ -47,13 +48,13 @@ export class UserFormComponent {
   defalut_female_image_mobile: string = icon.FEMALE_PLACEHOLDER;
 
   imageError: any;
-  isImageSaved: boolean = false;
+  isImageSaved = false;
   cardImageBase64: any;
   filepath: any;
-  isImageSaved_Mobile: boolean = false;
+  isImageSaved_Mobile = false;
   cardImageBase64_Mobile: any;
   filepath_Mobile: any;
-  change_mobile_pic: boolean = false;
+  change_mobile_pic = false;
 
   maxDate = new Date();
   variablesRoleList: any = [];
@@ -101,11 +102,17 @@ export class UserFormComponent {
   ];
 
   id: any;
-  userfullName: string = '';
+  userfullName = '';
+  step_index = 0;
 
   constructor (private location: Location, public uiSpinner: UiSpinnerService, public UserService: UserService, private fb: UntypedFormBuilder,
     public route: ActivatedRoute, private router: Router, private formBuilder: FormBuilder, private snackBar: MatSnackBar,) {
+    super();
     this.id = this.route.snapshot.queryParamMap.get("_id");
+    if (this.router.getCurrentNavigation()?.extras.state) {
+      this.step_index = Number(this.router.getCurrentNavigation()?.extras.state?.['value']);
+    }
+
   }
   ngOnInit() {
     this.getRole();
@@ -163,6 +170,10 @@ export class UserFormComponent {
     if (this.id) {
       this.getOneUser();
     }
+  }
+
+  selectionChange(e: any) {
+    this.step_index = e.selectedIndex;
   }
 
   async getOneUser() {
