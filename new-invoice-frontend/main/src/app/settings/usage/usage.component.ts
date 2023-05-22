@@ -74,11 +74,11 @@ export class UsageComponent {
     public uiSpinner: UiSpinnerService
   ) {
     this.usageinfo = this.formBuilder.group({
-      totalSuervisor: [{ value: '' }],
-      bucket_size: [{ value: '' }],
+      totalSuervisor: [''],
+      bucket_size: [''],
     });
     let that = this;
-    // this.getusagedata();
+    that.getusagedata();
     that.getcompanyusage();
   }
   back() {
@@ -89,22 +89,22 @@ export class UsageComponent {
     row.hasOwnProperty('position');
   };
   ngOnInit() {
-    this.getcompanyusage();
-    this.getusagedata();
-
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.dataSource = new MatTableDataSource(this.AllUsage.slice());
+    let that = this;
+    that.getcompanyusage();
+    that.getusagedata();
+    that.dataSource.sort = that.sort;
+    that.dataSource.paginator = that.paginator;
+    that.dataSource = new MatTableDataSource(that.AllUsage.slice());
   }
 
   async getcompanyusage() {
     let that = this;
-    that.uiSpinner.spin$.next(true);
+    // that.uiSpinner.spin$.next(true);
     that.httpCall
       .httpGetCall(httpversion.PORTAL_V1 + httproutes.PORTAL_SETTING_USEAGE)
       .subscribe(function (params) {
         if (params.status) {
-          that.uiSpinner.spin$.next(false);
+          // that.uiSpinner.spin$.next(false);
           that.usageinfo = that.formBuilder.group({
             totalSuervisor: [params.data.totalSuervisor],
             bucket_size: [params.data.bucket_size],

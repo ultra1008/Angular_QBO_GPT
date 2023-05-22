@@ -37,6 +37,7 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
   username_search: any;
   username_status: any;
   tweet_epochs: any = [];
+  cardLoading = true;
 
   constructor(
     public httpClient: HttpClient, private httpCall: HttpCall,
@@ -56,26 +57,29 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
   async getUser() {
     const data = await this.userService.getUser(this.isDelete);
     this.userList = data;
+    this.cardLoading = false;
   }
 
   convertDate(date: any) {
     return timeDateToepoch(date);
   }
 
-
   gotoArchiveUnarchive() {
     this.isDelete = this.isDelete == 1 ? 0 : 1;
+    this.cardLoading = true;
+    this.userList = [];
     this.getUser();
   }
+
   addNewUser() {
     this.router.navigate([WEB_ROUTES.USER_FORM]);
   }
+
   openHistory() {
     this.router.navigate([WEB_ROUTES.USER_HISTORY]);
   }
-  userReport() {
-    console.log("roleList", this.roleLists);
 
+  userReport() {
     const dialogRef = this.dialog.open(UserReportComponent, {
       width: '700px',
       data: {
@@ -87,17 +91,18 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
       //  
     });
   }
+
   async getRole() {
     const data = await this.userService.getRole();
     if (data.status) {
       this.roleLists = data.data;
-
     }
   }
 
   refresh() {
     this.getUser();
   }
+
   async archiveRecover(user: User, is_delete: number) {
     const data = await this.userService.deleteUser({ _id: user, is_delete: is_delete });
     if (data.status) {
@@ -108,6 +113,7 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
       showNotification(this.snackBar, data.message, 'error');
     }
   }
+
   async deleteUser(user: User, is_delete: number) {
 
     if (is_delete == 1) {
@@ -178,8 +184,8 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
 
 
   }
+
   gotoUser() {
-    console.log("call");
     localStorage.setItem(localstorageconstants.USER_DISPLAY, 'list');
     this.router.navigate([WEB_ROUTES.USER]);
   }

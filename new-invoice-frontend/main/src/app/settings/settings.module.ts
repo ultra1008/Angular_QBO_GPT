@@ -76,6 +76,7 @@ import { JobNameListingComponent } from './othersettings/job-name-listing/job-na
 import { TranslateModule } from '@ngx-translate/core';
 import { ImportEmployeeSettingsComponent } from './employeesettings/import-employee-settings/import-employee-settings.component';
 import { QuickbooksAuthorizationComponent } from './integration/qbointegration/quickbooks-authorization/quickbooks-authorization.component';
+import { ImportCostcodeSettingsComponent } from './costcode/import-costcode-settings/import-costcode-settings.component';
 
 @NgModule({
   declarations: [
@@ -121,6 +122,7 @@ import { QuickbooksAuthorizationComponent } from './integration/qbointegration/q
     JobNameListingComponent,
     ImportEmployeeSettingsComponent,
     QuickbooksAuthorizationComponent,
+    ImportCostcodeSettingsComponent,
   ],
   providers: [SettingsService],
   imports: [
