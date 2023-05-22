@@ -197,6 +197,7 @@
             },
             "MAIL_BOX": {
                 "HEADER": "Mailboxes to Monitor",
+                "HEADER_ARCHIVE": "Archive Mailboxes to Monitor",
                 "EMAIL": "Email",
                 "IMAP": "IMAP",
                 "PORT": "Port",
@@ -209,7 +210,12 @@
             },
             "COST_CODE_MODULE": {
                 "DIVISON": "Divison",
-                "DISCRIPTION": "Description"
+                "DISCRIPTION": "Description",
+                "HEADER_ARCHIVE": "Archive Cost Code",
+                "CONFIRMATION_DIALOG": {
+                    "ARCHIVE": "Are you sure you want to archive this cost code?",
+                    "RESTORE": "Are you sure you want to restore this cost code?"
+                }
             },
             "OTHER_SETTINGS_MODULE": {
                 "OTHER_SETTINGS": "Other Settings",
