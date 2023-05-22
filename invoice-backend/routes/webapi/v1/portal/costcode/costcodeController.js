@@ -6,6 +6,8 @@ var common = require("../../../../../controller/common/common");
 let db_connection = require('../../../../../controller/common/connectiondb');
 let collectionConstant = require('../../../../../config/collectionConstant');
 //let activityController = require("./../todaysActivity/todaysActivityController");
+var formidable = require('formidable');
+const reader = require('xlsx');
 
 module.exports.getallcostcode = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -323,6 +325,69 @@ module.exports.getCostCodeForTable = async function (req, res) {
             res.send([]);
         } finally {
             connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.importCostCode = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            let costcodeCollection = connection_db_api.model(collectionConstant.COSTCODES, costcodeSchema);
+            var form = new formidable.IncomingForm();
+            var fields = [];
+            var notFonud = 0;
+            var newOpenFile;
+            // var fileType;
+            var fileName;
+            form.parse(req)
+                .on('file', function (name, file) {
+                    notFonud = 1;
+                    fileName = file;
+                }).on('field', function (name, field) {
+                    fields[name] = field;
+                })
+                .on('error', function (err) {
+                    throw err;
+                }).on('end', async function () {
+                    newOpenFile = this.openedFiles;
+                    if (notFonud == 1) {
+                        const file = reader.readFile(newOpenFile[0].path);
+                        const sheets = file.SheetNames;
+                        let data = [];
+                        for (let i = 0; i < sheets.length; i++) {
+                            const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
+                            temp.forEach((ress) => {
+                                data.push(ress);
+                            });
+                        }
+                        for (let m = 0; m < data.length; m++) {
+                            requestObject = {};
+                            let onecategory_main = await costcodeCollection.findOne({ cost_code: data[m].cost_code, division: data[m].division });
+                            if (onecategory_main == null) {
+                                requestObject.cost_code = data[m].cost_code;
+                                requestObject.division = data[m].division;
+                                requestObject.module = data[m].module;
+                                requestObject.description = data[m].description;
+                                requestObject.value = data[m].value;
+                                requestObject.is_delete = 0;
+                                let add_costcode = new costcodeCollection(requestObject);
+                                let save_costcode = await add_costcode.save();
+                            } else {
+                            }
+                        }
+                        res.send({ status: true, message: translator.getStr('CostCodeAdded') });
+                    }
+                });
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            //connection_db_api.close()
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });

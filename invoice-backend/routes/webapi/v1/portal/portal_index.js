@@ -238,6 +238,7 @@ router.post('/webapi/v1/portal/getcostcodefordatatable', common.checkTokenExistO
 router.post('/webapi/v1/portal/savexlsxcostcode', common.checkTokenExistOrNot, costCodeController.savexlsxcostcode);
 router.post('/webapi/v1/portal/savecostcodeindb', common.checkTokenExistOrNot, costCodeController.savecostcodeindb);
 router.post('/webapi/v1/portal/getCostCodeForTable', common.checkTokenExistOrNot, costCodeValidation.getCostCodeForTableValidation, costCodeController.getCostCodeForTable);
+router.post('/webapi/v1/portal/importCostCode', common.checkTokenExistOrNot, costCodeController.importCostCode);
 
 let creditcardsettingsController = require("./creditcardsettings/creditcardsettingsController");
 let creditcardsettingsValidation = require('./creditcardsettings/creditcardsettingsValidation');
@@ -375,6 +376,7 @@ router.post('/webapi/v1/portal/getvendorreport', common.checkTokenExistOrNot, in
 router.post('/webapi/v1/portal/savevendorstoDB', common.checkTokenExistOrNot, invoice_vendorController.savevendorstoDB);
 router.post('/webapi/v1/portal/updateMultipleVendorStatus', common.checkTokenExistOrNot, invoice_vendorValidation.updateMultipleVendorStatus, invoice_vendorController.updateMultipleVendorStatus);
 router.post('/webapi/v1/portal/deleteMultipleVendor', common.checkTokenExistOrNot, invoice_vendorValidation.deleteMultipleVendor, invoice_vendorController.deleteMultipleVendor);
+router.post('/webapi/v1/portal/importVendor', common.checkTokenExistOrNot, invoice_vendorController.importVendor);
 
 
 

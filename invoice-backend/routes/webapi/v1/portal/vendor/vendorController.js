@@ -20,6 +20,8 @@ var recentActivity = require('./../recent_activity/recentActivityController');
 var QuickBooks = require('node-quickbooks');
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
+var formidable = require('formidable');
+const reader = require('xlsx');
 
 QuickBooks.setOauthVersion('2.0');//set the Oauth version
 
@@ -1117,6 +1119,72 @@ module.exports.getVendorExcelReport = async function (req, res) {
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         } finally {
             connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.importVendor = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+
+            var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
+            var form = new formidable.IncomingForm();
+            var fields = [];
+            var notFonud = 0;
+            var newOpenFile;
+            // var fileType;
+            var fileName;
+            form.parse(req)
+                .on('file', function (name, file) {
+                    notFonud = 1;
+                    fileName = file;
+                }).on('field', function (name, field) {
+                    fields[name] = field;
+                })
+                .on('error', function (err) {
+                    throw err;
+                }).on('end', async function () {
+                    newOpenFile = this.openedFiles;
+                    if (notFonud == 1) {
+                        const file = reader.readFile(newOpenFile[0].path);
+                        const sheets = file.SheetNames;
+                        let data = [];
+                        for (let i = 0; i < sheets.length; i++) {
+                            const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
+                            temp.forEach((ress) => {
+                                data.push(ress);
+                            });
+                        }
+                        for (let m = 0; m < data.length; m++) {
+                            requestObject = {};
+                            let onecategory_main = await vendorConnection.findOne({ vendor_name: data[m].vendor_name, vendor_email: data[m].vendor_email });
+                            if (onecategory_main == null) {
+                                requestObject.vendor_name = data[m].vendor_name;
+                                requestObject.vendor_phone = data[m].vendor_phone;
+                                requestObject.vendor_email = data[m].vendor_email;
+                                requestObject.vendor_address = data[m].vendor_address;
+                                requestObject.vendor_city = data[m].vendor_city;
+                                requestObject.vendor_state = data[m].vendor_state;
+                                requestObject.vendor_zipcode = data[m].vendor_zipcode;
+                                requestObject.vendor_terms = data[m].vendor_terms;
+                                let add_costcode = new vendorConnection(requestObject);
+                                let save_costcode = await add_costcode.save();
+                            } else {
+                            }
+                        }
+                        res.send({ status: true, message: translator.getStr('VENDOR_ADD_MESSAGE') });
+                    }
+                });
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            //connection_db_api.close()
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
