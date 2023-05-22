@@ -13,7 +13,7 @@
             "LIST_TO_GRID": "LIST TO GRID",
             "CLOSE": "Close",
             "CHANGE_LANGUAGE": "CHANGE LANGUAGE",
-            "IMPORT_TEMPLATE": "Download Import Template",
+            "IMPORT_TEMPLATE": "Download Template",
             "IMPORT": "Import"
         },
         "ACTIONS": {
@@ -224,7 +224,7 @@
                 "ADD_DISCOUNT": "Add Discount",
                 "DISCOUNT_PERCENTAGE": "Discount%",
                 "FILE_DOWNLOAD_INSTRUCTION": "Instruction for import file",
-                "OK_TO_IMPORT": "Ok to import",
+                "OK_TO_IMPORT": "Ok",
                 "DOWNLOAD_IMPORT_INSTRUCTION": "Please 'Do Not' delete or edit the first row of this template file to avoid errors when uploading the file again in to ROVUK platform",
                 "CONFIRMATION_DIALOG": {
                     "TERMS": "Are you sure you want to delete terms?",

@@ -465,17 +465,17 @@ export class EmployeesettingsComponent {
         .subscribe(function (params) {
           if (params.status) {
             if (that.currrent_tab == 'document') {
-              that.getDataDocumentType();
+              location.reload();
             } else if (that.currrent_tab == 'department') {
-              that.getDataDepartment();
+              location.reload();
             } else if (that.currrent_tab == 'jobtitle') {
-              that.getDataJobTitle();
+              location.reload();
             } else if (that.currrent_tab == 'jobtype') {
-              that.getDataJobType();
+              location.reload();
             } else if (that.currrent_tab == 'relationship') {
-              that.getDataRelationship();
+              location.reload();
             } else if (that.currrent_tab == 'language') {
-              that.getDataLanguage();
+              location.reload();
             }
             // that.openErrorDataDialog(params);
 
@@ -499,9 +499,7 @@ export class EmployeesettingsComponent {
         disableClose: true,
       });
 
-      dialogRef.afterClosed().subscribe((result) => {
-        this.getDataDocumentType();
-      });
+      dialogRef.afterClosed().subscribe((result) => {});
     } else if (this.currrent_tab == 'department') {
       const dialogRef = this.dialog.open(ImportEmployeeSettingsComponent, {
         width: '500px',
@@ -509,9 +507,7 @@ export class EmployeesettingsComponent {
         disableClose: true,
       });
 
-      dialogRef.afterClosed().subscribe((result) => {
-        this.getDataDepartment();
-      });
+      dialogRef.afterClosed().subscribe((result) => {});
     } else if (this.currrent_tab == 'jobtitle') {
       const dialogRef = this.dialog.open(ImportEmployeeSettingsComponent, {
         width: '500px',
@@ -519,9 +515,7 @@ export class EmployeesettingsComponent {
         disableClose: true,
       });
 
-      dialogRef.afterClosed().subscribe((result) => {
-        this.getDataJobTitle();
-      });
+      dialogRef.afterClosed().subscribe((result) => {});
     } else if (this.currrent_tab == 'jobtype') {
       const dialogRef = this.dialog.open(ImportEmployeeSettingsComponent, {
         width: '500px',
@@ -529,9 +523,7 @@ export class EmployeesettingsComponent {
         disableClose: true,
       });
 
-      dialogRef.afterClosed().subscribe((result) => {
-        this.getDataJobType();
-      });
+      dialogRef.afterClosed().subscribe((result) => {});
     } else if (this.currrent_tab == 'relationship') {
       const dialogRef = this.dialog.open(ImportEmployeeSettingsComponent, {
         width: '500px',
@@ -539,9 +531,7 @@ export class EmployeesettingsComponent {
         disableClose: true,
       });
 
-      dialogRef.afterClosed().subscribe((result) => {
-        this.getDataRelationship();
-      });
+      dialogRef.afterClosed().subscribe((result) => {});
     } else if (this.currrent_tab == 'language') {
       const dialogRef = this.dialog.open(ImportEmployeeSettingsComponent, {
         width: '500px',
@@ -549,9 +539,7 @@ export class EmployeesettingsComponent {
         disableClose: true,
       });
 
-      dialogRef.afterClosed().subscribe((result) => {
-        this.getDataLanguage();
-      });
+      dialogRef.afterClosed().subscribe((result) => {});
     }
   }
 
