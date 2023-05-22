@@ -21,6 +21,11 @@ export class QbointegrationComponent {
 
   }
 
+
+  connact() {
+    this.router.navigate(['settings/qbo-integration-online']);
+  }
+
   back() {
     this.router.navigate(['/settings/integration']);
   }
