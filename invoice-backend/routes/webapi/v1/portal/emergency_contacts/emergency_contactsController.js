@@ -85,8 +85,6 @@ module.exports.getemergencycontact = async function (req, res) {
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
-            console.log(req.body);
-
             let emergencycontactsCollection = connection_db_api.model(collectionConstant.EMERGENCY_CONTACT, emergency_contactsSchema);
             let emergencycontacts_tmp = await emergencycontactsCollection.aggregate([
                 {
@@ -126,7 +124,32 @@ module.exports.getemergencycontact = async function (req, res) {
                 { $sort: { createdAt: 1 } }
             ]);
             if (emergencycontacts_tmp) {
-                res.send({ message: translator.getStr('EmergencyContactListing'), data: emergencycontacts_tmp, status: true });
+                res.send(emergencycontacts_tmp);
+            } else {
+                res.send([]);
+            }
+        } catch (e) {
+            console.log(e);
+            res.send([]);
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send([]);
+    }
+};
+
+module.exports.getoneemergencycontact = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            let emergencycontactsCollection = connection_db_api.model(collectionConstant.EMERGENCY_CONTACT, emergency_contactsSchema);
+            let get_data = await emergencycontactsCollection.findOne({ _id: ObjectID(requestObject._id) });
+            if (get_data) {
+                res.send({ message: translator.getStr('EmergencyContactListing'), data: get_data, status: false });
             } else {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
             }

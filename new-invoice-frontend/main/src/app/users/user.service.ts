@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { HttpCall } from '../services/httpcall.service';
 import { UnsubscribeOnDestroyAdapter } from '../shared/UnsubscribeOnDestroyAdapter';
-import { User } from './user.model';
+import { EmergencyContact, User } from './user.model';
 import { BehaviorSubject } from 'rxjs';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { HttpHeaders } from '@angular/common/http';
@@ -10,7 +10,9 @@ import { HttpHeaders } from '@angular/common/http';
 @Injectable()
 export class UserService extends UnsubscribeOnDestroyAdapter {
   isTblLoading = true;
+  isEmergencyTblLoading = true;
   dataChange: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
+  emergencyDataChange: BehaviorSubject<EmergencyContact[]> = new BehaviorSubject<EmergencyContact[]>([]);
   // Temporarily stores data from dialogs
   dialogData!: User;
 
@@ -19,6 +21,10 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
   }
   get data(): User[] {
     return this.dataChange.value;
+  }
+
+  get emergencyData(): EmergencyContact[] {
+    return this.emergencyDataChange.value;
   }
 
   getDialogData() {
@@ -216,5 +222,46 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
     //        // error code here
     //     },
     //   });
+  }
+
+  // Datatable API
+  async getEmergencyContactForTable(id: string): Promise<void> {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.GET_EMERGENCY_CONTACT,
+        { _id: id }
+      )
+      .toPromise();
+    // Only write this for datatable api otherwise return data
+    this.isEmergencyTblLoading = false;
+    this.emergencyDataChange.next(data);
+  }
+
+  async getOneEmergencyContact(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(httpversion.PORTAL_V1 + httproutes.GET_ONE_EMERGENCY_CONTACT, requestObject)
+      .toPromise();
+    return data;
+  }
+
+  async getRelationship() {
+    const data = await this.httpCall
+      .httpGetCall(httpversion.PORTAL_V1 + httproutes.GET_RELATIONSHIP)
+      .toPromise();
+    return data;
+  }
+
+  async saveEmergencyContact(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(httpversion.PORTAL_V1 + httproutes.SAVE_EMERGENCY_CONTACT, requestObject)
+      .toPromise();
+    return data;
+  }
+
+  async deleteEmergencyContact(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(httpversion.PORTAL_V1 + httproutes.DELETE_EMERGENCY_CONTACT, requestObject)
+      .toPromise();
+    return data;
   }
 }

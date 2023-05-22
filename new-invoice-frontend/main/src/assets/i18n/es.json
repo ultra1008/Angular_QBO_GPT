@@ -341,5 +341,29 @@
         "VIEW": {
             "TITLE": "Change Password"
         }
+    },
+    "EMERGENCY_CONTACT": {
+        "TITLE": "Emergency Contact",
+        "ADD": "Add Emergency Contact",
+        "EDIT": "Edit Emergency Contact",
+        "FORM": {
+            "NAME": "Name",
+            "RELATION": "Relation",
+            "PHONE": "Phone",
+            "EMAIL": "Email",
+            "ADDRESS": "Address",
+            "STREET1": "Street1",
+            "STREET2": "Street2",
+            "CITY": "City",
+            "STATE": "State",
+            "ZIPCODE": "Zipcode",
+            "COUNTRY": "Country",
+            "LAST_VALIDATION_DATE": "Last Validation Date"
+        },
+        "CONFIRMATION_DIALOG": {
+            "SUBMIT": "Please complete the emergency form before submitting.",
+            "SAVING": "Are you sure you want to close this window without saving changes?",
+            "DELETE": "Are you sure you want to delete this emergency?"
+        }
     }
 }

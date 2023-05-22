@@ -64,6 +64,13 @@ export enum httproutes {
   SAVE_USER_INFO = 'saveemployeeinfo',
   SAVE_USER_MOBILE_PIC = 'savemobilephoto',
 
+  // Emergency Contact
+  GET_EMERGENCY_CONTACT = 'getemergencycontact',
+  GET_ONE_EMERGENCY_CONTACT = 'getoneemergencycontact',
+  SAVE_EMERGENCY_CONTACT = 'saveemergencycontact',
+  DELETE_EMERGENCY_CONTACT = 'deleteemergencycontact',
+  GET_RELATIONSHIP = 'getallrelationships',
+
   //Mail box
   MAILBOX_DATA_TABLE = 'getMailboxMonitorForTable',
   SAVE_MAILBOX = 'savemailboxmonitor',
@@ -153,6 +160,7 @@ export enum httproutes {
   DOCUMENTS_DATATABLE = 'getViewDocumentsDatatableForTable',
 
   //costcode
+  SETTINGS_IMPORT_COSTCODE_DATA = 'importCostCode ',
   COSTCODE_DATA_TABLE = 'getCostCodeForTable',
   DELETE_COST_CODE = 'deletecostcode',
   COST_CODE_SAVE = 'savecostcode',

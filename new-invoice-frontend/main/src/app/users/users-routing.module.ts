@@ -5,6 +5,7 @@ import { UserGridComponent } from './user-grid/user-grid.component';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { UserHistoryComponent } from './user-history/user-history.component';
 import { UserFormComponent } from './user-form/user-form.component';
+import { AddUserEmergenctContactComponent } from './user-form/user-emergency-contact/add-user-emergenct-contact/add-user-emergenct-contact.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,10 @@ const routes: Routes = [
   {
     path: WEB_ROUTES.FORM,
     component: UserFormComponent
+  },
+  {
+    path: WEB_ROUTES.USER_EMERGENCY_CONTACT + "/" + WEB_ROUTES.FORM,
+    component: AddUserEmergenctContactComponent
   },
 ];
 

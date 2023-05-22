@@ -10,7 +10,7 @@ export class User {
     department_name: string;
     userstatus: number;
     static _id: string;
-    constructor(response: User) {
+    constructor (response: User) {
         {
             this._id = response._id;
             this.userfullname = response.userfullname;
@@ -23,7 +23,6 @@ export class User {
         }
     }
 }
-
 export class AdvanceTable {
     id: number;
     img: string;
@@ -35,7 +34,7 @@ export class AdvanceTable {
     mobile: string;
     address: string;
     country: string;
-    constructor(advanceTable: AdvanceTable) {
+    constructor (advanceTable: AdvanceTable) {
         {
             this.id = advanceTable.id || this.getRandomID();
             this.img = advanceTable.img || 'assets/images/user/user1.jpg';
@@ -56,20 +55,47 @@ export class AdvanceTable {
         return S4() + S4();
     }
 }
-
 export class RoleModel {
     _id: string;
     role_name: string;
     is_delete: boolean;
     role_id: string;
 
-    constructor(response: RoleModel) {
+    constructor (response: RoleModel) {
         {
             this._id = response._id;
             this.role_name = response.role_name;
             this.is_delete = response.is_delete;
             this.role_id = response.role_id;
 
+        }
+    }
+}
+export class EmergencyContact {
+    _id: string;
+    emergency_contact_name: string;
+    relationship_name: string;
+    emergency_contact_email: string;
+    emergency_contact_phone: string;
+    emergency_contact_street1: string;
+    emergency_contact_street2: string;
+    emergency_contact_city: string;
+    emergency_contact_state: string;
+    is_validated: boolean;
+    validated_at: string;
+    constructor (response: EmergencyContact) {
+        {
+            this._id = response._id;
+            this.emergency_contact_name = response.emergency_contact_name;
+            this.relationship_name = response.relationship_name;
+            this.emergency_contact_email = response.emergency_contact_email;
+            this.emergency_contact_phone = response.emergency_contact_phone;
+            this.emergency_contact_street1 = response.emergency_contact_street1;
+            this.emergency_contact_street2 = response.emergency_contact_street2;
+            this.emergency_contact_city = response.emergency_contact_city;
+            this.emergency_contact_state = response.emergency_contact_state;
+            this.is_validated = response.is_validated;
+            this.validated_at = response.validated_at;
         }
     }
 }

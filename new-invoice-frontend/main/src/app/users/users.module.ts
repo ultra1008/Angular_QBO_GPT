@@ -41,6 +41,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { EmpListFilterPipe, EmpListFilterStatusPipe, FormateDateDDMMYYPipe, FormateDateStringPipe } from './users-filter.pipe';
 import { UserEmergencyContactComponent } from './user-form/user-emergency-contact/user-emergency-contact.component';
 import { UserDocumentComponent } from './user-form/user-document/user-document.component';
+import { AddUserEmergenctContactComponent } from './user-form/user-emergency-contact/add-user-emergenct-contact/add-user-emergenct-contact.component';
 
 
 @NgModule({
@@ -56,7 +57,8 @@ import { UserDocumentComponent } from './user-form/user-document/user-document.c
     FormateDateDDMMYYPipe,
     FormateDateStringPipe,
     UserEmergencyContactComponent,
-    UserDocumentComponent
+    UserDocumentComponent,
+    AddUserEmergenctContactComponent
   ],
   providers: [UserService],
   imports: [
