@@ -208,6 +208,7 @@ export function commonLocalThumbImage(sanitiser: DomSanitizer, file: File) {
             break;
     }
 }
+
 export function amountChange(params: any) {
     params = params.target.value;
     if (params == "") {
@@ -263,6 +264,11 @@ export function amountChange(params: any) {
          } */
     }
 }
+
+export function numberWithCommas(x: any) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 export function MMDDYYYY(epochTime: any) {
     if (epochTime == 0) return '';
     var dateObj = epochTime * 1000;

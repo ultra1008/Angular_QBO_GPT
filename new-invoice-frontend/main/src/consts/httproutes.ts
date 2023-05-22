@@ -52,12 +52,17 @@ export enum httproutes {
   USER_REPORT = 'getallemployeereport',
   TEAM_HISTORY = 'getuserhistory',
   GET_ALL_USER = 'getalluser',
+  GET_ONE_USER = 'getoneuser',
   GET_LOCATION = 'getalllocation',
   GET_JOB_TITLE = 'getAlljobtitle',
   GET_JOB_TYPE = 'getAlljobtype',
   GET_LANGUAGE = 'getlanguage',
   GET_DEPARTMENT = 'getalldepartment',
   SAVE_USER = 'saveemployee',
+  SAVE_USER_PERSONAL_INFO = 'savepersonalinfo',
+  SAVE_USER_CONTACT_INFO = 'savecontactinfo',
+  SAVE_USER_INFO = 'saveemployeeinfo',
+  SAVE_USER_MOBILE_PIC = 'savemobilephoto',
 
   //Mail box
   MAILBOX_DATA_TABLE = 'getMailboxMonitorForTable',

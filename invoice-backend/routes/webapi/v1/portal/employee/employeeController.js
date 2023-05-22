@@ -102,13 +102,11 @@ module.exports.saveEmployee = async function (req, res) {
                     fileName = file;
                 })
                 .on('field', function (name, field) {
-
                     fields[name] = field;
                 })
                 .on('error', function (err) {
                     throw err;
                 }).on('end', async function () {
-
                     newOpenFile = this.openedFiles;
                     var body = await JSON.parse(fields.reqObject);
                     body.useremail = body.useremail.toLowerCase();
@@ -138,9 +136,7 @@ module.exports.saveEmployee = async function (req, res) {
                     if (body.password) {
                         body.password = common.generateHash(body.password);
                     }
-
                     let checkEmailExist = await userConnection.findOne({ useremail: body.useremail });
-
                     if (checkEmailExist) {
                         res.send({ message: translator.getStr('EmailAlreadyExists'), status: false });
                     } else {
@@ -1232,13 +1228,14 @@ module.exports.updateShowIDCardFlag = async function (req, res) {
 };
 
 module.exports.savePersonalInfo = async function (req, res) {
+    console.log("start");
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             let history_object;
-
+            console.log("sagar");
             let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             var form = new formidable.IncomingForm();
             var fields = [];
@@ -1256,226 +1253,231 @@ module.exports.savePersonalInfo = async function (req, res) {
                 .on('error', function (err) {
                     throw err;
                 }).on('end', async function () {
-                    newOpenFile = this.openedFiles;
-                    var body = JSON.parse(fields.reqObject);
-                    body.useremail = body.useremail.toLowerCase();
-                    jobtitle = body.jobtitle_name;
-                    department = body.department_name;
-                    costcode = body.costcode_name;
-                    body.allow_for_projects = body.allow_for_projects == "true" || body.allow_for_projects == true ? true : false;
+                    console.log("end");
+                    if (fields._id) {
+                        newOpenFile = this.openedFiles;
+                        var body = JSON.parse(fields.reqObject);
+                        body.useremail = body.useremail.toLowerCase();
+                        jobtitle = body.jobtitle_name;
+                        department = body.department_name;
+                        costcode = body.costcode_name;
+                        body.allow_for_projects = body.allow_for_projects == "true" || body.allow_for_projects == true ? true : false;
 
-                    delete body['jobtitle_name'];
-                    delete body['department_name'];
-                    delete body['costcode_name'];
-                    delete body._id;
-                    let user_edit_id = fields._id;
-                    delete fields._id;
-                    //let usercostcode = "013-0110002";
-                    //password_tmp = body.password;
+                        delete body['jobtitle_name'];
+                        delete body['department_name'];
+                        delete body['costcode_name'];
+                        delete body._id;
+                        let user_edit_id = fields._id;
+                        delete fields._id;
+                        //let usercostcode = "013-0110002";
+                        //password_tmp = body.password;
 
-                    let temp_vendors = [];
-                    let tempVendor = body.vendors;
-                    if (tempVendor) {
-                        for (let i = 0; i < tempVendor.length; i++) {
-                            temp_vendors.push(ObjectID(tempVendor[i]));
+                        let temp_vendors = [];
+                        let tempVendor = body.vendors;
+                        if (tempVendor) {
+                            for (let i = 0; i < tempVendor.length; i++) {
+                                temp_vendors.push(ObjectID(tempVendor[i]));
+                            }
                         }
-                    }
-                    body.vendors = temp_vendors;
+                        body.vendors = temp_vendors;
 
-                    body.userupdated_by = decodedToken.UserData._id;
-                    if (body.password) {
-                        body.password = common.generateHash(body.password);
-                    }
-                    let one_user = await userConnection.findOne({ _id: ObjectID(user_edit_id) }, { userroleId: 1, useremail: 1, username: 1, usermiddlename: 1, userlastname: 1, userfullname: 1, userssn: 1, usergender: 1, userdob1: 1, userstatus: 1, user_no: 1, allow_for_projects: 1, });
-                    let get_user = await userConnection.findOne({ _id: ObjectID(user_edit_id) });
-                    let checkEmailExist = await userConnection.findOne({ useremail: body.useremail });
-                    let flg_update = false;
-
-                    if (checkEmailExist) {
-                        if (checkEmailExist._id == user_edit_id) {
+                        body.userupdated_by = decodedToken.UserData._id;
+                        if (body.password) {
+                            body.password = common.generateHash(body.password);
+                        }
+                        let one_user = await userConnection.findOne({ _id: ObjectID(user_edit_id) }, { userroleId: 1, useremail: 1, username: 1, usermiddlename: 1, userlastname: 1, userfullname: 1, userssn: 1, usergender: 1, userdob1: 1, userstatus: 1, user_no: 1, allow_for_projects: 1, });
+                        let get_user = await userConnection.findOne({ _id: ObjectID(user_edit_id) });
+                        let checkEmailExist = await userConnection.findOne({ useremail: body.useremail });
+                        let flg_update = false;
+                        console.log("edit user id, ", checkEmailExist._id, user_edit_id, "====", checkEmailExist._id == user_edit_id);
+                        if (checkEmailExist) {
+                            if (checkEmailExist._id == user_edit_id) {
+                                let update_user_1 = await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, body);
+                                flg_update = true;
+                            } else {
+                                res.send({ message: translator.getStr('EmailAlreadyExists'), status: false });
+                                return;
+                            }
+                        } else {
                             let update_user_1 = await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, body);
                             flg_update = true;
-                        } else {
-                            res.send({ message: translator.getStr('EmailAlreadyExists'), status: false });
-                            return;
                         }
-                    } else {
-                        let update_user_1 = await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, body);
-                        flg_update = true;
-                    }
-                    // //update code
-                    history_object = body;
-                    history_object.updated_id = user_edit_id;
-                    //let update_user_1 = await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, body);
-                    // let get_user_roles = connection_db_api.model(collectionConstant.INVOICE_ROLES, invoiceRoleSchema);
-                    // let onerole = await get_user_roles.findOne({ role_id: ObjectID(body.userroleId) });
-                    if (flg_update) {
-                        let LowerCase_bucket = decodedToken.companycode.toLowerCase();
+                        // //update code
+                        history_object = body;
+                        history_object.updated_id = user_edit_id;
+                        //let update_user_1 = await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, body);
+                        // let get_user_roles = connection_db_api.model(collectionConstant.INVOICE_ROLES, invoiceRoleSchema);
+                        // let onerole = await get_user_roles.findOne({ role_id: ObjectID(body.userroleId) });
+                        if (flg_update) {
+                            let LowerCase_bucket = decodedToken.companycode.toLowerCase();
 
-                        /* // Revalk Email Recipient from all projects
-                        let projectEmailRecipientsConnection = connection_db_api.model(collectionConstant.SUPPLIER_PROJECT_EMAIL_RECIPIENTS, projectEmailRecipientSchema);
-                        if (body.project_email_group == 'none') {
-                            let revokFromAllEmail = {
-                                sponsor_change_order: user_edit_id,
-                                prime_change_order: user_edit_id,
-                                sponsor_purchase_order: user_edit_id,
-                                sponsor_retaining_order: user_edit_id,
-                                prime_retaining_order: user_edit_id,
-                                sponsor_payment_order: user_edit_id,
-                                prime_payment_order: user_edit_id,
-                            };
-                            let update_object = await projectEmailRecipientsConnection.update({}, { $pull: revokFromAllEmail });
-                        } else if (body.project_email_group == 'prime_member') {
-                            let revokFromAllEmail = {
-                                prime_change_order: user_edit_id,
-                                prime_retaining_order: user_edit_id,
-                                prime_payment_order: user_edit_id,
-                            };
-                            let update_object = await projectEmailRecipientsConnection.update({}, { $pull: revokFromAllEmail });
-                        } else if (body.project_email_group == 'sponsor_member') {
-                            let revokFromAllEmail = {
-                                sponsor_change_order: user_edit_id,
-                                sponsor_purchase_order: user_edit_id,
-                                sponsor_retaining_order: user_edit_id,
-                                sponsor_payment_order: user_edit_id,
-                            };
-                            let update_object = await projectEmailRecipientsConnection.update({}, { $pull: revokFromAllEmail });
-                        } */
-
-
-                        //TODO-start
-                        /* let qrcode_Object = config.SITE_URL + '/#/user-publicpage?_id=' + user_edit_id + '&company_code=' + decodedToken.companycode;
-                        console.log("qrcode_Object", qrcode_Object);
-                        let admin_qrCode = await QRCODE.generate_QR_Code(qrcode_Object);
-                        console.log("admin_qrCode: ", admin_qrCode)
-                        let key_url = "employee/" + user_edit_id + "/" + user_edit_id + "_QRCode.png";
-                        let PARAMS = {
-                            Bucket: LowerCase_bucket,
-                            Key: key_url,
-                            Body: admin_qrCode,
-                            ACL: 'public-read-write'
-                        };
-                        if (one_user.userqrcode != undefined && one_user.userqrcode != "") {
-                            tmp_CodeArray = one_user.userqrcode.split("/");
-                            last_codearray = tmp_CodeArray.splice(0, 4);
-                            console.log(tmp_CodeArray.join("/"));
-                            let params_delete = {
-                                Bucket: last_codearray[last_codearray.length - 1],
-                                Key: tmp_CodeArray.join("/")
-                            };
-                            bucketOpration.deleteObject(params_delete, function (err, resultUpload) {
-                                console.log(err, resultUpload);
-                            });
-                        }
-                        bucketOpration.uploadFile(PARAMS, async function (err, resultUpload) {
-                            if (err) {
-                                res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
-                            } else {
-                                userqrcode = config.wasabisys_url + "/" + LowerCase_bucket + "/" + key_url;
-                                console.log("userqrcode: ", userqrcode);
-                                history_object.userqrcode = userqrcode;
-                                let updateuser = await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { userqrcode: userqrcode });
-                                if (updateuser) { */
-                        //TODO-end
-                        let tempReqObj = {
-                            userroleId: ObjectID(body.userroleId),
-                            useremail: body.useremail,
-                            username: body.username,
-                            usermiddlename: body.usermiddlename,
-                            userlastname: body.userlastname,
-                            userfullname: body.userfullname,
-                            userssn: body.userssn,
-                            usergender: body.usergender,
-                            userdob1: body.userdob1,
-                            userstatus: body.userstatus,
-                            user_no: body.user_no,
-                            allow_for_projects: body.allow_for_projects,
-                        };
-                        recentActivity.saveRecentActivity({
-                            user_id: decodedToken.UserData._id,
-                            username: decodedToken.UserData.userfullname,
-                            userpicture: decodedToken.UserData.userpicture,
-                            data_id: user_edit_id,
-                            title: body.userfullname,
-                            module: 'User',
-                            action: 'Update',
-                            action_from: 'Web',
-                        }, decodedToken);
-                        if (notFonud == 1) {
-                            var temp_path = newOpenFile[0].path;
-                            var file_name = newOpenFile[0].name;
-                            let extension = file_name.split(".")[1];
-                            dirKeyName = config.INVOICE_WASABI_PATH + "/employee/" + user_edit_id + "/" + attachmentLocations.PROFILE_PICTURE + "/user_picture." + extension;
-                            var fileBody = fs.readFileSync(temp_path);
-                            params = { Bucket: LowerCase_bucket, Key: dirKeyName, Body: fileBody, ACL: 'public-read-write' };
-                            //condition
-                            if (get_user.userpicture != undefined && get_user.userpicture != "") {
-                                tmp_picArray = get_user.userpicture.split("/");
-                                last_picarray = tmp_picArray.splice(0, 4);
-
-                                let params_delete_pic = {
-                                    Bucket: last_picarray[last_picarray.length - 1],
-                                    Key: tmp_picArray.join("/")
+                            /* // Revalk Email Recipient from all projects
+                            let projectEmailRecipientsConnection = connection_db_api.model(collectionConstant.SUPPLIER_PROJECT_EMAIL_RECIPIENTS, projectEmailRecipientSchema);
+                            if (body.project_email_group == 'none') {
+                                let revokFromAllEmail = {
+                                    sponsor_change_order: user_edit_id,
+                                    prime_change_order: user_edit_id,
+                                    sponsor_purchase_order: user_edit_id,
+                                    sponsor_retaining_order: user_edit_id,
+                                    prime_retaining_order: user_edit_id,
+                                    sponsor_payment_order: user_edit_id,
+                                    prime_payment_order: user_edit_id,
                                 };
-                                /*  bucketOpration.deleteObject(params_delete_pic, function (err, resultUpload) {
-                                     // console.log(err, resultUpload);
-                                 }); */
+                                let update_object = await projectEmailRecipientsConnection.update({}, { $pull: revokFromAllEmail });
+                            } else if (body.project_email_group == 'prime_member') {
+                                let revokFromAllEmail = {
+                                    prime_change_order: user_edit_id,
+                                    prime_retaining_order: user_edit_id,
+                                    prime_payment_order: user_edit_id,
+                                };
+                                let update_object = await projectEmailRecipientsConnection.update({}, { $pull: revokFromAllEmail });
+                            } else if (body.project_email_group == 'sponsor_member') {
+                                let revokFromAllEmail = {
+                                    sponsor_change_order: user_edit_id,
+                                    sponsor_purchase_order: user_edit_id,
+                                    sponsor_retaining_order: user_edit_id,
+                                    sponsor_payment_order: user_edit_id,
+                                };
+                                let update_object = await projectEmailRecipientsConnection.update({}, { $pull: revokFromAllEmail });
+                            } */
+
+
+                            //TODO-start
+                            /* let qrcode_Object = config.SITE_URL + '/#/user-publicpage?_id=' + user_edit_id + '&company_code=' + decodedToken.companycode;
+                            console.log("qrcode_Object", qrcode_Object);
+                            let admin_qrCode = await QRCODE.generate_QR_Code(qrcode_Object);
+                            console.log("admin_qrCode: ", admin_qrCode)
+                            let key_url = "employee/" + user_edit_id + "/" + user_edit_id + "_QRCode.png";
+                            let PARAMS = {
+                                Bucket: LowerCase_bucket,
+                                Key: key_url,
+                                Body: admin_qrCode,
+                                ACL: 'public-read-write'
+                            };
+                            if (one_user.userqrcode != undefined && one_user.userqrcode != "") {
+                                tmp_CodeArray = one_user.userqrcode.split("/");
+                                last_codearray = tmp_CodeArray.splice(0, 4);
+                                console.log(tmp_CodeArray.join("/"));
+                                let params_delete = {
+                                    Bucket: last_codearray[last_codearray.length - 1],
+                                    Key: tmp_CodeArray.join("/")
+                                };
+                                bucketOpration.deleteObject(params_delete, function (err, resultUpload) {
+                                    console.log(err, resultUpload);
+                                });
                             }
-                            bucketOpration.uploadFile(params, async function (err, resultUpload) {
+                            bucketOpration.uploadFile(PARAMS, async function (err, resultUpload) {
                                 if (err) {
                                     res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
                                 } else {
-                                    // console.log(resultUpload);
-                                    urlProfile = config.wasabisys_url + "/" + LowerCase_bucket + "/" + dirKeyName;
-                                    history_object.userpicture = urlProfile;
-                                    let update_user = await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { userpicture: urlProfile });
-                                    if (update_user) {
-                                        if (body.usergender == "Male") {
-                                            if (get_user.usermobile_picture == undefined || get_user.usermobile_picture == null || get_user.usermobile_picture == '') {
-                                                await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { usermobile_picture: config.DEFAULT_MALE_PICTURE });
+                                    userqrcode = config.wasabisys_url + "/" + LowerCase_bucket + "/" + key_url;
+                                    console.log("userqrcode: ", userqrcode);
+                                    history_object.userqrcode = userqrcode;
+                                    let updateuser = await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { userqrcode: userqrcode });
+                                    if (updateuser) { */
+                            //TODO-end
+                            let tempReqObj = {
+                                userroleId: ObjectID(body.userroleId),
+                                useremail: body.useremail,
+                                username: body.username,
+                                usermiddlename: body.usermiddlename,
+                                userlastname: body.userlastname,
+                                userfullname: body.userfullname,
+                                userssn: body.userssn,
+                                usergender: body.usergender,
+                                userdob1: body.userdob1,
+                                userstatus: body.userstatus,
+                                user_no: body.user_no,
+                                allow_for_projects: body.allow_for_projects,
+                            };
+                            recentActivity.saveRecentActivity({
+                                user_id: decodedToken.UserData._id,
+                                username: decodedToken.UserData.userfullname,
+                                userpicture: decodedToken.UserData.userpicture,
+                                data_id: user_edit_id,
+                                title: body.userfullname,
+                                module: 'User',
+                                action: 'Update',
+                                action_from: 'Web',
+                            }, decodedToken);
+                            if (notFonud == 1) {
+                                console.log("newOpenFile[0]: ", newOpenFile[0]);
+                                var temp_path = newOpenFile[0].filepath;
+                                var file_name = newOpenFile[0].originalFilename;
+                                let extension = file_name.split(".")[1];
+                                dirKeyName = config.INVOICE_WASABI_PATH + "/employee/" + user_edit_id + "/" + attachmentLocations.PROFILE_PICTURE + "/user_picture." + extension;
+                                var fileBody = fs.readFileSync(temp_path);
+                                params = { Bucket: LowerCase_bucket, Key: dirKeyName, Body: fileBody, ACL: 'public-read-write' };
+                                //condition
+                                if (get_user.userpicture != undefined && get_user.userpicture != "") {
+                                    tmp_picArray = get_user.userpicture.split("/");
+                                    last_picarray = tmp_picArray.splice(0, 4);
+
+                                    let params_delete_pic = {
+                                        Bucket: last_picarray[last_picarray.length - 1],
+                                        Key: tmp_picArray.join("/")
+                                    };
+                                    /*  bucketOpration.deleteObject(params_delete_pic, function (err, resultUpload) {
+                                         // console.log(err, resultUpload);
+                                     }); */
+                                }
+                                bucketOpration.uploadFile(params, async function (err, resultUpload) {
+                                    if (err) {
+                                        res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
+                                    } else {
+                                        // console.log(resultUpload);
+                                        urlProfile = config.wasabisys_url + "/" + LowerCase_bucket + "/" + dirKeyName;
+                                        history_object.userpicture = urlProfile;
+                                        let update_user = await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { userpicture: urlProfile });
+                                        if (update_user) {
+                                            if (body.usergender == "Male") {
+                                                if (get_user.usermobile_picture == undefined || get_user.usermobile_picture == null || get_user.usermobile_picture == '') {
+                                                    await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { usermobile_picture: config.DEFAULT_MALE_PICTURE });
+                                                }
+                                            } else if (body.usergender == "Female") {
+                                                if (get_user.usermobile_picture == undefined || get_user.usermobile_picture == null || get_user.usermobile_picture == '') {
+                                                    await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { usermobile_picture: config.DEFAULT_FEMALE_PICTURE });
+                                                }
                                             }
-                                        } else if (body.usergender == "Female") {
-                                            if (get_user.usermobile_picture == undefined || get_user.usermobile_picture == null || get_user.usermobile_picture == '') {
-                                                await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { usermobile_picture: config.DEFAULT_FEMALE_PICTURE });
-                                            }
+                                            addPersonalInfoHistory(user_edit_id, tempReqObj, one_user._doc, decodedToken, translator);
+                                            //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
+                                            res.send({ message: translator.getStr('UserUpdated'), data: body, status: true });
                                         }
-                                        addPersonalInfoHistory(user_edit_id, tempReqObj, one_user._doc, decodedToken, translator);
-                                        //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
-                                        res.send({ message: translator.getStr('UserUpdated'), data: body, status: true });
+                                    }
+                                });
+                            } else {
+                                if (body.usergender == "Male") {
+                                    if (get_user.userpicture == undefined || get_user.userpicture == null || get_user.userpicture == '') {
+                                        await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { userpicture: config.DEFAULT_MALE_PICTURE });
+                                    }
+                                    if (get_user.usermobile_picture == undefined || get_user.usermobile_picture == null || get_user.usermobile_picture == '') {
+                                        await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { usermobile_picture: config.DEFAULT_MALE_PICTURE });
+                                    }
+                                } else if (body.usergender == "Female") {
+                                    if (get_user.userpicture == undefined || get_user.userpicture == null || get_user.userpicture == '') {
+                                        await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { userpicture: config.DEFAULT_FEMALE_PICTURE });
+                                    }
+                                    if (get_user.usermobile_picture == undefined || get_user.usermobile_picture == null || get_user.usermobile_picture == '') {
+                                        await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { usermobile_picture: config.DEFAULT_FEMALE_PICTURE });
                                     }
                                 }
-                            });
-                        } else {
-                            if (body.usergender == "Male") {
-                                if (get_user.userpicture == undefined || get_user.userpicture == null || get_user.userpicture == '') {
-                                    await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { userpicture: config.DEFAULT_MALE_PICTURE });
-                                }
-                                if (get_user.usermobile_picture == undefined || get_user.usermobile_picture == null || get_user.usermobile_picture == '') {
-                                    await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { usermobile_picture: config.DEFAULT_MALE_PICTURE });
-                                }
-                            } else if (body.usergender == "Female") {
-                                if (get_user.userpicture == undefined || get_user.userpicture == null || get_user.userpicture == '') {
-                                    await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { userpicture: config.DEFAULT_FEMALE_PICTURE });
-                                }
-                                if (get_user.usermobile_picture == undefined || get_user.usermobile_picture == null || get_user.usermobile_picture == '') {
-                                    await userConnection.updateOne({ _id: ObjectID(user_edit_id) }, { usermobile_picture: config.DEFAULT_FEMALE_PICTURE });
-                                }
+                                addPersonalInfoHistory(user_edit_id, tempReqObj, one_user._doc, decodedToken, translator);
+                                //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
+                                res.send({ message: translator.getStr('UserUpdated'), data: body, status: true });
                             }
-                            addPersonalInfoHistory(user_edit_id, tempReqObj, one_user._doc, decodedToken, translator);
-                            //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
-                            res.send({ message: translator.getStr('UserUpdated'), data: body, status: true });
+
+                            //TODO-start
+                            /* }
                         }
-                        //TODO-start
-                        /* }
-                    }
-                }); */
-                        //TODO-end
-                    } else {
-                        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    }); */
+                            //TODO-end
+                        } else {
+                            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                        }
                     }
                 });
         } catch (e) {
-            console.log(e);
+            console.log("sagar error", e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         } finally {
             //connection_db_api.close()
@@ -1516,8 +1518,8 @@ module.exports.saveMobilePhoto = async function (req, res) {
 
                     if (notFonud == 1) {
                         newOpenFile = this.openedFiles;
-                        var temp_path = newOpenFile[0].path;
-                        var file_name = newOpenFile[0].name;
+                        var temp_path = newOpenFile[0].filepath;
+                        var file_name = newOpenFile[0].originalFilename;
                         let extension = file_name.split(".")[1];
                         dirKeyName = config.INVOICE_WASABI_PATH + "/employee/" + user_edit_id + "/" + attachmentLocations.PROFILE_PICTURE + "/mobile_picture." + extension;
                         var fileBody = fs.readFileSync(temp_path);

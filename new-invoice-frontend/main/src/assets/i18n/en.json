@@ -90,8 +90,16 @@
         }
     },
     "USERS": {
+        "TABS": {
+            "PERSONAL_INFORMATION": "Personal Information",
+            "CONTACT_INFORMATION": "Contact Information",
+            "EMPLOYEE_INFORMATION": "Employee Information",
+            "EMERGENCY_CONTACT": "Emergency Contact",
+            "DOCUMENT": "Document"
+        },
         "VIEW": {
             "ADD_USER": "Add User",
+            "EDIT_USER": "Edit User",
             "TITLE": "User",
             "ARCHIVED_TITLE": "Archived User"
         },
@@ -134,10 +142,7 @@
             "DEPARTMENT": "Department",
             "JOB_TITLE": "Job Title",
             "JOB_TYPE": "Job Type",
-            "LANGUAGE_SPOKEN": "Language Spoken",
-            "PERSONAL_INFORMATION": "Personal Information",
-            "CONTACT_INFORMATION": "Contact Information",
-            "EMPLOYEE_INFORMATION": "Employee Information"
+            "LANGUAGE_SPOKEN": "Language Spoken"
         }
     },
     "SETTINGS": {
@@ -197,6 +202,7 @@
             },
             "MAIL_BOX": {
                 "HEADER": "Mailboxes to Monitor",
+                "HEADER_ARCHIVE": "Archive Mailboxes to Monitor",
                 "EMAIL": "Email",
                 "IMAP": "IMAP",
                 "PORT": "Port",
@@ -209,7 +215,12 @@
             },
             "COST_CODE_MODULE": {
                 "DIVISON": "Divison",
-                "DISCRIPTION": "Description"
+                "DISCRIPTION": "Description",
+                "HEADER_ARCHIVE": "Archive Cost Code",
+                "CONFIRMATION_DIALOG": {
+                    "ARCHIVE": "Are you sure you want to archive this cost code?",
+                    "RESTORE": "Are you sure you want to restore this cost code?"
+                }
             },
             "OTHER_SETTINGS_MODULE": {
                 "OTHER_SETTINGS": "Other Settings",

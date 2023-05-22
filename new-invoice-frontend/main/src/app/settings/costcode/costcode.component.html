@@ -8,7 +8,8 @@
                         <div class="left">
                             <ul class="header-buttons-left ms-0">
                                 <li class="tbl-title">
-                                    <h2> {{'SETTINGS.SETTINGS_OTHER_OPTION.COST_CODE' | translate}}</h2>
+                                    <h2 *ngIf="isDelete === 0"> {{'SETTINGS.SETTINGS_OTHER_OPTION.COST_CODE' | translate}}</h2>
+                                    <h2 *ngIf="isDelete === 1"> {{'SETTINGS.SETTINGS_OTHER_OPTION.COST_CODE_MODULE.HEADER_ARCHIVE' | translate}}</h2>
                                 </li>
                             </ul>
                         </div>
@@ -24,7 +25,7 @@
                                   </li>
                                   <li class="tbl-header-btn">
                                     <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="DELETE">
-                                      <button mat-mini-fab color="primary" (click)="removeSelectedRows()">
+                                      <button mat-mini-fab color="primary">
                                         <mat-icon class="col-white">delete
                                         </mat-icon>
                                       </button>
@@ -89,7 +90,7 @@
                             </ng-container>
                           
                             <!-- actions -->
-                            <ng-container matColumnDef="actions">
+                            <!-- <ng-container matColumnDef="actions">
                               <mat-header-cell [ngClass]="'max-h'" class="psl-3" *matHeaderCellDef>{{'VENDOR.TABLE.ACTIONS' |
                                 translate}}
                               </mat-header-cell>
@@ -114,6 +115,29 @@
                                       translate}}</span>
                                   </button>
                                 </mat-menu>
+                              </mat-cell>
+                            </ng-container> -->
+                            <ng-container matColumnDef="actions">
+                              <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-action max-h'"
+                                *matHeaderCellDef>{{'VENDOR.TABLE.ACTIONS' |
+                                translate}}</mat-header-cell>
+                              <mat-cell *matCellDef="let row; let i=index;" class="pr-0 tbl-col-width-per-action">
+                                <button matTooltip="{{'COMMON.ACTIONS.EDIT' |
+                                              translate}}" mat-icon-button color="accent" (click)="$event.stopPropagation()"
+                                  (click)="edit(row)" *ngIf="isDelete === 0" class="col-blue">
+                                  <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'">
+                                  </app-feather-icons>
+                                </button>
+                                <button mat-icon-button matTooltip="{{'COMMON.ACTIONS.ARCHIVE' |
+                                              translate}}" color="accent" (click)="$event.stopPropagation()"
+                                  (click)="deleteCostCode(row, 1)" *ngIf="isDelete === 0" class="col-red">
+                                  <mat-icon>archive</mat-icon>
+                                </button>
+                                <button mat-icon-button matTooltip="{{'COMMON.ACTIONS.RESTORE' |
+                                              translate}}" color="accent" (click)="$event.stopPropagation()"
+                                  (click)="deleteCostCode(row, 0)" *ngIf="isDelete === 1" class="col-red">
+                                  <mat-icon>archive</mat-icon>
+                                </button>
                               </mat-cell>
                             </ng-container>
                             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

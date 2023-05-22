@@ -90,8 +90,16 @@
         }
     },
     "USERS": {
+        "TABS": {
+            "PERSONAL_INFORMATION": "Informacion personal",
+            "CONTACT_INFORMATION": "Información del contacto",
+            "EMPLOYEE_INFORMATION": "información del empleado",
+            "EMERGENCY_CONTACT": "Emergency Contact",
+            "DOCUMENT": "Document"
+        },
         "VIEW": {
             "ADD_USER": "Agregar usuario",
+            "EDIT_USER": "Edit User",
             "TITLE": "Usuario",
             "ARCHIVED_TITLE": "Usuario archivado"
         },
@@ -134,10 +142,7 @@
             "DEPARTMENT": "Departamento",
             "JOB_TITLE": "Título profesional",
             "JOB_TYPE": "El tipo de trabajo",
-            "LANGUAGE_SPOKEN": "Lenguaje hablado",
-            "PERSONAL_INFORMATION": "Informacion personal",
-            "CONTACT_INFORMATION": "Información del contacto",
-            "EMPLOYEE_INFORMATION": "información del empleado"
+            "LANGUAGE_SPOKEN": "Lenguaje hablado"
         }
     },
     "SETTINGS": {
@@ -197,6 +202,7 @@
             },
             "MAIL_BOX": {
                 "HEADER": "Buzones a monitorear",
+                "HEADER_ARCHIVE": "Archivar buzones para supervisar",
                 "EMAIL": "Correo electrónico",
                 "IMAP": "IMAP",
                 "PORT": "Puerto",
@@ -209,7 +215,12 @@
             },
             "COST_CODE_MODULE": {
                 "DIVISON": "División",
-                "DISCRIPTION": "Descripción"
+                "DISCRIPTION": "Descripción",
+                "HEADER_ARCHIVE": "Código de costo de archivo",
+                "CONFIRMATION_DIALOG": {
+                    "ARCHIVE": "¿Está seguro de que desea archivar este código de costo?",
+                    "RESTORE": "¿Está seguro de que desea restaurar este código de costo?"
+                }
             },
             "OTHER_SETTINGS_MODULE": {
                 "OTHER_SETTINGS": "Otros ajustes",

@@ -38,10 +38,9 @@ import { UserHistoryComponent } from './user-history/user-history.component';
 import { UserReportComponent } from './user-report/user-report.component';
 import { UserFormComponent } from './user-form/user-form.component';
 import { MatStepperModule } from '@angular/material/stepper';
-import { PersonalInformationComponent } from './user-form/personal-information/personal-information.component';
-import { ContactInformationComponent } from './user-form/contact-information/contact-information.component';
-import { EmployeeInformationComponent } from './user-form/employee-information/employee-information.component';
 import { EmpListFilterPipe, EmpListFilterStatusPipe, FormateDateDDMMYYPipe, FormateDateStringPipe } from './users-filter.pipe';
+import { UserEmergencyContactComponent } from './user-form/user-emergency-contact/user-emergency-contact.component';
+import { UserDocumentComponent } from './user-form/user-document/user-document.component';
 
 
 @NgModule({
@@ -52,13 +51,12 @@ import { EmpListFilterPipe, EmpListFilterStatusPipe, FormateDateDDMMYYPipe, Form
     UserHistoryComponent,
     UserReportComponent,
     UserFormComponent,
-    PersonalInformationComponent,
-    ContactInformationComponent,
-    EmployeeInformationComponent,
     EmpListFilterPipe,
     EmpListFilterStatusPipe,
     FormateDateDDMMYYPipe,
-    FormateDateStringPipe
+    FormateDateStringPipe,
+    UserEmergencyContactComponent,
+    UserDocumentComponent
   ],
   providers: [UserService],
   imports: [

@@ -17,6 +17,7 @@ import { CompanyInfoFormComponent } from './company-info-form/company-info-form.
 import { MailboxFormComponent } from './mailbox/mailbox-form/mailbox-form.component';
 import { QbointegrationComponent } from './integration/qbointegration/qbointegration.component';
 import { QbdintegrationComponent } from './integration/qbdintegration/qbdintegration.component';
+import { QuickbooksAuthorizationComponent } from './integration/qbointegration/quickbooks-authorization/quickbooks-authorization.component';
 
 const routes: Routes = [
   {
@@ -78,6 +79,10 @@ const routes: Routes = [
   {
     path: 'qbo-integration',
     component: QbointegrationComponent,
+  },
+  {
+    path: 'qbo-integration-online',
+    component: QuickbooksAuthorizationComponent,
   },
   {
     path: 'qbd-integration',

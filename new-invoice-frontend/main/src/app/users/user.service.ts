@@ -14,7 +14,7 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
   // Temporarily stores data from dialogs
   dialogData!: User;
 
-  constructor(private httpCall: HttpCall) {
+  constructor (private httpCall: HttpCall) {
     super();
   }
   get data(): User[] {
@@ -48,6 +48,16 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
     return data;
   }
 
+  async getOneUser(id: string) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.GET_ONE_USER,
+        { _id: id }
+      )
+      .toPromise();
+    return data;
+  }
+
   async deleteUser(requestObject: any) {
     const data = await this.httpCall
       .httpPostCall(
@@ -57,6 +67,7 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
       .toPromise();
     return data;
   }
+
   async allArchiveUser(requestObject: any) {
     const data = await this.httpCall
       .httpPostCall(
@@ -66,12 +77,14 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
       .toPromise();
     return data;
   }
+
   async getRole() {
     const data = await this.httpCall
       .httpGetCall(httpversion.PORTAL_V1 + httproutes.USER_SETTING_ROLES_ALL)
       .toPromise();
     return data;
   }
+
   async getManeger() {
     const data = await this.httpCall
       .httpGetCall(httpversion.PORTAL_V1 + httproutes.GET_ALL_USER)
@@ -84,6 +97,7 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
       .toPromise();
     return data;
   }
+
   async getLocation() {
     const data = await this.httpCall
       .httpGetCall(httpversion.PORTAL_V1 + httproutes.GET_LOCATION)
@@ -96,24 +110,28 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
       .toPromise();
     return data;
   }
+
   async getAlljobtype() {
     const data = await this.httpCall
       .httpGetCall(httpversion.PORTAL_V1 + httproutes.GET_JOB_TYPE)
       .toPromise();
     return data;
   }
+
   async getLanguage() {
     const data = await this.httpCall
       .httpGetCall(httpversion.PORTAL_V1 + httproutes.GET_LANGUAGE)
       .toPromise();
     return data;
   }
+
   async getDepartment() {
     const data = await this.httpCall
       .httpGetCall(httpversion.PORTAL_V1 + httproutes.GET_DEPARTMENT)
       .toPromise();
     return data;
   }
+
   async restoreUser(requestObject: any) {
     const data = await this.httpCall
       .httpPostCall(
@@ -133,6 +151,7 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
       .toPromise();
     return data;
   }
+
   async sendUserReport(requestObject: any) {
     const data = await this.httpCall
       .httpPostCall(
@@ -142,6 +161,7 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
       .toPromise();
     return data;
   }
+
   async saveUsers(requestObject: any) {
     console.log('requestObject', requestObject);
     const token = localStorage.getItem(localstorageconstants.INVOICE_TOKEN);
@@ -154,21 +174,39 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
       .toPromise();
     return data;
   }
+
+  async saveUserPersonalInfo(requestObject: any) {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.SAVE_USER_PERSONAL_INFO, requestObject).toPromise();
+    return data;
+  }
+
+  async saveUserContactInfo(requestObject: any) {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.SAVE_USER_CONTACT_INFO, requestObject).toPromise();
+    return data;
+  }
+
+  async saveUserInfo(requestObject: any) {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.SAVE_USER_INFO, requestObject).toPromise();
+    return data;
+  }
+
+  async saveUserMobilePicInfo(requestObject: any) {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.SAVE_USER_MOBILE_PIC, requestObject).toPromise();
+    return data;
+  }
+
   async updateAllUserStatus(requestObject: any) {
     const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_ALL_USER_STATUS_CHANGE, requestObject).toPromise();
     return data;
   }
+
   async updateStatus(requestObject: any) {
     const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_USER_STATUS_UPDATE, requestObject).toPromise();
-    console.log('111111111', data);
     return data;
-
   }
-
 
   addAdvanceTable(User: User): void {
     this.dialogData = User;
-
     // this.httpClient.post(this.API_URL, advanceTable)
     //   .subscribe({
     //     next: (data) => {

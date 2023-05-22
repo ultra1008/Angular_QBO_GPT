@@ -83,7 +83,6 @@ module.exports.editCompany = function (req, res) {
             }).on('end', function () {
                 newOpenFile = this.openedFiles;
                 var body = JSON.parse(fields.reqObject);
-                console.log("fields", fields);
                 var compnayCode_tmp = fields.editcopmanycode.toLowerCase();
                 var id = fields._id;
                 delete body['_id'];
