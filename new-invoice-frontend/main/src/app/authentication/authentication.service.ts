@@ -35,6 +35,11 @@ export class AuthenticationService {
     return data;
   }
 
+  async loginwithOTP(reqObject: any) {
+    const data = await this.httpCall.httpPostCall(httpversion.V1 + httproutes.LOGIN_WITH_OTP, reqObject).toPromise();
+    return data;
+  }
+
   async forgotPasswordPress(reqObject: any) {
     const data = await this.httpCall.httpPostCall(httpversion.V1 + httproutes.USER_FORGET_PASSWORD, reqObject).toPromise();
     return data;

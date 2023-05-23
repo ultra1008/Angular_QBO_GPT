@@ -12,10 +12,13 @@ router.post('/webapi/v1/forgetpassword', authController.forgetpassword);
 router.post('/webapi/v1/senduserpassword', authValidation.sendUserPasswordValidation, authController.sendUserPassword);
 router.post('/webapi/v1/getcompanysetting', authValidation.getCompanySetting, authController.getCompanySetting);
 router.post('/webapi/v1/sendotp', authValidation.sendOTP, authController.sendOTP);
-router.post('/webapi/v1/submitemailotp', authValidation.submitEmailOTP, authController.submitEmailOTP);
+router.post('/webapi/v1/submitotp', authValidation.submitOTP, authController.submitOTP);
 router.post('/webapi/v1/view_capture', authController.view_capture);
 router.post('/webapi/v1/get_view_capture', authController.get_view_capture);
 router.post('/webapi/v1/getlogincompanylist', authValidation.getLoginCompanyList, authController.getLoginCompanyList);
+router.post('/webapi/v1/sendemailotp', authValidation.sendEmailOTP, authController.sendEmailOTP);
+router.post('/webapi/v1/submitemailotp', authValidation.submitEmailOTP, authController.submitEmailOTP);
+router.post('/webapi/v1/loginwithemailotp', authValidation.loginWithEmailOTP, authController.loginWithEmailOTP);
 
 var companySizeController = require('./company_size/companySizeController');
 var companySizeValidation = require('./company_size/companySizeValidation');

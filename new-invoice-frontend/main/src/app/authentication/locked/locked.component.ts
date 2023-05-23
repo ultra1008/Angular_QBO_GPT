@@ -28,10 +28,14 @@ export class LockedComponent implements OnInit {
 
   constructor (private formBuilder: UntypedFormBuilder, private router: Router, private snackBar: MatSnackBar,
     private AuthenticationService: AuthenticationService, private authService: AuthService,) {
-    this.userData = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA) ?? '');
-    this.userName = this.userData.UserData.userfullname;
-    this.userPicture = this.userData.UserData.userpicture;
+    const user_data = localStorage.getItem(localstorageconstants.USERDATA) ?? '';
+    if (user_data !== '') {
+      this.userData = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA) ?? '{}');
+      this.userName = this.userData.UserData.userfullname;
+      this.userPicture = this.userData.UserData.userpicture;
+    }
   }
+
   ngOnInit() {
     this.authForm = this.formBuilder.group({
       password: ['', Validators.required],

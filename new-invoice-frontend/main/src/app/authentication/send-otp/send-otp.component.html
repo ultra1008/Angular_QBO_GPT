@@ -3,8 +3,7 @@
      <div class="row auth-main" style="background-image: url(assets/images/full_bg.jpg);">
           <div class="col-sm-4 auth-form-section">
                <div class="form-section">
-                    <div class="auth-wrapper">
-
+                    <div class="auth-wrapper" *ngIf="!showCompanyList">
                          <form class="validate-form" [formGroup]="authForm">
 
                               <div class="row">
@@ -52,6 +51,38 @@
                                    </div>
                               </div>
                          </form>
+                    </div>
+                    <div *ngIf="showCompanyList">
+                         <h2 class="welcome-msg cust-center"> Select Company </h2>
+                         <div class="cust-center mb-2">
+                              <mat-chip [removable]=" removable" (removed)="removeUseremail()">
+                                   {{useremail}}
+                                   <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                              </mat-chip>
+                         </div>
+                         <div class="col-12 col-sm-12 col-md-12 col-lg-4 col-xl-12 mt-3">
+                              <div class="card">
+                                   <div class="card-body">
+                                        <div class="media-list position-relative">
+                                             <div class="table-responsive" id="project-team-scroll">
+                                                  <table class="table table-hover table-xl mb-0">
+                                                       <tbody>
+                                                            <tr *ngFor="let company of companyList"
+                                                                 (click)="selectCompany(company)">
+                                                                 <td class="text-truncate d-flex companydata">
+                                                                      <img class="rounded-circle"
+                                                                           src="{{company.companylogo}}" alt=""
+                                                                           title="">
+                                                                      <div class="my-auto">{{company.companyname}}</div>
+                                                                 </td>
+                                                            </tr>
+                                                       </tbody>
+                                                  </table>
+                                             </div>
+                                        </div>
+                                   </div>
+                              </div>
+                         </div>
                     </div>
                </div>
           </div>

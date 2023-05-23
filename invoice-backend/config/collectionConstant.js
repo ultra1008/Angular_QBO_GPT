@@ -69,7 +69,7 @@ module.exports = {
     SUPPLIER_SCHEDULE_OF_ITEM_REMINDER: "supplier_schedule_of_item_reminders",
     SUPPLIER_SCHEDULE_OF_ITEM_COLOR: "supplier_schedule_of_item_colors",
     SETTINGS: "setting",
-    EMAIL_OTP: "email_otp",
+    EMAIL_OTP: "invoice_email_otp",
     SUPPLIER_ALERTS: "supplier_alerts",
     GIF_LOADER: "gif_loaders",
 

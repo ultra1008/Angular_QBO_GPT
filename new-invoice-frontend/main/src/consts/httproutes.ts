@@ -10,9 +10,10 @@ export enum httproutes {
   GET_COMPANY_SETTINGS = 'getcompanysetting',
   USER_LOGIN = 'login',
   GET_USER_COMPANY = 'getlogincompanylist',
-  SEND_OTP_EMAIL = 'sendotp',
+  SEND_OTP_EMAIL = 'sendemailotp',
   USER_FORGET_PASSWORD = 'forgetpassword',
   SUBMITT_OTP = 'submitemailotp',
+  LOGIN_WITH_OTP = 'loginwithemailotp',
   CHANGEPASSWORD = 'changepassword',
 
   // Vendor
