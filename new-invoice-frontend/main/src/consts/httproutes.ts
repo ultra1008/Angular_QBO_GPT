@@ -181,4 +181,5 @@ export enum httproutes {
 
   //clients
   GET_ALL_COSTCODE = 'getCostCode',
+  SAVE_CLIENT = 'saveclient ',
 }

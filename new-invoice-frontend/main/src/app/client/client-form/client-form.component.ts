@@ -73,9 +73,7 @@ export class ClientFormComponent {
         '',
         [Validators.required, Validators.email, Validators.minLength(5)],
       ],
-      gl_account: [''],
-      vendor_id: [''],
-      customer_id: [''],
+      gl_account: ['642ab08828667a73474c3c10'],
       client_phone: ['', [Validators.required]],
       client_cost_cost_id: ['', [Validators.required]],
       approver_id: ['', [Validators.required]],
@@ -123,7 +121,6 @@ export class ClientFormComponent {
     if (data.status) {
       this.variablecostcodeList = data.data;
       this.costcodeList = this.variablecostcodeList.slice();
-      console.log('cost code', this.costcodeList);
     }
   }
 
@@ -132,7 +129,6 @@ export class ClientFormComponent {
     if (data.status) {
       this.variableapproverList = data.data;
       this.approverList = this.variableapproverList.slice();
-      console.log('cost code', this.approverList);
     }
   }
 
@@ -181,11 +177,11 @@ export class ClientFormComponent {
         requestObject._id = this.id;
       }
 
-      const data = await this.vendorService.saveVendor(requestObject);
+      const data = await this.vendorService.saveClient(requestObject);
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        this.router.navigate([WEB_ROUTES.VENDOR]);
+        this.router.navigate([WEB_ROUTES.CLIENT]);
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');
