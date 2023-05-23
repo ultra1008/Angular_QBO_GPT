@@ -19,6 +19,8 @@ import { EmergencyContact } from '../../user.model';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { E, co } from '@fullcalendar/core/internal-common';
 import { MMDDYYYY, showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
+import { httproutes, httpversion } from 'src/consts/httproutes';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-user-emergency-contact',
@@ -50,14 +52,9 @@ export class UserEmergencyContactComponent extends UnsubscribeOnDestroyAdapter i
   contextMenuPosition = { x: '0px', y: '0px' };
 
   constructor (
-    public httpClient: HttpClient, private httpCall: HttpCall,
-    public dialog: MatDialog,
-    private snackBar: MatSnackBar, private router: Router,
-    public userTableService: UserService,
-    public translate: TranslateService,
-    private fb: UntypedFormBuilder,
-    public route: ActivatedRoute,
-  ) {
+    public httpClient: HttpClient, private httpCall: HttpCall, public dialog: MatDialog, private snackBar: MatSnackBar,
+    private router: Router, public userTableService: UserService, public translate: TranslateService,
+    private fb: UntypedFormBuilder, public route: ActivatedRoute, private commonService: CommonService,) {
     super();
     this.id = this.route.snapshot.queryParamMap.get("_id");
   }
@@ -123,7 +120,7 @@ export class UserEmergencyContactComponent extends UnsubscribeOnDestroyAdapter i
       })
       .then(async (result) => {
         if (result.isConfirmed) {
-          const data = await this.userTableService.deleteEmergencyContact({ _id: contact._id });
+          const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.DELETE_EMERGENCY_CONTACT, { _id: contact._id });
           if (data.status) {
             showNotification(this.snackBar, data.message, 'success');
             const foundIndex = this.userService?.emergencyDataChange.value.findIndex(

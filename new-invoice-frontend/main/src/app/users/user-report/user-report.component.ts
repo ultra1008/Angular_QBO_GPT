@@ -11,6 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../user.service';
 import { RoleModel } from '../user.model';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { httproutes, httpversion } from 'src/consts/httproutes';
 
 export interface DialogData {
   termsList: Array<any>;
@@ -33,8 +34,8 @@ export class UserReportComponent {
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
-  constructor(public uiSpinner: UiSpinnerService, public dialogRef: MatDialogRef<UserReportComponent>, private snackBar: MatSnackBar,
-    @Inject(MAT_DIALOG_DATA) public data: any, public UserReporService: UserService, private fb: UntypedFormBuilder,
+  constructor (public uiSpinner: UiSpinnerService, public dialogRef: MatDialogRef<UserReportComponent>, private snackBar: MatSnackBar,
+    @Inject(MAT_DIALOG_DATA) public data: any, public UserReporService: UserService, private fb: UntypedFormBuilder, private commonService: CommonService
   ) {
     console.log("data", data.roleList);
 
@@ -141,7 +142,7 @@ export class UserReportComponent {
       this.uiSpinner.spin$.next(true);
       const requestObject = this.userInfo.value;
       requestObject.email_list = this.emailsList;
-      this.UserReporService.sendUserReport(requestObject);
+      this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.USER_REPORT, requestObject);
       setTimeout(() => {
         this.uiSpinner.spin$.next(false);
         this.dialogRef.close();

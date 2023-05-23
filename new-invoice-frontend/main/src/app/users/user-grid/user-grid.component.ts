@@ -16,6 +16,8 @@ import { UserRestoreFormComponent } from '../user-restore-form/user-restore-form
 import { Direction } from '@angular/cdk/bidi';
 import { UserReportComponent } from '../user-report/user-report.component';
 import { FormateDateDDMMYYPipe, FormateDateStringPipe } from '../users-filter.pipe';
+import { httproutes, httpversion } from 'src/consts/httproutes';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-user-grid',
@@ -39,10 +41,10 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
   tweet_epochs: any = [];
   cardLoading = true;
 
-  constructor(
+  constructor (
     public httpClient: HttpClient, private httpCall: HttpCall,
     public dialog: MatDialog, public userService: UserService,
-    private snackBar: MatSnackBar, private router: Router,
+    private snackBar: MatSnackBar, private router: Router, private commonService: CommonService,
   ) {
     super();
   }
@@ -55,7 +57,7 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
   }
 
   async getUser() {
-    const data = await this.userService.getUser(this.isDelete);
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_USER_GET_FOR_TABLE, { is_delete: this.isDelete });
     this.userList = data;
     this.cardLoading = false;
   }
@@ -93,7 +95,7 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
   }
 
   async getRole() {
-    const data = await this.userService.getRole();
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.USER_SETTING_ROLES_ALL);
     if (data.status) {
       this.roleLists = data.data;
     }
@@ -104,7 +106,7 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
   }
 
   async archiveRecover(user: User, is_delete: number) {
-    const data = await this.userService.deleteUser({ _id: user, is_delete: is_delete });
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.USER_DELETE, { _id: user._id, is_delete: is_delete });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       this.getUser();
@@ -149,7 +151,6 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
       })
       .then(async (result) => {
         if (result.isConfirmed) {
-          console.log("user", user);
           let _id = user._id;
 
 
