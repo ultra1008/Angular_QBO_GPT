@@ -19,6 +19,7 @@ import {
   TermsTable,
   UsageTable,
   VendorTypeTable,
+  usageTable,
 } from './settings.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
@@ -314,11 +315,9 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     this.dataCostCodeChange.next(data);
   }
 
-  async getAllUsageTable(is_delete: number): Promise<void> {
+  async getAllUsageTable(): Promise<void> {
     const data = await this.httpCall
-      .httpPostCall(httpversion.PORTAL_V1 + httproutes.USAGE_DATA_TABLE, {
-        is_delete: is_delete,
-      })
+      .httpGetCall(httpversion.PORTAL_V1 + httproutes.USAGE_DATA_TABLE)
       .toPromise();
     // Only write this for datatable api otherwise return data
     this.isTblLoading = false;

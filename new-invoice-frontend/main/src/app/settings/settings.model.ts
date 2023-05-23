@@ -122,6 +122,24 @@ export class UsageTable {
   }
 }
 
+export class usageTable {
+  _id: string;
+  email: string;
+  imap: string;
+  port: number;
+  time: string;
+
+  constructor(usageTable: usageTable) {
+    {
+      this._id = usageTable._id;
+      this.email = usageTable.email;
+      this.imap = usageTable.imap;
+      this.port = usageTable.port;
+      this.time = usageTable.time;
+    }
+  }
+}
+
 export class Element {
   name!: string;
   position!: number;
