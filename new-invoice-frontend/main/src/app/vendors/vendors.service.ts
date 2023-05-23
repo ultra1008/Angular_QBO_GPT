@@ -28,7 +28,6 @@ export class VendorsService extends UnsubscribeOnDestroyAdapter {
   async getAllVendorTable(is_delete: number): Promise<void> {
     const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_GET_FOR_TABLE, { is_delete: is_delete }).toPromise();
     // Only write this for datatable api otherwise return data
-
     this.dataChange.next(data);
     this.isTblLoading = false;
   }
@@ -73,6 +72,10 @@ export class VendorsService extends UnsubscribeOnDestroyAdapter {
 
   async sendVendorReport(requestObject: any) {
     const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_REPORT, requestObject).toPromise();
+    return data;
+  }
+  async getVendor(is_delete: number) {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_GET, { is_delete: is_delete }).toPromise();
     return data;
   }
 }

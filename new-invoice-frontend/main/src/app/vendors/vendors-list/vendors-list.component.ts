@@ -131,6 +131,10 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     this.getTerms();
   }
 
+
+  listToGrid() {
+    this.router.navigate([WEB_ROUTES.VENDOR_GRID]);
+  }
   // TOOLTIPS
   getTooltip(row: any) {
     return row.vendor_email;
