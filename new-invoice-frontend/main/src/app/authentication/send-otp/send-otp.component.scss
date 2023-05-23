@@ -1,5 +1,5 @@
 .welcome-msg {
-     color: white !important;
+     color: black !important;
 }
 
 .auth-form-section {
@@ -11,9 +11,16 @@
      text-align: center;
 }
 
-
 .auth-main {
      background-size: cover;
      height: 100%;
      width: 100%;
+}
+
+.companydata {
+     img {
+          height: 30px;
+          width: 30px;
+          margin-right: 10px;
+     }
 }
