@@ -246,6 +246,8 @@ router.post('/webapi/v1/portal/savexlsxcostcode', common.checkTokenExistOrNot, c
 router.post('/webapi/v1/portal/savecostcodeindb', common.checkTokenExistOrNot, costCodeController.savecostcodeindb);
 router.post('/webapi/v1/portal/getCostCodeForTable', common.checkTokenExistOrNot, costCodeValidation.getCostCodeForTableValidation, costCodeController.getCostCodeForTable);
 router.post('/webapi/v1/portal/importCostCode', common.checkTokenExistOrNot, costCodeController.importCostCode);
+router.get('/webapi/v1/portal/getCostCode', common.checkTokenExistOrNot, costCodeController.getCostCode);
+
 
 let creditcardsettingsController = require("./creditcardsettings/creditcardsettingsController");
 let creditcardsettingsValidation = require('./creditcardsettings/creditcardsettingsValidation');
@@ -372,7 +374,7 @@ let invoice_vendorController = require('./vendor/vendorController');
 let invoice_vendorValidation = require('./vendor/vendorValidation');
 router.post('/webapi/v1/portal/savevendor', common.checkTokenExistOrNot, invoice_vendorValidation.saveVendor, invoice_vendorController.saveVendor);
 router.get('/webapi/v1/portal/getvendorstatuscount', common.checkTokenExistOrNot, invoice_vendorController.getVendorStatusCount);
-router.get('/webapi/v1/portal/getvendor', common.checkTokenExistOrNot, invoice_vendorController.getVendor);
+router.post('/webapi/v1/portal/getvendor', common.checkTokenExistOrNot, invoice_vendorController.getVendor);
 router.post('/webapi/v1/portal/getvendorfortable', common.checkTokenExistOrNot, invoice_vendorValidation.getVendorForTable, invoice_vendorController.getVendorForTable);
 router.post('/webapi/v1/portal/getonevendor', common.checkTokenExistOrNot, invoice_vendorValidation.getOneVendor, invoice_vendorController.getOneVendor);
 router.post('/webapi/v1/portal/deletevendor', common.checkTokenExistOrNot, invoice_vendorValidation.deleteVendor, invoice_vendorController.deleteVendor);
@@ -477,6 +479,6 @@ router.post('/webapi/v1/portal/getClinetHistory', common.checkTokenExistOrNot, c
 router.post('/webapi/v1/portal/updateClientStatus', common.checkTokenExistOrNot, clientController.updateClientStatus);
 router.post('/webapi/v1/portal/updateMultipleClientStatus', common.checkTokenExistOrNot, clientController.updateMultipleClientStatus);
 router.post('/webapi/v1/portal/deleteMultipleClient', common.checkTokenExistOrNot, clientController.deleteMultipleClient);
-
+router.post('/webapi/v1/portal/getClientForTable', common.checkTokenExistOrNot, clientController.getClientForTable);
 
 module.exports = router;
