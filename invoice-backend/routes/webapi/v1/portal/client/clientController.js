@@ -4,6 +4,7 @@ let collectionConstant = require('../../../../../config/collectionConstant');
 let common = require('../../../../../controller/common/common');
 var client_history_Schema = require('../../../../../model/history/client_history');
 const historyCollectionConstant = require('../../../../../config/historyCollectionConstant');
+let config = require('../../../../../config/config');
 
 // client insert Edit 
 module.exports.saveclient = async function (req, res) {
@@ -18,8 +19,18 @@ module.exports.saveclient = async function (req, res) {
             delete requestObject._id;
             if (id) {
                 //update invoice client
-                let updateclient = await clientConnection.updateOne({ _id: requestObject.id }, requestObject);
+                let updateclient = await clientConnection.updateOne({ _id: id }, requestObject);
                 if (updateclient) {
+
+                    // for (let i = 0; i < updatedData.length; i++) {
+                    //     updatedData[i]['key'] = translator.getStr(`Client_History.${updatedData[i]['key']}`);
+                    // }
+                    // let histioryObject = {
+                    //     data: updatedData,
+                    //     client_id: id,
+                    // };
+                    // addClientHistory("Update", histioryObject, decodedToken);
+
                     res.send({ status: true, message: "client update successfully..!" });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
@@ -35,6 +46,12 @@ module.exports.saveclient = async function (req, res) {
                 else {
                     var add_client = new clientConnection(requestObject);
                     var save_client = await add_client.save();
+
+                    // let histioryObject = {
+                    //     data: updatedData,
+                    //     client_id: id,
+                    // };
+                    // addClientHistory("Update", histioryObject, decodedToken);
                     res.send({ status: true, message: "client insert successfully..!", data: add_client });
 
                 }
@@ -92,7 +109,6 @@ module.exports.deleteclient = async function (req, res) {
             delete requestObject._id;
             var clientConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientSchema);
 
-
             requestObject.client_updated_by = decodedToken.UserData._id;
             requestObject.client_updated_at = Math.round(new Date().getTime() / 1000);
 
@@ -111,6 +127,13 @@ module.exports.deleteclient = async function (req, res) {
                         action = "Restore";
                         message = "client restore successfully";
                     }
+
+                    let histioryObject = {
+                        data: [],
+                        client_id: id,
+                    };
+
+                    addClientHistory(action, histioryObject, decodedToken);
                     res.send({ message: message, status: true });
 
                 } else {
@@ -217,6 +240,13 @@ module.exports.updateClientStatus = async function (req, res) {
                         message = "client status inactive successfully.";
                     }
 
+                    let histioryObject = {
+                        data: [],
+                        client_id: id,
+                    };
+
+                    addClientHistory(action, histioryObject, decodedToken);
+
                     res.send({ message: message, status: true });
 
                 } else {
@@ -262,6 +292,13 @@ module.exports.updateMultipleClientStatus = async function (req, res) {
                     action = "Inactive";
                     message = "client status inactive successfully.";
                 }
+
+                let histioryObject = {
+                    data: [],
+                    client_id: id,
+                };
+
+                addClientHistory(action, histioryObject, decodedToken);
                 res.send({ message: message, status: true });
 
             } else {
@@ -305,6 +342,13 @@ module.exports.deleteMultipleClient = async function (req, res) {
                     action = "Restore";
                     message = "client restore successfully";
                 }
+
+                let histioryObject = {
+                    data: [],
+                    client_id: id,
+                };
+
+                addClientHistory(action, histioryObject, decodedToken);
                 res.send({ message: message, status: true });
 
             } else {
