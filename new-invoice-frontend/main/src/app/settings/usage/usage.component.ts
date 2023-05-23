@@ -5,7 +5,7 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { SettingsService } from '../settings.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -14,9 +14,26 @@ import { httproutes, httpversion } from 'src/consts/httproutes';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { async } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  async,
+  fromEvent,
+  map,
+  merge,
+} from 'rxjs';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
+import { DataSource, SelectionModel } from '@angular/cdk/collections';
+import { UsageTable } from '../settings.model';
+import { MailboxDataSource } from '../mailbox/mailbox.component';
+import { MatMenuTrigger } from '@angular/material/menu';
+import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
+import {
+  showNotification,
+  swalWithBootstrapTwoButtons,
+} from 'src/consts/utils';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-usage',
@@ -24,11 +41,8 @@ import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
   styleUrls: ['./usage.component.scss'],
   animations: [
     trigger('detailExpand', [
-      state(
-        'collapsed',
-        style({ height: '0px', minHeight: '0', visibility: 'hidden' })
-      ),
-      state('expanded', style({ height: '*', visibility: 'visible' })),
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
       transition(
         'expanded <=> collapsed',
         animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
@@ -36,30 +50,39 @@ import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
     ]),
   ],
 })
-export class UsageComponent {
-  // displayedColumns = ['year'];
-  dataSource!: any;
+export class UsageComponent
+  extends UnsubscribeOnDestroyAdapter
+  implements OnInit
+{
+  // displayedColumns = ['_id'];
+
   AllUsage: any;
   usageinfo: FormGroup;
 
-  columnsToDisplay = ['year'];
-  expandedElement!: Element;
+  displayedColumns = ['_id'];
+  usageService?: SettingsService;
+  dataSource!: UsageDataSource;
+  selection = new SelectionModel<UsageTable>(true, []);
+  id?: number;
+  // advanceTable?: UsageTable;
+  isDelete = 0;
+  titleMessage: string = '';
 
-  tmp_arr: any = [
-    {
-      name: 'Parth',
-      facility_no: 'TC1234',
-      Amount: '124.45',
-    },
-    {
-      name: 'Parth1',
-      facility_no: 'TC123',
-      Amount: '123.45',
-    },
-  ];
+  // columnsToDisplay = ['year'];
+  // expandedElement!: Element;
 
-  @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  // tmp_arr: any = [
+  //   {
+  //     name: 'Parth',
+  //     facility_no: 'TC1234',
+  //     Amount: '124.45',
+  //   },
+  //   {
+  //     name: 'Parth1',
+  //     facility_no: 'TC123',
+  //     Amount: '123.45',
+  //   },
+  // ];
 
   isExpansionDetailRow = (i: number, row: Object) =>
     row.hasOwnProperty('detailRow');
@@ -71,16 +94,26 @@ export class UsageComponent {
     public translate: TranslateService,
     public httpCall: HttpCall,
     private formBuilder: FormBuilder,
-    public uiSpinner: UiSpinnerService
+    public uiSpinner: UiSpinnerService,
+    private snackBar: MatSnackBar
   ) {
+    super();
+
     this.usageinfo = this.formBuilder.group({
       totalSuervisor: [''],
       bucket_size: [''],
     });
     let that = this;
-    that.getusagedata();
+    // that.getusagedata();
     that.getcompanyusage();
   }
+
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort!: MatSort;
+  @ViewChild('filter', { static: true }) filter!: ElementRef;
+  @ViewChild(MatMenuTrigger)
+  contextMenu?: MatMenuTrigger;
+  contextMenuPosition = { x: '0px', y: '0px' };
   back() {
     this.router.navigate(['/settings']);
   }
@@ -90,11 +123,12 @@ export class UsageComponent {
   };
   ngOnInit() {
     let that = this;
+    this.loadData();
     that.getcompanyusage();
-    that.getusagedata();
-    that.dataSource.sort = that.sort;
-    that.dataSource.paginator = that.paginator;
-    that.dataSource = new MatTableDataSource(that.AllUsage.slice());
+    // that.getusagedata();
+    // that.dataSource.sort = that.sort;
+    // that.dataSource.paginator = that.paginator;
+    // that.dataSource = new MatTableDataSource(that.AllUsage.slice());
   }
 
   async getcompanyusage() {
@@ -113,102 +147,240 @@ export class UsageComponent {
       });
   }
 
-  async getusagedata() {
-    let that = this;
-    that.httpCall
-      .httpGetCall(httpversion.PORTAL_V1 + httproutes.USAGE_DATA_TABLE)
-      .subscribe(function (params) {
-        if (params.length > 0) {
-          that.AllUsage = [];
-          for (let i = 0; i < params.length; i++) {
-            that.AllUsage.push({
-              year: params[i].year,
-              // invoice_expense: params.data[i].invoice_expense,
-              // invoice_forms: params.data[i].invoice_forms,
-              // packing_slip_expense: params.data[i].packing_slip_expense,
-              // packing_slip_forms: params.data[i].packing_slip_forms,
-              // po_expense: params.data[i].po_expense,
-              // po_forms: params.data[i].po_forms,
-              // quote_expense: params.data[i].quote_expense,
-              // quote_forms: params.data[i].quote_forms,
-            });
-            console.log('daafsAFSAJsd', that.AllUsage);
-          }
+  // async getusagedata() {
+  //   let that = this;
+  //   that.httpCall
+  //     .httpGetCall(httpversion.PORTAL_V1 + httproutes.USAGE_DATA_TABLE)
+  //     .subscribe(function (params) {
+  //       if (params.length > 0) {
+  //         that.AllUsage = [];
+  //         for (let i = 0; i < params.length; i++) {
+  //           that.AllUsage.push({
+  //             year: params[i].year,
+  //           });
+  //           console.log('daafsAFSAJsd', that.AllUsage);
+  //         }
 
-          that.dataSource = new MatTableDataSource(that.AllUsage);
+  //       }
+  //     });
+  // }
 
-          // that.uiSpinner.spin$.next(false);
+  refresh() {
+    this.loadData();
+  }
+  addNew() {
+    this.router.navigate(['/settings/mailbox-form']);
+  }
+
+  editMailbox(mailbox: UsageTable) {
+    this.router.navigate(['/settings/mailbox-form'], {
+      queryParams: { _id: mailbox._id },
+    });
+  }
+
+  async archiveRecover(mailbox: UsageTable, is_delete: number) {
+    const data = await this.SettingsService.deleteMailbox({
+      _id: mailbox._id,
+      is_delete: is_delete,
+    });
+    if (data.status) {
+      showNotification(this.snackBar, data.message, 'success');
+      const foundIndex = this.SettingsService?.dataChange.value.findIndex(
+        (x) => x._id === mailbox._id
+      );
+
+      // for delete we use splice in order to remove single object from DataService
+      if (foundIndex != null && this.SettingsService) {
+        this.SettingsService.dataChange.value.splice(foundIndex, 1);
+        this.refreshTable();
+        location.reload();
+      }
+    } else {
+      showNotification(this.snackBar, data.message, 'error');
+    }
+  }
+
+  async deleteMailbox(mailbox: UsageTable, is_delete: number) {
+    if (is_delete == 1) {
+      this.titleMessage = this.translate.instant(
+        'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOX.CONFIRMATION_DIALOG.ARCHIVE'
+      );
+    } else {
+      this.titleMessage = this.translate.instant(
+        'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOX.CONFIRMATION_DIALOG.RESTORE'
+      );
+    }
+    swalWithBootstrapTwoButtons
+      .fire({
+        title: this.titleMessage,
+        showDenyButton: true,
+        confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+        denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+        allowOutsideClick: false,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          this.archiveRecover(mailbox, is_delete);
         }
       });
   }
+
+  gotoArchiveUnarchive() {
+    this.isDelete = this.isDelete == 1 ? 0 : 1;
+    this.loadData();
+  }
+
+  private refreshTable() {
+    this.paginator._changePageSize(this.paginator.pageSize);
+  }
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.renderedData.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected()
+      ? this.selection.clear()
+      : this.dataSource.renderedData.forEach((row) =>
+          this.selection.select(row)
+        );
+  }
+  removeSelectedRows() {
+    //   const totalSelect = this.selection.selected.length;
+    //   this.selection.selected.forEach((item) => {
+    //     const index: number = this.dataSource.renderedData.findIndex(
+    //       (d) => d === item
+    //     );
+    //     // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
+    //     this.usageService?.dataChange.value.splice(index, 1);
+    //     this.refreshTable();
+    //     this.selection = new SelectionModel<UsageTable>(true, []);
+    //   });
+    //  showNotification(
+    //     'snackbar-danger',
+    //     totalSelect + ' Record Delete Successfully...!!!',
+    //     'bottom',
+    //     'center'
+    //   );
+  }
+  public loadData() {
+    this.usageService = new SettingsService(this.httpCall);
+    this.dataSource = new UsageDataSource(
+      this.usageService,
+      this.paginator,
+      this.sort,
+      this.isDelete
+    );
+    this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
+      () => {
+        if (!this.dataSource) {
+          return;
+        }
+        this.dataSource.filter = this.filter.nativeElement.value;
+      }
+    );
+  }
+
+  // context menu
+  onContextMenu(event: MouseEvent, item: UsageTable) {
+    event.preventDefault();
+    this.contextMenuPosition.x = event.clientX + 'px';
+    this.contextMenuPosition.y = event.clientY + 'px';
+    if (this.contextMenu !== undefined && this.contextMenu.menu !== null) {
+      this.contextMenu.menuData = { item: item };
+      this.contextMenu.menu.focusFirstItem('mouse');
+      this.contextMenu.openMenu();
+    }
+  }
+}
+
+export class UsageDataSource extends DataSource<UsageTable> {
+  filterChange = new BehaviorSubject('');
+  get filter(): string {
+    return this.filterChange.value;
+  }
+  set filter(filter: string) {
+    this.filterChange.next(filter);
+  }
+  filteredData: UsageTable[] = [];
+  renderedData: UsageTable[] = [];
+  constructor(
+    public usageService: SettingsService,
+    public paginator: MatPaginator,
+    public _sort: MatSort,
+    public isDelete: number
+  ) {
+    super();
+    // Reset to the first page when the user changes the filter.
+    this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
+  }
+  /** Connect function called by the table to retrieve one stream containing the data to render. */
+  connect(): Observable<UsageTable[]> {
+    // Listen for any changes in the base data, sorting, filtering, or pagination
+    const displayDataChanges = [
+      this.usageService.dataUsageChange,
+      this._sort.sortChange,
+      this.filterChange,
+      this.paginator.page,
+    ];
+    this.usageService.getAllUsageTable();
+    return merge(...displayDataChanges).pipe(
+      map(() => {
+        // Filter data
+        this.filteredData = this.usageService.datausage
+          .slice()
+          .filter((UsageTable: UsageTable) => {
+            const searchStr = UsageTable._id.toLowerCase();
+            return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
+          });
+
+        this.filteredData = this.filteredData.map((element) => ({
+          ...element,
+          isExpanded: false,
+        }));
+        // Sort filtered data
+        const sortedData = this.sortData(this.filteredData.slice());
+        // Grab the page's slice of the filtered sorted data.
+        const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
+        this.renderedData = sortedData.splice(
+          startIndex,
+          this.paginator.pageSize
+        );
+        return this.renderedData;
+      })
+    );
+  }
+  disconnect() {
+    //disconnect
+  }
+  /** Returns a sorted copy of the database data. */
+  sortData(data: UsageTable[]): UsageTable[] {
+    if (!this._sort.active || this._sort.direction === '') {
+      return data;
+    }
+    return data.sort((a, b) => {
+      let propertyA: number | string = '';
+      let propertyB: number | string = '';
+      switch (this._sort.active) {
+        case 'id':
+          [propertyA, propertyB] = [a._id, b._id];
+          break;
+      }
+      const valueA = isNaN(+propertyA) ? propertyA : +propertyA;
+      const valueB = isNaN(+propertyB) ? propertyB : +propertyB;
+      return (
+        (valueA < valueB ? -1 : 1) * (this._sort.direction === 'asc' ? 1 : -1)
+      );
+    });
+  }
 }
 // export interface Element {
-//   year: number;
+//   name: string;
+//   position: number;
+//   weight: number;
+//   symbol: string;
 // }
-
-// this.httpCall
-//   .httpGetCall(httpversion.PORTAL_V1 + httproutes.PORTAL_SETTING_ROLES_ALL)
-//   .subscribe(function (data: { status: any; data: any }) {
-//     console.log('data', data);
-//     if (data.status) {
-//       this.AllUsage = data.data;
-//       console.log('data1', this.AllUsage);
-//     }
-//   });
-
-// const data: Element[] = [
-//   { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-//   { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-//   { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-//   { position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
-//   { position: 5, name: 'Boron', weight: 10.811, symbol: 'B' },
-//   { position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C' },
-// ];
-
-/**
- * Data source to provide what data should be rendered in the table. The observable provided
- * in connect should emit exactly the data that should be rendered by the table. If the data is
- * altered, the observable should emit that new set of data on the stream. In our case here,
- * we return a stream that contains only one set of data that doesn't change.
- */
-// export class ExampleDataSource extends DataSource<any> {
-//   /** Connect function called by the table to retrieve one stream containing the data to render. */
-//   connect(): Observable<Element[]> {
-//     const rows: any = [];
-//     data.forEach((element) => rows.push(element, { detailRow: true, element }));
-//     console.log(rows);
-//     return of(rows);
-//   }
-
-//   disconnect() {}
-// }
-
-export interface Element {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
-
-// const ELEMENT_DATA: Element[] = [
-//   { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-//   { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-//   { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-//   { position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
-//   { position: 5, name: 'Boron', weight: 10.811, symbol: 'B' },
-//   { position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C' },
-//   { position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
-//   { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
-//   { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
-//   { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
-//   { position: 11, name: 'Sodium', weight: 22.9897, symbol: 'Na' },
-//   { position: 12, name: 'Magnesium', weight: 24.305, symbol: 'Mg' },
-//   { position: 13, name: 'Aluminum', weight: 26.9815, symbol: 'Al' },
-//   { position: 14, name: 'Silicon', weight: 28.0855, symbol: 'Si' },
-//   { position: 15, name: 'Phosphorus', weight: 30.9738, symbol: 'P' },
-//   { position: 16, name: 'Sulfur', weight: 32.065, symbol: 'S' },
-//   { position: 17, name: 'Chlorine', weight: 35.453, symbol: 'Cl' },
-//   { position: 18, name: 'Argon', weight: 39.948, symbol: 'Ar' },
-//   { position: 19, name: 'Potassium', weight: 39.0983, symbol: 'K' },
-//   { position: 20, name: 'Calcium', weight: 40.078, symbol: 'Ca' },
-// ];
