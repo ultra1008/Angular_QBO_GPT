@@ -85,6 +85,14 @@ var companySchema = new Schema({
 
     parent_company: { type: subContractorSchema, default: subContractorDefaultValue },
     sub_contractor_company: { type: [subContractorSchema], default: [] },
+
+    company_user: [{
+        user_id: { type: mongoose.ObjectId, default: "" },
+        useremail: { type: String, default: "" },
+        password: { type: String, default: "" },
+        userstatus: { type: Number, default: 1 },
+        is_delete: { type: Number, default: 0 },
+    }],
 }, { collection: collectionConstant.SUPER_ADMIN_COMPANY, timestamps: true });
 
 module.exports = companySchema;

@@ -15,6 +15,7 @@ router.post('/webapi/v1/sendotp', authValidation.sendOTP, authController.sendOTP
 router.post('/webapi/v1/submitemailotp', authValidation.submitEmailOTP, authController.submitEmailOTP);
 router.post('/webapi/v1/view_capture', authController.view_capture);
 router.post('/webapi/v1/get_view_capture', authController.get_view_capture);
+router.post('/webapi/v1/getlogincompanylist', authValidation.getLoginCompanyList, authController.getLoginCompanyList);
 
 var companySizeController = require('./company_size/companySizeController');
 var companySizeValidation = require('./company_size/companySizeValidation');
