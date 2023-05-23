@@ -12,10 +12,15 @@ router.post('/webapi/v1/forgetpassword', authController.forgetpassword);
 router.post('/webapi/v1/senduserpassword', authValidation.sendUserPasswordValidation, authController.sendUserPassword);
 router.post('/webapi/v1/getcompanysetting', authValidation.getCompanySetting, authController.getCompanySetting);
 router.post('/webapi/v1/sendotp', authValidation.sendOTP, authController.sendOTP);
-router.post('/webapi/v1/submitemailotp', authValidation.submitEmailOTP, authController.submitEmailOTP);
+router.post('/webapi/v1/submitotp', authValidation.submitOTP, authController.submitOTP);
 router.post('/webapi/v1/view_capture', authController.view_capture);
 router.post('/webapi/v1/get_view_capture', authController.get_view_capture);
 router.post('/webapi/v1/getlogincompanylist', authValidation.getLoginCompanyList, authController.getLoginCompanyList);
+router.post('/webapi/v1/sendemailotp', authValidation.sendEmailOTP, authController.sendEmailOTP);
+router.post('/webapi/v1/submitemailotp', authValidation.submitEmailOTP, authController.submitEmailOTP);
+router.post('/webapi/v1/loginwithemailotp', authValidation.loginWithEmailOTP, authController.loginWithEmailOTP);
+router.post('/webapi/v1/emailforgotpassword', authValidation.emailForgotPassword, authController.emailForgotPassword);
+router.post('/webapi/v1/sendemailforgotpassword', authValidation.sendEmailForgotPassword, authController.sendEmailForgotPassword);
 
 var companySizeController = require('./company_size/companySizeController');
 var companySizeValidation = require('./company_size/companySizeValidation');
@@ -241,6 +246,8 @@ router.post('/webapi/v1/portal/savexlsxcostcode', common.checkTokenExistOrNot, c
 router.post('/webapi/v1/portal/savecostcodeindb', common.checkTokenExistOrNot, costCodeController.savecostcodeindb);
 router.post('/webapi/v1/portal/getCostCodeForTable', common.checkTokenExistOrNot, costCodeValidation.getCostCodeForTableValidation, costCodeController.getCostCodeForTable);
 router.post('/webapi/v1/portal/importCostCode', common.checkTokenExistOrNot, costCodeController.importCostCode);
+router.get('/webapi/v1/portal/getCostCode', common.checkTokenExistOrNot, costCodeController.getCostCode);
+
 
 let creditcardsettingsController = require("./creditcardsettings/creditcardsettingsController");
 let creditcardsettingsValidation = require('./creditcardsettings/creditcardsettingsValidation');
@@ -367,7 +374,7 @@ let invoice_vendorController = require('./vendor/vendorController');
 let invoice_vendorValidation = require('./vendor/vendorValidation');
 router.post('/webapi/v1/portal/savevendor', common.checkTokenExistOrNot, invoice_vendorValidation.saveVendor, invoice_vendorController.saveVendor);
 router.get('/webapi/v1/portal/getvendorstatuscount', common.checkTokenExistOrNot, invoice_vendorController.getVendorStatusCount);
-router.get('/webapi/v1/portal/getvendor', common.checkTokenExistOrNot, invoice_vendorController.getVendor);
+router.post('/webapi/v1/portal/getvendor', common.checkTokenExistOrNot, invoice_vendorController.getVendor);
 router.post('/webapi/v1/portal/getvendorfortable', common.checkTokenExistOrNot, invoice_vendorValidation.getVendorForTable, invoice_vendorController.getVendorForTable);
 router.post('/webapi/v1/portal/getonevendor', common.checkTokenExistOrNot, invoice_vendorValidation.getOneVendor, invoice_vendorController.getOneVendor);
 router.post('/webapi/v1/portal/deletevendor', common.checkTokenExistOrNot, invoice_vendorValidation.deleteVendor, invoice_vendorController.deleteVendor);
@@ -460,5 +467,18 @@ router.get('/webapi/v1/portal/getjobname', common.checkTokenExistOrNot, job_name
 router.post('/webapi/v1/portal/deletejobname', common.checkTokenExistOrNot, job_nameValidation.deletejobname, job_nameController.deletejobname);
 router.post('/webapi/v1/portal/importjobname', common.checkTokenExistOrNot, job_nameController.importjobname);
 router.post('/webapi/v1/portal/getjobnamefortable', common.checkTokenExistOrNot, job_nameValidation.getJobNameForTableValidation, job_nameController.getJobNameForTable);
+
+
+let clientController = require('./client/clientController');
+let clientValidation = require('./client/clientValidation');
+
+router.post('/webapi/v1/portal/saveclient', common.checkTokenExistOrNot, clientValidation.saveclientValidation, clientController.saveclient);
+router.get('/webapi/v1/portal/getclient', common.checkTokenExistOrNot, clientController.getclient);
+router.post('/webapi/v1/portal/deleteclient', common.checkTokenExistOrNot, clientValidation.deleteclientvalidation, clientController.deleteclient);
+router.post('/webapi/v1/portal/getClinetHistory', common.checkTokenExistOrNot, clientController.getClinetHistory);
+router.post('/webapi/v1/portal/updateClientStatus', common.checkTokenExistOrNot, clientController.updateClientStatus);
+router.post('/webapi/v1/portal/updateMultipleClientStatus', common.checkTokenExistOrNot, clientController.updateMultipleClientStatus);
+router.post('/webapi/v1/portal/deleteMultipleClient', common.checkTokenExistOrNot, clientController.deleteMultipleClient);
+router.post('/webapi/v1/portal/getClientForTable', common.checkTokenExistOrNot, clientController.getClientForTable);
 
 module.exports = router;

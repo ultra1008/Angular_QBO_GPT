@@ -6,6 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { AuthService } from 'src/app/core/service/auth.service';
 import { AuthenticationService } from '../authentication.service';
+import { WEB_ROUTES } from 'src/consts/routes';
 @Component({
   selector: 'app-send-otp',
   templateUrl: './send-otp.component.html',
@@ -15,23 +16,28 @@ export class SendOtpComponent {
   authForm!: UntypedFormGroup;
   submitted = false;
   returnUrl!: string;
-  companyCode: string = '';
-  sentOTP: boolean = false;
-  otp: string = "";
+  companyCode = '';
+  sentOTP = false;
+  otp = "";
   otpTimer: any;
   otpConfig: any = {
     length: 6,
     allowNumbersOnly: false,
     letterCase: 'Upper'
   };
+  companyList: any = [];
+  useremail = '';
+  showCompanyList = false;
+  removable = true;
 
-  constructor(
+  constructor (
     private formBuilder: UntypedFormBuilder,
     private router: Router,
     private authService: AuthService,
     private authenticationService: AuthenticationService,
     private snackBar: MatSnackBar
   ) { }
+
   ngOnInit() {
     this.companyCode = localStorage.getItem(localstorageconstants.COMPANYCODE) ?? '';
     this.authForm = this.formBuilder.group({
@@ -46,7 +52,6 @@ export class SendOtpComponent {
   }
 
   async sendOTP() {
-    console.log("call");
     let that = this;
     if (that.authForm.valid) {
       const reqObject = this.authForm.value;
@@ -55,16 +60,14 @@ export class SendOtpComponent {
       if (data.status) {
         showNotification(this.snackBar, data.message, 'success');
         this.sentOTP = true;
-        // for delete we use splice in order to remove single object from DataService
-
+        // for delete we use splice in order to remove single object from DataService 
       } else {
         showNotification(this.snackBar, data.message, 'error');
       }
-
     }
   }
+
   async submitOTP() {
-    console.log("call");
     let that = this;
     if (that.authForm.valid) {
       const reqObject = this.authForm.value;
@@ -73,30 +76,64 @@ export class SendOtpComponent {
 
       const data = await this.authenticationService.submitOTP(reqObject);
       if (data.status) {
-        showNotification(this.snackBar, data.message, 'success');
-        localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.data.token);
-        localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.data));
-        localStorage.setItem(localstorageconstants.COMPANYID, data.data.companydata._id);
-        localStorage.setItem(localstorageconstants.LOGOUT, 'false');
+        if (data.data.length === 0) {
+          showNotification(this.snackBar, 'You are not associated with any company. Kindly contact superadmin.', 'error');
+        } else if (data.data.length === 1) {
+          // only one compant so direct login
+          showNotification(this.snackBar, data.message, 'success');
+          if (data.user_data.UserData.useris_password_temp == true) {
+            this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);
+          } else {
+            setTimeout(() => {
+              this.router.navigate(['/dashboard/main']);
+            }, 300);
+          }
+          localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.user_data.token);
+          localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.user_data));
+          localStorage.setItem(localstorageconstants.COMPANYID, data.user_data.companydata._id);
+          localStorage.setItem(localstorageconstants.LOGOUT, 'false');
 
-        sessionStorage.setItem(localstorageconstants.USERTYPE, "invoice-portal");
-        localStorage.setItem(localstorageconstants.USERTYPE, "invoice-portal");
-        this.router.navigate(['/dashboard/main']);
+          sessionStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
+          localStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
+        } else {
+          this.useremail = reqObject.useremail;
+          this.companyList = data.data;
+          this.showCompanyList = true;
+        }
         // for delete we use splice in order to remove single object from DataService
-
       } else {
         showNotification(this.snackBar, data.message, 'error');
       }
-
     }
   }
-  // onSubmit() {
-  //   this.submitted = true;
-  //   // stop here if form is invalid
-  //   if (this.authForm.invalid) {
-  //     return;
-  //   } else {
-  //     this.router.navigate(['/dashboard/main']);
-  //   }
-  // }
+
+  async selectCompany(company: any) {
+    const formValues = this.authForm.value;
+    formValues._id = company._id;
+
+    const data = await this.authenticationService.loginwithOTP(formValues);
+    if (data.status) {
+      showNotification(this.snackBar, data.message, 'success');
+      if (data.user_data.UserData.useris_password_temp == true) {
+        this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);
+      } else {
+        setTimeout(() => {
+          this.router.navigate(['/dashboard/main']);
+        }, 300);
+      }
+      localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.user_data.token);
+      localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.user_data));
+      localStorage.setItem(localstorageconstants.COMPANYID, data.user_data.companydata._id);
+      localStorage.setItem(localstorageconstants.LOGOUT, 'false');
+
+      sessionStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
+      localStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
+    } else {
+      showNotification(this.snackBar, data.message, 'error');
+    }
+  }
+
+  removeUseremail() {
+    this.router.navigate(['/authentication/signin']);
+  }
 }

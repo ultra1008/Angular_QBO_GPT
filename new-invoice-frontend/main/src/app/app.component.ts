@@ -27,7 +27,7 @@ export class AppComponent {
     buttonsStyling: false,
   });
 
-  constructor(public translate: TranslateService, public _router: Router, private idle: Idle, private keepalive: Keepalive) {
+  constructor (public translate: TranslateService, public _router: Router, private idle: Idle, private keepalive: Keepalive) {
     this.translate.addLangs(['en', 'es']);
     this.translate.setDefaultLang('en');
     this._router.events.subscribe((routerEvent: Event) => {
@@ -50,7 +50,7 @@ export class AppComponent {
     idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
 
     idle.onIdleEnd.subscribe(() => {
-      this.idleState = 'No longer idle.'
+      this.idleState = 'No longer idle.';
       console.log(this.idleState);
       this.reset();
     });
@@ -65,7 +65,7 @@ export class AppComponent {
     });
 
     idle.onIdleStart.subscribe(() => {
-      this.idleState = 'You\'ve gone idle!'
+      this.idleState = 'You\'ve gone idle!';
       console.log(this.idleState);
 
       //display diaglog here
@@ -95,7 +95,7 @@ export class AppComponent {
     });
 
     idle.onTimeoutWarning.subscribe((countdown) => {
-      this.idleState = 'You will time out in ' + countdown + ' seconds!'
+      this.idleState = 'You will time out in ' + countdown + ' seconds!';
       console.log(this.idleState);
     });
 

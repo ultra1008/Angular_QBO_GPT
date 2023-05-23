@@ -1,20 +1,20 @@
 <div class="auth-container">
-  <div class="row auth-main">
-    <div class="col-sm-6 px-0 d-none d-sm-block">
-      <div class="left-img" style="background-image: url(assets/images/pages/bg-01.png);">
+  <div class="row auth-main" style="background-image: url(assets/images/full_bg.jpg);">
+    <div class="col-sm-8 px-0 d-none d-sm-block">
+      <div class="left-img">
       </div>
     </div>
-    <div class="col-sm-6 auth-form-section">
+    <div class="col-sm-4 auth-form-section">
       <div class="form-section">
         <div class="auth-wrapper">
           <form class="validate-form" [formGroup]="authForm" (ngSubmit)="onSubmit()">
             <div class="auth-locked">
               <div class="image">
-                <img src="assets/images/usrbig.jpg" alt="User">
+                <img src="{{userPicture}}" alt="">
               </div>
             </div>
             <span class="auth-locked-title p-b-34 p-t-27">
-              Emily Smith
+              {{userName}}
             </span>
             <div class="text-center">
               <p class="txt1 p-b-20">
@@ -38,15 +38,15 @@
               </div>
             </div>
             <div class="container-auth-form-btn mt-5">
-              <button mat-raised-button color color="primary" class="auth-form-btn" [disabled]="!authForm.valid "
+              <button mat-raised-button color color="primary" class="auth-form-btn" [disabled]="!authForm.valid"
                 type="submit">
-                Reset My Password
+                Login
               </button>
             </div>
             <div class="w-full p-t-15 p-b-15 text-center">
               <div>
-                <a routerLink="/authentication/signin" class="txt1">
-                  Need Help?
+                <a (click)="backToLogin()" class="txt1">
+                  Back to login?
                 </a>
               </div>
             </div>

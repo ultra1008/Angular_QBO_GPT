@@ -271,4 +271,12 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
       .toPromise();
     return data;
   }
+
+  async sendUserPassword(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(httpversion.V1 + httproutes.SAVE_USER_PASSWORD, requestObject)
+      .toPromise();
+    return data;
+  }
+
 }

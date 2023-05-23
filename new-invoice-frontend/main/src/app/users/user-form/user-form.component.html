@@ -147,6 +147,15 @@
                                                                            class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                                                            <mat-form-field class="example-full-width"
                                                                                 appearance="outline">
+                                                                                <span matSuffix>
+                                                                                     <!--  [ngClass]="true ? 'user-menu__button-custom-small_dark': 'user-menu__button-custom-small'" -->
+                                                                                     <button
+                                                                                          class="user-menu__button-custom-small"
+                                                                                          (click)="sendUserPassword()">
+                                                                                          <i
+                                                                                               class="fas fa-paper-plane"></i>
+                                                                                     </button>
+                                                                                </span>
                                                                                 <mat-label>{{'USERS.ADD_EDIT.TEMPORARY_PASSWORD' | translate}}</mat-label>
                                                                                 <input matInput
                                                                                      formControlName="password"

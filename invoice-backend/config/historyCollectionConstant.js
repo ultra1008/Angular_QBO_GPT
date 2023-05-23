@@ -27,4 +27,5 @@ module.exports = {
     INVOICE_USER_HISTORY: "invoice_user_histories",
     INVOICE_USER_DOCUMENT_HISTORY: "invoice_user_document_histories",
     INVOICE_VENDOR_HISTORY: "invoice_vendor_histories",
+    INVOICE_CLIENT_HISTORY: "invoice_client_histories"
 };

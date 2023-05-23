@@ -15,9 +15,13 @@ export class ForgotPasswordComponent implements OnInit {
   authForm!: UntypedFormGroup;
   submitted = false;
   returnUrl!: string;
-  companyCode: string = '';
+  companyCode = '';
+  useremail = '';
+  showForm = true;
+  companyList: any = [];
+  removable = true;
 
-  constructor(
+  constructor (
     private formBuilder: UntypedFormBuilder,
     private router: Router,
     private authService: AuthService,
@@ -35,30 +39,40 @@ export class ForgotPasswordComponent implements OnInit {
   }
 
   async forgotPasswordPress() {
-    console.log("call");
     let that = this;
     if (that.authForm.valid) {
-      const reqObject = this.authForm.value;
-      reqObject.companycode = this.companyCode;
-      const data = await this.authenticationService.forgotPasswordPress(reqObject);
+      const formValues = this.authForm.value;
+      const data = await this.authenticationService.emailForgotPassword(formValues);
       if (data.status) {
-        showNotification(this.snackBar, data.message, 'success');
-        this.router.navigate(['/authentication/signin']);
-        // for delete we use splice in order to remove single object from DataService
-
+        if (data.data.length == 1) {
+          showNotification(this.snackBar, data.message, 'success');
+          this.router.navigate(['/authentication/signin']);
+        } else {
+          this.useremail = formValues.useremail;
+          this.companyList = data.data;
+          this.showForm = false;
+        }
       } else {
         showNotification(this.snackBar, data.message, 'error');
       }
-
     }
   }
-  // onSubmit() {
-  //   this.submitted = true;
-  //   // stop here if form is invalid
-  //   if (this.authForm.invalid) {
-  //     return;
-  //   } else {
-  //     this.router.navigate(['/dashboard/main']);
-  //   }
-  // }
+
+  async selectCompany(company: any) {
+    const formValues = this.authForm.value;
+    formValues._id = company._id;
+    const data = await this.authenticationService.sendEmailForgotPassword(formValues);
+    if (data.status) {
+      showNotification(this.snackBar, data.message, 'success');
+      this.router.navigate(['/authentication/signin']);
+    } else {
+      showNotification(this.snackBar, data.message, 'error');
+    }
+  }
+
+  removeUseremail() {
+    this.useremail = '';
+    this.showForm = true;
+    this.authForm.reset();
+  }
 }

@@ -41,7 +41,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   darkIcon?: string;
   userName?: string;
   userPicture?: string;
-  constructor(
+  constructor (
     @Inject(DOCUMENT) private document: Document,
     private renderer: Renderer2,
     public elementRef: ElementRef,
@@ -266,6 +266,11 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     this.authService.logout().subscribe((res) => {
       if (!res.success) {
         localStorage.removeItem(localstorageconstants.DARKMODE);
+        localStorage.removeItem(localstorageconstants.USERDATA);
+        localStorage.removeItem(localstorageconstants.COMPANYDATA);
+        localStorage.removeItem(localstorageconstants.COMPANYID);
+        localStorage.removeItem(localstorageconstants.INVOICE_GIF);
+        localStorage.removeItem(localstorageconstants.INVOICE_TOKEN);
         localStorage.removeItem('choose_logoheader');
         localStorage.removeItem('choose_skin');
         localStorage.removeItem('menuOption');
