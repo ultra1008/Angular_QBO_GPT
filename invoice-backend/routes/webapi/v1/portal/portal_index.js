@@ -475,6 +475,6 @@ router.post('/webapi/v1/portal/getClinetHistory', common.checkTokenExistOrNot, c
 router.post('/webapi/v1/portal/updateClientStatus', common.checkTokenExistOrNot, clientController.updateClientStatus);
 router.post('/webapi/v1/portal/updateMultipleClientStatus', common.checkTokenExistOrNot, clientController.updateMultipleClientStatus);
 router.post('/webapi/v1/portal/deleteMultipleClient', common.checkTokenExistOrNot, clientController.deleteMultipleClient);
-
+router.post('/webapi/v1/portal/getClientForTable', common.checkTokenExistOrNot, clientController.getClientForTable);
 
 module.exports = router;
