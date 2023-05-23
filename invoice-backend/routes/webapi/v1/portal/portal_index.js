@@ -464,4 +464,17 @@ router.post('/webapi/v1/portal/deletejobname', common.checkTokenExistOrNot, job_
 router.post('/webapi/v1/portal/importjobname', common.checkTokenExistOrNot, job_nameController.importjobname);
 router.post('/webapi/v1/portal/getjobnamefortable', common.checkTokenExistOrNot, job_nameValidation.getJobNameForTableValidation, job_nameController.getJobNameForTable);
 
+
+let clientController = require('./client/clientController');
+let clientValidation = require('./client/clientValidation');
+
+router.post('/webapi/v1/portal/saveclient', common.checkTokenExistOrNot, clientValidation.saveclientValidation, clientController.saveclient);
+router.get('/webapi/v1/portal/getclient', common.checkTokenExistOrNot, clientController.getclient);
+router.post('/webapi/v1/portal/deleteclient', common.checkTokenExistOrNot, clientValidation.deleteclientvalidation, clientController.deleteclient);
+router.post('/webapi/v1/portal/getClinetHistory', common.checkTokenExistOrNot, clientController.getClinetHistory);
+router.post('/webapi/v1/portal/updateClientStatus', common.checkTokenExistOrNot, clientController.updateClientStatus);
+router.post('/webapi/v1/portal/updateMultipleClientStatus', common.checkTokenExistOrNot, clientController.updateMultipleClientStatus);
+router.post('/webapi/v1/portal/deleteMultipleClient', common.checkTokenExistOrNot, clientController.deleteMultipleClient);
+
+
 module.exports = router;
