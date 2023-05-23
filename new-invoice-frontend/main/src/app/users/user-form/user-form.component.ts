@@ -1,6 +1,6 @@
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, UntypedFormBuilder, UntypedFormGroup, Validators, } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators, } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { commonFileChangeEvent } from 'src/app/services/utils';
@@ -37,7 +37,6 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
   usercontactinfo!: UntypedFormGroup;
   useremployeeinfo!: UntypedFormGroup;
   showHideExpiration: any = [];
-  db_Doc_types: any = [];
   doc_controller = 0;
   document_array = Array(Array());
   sample_img = '/assets/images/image-gallery/logo.png';
@@ -88,6 +87,9 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
   variablesdb_Departmaents: any = [];
   db_Departmaents: any = this.variablesdb_Departmaents.slice();
 
+  variablesdb_Doc_types: any = [];
+  db_Doc_types: any = this.variablesdb_Doc_types.slice();
+
   public gender_array: any = configData.gender;
   public statuss: any = configData.Status;
 
@@ -121,6 +123,7 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
     this.getSupervisor();
     this.getJobTitle();
     this.getAlljobtype();
+    this.getAllDocumentType();
     this.getDepartment();
     this.getLanguage();
     this.userpersonalinfo = this.fb.group({
@@ -233,7 +236,8 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
         userdob: [userData.userdob],
         userstatus: [userData.userstatus],
         login_from: [userData.login_from, Validators.required],
-        allow_for_projects: [userData.allow_for_projects]
+        allow_for_projects: [userData.allow_for_projects],
+        usersDocument: new FormArray([]),
       });
 
       /* if (that.role_name == configdata.ROLE_ADMIN) {
@@ -279,8 +283,6 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
         show_id_card_on_qrcode_scan: [userData.show_id_card_on_qrcode_scan],
       }); */
     }
-
-    /*   */
   }
 
   amountChange(params: any) {
@@ -294,6 +296,7 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
       this.db_roles = this.variablesRoleList.slice();
     }
   }
+
   async getManeger() {
     const data = await this.UserService.getManeger();
     if (data.status) {
@@ -302,60 +305,64 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
 
     }
   }
+
   async getSupervisor() {
     const data = await this.UserService.getSupervisor();
     if (data.status) {
       this.variablesdb_supervisor_users = data.data;
       this.db_supervisor_users = this.variablesdb_supervisor_users.slice();
-
     }
   }
+
   async getLocation() {
     const data = await this.UserService.getLocation();
     if (data.status) {
-
       this.variablesdb_locations = data.data;
       this.db_locations = this.variablesdb_locations.slice();
-
     }
   }
+
   async getJobTitle() {
     const data = await this.UserService.getJobTitle();
     if (data.status) {
-
       this.variablesdb_jobtitle = data.data;
       this.db_jobtitle = this.variablesdb_jobtitle.slice();
-
     }
   }
+
   async getAlljobtype() {
     const data = await this.UserService.getAlljobtype();
     if (data.status) {
-
       this.variablesdb_jobtype = data.data;
       this.db_jobtype = this.variablesdb_jobtype.slice();
-
     }
   }
+
+  async getAllDocumentType() {
+    const data = await this.UserService.getAllDocumentType();
+    if (data.status) {
+      this.variablesdb_Doc_types = data.data;
+      this.db_Doc_types = this.variablesdb_Doc_types.slice();
+    }
+  }
+
   async getDepartment() {
     const data = await this.UserService.getDepartment();
     if (data.status) {
-
       this.variablesdb_Departmaents = data.data;
       this.db_Departmaents = this.variablesdb_Departmaents.slice();
     }
   }
+
   async getLanguage() {
     const data = await this.UserService.getLanguage();
     if (data.status) {
-
       this.variableslanguageList = data.data;
       this.languageList = this.variableslanguageList.slice();
-
     }
   }
-  language_change(event: any) {
 
+  language_change(event: any) {
     let language = event.value;
     this.useremployeeinfo.get("user_languages")!.setValue(language);
   }
@@ -370,14 +377,6 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
     el.click();
   }
 
-  addDoc() {
-    this.doc_controller++;
-
-    // this.U_D.push(this.formBuilder.group({
-    //   userdocument_type_id: ['', Validators.required],
-    //   userdocument_expire_date: ['']
-    // }));
-  }
   showHideExpirationDate(event: any, i: any) {
     let found = this.db_Doc_types.find((element: any) => element._id == event);
     this.showHideExpiration[i] = found.is_expiration;
@@ -419,7 +418,17 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
   }
 
   get u_from() { return this.userpersonalinfo.controls; }
-  get U_D() { return this.u_from['usersDocument']; }
+  get U_D() { return this.u_from['usersDocument'] as FormArray; }
+
+  getFormGroup(control: AbstractControl) { return control as FormGroup; }
+
+  addDoc() {
+    this.doc_controller++;
+    this.U_D.push(this.formBuilder.group({
+      userdocument_type_id: new FormControl('', [Validators.required]),
+      userdocument_expire_date: new FormControl()
+    }));
+  }
 
   async savedata() {
     let that = this;
@@ -444,6 +453,7 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
     //   });
     // }
   }
+
   async saveUser() {
     let that = this;
     if (that.userpersonalinfo.valid && that.useremployeeinfo.valid && that.usercontactinfo.valid) {
@@ -610,6 +620,7 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
       }
     }
   }
+
   /*  async saveEmployeeInfo() {
       console.log('saveEmployeeInfo');
       let that = this;
@@ -661,7 +672,6 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
     );
     return obj;
   };
-
 
   back(): void {
     this.router.navigate([WEB_ROUTES.USER]);

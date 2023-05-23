@@ -124,6 +124,13 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
     return data;
   }
 
+  async getAllDocumentType() {
+    const data = await this.httpCall
+      .httpGetCall(httpversion.PORTAL_V1 + httproutes.GET_DOCUMENT_TYPE)
+      .toPromise();
+    return data;
+  }
+
   async getLanguage() {
     const data = await this.httpCall
       .httpGetCall(httpversion.PORTAL_V1 + httproutes.GET_LANGUAGE)

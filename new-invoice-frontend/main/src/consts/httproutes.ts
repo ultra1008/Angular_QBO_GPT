@@ -9,6 +9,7 @@ export enum httproutes {
   // auth
   GET_COMPANY_SETTINGS = 'getcompanysetting',
   USER_LOGIN = 'login',
+  GET_USER_COMPANY = 'getlogincompanylist',
   SEND_OTP_EMAIL = 'sendotp',
   USER_FORGET_PASSWORD = 'forgetpassword',
   SUBMITT_OTP = 'submitemailotp',
@@ -56,6 +57,7 @@ export enum httproutes {
   GET_LOCATION = 'getalllocation',
   GET_JOB_TITLE = 'getAlljobtitle',
   GET_JOB_TYPE = 'getAlljobtype',
+  GET_DOCUMENT_TYPE = 'getalldoctype',
   GET_LANGUAGE = 'getlanguage',
   GET_DEPARTMENT = 'getalldepartment',
   SAVE_USER = 'saveemployee',

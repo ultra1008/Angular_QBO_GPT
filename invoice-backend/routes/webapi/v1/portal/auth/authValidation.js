@@ -1,6 +1,5 @@
 var validator = require("../../../../../controller/common/validationforrequest");
 
-
 const login = (req, res, next) => {
     const validationRule = {
         "useremail": "required|email",
@@ -131,6 +130,24 @@ const submitEmailOTP = (req, res, next) => {
     });
 };
 
+const getLoginCompanyList = (req, res, next) => {
+    const validationRule = {
+        "useremail": "required|email",
+        "password": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({
+                status: false,
+                message: 'Validation failed',
+                data: err
+            });
+        } else {
+            next();
+        }
+    });
+};
+
 module.exports = {
     login,
     changePasswordValidation,
@@ -139,4 +156,5 @@ module.exports = {
     getCompanySetting,
     sendOTP,
     submitEmailOTP,
+    getLoginCompanyList,
 };

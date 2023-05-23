@@ -32,8 +32,9 @@ export class SigninComponent implements OnInit {
   error = '';
   hide = true;
   removable = true;
-  showLogin = false;
+  showLogin = true;
   companyCode!: string;
+  useremail!: string;
   checked = false;
 
   availableColors: ChipColor[] = [
@@ -43,8 +44,9 @@ export class SigninComponent implements OnInit {
     { name: 'Warn', color: 'warn' },
   ];
   showForm = false;
+  companyList: any = [];
 
-  constructor(
+  constructor (
     private formBuilder: UntypedFormBuilder,
     private router: Router,
     private authService: AuthService,
@@ -63,7 +65,7 @@ export class SigninComponent implements OnInit {
     this.authForm = this.formBuilder.group({
       useremail: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
-      companycode: ['', Validators.required],
+      // companycode: ['', Validators.required],
       terms: ['', Validators.required],
     });
 
@@ -74,7 +76,7 @@ export class SigninComponent implements OnInit {
       this.authForm = this.formBuilder.group({
         useremail: ['', [Validators.required, Validators.email]],
         password: ['', Validators.required],
-        companycode: [removeFirst2, Validators.required],
+        // companycode: [removeFirst2, Validators.required],
         terms: ['', Validators.required],
       });
     }
@@ -118,7 +120,7 @@ export class SigninComponent implements OnInit {
 
   async getCompanySettings() {
     const formValues = this.authForm.value;
-    this.companyCode = 'R-' + formValues.companycode;
+    // this.companyCode = 'R-' + formValues.companycode;
     const data = await this.AuthenticationService.getCompanySettings(
       this.companyCode
     );
@@ -129,46 +131,38 @@ export class SigninComponent implements OnInit {
   }
   async userLogin() {
     if (!this.checked) {
-      showNotification(
-        this.snackBar,
-        'Please agree terms & conditions before proceed.',
-        'error'
-      );
+      showNotification(this.snackBar, 'Please agree terms & conditions before proceed.', 'error');
       return;
     }
     const formValues = this.authForm.value;
-    formValues.companycode = 'R-' + formValues.companycode;
+    // formValues.companycode = 'R-' + formValues.companycode;
 
-    const data = await this.AuthenticationService.userLogin(formValues);
+    const data = await this.AuthenticationService.checkUserCompany(formValues);
     if (data.status) {
-      console.log('data', data);
-      showNotification(this.snackBar, data.message, 'success');
+      if (data.data.length === 0) {
+        showNotification(this.snackBar, 'Invalid email or password!', 'error');
+      } else if (data.data.length === 1) {
+        // only one compant so direct login
+        showNotification(this.snackBar, data.message, 'success');
+        if (data.user_data.UserData.useris_password_temp == true) {
+          this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);
+        } else {
+          setTimeout(() => {
+            this.router.navigate(['/dashboard/main']);
+          }, 300);
+        }
+        localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.user_data.token);
+        localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.user_data));
+        localStorage.setItem(localstorageconstants.COMPANYID, data.user_data.companydata._id);
+        localStorage.setItem(localstorageconstants.LOGOUT, 'false');
 
-      if (data.data.UserData.useris_password_temp == true) {
-        this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);
+        sessionStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
+        localStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
       } else {
-        setTimeout(() => {
-          this.router.navigate(['/dashboard/main']);
-        }, 1300);
+        this.useremail = formValues.useremail;
+        this.companyList = data.data;
+        this.showLogin = false;
       }
-      localStorage.setItem(
-        localstorageconstants.INVOICE_TOKEN,
-        data.data.token
-      );
-      localStorage.setItem(
-        localstorageconstants.USERDATA,
-        JSON.stringify(data.data)
-      );
-      localStorage.setItem(
-        localstorageconstants.COMPANYID,
-        data.data.companydata._id
-      );
-      localStorage.setItem(localstorageconstants.LOGOUT, 'false');
-
-      sessionStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
-      localStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
-
-      // for delete we use splice in order to remove single object from DataService
     } else {
       showNotification(this.snackBar, data.message, 'error');
     }
@@ -180,15 +174,9 @@ export class SigninComponent implements OnInit {
     this.renderer.removeClass(this.document.body, 'menu_dark');
     this.renderer.removeClass(this.document.body, 'logo-black');
     if (localStorage.getItem('choose_skin')) {
-      this.renderer.removeClass(
-        this.document.body,
-        localStorage.getItem('choose_skin') as string
-      );
+      this.renderer.removeClass(this.document.body, localStorage.getItem('choose_skin') as string);
     } else {
-      this.renderer.removeClass(
-        this.document.body,
-        'theme-dark'
-      );
+      this.renderer.removeClass(this.document.body, 'theme-dark');
     }
 
     this.renderer.addClass(this.document.body, 'light');
@@ -212,15 +200,9 @@ export class SigninComponent implements OnInit {
     this.renderer.removeClass(this.document.body, 'menu_light');
     this.renderer.removeClass(this.document.body, 'logo-white');
     if (localStorage.getItem('choose_skin')) {
-      this.renderer.removeClass(
-        this.document.body,
-        localStorage.getItem('choose_skin') as string
-      );
+      this.renderer.removeClass(this.document.body, localStorage.getItem('choose_skin') as string);
     } else {
-      this.renderer.removeClass(
-        this.document.body,
-        'theme-light'
-      );
+      this.renderer.removeClass(this.document.body, 'theme-light');
     }
     this.renderer.addClass(this.document.body, 'dark');
     this.renderer.addClass(this.document.body, 'submenu-closed');
@@ -267,6 +249,39 @@ export class SigninComponent implements OnInit {
             this.loading = false;
           },
         });
+    }
+  }
+
+  removeUseremail() {
+    this.useremail = '';
+    this.showLogin = true;
+    this.authForm.reset();
+  }
+
+  async selectCompany(company: any) {
+    const formValues = this.authForm.value;
+    formValues.companycode = company.companycode;
+
+    const data = await this.AuthenticationService.userLogin(formValues);
+    if (data.status) {
+
+      showNotification(this.snackBar, data.message, 'success');
+      if (data.data.UserData.useris_password_temp == true) {
+        this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);
+      } else {
+        setTimeout(() => {
+          this.router.navigate(['/dashboard/main']);
+        }, 300);
+      }
+      localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.data.token);
+      localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.data));
+      localStorage.setItem(localstorageconstants.COMPANYID, data.data.companydata._id);
+      localStorage.setItem(localstorageconstants.LOGOUT, 'false');
+
+      sessionStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
+      localStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
+    } else {
+      showNotification(this.snackBar, data.message, 'error');
     }
   }
 }
