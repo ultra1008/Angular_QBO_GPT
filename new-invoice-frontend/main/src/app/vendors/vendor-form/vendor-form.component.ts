@@ -28,6 +28,7 @@ import { wasabiImagePath } from 'src/consts/wasabiImagePath';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { TranslateService } from '@ngx-translate/core';
+import { httproutes, httpversion } from 'src/consts/httproutes';
 
 @Component({
   selector: 'app-vendor-form',
@@ -56,7 +57,7 @@ export class VendorFormComponent {
   titleMessage: string = "";
   show: boolean = false;
 
-  constructor(
+  constructor (
     private fb: UntypedFormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
@@ -65,7 +66,7 @@ export class VendorFormComponent {
     public route: ActivatedRoute,
     public vendorService: VendorsService,
     private sanitiser: DomSanitizer,
-    public commonService: CommonService
+    public commonService: CommonService,
   ) {
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
 
@@ -103,7 +104,7 @@ export class VendorFormComponent {
   }
 
   async getOneVendor() {
-    const data = await this.vendorService.getOneVendor(this.id);
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_GET_ONE, { _id: this.id });
     if (data.status) {
       const vendorData = data.data;
       this.vendorForm = this.fb.group({
@@ -138,52 +139,11 @@ export class VendorFormComponent {
   }
 
   async getTerms() {
-    const data = await this.vendorService.getTerms();
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_TERM_GET);
     if (data.status) {
       this.variablestermList = data.data;
       this.termsList = this.variablestermList.slice();
     }
-  }
-
-  // async archiveRecover(vendor: Vendor, is_delete: number) {
-  //   this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
-  //   const data = await this.vendorService.deleteVendor({id });
-  //   if (data.status) {
-  //     showNotification(this.snackBar, data.message, 'success');
-  //     const foundIndex = this.vendorService?.dataChange.value.findIndex(
-  //       (x) => x._id === vendor._id
-  //     );
-  //     // for delete we use splice in order to remove single object from DataService
-  //     if (foundIndex != null && this.vendorService) {
-  //       this.vendorService.dataChange.value.splice(foundIndex, 1);
-
-  //       this.router.navigate([WEB_ROUTES.VENDOR], { queryParams: { isDelete: this.isDelete } });
-
-
-  //     }
-  //   } else {
-  //     showNotification(this.snackBar, data.message, 'error');
-  //   }
-  // }
-
-  async deleteVendor() {
-
-    //   this.titleMessage = this.translate.instant('VENDOR.CONFIRMATION_DIALOG.ARCHIVE');
-
-    // swalWithBootstrapTwoButtons
-    //   .fire({
-    //     title: this.titleMessage,
-    //     showDenyButton: true,
-    //     confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
-    //     denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
-    //     allowOutsideClick: false,
-    //   })
-    //   .then((result) => {
-    //     if (result.isConfirmed) {
-    //       this.archiveRecover(vendor, is_delete);
-    //       this.show = false;
-    //     }
-    //   });
   }
 
   async saveVendor() {
@@ -205,7 +165,7 @@ export class VendorFormComponent {
           this.last_files_array
         );
       }
-      const data = await this.vendorService.saveVendor(requestObject);
+      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_SAVE, requestObject);
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');

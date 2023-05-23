@@ -10,6 +10,8 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { CommonService } from 'src/app/services/common.service';
+import { httpversion, httproutes } from 'src/consts/httproutes';
 
 export interface DialogData {
   termsList: Array<any>;
@@ -32,8 +34,8 @@ export class VendorReportComponent implements OnInit {
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
-  constructor(public uiSpinner: UiSpinnerService, public dialogRef: MatDialogRef<VendorReportComponent>, private snackBar: MatSnackBar,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData, public vendorService: VendorsService, private fb: UntypedFormBuilder,
+  constructor (public uiSpinner: UiSpinnerService, public dialogRef: MatDialogRef<VendorReportComponent>, private snackBar: MatSnackBar,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData, public vendorService: VendorsService, private fb: UntypedFormBuilder, public commonService: CommonService,
   ) {
     // Set the defaults
     /* this.action = 'insert';
@@ -136,7 +138,7 @@ export class VendorReportComponent implements OnInit {
       this.uiSpinner.spin$.next(true);
       const requestObject = this.vendorInfo.value;
       requestObject.email_list = this.emailsList;
-      this.vendorService.sendVendorReport(requestObject);
+      this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_REPORT, requestObject);
       setTimeout(() => {
         this.uiSpinner.spin$.next(false);
         this.dialogRef.close();

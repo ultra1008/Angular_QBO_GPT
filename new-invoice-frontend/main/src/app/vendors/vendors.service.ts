@@ -13,7 +13,7 @@ export class VendorsService extends UnsubscribeOnDestroyAdapter {
   dataChange: BehaviorSubject<Vendor[]> = new BehaviorSubject<Vendor[]>([]);
   // Temporarily stores data from dialogs
   dialogData!: Vendor;
-  constructor(private httpCall: HttpCall) {
+  constructor (private httpCall: HttpCall) {
     super();
   }
   get data(): Vendor[] {
@@ -30,52 +30,5 @@ export class VendorsService extends UnsubscribeOnDestroyAdapter {
     // Only write this for datatable api otherwise return data
     this.dataChange.next(data);
     this.isTblLoading = false;
-  }
-
-  async getOneVendor(id: string) {
-    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_GET_ONE, { _id: id }).toPromise();
-    return data;
-  }
-
-  async saveVendor(requestObject: any) {
-    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_SAVE, requestObject).toPromise();
-    return data;
-  }
-
-  async updateVendorStatus(requestObject: any) {
-    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_STATUS_UPDATE, requestObject).toPromise();
-    return data;
-  }
-  async updateAllVendorStatus(requestObject: any) {
-    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_ALL_VENDOR_STATUS_UPDATE, requestObject).toPromise();
-    return data;
-  }
-
-  async deleteVendor(requestObject: any) {
-    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_DELETE, requestObject).toPromise();
-    return data;
-  }
-
-  async allDeleteVendor(requestObject: any) {
-    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_ALL_DELETE, requestObject).toPromise();
-    return data;
-  }
-  async getTerms() {
-    const data = await this.httpCall.httpGetCall(httpversion.PORTAL_V1 + httproutes.PORTAL_TERM_GET).toPromise();
-    return data;
-  }
-
-  async getVendorHistory(requestObject: any) {
-    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_GET_HISTORY, requestObject).toPromise();
-    return data;
-  }
-
-  async sendVendorReport(requestObject: any) {
-    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_REPORT, requestObject).toPromise();
-    return data;
-  }
-  async getVendor(is_delete: number) {
-    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_GET, { is_delete: is_delete }).toPromise();
-    return data;
   }
 }
