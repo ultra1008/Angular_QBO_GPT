@@ -23,6 +23,11 @@ const routes: Routes = [
           import('./vendors/vendors.module').then((m) => m.VendorsModule),
       },
       {
+        path: WEB_ROUTES.SIDEMENU_CLIENT,
+        loadChildren: () =>
+          import('./client/client.module').then((m) => m.ClientModule),
+      },
+      {
         path: WEB_ROUTES.SIDEMENU_INVOICES,
         loadChildren: () =>
           import('./invoice/invoice.module').then((m) => m.InvoiceModule),
@@ -64,4 +69,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes, { useHash: false })],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
