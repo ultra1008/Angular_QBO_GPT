@@ -40,8 +40,13 @@ export class AuthenticationService {
     return data;
   }
 
-  async forgotPasswordPress(reqObject: any) {
-    const data = await this.httpCall.httpPostCall(httpversion.V1 + httproutes.USER_FORGET_PASSWORD, reqObject).toPromise();
+  async emailForgotPassword(reqObject: any) {
+    const data = await this.httpCall.httpPostCall(httpversion.V1 + httproutes.EMAIL_FORGET_PASSWORD, reqObject).toPromise();
+    return data;
+  }
+
+  async sendEmailForgotPassword(reqObject: any) {
+    const data = await this.httpCall.httpPostCall(httpversion.V1 + httproutes.SEND_EMAIL_FORGET_PASSWORD, reqObject).toPromise();
     return data;
   }
 

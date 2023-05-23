@@ -383,6 +383,9 @@ module.exports.changepassword = async function (req, res) {
             } else {
                 let connection_db_api;
                 try {
+                    let admin_connection_db_api = await db_connection.connection_db_api(config.ADMIN_CONFIG);
+                    let companyConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_COMPANY, companySchema);
+
                     connection_db_api = await db_connection.connection_db_api(result);
                     let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
                     let userOne = await userConnection.findOne({ _id: ObjectID(decodedToken.UserData._id), is_delete: 0, userstatus: 1 });
@@ -393,6 +396,12 @@ module.exports.changepassword = async function (req, res) {
                             var passwordHash = await common.generateHash(req.body.password);
                             var updatesuccess = await userConnection.updateOne({ _id: ObjectID(decodedToken.UserData._id) }, { "password": passwordHash, useris_password_temp: false });
                             if (updatesuccess) {
+                                let company_data = await companyConnection.findOne({ companycode: decodedToken.companycode });
+                                let companyUserObj = {
+                                    'company_user.$.password': passwordHash,
+                                };
+                                let update_company_user = await companyConnection.updateOne({ _id: ObjectID(company_data._id), 'company_user.user_id': ObjectID(decodedToken.UserData._id) }, { $set: companyUserObj });
+
                                 res.send({ message: translator.getStr('PasswordChanged'), data: updatesuccess, status: true });
                             } else {
                                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
@@ -527,46 +536,58 @@ module.exports.forgetpassword = async function (req, res) {
                 var translator = new common.Language('en');
                 let connection_db_api = await db_connection.connection_db_api(resulttanent);
                 req.body.useremail = req.body.useremail.toLowerCase();
+                let admin_connection_db_api = await db_connection.connection_db_api(config.ADMIN_CONFIG);
                 try {
-                    let supplierUserSchemaConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
-                    let find_one_vendor = await supplierUserSchemaConnection.findOne({ useremail: requestObject.useremail });
+                    let companyConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_COMPANY, companySchema);
+                    let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+                    let find_one_vendor = await userConnection.findOne({ useremail: requestObject.useremail });
                     if (find_one_vendor == null) {
                         res.send({ message: translator.getStr('EmailNotExists'), status: false });
                     } else {
                         let temp_password = common.rendomPassword(8);
+                        let passwordHash = common.generateHash(temp_password);
 
-                        let update_user = await supplierUserSchemaConnection.updateOne({ useremail: req.body.useremail }, { password: common.generateHash(temp_password), useris_password_temp: true });
-                        const data = await fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/resetPassword.html', 'utf8');
-                        let emailTmp = {
-                            HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
-                            SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
-                            ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
-                            THANKS: translator.getStr('EmailTemplateThanks'),
-                            ROVUK_TEAM: ` Rovuk A/P ${translator.getStr('team_mail_all')}`,
+                        let update_user = await userConnection.updateOne({ useremail: req.body.useremail }, { password: passwordHash, useris_password_temp: true });
+                        if (update_user) {
+                            let company_data = await companyConnection.findOne({ companycode: requestObject.companycode });
+                            let one_user = await userConnection.findOne({ useremail: req.body.useremail });
+                            let companyUserObj = {
+                                'company_user.$.password': passwordHash,
+                            };
+                            let update_company_user = await companyConnection.updateOne({ _id: ObjectID(company_data._id), 'company_user.user_id': ObjectID(one_user._id) }, { $set: companyUserObj });
 
-                            TITLE: translator.getStr('MailForgotPassword_Title'),
-                            HI_USERNAME: translator.getStr('Hello_mail'),
-                            TEXT1: translator.getStr('vendor_mail_forgotpass_line1_1'),
-                            TEXT2: translator.getStr('vendor_mail_forgotpass_line3_1'),
-                            TEMP_PASSWORD: `${translator.getStr('vendor_mail_forgotpass_line2_1')} ${temp_password}`,
+                            const data = await fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/resetPassword.html', 'utf8');
+                            let emailTmp = {
+                                HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
+                                SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
+                                ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                                THANKS: translator.getStr('EmailTemplateThanks'),
+                                ROVUK_TEAM: ` Rovuk A/P ${translator.getStr('team_mail_all')}`,
 
-                            BUTTON_TEXT: translator.getStr('EmailInvitationLogIn'),
-                            LINK: config.SITE_URL + "/login",
+                                TITLE: translator.getStr('MailForgotPassword_Title'),
+                                HI_USERNAME: translator.getStr('Hello_mail'),
+                                TEXT1: translator.getStr('vendor_mail_forgotpass_line1_1'),
+                                TEXT2: translator.getStr('vendor_mail_forgotpass_line3_1'),
+                                TEMP_PASSWORD: `${translator.getStr('vendor_mail_forgotpass_line2_1')} ${temp_password}`,
 
-                            COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${resultfind.companyname}`,
-                            COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${resultfind.companycode}`,
-                        };
-                        let tmp_subject = translator.getStr('MailForgotPassword_Subject');
-                        var template = handlebars.compile(data);
-                        var HtmlData = await template(emailTmp);
-                        let tenant_smtp_security = config.tenants.tenant_smtp_security == "Yes" || config.tenants.tenant_smtp_security == "YES" || config.tenants.tenant_smtp_security == "yes" ? true : false;
-                        let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, find_one_vendor.useremail, tmp_subject, HtmlData,
-                            config.tenants.tenant_smtp_server, config.tenants.tenant_smtp_port, config.tenants.tenant_smtp_reply_to_mail, config.tenants.tenant_smtp_password, config.tenants.tenant_smtp_timeout,
-                            tenant_smtp_security);
-                        if (mailsend) {
-                            res.send({ message: translator.getStr('CheckMailForgotPassword'), status: true, update_user: update_user });
-                        } else {
-                            res.send({ message: translator.getStr('CompanyNotFound'), status: false });
+                                BUTTON_TEXT: translator.getStr('EmailInvitationLogIn'),
+                                LINK: config.SITE_URL + "/login",
+
+                                COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${resultfind.companyname}`,
+                                COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${resultfind.companycode}`,
+                            };
+                            let tmp_subject = translator.getStr('MailForgotPassword_Subject');
+                            var template = handlebars.compile(data);
+                            var HtmlData = await template(emailTmp);
+                            let tenant_smtp_security = config.tenants.tenant_smtp_security == "Yes" || config.tenants.tenant_smtp_security == "YES" || config.tenants.tenant_smtp_security == "yes" ? true : false;
+                            let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, find_one_vendor.useremail, tmp_subject, HtmlData,
+                                config.tenants.tenant_smtp_server, config.tenants.tenant_smtp_port, config.tenants.tenant_smtp_reply_to_mail, config.tenants.tenant_smtp_password, config.tenants.tenant_smtp_timeout,
+                                tenant_smtp_security);
+                            if (mailsend) {
+                                res.send({ message: translator.getStr('CheckMailForgotPassword'), status: true, update_user: update_user });
+                            } else {
+                                res.send({ message: translator.getStr('CompanyNotFound'), status: false });
+                            }
                         }
                     }
                 } catch (e) {
@@ -578,83 +599,62 @@ module.exports.forgetpassword = async function (req, res) {
             }
         });
     });
-    /* var decodedToken = common.decodedJWT(req.headers.authorization);
-    var translator = new common.Language(req.headers.language);
-    if (decodedToken) {
-        let connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try {
-            var requestObject = req.body;
-
-            let loginHistoryConnection = connection_db_api.model(collectionConstant.INVOICE_LOGINHISTORY, loginHistorySchema);
-            requestObject.user_id = decodedToken.UserData._id;
-            requestObject.created_at = Math.round(new Date().getTime() / 1000);
-            requestObject.updated_at = requestObject.created_at;
-            requestObject.logout_at = requestObject.created_at;
-            requestObject.is_login = false;
-            requestObject.userfirebase_token = "";
-            let add_logout = new loginHistoryConnection(requestObject);
-            let save_logout = await add_logout.save();
-            if (save_logout) {
-                requestObject.inserted_id = save_logout._id;
-                res.send({ message: translator.getStr('Logout'), data: save_logout, status: true });
-            } else {
-                res.send({ message: translator.getStr('SomethingWrong'), status: false });
-            }
-        } catch (e) {
-            console.log(e);
-            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
-        } finally {
-            connection_db_api.close()
-        }
-    } else {
-        res.send({ message: translator.getStr('InvalidUser'), status: false });
-    } */
 };
 
 module.exports.sendUserPassword = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
     if (decodedToken) {
+        let admin_connection_db_api = await db_connection.connection_db_api(config.ADMIN_CONFIG);
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-            var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
-            let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
-            let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
+            let companyConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_COMPANY, companySchema);
+            let tenantConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_TENANTS, tenantSchema);
+
+            let talnate_data = await tenantConnection.findOne({ companycode: decodedToken.companycode });
+            let company_data = await companyConnection.findOne({ companycode: decodedToken.companycode });
+
             let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             // let UserData = await userConnection.findOne({ _id: decodedToken.UserData._id });
-            let UserData = await userConnection.findOne({ useremail: requestObject.useremail });
-            if (UserData == null) {
+            let one_user = await userConnection.findOne({ useremail: requestObject.useremail });
+            if (one_user == null) {
                 res.send({ message: translator.getStr('UserNotFound'), status: false });
             } else {
-                let update_user = await userConnection.updateOne({ _id: decodedToken.UserData._id }, { password: common.generateHash(requestObject.password), useris_password_temp: true });
-                const data = await fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/resetPassword.html', 'utf8');
-                let emailTmp = {
-                    HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE} `,
-                    SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${config.NUMBERPHONE2} `,
-                    ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')} `,
-                    THANKS: translator.getStr('EmailTemplateThanks'),
-                    ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                var passwordHash = common.generateHash(requestObject.password);
+                let update_user = await userConnection.updateOne({ _id: one_user._id }, { password: passwordHash, useris_password_temp: true });
+                if (update_user) {
+                    let companyUserObj = {
+                        'company_user.$.password': passwordHash,
+                    };
+                    let update_company_user = await companyConnection.updateOne({ _id: ObjectID(company_data._id), 'company_user.user_id': ObjectID(one_user._id) }, { $set: companyUserObj });
 
-                    TITLE: translator.getStr('EmailResetPasswordTitle'),
-                    HI_USERNAME: `${translator.getStr('EmailTemplateHi')} ${UserData.username}, `,
-                    TEXT1: translator.getStr('EmailResetPasswordText1'),
-                    TEXT2: translator.getStr('EmailResetPasswordText2'),
-                    TEXT3: translator.getStr('EmailResetPasswordText3'),
-                    TEMP_PASSWORD: `${translator.getStr('EmailResetPasswordTempPassword')} ${requestObject.password} `,
+                    const data = await fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/resetPassword.html', 'utf8');
+                    let emailTmp = {
+                        HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE} `,
+                        SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${config.NUMBERPHONE2} `,
+                        ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')} `,
+                        THANKS: translator.getStr('EmailTemplateThanks'),
+                        ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
 
-                    // COMPANYNAME: `${ translator.getStr('EmailAppInvitationCompanyName'); } ${ company_data.companyname; } `,
-                    // COMPANYCODE: `${ translator.getStr('EmailAppInvitationCompanyCode'); } ${ company_data.companycode; } `,
-                };
-                var template = handlebars.compile(data);
-                var HtmlData = await template(emailTmp);
-                let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [requestObject.useremail], "Rovuk Forgot Password", HtmlData,
-                    talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail, talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout,
-                    talnate_data.tenant_smtp_security);
-                if (mailsend) {
+                        TITLE: translator.getStr('EmailResetPasswordTitle'),
+                        HI_USERNAME: `${translator.getStr('EmailTemplateHi')} ${one_user.username}, `,
+                        TEXT1: translator.getStr('EmailResetPasswordText1'),
+                        TEXT2: translator.getStr('EmailResetPasswordText2'),
+                        TEXT3: translator.getStr('EmailResetPasswordText3'),
+                        TEMP_PASSWORD: `${translator.getStr('EmailResetPasswordTempPassword')} ${requestObject.password} `,
+
+                        // COMPANYNAME: `${ translator.getStr('EmailAppInvitationCompanyName'); } ${ company_data.companyname; } `,
+                        // COMPANYCODE: `${ translator.getStr('EmailAppInvitationCompanyCode'); } ${ company_data.companycode; } `,
+                    };
+                    var template = handlebars.compile(data);
+                    var HtmlData = await template(emailTmp);
+                    sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [requestObject.useremail], "Rovuk Forgot Password", HtmlData,
+                        talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail, talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout,
+                        talnate_data.tenant_smtp_security);
                     res.send({ message: translator.getStr('CheckMailNewPassword'), status: true, update_user: update_user });
                 } else {
-                    res.send({ message: translator.getStr('CompanyNotFound'), status: false });
+                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
                 }
             }
         } catch (e) {
@@ -1232,7 +1232,7 @@ module.exports.getLoginCompanyList = async function (req, res) {
     try {
         var requestObject = req.body;
         requestObject.useremail = requestObject.useremail.toLowerCase();
-        // var psss_tnp = await common.validPassword(requestObject.password, UserData.password);
+
         let companyConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_COMPANY, companySchema);
         let tenantsConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_TENANTS, tenantSchema);
         let match = {
@@ -2295,5 +2295,147 @@ module.exports.loginWithEmailOTP = async function (req, res) {
         res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
     } finally {
         admin_connection_db_api.close();
+    }
+};
+
+module.exports.emailForgotPassword = async function (req, res) {
+    var translator = new common.Language('en');
+    let admin_connection_db_api = await db_connection.connection_db_api(config.ADMIN_CONFIG);
+    try {
+        var requestObject = req.body;
+        requestObject.useremail = requestObject.useremail.toLowerCase();
+
+        let companyConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_COMPANY, companySchema);
+        let tenantsConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_TENANTS, tenantSchema);
+        let match = {
+            'company_user.useremail': requestObject.useremail,
+            'company_user.userstatus': 1,
+            'company_user.is_delete': 0,
+        };
+        var get_company = await companyConnection.find(match);
+        if (get_company.length == 1) {
+            var get_tenants = await tenantsConnection.findOne({ company_id: get_company[0]._id });
+            let connection_db_api = await db_connection.connection_db_api(get_tenants);
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+
+            let temp_password = common.rendomPassword(8);
+            let passwordHash = common.generateHash(temp_password);
+
+            let update_user = await userConnection.updateOne({ useremail: requestObject.useremail }, { password: passwordHash, useris_password_temp: true });
+            if (update_user) {
+                let one_user = await userConnection.findOne({ useremail: requestObject.useremail });
+                let companyUserObj = {
+                    'company_user.$.password': passwordHash,
+                };
+                let update_company_user = await companyConnection.updateOne({ _id: ObjectID(get_company[0]._id), 'company_user.user_id': ObjectID(one_user._id) }, { $set: companyUserObj });
+
+                const data = await fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/resetPassword.html', 'utf8');
+                let emailTmp = {
+                    HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
+                    SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
+                    ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                    THANKS: translator.getStr('EmailTemplateThanks'),
+                    ROVUK_TEAM: ` Rovuk A/P ${translator.getStr('team_mail_all')}`,
+
+                    TITLE: translator.getStr('MailForgotPassword_Title'),
+                    HI_USERNAME: translator.getStr('Hello_mail'),
+                    TEXT1: translator.getStr('vendor_mail_forgotpass_line1_1'),
+                    TEXT2: translator.getStr('vendor_mail_forgotpass_line3_1'),
+                    TEMP_PASSWORD: `${translator.getStr('vendor_mail_forgotpass_line2_1')} ${temp_password}`,
+
+                    BUTTON_TEXT: translator.getStr('EmailInvitationLogIn'),
+                    LINK: config.SITE_URL + "/login",
+
+                    COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${get_company[0].companyname}`,
+                    COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${get_company[0].companycode}`,
+                };
+                let tmp_subject = translator.getStr('MailForgotPassword_Subject');
+                var template = handlebars.compile(data);
+                var HtmlData = await template(emailTmp);
+                let tenant_smtp_security = config.tenants.tenant_smtp_security == "Yes" || config.tenants.tenant_smtp_security == "YES" || config.tenants.tenant_smtp_security == "yes" ? true : false;
+                sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, one_user.useremail, tmp_subject, HtmlData,
+                    config.tenants.tenant_smtp_server, config.tenants.tenant_smtp_port, config.tenants.tenant_smtp_reply_to_mail, config.tenants.tenant_smtp_password, config.tenants.tenant_smtp_timeout,
+                    tenant_smtp_security);
+                res.send({ message: translator.getStr('CheckMailForgotPassword'), status: true, data: get_company });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } else {
+            res.send({ message: translator.getStr('CompanyListing'), status: true, data: get_company });
+        }
+    } catch (e) {
+        console.log(e);
+        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+    } finally {
+        // connection_db_api.close();
+    }
+};
+
+module.exports.sendEmailForgotPassword = async function (req, res) {
+    var translator = new common.Language('en');
+    let admin_connection_db_api = await db_connection.connection_db_api(config.ADMIN_CONFIG);
+    try {
+        var requestObject = req.body;
+        requestObject.useremail = requestObject.useremail.toLowerCase();
+
+        let companyConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_COMPANY, companySchema);
+        let tenantsConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_TENANTS, tenantSchema);
+        let match = {
+            'company_user.useremail': requestObject.useremail,
+            'company_user.userstatus': 1,
+            'company_user.is_delete': 0,
+        };
+        var get_company = await companyConnection.findOne({ _id: ObjectID(requestObject._id) });
+        var get_tenants = await tenantsConnection.findOne({ company_id: get_company._id });
+        let connection_db_api = await db_connection.connection_db_api(get_tenants);
+        let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+
+        let temp_password = common.rendomPassword(8);
+        let passwordHash = common.generateHash(temp_password);
+
+        let update_user = await userConnection.updateOne({ useremail: requestObject.useremail }, { password: passwordHash, useris_password_temp: true });
+        if (update_user) {
+            let one_user = await userConnection.findOne({ useremail: requestObject.useremail });
+            let companyUserObj = {
+                'company_user.$.password': passwordHash,
+            };
+            let update_company_user = await companyConnection.updateOne({ _id: ObjectID(get_company._id), 'company_user.user_id': ObjectID(one_user._id) }, { $set: companyUserObj });
+
+            const data = await fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/resetPassword.html', 'utf8');
+            let emailTmp = {
+                HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
+                SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
+                ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                THANKS: translator.getStr('EmailTemplateThanks'),
+                ROVUK_TEAM: ` Rovuk A/P ${translator.getStr('team_mail_all')}`,
+
+                TITLE: translator.getStr('MailForgotPassword_Title'),
+                HI_USERNAME: translator.getStr('Hello_mail'),
+                TEXT1: translator.getStr('vendor_mail_forgotpass_line1_1'),
+                TEXT2: translator.getStr('vendor_mail_forgotpass_line3_1'),
+                TEMP_PASSWORD: `${translator.getStr('vendor_mail_forgotpass_line2_1')} ${temp_password}`,
+
+                BUTTON_TEXT: translator.getStr('EmailInvitationLogIn'),
+                LINK: config.SITE_URL + "/login",
+
+                COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${get_company.companyname}`,
+                COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${get_company.companycode}`,
+            };
+            let tmp_subject = translator.getStr('MailForgotPassword_Subject');
+            var template = handlebars.compile(data);
+            var HtmlData = await template(emailTmp);
+            let tenant_smtp_security = config.tenants.tenant_smtp_security == "Yes" || config.tenants.tenant_smtp_security == "YES" || config.tenants.tenant_smtp_security == "yes" ? true : false;
+            sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, one_user.useremail, tmp_subject, HtmlData,
+                config.tenants.tenant_smtp_server, config.tenants.tenant_smtp_port, config.tenants.tenant_smtp_reply_to_mail, config.tenants.tenant_smtp_password, config.tenants.tenant_smtp_timeout,
+                tenant_smtp_security);
+            res.send({ message: translator.getStr('CheckMailForgotPassword'), status: true, data: get_company });
+        } else {
+            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        }
+    } catch (e) {
+        console.log(e);
+        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+    } finally {
+        // connection_db_api.close();
     }
 };

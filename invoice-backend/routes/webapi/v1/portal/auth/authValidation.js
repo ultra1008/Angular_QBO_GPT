@@ -200,6 +200,41 @@ const loginWithEmailOTP = (req, res, next) => {
     });
 };
 
+const emailForgotPassword = (req, res, next) => {
+    const validationRule = {
+        "useremail": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            let error = err.first('companycode') ? err.first('companycode') : "";
+            res.send({
+                status: false,
+                message: error
+            });
+        } else {
+            next();
+        }
+    });
+};
+
+const sendEmailForgotPassword = (req, res, next) => {
+    const validationRule = {
+        "useremail": "required",
+        "_id": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            let error = err.first('companycode') ? err.first('companycode') : "";
+            res.send({
+                status: false,
+                message: error
+            });
+        } else {
+            next();
+        }
+    });
+};
+
 module.exports = {
     login,
     changePasswordValidation,
@@ -212,4 +247,6 @@ module.exports = {
     sendEmailOTP,
     submitEmailOTP,
     loginWithEmailOTP,
+    emailForgotPassword,
+    sendEmailForgotPassword,
 };

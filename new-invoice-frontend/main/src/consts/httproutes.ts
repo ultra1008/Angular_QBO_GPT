@@ -11,7 +11,8 @@ export enum httproutes {
   USER_LOGIN = 'login',
   GET_USER_COMPANY = 'getlogincompanylist',
   SEND_OTP_EMAIL = 'sendemailotp',
-  USER_FORGET_PASSWORD = 'forgetpassword',
+  EMAIL_FORGET_PASSWORD = 'emailforgotpassword',
+  SEND_EMAIL_FORGET_PASSWORD = 'sendemailforgotpassword',
   SUBMITT_OTP = 'submitemailotp',
   LOGIN_WITH_OTP = 'loginwithemailotp',
   CHANGEPASSWORD = 'changepassword',
@@ -66,6 +67,7 @@ export enum httproutes {
   SAVE_USER_CONTACT_INFO = 'savecontactinfo',
   SAVE_USER_INFO = 'saveemployeeinfo',
   SAVE_USER_MOBILE_PIC = 'savemobilephoto',
+  SAVE_USER_PASSWORD = 'senduserpassword',
 
   // Emergency Contact
   GET_EMERGENCY_CONTACT = 'getemergencycontact',

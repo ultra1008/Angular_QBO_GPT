@@ -377,6 +377,29 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
     el.click();
   }
 
+  async sendUserPassword() {
+    let that = this;
+    const req_temp = that.userpersonalinfo.value;
+    if (req_temp.password == "" || req_temp.password == null || req_temp.password == undefined) {
+      showNotification(this.snackBar, 'Please enter temporary password', 'error');
+    } else {
+      that.uiSpinner.spin$.next(true);
+      const reqObject = {
+        password: req_temp.password,
+        useremail: req_temp.useremail
+      };
+      const data = await this.UserService.sendUserPassword(reqObject);
+      if (data.status) {
+        that.uiSpinner.spin$.next(false);
+        showNotification(that.snackBar, data.message, 'success');
+        that.userpersonalinfo.get("password")?.setValue("");
+      } else {
+        that.uiSpinner.spin$.next(false);
+        showNotification(that.snackBar, data.message, 'error');
+      }
+    }
+  }
+
   showHideExpirationDate(event: any, i: any) {
     let found = this.db_Doc_types.find((element: any) => element._id == event);
     this.showHideExpiration[i] = found.is_expiration;
@@ -464,8 +487,6 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
         ...that.useremployeeinfo.value,
         usersalary: this.useremployeeinfo.value.usersalary.toString().replace(/,/g, ""),
         ...that.usercontactinfo.value
-
-
       };
       reqObject.userpicture = that.sample_img;
 
