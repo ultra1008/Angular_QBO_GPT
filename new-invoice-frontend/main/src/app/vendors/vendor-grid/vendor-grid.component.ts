@@ -26,8 +26,8 @@ export class VendorGridComponent extends UnsubscribeOnDestroyAdapter implements 
   vendorList: any = [];
   cardLoading = true;
   isDelete = 0;
-  active_word: string = "Active";
-  inactive_word: string = "Inactive";
+  active_word = "Active";
+  inactive_word = "Inactive";
   vendorname_search: any;
   vendor_status: any;
   termsList: Array<TermModel> = [];
@@ -46,7 +46,7 @@ export class VendorGridComponent extends UnsubscribeOnDestroyAdapter implements 
   }
 
   changeStatus(event: any) {
-
+    //
   }
 
   gotolist() {

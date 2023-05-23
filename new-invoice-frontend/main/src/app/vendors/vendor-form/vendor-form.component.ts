@@ -53,9 +53,9 @@ export class VendorFormComponent {
   galleryImages: NgxGalleryImage[] = [];
   imageObject = [];
   tmp_gallery: any;
-  submitting_text: string = '';
-  titleMessage: string = "";
-  show: boolean = false;
+  submitting_text = '';
+  titleMessage = "";
+  show = false;
 
   constructor (
     private fb: UntypedFormBuilder,

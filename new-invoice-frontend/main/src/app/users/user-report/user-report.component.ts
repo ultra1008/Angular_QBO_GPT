@@ -28,7 +28,7 @@ export class UserReportComponent {
   roleLists: Array<RoleModel> = [];
   statusList: Array<any> = configData.INVOICES_STATUS;
   emailsList: string[] = [];
-  is_oneOnly: boolean = true;
+  is_oneOnly = true;
   selectable = true;
   removable = true;
   addOnBlur = true;
@@ -51,7 +51,6 @@ export class UserReportComponent {
       this.advanceTable = new AdvanceTable(blankObject);
     } */
     this.roleLists = data.roleList;
-    console.log("this.roleLists", this.roleLists);
     this.userInfo = this.fb.group({
       All_Roles: [true],
       role_ids: [this.roleLists.map((el) => el._id)],
@@ -101,7 +100,7 @@ export class UserReportComponent {
   }
   addmyself() {
     if (this.is_oneOnly) {
-      let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+      const user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
       this.emailsList.push(user_data.UserData.useremail);
       this.is_oneOnly = false;
     }
@@ -121,11 +120,11 @@ export class UserReportComponent {
       }
     }
     // Clear the input value
-    event.chipInput!.clear();
+    event.chipInput.clear();
   }
 
   removeEmail(email: string): void {
-    let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    const user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
     const index = this.emailsList.indexOf(email);
 
     if (index >= 0) {
@@ -161,7 +160,7 @@ export class UserReportComponent {
       if (validEmail) {
         this.emailsList.push(value);
         // Clear the input value
-        event.chipInput!.clear();
+        event.chipInput.clear();
       } else {
         // here error for valid email
       }

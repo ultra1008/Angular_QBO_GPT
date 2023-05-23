@@ -28,7 +28,7 @@ export class VendorReportComponent implements OnInit {
   termsList: Array<TermModel> = [];
   statusList: Array<any> = configData.INVOICES_STATUS;
   emailsList: string[] = [];
-  is_oneOnly: boolean = true;
+  is_oneOnly = true;
   selectable = true;
   removable = true;
   addOnBlur = true;
@@ -37,17 +37,6 @@ export class VendorReportComponent implements OnInit {
   constructor (public uiSpinner: UiSpinnerService, public dialogRef: MatDialogRef<VendorReportComponent>, private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: DialogData, public vendorService: VendorsService, private fb: UntypedFormBuilder, public commonService: CommonService,
   ) {
-    // Set the defaults
-    /* this.action = 'insert';
-    if (this.action === 'edit') {
-      this.dialogTitle =
-        data.advanceTable.fName + ' ' + data.advanceTable.lName;
-      this.advanceTable = data.advanceTable;
-    } else {
-      this.dialogTitle = 'New Record';
-      const blankObject = {} as AdvanceTable;
-      this.advanceTable = new AdvanceTable(blankObject);
-    } */
     this.termsList = data.termsList;
 
     this.vendorInfo = this.fb.group({
@@ -59,20 +48,19 @@ export class VendorReportComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const that = this;
-    that.vendorInfo.get("terms_ids")?.valueChanges.subscribe(function (params: any) {
-      if (params.length == that.termsList.length) {
-        that.vendorInfo.get("All_Terms")?.setValue(true);
+
+    this.vendorInfo.get("terms_ids")?.valueChanges.subscribe(function (params: any) {
+      if (params.length == this.termsList.length) {
+        this.vendorInfo.get("All_Terms")?.setValue(true);
       } else {
-        that.vendorInfo.get("All_Terms")?.setValue(false);
+        this.vendorInfo.get("All_Terms")?.setValue(false);
       }
     });
-    that.vendorInfo.get("invoice_status")?.valueChanges.subscribe(function (params: any) {
-      if (params.length == that.statusList.length) {
-        that.vendorInfo.get("All_Invoice_Status")?.setValue(true);
+    this.vendorInfo.get("invoice_status")?.valueChanges.subscribe(function (params: any) {
+      if (params.length == this.statusList.length) {
+        this.vendorInfo.get("All_Invoice_Status")?.setValue(true);
       } else {
-        that.vendorInfo.get("All_Invoice_Status")?.setValue(false);
+        this.vendorInfo.get("All_Invoice_Status")?.setValue(false);
       }
     });
   }
@@ -105,24 +93,24 @@ export class VendorReportComponent implements OnInit {
       if (validEmail) {
         this.emailsList.push(value);
         // Clear the input value
-        event.chipInput!.clear();
+        event.chipInput.clear();
       } else {
         // here error for valid email
       }
     }
     // Clear the input value
-    event.chipInput!.clear();
+    event.chipInput.clear();
   }
   addmyself() {
     if (this.is_oneOnly) {
-      let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+      const user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
       this.emailsList.push(user_data.UserData.useremail);
       this.is_oneOnly = false;
     }
   }
 
   removeEmail(email: string): void {
-    let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    const user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
     const index = this.emailsList.indexOf(email);
 
     if (index >= 0) {
@@ -157,7 +145,7 @@ export class VendorReportComponent implements OnInit {
       if (validEmail) {
         this.emailsList.push(value);
         // Clear the input value
-        event.chipInput!.clear();
+        event.chipInput.clear();
       } else {
         // here error for valid email
       }

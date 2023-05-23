@@ -40,7 +40,7 @@ export class UserRestoreFormComponent {
   variablesRoleList: any = [];
 
   roleList: any = this.variablesRoleList.slice();
-  titleMessage: string = '';
+  titleMessage = '';
   userList: any = [];
   isDelete = 0;
   constructor (
@@ -103,7 +103,7 @@ export class UserRestoreFormComponent {
   //   }
   // }
   async restoreUser(userId: any) {
-    let requestObject = this.userRoleInfo.value;
+    const requestObject = this.userRoleInfo.value;
     requestObject._id = userId;
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.USER_RECOVER, requestObject);
     if (data.status) {

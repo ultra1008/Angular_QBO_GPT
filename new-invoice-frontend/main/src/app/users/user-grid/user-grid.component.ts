@@ -30,9 +30,9 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
   userList: any = [];
   dataSource!: UserDataSource;
   @ViewChild('filter', { static: true }) filter!: ElementRef;
-  active_word: string = "Active";
-  inactive_word: string = "Inactive";
-  titleMessage: string = "";
+  active_word = "Active";
+  inactive_word = "Inactive";
+  titleMessage = "";
   selection = new SelectionModel<User>(true, []);
   advanceTable?: AdvanceTable;
   roleLists: Array<RoleModel> = [];
@@ -53,7 +53,7 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
     this.getUser();
   }
   changeStatus(event: any) {
-
+    //
   }
 
   async getUser() {
@@ -139,7 +139,6 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
   }
 
   addNew(user: User) {
-    let that = this;
     this.titleMessage = "Are you sure you want to restore this user?";
     swalWithBootstrapTwoButtons
       .fire({
@@ -151,17 +150,8 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
       })
       .then(async (result) => {
         if (result.isConfirmed) {
-          let _id = user._id;
-
-
-          let tempDirection: Direction;
-          if (localStorage.getItem('isRtl') === 'true') {
-            tempDirection = 'rtl';
-          } else {
-            tempDirection = 'ltr';
-          }
           const dialogRef = this.dialog.open(UserRestoreFormComponent, {
-            data: _id
+            data: user._id
           });
           this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
             if (result === 1) {

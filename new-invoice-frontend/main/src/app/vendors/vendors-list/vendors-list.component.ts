@@ -22,7 +22,7 @@ import { NgxGalleryComponent, NgxGalleryImage, NgxGalleryOptions } from 'ngx-gal
 import { VendorReportComponent } from '../vendor-report/vendor-report.component';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { TranslateService } from '@ngx-translate/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { CommonService } from 'src/app/services/common.service';
 
@@ -38,7 +38,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   galleryImages: NgxGalleryImage[] = [];
   imageObject = [];
   tmp_gallery: any;
-  show: boolean = false;
+  show = false;
   displayedColumns = [
     'select',
     'vendor_name',
@@ -58,12 +58,10 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   id?: number;
   isDelete = 0;
   termsList: Array<TermModel> = [];
-  titleMessage: string = "";
-  isQBSyncedCompany: boolean = false;
+  titleMessage = "";
+  isQBSyncedCompany = false;
   rform?: any;
   selectedValue!: string;
-
-
 
   constructor (
     public httpClient: HttpClient, private httpCall: HttpCall,
@@ -73,9 +71,8 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     private fb: UntypedFormBuilder,
   ) {
     super();
-
-
   }
+
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   @ViewChild('filter', { static: true }) filter!: ElementRef;
@@ -162,8 +159,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     this.loadData();
   }
   onBookChange(ob: any) {
-    console.log('Book changed...');
-    let selectedBook = ob.value;
+    const selectedBook = ob.value;
     console.log(selectedBook);
     if (selectedBook == 1) {
       swalWithBootstrapTwoButtons
@@ -218,7 +214,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
 
 
   async allArchive() {
-    let tmp_ids = [];
+    const tmp_ids = [];
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
     }
@@ -240,7 +236,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   }
 
   async allActive() {
-    let tmp_ids = [];
+    const tmp_ids = [];
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
     }
@@ -255,7 +251,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   }
 
   async allInactive() {
-    let tmp_ids = [];
+    const tmp_ids = [];
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
     }

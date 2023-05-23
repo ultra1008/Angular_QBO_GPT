@@ -40,7 +40,7 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
   useremployeeinfo!: UntypedFormGroup;
   showHideExpiration: any = [];
   doc_controller = 0;
-  document_array = Array(Array());
+  document_array: any = [];
   sample_img = '/assets/images/image-gallery/logo.png';
 
   defalut_image: string = icon.MALE_PLACEHOLDER;
@@ -182,37 +182,36 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
   }
 
   async getOneUser() {
-    const that = this;
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ONE_USER, { _id: this.id });
     if (data.status) {
       const userData = data.data;
 
       if (userData.userpicture != "") {
         if (userData.usergender == 'Male') {
-          that.defalut_image = userData.userpicture;
+          this.defalut_image = userData.userpicture;
           if (userData.userpicture != icon.MALE_PLACEHOLDER) {
-            that.defalut_female_image = userData.userpicture;
+            this.defalut_female_image = userData.userpicture;
           }
         }
         if (userData.usergender == 'Female') {
-          that.defalut_female_image = userData.userpicture;
+          this.defalut_female_image = userData.userpicture;
           if (userData.userpicture != icon.FEMALE_PLACEHOLDER) {
-            that.defalut_image = userData.userpicture;
+            this.defalut_image = userData.userpicture;
           }
         }
       }
 
       if (userData.usermobile_picture != "") {
         if (userData.usergender == 'Male') {
-          that.defalut_image_mobile = userData.usermobile_picture;
+          this.defalut_image_mobile = userData.usermobile_picture;
           if (userData.usermobile_picture != icon.MALE_PLACEHOLDER) {
-            that.defalut_female_image_mobile = userData.usermobile_picture;
+            this.defalut_female_image_mobile = userData.usermobile_picture;
           }
         }
         if (userData.usergender == 'Female') {
-          that.defalut_female_image_mobile = userData.usermobile_picture;
+          this.defalut_female_image_mobile = userData.usermobile_picture;
           if (userData.usermobile_picture != icon.FEMALE_PLACEHOLDER) {
-            that.defalut_image_mobile = userData.usermobile_picture;
+            this.defalut_image_mobile = userData.usermobile_picture;
           }
         }
       }
@@ -222,8 +221,8 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
         complianceOfficer = userData.compliance_officer.toString();
       }
 
-      that.userfullName = '- ' + userData.userfullname;
-      that.userpersonalinfo = that.formBuilder.group({
+      this.userfullName = '- ' + userData.userfullname;
+      this.userpersonalinfo = this.formBuilder.group({
         username: [userData.username, Validators.required],
         usermiddlename: [userData.usermiddlename],
         userlastname: [userData.userlastname, Validators.required],
@@ -242,16 +241,16 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
         usersDocument: new FormArray([]),
       });
 
-      /* if (that.role_name == configdata.ROLE_ADMIN) {
-        that.userpersonalinfo.get('userroleId')!.setValidators([Validators.required]);
-        that.userpersonalinfo.get('userroleId')!.updateValueAndValidity();
+      /* if (this.role_name == configdata.ROLE_ADMIN) {
+        this.userpersonalinfo.get('userroleId')!.setValidators([Validators.required]);
+        this.userpersonalinfo.get('userroleId')!.updateValueAndValidity();
       } else {
-        that.is_role_disabled = true;
+        this.is_role_disabled = true;
       }
       if (userData.is_first) {
-        that.is_role_disabled = true;
+        this.is_role_disabled = true;
       } */
-      that.usercontactinfo = that.formBuilder.group({
+      this.usercontactinfo = this.formBuilder.group({
         userphone: [userData.userphone],
         usersecondary_email: [userData.usersecondary_email, [Validators.email]],
         userstreet1: [userData.userstreet1],
@@ -262,7 +261,7 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
         usercountry: [userData.usercountry]
       });
 
-      that.useremployeeinfo = that.formBuilder.group({
+      this.useremployeeinfo = this.formBuilder.group({
         usersalary: [userData.usersalary, Validators.required],
         userstartdate: [userData.userstartdate],
         usermanager_id: [userData.usermanager_id],
@@ -279,9 +278,9 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
         user_languages: [userData.user_languages],
       });
 
-      that.useremployeeinfo.get("usersalary")?.setValue(numberWithCommas(userData.usersalary.toFixed(2)));
+      this.useremployeeinfo.get("usersalary")?.setValue(numberWithCommas(userData.usersalary.toFixed(2)));
 
-      /* that.idcardinfo = that.formBuilder.group({
+      /* this.idcardinfo = this.formBuilder.group({
         show_id_card_on_qrcode_scan: [userData.show_id_card_on_qrcode_scan],
       }); */
     }
@@ -375,24 +374,23 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
   }
 
   async sendUserPassword() {
-    const that = this;
-    const req_temp = that.userpersonalinfo.value;
+    const req_temp = this.userpersonalinfo.value;
     if (req_temp.password == "" || req_temp.password == null || req_temp.password == undefined) {
       showNotification(this.snackBar, 'Please enter temporary password', 'error');
     } else {
-      that.uiSpinner.spin$.next(true);
+      this.uiSpinner.spin$.next(true);
       const reqObject = {
         password: req_temp.password,
         useremail: req_temp.useremail
       };
       const data = await this.commonService.postRequestAPI(httpversion.V1 + httproutes.SAVE_USER_PASSWORD, reqObject);
       if (data.status) {
-        that.uiSpinner.spin$.next(false);
-        showNotification(that.snackBar, data.message, 'success');
-        that.userpersonalinfo.get("password")?.setValue("");
+        this.uiSpinner.spin$.next(false);
+        showNotification(this.snackBar, data.message, 'success');
+        this.userpersonalinfo.get("password")?.setValue("");
       } else {
-        that.uiSpinner.spin$.next(false);
-        showNotification(that.snackBar, data.message, 'error');
+        this.uiSpinner.spin$.next(false);
+        showNotification(this.snackBar, data.message, 'error');
       }
     }
   }
@@ -458,23 +456,22 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
   }
 
   async saveUser() {
-    const that = this;
-    if (that.userpersonalinfo.valid && that.useremployeeinfo.valid && that.usercontactinfo.valid) {
-      // let usersDocument = that.userpersonalinfo.value.usersDocument || [];
-      delete that.userpersonalinfo.value.usersDocument;
+    if (this.userpersonalinfo.valid && this.useremployeeinfo.valid && this.usercontactinfo.valid) {
+      // let usersDocument = this.userpersonalinfo.value.usersDocument || [];
+      delete this.userpersonalinfo.value.usersDocument;
       let reqObject = {
-        ...that.userpersonalinfo.value,
-        ...that.useremployeeinfo.value,
+        ...this.userpersonalinfo.value,
+        ...this.useremployeeinfo.value,
         usersalary: this.useremployeeinfo.value.usersalary.toString().replace(/,/g, ""),
-        ...that.usercontactinfo.value
+        ...this.usercontactinfo.value
       };
-      reqObject.userpicture = that.sample_img;
+      reqObject.userpicture = this.sample_img;
 
       reqObject.allow_for_projects = String(reqObject.allow_for_projects);
 
-      const department_name = that.db_Departmaents.find((dpt: any) => { return dpt._id == reqObject.userdepartment_id; });
-      const jobtitle_name = that.db_jobtitle.find((dpt: any) => { return dpt._id == reqObject.userjob_title_id; });
-      const costcode_name = that.db_costcodes.find((dpt: any) => { return dpt._id == reqObject.usercostcode; });
+      const department_name = this.db_Departmaents.find((dpt: any) => { return dpt._id == reqObject.userdepartment_id; });
+      const jobtitle_name = this.db_jobtitle.find((dpt: any) => { return dpt._id == reqObject.userjob_title_id; });
+      const costcode_name = this.db_costcodes.find((dpt: any) => { return dpt._id == reqObject.usercostcode; });
 
       reqObject.department_name = department_name != undefined ? department_name.department_name : "";
       reqObject.jobtitle_name = jobtitle_name != undefined ? jobtitle_name.job_title_name : "";
@@ -482,9 +479,9 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
 
       reqObject.userfullname = reqObject.username + " " + reqObject.usermiddlename + " " + reqObject.userlastname;
       reqObject.userfulladdress = reqObject.userstreet1 + "," + reqObject.userstreet2 + "," + reqObject.usercity + "," + reqObject.user_state + reqObject.user_state + "-" + reqObject.userzipcode;
-      reqObject = await that.removeEmptyOrNull(reqObject);
+      reqObject = await this.removeEmptyOrNull(reqObject);
       const formData = new FormData();
-      formData.append('file', that.filepath);
+      formData.append('file', this.filepath);
       formData.append('reqObject', JSON.stringify(reqObject));
       const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_USER, formData);
       if (data.status) {
@@ -499,8 +496,7 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
   }
 
   async savePersonalInfo() {
-    const that = this;
-    const tmp_data_emp_info = that.useremployeeinfo.value;
+    const tmp_data_emp_info = this.useremployeeinfo.value;
     this.userpersonalinfo.markAllAsTouched();
     if (this.userpersonalinfo.valid) {
       this.uiSpinner.spin$.next(true);
@@ -524,16 +520,16 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
         formData.append('file', this.filepath);
       } else {
         if (reqObject.usergender == 'Male') {
-          reqObject.userpicture = that.defalut_image;
+          reqObject.userpicture = this.defalut_image;
         } else {
-          reqObject.userpicture = that.defalut_female_image;
+          reqObject.userpicture = this.defalut_female_image;
         }
       }
-      if (!that.change_mobile_pic) {
+      if (!this.change_mobile_pic) {
         if (reqObject.usergender == 'Male') {
-          reqObject.usermobile_picture = that.defalut_image_mobile;
+          reqObject.usermobile_picture = this.defalut_image_mobile;
         } else {
-          reqObject.usermobile_picture = that.defalut_female_image_mobile;
+          reqObject.usermobile_picture = this.defalut_female_image_mobile;
         }
       }
       formData.append("_id", this.id);
@@ -541,33 +537,32 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
 
       const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_USER_PERSONAL_INFO, formData);
       if (data.status) {
-        if (that.change_mobile_pic) {
+        if (this.change_mobile_pic) {
           const formData_new = new FormData();
-          formData_new.append('file', that.filepath_Mobile);
+          formData_new.append('file', this.filepath_Mobile);
           formData_new.append("_id", this.id);
           const data_new = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_USER_MOBILE_PIC, formData_new);
           if (data_new.status) {
             showNotification(this.snackBar, data_new.message, 'success');
-            that.uiSpinner.spin$.next(false);
-            that.back();
+            this.uiSpinner.spin$.next(false);
+            this.back();
           } else {
             showNotification(this.snackBar, data_new.message, 'success');
-            that.uiSpinner.spin$.next(false);
+            this.uiSpinner.spin$.next(false);
           }
         } else {
           showNotification(this.snackBar, data.message, 'success');
-          that.uiSpinner.spin$.next(false);
-          that.back();
+          this.uiSpinner.spin$.next(false);
+          this.back();
         }
       } else {
         showNotification(this.snackBar, data.message, 'error');
-        that.uiSpinner.spin$.next(false);
+        this.uiSpinner.spin$.next(false);
       }
     }
   }
 
   async saveContactInfo() {
-    const that = this;
     const reqObject = this.usercontactinfo.value;
     this.usercontactinfo.markAllAsTouched();
     if (this.usercontactinfo.valid) {
@@ -576,17 +571,16 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
       const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_USER_CONTACT_INFO, reqObject);
       if (data.status) {
         showNotification(this.snackBar, data.message, 'success');
-        that.uiSpinner.spin$.next(false);
-        that.back();
+        this.uiSpinner.spin$.next(false);
+        this.back();
       } else {
         showNotification(this.snackBar, data.message, 'error');
-        that.uiSpinner.spin$.next(false);
+        this.uiSpinner.spin$.next(false);
       }
     }
   }
 
   async saveEmployeeInfo() {
-    const that = this;
     this.useremployeeinfo.markAllAsTouched();
     if (this.useremployeeinfo.valid) {
       const reqObject = {
@@ -608,16 +602,16 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
       const role_name_tmp = this.db_roles.find((dpt: any) => { return dpt._id == reqObject.userroleId; });
       reqObject.role_name = role_name_tmp != undefined ? role_name_tmp.role_name : "";
 
-      // reqObject.userqrcode = that.user_data.userqrcode;
+      // reqObject.userqrcode = this.user_data.userqrcode;
       this.uiSpinner.spin$.next(true);
       const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_USER_INFO, reqObject);
       if (data.status) {
         showNotification(this.snackBar, data.message, 'success');
-        that.uiSpinner.spin$.next(false);
-        that.back();
+        this.uiSpinner.spin$.next(false);
+        this.back();
       } else {
         showNotification(this.snackBar, data.message, 'error');
-        that.uiSpinner.spin$.next(false);
+        this.uiSpinner.spin$.next(false);
       }
     }
   }
