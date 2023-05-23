@@ -4,6 +4,7 @@ import { VendorsListComponent } from './vendors-list/vendors-list.component';
 import { VendorFormComponent } from './vendor-form/vendor-form.component';
 import { VendorHistoryComponent } from './vendor-history/vendor-history.component';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { VendorGridComponent } from './vendor-grid/vendor-grid.component';
 
 const routes: Routes = [
   {
@@ -17,6 +18,10 @@ const routes: Routes = [
   {
     path: WEB_ROUTES.HISTORY,
     component: VendorHistoryComponent
+  },
+  {
+    path: WEB_ROUTES.GRID,
+    component: VendorGridComponent
   },
 ];
 

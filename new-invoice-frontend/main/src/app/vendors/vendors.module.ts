@@ -34,12 +34,17 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatListModule } from '@angular/material/list';
 import { MatSelectFilterModule } from 'mat-select-filter';
 import { TranslateModule } from '@ngx-translate/core';
+import { VendorGridComponent } from './vendor-grid/vendor-grid.component';
+import { VendorListFilterPipe, VendorListFilterStatusPipe } from './vendors-filter.pipe';
 @NgModule({
   declarations: [
     VendorsListComponent,
     VendorFormComponent,
     VendorHistoryComponent,
-    VendorReportComponent
+    VendorReportComponent,
+    VendorGridComponent,
+    VendorListFilterStatusPipe,
+    VendorListFilterPipe
   ],
   providers: [VendorsService],
   imports: [
