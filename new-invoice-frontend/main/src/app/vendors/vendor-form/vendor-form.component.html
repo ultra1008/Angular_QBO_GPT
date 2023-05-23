@@ -39,69 +39,61 @@
                     <div class="body">
                         <form class="register-form m-4" [formGroup]="vendorForm">
                             <div class="row">
-                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2" style="font-size: 12px;">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <!-- <mat-label>{{'VENDOR.ADD_EDIT.VENDOR_NAME' | translate}}</mat-label> -->
+                                        <mat-label>{{'VENDOR.ADD_EDIT.VENDOR_NAME' | translate}}</mat-label>
                                         <input matInput formControlName="vendor_name"
-                                            placeholder="{{'VENDOR.ADD_EDIT.VENDOR_NAME' | translate}}"
                                             style="text-transform:capitalize !important;" required>
+
                                     </mat-form-field>
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <!-- <mat-label>{{'VENDOR.ADD_EDIT.PHONE' | translate}}</mat-label> -->
-                                        <input placeholder="{{'VENDOR.ADD_EDIT.PHONE' | translate}}" required
-                                            formControlName="vendor_phone" matInput mask="(000) 000 0000" />
+                                        <mat-label>{{'VENDOR.ADD_EDIT.PHONE' | translate}}</mat-label>
+                                        <input required formControlName="vendor_phone" matInput mask="(000) 000 0000" />
                                     </mat-form-field>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <!-- <mat-label>{{'VENDOR.ADD_EDIT.EMAIL' | translate}}</mat-label> -->
-                                        <input placeholder="{{'VENDOR.ADD_EDIT.EMAIL' | translate}}"
-                                            placeholder="{{'VENDOR.ADD_EDIT.EMAIL' | translate}}" matInput
-                                            formControlName="vendor_email" required>
+                                        <mat-label>{{'VENDOR.ADD_EDIT.EMAIL' | translate}}</mat-label>
+                                        <input matInput formControlName="vendor_email" required>
                                     </mat-form-field>
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <!-- <mat-label>{{'VENDOR.ADD_EDIT.GL_ACCOUNTS' | translate}}</mat-label> -->
-                                        <input placeholder="{{'VENDOR.ADD_EDIT.GL_ACCOUNTS' | translate}}" matInput
-                                            formControlName="gl_account">
+                                        <mat-label>{{'VENDOR.ADD_EDIT.GL_ACCOUNTS' | translate}}</mat-label>
+                                        <input matInput formControlName="gl_account">
                                     </mat-form-field>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <!-- <mat-label>{{'VENDOR.ADD_EDIT.VENDOR_ID' | translate}}</mat-label> -->
-                                        <input placeholder="{{'VENDOR.ADD_EDIT.VENDOR_ID' | translate}}" matInput
-                                            formControlName="vendor_id">
+                                        <mat-label>{{'VENDOR.ADD_EDIT.VENDOR_ID' | translate}}</mat-label>
+                                        <input matInput formControlName="vendor_id">
                                     </mat-form-field>
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <!-- <mat-label>{{'VENDOR.ADD_EDIT.CUSTOMER_ID' | translate}}</mat-label> -->
-                                        <input placeholder="{{'VENDOR.ADD_EDIT.CUSTOMER_ID' | translate}}" matInput
-                                            formControlName="customer_id">
+                                        <mat-label>{{'VENDOR.ADD_EDIT.CUSTOMER_ID' | translate}}</mat-label>
+                                        <input matInput formControlName="customer_id">
                                     </mat-form-field>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <!-- <mat-label>{{'VENDOR.ADD_EDIT.ADDRESS' | translate}}</mat-label> -->
-                                        <input placeholder="{{'VENDOR.ADD_EDIT.ADDRESS' | translate}}"
-                                            style="text-transform:capitalize !important;" matInput
+                                        <mat-label>{{'VENDOR.ADD_EDIT.ADDRESS' | translate}}</mat-label>
+                                        <input style="text-transform:capitalize !important;" matInput
                                             formControlName="vendor_address">
                                     </mat-form-field>
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <!-- <mat-label>{{'VENDOR.ADD_EDIT.ADDRESS2' | translate}}</mat-label> -->
-                                        <input placeholder="{{'VENDOR.ADD_EDIT.ADDRESS2' | translate}}"
-                                            style="text-transform:capitalize !important;" matInput
+                                        <mat-label>{{'VENDOR.ADD_EDIT.ADDRESS2' | translate}}</mat-label>
+                                        <input style="text-transform:capitalize !important;" matInput
                                             formControlName="vendor_address2">
                                     </mat-form-field>
                                 </div>
@@ -109,32 +101,29 @@
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <!-- <mat-label>{{'VENDOR.ADD_EDIT.CITY' | translate}}</mat-label> -->
-                                        <input placeholder="{{'VENDOR.ADD_EDIT.CITY' | translate}}"
-                                            style="text-transform:capitalize !important;" matInput
+                                        <mat-label>{{'VENDOR.ADD_EDIT.CITY' | translate}}</mat-label>
+                                        <input style="text-transform:capitalize !important;" matInput
                                             formControlName="vendor_city" required>
                                     </mat-form-field>
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <!-- <mat-label>{{'VENDOR.ADD_EDIT.STATE' | translate}}</mat-label> -->
-                                        <input placeholder="{{'VENDOR.ADD_EDIT.STATE' | translate}}" matInput
-                                            style="text-transform:capitalize !important;" formControlName="vendor_state"
-                                            required>
+                                        <mat-label>{{'VENDOR.ADD_EDIT.STATE' | translate}}</mat-label>
+                                        <input matInput style="text-transform:capitalize !important;"
+                                            formControlName="vendor_state" required>
                                     </mat-form-field>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <!-- <mat-label>{{'VENDOR.ADD_EDIT.ZIP_CODE' | translate}}</mat-label> -->
-                                        <input placeholder="{{'VENDOR.ADD_EDIT.ZIP_CODE' | translate}}" matInput
-                                            formControlName="vendor_zipcode" required>
+                                        <mat-label>{{'VENDOR.ADD_EDIT.ZIP_CODE' | translate}}</mat-label>
+                                        <input matInput formControlName="vendor_zipcode" required>
                                     </mat-form-field>
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <!-- <mat-label>{{'VENDOR.ADD_EDIT.COUNTRY' | translate}}</mat-label> -->
+                                        <mat-label>{{'VENDOR.ADD_EDIT.COUNTRY' | translate}}</mat-label>
                                         <mat-select formControlName="vendor_country">
                                             <mat-option *ngFor="let country of countryList" [value]="country._id">
                                                 {{country.name}}
@@ -146,9 +135,8 @@
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <!-- <mat-label>{{'VENDOR.ADD_EDIT.TERMS' | translate}}</mat-label> -->
-                                        <mat-select formControlName="vendor_terms "
-                                            placeholder="{{'VENDOR.ADD_EDIT.TERMS' | translate}}">
+                                        <mat-label>{{'VENDOR.ADD_EDIT.TERMS' | translate}}</mat-label>
+                                        <mat-select formControlName="vendor_terms" style="font-size: 12px;">
                                             <mat-select-filter #termListSelect [placeholder]="'Filter'"
                                                 [displayMember]="'name'" [array]="variablestermList"
                                                 (filteredReturn)="termsList =$event">
@@ -161,9 +149,8 @@
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <!-- <mat-label>{{'VENDOR.ADD_EDIT.STATUS' | translate}}</mat-label> -->
-                                        <mat-select placeholder="{{'VENDOR.ADD_EDIT.STATUS' | translate}}"
-                                            formControlName="vendor_status">
+                                        <mat-label>{{'VENDOR.ADD_EDIT.STATUS' | translate}}</mat-label>
+                                        <mat-select formControlName="vendor_status">
                                             <mat-option [value]="1">
                                                 Active
                                             </mat-option>
@@ -174,12 +161,13 @@
                                     </mat-form-field>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row form-old">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                                    <mat-form-field class="example-full-width" appearance="outline">
-                                        <!-- <mat-label>{{'VENDOR.ADD_EDIT.DESCRIPTION' | translate}}</mat-label> -->
-                                        <textarea placeholder="{{'VENDOR.ADD_EDIT.DESCRIPTION' | translate}}" matInput
-                                            style="height: auto !important;"
+                                    <mat-form-field class="example-full-width" appearance="outline"
+                                        style="height: auto !important;">
+                                        <mat-label
+                                            style="height: auto !important;">{{'VENDOR.ADD_EDIT.DESCRIPTION' | translate}}</mat-label>
+                                        <textarea matInput style="height: auto !important;"
                                             formControlName="vendor_description"></textarea>
                                     </mat-form-field>
                                 </div>
