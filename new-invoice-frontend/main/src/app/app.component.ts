@@ -27,7 +27,7 @@ export class AppComponent {
     buttonsStyling: false,
   });
 
-  constructor(public translate: TranslateService, public _router: Router, private idle: Idle, private keepalive: Keepalive) {
+  constructor (public translate: TranslateService, public _router: Router, private idle: Idle, private keepalive: Keepalive) {
     this.translate.addLangs(['en', 'es']);
     this.translate.setDefaultLang('en');
     this._router.events.subscribe((routerEvent: Event) => {
@@ -43,14 +43,14 @@ export class AppComponent {
     });
 
     // sets an idle timeout of 5 seconds, for testing purposes.
-    idle.setIdle(1800); // 60 x 30 = 30 min
+    idle.setIdle(60); // 60 x 30 = 30 min
     // sets a timeout period of 5 seconds. after 10 seconds of inactivity, the user will be considered timed out.
     idle.setTimeout(5);
     // sets the default interrupts, in this case, things like clicks, scrolls, touches to the document
     idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
 
     idle.onIdleEnd.subscribe(() => {
-      this.idleState = 'No longer idle.'
+      this.idleState = 'No longer idle.';
       console.log(this.idleState);
       this.reset();
     });
@@ -65,7 +65,7 @@ export class AppComponent {
     });
 
     idle.onIdleStart.subscribe(() => {
-      this.idleState = 'You\'ve gone idle!'
+      this.idleState = 'You\'ve gone idle!';
       console.log(this.idleState);
 
       //display diaglog here
@@ -95,7 +95,7 @@ export class AppComponent {
     });
 
     idle.onTimeoutWarning.subscribe((countdown) => {
-      this.idleState = 'You will time out in ' + countdown + ' seconds!'
+      this.idleState = 'You will time out in ' + countdown + ' seconds!';
       console.log(this.idleState);
     });
 

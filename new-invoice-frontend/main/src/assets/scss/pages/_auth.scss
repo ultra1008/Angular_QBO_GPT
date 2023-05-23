@@ -1,6 +1,7 @@
 .auth-container {
   height: 100%;
   width: 100%;
+
   .auth-main {
     height: 100%;
     width: 100%;
@@ -35,13 +36,16 @@
   h1 {
     color: #fff;
   }
+
   p {
     color: #fff;
   }
 }
+
 .auth-form-section {
   background-color: #fff;
 }
+
 .auth-form-btn {
   display: flex;
   justify-content: center;
@@ -49,10 +53,12 @@
   height: 50px !important;
   border-radius: 10px;
   cursor: pointer;
+
   button {
     width: 100%;
   }
 }
+
 .form-section {
   display: flex;
   flex-direction: column;
@@ -60,6 +66,7 @@
   justify-content: center;
   height: 100%;
 }
+
 .auth-signup-text {
   font-size: 18px;
   color: #000;
@@ -67,20 +74,24 @@
   width: 410px;
   max-width: 100%;
 }
+
 .sign-up-link {
   color: #3699ff;
   font-size: 20px !important;
   margin: 0px 10px;
 }
+
 .auth-wrapper {
   width: 410px;
   max-width: 100%;
   margin-top: auto;
   margin-bottom: auto;
 }
+
 .login-title {
   margin-bottom: 20px;
 }
+
 .social-login-title {
   font-size: 15px;
   color: #919aa3;
@@ -104,11 +115,14 @@
     background-position: center right;
   }
 }
+
 .welcome-msg {
   font-weight: 500;
 }
+
 .social-icon {
   text-align: center;
+
   li a {
     color: #3c4858;
     border: 1px solid #3c4858;
@@ -120,6 +134,7 @@
     transition: all 0.4s ease;
     overflow: hidden;
     position: relative;
+
     &:hover {
       background-color: #2f55d4;
       border-color: #2f55d4 !important;
@@ -127,17 +142,21 @@
     }
   }
 }
+
 .sm-icon {
   height: 16px !important;
   width: 16px !important;
 }
+
 .show-pwd-icon {
   color: rgba(0, 0, 0, 0.55);
   padding: 12px;
 }
+
 .face-icon {
   color: rgba(0, 0, 0, 0.55);
 }
+
 .auth-locked {
   font-size: 60px;
   color: #333;
@@ -145,12 +164,15 @@
   height: 120px;
   background-color: transparent;
   margin: 0 auto;
+
   img {
     width: 100px;
+    height: 100px;
     border-radius: 50%;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
   }
 }
+
 .auth-locked-title {
   font-size: 30px;
   font-family: Poppins, sans-serif;
@@ -160,6 +182,7 @@
   width: 100%;
   display: block;
 }
+
 .error-header {
   font-size: 80px;
   line-height: 1.2;
@@ -170,6 +193,7 @@
   display: block;
   font-weight: 700;
 }
+
 .error-subheader {
   font-size: 17px;
   color: #403866;
@@ -179,6 +203,7 @@
   display: block;
   font-weight: 700;
 }
+
 .error-subheader2 {
   font-size: 12px;
   color: #919192;
