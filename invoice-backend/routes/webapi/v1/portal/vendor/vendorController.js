@@ -242,10 +242,11 @@ module.exports.getVendor = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
     if (decodedToken) {
+        var requestObject = req.body;
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
-            var getdata = await vendorConnection.find({ is_delete: 0 });
+            var getdata = await vendorConnection.find({ is_delete: requestObject.is_delete });
             if (getdata) {
                 res.send({ status: true, message: "Vendor data", data: getdata });
             } else {
