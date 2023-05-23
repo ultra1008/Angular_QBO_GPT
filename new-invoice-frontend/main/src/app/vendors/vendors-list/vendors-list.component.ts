@@ -23,6 +23,8 @@ import { VendorReportComponent } from '../vendor-report/vendor-report.component'
 import { WEB_ROUTES } from 'src/consts/routes';
 import { TranslateService } from '@ngx-translate/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { httproutes, httpversion } from 'src/consts/httproutes';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-vendors-list',
@@ -63,9 +65,9 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
 
 
 
-  constructor(
+  constructor (
     public httpClient: HttpClient, private httpCall: HttpCall,
-    public dialog: MatDialog,
+    public dialog: MatDialog, private commonService: CommonService,
     public vendorTableService: VendorsService,
     private snackBar: MatSnackBar, private router: Router, public translate: TranslateService,
     private fb: UntypedFormBuilder,
@@ -220,7 +222,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
     }
-    const data = await this.vendorTableService.allDeleteVendor({ _id: tmp_ids, is_delete: 1 });
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_ALL_DELETE, { _id: tmp_ids, is_delete: 1 });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       this.refresh();
@@ -242,7 +244,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
     }
-    const data = await this.vendorTableService.updateAllVendorStatus({ _id: tmp_ids, vendor_status: 1 });
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_ALL_VENDOR_STATUS_UPDATE, { _id: tmp_ids, vendor_status: 1 });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       this.refresh();
@@ -257,7 +259,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
     }
-    const data = await this.vendorTableService.updateAllVendorStatus({ _id: tmp_ids, vendor_status: 2 });
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_ALL_VENDOR_STATUS_UPDATE, { _id: tmp_ids, vendor_status: 2 });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       this.refresh();
@@ -355,7 +357,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     if (vendor.vendor_status == 1) {
       status = 2;
     }
-    const data = await this.vendorTableService.updateVendorStatus({ _id: vendor._id, vendor_status: status });
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_STATUS_UPDATE, { _id: vendor._id, vendor_status: status });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       const foundIndex = this.vendorService?.dataChange.value.findIndex(
@@ -371,7 +373,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   }
 
   async archiveRecover(vendor: Vendor, is_delete: number) {
-    const data = await this.vendorTableService.deleteVendor({ _id: vendor._id, is_delete: is_delete });
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_DELETE, { _id: vendor._id, is_delete: is_delete });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       const foundIndex = this.vendorService?.dataChange.value.findIndex(
@@ -427,7 +429,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   }
 
   async getTerms() {
-    const data = await this.vendorService?.getTerms();
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_TERM_GET);
     if (data.status) {
       this.termsList = data.data;
     }
@@ -458,7 +460,7 @@ export class VendorDataSource extends DataSource<Vendor> {
   }
   filteredData: Vendor[] = [];
   renderedData: Vendor[] = [];
-  constructor(
+  constructor (
     public vendorService: VendorsService,
     public paginator: MatPaginator,
     public _sort: MatSort,

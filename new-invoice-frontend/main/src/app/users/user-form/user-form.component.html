@@ -59,11 +59,11 @@
                                                                                                alt="" />
                                                                                      </ng-container>
                                                                                      <ng-template #elseTemplate>
-                                                                                          <img *ngIf="userpersonalinfo.get('usergender')?.value != 'Female'"
+                                                                                          <img *ngIf="userpersonalinfo.get('usergender')?.value !== 'Female'"
                                                                                                src="{{defalut_image}}"
                                                                                                class="circular--landscape img"
                                                                                                alt="">
-                                                                                          <img *ngIf="userpersonalinfo.get('usergender')?.value == 'Female'"
+                                                                                          <img *ngIf="userpersonalinfo.get('usergender')?.value === 'Female'"
                                                                                                src="{{defalut_female_image}}"
                                                                                                class="circular--landscape img"
                                                                                                alt="">
@@ -84,11 +84,11 @@
                                                                                                alt="" />
                                                                                      </ng-container>
                                                                                      <ng-template #elseTemplate_Mobile>
-                                                                                          <img *ngIf="userpersonalinfo.get('usergender')?.value != 'Female'"
+                                                                                          <img *ngIf="userpersonalinfo.get('usergender')?.value !== 'Female'"
                                                                                                src="{{defalut_image_mobile}}"
                                                                                                class="circular--landscape img"
                                                                                                alt="">
-                                                                                          <img *ngIf="userpersonalinfo.get('usergender')?.value == 'Female'"
+                                                                                          <img *ngIf="userpersonalinfo.get('usergender')?.value === 'Female'"
                                                                                                src="{{defalut_female_image_mobile}}"
                                                                                                class="circular--landscape img"
                                                                                                alt="">
@@ -686,11 +686,11 @@
                                    </div>
                               </mat-step>
                               <ng-template matStepperIcon="edit" let-index="index">
-                                   <mat-icon *ngIf="index == 0" class="Icon-h">account_box</mat-icon>
-                                   <mat-icon *ngIf="index == 1" class="Icon-h">contact_phone</mat-icon>
-                                   <div *ngIf="index == 2" class="fa fa-address-card"></div>
-                                   <div *ngIf="index == 3" class="fa fa-address-card"></div>
-                                   <div *ngIf="index == 4" class="fa fa-address-card"></div>
+                                   <mat-icon *ngIf="index === 0" class="Icon-h">account_box</mat-icon>
+                                   <mat-icon *ngIf="index === 1" class="Icon-h">contact_phone</mat-icon>
+                                   <div *ngIf="index === 2" class="fa fa-address-card"></div>
+                                   <div *ngIf="index === 3" class="fa fa-address-card"></div>
+                                   <div *ngIf="index === 4" class="fa fa-address-card"></div>
                               </ng-template>
                               <ng-template matStepperIcon="person">
                                    <mat-icon class="Icon-h">account_box</mat-icon>

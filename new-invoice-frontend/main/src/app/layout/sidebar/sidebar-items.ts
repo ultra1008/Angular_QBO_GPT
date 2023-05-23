@@ -24,6 +24,17 @@ export const ROUTES: RouteInfo[] = [
     submenu: [],
   },
   {
+    path: WEB_ROUTES.CLIENT,
+    title: 'Client',
+    iconType: 'material-icons-two-tone',
+    icon: 'account_circle',
+    class: '',
+    groupTitle: false,
+    badge: '',
+    badgeClass: '',
+    submenu: [],
+  },
+  {
     path: 'invoice',
     title: 'Invoices',
     iconType: 'material-icons-two-tone',

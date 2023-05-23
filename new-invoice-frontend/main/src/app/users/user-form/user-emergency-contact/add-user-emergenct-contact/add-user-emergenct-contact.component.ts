@@ -3,8 +3,10 @@ import { FormBuilder, UntypedFormBuilder, UntypedFormGroup, Validators } from '@
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { CommonService } from 'src/app/services/common.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { UserService } from 'src/app/users/user.service';
+import { httproutes, httpversion } from 'src/consts/httproutes';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { showNotification, swalWithBootstrapButtons } from 'src/consts/utils';
 
@@ -25,7 +27,7 @@ export class AddUserEmergenctContactComponent implements OnInit {
 
   constructor (public uiSpinner: UiSpinnerService, public userService: UserService, private fb: UntypedFormBuilder,
     public route: ActivatedRoute, private router: Router, private formBuilder: FormBuilder, private snackBar: MatSnackBar,
-    public translate: TranslateService,) {
+    public translate: TranslateService, private commonService: CommonService) {
     this.id = this.route.snapshot.queryParamMap.get("_id");
     this.userId = this.route.snapshot.queryParamMap.get("user_id");
 
@@ -52,7 +54,7 @@ export class AddUserEmergenctContactComponent implements OnInit {
   }
 
   async getOneEmergencyContact() {
-    const data = await this.userService.getOneEmergencyContact({ _id: this.id });
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ONE_EMERGENCY_CONTACT, { _id: this.id });
     this.form = this.formBuilder.group({
       emergency_contact_name: [data.data.emergency_contact_name, Validators.required],
       emergency_contact_relation: [data.data.emergency_contact_relation, Validators.required],
@@ -69,7 +71,7 @@ export class AddUserEmergenctContactComponent implements OnInit {
   }
 
   async getRelationship() {
-    const data = await this.userService.getRelationship();
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_RELATIONSHIP);
     if (data.status) {
       this.variablesRelationshipList = data.data;
       this.relationshipList = this.variablesRelationshipList.slice();
@@ -84,7 +86,7 @@ export class AddUserEmergenctContactComponent implements OnInit {
       }
       reqObject.emergency_contact_userid = this.userId;
       this.uiSpinner.spin$.next(true);
-      const data = await this.userService.saveEmergencyContact(reqObject);
+      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_EMERGENCY_CONTACT, reqObject);
       if (data.status) {
         showNotification(this.snackBar, data.message, 'success');
         this.uiSpinner.spin$.next(false);

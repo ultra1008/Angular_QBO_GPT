@@ -18,7 +18,11 @@ import { fakeBackendProvider } from './core/interceptor/fake-backend';
 import { ErrorInterceptor } from './core/interceptor/error.interceptor';
 import { JwtInterceptor } from './core/interceptor/jwt.interceptor';
 
-import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpClientModule,
+  HTTP_INTERCEPTORS,
+} from '@angular/common/http';
 
 import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
 import { NgScrollbarModule } from 'ngx-scrollbar';
@@ -32,6 +36,8 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LanguageComponent } from './layout/language/language.component';
 import { MatSelectModule } from '@angular/material/select';
+import { ClientComponent } from './client/client.component';
+import { ClientFormComponent } from './client/client-form/client-form.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +48,7 @@ import { MatSelectModule } from '@angular/material/select';
     RightSidebarComponent,
     AuthLayoutComponent,
     MainLayoutComponent,
-    LanguageComponent
+    LanguageComponent,
   ],
   imports: [
     BrowserModule,
@@ -64,9 +70,9 @@ import { MatSelectModule } from '@angular/material/select';
       loader: {
         provide: TranslateLoader,
         useFactory: httpTranslateLoader,
-        deps: [HttpClient]
-      }
-    })
+        deps: [HttpClient],
+      },
+    }),
   ],
   providers: [
     // { provide: LocationStrategy, useClass: HashLocationStrategy },
@@ -76,7 +82,7 @@ import { MatSelectModule } from '@angular/material/select';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
 // AOT compilation support
 export function httpTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http);

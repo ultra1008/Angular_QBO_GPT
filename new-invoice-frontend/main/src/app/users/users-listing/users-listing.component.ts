@@ -22,6 +22,8 @@ import { Direction } from '@angular/cdk/bidi';
 import { UserRestoreFormComponent } from '../user-restore-form/user-restore-form.component';
 import { UserReportComponent } from '../user-report/user-report.component';
 import { UntypedFormBuilder } from '@angular/forms';
+import { httproutes, httpversion } from 'src/consts/httproutes';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-users-listing',
@@ -65,6 +67,7 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
     public userTableService: UserService,
     public translate: TranslateService,
     private fb: UntypedFormBuilder,
+    private commonService: CommonService,
   ) {
     super();
   }
@@ -108,7 +111,6 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
     return row.department_name;
   }
   onBookChange(ob: any) {
-    console.log('Book changed...');
     const selectedBook = ob.value;
     console.log(selectedBook);
     if (selectedBook == 1) {
@@ -158,12 +160,11 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
     }
   }
   async allArchiveUser() {
-    console.log('call1');
     const tmp_ids = [];
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
     }
-    const data = await this.userTableService.allArchiveUser({ _id: tmp_ids, is_delete: 1 });
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_TERM_ALL_DELETE, { _id: tmp_ids, is_delete: 1 });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       this.refresh();
@@ -173,13 +174,12 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
   }
 
   async allUserActive() {
-    console.log('call2');
     const tmp_ids = [];
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
       console.log("tmp_ids", tmp_ids);
     }
-    const data = await this.userTableService.updateAllUserStatus({ _id: tmp_ids, userstatus: 1 });
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_USER_STATUS_UPDATE, { _id: tmp_ids, userstatus: 1 });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       this.refresh();
@@ -189,12 +189,11 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
   }
 
   async allUserInactive() {
-    console.log('call3');
     const tmp_ids = [];
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
     }
-    const data = await this.userTableService.updateAllUserStatus({ _id: tmp_ids, userstatus: 2 });
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_USER_STATUS_UPDATE, { _id: tmp_ids, userstatus: 2 });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       this.refresh();
@@ -205,12 +204,11 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
 
 
   async updateStatus(User: User) {
-    console.log("user", User);
     let status = 1;
     if (User.userstatus == 1) {
       status = 2;
     }
-    const data = await this.userTableService.updateStatus({ _id: User._id, userstatus: status });
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_ALL_USER_STATUS_CHANGE, { _id: User._id, userstatus: status });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       const foundIndex = this.userService?.dataChange.value.findIndex(
@@ -236,11 +234,8 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
       : this.dataSource.renderedData.forEach((row) =>
         this.selection.select(row)
       );
-    console.log('numRows123', this.selection.selected);
   }
   userReport() {
-    console.log("roleList", this.roleLists);
-
     const dialogRef = this.dialog.open(UserReportComponent, {
       width: '700px',
       data: {
@@ -295,10 +290,9 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
     this.loadData();
   }
   async getRole() {
-    const data = await this.userTableService.getRole();
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.USER_SETTING_ROLES_ALL);
     if (data.status) {
       this.roleLists = data.data;
-
     }
   }
 
@@ -307,7 +301,7 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
     this.router.navigate([WEB_ROUTES.USER_GRID]);
   }
   async archiveRecover(user: User, is_delete: number) {
-    const data = await this.userTableService.deleteUser({ _id: user._id, is_delete: is_delete });
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.USER_DELETE, { _id: user._id, is_delete: is_delete });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       const foundIndex = this.userService?.dataChange.value.findIndex(
@@ -351,7 +345,6 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
   }
 
   addNew(user: User) {
-    console.log("user", user);
     const _id = user._id;
     const dialogRef = this.dialog.open(UserRestoreFormComponent, {
       data: _id

@@ -1,6 +1,7 @@
 export enum WEB_ROUTES {
   SIDEMENU_DASHBOARD = 'dashboard',
   SIDEMENU_VENDOR = 'vendor',
+  SIDEMENU_CLIENT = 'client',
   SIDEMENU_INVOICES = 'invoice',
   SIDEMENU_DOCUMENTS = 'documents',
   SIDEMENU_REPORTS = 'reports',
@@ -10,12 +11,14 @@ export enum WEB_ROUTES {
   FORM = 'form',
   HISTORY = 'history',
   GRID = 'grid',
-
+  CLIENT = '/client',
   VENDOR = '/vendor',
   USER = '/user',
   USER_EMERGENCY_CONTACT = 'emergency-contact',
 
   CHANGE_PASSWORD = '/authentication/change-password',
+
+  CLIENT_FORM = '/client/form',
 
   VENDOR_FORM = '/vendor/form',
   VENDOR_ARCHIVE = '/vendor/archive',

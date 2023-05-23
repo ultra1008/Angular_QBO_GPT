@@ -12,6 +12,8 @@ import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { Location } from '@angular/common';
 import { icon } from 'src/consts/icon';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
+import { CommonService } from 'src/app/services/common.service';
+import { httproutes, httpversion } from 'src/consts/httproutes';
 @Component({
   selector: 'app-user-form',
   templateUrl: './user-form.component.html',
@@ -108,7 +110,8 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
   step_index = 0;
 
   constructor (private location: Location, public uiSpinner: UiSpinnerService, public UserService: UserService, private fb: UntypedFormBuilder,
-    public route: ActivatedRoute, private router: Router, private formBuilder: FormBuilder, private snackBar: MatSnackBar,) {
+    public route: ActivatedRoute, private router: Router, private formBuilder: FormBuilder, private snackBar: MatSnackBar,
+    private commonService: CommonService,) {
     super();
     this.id = this.route.snapshot.queryParamMap.get("_id");
     if (this.router.getCurrentNavigation()?.extras.state) {
@@ -120,7 +123,6 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
     this.getRole();
     this.getManeger();
     this.getLocation();
-    this.getSupervisor();
     this.getJobTitle();
     this.getAlljobtype();
     this.getAllDocumentType();
@@ -180,8 +182,8 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
   }
 
   async getOneUser() {
-    let that = this;
-    const data = await this.UserService.getOneUser(this.id);
+    const that = this;
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ONE_USER, { _id: this.id });
     if (data.status) {
       const userData = data.data;
 
@@ -277,7 +279,7 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
         user_languages: [userData.user_languages],
       });
 
-      that.useremployeeinfo.get("usersalary")!.setValue(numberWithCommas(userData.usersalary.toFixed(2)));
+      that.useremployeeinfo.get("usersalary")?.setValue(numberWithCommas(userData.usersalary.toFixed(2)));
 
       /* that.idcardinfo = that.formBuilder.group({
         show_id_card_on_qrcode_scan: [userData.show_id_card_on_qrcode_scan],
@@ -286,11 +288,11 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
   }
 
   amountChange(params: any) {
-    this.useremployeeinfo.get("usersalary")!.setValue(amountChange(params));
+    this.useremployeeinfo.get("usersalary")?.setValue(amountChange(params));
   }
 
   async getRole() {
-    const data = await this.UserService.getRole();
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.USER_SETTING_ROLES_ALL);
     if (data.status) {
       this.variablesRoleList = data.data;
       this.db_roles = this.variablesRoleList.slice();
@@ -298,24 +300,19 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
   }
 
   async getManeger() {
-    const data = await this.UserService.getManeger();
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ALL_USER);
     if (data.status) {
       this.variablesdb_manager_users = data.data;
       this.db_manager_users = this.variablesdb_manager_users.slice();
 
-    }
-  }
-
-  async getSupervisor() {
-    const data = await this.UserService.getSupervisor();
-    if (data.status) {
       this.variablesdb_supervisor_users = data.data;
       this.db_supervisor_users = this.variablesdb_supervisor_users.slice();
+
     }
   }
 
   async getLocation() {
-    const data = await this.UserService.getLocation();
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_LOCATION);
     if (data.status) {
       this.variablesdb_locations = data.data;
       this.db_locations = this.variablesdb_locations.slice();
@@ -323,7 +320,7 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
   }
 
   async getJobTitle() {
-    const data = await this.UserService.getJobTitle();
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_JOB_TITLE);
     if (data.status) {
       this.variablesdb_jobtitle = data.data;
       this.db_jobtitle = this.variablesdb_jobtitle.slice();
@@ -331,7 +328,7 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
   }
 
   async getAlljobtype() {
-    const data = await this.UserService.getAlljobtype();
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_JOB_TYPE);
     if (data.status) {
       this.variablesdb_jobtype = data.data;
       this.db_jobtype = this.variablesdb_jobtype.slice();
@@ -339,7 +336,7 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
   }
 
   async getAllDocumentType() {
-    const data = await this.UserService.getAllDocumentType();
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_DOCUMENT_TYPE);
     if (data.status) {
       this.variablesdb_Doc_types = data.data;
       this.db_Doc_types = this.variablesdb_Doc_types.slice();
@@ -347,7 +344,7 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
   }
 
   async getDepartment() {
-    const data = await this.UserService.getDepartment();
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_DEPARTMENT);
     if (data.status) {
       this.variablesdb_Departmaents = data.data;
       this.db_Departmaents = this.variablesdb_Departmaents.slice();
@@ -355,7 +352,7 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
   }
 
   async getLanguage() {
-    const data = await this.UserService.getLanguage();
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_LANGUAGE);
     if (data.status) {
       this.variableslanguageList = data.data;
       this.languageList = this.variableslanguageList.slice();
@@ -363,22 +360,22 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
   }
 
   language_change(event: any) {
-    let language = event.value;
-    this.useremployeeinfo.get("user_languages")!.setValue(language);
+    const language = event.value;
+    this.useremployeeinfo.get("user_languages")?.setValue(language);
   }
 
   openfilebox() {
-    let el: HTMLElement = this.OpenFilebox.nativeElement;
+    const el: HTMLElement = this.OpenFilebox.nativeElement;
     el.click();
   }
 
   openfilebox_mobile() {
-    let el: HTMLElement = this.OpenFilebox_mobile.nativeElement;
+    const el: HTMLElement = this.OpenFilebox_mobile.nativeElement;
     el.click();
   }
 
   async sendUserPassword() {
-    let that = this;
+    const that = this;
     const req_temp = that.userpersonalinfo.value;
     if (req_temp.password == "" || req_temp.password == null || req_temp.password == undefined) {
       showNotification(this.snackBar, 'Please enter temporary password', 'error');
@@ -388,7 +385,7 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
         password: req_temp.password,
         useremail: req_temp.useremail
       };
-      const data = await this.UserService.sendUserPassword(reqObject);
+      const data = await this.commonService.postRequestAPI(httpversion.V1 + httproutes.SAVE_USER_PASSWORD, reqObject);
       if (data.status) {
         that.uiSpinner.spin$.next(false);
         showNotification(that.snackBar, data.message, 'success');
@@ -401,7 +398,7 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
   }
 
   showHideExpirationDate(event: any, i: any) {
-    let found = this.db_Doc_types.find((element: any) => element._id == event);
+    const found = this.db_Doc_types.find((element: any) => element._id == event);
     this.showHideExpiration[i] = found.is_expiration;
   }
   documentChangeEvent(fileInput: any, index: any) {
@@ -454,33 +451,16 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
   }
 
   async savedata() {
-    let that = this;
     this.userpersonalinfo.markAllAsTouched();
     this.usercontactinfo.markAllAsTouched();
     this.useremployeeinfo.markAllAsTouched();
     this.saveUser();
-    // if (this.userpersonalinfo.valid && this.useremployeeinfo.valid && this.usercontactinfo.valid) {
-    //   swalWithBootstrapButtons.fire({
-    //     title: this.YOU_WANT_TO_ADD_SCHEDULE,
-    //     showDenyButton: true,
-    //     showCancelButton: false,
-    //     confirmButtonText: this.Compnay_Equipment_Delete_Yes,
-    //     denyButtonText: this.Compnay_Equipment_Delete_No,
-    //   }).then((result) => {
-    //     if (result.isConfirmed) {
-    //       this.openScheduleform({});
-    //     } else {
-    //       this.saveUserInDB("");
-    //     }
-
-    //   });
-    // }
   }
 
   async saveUser() {
-    let that = this;
+    const that = this;
     if (that.userpersonalinfo.valid && that.useremployeeinfo.valid && that.usercontactinfo.valid) {
-      let usersDocument = that.userpersonalinfo.value.usersDocument || [];
+      // let usersDocument = that.userpersonalinfo.value.usersDocument || [];
       delete that.userpersonalinfo.value.usersDocument;
       let reqObject = {
         ...that.userpersonalinfo.value,
@@ -492,9 +472,9 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
 
       reqObject.allow_for_projects = String(reqObject.allow_for_projects);
 
-      let department_name = that.db_Departmaents.find((dpt: any) => { return dpt._id == reqObject.userdepartment_id; });
-      let jobtitle_name = that.db_jobtitle.find((dpt: any) => { return dpt._id == reqObject.userjob_title_id; });
-      let costcode_name = that.db_costcodes.find((dpt: any) => { return dpt._id == reqObject.usercostcode; });
+      const department_name = that.db_Departmaents.find((dpt: any) => { return dpt._id == reqObject.userdepartment_id; });
+      const jobtitle_name = that.db_jobtitle.find((dpt: any) => { return dpt._id == reqObject.userjob_title_id; });
+      const costcode_name = that.db_costcodes.find((dpt: any) => { return dpt._id == reqObject.usercostcode; });
 
       reqObject.department_name = department_name != undefined ? department_name.department_name : "";
       reqObject.jobtitle_name = jobtitle_name != undefined ? jobtitle_name.job_title_name : "";
@@ -506,7 +486,7 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
       const formData = new FormData();
       formData.append('file', that.filepath);
       formData.append('reqObject', JSON.stringify(reqObject));
-      const data = await this.UserService.saveUsers(formData);
+      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_USER, formData);
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
@@ -519,7 +499,7 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
   }
 
   async savePersonalInfo() {
-    let that = this;
+    const that = this;
     const tmp_data_emp_info = that.useremployeeinfo.value;
     this.userpersonalinfo.markAllAsTouched();
     if (this.userpersonalinfo.valid) {
@@ -559,13 +539,13 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
       formData.append("_id", this.id);
       formData.append('reqObject', JSON.stringify(reqObject));
 
-      const data = await this.UserService.saveUserPersonalInfo(formData);
+      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_USER_PERSONAL_INFO, formData);
       if (data.status) {
         if (that.change_mobile_pic) {
           const formData_new = new FormData();
           formData_new.append('file', that.filepath_Mobile);
           formData_new.append("_id", this.id);
-          const data_new = await this.UserService.saveUserMobilePicInfo(formData_new);
+          const data_new = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_USER_MOBILE_PIC, formData_new);
           if (data_new.status) {
             showNotification(this.snackBar, data_new.message, 'success');
             that.uiSpinner.spin$.next(false);
@@ -587,13 +567,13 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
   }
 
   async saveContactInfo() {
-    let that = this;
+    const that = this;
     const reqObject = this.usercontactinfo.value;
     this.usercontactinfo.markAllAsTouched();
     if (this.usercontactinfo.valid) {
       reqObject._id = this.id;
       this.uiSpinner.spin$.next(true);
-      const data = await this.UserService.saveUserContactInfo(reqObject);
+      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_USER_CONTACT_INFO, reqObject);
       if (data.status) {
         showNotification(this.snackBar, data.message, 'success');
         that.uiSpinner.spin$.next(false);
@@ -606,7 +586,7 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
   }
 
   async saveEmployeeInfo() {
-    let that = this;
+    const that = this;
     this.useremployeeinfo.markAllAsTouched();
     if (this.useremployeeinfo.valid) {
       const reqObject = {
@@ -630,7 +610,7 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
 
       // reqObject.userqrcode = that.user_data.userqrcode;
       this.uiSpinner.spin$.next(true);
-      const data = await this.UserService.saveUserInfo(reqObject);
+      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_USER_INFO, reqObject);
       if (data.status) {
         showNotification(this.snackBar, data.message, 'success');
         that.uiSpinner.spin$.next(false);

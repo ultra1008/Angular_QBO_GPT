@@ -178,4 +178,7 @@ export enum httproutes {
   //role
   SETTING_ROLES_ALL = 'getallrolespermission',
   SETTING_ROLES_SAVE = 'saveRoles',
+
+  //clients
+  GET_ALL_COSTCODE = 'getCostCode',
 }

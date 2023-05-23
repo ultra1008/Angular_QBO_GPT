@@ -16,6 +16,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SelectionModel } from '@angular/cdk/collections';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { Router } from '@angular/router';
+import { CommonService } from 'src/app/services/common.service';
+import { httproutes, httpversion } from 'src/consts/httproutes';
 
 export interface DialogData {
   user: any;
@@ -41,13 +43,13 @@ export class UserRestoreFormComponent {
   titleMessage: string = '';
   userList: any = [];
   isDelete = 0;
-  constructor(
+  constructor (
     public dialogRef: MatDialogRef<UserRestoreFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     public UserService: UserService,
     private fb: UntypedFormBuilder,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router, private commonService: CommonService,
   ) {
     console.log('constroctor User', data);
 
@@ -72,8 +74,8 @@ export class UserRestoreFormComponent {
     return this.formControl.hasError('required')
       ? 'Required field'
       : this.formControl.hasError('email')
-      ? 'Not a valid email'
-      : '';
+        ? 'Not a valid email'
+        : '';
   }
   createContactForm(): UntypedFormGroup {
     return this.fb.group({
@@ -85,7 +87,7 @@ export class UserRestoreFormComponent {
     // emppty stuff
   }
   async getRole() {
-    const data = await this.UserService.getRole();
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.USER_SETTING_ROLES_ALL);
     if (data.status) {
       this.variablesRoleList = data.data;
       this.roleList = this.variablesRoleList.slice();
@@ -103,7 +105,7 @@ export class UserRestoreFormComponent {
   async restoreUser(userId: any) {
     let requestObject = this.userRoleInfo.value;
     requestObject._id = userId;
-    const data = await this.UserService.restoreUser(requestObject);
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.USER_RECOVER, requestObject);
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       location.reload();
@@ -118,7 +120,7 @@ export class UserRestoreFormComponent {
 
   // }
   async getUser() {
-    const data = await this.UserService.getUser(this.isDelete);
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_USER_GET_FOR_TABLE, { is_delete: this.isDelete });
     this.userList = data;
   }
 

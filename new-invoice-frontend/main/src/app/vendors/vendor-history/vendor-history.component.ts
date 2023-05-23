@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { VendorsService } from '../vendors.service';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { CommonService } from 'src/app/services/common.service';
+import { httpversion, httproutes } from 'src/consts/httproutes';
 
 @Component({
   selector: 'app-vendor-history',
@@ -14,7 +16,7 @@ export class VendorHistoryComponent extends UnsubscribeOnDestroyAdapter implemen
   vendorHistory: any;
   historyLoading = true;
 
-  constructor(private router: Router, public vendorService: VendorsService,) {
+  constructor (private router: Router, public vendorService: VendorsService, public commonService: CommonService) {
     super();
   }
 
@@ -23,7 +25,7 @@ export class VendorHistoryComponent extends UnsubscribeOnDestroyAdapter implemen
   }
 
   async getVendorHistory() {
-    const data = await this.vendorService.getVendorHistory({ start: this.start });
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_GET_HISTORY, { start: this.start });
     if (data.status) {
       if (this.start == 0) {
         this.vendorHistory = data.data;
