@@ -169,7 +169,7 @@ module.exports.saveEmployee = async function (req, res) {
                                 userstatus: add.userstatus,
                                 is_delete: add.is_delete,
                             };
-                            let update_company = await companyConnection.updateOne({ _id: ObjectID(company_data._id) }, { $push: { company_user: comanyUserObj } });
+                            let update_company = await companyConnection.updateOne({ _id: ObjectID(company_data._id) }, { $push: { invoice_user: comanyUserObj } });
 
                             if (body.allow_for_projects) {
                                 //await addUserAsAllProjectsWorker(add._id, decodedToken);
@@ -1316,17 +1316,17 @@ module.exports.savePersonalInfo = async function (req, res) {
                         }
                         if (body.password) {
                             companyUserObj = {
-                                'company_user.useremail': body.useremail,
-                                'company_user.password': body.password,
-                                'company_user.userstatus': body.userstatus,
+                                'invoice_user.useremail': body.useremail,
+                                'invoice_user.password': body.password,
+                                'invoice_user.userstatus': body.userstatus,
                             };
                         } else {
                             companyUserObj = {
-                                'company_user.$.useremail': body.useremail,
-                                'company_user.$.userstatus': body.userstatus,
+                                'invoice_user.$.useremail': body.useremail,
+                                'invoice_user.$.userstatus': body.userstatus,
                             };
                         }
-                        let update_company_user = await companyConnection.updateOne({ _id: ObjectID(company_data._id), 'company_user.user_id': ObjectID(user_edit_id) }, { $set: companyUserObj });
+                        let update_invoice_user = await companyConnection.updateOne({ _id: ObjectID(company_data._id), 'invoice_user.user_id': ObjectID(user_edit_id) }, { $set: companyUserObj });
                         history_object = body;
                         history_object.updated_id = user_edit_id;
                         if (flg_update) {
@@ -1746,9 +1746,9 @@ module.exports.deleteTeamMember = async function (req, res) {
                         if (update_user) {
                             let company_data = await companyConnection.findOne({ companycode: decodedToken.companycode });
                             let companyUserObj = {
-                                'company_user.$.is_delete': 1,
+                                'invoice_user.$.is_delete': 1,
                             };
-                            let update_company_user = await companyConnection.updateOne({ _id: ObjectID(company_data._id), 'company_user.user_id': ObjectID(requestObject._id) }, { $set: companyUserObj });
+                            let update_invoice_user = await companyConnection.updateOne({ _id: ObjectID(company_data._id), 'invoice_user.user_id': ObjectID(requestObject._id) }, { $set: companyUserObj });
 
                             let histioryObject = {
                                 data: [],
@@ -1801,13 +1801,13 @@ module.exports.deleteMultipleTeamMember = async function (req, res) {
             if (update_user) {
                 let company_data = await companyConnection.findOne({ companycode: decodedToken.companycode });
                 let companyUserObj = {
-                    'company_user.$.is_delete': requestObject.is_delete,
+                    'invoice_user.$.is_delete': requestObject.is_delete,
                 };
                 for (let i = 0; i < requestObject._id.length; i++) {
                     let one_user = await userConnection.findOne({ _id: ObjectID(requestObject._id[i]) });
                     if (one_user.is_first && one_user._id == decodedToken.UserData._id) {
                     } else {
-                        let update_company_user = await companyConnection.updateOne({ _id: ObjectID(company_data._id), 'company_user.user_id': ObjectID(requestObject._id[i]) }, { $set: companyUserObj });
+                        let update_invoice_user = await companyConnection.updateOne({ _id: ObjectID(company_data._id), 'invoice_user.user_id': ObjectID(requestObject._id[i]) }, { $set: companyUserObj });
                     }
 
                     let get_user = await userConnection.findOne({ _id: ObjectID(requestObject._id[i]) });
@@ -4211,12 +4211,12 @@ module.exports.recoverteam = async function (req, res) {
                 if (update_team) {
                     let company_data = await companyConnection.findOne({ companycode: decodedToken.companycode });
                     let companyUserObj = {
-                        'company_user.$.is_delete': 0,
+                        'invoice_user.$.is_delete': 0,
                     };
                     let one_user = await userCollection.findOne({ _id: ObjectID(requestObject._id) });
                     if (one_user.is_first && one_user._id == decodedToken.UserData._id) {
                     } else {
-                        let update_company_user = await companyConnection.updateOne({ _id: ObjectID(company_data._id), 'company_user.user_id': ObjectID(requestObject._id) }, { $set: companyUserObj });
+                        let update_invoice_user = await companyConnection.updateOne({ _id: ObjectID(company_data._id), 'invoice_user.user_id': ObjectID(requestObject._id) }, { $set: companyUserObj });
                     }
                     let histioryObject = {
                         data: [],
@@ -4704,9 +4704,9 @@ module.exports.updateUserStatus = async function (req, res) {
 
                         if (updateStatus) {
                             let companyUserObj = {
-                                'company_user.$.userstatus': requestObject.userstatus,
+                                'invoice_user.$.userstatus': requestObject.userstatus,
                             };
-                            let update_company_user = await companyConnection.updateOne({ _id: ObjectID(company_data._id), 'company_user.user_id': ObjectID(id) }, { $set: companyUserObj });
+                            let update_invoice_user = await companyConnection.updateOne({ _id: ObjectID(company_data._id), 'invoice_user.user_id': ObjectID(id) }, { $set: companyUserObj });
 
                             let action = '';
                             let message = '';
@@ -4780,13 +4780,13 @@ module.exports.updateMultipleUserStatus = async function (req, res) {
 
                 let company_data = await companyConnection.findOne({ companycode: decodedToken.companycode });
                 let companyUserObj = {
-                    'company_user.$.userstatus': requestObject.userstatus,
+                    'invoice_user.$.userstatus': requestObject.userstatus,
                 };
                 for (let i = 0; i < requestObject._id.length; i++) {
                     var get_user = await userConnection.findOne({ _id: ObjectID(requestObject._id[i]) });
                     if (get_user.is_first && get_user._id == decodedToken.UserData._id) {
                     } else {
-                        let update_company_user = await companyConnection.updateOne({ _id: ObjectID(company_data._id), 'company_user.user_id': ObjectID(requestObject._id[i]) }, { $set: companyUserObj });
+                        let update_invoice_user = await companyConnection.updateOne({ _id: ObjectID(company_data._id), 'invoice_user.user_id': ObjectID(requestObject._id[i]) }, { $set: companyUserObj });
                     }
 
                     let histioryObject = {

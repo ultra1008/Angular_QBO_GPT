@@ -398,9 +398,9 @@ module.exports.changepassword = async function (req, res) {
                             if (updatesuccess) {
                                 let company_data = await companyConnection.findOne({ companycode: decodedToken.companycode });
                                 let companyUserObj = {
-                                    'company_user.$.password': passwordHash,
+                                    'invoice_user.$.password': passwordHash,
                                 };
-                                let update_company_user = await companyConnection.updateOne({ _id: ObjectID(company_data._id), 'company_user.user_id': ObjectID(decodedToken.UserData._id) }, { $set: companyUserObj });
+                                let update_invoice_user = await companyConnection.updateOne({ _id: ObjectID(company_data._id), 'invoice_user.user_id': ObjectID(decodedToken.UserData._id) }, { $set: companyUserObj });
 
                                 res.send({ message: translator.getStr('PasswordChanged'), data: updatesuccess, status: true });
                             } else {
@@ -552,9 +552,9 @@ module.exports.forgetpassword = async function (req, res) {
                             let company_data = await companyConnection.findOne({ companycode: requestObject.companycode });
                             let one_user = await userConnection.findOne({ useremail: req.body.useremail });
                             let companyUserObj = {
-                                'company_user.$.password': passwordHash,
+                                'invoice_user.$.password': passwordHash,
                             };
-                            let update_company_user = await companyConnection.updateOne({ _id: ObjectID(company_data._id), 'company_user.user_id': ObjectID(one_user._id) }, { $set: companyUserObj });
+                            let update_invoice_user = await companyConnection.updateOne({ _id: ObjectID(company_data._id), 'invoice_user.user_id': ObjectID(one_user._id) }, { $set: companyUserObj });
 
                             const data = await fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/resetPassword.html', 'utf8');
                             let emailTmp = {
@@ -625,9 +625,9 @@ module.exports.sendUserPassword = async function (req, res) {
                 let update_user = await userConnection.updateOne({ _id: one_user._id }, { password: passwordHash, useris_password_temp: true });
                 if (update_user) {
                     let companyUserObj = {
-                        'company_user.$.password': passwordHash,
+                        'invoice_user.$.password': passwordHash,
                     };
-                    let update_company_user = await companyConnection.updateOne({ _id: ObjectID(company_data._id), 'company_user.user_id': ObjectID(one_user._id) }, { $set: companyUserObj });
+                    let update_invoice_user = await companyConnection.updateOne({ _id: ObjectID(company_data._id), 'invoice_user.user_id': ObjectID(one_user._id) }, { $set: companyUserObj });
 
                     const data = await fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/resetPassword.html', 'utf8');
                     let emailTmp = {
@@ -1236,14 +1236,14 @@ module.exports.getLoginCompanyList = async function (req, res) {
         let companyConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_COMPANY, companySchema);
         let tenantsConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_TENANTS, tenantSchema);
         let match = {
-            'company_user.useremail': requestObject.useremail,
-            'company_user.userstatus': 1,
-            'company_user.is_delete': 0,
+            'invoice_user.useremail': requestObject.useremail,
+            'invoice_user.userstatus': 1,
+            'invoice_user.is_delete': 0,
         };
         var get_company = await companyConnection.find(match);
         var data = [];
         for (let i = 0; i < get_company.length; i++) {
-            let user = get_company[i].company_user.find(o => o.useremail === requestObject.useremail);
+            let user = get_company[i].invoice_user.find(o => o.useremail === requestObject.useremail);
             if (user) {
                 var psss_tnp = await common.validPassword(requestObject.password, user.password);
                 if (psss_tnp) {
@@ -1578,7 +1578,7 @@ module.exports.sendEmailOTP = async function (req, res) {
         requestObject.useremail = requestObject.useremail.toLowerCase();
         let companyConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_COMPANY, companySchema);
 
-        var get_company = await companyConnection.find({ 'company_user.useremail': requestObject.useremail });
+        var get_company = await companyConnection.find({ 'invoice_user.useremail': requestObject.useremail });
         if (get_company.length === 0) {
             res.send({ message: translator.getStr('UserNotFound'), status: false });
         } else {
@@ -1634,7 +1634,7 @@ module.exports.submitEmailOTP = async function (req, res) {
         let tenantsConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_TENANTS, tenantSchema);
         let emailOTPConnection = admin_connection_db_api.model(collectionConstant.EMAIL_OTP, emailOTPSchema);
 
-        var get_company = await companyConnection.find({ 'company_user.useremail': requestObject.useremail });
+        var get_company = await companyConnection.find({ 'invoice_user.useremail': requestObject.useremail });
         if (get_company.length === 0) {
             res.send({ message: translator.getStr('UserNotFound'), status: false });
         } else {
@@ -2308,9 +2308,9 @@ module.exports.emailForgotPassword = async function (req, res) {
         let companyConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_COMPANY, companySchema);
         let tenantsConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_TENANTS, tenantSchema);
         let match = {
-            'company_user.useremail': requestObject.useremail,
-            'company_user.userstatus': 1,
-            'company_user.is_delete': 0,
+            'invoice_user.useremail': requestObject.useremail,
+            'invoice_user.userstatus': 1,
+            'invoice_user.is_delete': 0,
         };
         var get_company = await companyConnection.find(match);
         if (get_company.length == 1) {
@@ -2325,9 +2325,9 @@ module.exports.emailForgotPassword = async function (req, res) {
             if (update_user) {
                 let one_user = await userConnection.findOne({ useremail: requestObject.useremail });
                 let companyUserObj = {
-                    'company_user.$.password': passwordHash,
+                    'invoice_user.$.password': passwordHash,
                 };
-                let update_company_user = await companyConnection.updateOne({ _id: ObjectID(get_company[0]._id), 'company_user.user_id': ObjectID(one_user._id) }, { $set: companyUserObj });
+                let update_invoice_user = await companyConnection.updateOne({ _id: ObjectID(get_company[0]._id), 'invoice_user.user_id': ObjectID(one_user._id) }, { $set: companyUserObj });
 
                 const data = await fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/resetPassword.html', 'utf8');
                 let emailTmp = {
@@ -2381,9 +2381,9 @@ module.exports.sendEmailForgotPassword = async function (req, res) {
         let companyConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_COMPANY, companySchema);
         let tenantsConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_TENANTS, tenantSchema);
         let match = {
-            'company_user.useremail': requestObject.useremail,
-            'company_user.userstatus': 1,
-            'company_user.is_delete': 0,
+            'invoice_user.useremail': requestObject.useremail,
+            'invoice_user.userstatus': 1,
+            'invoice_user.is_delete': 0,
         };
         var get_company = await companyConnection.findOne({ _id: ObjectID(requestObject._id) });
         var get_tenants = await tenantsConnection.findOne({ company_id: get_company._id });
@@ -2397,9 +2397,9 @@ module.exports.sendEmailForgotPassword = async function (req, res) {
         if (update_user) {
             let one_user = await userConnection.findOne({ useremail: requestObject.useremail });
             let companyUserObj = {
-                'company_user.$.password': passwordHash,
+                'invoice_user.$.password': passwordHash,
             };
-            let update_company_user = await companyConnection.updateOne({ _id: ObjectID(get_company._id), 'company_user.user_id': ObjectID(one_user._id) }, { $set: companyUserObj });
+            let update_invoice_user = await companyConnection.updateOne({ _id: ObjectID(get_company._id), 'invoice_user.user_id': ObjectID(one_user._id) }, { $set: companyUserObj });
 
             const data = await fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/resetPassword.html', 'utf8');
             let emailTmp = {

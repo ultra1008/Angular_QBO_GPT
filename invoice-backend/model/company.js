@@ -86,7 +86,7 @@ var companySchema = new Schema({
     parent_company: { type: subContractorSchema, default: subContractorDefaultValue },
     sub_contractor_company: { type: [subContractorSchema], default: [] },
 
-    company_user: [{
+    invoice_user: [{
         user_id: { type: mongoose.ObjectId, default: "" },
         useremail: { type: String, default: "" },
         password: { type: String, default: "" },
