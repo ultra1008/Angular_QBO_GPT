@@ -393,3 +393,25 @@ module.exports.importCostCode = async function (req, res) {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
+
+// get term
+module.exports.getCostCode = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            let costcodeCollection = connection_db_api.model(collectionConstant.COSTCODES, costcodeSchema);
+            let get_data = await costcodeCollection.find({ is_delete: 0 }).sort({ name: 1 }).collation({ locale: "en_US" });
+            res.send({ status: true, message: "costcode data", data: get_data });
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
