@@ -5,8 +5,6 @@ import { TranslateService } from '@ngx-translate/core';
 import * as ApexCharts from 'apexcharts';
 import { ApexAxisChartSeries, ApexNonAxisChartSeries, ApexChart, ApexDataLabels, ApexPlotOptions, ApexYAxis, ApexXAxis, ApexFill, ApexTooltip, ApexStroke, ApexLegend, ApexTitleSubtitle, ApexGrid, ApexMarkers, ApexResponsive } from 'ng-apexcharts';
 import { WEB_ROUTES } from 'src/consts/routes';
-// import domtoimage from "dom-to-image-improved";
-// import { jsPDF } from "jspdf";
 
 export type ChartOptions = {
   series?: ApexAxisChartSeries;
