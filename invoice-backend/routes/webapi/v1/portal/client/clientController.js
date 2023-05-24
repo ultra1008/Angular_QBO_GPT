@@ -27,7 +27,7 @@ module.exports.saveclient = async function (req, res) {
                     // find difference of object 
                     let updatedData = await common.findUpdatedFieldHistory(requestObject, one_client._doc);
                     for (let i = 0; i < updatedData.length; i++) {
-                        updatedData[i]['key'] = (`Client_History.${updatedData[i]['key']}`);
+                        updatedData[i]['key'] = translator.getStr(` Client_History.${updatedData[i]['key']}`);
                     }
                     let histioryObject = {
                         data: updatedData,
@@ -54,6 +54,10 @@ module.exports.saveclient = async function (req, res) {
 
                     // find difference of object 
                     let insertedData = await common.setInsertedFieldHistory(requestObject);
+
+                    for (let i = 0; i < insertedData.length; i++) {
+                        insertedData[i]['key'] = translator.getStr(`Client_History.${insertedData[i]['key']}`);
+                    }
                     let histioryObject = {
                         data: insertedData,
                         client_id: save_client.id,

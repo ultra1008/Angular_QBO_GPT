@@ -482,4 +482,13 @@ router.post('/webapi/v1/portal/deleteMultipleClient', common.checkTokenExistOrNo
 router.post('/webapi/v1/portal/getClientForTable', common.checkTokenExistOrNot, clientController.getClientForTable);
 router.post('/webapi/v1/portal/getOneClient', common.checkTokenExistOrNot, clientController.getOneClient);
 
+
+Class_nameController = require('./class_name/class_nameController');
+Class_nameValidation = require('./class_name/class_nameValidation');
+router.post('/webapi/v1/portal/saveclassname', common.checkTokenExistOrNot, Class_nameController.saveclassname);
+router.post('/webapi/v1/portal/deleteclassname', common.checkTokenExistOrNot, Class_nameController.deleteclassname);
+router.get('/webapi/v1/portal/getclassname', common.checkTokenExistOrNot, Class_nameController.getclassname);
+router.post('/webapi/v1/portal/getclassnameForTable', common.checkTokenExistOrNot, Class_nameController.getclassnameForTable);
+router.post('/webapi/v1/portal/updateclassnameStatus', common.checkTokenExistOrNot, Class_nameController.updateclassnameStatus);
+
 module.exports = router;

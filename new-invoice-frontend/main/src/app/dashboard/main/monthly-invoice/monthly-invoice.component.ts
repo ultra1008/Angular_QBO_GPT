@@ -5,6 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import * as ApexCharts from 'apexcharts';
 import { ApexAxisChartSeries, ApexNonAxisChartSeries, ApexChart, ApexDataLabels, ApexPlotOptions, ApexYAxis, ApexXAxis, ApexFill, ApexTooltip, ApexStroke, ApexLegend, ApexTitleSubtitle, ApexGrid, ApexMarkers, ApexResponsive } from 'ng-apexcharts';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { saveAs } from 'file-saver';
 
 export type ChartOptions = {
   series?: ApexAxisChartSeries;
@@ -54,45 +55,7 @@ export class MonthlyInvoiceComponent {
           opacity: 1,
         },
         toolbar: {
-          show: true,
-          tools: {
-            zoom: false,
-            zoomin: false,
-            zoomout: false,
-            reset: false,
-            pan: false, print: true,
-            /* download: '<div style="background-color:red"><img src="../../assets/images/icons/download.svg" class="ico-download" width="20"></div>',
-            customIcons: [{
-              icon: '<img src="../../assets/images/icons/download.svg" class="ico-download" width="20">',
-              index: 0,
-              title: 'tooltip of the icon',
-              class: 'custom-icon',
-              click: function () {
-                console.log('clicked');
-              }
-            } ],*/
-            export: {
-              /* svg: {
-                filename: 'chart.svg'
-              },
-              png: {
-                filename: 'chart.png'
-              } */
-              /* csv?: {
-                filename?: undefined | string;
-                columnDelimiter?: string;
-                headerCategory?: string;
-                headerValue?: string;
-                dateFormatter?(timestamp?: number): any;
-            };
-            svg?: {
-                filename?: undefined | string;
-            };
-            png?: {
-                filename?: undefined | string;
-            }; */
-            }
-          },
+          show: false,
         },
         foreColor: '#9aa0ac',
       },
@@ -149,15 +112,6 @@ export class MonthlyInvoiceComponent {
             colors: ['#9aa0ac'],
           },
         },
-        min: 5,
-        max: 40,
-      },
-      legend: {
-        position: 'top',
-        horizontalAlign: 'right',
-        floating: true,
-        offsetY: -25,
-        offsetX: -5,
       },
       tooltip: {
         theme: 'dark',
@@ -168,15 +122,107 @@ export class MonthlyInvoiceComponent {
           show: true,
         },
       },
+      legend: {
+        position: 'bottom',
+        horizontalAlign: 'center',
+      },
     };
   }
 
   downloadHistoryChart() {
-    //
+    const chart = new ApexCharts(document.querySelector("#chart"), this.invoiceChartOptions);
+    chart.render().then(() => {
+      window.setTimeout(function () {
+        chart.dataURI().then((uri: any) => {
+          console.log(uri.imgURI);
+          const downloadLink = document.createElement('a');
+          const fileName = 'Monthly Invoice Chart.png';
+
+          downloadLink.href = uri.imgURI;
+          downloadLink.download = fileName;
+          downloadLink.click();
+          // downloadLink.remove();
+          /*  window.setTimeout(function () {
+              // downloadLink.remove();
+            }, 1000); */
+
+          /*  const blob = new Blob([uri.imgURI], { type: "image/png" });
+           console.log(blob); 
+ 
+           saveAs(blob, 'attachment'); */
+          /* const img = new Image();
+          img.src = uri.imgURI;
+
+          const winparams =
+            "dependent=yes,locationbar=no,scrollbars=yes,menubar=yes," +
+            "resizable,screenX=50,screenY=50,width=850,height=1050";
+
+          const htmlPop =
+            "<embed width=100% height=100%" +
+            ' type="image/png"' +
+            ' src="' +
+            uri.imgURI +
+            '" ' +
+            '"></embed>';
+
+          this.printWindow = window.open("", "PDF", winparams);
+          this.printWindow.document.write(htmlPop);
+          this.printWindow.print();
+          this.loadingBuffer = false; */
+        });
+      }, 2500);
+    });
+
+
+
+    /* const chart = new ApexCharts(document.querySelector("#chart"), this.invoiceChartOptions);
+    chart.render().then(() => {
+      window.setTimeout(function () {
+        chart.dataURI().then((uri: any) => {
+          // console.log(uri.imgURI);
+          const downloadLink = document.createElement('a');
+          const fileName = 'Monthly Invoice Chart.png';
+
+          downloadLink.href = uri.imgURI;
+          downloadLink.download = fileName;
+
+          downloadLink.click();
+          window.setTimeout(function () {
+            document.body.removeChild(downloadLink);
+          }, 1000);
+        });
+      }, 1500);
+    }); */
   }
 
-  printHistoryChart() {
+  async printHistoryChart() {
+    /* console.log(window.ApexCharts._chartInstances);
+    const chartInstance = window.ApexCharts._chartInstances.find(
+      (chart: any) => chart.id === 'chart'
+    );
+
+    const base64 = await chartInstance.chart.dataURI();
+    const downloadLink = document.createElement("a");  
+    downloadLink.href = base64.imgURI;
+    downloadLink.download = "image.png";
+
+    // Add the anchor element to the document
+    document.body.appendChild(downloadLink);
+
+    // Simulate a click event to initiate the download
+    downloadLink.click();
+
+    // Remove the anchor element from the document
+    document.body.removeChild(downloadLink); */
     const chart = new ApexCharts(document.querySelector("#chart"), this.invoiceChartOptions);
+    chart.render().then(() => {
+      window.setTimeout(function () {
+        chart.dataURI().then((uri: any) => {
+          console.log(uri.imgURI);
+        });
+      }, 1000);
+    });
+    /* const chart = new ApexCharts(document.querySelector("#chart"), this.invoiceChartOptions);
     chart.render().then(() => {
       chart.dataURI().then((uri: any) => {  // Here shows an error
         console.log(uri);
@@ -185,13 +231,9 @@ export class MonthlyInvoiceComponent {
 
         downloadLink.href = uri.imgURI;
         downloadLink.download = fileName;
-        downloadLink.click();
-        // this._sanitizer.bypassSecurityTrustResourceUrl(uri);
-        /*  const pdf = new jsPDF();
-         pdf.addImage(uri, 'PNG', 0, 0);
-         pdf.save("download.pdf"); */
+        downloadLink.click(); 
       });
-    });
+    }); */
   }
   /* this.chartdiv = document.getElementById("chartdiv");
   this.chartdiv.style.display = "block";

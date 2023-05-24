@@ -39,12 +39,12 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="body overflow-auto chart" id="chart">
-                        <div style="text-align:center">
-                            <apx-chart [series]="invoiceChartOptions.series!" [chart]="invoiceChartOptions.chart!"
-                                [xaxis]="invoiceChartOptions.xaxis!" [title]="invoiceChartOptions.title!"
-                                [stroke]="invoiceChartOptions.stroke"></apx-chart>
-                        </div>
+                    <div class="body overflow-auto" id="chart">
+                        <apx-chart [series]="invoiceChartOptions.series!" [chart]="invoiceChartOptions.chart!"
+                            [dataLabels]="invoiceChartOptions.dataLabels" [tooltip]="invoiceChartOptions.tooltip"
+                            [xaxis]="invoiceChartOptions.xaxis!" [yaxis]="invoiceChartOptions.yaxis!"
+                            [title]="invoiceChartOptions.title!" [stroke]="invoiceChartOptions.stroke"
+                            [legend]="invoiceChartOptions.legend"></apx-chart>
                     </div>
                 </div>
             </div>
