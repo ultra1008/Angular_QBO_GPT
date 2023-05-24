@@ -149,6 +149,7 @@ export enum httproutes {
   OTHER_SETTINGS_GET_JOB_NAME = 'getjobname',
   OTHER_SETTING_DELETE_JOB_NAME = 'deletejobname',
   OTHER_SETTINGS_IMPORT = 'importjobname',
+  CLASS_NAME_DATA_TABLE = 'getclassnameForTable ',
 
   // Document_View
   INVOICE_OTHER_SETTING_UPDATE_ALERTS = 'getupdatesetting',

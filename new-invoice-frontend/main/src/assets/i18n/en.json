@@ -229,6 +229,7 @@
                 "TAX_RATE": "Tax Rate",
                 "DOCUMENT": "Documents",
                 "VENDOR_TYPE": "Vendor Type",
+                "CLASS_NAME": "Class Name",
                 "JOB_NAME": "Job Name",
                 "JOB_CONTACT_EMAIL": "Job Contact Email",
                 "DUE_DAYS": "Due Days",

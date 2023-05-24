@@ -298,3 +298,19 @@ export class JobNameTable {
     }
   }
 }
+
+export class ClassNameTable {
+  _id: string;
+  name!: string;
+  number!: string;
+  description!: string;
+
+  constructor(ClassNameTable: ClassNameTable) {
+    {
+      this._id = ClassNameTable._id;
+      this.name = ClassNameTable.name;
+      this.number = ClassNameTable.number;
+      this.description = ClassNameTable.description;
+    }
+  }
+}

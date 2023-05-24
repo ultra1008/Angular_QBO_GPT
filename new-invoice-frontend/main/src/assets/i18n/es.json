@@ -229,6 +229,7 @@
                 "TAX_RATE": "Tasa de impuesto",
                 "DOCUMENT": "Documentos",
                 "VENDOR_TYPE": "Tipo de proveedor",
+                "CLASS_NAME": "Nombre de la clase",
                 "JOB_NAME": "Nombre del trabajo",
                 "JOB_CONTACT_EMAIL": "Correo electrónico de contacto laboral",
                 "DUE_DAYS": "Días de vencimiento",
