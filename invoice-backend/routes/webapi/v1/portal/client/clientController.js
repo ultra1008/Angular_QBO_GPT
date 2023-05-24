@@ -390,3 +390,30 @@ module.exports.getClientForTable = async function (req, res) {
     }
 };
 
+
+//get one invoice client
+module.exports.getOneClient = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var clientConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientSchema);
+            var getdata = await clientConnection.findOne({ _id: requestObject._id });
+            if (getdata) {
+                res.send({ status: true, message: "Client data", data: getdata });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false, error: e });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+

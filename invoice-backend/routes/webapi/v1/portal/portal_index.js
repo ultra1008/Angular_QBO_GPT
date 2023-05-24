@@ -480,5 +480,6 @@ router.post('/webapi/v1/portal/updateClientStatus', common.checkTokenExistOrNot,
 router.post('/webapi/v1/portal/updateMultipleClientStatus', common.checkTokenExistOrNot, clientController.updateMultipleClientStatus);
 router.post('/webapi/v1/portal/deleteMultipleClient', common.checkTokenExistOrNot, clientController.deleteMultipleClient);
 router.post('/webapi/v1/portal/getClientForTable', common.checkTokenExistOrNot, clientController.getClientForTable);
+router.post('/webapi/v1/portal/getOneClient', common.checkTokenExistOrNot, clientController.getOneClient);
 
 module.exports = router;
