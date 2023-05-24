@@ -313,7 +313,7 @@
 </section>
 
 <ng-template #invoiceCardTemplate let-invoice='invoice'>
-  <div class="doc-file-type mb-2">
+  <div class="doc-file-type mb-2" (click)="invoiceDetail(invoice)">
     <div class="list-unstyled">
       <div class="m-1">
         <div class="d-flex justify-content-between">
