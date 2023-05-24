@@ -203,7 +203,15 @@ module.exports.getClinetHistory = async function (req, res) {
                     }
                 },
                 { $unwind: "$client_id" },
-                { $unwind: "$client_id" },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "history_created_by",
+                        foreignField: "_id",
+                        as: "history_created_by"
+                    }
+                },
+                { $unwind: "$history_created_by" },
                 { $sort: { history_created_at: -1 } },
                 { $limit: perpage + start },
                 { $skip: start }
@@ -219,7 +227,6 @@ module.exports.getClinetHistory = async function (req, res) {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
-
 //client active or inactive
 module.exports.updateClientStatus = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -285,8 +292,6 @@ module.exports.updateMultipleClientStatus = async function (req, res) {
         try {
             var clientConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientSchema);
             var requestObject = req.body;
-            var id = requestObject._id;
-            delete requestObject._id;
 
             var updateStatus = await clientConnection.updateMany({ _id: { $in: requestObject._id } }, { client_status: requestObject.client_status });
 
@@ -301,12 +306,14 @@ module.exports.updateMultipleClientStatus = async function (req, res) {
                     message = "client status inactive successfully.";
                 }
 
-                let histioryObject = {
-                    data: [],
-                    client_id: id,
-                };
+                for (let i = 0; i < requestObject._id.length; i++) {
+                    let histioryObject = {
+                        data: [],
+                        client_id: requestObject._id[i],
+                    };
 
-                addClientHistory(action, histioryObject, decodedToken);
+                    addClientHistory(action, histioryObject, decodedToken);
+                }
                 res.send({ message: message, status: true });
 
             } else {
@@ -333,8 +340,7 @@ module.exports.deleteMultipleClient = async function (req, res) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-            let id = requestObject._id;
-            delete requestObject._id;
+
             var clientConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientSchema);
 
 
@@ -353,12 +359,16 @@ module.exports.deleteMultipleClient = async function (req, res) {
                     message = "client restore successfully";
                 }
 
-                let histioryObject = {
-                    data: [],
-                    client_id: id,
-                };
+                for (let i = 0; i < requestObject._id.length; i++) {
+                    //var one_client = await clientConnection.findOne({ _id: ObjectID(requestObject._id[i]) });
 
-                addClientHistory(action, histioryObject, decodedToken);
+                    let histioryObject = {
+                        data: [],
+                        client_id: requestObject._id[i],
+                    };
+
+                    addClientHistory(action, histioryObject, decodedToken);
+                }
                 res.send({ message: message, status: true });
 
             } else {

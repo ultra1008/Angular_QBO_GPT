@@ -3,7 +3,6 @@ var Schema = mongoose.Schema;
 
 var clientSchema = new Schema({
     data: { type: Array, default: [] },
-
     client_id: { type: mongoose.ObjectId, default: "" },
     history_created_at: { type: Number, default: 0 },
     history_created_by: { type: mongoose.ObjectId, default: "" },
