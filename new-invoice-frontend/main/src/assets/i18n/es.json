@@ -328,7 +328,7 @@
         },
         "TABLE": {
             "DOCUMENT_TYPE": "Tipo de documento",
-            "PO_NO": "DESPUÉS DE NO",
+            "PO_NO": "CORREOS. Número",
             "INVOICE_NO": "Número de factura",
             "VENDOR_NAME": "Nombre del proveedor",
             "UPDATED_BY": "Actualizado por",

@@ -91,9 +91,10 @@
                                    <!-- vendorListFilterStatus : vendor_status -->
                                    <div class="test col-xs-12 col-sm-6 col-md-4 col-xl-3"
                                         *ngFor="let vendor of vendorList  | vendorListFilter : vendorname_search |vendorListFilterStatus : vendor_status   ">
-                                        <div class="card rixit " style="border: 2px solid rgb(182, 182, 182);">
+                                        <div class="card rixit" style="border: 2px solid rgb(182, 182, 182);">
                                              <div class="m-b-20">
-                                                  <div class="contact-grid" style="height: 300px;">
+                                                  <div class="contact-grid" style="height: 310px"
+                                                       (click)="editVendor(vendor)">
                                                        <div class="profile-header">
                                                             <div class="col-12 m-1 d-flex">
                                                                  <div class="col-4">
@@ -144,15 +145,15 @@
                                                                  <b>Open Invoice</b>
                                                                  <P> {{514}}</P>
                                                             </div>
-                                                            <div class="col-6">
+                                                            <div class="col-6 mb-1">
                                                                  <b>Amount</b>
                                                                  <P> {{500000000000}}</P>
                                                             </div>
                                                        </div>
-                                                       <div class="chip m-1"
+                                                       <div class="chip"
                                                             [ngClass]="vendor.vendor_status == 1 ? 'active' :'inactive'">
-                                                            <span class="py-2">
-                                                                 {{vendor.vendor_status == 1 ? active_word :inactive_word }}</span>
+
+                                                            {{vendor.vendor_status == 1 ? active_word :inactive_word }}
                                                        </div>
 
                                                   </div>

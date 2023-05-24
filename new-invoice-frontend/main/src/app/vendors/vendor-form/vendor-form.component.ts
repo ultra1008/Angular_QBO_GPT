@@ -57,7 +57,7 @@ export class VendorFormComponent {
   titleMessage = "";
   show = false;
 
-  constructor (
+  constructor(
     private fb: UntypedFormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
@@ -143,6 +143,37 @@ export class VendorFormComponent {
     if (data.status) {
       this.variablestermList = data.data;
       this.termsList = this.variablestermList.slice();
+    }
+  }
+
+  async archiveRecover() {
+
+    this.titleMessage = this.translate.instant('VENDOR.CONFIRMATION_DIALOG.ARCHIVE');
+
+    swalWithBootstrapTwoButtons
+      .fire({
+        title: this.titleMessage,
+        showDenyButton: true,
+        confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+        denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+        allowOutsideClick: false,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          this.deletvendor();
+          this.show = false;
+        }
+      });
+
+  }
+  async deletvendor() {
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_DELETE, { _id: this.id, is_delete: 1 });
+    if (data.status) {
+      showNotification(this.snackBar, data.message, 'success');
+
+      this.router.navigate([WEB_ROUTES.VENDOR], { queryParams: { is_delete: 1 }, });
+    } else {
+      showNotification(this.snackBar, data.message, 'error');
     }
   }
 

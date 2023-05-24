@@ -15,6 +15,7 @@ import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroy
 import { FormateDateStringPipe } from 'src/app/users/users-filter.pipe';
 import { httpversion, httproutes } from 'src/consts/httproutes';
 import { CommonService } from 'src/app/services/common.service';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
 
 @Component({
   selector: 'app-vendor-grid',
@@ -32,7 +33,7 @@ export class VendorGridComponent extends UnsubscribeOnDestroyAdapter implements 
   vendor_status: any;
   termsList: Array<TermModel> = [];
 
-  constructor (
+  constructor(
     public httpClient: HttpClient, private httpCall: HttpCall,
     public dialog: MatDialog,
     public vendorTableService: VendorsService,
@@ -50,8 +51,10 @@ export class VendorGridComponent extends UnsubscribeOnDestroyAdapter implements 
   }
 
   gotolist() {
-    this.router.navigate([WEB_ROUTES.VENDOR_GRID]);
+    localStorage.setItem(localstorageconstants.VENDOR_DISPLAY, 'list');
+    this.router.navigate([WEB_ROUTES.VENDOR]);
   }
+
 
   async getVendor() {
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_GET, { is_delete: this.isDelete });
@@ -99,7 +102,9 @@ export class VendorGridComponent extends UnsubscribeOnDestroyAdapter implements 
   }
 
   editVendor(vendor: Vendor) {
-    this.router.navigate([WEB_ROUTES.VENDOR_FORM], { queryParams: { _id: vendor._id } });
+    if (this.isDelete == 0) {
+      this.router.navigate([WEB_ROUTES.VENDOR_FORM], { queryParams: { _id: vendor._id } });
+    }
   }
 
   openHistory() {

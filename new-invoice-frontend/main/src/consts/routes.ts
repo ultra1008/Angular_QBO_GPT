@@ -24,7 +24,6 @@ export enum WEB_ROUTES {
   VENDOR_ARCHIVE = '/vendor/archive',
   VENDOR_HISTORY = '/vendor/history',
   VENDOR_GRID = '/vendor/grid',
-
   USER_GRID = '/user/grid',
   USER_HISTORY = '/user/history',
   USER_FORM = '/user/form',

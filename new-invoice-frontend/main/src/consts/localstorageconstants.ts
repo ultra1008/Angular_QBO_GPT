@@ -10,6 +10,7 @@ export enum localstorageconstants {
   LOGOUT = 'invoicelogout',
   //THEME = 'thinvoicetheme',
   USER_DISPLAY = 'invoiceuserlist',
+  VENDOR_DISPLAY = 'invoicevendorlist',
   COMPANYID = 'invoicecompanyid',
   COMPANYDATA = 'invoicecompanydata'
 }

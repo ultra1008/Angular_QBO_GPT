@@ -328,8 +328,8 @@
         },
         "TABLE": {
             "DOCUMENT_TYPE": "Document Type",
-            "PO_NO": "PO NO",
-            "INVOICE_NO": "Invoice No",
+            "PO_NO": "P.O. Number",
+            "INVOICE_NO": "Invoice Number",
             "VENDOR_NAME": "Vendor Name",
             "UPDATED_BY": "Updated By",
             "UPDATED_AT": "Updated At",

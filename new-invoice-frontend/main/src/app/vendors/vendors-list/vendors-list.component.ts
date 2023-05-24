@@ -25,6 +25,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { CommonService } from 'src/app/services/common.service';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
 
 @Component({
   selector: 'app-vendors-list',
@@ -63,7 +64,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   rform?: any;
   selectedValue!: string;
 
-  constructor (
+  constructor(
     public httpClient: HttpClient, private httpCall: HttpCall,
     public dialog: MatDialog, private commonService: CommonService,
     public vendorTableService: VendorsService,
@@ -82,6 +83,12 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   vendor_status: any = [''];
 
   ngOnInit() {
+    const vendorDisplay = localStorage.getItem(localstorageconstants.VENDOR_DISPLAY) ?? 'list';
+    if (vendorDisplay == 'list') {
+      this.loadData();
+    } else {
+      this.router.navigate([WEB_ROUTES.VENDOR_GRID]);
+    }
 
     this.rform = this.fb.group({
       vendor_status: [''],
@@ -132,6 +139,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
 
 
   listToGrid() {
+    localStorage.setItem(localstorageconstants.VENDOR_DISPLAY, 'grid');
     this.router.navigate([WEB_ROUTES.VENDOR_GRID]);
   }
   // TOOLTIPS
@@ -270,7 +278,9 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   }
 
   editVendor(vendor: Vendor) {
-    this.router.navigate([WEB_ROUTES.VENDOR_FORM], { queryParams: { _id: vendor._id } });
+    if (this.isDelete == 0) {
+      this.router.navigate([WEB_ROUTES.VENDOR_FORM], { queryParams: { _id: vendor._id } });
+    }
   }
 
   openHistory() {
@@ -456,7 +466,7 @@ export class VendorDataSource extends DataSource<Vendor> {
   }
   filteredData: Vendor[] = [];
   renderedData: Vendor[] = [];
-  constructor (
+  constructor(
     public vendorService: VendorsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
