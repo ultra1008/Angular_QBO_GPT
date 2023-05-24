@@ -103,6 +103,7 @@ module.exports = {
     JOB_NAME: 'job_names',
     INVOICE_CLIENT: "invoice_clients",
     VIEW_CAPTURE: "view_captures",
+    CLASS_NAME: "class_names"
 
 
 };
