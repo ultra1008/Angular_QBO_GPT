@@ -171,10 +171,9 @@ const submitEmailOTP = (req, res, next) => {
     };
     validator(req.body, validationRule, {}, (err, status) => {
         if (!status) {
-            let error = err.first('companycode') ? err.first('companycode') : "";
             res.send({
                 status: false,
-                message: error
+                message: err
             });
         } else {
             next();
@@ -189,10 +188,9 @@ const loginWithEmailOTP = (req, res, next) => {
     };
     validator(req.body, validationRule, {}, (err, status) => {
         if (!status) {
-            let error = err.first('companycode') ? err.first('companycode') : "";
             res.send({
                 status: false,
-                message: error
+                message: err
             });
         } else {
             next();
@@ -206,10 +204,9 @@ const emailForgotPassword = (req, res, next) => {
     };
     validator(req.body, validationRule, {}, (err, status) => {
         if (!status) {
-            let error = err.first('companycode') ? err.first('companycode') : "";
             res.send({
                 status: false,
-                message: error
+                message: err
             });
         } else {
             next();
@@ -224,10 +221,9 @@ const sendEmailForgotPassword = (req, res, next) => {
     };
     validator(req.body, validationRule, {}, (err, status) => {
         if (!status) {
-            let error = err.first('companycode') ? err.first('companycode') : "";
             res.send({
                 status: false,
-                message: error
+                message: err
             });
         } else {
             next();
