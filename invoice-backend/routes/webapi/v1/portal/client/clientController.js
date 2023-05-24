@@ -374,38 +374,11 @@ module.exports.getClientForTable = async function (req, res) {
         try {
             var requestObject = req.body;
             var clientConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientSchema);
-            var getdata = await clientConnection.find({ is_delete: requestObject.is_delete });
-            if (getdata) {
-                res.send(getdata);
-            } else {
-                res.send([]);
-            }
-        } catch (e) {
-            console.log(e);
-            res.send([]);
-        } finally {
-            connection_db_api.close();
-        }
-    } else {
-        res.send({ status: false, message: translator.getStr('InvalidUser') });
-    }
-};
-
-
-//get one invoice client
-module.exports.getOneClient = async function (req, res) {
-    var decodedToken = common.decodedJWT(req.headers.authorization);
-    var translator = new common.Language(req.headers.language);
-    if (decodedToken) {
-        var connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try {
-            var requestObject = req.body;
-            var clientConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientSchema);
             let query_where = {
-                "_id": ObjectID(requestObject._id),
-                "is_delete": 0
+                is_delete: requestObject.is_delete,
+
             };
-            var get_data = await clientConnection.aggregate([
+            var getdata = await clientConnection.aggregate([
                 {
                     $match: query_where
                 },
@@ -449,18 +422,40 @@ module.exports.getOneClient = async function (req, res) {
                     }
                 }
             ]);
-            if (get_data) {
-                res.send({ status: true, message: "Client data", data: get_data });
+            // var getdata = await clientConnection.find({ is_delete: requestObject.is_delete });
+            if (getdata) {
+                res.send(getdata);
+            } else {
+                res.send([]);
             }
-            else {
+        } catch (e) {
+            console.log(e);
+            res.send([]);
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+
+//get one invoice client
+module.exports.getOneClient = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var clientConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientSchema);
+
+            var getdata = await clientConnection.findOne({ _id: requestObject._id });
+            if (getdata) {
+                res.send({ status: true, message: "Client data", data: getdata });
+            } else {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
             }
-            // var getdata = await clientConnection.findOne({ _id: requestObject._id });
-            // if (getdata) {
-            //     res.send({ status: true, message: "Client data", data: getdata });
-            // } else {
-            //     res.send({ message: translator.getStr('SomethingWrong'), status: false });
-            // }
         } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), status: false, error: e });
