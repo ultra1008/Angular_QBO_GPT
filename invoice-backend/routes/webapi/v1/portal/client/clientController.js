@@ -203,6 +203,7 @@ module.exports.getClinetHistory = async function (req, res) {
                     }
                 },
                 { $unwind: "$client_id" },
+                { $unwind: "$client_id" },
                 { $sort: { history_created_at: -1 } },
                 { $limit: perpage + start },
                 { $skip: start }
@@ -284,8 +285,8 @@ module.exports.updateMultipleClientStatus = async function (req, res) {
         try {
             var clientConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientSchema);
             var requestObject = req.body;
-            // var id = requestObject._id;
-            // delete requestObject._id;
+            var id = requestObject._id;
+            delete requestObject._id;
 
             var updateStatus = await clientConnection.updateMany({ _id: { $in: requestObject._id } }, { client_status: requestObject.client_status });
 
@@ -332,6 +333,8 @@ module.exports.deleteMultipleClient = async function (req, res) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
+            let id = requestObject._id;
+            delete requestObject._id;
             var clientConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientSchema);
 
 
@@ -393,19 +396,29 @@ module.exports.getClientForTable = async function (req, res) {
                         from: collectionConstant.INVOICE_USER,
                         localField: "approver_id",
                         foreignField: "_id",
-                        as: "approver_id"
+                        as: "invoice_user"
                     }
                 },
-                { $unwind: "$approver_id" },
+                {
+                    $unwind: {
+                        preserveNullAndEmptyArrays: true,
+                        path: "$invoice_user"
+                    }
+                },
                 {
                     $lookup: {
                         from: collectionConstant.COSTCODES,
                         localField: "client_cost_cost_id",
                         foreignField: "_id",
-                        as: "client_cost_cost_id"
+                        as: "costcode"
                     }
                 },
-                { $unwind: "$client_cost_cost_id" },
+                {
+                    $unwind: {
+                        preserveNullAndEmptyArrays: true,
+                        path: "$costcode"
+                    }
+                },
                 {
                     $project: {
                         client_name: 1,
@@ -415,14 +428,16 @@ module.exports.getClientForTable = async function (req, res) {
                         client_notes: 1,
                         gl_account: 1,
                         is_delete: 1,
-                        approver_id: {
-                            _id: "$approver_id._id",
-                            userfullname: "$approver_id.userfullname",
+                        approver_id: 1,
+                        client_cost_cost_id: 1,
+                        approver: {
+                            _id: "$invoice_user._id",
+                            userfullname: "$invoice_user.userfullname",
 
                         },
-                        client_cost_cost_id: {
-                            _id: "$client_cost_cost_id._id",
-                            cost_code: "$client_cost_cost_id.cost_code",
+                        client_cost_cost: {
+                            _id: "$costcode._id",
+                            cost_code: "$costcode.cost_code",
 
                         }
                     }
