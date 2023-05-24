@@ -25,7 +25,7 @@ export const ROUTES: RouteInfo[] = [
   },
   {
     path: WEB_ROUTES.CLIENT,
-    title: 'Client',
+    title: 'Client/Job Name',
     iconType: 'material-icons-two-tone',
     icon: 'account_circle',
     class: '',
