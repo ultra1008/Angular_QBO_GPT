@@ -203,6 +203,7 @@ module.exports.getClinetHistory = async function (req, res) {
                     }
                 },
                 { $unwind: "$client_id" },
+                { $unwind: "$client_id" },
                 { $sort: { history_created_at: -1 } },
                 { $limit: perpage + start },
                 { $skip: start }
@@ -284,8 +285,8 @@ module.exports.updateMultipleClientStatus = async function (req, res) {
         try {
             var clientConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientSchema);
             var requestObject = req.body;
-            // var id = requestObject._id;
-            // delete requestObject._id;
+            var id = requestObject._id;
+            delete requestObject._id;
 
             var updateStatus = await clientConnection.updateMany({ _id: { $in: requestObject._id } }, { client_status: requestObject.client_status });
 
@@ -332,6 +333,8 @@ module.exports.deleteMultipleClient = async function (req, res) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
+            let id = requestObject._id;
+            delete requestObject._id;
             var clientConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientSchema);
 
 
