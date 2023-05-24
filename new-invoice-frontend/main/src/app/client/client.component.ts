@@ -31,6 +31,7 @@ import { Vendor, TermModel } from '../vendors/vendor-table.model';
 import { VendorsService } from '../vendors/vendors.service';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { ClientService } from './client.service';
+import { ClientList } from './client.model';
 
 @Component({
   selector: 'app-client',
@@ -42,28 +43,20 @@ export class ClientComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit
 {
-  @ViewChild('gallery') gallery!: NgxGalleryComponent;
-  galleryOptions!: NgxGalleryOptions[];
-  galleryImages: NgxGalleryImage[] = [];
-  imageObject = [];
-  tmp_gallery: any;
   show: boolean = false;
   displayedColumns = [
     'select',
-    'vendor_name',
-    'vendor_id',
-    'customer_id',
-    'vendor_phone',
-    'vendor_email',
-    'vendor_address',
-    'vendor_status',
-    'vendor_attachment',
-    'vendor_from',
+    'client_name',
+    'client_number',
+    'client_email',
+    'approver_id',
+    'client_cost_cost_id',
+    'client_status',
     'actions',
   ];
-  vendorService?: ClientService;
-  dataSource!: VendorDataSource;
-  selection = new SelectionModel<Vendor>(true, []);
+  clientService?: ClientService;
+  dataSource!: ClientDataSource;
+  selection = new SelectionModel<ClientList>(true, []);
   id?: number;
   isDelete = 0;
   termsList: Array<TermModel> = [];
@@ -76,7 +69,7 @@ export class ClientComponent
     public httpClient: HttpClient,
     private httpCall: HttpCall,
     public dialog: MatDialog,
-    public vendorTableService: ClientService,
+    public clientTableService: ClientService,
     private snackBar: MatSnackBar,
     private router: Router,
     public translate: TranslateService,
@@ -90,87 +83,47 @@ export class ClientComponent
   @ViewChild(MatMenuTrigger)
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
-  vendor_status: any = [''];
+  client_status: any = [''];
 
   ngOnInit() {
     this.rform = this.fb.group({
-      vendor_status: [''],
+      client_status: [''],
     });
-
-    if (this.isQBSyncedCompany) {
-      this.displayedColumns = [
-        'select',
-        'vendor_name',
-        'vendor_id',
-        'customer_id',
-        'vendor_phone',
-        'vendor_email',
-        'vendor_address',
-        'vendor_status',
-        'vendor_attachment',
-        'vendor_from',
-        'actions',
-      ];
-    } else {
-      this.displayedColumns = [
-        'select',
-        'vendor_name',
-        'vendor_id',
-        'customer_id',
-        'vendor_phone',
-        'vendor_email',
-        'vendor_address',
-        'vendor_status',
-        'vendor_attachment',
-        'actions',
-      ];
-    }
 
     this.loadData();
 
-    this.tmp_gallery = gallery_options();
-    this.tmp_gallery.actions = [
-      {
-        icon: 'fas fa-download',
-        onClick: this.downloadButtonPress.bind(this),
-        titleText: 'download',
-      },
-    ];
-    this.galleryOptions = [this.tmp_gallery];
     this.getTerms();
   }
 
   // TOOLTIPS
   getTooltip(row: any) {
-    return row.vendor_email;
-  }
-  getAddTooltip(row: any) {
-    return row.vendor_address;
+    return row.client_email;
   }
   getNameTooltip(row: any) {
-    return row.vendor_name;
+    return row.client_name;
   }
-  getCustomerIdTooltip(row: any) {
-    return row.customer_id;
+  getCostCodeTooltip(row: any) {
+    return row.client_cost_cost.cost_code;
   }
-  getVendorIdTooltip(row: any) {
-    return row.vendor_id;
+  getNumberTooltip(row: any) {
+    return row.client_number;
   }
-  getPhonTooltip(row: any) {
-    return row.vendor_phone;
+  getApproverTooltip(row: any) {
+    return row.approver.userfullname;
   }
 
   refresh() {
     this.loadData();
   }
   onBookChange(ob: any) {
-    console.log('Book changed...');
     let selectedBook = ob.value;
     console.log(selectedBook);
     if (selectedBook == 1) {
       swalWithBootstrapTwoButtons
         .fire({
-          title: 'Are you sure you want to active all vendor?',
+          title: this.translate.instant(
+            'CLIENT.CONFIRMATION_DIALOG.ALL_ACTIVE'
+          ),
           showDenyButton: true,
           confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
           denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
@@ -184,7 +137,9 @@ export class ClientComponent
     } else if (selectedBook == 2) {
       swalWithBootstrapTwoButtons
         .fire({
-          title: 'Are you sure you want to Inactive all vendor?',
+          title: this.translate.instant(
+            'CLIENT.CONFIRMATION_DIALOG.ALL_INACTIVE'
+          ),
           showDenyButton: true,
           confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
           denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
@@ -198,7 +153,9 @@ export class ClientComponent
     } else if (selectedBook == 3) {
       swalWithBootstrapTwoButtons
         .fire({
-          title: 'Are you sure you want to archive all vendor?',
+          title: this.translate.instant(
+            'CLIENT.CONFIRMATION_DIALOG.ALL_ARCHIVE'
+          ),
           showDenyButton: true,
           confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
           denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
@@ -217,21 +174,14 @@ export class ClientComponent
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
     }
-    const data = await this.vendorTableService.allDeleteVendor({
+    const data = await this.clientTableService.allDeleteClient({
       _id: tmp_ids,
       is_delete: 1,
     });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       this.refresh();
-      // const foundIndex = this.vendorService?.dataChange.value.findIndex(
-      //   (x) => x._id === vendor._id
-      // );
-      // for delete we use splice in order to remove single object from DataService
-      // if (foundIndex != null && this.vendorService) {
-      //   this.vendorService.dataChange.value.splice(foundIndex, 1);
-
-      // }
+      location.reload();
     } else {
       showNotification(this.snackBar, data.message, 'error');
     }
@@ -242,9 +192,9 @@ export class ClientComponent
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
     }
-    const data = await this.vendorTableService.updateAllVendorStatus({
+    const data = await this.clientTableService.updateAllclientStatus({
       _id: tmp_ids,
-      vendor_status: 1,
+      client_status: 1,
     });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
@@ -259,9 +209,9 @@ export class ClientComponent
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
     }
-    const data = await this.vendorTableService.updateAllVendorStatus({
+    const data = await this.clientTableService.updateAllclientStatus({
       _id: tmp_ids,
-      vendor_status: 2,
+      client_status: 2,
     });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
@@ -275,14 +225,14 @@ export class ClientComponent
     this.router.navigate([WEB_ROUTES.CLIENT_FORM]);
   }
 
-  editVendor(vendor: Vendor) {
+  editClient(client: ClientList) {
     this.router.navigate([WEB_ROUTES.CLIENT_FORM], {
-      queryParams: { _id: vendor._id },
+      queryParams: { _id: client._id },
     });
   }
 
   openHistory() {
-    this.router.navigate([WEB_ROUTES.VENDOR_HISTORY]);
+    this.router.navigate([WEB_ROUTES.CLIENT_HISTORY]);
   }
 
   private refreshTable() {
@@ -310,9 +260,9 @@ export class ClientComponent
   public loadData() {
     this.show = false;
     console.log('Vendor loadData call');
-    this.vendorService = new ClientService(this.httpCall);
-    this.dataSource = new VendorDataSource(
-      this.vendorService,
+    this.clientService = new ClientService(this.httpCall);
+    this.dataSource = new ClientDataSource(
+      this.clientService,
       this.paginator,
       this.sort,
       this.isDelete
@@ -331,22 +281,21 @@ export class ClientComponent
   // export table data in excel file
   exportExcel() {
     // key name with space add in brackets
-    const exportData: Partial<TableElement>[] =
-      this.dataSource.filteredData.map((x) => ({
-        'Vendor Name': x.vendor_name || '',
-        'Vendor ID': x.vendor_id || '',
-        'Customer ID': x.customer_id || '',
-        Phone: x.vendor_phone || '',
-        Email: x.vendor_email || '',
-        Address: x.vendor_address || '',
-        Status: x.vendor_status === 1 ? 'Active' : 'Inactive',
-      }));
-
-    TableExportUtil.exportToExcel(exportData, 'excel');
+    //  const exportData: Partial<TableElement>[] =
+    //       this.dataSource.filteredData.map((x) => ({
+    //         'Vendor Name': x.vendor_name || '',
+    //         'Vendor ID': x.vendor_id || '',
+    //         'Customer ID': x.customer_id || '',
+    //         Phone: x.vendor_phone || '',
+    //         Email: x.vendor_email || '',
+    //         Address: x.vendor_address || '',
+    //         Status: x.vendor_status === 1 ? 'Active' : 'Inactive',
+    //       }));
+    //     TableExportUtil.exportToExcel(exportData, 'excel');
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: Vendor) {
+  onContextMenu(event: MouseEvent, item: ClientList) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -356,22 +305,23 @@ export class ClientComponent
       this.contextMenu.openMenu();
     }
   }
-  async updateStatus(vendor: Vendor) {
+  async updateStatus(client: ClientList) {
     let status = 1;
-    if (vendor.vendor_status == 1) {
+    if (client.client_status == 1) {
       status = 2;
     }
-    const data = await this.vendorTableService.updateVendorStatus({
-      _id: vendor._id,
-      vendor_status: status,
+    const data = await this.clientTableService.updateClientStatus({
+      _id: client._id,
+      client_status: status,
     });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
-      const foundIndex = this.vendorService?.dataChange.value.findIndex(
-        (x) => x._id === vendor._id
+      const foundIndex = this.clientService?.dataClientChange.value.findIndex(
+        (x) => x._id === client._id
       );
-      if (foundIndex != null && this.vendorService) {
-        this.vendorService.dataChange.value[foundIndex].vendor_status = status;
+      if (foundIndex != null && this.clientService) {
+        this.clientService.dataClientChange.value[foundIndex].client_status =
+          status;
         this.refreshTable();
       }
     } else {
@@ -379,34 +329,35 @@ export class ClientComponent
     }
   }
 
-  async archiveRecover(vendor: Vendor, is_delete: number) {
-    const data = await this.vendorTableService.deleteVendor({
-      _id: vendor._id,
+  async archiveRecover(client: ClientList, is_delete: number) {
+    const data = await this.clientTableService.deleteClient({
+      _id: client._id,
       is_delete: is_delete,
     });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
-      const foundIndex = this.vendorService?.dataChange.value.findIndex(
-        (x) => x._id === vendor._id
+      const foundIndex = this.clientService?.dataChange.value.findIndex(
+        (x) => x._id === client._id
       );
       // for delete we use splice in order to remove single object from DataService
-      if (foundIndex != null && this.vendorService) {
-        this.vendorService.dataChange.value.splice(foundIndex, 1);
+      if (foundIndex != null && this.clientService) {
+        this.clientService.dataChange.value.splice(foundIndex, 1);
         this.refreshTable();
+        location.reload();
       }
     } else {
       showNotification(this.snackBar, data.message, 'error');
     }
   }
 
-  async deleteVendor(vendor: Vendor, is_delete: number) {
+  async deleteVendor(client: ClientList, is_delete: number) {
     if (is_delete == 1) {
       this.titleMessage = this.translate.instant(
-        'VENDOR.CONFIRMATION_DIALOG.ARCHIVE'
+        'CLIENT.CONFIRMATION_DIALOG.ARCHIVE'
       );
     } else {
       this.titleMessage = this.translate.instant(
-        'VENDOR.CONFIRMATION_DIALOG.RESTORE'
+        'CLIENT.CONFIRMATION_DIALOG.RESTORE'
       );
     }
     swalWithBootstrapTwoButtons
@@ -419,7 +370,7 @@ export class ClientComponent
       })
       .then((result) => {
         if (result.isConfirmed) {
-          this.archiveRecover(vendor, is_delete);
+          this.archiveRecover(client, is_delete);
           this.show = false;
         }
       });
@@ -427,25 +378,33 @@ export class ClientComponent
 
   gotoArchiveUnarchive() {
     this.isDelete = this.isDelete == 1 ? 0 : 1;
+    if (this.isDelete === 0) {
+      this.displayedColumns = [
+        'select',
+        'client_name',
+        'client_number',
+        'client_email',
+        'approver_id',
+        'client_cost_cost_id',
+        'client_status',
+        'actions',
+      ];
+    } else {
+      this.displayedColumns = [
+        'client_name',
+        'client_number',
+        'client_email',
+        'approver_id',
+        'client_cost_cost_id',
+        'client_status',
+        'actions',
+      ];
+    }
     this.refresh();
   }
 
-  // View Network Attachment
-  viewAttachment(vendor: Vendor) {
-    this.galleryImages = commonNewtworkAttachmentViewer(
-      vendor.vendor_attachment
-    );
-    setTimeout(() => {
-      this.gallery.openPreview(0);
-    }, 0);
-  }
-
-  downloadButtonPress(event: any, index: number): void {
-    window.location.href = this.imageObject[index];
-  }
-
   async getTerms() {
-    const data = await this.vendorService?.getTerms();
+    const data = await this.clientService?.getTerms();
     if (data.status) {
       this.termsList = data.data;
     }
@@ -466,7 +425,7 @@ export class ClientComponent
 }
 
 // This class is used for datatable sorting and searching
-export class VendorDataSource extends DataSource<Vendor> {
+export class ClientDataSource extends DataSource<ClientList> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -474,10 +433,10 @@ export class VendorDataSource extends DataSource<Vendor> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: Vendor[] = [];
-  renderedData: Vendor[] = [];
+  filteredData: ClientList[] = [];
+  renderedData: ClientList[] = [];
   constructor(
-    public vendorService: ClientService,
+    public clientService: ClientService,
     public paginator: MatPaginator,
     public _sort: MatSort,
     public isDelete: number
@@ -487,28 +446,27 @@ export class VendorDataSource extends DataSource<Vendor> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<Vendor[]> {
+  connect(): Observable<ClientList[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this.vendorService.dataChange,
+      this.clientService.dataClientChange,
       this._sort.sortChange,
       this.filterChange,
       this.paginator.page,
     ];
-    this.vendorService.getAllVendorTable(this.isDelete);
+    this.clientService.getAllClientTable(this.isDelete);
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
-        this.filteredData = this.vendorService.data
+        this.filteredData = this.clientService.dataClient
           .slice()
-          .filter((vendorTable: Vendor) => {
+          .filter((ClientList: ClientList) => {
             const searchStr = (
-              vendorTable.vendor_name +
-              vendorTable.vendor_id +
-              vendorTable.customer_id +
-              vendorTable.vendor_phone +
-              vendorTable.vendor_email +
-              vendorTable.vendor_address
+              ClientList.client_name +
+              ClientList.client_email +
+              ClientList.client_status +
+              ClientList.approver_id +
+              ClientList.client_cost_cost_id
             ).toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
@@ -528,7 +486,7 @@ export class VendorDataSource extends DataSource<Vendor> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: Vendor[]): Vendor[] {
+  sortData(data: ClientList[]): ClientList[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }
@@ -540,25 +498,25 @@ export class VendorDataSource extends DataSource<Vendor> {
           [propertyA, propertyB] = [a._id, b._id];
           break;
         case 'vendor_name':
-          [propertyA, propertyB] = [a.vendor_name, b.vendor_name];
+          [propertyA, propertyB] = [a.client_name, b.client_name];
           break;
         case 'vendor_id':
-          [propertyA, propertyB] = [a.vendor_id, b.vendor_id];
+          [propertyA, propertyB] = [a.client_number, b.client_number];
           break;
         case 'customer_id':
-          [propertyA, propertyB] = [a.customer_id, b.customer_id];
+          [propertyA, propertyB] = [a.client_email, b.client_email];
           break;
         case 'vendor_phone':
-          [propertyA, propertyB] = [a.vendor_phone, b.vendor_phone];
+          [propertyA, propertyB] = [a.client_status, b.client_status];
           break;
         case 'vendor_email':
-          [propertyA, propertyB] = [a.vendor_email, b.vendor_email];
+          [propertyA, propertyB] = [a.approver_id, b.approver_id];
           break;
         case 'vendor_address':
-          [propertyA, propertyB] = [a.vendor_address, b.vendor_address];
-          break;
-        case 'vendor_status':
-          [propertyA, propertyB] = [a.vendor_status, b.vendor_status];
+          [propertyA, propertyB] = [
+            a.client_cost_cost_id,
+            b.client_cost_cost_id,
+          ];
           break;
       }
       const valueA = isNaN(+propertyA) ? propertyA : +propertyA;

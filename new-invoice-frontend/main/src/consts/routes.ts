@@ -18,11 +18,14 @@ export enum WEB_ROUTES {
 
   DASHBOARD = '/dashboard/main',
   MONTHLY_HISTORY = 'monthly-history',
+  MONTHLY_INVOICE = 'monthly-invoice',
   DASHBOARD_MONTHLY_HISTORY = '/dashboard/monthly-history',
+  DASHBOARD_MONTHLY_INVOICE = '/dashboard/monthly-invoice',
 
   CHANGE_PASSWORD = '/authentication/change-password',
 
   CLIENT_FORM = '/client/form',
+  CLIENT_HISTORY = '/client/history',
 
   VENDOR_FORM = '/vendor/form',
   VENDOR_ARCHIVE = '/vendor/archive',

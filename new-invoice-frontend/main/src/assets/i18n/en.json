@@ -365,5 +365,39 @@
             "SAVING": "Are you sure you want to close this window without saving changes?",
             "DELETE": "Are you sure you want to delete this emergency?"
         }
+    },
+    "CLIENT": {
+        "VIEW": {
+            "TITLE": "Client/Job Name",
+            "ARCHIVED_TITLE": "Archived Client/Job Name"
+        },
+        "TABLE": {
+            "CLIENT_NAME": "Client/Job Name",
+            "CLIENT_NUMBER": "Client Number",
+            "JOB_CONTACT_EMAIL": "Job Contact Email",
+            "APPROVER": "Approver",
+            "COST_CODE": "Cost Code",
+            "STATUS": "Status",
+            "ACTIONS": "Action"
+        },
+        "ADD_EDIT": {
+            "ADD_TITLE": "Add Client/Job Name",
+            "EDIT_TITLE": "Edit Client/Job Name",
+            "COST_GL": "Cost Code/GL Account",
+            "STATUS": "Status",
+            "NOTES": "Notes"
+        },
+        "HISTORY": {
+            "TITLE": "Client/Job Name History"
+        },
+        "CONFIRMATION_DIALOG": {
+            "SUBMIT": "Please complete the Client/Job Name form before submitting.",
+            "SAVING": "Are you sure you want to close this window without saving changes?",
+            "ARCHIVE": "Are you sure you want to archive this Client/Job Name?",
+            "RESTORE": "Are you sure you want to restore this Client/Job Name?",
+            "ALL_ACTIVE": "Are you sure you want to active all Client/Job Name?",
+            "ALL_INACTIVE": "Are you sure you want to Inactive all Client/Job Name?",
+            "ALL_ARCHIVE": "Are you sure you want to archive all Client/Job Name?"
+        }
     }
 }

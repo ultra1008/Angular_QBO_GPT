@@ -119,17 +119,17 @@ export class MainComponent {
       series: [
         {
           name: 'Pending Invoice',
-          data: [28, 29, 33, 36, 32, 32, 33],
+          data: [28, 29, 33],
           color: '#C5B7FF',
         },
         {
           name: 'Approved Invoice',
-          data: [12, 11, 14, 18, 17, 13, 13],
+          data: [12, 11, 14],
           color: '#94D4FE',
         },
         {
           name: 'Rejected Invoice',
-          data: [2, 5, 1, 6, 8, 3, 3],
+          data: [2, 5, 1],
           color: '#FF99B1',
         },
       ],
@@ -144,7 +144,7 @@ export class MainComponent {
         size: 6,
       },
       xaxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+        categories: ['Mar', 'Apr', 'May'],
         title: {
           text: 'Month',
         },
@@ -266,7 +266,7 @@ export class MainComponent {
   }
 
   viewMonthlyInvoiceChart() {
-    //
+    this.router.navigate([WEB_ROUTES.DASHBOARD_MONTHLY_INVOICE]);
   }
 
   downloadMonthlyInvoiceChart() {

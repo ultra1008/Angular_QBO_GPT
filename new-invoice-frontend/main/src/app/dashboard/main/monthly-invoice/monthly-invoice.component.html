@@ -8,7 +8,7 @@
                         <div class="left">
                             <ul class="header-buttons-left ms-0">
                                 <li class="tbl-title">
-                                    <h2>Monthly History</h2>
+                                    <h2>Monthly Invoice</h2>
                                 </li>
                             </ul>
                         </div>
@@ -39,11 +39,11 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="body overflow-auto">
+                    <div class="body overflow-auto chart" id="chart">
                         <div style="text-align:center">
-                            <apx-chart [series]="columnChartOptions.series!" [chart]="columnChartOptions.chart!"
-                                [title]="columnChartOptions.title!" [dataLabels]="columnChartOptions.dataLabels"
-                                [xaxis]="columnChartOptions.xaxis"></apx-chart>
+                            <apx-chart [series]="invoiceChartOptions.series!" [chart]="invoiceChartOptions.chart!"
+                                [xaxis]="invoiceChartOptions.xaxis!" [title]="invoiceChartOptions.title!"
+                                [stroke]="invoiceChartOptions.stroke"></apx-chart>
                         </div>
                     </div>
                 </div>

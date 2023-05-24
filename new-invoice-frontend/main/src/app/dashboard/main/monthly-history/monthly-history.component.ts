@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ApexAxisChartSeries, ApexNonAxisChartSeries, ApexChart, ApexDataLabels, ApexPlotOptions, ApexYAxis, ApexXAxis, ApexFill, ApexTooltip, ApexStroke, ApexLegend, ApexTitleSubtitle, ApexGrid, ApexMarkers, ApexResponsive } from 'ng-apexcharts';
 import { WEB_ROUTES } from 'src/consts/routes';
+
 export type ChartOptions = {
   series?: ApexAxisChartSeries;
   series2?: ApexNonAxisChartSeries;
@@ -113,10 +114,6 @@ export class MonthlyHistoryComponent {
         enabled: false,
       },
     };
-  }
-
-  viewHistoryChart() {
-    // this.router.navigate([WEB_ROUTES.DASHBOARD_MONTHLY_HISTORY]);
   }
 
   downloadHistoryChart() {
