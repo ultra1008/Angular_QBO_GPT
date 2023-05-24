@@ -365,5 +365,39 @@
             "SAVING": "Are you sure you want to close this window without saving changes?",
             "DELETE": "Are you sure you want to delete this emergency?"
         }
+    },
+    "CLIENT": {
+        "VIEW": {
+            "TITLE": "Cliente/Nombre del trabajo",
+            "ARCHIVED_TITLE": "Nombre de trabajo/cliente archivado"
+        },
+        "TABLE": {
+            "CLIENT_NAME": "Cliente/Nombre del trabajo",
+            "CLIENT_NUMBER": "Numero de cliente",
+            "JOB_CONTACT_EMAIL": "Correo electrónico de contacto laboral",
+            "APPROVER": "Aprobador",
+            "COST_CODE": "Código de costo",
+            "STATUS": "Estado",
+            "ACTIONS": "Acción"
+        },
+        "ADD_EDIT": {
+            "ADD_TITLE": "Agregar nombre de cliente/trabajo",
+            "EDIT_TITLE": "Editar nombre de cliente/trabajo",
+            "COST_GL": "Código de costo/Cuenta de mayor",
+            "STATUS": "Estado",
+            "NOTES": "notas"
+        },
+        "HISTORY": {
+            "TITLE": "Historial de nombre de cliente/trabajo"
+        },
+        "CONFIRMATION_DIALOG": {
+            "SUBMIT": "Por favor, complete el formulario de nombre de cliente / trabajo antes de enviar.",
+            "SAVING": "¿Está seguro de que desea cerrar esta ventana sin guardar los cambios?",
+            "ARCHIVE": "¿Está seguro de que desea archivar este nombre de cliente/trabajo?",
+            "RESTORE": "¿Está seguro de que desea restaurar este nombre de cliente/trabajo?",
+            "ALL_ACTIVE": "¿Está seguro de que desea activar todo el cliente/trabajo?",
+            "ALL_INACTIVE": "¿Está seguro de que desea Inactivar todo el cliente/trabajo?",
+            "ALL_ARCHIVE": "¿Está seguro de que desea archivar todos los clientes/trabajo?"
+        }
     }
 }

@@ -185,4 +185,11 @@ export enum httproutes {
   //clients
   GET_ALL_COSTCODE = 'getCostCode',
   SAVE_CLIENT = 'saveclient ',
+  CLIENT_DATA_TABLE = 'getClientForTable',
+  CLIENT_UPDATE_ALL_STATUS = 'updateMultipleClientStatus',
+  CLIENT_DELETE = 'deleteclient ',
+  CLIENT_GET_ONE = 'getOneClient',
+  CLIENT_UPDATE_STATUS = 'updateClientStatus',
+  CLIENT_ALL_DELETE = 'deleteMultipleClient ',
+  CLIENT_GET_HISTORY = 'getClinetHistory',
 }

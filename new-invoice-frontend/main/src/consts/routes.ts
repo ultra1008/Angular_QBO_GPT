@@ -25,6 +25,7 @@ export enum WEB_ROUTES {
   CHANGE_PASSWORD = '/authentication/change-password',
 
   CLIENT_FORM = '/client/form',
+  CLIENT_HISTORY = '/client/history',
 
   VENDOR_FORM = '/vendor/form',
   VENDOR_ARCHIVE = '/vendor/archive',

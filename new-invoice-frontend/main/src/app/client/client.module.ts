@@ -31,9 +31,10 @@ import { CommonComponentsModule } from '../common-components/common-components.m
 import { ComponentsModule } from '../shared/components/components.module';
 import { SharedModule } from '../shared/shared.module';
 import { ClientRoutingModule } from './client-routing.module';
+import { ClientHistoryComponent } from './client-history/client-history.component';
 
 @NgModule({
-  declarations: [ClientComponent, ClientFormComponent],
+  declarations: [ClientComponent, ClientFormComponent, ClientHistoryComponent],
   imports: [
     CommonModule,
     CommonModule,
