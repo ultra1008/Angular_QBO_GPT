@@ -18,7 +18,6 @@ import { WEB_ROUTES } from 'src/consts/routes';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { formatPhoneNumber, showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
 import { TranslateService } from '@ngx-translate/core';
-import { Direction } from '@angular/cdk/bidi';
 import { UserRestoreFormComponent } from '../user-restore-form/user-restore-form.component';
 import { UserReportComponent } from '../user-report/user-report.component';
 import { UntypedFormBuilder } from '@angular/forms';
@@ -60,7 +59,7 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
 
-  constructor (
+  constructor(
     public httpClient: HttpClient, private httpCall: HttpCall,
     public dialog: MatDialog,
     private snackBar: MatSnackBar, private router: Router,
@@ -112,7 +111,6 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
   }
   onBookChange(ob: any) {
     const selectedBook = ob.value;
-    console.log(selectedBook);
     if (selectedBook == 1) {
       swalWithBootstrapTwoButtons
         .fire({
@@ -177,7 +175,6 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
     const tmp_ids = [];
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
-      console.log("tmp_ids", tmp_ids);
     }
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_USER_STATUS_UPDATE, { _id: tmp_ids, userstatus: 1 });
     if (data.status) {
@@ -228,6 +225,7 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
     const numRows = this.dataSource.renderedData.length;
     return numSelected === numRows;
   }
+
   masterToggle() {
     this.isAllSelected()
       ? this.selection.clear()
@@ -235,6 +233,7 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
         this.selection.select(row)
       );
   }
+
   userReport() {
     const dialogRef = this.dialog.open(UserReportComponent, {
       width: '700px',
@@ -351,18 +350,7 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
     });
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
       if (result === 1) {
-        // After dialog is closed we're doing frontend updates
-        // For add we're just pushing a new row inside DataService
-        // this.exampleDatabase?.dataChange.value.unshift(
-        //   this.advanceTableService.getDialogData()
-        // );
 
-        // this.showNotification(
-        //   'snackbar-success',
-        //   'Add Record Successfully...!!!',
-        //   'bottom',
-        //   'center'
-        // );
       }
     });
 
@@ -390,7 +378,7 @@ export class UserDataSource extends DataSource<User> {
   }
   filteredData: User[] = [];
   renderedData: User[] = [];
-  constructor (
+  constructor(
     public userService: UserService,
     public paginator: MatPaginator,
     public _sort: MatSort,

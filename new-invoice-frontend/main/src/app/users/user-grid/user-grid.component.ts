@@ -13,7 +13,6 @@ import { showNotification, swalWithBootstrapTwoButtons, timeDateToepoch } from '
 import { SelectionModel } from '@angular/cdk/collections';
 import { AdvanceTable, RoleModel, User } from '../user.model';
 import { UserRestoreFormComponent } from '../user-restore-form/user-restore-form.component';
-import { Direction } from '@angular/cdk/bidi';
 import { UserReportComponent } from '../user-report/user-report.component';
 import { FormateDateDDMMYYPipe, FormateDateStringPipe } from '../users-filter.pipe';
 import { httproutes, httpversion } from 'src/consts/httproutes';
@@ -41,7 +40,7 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
   tweet_epochs: any = [];
   cardLoading = true;
 
-  constructor (
+  constructor(
     public httpClient: HttpClient, private httpCall: HttpCall,
     public dialog: MatDialog, public userService: UserService,
     private snackBar: MatSnackBar, private router: Router, private commonService: CommonService,
@@ -155,18 +154,6 @@ export class UserGridComponent extends UnsubscribeOnDestroyAdapter implements On
           });
           this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
             if (result === 1) {
-              // After dialog is closed we're doing frontend updates
-              // For add we're just pushing a new row inside DataService
-              // this.exampleDatabase?.dataChange.value.unshift(
-              //   this.advanceTableService.getDialogData()
-              // );
-
-              // this.showNotification(
-              //   'snackbar-success',
-              //   'Add Record Successfully...!!!',
-              //   'bottom',
-              //   'center'
-              // );
             }
           });
 

@@ -285,36 +285,6 @@
                                         </button>
                                     </mat-cell>
                                 </ng-container>
-                                <!-- <ng-container matColumnDef="actions">
-                                    <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-7'" *matHeaderCellDef>
-                                        {{'VENDOR.TABLE.ACTIONS' |
-                                        translate}}
-                                    </mat-header-cell>
-                                    <mat-cell class=" psl-3 tbl-col-width-per-7" *matCellDef="let row; let i=index;">
-                                        <button mat-icon-button [matMenuTriggerFor]="menu"
-                                            (click)="$event.stopPropagation()">
-                                            <mat-icon>more_vert</mat-icon>
-                                        </button>
-                                        <mat-menu #menu="matMenu">
-                                            <button mat-menu-item (click)="editVendor(row)" *ngIf="isDelete === 0">
-                                                <i class="material-icons-two-tone align-middle msr-2">create</i>
-                                                <span>{{'COMMON.ACTIONS.EDIT' |
-                                                    translate}}</span>
-                                            </button>
-                                            <button mat-menu-item (click)="deleteVendor(row,1)" *ngIf="isDelete === 0">
-                                                <i class="material-icons-two-tone align-middle msr-2">archive</i>
-                                                <span>{{'COMMON.ACTIONS.ARCHIVE' |
-                                                    translate}}</span>
-                                            </button>
-                                            <button mat-menu-item (click)="deleteVendor(row,0)" *ngIf="isDelete === 1">
-                                                <i class="material-icons-two-tone align-middle msr-2">archive</i>
-                                                <span>{{'COMMON.ACTIONS.RESTORE' |
-                                                    translate}}</span>
-                                            </button>
-                                        </mat-menu>
-                                    </mat-cell>
-                                </ng-container> -->
-
                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                                 <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'"
                                     matRipple>

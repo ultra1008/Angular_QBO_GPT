@@ -1,20 +1,11 @@
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Component, Inject } from '@angular/core';
-import {
-  UntypedFormControl,
-  Validators,
-  UntypedFormGroup,
-  UntypedFormBuilder,
-} from '@angular/forms';
+import { UntypedFormControl, Validators, UntypedFormGroup, UntypedFormBuilder, } from '@angular/forms';
 import { AdvanceTable, User } from '../user.model';
 import { UserService } from '../user.service';
-import {
-  showNotification,
-  swalWithBootstrapTwoButtons,
-} from 'src/consts/utils';
+import { showNotification, } from 'src/consts/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SelectionModel } from '@angular/cdk/collections';
-import { WEB_ROUTES } from 'src/consts/routes';
 import { Router } from '@angular/router';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
@@ -43,7 +34,7 @@ export class UserRestoreFormComponent {
   titleMessage = '';
   userList: any = [];
   isDelete = 0;
-  constructor (
+  constructor(
     public dialogRef: MatDialogRef<UserRestoreFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     public UserService: UserService,
@@ -93,15 +84,7 @@ export class UserRestoreFormComponent {
       this.roleList = this.variablesRoleList.slice();
     }
   }
-  // async archiveRecover(user: User, is_delete: number) {
-  //   const data = await this.advanceTableService.deleteUser({ _id: user, is_delete: is_delete });
-  //   if (data.status) {
-  //     showNotification(this.snackBar, data.message, 'success');
 
-  //   } else {
-  //     showNotification(this.snackBar, data.message, 'error');
-  //   }
-  // }
   async restoreUser(userId: any) {
     const requestObject = this.userRoleInfo.value;
     requestObject._id = userId;
@@ -114,11 +97,6 @@ export class UserRestoreFormComponent {
     }
   }
 
-  // gotoArchiveUnarchive() {
-  //   this.isDelete = this.isDelete == 1 ? 0 : 1;
-  //   this.getUser();
-
-  // }
   async getUser() {
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_USER_GET_FOR_TABLE, { is_delete: this.isDelete });
     this.userList = data;

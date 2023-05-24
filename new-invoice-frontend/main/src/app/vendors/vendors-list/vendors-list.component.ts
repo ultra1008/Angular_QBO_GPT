@@ -168,7 +168,6 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   }
   onBookChange(ob: any) {
     const selectedBook = ob.value;
-    console.log(selectedBook);
     if (selectedBook == 1) {
       swalWithBootstrapTwoButtons
         .fire({
@@ -230,14 +229,6 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       this.refresh();
-      // const foundIndex = this.vendorService?.dataChange.value.findIndex(
-      //   (x) => x._id === vendor._id
-      // );
-      // for delete we use splice in order to remove single object from DataService
-      // if (foundIndex != null && this.vendorService) {
-      //   this.vendorService.dataChange.value.splice(foundIndex, 1);
-
-      // }
     } else {
       showNotification(this.snackBar, data.message, 'error');
     }
@@ -290,6 +281,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   private refreshTable() {
     this.paginator._changePageSize(this.paginator.pageSize);
   }
+
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -304,14 +296,13 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
       : this.dataSource.renderedData.forEach((row) =>
         this.selection.select(row)
       );
-    console.log('numRows', this.selection.selected);
+
   }
   removeSelectedRows() {
-    console.log('All Selected removed option selected');
+
   }
   public loadData() {
     this.show = false;
-    console.log('Vendor loadData call');
     this.vendorService = new VendorsService(this.httpCall);
     this.dataSource = new VendorDataSource(
       this.vendorService,

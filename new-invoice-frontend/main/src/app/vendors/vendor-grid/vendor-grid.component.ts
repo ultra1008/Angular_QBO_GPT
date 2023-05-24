@@ -46,15 +46,10 @@ export class VendorGridComponent extends UnsubscribeOnDestroyAdapter implements 
     this.getVendor();
   }
 
-  changeStatus(event: any) {
-    //
-  }
-
   gotolist() {
     localStorage.setItem(localstorageconstants.VENDOR_DISPLAY, 'list');
     this.router.navigate([WEB_ROUTES.VENDOR]);
   }
-
 
   async getVendor() {
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_GET, { is_delete: this.isDelete });

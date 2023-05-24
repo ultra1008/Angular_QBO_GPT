@@ -1,28 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import {
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators,
-} from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators, } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { VendorsService } from '../vendors.service';
-import { CountryModel, TermModel, Vendor } from '../vendor-table.model';
-import {
-  commonLocalThumbImage,
-  commonNetworkThumbImage,
-  commonNewtworkAttachmentViewer,
-  gallery_options,
-  showNotification,
-  swalWithBootstrapButtons,
-  swalWithBootstrapTwoButtons,
-} from 'src/consts/utils';
+import { CountryModel, TermModel } from '../vendor-table.model';
+import { commonLocalThumbImage, commonNetworkThumbImage, commonNewtworkAttachmentViewer, gallery_options, showNotification, swalWithBootstrapButtons, swalWithBootstrapTwoButtons, } from 'src/consts/utils';
 import { DomSanitizer } from '@angular/platform-browser';
-import {
-  NgxGalleryComponent,
-  NgxGalleryImage,
-  NgxGalleryOptions,
-} from 'ngx-gallery-9';
+import { NgxGalleryComponent, NgxGalleryImage, NgxGalleryOptions, } from 'ngx-gallery-9';
 import { CommonService } from 'src/app/services/common.service';
 import { wasabiImagePath } from 'src/consts/wasabiImagePath';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
@@ -245,13 +229,13 @@ export class VendorFormComponent {
     this.prepareFilesList($event);
   }
   fileChange(event: Event) {
-    // console.log("event:' ", event);
     const element = event.currentTarget as HTMLInputElement;
     const fileList = element.files;
     if (fileList) {
       this.prepareFilesList(fileList);
     }
   }
+
   fileBrowseHandler(files: any) {
     this.prepareFilesList(files);
   }
