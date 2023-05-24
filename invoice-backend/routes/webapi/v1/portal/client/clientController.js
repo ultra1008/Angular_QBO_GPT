@@ -19,18 +19,21 @@ module.exports.saveclient = async function (req, res) {
             let id = requestObject._id;
             delete requestObject._id;
             if (id) {
+                let one_client = await clientConnection.findOne({ _id: ObjectID(id) });
                 //update invoice client
                 let updateclient = await clientConnection.updateOne({ _id: id }, requestObject);
                 if (updateclient) {
 
-                    // for (let i = 0; i < updatedData.length; i++) {
-                    //     updatedData[i]['key'] = translator.getStr(`Client_History.${updatedData[i]['key']}`);
-                    // }
-                    // let histioryObject = {
-                    //     data: updatedData,
-                    //     client_id: id,
-                    // };
-                    // addClientHistory("Update", histioryObject, decodedToken);
+                    // find difference of object 
+                    let updatedData = await common.findUpdatedFieldHistory(requestObject, one_client._doc);
+                    for (let i = 0; i < updatedData.length; i++) {
+                        updatedData[i]['key'] = (`Client_History.${updatedData[i]['key']}`);
+                    }
+                    let histioryObject = {
+                        data: updatedData,
+                        client_id: id,
+                    };
+                    addClientHistory("Update", histioryObject, decodedToken);
 
                     res.send({ status: true, message: "client update successfully..!" });
                 } else {
@@ -48,11 +51,14 @@ module.exports.saveclient = async function (req, res) {
                     var add_client = new clientConnection(requestObject);
                     var save_client = await add_client.save();
 
-                    // let histioryObject = {
-                    //     data: updatedData,
-                    //     client_id: id,
-                    // };
-                    // addClientHistory("Update", histioryObject, decodedToken);
+
+                    // find difference of object 
+                    let insertedData = await common.setInsertedFieldHistory(requestObject);
+                    let histioryObject = {
+                        data: insertedData,
+                        client_id: save_client.id,
+                    };
+                    addClientHistory("Insert", histioryObject, decodedToken);
                     res.send({ status: true, message: "client insert successfully..!", data: add_client });
 
                 }
@@ -113,7 +119,7 @@ module.exports.deleteclient = async function (req, res) {
             requestObject.client_updated_by = decodedToken.UserData._id;
             requestObject.client_updated_at = Math.round(new Date().getTime() / 1000);
 
-            var one_client = await clientConnection.findOne({ _id: requestObject.id });
+            var one_client = await clientConnection.findOne({ _id: ObjectID(id) });
 
             if (one_client) {
                 var delete_client = await clientConnection.updateMany({ _id: id }, { is_delete: requestObject.is_delete });
@@ -190,13 +196,13 @@ module.exports.getClinetHistory = async function (req, res) {
             let get_data = await client_history_connection.aggregate([
                 {
                     $lookup: {
-                        from: collectionConstant.INVOICE_VENDOR,
+                        from: collectionConstant.INVOICE_CLIENT,
                         localField: "client_id",
                         foreignField: "_id",
-                        as: "client"
+                        as: "client_id"
                     }
                 },
-                { $unwind: "$client" },
+                { $unwind: "$client_id" },
                 { $sort: { history_created_at: -1 } },
                 { $limit: perpage + start },
                 { $skip: start }
@@ -226,7 +232,7 @@ module.exports.updateClientStatus = async function (req, res) {
             var id = requestObject._id;
             delete requestObject._id;
 
-            var one_client = await clientConnection.findOne({ _id: requestObject.id });
+            var one_client = await clientConnection.findOne({ _id: ObjectID(id) });
             if (one_client) {
                 var updateStatus = await clientConnection.updateMany({ _id: requestObject.id }, { client_status: requestObject.client_status });
 
@@ -466,6 +472,8 @@ module.exports.getOneClient = async function (req, res) {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
+
+
 
 
 
