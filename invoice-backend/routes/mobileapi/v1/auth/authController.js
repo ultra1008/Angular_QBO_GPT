@@ -1449,7 +1449,9 @@ module.exports.getLoginCompanyList = async function (req, res) {
                 }
             }
         }
-        if (data.length == 1) {
+        if (data.length == 0) {
+            res.send({ message: 'Invalid username or password', status: false });
+        } else if (data.length == 1) {
             var get_tenants = await tenantsConnection.findOne({ company_id: data[0]._id });
             let connection_db_api = await db_connection.connection_db_api(get_tenants);
             let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);

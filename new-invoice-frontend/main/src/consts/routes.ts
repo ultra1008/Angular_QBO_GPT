@@ -16,6 +16,10 @@ export enum WEB_ROUTES {
   USER = '/user',
   USER_EMERGENCY_CONTACT = 'emergency-contact',
 
+  DASHBOARD = '/dashboard/main',
+  MONTHLY_HISTORY = 'monthly-history',
+  DASHBOARD_MONTHLY_HISTORY = '/dashboard/monthly-history',
+
   CHANGE_PASSWORD = '/authentication/change-password',
 
   CLIENT_FORM = '/client/form',

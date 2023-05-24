@@ -17,6 +17,9 @@ export enum httproutes {
   LOGIN_WITH_OTP = 'loginwithemailotp',
   CHANGEPASSWORD = 'changepassword',
 
+  // Dashboard
+  GET_DASHBOARD_INVOICE = 'getdashboardinvoice',
+
   // Vendor
   PORTAL_VENDOR_GET_FOR_TABLE = 'getvendorfortable',
   PORTAL_VENDOR_GET_ONE = 'getonevendor',

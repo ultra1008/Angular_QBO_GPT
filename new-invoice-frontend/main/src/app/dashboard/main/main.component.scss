@@ -1,1 +1,191 @@
+.dashboard-count {
+    border-radius: 10px;
+    display: flex;
 
+    .icon {
+        border-radius: 10px 0px 0px 10px;
+        width: 60px;
+        padding: 20px 20px;
+    }
+
+    .details {
+        padding: 10px 15px;
+
+        .count {
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .description {
+            font-weight: 500;
+        }
+    }
+}
+
+.pending-document-bg {
+    background-color: #D9E8FF;
+}
+
+.pending-document-icon-bg {
+    background-color: #0D6EFD;
+}
+
+.pending-invoice-bg {
+    background-color: #FEDEF7;
+}
+
+.pending-invoice-icon-bg {
+    background-color: #D626AF;
+}
+
+.sent-for-approval-bg {
+    background-color: #D2FFF2;
+}
+
+.sent-for-approval-icon-bg {
+    background-color: #23BB8E;
+}
+
+.rejected-invoice-bg {
+    background-color: #FFE1E1;
+}
+
+.rejected-invoice-icon-bg {
+    background-color: #EE1313;
+}
+
+.close-to-due-date-bg {
+    background-color: #FFFADD;
+}
+
+.close-to-due-date-icon-bg {
+    background-color: #FDE14E;
+}
+
+.on-hold-bg {
+    background-color: #EFDEFF;
+}
+
+.on-hold-icon-bg {
+    background-color: #8533D7;
+}
+
+.duplicate-bg {
+    background-color: #FFE9DC;
+}
+
+.duplicate-icon-bg {
+    background-color: #EF742F;
+}
+
+/* .item {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0px;
+
+    width: 196px;
+    height: 60px;
+
+ 
+
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+
+    .icon {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        padding: 20px;
+        gap: 10px;
+
+        width: 56px;
+        height: 60px;
+
+        background: #0D6EFD;
+        border-radius: 10px 0px 0px 10px;
+ 
+
+        flex: none;
+        order: 0;
+        flex-grow: 0;
+
+        i {
+            width: 16px;
+            height: 20px;
+        }
+    }
+
+    .text {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+        gap: 10px;
+
+        // width: 140px;
+        height: 60px;
+
+        background: #D9E8FF;
+        border-radius: 0px 10px 10px 0px;
+ 
+
+        flex: none;
+        order: 1;
+        flex-grow: 0;
+
+        .count {
+            // width: 26px;
+            // height: 17px;
+            font-weight: 800;
+            font-size: 14px;
+            line-height: 17px;
+
+            color: #000000;
+        }
+
+        .description {
+            // width: 116px;
+            // height: 15px;
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 15px;
+
+            color: #000000;
+        }
+    }
+} */
+.job-cost {
+    height: 470px;
+}
+
+.document .body {
+    padding-top: 0px;
+    min-height: 220px;
+    height: 220px;
+}
+
+.doc-file-type {
+    border: 1px solid #D1D1D1;
+    border-radius: 5px;
+    padding: 10px;
+
+    .last-updated {
+        margin-bottom: 0px;
+    }
+
+    .amount {
+        color: #F10007;
+    }
+}
+
+.doc-file-type .d-flex {
+    margin-bottom: 0px !important;
+    padding-bottom: 0px !important;
+    border-bottom: none !important;
+}
+
+.profile-header .col-lg-6 {
+    margin-bottom: 0px !important;
+}
