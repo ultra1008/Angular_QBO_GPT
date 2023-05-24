@@ -110,6 +110,107 @@ const helpMail = (req, res, next) => {
     });
 };
 
+const getLoginCompanyList = (req, res, next) => {
+    const validationRule = {
+        "useremail": "required|email",
+        "password": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({
+                status: false,
+                message: 'Validation failed',
+                data: err
+            });
+        } else {
+            next();
+        }
+    });
+};
+
+const sendEmailOTP = (req, res, next) => {
+    const validationRule = {
+        "useremail": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({
+                status: false,
+                message: err
+            });
+        } else {
+            next();
+        }
+    });
+};
+
+const submitEmailOTP = (req, res, next) => {
+    const validationRule = {
+        "useremail": "required",
+        "otp": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({
+                status: false,
+                message: err
+            });
+        } else {
+            next();
+        }
+    });
+};
+
+const loginWithEmailOTP = (req, res, next) => {
+    const validationRule = {
+        "useremail": "required",
+        "_id": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({
+                status: false,
+                message: err
+            });
+        } else {
+            next();
+        }
+    });
+};
+
+const emailForgotPassword = (req, res, next) => {
+    const validationRule = {
+        "useremail": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({
+                status: false,
+                message: err
+            });
+        } else {
+            next();
+        }
+    });
+};
+
+const sendEmailForgotPassword = (req, res, next) => {
+    const validationRule = {
+        "useremail": "required",
+        "_id": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({
+                status: false,
+                message: err
+            });
+        } else {
+            next();
+        }
+    });
+};
+
 module.exports = {
     login,
     sendOTPforLoginValidation,
@@ -117,4 +218,10 @@ module.exports = {
     changePasswordValidation,
     forgetPasswordValidation,
     helpMail,
+    getLoginCompanyList,
+    sendEmailOTP,
+    submitEmailOTP,
+    loginWithEmailOTP,
+    emailForgotPassword,
+    sendEmailForgotPassword,
 };
