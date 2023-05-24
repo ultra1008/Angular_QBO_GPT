@@ -5,6 +5,7 @@ let common = require('../../../../../controller/common/common');
 var client_history_Schema = require('../../../../../model/history/client_history');
 const historyCollectionConstant = require('../../../../../config/historyCollectionConstant');
 let config = require('../../../../../config/config');
+var ObjectID = require('mongodb').ObjectID;
 
 // client insert Edit 
 module.exports.saveclient = async function (req, res) {
@@ -400,12 +401,66 @@ module.exports.getOneClient = async function (req, res) {
         try {
             var requestObject = req.body;
             var clientConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientSchema);
-            var getdata = await clientConnection.findOne({ _id: requestObject._id });
-            if (getdata) {
-                res.send({ status: true, message: "Client data", data: getdata });
-            } else {
+            let query_where = {
+                "_id": ObjectID(requestObject._id),
+                "is_delete": 0
+            };
+            var get_data = await clientConnection.aggregate([
+                {
+                    $match: query_where
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "approver_id",
+                        foreignField: "_id",
+                        as: "approver_id"
+                    }
+                },
+                { $unwind: "$approver_id" },
+                {
+                    $lookup: {
+                        from: collectionConstant.COSTCODES,
+                        localField: "client_cost_cost_id",
+                        foreignField: "_id",
+                        as: "client_cost_cost_id"
+                    }
+                },
+                { $unwind: "$client_cost_cost_id" },
+                {
+                    $project: {
+                        client_name: 1,
+                        client_number: 1,
+                        client_email: 1,
+                        client_status: 1,
+                        client_notes: 1,
+                        gl_account: 1,
+                        is_delete: 1,
+                        approver_id: {
+                            _id: "$approver_id._id",
+                            userfullname: "$approver_id.userfullname",
+
+                        },
+                        client_cost_cost_id: {
+                            _id: "$client_cost_cost_id._id",
+                            cost_code: "$client_cost_cost_id.cost_code",
+
+                        }
+                    }
+                }
+            ]);
+            if (get_data) {
+                res.send({ status: true, message: "Client data", data: get_data });
+            }
+            else {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
             }
+            // var getdata = await clientConnection.findOne({ _id: requestObject._id });
+            // if (getdata) {
+            //     res.send({ status: true, message: "Client data", data: getdata });
+            // } else {
+            //     res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            // }
         } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), status: false, error: e });
@@ -416,4 +471,6 @@ module.exports.getOneClient = async function (req, res) {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
+
+
 
