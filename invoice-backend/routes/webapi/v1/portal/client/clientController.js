@@ -393,19 +393,29 @@ module.exports.getClientForTable = async function (req, res) {
                         from: collectionConstant.INVOICE_USER,
                         localField: "approver_id",
                         foreignField: "_id",
-                        as: "approver_id"
+                        as: "invoice_user"
                     }
                 },
-                { $unwind: "$approver_id" },
+                {
+                    $unwind: {
+                        preserveNullAndEmptyArrays: true,
+                        path: "$invoice_user"
+                    }
+                },
                 {
                     $lookup: {
                         from: collectionConstant.COSTCODES,
                         localField: "client_cost_cost_id",
                         foreignField: "_id",
-                        as: "client_cost_cost_id"
+                        as: "costcode"
                     }
                 },
-                { $unwind: "$client_cost_cost_id" },
+                {
+                    $unwind: {
+                        preserveNullAndEmptyArrays: true,
+                        path: "$costcode"
+                    }
+                },
                 {
                     $project: {
                         client_name: 1,
@@ -415,14 +425,16 @@ module.exports.getClientForTable = async function (req, res) {
                         client_notes: 1,
                         gl_account: 1,
                         is_delete: 1,
-                        approver_id: {
-                            _id: "$approver_id._id",
-                            userfullname: "$approver_id.userfullname",
+                        approver_id: 1,
+                        client_cost_cost_id: 1,
+                        approver: {
+                            _id: "$invoice_user._id",
+                            userfullname: "$invoice_user.userfullname",
 
                         },
-                        client_cost_cost_id: {
-                            _id: "$client_cost_cost_id._id",
-                            cost_code: "$client_cost_cost_id.cost_code",
+                        client_cost_cost: {
+                            _id: "$costcode._id",
+                            cost_code: "$costcode.cost_code",
 
                         }
                     }
