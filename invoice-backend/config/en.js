@@ -942,11 +942,11 @@ module.exports = {
 
 
     Client_History: {
-        Client_name: 'Client Name',
-        Client_number: 'Client Number',
-        Client_email: ' Client Contact Email',
-        Client_status: 'Status',
-        Client_note: 'Client Note',
+        client_name: 'Client Name',
+        client_number: 'Client Number',
+        client_email: ' Client Contact Email',
+        client_status: 'Status',
+        client_notes: 'Client Note',
         gl_account: ' Client GCL Account',
         approver_id: 'Approved By',
         Client_id: 'Client Id',
