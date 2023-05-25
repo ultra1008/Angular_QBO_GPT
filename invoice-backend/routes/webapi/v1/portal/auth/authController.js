@@ -2441,3 +2441,27 @@ module.exports.sendEmailForgotPassword = async function (req, res) {
         // connection_db_api.close();
     }
 };
+
+module.exports.getMyCompanyList = async function (req, res) {
+    var translator = new common.Language('en');
+    let admin_connection_db_api = await db_connection.connection_db_api(config.ADMIN_CONFIG);
+    try {
+        var requestObject = req.body;
+        requestObject.useremail = requestObject.useremail.toLowerCase();
+
+        let companyConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_COMPANY, companySchema);
+        let tenantsConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_TENANTS, tenantSchema);
+        let match = {
+            'invoice_user.useremail': requestObject.useremail,
+            'invoice_user.userstatus': 1,
+            'invoice_user.is_delete': 0,
+        };
+        var get_company = await companyConnection.find(match);
+        res.send({ message: translator.getStr('CompanyListing'), status: true, data: get_company });
+    } catch (e) {
+        console.log(e);
+        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+    } finally {
+        // connection_db_api.close();
+    }
+};
