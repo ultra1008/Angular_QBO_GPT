@@ -39,28 +39,29 @@
                             <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                         </mat-chip>
                     </div>
-                    <form class="validate-form" [formGroup]="form">
-                        <div class="row">
-                            <div class="col-xl-12col-lg-12 col-md-12 col-sm-12 mb-2">
-                                <mat-form-field class="example-full-width" appearance="outline">
-                                    <mat-label>Password</mat-label>
-                                    <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
-                                    <a class="show-pwd-icon" href="#" onClick="return false;" matSuffix
-                                        (click)="hide = !hide" [attr.aria-label]="'Hide password'"
-                                        [attr.aria-pressed]="hide">
-                                        <mat-icon matSuffix>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                                    </a>
-
-                                </mat-form-field>
+                    <div class="custom-form">
+                        <form class="validate-form mt-3" [formGroup]="form">
+                            <div class="row">
+                                <div class="col-xl-12col-lg-12 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>Password</mat-label>
+                                        <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
+                                        <a class="show-pwd-icon" href="#" onClick="return false;" matSuffix
+                                            (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                                            [attr.aria-pressed]="hide">
+                                            <mat-icon matSuffix>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                        </a>
+                                    </mat-form-field>
+                                </div>
                             </div>
-                        </div>
-                        <div class="container-auth-form-btn">
-                            <div style="text-align:center; ">
-                                <button mat-raised-button color="primary" (click)="userLogin()" class="auth-form-btn"
-                                    type="submit">Login</button>
+                            <div class="container-auth-form-btn">
+                                <div style="text-align:center; ">
+                                    <button mat-raised-button color="primary" (click)="userLogin()"
+                                        class="auth-form-btn" type="submit">Login</button>
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

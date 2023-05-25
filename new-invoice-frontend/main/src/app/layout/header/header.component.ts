@@ -347,7 +347,7 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
       tempDirection = 'ltr';
     }
     const dialogRef = this.dialog.open(SwitchCompanyComponent, {
-      width: '35%',
+      width: '28%',
       data: {
         /* advanceTable: this.advanceTable,
         action: 'add', */
