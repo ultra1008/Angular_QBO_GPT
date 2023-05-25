@@ -72,6 +72,7 @@ export enum httproutes {
   SAVE_USER_INFO = 'saveemployeeinfo',
   SAVE_USER_MOBILE_PIC = 'savemobilephoto',
   SAVE_USER_PASSWORD = 'senduserpassword',
+  SAVE_USER_DOCUMENT = 'saveuserdocument',
 
   // Emergency Contact
   GET_EMERGENCY_CONTACT = 'getemergencycontact',
