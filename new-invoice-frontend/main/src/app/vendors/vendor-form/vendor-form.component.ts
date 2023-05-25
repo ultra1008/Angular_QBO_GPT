@@ -3,7 +3,7 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators, } from '@angular/form
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { VendorsService } from '../vendors.service';
-import { CountryModel, TermModel } from '../vendor-table.model';
+import { CountryModel, TermModel } from '../vendor.model';
 import { commonLocalThumbImage, commonNetworkThumbImage, commonNewtworkAttachmentViewer, gallery_options, showNotification, swalWithBootstrapButtons, swalWithBootstrapTwoButtons, } from 'src/consts/utils';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NgxGalleryComponent, NgxGalleryImage, NgxGalleryOptions, } from 'ngx-gallery-9';
@@ -13,6 +13,7 @@ import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { TranslateService } from '@ngx-translate/core';
 import { httproutes, httpversion } from 'src/consts/httproutes';
+import { commonFileChangeEvent } from 'src/app/services/utils';
 
 @Component({
   selector: 'app-vendor-form',
@@ -20,6 +21,12 @@ import { httproutes, httpversion } from 'src/consts/httproutes';
   styleUrls: ['./vendor-form.component.scss'],
 })
 export class VendorFormComponent {
+  @ViewChild('OpenFilebox') OpenFilebox: any;
+  isImageSaved = false;
+  cardImageBase64: any;
+  filepath: any;
+  vendorImage = 'assets/images/vendor.png';
+
   vendorForm: UntypedFormGroup;
   hide = true;
   agree = false;
@@ -41,7 +48,7 @@ export class VendorFormComponent {
   titleMessage = "";
   show = false;
 
-  constructor(
+  constructor (
     private fb: UntypedFormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
@@ -109,13 +116,12 @@ export class VendorFormComponent {
         vendor_description: [vendorData.vendor_description],
       });
       this.files_old = [];
-      for (
-        let loop_i = 0;
-        loop_i < vendorData.vendor_attachment.length;
-        loop_i++
-      ) {
+      for (let loop_i = 0; loop_i < vendorData.vendor_attachment.length; loop_i++) {
         const tmpArray = vendorData.vendor_attachment[loop_i].split('/');
         this.files_old.push(tmpArray[tmpArray.length - 1]);
+      }
+      if (vendorData.vendor_image != "" && vendorData.vendor_image != undefined) {
+        this.vendorImage = vendorData.vendor_image;
       }
       this.last_files_array = vendorData.vendor_attachment;
       this.vendorForm.markAllAsTouched();
@@ -163,9 +169,23 @@ export class VendorFormComponent {
 
   async saveVendor() {
     if (this.vendorForm.valid) {
+      this.uiSpinner.spin$.next(true);
       const requestObject = this.vendorForm.value;
       if (this.id) {
         requestObject._id = this.id;
+      }
+
+      // vendor_image
+      if (this.isImageSaved) {
+        const formData_image = new FormData();
+        formData_image.append('file[]', this.filepath);
+        formData_image.append('folder_name', wasabiImagePath.VENDOR_IMAGE);
+        const image = await this.commonService.saveAttachment(formData_image);
+        if (image.status) {
+          if (image.data.length > 0) {
+            requestObject.vendor_image = image.data[0];
+          }
+        }
       }
 
       const formData = new FormData();
@@ -173,7 +193,7 @@ export class VendorFormComponent {
         formData.append('file[]', this.files[i]);
       }
       formData.append('folder_name', wasabiImagePath.VENDOR_ATTACHMENT);
-      this.uiSpinner.spin$.next(true);
+
       const attachment = await this.commonService.saveAttachment(formData);
       if (attachment.status) {
         requestObject.vendor_attachment = attachment.data.concat(
@@ -275,5 +295,22 @@ export class VendorFormComponent {
 
   downloadButtonPress(event: any, index: number): void {
     window.location.href = this.imageObject[index];
+  }
+
+  openfilebox() {
+    const el: HTMLElement = this.OpenFilebox.nativeElement;
+    el.click();
+  }
+
+  fileChangeEvent(fileInput: any) {
+    commonFileChangeEvent(fileInput, 'image').then((result: any) => {
+      if (result.status) {
+        this.filepath = result.filepath;
+        this.cardImageBase64 = result.base64;
+        this.isImageSaved = true;
+      } else {
+        showNotification(this.snackBar, result.message, 'error');
+      }
+    });
   }
 }

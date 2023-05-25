@@ -15,7 +15,7 @@ import {
 import { CommonService } from 'src/app/services/common.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { commonFileChangeEvent } from 'src/app/services/utils';
-import { TermModel, CountryModel } from 'src/app/vendors/vendor-table.model';
+import { TermModel, CountryModel } from 'src/app/vendors/vendor.model';
 import { VendorsService } from 'src/app/vendors/vendors.service';
 import { WEB_ROUTES } from 'src/consts/routes';
 import {
@@ -79,7 +79,7 @@ export class CompanyInfoFormComponent {
   compnay_code: any;
   compnay_id: any;
 
-  constructor(
+  constructor (
     private fb: UntypedFormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,

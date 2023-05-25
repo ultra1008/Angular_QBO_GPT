@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '../shared/UnsubscribeOnDestroyAdapter';
-import { Vendor } from './vendor-table.model';
+import { Vendor } from './vendor.model';
 import { HttpCall } from '../services/httpcall.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 @Injectable()

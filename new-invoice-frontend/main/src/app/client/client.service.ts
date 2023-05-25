@@ -3,7 +3,7 @@ import { UnsubscribeOnDestroyAdapter } from '../shared/UnsubscribeOnDestroyAdapt
 import { BehaviorSubject } from 'rxjs';
 import { httpversion, httproutes } from 'src/consts/httproutes';
 import { HttpCall } from '../services/httpcall.service';
-import { Vendor } from '../vendors/vendor-table.model';
+import { Vendor } from '../vendors/vendor.model';
 import { ClientList } from './client.model';
 
 @Injectable({
@@ -19,7 +19,7 @@ export class ClientService extends UnsubscribeOnDestroyAdapter {
   >([]);
   // Temporarily stores data from dialogs
   dialogData!: Vendor;
-  constructor(private httpCall: HttpCall) {
+  constructor (private httpCall: HttpCall) {
     super();
   }
   get data(): Vendor[] {

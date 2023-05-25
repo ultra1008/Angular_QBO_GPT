@@ -96,7 +96,8 @@
                                                        <div class="profile-header">
                                                             <div class="col-12 m-1 d-flex">
                                                                  <div class="col-4">
-                                                                      <img src={{vendor.vendor_image}} class="user-img1"
+                                                                      <img [src]="vendor.vendor_image || 'assets/images/vendor.png'"
+                                                                           class="user-img1"
                                                                            style="background-color: white;" width="80px"
                                                                            height="80px " alt="">
                                                                  </div>

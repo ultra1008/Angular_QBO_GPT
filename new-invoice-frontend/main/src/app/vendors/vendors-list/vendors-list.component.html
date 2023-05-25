@@ -144,6 +144,16 @@
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" class="psl-1">{{row.id}}</mat-cell>
                                 </ng-container>
+                                <ng-container matColumnDef="vendor_image">
+                                    <mat-header-cell mat-header-cell *matHeaderCellDef
+                                        [ngClass]="'tbl-col-width-per-5'"> {{'VENDOR.TABLE.VENDOR_IMAGE' |
+                                        translate}}
+                                    </mat-header-cell>
+                                    <mat-cell mat-cell *matCellDef="let row" class="table-img tbl-col-width-per-5"><span
+                                            class="mobile-label">Image:</span>
+                                        <img [src]="row.vendor_image || 'assets/images/vendor.png'" />
+                                    </mat-cell>
+                                </ng-container>
                                 <ng-container matColumnDef="vendor_name">
                                     <mat-header-cell [ngClass]="'tbl-col-width-per-max'" *matHeaderCellDef
                                         mat-sort-header>{{'VENDOR.TABLE.VENDOR_NAME' |
@@ -191,7 +201,8 @@
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" [matTooltip]="getVendorIdTooltip(row)"
                                         (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">
-                                        <span class="truncate-text"> <span class="mobile-label">Open Invoice:</span></span>
+                                        <span class="truncate-text"> <span class="mobile-label">Open
+                                                Invoice:</span></span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="amount_paid">
@@ -200,7 +211,8 @@
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" [matTooltip]="getVendorIdTooltip(row)"
                                         (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">
-                                        <span class="truncate-text"> <span class="mobile-label">Amount Paid:</span></span>
+                                        <span class="truncate-text"> <span class="mobile-label">Amount
+                                                Paid:</span></span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="amount_open">
@@ -209,7 +221,8 @@
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" [matTooltip]="getVendorIdTooltip(row)"
                                         (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">
-                                        <span class="truncate-text"> <span class="mobile-label">Amount Open:</span></span>
+                                        <span class="truncate-text"> <span class="mobile-label">Amount
+                                                Open:</span></span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_phone">

@@ -14,7 +14,7 @@ import { TableExportUtil } from 'src/app/shared/tableExportUtil';
 import { TableElement } from 'src/app/shared/TableElement';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { VendorsService } from '../vendors.service';
-import { TermModel, Vendor } from '../vendor-table.model';
+import { TermModel, Vendor } from '../vendor.model';
 import { Router } from '@angular/router';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import {
@@ -45,8 +45,7 @@ import { localstorageconstants } from 'src/consts/localstorageconstants';
 })
 export class VendorsListComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit
-{
+  implements OnInit {
   @ViewChild('gallery') gallery!: NgxGalleryComponent;
   galleryOptions!: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[] = [];
@@ -55,6 +54,7 @@ export class VendorsListComponent
   show = false;
   displayedColumns = [
     'select',
+    'vendor_image',
     'vendor_name',
     'vendor_id',
     'customer_id',
@@ -77,7 +77,7 @@ export class VendorsListComponent
   rform?: any;
   selectedValue!: string;
 
-  constructor(
+  constructor (
     public httpClient: HttpClient,
     private httpCall: HttpCall,
     public dialog: MatDialog,
@@ -115,6 +115,7 @@ export class VendorsListComponent
     if (this.isQBSyncedCompany) {
       this.displayedColumns = [
         'select',
+        'vendor_image',
         'vendor_name',
         'invoice',
         'open_invoice',
@@ -133,6 +134,7 @@ export class VendorsListComponent
     } else {
       this.displayedColumns = [
         'select',
+        'vendor_image',
         'vendor_name',
         'invoice',
         'open_invoice',
@@ -320,10 +322,10 @@ export class VendorsListComponent
     this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.renderedData.forEach((row) =>
-          this.selection.select(row)
-        );
+        this.selection.select(row)
+      );
   }
-  removeSelectedRows() {}
+  removeSelectedRows() { }
   public loadData() {
     this.show = false;
     this.vendorService = new VendorsService(this.httpCall);
@@ -494,7 +496,7 @@ export class VendorDataSource extends DataSource<Vendor> {
   }
   filteredData: Vendor[] = [];
   renderedData: Vendor[] = [];
-  constructor(
+  constructor (
     public vendorService: VendorsService,
     public paginator: MatPaginator,
     public _sort: MatSort,

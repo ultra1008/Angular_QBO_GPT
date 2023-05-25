@@ -1,5 +1,6 @@
 export class Vendor {
     _id: string;
+    vendor_image: string;
     vendor_name: string;
     vendor_id: string;
     customer_id: string;
@@ -12,6 +13,7 @@ export class Vendor {
     constructor (response: Vendor) {
         {
             this._id = response._id;
+            this.vendor_image = response.vendor_image;
             this.vendor_name = response.vendor_name;
             this.vendor_id = response.vendor_id;
             this.customer_id = response.customer_id;

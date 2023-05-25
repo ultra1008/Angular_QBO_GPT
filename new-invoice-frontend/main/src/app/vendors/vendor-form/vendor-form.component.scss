@@ -154,3 +154,27 @@
     min-height: 40px;
     font-size: 14px !important
 } */
+.vendor-image {
+    cursor: pointer;
+
+    img {
+        height: 200px;
+        width: 200px;
+    }
+}
+
+.fileInputProfileWrap {
+    width: 100%;
+    height: auto;
+}
+
+.fileInputProfile {
+    position: absolute;
+    z-index: 99;
+    opacity: 0;
+}
+
+.fileInputProfile[disabled]+.img-space {
+    pointer-events: none;
+    cursor: not-allowed !important;
+}
