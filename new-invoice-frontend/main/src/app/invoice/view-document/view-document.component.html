@@ -1,0 +1,519 @@
+<section class="content">
+    <div class="content-block">
+        <div class="m-4"></div>
+
+        <div class="row" *ngIf="document === documentTypes.po">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="materialTableHeader">
+                        <div class="left">
+                            <ul class="header-buttons-left ms-0">
+                                <li class="tbl-title">
+                                    <h2 style="margin-right: 15px;">Purchase Order</h2>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="right ">
+                            <ul class="tbl-export-btn">
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" matTooltip="BACK">
+                                        <button mat-mini-fab color="warn">
+                                            <mat-icon class="col-white">close </mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="body overflow-auto">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <form class="register-form m-4" [formGroup]="poForm">
+                                    <div class="row">
+                                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Document Type</mat-label>
+                                                <mat-select formControlName="document_type" required>
+                                                    <mat-option *ngFor="let type of documentTypesList"
+                                                        [value]="type.key">
+                                                        {{type.name}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Vendor Name</mat-label>
+                                                <input required formControlName="vendor_name" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Quote Number</mat-label>
+                                                <input formControlName="quote_number" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Date</mat-label>
+                                                <input formControlName="date" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Shipping Method</mat-label>
+                                                <input formControlName="shipping_method" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Sub Total</mat-label>
+                                                <input formControlName="sub_total" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Tax Amount</mat-label>
+                                                <input formControlName="tax" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Quote Total</mat-label>
+                                                <input formControlName="quote_total" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Receiver Phone</mat-label>
+                                                <input formControlName="receiver_phone" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Terms</mat-label>
+                                                <mat-select formControlName="terms" style="font-size: 12px;">
+                                                    <mat-select-filter #termListSelect [placeholder]="'Filter'"
+                                                        [displayMember]="'name'" [array]="variablestermList"
+                                                        (filteredReturn)="termsList =$event">
+                                                    </mat-select-filter>
+                                                    <mat-option *ngFor="let term of termsList" [value]="term._id">
+                                                        {{term.name}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Address</mat-label>
+                                                <textarea matInput formControlName="address"></textarea>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                            <button class="btn-space" mat-raised-button color="primary"
+                                                [disabled]="!poForm.valid">{{'COMMON.ACTIONS.SAVE'|
+                                                translate}}</button>
+                                            <button type="button" mat-raised-button
+                                                color="warn">{{'COMMON.ACTIONS.CANCEL'| translate}}</button>
+                                        </div>
+                                    </div>
+                                    <!--  <div class="row">
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                            <button class="btn-space" mat-raised-button color="primary"
+                                                [disabled]="!poForm.valid" (click)="saveVendor()">{{'COMMON.ACTIONS.SAVE'|
+                                                translate}}</button>
+                                            <button type="button" mat-raised-button color="warn"
+                                                (click)="confirmExit()">{{'COMMON.ACTIONS.CANCEL'| translate}}</button>
+                                        </div>
+                                    </div> -->
+
+                                </form>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div class="card" style="height: 770px; width:790px">
+                                    <div class="pdf-viewer">
+                                        <pdf-viewer id="pdf" [src]="pdf_url" [rotation]="0" [original-size]="false"
+                                            [show-all]="true" [fit-to-page]="false" [zoom]="1"
+                                            [zoom-scale]="'page-width'" [stick-to-page]="false" [render-text]="true"
+                                            [external-link-target]="'blank'" [autoresize]="true" [show-borders]="false"
+                                            [external-link-target]="'blank'"></pdf-viewer>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="document === documentTypes.quote">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="materialTableHeader">
+                        <div class="left">
+                            <ul class="header-buttons-left ms-0">
+                                <li class="tbl-title">
+                                    <h2 style="margin-right: 15px;">Quote</h2>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="right ">
+                            <ul class="tbl-export-btn">
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" matTooltip="BACK">
+                                        <button mat-mini-fab color="warn">
+                                            <mat-icon class="col-white">close </mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="body overflow-auto">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <form class="register-form m-4" [formGroup]="quoteForm">
+                                    <div class="row">
+                                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Document Type</mat-label>
+                                                <mat-select formControlName="document_type" required>
+                                                    <mat-option *ngFor="let type of documentTypesList"
+                                                        [value]="type.key">
+                                                        {{type.name}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Vendor Name</mat-label>
+                                                <input required formControlName="vendor_name" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Quote Number</mat-label>
+                                                <input formControlName="quote_number" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Date</mat-label>
+                                                <input formControlName="date" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Shipping Method</mat-label>
+                                                <input formControlName="shipping_method" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Sub Total</mat-label>
+                                                <input formControlName="sub_total" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Tax Amount</mat-label>
+                                                <input formControlName="tax" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Quote Total</mat-label>
+                                                <input formControlName="quote_total" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Receiver Phone</mat-label>
+                                                <input formControlName="receiver_phone" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Terms</mat-label>
+                                                <mat-select formControlName="terms" style="font-size: 12px;">
+                                                    <mat-select-filter #termListSelect [placeholder]="'Filter'"
+                                                        [displayMember]="'name'" [array]="variablestermList"
+                                                        (filteredReturn)="termsList =$event">
+                                                    </mat-select-filter>
+                                                    <mat-option *ngFor="let term of termsList" [value]="term._id">
+                                                        {{term.name}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Address</mat-label>
+                                                <textarea matInput formControlName="address"></textarea>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                            <button class="btn-space" mat-raised-button color="primary"
+                                                [disabled]="!quoteForm.valid">{{'COMMON.ACTIONS.SAVE'|
+                                                translate}}</button>
+                                            <button type="button" mat-raised-button
+                                                color="warn">{{'COMMON.ACTIONS.CANCEL'| translate}}</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div class="card" style="height: 770px; width:790px">
+                                    <div class="pdf-viewer">
+                                        <pdf-viewer id="pdf" [src]="pdf_url" [rotation]="0" [original-size]="false"
+                                            [show-all]="true" [fit-to-page]="false" [zoom]="1"
+                                            [zoom-scale]="'page-width'" [stick-to-page]="false" [render-text]="true"
+                                            [external-link-target]="'blank'" [autoresize]="true" [show-borders]="false"
+                                            [external-link-target]="'blank'" style="display: block;"></pdf-viewer>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="document === documentTypes.packingSlip">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="materialTableHeader">
+                        <div class="left">
+                            <ul class="header-buttons-left ms-0">
+                                <li class="tbl-title">
+                                    <h2 style="margin-right: 15px;">Packing Slip</h2>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="right ">
+                            <ul class="tbl-export-btn">
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" matTooltip="BACK">
+                                        <button mat-mini-fab color="warn">
+                                            <mat-icon class="col-white">close </mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="body overflow-auto">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <form class="register-form m-4" [formGroup]="packingSlipForm">
+                                    <div class="row">
+                                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Document Type</mat-label>
+                                                <mat-select formControlName="document_type" required>
+                                                    <mat-option *ngFor="let type of documentTypesList"
+                                                        [value]="type.key">
+                                                        {{type.name}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Vendor Name</mat-label>
+                                                <input required formControlName="vendor_name" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Invoice#</mat-label>
+                                                <input formControlName="invoice" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Date</mat-label>
+                                                <input formControlName="date" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>PO#</mat-label>
+                                                <input formControlName="po" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Shipping Address</mat-label>
+                                                <input formControlName="address" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Received By</mat-label>
+                                                <input formControlName="received_by" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                            <button class="btn-space" mat-raised-button color="primary"
+                                                [disabled]="!packingSlipForm.valid">{{'COMMON.ACTIONS.SAVE'|
+                                                translate}}</button>
+                                            <button type="button" mat-raised-button
+                                                color="warn">{{'COMMON.ACTIONS.CANCEL'| translate}}</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div class="card" style="height: 770px; width:790px">
+                                    <div class="pdf-viewer">
+                                        <pdf-viewer id="pdf" [src]="pdf_url" [rotation]="0" [original-size]="false"
+                                            [show-all]="true" [fit-to-page]="false" [zoom]="1"
+                                            [zoom-scale]="'page-width'" [stick-to-page]="false" [render-text]="true"
+                                            [external-link-target]="'blank'" [autoresize]="true" [show-borders]="false"
+                                            [external-link-target]="'blank'"></pdf-viewer>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="document === documentTypes.receivingSlip">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="materialTableHeader">
+                        <div class="left">
+                            <ul class="header-buttons-left ms-0">
+                                <li class="tbl-title">
+                                    <h2 style="margin-right: 15px;">Receiving Slip</h2>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="right ">
+                            <ul class="tbl-export-btn">
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" matTooltip="BACK">
+                                        <button mat-mini-fab color="warn">
+                                            <mat-icon class="col-white">close </mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="body overflow-auto">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <form class="register-form m-4" [formGroup]="receivingSlipForm">
+                                    <div class="row">
+                                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Document Type</mat-label>
+                                                <mat-select formControlName="document_type" required>
+                                                    <mat-option *ngFor="let type of documentTypesList"
+                                                        [value]="type.key">
+                                                        {{type.name}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Vendor Name</mat-label>
+                                                <input required formControlName="vendor_name" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Invoice#</mat-label>
+                                                <input formControlName="invoice" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Date</mat-label>
+                                                <input formControlName="date" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>PO#</mat-label>
+                                                <input formControlName="po" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Shipping Address</mat-label>
+                                                <input formControlName="address" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                            <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-label>Received By</mat-label>
+                                                <input formControlName="received_by" matInput />
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                            <button class="btn-space" mat-raised-button color="primary"
+                                                [disabled]="!receivingSlipForm.valid">{{'COMMON.ACTIONS.SAVE'|
+                                                translate}}</button>
+                                            <button type="button" mat-raised-button
+                                                color="warn">{{'COMMON.ACTIONS.CANCEL'| translate}}</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div class="card" style="height: 770px; width:790px">
+                                    <div class="pdf-viewer">
+                                        <pdf-viewer id="pdf" [src]="pdf_url" [rotation]="0" [original-size]="false"
+                                            [show-all]="true" [fit-to-page]="false" [zoom]="1"
+                                            [zoom-scale]="'page-width'" [stick-to-page]="false" [render-text]="true"
+                                            [external-link-target]="'blank'" [autoresize]="true" [show-borders]="false"
+                                            [external-link-target]="'blank'"></pdf-viewer>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

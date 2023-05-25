@@ -13,12 +13,16 @@ import { MatInputModule } from '@angular/material/input';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatTabsModule } from '@angular/material/tabs';
+import { ViewDocumentComponent } from './view-document/view-document.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSelectFilterModule } from 'mat-select-filter';
 
 
 @NgModule({
   declarations: [
     InvoiceListingComponent,
-    InvoiceDetailComponent
+    InvoiceDetailComponent,
+    ViewDocumentComponent
   ],
   imports: [
     CommonModule,
@@ -34,6 +38,9 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatInputModule,
     FormsModule,
     MatTabsModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatSelectFilterModule,
   ]
 })
 export class InvoiceModule { }
