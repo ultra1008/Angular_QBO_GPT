@@ -53,6 +53,10 @@
             "VENDOR_NAME": "Vendor Name",
             "VENDOR_ID": "Vendor ID",
             "CUSTOMER_ID": "Customer ID",
+            "INVOICE": "Invoice",
+            "OPEN_INVOICE": "Open Invoice",
+            "AMOUNT_PAID": "Amount Paid This Year",
+            "AMOUNT_OPEN": "Amount Open",
             "PHONE": "Phone",
             "EMAIL": "Email",
             "ADDRESS": "Address",
@@ -230,6 +234,8 @@
                 "DOCUMENT": "Documents",
                 "VENDOR_TYPE": "Vendor Type",
                 "CLASS_NAME": "Class Name",
+                "NUMBER": "Number",
+                "DESCRIPTION": "Description",
                 "JOB_NAME": "Job Name",
                 "JOB_CONTACT_EMAIL": "Job Contact Email",
                 "DUE_DAYS": "Due Days",
@@ -243,7 +249,8 @@
                     "TAX_RATE": "Are you sure you want to delete tax rate?",
                     "DOCUMENT": "Are you sure you want to delete Document?",
                     "VENDOR_TYPE": "Are you sure you want to delete vendor type?",
-                    "JOB_NAME": "Are you sure you want to delete job name?"
+                    "JOB_NAME": "Are you sure you want to delete job name?",
+                    "CLASS_NAME": "Are you sure you want to delete class name?"
                 }
             },
             "EMPLOYEE_MODULE": {

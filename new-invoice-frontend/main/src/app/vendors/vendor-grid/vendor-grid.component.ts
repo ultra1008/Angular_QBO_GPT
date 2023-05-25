@@ -23,22 +23,29 @@ import { localstorageconstants } from 'src/consts/localstorageconstants';
   styleUrls: ['./vendor-grid.component.scss'],
   providers: [FormateDateStringPipe],
 })
-export class VendorGridComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
+export class VendorGridComponent
+  extends UnsubscribeOnDestroyAdapter
+  implements OnInit
+{
   vendorList: any = [];
   cardLoading = true;
   isDelete = 0;
-  active_word = "Active";
-  inactive_word = "Inactive";
+  active_word = 'Active';
+  inactive_word = 'Inactive';
   vendorname_search: any;
   vendor_status: any;
   termsList: Array<TermModel> = [];
 
   constructor(
-    public httpClient: HttpClient, private httpCall: HttpCall,
+    public httpClient: HttpClient,
+    private httpCall: HttpCall,
     public dialog: MatDialog,
     public vendorTableService: VendorsService,
-    private snackBar: MatSnackBar, private router: Router, public translate: TranslateService,
-    private fb: UntypedFormBuilder, public commonService: CommonService,
+    private snackBar: MatSnackBar,
+    private router: Router,
+    public translate: TranslateService,
+    private fb: UntypedFormBuilder,
+    public commonService: CommonService
   ) {
     super();
   }
@@ -52,7 +59,10 @@ export class VendorGridComponent extends UnsubscribeOnDestroyAdapter implements 
   }
 
   async getVendor() {
-    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_GET, { is_delete: this.isDelete });
+    const data = await this.commonService.postRequestAPI(
+      httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_GET,
+      { is_delete: this.isDelete }
+    );
     this.vendorList = data.data;
     this.cardLoading = false;
   }
@@ -77,7 +87,9 @@ export class VendorGridComponent extends UnsubscribeOnDestroyAdapter implements 
   }
 
   async getTerms() {
-    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_TERM_GET);
+    const data = await this.commonService.getRequestAPI(
+      httpversion.PORTAL_V1 + httproutes.PORTAL_TERM_GET
+    );
     if (data.status) {
       this.termsList = data.data;
     }
@@ -92,18 +104,26 @@ export class VendorGridComponent extends UnsubscribeOnDestroyAdapter implements 
       },
     });
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-      //  
+      //
     });
   }
 
   editVendor(vendor: Vendor) {
     if (this.isDelete == 0) {
-      this.router.navigate([WEB_ROUTES.VENDOR_FORM], { queryParams: { _id: vendor._id } });
+      this.router.navigate([WEB_ROUTES.VENDOR_FORM], {
+        queryParams: { _id: vendor._id },
+      });
     }
   }
 
   openHistory() {
     this.router.navigate([WEB_ROUTES.VENDOR_HISTORY]);
   }
-}
 
+  formateAmount(price: any) {
+    return Number(price).toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    });
+  }
+}

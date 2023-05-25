@@ -17,8 +17,18 @@ import { VendorsService } from '../vendors.service';
 import { TermModel, Vendor } from '../vendor-table.model';
 import { Router } from '@angular/router';
 import { HttpCall } from 'src/app/services/httpcall.service';
-import { commonNewtworkAttachmentViewer, gallery_options, showNotification, swalWithBootstrapButtons, swalWithBootstrapTwoButtons } from 'src/consts/utils';
-import { NgxGalleryComponent, NgxGalleryImage, NgxGalleryOptions } from 'ngx-gallery-9';
+import {
+  commonNewtworkAttachmentViewer,
+  gallery_options,
+  showNotification,
+  swalWithBootstrapButtons,
+  swalWithBootstrapTwoButtons,
+} from 'src/consts/utils';
+import {
+  NgxGalleryComponent,
+  NgxGalleryImage,
+  NgxGalleryOptions,
+} from 'ngx-gallery-9';
 import { VendorReportComponent } from '../vendor-report/vendor-report.component';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { TranslateService } from '@ngx-translate/core';
@@ -33,8 +43,11 @@ import { localstorageconstants } from 'src/consts/localstorageconstants';
   styleUrls: ['./vendors-list.component.scss'],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
 })
-export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
-  @ViewChild("gallery") gallery!: NgxGalleryComponent;
+export class VendorsListComponent
+  extends UnsubscribeOnDestroyAdapter
+  implements OnInit
+{
+  @ViewChild('gallery') gallery!: NgxGalleryComponent;
   galleryOptions!: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[] = [];
   imageObject = [];
@@ -59,17 +72,21 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   id?: number;
   isDelete = 0;
   termsList: Array<TermModel> = [];
-  titleMessage = "";
+  titleMessage = '';
   isQBSyncedCompany = false;
   rform?: any;
   selectedValue!: string;
 
   constructor(
-    public httpClient: HttpClient, private httpCall: HttpCall,
-    public dialog: MatDialog, private commonService: CommonService,
+    public httpClient: HttpClient,
+    private httpCall: HttpCall,
+    public dialog: MatDialog,
+    private commonService: CommonService,
     public vendorTableService: VendorsService,
-    private snackBar: MatSnackBar, private router: Router, public translate: TranslateService,
-    private fb: UntypedFormBuilder,
+    private snackBar: MatSnackBar,
+    private router: Router,
+    public translate: TranslateService,
+    private fb: UntypedFormBuilder
   ) {
     super();
   }
@@ -83,7 +100,8 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   vendor_status: any = [''];
 
   ngOnInit() {
-    const vendorDisplay = localStorage.getItem(localstorageconstants.VENDOR_DISPLAY) ?? 'list';
+    const vendorDisplay =
+      localStorage.getItem(localstorageconstants.VENDOR_DISPLAY) ?? 'list';
     if (vendorDisplay == 'list') {
       this.loadData();
     } else {
@@ -98,8 +116,12 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
       this.displayedColumns = [
         'select',
         'vendor_name',
-        'vendor_id',
-        'customer_id',
+        'invoice',
+        'open_invoice',
+        'amount_paid',
+        'amount_open',
+        // 'vendor_id',
+        // 'customer_id',
         'vendor_phone',
         'vendor_email',
         'vendor_address',
@@ -112,8 +134,12 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
       this.displayedColumns = [
         'select',
         'vendor_name',
-        'vendor_id',
-        'customer_id',
+        'invoice',
+        'open_invoice',
+        'amount_paid',
+        'amount_open',
+        // 'vendor_id',
+        // 'customer_id',
         'vendor_phone',
         'vendor_email',
         'vendor_address',
@@ -128,15 +154,14 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     this.tmp_gallery = gallery_options();
     this.tmp_gallery.actions = [
       {
-        icon: "fas fa-download",
+        icon: 'fas fa-download',
         onClick: this.downloadButtonPress.bind(this),
-        titleText: "download",
+        titleText: 'download',
       },
     ];
     this.galleryOptions = [this.tmp_gallery];
     this.getTerms();
   }
-
 
   listToGrid() {
     localStorage.setItem(localstorageconstants.VENDOR_DISPLAY, 'grid');
@@ -162,7 +187,6 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     return row.vendor_phone;
   }
 
-
   refresh() {
     this.loadData();
   }
@@ -182,9 +206,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
             this.allActive();
           }
         });
-
-    }
-    else if (selectedBook == 2) {
+    } else if (selectedBook == 2) {
       swalWithBootstrapTwoButtons
         .fire({
           title: 'Are you sure you want to Inactive all vendor?',
@@ -196,11 +218,8 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
         .then((result) => {
           if (result.isConfirmed) {
             this.allInactive();
-
           }
         });
-
-
     } else if (selectedBook == 3) {
       swalWithBootstrapTwoButtons
         .fire({
@@ -215,17 +234,18 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
             this.allArchive();
           }
         });
-
     }
   }
-
 
   async allArchive() {
     const tmp_ids = [];
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
     }
-    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_ALL_DELETE, { _id: tmp_ids, is_delete: 1 });
+    const data = await this.commonService.postRequestAPI(
+      httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_ALL_DELETE,
+      { _id: tmp_ids, is_delete: 1 }
+    );
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       this.refresh();
@@ -239,11 +259,13 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
     }
-    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_ALL_VENDOR_STATUS_UPDATE, { _id: tmp_ids, vendor_status: 1 });
+    const data = await this.commonService.postRequestAPI(
+      httpversion.PORTAL_V1 + httproutes.PORTAL_ALL_VENDOR_STATUS_UPDATE,
+      { _id: tmp_ids, vendor_status: 1 }
+    );
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       this.refresh();
-
     } else {
       showNotification(this.snackBar, data.message, 'error');
     }
@@ -254,11 +276,13 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
     }
-    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_ALL_VENDOR_STATUS_UPDATE, { _id: tmp_ids, vendor_status: 2 });
+    const data = await this.commonService.postRequestAPI(
+      httpversion.PORTAL_V1 + httproutes.PORTAL_ALL_VENDOR_STATUS_UPDATE,
+      { _id: tmp_ids, vendor_status: 2 }
+    );
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       this.refresh();
-
     } else {
       showNotification(this.snackBar, data.message, 'error');
     }
@@ -270,7 +294,9 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
 
   editVendor(vendor: Vendor) {
     if (this.isDelete == 0) {
-      this.router.navigate([WEB_ROUTES.VENDOR_FORM], { queryParams: { _id: vendor._id } });
+      this.router.navigate([WEB_ROUTES.VENDOR_FORM], {
+        queryParams: { _id: vendor._id },
+      });
     }
   }
 
@@ -294,13 +320,10 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.renderedData.forEach((row) =>
-        this.selection.select(row)
-      );
-
+          this.selection.select(row)
+        );
   }
-  removeSelectedRows() {
-
-  }
+  removeSelectedRows() {}
   public loadData() {
     this.show = false;
     this.vendorService = new VendorsService(this.httpCall);
@@ -308,7 +331,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
       this.vendorService,
       this.paginator,
       this.sort,
-      this.isDelete,
+      this.isDelete
     );
     this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
       () => {
@@ -329,10 +352,10 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
         'Vendor Name': x.vendor_name || '',
         'Vendor ID': x.vendor_id || '',
         'Customer ID': x.customer_id || '',
-        'Phone': x.vendor_phone || '',
-        'Email': x.vendor_email || '',
-        'Address': x.vendor_address || '',
-        'Status': x.vendor_status === 1 ? 'Active' : 'Inactive',
+        Phone: x.vendor_phone || '',
+        Email: x.vendor_email || '',
+        Address: x.vendor_address || '',
+        Status: x.vendor_status === 1 ? 'Active' : 'Inactive',
       }));
 
     TableExportUtil.exportToExcel(exportData, 'excel');
@@ -354,7 +377,10 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     if (vendor.vendor_status == 1) {
       status = 2;
     }
-    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_STATUS_UPDATE, { _id: vendor._id, vendor_status: status });
+    const data = await this.commonService.postRequestAPI(
+      httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_STATUS_UPDATE,
+      { _id: vendor._id, vendor_status: status }
+    );
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       const foundIndex = this.vendorService?.dataChange.value.findIndex(
@@ -370,7 +396,10 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   }
 
   async archiveRecover(vendor: Vendor, is_delete: number) {
-    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_DELETE, { _id: vendor._id, is_delete: is_delete });
+    const data = await this.commonService.postRequestAPI(
+      httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_DELETE,
+      { _id: vendor._id, is_delete: is_delete }
+    );
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       const foundIndex = this.vendorService?.dataChange.value.findIndex(
@@ -388,9 +417,13 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
 
   async deleteVendor(vendor: Vendor, is_delete: number) {
     if (is_delete == 1) {
-      this.titleMessage = this.translate.instant('VENDOR.CONFIRMATION_DIALOG.ARCHIVE');
+      this.titleMessage = this.translate.instant(
+        'VENDOR.CONFIRMATION_DIALOG.ARCHIVE'
+      );
     } else {
-      this.titleMessage = this.translate.instant('VENDOR.CONFIRMATION_DIALOG.RESTORE');
+      this.titleMessage = this.translate.instant(
+        'VENDOR.CONFIRMATION_DIALOG.RESTORE'
+      );
     }
     swalWithBootstrapTwoButtons
       .fire({
@@ -415,7 +448,9 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
 
   // View Network Attachment
   viewAttachment(vendor: Vendor) {
-    this.galleryImages = commonNewtworkAttachmentViewer(vendor.vendor_attachment);
+    this.galleryImages = commonNewtworkAttachmentViewer(
+      vendor.vendor_attachment
+    );
     setTimeout(() => {
       this.gallery.openPreview(0);
     }, 0);
@@ -426,7 +461,9 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   }
 
   async getTerms() {
-    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_TERM_GET);
+    const data = await this.commonService.getRequestAPI(
+      httpversion.PORTAL_V1 + httproutes.PORTAL_TERM_GET
+    );
     if (data.status) {
       this.termsList = data.data;
     }
@@ -441,7 +478,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
       },
     });
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-      //  
+      //
     });
   }
 }
@@ -461,7 +498,7 @@ export class VendorDataSource extends DataSource<Vendor> {
     public vendorService: VendorsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
-    public isDelete: number,
+    public isDelete: number
   ) {
     super();
     // Reset to the first page when the user changes the filter.

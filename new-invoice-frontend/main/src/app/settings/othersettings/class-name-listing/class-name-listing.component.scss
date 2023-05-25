@@ -53,3 +53,28 @@
 
 
 }
+
+@media only screen and (max-width:50px) and (min-width: 610px) {
+    ::ng-deep .mdc-text-field--outlined {
+        // c
+    }
+
+    ::ng-deep .mat-row1 {
+        display: unset !important;
+    }
+
+    .tbl-col-width-per-selected {
+        min-width: unset !important;
+        max-width: unset !important;
+    }
+
+    .tbl-col-width-per-action {
+        min-width: unset !important;
+        max-width: unset !important;
+    }
+
+    .tbl-col-width-per-max {
+        min-width: unset !important;
+        max-width: unset !important;
+    }
+}

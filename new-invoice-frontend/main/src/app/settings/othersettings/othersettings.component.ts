@@ -18,6 +18,7 @@ import { ImportOtherSettingsComponent } from './import-other-settings/import-oth
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
+import { ClassNameFormComponent } from './class-name-form/class-name-form.component';
 
 @Component({
   selector: 'app-othersettings',
@@ -36,7 +37,6 @@ export class OthersettingsComponent {
     'Tax rate',
     'Documents',
     'Vendor type',
-    'Job name',
     'Class name',
   ];
   @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
@@ -132,22 +132,21 @@ export class OthersettingsComponent {
       dialogRef.afterClosed().subscribe((result) => {
         this.getDataVendorType();
       });
-    } else if (this.currrent_tab == 'Job name') {
-      const dialogRef = this.dialog.open(JobNameFormComponent, {
-        width: '350px',
-        data: {},
-      });
-      dialogRef.afterClosed().subscribe((result) => {
-        this.getDataJobName();
-      });
+      // }
+      //  else if (this.currrent_tab == 'Job name') {
+      //   const dialogRef = this.dialog.open(JobNameFormComponent, {
+      //     width: '350px',
+      //     data: {},
+      //   });
+      //   dialogRef.afterClosed().subscribe((result) => {
+      //     this.getDataJobName();
+      //   });
     } else if (this.currrent_tab == 'Class name') {
-      const dialogRef = this.dialog.open(JobNameFormComponent, {
+      const dialogRef = this.dialog.open(ClassNameFormComponent, {
         width: '350px',
         data: {},
       });
-      dialogRef.afterClosed().subscribe((result) => {
-        this.getDataJobName();
-      });
+      dialogRef.afterClosed().subscribe((result) => {});
     }
   }
 
@@ -223,14 +222,14 @@ export class OthersettingsComponent {
 
   editClassName(Classname: any) {
     if (this.currrent_tab == 'Class name') {
-      const dialogRef = this.dialog.open(JobNameFormComponent, {
+      const dialogRef = this.dialog.open(ClassNameFormComponent, {
         width: '350px',
         data: Classname,
         disableClose: true,
       });
 
       dialogRef.afterClosed().subscribe((result) => {
-        this.getDataJobName();
+        location.reload();
       });
     }
   }

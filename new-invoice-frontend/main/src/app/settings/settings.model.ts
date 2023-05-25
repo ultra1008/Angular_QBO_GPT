@@ -304,6 +304,7 @@ export class ClassNameTable {
   name!: string;
   number!: string;
   description!: string;
+  status!: number;
 
   constructor(ClassNameTable: ClassNameTable) {
     {
@@ -311,6 +312,7 @@ export class ClassNameTable {
       this.name = ClassNameTable.name;
       this.number = ClassNameTable.number;
       this.description = ClassNameTable.description;
+      this.status = ClassNameTable.status;
     }
   }
 }
