@@ -400,5 +400,20 @@
             "ALL_INACTIVE": "Are you sure you want to Inactive all Client/Job Name?",
             "ALL_ARCHIVE": "Are you sure you want to archive all Client/Job Name?"
         }
+    },
+    "DOCUMENT": {
+        "TITLE": "Document",
+        "ADD": "Add Document",
+        "EDIT": "Edit Document",
+        "FORM": {
+            "DOCUMENT_TYPE": "Document Type",
+            "EXPIRATION_DATE": "Expiration Date",
+            "DOCUMENT": "Document"
+        },
+        "CONFIRMATION_DIALOG": {
+            "SUBMIT": "Please complete the document form before submitting.",
+            "SAVING": "Are you sure you want to close this window without saving changes?",
+            "DELETE": "Are you sure you want to delete this document?"
+        }
     }
 }

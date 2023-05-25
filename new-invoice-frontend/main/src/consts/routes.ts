@@ -18,6 +18,7 @@ export enum WEB_ROUTES {
   DETAILS = 'details',
   VIEW_DOCUMENT = 'view-document',
   USER_EMERGENCY_CONTACT = 'emergency-contact',
+  USER_DOCUMENT = 'document',
 
   DASHBOARD = '/dashboard/main',
   MONTHLY_HISTORY = 'monthly-history',
@@ -38,6 +39,7 @@ export enum WEB_ROUTES {
   USER_HISTORY = '/user/history',
   USER_FORM = '/user/form',
   USER_EMERGENCY_CONTACT_FORM = '/user/emergency-contact/form',
+  USER_DOCUMENT_FORM = '/user/document/form',
 
   COMPANY_INFO_FORM = 'company-info-form',
 

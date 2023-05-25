@@ -562,10 +562,10 @@ module.exports.saveUserDocument = async function (req, res) {
                         body.userdocument_updated_at = Math.round(new Date().getTime() / 1000);
                         body.userdocument_user_id = fields.user_id;
                         body.show_on_qrcode_scan = fields.show_on_qrcode_scan == "true" || fields.show_on_qrcode_scan == true ? true : false;
-                        var temp_path = newOpenFile[0].path;
-                        var file_name = newOpenFile[0].name;
+                        var temp_path = newOpenFile[0].filepath;
+                        var file_name = newOpenFile[0].originalFilename;
                         let date = moment().format('D_MMM_YYYY_hh_mm_ss_SSS_A');
-                        let array_name = newOpenFile[0].name.split(".");
+                        let array_name = newOpenFile[0].originalFilename.split(".");
                         var file_name_ext = array_name[array_name.length - 1];
                         //var file_name_ext = newOpenFile[0].name.split(".")[1];
                         var file_name = attachmentLocations.USER_DOCUMENT + "_" + date + "." + file_name_ext;

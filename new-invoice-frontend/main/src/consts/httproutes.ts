@@ -72,7 +72,7 @@ export enum httproutes {
   SAVE_USER_INFO = 'saveemployeeinfo',
   SAVE_USER_MOBILE_PIC = 'savemobilephoto',
   SAVE_USER_PASSWORD = 'senduserpassword',
-  SAVE_USER_DOCUMENT = 'saveuserdocument',
+
 
   // Emergency Contact
   GET_EMERGENCY_CONTACT = 'getemergencycontact',
@@ -80,6 +80,13 @@ export enum httproutes {
   SAVE_EMERGENCY_CONTACT = 'saveemergencycontact',
   DELETE_EMERGENCY_CONTACT = 'deleteemergencycontact',
   GET_RELATIONSHIP = 'getallrelationships',
+
+  // User Document
+  GET_USER_DOCUMENT = 'getuserdocument',
+  GET_ONE_USER_DOCUMENT = 'getoneuserdocument',
+  SAVE_USER_DOCUMENT = 'saveuserdocument',
+  EDIT_USER_DOCUMENT = 'edituserdocument',
+  DELETE_USER_DOCUMENT = 'deleteuserdocument',
 
   //Mail box
   MAILBOX_DATA_TABLE = 'getMailboxMonitorForTable',

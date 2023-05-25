@@ -71,6 +71,7 @@ export class RoleModel {
         }
     }
 }
+
 export class EmergencyContact {
     _id: string;
     emergency_contact_name: string;
@@ -96,6 +97,24 @@ export class EmergencyContact {
             this.emergency_contact_state = response.emergency_contact_state;
             this.is_validated = response.is_validated;
             this.validated_at = response.validated_at;
+        }
+    }
+}
+
+export class UserDocument {
+    _id: string;
+    document_name: string;
+    userdocument_expire_date: number;
+    userdocument_type_id: string;
+    userdocument_url: string;
+
+    constructor (response: UserDocument) {
+        {
+            this._id = response._id;
+            this.document_name = response.document_name;
+            this.userdocument_expire_date = response.userdocument_expire_date;
+            this.userdocument_type_id = response.userdocument_type_id;
+            this.userdocument_url = response.userdocument_url;
         }
     }
 }
