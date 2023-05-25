@@ -167,25 +167,35 @@ module.exports.importInvoiceDocument = async function (req, res) {
                         const file = reader.readFile(newOpenFile[0].path);
                         const sheets = file.SheetNames;
                         let data = [];
+                        let exitdata = new Array();
                         for (let i = 0; i < sheets.length; i++) {
                             const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
                             temp.forEach((ress) => {
                                 data.push(ress);
                             });
                         }
+                        var onecategory_main = "";
                         for (let m = 0; m < data.length; m++) {
-                            requestObject = {};
-                            let onecategory_main = await invoiceDocumentConnection.findOne({ name: data[m].name, is_expiration: data[m].is_expiration });
-                            if (onecategory_main == null) {
-                                requestObject.name = data[m].name;
-                                requestObject.is_expiration = data[m].is_expiration;
-                                let add_taxrate = new invoiceDocumentConnection(requestObject);
-                                let save_taxrate = await add_taxrate.save();
-                            } else {
-                                res.send({ status: true, message: "Document info name is allready exist." });
+                            onecategory_main = await invoiceDocumentConnection.findOne({ name: data[m].name, is_expiration: data[m].is_expiration }, { name: 1, is_expiration: 1 });
+                            if (onecategory_main != null) {
+                                exitdata[m] = onecategory_main.name;
                             }
                         }
-                        res.send({ status: true, message: "Document info add successfully." });
+                        if (exitdata.length > 0) {
+                            res.send({ status: false, exitdata: exitdata, message: "name is allready exist." });
+                        }
+                        else {
+                            for (let m = 0; m < data.length; m++) {
+                                onecategory_main = await invoiceDocumentConnection.findOne({ name: data[m].name, is_expiration: data[m].is_expiration }, { name: 1, is_expiration: 1 });
+                                requestObject = {};
+                                requestObject.name = data[m].name;
+                                requestObject.is_expiration = data[m].is_expiration;
+                                let add_data = new invoiceDocumentConnection(requestObject);
+                                let save_data = await add_data.save();
+
+                            }
+                            res.send({ status: true, message: "Document info add successfully." });
+                        }
 
                     } else {
                         res.send({ status: false, message: translator.getStr('SomethingWrong'), rerror: e });

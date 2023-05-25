@@ -165,24 +165,34 @@ module.exports.importJobTitle = async function (req, res) {
                         const file = reader.readFile(newOpenFile[0].path);
                         const sheets = file.SheetNames;
                         let data = [];
+                        let exitdata = new Array();
                         for (let i = 0; i < sheets.length; i++) {
                             const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
                             temp.forEach((ress) => {
                                 data.push(ress);
                             });
                         }
+                        var onecategory_main = "";
                         for (let m = 0; m < data.length; m++) {
-                            requestObject = {};
-                            let getdata = await jobtitleCollection.findOne({ job_title_name: data[m].job_title_name });
-                            if (getdata == null) {
-                                requestObject.job_title_name = data[m].job_title_name;
-                                let add_job_type = new jobtitleCollection(requestObject);
-                                let save_job_type = await add_job_type.save();
-                            } else {
-                                res.send({ status: true, message: "job title  name is allready exist." });
+                            onecategory_main = await jobtitleCollection.findOne({ job_title_name: data[m].job_title_name }, { job_title_name: 1 });
+                            if (onecategory_main != null) {
+                                exitdata[m] = onecategory_main.job_title_name;
                             }
                         }
-                        res.send({ status: true, message: "job title info add successfully." });
+                        if (exitdata.length > 0) {
+                            res.send({ status: false, exitdata: exitdata, message: "job title name is allready exist." });
+                        }
+                        else {
+                            for (let m = 0; m < data.length; m++) {
+                                onecategory_main = await jobtitleCollection.findOne({ job_title_name: data[m].job_title_name }, { job_title_name: 1 });
+                                requestObject = {};
+                                requestObject.job_title_name = data[m].job_title_name;
+                                let add_job_title = new jobtitleCollection(requestObject);
+                                let save_job_title = await add_job_title.save();
+
+                            }
+                            res.send({ status: true, message: "job title info add successfully." });
+                        }
 
                     } else {
                         res.send({ status: false, message: translator.getStr('SomethingWrong') });

@@ -167,24 +167,34 @@ module.exports.importvendortype = async function (req, res) {
                         const file = reader.readFile(newOpenFile[0].path);
                         const sheets = file.SheetNames;
                         let data = [];
+                        let exitdata = new Array();
                         for (let i = 0; i < sheets.length; i++) {
                             const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
                             temp.forEach((ress) => {
                                 data.push(ress);
                             });
                         }
+                        var onecategory_main = "";
                         for (let m = 0; m < data.length; m++) {
-                            requestObject = {};
-                            let onecategory_main = await vendortypeConnection.findOne({ name: data[m].name });
-                            if (onecategory_main == null) {
-                                requestObject.name = data[m].name;
-                                let add_taxrate = new vendortypeConnection(requestObject);
-                                let save_taxrate = await add_taxrate.save();
-                            } else {
-                                res.send({ status: true, message: "vendor type  name is allready exist." });
+                            onecategory_main = await vendortypeConnection.findOne({ name: data[m].name }, { name: 1 });
+                            if (onecategory_main != null) {
+                                exitdata[m] = onecategory_main.name;
                             }
                         }
-                        res.send({ status: true, message: "vendor type info add successfully." });
+                        if (exitdata.length > 0) {
+                            res.send({ status: false, exitdata: exitdata, message: "name is allready exist." });
+                        }
+                        else {
+                            for (let m = 0; m < data.length; m++) {
+                                onecategory_main = await vendortypeConnection.findOne({ name: data[m].name }, { name: 1 });
+                                requestObject = {};
+                                requestObject.name = data[m].name;
+                                let add_vendortype = new vendortypeConnection(requestObject);
+                                let save_vendortype = await add_vendortype.save();
+
+                            }
+                            res.send({ status: true, message: "vendor type info add successfully." });
+                        }
 
                     } else {
                         res.send({ status: false, message: translator.getStr('SomethingWrong') });
