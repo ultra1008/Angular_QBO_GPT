@@ -14,6 +14,7 @@ export enum WEB_ROUTES {
   CLIENT = '/client',
   VENDOR = '/vendor',
   USER = '/user',
+  INVOICE = '/invoice',
   DETAILS = 'details',
   VIEW_DOCUMENT = 'view-document',
   USER_EMERGENCY_CONTACT = 'emergency-contact',

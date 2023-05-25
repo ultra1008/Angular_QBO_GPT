@@ -1,6 +1,7 @@
 .dashboard-count {
     border-radius: 10px;
     display: flex;
+    cursor: pointer;
 
     .icon {
         border-radius: 10px 0px 0px 10px;
@@ -78,84 +79,6 @@
     background-color: #EF742F;
 }
 
-/* .item {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    padding: 0px;
-
-    width: 196px;
-    height: 60px;
-
- 
-
-    flex: none;
-    order: 0;
-    flex-grow: 0;
-
-    .icon {
-        display: flex;
-        flex-direction: row;
-        align-items: flex-start;
-        padding: 20px;
-        gap: 10px;
-
-        width: 56px;
-        height: 60px;
-
-        background: #0D6EFD;
-        border-radius: 10px 0px 0px 10px;
- 
-
-        flex: none;
-        order: 0;
-        flex-grow: 0;
-
-        i {
-            width: 16px;
-            height: 20px;
-        }
-    }
-
-    .text {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 10px;
-        gap: 10px;
-
-        // width: 140px;
-        height: 60px;
-
-        background: #D9E8FF;
-        border-radius: 0px 10px 10px 0px;
- 
-
-        flex: none;
-        order: 1;
-        flex-grow: 0;
-
-        .count {
-            // width: 26px;
-            // height: 17px;
-            font-weight: 800;
-            font-size: 14px;
-            line-height: 17px;
-
-            color: #000000;
-        }
-
-        .description {
-            // width: 116px;
-            // height: 15px;
-            font-weight: 500;
-            font-size: 12px;
-            line-height: 15px;
-
-            color: #000000;
-        }
-    }
-} */
 .job-cost {
     height: 470px;
 }
@@ -170,6 +93,7 @@
     border: 1px solid #D1D1D1;
     border-radius: 5px;
     padding: 10px;
+    cursor: pointer;
 
     .last-updated {
         margin-bottom: 0px;
