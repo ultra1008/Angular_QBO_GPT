@@ -177,7 +177,7 @@
             "USAGE": "Usage",
             "OTHER_SETTINGS": "Other Settings",
             "SECURITY": "Security",
-            "COST_CODE": "Cost Code",
+            "COST_CODE": "Cost Code/GL Account",
             "DOCUMENT_VIEW": "Document View",
             "SECURITY_MODULE": {
                 "ALERT_SURE_WANT_CHANGE": "This is a global setting that will affect all projects. Are you sure you want to make the change?",
