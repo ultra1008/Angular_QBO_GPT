@@ -212,6 +212,7 @@ router.post('/webapi/v1/portal/sendemergencycontactreminder', common.checkTokenE
 let userDocumentController = require('./document/documentController');
 let userDocumentValidation = require('./document/documentValidation');
 router.post('/webapi/v1/portal/getuserdocument', common.checkTokenExistOrNot, userDocumentController.getUserDocument);
+router.post('/webapi/v1/portal/getoneuserdocument', common.checkTokenExistOrNot, userDocumentValidation.getOneUserDocument, userDocumentController.getOneUserDocument);
 router.post('/webapi/v1/portal/deleteuserdocument', common.checkTokenExistOrNot, userDocumentValidation.deleteDocumentValidation, userDocumentController.deleteUserDocument);
 router.post('/webapi/v1/portal/edituserdocument', common.checkTokenExistOrNot, userDocumentController.editUserDocument);
 

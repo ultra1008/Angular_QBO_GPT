@@ -10,8 +10,6 @@ import { httproutes, httpversion } from 'src/consts/httproutes';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { showNotification, swalWithBootstrapButtons } from 'src/consts/utils';
 
-type NewType = UserService;
-
 @Component({
   selector: 'app-add-user-emergenct-contact',
   templateUrl: './add-user-emergenct-contact.component.html',

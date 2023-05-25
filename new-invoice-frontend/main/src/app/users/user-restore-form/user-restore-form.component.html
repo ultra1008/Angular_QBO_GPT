@@ -1,18 +1,29 @@
 <div class="addContainer">
-     <div class="modalHeader">
-          <div class="editRowModal">
-               <div class="modalHeader clearfix">
-                    <div class="modal-about">
-                         <div class="fw-bold p-t-5 p-l-10 font-17">
-                              Restore User
+     <div class="mr-set">
+          <div class="row">
+               <div class="col-2">
+                    <img src="{{invoice_logo}}" height="45px" width="45px">
+               </div>
+               <div class="col-8 align-div">
+                    <div class="editRowModal">
+                         <div class=" clearfix">
+                              <div class="modal-about">
+                                   <div class="fw-bold  font-17">
+                                        Restore User
+                                   </div>
+                              </div>
                          </div>
                     </div>
                </div>
+               <div class="col-2">
+                    <button mat-mini-fab (click)="dialogRef.close()" color="warn" aria-label="Close dialog">
+                         <mat-icon class="col-white">close </mat-icon>
+                    </button>
+               </div>
           </div>
-          <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
-               <mat-icon>close</mat-icon>
-          </button>
      </div>
+
+
      <div mat-dialog-content>
           <form class="register-form m-4" [formGroup]="userRoleInfo" (ngSubmit)="submit">
 
@@ -48,11 +59,13 @@
                     </div>
                </div>
                <div class="row">
-                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2 align-div">
                          <div class="example-button-row">
-                              <button mat-raised-button color="primary" [disabled]="!userRoleInfo.valid"
-                                   [mat-dialog-close]="1" (click)="restoreUser(data)">Save</button>
-                              <button mat-raised-button color="warn" tabindex="-1">Cancel</button>
+                              <button mat-raised-button color="primary" class="width-set-2"
+                                   [disabled]="!userRoleInfo.valid" [mat-dialog-close]="1"
+                                   (click)="restoreUser(data)">Save</button>
+                              <button mat-raised-button color="warn" class="width-set-1" (click)="dialogRef.close()"
+                                   tabindex="-1">Cancel</button>
                          </div>
                     </div>
                </div>

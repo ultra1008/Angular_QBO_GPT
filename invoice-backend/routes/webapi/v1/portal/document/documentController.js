@@ -17,11 +17,10 @@ module.exports.getUserDocument = async function (req, res) {
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
-
             let userDocumentConnection = connection_db_api.model(collectionConstant.INVOICE_USER_DOCUMENT, userDocumentSchema);
-            let users_document = await userDocumentConnection.aggregate([
+            let get_data = await userDocumentConnection.aggregate([
                 {
-                    $match: { userdocument_user_id: ObjectID(req.body.user_id), is_delete: 0 },
+                    $match: { userdocument_user_id: ObjectID(req.body._id), is_delete: 0 },
                 },
                 {
                     $lookup: {
@@ -47,9 +46,35 @@ module.exports.getUserDocument = async function (req, res) {
                 },
                 { $sort: { createdAt: -1 } }
             ]);
-            console.log(users_document);
-            if (users_document) {
-                res.send({ message: translator.getStr('UserDocumentListing'), data: users_document, status: true });
+            if (get_data) {
+                res.send(get_data);
+            } else {
+                res.send([]);
+            }
+        } catch (e) {
+            console.log(e);
+            res.send([]);
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.getOneUserDocument = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            let requestObject = req.body;
+            let userDocumentConnection = connection_db_api.model(collectionConstant.INVOICE_USER_DOCUMENT, userDocumentSchema);
+            let get_data = await userDocumentConnection.findOne({ _id: ObjectID(requestObject._id) });
+            if (get_data) {
+                res.send({ message: translator.getStr('UserDocumentListing'), data: get_data, status: true });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
             }
         } catch (e) {
             console.log(e);

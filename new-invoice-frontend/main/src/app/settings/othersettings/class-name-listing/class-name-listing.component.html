@@ -15,7 +15,8 @@
 
                         <ng-container matColumnDef="number">
                             <mat-header-cell *matHeaderCellDef
-                            [ngClass]="'max-h'"  mat-sort-header>Number</mat-header-cell>
+                            [ngClass]="'max-h'"  mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.NUMBER' |
+                            translate}}</mat-header-cell>
                             <mat-cell *matCellDef="let row" (click)="edit(row)" (contextmenu)="onContextMenu($event, row)">
                                 <span class="mobile-label">number:</span> {{row.number}}
                             </mat-cell>
@@ -23,9 +24,28 @@
 
                         <ng-container matColumnDef="description">
                             <mat-header-cell *matHeaderCellDef
-                            [ngClass]="'max-h'"  mat-sort-header>Description</mat-header-cell>
+                            [ngClass]="'max-h'"  mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.DESCRIPTION' |
+                            translate}}</mat-header-cell>
                             <mat-cell *matCellDef="let row" (click)="edit(row)" (contextmenu)="onContextMenu($event, row)">
                                 <span class="mobile-label">description:</span> {{row.description}}
+                            </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="status">
+                            <mat-header-cell class="psl-1" [ngClass]="'tbl-col-width-per-action'"
+                                *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.STATUS' |
+                                translate}}
+                            </mat-header-cell>
+                            <mat-cell mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row) "
+                                class="tbl-col-width-per-action">
+                                <span class="mobile-label">Status:</span>
+                                <div *ngIf="row.status===1" >
+                                    <span class="badge badge-solid-green">
+                                        {{'COMMON.STATUS.ACTIVE' | translate}}</span>
+                                </div>
+                                <div *ngIf="row.status===2">
+                                    <span class="badge badge-solid-red">
+                                        {{'COMMON.STATUS.INACTIVE' | translate}}</span>
+                                </div>
                             </mat-cell>
                         </ng-container>
                         <!-- actions -->
@@ -60,10 +80,10 @@
                     </table>
                 </div>
                 <!-- Loading spinner -->
-                <div *ngIf="jobnameService?.isTblLoading" class="tbl-spinner">
+                <div *ngIf="classnameService?.isTblLoading" class="tbl-spinner">
                     <app-loading></app-loading>
                 </div>
-                <div *ngIf="!jobnameService?.isTblLoading" class="no-results"
+                <div *ngIf="!classnameService?.isTblLoading" class="no-results"
                     [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
                     No matching records found
                 </div>

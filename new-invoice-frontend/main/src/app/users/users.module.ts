@@ -42,6 +42,7 @@ import { EmpListFilterPipe, EmpListFilterStatusPipe, FormateDateDDMMYYPipe, Form
 import { UserEmergencyContactComponent } from './user-form/user-emergency-contact/user-emergency-contact.component';
 import { UserDocumentComponent } from './user-form/user-document/user-document.component';
 import { AddUserEmergenctContactComponent } from './user-form/user-emergency-contact/add-user-emergenct-contact/add-user-emergenct-contact.component';
+import { UserDocumentFormComponent } from './user-form/user-document/user-document-form/user-document-form.component';
 
 
 @NgModule({
@@ -58,7 +59,8 @@ import { AddUserEmergenctContactComponent } from './user-form/user-emergency-con
     FormateDateStringPipe,
     UserEmergencyContactComponent,
     UserDocumentComponent,
-    AddUserEmergenctContactComponent
+    AddUserEmergenctContactComponent,
+    UserDocumentFormComponent
   ],
   providers: [UserService],
   imports: [
@@ -95,7 +97,7 @@ import { AddUserEmergenctContactComponent } from './user-form/user-emergency-con
     TranslateModule,
     MatSelectFilterModule,
     MatStepperModule,
-
+    MatDatepickerModule,
   ]
 })
 export class UsersModule { }

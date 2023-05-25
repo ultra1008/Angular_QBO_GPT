@@ -86,11 +86,11 @@
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>{{'VENDOR.ADD_EDIT.STATUS' | translate}}</mat-label>
-                                        <mat-select formControlName="client_status">
-                                            <mat-option [value]="1">
+                                        <mat-select formControlName="client_status" class="active-inactive-tx">
+                                            <mat-option class="active-inactive-tx" [value]="1">
                                                 ACTIVE
                                             </mat-option>
-                                            <mat-option [value]="2">
+                                            <mat-option class="active-inactive-tx" [value]="2">
                                                 INACTIVE
                                             </mat-option>
                                         </mat-select>

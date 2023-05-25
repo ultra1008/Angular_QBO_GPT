@@ -14,6 +14,7 @@ import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
 import { ClassNameTable } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
 import { JobNameFormComponent } from '../job-name-form/job-name-form.component';
+import { ClassNameFormComponent } from '../class-name-form/class-name-form.component';
 
 @Component({
   selector: 'app-class-name-listing',
@@ -24,9 +25,9 @@ export class ClassNameListingComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit
 {
-  displayedColumns = ['name', 'number', 'description', 'actions'];
-  jobnameService?: SettingsService;
-  dataSource!: JobNameDataSource;
+  displayedColumns = ['name', 'number', 'description', 'status', 'actions'];
+  classnameService?: SettingsService;
+  dataSource!: ClassNameDataSource;
   selection = new SelectionModel<ClassNameTable>(true, []);
   id?: number;
   isDelete = 0;
@@ -49,6 +50,8 @@ export class ClassNameListingComponent
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
   ngOnInit() {
+    console.log('call');
+
     this.loadData();
   }
   refresh() {
@@ -58,12 +61,12 @@ export class ClassNameListingComponent
     this.router.navigate(['/settings/mailbox-form']);
   }
 
-  edit(jobname: any) {
+  edit(classname: any) {
     let that = this;
     console.log('vednor');
-    const dialogRef = this.dialog.open(JobNameFormComponent, {
+    const dialogRef = this.dialog.open(ClassNameFormComponent, {
       width: '350px',
-      data: jobname,
+      data: classname,
       disableClose: true,
     });
 
@@ -72,12 +75,12 @@ export class ClassNameListingComponent
     });
   }
 
-  async delete(jobname: any) {
+  async delete(classname: any) {
     let that = this;
     swalWithBootstrapButtons
       .fire({
         title: this.translate.instant(
-          'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CONFIRMATION_DIALOG.JOB_NAME'
+          'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CONFIRMATION_DIALOG.CLASS_NAME'
         ),
         showDenyButton: true,
         showCancelButton: false,
@@ -87,7 +90,9 @@ export class ClassNameListingComponent
       })
       .then(async (result) => {
         if (result.isConfirmed) {
-          const data = await that.SettingsService.DeleteJobName(jobname._id);
+          const data = await that.SettingsService.DeleteClassName(
+            classname._id
+          );
           if (data.status) {
             showNotification(that.snackBar, data.message, 'success');
             that.refreshTable();
@@ -125,7 +130,7 @@ export class ClassNameListingComponent
     //       (d) => d === item
     //     );
     //     // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
-    //     this.jobnameService?.dataChange.value.splice(index, 1);
+    //     this.classnameService?.dataChange.value.splice(index, 1);
     //     this.refreshTable();
     //     this.selection = new SelectionModel<ClassNameTable>(true, []);
     //   });
@@ -137,13 +142,16 @@ export class ClassNameListingComponent
     //   );
   }
   public loadData() {
-    this.jobnameService = new SettingsService(this.httpCall);
-    this.dataSource = new JobNameDataSource(
-      this.jobnameService,
+    console.log('call');
+    this.classnameService = new SettingsService(this.httpCall);
+
+    this.dataSource = new ClassNameDataSource(
+      this.classnameService,
       this.paginator,
       this.sort,
       this.isDelete
     );
+    console.log('dataSource', this.dataSource);
     this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
       () => {
         if (!this.dataSource) {
@@ -170,7 +178,7 @@ export class ClassNameListingComponent
     }
   }
 }
-export class JobNameDataSource extends DataSource<ClassNameTable> {
+export class ClassNameDataSource extends DataSource<ClassNameTable> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -181,7 +189,7 @@ export class JobNameDataSource extends DataSource<ClassNameTable> {
   filteredData: ClassNameTable[] = [];
   renderedData: ClassNameTable[] = [];
   constructor(
-    public jobnameService: SettingsService,
+    public classnameService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
     public isDelete: number
@@ -194,16 +202,17 @@ export class JobNameDataSource extends DataSource<ClassNameTable> {
   connect(): Observable<ClassNameTable[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this.jobnameService.dataclassnameChange,
+      this.classnameService.dataclassnameChange,
       this._sort.sortChange,
       this.filterChange,
+
       this.paginator.page,
     ];
-    this.jobnameService.getAllClassNameTable(this.isDelete);
+    this.classnameService.getAllClassNameTable(this.isDelete);
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
-        this.filteredData = this.jobnameService.dataClassname
+        this.filteredData = this.classnameService.dataClassname
           .slice()
           .filter((ClassNameTable: ClassNameTable) => {
             const searchStr =

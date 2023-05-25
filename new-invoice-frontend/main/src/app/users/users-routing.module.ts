@@ -6,6 +6,7 @@ import { WEB_ROUTES } from 'src/consts/routes';
 import { UserHistoryComponent } from './user-history/user-history.component';
 import { UserFormComponent } from './user-form/user-form.component';
 import { AddUserEmergenctContactComponent } from './user-form/user-emergency-contact/add-user-emergenct-contact/add-user-emergenct-contact.component';
+import { UserDocumentFormComponent } from './user-form/user-document/user-document-form/user-document-form.component';
 
 const routes: Routes = [
   {
@@ -27,6 +28,10 @@ const routes: Routes = [
   {
     path: WEB_ROUTES.USER_EMERGENCY_CONTACT + "/" + WEB_ROUTES.FORM,
     component: AddUserEmergenctContactComponent
+  },
+  {
+    path: WEB_ROUTES.USER_DOCUMENT + "/" + WEB_ROUTES.FORM,
+    component: UserDocumentFormComponent
   },
 ];
 

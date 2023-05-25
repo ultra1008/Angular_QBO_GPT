@@ -17,7 +17,6 @@ import { UntypedFormBuilder } from '@angular/forms';
 import { UserService } from '../../user.service';
 import { EmergencyContact } from '../../user.model';
 import { WEB_ROUTES } from 'src/consts/routes';
-import { E, co } from '@fullcalendar/core/internal-common';
 import { MMDDYYYY, showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { CommonService } from 'src/app/services/common.service';

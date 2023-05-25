@@ -18,7 +18,7 @@
                         <div class="main-cust-setting-div">
                             <mat-tab-group [selectedIndex]="step_index" (selectedTabChange)="onTabChanged($event)"
                                 [(selectedIndex)]="step_index">
-                                <mat-tab label="Invoice">
+                                <!-- <mat-tab label="Invoice">
                                     <div class="body overflow-auto">
                                         <div class="table-responsive">
                                             <table mat-table #table [dataSource]="dataSource" matSort
@@ -92,7 +92,6 @@
                                                 </mat-row>
                                             </table>
                                         </div>
-                                        <!-- Loading spinner -->
                                         <div *ngIf="DocumentsServices?.isTblLoading" class="tbl-spinner">
                                             <app-loading></app-loading>
                                         </div>
@@ -105,7 +104,7 @@
                                         </mat-paginator>
                                     </div>
 
-                                </mat-tab>
+                                </mat-tab> -->
                                 <mat-tab label="P.O.">
                                     <div class="body overflow-auto">
                                         <div class="table-responsive">

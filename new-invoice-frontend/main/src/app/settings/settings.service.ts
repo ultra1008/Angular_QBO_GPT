@@ -320,7 +320,7 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
       .toPromise();
     // Only write this for datatable api otherwise return data
     this.isTblLoading = false;
-    this.dataJobnameChange.next(data);
+    this.dataclassnameChange.next(data);
   }
 
   async getAllCostCodeTable(is_delete: number): Promise<void> {
@@ -659,6 +659,15 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     return data;
   }
 
+  async DeleteClassName(_id: string) {
+    const data = await this.httpCall
+      .httpPostCall(httpversion.PORTAL_V1 + httproutes.DELETE_CLASS_NAME, {
+        _id: _id,
+      })
+      .toPromise();
+    return data;
+  }
+
   addAdvanceTable(Document: Settings): void {
     this.dialogData = Document;
   }
@@ -747,6 +756,16 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     const data = await this.httpCall
       .httpPostCall(
         httpversion.PORTAL_V1 + httproutes.OTHER_SETTING_SAVE_JOB_NAME,
+        requestObject
+      )
+      .toPromise();
+    return data;
+  }
+
+  async saveClassName(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.SAVE_CLASS_NAME,
         requestObject
       )
       .toPromise();

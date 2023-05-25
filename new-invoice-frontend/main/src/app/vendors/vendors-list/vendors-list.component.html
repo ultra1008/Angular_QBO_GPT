@@ -156,7 +156,7 @@
                                                 Name:</span>{{row.vendor_name}}</span>
                                     </mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="vendor_id">
+                                <!-- <ng-container matColumnDef="vendor_id">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.VENDOR_ID' |
                                         translate}}
                                     </mat-header-cell>
@@ -165,8 +165,8 @@
                                         <span class="truncate-text"> <span class="mobile-label">Vendor
                                                 ID:</span>{{row.vendor_id}}</span>
                                     </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="customer_id">
+                                </ng-container> -->
+                                <!-- <ng-container matColumnDef="customer_id">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.CUSTOMER_ID' |
                                         translate}}
                                     </mat-header-cell>
@@ -174,6 +174,42 @@
                                         (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">
                                         <span class="truncate-text"> <span class="mobile-label">Customer
                                                 ID:</span>{{row.customer_id}}</span>
+                                    </mat-cell>
+                                </ng-container> -->
+                                <ng-container matColumnDef="invoice">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.INVOICE' |
+                                        translate}}
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row" [matTooltip]="getVendorIdTooltip(row)"
+                                        (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">
+                                        <span class="truncate-text"> <span class="mobile-label">Invoice:</span></span>
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="open_invoice">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.OPEN_INVOICE' |
+                                        translate}}
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row" [matTooltip]="getVendorIdTooltip(row)"
+                                        (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">
+                                        <span class="truncate-text"> <span class="mobile-label">Open Invoice:</span></span>
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="amount_paid">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.AMOUNT_PAID' |
+                                        translate}}
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row" [matTooltip]="getVendorIdTooltip(row)"
+                                        (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">
+                                        <span class="truncate-text"> <span class="mobile-label">Amount Paid:</span></span>
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="amount_open">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.AMOUNT_OPEN' |
+                                        translate}}
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row" [matTooltip]="getVendorIdTooltip(row)"
+                                        (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">
+                                        <span class="truncate-text"> <span class="mobile-label">Amount Open:</span></span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_phone">
