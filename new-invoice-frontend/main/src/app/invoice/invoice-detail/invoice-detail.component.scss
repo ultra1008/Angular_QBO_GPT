@@ -87,10 +87,55 @@
      font-size: 12px !important;
 }
 
-.activity {
+::ng-deep .mat-mdc-form-field-subscript-wrapper {
 
+     height: 13px !important;
+}
+
+.e-panal {
+     ::ng-deep .mat-expansion-panel-body {
+          // h
+     }
+
+     ::ng-deep .mat-expansion-panel-body {
+          padding: 0 4px 16px !important;
+     }
+
+     ::ng-deep.mat-expansion-panel-header.mat-expanded {
+          height: 35px !important;
+     }
+}
+
+.activity {
      ::ng-deep .mat-mdc-tab.mdc-tab {
           height: 22px;
-
      }
+}
+
+// expansion-panel
+.mat-expansion-panel-header {
+     border-radius: 10px !important;
+     margin-bottom: 5px !important;
+     height: 33px !important;
+     background-color: #3f51b5 !important;
+     color: white;
+}
+
+.mat-expansion-panel-header-title {
+     color: rgba(255, 255, 255, 0.87);
+}
+
+::ng-deep .mat-expansion-indicator::after {
+     color: rgba(255, 255, 255, 0.87) !important;
+}
+
+// expansion-panel
+
+.chat-p {
+     padding-top: 7px;
+     padding-left: 10px;
+}
+
+.chat-msg {
+     padding-left: 10px;
 }

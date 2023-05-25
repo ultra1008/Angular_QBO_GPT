@@ -13,8 +13,9 @@ import { MatInputModule } from '@angular/material/input';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatTabsModule } from '@angular/material/tabs';
-import { ViewDocumentComponent } from './view-document/view-document.component';
 import { MatSelectModule } from '@angular/material/select';
+import { NgScrollbarModule } from 'ngx-scrollbar';
+import { ViewDocumentComponent } from './view-document/view-document.component';
 import { MatSelectFilterModule } from 'mat-select-filter';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatMenuModule } from '@angular/material/menu';
@@ -82,6 +83,7 @@ import { AdvanceTableService } from '../advance-table/advance-table.service';
     TranslateModule,
     MatCheckboxModule,
     MatDialogModule,
+    NgScrollbarModule
   ]
 })
 export class InvoiceModule { }
