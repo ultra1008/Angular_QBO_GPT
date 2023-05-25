@@ -13,6 +13,8 @@ import { MatInputModule } from '@angular/material/input';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatSelectModule } from '@angular/material/select';
+import { NgScrollbarModule } from 'ngx-scrollbar';
 
 
 @NgModule({
@@ -34,6 +36,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatInputModule,
     FormsModule,
     MatTabsModule,
+    MatSelectModule,
+    NgScrollbarModule
   ]
 })
 export class InvoiceModule { }
