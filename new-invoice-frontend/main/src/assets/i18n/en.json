@@ -219,6 +219,7 @@
             },
             "COST_CODE_MODULE": {
                 "DIVISON": "Divison",
+                "GL_ACCOUNTS": "GL account type/cost code type",
                 "DISCRIPTION": "Description",
                 "HEADER_ARCHIVE": "Archive Cost Code",
                 "CONFIRMATION_DIALOG": {

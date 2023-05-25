@@ -180,7 +180,7 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.USER_NAME' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell [matTooltip]="getNameTooltip(row)" *matCellDef="let row"
+                                    <mat-cell [matTooltip]="getNameTooltip(row)" (click)="editUser(row)" *matCellDef="let row"
                                         (contextmenu)="onContextMenu($event, row)">
                                         <span class="truncate-text"> <span
                                                 class="mobile-label">Name:</span>{{row.userfullname}}</span>
@@ -190,7 +190,7 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.PHONE' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell [matTooltip]="getPhoneTooltip(row)" *matCellDef="let row"
+                                    <mat-cell [matTooltip]="getPhoneTooltip(row)" (click)="editUser(row)" *matCellDef="let row"
                                         (contextmenu)="onContextMenu($event, row)">
                                         <span class="truncate-text"> <span
                                                 class="mobile-label">Phone:</span>{{phonenoFormat(row.userphone)}}</span>
@@ -200,7 +200,7 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.EMAIL' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" [matTooltip]="getEmailTooltip(row)"
+                                    <mat-cell *matCellDef="let row" (click)="editUser(row)" [matTooltip]="getEmailTooltip(row)"
                                         (contextmenu)="onContextMenu($event, row)">
                                         <span class="truncate-text"> <span
                                                 class="mobile-label">Email:</span>{{row.useremail}}</span>
@@ -210,7 +210,7 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.ROLE' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell [matTooltip]="getRoleTooltip(row)" *matCellDef="let row"
+                                    <mat-cell [matTooltip]="getRoleTooltip(row)" (click)="editUser(row)" *matCellDef="let row"
                                         (contextmenu)="onContextMenu($event, row)">
                                         <span class="truncate-text"> <span
                                                 class="mobile-label">Role:</span>{{row.role_name}}</span>
@@ -220,7 +220,7 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.JOB_TITLE' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell [matTooltip]="getJobTitleTooltip(row)" *matCellDef="let row"
+                                    <mat-cell [matTooltip]="getJobTitleTooltip(row)" (click)="editUser(row)" *matCellDef="let row"
                                         (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Job
                                             Title:</span>{{row.userjob_title_name}}
@@ -230,7 +230,7 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.DEPARTMENT' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell [matTooltip]="getDepartmentTooltip(row)" *matCellDef="let row"
+                                    <mat-cell [matTooltip]="getDepartmentTooltip(row)" (click)="editUser(row)" *matCellDef="let row"
                                         (contextmenu)="onContextMenu($event, row)">
                                         <span class="truncate-text"> <span
                                                 class="mobile-label">Department:</span>{{row.department_name}}</span>

@@ -177,12 +177,12 @@ export class VendorsListComponent
   getNameTooltip(row: any) {
     return row.vendor_name;
   }
-  getCustomerIdTooltip(row: any) {
-    return row.customer_id;
-  }
-  getVendorIdTooltip(row: any) {
-    return row.vendor_id;
-  }
+  // getCustomerIdTooltip(row: any) {
+  //   return row.customer_id;
+  // }
+  // getVendorIdTooltip(row: any) {
+  //   return row.vendor_id;
+  // }
   getPhonTooltip(row: any) {
     return row.vendor_phone;
   }

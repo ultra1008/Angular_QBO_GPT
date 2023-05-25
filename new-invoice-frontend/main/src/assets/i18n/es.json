@@ -219,6 +219,7 @@
             },
             "COST_CODE_MODULE": {
                 "DIVISON": "División",
+                "GL_ACCOUNTS": "Tipo de cuenta del LM/tipo de código de costo",
                 "DISCRIPTION": "Descripción",
                 "HEADER_ARCHIVE": "Código de costo de archivo",
                 "CONFIRMATION_DIALOG": {
