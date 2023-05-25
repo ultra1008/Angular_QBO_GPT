@@ -27,7 +27,7 @@ import { TableElement } from '../shared/TableElement';
 import { UnsubscribeOnDestroyAdapter } from '../shared/UnsubscribeOnDestroyAdapter';
 import { TableExportUtil } from '../shared/tableExportUtil';
 import { VendorReportComponent } from '../vendors/vendor-report/vendor-report.component';
-import { Vendor, TermModel } from '../vendors/vendor-table.model';
+import { Vendor, TermModel } from '../vendors/vendor.model';
 import { VendorsService } from '../vendors/vendors.service';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { ClientService } from './client.service';
@@ -41,8 +41,7 @@ import { ClientList } from './client.model';
 })
 export class ClientComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit
-{
+  implements OnInit {
   show: boolean = false;
   displayedColumns = [
     'select',
@@ -65,7 +64,7 @@ export class ClientComponent
   rform?: any;
   selectedValue!: string;
 
-  constructor(
+  constructor (
     public httpClient: HttpClient,
     private httpCall: HttpCall,
     public dialog: MatDialog,
@@ -250,8 +249,8 @@ export class ClientComponent
     this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.renderedData.forEach((row) =>
-          this.selection.select(row)
-        );
+        this.selection.select(row)
+      );
     console.log('numRows', this.selection.selected);
   }
   removeSelectedRows() {
@@ -435,7 +434,7 @@ export class ClientDataSource extends DataSource<ClientList> {
   }
   filteredData: ClientList[] = [];
   renderedData: ClientList[] = [];
-  constructor(
+  constructor (
     public clientService: ClientService,
     public paginator: MatPaginator,
     public _sort: MatSort,

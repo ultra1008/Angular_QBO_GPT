@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WEB_ROUTES } from 'src/consts/routes';
-import { TermModel, Vendor } from '../vendor-table.model';
+import { TermModel, Vendor } from '../vendor.model';
 import { HttpClient } from '@angular/common/http';
 import { UntypedFormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -25,8 +25,7 @@ import { localstorageconstants } from 'src/consts/localstorageconstants';
 })
 export class VendorGridComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit
-{
+  implements OnInit {
   vendorList: any = [];
   cardLoading = true;
   isDelete = 0;
@@ -36,7 +35,7 @@ export class VendorGridComponent
   vendor_status: any;
   termsList: Array<TermModel> = [];
 
-  constructor(
+  constructor (
     public httpClient: HttpClient,
     private httpCall: HttpCall,
     public dialog: MatDialog,

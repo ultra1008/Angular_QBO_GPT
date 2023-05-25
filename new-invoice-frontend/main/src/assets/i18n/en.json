@@ -50,6 +50,7 @@
             "ARCHIVED_TITLE": "Archived Vendor"
         },
         "TABLE": {
+            "VENDOR_IMAGE": "Image",
             "VENDOR_NAME": "Vendor Name",
             "VENDOR_ID": "Vendor ID",
             "CUSTOMER_ID": "Customer ID",

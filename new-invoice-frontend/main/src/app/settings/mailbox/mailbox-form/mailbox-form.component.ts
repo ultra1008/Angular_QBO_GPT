@@ -14,7 +14,7 @@ import {
 } from 'ngx-gallery-9';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
-import { TermModel, CountryModel } from 'src/app/vendors/vendor-table.model';
+import { TermModel, CountryModel } from 'src/app/vendors/vendor.model';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { showNotification, swalWithBootstrapButtons } from 'src/consts/utils';
 import { SettingsService } from '../../settings.service';
@@ -38,7 +38,7 @@ export class MailboxFormComponent {
   frequency = configData.MAILBOX_MONITOR_TIME;
   cronTime: any;
 
-  constructor(
+  constructor (
     private fb: UntypedFormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,

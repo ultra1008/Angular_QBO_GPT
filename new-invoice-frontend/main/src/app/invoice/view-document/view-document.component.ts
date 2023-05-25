@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CommonService } from 'src/app/services/common.service';
-import { TermModel } from 'src/app/vendors/vendor-table.model';
+import { TermModel } from 'src/app/vendors/vendor.model';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { configData } from 'src/environments/configData';
 
