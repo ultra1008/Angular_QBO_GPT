@@ -5,7 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { commonFileChangeEvent } from 'src/app/services/utils';
 import { WEB_ROUTES } from 'src/consts/routes';
-import { amountChange, numberWithCommas, showNotification } from 'src/consts/utils';
+import { amountChange, numberWithCommas, showNotification, timeDateToepoch } from 'src/consts/utils';
 import { UserService } from '../user.service';
 import { configData } from 'src/environments/configData';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
@@ -457,7 +457,8 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
 
   async saveUser() {
     if (this.userpersonalinfo.valid && this.useremployeeinfo.valid && this.usercontactinfo.valid) {
-      // let usersDocument = this.userpersonalinfo.value.usersDocument || [];
+      this.uiSpinner.spin$.next(true);
+      const usersDocument = this.userpersonalinfo.value.usersDocument || [];
       delete this.userpersonalinfo.value.usersDocument;
       let reqObject = {
         ...this.userpersonalinfo.value,
@@ -485,9 +486,32 @@ export class UserFormComponent extends UnsubscribeOnDestroyAdapter implements On
       formData.append('reqObject', JSON.stringify(reqObject));
       const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_USER, formData);
       if (data.status) {
-        this.uiSpinner.spin$.next(false);
-        showNotification(this.snackBar, data.message, 'success');
-        this.router.navigate([WEB_ROUTES.USER]);
+        if (usersDocument.length === 0) {
+          this.uiSpinner.spin$.next(false);
+          showNotification(this.snackBar, data.message, 'success');
+          this.router.navigate([WEB_ROUTES.USER]);
+        } else {
+          this.uiSpinner.spin$.next(false);
+          usersDocument.forEach(async (element: any, i: number) => {
+            element.userdocument_expire_date = timeDateToepoch(new Date(element.userdocument_expire_date));
+            const formData_doc = new FormData();
+            formData_doc.append("file", this.document_array[i]);
+            formData_doc.append("reqObject", JSON.stringify(element));
+            formData_doc.append("user_id", data.data._id);
+            const data_doc = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_USER_DOCUMENT, formData_doc);
+            if (data_doc.status) {
+              //
+            } else {
+              this.uiSpinner.spin$.next(false);
+              showNotification(this.snackBar, data_doc.message, 'error');
+            }
+            if (usersDocument.length == i + 1) {
+              this.uiSpinner.spin$.next(false);
+              showNotification(this.snackBar, data.message, 'success');
+              this.router.navigate([WEB_ROUTES.USER]);
+            }
+          });
+        }
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');
