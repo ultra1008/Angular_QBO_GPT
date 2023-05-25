@@ -40,7 +40,7 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
 
   type = '';
 
-  constructor (public httpClient: HttpClient, public dialog: MatDialog, public invoiceService: InvoiceService,
+  constructor(public httpClient: HttpClient, public dialog: MatDialog, public invoiceService: InvoiceService,
     private snackBar: MatSnackBar, public route: ActivatedRoute, private router: Router) {
     super();
     route.queryParams.subscribe(queryParams => {
@@ -94,6 +94,7 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
   editCall(row: Invoice) {
     this.router.navigate([WEB_ROUTES.INVOICE_DETAILS]);
   }
+
 
   private refreshTable() {
     this.paginator._changePageSize(this.paginator.pageSize);
@@ -183,7 +184,7 @@ export class ExampleDataSource extends DataSource<Invoice> {
   }
   filteredData: Invoice[] = [];
   renderedData: Invoice[] = [];
-  constructor (
+  constructor(
     public exampleDatabase: InvoiceService,
     public paginator: MatPaginator,
     public _sort: MatSort

@@ -18,6 +18,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
     HistoryComponent,
     PhoneFormatPipe,
     LoadingComponent,
+    CustompdfviewerComponent
   ],
   imports: [
     CommonModule,

@@ -29,7 +29,7 @@
                                    </li>
                                    <li class="tbl-header-btn">
                                         <div class="m-l-10" matTooltip="BACK">
-                                             <button mat-mini-fab color="warn">
+                                             <button mat-mini-fab color="warn" (click)="back()">
                                                   <mat-icon class="col-white">close </mat-icon>
                                              </button>
                                         </div>
@@ -39,7 +39,7 @@
                     </div>
                     <div class="row clearfix mt-2">
                          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                              <div class="Fix-hight" style="overflow: scroll; overflow-x: hidden;">
+                              <div class="Fix-hight">
                                    <div class="card">
                                         <div class="header">
                                              <h2>Information</h2>
@@ -48,7 +48,6 @@
                                              <div class="list-group">
                                                   <form class="register-form m-1" [formGroup]="invoiceForm">
                                                        <div class="row">
-
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
@@ -149,15 +148,16 @@
                                                             </div>
                                                        </div>
                                                   </form>
-                                                  <div class="d-flex"
-                                                       style="padding-left: 15px !important; padding-bottom: 5px !important;">
+                                                  <div class="d-flex form-button">
                                                        <button class="btn-space" mat-raised-button
                                                             color="primary">{{'COMMON.ACTIONS.SAVE'|
                                                   translate}}</button>
                                                        <button class="btn-space but-c" type="button"
                                                             mat-raised-button>{{'Approve'| translate}}</button>
-                                                       <button type="button" mat-raised-button
+                                                       <button class="btn-space" type="button" mat-raised-button
                                                             color="warn">{{'Reject'| translate}}</button>
+                                                       <button type="button" class="onhold"
+                                                            mat-raised-button>{{'On Hold'| translate}}</button>
                                                   </div>
                                              </div>
                                         </div>
@@ -397,13 +397,10 @@
                                                             </div>
                                                        </div>
                                                   </form>
-                                                  <div class="d-flex" style="padding-left: 15px !important;">
+                                                  <div class="d-flex form-button">
                                                        <button class="btn-space" mat-raised-button
                                                             color="primary">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
-                                                       <button class="btn-space but-c" type="button"
-                                                            mat-raised-button>{{'Approve'| translate}}</button>
-                                                       <button type="button" mat-raised-button
-                                                            color="warn">{{'Reject'| translate}}</button>
+
                                                   </div>
                                              </mat-expansion-panel>
                                              <mat-expansion-panel (opened)="panelOpenState = true"
@@ -437,8 +434,7 @@
                                                                  <ng-scrollbar style="height: 250px" visibility="hover">
                                                                       <div class="chat-history" id="chat-conversation">
                                                                            <ul>
-                                                                                <li
-                                                                                     style="background: #e8e8e8;border-radius: 10px; ">
+                                                                                <li class="note-card">
                                                                                      <div
                                                                                           class="message-data d-flex chat-p mt-2">
                                                                                           <div class="col-11">
@@ -471,8 +467,7 @@
                                                                                           </div>
                                                                                      </div>
                                                                                 </li>
-                                                                                <li
-                                                                                     style="background: #e8e8e8;border-radius: 10px; ">
+                                                                                <li class="note-card">
                                                                                      <div
                                                                                           class="message-data d-flex chat-p mt-2">
                                                                                           <div class="col-11">
@@ -505,8 +500,7 @@
                                                                                           </div>
                                                                                      </div>
                                                                                 </li>
-                                                                                <li
-                                                                                     style="background: #e8e8e8;border-radius: 10px; ">
+                                                                                <li class="note-card">
                                                                                      <div
                                                                                           class="message-data d-flex chat-p mt-2">
                                                                                           <div class="col-11">
@@ -761,13 +755,14 @@
                                    <div class="body">
                                         <img src="assets/images/full_bg.jpg" height="690px" width="760px" alt="">
                                    </div> -->
-                                   <div class="pdf-viewer">
+                                   <app-custompdfviewer [pdf_url]="pdf_url"></app-custompdfviewer>
+                                   <!-- <div class="pdf-viewer">
                                         <pdf-viewer id="pdf" [src]="pdf_url" [rotation]="0" [original-size]="false"
                                              [show-all]="true" [fit-to-page]="false" [zoom]="1"
                                              [zoom-scale]="'page-width'" [stick-to-page]="false" [render-text]="true"
                                              [external-link-target]="'blank'" [autoresize]="true" [show-borders]="false"
                                              [external-link-target]="'blank'"></pdf-viewer>
-                                   </div>
+                                   </div> -->
                               </div>
                          </div>
                     </div>
