@@ -18,7 +18,7 @@
             <h6 class="card-title"><b>In-Progress</b></h6>
             <div class="row ">
               <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                <div class="dashboard-count pending-document-bg">
+                <div class="dashboard-count pending-document-bg" (click)="viewInvoice('Pending_Document')">
                   <div class="icon pending-document-icon-bg">
                     <img src='assets/images/icons/pending.svg' alt="" height="25" width="25" />
                   </div>
@@ -29,7 +29,7 @@
                 </div>
               </div>
               <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                <div class="dashboard-count pending-invoice-bg">
+                <div class="dashboard-count pending-invoice-bg" (click)="viewInvoice('Pending_Invoice')">
                   <div class="icon pending-invoice-icon-bg">
                     <img src='assets/images/icons/pending_invoice.svg' alt="" height="25" width="25" />
                   </div>
@@ -43,24 +43,13 @@
           </div>
         </div>
       </div>
-      <!-- <div class="row">
-              <div class="col-lg-12 col-md-12 col-12">
-                <h4 class="m-t-0 m-b-0"><strong>Sarah</strong> Smith</h4>
-                <span class="job_post">Java Develper</span>
-                <p>102, Svayam Appartment, new P.L. road, Rajkot-369852</p>
-                <div>
-                  <button type="button" class="btn btn-outline-success btn-border-radius msr-2">Follow</button>
-                  <button type="button" class="btn btn-outline-warning btn-border-radius">Message</button>
-                </div>
-              </div>
-            </div> -->
       <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
         <div class="card profile-header">
           <div class="body">
             <h6 class="card-title"><b>Waiting For Approval</b></h6>
             <div class="row">
               <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                <div class="dashboard-count sent-for-approval-bg">
+                <div class="dashboard-count sent-for-approval-bg" (click)="viewInvoice('Sent_For_Approval')">
                   <div class="icon sent-for-approval-icon-bg">
                     <img src='assets/images/icons/approval.svg' alt="" height="25" width="25" />
                   </div>
@@ -71,7 +60,7 @@
                 </div>
               </div>
               <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                <div class="dashboard-count rejected-invoice-bg">
+                <div class="dashboard-count rejected-invoice-bg" (click)="viewInvoice('Rejected_Invoice')">
                   <div class="icon rejected-invoice-icon-bg">
                     <img src='assets/images/icons/reject.svg' alt="" height="25" width="25" />
                   </div>
@@ -91,7 +80,7 @@
             <h6 class="card-title"><b>Need Attention</b></h6>
             <div class="row">
               <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                <div class="dashboard-count close-to-due-date-bg">
+                <div class="dashboard-count close-to-due-date-bg" (click)="viewInvoice('Close_To_Due_Date')">
                   <div class="icon close-to-due-date-icon-bg">
                     <img src='assets/images/icons/due_date.svg' alt="" height="25" width="25" />
                   </div>
@@ -102,7 +91,7 @@
                 </div>
               </div>
               <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                <div class="dashboard-count on-hold-bg">
+                <div class="dashboard-count on-hold-bg" (click)="viewInvoice('On_Hold')">
                   <div class="icon on-hold-icon-bg">
                     <img src='assets/images/icons/hold.svg' alt="" height="25" width="25" />
                   </div>
@@ -122,7 +111,7 @@
             <h6 class="card-title"><b>Duplicate Invoice</b></h6>
             <div class="row">
               <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                <div class="dashboard-count duplicate-bg">
+                <div class="dashboard-count duplicate-bg" (click)="viewInvoice('Duplicate')">
                   <div class="icon duplicate-icon-bg">
                     <img src='assets/images/icons/duplicate.svg' alt="" height="25" width="25" />
                   </div>

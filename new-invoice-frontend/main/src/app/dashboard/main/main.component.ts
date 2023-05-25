@@ -77,7 +77,7 @@ export class MainComponent {
   rejectedInvoices: any = [];
   processedInvoices: any = [];
 
-  constructor(private commonService: CommonService, private router: Router,) {
+  constructor (private commonService: CommonService, private router: Router,) {
     this.getDashboardInvoice();
     this.monthlyInvoiceChart();
     this.monthlyHistoryChart();
@@ -291,5 +291,9 @@ export class MainComponent {
 
   invoiceDetail(invoice: any) {
     this.router.navigate([WEB_ROUTES.INVOICE_DETAILS]);
+  }
+
+  viewInvoice(type: string) {
+    this.router.navigate([WEB_ROUTES.INVOICE], { queryParams: { type: type } });
   }
 }

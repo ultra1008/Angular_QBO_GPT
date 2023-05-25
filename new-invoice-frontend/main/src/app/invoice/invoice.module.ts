@@ -15,13 +15,32 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSelectModule } from '@angular/material/select';
 import { NgScrollbarModule } from 'ngx-scrollbar';
+import { ViewDocumentComponent } from './view-document/view-document.component';
+import { MatSelectFilterModule } from 'mat-select-filter';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSortModule } from '@angular/material/sort';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { CommonComponentsModule } from '../common-components/common-components.module';
+import { ComponentsModule } from '../shared/components/components.module';
+import { SharedModule } from '../shared/shared.module';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
+import { AdvanceTableService } from '../advance-table/advance-table.service';
 
 
 @NgModule({
   declarations: [
     InvoiceListingComponent,
-    InvoiceDetailComponent
+    InvoiceDetailComponent,
+    ViewDocumentComponent
   ],
+  providers: [AdvanceTableService],
   imports: [
     CommonModule,
     TranslateModule,
@@ -36,7 +55,34 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
     MatInputModule,
     FormsModule,
     MatTabsModule,
+    MatFormFieldModule,
     MatSelectModule,
+    MatSelectFilterModule,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSnackBarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSelectModule,
+    MatCardModule,
+    MatDatepickerModule,
+    MatProgressSpinnerModule,
+    MatSortModule,
+    MatMenuModule,
+    SharedModule,
+    ComponentsModule,
+    CommonComponentsModule,
+    MatChipsModule,
+    MatListModule,
+    MatSelectFilterModule,
+    TranslateModule,
+    MatCheckboxModule,
+    MatDialogModule,
     NgScrollbarModule
   ]
 })

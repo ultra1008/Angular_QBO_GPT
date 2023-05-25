@@ -54,6 +54,7 @@ module.exports.saveclassname = async function (req, res) {
                 }
                 else {
                     var add_vendortype = new class_nameConnection(requestObject);
+                    console.log("requestObject", requestObject);
                     var save_vendortype = await add_vendortype.save();
                     res.send({ status: true, message: "class name insert successfully..!", data: add_vendortype });
                 }
@@ -160,50 +161,77 @@ module.exports.getclassnameForTable = async function (req, res) {
     }
 };
 
-//class name active or inactive
-module.exports.updateclassnameStatus = async function (req, res) {
+// bulk upload 
+module.exports.importclassname = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
-
     if (decodedToken) {
-        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var class_nameConnection = connection_db_api.model(collectionConstant.CLASS_NAME, classnameSchema);
-            var requestObject = req.body;
-            var id = requestObject._id;
-            delete requestObject._id;
+            var form = new formidable.IncomingForm();
+            var fields = [];
+            var notFonud = 0;
+            var newOpenFile;
+            var fileName;
+            form.parse(req)
+                .on('file', function (name, file) {
+                    notFonud = 1;
+                    fileName = file;
+                }).on('field', function (name, field) {
+                    fields[name] = field;
+                })
+                .on('error', function (err) {
+                    throw err;
+                }).on('end', async function () {
+                    newOpenFile = this.openedFiles;
 
-            var one_classname = await class_nameConnection.findOne({ _id: ObjectID(id) });
-            if (one_classname) {
-                var updateStatus = await class_nameConnection.updateMany({ _id: requestObject.id }, { status: requestObject.status });
+                    if (notFonud == 1) {
 
-                if (updateStatus) {
-                    let action = '';
-                    let message = '';
-                    if (requestObject.status == 1) {
-                        action = "Active";
-                        message = "class name status active successfully.";
+                        const file = reader.readFile(newOpenFile[0].path);
+                        const sheets = file.SheetNames;
+                        let data = [];
+                        let exitdata = new Array();
+
+
+                        for (let i = 0; i < sheets.length; i++) {
+                            const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
+                            temp.forEach((ress) => {
+                                data.push(ress);
+                            });
+                        }
+                        var onecategory_main = "";
+                        for (let m = 0; m < data.length; m++) {
+                            onecategory_main = await class_nameConnection.findOne({ name: data[m].name, number: data[m].number }, { name: 1, number: 1 });
+                            if (onecategory_main != null) {
+                                exitdata[m] = onecategory_main.name;
+                            }
+                        }
+                        if (exitdata.length > 0) {
+                            res.send({ status: false, exitdata: exitdata, message: "name is allready exist." });
+                        }
+                        else {
+                            for (let m = 0; m < data.length; m++) {
+                                onecategory_main = await class_nameConnection.findOne({ name: data[m].name, number: data[m].number }, { name: 1, number: 1 });
+                                requestObject = {};
+                                requestObject.name = data[m].name;
+                                requestObject.number = data[m].number;
+                                requestObject.description = data[m].description;
+                                let add_classname = new class_nameConnection(requestObject);
+                                let save_classname = await add_classname.save();
+
+                            }
+                            res.send({ status: true, message: "class name info add successfully." });
+                        }
                     } else {
-                        action = "Inactive";
-                        message = "class name status inactive successfully.";
+                        res.send({ status: false, message: translator.getStr('SomethingWrong') });
                     }
-                    res.send({ message: message, status: true });
-
-                } else {
-                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
-                }
-            } else {
-                res.send({ message: "class name not found with this id.", status: false });
-            }
-        } catch (e) {
-            console.log(e);
-            res.send({ message: translator.getStr('SomethingWrong'), status: false, error: e });
-
-        } finally {
-            connection_db_api.close();
+                });
+        } catch (error) {
+            console.log(error);
+            res.send({ status: false, message: translator.getStr('SomethingWrong'), error: error });
         }
     } else {
-        res.send({ status: false, message: translator.getStr('InvalidUser') });
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
-

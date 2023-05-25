@@ -489,6 +489,6 @@ router.post('/webapi/v1/portal/saveclassname', common.checkTokenExistOrNot, Clas
 router.post('/webapi/v1/portal/deleteclassname', common.checkTokenExistOrNot, Class_nameController.deleteclassname);
 router.get('/webapi/v1/portal/getclassname', common.checkTokenExistOrNot, Class_nameController.getclassname);
 router.post('/webapi/v1/portal/getclassnameForTable', common.checkTokenExistOrNot, Class_nameController.getclassnameForTable);
-router.post('/webapi/v1/portal/updateclassnameStatus', common.checkTokenExistOrNot, Class_nameController.updateclassnameStatus);
+router.post('/webapi/v1/portal/importclassname', common.checkTokenExistOrNot, Class_nameController.importclassname);
 
 module.exports = router;
