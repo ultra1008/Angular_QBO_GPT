@@ -235,25 +235,3 @@ module.exports.importclassname = async function (req, res) {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
-
-async function userInsertCheck(connection_db_api, onedata) {
-
-    try {
-        onedata.username = onedata.name;
-        //onedata.vendor_name = onedata.vendor_name + " " + onedata.vendor_name;
-        var class_nameConnection = connection_db_api.model(collectionConstant.CLASS_NAME, classnameSchema);
-        let check_user = await class_nameConnection.findOne({
-            number: onedata.number
-        });
-        if (check_user == null) {
-            return {
-                status: true, message: ('Data_Correct')
-            };
-        } else {
-            return { status: false, message: ("EmailAlreadyExists") };
-        }
-
-    } catch (e) {
-        return { status: false, message: ("Somthing_Wrong_with_connection") };
-    }
-}
