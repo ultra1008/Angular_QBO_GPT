@@ -168,7 +168,6 @@
 
                                         </div>
                                         <div class="body">
-
                                              <mat-tab-group>
                                                   <mat-tab label="3-28-2023">
                                                        <div class="body table-responsive">
@@ -417,10 +416,27 @@
                                                   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                        <div class="card">
                                                             <div class="chat">
+                                                                 <div class="chat-message clearfix">
+                                                                      <div class="form-group d-flex">
+                                                                           <div class="form-line col-11">
+                                                                                <mat-form-field
+                                                                                     class="example-full-width">
+                                                                                     <input matInput
+                                                                                          placeholder="Enter text here..">
+                                                                                </mat-form-field>
+                                                                           </div>
+                                                                           <div class="chat-upload col-1">
+                                                                                <button mat-raised-button
+                                                                                     color="primary">{{'COMMON.ACTIONS.SAVE'|
+                                                                      translate}}</button>
+
+                                                                           </div>
+                                                                      </div>
+
+                                                                 </div>
                                                                  <ng-scrollbar style="height: 250px" visibility="hover">
                                                                       <div class="chat-history" id="chat-conversation">
                                                                            <ul>
-
                                                                                 <li
                                                                                      style="background: #e8e8e8;border-radius: 10px; ">
                                                                                      <div
@@ -527,24 +543,7 @@
                                                                            </ul>
                                                                       </div>
                                                                  </ng-scrollbar>
-                                                                 <div class="chat-message clearfix">
-                                                                      <div class="form-group d-flex">
-                                                                           <div class="form-line col-11">
-                                                                                <mat-form-field
-                                                                                     class="example-full-width">
-                                                                                     <input matInput
-                                                                                          placeholder="Enter text here..">
-                                                                                </mat-form-field>
-                                                                           </div>
-                                                                           <div class="chat-upload col-1">
-                                                                                <button mat-raised-button
-                                                                                     color="primary">{{'COMMON.ACTIONS.SAVE'|
-                                                                      translate}}</button>
 
-                                                                           </div>
-                                                                      </div>
-
-                                                                 </div>
                                                             </div>
                                                        </div>
                                                   </div>
@@ -557,58 +556,202 @@
                                                        </mat-panel-title>
 
                                                   </mat-expansion-panel-header>
-                                                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                                       <mat-form-field class="example-full-width" appearance="fill">
-                                                            <mat-label>First name</mat-label>
-                                                            <input matInput>
-                                                       </mat-form-field>
+                                                  <div class="body">
+                                                       <div class="doc-file-type">
+                                                            <ng-scrollbar style="height: 285px" visibility="hover">
+                                                                 <ul class="list-unstyled">
+                                                                      <div class="row"> <button mat-raised-button
+                                                                                color="primary">{{'COMMON.ACTIONS.SAVE'|
+                                                       translate}}</button></div>
+                                                                      <li class="d-flex mb-3 mt-2">
+                                                                           <span
+                                                                                class="msr-3 align-self-center img-icon primary-rgba text-primary"><i
+                                                                                     class="far fa-file-word"></i></span>
+                                                                           <div class="set-flex">
+                                                                                <h5 class="font-16 mb-1">Java
+                                                                                     Programming</h5>
+                                                                                <p>04/20/2023, 04:31 PM</p>
+                                                                           </div>
+                                                                           <span style="height: 25px;"
+                                                                                class="badge badge-solid-red">
+                                                                                Invoice</span>
+
+
+                                                                           <div class="ms-auto">
+                                                                                <td>
+                                                                                     <button mat-mini-fab
+                                                                                          style="margin-right: 3px;">
+                                                                                          <mat-icon
+                                                                                               class="col-white ">delete</mat-icon>
+                                                                                     </button>
+                                                                                     <button mat-mini-fab
+                                                                                          color="primary">
+                                                                                          <mat-icon
+                                                                                               class="col-white">download</mat-icon>
+                                                                                     </button>
+                                                                                </td>
+                                                                           </div>
+                                                                      </li>
+                                                                      <li class="d-flex mb-3">
+                                                                           <span
+                                                                                class="msr-3 align-self-center img-icon success-rgba text-success"><i
+                                                                                     class="far fa-file-excel"></i></span>
+                                                                           <div class="set-flex">
+                                                                                <h5 class="font-16 mb-1">Angular Theory
+                                                                                </h5>
+                                                                                <p>04/20/2023, 04:31 PM</p>
+                                                                           </div>
+                                                                           <span style="height: 25px;"
+                                                                                class="badge badge-solid-blue">
+                                                                                P.O.</span>
+                                                                           <div class="ms-auto">
+                                                                                <td>
+                                                                                     <button mat-mini-fab
+                                                                                          style="margin-right: 3px;">
+                                                                                          <mat-icon
+                                                                                               class="col-white ">delete</mat-icon>
+                                                                                     </button>
+                                                                                     <button mat-mini-fab
+                                                                                          color="primary">
+                                                                                          <mat-icon
+                                                                                               class="col-white">download</mat-icon>
+                                                                                     </button>
+                                                                                </td>
+                                                                           </div>
+                                                                      </li>
+                                                                      <li class="d-flex mb-3">
+                                                                           <span
+                                                                                class="msr-3 align-self-center img-icon danger-rgba text-danger"><i
+                                                                                     class="far fa-file-pdf"></i></span>
+                                                                           <div class="set-flex">
+                                                                                <h5 class="font-16 mb-1">Maths Sums
+                                                                                     Solution</h5>
+                                                                                <p>04/20/2023, 04:31 PM</p>
+                                                                           </div>
+                                                                           <span style="height: 25px;" class="badge badge-solid-orange
+                                                                                ">
+                                                                                Packing Slip</span>
+                                                                           <div class="ms-auto">
+                                                                                <td>
+                                                                                     <button mat-mini-fab
+                                                                                          style="margin-right: 3px;">
+                                                                                          <mat-icon
+                                                                                               class="col-white ">delete</mat-icon>
+                                                                                     </button>
+                                                                                     <button mat-mini-fab
+                                                                                          color="primary">
+                                                                                          <mat-icon
+                                                                                               class="col-white">download</mat-icon>
+                                                                                     </button>
+                                                                                </td>
+                                                                           </div>
+                                                                      </li>
+                                                                      <li class="d-flex mb-3">
+                                                                           <span
+                                                                                class="msr-3 align-self-center img-icon info-rgba text-info"><i
+                                                                                     class="far fa-file-archive"></i></span>
+                                                                           <div class="set-flex">
+                                                                                <h5 class="font-16 mb-1">Submit Science
+                                                                                     Journal</h5>
+                                                                                <p>04/20/2023, 04:31 PM</p>
+                                                                           </div>
+                                                                           <span style="height: 25px;" class="badge badge-solid-green
+                                                                           ">
+                                                                                Reciving Slip</span>
+                                                                           <div class="ms-auto">
+                                                                                <td>
+                                                                                     <button mat-mini-fab
+                                                                                          style="margin-right: 3px;">
+                                                                                          <mat-icon
+                                                                                               class="col-white ">delete</mat-icon>
+                                                                                     </button>
+                                                                                     <button mat-mini-fab
+                                                                                          color="primary">
+                                                                                          <mat-icon
+                                                                                               class="col-white">download</mat-icon>
+                                                                                     </button>
+                                                                                </td>
+                                                                           </div>
+                                                                      </li>
+                                                                      <li class="d-flex mb-3">
+                                                                           <span
+                                                                                class="msr-3 align-self-center img-icon primary-rgba text-primary"><i
+                                                                                     class="far fa-file-word"></i></span>
+                                                                           <div class="set-flex">
+                                                                                <h5 class="font-16 mb-1">Marketing
+                                                                                     Instructions</h5>
+                                                                                <p>04/20/2023, 04:31 PM</p>
+                                                                           </div>
+                                                                           <span style="height: 25px;" class="badge badge-solid-cyan
+                                                                           ">
+                                                                                Quote</span>
+                                                                           <div class="ms-auto">
+                                                                                <td>
+                                                                                     <button mat-mini-fab
+                                                                                          style="margin-right: 3px;">
+                                                                                          <mat-icon
+                                                                                               class="col-white ">delete</mat-icon>
+                                                                                     </button>
+                                                                                     <button mat-mini-fab
+                                                                                          color="primary">
+                                                                                          <mat-icon
+                                                                                               class="col-white">download</mat-icon>
+                                                                                     </button>
+                                                                                </td>
+                                                                           </div>
+                                                                      </li>
+                                                                 </ul>
+                                                            </ng-scrollbar>
+
+                                                       </div>
                                                   </div>
-                                                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                                       <mat-form-field class="example-full-width" appearance="fill">
-                                                            <mat-label>Age</mat-label>
-                                                            <input matInput type="number" min="1">
-                                                       </mat-form-field>
-                                                  </div>
-                                                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                                       <mat-form-field class="example-full-width" appearance="fill">
-                                                            <mat-label>First name</mat-label>
-                                                            <input matInput>
-                                                       </mat-form-field>
-                                                  </div>
-                                                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                                       <mat-form-field class="example-full-width" appearance="fill">
-                                                            <mat-label>Age</mat-label>
-                                                            <input matInput type="number" min="1">
-                                                       </mat-form-field>
-                                                  </div>
-                                                  <p>I'm visible because I am
-                                                       open</p>
                                              </mat-expansion-panel>
                                         </mat-accordion>
                                    </div>
                               </div>
-
-
-                              <div class="card mt-2 position-f">
+                              <div class="card  activity mt-2 position-f">
                                    <div class="header">
                                         <h2>Info</h2>
+                                        <span style="height: 10px;">
+
+
+                                             <mat-icon class="col-gray mt-1">add</mat-icon>
+
+                                        </span>
                                    </div>
                                    <div class="body">
                                         <div class="list-group">
-                                             <a href="#" onClick="return false;" class="list-group-item active">
-                                                  Cras justo odio
-                                             </a>
-                                             <a href="#" onClick="return false;" class="list-group-item">Dapibus ac
-                                                  facilisis in</a>
-                                             <a href="#" onClick="return false;" class="list-group-item">Morbi leo
-                                                  risus</a>
+                                             <div class="body">
+
+                                                  <div class="body table-responsive">
+                                                       <table class="table">
+                                                            <thead>
+                                                                 <tr>
+                                                                      <th>Total amount</th>
+                                                                      <th>cost code</th>
+                                                                      <th>Assign To</th>
+                                                                      <th>GL Account</th>
+                                                                      <th>Notes</th>
+                                                                 </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                 <tr>
+                                                                      <th>55.00</th>
+                                                                      <td>Cost Code</td>
+                                                                      <td>Assign To</td>
+                                                                      <td>GL Account</td>
+                                                                      <td>Notes</td>
+                                                                 </tr>
+                                                            </tbody>
+                                                       </table>
+                                                  </div>
+
+
+                                             </div>
 
                                         </div>
                                    </div>
                               </div>
-
-
-
                          </div>
                          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                               <div class="card" style="height: 770px; width:790px">
