@@ -931,4 +931,8 @@ module.exports = {
     MailboxMonitorDeleted: 'Mailbox Monitor deleted successfully.',
 
     Processor_Restrict_Mobile_Login: 'Your role does not have login permission in mobile application.  Kindly contact admin of your company to access in the mobile app.',
+
+    INVOICE_MESSAGE_LISTING: 'Message Listing',
+    INVOICE_MESSAGE_SEND: 'Message sent successfully.',
+    INVOICE_MESSAGE_DELETED: 'Message deleted successfully.',
 };

@@ -1,20 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { SendInvoiceMessageComponent } from './send-invoice-message/send-invoice-message.component';
 
 @Component({
   selector: 'app-invoice-detail',
   templateUrl: './invoice-detail.component.html',
   styleUrls: ['./invoice-detail.component.scss']
 })
-export class InvoiceDetailComponent {
+export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   panelOpenState = false;
   invoiceForm: UntypedFormGroup;
   moreInformationForm!: UntypedFormGroup;
   step = 0;
   pdf_url = 'https://s3.wasabisys.com/r-988514/dailyreport/60c31f3dc5ba8494a2b1070f/60c31f3dc5ba8494a2b1070fdailyreport1630757615234.pdf';
-  loadInvoice: boolean = true;
+  loadInvoice = true;
   setStep(index: number) {
     this.step = index;
   }
@@ -24,8 +27,8 @@ export class InvoiceDetailComponent {
   prevStep() {
     this.step--;
   }
-  constructor(private fb: UntypedFormBuilder, private router: Router) {
-    //constructor
+  constructor (private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog) {
+    super();
     this.invoiceForm = this.fb.group({
       document_type: ['',],
       vendor_name: ['',],
@@ -64,12 +67,20 @@ export class InvoiceDetailComponent {
     });
   }
 
-
   back() {
     this.router.navigate([WEB_ROUTES.INVOICE]);
   }
 
-
+  sendMessage() {
+    const dialogRef = this.dialog.open(SendInvoiceMessageComponent, {
+      width: '28%',
+      data: {
+      },
+    });
+    this.subs.sink = dialogRef.afterClosed().subscribe((result: any) => {
+      //  
+    });
+  }
 
 
 

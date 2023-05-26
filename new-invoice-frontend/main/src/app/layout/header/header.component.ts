@@ -20,6 +20,7 @@ import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroy
 import { MatDialog } from '@angular/material/dialog';
 import { Direction } from '@angular/cdk/bidi';
 import { SwitchCompanyComponent } from './switch-company/switch-company.component';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 interface Notifications {
   message: string;
@@ -357,5 +358,9 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
     this.subs.sink = dialogRef.afterClosed().subscribe((result: any) => {
       //  
     });
+  }
+
+  viewMessage() {
+    this.router.navigate([WEB_ROUTES.INVOICE_MESSAGES]);
   }
 }

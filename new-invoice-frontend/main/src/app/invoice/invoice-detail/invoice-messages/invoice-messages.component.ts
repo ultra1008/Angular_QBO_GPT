@@ -1,43 +1,41 @@
-import { DataSource, SelectionModel } from '@angular/cdk/collections';
+import { SelectionModel, DataSource } from '@angular/cdk/collections';
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarVerticalPosition, MatSnackBarHorizontalPosition } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
-import { BehaviorSubject, Observable, fromEvent, map, merge } from 'rxjs';
-import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
-import { Invoice } from '../invoice.model';
-import { InvoiceService } from '../invoice.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { fromEvent, BehaviorSubject, Observable, merge, map } from 'rxjs';
+import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { InvoiceService } from '../../invoice.service';
+import { InvoiceMessage } from '../../invoice.model';
 import { HttpCall } from 'src/app/services/httpcall.service';
 
 @Component({
-  selector: 'app-invoice-listing',
-  templateUrl: './invoice-listing.component.html',
-  styleUrls: ['./invoice-listing.component.scss'],
-  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
+  selector: 'app-invoice-messages',
+  templateUrl: './invoice-messages.component.html',
+  styleUrls: ['./invoice-messages.component.scss']
 })
-export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
+export class InvoiceMessagesComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
   displayedColumns = [
-    'invoice_date',
+    'created_at',
+    'sender',
+    'receiver',
+    'seen',
+    'invoice_number',
     'due_date',
     'vendor',
-    'invoice_number',
     'total_amount',
-    'net_amount',
-    'approver',
-    'status',
     'actions',
   ];
   exampleDatabase?: InvoiceService;
   dataSource!: ExampleDataSource;
-  selection = new SelectionModel<Invoice>(true, []);
+  selection = new SelectionModel<InvoiceMessage>(true, []);
   id?: number;
-  invoiceTable?: Invoice;
+  invoiceTable?: InvoiceMessage;
 
   type = '';
 
@@ -61,41 +59,10 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
   refresh() {
     this.loadData();
   }
-  addNew() {
-    /* let tempDirection: Direction;
-    if (localStorage.getItem('isRtl') === 'true') {
-      tempDirection = 'rtl';
-    } else {
-      tempDirection = 'ltr';
-    }
-    const dialogRef = this.dialog.open(FormComponent, {
-      data: {
-        invoiceTable: this.invoiceTable,
-        action: 'add',
-      },
-      direction: tempDirection,
-    });
-    this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-      if (result === 1) {
-        // After dialog is closed we're doing frontend updates
-        // For add we're just pushing a new row inside DataService
-        this.exampleDatabase?.dataChange.value.unshift(
-          this.invoiceService.getDialogData()
-        );
-        this.refreshTable();
-        this.showNotification(
-          'snackbar-success',
-          'Add Record Successfully...!!!',
-          'bottom',
-          'center'
-        );
-      }
-    }); */
-  }
-  editCall(row: Invoice) {
-    this.router.navigate([WEB_ROUTES.INVOICE_DETAILS], { queryParams: { _id: '642aa86f28667a73474c388c' } });
-  }
 
+  viewMessage(row: InvoiceMessage) {
+    this.router.navigate([WEB_ROUTES.INVOICE_MESSAGE_VIEW], { queryParams: { _id: row._id } });
+  }
 
   private refreshTable() {
     this.paginator._changePageSize(this.paginator.pageSize);
@@ -122,9 +89,9 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
         (d) => d === item
       );
       // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
-      this.exampleDatabase?.dataChange.value.splice(index, 1);
+      this.exampleDatabase?.messageDataChange.value.splice(index, 1);
       this.refreshTable();
-      this.selection = new SelectionModel<Invoice>(true, []);
+      this.selection = new SelectionModel<InvoiceMessage>(true, []);
     });
     this.showNotification(
       'snackbar-danger',
@@ -164,7 +131,7 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: Invoice) {
+  onContextMenu(event: MouseEvent, item: InvoiceMessage) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -175,7 +142,7 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
     }
   }
 }
-export class ExampleDataSource extends DataSource<Invoice> {
+export class ExampleDataSource extends DataSource<InvoiceMessage> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -183,8 +150,8 @@ export class ExampleDataSource extends DataSource<Invoice> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: Invoice[] = [];
-  renderedData: Invoice[] = [];
+  filteredData: InvoiceMessage[] = [];
+  renderedData: InvoiceMessage[] = [];
   constructor (
     public exampleDatabase: InvoiceService,
     public paginator: MatPaginator,
@@ -195,30 +162,24 @@ export class ExampleDataSource extends DataSource<Invoice> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<Invoice[]> {
+  connect(): Observable<InvoiceMessage[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this.exampleDatabase.dataChange,
+      this.exampleDatabase.messageDataChange,
       this._sort.sortChange,
       this.filterChange,
       this.paginator.page,
     ];
-    this.exampleDatabase.getInvoiceTable();
+    this.exampleDatabase.getMessageForTable();
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
-        this.filteredData = this.exampleDatabase.data
+        this.filteredData = this.exampleDatabase.messageData
           .slice()
-          .filter((invoice: Invoice) => {
+          .filter((invoice: InvoiceMessage) => {
             const searchStr = (
-              invoice.invoice_date +
-              invoice.due_date +
-              invoice.vendor +
-              invoice.invoice +
-              invoice.total +
-              invoice.net_amount +
-              invoice.approver +
-              invoice.status
+              invoice.sender.userfullname +
+              invoice.receiver.userfullname
             ).toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
@@ -238,7 +199,7 @@ export class ExampleDataSource extends DataSource<Invoice> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: Invoice[]): Invoice[] {
+  sortData(data: InvoiceMessage[]): InvoiceMessage[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }
@@ -249,29 +210,8 @@ export class ExampleDataSource extends DataSource<Invoice> {
         case '_id':
           [propertyA, propertyB] = [a._id, b._id];
           break;
-        case 'invoice_date':
-          [propertyA, propertyB] = [a.invoice_date, b.invoice_date];
-          break;
-        case 'due_date':
-          [propertyA, propertyB] = [a.due_date, b.due_date];
-          break;
-        /* case 'vendor':
-          [propertyA, propertyB] = [a.vendor, b.vendor];
-          break; */
-        case 'invoice':
-          [propertyA, propertyB] = [a.invoice, b.invoice];
-          break;
-        case 'total':
-          [propertyA, propertyB] = [a.total, b.total];
-          break;
-        case 'net_amount':
-          [propertyA, propertyB] = [a.net_amount, b.net_amount];
-          break;
-        case 'approver':
-          [propertyA, propertyB] = [a.approver, b.approver];
-          break;
-        case 'status':
-          [propertyA, propertyB] = [a.status, b.status];
+        case 'created_at':
+          [propertyA, propertyB] = [a.created_at, b.created_at];
           break;
       }
       const valueA = isNaN(+propertyA) ? propertyA : +propertyA;

@@ -204,4 +204,10 @@ export enum httproutes {
   CLIENT_UPDATE_STATUS = 'updateClientStatus',
   CLIENT_ALL_DELETE = 'deleteMultipleClient ',
   CLIENT_GET_HISTORY = 'getClinetHistory',
+
+  // Invoice Message
+  GET_INVOICE_MESSAGE_FOR_TABLE = 'getinvoicemessagefortable',
+  GET_ONE_INVOICE_MESSAGE = 'getoneinvoicemessage',
+  SEND_INVOICE_MESSAGE = 'sendinvoicemessage',
+  DELETE_INVOICE_MESSAGE = 'deleteinvoicemessage',
 }

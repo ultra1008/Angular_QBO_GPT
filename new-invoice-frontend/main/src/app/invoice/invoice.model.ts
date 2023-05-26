@@ -1,10 +1,12 @@
+import { Vendor } from "../vendors/vendor.model";
+
 export class Invoice {
   _id: string;
   invoice_date: string;
   due_date: string;
-  vendor: string;
-  invoice_number: string;
-  total_amount: string;
+  vendor: Vendor;
+  invoice: string;
+  total: string;
   net_amount: string;
   approver: string;
   status: string;
@@ -14,11 +16,43 @@ export class Invoice {
       this.invoice_date = invoice.invoice_date || '';
       this.due_date = invoice.due_date || '';
       this.vendor = invoice.vendor || '';
-      this.invoice_number = invoice.invoice_number || '';
-      this.total_amount = invoice.total_amount || '';
+      this.invoice = invoice.invoice || '';
+      this.total = invoice.total || '';
       this.net_amount = invoice.net_amount || '';
       this.approver = invoice.approver || '';
       this.status = invoice.status || '';
+    }
+  }
+}
+
+export class InvoiceUser {
+  _id: string;
+  userfullname: string;
+  userpicture: string;
+  constructor (response: InvoiceUser) {
+    {
+      this._id = response._id;
+      this.userfullname = response.userfullname;
+      this.userpicture = response.userpicture;
+    }
+  }
+}
+export class InvoiceMessage {
+  _id: string;
+  created_at: number;
+  sender: InvoiceUser;
+  receiver: InvoiceUser;
+  invoice: Invoice;
+  is_seen: string;
+  constructor (response: InvoiceMessage) {
+    {
+      this._id = response._id;
+      this.created_at = response.created_at;
+      this.sender = response.sender;
+      this.receiver = response.receiver;
+      this.invoice = response.invoice;
+      this.is_seen = response.is_seen;
+
     }
   }
 }

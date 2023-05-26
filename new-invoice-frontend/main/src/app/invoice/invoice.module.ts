@@ -32,14 +32,19 @@ import { SharedModule } from '../shared/shared.module';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AdvanceTableService } from '../advance-table/advance-table.service';
-import { CustompdfviewerComponent } from '../common-components/custompdfviewer/custompdfviewer.component';
+import { SendInvoiceMessageComponent } from './invoice-detail/send-invoice-message/send-invoice-message.component';
+import { InvoiceMessagesComponent } from './invoice-detail/invoice-messages/invoice-messages.component';
+import { InvoiceMessageViewComponent } from './invoice-detail/invoice-message-view/invoice-message-view.component';
 
 
 @NgModule({
   declarations: [
     InvoiceListingComponent,
     InvoiceDetailComponent,
-    ViewDocumentComponent
+    ViewDocumentComponent,
+    SendInvoiceMessageComponent,
+    InvoiceMessagesComponent,
+    InvoiceMessageViewComponent
   ],
   providers: [AdvanceTableService],
   imports: [
@@ -85,7 +90,6 @@ import { CustompdfviewerComponent } from '../common-components/custompdfviewer/c
     MatCheckboxModule,
     MatDialogModule,
     NgScrollbarModule,
-
   ]
 })
 export class InvoiceModule { }
