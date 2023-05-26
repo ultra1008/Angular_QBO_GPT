@@ -136,7 +136,7 @@
 
 // expansion-panel
 .mat-expansion-panel-header {
-     border-radius: 10px !important;
+     border-radius: 5px !important;
      margin-bottom: 5px !important;
      height: 33px !important;
      background-color: #3f51b5 !important;
@@ -160,4 +160,26 @@
 
 .chat-msg {
      padding-left: 10px;
+}
+
+.mdc-fab--mini {
+     width: 35px;
+     height: 35px;
+}
+
+.mat-icon {
+     height: 17px;
+     width: 17px;
+}
+
+.material-icons {
+     font-size: 17px;
+}
+
+.badge {
+     height: 25px;
+}
+
+.custom-d-flex {
+     display: flex;
 }
