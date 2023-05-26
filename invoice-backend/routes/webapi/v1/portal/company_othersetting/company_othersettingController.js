@@ -492,7 +492,7 @@ module.exports.getCustomerStates = async function (req, res) {
             ]);
             console.log("getData", getData);
             var dataResponce = {};
-            dataResponce.data = getData;
+            dataResponce = getData;
             res.json(dataResponce);
 
         } catch (e) {
