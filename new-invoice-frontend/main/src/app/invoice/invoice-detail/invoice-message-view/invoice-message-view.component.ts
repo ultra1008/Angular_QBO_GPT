@@ -15,12 +15,6 @@ import { showNotification } from 'src/consts/utils';
   styleUrls: ['./invoice-message-view.component.scss']
 })
 export class InvoiceMessageViewComponent {
-  disabled = false;
-  compact = true;
-  invertX = false;
-  invertY = false;
-
-  // @ViewChild(NgScrollbar) scrollbarRef: NgScrollbar;
 
   myId = '';
   id: any;
