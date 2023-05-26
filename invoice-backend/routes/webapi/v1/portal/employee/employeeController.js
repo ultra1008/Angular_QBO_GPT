@@ -928,8 +928,7 @@ module.exports.getOneUser = async function (req, res) {
                 {
                     $match:
                     {
-                        _id: ObjectID(req.body._id),
-                        is_delete: 0
+                        _id: ObjectID(req.body._id)
                     },
                 },
                 {
