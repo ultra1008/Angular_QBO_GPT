@@ -1197,6 +1197,7 @@ module.exports.getOneUser = async function (req, res) {
                         project_email_group: 1,
                         compliance_officer: 1,
                         vendors: 1,
+                        is_delete: 1,
                     }
                 }
             ]);
