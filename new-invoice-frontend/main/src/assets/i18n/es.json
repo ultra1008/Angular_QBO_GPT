@@ -14,7 +14,9 @@
             "CLOSE": "Cerca",
             "CHANGE_LANGUAGE": "CAMBIAR IDIOMA",
             "IMPORT_TEMPLATE": "Descargar plantilla de importación",
-            "IMPORT": "Importar"
+            "IMPORT": "Importar",
+            "MAIL": "Correo",
+            "MESSAGE": "Mensaje"
         },
         "ACTIONS": {
             "EDIT": "Editar",

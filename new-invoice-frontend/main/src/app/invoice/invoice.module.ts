@@ -36,6 +36,9 @@ import { SendInvoiceMessageComponent } from './invoice-detail/send-invoice-messa
 import { InvoiceMessagesComponent } from './invoice-detail/invoice-messages/invoice-messages.component';
 import { InvoiceMessageViewComponent } from './invoice-detail/invoice-message-view/invoice-message-view.component';
 
+import { MessageFormComponent } from './message-form/message-form.component';
+import { MailFormComponent } from './mail-form/mail-form.component';
+import { DepartmentFormComponent } from '../settings/employeesettings/department-form/department-form.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +47,9 @@ import { InvoiceMessageViewComponent } from './invoice-detail/invoice-message-vi
     ViewDocumentComponent,
     SendInvoiceMessageComponent,
     InvoiceMessagesComponent,
-    InvoiceMessageViewComponent
+    InvoiceMessageViewComponent,
+    MessageFormComponent,
+    MailFormComponent,
   ],
   providers: [AdvanceTableService],
   imports: [
@@ -90,6 +95,6 @@ import { InvoiceMessageViewComponent } from './invoice-detail/invoice-message-vi
     MatCheckboxModule,
     MatDialogModule,
     NgScrollbarModule,
-  ]
+  ],
 })
-export class InvoiceModule { }
+export class InvoiceModule {}

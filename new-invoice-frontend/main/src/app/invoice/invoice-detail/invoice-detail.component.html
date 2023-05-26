@@ -12,11 +12,18 @@
                               </ul>
                          </div>
                          <div class="right ">
-                              <ul class="tbl-export-btn">
+                              <ul class="tbl-export-btn"> 
                                    <li class="tbl-header-btn">
                                         <div class="m-l-10" matTooltip="MESSAGE">
                                              <button mat-mini-fab color="primary" (click)="sendMessage()">
-                                                  <mat-icon class="col-white">message</mat-icon>
+                                                  <img src="{{MAIL_ICON}}" width="18px" height="18px">
+                                             </button>
+                                        </div>
+                                   </li>
+                                   <li class="tbl-header-btn">
+                                        <div class="m-l-10" matTooltip="MAIL">
+                                             <button mat-mini-fab color="primary" (click)="addmail()">
+                                                  <img src="{{MESSAGE_ICON}}" width="18px" height="18px">
                                              </button>
                                         </div>
                                    </li>
