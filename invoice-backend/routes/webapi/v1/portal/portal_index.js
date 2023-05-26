@@ -496,6 +496,7 @@ let invoiceMessageController = require('./invoice_message/invoiceMessageControll
 let invoiceMessageValidation = require('./invoice_message/invoiceMessageValidation');
 router.get('/webapi/v1/portal/getinvoicemessagefortable', common.checkTokenExistOrNot, invoiceMessageController.getInvoiceMessageForTable);
 router.post('/webapi/v1/portal/getoneinvoicemessage', common.checkTokenExistOrNot, invoiceMessageValidation.getOneInvoiceMessage, invoiceMessageController.getOneInvoiceMessage);
+router.post('/webapi/v1/portal/updateinvoicemessageseenflag', common.checkTokenExistOrNot, invoiceMessageValidation.updateInvoiceMessageSeenFlag, invoiceMessageController.updateInvoiceMessageSeenFlag);
 router.post('/webapi/v1/portal/sendinvoicemessage', common.checkTokenExistOrNot, invoiceMessageValidation.sendInvoiceMessage, invoiceMessageController.sendInvoiceMessage);
 router.post('/webapi/v1/portal/deleteinvoicemessage', common.checkTokenExistOrNot, invoiceMessageValidation.deleteInvoiceMessage, invoiceMessageController.deleteInvoiceMessage);
 

@@ -208,6 +208,7 @@ export enum httproutes {
   // Invoice Message
   GET_INVOICE_MESSAGE_FOR_TABLE = 'getinvoicemessagefortable',
   GET_ONE_INVOICE_MESSAGE = 'getoneinvoicemessage',
+  UPDATE_INVOICE_MESSAGE_SEEN_FLAG = 'updateinvoicemessageseenflag',
   SEND_INVOICE_MESSAGE = 'sendinvoicemessage',
   DELETE_INVOICE_MESSAGE = 'deleteinvoicemessage',
 }

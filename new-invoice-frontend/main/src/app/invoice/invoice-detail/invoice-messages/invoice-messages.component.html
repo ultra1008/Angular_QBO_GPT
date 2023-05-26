@@ -54,7 +54,7 @@
                                     <mat-cell *matCellDef="let row" (click)="viewMessage(row)"
                                         (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Read by
-                                            Receiver:</span>{{row.is_seen ? 'Yes' : 'No'}}</mat-cell>
+                                            Receiver:</span>{{row.seen_last_message ? 'Yes' : 'No'}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="invoice_number">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Invoice Number
@@ -97,7 +97,7 @@
                                                 [class]="'tbl-fav-eye'"></app-feather-icons>
                                         </button>
                                         <button mat-icon-button color="accent" (click)="$event.stopPropagation()"
-                                            class="col-red">
+                                            (click)="deleteMessage(row)" class="col-red">
                                             <mat-icon>archive</mat-icon>
                                         </button>
                                     </mat-cell>

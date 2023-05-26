@@ -1,12 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { CommonService } from 'src/app/services/common.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { WEB_ROUTES } from 'src/consts/routes';
 import { showNotification } from 'src/consts/utils';
 
 @Component({
@@ -26,7 +27,7 @@ export class InvoiceMessageViewComponent {
   endScroll = 0;
 
   constructor (public commonService: CommonService, public route: ActivatedRoute, private formBuilder: FormBuilder,
-    public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar,) {
+    public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, private router: Router) {
     const userData = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA) ?? '{}');
     this.myId = userData.UserData._id;
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
@@ -42,12 +43,21 @@ export class InvoiceMessageViewComponent {
       this.messageData = data.data;
       this.messageList = data.messages;
       this.isLoading = false;
+      this.updateSeenFlag();
     }
     setTimeout(() => {
       /*  const myElement = document.getElementById("myPageId");
        myElement.scrollTop = document.getElementById('messageListDiv')?.scrollHeight; */
       // this.endScroll = document.getElementById('messageListDiv')?.scrollHeight;
     }, 100);
+  }
+
+  updateSeenFlag() {
+    const requestObject = {
+      _id: this.id,
+      receiver_id: this.myId,
+    };
+    this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.UPDATE_INVOICE_MESSAGE_SEEN_FLAG, requestObject);
   }
 
   async sendMessage() {
@@ -75,5 +85,9 @@ export class InvoiceMessageViewComponent {
         showNotification(this.snackBar, data.message, 'error');
       }
     }
+  }
+
+  back() {
+    this.router.navigate([WEB_ROUTES.INVOICE_MESSAGES]);
   }
 }
