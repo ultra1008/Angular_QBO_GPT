@@ -15,6 +15,8 @@ let rest_Api = require('./../../../../config/db_rest_api');
 const { isNull } = require('util');
 var emailOTPSchema = require('./../../../../model/email_otp');
 let db_rest_api = require('../../../../config/db_rest_api');
+var companySchema = require('../../../../model/company');
+var tenantSchema = require('../../../../model/tenants');
 
 module.exports.login = async function (req, res) {
     var requestObject = req.body;
@@ -1418,5 +1420,1222 @@ module.exports.helpMail = async function (req, res) {
     } catch (e) {
         console.log(e);
         res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+    }
+};
+
+// Check credentials in company
+module.exports.getLoginCompanyList = async function (req, res) {
+    var translator = new common.Language('en');
+    let admin_connection_db_api = await db_connection.connection_db_api(config.ADMIN_CONFIG);
+    try {
+        var requestObject = req.body;
+        requestObject.useremail = requestObject.useremail.toLowerCase();
+
+        let companyConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_COMPANY, companySchema);
+        let tenantsConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_TENANTS, tenantSchema);
+        let match = {
+            'invoice_user.useremail': requestObject.useremail,
+            'invoice_user.userstatus': 1,
+            'invoice_user.is_delete': 0,
+        };
+        var get_company = await companyConnection.find(match);
+        var data = [];
+        for (let i = 0; i < get_company.length; i++) {
+            let user = get_company[i].invoice_user.find(o => o.useremail === requestObject.useremail);
+            if (user) {
+                var psss_tnp = await common.validPassword(requestObject.password, user.password);
+                if (psss_tnp) {
+                    data.push(get_company[i]);
+                }
+            }
+        }
+        if (data.length == 0) {
+            res.send({ message: 'Invalid username or password', status: false });
+        } else if (data.length == 1) {
+            var get_tenants = await tenantsConnection.findOne({ company_id: data[0]._id });
+            let connection_db_api = await db_connection.connection_db_api(get_tenants);
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+            let roleConnection = connection_db_api.model(collectionConstant.INVOICE_ROLES, invoiceRoleSchema);
+            let UserData = await userConnection.aggregate([
+                {
+                    $match:
+                    {
+                        useremail: requestObject.useremail,
+                        is_delete: 0,
+                        userstatus: 1
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_ROLES,
+                        localField: "userroleId",
+                        foreignField: "role_id",
+                        as: "role"
+                    }
+                },
+                /* {
+                    $unwind: {
+                        path: "$role",
+                        preserveNullAndEmptyArrays: true
+                    },
+                }, */
+                {
+                    $lookup: {
+                        from: collectionConstant.JOB_TITLE,
+                        localField: "userjob_title_id",
+                        foreignField: "_id",
+                        as: "jobtitle"
+                    }
+                },
+                /*  {
+                     $unwind: {
+                         path: "$jobtitle",
+                         preserveNullAndEmptyArrays: true
+                     },
+                 }, */
+                {
+                    $lookup: {
+                        from: collectionConstant.DEPARTMENTS,
+                        localField: "userdepartment_id",
+                        foreignField: "_id",
+                        as: "department"
+                    }
+                },
+                /* {
+                    $unwind: {
+                        path: "$department",
+                        preserveNullAndEmptyArrays: true
+                    },
+                }, */
+                {
+                    $lookup: {
+                        from: collectionConstant.PAYROLL_GROUP,
+                        localField: "user_id_payroll_group",
+                        foreignField: "_id",
+                        as: "payrollgroup"
+                    }
+                },
+                //  {
+                //      $unwind: {
+                //         path:"$payrollgroup",
+                //         preserveNullAndEmptyArrays: true
+                //     },
+                //  }, 
+                {
+                    $lookup: {
+                        from: collectionConstant.JOB_TYPE,
+                        localField: "userjob_type_id",
+                        foreignField: "_id",
+                        as: "jobtype"
+                    }
+                },
+                // {
+                //     $unwind: {
+                //         path:"$jobtype",
+                //         preserveNullAndEmptyArrays: true
+                //     },
+                // },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "usersupervisor_id",
+                        foreignField: "_id",
+                        as: "supervisor"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.LOCATIONS,
+                        localField: "userlocation_id",
+                        foreignField: "_id",
+                        as: "location"
+                    }
+                },
+                // {
+                //     $unwind: {
+                //         path:"$location",
+                //         preserveNullAndEmptyArrays: true
+                //     },
+                // },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "usermanager_id",
+                        foreignField: "_id",
+                        as: "manager"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.CREDITCARD,
+                        localField: "card_type",
+                        foreignField: "_id",
+                        as: "card"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$card",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $project: {
+                        role_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$role.role_name" },
+                                        {
+                                            $arrayElemAt: ["$role.role_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        supervisor_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$supervisor.userfullname" },
+                                        {
+                                            $arrayElemAt: ["$supervisor.userfullname", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        manager_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$manager.userfullname" },
+                                        {
+                                            $arrayElemAt: ["$manager.userfullname", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        location_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$location.location_name" },
+                                        {
+                                            $arrayElemAt: ["$location.location_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        userjob_type_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$jobtype.job_type_name" },
+                                        {
+                                            $arrayElemAt: ["$jobtype.job_type_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        userjob_title_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$jobtitle.job_title_name" },
+                                        {
+                                            $arrayElemAt: ["$jobtitle.job_title_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        department_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$department.department_name" },
+                                        {
+                                            $arrayElemAt: ["$department.department_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        user_payroll_group_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$payrollgroup.payroll_group_name" },
+                                        {
+                                            $arrayElemAt: ["$payrollgroup.payroll_group_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        userroleId: 1,
+                        password: 1,
+                        useremail: 1,
+                        username: 1,
+                        usermiddlename: 1,
+                        userlastname: 1,
+                        userfullname: 1,
+                        userssn: 1,
+                        userdevice_pin: 1,
+                        userphone: 1,
+                        usersecondary_email: 1,
+                        usergender: 1,
+                        userdob: 1,
+                        userstatus: 1,
+                        userpicture: 1,
+                        usermobile_picture: 1,
+                        userfulladdress: 1,
+                        userstreet1: 1,
+                        userstreet2: 1,
+                        usercity: 1,
+                        user_state: 1,
+                        userzipcode: 1,
+                        usercountry: 1,
+                        userstartdate: 1,
+                        usersalary: 1,
+                        usermanager_id: 1,
+                        usersupervisor_id: 1,
+                        userlocation_id: 1,
+                        userjob_title_id: 1,
+                        userdepartment_id: 1,
+                        userjob_type_id: 1,
+                        usernon_exempt: 1,
+                        usermedicalBenifits: 1,
+                        useradditionalBenifits: 1,
+                        useris_password_temp: 1,
+                        userterm_conditions: 1,
+                        userweb_security_code: 1,
+                        user_payroll_rules: 1,
+                        user_id_payroll_group: 1,
+                        usercostcode: 1,
+                        userqrcode: 1,
+                        userfirebase_id: 1,
+                        login_from: 1,
+                        card_type_name: { $ifNull: ["$card.name", ""] },
+                        card_type: 1,
+                        api_setting: 1,
+                        signature: 1,
+                        allow_for_projects: 1,
+                        user_languages: 1,
+                        show_id_card_on_qrcode_scan: 1,
+                        compliance_officer: 1,
+                    }
+                }
+            ]);
+            UserData = UserData[0];
+            let roles_tmp = await roleConnection.findOne({ role_id: ObjectID(UserData.userroleId) });
+            var resObject_db = {
+                "DB_HOST": get_tenants.DB_HOST,
+                "DB_NAME": get_tenants.DB_NAME,
+                "DB_PORT": get_tenants.DB_PORT,
+                "DB_USERNAME": get_tenants.DB_USERNAME,
+                "DB_PASSWORD": get_tenants.DB_PASSWORD,
+                "companycode": get_tenants.companycode,
+                "token": ""
+            };
+            let resObject = {
+                ...resObject_db,
+                UserData
+            };
+            //console.log("resObject", resObject)
+            var resLast = {
+                "token": "",
+                UserData,
+                settings: {},
+                role_permission: [],
+                questions: [],
+                companydata: data[0]
+            };
+            var token = await common.generateJWT(resObject);
+            resLast.token = token;
+            resLast.role_permission = roles_tmp.role_permission;
+            res.send({ message: translator.getStr('LoginSuccess'), status: true, data, user_data: resLast });
+        } else {
+            res.send({ message: translator.getStr('CompanyListing'), status: true, data });
+        }
+    } catch (e) {
+        console.log(e);
+        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+    } finally {
+        // connection_db_api.close();
+    }
+};
+
+module.exports.sendEmailOTP = async function (req, res) {
+    var requestObject = req.body;
+    var translator = new common.Language('en');
+    let admin_connection_db_api = await db_connection.connection_db_api(config.ADMIN_CONFIG);
+    try {
+        requestObject.useremail = requestObject.useremail.toLowerCase();
+        let companyConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_COMPANY, companySchema);
+
+        var get_company = await companyConnection.find({ 'invoice_user.useremail': requestObject.useremail });
+        if (get_company.length === 0) {
+            res.send({ message: translator.getStr('UserNotFound'), status: false });
+        } else {
+            let emailOTPConnection = admin_connection_db_api.model(collectionConstant.EMAIL_OTP, emailOTPSchema);
+            //let sixdidgitnumber = Math.floor(Math.random() * (9 * Math.pow(10, 6 - 1))) + Math.pow(10, 6 - 1);
+            let sixdidgitnumber = common.generateRandomOTP();
+            requestObject.sent_on = Math.round(new Date().getTime() / 1000);
+            requestObject.otp = sixdidgitnumber;
+            console.log("OTP", sixdidgitnumber);
+            let send_email_otp = new emailOTPConnection(requestObject);
+            let save_email_otp = await send_email_otp.save();
+            if (save_email_otp) {
+                let emailTmp = {
+                    HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE} `,
+                    SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2} `,
+                    ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')} `,
+                    THANKS: translator.getStr('EmailTemplateThanks'),
+                    ROVUK_TEAM: `Rovuk A/P ${translator.getStr('team_mail_all')}`,
+
+                    TITLE: 'One Time Password (OTP) verification',
+                    LINE1: new handlebars.SafeString(`Your One Time Password(OTP) is <b> ${sixdidgitnumber}</b>.`),
+                    LINE2: 'Make sure to enter it in the web browser, since your account can’t be accessed without it.',
+
+                    COMPANYNAME: ``,
+                    COMPANYCODE: ``,
+                };
+                const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/emailOTP.html', 'utf8');
+                var template = handlebars.compile(file_data);
+                var HtmlData = await template(emailTmp);
+                sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, [requestObject.useremail], "OTP Verification", HtmlData,
+                    config.tenants.tenant_smtp_server, config.tenants.tenant_smtp_port, config.tenants.tenant_smtp_reply_to_mail,
+                    config.tenants.tenant_smtp_password, config.tenants.tenant_smtp_timeout, config.tenants.tenant_smtp_security);
+                res.send({ message: 'One Time Password (OTP) sent successfully.', status: true });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        }
+    } catch (e) {
+        console.log("-----", e);
+        res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+    } finally {
+        admin_connection_db_api.close();
+    }
+};
+
+module.exports.submitEmailOTP = async function (req, res) {
+    var requestObject = req.body;
+    var translator = new common.Language('en');
+    let admin_connection_db_api = await db_connection.connection_db_api(config.ADMIN_CONFIG);
+    try {
+        requestObject.useremail = requestObject.useremail.toLowerCase();
+        let companyConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_COMPANY, companySchema);
+        let tenantsConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_TENANTS, tenantSchema);
+        let emailOTPConnection = admin_connection_db_api.model(collectionConstant.EMAIL_OTP, emailOTPSchema);
+
+        var get_company = await companyConnection.find({ 'invoice_user.useremail': requestObject.useremail });
+        if (get_company.length === 0) {
+            res.send({ message: translator.getStr('UserNotFound'), status: false });
+        } else {
+            let get_otp = await emailOTPConnection.findOne({ useremail: requestObject.useremail, is_delete: 0 }).sort({ sent_on: -1 });
+            if (get_otp) {
+                if (get_otp.otp == requestObject.otp) {
+                    await emailOTPConnection.updateMany({ useremail: requestObject.useremail }, { is_delete: 1 });
+
+                    if (get_company.length == 1) {
+                        var get_tenants = await tenantsConnection.findOne({ company_id: get_company[0]._id });
+                        let connection_db_api = await db_connection.connection_db_api(get_tenants);
+                        let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+                        let roleConnection = connection_db_api.model(collectionConstant.INVOICE_ROLES, invoiceRoleSchema);
+                        let UserData = await userConnection.aggregate([
+                            {
+                                $match:
+                                {
+                                    useremail: requestObject.useremail,
+                                    is_delete: 0,
+                                    userstatus: 1
+                                },
+                            },
+                            {
+                                $lookup: {
+                                    from: collectionConstant.INVOICE_ROLES,
+                                    localField: "userroleId",
+                                    foreignField: "role_id",
+                                    as: "role"
+                                }
+                            },
+                            /* {
+                                $unwind: {
+                                    path: "$role",
+                                    preserveNullAndEmptyArrays: true
+                                },
+                            }, */
+                            {
+                                $lookup: {
+                                    from: collectionConstant.JOB_TITLE,
+                                    localField: "userjob_title_id",
+                                    foreignField: "_id",
+                                    as: "jobtitle"
+                                }
+                            },
+                            /*  {
+                                 $unwind: {
+                                     path: "$jobtitle",
+                                     preserveNullAndEmptyArrays: true
+                                 },
+                             }, */
+                            {
+                                $lookup: {
+                                    from: collectionConstant.DEPARTMENTS,
+                                    localField: "userdepartment_id",
+                                    foreignField: "_id",
+                                    as: "department"
+                                }
+                            },
+                            /* {
+                                $unwind: {
+                                    path: "$department",
+                                    preserveNullAndEmptyArrays: true
+                                },
+                            }, */
+                            {
+                                $lookup: {
+                                    from: collectionConstant.PAYROLL_GROUP,
+                                    localField: "user_id_payroll_group",
+                                    foreignField: "_id",
+                                    as: "payrollgroup"
+                                }
+                            },
+                            //  {
+                            //      $unwind: {
+                            //         path:"$payrollgroup",
+                            //         preserveNullAndEmptyArrays: true
+                            //     },
+                            //  }, 
+                            {
+                                $lookup: {
+                                    from: collectionConstant.JOB_TYPE,
+                                    localField: "userjob_type_id",
+                                    foreignField: "_id",
+                                    as: "jobtype"
+                                }
+                            },
+                            // {
+                            //     $unwind: {
+                            //         path:"$jobtype",
+                            //         preserveNullAndEmptyArrays: true
+                            //     },
+                            // },
+                            {
+                                $lookup: {
+                                    from: collectionConstant.INVOICE_USER,
+                                    localField: "usersupervisor_id",
+                                    foreignField: "_id",
+                                    as: "supervisor"
+                                }
+                            },
+                            {
+                                $lookup: {
+                                    from: collectionConstant.LOCATIONS,
+                                    localField: "userlocation_id",
+                                    foreignField: "_id",
+                                    as: "location"
+                                }
+                            },
+                            // {
+                            //     $unwind: {
+                            //         path:"$location",
+                            //         preserveNullAndEmptyArrays: true
+                            //     },
+                            // },
+                            {
+                                $lookup: {
+                                    from: collectionConstant.INVOICE_USER,
+                                    localField: "usermanager_id",
+                                    foreignField: "_id",
+                                    as: "manager"
+                                }
+                            },
+                            {
+                                $lookup: {
+                                    from: collectionConstant.CREDITCARD,
+                                    localField: "card_type",
+                                    foreignField: "_id",
+                                    as: "card"
+                                }
+                            },
+                            {
+                                $unwind: {
+                                    path: "$card",
+                                    preserveNullAndEmptyArrays: true
+                                },
+                            },
+                            {
+                                $project: {
+                                    role_name: {
+                                        $ifNull: [
+                                            {
+                                                $cond: [
+                                                    { $isArray: "$role.role_name" },
+                                                    {
+                                                        $arrayElemAt: ["$role.role_name", 0]
+                                                    }, ""
+                                                ]
+                                            }, ""
+                                        ]
+                                    },
+                                    supervisor_name: {
+                                        $ifNull: [
+                                            {
+                                                $cond: [
+                                                    { $isArray: "$supervisor.userfullname" },
+                                                    {
+                                                        $arrayElemAt: ["$supervisor.userfullname", 0]
+                                                    }, ""
+                                                ]
+                                            }, ""
+                                        ]
+                                    },
+                                    manager_name: {
+                                        $ifNull: [
+                                            {
+                                                $cond: [
+                                                    { $isArray: "$manager.userfullname" },
+                                                    {
+                                                        $arrayElemAt: ["$manager.userfullname", 0]
+                                                    }, ""
+                                                ]
+                                            }, ""
+                                        ]
+                                    },
+                                    location_name: {
+                                        $ifNull: [
+                                            {
+                                                $cond: [
+                                                    { $isArray: "$location.location_name" },
+                                                    {
+                                                        $arrayElemAt: ["$location.location_name", 0]
+                                                    }, ""
+                                                ]
+                                            }, ""
+                                        ]
+                                    },
+                                    userjob_type_name: {
+                                        $ifNull: [
+                                            {
+                                                $cond: [
+                                                    { $isArray: "$jobtype.job_type_name" },
+                                                    {
+                                                        $arrayElemAt: ["$jobtype.job_type_name", 0]
+                                                    }, ""
+                                                ]
+                                            }, ""
+                                        ]
+                                    },
+                                    userjob_title_name: {
+                                        $ifNull: [
+                                            {
+                                                $cond: [
+                                                    { $isArray: "$jobtitle.job_title_name" },
+                                                    {
+                                                        $arrayElemAt: ["$jobtitle.job_title_name", 0]
+                                                    }, ""
+                                                ]
+                                            }, ""
+                                        ]
+                                    },
+                                    department_name: {
+                                        $ifNull: [
+                                            {
+                                                $cond: [
+                                                    { $isArray: "$department.department_name" },
+                                                    {
+                                                        $arrayElemAt: ["$department.department_name", 0]
+                                                    }, ""
+                                                ]
+                                            }, ""
+                                        ]
+                                    },
+                                    user_payroll_group_name: {
+                                        $ifNull: [
+                                            {
+                                                $cond: [
+                                                    { $isArray: "$payrollgroup.payroll_group_name" },
+                                                    {
+                                                        $arrayElemAt: ["$payrollgroup.payroll_group_name", 0]
+                                                    }, ""
+                                                ]
+                                            }, ""
+                                        ]
+                                    },
+                                    userroleId: 1,
+                                    password: 1,
+                                    useremail: 1,
+                                    username: 1,
+                                    usermiddlename: 1,
+                                    userlastname: 1,
+                                    userfullname: 1,
+                                    userssn: 1,
+                                    userdevice_pin: 1,
+                                    userphone: 1,
+                                    usersecondary_email: 1,
+                                    usergender: 1,
+                                    userdob: 1,
+                                    userstatus: 1,
+                                    userpicture: 1,
+                                    usermobile_picture: 1,
+                                    userfulladdress: 1,
+                                    userstreet1: 1,
+                                    userstreet2: 1,
+                                    usercity: 1,
+                                    user_state: 1,
+                                    userzipcode: 1,
+                                    usercountry: 1,
+                                    userstartdate: 1,
+                                    usersalary: 1,
+                                    usermanager_id: 1,
+                                    usersupervisor_id: 1,
+                                    userlocation_id: 1,
+                                    userjob_title_id: 1,
+                                    userdepartment_id: 1,
+                                    userjob_type_id: 1,
+                                    usernon_exempt: 1,
+                                    usermedicalBenifits: 1,
+                                    useradditionalBenifits: 1,
+                                    useris_password_temp: 1,
+                                    userterm_conditions: 1,
+                                    userweb_security_code: 1,
+                                    user_payroll_rules: 1,
+                                    user_id_payroll_group: 1,
+                                    usercostcode: 1,
+                                    userqrcode: 1,
+                                    userfirebase_id: 1,
+                                    login_from: 1,
+                                    card_type_name: { $ifNull: ["$card.name", ""] },
+                                    card_type: 1,
+                                    api_setting: 1,
+                                    signature: 1,
+                                    allow_for_projects: 1,
+                                    user_languages: 1,
+                                    show_id_card_on_qrcode_scan: 1,
+                                    compliance_officer: 1,
+                                }
+                            }
+                        ]);
+                        UserData = UserData[0];
+                        let roles_tmp = await roleConnection.findOne({ role_id: ObjectID(UserData.userroleId) });
+                        var resObject_db = {
+                            "DB_HOST": get_tenants.DB_HOST,
+                            "DB_NAME": get_tenants.DB_NAME,
+                            "DB_PORT": get_tenants.DB_PORT,
+                            "DB_USERNAME": get_tenants.DB_USERNAME,
+                            "DB_PASSWORD": get_tenants.DB_PASSWORD,
+                            "companycode": get_tenants.companycode,
+                            "token": ""
+                        };
+                        let resObject = {
+                            ...resObject_db,
+                            UserData
+                        };
+                        //console.log("resObject", resObject)
+                        var resLast = {
+                            "token": "",
+                            UserData,
+                            settings: {},
+                            role_permission: [],
+                            questions: [],
+                            companydata: get_company[0]
+                        };
+                        var token = await common.generateJWT(resObject);
+                        resLast.token = token;
+                        resLast.role_permission = roles_tmp.role_permission;
+                        res.send({ message: translator.getStr('LoginSuccess'), status: true, data: get_company, user_data: resLast });
+                    } else {
+                        res.send({ message: 'One Time Password (OTP) matched successfully.', data: get_company, status: true });
+                    }
+                } else {
+                    res.send({ message: 'Make sure you entered correct One Time Password (OTP).', status: false });
+                }
+            } else {
+                res.send({ message: 'Make sure you entered correct One Time Password (OTP).', status: false });
+            }
+        }
+    } catch (e) {
+        console.log("-----", e);
+        res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+    } finally {
+        admin_connection_db_api.close();
+    }
+};
+
+module.exports.loginWithEmailOTP = async function (req, res) {
+    var requestObject = req.body;
+    var translator = new common.Language('en');
+    let admin_connection_db_api = await db_connection.connection_db_api(config.ADMIN_CONFIG);
+    try {
+        requestObject.useremail = requestObject.useremail.toLowerCase();
+        let companyConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_COMPANY, companySchema);
+        let tenantsConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_TENANTS, tenantSchema);
+
+        var get_company = await companyConnection.findOne({ _id: requestObject._id });
+        if (get_company) {
+            var get_tenants = await tenantsConnection.findOne({ company_id: get_company._id });
+            let connection_db_api = await db_connection.connection_db_api(get_tenants);
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+            let roleConnection = connection_db_api.model(collectionConstant.INVOICE_ROLES, invoiceRoleSchema);
+            let UserData = await userConnection.aggregate([
+                {
+                    $match:
+                    {
+                        useremail: requestObject.useremail,
+                        is_delete: 0,
+                        userstatus: 1
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_ROLES,
+                        localField: "userroleId",
+                        foreignField: "role_id",
+                        as: "role"
+                    }
+                },
+                /* {
+                    $unwind: {
+                        path: "$role",
+                        preserveNullAndEmptyArrays: true
+                    },
+                }, */
+                {
+                    $lookup: {
+                        from: collectionConstant.JOB_TITLE,
+                        localField: "userjob_title_id",
+                        foreignField: "_id",
+                        as: "jobtitle"
+                    }
+                },
+                /*  {
+                     $unwind: {
+                         path: "$jobtitle",
+                         preserveNullAndEmptyArrays: true
+                     },
+                 }, */
+                {
+                    $lookup: {
+                        from: collectionConstant.DEPARTMENTS,
+                        localField: "userdepartment_id",
+                        foreignField: "_id",
+                        as: "department"
+                    }
+                },
+                /* {
+                    $unwind: {
+                        path: "$department",
+                        preserveNullAndEmptyArrays: true
+                    },
+                }, */
+                {
+                    $lookup: {
+                        from: collectionConstant.PAYROLL_GROUP,
+                        localField: "user_id_payroll_group",
+                        foreignField: "_id",
+                        as: "payrollgroup"
+                    }
+                },
+                //  {
+                //      $unwind: {
+                //         path:"$payrollgroup",
+                //         preserveNullAndEmptyArrays: true
+                //     },
+                //  }, 
+                {
+                    $lookup: {
+                        from: collectionConstant.JOB_TYPE,
+                        localField: "userjob_type_id",
+                        foreignField: "_id",
+                        as: "jobtype"
+                    }
+                },
+                // {
+                //     $unwind: {
+                //         path:"$jobtype",
+                //         preserveNullAndEmptyArrays: true
+                //     },
+                // },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "usersupervisor_id",
+                        foreignField: "_id",
+                        as: "supervisor"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.LOCATIONS,
+                        localField: "userlocation_id",
+                        foreignField: "_id",
+                        as: "location"
+                    }
+                },
+                // {
+                //     $unwind: {
+                //         path:"$location",
+                //         preserveNullAndEmptyArrays: true
+                //     },
+                // },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "usermanager_id",
+                        foreignField: "_id",
+                        as: "manager"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.CREDITCARD,
+                        localField: "card_type",
+                        foreignField: "_id",
+                        as: "card"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$card",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $project: {
+                        role_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$role.role_name" },
+                                        {
+                                            $arrayElemAt: ["$role.role_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        supervisor_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$supervisor.userfullname" },
+                                        {
+                                            $arrayElemAt: ["$supervisor.userfullname", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        manager_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$manager.userfullname" },
+                                        {
+                                            $arrayElemAt: ["$manager.userfullname", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        location_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$location.location_name" },
+                                        {
+                                            $arrayElemAt: ["$location.location_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        userjob_type_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$jobtype.job_type_name" },
+                                        {
+                                            $arrayElemAt: ["$jobtype.job_type_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        userjob_title_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$jobtitle.job_title_name" },
+                                        {
+                                            $arrayElemAt: ["$jobtitle.job_title_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        department_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$department.department_name" },
+                                        {
+                                            $arrayElemAt: ["$department.department_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        user_payroll_group_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$payrollgroup.payroll_group_name" },
+                                        {
+                                            $arrayElemAt: ["$payrollgroup.payroll_group_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        userroleId: 1,
+                        password: 1,
+                        useremail: 1,
+                        username: 1,
+                        usermiddlename: 1,
+                        userlastname: 1,
+                        userfullname: 1,
+                        userssn: 1,
+                        userdevice_pin: 1,
+                        userphone: 1,
+                        usersecondary_email: 1,
+                        usergender: 1,
+                        userdob: 1,
+                        userstatus: 1,
+                        userpicture: 1,
+                        usermobile_picture: 1,
+                        userfulladdress: 1,
+                        userstreet1: 1,
+                        userstreet2: 1,
+                        usercity: 1,
+                        user_state: 1,
+                        userzipcode: 1,
+                        usercountry: 1,
+                        userstartdate: 1,
+                        usersalary: 1,
+                        usermanager_id: 1,
+                        usersupervisor_id: 1,
+                        userlocation_id: 1,
+                        userjob_title_id: 1,
+                        userdepartment_id: 1,
+                        userjob_type_id: 1,
+                        usernon_exempt: 1,
+                        usermedicalBenifits: 1,
+                        useradditionalBenifits: 1,
+                        useris_password_temp: 1,
+                        userterm_conditions: 1,
+                        userweb_security_code: 1,
+                        user_payroll_rules: 1,
+                        user_id_payroll_group: 1,
+                        usercostcode: 1,
+                        userqrcode: 1,
+                        userfirebase_id: 1,
+                        login_from: 1,
+                        card_type_name: { $ifNull: ["$card.name", ""] },
+                        card_type: 1,
+                        api_setting: 1,
+                        signature: 1,
+                        allow_for_projects: 1,
+                        user_languages: 1,
+                        show_id_card_on_qrcode_scan: 1,
+                        compliance_officer: 1,
+                    }
+                }
+            ]);
+            UserData = UserData[0];
+            let roles_tmp = await roleConnection.findOne({ role_id: ObjectID(UserData.userroleId) });
+            var resObject_db = {
+                "DB_HOST": get_tenants.DB_HOST,
+                "DB_NAME": get_tenants.DB_NAME,
+                "DB_PORT": get_tenants.DB_PORT,
+                "DB_USERNAME": get_tenants.DB_USERNAME,
+                "DB_PASSWORD": get_tenants.DB_PASSWORD,
+                "companycode": get_tenants.companycode,
+                "token": ""
+            };
+            let resObject = {
+                ...resObject_db,
+                UserData
+            };
+            //console.log("resObject", resObject)
+            var resLast = {
+                "token": "",
+                UserData,
+                settings: {},
+                role_permission: [],
+                questions: [],
+                companydata: get_company
+            };
+            var token = await common.generateJWT(resObject);
+            resLast.token = token;
+            resLast.role_permission = roles_tmp.role_permission;
+            res.send({ message: translator.getStr('LoginSuccess'), status: true, data: get_company, user_data: resLast });
+        } else {
+            res.send({ message: translator.getStr('UserNotFound'), status: false });
+        }
+    } catch (e) {
+        console.log("-----", e);
+        res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+    } finally {
+        admin_connection_db_api.close();
+    }
+};
+
+module.exports.emailForgotPassword = async function (req, res) {
+    var translator = new common.Language('en');
+    let admin_connection_db_api = await db_connection.connection_db_api(config.ADMIN_CONFIG);
+    try {
+        var requestObject = req.body;
+        requestObject.useremail = requestObject.useremail.toLowerCase();
+
+        let companyConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_COMPANY, companySchema);
+        let tenantsConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_TENANTS, tenantSchema);
+        let match = {
+            'invoice_user.useremail': requestObject.useremail,
+            'invoice_user.userstatus': 1,
+            'invoice_user.is_delete': 0,
+        };
+        var get_company = await companyConnection.find(match);
+        if (get_company.length == 1) {
+            var get_tenants = await tenantsConnection.findOne({ company_id: get_company[0]._id });
+            let connection_db_api = await db_connection.connection_db_api(get_tenants);
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+
+            let temp_password = common.rendomPassword(8);
+            let passwordHash = common.generateHash(temp_password);
+
+            let update_user = await userConnection.updateOne({ useremail: requestObject.useremail }, { password: passwordHash, useris_password_temp: true });
+            if (update_user) {
+                let one_user = await userConnection.findOne({ useremail: requestObject.useremail });
+                let companyUserObj = {
+                    'invoice_user.$.password': passwordHash,
+                };
+                let update_invoice_user = await companyConnection.updateOne({ _id: ObjectID(get_company[0]._id), 'invoice_user.user_id': ObjectID(one_user._id) }, { $set: companyUserObj });
+
+                const data = await fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/resetPassword.html', 'utf8');
+                let emailTmp = {
+                    HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
+                    SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
+                    ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                    THANKS: translator.getStr('EmailTemplateThanks'),
+                    ROVUK_TEAM: ` Rovuk A/P ${translator.getStr('team_mail_all')}`,
+
+                    TITLE: translator.getStr('MailForgotPassword_Title'),
+                    HI_USERNAME: translator.getStr('Hello_mail'),
+                    TEXT1: translator.getStr('vendor_mail_forgotpass_line1_1'),
+                    TEXT2: translator.getStr('vendor_mail_forgotpass_line3_1'),
+                    TEMP_PASSWORD: `${translator.getStr('vendor_mail_forgotpass_line2_1')} ${temp_password}`,
+
+                    BUTTON_TEXT: translator.getStr('EmailInvitationLogIn'),
+                    LINK: config.SITE_URL + "/login",
+
+                    COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${get_company[0].companyname}`,
+                    COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${get_company[0].companycode}`,
+                };
+                let tmp_subject = translator.getStr('MailForgotPassword_Subject');
+                var template = handlebars.compile(data);
+                var HtmlData = await template(emailTmp);
+                let tenant_smtp_security = config.tenants.tenant_smtp_security == "Yes" || config.tenants.tenant_smtp_security == "YES" || config.tenants.tenant_smtp_security == "yes" ? true : false;
+                sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, one_user.useremail, tmp_subject, HtmlData,
+                    config.tenants.tenant_smtp_server, config.tenants.tenant_smtp_port, config.tenants.tenant_smtp_reply_to_mail, config.tenants.tenant_smtp_password, config.tenants.tenant_smtp_timeout,
+                    tenant_smtp_security);
+                res.send({ message: translator.getStr('CheckMailForgotPassword'), status: true, data: get_company });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } else {
+            res.send({ message: translator.getStr('CompanyListing'), status: true, data: get_company });
+        }
+    } catch (e) {
+        console.log(e);
+        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+    } finally {
+        // connection_db_api.close();
+    }
+};
+
+module.exports.sendEmailForgotPassword = async function (req, res) {
+    var translator = new common.Language('en');
+    let admin_connection_db_api = await db_connection.connection_db_api(config.ADMIN_CONFIG);
+    try {
+        var requestObject = req.body;
+        requestObject.useremail = requestObject.useremail.toLowerCase();
+
+        let companyConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_COMPANY, companySchema);
+        let tenantsConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_TENANTS, tenantSchema);
+        let match = {
+            'invoice_user.useremail': requestObject.useremail,
+            'invoice_user.userstatus': 1,
+            'invoice_user.is_delete': 0,
+        };
+        var get_company = await companyConnection.findOne({ _id: ObjectID(requestObject._id) });
+        var get_tenants = await tenantsConnection.findOne({ company_id: get_company._id });
+        let connection_db_api = await db_connection.connection_db_api(get_tenants);
+        let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+
+        let temp_password = common.rendomPassword(8);
+        let passwordHash = common.generateHash(temp_password);
+
+        let update_user = await userConnection.updateOne({ useremail: requestObject.useremail }, { password: passwordHash, useris_password_temp: true });
+        if (update_user) {
+            let one_user = await userConnection.findOne({ useremail: requestObject.useremail });
+            let companyUserObj = {
+                'invoice_user.$.password': passwordHash,
+            };
+            let update_invoice_user = await companyConnection.updateOne({ _id: ObjectID(get_company._id), 'invoice_user.user_id': ObjectID(one_user._id) }, { $set: companyUserObj });
+
+            const data = await fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/resetPassword.html', 'utf8');
+            let emailTmp = {
+                HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
+                SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
+                ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                THANKS: translator.getStr('EmailTemplateThanks'),
+                ROVUK_TEAM: ` Rovuk A/P ${translator.getStr('team_mail_all')}`,
+
+                TITLE: translator.getStr('MailForgotPassword_Title'),
+                HI_USERNAME: translator.getStr('Hello_mail'),
+                TEXT1: translator.getStr('vendor_mail_forgotpass_line1_1'),
+                TEXT2: translator.getStr('vendor_mail_forgotpass_line3_1'),
+                TEMP_PASSWORD: `${translator.getStr('vendor_mail_forgotpass_line2_1')} ${temp_password}`,
+
+                BUTTON_TEXT: translator.getStr('EmailInvitationLogIn'),
+                LINK: config.SITE_URL + "/login",
+
+                COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${get_company.companyname}`,
+                COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${get_company.companycode}`,
+            };
+            let tmp_subject = translator.getStr('MailForgotPassword_Subject');
+            var template = handlebars.compile(data);
+            var HtmlData = await template(emailTmp);
+            let tenant_smtp_security = config.tenants.tenant_smtp_security == "Yes" || config.tenants.tenant_smtp_security == "YES" || config.tenants.tenant_smtp_security == "yes" ? true : false;
+            sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, one_user.useremail, tmp_subject, HtmlData,
+                config.tenants.tenant_smtp_server, config.tenants.tenant_smtp_port, config.tenants.tenant_smtp_reply_to_mail, config.tenants.tenant_smtp_password, config.tenants.tenant_smtp_timeout,
+                tenant_smtp_security);
+            res.send({ message: translator.getStr('CheckMailForgotPassword'), status: true, data: get_company });
+        } else {
+            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        }
+    } catch (e) {
+        console.log(e);
+        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+    } finally {
+        // connection_db_api.close();
     }
 };

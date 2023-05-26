@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WEB_ROUTES } from 'src/consts/routes';
-import { TermModel, Vendor } from '../vendor-table.model';
+import { TermModel, Vendor } from '../vendor.model';
 import { HttpClient } from '@angular/common/http';
 import { UntypedFormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -15,6 +15,7 @@ import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroy
 import { FormateDateStringPipe } from 'src/app/users/users-filter.pipe';
 import { httpversion, httproutes } from 'src/consts/httproutes';
 import { CommonService } from 'src/app/services/common.service';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
 
 @Component({
   selector: 'app-vendor-grid',
@@ -22,22 +23,28 @@ import { CommonService } from 'src/app/services/common.service';
   styleUrls: ['./vendor-grid.component.scss'],
   providers: [FormateDateStringPipe],
 })
-export class VendorGridComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
+export class VendorGridComponent
+  extends UnsubscribeOnDestroyAdapter
+  implements OnInit {
   vendorList: any = [];
   cardLoading = true;
   isDelete = 0;
-  active_word = "Active";
-  inactive_word = "Inactive";
+  active_word = 'Active';
+  inactive_word = 'Inactive';
   vendorname_search: any;
   vendor_status: any;
   termsList: Array<TermModel> = [];
 
   constructor (
-    public httpClient: HttpClient, private httpCall: HttpCall,
+    public httpClient: HttpClient,
+    private httpCall: HttpCall,
     public dialog: MatDialog,
     public vendorTableService: VendorsService,
-    private snackBar: MatSnackBar, private router: Router, public translate: TranslateService,
-    private fb: UntypedFormBuilder, public commonService: CommonService,
+    private snackBar: MatSnackBar,
+    private router: Router,
+    public translate: TranslateService,
+    private fb: UntypedFormBuilder,
+    public commonService: CommonService
   ) {
     super();
   }
@@ -45,16 +52,16 @@ export class VendorGridComponent extends UnsubscribeOnDestroyAdapter implements 
     this.getVendor();
   }
 
-  changeStatus(event: any) {
-    //
-  }
-
   gotolist() {
-    this.router.navigate([WEB_ROUTES.VENDOR_GRID]);
+    localStorage.setItem(localstorageconstants.VENDOR_DISPLAY, 'list');
+    this.router.navigate([WEB_ROUTES.VENDOR]);
   }
 
   async getVendor() {
-    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_GET, { is_delete: this.isDelete });
+    const data = await this.commonService.postRequestAPI(
+      httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_GET,
+      { is_delete: this.isDelete }
+    );
     this.vendorList = data.data;
     this.cardLoading = false;
   }
@@ -79,7 +86,9 @@ export class VendorGridComponent extends UnsubscribeOnDestroyAdapter implements 
   }
 
   async getTerms() {
-    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_TERM_GET);
+    const data = await this.commonService.getRequestAPI(
+      httpversion.PORTAL_V1 + httproutes.PORTAL_TERM_GET
+    );
     if (data.status) {
       this.termsList = data.data;
     }
@@ -94,16 +103,26 @@ export class VendorGridComponent extends UnsubscribeOnDestroyAdapter implements 
       },
     });
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-      //  
+      //
     });
   }
 
   editVendor(vendor: Vendor) {
-    this.router.navigate([WEB_ROUTES.VENDOR_FORM], { queryParams: { _id: vendor._id } });
+    if (this.isDelete == 0) {
+      this.router.navigate([WEB_ROUTES.VENDOR_FORM], {
+        queryParams: { _id: vendor._id },
+      });
+    }
   }
 
   openHistory() {
     this.router.navigate([WEB_ROUTES.VENDOR_HISTORY]);
   }
-}
 
+  formateAmount(price: any) {
+    return Number(price).toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    });
+  }
+}

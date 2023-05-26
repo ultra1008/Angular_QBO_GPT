@@ -3,7 +3,8 @@ import { UnsubscribeOnDestroyAdapter } from '../shared/UnsubscribeOnDestroyAdapt
 import { BehaviorSubject } from 'rxjs';
 import { httpversion, httproutes } from 'src/consts/httproutes';
 import { HttpCall } from '../services/httpcall.service';
-import { Vendor } from '../vendors/vendor-table.model';
+import { Vendor } from '../vendors/vendor.model';
+import { ClientList } from './client.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,13 +13,21 @@ export class ClientService extends UnsubscribeOnDestroyAdapter {
   private readonly API_URL = 'assets/data/advanceTable.json';
   isTblLoading = true;
   dataChange: BehaviorSubject<Vendor[]> = new BehaviorSubject<Vendor[]>([]);
+
+  dataClientChange: BehaviorSubject<ClientList[]> = new BehaviorSubject<
+    ClientList[]
+  >([]);
   // Temporarily stores data from dialogs
   dialogData!: Vendor;
-  constructor(private httpCall: HttpCall) {
+  constructor (private httpCall: HttpCall) {
     super();
   }
   get data(): Vendor[] {
     return this.dataChange.value;
+  }
+
+  get dataClient(): ClientList[] {
+    return this.dataClientChange.value;
   }
 
   getDialogData() {
@@ -39,9 +48,21 @@ export class ClientService extends UnsubscribeOnDestroyAdapter {
     this.isTblLoading = false;
   }
 
-  async getOneVendor(id: string) {
+  async getAllClientTable(is_delete: number): Promise<void> {
     const data = await this.httpCall
-      .httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_GET_ONE, {
+      .httpPostCall(httpversion.PORTAL_V1 + httproutes.CLIENT_DATA_TABLE, {
+        is_delete: is_delete,
+      })
+      .toPromise();
+    // Only write this for datatable api otherwise return data
+
+    this.dataClientChange.next(data);
+    this.isTblLoading = false;
+  }
+
+  async getOneClient(id: string) {
+    const data = await this.httpCall
+      .httpPostCall(httpversion.PORTAL_V1 + httproutes.CLIENT_GET_ONE, {
         _id: id,
       })
       .toPromise();
@@ -58,39 +79,39 @@ export class ClientService extends UnsubscribeOnDestroyAdapter {
     return data;
   }
 
-  async updateVendorStatus(requestObject: any) {
+  async updateClientStatus(requestObject: any) {
     const data = await this.httpCall
       .httpPostCall(
-        httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_STATUS_UPDATE,
+        httpversion.PORTAL_V1 + httproutes.CLIENT_UPDATE_STATUS,
         requestObject
       )
       .toPromise();
     return data;
   }
-  async updateAllVendorStatus(requestObject: any) {
+  async updateAllclientStatus(requestObject: any) {
     const data = await this.httpCall
       .httpPostCall(
-        httpversion.PORTAL_V1 + httproutes.PORTAL_ALL_VENDOR_STATUS_UPDATE,
-        requestObject
-      )
-      .toPromise();
-    return data;
-  }
-
-  async deleteVendor(requestObject: any) {
-    const data = await this.httpCall
-      .httpPostCall(
-        httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_DELETE,
+        httpversion.PORTAL_V1 + httproutes.CLIENT_UPDATE_ALL_STATUS,
         requestObject
       )
       .toPromise();
     return data;
   }
 
-  async allDeleteVendor(requestObject: any) {
+  async deleteClient(requestObject: any) {
     const data = await this.httpCall
       .httpPostCall(
-        httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_ALL_DELETE,
+        httpversion.PORTAL_V1 + httproutes.CLIENT_DELETE,
+        requestObject
+      )
+      .toPromise();
+    return data;
+  }
+
+  async allDeleteClient(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.CLIENT_ALL_DELETE,
         requestObject
       )
       .toPromise();

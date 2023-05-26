@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { VendorsService } from '../vendors.service';
-import { TermModel } from '../vendor-table.model';
+import { TermModel } from '../vendor.model';
 import { configData } from 'src/environments/configData';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { isValidMailFormat, showNotification } from 'src/consts/utils';

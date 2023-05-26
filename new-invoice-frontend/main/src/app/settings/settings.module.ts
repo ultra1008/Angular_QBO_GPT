@@ -77,6 +77,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ImportEmployeeSettingsComponent } from './employeesettings/import-employee-settings/import-employee-settings.component';
 import { QuickbooksAuthorizationComponent } from './integration/qbointegration/quickbooks-authorization/quickbooks-authorization.component';
 import { ImportCostcodeSettingsComponent } from './costcode/import-costcode-settings/import-costcode-settings.component';
+import { ClassNameListingComponent } from './othersettings/class-name-listing/class-name-listing.component';
+import { ClassNameFormComponent } from './othersettings/class-name-form/class-name-form.component';
 
 @NgModule({
   declarations: [
@@ -123,6 +125,8 @@ import { ImportCostcodeSettingsComponent } from './costcode/import-costcode-sett
     ImportEmployeeSettingsComponent,
     QuickbooksAuthorizationComponent,
     ImportCostcodeSettingsComponent,
+    ClassNameListingComponent,
+    ClassNameFormComponent,
   ],
   providers: [SettingsService],
   imports: [

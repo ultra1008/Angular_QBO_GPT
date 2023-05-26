@@ -55,6 +55,7 @@
     "ng-image-fullscreen-view": "^3.0.3",
     "ng-otp-input": "^1.8.5",
     "ng2-charts": "^4.1.1",
+    "ng2-pdf-viewer": "^9.1.5",
     "ngx-dropzone-wrapper": "^13.0.0",
     "ngx-echarts": "^15.0.1",
     "ngx-gallery-9": "^1.0.6",

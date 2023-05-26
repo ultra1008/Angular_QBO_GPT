@@ -8,21 +8,13 @@
                         <div class="left">
                             <ul class="header-buttons-left ms-0">
                                 <li class="tbl-title">
-                                    <h2 *ngIf="id.length == 0">Add Client</h2>
-                                    <h2 *ngIf="id.length > 0">Edit Client</h2>
+                                    <h2 *ngIf="id.length == 0">{{'CLIENT.ADD_EDIT.ADD_TITLE' | translate}}</h2>
+                                    <h2 *ngIf="id.length > 0">{{'CLIENT.ADD_EDIT.EDIT_TITLE' | translate}}</h2>
                                 </li>
                             </ul>
                         </div>
                         <div class="right">
                             <ul class="tbl-export-btn">
-                                <li class="tbl-header-btn">
-                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' |
-                                        translate}}">
-                                        <button mat-mini-fab color="warn" (click)="deleteVendor()">
-                                            <mat-icon class="col-white">archive</mat-icon>
-                                        </button>
-                                    </div>
-                                </li>
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' |
                                         translate}}">
@@ -40,7 +32,7 @@
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2" style="font-size: 12px;">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Cilent Name</mat-label>
+                                        <mat-label>{{'CLIENT.TABLE.CLIENT_NAME' | translate}}</mat-label>
                                         <input matInput formControlName="client_name"
                                             style="text-transform:capitalize !important;" required>
 
@@ -48,62 +40,38 @@
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Client Number</mat-label>
-                                        <input matInput formControlName="client_number" required>
+                                        <mat-label>{{'CLIENT.TABLE.JOB_CONTACT_EMAIL' | translate}}</mat-label>
+                                        <input matInput required formControlName="client_email"/>
                                     </mat-form-field>
                                 </div>
                             </div>
                             <div class="row">
+                               
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Client Phone</mat-label>
-                                        <input required formControlName="client_phone" matInput mask="(000) 000 0000" />
+                                        <mat-label>{{'CLIENT.TABLE.CLIENT_NUMBER' | translate}}</mat-label>
+                                        <input matInput formControlName="client_number">
                                     </mat-form-field>
                                 </div>
-                              
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>{{'VENDOR.ADD_EDIT.GL_ACCOUNTS' | translate}}</mat-label>
-                                        <mat-select formControlName="gl_account">
-                                            <mat-option [value]="1">
-                                                123
-                                            </mat-option>
-                                            <mat-option [value]="2">
-                                                345
+                                        <mat-label>{{'CLIENT.ADD_EDIT.COST_GL' | translate}}</mat-label>
+                                        <mat-select formControlName="client_cost_cost_id" style="font-size: 12px;">
+                                            <mat-select-filter #costcodeListSelect [placeholder]="'Filter'"
+                                                [displayMember]="'value'" [array]="variablecostcodeList"
+                                                (filteredReturn)="costcodeList =$event">
+                                            </mat-select-filter>
+                                            <mat-option *ngFor="let costcode of costcodeList" [value]="costcode._id">
+                                                {{costcode.value}}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
                             </div>
-                        <div class="row">
-                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                <mat-form-field class="example-full-width" appearance="outline">
-                                    <mat-label>Client Email</mat-label>
-                                    <input matInput required formControlName="client_email"/>
-                                </mat-form-field>
-                            </div>
-                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                <mat-form-field class="example-full-width" appearance="outline">
-                                    <mat-label>Cost Code</mat-label>
-                                    <mat-select formControlName="client_cost_cost_id" style="font-size: 12px;">
-                                        <mat-select-filter #costcodeListSelect [placeholder]="'Filter'"
-                                            [displayMember]="'value'" [array]="variablecostcodeList"
-                                            (filteredReturn)="costcodeList =$event">
-                                        </mat-select-filter>
-                                        <mat-option *ngFor="let costcode of costcodeList" [value]="costcode._id">
-                                            {{costcode.value}}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
-                        </div>
-                          
-                           
-                           
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
-                                        <mat-label>Approver</mat-label>
+                                        <mat-label>{{'CLIENT.TABLE.APPROVER' | translate}}</mat-label>
                                         <mat-select formControlName="approver_id" style="font-size: 12px;">
                                             <mat-select-filter #termListSelect [placeholder]="'Filter'"
                                                 [displayMember]="'userfullname'" [array]="variableapproverList"
@@ -118,11 +86,11 @@
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>{{'VENDOR.ADD_EDIT.STATUS' | translate}}</mat-label>
-                                        <mat-select formControlName="client_status">
-                                            <mat-option [value]="1">
+                                        <mat-select formControlName="client_status" class="active-inactive-tx">
+                                            <mat-option class="active-inactive-tx" [value]="1">
                                                 ACTIVE
                                             </mat-option>
-                                            <mat-option [value]="2">
+                                            <mat-option class="active-inactive-tx" [value]="2">
                                                 INACTIVE
                                             </mat-option>
                                         </mat-select>
@@ -130,11 +98,12 @@
                                 </div>
                             </div>
                             <div class="row form-old">
+                             
                                 <div class="col-xl-12 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline"
                                         style="height: auto !important;">
                                         <mat-label
-                                            style="height: auto !important;">Notes</mat-label>
+                                            style="height: auto !important;">{{'CLIENT.ADD_EDIT.NOTES' | translate}}</mat-label>
                                         <textarea matInput style="height: auto !important;"
                                             formControlName="client_notes"></textarea>
                                     </mat-form-field>

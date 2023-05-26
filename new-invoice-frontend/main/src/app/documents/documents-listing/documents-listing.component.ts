@@ -15,6 +15,7 @@ import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroy
 import { DocumentTable } from '../documents.model';
 import { DocumentsService } from '../documents.service';
 import { MMDDYYYY } from 'src/consts/utils';
+import { configData } from 'src/environments/configData';
 
 @Component({
   selector: 'app-documents-listing',
@@ -37,9 +38,9 @@ export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter
   selection = new SelectionModel<DocumentTable>(true, []);
   id?: number;
   isDelete = 0;
-  step_index: number = 0;
-  titleMessage: string = '';
-  showTable: boolean = true;
+  step_index = 0;
+  titleMessage = '';
+  showTable = true;
   tab_Array: any = ['INVOICE', 'PURCHASE_ORDER', 'PACKING_SLIP', 'RECEIVING_SLIP', 'QUOTE', 'Other', 'Delete'];
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -47,17 +48,9 @@ export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter
   @ViewChild(MatMenuTrigger)
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
-  documentTypes: any = {
-    po: 'PURCHASE_ORDER',
-    packingSlip: 'PACKING_SLIP',
-    receivingSlip: 'RECEIVING_SLIP',
-    quote: 'QUOTE',
-    invoice: 'INVOICE'
-  };
+  documentTypes = configData.DOCUMENT_TYPES;
 
-
-
-  constructor(
+  constructor (
     public dialog: MatDialog,
     public DocumentsService: DocumentsService,
     public router: Router,
@@ -138,7 +131,7 @@ export class DocumentDataSource extends DataSource<DocumentTable> {
   }
   filteredData: DocumentTable[] = [];
   renderedData: DocumentTable[] = [];
-  constructor(
+  constructor (
     public DocumentsService: DocumentsService,
     public paginator: MatPaginator,
     public _sort: MatSort,

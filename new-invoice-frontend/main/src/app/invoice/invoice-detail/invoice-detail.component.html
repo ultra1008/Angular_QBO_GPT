@@ -1,0 +1,772 @@
+<section class="content">
+     <div class="content-block">
+          <div class="m-4"></div>
+          <div class="row">
+               <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="materialTableHeader">
+                         <div class="left">
+                              <ul class="header-buttons-left ms-0">
+                                   <li class="tbl-title">
+                                        <h2 style="margin-right: 15px;">Invoice Detail <span>Pending</span></h2>
+                                   </li>
+                              </ul>
+                         </div>
+                         <div class="right ">
+                              <ul class="tbl-export-btn">
+                                   <li class="tbl-header-btn">
+                                        <div class="m-l-10" matTooltip="REPORT">
+                                             <button mat-mini-fab color="primary">
+                                                  <mat-icon class="col-white">insert_drive_file</mat-icon>
+                                             </button>
+                                        </div>
+                                   </li>
+                                   <li class="tbl-header-btn">
+                                        <div class="m-l-10" matTooltip="HISTORY">
+                                             <button mat-mini-fab color="primary">
+                                                  <mat-icon class="col-white">history</mat-icon>
+                                             </button>
+                                        </div>
+                                   </li>
+                                   <li class="tbl-header-btn">
+                                        <div class="m-l-10" matTooltip="BACK">
+                                             <button mat-mini-fab color="warn" (click)="back()">
+                                                  <mat-icon class="col-white">close </mat-icon>
+                                             </button>
+                                        </div>
+                                   </li>
+                              </ul>
+                         </div>
+                    </div>
+                    <div class="row clearfix mt-2">
+                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                              <div class="Fix-hight">
+                                   <div class="card">
+                                        <div class="header">
+                                             <h2>Information</h2>
+                                        </div>
+                                        <div class="body">
+                                             <div class="list-group">
+                                                  <form class="register-form m-1" [formGroup]="invoiceForm">
+                                                       <div class="row">
+                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'Document Type' | translate}}</mat-label>
+                                                                      <mat-select formControlName="document_type">
+                                                                           <mat-option [value]="1">
+                                                                                Invoice
+                                                                           </mat-option>
+                                                                           <mat-option [value]="2">
+                                                                                P.O.
+                                                                           </mat-option>
+                                                                      </mat-select>
+                                                                 </mat-form-field>
+                                                            </div>
+                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'Vendor Name' | translate}}</mat-label>
+                                                                      <input matInput formControlName="vendor_name"
+                                                                           capitalOnly>
+                                                                 </mat-form-field>
+                                                            </div>
+                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'Invoice#' | translate}}</mat-label>
+                                                                      <input matInput
+                                                                           class="input-capitalized-textfield"
+                                                                           formControlName="invoice">
+                                                                 </mat-form-field>
+                                                            </div>
+                                                       </div>
+                                                       <div class="row ">
+
+                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'Invoice Date' | translate}}</mat-label>
+                                                                      <input matInput formControlName="invoice_date"
+                                                                           capitalOnly>
+                                                                 </mat-form-field>
+                                                            </div>
+                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'Due Date' | translate}}</mat-label>
+                                                                      <input matInput formControlName="due_date"
+                                                                           capitalOnly>
+                                                                 </mat-form-field>
+                                                            </div>
+                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'Total Amount' | translate}}</mat-label>
+                                                                      <input matInput
+                                                                           class="input-capitalized-textfield"
+                                                                           formControlName="total_amount">
+                                                                 </mat-form-field>
+                                                            </div>
+                                                       </div>
+                                                       <div class="row ">
+                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'Text Amount' | translate}}</mat-label>
+                                                                      <input matInput formControlName="text_amount"
+                                                                           capitalOnly>
+                                                                 </mat-form-field>
+                                                            </div>
+                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'Assign To' | translate}}</mat-label>
+                                                                      <mat-select formControlName="assign_to">
+                                                                           <mat-option [value]="1">
+                                                                                Rana Rxit
+                                                                           </mat-option>
+                                                                           <mat-option [value]="2">
+                                                                                Parth Tailor
+                                                                           </mat-option>
+                                                                      </mat-select>
+                                                                 </mat-form-field>
+                                                            </div>
+                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'Status' | translate}}</mat-label>
+
+                                                                      <mat-select formControlName="status">
+                                                                           <mat-option [value]="1">
+                                                                                Active
+                                                                           </mat-option>
+                                                                           <mat-option [value]="2">
+                                                                                Inactive
+                                                                           </mat-option>
+                                                                      </mat-select>
+                                                                 </mat-form-field>
+                                                            </div>
+                                                       </div>
+                                                  </form>
+                                                  <div class="d-flex form-button">
+                                                       <button class="btn-space" mat-raised-button
+                                                            color="primary">{{'COMMON.ACTIONS.SAVE'|
+                                                  translate}}</button>
+                                                       <button class="btn-space but-c" type="button"
+                                                            mat-raised-button>{{'Approve'| translate}}</button>
+                                                       <button class="btn-space" type="button" mat-raised-button
+                                                            color="warn">{{'Reject'| translate}}</button>
+                                                       <button type="button" class="onhold"
+                                                            mat-raised-button>{{'On Hold'| translate}}</button>
+                                                  </div>
+                                             </div>
+                                        </div>
+                                   </div>
+                                   <div class="card activity">
+                                        <div class="header">
+                                             <h2>Accounting Activity</h2>
+
+                                        </div>
+                                        <div class="body">
+                                             <mat-tab-group>
+                                                  <mat-tab label="3-28-2023">
+                                                       <div class="body table-responsive">
+                                                            <table class="table">
+                                                                 <thead>
+                                                                      <tr>
+                                                                           <th>Total Amount</th>
+                                                                           <th>Cost Code</th>
+                                                                           <th>Assign To</th>
+                                                                           <th>GL Account</th>
+                                                                           <th>Notes</th>
+                                                                      </tr>
+                                                                 </thead>
+                                                                 <tbody>
+                                                                      <tr>
+                                                                           <th>55.00</th>
+                                                                           <td>Cost Code</td>
+                                                                           <td>Assign To</td>
+                                                                           <td>GL Account</td>
+                                                                           <td>Notes</td>
+                                                                      </tr>
+                                                                 </tbody>
+                                                            </table>
+                                                       </div>
+                                                  </mat-tab>
+                                                  <mat-tab label="3-25-2023">
+                                                       <div class="body table-responsive">
+                                                            <table class="table">
+                                                                 <thead>
+                                                                      <tr>
+                                                                           <th>Total Amount</th>
+                                                                           <th>Cost Code</th>
+                                                                           <th>Assign To</th>
+                                                                           <th>GL Account</th>
+                                                                           <th>Notes</th>
+                                                                      </tr>
+                                                                 </thead>
+                                                                 <tbody>
+                                                                      <tr>
+                                                                           <th>55.00</th>
+                                                                           <td>Cost Code</td>
+                                                                           <td>Assign To</td>
+                                                                           <td>GL Account</td>
+                                                                           <td>Notes</td>
+                                                                      </tr>
+                                                                 </tbody>
+                                                            </table>
+                                                       </div>
+                                                  </mat-tab>
+                                                  <mat-tab label="3-20-2023">
+                                                       <div class="body table-responsive">
+                                                            <table class="table">
+                                                                 <thead>
+                                                                      <tr>
+                                                                           <th>Total Amount</th>
+                                                                           <th>Cost Code</th>
+                                                                           <th>Assign To</th>
+                                                                           <th>GL Account</th>
+                                                                           <th>Notes</th>
+                                                                      </tr>
+                                                                 </thead>
+                                                                 <tbody>
+                                                                      <tr>
+                                                                           <th>55.00</th>
+                                                                           <td>Cost Code</td>
+                                                                           <td>Assign To</td>
+                                                                           <td>GL Account</td>
+                                                                           <td>Notes</td>
+                                                                      </tr>
+                                                                 </tbody>
+                                                            </table>
+                                                       </div>
+                                                  </mat-tab>
+                                             </mat-tab-group>
+
+                                        </div>
+                                   </div>
+                                   <div class="body e-panal">
+                                        <mat-accordion>
+                                             <mat-expansion-panel>
+                                                  <mat-expansion-panel-header>
+                                                       <mat-panel-title>
+                                                            More information
+                                                       </mat-panel-title>
+                                                  </mat-expansion-panel-header>
+                                                  <form class="register-form m-1" [formGroup]="moreInformationForm">
+                                                       <div class="row">
+                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'Vendor ID' | translate}}</mat-label>
+                                                                      <input matInput formControlName="vendor_id"
+                                                                           capitalOnly>
+                                                                 </mat-form-field>
+                                                            </div>
+                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'Customer ID' | translate}}</mat-label>
+                                                                      <input matInput formControlName="customer_id"
+                                                                           capitalOnly>
+                                                                 </mat-form-field>
+                                                            </div>
+                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'P.O.#' | translate}}</mat-label>
+                                                                      <input matInput
+                                                                           class="input-capitalized-textfield"
+                                                                           formControlName="po_number">
+                                                                 </mat-form-field>
+                                                            </div>
+                                                       </div>
+                                                       <div class="row ">
+                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'Job#' | translate}}</mat-label>
+                                                                      <input matInput formControlName="job_number"
+                                                                           capitalOnly>
+                                                                 </mat-form-field>
+                                                            </div>
+                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'Order date' | translate}}</mat-label>
+                                                                      <input matInput formControlName="order_date"
+                                                                           capitalOnly>
+                                                                 </mat-form-field>
+                                                            </div>
+                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'Ship Date' | translate}}</mat-label>
+                                                                      <input matInput
+                                                                           class="input-capitalized-textfield"
+                                                                           formControlName="ship_date">
+                                                                 </mat-form-field>
+                                                            </div>
+                                                       </div>
+                                                       <div class="row ">
+                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'Packing slip' | translate}}</mat-label>
+                                                                      <input matInput formControlName="packing_slip"
+                                                                           capitalOnly>
+                                                                 </mat-form-field>
+                                                            </div>
+                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'Receiving slip' | translate}}</mat-label>
+                                                                      <input matInput formControlName="reciving_slip"
+                                                                           capitalOnly>
+                                                                 </mat-form-field>
+                                                            </div>
+                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'Terms' | translate}}</mat-label>
+                                                                      <input matInput formControlName="terms"
+                                                                           capitalOnly>
+                                                                 </mat-form-field>
+                                                            </div>
+                                                       </div>
+                                                       <div class="row">
+                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'Tax ID' | translate}}</mat-label>
+                                                                      <input matInput formControlName="tax_id"
+                                                                           capitalOnly>
+                                                                 </mat-form-field>
+                                                            </div>
+                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'Sub total' | translate}}</mat-label>
+                                                                      <input matInput formControlName="sub_total"
+                                                                           capitalOnly>
+                                                                 </mat-form-field>
+                                                            </div>
+                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'Amount Due' | translate}}</mat-label>
+                                                                      <input matInput
+                                                                           class="input-capitalized-textfield"
+                                                                           formControlName="amount_due">
+                                                                 </mat-form-field>
+                                                            </div>
+                                                       </div>
+                                                       <div class="row ">
+                                                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'Cost Code' | translate}}</mat-label>
+                                                                      <mat-select formControlName="costcode">
+                                                                           <mat-option [value]="1">
+                                                                                Invoice
+                                                                           </mat-option>
+                                                                           <mat-option [value]="2">
+                                                                                P.O.
+                                                                           </mat-option>
+                                                                      </mat-select>
+                                                                 </mat-form-field>
+                                                            </div>
+                                                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'GL Account' | translate}}</mat-label>
+                                                                      <input matInput
+                                                                           class="input-capitalized-textfield"
+                                                                           formControlName="gl_account">
+                                                                 </mat-form-field>
+                                                            </div>
+                                                       </div>
+                                                       <div class="row ">
+                                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'Notes' | translate}}</mat-label>
+                                                                      <input matInput formControlName="notes"
+                                                                           capitalOnly>
+                                                                 </mat-form-field>
+                                                            </div>
+                                                       </div>
+                                                  </form>
+                                                  <div class="d-flex form-button">
+                                                       <button class="btn-space" mat-raised-button
+                                                            color="primary">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
+
+                                                  </div>
+                                             </mat-expansion-panel>
+                                             <mat-expansion-panel (opened)="panelOpenState = true"
+                                                  (closed)="panelOpenState = false">
+                                                  <mat-expansion-panel-header>
+                                                       <mat-panel-title>
+                                                            Notes
+                                                       </mat-panel-title>
+                                                  </mat-expansion-panel-header>
+                                                  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                       <div class="card">
+                                                            <div class="chat">
+                                                                 <div class="chat-message clearfix">
+                                                                      <div class="form-group d-flex">
+                                                                           <div class="form-line col-11">
+                                                                                <mat-form-field
+                                                                                     class="example-full-width">
+                                                                                     <input matInput
+                                                                                          placeholder="Enter text here..">
+                                                                                </mat-form-field>
+                                                                           </div>
+                                                                           <div class="chat-upload col-1">
+                                                                                <button mat-raised-button
+                                                                                     color="primary">{{'COMMON.ACTIONS.SAVE'|
+                                                                      translate}}</button>
+
+                                                                           </div>
+                                                                      </div>
+
+                                                                 </div>
+                                                                 <ng-scrollbar style="height: 250px" visibility="hover">
+                                                                      <div class="chat-history" id="chat-conversation">
+                                                                           <ul>
+                                                                                <li class="note-card">
+                                                                                     <div
+                                                                                          class="message-data d-flex chat-p mt-2">
+                                                                                          <div class="col-11">
+                                                                                               <span
+                                                                                                    class="message-data-name"><img
+                                                                                                         style="border-radius: 50%;"
+                                                                                                         src="assets/images/user/user2.jpg"
+                                                                                                         alt="avatar">
+                                                                                               </span>
+                                                                                               <span
+                                                                                                    class="message-data-time">10:12
+                                                                                                    AM, Today</span>
+                                                                                          </div>
+                                                                                          <div class="col-1">
+                                                                                               <span>
+                                                                                                    <button mat-mini-fab
+                                                                                                         color="primary">
+                                                                                                         <mat-icon
+                                                                                                              class="col-white">delete</mat-icon>
+                                                                                                    </button>
+
+                                                                                               </span>
+                                                                                          </div>
+                                                                                     </div>
+                                                                                     <div class="mr-2 chat-msg">
+                                                                                          <p>Its good. We completed
+                                                                                               almost all task assign by
+                                                                                               our manager.</p>
+                                                                                          <div class="row">
+                                                                                          </div>
+                                                                                     </div>
+                                                                                </li>
+                                                                                <li class="note-card">
+                                                                                     <div
+                                                                                          class="message-data d-flex chat-p mt-2">
+                                                                                          <div class="col-11">
+                                                                                               <span
+                                                                                                    class="message-data-name"><img
+                                                                                                         style="border-radius: 50%;"
+                                                                                                         src="assets/images/user/user2.jpg"
+                                                                                                         alt="avatar">
+                                                                                               </span>
+                                                                                               <span
+                                                                                                    class="message-data-time">10:12
+                                                                                                    AM, Today</span>
+                                                                                          </div>
+                                                                                          <div class="col-1">
+                                                                                               <span>
+                                                                                                    <button mat-mini-fab
+                                                                                                         color="primary">
+                                                                                                         <mat-icon
+                                                                                                              class="col-white">delete</mat-icon>
+                                                                                                    </button>
+
+                                                                                               </span>
+                                                                                          </div>
+                                                                                     </div>
+                                                                                     <div class="mr-2 chat-msg">
+                                                                                          <p>Its good. We completed
+                                                                                               almost all task assign by
+                                                                                               our manager.</p>
+                                                                                          <div class="row">
+                                                                                          </div>
+                                                                                     </div>
+                                                                                </li>
+                                                                                <li class="note-card">
+                                                                                     <div
+                                                                                          class="message-data d-flex chat-p mt-2">
+                                                                                          <div class="col-11">
+                                                                                               <span
+                                                                                                    class="message-data-name"><img
+                                                                                                         style="border-radius: 50%;"
+                                                                                                         src="assets/images/user/user2.jpg"
+                                                                                                         alt="avatar">
+                                                                                               </span>
+                                                                                               <span
+                                                                                                    class="message-data-time">10:12
+                                                                                                    AM, Today</span>
+                                                                                          </div>
+                                                                                          <div class="col-1">
+                                                                                               <span>
+                                                                                                    <button mat-mini-fab
+                                                                                                         color="primary">
+                                                                                                         <mat-icon
+                                                                                                              class="col-white">delete</mat-icon>
+                                                                                                    </button>
+
+                                                                                               </span>
+                                                                                          </div>
+                                                                                     </div>
+                                                                                     <div class="mr-2 chat-msg">
+                                                                                          <p>Its good. We completed
+                                                                                               almost all task assign by
+                                                                                               our manager.</p>
+                                                                                          <div class="row">
+                                                                                          </div>
+                                                                                     </div>
+                                                                                </li>
+
+                                                                           </ul>
+                                                                      </div>
+                                                                 </ng-scrollbar>
+
+                                                            </div>
+                                                       </div>
+                                                  </div>
+                                             </mat-expansion-panel>
+                                             <mat-expansion-panel (opened)="panelOpenState = true"
+                                                  (closed)="panelOpenState = false">
+                                                  <mat-expansion-panel-header>
+                                                       <mat-panel-title>
+                                                            Supporting Documents
+                                                       </mat-panel-title>
+
+                                                  </mat-expansion-panel-header>
+                                                  <div class="body">
+                                                       <div class="doc-file-type">
+                                                            <ng-scrollbar style="height: 285px" visibility="hover">
+                                                                 <ul class="list-unstyled">
+                                                                      <div class="row"> <button mat-raised-button
+                                                                                color="primary">{{'COMMON.ACTIONS.SAVE'|
+                                                       translate}}</button></div>
+                                                                      <li class="d-flex mb-3 mt-2">
+                                                                           <span
+                                                                                class="msr-3 align-self-center img-icon primary-rgba text-primary"><i
+                                                                                     class="far fa-file-word"></i></span>
+                                                                           <div class="set-flex">
+                                                                                <h5 class="font-16 mb-1">Java
+                                                                                     Programming</h5>
+                                                                                <p>04/20/2023, 04:31 PM</p>
+                                                                           </div>
+                                                                           <span style="height: 25px;"
+                                                                                class="badge badge-solid-red">
+                                                                                Invoice</span>
+
+
+                                                                           <div class="ms-auto">
+                                                                                <td>
+                                                                                     <button mat-mini-fab
+                                                                                          style="margin-right: 3px;">
+                                                                                          <mat-icon
+                                                                                               class="col-white ">delete</mat-icon>
+                                                                                     </button>
+                                                                                     <button mat-mini-fab
+                                                                                          color="primary">
+                                                                                          <mat-icon
+                                                                                               class="col-white">download</mat-icon>
+                                                                                     </button>
+                                                                                </td>
+                                                                           </div>
+                                                                      </li>
+                                                                      <li class="d-flex mb-3">
+                                                                           <span
+                                                                                class="msr-3 align-self-center img-icon success-rgba text-success"><i
+                                                                                     class="far fa-file-excel"></i></span>
+                                                                           <div class="set-flex">
+                                                                                <h5 class="font-16 mb-1">Angular Theory
+                                                                                </h5>
+                                                                                <p>04/20/2023, 04:31 PM</p>
+                                                                           </div>
+                                                                           <span style="height: 25px;"
+                                                                                class="badge badge-solid-blue">
+                                                                                P.O.</span>
+                                                                           <div class="ms-auto">
+                                                                                <td>
+                                                                                     <button mat-mini-fab
+                                                                                          style="margin-right: 3px;">
+                                                                                          <mat-icon
+                                                                                               class="col-white ">delete</mat-icon>
+                                                                                     </button>
+                                                                                     <button mat-mini-fab
+                                                                                          color="primary">
+                                                                                          <mat-icon
+                                                                                               class="col-white">download</mat-icon>
+                                                                                     </button>
+                                                                                </td>
+                                                                           </div>
+                                                                      </li>
+                                                                      <li class="d-flex mb-3">
+                                                                           <span
+                                                                                class="msr-3 align-self-center img-icon danger-rgba text-danger"><i
+                                                                                     class="far fa-file-pdf"></i></span>
+                                                                           <div class="set-flex">
+                                                                                <h5 class="font-16 mb-1">Maths Sums
+                                                                                     Solution</h5>
+                                                                                <p>04/20/2023, 04:31 PM</p>
+                                                                           </div>
+                                                                           <span style="height: 25px;" class="badge badge-solid-orange
+                                                                                ">
+                                                                                Packing Slip</span>
+                                                                           <div class="ms-auto">
+                                                                                <td>
+                                                                                     <button mat-mini-fab
+                                                                                          style="margin-right: 3px;">
+                                                                                          <mat-icon
+                                                                                               class="col-white ">delete</mat-icon>
+                                                                                     </button>
+                                                                                     <button mat-mini-fab
+                                                                                          color="primary">
+                                                                                          <mat-icon
+                                                                                               class="col-white">download</mat-icon>
+                                                                                     </button>
+                                                                                </td>
+                                                                           </div>
+                                                                      </li>
+                                                                      <li class="d-flex mb-3">
+                                                                           <span
+                                                                                class="msr-3 align-self-center img-icon info-rgba text-info"><i
+                                                                                     class="far fa-file-archive"></i></span>
+                                                                           <div class="set-flex">
+                                                                                <h5 class="font-16 mb-1">Submit Science
+                                                                                     Journal</h5>
+                                                                                <p>04/20/2023, 04:31 PM</p>
+                                                                           </div>
+                                                                           <span style="height: 25px;" class="badge badge-solid-green
+                                                                           ">
+                                                                                Reciving Slip</span>
+                                                                           <div class="ms-auto">
+                                                                                <td>
+                                                                                     <button mat-mini-fab
+                                                                                          style="margin-right: 3px;">
+                                                                                          <mat-icon
+                                                                                               class="col-white ">delete</mat-icon>
+                                                                                     </button>
+                                                                                     <button mat-mini-fab
+                                                                                          color="primary">
+                                                                                          <mat-icon
+                                                                                               class="col-white">download</mat-icon>
+                                                                                     </button>
+                                                                                </td>
+                                                                           </div>
+                                                                      </li>
+                                                                      <li class="d-flex mb-3">
+                                                                           <span
+                                                                                class="msr-3 align-self-center img-icon primary-rgba text-primary"><i
+                                                                                     class="far fa-file-word"></i></span>
+                                                                           <div class="set-flex">
+                                                                                <h5 class="font-16 mb-1">Marketing
+                                                                                     Instructions</h5>
+                                                                                <p>04/20/2023, 04:31 PM</p>
+                                                                           </div>
+                                                                           <span style="height: 25px;" class="badge badge-solid-cyan
+                                                                           ">
+                                                                                Quote</span>
+                                                                           <div class="ms-auto">
+                                                                                <td>
+                                                                                     <button mat-mini-fab
+                                                                                          style="margin-right: 3px;">
+                                                                                          <mat-icon
+                                                                                               class="col-white ">delete</mat-icon>
+                                                                                     </button>
+                                                                                     <button mat-mini-fab
+                                                                                          color="primary">
+                                                                                          <mat-icon
+                                                                                               class="col-white">download</mat-icon>
+                                                                                     </button>
+                                                                                </td>
+                                                                           </div>
+                                                                      </li>
+                                                                 </ul>
+                                                            </ng-scrollbar>
+
+                                                       </div>
+                                                  </div>
+                                             </mat-expansion-panel>
+                                        </mat-accordion>
+                                   </div>
+                              </div>
+                              <div class="card  activity mt-2 position-f">
+                                   <div class="header">
+                                        <h2>Info</h2>
+                                        <span style="height: 10px;">
+
+
+                                             <mat-icon class="col-gray mt-1">add</mat-icon>
+
+                                        </span>
+                                   </div>
+                                   <div class="body">
+                                        <div class="list-group">
+                                             <div class="body">
+
+                                                  <div class="body table-responsive">
+                                                       <table class="table">
+                                                            <thead>
+                                                                 <tr>
+                                                                      <th>Total amount</th>
+                                                                      <th>cost code</th>
+                                                                      <th>Assign To</th>
+                                                                      <th>GL Account</th>
+                                                                      <th>Notes</th>
+                                                                 </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                 <tr>
+                                                                      <th>55.00</th>
+                                                                      <td>Cost Code</td>
+                                                                      <td>Assign To</td>
+                                                                      <td>GL Account</td>
+                                                                      <td>Notes</td>
+                                                                 </tr>
+                                                            </tbody>
+                                                       </table>
+                                                  </div>
+
+
+                                             </div>
+
+                                        </div>
+                                   </div>
+                              </div>
+                         </div>
+                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                              <div class="card" style="height: 770px; width:790px">
+                                   <!-- <div class="header">
+                                        <h2>Preview</h2>
+                                   </div>
+                                   <div class="body">
+                                        <img src="assets/images/full_bg.jpg" height="690px" width="760px" alt="">
+                                   </div> -->
+                                   <app-custompdfviewer [pdf_url]="pdf_url"></app-custompdfviewer>
+                                   <!-- <div class="pdf-viewer">
+                                        <pdf-viewer id="pdf" [src]="pdf_url" [rotation]="0" [original-size]="false"
+                                             [show-all]="true" [fit-to-page]="false" [zoom]="1"
+                                             [zoom-scale]="'page-width'" [stick-to-page]="false" [render-text]="true"
+                                             [external-link-target]="'blank'" [autoresize]="true" [show-borders]="false"
+                                             [external-link-target]="'blank'"></pdf-viewer>
+                                   </div> -->
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+     </div>
+</section>

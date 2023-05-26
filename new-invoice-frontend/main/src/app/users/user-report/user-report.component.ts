@@ -34,22 +34,9 @@ export class UserReportComponent {
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
-  constructor (public uiSpinner: UiSpinnerService, public dialogRef: MatDialogRef<UserReportComponent>, private snackBar: MatSnackBar,
+  constructor(public uiSpinner: UiSpinnerService, public dialogRef: MatDialogRef<UserReportComponent>, private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: any, public UserReporService: UserService, private fb: UntypedFormBuilder, private commonService: CommonService
   ) {
-    console.log("data", data.roleList);
-
-    // Set the defaults
-    /* this.action = 'insert';
-    if (this.action === 'edit') {
-      this.dialogTitle =
-        data.advanceTable.fName + ' ' + data.advanceTable.lName;
-      this.advanceTable = data.advanceTable;
-    } else {
-      this.dialogTitle = 'New Record';
-      const blankObject = {} as AdvanceTable;
-      this.advanceTable = new AdvanceTable(blankObject);
-    } */
     this.roleLists = data.roleList;
     this.userInfo = this.fb.group({
       All_Roles: [true],

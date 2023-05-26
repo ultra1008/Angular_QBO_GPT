@@ -16,9 +16,12 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { map } from 'rxjs/operators';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
-import { formatPhoneNumber, showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
+import {
+  formatPhoneNumber,
+  showNotification,
+  swalWithBootstrapTwoButtons,
+} from 'src/consts/utils';
 import { TranslateService } from '@ngx-translate/core';
-import { Direction } from '@angular/cdk/bidi';
 import { UserRestoreFormComponent } from '../user-restore-form/user-restore-form.component';
 import { UserReportComponent } from '../user-report/user-report.component';
 import { UntypedFormBuilder } from '@angular/forms';
@@ -31,7 +34,10 @@ import { CommonService } from 'src/app/services/common.service';
   styleUrls: ['./users-listing.component.scss'],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
 })
-export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
+export class UsersListingComponent
+  extends UnsubscribeOnDestroyAdapter
+  implements OnInit
+{
   displayedColumns = [
     'select',
     'img',
@@ -49,7 +55,7 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
   selection = new SelectionModel<User>(true, []);
   isDelete = 0;
   advanceTable?: User;
-  titleMessage = "";
+  titleMessage = '';
   roleLists: Array<RoleModel> = [];
   userSelectForm?: any;
   selectedValue!: string;
@@ -60,14 +66,16 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
 
-  constructor (
-    public httpClient: HttpClient, private httpCall: HttpCall,
+  constructor(
+    public httpClient: HttpClient,
+    private httpCall: HttpCall,
     public dialog: MatDialog,
-    private snackBar: MatSnackBar, private router: Router,
+    private snackBar: MatSnackBar,
+    private router: Router,
     public userTableService: UserService,
     public translate: TranslateService,
     private fb: UntypedFormBuilder,
-    private commonService: CommonService,
+    private commonService: CommonService
   ) {
     super();
   }
@@ -77,7 +85,8 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
       userstatus: [''],
     });
     this.getRole();
-    const userDisplay = localStorage.getItem(localstorageconstants.USER_DISPLAY) ?? 'list';
+    const userDisplay =
+      localStorage.getItem(localstorageconstants.USER_DISPLAY) ?? 'list';
     if (userDisplay == 'list') {
       this.loadData();
     } else {
@@ -112,7 +121,6 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
   }
   onBookChange(ob: any) {
     const selectedBook = ob.value;
-    console.log(selectedBook);
     if (selectedBook == 1) {
       swalWithBootstrapTwoButtons
         .fire({
@@ -127,8 +135,7 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
             this.allUserActive();
           }
         });
-    }
-    else if (selectedBook == 2) {
+    } else if (selectedBook == 2) {
       swalWithBootstrapTwoButtons
         .fire({
           title: 'Are you sure you want to Inactive all user?',
@@ -140,7 +147,6 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
         .then((result) => {
           if (result.isConfirmed) {
             this.allUserInactive();
-
           }
         });
     } else if (selectedBook == 3) {
@@ -164,7 +170,10 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
     }
-    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_TERM_ALL_DELETE, { _id: tmp_ids, is_delete: 1 });
+    const data = await this.commonService.postRequestAPI(
+      httpversion.PORTAL_V1 + httproutes.PORTAL_TERM_ALL_DELETE,
+      { _id: tmp_ids, is_delete: 1 }
+    );
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       this.refresh();
@@ -177,9 +186,11 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
     const tmp_ids = [];
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
-      console.log("tmp_ids", tmp_ids);
     }
-    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_USER_STATUS_UPDATE, { _id: tmp_ids, userstatus: 1 });
+    const data = await this.commonService.postRequestAPI(
+      httpversion.PORTAL_V1 + httproutes.PORTAL_USER_STATUS_UPDATE,
+      { _id: tmp_ids, userstatus: 1 }
+    );
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       this.refresh();
@@ -193,7 +204,10 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
     }
-    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_USER_STATUS_UPDATE, { _id: tmp_ids, userstatus: 2 });
+    const data = await this.commonService.postRequestAPI(
+      httpversion.PORTAL_V1 + httproutes.PORTAL_USER_STATUS_UPDATE,
+      { _id: tmp_ids, userstatus: 2 }
+    );
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       this.refresh();
@@ -202,13 +216,15 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
     }
   }
 
-
   async updateStatus(User: User) {
     let status = 1;
     if (User.userstatus == 1) {
       status = 2;
     }
-    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_ALL_USER_STATUS_CHANGE, { _id: User._id, userstatus: status });
+    const data = await this.commonService.postRequestAPI(
+      httpversion.PORTAL_V1 + httproutes.PORTAL_ALL_USER_STATUS_CHANGE,
+      { _id: User._id, userstatus: status }
+    );
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       const foundIndex = this.userService?.dataChange.value.findIndex(
@@ -228,13 +244,15 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
     const numRows = this.dataSource.renderedData.length;
     return numSelected === numRows;
   }
+
   masterToggle() {
     this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.renderedData.forEach((row) =>
-        this.selection.select(row)
-      );
+          this.selection.select(row)
+        );
   }
+
   userReport() {
     const dialogRef = this.dialog.open(UserReportComponent, {
       width: '700px',
@@ -244,7 +262,7 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
       },
     });
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-      //  
+      //
     });
   }
 
@@ -257,7 +275,7 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
       this.userService,
       this.paginator,
       this.sort,
-      this.isDelete,
+      this.isDelete
     );
     this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
       () => {
@@ -284,13 +302,40 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
     return formatPhoneNumber(data);
   }
 
-
   gotoArchiveUnarchive() {
     this.isDelete = this.isDelete == 1 ? 0 : 1;
+    if (this.isDelete === 0) {
+      this.displayedColumns = [
+        'select',
+        'img',
+        'userfullname',
+        'useremail',
+        'userphone',
+        'role_name',
+        'userjob_title_name',
+        'department_name',
+        'userstatus',
+        'actions',
+      ];
+    } else {
+      this.displayedColumns = [
+        'img',
+        'userfullname',
+        'useremail',
+        'userphone',
+        'role_name',
+        'userjob_title_name',
+        'department_name',
+        'userstatus',
+        'actions',
+      ];
+    }
     this.loadData();
   }
   async getRole() {
-    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.USER_SETTING_ROLES_ALL);
+    const data = await this.commonService.getRequestAPI(
+      httpversion.PORTAL_V1 + httproutes.USER_SETTING_ROLES_ALL
+    );
     if (data.status) {
       this.roleLists = data.data;
     }
@@ -301,7 +346,10 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
     this.router.navigate([WEB_ROUTES.USER_GRID]);
   }
   async archiveRecover(user: User, is_delete: number) {
-    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.USER_DELETE, { _id: user._id, is_delete: is_delete });
+    const data = await this.commonService.postRequestAPI(
+      httpversion.PORTAL_V1 + httproutes.USER_DELETE,
+      { _id: user._id, is_delete: is_delete }
+    );
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       const foundIndex = this.userService?.dataChange.value.findIndex(
@@ -319,27 +367,25 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
 
   async deleteUser(user: User, is_delete: number) {
     if (is_delete == 1) {
-      this.titleMessage = "Are you sure you want to archive this user?";
+      this.titleMessage = 'Are you sure you want to archive this user?';
     } else {
-      this.titleMessage = "Are you sure you want to restore this user?";
+      this.titleMessage = 'Are you sure you want to restore this user?';
     }
     swalWithBootstrapTwoButtons
       .fire({
         title: this.titleMessage,
         showDenyButton: true,
-        confirmButtonText: "Yes",
-        denyButtonText: "No",
+        confirmButtonText: 'Yes',
+        denyButtonText: 'No',
         allowOutsideClick: false,
       })
       .then((result) => {
-
         if (result.isConfirmed) {
           if (is_delete == 1) {
             this.archiveRecover(user, is_delete);
           } else {
             this.addNew(user);
           }
-
         }
       });
   }
@@ -347,37 +393,22 @@ export class UsersListingComponent extends UnsubscribeOnDestroyAdapter implement
   addNew(user: User) {
     const _id = user._id;
     const dialogRef = this.dialog.open(UserRestoreFormComponent, {
-      data: _id
+      data: _id,
     });
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
       if (result === 1) {
-        // After dialog is closed we're doing frontend updates
-        // For add we're just pushing a new row inside DataService
-        // this.exampleDatabase?.dataChange.value.unshift(
-        //   this.advanceTableService.getDialogData()
-        // );
-
-        // this.showNotification(
-        //   'snackbar-success',
-        //   'Add Record Successfully...!!!',
-        //   'bottom',
-        //   'center'
-        // );
       }
     });
-
   }
   addNewUser() {
     this.router.navigate([WEB_ROUTES.USER_FORM]);
   }
   editUser(user: User) {
-    this.router.navigate([WEB_ROUTES.USER_FORM], { queryParams: { _id: user._id } });
+    this.router.navigate([WEB_ROUTES.USER_FORM], {
+      queryParams: { _id: user._id },
+    });
   }
-
 }
-
-
-
 
 // This class is used for datatable sorting and searching
 export class UserDataSource extends DataSource<User> {
@@ -390,11 +421,11 @@ export class UserDataSource extends DataSource<User> {
   }
   filteredData: User[] = [];
   renderedData: User[] = [];
-  constructor (
+  constructor(
     public userService: UserService,
     public paginator: MatPaginator,
     public _sort: MatSort,
-    public isDelete: number,
+    public isDelete: number
   ) {
     super();
     // Reset to the first page when the user changes the filter.

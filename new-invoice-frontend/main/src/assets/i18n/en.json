@@ -50,9 +50,14 @@
             "ARCHIVED_TITLE": "Archived Vendor"
         },
         "TABLE": {
+            "VENDOR_IMAGE": "Image",
             "VENDOR_NAME": "Vendor Name",
             "VENDOR_ID": "Vendor ID",
             "CUSTOMER_ID": "Customer ID",
+            "INVOICE": "Invoice",
+            "OPEN_INVOICE": "Open Invoice",
+            "AMOUNT_PAID": "Amount Paid This Year",
+            "AMOUNT_OPEN": "Amount Open",
             "PHONE": "Phone",
             "EMAIL": "Email",
             "ADDRESS": "Address",
@@ -173,7 +178,7 @@
             "USAGE": "Usage",
             "OTHER_SETTINGS": "Other Settings",
             "SECURITY": "Security",
-            "COST_CODE": "Cost Code",
+            "COST_CODE": "Cost Code/GL Account",
             "DOCUMENT_VIEW": "Document View",
             "SECURITY_MODULE": {
                 "ALERT_SURE_WANT_CHANGE": "This is a global setting that will affect all projects. Are you sure you want to make the change?",
@@ -215,6 +220,7 @@
             },
             "COST_CODE_MODULE": {
                 "DIVISON": "Divison",
+                "GL_ACCOUNTS": "GL account type/cost code type",
                 "DISCRIPTION": "Description",
                 "HEADER_ARCHIVE": "Archive Cost Code",
                 "CONFIRMATION_DIALOG": {
@@ -229,6 +235,9 @@
                 "TAX_RATE": "Tax Rate",
                 "DOCUMENT": "Documents",
                 "VENDOR_TYPE": "Vendor Type",
+                "CLASS_NAME": "Class Name",
+                "NUMBER": "Number",
+                "DESCRIPTION": "Description",
                 "JOB_NAME": "Job Name",
                 "JOB_CONTACT_EMAIL": "Job Contact Email",
                 "DUE_DAYS": "Due Days",
@@ -242,7 +251,8 @@
                     "TAX_RATE": "Are you sure you want to delete tax rate?",
                     "DOCUMENT": "Are you sure you want to delete Document?",
                     "VENDOR_TYPE": "Are you sure you want to delete vendor type?",
-                    "JOB_NAME": "Are you sure you want to delete job name?"
+                    "JOB_NAME": "Are you sure you want to delete job name?",
+                    "CLASS_NAME": "Are you sure you want to delete class name?"
                 }
             },
             "EMPLOYEE_MODULE": {
@@ -328,8 +338,8 @@
         },
         "TABLE": {
             "DOCUMENT_TYPE": "Document Type",
-            "PO_NO": "PO NO",
-            "INVOICE_NO": "Invoice No",
+            "PO_NO": "P.O. Number",
+            "INVOICE_NO": "Invoice Number",
             "VENDOR_NAME": "Vendor Name",
             "UPDATED_BY": "Updated By",
             "UPDATED_AT": "Updated At",
@@ -364,6 +374,55 @@
             "SUBMIT": "Please complete the emergency form before submitting.",
             "SAVING": "Are you sure you want to close this window without saving changes?",
             "DELETE": "Are you sure you want to delete this emergency?"
+        }
+    },
+    "CLIENT": {
+        "VIEW": {
+            "TITLE": "Client/Job Name",
+            "ARCHIVED_TITLE": "Archived Client/Job Name"
+        },
+        "TABLE": {
+            "CLIENT_NAME": "Client/Job Name",
+            "CLIENT_NUMBER": "Client Number",
+            "JOB_CONTACT_EMAIL": "Job Contact Email",
+            "APPROVER": "Approver",
+            "COST_CODE": "Cost Code",
+            "STATUS": "Status",
+            "ACTIONS": "Action"
+        },
+        "ADD_EDIT": {
+            "ADD_TITLE": "Add Client/Job Name",
+            "EDIT_TITLE": "Edit Client/Job Name",
+            "COST_GL": "Cost Code/GL Account",
+            "STATUS": "Status",
+            "NOTES": "Notes"
+        },
+        "HISTORY": {
+            "TITLE": "Client/Job Name History"
+        },
+        "CONFIRMATION_DIALOG": {
+            "SUBMIT": "Please complete the Client/Job Name form before submitting.",
+            "SAVING": "Are you sure you want to close this window without saving changes?",
+            "ARCHIVE": "Are you sure you want to archive this Client/Job Name?",
+            "RESTORE": "Are you sure you want to restore this Client/Job Name?",
+            "ALL_ACTIVE": "Are you sure you want to active all Client/Job Name?",
+            "ALL_INACTIVE": "Are you sure you want to Inactive all Client/Job Name?",
+            "ALL_ARCHIVE": "Are you sure you want to archive all Client/Job Name?"
+        }
+    },
+    "DOCUMENT": {
+        "TITLE": "Document",
+        "ADD": "Add Document",
+        "EDIT": "Edit Document",
+        "FORM": {
+            "DOCUMENT_TYPE": "Document Type",
+            "EXPIRATION_DATE": "Expiration Date",
+            "DOCUMENT": "Document"
+        },
+        "CONFIRMATION_DIALOG": {
+            "SUBMIT": "Please complete the document form before submitting.",
+            "SAVING": "Are you sure you want to close this window without saving changes?",
+            "DELETE": "Are you sure you want to delete this document?"
         }
     }
 }

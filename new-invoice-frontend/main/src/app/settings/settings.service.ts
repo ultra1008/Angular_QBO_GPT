@@ -4,6 +4,7 @@ import { HttpCall } from '../services/httpcall.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { BehaviorSubject } from 'rxjs';
 import {
+  ClassNameTable,
   CostCodeTable,
   DepartmentTable,
   DocumentTable,
@@ -82,6 +83,10 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     JobNameTable[]
   >([]);
 
+  dataclassnameChange: BehaviorSubject<ClassNameTable[]> = new BehaviorSubject<
+    ClassNameTable[]
+  >([]);
+
   constructor(private httpCall: HttpCall) {
     super();
   }
@@ -139,6 +144,10 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
 
   get dataJobname(): JobNameTable[] {
     return this.dataJobnameChange.value;
+  }
+
+  get dataClassname(): ClassNameTable[] {
+    return this.dataclassnameChange.value;
   }
   async getCompanyType() {
     const data = await this.httpCall
@@ -301,6 +310,17 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     // Only write this for datatable api otherwise return data
     this.isTblLoading = false;
     this.dataJobnameChange.next(data);
+  }
+
+  async getAllClassNameTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall
+      .httpPostCall(httpversion.PORTAL_V1 + httproutes.CLASS_NAME_DATA_TABLE, {
+        is_delete: is_delete,
+      })
+      .toPromise();
+    // Only write this for datatable api otherwise return data
+    this.isTblLoading = false;
+    this.dataclassnameChange.next(data);
   }
 
   async getAllCostCodeTable(is_delete: number): Promise<void> {
@@ -639,6 +659,15 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     return data;
   }
 
+  async DeleteClassName(_id: string) {
+    const data = await this.httpCall
+      .httpPostCall(httpversion.PORTAL_V1 + httproutes.DELETE_CLASS_NAME, {
+        _id: _id,
+      })
+      .toPromise();
+    return data;
+  }
+
   addAdvanceTable(Document: Settings): void {
     this.dialogData = Document;
   }
@@ -727,6 +756,16 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     const data = await this.httpCall
       .httpPostCall(
         httpversion.PORTAL_V1 + httproutes.OTHER_SETTING_SAVE_JOB_NAME,
+        requestObject
+      )
+      .toPromise();
+    return data;
+  }
+
+  async saveClassName(requestObject: any) {
+    const data = await this.httpCall
+      .httpPostCall(
+        httpversion.PORTAL_V1 + httproutes.SAVE_CLASS_NAME,
         requestObject
       )
       .toPromise();

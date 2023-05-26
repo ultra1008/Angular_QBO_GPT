@@ -10,12 +10,16 @@ export enum httproutes {
   GET_COMPANY_SETTINGS = 'getcompanysetting',
   USER_LOGIN = 'login',
   GET_USER_COMPANY = 'getlogincompanylist',
+  GET_MY_COMPANY_LIST = 'getmycompanylist',
   SEND_OTP_EMAIL = 'sendemailotp',
   EMAIL_FORGET_PASSWORD = 'emailforgotpassword',
   SEND_EMAIL_FORGET_PASSWORD = 'sendemailforgotpassword',
   SUBMITT_OTP = 'submitemailotp',
   LOGIN_WITH_OTP = 'loginwithemailotp',
   CHANGEPASSWORD = 'changepassword',
+
+  // Dashboard
+  GET_DASHBOARD_INVOICE = 'getdashboardinvoice',
 
   // Vendor
   PORTAL_VENDOR_GET_FOR_TABLE = 'getvendorfortable',
@@ -70,12 +74,20 @@ export enum httproutes {
   SAVE_USER_MOBILE_PIC = 'savemobilephoto',
   SAVE_USER_PASSWORD = 'senduserpassword',
 
+
   // Emergency Contact
   GET_EMERGENCY_CONTACT = 'getemergencycontact',
   GET_ONE_EMERGENCY_CONTACT = 'getoneemergencycontact',
   SAVE_EMERGENCY_CONTACT = 'saveemergencycontact',
   DELETE_EMERGENCY_CONTACT = 'deleteemergencycontact',
   GET_RELATIONSHIP = 'getallrelationships',
+
+  // User Document
+  GET_USER_DOCUMENT = 'getuserdocument',
+  GET_ONE_USER_DOCUMENT = 'getoneuserdocument',
+  SAVE_USER_DOCUMENT = 'saveuserdocument',
+  EDIT_USER_DOCUMENT = 'edituserdocument',
+  DELETE_USER_DOCUMENT = 'deleteuserdocument',
 
   //Mail box
   MAILBOX_DATA_TABLE = 'getMailboxMonitorForTable',
@@ -146,6 +158,9 @@ export enum httproutes {
   OTHER_SETTINGS_GET_JOB_NAME = 'getjobname',
   OTHER_SETTING_DELETE_JOB_NAME = 'deletejobname',
   OTHER_SETTINGS_IMPORT = 'importjobname',
+  CLASS_NAME_DATA_TABLE = 'getclassnameForTable ',
+  SAVE_CLASS_NAME = 'saveclassname',
+  DELETE_CLASS_NAME = 'deleteclassname',
 
   // Document_View
   INVOICE_OTHER_SETTING_UPDATE_ALERTS = 'getupdatesetting',
@@ -182,4 +197,11 @@ export enum httproutes {
   //clients
   GET_ALL_COSTCODE = 'getCostCode',
   SAVE_CLIENT = 'saveclient ',
+  CLIENT_DATA_TABLE = 'getClientForTable',
+  CLIENT_UPDATE_ALL_STATUS = 'updateMultipleClientStatus',
+  CLIENT_DELETE = 'deleteclient ',
+  CLIENT_GET_ONE = 'getOneClient',
+  CLIENT_UPDATE_STATUS = 'updateClientStatus',
+  CLIENT_ALL_DELETE = 'deleteMultipleClient ',
+  CLIENT_GET_HISTORY = 'getClinetHistory',
 }

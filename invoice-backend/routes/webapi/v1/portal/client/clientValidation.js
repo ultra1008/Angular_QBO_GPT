@@ -3,10 +3,7 @@ var validator = require("../../../../../controller/common/validationforrequest")
 const saveclientValidation = (req, res, next) => {
     const validationRule = {
         "client_name": "required",
-        "client_number": "required",
-        "client_phone": "required",
-        "client_email": "required",
-        "client_notes": "required",
+        "client_email": "required"
     };
     validator(req.body, validationRule, {}, (err, status) => {
         if (!status) {

@@ -18,6 +18,7 @@ import { ImportOtherSettingsComponent } from './import-other-settings/import-oth
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
+import { ClassNameFormComponent } from './class-name-form/class-name-form.component';
 
 @Component({
   selector: 'app-othersettings',
@@ -36,7 +37,7 @@ export class OthersettingsComponent {
     'Tax rate',
     'Documents',
     'Vendor type',
-    'Job name',
+    'Class name',
   ];
   @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
 
@@ -131,14 +132,21 @@ export class OthersettingsComponent {
       dialogRef.afterClosed().subscribe((result) => {
         this.getDataVendorType();
       });
-    } else if (this.currrent_tab == 'Job name') {
-      const dialogRef = this.dialog.open(JobNameFormComponent, {
+      // }
+      //  else if (this.currrent_tab == 'Job name') {
+      //   const dialogRef = this.dialog.open(JobNameFormComponent, {
+      //     width: '350px',
+      //     data: {},
+      //   });
+      //   dialogRef.afterClosed().subscribe((result) => {
+      //     this.getDataJobName();
+      //   });
+    } else if (this.currrent_tab == 'Class name') {
+      const dialogRef = this.dialog.open(ClassNameFormComponent, {
         width: '350px',
         data: {},
       });
-      dialogRef.afterClosed().subscribe((result) => {
-        this.getDataJobName();
-      });
+      dialogRef.afterClosed().subscribe((result) => {});
     }
   }
 
@@ -208,6 +216,20 @@ export class OthersettingsComponent {
 
       dialogRef.afterClosed().subscribe((result) => {
         this.getDataJobName();
+      });
+    }
+  }
+
+  editClassName(Classname: any) {
+    if (this.currrent_tab == 'Class name') {
+      const dialogRef = this.dialog.open(ClassNameFormComponent, {
+        width: '350px',
+        data: Classname,
+        disableClose: true,
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        location.reload();
       });
     }
   }
@@ -346,6 +368,32 @@ export class OthersettingsComponent {
       });
   }
 
+  async deleteClassName(ClassName: any) {
+    let that = this;
+    swalWithBootstrapButtons
+      .fire({
+        title: this.translate.instant(
+          'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CONFIRMATION_DIALOG.JOB_NAME'
+        ),
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+        denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+        allowOutsideClick: false,
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          const data = await this.SettingsServices.DeleteJobName(ClassName._id);
+          if (data.status) {
+            showNotification(this.snackBar, data.message, 'success');
+            that.getDataJobName();
+          } else {
+            showNotification(this.snackBar, data.message, 'error');
+          }
+        }
+      });
+  }
+
   importFileAction() {
     let el: HTMLElement = this.OpenFilebox.nativeElement;
     el.click();
@@ -392,6 +440,8 @@ export class OthersettingsComponent {
           httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_IMPORT_VENDOR_TYPE;
       } else if (that.currrent_tab == 'Job name') {
         apiurl = httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_IMPORT;
+      } else if (that.currrent_tab == 'Class name') {
+        apiurl = httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_IMPORT;
       }
 
       that.uiSpinner.spin$.next(true);
@@ -408,6 +458,8 @@ export class OthersettingsComponent {
             } else if (that.currrent_tab == 'Vendor type') {
               that.getDataVendorType();
             } else if (that.currrent_tab == 'Job name') {
+              that.getDataJobName();
+            } else if (that.currrent_tab == 'Class name') {
               that.getDataJobName();
             }
             // that.openErrorDataDialog(params);
@@ -466,6 +518,16 @@ export class OthersettingsComponent {
         this.getDataVendorType();
       });
     } else if (this.currrent_tab == 'Job name') {
+      const dialogRef = this.dialog.open(ImportOtherSettingsComponent, {
+        width: '500px',
+        data: this.currrent_tab,
+        disableClose: true,
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        this.getDataJobName();
+      });
+    } else if (this.currrent_tab == 'Class name') {
       const dialogRef = this.dialog.open(ImportOtherSettingsComponent, {
         width: '500px',
         data: this.currrent_tab,

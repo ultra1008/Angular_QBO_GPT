@@ -16,6 +16,10 @@ import { FormControl } from '@angular/forms';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { TranslateService } from '@ngx-translate/core';
 import { configData } from 'src/environments/configData';
+import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
+import { MatDialog } from '@angular/material/dialog';
+import { Direction } from '@angular/cdk/bidi';
+import { SwitchCompanyComponent } from './switch-company/switch-company.component';
 
 interface Notifications {
   message: string;
@@ -30,7 +34,7 @@ interface Notifications {
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnInit, AfterViewInit {
+export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnInit, AfterViewInit {
   public config!: InConfiguration;
   isNavbarCollapsed = true;
   isOpenSidebar?: boolean;
@@ -41,16 +45,11 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   darkIcon?: string;
   userName?: string;
   userPicture?: string;
-  constructor (
-    @Inject(DOCUMENT) private document: Document,
-    private renderer: Renderer2,
-    public elementRef: ElementRef,
-    private rightSidebarService: RightSidebarService,
-    private configService: ConfigService,
-    private authService: AuthService,
-    private router: Router,
-    public translate: TranslateService
-  ) { }
+  constructor (@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, public elementRef: ElementRef,
+    private rightSidebarService: RightSidebarService, private configService: ConfigService, private authService: AuthService,
+    private router: Router, public translate: TranslateService, public dialog: MatDialog,) {
+    super();
+  }
   notifications: Notifications[] = [
     {
       message: 'Please check your mail',
@@ -104,13 +103,11 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   ];
   ngOnInit() {
     this.config = this.configService.configData;
-    let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    const user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
     this.userName = user_data.UserData.userfullname;
     this.userPicture = user_data.UserData.userpicture;
 
-    var tmp_locallanguage = localStorage.getItem(
-      localstorageconstants.LANGUAGE
-    );
+    var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     tmp_locallanguage =
       tmp_locallanguage == '' ||
         tmp_locallanguage == undefined ||
@@ -340,5 +337,25 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     localStorage.setItem('choose_skin', 'theme-black');
     localStorage.setItem(localstorageconstants.DARKMODE, theme);
     localStorage.setItem('menuOption', menuOption);
+  }
+
+  switchCompany() {
+    let tempDirection: Direction;
+    if (localStorage.getItem('isRtl') === 'true') {
+      tempDirection = 'rtl';
+    } else {
+      tempDirection = 'ltr';
+    }
+    const dialogRef = this.dialog.open(SwitchCompanyComponent, {
+      width: '28%',
+      data: {
+        /* advanceTable: this.advanceTable,
+        action: 'add', */
+      },
+      direction: tempDirection,
+    });
+    this.subs.sink = dialogRef.afterClosed().subscribe((result: any) => {
+      //  
+    });
   }
 }

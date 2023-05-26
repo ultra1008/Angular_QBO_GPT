@@ -938,6 +938,19 @@ module.exports = {
     LanguageListing: "Language listing",
     LanguageUpdated: "Language updated successfully.",
     LanguageAdded: "Language added successfully.",
-    LanguageDeleted: "Language deleted successfully."
+    LanguageDeleted: "Language deleted successfully.",
+
+
+    Client_History: {
+        client_name: 'Client Name',
+        client_number: 'Client Number',
+        client_email: ' Client Contact Email',
+        client_status: 'Status',
+        client_notes: 'Client Note',
+        gl_account: ' Client GCL Account',
+        approver_id: 'Approved By',
+        Client_id: 'Client Id',
+        client_cost_cost_id: 'Client Costcode ',
+    },
 
 };

@@ -21,6 +21,7 @@ router.post('/webapi/v1/submitemailotp', authValidation.submitEmailOTP, authCont
 router.post('/webapi/v1/loginwithemailotp', authValidation.loginWithEmailOTP, authController.loginWithEmailOTP);
 router.post('/webapi/v1/emailforgotpassword', authValidation.emailForgotPassword, authController.emailForgotPassword);
 router.post('/webapi/v1/sendemailforgotpassword', authValidation.sendEmailForgotPassword, authController.sendEmailForgotPassword);
+router.post('/webapi/v1/getmycompanylist', authValidation.getMyCompanyList, authController.getMyCompanyList);
 
 var companySizeController = require('./company_size/companySizeController');
 var companySizeValidation = require('./company_size/companySizeValidation');
@@ -212,6 +213,7 @@ router.post('/webapi/v1/portal/sendemergencycontactreminder', common.checkTokenE
 let userDocumentController = require('./document/documentController');
 let userDocumentValidation = require('./document/documentValidation');
 router.post('/webapi/v1/portal/getuserdocument', common.checkTokenExistOrNot, userDocumentController.getUserDocument);
+router.post('/webapi/v1/portal/getoneuserdocument', common.checkTokenExistOrNot, userDocumentValidation.getOneUserDocument, userDocumentController.getOneUserDocument);
 router.post('/webapi/v1/portal/deleteuserdocument', common.checkTokenExistOrNot, userDocumentValidation.deleteDocumentValidation, userDocumentController.deleteUserDocument);
 router.post('/webapi/v1/portal/edituserdocument', common.checkTokenExistOrNot, userDocumentController.editUserDocument);
 
@@ -481,5 +483,14 @@ router.post('/webapi/v1/portal/updateMultipleClientStatus', common.checkTokenExi
 router.post('/webapi/v1/portal/deleteMultipleClient', common.checkTokenExistOrNot, clientController.deleteMultipleClient);
 router.post('/webapi/v1/portal/getClientForTable', common.checkTokenExistOrNot, clientController.getClientForTable);
 router.post('/webapi/v1/portal/getOneClient', common.checkTokenExistOrNot, clientController.getOneClient);
+
+
+Class_nameController = require('./class_name/class_nameController');
+Class_nameValidation = require('./class_name/class_nameValidation');
+router.post('/webapi/v1/portal/saveclassname', common.checkTokenExistOrNot, Class_nameController.saveclassname);
+router.post('/webapi/v1/portal/deleteclassname', common.checkTokenExistOrNot, Class_nameController.deleteclassname);
+router.get('/webapi/v1/portal/getclassname', common.checkTokenExistOrNot, Class_nameController.getclassname);
+router.post('/webapi/v1/portal/getclassnameForTable', common.checkTokenExistOrNot, Class_nameController.getclassnameForTable);
+router.post('/webapi/v1/portal/importclassname', common.checkTokenExistOrNot, Class_nameController.importclassname);
 
 module.exports = router;

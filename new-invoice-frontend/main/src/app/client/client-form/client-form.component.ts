@@ -15,7 +15,7 @@ import {
 } from 'ngx-gallery-9';
 import { CommonService } from 'src/app/services/common.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
-import { TermModel, CountryModel } from 'src/app/vendors/vendor-table.model';
+import { TermModel, CountryModel } from 'src/app/vendors/vendor.model';
 import { VendorsService } from 'src/app/vendors/vendors.service';
 import { WEB_ROUTES } from 'src/consts/routes';
 import {
@@ -53,7 +53,7 @@ export class ClientFormComponent {
   titleMessage: string = '';
   show: boolean = false;
 
-  constructor(
+  constructor (
     private fb: UntypedFormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
@@ -68,16 +68,16 @@ export class ClientFormComponent {
 
     this.vendorForm = this.fb.group({
       client_name: ['', [Validators.required]],
-      client_number: ['', [Validators.required]],
+      client_number: [''],
       client_email: [
         '',
         [Validators.required, Validators.email, Validators.minLength(5)],
       ],
       gl_account: ['642ab08828667a73474c3c10'],
-      client_phone: ['', [Validators.required]],
-      client_cost_cost_id: ['', [Validators.required]],
-      approver_id: ['', [Validators.required]],
-      client_status: ['', [Validators.required]],
+      client_phone: [''],
+      client_cost_cost_id: [''],
+      approver_id: [''],
+      client_status: [''],
       client_notes: [''],
     });
     this.getapprover();
@@ -88,28 +88,21 @@ export class ClientFormComponent {
   }
 
   async getOneVendor() {
-    const data = await this.vendorService.getOneVendor(this.id);
+    const data = await this.vendorService.getOneClient(this.id);
     if (data.status) {
-      const vendorData = data.data;
+      const clientData = data.data;
       this.vendorForm = this.fb.group({
-        vendor_name: [vendorData.vendor_name, [Validators.required]],
-        vendor_phone: [vendorData.vendor_phone, [Validators.required]],
-        vendor_email: [
-          vendorData.vendor_email,
+        client_name: [clientData.client_name, [Validators.required]],
+        client_number: [clientData.client_number],
+        client_email: [
+          clientData.client_email,
           [Validators.required, Validators.email, Validators.minLength(5)],
         ],
-        gl_account: [vendorData.gl_account],
-        vendor_id: [vendorData.vendor_id],
-        customer_id: [vendorData.customer_id],
-        vendor_address: [vendorData.vendor_address, [Validators.required]],
-        vendor_address2: [vendorData.vendor_address2],
-        vendor_city: [vendorData.vendor_city, [Validators.required]],
-        vendor_state: [vendorData.vendor_state, [Validators.required]],
-        vendor_zipcode: [vendorData.vendor_zipcode, [Validators.required]],
-        vendor_country: [vendorData.vendor_country],
-        vendor_terms: [vendorData.vendor_terms, [Validators.required]],
-        vendor_status: [vendorData.vendor_status, [Validators.required]],
-        vendor_description: [vendorData.vendor_description],
+        client_cost_cost_id: [clientData.client_cost_cost_id],
+        approver_id: [clientData.approver_id],
+        customer_id: [clientData.customer_id],
+        client_status: [clientData.client_status],
+        client_notes: [clientData.client_notes],
       });
 
       this.vendorForm.markAllAsTouched();

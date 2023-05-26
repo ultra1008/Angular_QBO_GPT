@@ -470,4 +470,18 @@ export const configData = {
     { name: 'Alert', key: 'Alert' },
     { name: 'Notification', key: 'Notification' },
   ],
+  DOCUMENT_TYPE_LIST: [
+    { name: 'Invoice', key: 'INVOICE' },
+    { name: 'PO', key: 'PURCHASE_ORDER' },
+    { name: 'Packing Slip', key: 'PACKING_SLIP' },
+    { name: 'Receiving Slip', key: 'RECEIVING_SLIP' },
+    { name: 'Quote', key: 'QUOTE' },
+  ],
+  DOCUMENT_TYPES: {
+    po: 'PURCHASE_ORDER',
+    packingSlip: 'PACKING_SLIP',
+    receivingSlip: 'RECEIVING_SLIP',
+    quote: 'QUOTE',
+    invoice: 'INVOICE'
+  }
 };

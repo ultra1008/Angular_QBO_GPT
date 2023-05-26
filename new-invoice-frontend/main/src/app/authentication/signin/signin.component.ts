@@ -148,7 +148,7 @@ export class SigninComponent implements OnInit {
           this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);
         } else {
           setTimeout(() => {
-            this.router.navigate(['/dashboard/main']);
+            this.router.navigate([WEB_ROUTES.DASHBOARD]);
           }, 300);
         }
         localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.user_data.token);
@@ -234,7 +234,7 @@ export class SigninComponent implements OnInit {
               if (res) {
                 const token = this.authService.currentUserValue.token;
                 if (token) {
-                  this.router.navigate(['/dashboard/main']);
+                  this.router.navigate([WEB_ROUTES.DASHBOARD]);
                 }
               } else {
                 this.error = 'Invalid Login';
@@ -270,7 +270,7 @@ export class SigninComponent implements OnInit {
         this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);
       } else {
         setTimeout(() => {
-          this.router.navigate(['/dashboard/main']);
+          this.router.navigate([WEB_ROUTES.DASHBOARD]);
         }, 300);
       }
       localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.data.token);

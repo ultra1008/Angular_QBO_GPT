@@ -10,8 +10,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTabsModule } from '@angular/material/tabs';
 import { NgxGaugeModule } from 'ngx-gauge';
+import { MonthlyHistoryComponent } from './main/monthly-history/monthly-history.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { MonthlyInvoiceComponent } from './main/monthly-invoice/monthly-invoice.component';
 @NgModule({
-  declarations: [MainComponent],
+  declarations: [MainComponent, MonthlyHistoryComponent, MonthlyInvoiceComponent],
   imports: [
     CommonModule,
     DashboardRoutingModule,
@@ -25,6 +28,7 @@ import { NgxGaugeModule } from 'ngx-gauge';
     MatTooltipModule,
     MatTabsModule,
     NgxGaugeModule,
+    TranslateModule,
   ],
 })
-export class DashboardModule {}
+export class DashboardModule { }

@@ -16,6 +16,12 @@ router.post("/mobile/v1/auth/updateuser", common.checkTokenExistOrNot, authContr
 router.post("/mobile/v1/auth/userlogout", common.checkTokenExistOrNot, authController.userLogout);
 router.post("/mobile/v1/auth/savelogindetails", common.checkTokenExistOrNot, authController.saveLoginDetails);
 router.post('/mobile/v1/auth/helpmail', authValidation.helpMail, authController.helpMail);
+router.post('/mobile/v1/auth/getlogincompanylist', authValidation.getLoginCompanyList, authController.getLoginCompanyList);
+router.post('/mobile/v1/auth/sendemailotp', authValidation.sendEmailOTP, authController.sendEmailOTP);
+router.post('/mobile/v1/auth/submitemailotp', authValidation.submitEmailOTP, authController.submitEmailOTP);
+router.post('/mobile/v1/auth/loginwithemailotp', authValidation.loginWithEmailOTP, authController.loginWithEmailOTP);
+router.post('/mobile/v1/auth/emailforgotpassword', authValidation.emailForgotPassword, authController.emailForgotPassword);
+router.post('/mobile/v1/auth/sendemailforgotpassword', authValidation.sendEmailForgotPassword, authController.sendEmailForgotPassword);
 
 // Invoice
 var invoiceController = require('./invoices/invoiceController');

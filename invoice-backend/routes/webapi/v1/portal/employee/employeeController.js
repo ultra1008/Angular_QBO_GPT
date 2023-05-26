@@ -139,7 +139,7 @@ module.exports.saveEmployee = async function (req, res) {
                     if (body.password) {
                         body.password = common.generateHash(body.password);
                     }
-                    let checkEmailExist = await userConnection.findOne({ useremail: body.useremail });
+                    let checkEmailExist = await userConnection.findOne({ useremail: body.useremail, is_delete: 0 });
                     if (checkEmailExist) {
                         res.send({ message: translator.getStr('EmailAlreadyExists'), status: false });
                     } else {
@@ -235,6 +235,7 @@ module.exports.saveEmployee = async function (req, res) {
                                     action: 'Insert',
                                     action_from: 'Web',
                                 }, decodedToken);
+                                let one_user = await userConnection.findOne({ _id: ObjectID(add._id) });
                                 if (notFonud == 1) {
                                     var temp_path = newOpenFile[0].path;
                                     var file_name = newOpenFile[0].name;
@@ -257,7 +258,7 @@ module.exports.saveEmployee = async function (req, res) {
                                             if (update_user) {
                                                 addInsertHistory(add._id, body, decodedToken, translator, connection_db_api);
                                                 //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
-                                                res.send({ message: translator.getStr('UserCreationEmail'), data: body, status: true });
+                                                res.send({ message: translator.getStr('UserCreationEmail'), data: one_user, status: true });
                                             }
                                         }
                                     });
@@ -269,7 +270,7 @@ module.exports.saveEmployee = async function (req, res) {
                                     }
                                     addInsertHistory(add._id, body, decodedToken, translator, connection_db_api);
                                     //activityController.updateAllUser({ "api_setting.employee": true }, decodedToken);
-                                    res.send({ message: translator.getStr('UserAdded'), data: body, status: true });
+                                    res.send({ message: translator.getStr('UserAdded'), data: one_user, status: true });
                                 }
                             }
                             //     }
@@ -561,10 +562,10 @@ module.exports.saveUserDocument = async function (req, res) {
                         body.userdocument_updated_at = Math.round(new Date().getTime() / 1000);
                         body.userdocument_user_id = fields.user_id;
                         body.show_on_qrcode_scan = fields.show_on_qrcode_scan == "true" || fields.show_on_qrcode_scan == true ? true : false;
-                        var temp_path = newOpenFile[0].path;
-                        var file_name = newOpenFile[0].name;
+                        var temp_path = newOpenFile[0].filepath;
+                        var file_name = newOpenFile[0].originalFilename;
                         let date = moment().format('D_MMM_YYYY_hh_mm_ss_SSS_A');
-                        let array_name = newOpenFile[0].name.split(".");
+                        let array_name = newOpenFile[0].originalFilename.split(".");
                         var file_name_ext = array_name[array_name.length - 1];
                         //var file_name_ext = newOpenFile[0].name.split(".")[1];
                         var file_name = attachmentLocations.USER_DOCUMENT + "_" + date + "." + file_name_ext;

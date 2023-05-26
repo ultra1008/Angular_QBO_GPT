@@ -25,8 +25,7 @@
                                         <li *ngIf="isDelete === 0" class="rix">
                                              <mat-form-field class="cust-padding-top" appearance="outline">
                                                   <mat-label>{{'Status' | translate }}</mat-label>
-                                                  <mat-select (change)="changeStatus($event)"
-                                                       [(ngModel)]="vendor_status">
+                                                  <mat-select [(ngModel)]="vendor_status">
                                                        <mat-option value="All">{{'All' | translate}}</mat-option>
                                                        <mat-option value="1">{{'Active' | translate}}</mat-option>
                                                        <mat-option value="2">{{'Inactive' | translate}}</mat-option>
@@ -88,16 +87,17 @@
                          </div>
                          <div class="body overflow-auto">
                               <div class="row">
-                                   <!-- vendorListFilterStatus : vendor_status -->
                                    <div class="test col-xs-12 col-sm-6 col-md-4 col-xl-3"
-                                        *ngFor="let vendor of vendorList  | vendorListFilter : vendorname_search |vendorListFilterStatus : vendor_status   ">
-                                        <div class="card rixit " style="border: 2px solid rgb(182, 182, 182);">
+                                        *ngFor="let vendor of vendorList  | vendorListFilter : vendorname_search |vendorListFilterStatus : vendor_status">
+                                        <div class="card rixit" style="border: 2px solid rgb(182, 182, 182);">
                                              <div class="m-b-20">
-                                                  <div class="contact-grid" style="height: 300px;">
+                                                  <div class="contact-grid" style="height: 310px"
+                                                       (click)="editVendor(vendor)">
                                                        <div class="profile-header">
                                                             <div class="col-12 m-1 d-flex">
                                                                  <div class="col-4">
-                                                                      <img src={{vendor.vendor_image}} class="user-img1"
+                                                                      <img [src]="vendor.vendor_image || 'assets/images/vendor.png'"
+                                                                           class="user-img1"
                                                                            style="background-color: white;" width="80px"
                                                                            height="80px " alt="">
                                                                  </div>
@@ -136,7 +136,7 @@
                                                             </div>
                                                             <div class="col-6">
                                                                  <b> Amount Paid This Year</b>
-                                                                 <P> {{50000000000}}</P>
+                                                                 <P> {{formateAmount(50000000000)}}</P>
                                                             </div>
                                                        </div>
                                                        <div class="col-12 d-flex">
@@ -144,15 +144,15 @@
                                                                  <b>Open Invoice</b>
                                                                  <P> {{514}}</P>
                                                             </div>
-                                                            <div class="col-6">
-                                                                 <b>Amount</b>
-                                                                 <P> {{500000000000}}</P>
+                                                            <div class="col-6 mb-1">
+                                                                 <b>Amount open</b>
+                                                                 <P> {{formateAmount(50000000000)}}</P>
                                                             </div>
                                                        </div>
-                                                       <div class="chip m-1"
+                                                       <div class="chip"
                                                             [ngClass]="vendor.vendor_status == 1 ? 'active' :'inactive'">
-                                                            <span class="py-2">
-                                                                 {{vendor.vendor_status == 1 ? active_word :inactive_word }}</span>
+
+                                                            {{vendor.vendor_status == 1 ? active_word :inactive_word }}
                                                        </div>
 
                                                   </div>

@@ -147,7 +147,7 @@
                                                                            class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                                                            <mat-form-field class="example-full-width"
                                                                                 appearance="outline">
-                                                                                <span matSuffix>
+                                                                                <span matSuffix *ngIf="id !== null">
                                                                                      <!--  [ngClass]="true ? 'user-menu__button-custom-small_dark': 'user-menu__button-custom-small'" -->
                                                                                      <button
                                                                                           class="user-menu__button-custom-small"
@@ -250,10 +250,7 @@
                                                                            </mat-form-field>
                                                                       </div>
                                                                  </div>
-                                                                 <div class="main-first-row">
-
-                                                                 </div>
-                                                                 <div>
+                                                                 <div *ngIf="id === null">
                                                                       {{'Employee-form-Document' | translate }}
                                                                       <hr />
                                                                       <mat-chip (click)="addDoc()" color="accent">+
@@ -454,7 +451,7 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>{{'USERS.ADD_EDIT.EMPLOYEE_SALARY' | translate}}</mat-label>
-                                                                      <span matPrefix>$ &nbsp;</span>
+                                                                      <span class="dollar-align" matPrefix>$</span>
                                                                       <input matInput
                                                                            placeholder="{{'Employee-form-Salary-Hourly-Rate' | translate }}"
                                                                            class="input-capitalized-textfield"
@@ -505,7 +502,7 @@
                                                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'USERS.ADD_EDIT.MANAGER' | translate}}</mat-label>
+                                                                      <mat-label>{{'USERS.ADD_EDIT.SUPERVISOR' | translate}}</mat-label>
                                                                       <mat-select formControlName="usersupervisor_id"
                                                                            #db_supervisor_usersSelect
                                                                            class="dark-cust-color">
@@ -649,7 +646,7 @@
                                                                       mat-raised-button (click)="savedata()"
                                                                       color="primary">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                                  <button *ngIf="id !== null" mat-raised-button
-                                                                      color="primary"
+                                                                      color="warn"
                                                                       (click)="saveEmployeeInfo()">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                             </div>
                                                        </div>

@@ -144,6 +144,16 @@
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" class="psl-1">{{row.id}}</mat-cell>
                                 </ng-container>
+                                <ng-container matColumnDef="vendor_image">
+                                    <mat-header-cell mat-header-cell *matHeaderCellDef
+                                        [ngClass]="'tbl-col-width-per-5'"> {{'VENDOR.TABLE.VENDOR_IMAGE' |
+                                        translate}}
+                                    </mat-header-cell>
+                                    <mat-cell mat-cell *matCellDef="let row" class="table-img tbl-col-width-per-5"><span
+                                            class="mobile-label">Image:</span>
+                                        <img [src]="row.vendor_image || 'assets/images/vendor.png'" />
+                                    </mat-cell>
+                                </ng-container>
                                 <ng-container matColumnDef="vendor_name">
                                     <mat-header-cell [ngClass]="'tbl-col-width-per-max'" *matHeaderCellDef
                                         mat-sort-header>{{'VENDOR.TABLE.VENDOR_NAME' |
@@ -156,7 +166,7 @@
                                                 Name:</span>{{row.vendor_name}}</span>
                                     </mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="vendor_id">
+                                <!-- <ng-container matColumnDef="vendor_id">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.VENDOR_ID' |
                                         translate}}
                                     </mat-header-cell>
@@ -165,8 +175,8 @@
                                         <span class="truncate-text"> <span class="mobile-label">Vendor
                                                 ID:</span>{{row.vendor_id}}</span>
                                     </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="customer_id">
+                                </ng-container> -->
+                                <!-- <ng-container matColumnDef="customer_id">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.CUSTOMER_ID' |
                                         translate}}
                                     </mat-header-cell>
@@ -174,6 +184,46 @@
                                         (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">
                                         <span class="truncate-text"> <span class="mobile-label">Customer
                                                 ID:</span>{{row.customer_id}}</span>
+                                    </mat-cell>
+                                </ng-container> -->
+                                <ng-container matColumnDef="invoice">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.INVOICE' |
+                                        translate}}
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row" 
+                                        (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">
+                                        <span class="truncate-text"> <span class="mobile-label">Invoice:</span></span>
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="open_invoice">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.OPEN_INVOICE' |
+                                        translate}}
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row" 
+                                        (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">
+                                        <span class="truncate-text"> <span class="mobile-label">Open
+                                                Invoice:</span></span>
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="amount_paid">
+                                    <mat-header-cell [ngClass]="'tbl-col-width-per-max'" *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.AMOUNT_PAID' |
+                                        translate}}
+                                    </mat-header-cell>
+                                    <mat-cell class="tbl-col-width-per-max" *matCellDef="let row" 
+                                        (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">
+                                        <span class="truncate-text"> <span class="mobile-label">Amount
+                                                Paid:</span></span>
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="amount_open">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.AMOUNT_OPEN' |
+                                        translate}}
+                                    </mat-header-cell>
+                                   
+                                    <mat-cell *matCellDef="let row" 
+                                        (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">
+                                        <span class="truncate-text"> <span class="mobile-label">Amount
+                                                Open:</span></span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_phone">
@@ -285,36 +335,6 @@
                                         </button>
                                     </mat-cell>
                                 </ng-container>
-                                <!-- <ng-container matColumnDef="actions">
-                                    <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-7'" *matHeaderCellDef>
-                                        {{'VENDOR.TABLE.ACTIONS' |
-                                        translate}}
-                                    </mat-header-cell>
-                                    <mat-cell class=" psl-3 tbl-col-width-per-7" *matCellDef="let row; let i=index;">
-                                        <button mat-icon-button [matMenuTriggerFor]="menu"
-                                            (click)="$event.stopPropagation()">
-                                            <mat-icon>more_vert</mat-icon>
-                                        </button>
-                                        <mat-menu #menu="matMenu">
-                                            <button mat-menu-item (click)="editVendor(row)" *ngIf="isDelete === 0">
-                                                <i class="material-icons-two-tone align-middle msr-2">create</i>
-                                                <span>{{'COMMON.ACTIONS.EDIT' |
-                                                    translate}}</span>
-                                            </button>
-                                            <button mat-menu-item (click)="deleteVendor(row,1)" *ngIf="isDelete === 0">
-                                                <i class="material-icons-two-tone align-middle msr-2">archive</i>
-                                                <span>{{'COMMON.ACTIONS.ARCHIVE' |
-                                                    translate}}</span>
-                                            </button>
-                                            <button mat-menu-item (click)="deleteVendor(row,0)" *ngIf="isDelete === 1">
-                                                <i class="material-icons-two-tone align-middle msr-2">archive</i>
-                                                <span>{{'COMMON.ACTIONS.RESTORE' |
-                                                    translate}}</span>
-                                            </button>
-                                        </mat-menu>
-                                    </mat-cell>
-                                </ng-container> -->
-
                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                                 <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'"
                                     matRipple>
@@ -336,6 +356,7 @@
                 </div>
             </div>
         </div>
+    </div>
+</section>
 
-
-        <ngx-gallery [options]="galleryOptions" [images]="galleryImages" #gallery></ngx-gallery>
+<ngx-gallery [options]="galleryOptions" [images]="galleryImages" #gallery></ngx-gallery>

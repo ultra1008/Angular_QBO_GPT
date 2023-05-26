@@ -168,25 +168,48 @@ module.exports.importdoctype = async function (req, res) {
                         const file = reader.readFile(newOpenFile[0].path);
                         const sheets = file.SheetNames;
                         let data = [];
+                        let exitdata = new Array();
                         for (let i = 0; i < sheets.length; i++) {
                             const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
                             temp.forEach((ress) => {
                                 data.push(ress);
                             });
                         }
+                        var onecategory_main = "";
                         for (let m = 0; m < data.length; m++) {
-                            requestObject = {};
-                            let getdata = await documenttypeCollection.findOne({ document_type_name: data[m].document_type_name, is_expiration: data[m].is_expiration });
-                            if (getdata == null) {
-                                requestObject.document_type_name = data[m].document_type_name;
-                                requestObject.is_expiration = data[m].is_expiration;
-                                let add_job_type = new documenttypeCollection(requestObject);
-                                let save_job_type = await add_job_type.save();
-                            } else {
-                                res.send({ status: true, message: "document type name and is_expiration is allready exist." });
+                            onecategory_main = await documenttypeCollection.findOne({ document_type_name: data[m].document_type_name, due_days: data[m].due_days }, { document_type_name: 1, due_days: 1 });
+                            if (onecategory_main != null) {
+                                exitdata[m] = onecategory_main.document_type_name;
                             }
                         }
-                        res.send({ status: true, message: "department info add successfully." });
+                        if (exitdata.length > 0) {
+                            res.send({ status: false, exitdata: exitdata, message: "document type name is allready exist." });
+                        }
+                        else {
+                            for (let m = 0; m < data.length; m++) {
+                                onecategory_main = await documenttypeCollection.findOne({ document_type_name: data[m].document_type_name, due_days: data[m].due_days, }, { document_type_name: 1, due_days: 1 });
+                                requestObject = {};
+                                requestObject.document_type_name = data[m].document_type_name;
+                                requestObject.is_expiration = data[m].is_expiration;
+                                let add_documenttype = new documenttypeCollection(requestObject);
+                                let save_documenttype = await add_documenttype.save();
+
+                            }
+                            res.send({ status: true, message: "document type info add successfully." });
+                        }
+                        // for (let m = 0; m < data.length; m++) {
+                        //     requestObject = {};
+                        //     let getdata = await documenttypeCollection.findOne({ document_type_name: data[m].document_type_name, is_expiration: data[m].is_expiration });
+                        //     if (getdata == null) {
+                        //         requestObject.document_type_name = data[m].document_type_name;
+                        //         requestObject.is_expiration = data[m].is_expiration;
+                        //         let add_job_type = new documenttypeCollection(requestObject);
+                        //         let save_job_type = await add_job_type.save();
+                        //     } else {
+                        //         res.send({ status: true, message: "document type name and is_expiration is allready exist." });
+                        //     }
+                        // }
+                        // res.send({ status: true, message: "department info add successfully." });
 
                     } else {
                         res.send({ status: false, message: translator.getStr('SomethingWrong') });

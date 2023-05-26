@@ -15,27 +15,34 @@ import {
   ApexLegend,
   ApexFill,
   ApexResponsive,
+  ApexGrid,
 } from 'ng-apexcharts';
 import { NgxGaugeType } from 'ngx-gauge/gauge/gauge';
 import { dataSeries } from './chartdata';
-export type chartOptions = {
-  series: ApexAxisChartSeries;
-  series2: ApexNonAxisChartSeries;
-  chart: ApexChart;
-  xaxis: ApexXAxis;
-  yaxis: ApexYAxis;
-  stroke: ApexStroke;
-  markers: ApexMarkers;
-  title: ApexTitleSubtitle;
-  fill: ApexFill;
-  tooltip: ApexTooltip;
-  dataLabels: ApexDataLabels;
-  legend: ApexLegend;
-  colors: string[];
-  plotOptions: ApexPlotOptions;
+import { CommonService } from 'src/app/services/common.service';
+import { httproutes, httpversion } from 'src/consts/httproutes';
+import { WEB_ROUTES } from 'src/consts/routes';
+import { Router } from '@angular/router';
+export type ChartOptions = {
+  series?: ApexAxisChartSeries;
+  series2?: ApexNonAxisChartSeries;
+  chart?: ApexChart;
+  dataLabels?: ApexDataLabels;
+  plotOptions?: ApexPlotOptions;
+  yaxis?: ApexYAxis;
+  xaxis?: ApexXAxis;
+  fill?: ApexFill;
+  tooltip?: ApexTooltip;
+  stroke?: ApexStroke;
+  legend?: ApexLegend;
+  title?: ApexTitleSubtitle;
+  colors?: string[];
+  grid?: ApexGrid;
+  markers?: ApexMarkers;
   labels: string[];
   responsive: ApexResponsive[];
 };
+
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
@@ -43,10 +50,8 @@ export type chartOptions = {
 })
 export class MainComponent {
   @ViewChild('chart') chart?: ChartComponent;
-  public areaChartOptions!: Partial<chartOptions>;
-  public barChartOptions!: Partial<chartOptions>;
-  public circleChartOptions!: Partial<chartOptions>;
-  public pieChartOptions!: Partial<chartOptions>;
+  public invoiceChartOptions: Partial<ChartOptions> | any;
+  public columnChartOptions: Partial<ChartOptions> | any;
 
   gaugeType = 'arch' as NgxGaugeType;
   gaugeValue = 48;
@@ -68,146 +73,105 @@ export class MainComponent {
     75.5: { color: 'red' },
   };
 
-  constructor() {
-    this.chart1();
-    this.chart2();
-    this.smallChart();
-    this.smallChart2();
-  }
-  private chart1() {
-    let ts2 = 1484418600000;
-    const dates = [];
-    for (let i = 0; i < 120; i++) {
-      ts2 = ts2 + 86400000;
-      dates.push([ts2, dataSeries[1][i].value]);
-    }
-    this.areaChartOptions = {
-      series: [
-        {
-          name: 'Booking Per Day',
-          data: dates,
-        },
-      ],
-      chart: {
-        type: 'area',
-        stacked: false,
-        height: 250,
-        toolbar: {
-          show: true,
-        },
-        foreColor: '#9aa0ac',
-      },
-      colors: ['#9F8DF1', '#E79A3B'],
-      dataLabels: {
-        enabled: false,
-      },
-      markers: {
-        size: 0,
-      },
-      fill: {
-        type: 'gradient',
-        gradient: {
-          shadeIntensity: 1,
-          inverseColors: false,
-          opacityFrom: 0.5,
-          opacityTo: 0,
-          stops: [0, 90, 100],
-        },
-      },
-      stroke: {
-        curve: 'smooth',
-      },
-      yaxis: {
-        labels: {
-          formatter: function (val) {
-            return (val / 1000000).toFixed(0);
-          },
-        },
-        title: {
-          text: 'Booking',
-        },
-      },
-      xaxis: {
-        type: 'datetime',
-      },
-      legend: {
-        show: true,
-        position: 'top',
-        horizontalAlign: 'center',
-        offsetX: 0,
-        offsetY: 0,
-      },
+  pendingInvoices: any = [];
+  rejectedInvoices: any = [];
+  processedInvoices: any = [];
 
-      tooltip: {
-        theme: 'dark',
-        marker: {
-          show: true,
-        },
-        x: {
-          show: true,
-        },
-        y: {
-          formatter: function (val) {
-            return (val / 1000000).toFixed(0);
-          },
-        },
-      },
-    };
+  constructor (private commonService: CommonService, private router: Router,) {
+    this.getDashboardInvoice();
+    this.monthlyInvoiceChart();
+    this.monthlyHistoryChart();
   }
-  private chart2() {
-    this.barChartOptions = {
-      series: [
-        {
-          name: 'Net Profit',
-          data: [44, 55, 57, 56, 61, 58],
-        },
-        {
-          name: 'Revenue',
-          data: [76, 85, 101, 98, 87, 105],
-        },
-      ],
+
+  async getDashboardInvoice() {
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_DASHBOARD_INVOICE);
+    if (data.status) {
+      this.pendingInvoices = data.data.pending_invoices;
+      this.rejectedInvoices = data.data.cancelled_invoices;
+      this.processedInvoices = data.data.process_invoices;
+    }
+  }
+
+  monthlyInvoiceChart() {
+    this.invoiceChartOptions = {
       chart: {
-        type: 'bar',
         height: 350,
-        toolbar: {
-          show: false,
-        },
+        type: 'line',
         dropShadow: {
-          enabled: true,
+          enabled: false,
           color: '#000',
           top: 18,
           left: 7,
           blur: 10,
-          opacity: 0.2,
+          opacity: 1,
+        },
+        toolbar: {
+          show: false,
         },
         foreColor: '#9aa0ac',
       },
-      colors: ['#5C9FFB', '#AEAEAE'],
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: '50%',
-          borderRadius: 5,
-        },
-      },
-      legend: {
-        show: false,
-      },
       dataLabels: {
-        enabled: false,
+        enabled: true,
       },
       stroke: {
-        show: true,
-        width: 2,
-        colors: ['transparent'],
+        curve: 'smooth',
+      },
+      series: [
+        {
+          name: 'Pending Invoice',
+          data: [28, 29, 33],
+          color: '#C5B7FF',
+        },
+        {
+          name: 'Approved Invoice',
+          data: [12, 11, 14],
+          color: '#94D4FE',
+        },
+        {
+          name: 'Rejected Invoice',
+          data: [2, 5, 1],
+          color: '#FF99B1',
+        },
+      ],
+      grid: {
+        borderColor: '#e7e7e7',
+        row: {
+          colors: ['#f3f3f3', 'transparent'],
+          opacity: 0.5,
+        },
+      },
+      markers: {
+        size: 6,
       },
       xaxis: {
-        categories: ['jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        categories: ['Mar', 'Apr', 'May'],
+        title: {
+          text: 'Month',
+        },
+        labels: {
+          style: {
+            colors: '#9aa0ac',
+          },
+        },
       },
       yaxis: {
         title: {
-          text: '$ (thousands)',
+          text: 'Temperature',
         },
+        labels: {
+          style: {
+            colors: ['#9aa0ac'],
+          },
+        },
+        min: 5,
+        max: 40,
+      },
+      legend: {
+        position: 'top',
+        horizontalAlign: 'right',
+        floating: true,
+        offsetY: -25,
+        offsetX: -5,
       },
       tooltip: {
         theme: 'dark',
@@ -217,93 +181,119 @@ export class MainComponent {
         x: {
           show: true,
         },
-        y: {
-          formatter: function (val) {
-            return '$ ' + val + ' thousands';
-          },
-        },
       },
     };
   }
-  private smallChart() {
-    this.circleChartOptions = {
-      series2: [76, 67, 61, 90],
+
+  monthlyHistoryChart() {
+    this.columnChartOptions = {
       chart: {
-        height: 260,
-        type: 'radialBar',
-      },
-      plotOptions: {
-        radialBar: {
-          offsetY: 0,
-          startAngle: 0,
-          endAngle: 270,
-          hollow: {
-            margin: 5,
-            size: '30%',
-            background: 'transparent',
-            image: undefined,
-          },
-          dataLabels: {
-            name: {
-              show: false,
-            },
-            value: {
-              show: false,
-            },
-          },
+        height: 350,
+        type: 'bar',
+        stacked: true,
+        toolbar: {
+          show: false,
         },
-      },
-      colors: ['#569C4D', '#72B1AC', '#EA8A2A', '#4772A0'],
-      labels: ['Data 1', 'Data 2', 'Data 3', 'Data 4'],
-      legend: {
-        show: true,
-        floating: true,
-        fontSize: '16px',
-        position: 'left',
-        offsetX: 50,
-        offsetY: 10,
-        labels: {
-          useSeriesColors: true,
+        zoom: {
+          enabled: false,
         },
-        formatter: function (seriesName, opts) {
-          return seriesName + ':  ' + opts.w.globals.series[opts.seriesIndex];
-        },
-        itemMargin: {
-          horizontal: 3,
-        },
+        foreColor: '#9aa0ac',
       },
       responsive: [
         {
           breakpoint: 480,
           options: {
             legend: {
-              show: false,
+              position: 'bottom',
+              offsetX: -5,
+              offsetY: 0,
             },
           },
         },
       ],
-    };
-  }
-  private smallChart2() {
-    this.pieChartOptions = {
-      series2: [44, 55, 13, 43, 22],
-      chart: {
-        type: 'donut',
-        width: 200,
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: '180%',
+        },
+      },
+      series: [
+        {
+          name: 'Paid',
+          data: [44, 55, 41],
+          color: '#008FFB',
+        },
+        {
+          name: 'On Hold',
+          data: [13, 23, 20],
+          color: '#E1E0E0',
+        },
+        {
+          name: 'Decline',
+          data: [11, 17, 15],
+          color: '#F44336',
+        },
+      ],
+      xaxis: {
+        categories: ['Mar', 'Apr', 'May'],
+        title: {
+          text: 'Month',
+        },
+        labels: {
+          style: {
+            colors: '#9aa0ac',
+          },
+        },
+      },
+      yaxis: {
+        labels: {
+          style: {
+            colors: ['#9aa0ac'],
+          },
+        },
       },
       legend: {
-        show: false,
+        position: 'bottom',
+        offsetY: 0,
+      },
+      fill: {
+        opacity: 1,
       },
       dataLabels: {
         enabled: false,
       },
-      labels: ['Science', 'Mathes', 'Economics', 'History', 'Music'],
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {},
-        },
-      ],
     };
+  }
+
+  viewMonthlyInvoiceChart() {
+    this.router.navigate([WEB_ROUTES.DASHBOARD_MONTHLY_INVOICE]);
+  }
+
+  downloadMonthlyInvoiceChart() {
+    //
+  }
+
+  printMonthlyInvoiceChart() {
+    //
+  }
+
+  viewHistoryChart() {
+    this.router.navigate([WEB_ROUTES.DASHBOARD_MONTHLY_HISTORY]);
+  }
+
+  downloadHistoryChart() {
+    //
+  }
+
+  printHistoryChart() {
+    //
+  }
+
+  invoiceDetail(invoice: any) {
+    this.router.navigate([WEB_ROUTES.INVOICE_DETAILS]);
+  }
+
+  viewInvoice(type: string) {
+    this.router.navigate([WEB_ROUTES.INVOICE], { queryParams: { type: type } });
   }
 }
