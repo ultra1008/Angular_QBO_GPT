@@ -196,11 +196,33 @@ module.exports.sendInvoiceMessage = async function (req, res) {
                     message: requestObject.message,
                     created_at: Math.round(new Date().getTime() / 1000),
                     is_first: requestObject.is_first,
+                    invoice_message_id: requestObject.invoice_message_id ?? '',
                 });
             }
             let save_invoice_message = await invoiceMessageCollection.insertMany(reqObject);
             if (save_invoice_message) {
-                res.send({ message: translator.getStr('INVOICE_MESSAGE_SEND'), status: true });
+                var ids = [];
+                for (let i = 0; i < save_invoice_message.length; i++) {
+                    ids.push(ObjectID(save_invoice_message[i]._id));
+                }
+                let get_message = await invoiceMessageCollection.aggregate([
+                    { $match: { _id: { $in: ids } } },
+                    {
+                        $lookup: {
+                            from: collectionConstant.INVOICE_USER,
+                            localField: "sender_id",
+                            foreignField: "_id",
+                            as: "sender"
+                        }
+                    },
+                    { $unwind: "$sender" },
+                    { $sort: { created_at: 1 } },
+                ]);
+                console.log("get_message: ", get_message);
+                if (get_message.length > 0) {
+                    get_message = get_message[0];
+                }
+                res.send({ message: translator.getStr('INVOICE_MESSAGE_SEND'), data: get_message, status: true });
             } else {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
             }

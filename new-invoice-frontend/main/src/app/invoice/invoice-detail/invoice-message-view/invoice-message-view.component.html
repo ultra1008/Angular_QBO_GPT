@@ -39,7 +39,7 @@
                             </div>
                             <ng-scrollbar style="height: 449px" visibility="hover">
                                 <div class="chat-history" id="chat-conversation">
-                                    <ul>
+                                    <ul id="messageListDiv">
                                         <li *ngFor="let message of messageList"
                                             [ngClass]="myId === message.sender_id ? 'clearfix' : ''">
                                             <ng-container *ngIf="myId === message.sender_id"
@@ -78,9 +78,15 @@
                             </ng-scrollbar>
                             <div class="chat-message clearfix">
                                 <div class="form-group">
-                                    <mat-form-field class="example-full-width" appearance="outline">
-                                        <input matInput placeholder="Enter message here..">
-                                    </mat-form-field>
+                                    <form [formGroup]="form">
+                                        <mat-form-field class="example-full-width" appearance="outline">
+                                            <input matInput formControlName="message"
+                                                placeholder="Enter message here..">
+                                            <button mat-icon-button matSuffix (click)="sendMessage()">
+                                                <mat-icon>send</mat-icon>
+                                            </button>
+                                        </mat-form-field>
+                                    </form>
                                 </div>
                             </div>
                         </div>
