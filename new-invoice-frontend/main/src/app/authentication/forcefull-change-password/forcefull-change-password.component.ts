@@ -12,6 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { showNotification } from 'src/consts/utils';
 import { Location } from '@angular/common';
 import { icon } from 'src/consts/icon';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-forcefull-change-password',
@@ -27,7 +28,7 @@ export class ForcefullChangePasswordComponent {
   eyeButtonForOldPassword() {
     this.hideOld = !this.hideOld;
   }
-  logo = icon.INVOICE_LOGO
+  logo = icon.INVOICE_LOGO;
   eyeButtonForNewPassword() {
     this.hideNew = !this.hideNew;
   }
@@ -43,7 +44,7 @@ export class ForcefullChangePasswordComponent {
       active: 'Examples',
     },
   ];
-  constructor(
+  constructor (
     private fb: UntypedFormBuilder,
     private router: Router,
     private authenticationService: AuthenticationService,
@@ -54,7 +55,7 @@ export class ForcefullChangePasswordComponent {
   }
 
   back() {
-    this.location.back()
+    this.location.back();
   }
   initForm() {
     this.forcefullyPasswordInfo = this.fb.group(
@@ -86,7 +87,7 @@ export class ForcefullChangePasswordComponent {
       }
     };
   }
-  private passwordMatcher(control: FormControl): { [s: string]: boolean } {
+  private passwordMatcher(control: FormControl): { [s: string]: boolean; } {
     console.log('cantrol', control.value);
     console.log(
       'forcefully',
@@ -152,7 +153,7 @@ export class ForcefullChangePasswordComponent {
       const data = await this.authenticationService.changePassword(reqObject);
       if (data.status) {
         showNotification(this.snackBar, data.message, 'success');
-        this.router.navigate(['/dashboard/main']);
+        this.router.navigate([WEB_ROUTES.DASHBOARD]);
         // for delete we use splice in order to remove single object from DataService
       } else {
         showNotification(this.snackBar, data.message, 'error');

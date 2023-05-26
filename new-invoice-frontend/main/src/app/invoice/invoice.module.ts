@@ -32,6 +32,7 @@ import { SharedModule } from '../shared/shared.module';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AdvanceTableService } from '../advance-table/advance-table.service';
+import { CustompdfviewerComponent } from '../common-components/custompdfviewer/custompdfviewer.component';
 
 
 @NgModule({
@@ -83,7 +84,8 @@ import { AdvanceTableService } from '../advance-table/advance-table.service';
     TranslateModule,
     MatCheckboxModule,
     MatDialogModule,
-    NgScrollbarModule
+    NgScrollbarModule,
+
   ]
 })
 export class InvoiceModule { }

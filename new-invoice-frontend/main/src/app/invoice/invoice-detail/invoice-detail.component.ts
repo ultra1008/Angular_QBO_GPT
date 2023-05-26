@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-invoice-detail',
@@ -22,7 +24,7 @@ export class InvoiceDetailComponent {
   prevStep() {
     this.step--;
   }
-  constructor(private fb: UntypedFormBuilder,) {
+  constructor(private fb: UntypedFormBuilder, private router: Router) {
     //constructor
     this.invoiceForm = this.fb.group({
       document_type: ['',],
@@ -63,7 +65,9 @@ export class InvoiceDetailComponent {
   }
 
 
-
+  back() {
+    this.router.navigate([WEB_ROUTES.INVOICE]);
+  }
 
 
 

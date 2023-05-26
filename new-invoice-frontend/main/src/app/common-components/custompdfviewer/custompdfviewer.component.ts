@@ -12,8 +12,8 @@ import { HttpCall } from 'src/app/services/httpcall.service';
   styleUrls: ['./custompdfviewer.component.scss']
 })
 export class CustompdfviewerComponent {
-  @Input() data: any;
-  pdf_url: any;
+  @Input() pdf_url: any;
+
   isrefresh: boolean = false;
   isspoStatusapprovepending: boolean = false;
   isCertificateStatusPending: boolean = false;

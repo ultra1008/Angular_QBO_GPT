@@ -85,7 +85,7 @@ export class SendOtpComponent {
             this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);
           } else {
             setTimeout(() => {
-              this.router.navigate(['/dashboard/main']);
+              this.router.navigate([WEB_ROUTES.DASHBOARD]);
             }, 300);
           }
           localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.user_data.token);
@@ -118,7 +118,7 @@ export class SendOtpComponent {
         this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);
       } else {
         setTimeout(() => {
-          this.router.navigate(['/dashboard/main']);
+          this.router.navigate([WEB_ROUTES.DASHBOARD]);
         }, 300);
       }
       localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.user_data.token);

@@ -1134,136 +1134,89 @@ module.exports.importVendor = async function (req, res) {
         try {
 
             var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
-            // var form = new formidable.IncomingForm();
-            // var fields = [];
-            // var notFonud = 0;
-            // var newOpenFile;
-            // // var fileType;
-            // var fileName;
-            // form.parse(req)
-            //     .on('file', function (name, file) {
-            //         notFonud = 1;
-            //         fileName = file;
-            //     }).on('field', function (name, field) {
-            //         fields[name] = field;
-            //     })
-            //     .on('error', function (err) {
-            //         throw err;
-            //     }).on('end', async function () {
-            //         newOpenFile = this.openedFiles;
-            //         if (notFonud == 1) {
-            //             const file = reader.readFile(newOpenFile[0].path);
-            //             const sheets = file.SheetNames;
-            //             let data = [];
-            //             for (let i = 0; i < sheets.length; i++) {
-            //                 const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
-            //                 temp.forEach((ress) => {
-            //                     data.push(ress);
-            //                 });
-            //             }
-
-            //             for (let m = 0; m < data.length; m++) {
-            //                 requestObject = {};
-            //                 let onecategory_main = await vendorConnection.findOne({ vendor_name: data[m].vendor_name, vendor_email: data[m].vendor_email });
-            //                 if (onecategory_main == null) {
-            //                     requestObject.vendor_name = data[m].vendor_name;
-            //                     requestObject.vendor_phone = data[m].vendor_phone;
-            //                     requestObject.vendor_email = data[m].vendor_email;
-            //                     requestObject.vendor_address = data[m].vendor_address;
-            //                     requestObject.vendor_city = data[m].vendor_city;
-            //                     requestObject.vendor_state = data[m].vendor_state;
-            //                     requestObject.vendor_zipcode = data[m].vendor_zipcode;
-            //                     requestObject.vendor_terms = data[m].vendor_terms;
-            //                     let add_costcode = new vendorConnection(requestObject);
-            //                     let save_costcode = await add_costcode.save();
-            //                 } else {
-            //                 }
-            //             }
-            //             res.send({ status: true, message: translator.getStr('VENDOR_ADD_MESSAGE') });
-            //         }
-            //     });
             var form = new formidable.IncomingForm();
             var fields = [];
             var notFonud = 0;
             var newOpenFile;
+            // var fileType;
+            var fileName;
             form.parse(req)
                 .on('file', function (name, file) {
                     notFonud = 1;
                     fileName = file;
-                })
-                .on('field', function (name, field) {
-                    console.log(name, field);
+                }).on('field', function (name, field) {
                     fields[name] = field;
                 })
                 .on('error', function (err) {
                     throw err;
                 }).on('end', async function () {
                     newOpenFile = this.openedFiles;
-
-
                     if (notFonud == 1) {
                         const file = reader.readFile(newOpenFile[0].path);
                         const sheets = file.SheetNames;
                         let data = [];
-
+                        let exitdata = new Array();
                         for (let i = 0; i < sheets.length; i++) {
-                            const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]], { header: 1 });
-                            temp.forEach((res) => {
-                                data.push(res);
+                            const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
+                            temp.forEach((ress) => {
+                                data.push(ress);
                             });
                         }
-                        // Printing data
-                        header_ = data.shift();
 
-                        const keys_OLD = ["vendor_name", "vendor_phone", "vendor_email", "vendor_address", "vendor_city",
-                            "vendor_state", "vendor_zipcode", "vendor_terms"];
-                        if (JSON.stringify(keys_OLD.sort()) == JSON.stringify(header_.sort())) {
-                            const file = reader.readFile(newOpenFile[0].path);
-                            const sheets = file.SheetNames;
-                            let data = [];
-                            let success_data = [], error_data = [];
-                            for (let i = 0; i < sheets.length; i++) {
-                                const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
-                                temp.forEach((res) => {
-                                    data.push(res);
-                                });
-                            }
-
-                            for (let m = 0; m < data.length; m++) {
-
-                                data[m].vendor_name = `${data[m].vendor_name} ${data[m].vendor_name}`;
-                                if (data[m].vendor_phone == undefined || data[m].vendor_email == undefined || data[m].vendor_address == undefined ||
-                                    data[m].vendor_city == undefined || data[m].vendor_state == undefined || data[m].vendor_zipcode == undefined) {
-                                    data[m].vendor_terms = false;
-                                    data[m].message = ('Data_Missing');
-                                    error_data.push({ data: data[m], message: ('Data_Missing') });
-                                } else {
-                                    let objRes = await userInsertCheck(connection_db_api, data[m]);
-                                    if (objRes.status) {
-                                        data[m].status = objRes.status;
-                                        data[m].message = objRes.message;
-                                        success_data.push({ data: data[m], message: objRes.message });
-                                        // let success_data = new vendorConnection(requestObject);
-                                        // let save_vendor = await success_data.save();
-                                    } else {
-                                        data[m].status = objRes.status;
-                                        data[m].message = objRes.message;
-                                        error_data.push({ data: data[m], message: objRes.message });
-                                    }
-                                }
-                                if (m == (data.length - 1)) {
-                                    res.send({
-                                        message: ('IMPORT_EMPLOYEE_MESSAGE'),
-                                        status: true,
-                                        data: data,
-                                        error_data: error_data,
-                                        success_data: success_data
-                                    });
-                                }
+                        var onecategory_main = "";
+                        for (let m = 0; m < data.length; m++) {
+                            onecategory_main = await vendorConnection.findOne({ vendor_email: data[m].vendor_email }, { vendor_email: 1 });
+                            if (onecategory_main != null) {
+                                exitdata[m] = onecategory_main.vendor_email;
                             }
                         }
+                        if (exitdata.length > 0) {
+                            res.send({ status: false, exitdata: exitdata, message: " vendor email is allready exist." });
+                        }
+                        else {
+                            for (let m = 0; m < data.length; m++) {
+                                onecategory_main = await vendorConnection.findOne({ vendor_email: data[m].vendor_email }, { vendor_email: 1 });
+                                requestObject = {};
+                                requestObject.vendor_name = data[m].vendor_name;
+                                requestObject.vendor_phone = data[m].vendor_phone;
+                                requestObject.vendor_email = data[m].vendor_email;
+                                requestObject.vendor_address = data[m].vendor_address;
+                                requestObject.vendor_city = data[m].vendor_city;
+                                requestObject.vendor_state = data[m].vendor_state;
+                                requestObject.vendor_zipcode = data[m].vendor_zipcode;
+                                requestObject.vendor_terms = data[m].vendor_terms;
+                                let add_vendor = new vendorConnection(requestObject);
+                                let save_vendor = await add_vendor.save();
+
+                            }
+                            res.send({ status: true, message: translator.getStr('VENDOR_ADD_MESSAGE') });
+
+                        }
+
+                        // for (let m = 0; m < data.length; m++) {
+                        //     requestObject = {};
+                        //     let onecategory_main = await vendorConnection.findOne({ vendor_name: data[m].vendor_name, vendor_email: data[m].vendor_email });
+                        //     if (onecategory_main == null) {
+                        //         requestObject.vendor_name = data[m].vendor_name;
+                        //         requestObject.vendor_phone = data[m].vendor_phone;
+                        //         requestObject.vendor_email = data[m].vendor_email;
+                        //         requestObject.vendor_address = data[m].vendor_address;
+                        //         requestObject.vendor_city = data[m].vendor_city;
+                        //         requestObject.vendor_state = data[m].vendor_state;
+                        //         requestObject.vendor_zipcode = data[m].vendor_zipcode;
+                        //         requestObject.vendor_terms = data[m].vendor_terms;
+                        //         let add_costcode = new vendorConnection(requestObject);
+                        //         let save_costcode = await add_costcode.save();
+                        //     } else {
+                        //     }
+                        // }
+                        // res.send({ status: true, message: translator.getStr('VENDOR_ADD_MESSAGE') });
+                    }
+                    else {
+                        res.send({ message: translator.getStr('SomethingWrong'), status: false });
                     }
                 });
+
         } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });

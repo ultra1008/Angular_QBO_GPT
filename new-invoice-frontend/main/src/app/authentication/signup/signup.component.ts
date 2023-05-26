@@ -5,6 +5,7 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
+import { WEB_ROUTES } from 'src/consts/routes';
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
@@ -16,10 +17,10 @@ export class SignupComponent implements OnInit {
   returnUrl!: string;
   hide = true;
   chide = true;
-  constructor(
+  constructor (
     private formBuilder: UntypedFormBuilder,
     private router: Router
-  ) {}
+  ) { }
   ngOnInit() {
     this.authForm = this.formBuilder.group({
       username: ['', Validators.required],
@@ -40,7 +41,7 @@ export class SignupComponent implements OnInit {
     if (this.authForm.invalid) {
       return;
     } else {
-      this.router.navigate(['/dashboard/main']);
+      this.router.navigate([WEB_ROUTES.DASHBOARD]);
     }
   }
 }

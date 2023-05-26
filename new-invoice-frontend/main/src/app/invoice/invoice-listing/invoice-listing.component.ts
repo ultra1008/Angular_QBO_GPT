@@ -92,8 +92,9 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
     }); */
   }
   editCall(row: Invoice) {
-    this.router.navigate([WEB_ROUTES.INVOICE_DETAILS]);
+    this.router.navigate([WEB_ROUTES.INVOICE_DETAILS], { queryParams: { _id: '642aa86f28667a73474c388c' } });
   }
+
 
   private refreshTable() {
     this.paginator._changePageSize(this.paginator.pageSize);

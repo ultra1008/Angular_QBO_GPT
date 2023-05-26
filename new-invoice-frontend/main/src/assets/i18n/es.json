@@ -50,6 +50,7 @@
             "ARCHIVED_TITLE": "Proveedor archivado"
         },
         "TABLE": {
+            "VENDOR_IMAGE": "Image",
             "VENDOR_NAME": "Nombre del proveedor",
             "VENDOR_ID": "ID de proveedor",
             "CUSTOMER_ID": "ID de cliente",
@@ -177,7 +178,7 @@
             "USAGE": "Uso",
             "OTHER_SETTINGS": "Otras configuraciones",
             "SECURITY": "Seguridad",
-            "COST_CODE": "Código de costo",
+            "COST_CODE": "Código de costo/Cuenta de mayor",
             "DOCUMENT_VIEW": "Vista de documento",
             "SECURITY_MODULE": {
                 "ALERT_SURE_WANT_CHANGE": "Esta es una configuración global que afectará a todos los proyectos. ¿Está seguro de que desea realizar el cambio?",
@@ -219,6 +220,7 @@
             },
             "COST_CODE_MODULE": {
                 "DIVISON": "División",
+                "GL_ACCOUNTS": "Tipo de cuenta del LM/tipo de código de costo",
                 "DISCRIPTION": "Descripción",
                 "HEADER_ARCHIVE": "Código de costo de archivo",
                 "CONFIRMATION_DIALOG": {

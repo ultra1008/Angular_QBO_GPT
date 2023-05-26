@@ -10,6 +10,9 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 import { LanguageComponent } from './language/language.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { SwitchCompanyComponent } from './header/switch-company/switch-company.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 @NgModule({
   imports: [
     CommonModule,
@@ -20,15 +23,19 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatInputModule,
     MatBadgeModule,
     NgScrollbarModule,
-    TranslateModule
+    TranslateModule,
+    MatDialogModule,
+    MatSnackBarModule,
   ],
   declarations: [
-    LanguageComponent
+    LanguageComponent,
+    SwitchCompanyComponent
   ],
   exports: [
     LanguageComponent,
     TranslateModule,
-    MatTooltipModule
+    MatTooltipModule,
+    SwitchCompanyComponent,
   ]
 })
 export class LayoutModule { }

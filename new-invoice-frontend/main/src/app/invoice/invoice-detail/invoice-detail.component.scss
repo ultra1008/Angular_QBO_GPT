@@ -1,5 +1,12 @@
 .Fix-hight {
      max-height: 70%;
+     overflow: scroll;
+     overflow-x: hidden;
+}
+
+.onhold {
+     background: #FF9800;
+     color: white
 }
 
 .position-f {
@@ -7,11 +14,22 @@
      width: 42.1%;
 }
 
+.note-card {
+     background: #e8e8e8;
+     border-radius: 10px;
+}
+
+.form-button {
+     padding-left: 15px !important;
+     padding-bottom: 5px !important;
+
+}
+
 .card {
      margin-bottom: 10px !important;
 
      .body {
-          padding: unset !important;
+          padding: 5px !important;
      }
 
      .header {
@@ -32,6 +50,10 @@
      color: white
 }
 
+::ng-deep .mat-expansion-panel-content {
+
+     padding: 5px !important;
+}
 
 ::ng-deep .mat-mdc-text-field-wrapper {
      height: 40px !important;
@@ -114,7 +136,7 @@
 
 // expansion-panel
 .mat-expansion-panel-header {
-     border-radius: 10px !important;
+     border-radius: 5px !important;
      margin-bottom: 5px !important;
      height: 33px !important;
      background-color: #3f51b5 !important;
@@ -138,4 +160,26 @@
 
 .chat-msg {
      padding-left: 10px;
+}
+
+.mdc-fab--mini {
+     width: 35px;
+     height: 35px;
+}
+
+.mat-icon {
+     height: 17px;
+     width: 17px;
+}
+
+.material-icons {
+     font-size: 17px;
+}
+
+.badge {
+     height: 25px;
+}
+
+.custom-d-flex {
+     display: flex;
 }

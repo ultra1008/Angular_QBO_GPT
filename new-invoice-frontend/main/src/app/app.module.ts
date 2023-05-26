@@ -36,8 +36,9 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LanguageComponent } from './layout/language/language.component';
 import { MatSelectModule } from '@angular/material/select';
-import { ClientComponent } from './client/client.component';
-import { ClientFormComponent } from './client/client-form/client-form.component';
+import { SwitchCompanyComponent } from './layout/header/switch-company/switch-company.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { ClientFormComponent } from './client/client-form/client-form.component'
     AuthLayoutComponent,
     MainLayoutComponent,
     LanguageComponent,
+    SwitchCompanyComponent,
   ],
   imports: [
     BrowserModule,
@@ -66,6 +68,8 @@ import { ClientFormComponent } from './client/client-form/client-form.component'
     CommonComponentsModule,
     MatSelectModule,
     MatChipsModule,
+    MatDialogModule,
+    MatSnackBarModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -82,7 +86,7 @@ import { ClientFormComponent } from './client/client-form/client-form.component'
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }
 // AOT compilation support
 export function httpTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http);

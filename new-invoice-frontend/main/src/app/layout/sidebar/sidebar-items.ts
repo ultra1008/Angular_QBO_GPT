@@ -2,7 +2,7 @@ import { WEB_ROUTES } from 'src/consts/routes';
 import { RouteInfo } from './sidebar.metadata';
 export const ROUTES: RouteInfo[] = [
   {
-    path: '/dashboard/main',
+    path: WEB_ROUTES.DASHBOARD,
     title: 'Dashboard',
     iconType: 'material-icons-two-tone',
     icon: 'home',

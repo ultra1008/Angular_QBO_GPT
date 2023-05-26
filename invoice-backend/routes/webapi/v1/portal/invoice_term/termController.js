@@ -152,28 +152,37 @@ module.exports.importterm = async function (req, res) {
                         const file = reader.readFile(newOpenFile[0].path);
                         const sheets = file.SheetNames;
                         let data = [];
+                        let exitdata = new Array();
                         for (let i = 0; i < sheets.length; i++) {
                             const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
                             temp.forEach((ress) => {
                                 data.push(ress);
                             });
                         }
+                        var onecategory_main = "";
                         for (let m = 0; m < data.length; m++) {
-                            requestObject = {};
-                            let onecategory_main = await termConnection.findOne({ name: data[m].name, due_days: data[m].due_days, });
-                            if (onecategory_main == null) {
+                            onecategory_main = await termConnection.findOne({ name: data[m].name, due_days: data[m].due_days }, { name: 1, due_days: 1 });
+                            if (onecategory_main != null) {
+                                exitdata[m] = onecategory_main.name;
+                            }
+                        }
+                        if (exitdata.length > 0) {
+                            res.send({ status: false, exitdata: exitdata, message: "name is allready exist." });
+                        }
+                        else {
+                            for (let m = 0; m < data.length; m++) {
+                                onecategory_main = await termConnection.findOne({ name: data[m].name, due_days: data[m].due_days, }, { name: 1, due_days: 1 });
+                                requestObject = {};
                                 requestObject.name = data[m].name;
                                 requestObject.due_days = data[m].due_days;
                                 requestObject.is_discount = data[m].is_discount;
                                 requestObject.discount = data[m].discount;
                                 let add_term = new termConnection(requestObject);
                                 let save_term = await add_term.save();
-                            } else {
-                                res.send({ status: true, message: "term info name or due_days contact is allready exist." });
-                            }
-                        }
-                        res.send({ status: true, message: "term info add successfully." });
 
+                            }
+                            res.send({ status: true, message: "term info add successfully." });
+                        }
                     } else {
                         res.send({ status: false, message: translator.getStr('SomethingWrong'), rerror: e });
                     }

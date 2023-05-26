@@ -29,7 +29,7 @@
                                    </li>
                                    <li class="tbl-header-btn">
                                         <div class="m-l-10" matTooltip="BACK">
-                                             <button mat-mini-fab color="warn">
+                                             <button mat-mini-fab color="warn" (click)="back()">
                                                   <mat-icon class="col-white">close </mat-icon>
                                              </button>
                                         </div>
@@ -39,7 +39,7 @@
                     </div>
                     <div class="row clearfix mt-2">
                          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                              <div class="Fix-hight" style="overflow: scroll; overflow-x: hidden;">
+                              <div class="Fix-hight">
                                    <div class="card">
                                         <div class="header">
                                              <h2>Information</h2>
@@ -48,7 +48,6 @@
                                              <div class="list-group">
                                                   <form class="register-form m-1" [formGroup]="invoiceForm">
                                                        <div class="row">
-
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
@@ -149,15 +148,16 @@
                                                             </div>
                                                        </div>
                                                   </form>
-                                                  <div class="d-flex"
-                                                       style="padding-left: 15px !important; padding-bottom: 5px !important;">
+                                                  <div class="d-flex form-button">
                                                        <button class="btn-space" mat-raised-button
                                                             color="primary">{{'COMMON.ACTIONS.SAVE'|
                                                   translate}}</button>
                                                        <button class="btn-space but-c" type="button"
                                                             mat-raised-button>{{'Approve'| translate}}</button>
-                                                       <button type="button" mat-raised-button
+                                                       <button class="btn-space" type="button" mat-raised-button
                                                             color="warn">{{'Reject'| translate}}</button>
+                                                       <button type="button" class="onhold"
+                                                            mat-raised-button>{{'On Hold'| translate}}</button>
                                                   </div>
                                              </div>
                                         </div>
@@ -168,7 +168,6 @@
 
                                         </div>
                                         <div class="body">
-
                                              <mat-tab-group>
                                                   <mat-tab label="3-28-2023">
                                                        <div class="body table-responsive">
@@ -398,13 +397,10 @@
                                                             </div>
                                                        </div>
                                                   </form>
-                                                  <div class="d-flex" style="padding-left: 15px !important;">
+                                                  <div class="d-flex form-button">
                                                        <button class="btn-space" mat-raised-button
                                                             color="primary">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
-                                                       <button class="btn-space but-c" type="button"
-                                                            mat-raised-button>{{'Approve'| translate}}</button>
-                                                       <button type="button" mat-raised-button
-                                                            color="warn">{{'Reject'| translate}}</button>
+
                                                   </div>
                                              </mat-expansion-panel>
                                              <mat-expansion-panel (opened)="panelOpenState = true"
@@ -417,12 +413,28 @@
                                                   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                        <div class="card">
                                                             <div class="chat">
+                                                                 <div class="chat-message clearfix">
+                                                                      <div class="form-group d-flex">
+                                                                           <div class="form-line col-11">
+                                                                                <mat-form-field
+                                                                                     class="example-full-width">
+                                                                                     <input matInput
+                                                                                          placeholder="Enter text here..">
+                                                                                </mat-form-field>
+                                                                           </div>
+                                                                           <div class="chat-upload col-1">
+                                                                                <button mat-raised-button
+                                                                                     color="primary">{{'COMMON.ACTIONS.SAVE'|
+                                                                      translate}}</button>
+
+                                                                           </div>
+                                                                      </div>
+
+                                                                 </div>
                                                                  <ng-scrollbar style="height: 250px" visibility="hover">
                                                                       <div class="chat-history" id="chat-conversation">
                                                                            <ul>
-
-                                                                                <li
-                                                                                     style="background: #e8e8e8;border-radius: 10px; ">
+                                                                                <li class="note-card">
                                                                                      <div
                                                                                           class="message-data d-flex chat-p mt-2">
                                                                                           <div class="col-11">
@@ -455,8 +467,7 @@
                                                                                           </div>
                                                                                      </div>
                                                                                 </li>
-                                                                                <li
-                                                                                     style="background: #e8e8e8;border-radius: 10px; ">
+                                                                                <li class="note-card">
                                                                                      <div
                                                                                           class="message-data d-flex chat-p mt-2">
                                                                                           <div class="col-11">
@@ -489,8 +500,7 @@
                                                                                           </div>
                                                                                      </div>
                                                                                 </li>
-                                                                                <li
-                                                                                     style="background: #e8e8e8;border-radius: 10px; ">
+                                                                                <li class="note-card">
                                                                                      <div
                                                                                           class="message-data d-flex chat-p mt-2">
                                                                                           <div class="col-11">
@@ -527,24 +537,7 @@
                                                                            </ul>
                                                                       </div>
                                                                  </ng-scrollbar>
-                                                                 <div class="chat-message clearfix">
-                                                                      <div class="form-group d-flex">
-                                                                           <div class="form-line col-11">
-                                                                                <mat-form-field
-                                                                                     class="example-full-width">
-                                                                                     <input matInput
-                                                                                          placeholder="Enter text here..">
-                                                                                </mat-form-field>
-                                                                           </div>
-                                                                           <div class="chat-upload col-1">
-                                                                                <button mat-raised-button
-                                                                                     color="primary">{{'COMMON.ACTIONS.SAVE'|
-                                                                      translate}}</button>
 
-                                                                           </div>
-                                                                      </div>
-
-                                                                 </div>
                                                             </div>
                                                        </div>
                                                   </div>
@@ -557,58 +550,95 @@
                                                        </mat-panel-title>
 
                                                   </mat-expansion-panel-header>
-                                                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                                       <mat-form-field class="example-full-width" appearance="fill">
-                                                            <mat-label>First name</mat-label>
-                                                            <input matInput>
-                                                       </mat-form-field>
+                                                  <div class="body">
+                                                       <div class="doc-file-type">
+                                                            <ng-scrollbar style="height: 285px" visibility="hover">
+                                                                 <ul class="list-unstyled">
+                                                                      <div class="row">
+                                                                           <button mat-raised-button color="primary">
+                                                                                {{'COMMON.ACTIONS.SAVE'| translate}}
+                                                                           </button>
+                                                                      </div>
+                                                                      <li class="d-flex justify-content-between mb-3"
+                                                                           *ngFor="let document of [1,2,3,4,5]; let i = index"
+                                                                           [ngClass]="i === 0 ? 'mt-2' : ''">
+                                                                           <div class="custom-d-flex">
+                                                                                <span
+                                                                                     class="msr-3 align-self-center img-icon primary-rgba text-primary"><i
+                                                                                          class="far fa-file-pdf"></i>
+                                                                                </span>
+                                                                                <div class="set-flex">
+                                                                                     <h5 class="font-16 mb-1">Java
+                                                                                          Programming</h5>
+                                                                                     <p>04/20/2023, 04:31 PM</p>
+                                                                                </div>
+                                                                           </div>
+                                                                           <span class="badge badge-solid-red my-auto">
+                                                                                Invoice </span>
+                                                                           <div>
+                                                                                <td>
+                                                                                     <button mat-mini-fab color="warn"
+                                                                                          class="mx-2">
+                                                                                          <mat-icon
+                                                                                               class="col-white">delete</mat-icon>
+                                                                                     </button>
+                                                                                     <button mat-mini-fab
+                                                                                          color="primary">
+                                                                                          <mat-icon
+                                                                                               class="col-white">download</mat-icon>
+                                                                                     </button>
+                                                                                </td>
+                                                                           </div>
+                                                                      </li>
+                                                                 </ul>
+                                                            </ng-scrollbar>
+
+                                                       </div>
                                                   </div>
-                                                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                                       <mat-form-field class="example-full-width" appearance="fill">
-                                                            <mat-label>Age</mat-label>
-                                                            <input matInput type="number" min="1">
-                                                       </mat-form-field>
-                                                  </div>
-                                                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                                       <mat-form-field class="example-full-width" appearance="fill">
-                                                            <mat-label>First name</mat-label>
-                                                            <input matInput>
-                                                       </mat-form-field>
-                                                  </div>
-                                                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                                       <mat-form-field class="example-full-width" appearance="fill">
-                                                            <mat-label>Age</mat-label>
-                                                            <input matInput type="number" min="1">
-                                                       </mat-form-field>
-                                                  </div>
-                                                  <p>I'm visible because I am
-                                                       open</p>
                                              </mat-expansion-panel>
                                         </mat-accordion>
                                    </div>
                               </div>
-
-
-                              <div class="card mt-2 position-f">
+                              <div class="card  activity mt-2 position-f">
                                    <div class="header">
                                         <h2>Info</h2>
+                                        <span style="height: 10px;">
+                                             <mat-icon class="col-gray mt-1">add</mat-icon>
+                                        </span>
                                    </div>
                                    <div class="body">
                                         <div class="list-group">
-                                             <a href="#" onClick="return false;" class="list-group-item active">
-                                                  Cras justo odio
-                                             </a>
-                                             <a href="#" onClick="return false;" class="list-group-item">Dapibus ac
-                                                  facilisis in</a>
-                                             <a href="#" onClick="return false;" class="list-group-item">Morbi leo
-                                                  risus</a>
+                                             <div class="body">
+
+                                                  <div class="body table-responsive">
+                                                       <table class="table">
+                                                            <thead>
+                                                                 <tr>
+                                                                      <th>Total amount</th>
+                                                                      <th>cost code</th>
+                                                                      <th>Assign To</th>
+                                                                      <th>GL Account</th>
+                                                                      <th>Notes</th>
+                                                                 </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                 <tr>
+                                                                      <th>55.00</th>
+                                                                      <td>Cost Code</td>
+                                                                      <td>Assign To</td>
+                                                                      <td>GL Account</td>
+                                                                      <td>Notes</td>
+                                                                 </tr>
+                                                            </tbody>
+                                                       </table>
+                                                  </div>
+
+
+                                             </div>
 
                                         </div>
                                    </div>
                               </div>
-
-
-
                          </div>
                          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                               <div class="card" style="height: 770px; width:790px">
@@ -618,13 +648,14 @@
                                    <div class="body">
                                         <img src="assets/images/full_bg.jpg" height="690px" width="760px" alt="">
                                    </div> -->
-                                   <div class="pdf-viewer">
+                                   <app-custompdfviewer [pdf_url]="pdf_url"></app-custompdfviewer>
+                                   <!-- <div class="pdf-viewer">
                                         <pdf-viewer id="pdf" [src]="pdf_url" [rotation]="0" [original-size]="false"
                                              [show-all]="true" [fit-to-page]="false" [zoom]="1"
                                              [zoom-scale]="'page-width'" [stick-to-page]="false" [render-text]="true"
                                              [external-link-target]="'blank'" [autoresize]="true" [show-borders]="false"
                                              [external-link-target]="'blank'"></pdf-viewer>
-                                   </div>
+                                   </div> -->
                               </div>
                          </div>
                     </div>

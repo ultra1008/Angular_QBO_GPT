@@ -359,28 +359,56 @@ module.exports.importCostCode = async function (req, res) {
                         const file = reader.readFile(newOpenFile[0].path);
                         const sheets = file.SheetNames;
                         let data = [];
+                        let exitdata = new Array();
                         for (let i = 0; i < sheets.length; i++) {
                             const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
                             temp.forEach((ress) => {
                                 data.push(ress);
                             });
                         }
+                        var onecategory_main = "";
                         for (let m = 0; m < data.length; m++) {
-                            requestObject = {};
-                            let onecategory_main = await costcodeCollection.findOne({ cost_code: data[m].cost_code, division: data[m].division });
-                            if (onecategory_main == null) {
+                            onecategory_main = await costcodeCollection.findOne({ cost_code: data[m].cost_code, division: data[m].division }, { cost_code: 1 });
+                            if (onecategory_main != null) {
+                                exitdata[m] = onecategory_main.cost_code;
+                            }
+                        }
+                        if (exitdata.length > 0) {
+                            res.send({ status: false, exitdata: exitdata, message: "cost code is allready exist." });
+                        }
+                        else {
+                            for (let m = 0; m < data.length; m++) {
+                                onecategory_main = await costcodeCollection.findOne({ cost_code: data[m].cost_code, division: data[m].division }, { cost_code: 1 });
+                                requestObject = {};
                                 requestObject.cost_code = data[m].cost_code;
                                 requestObject.division = data[m].division;
                                 requestObject.module = data[m].module;
                                 requestObject.description = data[m].description;
                                 requestObject.value = data[m].value;
-                                requestObject.is_delete = 0;
                                 let add_costcode = new costcodeCollection(requestObject);
                                 let save_costcode = await add_costcode.save();
-                            } else {
                             }
+                            res.send({ status: true, message: translator.getStr('CostCodeAdded') });
                         }
-                        res.send({ status: true, message: translator.getStr('CostCodeAdded') });
+                        // for (let m = 0; m < data.length; m++) {
+                        //     requestObject = {};
+                        //     let onecategory_main = await costcodeCollection.findOne({ cost_code: data[m].cost_code, division: data[m].division });
+                        //     if (onecategory_main == null) {
+                        //         requestObject.cost_code = data[m].cost_code;
+                        //         requestObject.division = data[m].division;
+                        //         requestObject.module = data[m].module;
+                        //         requestObject.description = data[m].description;
+                        //         requestObject.value = data[m].value;
+                        //         requestObject.is_delete = 0;
+                        //         let add_costcode = new costcodeCollection(requestObject);
+                        //         let save_costcode = await add_costcode.save();
+                        //     } else {
+                        //     }
+                        // }
+                        // res.send({ status: true, message: translator.getStr('CostCodeAdded') });
+                    }
+                    else {
+                        res.send({ message: translator.getStr('SomethingWrong'), status: false });
                     }
                 });
         } catch (e) {

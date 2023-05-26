@@ -167,24 +167,35 @@ module.exports.importdepartment = async function (req, res) {
                         const file = reader.readFile(newOpenFile[0].path);
                         const sheets = file.SheetNames;
                         let data = [];
+                        let exitdata = new Array();
                         for (let i = 0; i < sheets.length; i++) {
                             const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
                             temp.forEach((ress) => {
                                 data.push(ress);
                             });
                         }
+                        var onecategory_main = "";
                         for (let m = 0; m < data.length; m++) {
-                            requestObject = {};
-                            let getdata = await departmentCollection.findOne({ department_name: data[m].department_name });
-                            if (getdata == null) {
-                                requestObject.department_name = data[m].department_name;
-                                let add_job_type = new departmentCollection(requestObject);
-                                let save_job_type = await add_job_type.save();
-                            } else {
-                                res.send({ status: true, message: "department name is allready exist." });
+                            onecategory_main = await departmentCollection.findOne({ department_name: data[m].department_name }, { department_name: 1 });
+                            if (onecategory_main != null) {
+                                exitdata[m] = onecategory_main.department_name;
                             }
                         }
-                        res.send({ status: true, message: "department info add successfully." });
+                        if (exitdata.length > 0) {
+                            res.send({ status: false, exitdata: exitdata, message: "department  name is allready exist." });
+                        }
+                        else {
+                            for (let m = 0; m < data.length; m++) {
+                                onecategory_main = await departmentCollection.findOne({ department_name: data[m].department_name }, { department_name: 1 });
+                                requestObject = {};
+                                requestObject.department_name = data[m].department_name;
+                                let add_department = new departmentCollection(requestObject);
+                                let save_department = await add_department.save();
+
+                            }
+                            res.send({ status: true, message: "department info add successfully." });
+                        }
+
 
                     } else {
                         res.send({ status: false, message: translator.getStr('SomethingWrong') });
