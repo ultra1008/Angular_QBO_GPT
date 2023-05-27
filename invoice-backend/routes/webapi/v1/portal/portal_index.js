@@ -482,6 +482,7 @@ router.post('/webapi/v1/portal/updateMultipleClientStatus', common.checkTokenExi
 router.post('/webapi/v1/portal/deleteMultipleClient', common.checkTokenExistOrNot, clientController.deleteMultipleClient);
 router.post('/webapi/v1/portal/getClientForTable', common.checkTokenExistOrNot, clientController.getClientForTable);
 router.post('/webapi/v1/portal/getOneClient', common.checkTokenExistOrNot, clientController.getOneClient);
+router.post('/webapi/v1/portal/importClientname', common.checkTokenExistOrNot, clientController.importClientname);
 
 
 Class_nameController = require('./class_name/class_nameController');
