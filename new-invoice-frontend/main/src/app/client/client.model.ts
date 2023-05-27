@@ -1,3 +1,6 @@
+import { CostCodeTable } from '../settings/settings.model';
+import { User } from './../users/user.model';
+
 export class ClientList {
   _id: string;
   client_name: string;
@@ -9,7 +12,9 @@ export class ClientList {
   gl_account: number;
   client_cost_cost_id: string;
   client_phone: string;
-  constructor(response: ClientList) {
+  approver: User;
+  client_cost_cost: CostCodeTable;
+  constructor (response: ClientList) {
     {
       this._id = response._id;
       this.client_name = response.client_name;
@@ -21,6 +26,8 @@ export class ClientList {
       this.gl_account = response.gl_account;
       this.client_cost_cost_id = response.client_cost_cost_id;
       this.client_phone = response.client_phone;
+      this.approver = response.approver;
+      this.client_cost_cost = response.client_cost_cost;
     }
   }
 }

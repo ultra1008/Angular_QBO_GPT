@@ -101,42 +101,12 @@
                                         </button>
                                     </div>
                                 </li>
-
-                                <!-- <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="MULTI ARCHIVE">
-                                        <button mat-mini-fab color="warn" (click)="removeSelectedRows()">
-                                            <mat-icon class="col-white">archive </mat-icon>
-                                        </button>
-                                    </div>
-                                </li>
-                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" matTooltip="REFRESH">
-                                        <button mat-mini-fab color="primary" (click)="refresh()">
-                                            <mat-icon class="col-white">refresh</mat-icon>
-                                        </button>
-                                    </div>
-                                </li>
-                             
-                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" matTooltip="REPORT" (click)="vendorReport()">
-                                        <button mat-mini-fab color="primary">
-                                            <mat-icon class="col-white">insert_drive_file</mat-icon>
-                                        </button>
-                                    </div>
-                                </li>
-                              
-                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" matTooltip="ADD">
-                                        <button mat-mini-fab color="primary" (click)="addNew()">
-                                            <mat-icon class="col-white">add</mat-icon>
-                                        </button>
-                                    </div>
-                                </li>
                                 <li *ngIf="isDelete === 0">
-                                    <div class="export-button m-l-10" matTooltip="XLSX">
+                                    <div class="export-button m-l-10" matTooltip="{{'COMMON.TOOL_TIP.XLSX' |
+                                        translate}}">
                                         <img src="assets/images/icons/xlsx.png" alt="" (click)="exportExcel()" />
                                     </div>
-                                </li> -->
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -180,8 +150,8 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.USER_NAME' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell [matTooltip]="getNameTooltip(row)" (click)="editUser(row)" *matCellDef="let row"
-                                        (contextmenu)="onContextMenu($event, row)">
+                                    <mat-cell [matTooltip]="getNameTooltip(row)" (click)="editUser(row)"
+                                        *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
                                         <span class="truncate-text"> <span
                                                 class="mobile-label">Name:</span>{{row.userfullname}}</span>
                                     </mat-cell>
@@ -190,8 +160,8 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.PHONE' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell [matTooltip]="getPhoneTooltip(row)" (click)="editUser(row)" *matCellDef="let row"
-                                        (contextmenu)="onContextMenu($event, row)">
+                                    <mat-cell [matTooltip]="getPhoneTooltip(row)" (click)="editUser(row)"
+                                        *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
                                         <span class="truncate-text"> <span
                                                 class="mobile-label">Phone:</span>{{phonenoFormat(row.userphone)}}</span>
                                     </mat-cell>
@@ -200,8 +170,8 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.EMAIL' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (click)="editUser(row)" [matTooltip]="getEmailTooltip(row)"
-                                        (contextmenu)="onContextMenu($event, row)">
+                                    <mat-cell *matCellDef="let row" (click)="editUser(row)"
+                                        [matTooltip]="getEmailTooltip(row)" (contextmenu)="onContextMenu($event, row)">
                                         <span class="truncate-text"> <span
                                                 class="mobile-label">Email:</span>{{row.useremail}}</span>
                                     </mat-cell>
@@ -210,8 +180,8 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.ROLE' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell [matTooltip]="getRoleTooltip(row)" (click)="editUser(row)" *matCellDef="let row"
-                                        (contextmenu)="onContextMenu($event, row)">
+                                    <mat-cell [matTooltip]="getRoleTooltip(row)" (click)="editUser(row)"
+                                        *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
                                         <span class="truncate-text"> <span
                                                 class="mobile-label">Role:</span>{{row.role_name}}</span>
                                     </mat-cell>
@@ -220,8 +190,8 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.JOB_TITLE' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell [matTooltip]="getJobTitleTooltip(row)" (click)="editUser(row)" *matCellDef="let row"
-                                        (contextmenu)="onContextMenu($event, row)">
+                                    <mat-cell [matTooltip]="getJobTitleTooltip(row)" (click)="editUser(row)"
+                                        *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Job
                                             Title:</span>{{row.userjob_title_name}}
                                     </mat-cell>
@@ -230,8 +200,8 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.DEPARTMENT' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell [matTooltip]="getDepartmentTooltip(row)" (click)="editUser(row)" *matCellDef="let row"
-                                        (contextmenu)="onContextMenu($event, row)">
+                                    <mat-cell [matTooltip]="getDepartmentTooltip(row)" (click)="editUser(row)"
+                                        *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
                                         <span class="truncate-text"> <span
                                                 class="mobile-label">Department:</span>{{row.department_name}}</span>
                                     </mat-cell>

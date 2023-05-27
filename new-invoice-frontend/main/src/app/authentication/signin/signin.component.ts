@@ -148,13 +148,13 @@ export class SigninComponent implements OnInit {
           this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);
         } else {
           setTimeout(() => {
+            localStorage.setItem(localstorageconstants.LOGOUT, 'false');
             this.router.navigate([WEB_ROUTES.DASHBOARD]);
           }, 300);
         }
         localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.user_data.token);
         localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.user_data));
         localStorage.setItem(localstorageconstants.COMPANYID, data.user_data.companydata._id);
-        localStorage.setItem(localstorageconstants.LOGOUT, 'false');
 
         sessionStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
         localStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
@@ -269,6 +269,7 @@ export class SigninComponent implements OnInit {
       if (data.data.UserData.useris_password_temp == true) {
         this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);
       } else {
+        localStorage.setItem(localstorageconstants.LOGOUT, 'false');
         setTimeout(() => {
           this.router.navigate([WEB_ROUTES.DASHBOARD]);
         }, 300);
@@ -276,7 +277,7 @@ export class SigninComponent implements OnInit {
       localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.data.token);
       localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.data));
       localStorage.setItem(localstorageconstants.COMPANYID, data.data.companydata._id);
-      localStorage.setItem(localstorageconstants.LOGOUT, 'false');
+
 
       sessionStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
       localStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');

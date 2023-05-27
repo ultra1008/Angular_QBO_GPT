@@ -13,6 +13,7 @@ import { showNotification } from 'src/consts/utils';
 import { Location } from '@angular/common';
 import { icon } from 'src/consts/icon';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
 
 @Component({
   selector: 'app-forcefull-change-password',
@@ -37,13 +38,6 @@ export class ForcefullChangePasswordComponent {
     this.hideConfirm = !this.hideConfirm;
   }
 
-  breadscrums = [
-    {
-      title: 'Examples',
-      items: ['Forms'],
-      active: 'Examples',
-    },
-  ];
   constructor (
     private fb: UntypedFormBuilder,
     private router: Router,
@@ -55,8 +49,15 @@ export class ForcefullChangePasswordComponent {
   }
 
   back() {
-    this.location.back();
+    const logout = localStorage.getItem(localstorageconstants.LOGOUT) ?? 'true';
+    console.log("logoutlogout", logout);
+    if (logout == 'true') {
+      this.router.navigate([WEB_ROUTES.LOGIN]);
+    } else {
+      this.router.navigate([WEB_ROUTES.DASHBOARD]);
+    }
   }
+
   initForm() {
     this.forcefullyPasswordInfo = this.fb.group(
       {
@@ -126,7 +127,6 @@ export class ForcefullChangePasswordComponent {
   async changePassword() {
     this.forcefullyPasswordInfo?.markAllAsTouched();
     const reqObject = this.forcefullyPasswordInfo?.value;
-    console.log('reqobject', reqObject);
     let that = this;
     if (reqObject.password !== reqObject.password_confirmation) {
       showNotification(
@@ -136,22 +136,11 @@ export class ForcefullChangePasswordComponent {
       );
       return;
     }
-    console.log(
-      'oldpassword: ',
-      that.forcefullyPasswordInfo?.get('oldpassword')?.valid
-    );
-    console.log(
-      'password: ',
-      that.forcefullyPasswordInfo?.get('password')?.valid
-    );
-    console.log(
-      'password_confirmation: ',
-      that.forcefullyPasswordInfo?.get('password_confirmation')?.valid
-    );
     // console.log("call change passwoed", that.forcefullyPasswordInfo?.valid, that.forcefullyPasswordInfo?.value);
     if (that.forcefullyPasswordInfo?.valid) {
       const data = await this.authenticationService.changePassword(reqObject);
       if (data.status) {
+        localStorage.setItem(localstorageconstants.LOGOUT, 'false');
         showNotification(this.snackBar, data.message, 'success');
         this.router.navigate([WEB_ROUTES.DASHBOARD]);
         // for delete we use splice in order to remove single object from DataService

@@ -176,13 +176,13 @@
                                                   <div class="d-flex form-button">
                                                        <button class="btn-space" mat-raised-button
                                                             color="primary">{{'COMMON.ACTIONS.SAVE'|
-                                                  translate}}</button>
+                                                            translate}}</button>
                                                        <button class="btn-space but-c" type="button"
                                                             mat-raised-button>{{'Approve'| translate}}</button>
                                                        <button class="btn-space" type="button" mat-raised-button
                                                             color="warn">{{'Reject'| translate}}</button>
-                                                       <button type="button" class="onhold"
-                                                            mat-raised-button>{{'On Hold'| translate}}</button>
+                                                       <button type="button" class="onhold" mat-raised-button>{{'On
+                                                            Hold'| translate}}</button>
                                                   </div>
                                              </div>
                                         </div>
@@ -473,7 +473,8 @@
                                                   </form>
                                                   <div class="d-flex form-button">
                                                        <button class="btn-space" mat-raised-button
-                                                            color="primary">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
+                                                            color="primary">{{'COMMON.ACTIONS.SAVE'|
+                                                            translate}}</button>
 
                                                   </div>
                                              </mat-expansion-panel>
@@ -499,7 +500,7 @@
                                                                            <div class="chat-upload col-1">
                                                                                 <button mat-raised-button
                                                                                      color="primary">{{'COMMON.ACTIONS.SAVE'|
-                                                                      translate}}</button>
+                                                                                     translate}}</button>
 
                                                                            </div>
                                                                       </div>
@@ -647,8 +648,21 @@
                                                                                      <p>04/20/2023, 04:31 PM</p>
                                                                                 </div>
                                                                            </div>
-                                                                           <span class="badge badge-solid-red my-auto">
+                                                                           <span *ngIf="i == 0"
+                                                                                class="badge badge-solid-red my-auto">
                                                                                 Invoice </span>
+                                                                           <span *ngIf="i == 1"
+                                                                                class="badge badge-solid-purple my-auto">
+                                                                                P.O </span>
+                                                                           <span *ngIf="i == 2"
+                                                                                class="badge badge-solid-cyan my-auto">
+                                                                                Quotes </span>
+                                                                           <span *ngIf="i == 3"
+                                                                                class="badge badge-solid-green my-auto">
+                                                                                Reciving Slip </span>
+                                                                           <span *ngIf="i == 4"
+                                                                                class="badge badge-solid-pink my-auto">
+                                                                                Packing Slip </span>
                                                                            <div>
                                                                                 <td>
                                                                                      <button mat-mini-fab color="warn"

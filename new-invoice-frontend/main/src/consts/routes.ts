@@ -8,6 +8,8 @@ export enum WEB_ROUTES {
   SIDEMENU_USER = 'user',
   SIDEMENU_SETTINGS = 'settings',
 
+  LOGIN = '/authentication/signin',
+
   FORM = 'form',
   HISTORY = 'history',
   GRID = 'grid',

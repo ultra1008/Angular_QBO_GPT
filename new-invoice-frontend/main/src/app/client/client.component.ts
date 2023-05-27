@@ -27,8 +27,7 @@ import { TableElement } from '../shared/TableElement';
 import { UnsubscribeOnDestroyAdapter } from '../shared/UnsubscribeOnDestroyAdapter';
 import { TableExportUtil } from '../shared/tableExportUtil';
 import { VendorReportComponent } from '../vendors/vendor-report/vendor-report.component';
-import { Vendor, TermModel } from '../vendors/vendor.model';
-import { VendorsService } from '../vendors/vendors.service';
+import { TermModel } from '../vendors/vendor.model';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { ClientService } from './client.service';
 import { ClientList } from './client.model';
@@ -42,7 +41,7 @@ import { ClientList } from './client.model';
 export class ClientComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
-  show: boolean = false;
+  show = false;
   displayedColumns = [
     'select',
     'client_name',
@@ -59,8 +58,8 @@ export class ClientComponent
   id?: number;
   isDelete = 0;
   termsList: Array<TermModel> = [];
-  titleMessage: string = '';
-  isQBSyncedCompany: boolean = false;
+  titleMessage = '';
+  isQBSyncedCompany = false;
   rform?: any;
   selectedValue!: string;
 
@@ -102,20 +101,20 @@ export class ClientComponent
     return row.client_name;
   }
   getCostCodeTooltip(row: any) {
-    return row.client_cost_cost.cost_code;
+    return row.client_cost_cost?.cost_code;
   }
   getNumberTooltip(row: any) {
     return row.client_number;
   }
   getApproverTooltip(row: any) {
-    return row.approver.userfullname;
+    return row.approver?.userfullname;
   }
 
   refresh() {
     this.loadData();
   }
   onBookChange(ob: any) {
-    let selectedBook = ob.value;
+    const selectedBook = ob.value;
     console.log(selectedBook);
     if (selectedBook == 1) {
       swalWithBootstrapTwoButtons
@@ -169,7 +168,7 @@ export class ClientComponent
   }
 
   async allArchive() {
-    let tmp_ids = [];
+    const tmp_ids = [];
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
     }
@@ -187,7 +186,7 @@ export class ClientComponent
   }
 
   async allActive() {
-    let tmp_ids = [];
+    const tmp_ids = [];
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
     }
@@ -204,7 +203,7 @@ export class ClientComponent
   }
 
   async allInactive() {
-    let tmp_ids = [];
+    const tmp_ids = [];
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
     }
@@ -280,17 +279,17 @@ export class ClientComponent
   // export table data in excel file
   exportExcel() {
     // key name with space add in brackets
-    //  const exportData: Partial<TableElement>[] =
-    //       this.dataSource.filteredData.map((x) => ({
-    //         'Vendor Name': x.vendor_name || '',
-    //         'Vendor ID': x.vendor_id || '',
-    //         'Customer ID': x.customer_id || '',
-    //         Phone: x.vendor_phone || '',
-    //         Email: x.vendor_email || '',
-    //         Address: x.vendor_address || '',
-    //         Status: x.vendor_status === 1 ? 'Active' : 'Inactive',
-    //       }));
-    //     TableExportUtil.exportToExcel(exportData, 'excel');
+    const exportData: Partial<TableElement>[] =
+      this.dataSource.filteredData.map((x) => ({
+        'Client/Job Name': x.client_name || '',
+        'Client Number': x.client_number || '',
+        'Job Contact Email': x.client_email || '',
+        'Approver': x.approver?.userfullname || '',
+        'Job Cost Code/GL Account': x.client_cost_cost?.value || '',
+        'Status': x.client_status == 1 ? this.translate.instant('COMMON.STATUS.ACTIVE') : this.translate.instant('COMMON.STATUS.INACTIVE') || '',
+      }));
+
+    TableExportUtil.exportToExcel(exportData, 'excel');
   }
 
   // context menu
