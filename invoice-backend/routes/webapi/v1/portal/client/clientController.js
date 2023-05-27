@@ -1,4 +1,6 @@
 var clientSchema = require('../../../../../model/client');
+var userSchema = require('../../../../../model/user');
+var costCodeSchema = require('../../../../../model/invoice_cost_code');
 let db_connection = require('../../../../../controller/common/connectiondb');
 let collectionConstant = require('../../../../../config/collectionConstant');
 let common = require('../../../../../controller/common/common');
@@ -8,6 +10,7 @@ let config = require('../../../../../config/config');
 var ObjectID = require('mongodb').ObjectID;
 var formidable = require('formidable');
 const reader = require('xlsx');
+const _ = require("lodash");
 
 // client insert Edit 
 module.exports.saveclient = async function (req, res) {
@@ -18,6 +21,9 @@ module.exports.saveclient = async function (req, res) {
         try {
             var requestObject = req.body;
             var clientConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientSchema);
+            var userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+            var costCodeConnection = connection_db_api.model(collectionConstant.COSTCODES, costCodeSchema);
+
             let id = requestObject._id;
             delete requestObject._id;
             if (id) {
@@ -25,11 +31,32 @@ module.exports.saveclient = async function (req, res) {
                 //update invoice client
                 let updateclient = await clientConnection.updateOne({ _id: id }, requestObject);
                 if (updateclient) {
-
                     // find difference of object 
                     let updatedData = await common.findUpdatedFieldHistory(requestObject, one_client._doc);
+
+                    if (requestObject.approver_id !== '') {
+                        let found_approver = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'approver_id'; });
+                        if (found_approver != -1) {
+                            let one_term = await userConnection.findOne({ _id: ObjectID(updatedData[found_approver].value) });
+                            updatedData[found_approver].value = one_term.userfullname;
+                        }
+                    }
+
+                    if (requestObject.client_cost_cost_id !== '') {
+                        let found_costcode = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'client_cost_cost_id'; });
+                        if (found_costcode != -1) {
+                            let one_term = await costCodeConnection.findOne({ _id: ObjectID(updatedData[found_costcode].value) });
+                            updatedData[found_costcode].value = one_term.value;
+                        }
+                    }
+
+                    let found_status = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'client_status'; });
+                    if (found_status != -1) {
+                        updatedData[found_status].value = updatedData[found_status].value == 1 ? 'Active' : updatedData[found_status].value == 2 ? 'Inactive' : '';
+                    }
+
                     for (let i = 0; i < updatedData.length; i++) {
-                        updatedData[i]['key'] = translator.getStr(` Client_History.${updatedData[i]['key']}`);
+                        updatedData[i]['key'] = translator.getStr(`Client_History.${updatedData[i]['key']}`);
                     }
                     let histioryObject = {
                         data: updatedData,
@@ -44,18 +71,35 @@ module.exports.saveclient = async function (req, res) {
             }
             else {
                 //insert invoice client
-
                 var nameexist = await clientConnection.findOne({ "client_name": requestObject.client_name });
                 if (nameexist) {
                     res.send({ status: false, message: "client allready exist" });
-                }
-                else {
+                } else {
                     var add_client = new clientConnection(requestObject);
                     var save_client = await add_client.save();
-
-
                     // find difference of object 
                     let insertedData = await common.setInsertedFieldHistory(requestObject);
+
+                    if (requestObject.approver_id !== '') {
+                        let found_approver = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'approver_id'; });
+                        if (found_approver != -1) {
+                            let one_term = await userConnection.findOne({ _id: ObjectID(insertedData[found_approver].value) });
+                            insertedData[found_approver].value = one_term.userfullname;
+                        }
+                    }
+
+                    if (requestObject.client_cost_cost_id !== '') {
+                        let found_costcode = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'client_cost_cost_id'; });
+                        if (found_costcode != -1) {
+                            let one_term = await costCodeConnection.findOne({ _id: ObjectID(insertedData[found_costcode].value) });
+                            insertedData[found_costcode].value = one_term.value;
+                        }
+                    }
+
+                    let found_status = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'client_status'; });
+                    if (found_status != -1) {
+                        insertedData[found_status].value = insertedData[found_status].value == 1 ? 'Active' : insertedData[found_status].value == 2 ? 'Inactive' : '';
+                    }
 
                     for (let i = 0; i < insertedData.length; i++) {
                         insertedData[i]['key'] = translator.getStr(`Client_History.${insertedData[i]['key']}`);
@@ -66,9 +110,7 @@ module.exports.saveclient = async function (req, res) {
                     };
                     addClientHistory("Insert", histioryObject, decodedToken);
                     res.send({ status: true, message: "client insert successfully..!", data: add_client });
-
                 }
-
             }
         } catch (e) {
             console.log(e);
@@ -85,17 +127,14 @@ module.exports.saveclient = async function (req, res) {
 
 // get client
 module.exports.getclient = async function (req, res) {
-
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
-
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var clientConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientSchema);
             let get_data = await clientConnection.find({ is_delete: 0 });
             res.send({ status: true, message: "Get client", data: get_data });
-
         } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
@@ -135,20 +174,18 @@ module.exports.deleteclient = async function (req, res) {
                     let message = '';
                     if (requestObject.is_delete == 1) {
                         action = "Archive";
-                        message = "client archive successfully";
+                        message = "Client archive successfully.";
                     } else {
                         action = "Restore";
-                        message = "client restore successfully";
+                        message = "Client restore successfully.";
                     }
 
                     let histioryObject = {
                         data: [],
                         client_id: id,
                     };
-
                     addClientHistory(action, histioryObject, decodedToken);
                     res.send({ message: message, status: true });
-
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
                 }
@@ -178,7 +215,7 @@ async function addClientHistory(action, data, decodedToken) {
         data.history_created_at = Math.round(new Date().getTime() / 1000);
         data.history_created_by = decodedToken.UserData._id;
         var add_client_history = new client_history_connection(data);
-        var save_client_history = add_client_history.save();
+        var save_client_history = await add_client_history.save();
     } catch (e) {
         console.log(e);
     } finally {

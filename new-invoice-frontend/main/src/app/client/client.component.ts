@@ -41,7 +41,6 @@ import { ClientList } from './client.model';
 export class ClientComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
-  show = false;
   displayedColumns = [
     'select',
     'client_name',
@@ -256,7 +255,6 @@ export class ClientComponent
     console.log('All Selected removed option selected');
   }
   public loadData() {
-    this.show = false;
     console.log('Vendor loadData call');
     this.clientService = new ClientService(this.httpCall);
     this.dataSource = new ClientDataSource(
@@ -273,7 +271,6 @@ export class ClientComponent
         this.dataSource.filter = this.filter.nativeElement.value;
       }
     );
-    this.show = true;
   }
 
   // export table data in excel file
@@ -334,21 +331,20 @@ export class ClientComponent
     });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
-      const foundIndex = this.clientService?.dataChange.value.findIndex(
+      const foundIndex = this.clientService?.dataClientChange.value.findIndex(
         (x) => x._id === client._id
       );
       // for delete we use splice in order to remove single object from DataService
       if (foundIndex != null && this.clientService) {
-        this.clientService.dataChange.value.splice(foundIndex, 1);
+        this.clientService.dataClientChange.value.splice(foundIndex, 1);
         this.refreshTable();
-        location.reload();
       }
     } else {
       showNotification(this.snackBar, data.message, 'error');
     }
   }
 
-  async deleteVendor(client: ClientList, is_delete: number) {
+  async deleteClient(client: ClientList, is_delete: number) {
     if (is_delete == 1) {
       this.titleMessage = this.translate.instant(
         'CLIENT.CONFIRMATION_DIALOG.ARCHIVE'
@@ -369,7 +365,6 @@ export class ClientComponent
       .then((result) => {
         if (result.isConfirmed) {
           this.archiveRecover(client, is_delete);
-          this.show = false;
         }
       });
   }

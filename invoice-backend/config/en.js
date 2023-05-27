@@ -931,7 +931,6 @@ module.exports = {
     MailboxMonitorUpdated: 'Mailbox Monitor updated successfully.',
     MailboxMonitorDeleted: 'Mailbox Monitor deleted successfully.',
 
-
     Processor_Restrict_Mobile_Login: 'Your role does not have login permission in mobile application.  Kindly contact admin of your company to access in the mobile app.',
 
     //Language
@@ -940,17 +939,16 @@ module.exports = {
     LanguageAdded: "Language added successfully.",
     LanguageDeleted: "Language deleted successfully.",
 
-
     Client_History: {
         client_name: 'Client Name',
         client_number: 'Client Number',
-        client_email: ' Client Contact Email',
+        client_email: 'Client Contact Email',
         client_status: 'Status',
         client_notes: 'Client Note',
         gl_account: ' Client GCL Account',
         approver_id: 'Approved By',
-        Client_id: 'Client Id',
-        client_cost_cost_id: 'Client Costcode ',
+        client_id: 'Client Id',
+        client_cost_cost_id: 'Client Costcode',
     },
 
     INVOICE_MESSAGE_LISTING: 'Message Listing',

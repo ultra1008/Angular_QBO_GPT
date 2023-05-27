@@ -7,7 +7,7 @@ var clientSchema = new Schema({
     client_status: { type: Number, default: 1 },
     client_notes: { type: String, default: "" },
     approver_id: { type: mongoose.ObjectId, default: '' }, //User id 
-    gl_account: { type: mongoose.ObjectId, default: '' },
+    // gl_account: { type: mongoose.ObjectId, default: '' },
     client_cost_cost_id: { type: mongoose.ObjectId, default: '' },
     is_delete: { type: Number, default: 0 },
 }, { timestamps: false });

@@ -69,12 +69,7 @@ export class ClientFormComponent {
     this.vendorForm = this.fb.group({
       client_name: ['', [Validators.required]],
       client_number: [''],
-      client_email: [
-        '',
-        [Validators.required, Validators.email, Validators.minLength(5)],
-      ],
-      gl_account: ['642ab08828667a73474c3c10'],
-      client_phone: [''],
+      client_email: ['', [Validators.required, Validators.email, Validators.minLength(5)],],
       client_cost_cost_id: [''],
       approver_id: [''],
       client_status: [''],
@@ -100,7 +95,6 @@ export class ClientFormComponent {
         ],
         client_cost_cost_id: [clientData.client_cost_cost_id],
         approver_id: [clientData.approver_id],
-        customer_id: [clientData.customer_id],
         client_status: [clientData.client_status],
         client_notes: [clientData.client_notes],
       });
