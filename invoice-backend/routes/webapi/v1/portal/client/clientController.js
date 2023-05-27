@@ -446,16 +446,8 @@ module.exports.getClientForTable = async function (req, res) {
                         is_delete: 1,
                         approver_id: 1,
                         client_cost_cost_id: 1,
-                        approver: {
-                            _id: "$invoice_user._id",
-                            userfullname: "$invoice_user.userfullname",
-
-                        },
-                        client_cost_cost: {
-                            _id: "$costcode._id",
-                            cost_code: "$costcode.cost_code",
-
-                        }
+                        approver: "$invoice_user",
+                        client_cost_cost: "$costcode",
                     }
                 }
             ]);
