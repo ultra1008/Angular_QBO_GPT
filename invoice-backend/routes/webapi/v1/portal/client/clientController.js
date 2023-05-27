@@ -441,8 +441,6 @@ module.exports.getClientForTable = async function (req, res) {
             var clientConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientSchema);
             let query_where = {
                 is_delete: requestObject.is_delete,
-                $sort: { created_at: -1 }
-
             };
             var getdata = await clientConnection.aggregate([
                 {
@@ -490,7 +488,8 @@ module.exports.getClientForTable = async function (req, res) {
                         approver: "$invoice_user",
                         client_cost_cost: "$costcode",
                     }
-                }
+                },
+                { $sort: { created_at: -1 } }
             ]);
             // var getdata = await clientConnection.find({ is_delete: requestObject.is_delete });
             if (getdata) {
