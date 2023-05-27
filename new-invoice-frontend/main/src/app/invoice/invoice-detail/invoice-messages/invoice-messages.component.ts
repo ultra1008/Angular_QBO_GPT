@@ -16,6 +16,8 @@ import { HttpCall } from 'src/app/services/httpcall.service';
 import { showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
+import { TableElement } from 'src/app/shared/TableElement';
+import { TableExportUtil } from 'src/app/shared/tableExportUtil';
 
 @Component({
   selector: 'app-invoice-messages',
@@ -146,6 +148,22 @@ export class InvoiceMessagesComponent extends UnsubscribeOnDestroyAdapter implem
           }
         }
       });
+  }
+
+  exportExcel() {
+    const exportData: Partial<TableElement>[] =
+      this.dataSource.filteredData.map((x) => ({
+        'Date & Time': x.created_at,
+        'Sender': x.sender.userfullname,
+        'Receiver': x.receiver.userfullname,
+        'Ready by Receiver': x.seen_last_message ? 'Yes' : 'No',
+        'Invoice Number': x.invoice.invoice,
+        'Due Date': x.invoice.due_date,
+        'Vendor': x.invoice.vendor.vendor_name,
+        'Total Amount': x.invoice.invoice_total,
+      }));
+
+    TableExportUtil.exportToExcel(exportData, 'excel');
   }
 }
 export class ExampleDataSource extends DataSource<InvoiceMessage> {

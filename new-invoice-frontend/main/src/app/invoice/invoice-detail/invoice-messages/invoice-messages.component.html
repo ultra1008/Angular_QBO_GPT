@@ -19,6 +19,12 @@
                         </div>
                         <div class="right">
                             <ul class="tbl-export-btn">
+                                <li>
+                                    <div class="export-button m-l-10" matTooltip="{{'COMMON.TOOL_TIP.XLSX' |
+                                        translate}}">
+                                        <img src="assets/images/icons/xlsx.png" alt="" (click)="exportExcel()" />
+                                    </div>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -85,7 +91,7 @@
                                     <mat-cell *matCellDef="let row" (click)="viewMessage(row)"
                                         (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Total
-                                            Amount:</span>{{row.invoice.total}}</mat-cell>
+                                            Amount:</span>{{row.invoice.invoice_total}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="actions">
                                     <mat-header-cell class="pr-0 tbl-col-width-per-action"

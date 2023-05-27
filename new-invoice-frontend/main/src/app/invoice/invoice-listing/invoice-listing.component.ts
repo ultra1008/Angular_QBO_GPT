@@ -188,7 +188,7 @@ export class ExampleDataSource extends DataSource<Invoice> {
               invoice.due_date +
               invoice.vendor +
               invoice.invoice +
-              invoice.total +
+              invoice.invoice_total +
               invoice.net_amount +
               invoice.approver +
               invoice.status
@@ -234,8 +234,8 @@ export class ExampleDataSource extends DataSource<Invoice> {
         case 'invoice':
           [propertyA, propertyB] = [a.invoice, b.invoice];
           break;
-        case 'total':
-          [propertyA, propertyB] = [a.total, b.total];
+        case 'invoice_total':
+          [propertyA, propertyB] = [a.invoice_total, b.invoice_total];
           break;
         case 'net_amount':
           [propertyA, propertyB] = [a.net_amount, b.net_amount];
