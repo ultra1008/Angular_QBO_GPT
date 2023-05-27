@@ -24,7 +24,7 @@ module.exports = {
     TOTAL_AMOUNT: "Total Amount: ",
     VENDOR_NAME: "Vendor Name: ",
     VIEW_PDF: "View PDF",
-    MESSAGE: "Message :",
+
     //Email Templates
     EmailTemplateHi: 'Hi',
     EmailTemplateHello: 'Hello',

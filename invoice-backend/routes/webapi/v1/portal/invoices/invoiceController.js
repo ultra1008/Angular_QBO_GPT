@@ -3962,7 +3962,7 @@ module.exports.sendInvoiceEmail = async function (req, res) {
                 EMAILTITLE: translator.getStr('INVOICE_SEND_TITLE'),
 
                 ANY_QUESTION: translator.getStr('EmailLoginAnyQuestion'),
-                MESSAGE: `${translator.getStr('MESSAGE')} ${requestObject.message}`,
+                MESSAGE: `${requestObject.message}`,
 
                 // COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
                 // COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
