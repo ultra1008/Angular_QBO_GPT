@@ -3962,11 +3962,13 @@ module.exports.sendInvoiceEmail = async function (req, res) {
                 EMAILTITLE: translator.getStr('INVOICE_SEND_TITLE'),
 
                 ANY_QUESTION: translator.getStr('EmailLoginAnyQuestion'),
-                COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
-                COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
-                VENDOR_NAME: `${translator.getStr('VENDOR_NAME')} ${requestObject.vendor_name}`,
-                INVOICE_NUMBER: `${translator.getStr('INVOICE_NUMBER')} ${requestObject.invoice_number}`,
-                TOTAL_AMOUNT: `${translator.getStr('TOTAL_AMOUNT')} ${requestObject.invoice_total}`,
+                MESSAGE: `${translator.getStr('MESSAGE')} ${requestObject.message}`,
+
+                // COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
+                // COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
+                // VENDOR_NAME: `${translator.getStr('VENDOR_NAME')} ${requestObject.vendor_name}`,
+                // INVOICE_NUMBER: `${translator.getStr('INVOICE_NUMBER')} ${requestObject.invoice_number}`,
+                // TOTAL_AMOUNT: `${translator.getStr('TOTAL_AMOUNT')} ${requestObject.invoice_total}`,
                 FILE_LINK: `${requestObject.pdf_url}`,
                 VIEW_PDF: `${translator.getStr('VIEW_PDF')}`
             };
@@ -3974,7 +3976,7 @@ module.exports.sendInvoiceEmail = async function (req, res) {
             const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/invoicesend.html', 'utf8');
             var template = handlebars.compile(file_data);
             var HtmlData = await template(emailTmp);
-            let mailsend = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [requestObject.to], `${requestObject.subject}`, HtmlData,
+            let mailsend = await sendEmail.sendEmail_client_invoice(talnate_data.tenant_smtp_username, [requestObject.to], [requestObject.cc], `${requestObject.subject}`, HtmlData,
                 talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
                 talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
             if (mailsend) {
