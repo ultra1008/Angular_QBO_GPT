@@ -29,6 +29,7 @@ module.exports.saveclient = async function (req, res) {
             if (id) {
                 let one_client = await clientConnection.findOne({ _id: ObjectID(id) });
                 //update invoice client
+                requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                 let updateclient = await clientConnection.updateOne({ _id: id }, requestObject);
                 if (updateclient) {
                     // find difference of object 
@@ -75,6 +76,8 @@ module.exports.saveclient = async function (req, res) {
                 if (nameexist) {
                     res.send({ status: false, message: "client allready exist" });
                 } else {
+                    requestObject.created_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                     var add_client = new clientConnection(requestObject);
                     var save_client = await add_client.save();
                     // find difference of object 
@@ -438,6 +441,7 @@ module.exports.getClientForTable = async function (req, res) {
             var clientConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientSchema);
             let query_where = {
                 is_delete: requestObject.is_delete,
+                $sort: { created_at: -1 }
 
             };
             var getdata = await clientConnection.aggregate([
