@@ -269,6 +269,7 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
         localStorage.removeItem(localstorageconstants.COMPANYID);
         localStorage.removeItem(localstorageconstants.INVOICE_GIF);
         localStorage.removeItem(localstorageconstants.INVOICE_TOKEN);
+        localStorage.setItem(localstorageconstants.LOGOUT, 'true');
         localStorage.removeItem('choose_logoheader');
         localStorage.removeItem('choose_skin');
         localStorage.removeItem('menuOption');
