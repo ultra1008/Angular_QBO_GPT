@@ -30,6 +30,7 @@ module.exports.saveclient = async function (req, res) {
                 let one_client = await clientConnection.findOne({ _id: ObjectID(id) });
                 //update invoice client
                 requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+                requestObject.updated_by = decodedToken.UserData._id;
                 let updateclient = await clientConnection.updateOne({ _id: id }, requestObject);
                 if (updateclient) {
                     // find difference of object 
@@ -78,6 +79,8 @@ module.exports.saveclient = async function (req, res) {
                 } else {
                     requestObject.created_at = Math.round(new Date().getTime() / 1000);
                     requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.created_by = decodedToken.UserData._id;
+                    requestObject.updated_by = decodedToken.UserData._id;
                     var add_client = new clientConnection(requestObject);
                     var save_client = await add_client.save();
                     // find difference of object 
