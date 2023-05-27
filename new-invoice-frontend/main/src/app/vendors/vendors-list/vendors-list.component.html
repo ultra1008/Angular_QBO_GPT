@@ -190,8 +190,8 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.INVOICE' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" 
-                                        (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">
+                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
+                                        (click)="editVendor(row)">
                                         <span class="truncate-text"> <span class="mobile-label">Invoice:</span></span>
                                     </mat-cell>
                                 </ng-container>
@@ -199,17 +199,18 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.OPEN_INVOICE' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" 
-                                        (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">
+                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
+                                        (click)="editVendor(row)">
                                         <span class="truncate-text"> <span class="mobile-label">Open
                                                 Invoice:</span></span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="amount_paid">
-                                    <mat-header-cell [ngClass]="'tbl-col-width-per-max'" *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.AMOUNT_PAID' |
+                                    <mat-header-cell [ngClass]="'tbl-col-width-per-max'" *matHeaderCellDef
+                                        mat-sort-header>{{'VENDOR.TABLE.AMOUNT_PAID' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell class="tbl-col-width-per-max" *matCellDef="let row" 
+                                    <mat-cell class="tbl-col-width-per-max" *matCellDef="let row"
                                         (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">
                                         <span class="truncate-text"> <span class="mobile-label">Amount
                                                 Paid:</span></span>
@@ -219,9 +220,9 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.AMOUNT_OPEN' |
                                         translate}}
                                     </mat-header-cell>
-                                   
-                                    <mat-cell *matCellDef="let row" 
-                                        (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">
+
+                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
+                                        (click)="editVendor(row)">
                                         <span class="truncate-text"> <span class="mobile-label">Amount
                                                 Open:</span></span>
                                     </mat-cell>

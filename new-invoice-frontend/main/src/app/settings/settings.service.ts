@@ -7,7 +7,7 @@ import {
   ClassNameTable,
   CostCodeTable,
   DepartmentTable,
-  DocumentTable,
+  DocumentTypeTable,
   DocumentsTable,
   JobNameTable,
   JobTitleTable,
@@ -31,6 +31,7 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
   // Temporarily stores data from dialogs
   dialogData!: any;
   isTblLoading = true;
+  isDoctyeTblLoading = true;
   dataChange: BehaviorSubject<MailboxTable[]> = new BehaviorSubject<
     MailboxTable[]
   >([]);
@@ -43,8 +44,7 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     UsageTable[]
   >([]);
 
-  dataDocumentTypeChange: BehaviorSubject<DocumentTable[]> =
-    new BehaviorSubject<DocumentTable[]>([]);
+  dataDocumentTypeChange: BehaviorSubject<DocumentTypeTable[]> = new BehaviorSubject<DocumentTypeTable[]>([]);
 
   dataDepartmentChange: BehaviorSubject<DepartmentTable[]> =
     new BehaviorSubject<DepartmentTable[]>([]);
@@ -87,7 +87,7 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     ClassNameTable[]
   >([]);
 
-  constructor(private httpCall: HttpCall) {
+  constructor (private httpCall: HttpCall) {
     super();
   }
   get data(): MailboxTable[] {
@@ -102,7 +102,7 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     return this.dataUsageChange.value;
   }
 
-  get datadocumenttype(): DocumentTable[] {
+  get datadocumenttype(): DocumentTypeTable[] {
     return this.dataDocumentTypeChange.value;
   }
 
@@ -173,18 +173,11 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     this.dataChange.next(data);
   }
 
-  async getAllDocumentTable(is_delete: number): Promise<void> {
-    const data = await this.httpCall
-      .httpPostCall(
-        httpversion.PORTAL_V1 + httproutes.SETTING_DOCUMENT_TYPE_DATA_TABLE,
-        {
-          is_delete: is_delete,
-        }
-      )
-      .toPromise();
+  async getAllDocumentTypeTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.SETTING_DOCUMENT_TYPE_DATA_TABLE, { is_delete: is_delete }).toPromise();
     // Only write this for datatable api otherwise return data
-    this.isTblLoading = false;
     this.dataDocumentTypeChange.next(data);
+    this.isDoctyeTblLoading = false;
   }
 
   async getAllDepartmentTable(is_delete: number): Promise<void> {

@@ -15,7 +15,7 @@ import {
   swalWithBootstrapButtons,
   swalWithBootstrapTwoButtons,
 } from 'src/consts/utils';
-import { DocumentTable } from '../../settings.model';
+import { DocumentTypeTable } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
 import { DocumentTypeFormComponent } from '../document-type-form/document-type-form.component';
 
@@ -26,18 +26,17 @@ import { DocumentTypeFormComponent } from '../document-type-form/document-type-f
 })
 export class DocumentTypeListComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit
-{
+  implements OnInit {
   displayedColumns = ['document_type_name', 'is_expiration', 'actions'];
   documentService?: SettingsService;
   dataSource!: DocumentTypeDataSource;
-  selection = new SelectionModel<DocumentTable>(true, []);
+  selection = new SelectionModel<DocumentTypeTable>(true, []);
   id?: number;
-  // advanceTable?: DocumentTable;
+  // advanceTable?: DocumentTypeTable;
   isDelete = 0;
-  titleMessage: string = '';
+  titleMessage = '';
 
-  constructor(
+  constructor (
     public dialog: MatDialog,
     public SettingsService: SettingsService,
     private snackBar: MatSnackBar,
@@ -63,7 +62,7 @@ export class DocumentTypeListComponent
     this.router.navigate(['/settings/mailbox-form']);
   }
 
-  editMailbox(mailbox: DocumentTable) {
+  editMailbox(mailbox: DocumentTypeTable) {
     this.router.navigate(['/settings/mailbox-form'], {
       queryParams: { _id: mailbox._id },
     });
@@ -103,8 +102,20 @@ export class DocumentTypeListComponent
           );
           if (data.status) {
             showNotification(that.snackBar, data.message, 'success');
-            that.refreshTable();
-            location.reload();
+            that.loadData();
+            /* console.log("this.SettingsService?.dataDocumentTypeChange: ", this.SettingsService?.dataDocumentTypeChange.value);
+            const foundIndex = this.SettingsService?.dataDocumentTypeChange.value.findIndex(
+              (x) => {
+                console.log("sagar match: ", x._id, Document._id);
+                x._id === Document._id;
+              }
+            );
+            console.log("foundIndex: ", foundIndex);
+            // for delete we use splice in order to remove single object from DataService
+            if (foundIndex != null && this.SettingsService) {
+              this.SettingsService.dataDocumentTypeChange.value.splice(foundIndex, 1);
+              this.refreshTable();
+            } */
           } else {
             showNotification(that.snackBar, data.message, 'error');
           }
@@ -133,8 +144,8 @@ export class DocumentTypeListComponent
     this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.renderedData.forEach((row) =>
-          this.selection.select(row)
-        );
+        this.selection.select(row)
+      );
   }
   removeSelectedRows() {
     //   const totalSelect = this.selection.selected.length;
@@ -145,7 +156,7 @@ export class DocumentTypeListComponent
     //     // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
     //     this.documentService?.dataChange.value.splice(index, 1);
     //     this.refreshTable();
-    //     this.selection = new SelectionModel<DocumentTable>(true, []);
+    //     this.selection = new SelectionModel<DocumentTypeTable>(true, []);
     //   });
     //  showNotification(
     //     'snackbar-danger',
@@ -177,7 +188,7 @@ export class DocumentTypeListComponent
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: DocumentTable) {
+  onContextMenu(event: MouseEvent, item: DocumentTypeTable) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -188,7 +199,7 @@ export class DocumentTypeListComponent
     }
   }
 }
-export class DocumentTypeDataSource extends DataSource<DocumentTable> {
+export class DocumentTypeDataSource extends DataSource<DocumentTypeTable> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -196,9 +207,9 @@ export class DocumentTypeDataSource extends DataSource<DocumentTable> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: DocumentTable[] = [];
-  renderedData: DocumentTable[] = [];
-  constructor(
+  filteredData: DocumentTypeTable[] = [];
+  renderedData: DocumentTypeTable[] = [];
+  constructor (
     public documentService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
@@ -209,7 +220,7 @@ export class DocumentTypeDataSource extends DataSource<DocumentTable> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<DocumentTable[]> {
+  connect(): Observable<DocumentTypeTable[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this.documentService.dataDocumentTypeChange,
@@ -217,15 +228,16 @@ export class DocumentTypeDataSource extends DataSource<DocumentTable> {
       this.filterChange,
       this.paginator.page,
     ];
-    this.documentService.getAllDocumentTable(this.isDelete);
+    this.documentService.getAllDocumentTypeTable(this.isDelete);
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
         this.filteredData = this.documentService.datadocumenttype
           .slice()
-          .filter((documentTable: DocumentTable) => {
+          .filter((documentTable: DocumentTypeTable) => {
             const searchStr = (
-              documentTable.document_type_name + documentTable.is_expiration
+              documentTable.document_type_name +
+              documentTable.is_expiration
             ).toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
@@ -245,7 +257,7 @@ export class DocumentTypeDataSource extends DataSource<DocumentTable> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: DocumentTable[]): DocumentTable[] {
+  sortData(data: DocumentTypeTable[]): DocumentTypeTable[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }

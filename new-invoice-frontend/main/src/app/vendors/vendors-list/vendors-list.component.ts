@@ -151,7 +151,7 @@ export class VendorsListComponent
       ];
     }
 
-    this.loadData();
+    // this.loadData();
 
     this.tmp_gallery = gallery_options();
     this.tmp_gallery.actions = [
