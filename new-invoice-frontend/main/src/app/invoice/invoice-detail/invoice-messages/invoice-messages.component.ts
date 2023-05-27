@@ -13,6 +13,9 @@ import { WEB_ROUTES } from 'src/consts/routes';
 import { InvoiceService } from '../../invoice.service';
 import { InvoiceMessage } from '../../invoice.model';
 import { HttpCall } from 'src/app/services/httpcall.service';
+import { showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
+import { CommonService } from 'src/app/services/common.service';
+import { httproutes, httpversion } from 'src/consts/httproutes';
 
 @Component({
   selector: 'app-invoice-messages',
@@ -40,7 +43,8 @@ export class InvoiceMessagesComponent extends UnsubscribeOnDestroyAdapter implem
   type = '';
 
   constructor (public httpClient: HttpClient, public dialog: MatDialog, public invoiceService: InvoiceService,
-    private snackBar: MatSnackBar, public route: ActivatedRoute, private router: Router, private httpCall: HttpCall) {
+    private snackBar: MatSnackBar, public route: ActivatedRoute, private router: Router, private httpCall: HttpCall,
+    private commonService: CommonService) {
     super();
     route.queryParams.subscribe(queryParams => {
       this.type = queryParams['type'] ?? '';
@@ -82,24 +86,7 @@ export class InvoiceMessagesComponent extends UnsubscribeOnDestroyAdapter implem
         this.selection.select(row)
       );
   }
-  removeSelectedRows() {
-    const totalSelect = this.selection.selected.length;
-    this.selection.selected.forEach((item) => {
-      const index: number = this.dataSource.renderedData.findIndex(
-        (d) => d === item
-      );
-      // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
-      this.exampleDatabase?.messageDataChange.value.splice(index, 1);
-      this.refreshTable();
-      this.selection = new SelectionModel<InvoiceMessage>(true, []);
-    });
-    this.showNotification(
-      'snackbar-danger',
-      totalSelect + ' Record Delete Successfully...!!!',
-      'bottom',
-      'center'
-    );
-  }
+
   public loadData() {
     this.exampleDatabase = new InvoiceService(this.httpClient, this.httpCall);
     this.dataSource = new ExampleDataSource(
@@ -116,19 +103,6 @@ export class InvoiceMessagesComponent extends UnsubscribeOnDestroyAdapter implem
       }
     );
   }
-  showNotification(
-    colorName: string,
-    text: string,
-    placementFrom: MatSnackBarVerticalPosition,
-    placementAlign: MatSnackBarHorizontalPosition
-  ) {
-    this.snackBar.open(text, '', {
-      duration: 2000,
-      verticalPosition: placementFrom,
-      horizontalPosition: placementAlign,
-      panelClass: colorName,
-    });
-  }
 
   // context menu
   onContextMenu(event: MouseEvent, item: InvoiceMessage) {
@@ -140,6 +114,38 @@ export class InvoiceMessagesComponent extends UnsubscribeOnDestroyAdapter implem
       this.contextMenu.menu.focusFirstItem('mouse');
       this.contextMenu.openMenu();
     }
+  }
+
+  async deleteMessage(message: InvoiceMessage) {
+    swalWithBootstrapTwoButtons
+      .fire({
+        title: 'Are you sure you want to delete this chat?',
+        showDenyButton: true,
+        confirmButtonText: 'Yes',
+        denyButtonText: 'No',
+        allowOutsideClick: false,
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          const data = await this.commonService.postRequestAPI(
+            httpversion.PORTAL_V1 + httproutes.DELETE_INVOICE_MESSAGE,
+            { _id: message._id }
+          );
+          if (data.status) {
+            showNotification(this.snackBar, data.message, 'success');
+            const foundIndex = this.invoiceService?.messageDataChange.value.findIndex(
+              (x) => x._id === message._id
+            );
+            // for delete we use splice in order to remove single object from DataService
+            if (foundIndex != null && this.invoiceService) {
+              this.invoiceService.messageDataChange.value.splice(foundIndex, 1);
+              this.refreshTable();
+            }
+          } else {
+            showNotification(this.snackBar, data.message, 'error');
+          }
+        }
+      });
   }
 }
 export class ExampleDataSource extends DataSource<InvoiceMessage> {

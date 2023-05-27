@@ -17,6 +17,24 @@ const getOneInvoiceMessage = (req, res, next) => {
     });
 };
 
+const updateInvoiceMessageSeenFlag = (req, res, next) => {
+    const validationRule = {
+        "_id": "required",
+        "receiver_id": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({
+                status: false,
+                message: 'Validation failed',
+                data: err
+            });
+        } else {
+            next();
+        }
+    });
+};
+
 const sendInvoiceMessage = (req, res, next) => {
     const validationRule = {
         "users": "required|array",
@@ -56,6 +74,7 @@ const deleteInvoiceMessage = (req, res, next) => {
 
 module.exports = {
     getOneInvoiceMessage,
+    updateInvoiceMessageSeenFlag,
     sendInvoiceMessage,
     deleteInvoiceMessage,
 };

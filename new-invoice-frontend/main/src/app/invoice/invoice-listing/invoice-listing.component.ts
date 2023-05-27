@@ -9,11 +9,14 @@ import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition
 import { MatSort } from '@angular/material/sort';
 import { BehaviorSubject, Observable, fromEvent, map, merge } from 'rxjs';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
-import { Invoice } from '../invoice.model';
+import { Invoice, InvoiceMessage } from '../invoice.model';
 import { InvoiceService } from '../invoice.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { HttpCall } from 'src/app/services/httpcall.service';
+import { showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
+import { CommonService } from 'src/app/services/common.service';
+import { httproutes, httpversion } from 'src/consts/httproutes';
 
 @Component({
   selector: 'app-invoice-listing',
@@ -42,7 +45,8 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
   type = '';
 
   constructor (public httpClient: HttpClient, public dialog: MatDialog, public invoiceService: InvoiceService,
-    private snackBar: MatSnackBar, public route: ActivatedRoute, private router: Router, private httpCall: HttpCall) {
+    private snackBar: MatSnackBar, public route: ActivatedRoute, private router: Router, private httpCall: HttpCall,
+    private commonService: CommonService) {
     super();
     route.queryParams.subscribe(queryParams => {
       this.type = queryParams['type'] ?? '';
@@ -115,24 +119,6 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
         this.selection.select(row)
       );
   }
-  removeSelectedRows() {
-    const totalSelect = this.selection.selected.length;
-    this.selection.selected.forEach((item) => {
-      const index: number = this.dataSource.renderedData.findIndex(
-        (d) => d === item
-      );
-      // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
-      this.exampleDatabase?.dataChange.value.splice(index, 1);
-      this.refreshTable();
-      this.selection = new SelectionModel<Invoice>(true, []);
-    });
-    this.showNotification(
-      'snackbar-danger',
-      totalSelect + ' Record Delete Successfully...!!!',
-      'bottom',
-      'center'
-    );
-  }
   public loadData() {
     this.exampleDatabase = new InvoiceService(this.httpClient, this.httpCall);
     this.dataSource = new ExampleDataSource(
@@ -148,19 +134,6 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
         this.dataSource.filter = this.filter.nativeElement.value;
       }
     );
-  }
-  showNotification(
-    colorName: string,
-    text: string,
-    placementFrom: MatSnackBarVerticalPosition,
-    placementAlign: MatSnackBarHorizontalPosition
-  ) {
-    this.snackBar.open(text, '', {
-      duration: 2000,
-      verticalPosition: placementFrom,
-      horizontalPosition: placementAlign,
-      panelClass: colorName,
-    });
   }
 
   // context menu

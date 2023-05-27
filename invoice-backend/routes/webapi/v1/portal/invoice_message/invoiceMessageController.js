@@ -71,6 +71,19 @@ module.exports.getInvoiceMessageForTable = async function (req, res) {
                 { $unwind: "$receiver" },
                 { $sort: { created_at: -1 } }
             ]);
+            for (let i = 0; i < get_data.length; i++) {
+                let get_messages = await invoiceMessageCollection.findOne({
+                    $or: [
+                        { _id: ObjectID(get_data[i]._id) },
+                        { invoice_message_id: ObjectID(get_data[i]._id) },
+                    ]
+                }).sort({ created_at: -1 });
+                if (get_messages) {
+                    get_data[i].seen_last_message = get_messages.is_seen;
+                } else {
+                    get_data[i].seen_last_message = false;
+                }
+            }
             res.json(get_data);
         } catch (e) {
             console.log(e);
@@ -189,15 +202,19 @@ module.exports.sendInvoiceMessage = async function (req, res) {
             let invoiceMessageCollection = connection_db_api.model(collectionConstant.INVOICE_MESSAGE, invoiceMessageSchema);
             let reqObject = [];
             for (let i = 0; i < requestObject.users.length; i++) {
-                reqObject.push({
+                let obj = {
                     invoice_id: requestObject.invoice_id,
                     sender_id: decodedToken.UserData._id,
                     receiver_id: requestObject.users[i],
                     message: requestObject.message,
                     created_at: Math.round(new Date().getTime() / 1000),
                     is_first: requestObject.is_first,
-                    invoice_message_id: requestObject.invoice_message_id ?? '',
-                });
+                    invoice_message_id: requestObject.invoice_message_id,
+                };
+                if (obj.invoice_message_id == undefined || obj.invoice_message_id == null) {
+                    obj.invoice_message_id = '';
+                }
+                reqObject.push(obj);
             }
             let save_invoice_message = await invoiceMessageCollection.insertMany(reqObject);
             if (save_invoice_message) {
@@ -223,6 +240,37 @@ module.exports.sendInvoiceMessage = async function (req, res) {
                     get_message = get_message[0];
                 }
                 res.send({ message: translator.getStr('INVOICE_MESSAGE_SEND'), data: get_message, status: true });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.updateInvoiceMessageSeenFlag = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            let invoiceMessageCollection = connection_db_api.model(collectionConstant.INVOICE_MESSAGE, invoiceMessageSchema);
+            let update_seen_flag = await invoiceMessageCollection.updateMany({
+                $or: [
+                    { _id: ObjectID(requestObject._id) },
+                    { invoice_message_id: ObjectID(requestObject._id) },
+                ],
+                receiver_id: ObjectID(requestObject.receiver_id),
+            }, { is_seen: true });
+            if (update_seen_flag) {
+                res.send({ message: 'Flag updated successfully.', status: true });
             } else {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
             }

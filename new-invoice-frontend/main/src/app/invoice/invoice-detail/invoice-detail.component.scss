@@ -128,9 +128,17 @@
      }
 }
 
+.title-h {
+     margin-right: 15px;
+}
+
 .activity {
      ::ng-deep .mat-mdc-tab.mdc-tab {
           height: 22px;
+     }
+
+     .Activity-h {
+          height: 10px;
      }
 }
 
@@ -152,10 +160,40 @@
 }
 
 // expansion-panel
+// NOTES
+.chat-main {
+     height: 250px;
 
-.chat-p {
-     padding-top: 7px;
-     padding-left: 10px;
+     .chat-p {
+          padding-top: 7px;
+          padding-left: 10px;
+     }
+
+     .chat-msg {
+          padding-left: 10px;
+     }
+
+     .img-b {
+          border-radius: 50%;
+     }
+}
+
+
+.document-h {
+     height: 285px;
+
+     .document-card {
+          height: 25px;
+     }
+
+     .document-btn {
+          margin-right: 3px;
+     }
+}
+
+.pdf-h {
+     height: 770px;
+     width: 790px;
 }
 
 .chat-msg {
