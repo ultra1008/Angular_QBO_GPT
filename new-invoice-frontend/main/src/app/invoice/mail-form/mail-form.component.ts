@@ -17,6 +17,7 @@ import { DepartmentFormComponent } from 'src/app/settings/employeesettings/depar
 import { AdvanceTable, User } from 'src/app/users/user.model';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { icon } from 'src/consts/icon';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { showNotification } from 'src/consts/utils';
 
 @Component({
@@ -27,20 +28,22 @@ import { showNotification } from 'src/consts/utils';
 export class MailFormComponent {
   action: string;
   dialogTitle: string;
-  DepartmentInfo!: any;
+  mailInfo!: any;
   advanceTable: AdvanceTable;
-  variablesRoleList: any = [];
   invoice_logo = icon.INVOICE_LOGO;
 
-  roleList: any = this.variablesRoleList.slice();
+
   titleMessage: string = '';
   variablesUserList: any = [];
   userList: Array<User> = this.variablesUserList.slice();
+  variablesUserToList: any = [];
+  usertoList: Array<User> = this.variablesUserToList.slice();
   isDelete = 0;
-
+  SmtpEmail: any;
   removable = true;
   addOnBlur = true;
   selectedUsers: Array<string> = [];
+  selectedToUsers: Array<string> = [];
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   constructor(
@@ -52,28 +55,23 @@ export class MailFormComponent {
     public uiSpinner: UiSpinnerService,
     public commonService: CommonService
   ) {
-    this.getUser();
-    this.DepartmentInfo = new FormGroup({
-      subject: new FormControl('', [Validators.required]),
-      drop_to: new FormControl('', [Validators.required]),
-      drop_copy: new FormControl('', [Validators.required]),
-
+    this.mailInfo = this.fb.group({
+      to: [[], [Validators.required]],
+      subject: ['', [Validators.required]],
+      message: ['', [Validators.required]],
+      cc: [[], [Validators.required]],
     });
-    console.log('data', data);
-    const document_data = data.data;
+    this.mailInfo.get("message")!.setValue(`
+    
+-----------------------------------------------------------------------------\n
+Please Note: Reply To Mailto:Info@Rovuk.Us\n
+Company Name\n
+Vendor:Vendor Name\n
+Invoice Number: 7846002546556552\n
+Total Amount: $12,000`);
 
-    if (this.data) {
-      console.log('call');
-      this.DepartmentInfo = new FormGroup({
-        department_name: new FormControl(this.data.department_name, [
-          Validators.required,
-        ]),
-      });
-    }
-
-
-
-
+    this.getUser();
+    this.getSmtpEmail();
     // Set the defaults
     this.action = data.action;
     if (this.action === 'edit') {
@@ -97,7 +95,13 @@ export class MailFormComponent {
     if (data.status) {
       this.variablesUserList = data.data;
       this.userList = this.variablesUserList.slice();
+
+      this.variablesUserToList = data.data;
+      this.usertoList = this.variablesUserToList.slice();
     }
+    const user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    this.mailInfo.get("cc")!.setValue([user_data.UserData.useremail]);
+    this.selectedUsers.push(user_data.UserData.useremail);
   }
   getErrorMessage() {
     return this.formControl.hasError('required')
@@ -111,6 +115,11 @@ export class MailFormComponent {
     this.selectedUsers = event.value;
   }
 
+  onUsertoChange(event: any) {
+    this.selectedToUsers = event.value;
+  }
+
+
   onUserCopyChange(event: any) {
     this.selectedUsers = event.value;
   }
@@ -121,30 +130,49 @@ export class MailFormComponent {
     }
   }
 
+  removeUserTOemail(user: string) {
+    var index = this.selectedToUsers.indexOf(user);
+    if (index !== -1) {
+      this.selectedToUsers.splice(index, 1);
+    }
+  }
+
+  async getSmtpEmail() {
+    const data = await this.commonService.getRequestAPI(
+      httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP
+    );
+    if (data.status) {
+      this.SmtpEmail = data.data.tenant_smtp_username;
+    }
+
+  }
+
   async submit() {
-    // if (this.DepartmentInfo.valid) {
-    //   let requestObject = this.DepartmentInfo.value;
-    //   if (this.data) {
-    //     requestObject._id = this.data._id;
-    //   }
-    //   this.uiSpinner.spin$.next(true);
-    //   const data = await this.SettingsServices.saveDepartment(requestObject);
-    //   if (data.status) {
-    //     this.uiSpinner.spin$.next(false);
-    //     showNotification(this.snackBar, data.message, 'success');
-    //     location.reload();
-    //   } else {
-    //     this.uiSpinner.spin$.next(false);
-    //     showNotification(this.snackBar, data.message, 'error');
-    //   }
-    // }
+    if (this.mailInfo.valid) {
+      let requestObject = this.mailInfo.value;
+      requestObject.pdf_url = 'https://www.orimi.com/pdf-test.pdf';
+      if (this.data) {
+        requestObject._id = this.data._id;
+      }
+      this.uiSpinner.spin$.next(true);
+
+      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SEND_INVOICE_EMAIL, requestObject);
+      if (data.status) {
+        this.uiSpinner.spin$.next(false);
+        showNotification(this.snackBar, data.message, 'success');
+        location.reload();
+      } else {
+        this.uiSpinner.spin$.next(false);
+        showNotification(this.snackBar, data.message, 'error');
+      }
+    }
   }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
   public confirmAdd(): void {
-    // this.advanceTableService.addAdvanceTable(this.DepartmentInfo.getRawValue());
+    // this.advanceTableService.addAdvanceTable(this.mailInfo.getRawValue());
   }
 }
 

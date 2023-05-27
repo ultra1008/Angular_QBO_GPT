@@ -45,8 +45,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class UserFormComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit
-{
+  implements OnInit {
   isLinear = false;
 
   HFormGroup1?: UntypedFormGroup;
