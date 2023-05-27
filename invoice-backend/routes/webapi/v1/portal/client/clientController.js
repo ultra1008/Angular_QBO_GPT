@@ -6,6 +6,8 @@ var client_history_Schema = require('../../../../../model/history/client_history
 const historyCollectionConstant = require('../../../../../config/historyCollectionConstant');
 let config = require('../../../../../config/config');
 var ObjectID = require('mongodb').ObjectID;
+var formidable = require('formidable');
+const reader = require('xlsx');
 
 // client insert Edit 
 module.exports.saveclient = async function (req, res) {
@@ -499,6 +501,85 @@ module.exports.getOneClient = async function (req, res) {
         }
     } else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+// bulk upload 
+module.exports.importClientname = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var clientConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientSchema);
+            console.log("hdh");
+            var form = new formidable.IncomingForm();
+            var fields = [];
+            var notFonud = 0;
+            var newOpenFile;
+            var fileName;
+            form.parse(req)
+                .on('file', function (name, file) {
+                    notFonud = 1;
+                    fileName = file;
+                }).on('field', function (name, field) {
+                    fields[name] = field;
+                })
+                .on('error', function (err) {
+                    throw err;
+                }).on('end', async function () {
+                    newOpenFile = this.openedFiles;
+
+                    if (notFonud == 1) {
+
+                        const file = reader.readFile(newOpenFile[0].path);
+                        const sheets = file.SheetNames;
+                        let data = [];
+                        let exitdata = new Array();
+                        for (let i = 0; i < sheets.length; i++) {
+                            const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
+                            temp.forEach((ress) => {
+                                data.push(ress);
+                            });
+                        }
+                        var onecategory_main = "";
+                        for (let m = 0; m < data.length; m++) {
+                            onecategory_main = await clientConnection.findOne({ client_name: data[m].client_name }, { client_name: 1 });
+                            if (onecategory_main != null) {
+                                exitdata[m] = onecategory_main.client_name;
+                            }
+                        }
+                        if (exitdata.length > 0) {
+                            res.send({ status: false, exitdata: exitdata, message: "client name is allready exist." });
+                        }
+                        else {
+                            for (let m = 0; m < data.length; m++) {
+                                onecategory_main = await clientConnection.findOne({ client_name: data[m].client_name }, { client_name: 1 });
+                                requestObject = {};
+                                requestObject.client_name = data[m].client_name;
+                                requestObject.client_number = data[m].client_number;
+                                requestObject.client_email = data[m].client_email;
+                                requestObject.client_notes = data[m].client_notes;
+                                requestObject.approver_id = data[m].approver_id;
+                                requestObject.gl_account = data[m].gl_account;
+                                requestObject.client_cost_cost_id = data[m].client_cost_cost_id;
+                                let add_clinetname = new clientConnection(requestObject);
+                                let save_clinetname = await add_clinetname.save();
+
+                            }
+                            res.send({ status: true, message: "client name info add successfully." });
+                        }
+
+                    } else {
+                        res.send({ status: false, message: translator.getStr('SomethingWrong') });
+                    }
+                });
+        } catch (error) {
+            console.log(error);
+            res.send({ status: false, message: translator.getStr('SomethingWrong'), error: error });
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
 
