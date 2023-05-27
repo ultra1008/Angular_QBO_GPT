@@ -1,3 +1,17 @@
 .auth-form-btn {
     height: 40px !important;
 }
+
+.mr-set {
+    margin: 10px;
+}
+
+.align-div{
+    display: flex;
+    justify-content: center;
+    margin-top: 0px;
+}
+
+ ::ng-deep textarea{
+    resize: none !important; 
+     } 
