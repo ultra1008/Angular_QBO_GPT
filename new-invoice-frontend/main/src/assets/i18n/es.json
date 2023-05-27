@@ -448,7 +448,7 @@
                 }
             },
             "ACCOUNTING_ACTIVITY": {
-                "ACCOUNTING_ACTIVITY": "Accounting Activity",
+                "TITLE": "Accounting Activity",
                 "TABLE": {
                     "TOTAL_AMOUNT": "Total Amount",
                     "COST_CODE": "Cost Code",

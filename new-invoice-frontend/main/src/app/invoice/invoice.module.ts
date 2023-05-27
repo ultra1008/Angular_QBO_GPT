@@ -40,6 +40,8 @@ import { MessageFormComponent } from './message-form/message-form.component';
 import { MailFormComponent } from './mail-form/mail-form.component';
 import { DepartmentFormComponent } from '../settings/employeesettings/department-form/department-form.component';
 
+import { BrowserModule } from '@angular/platform-browser';
+
 @NgModule({
   declarations: [
     InvoiceListingComponent,
@@ -95,6 +97,9 @@ import { DepartmentFormComponent } from '../settings/employeesettings/department
     MatCheckboxModule,
     MatDialogModule,
     NgScrollbarModule,
+
+
+
   ],
 })
-export class InvoiceModule {}
+export class InvoiceModule { }

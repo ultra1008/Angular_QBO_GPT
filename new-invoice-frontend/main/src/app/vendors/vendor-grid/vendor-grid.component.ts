@@ -35,7 +35,7 @@ export class VendorGridComponent
   vendor_status: any;
   termsList: Array<TermModel> = [];
 
-  constructor (
+  constructor(
     public httpClient: HttpClient,
     private httpCall: HttpCall,
     public dialog: MatDialog,
