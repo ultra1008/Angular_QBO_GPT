@@ -10,6 +10,8 @@ var clientSchema = new Schema({
     gl_account: { type: mongoose.ObjectId, default: '' },
     client_cost_cost_id: { type: mongoose.ObjectId, default: '' },
     is_delete: { type: Number, default: 0 },
+    created_at: { type: Number },
+    updated_at: { type: Number },
 }, { timestamps: false });
 
 module.exports = clientSchema;
