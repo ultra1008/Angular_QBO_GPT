@@ -27,6 +27,8 @@ import { UserReportComponent } from '../user-report/user-report.component';
 import { UntypedFormBuilder } from '@angular/forms';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { CommonService } from 'src/app/services/common.service';
+import { TableElement } from 'src/app/shared/TableElement';
+import { TableExportUtil } from 'src/app/shared/tableExportUtil';
 
 @Component({
   selector: 'app-users-listing',
@@ -36,8 +38,7 @@ import { CommonService } from 'src/app/services/common.service';
 })
 export class UsersListingComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit
-{
+  implements OnInit {
   displayedColumns = [
     'select',
     'img',
@@ -66,7 +67,7 @@ export class UsersListingComponent
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
 
-  constructor(
+  constructor (
     public httpClient: HttpClient,
     private httpCall: HttpCall,
     public dialog: MatDialog,
@@ -249,8 +250,8 @@ export class UsersListingComponent
     this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.renderedData.forEach((row) =>
-          this.selection.select(row)
-        );
+        this.selection.select(row)
+      );
   }
 
   userReport() {
@@ -408,6 +409,22 @@ export class UsersListingComponent
       queryParams: { _id: user._id },
     });
   }
+
+  exportExcel() {
+    // key name with space add in brackets
+    const exportData: Partial<TableElement>[] =
+      this.dataSource.filteredData.map((x) => ({
+        'User Name': x.userfullname || '',
+        'Email': x.useremail || '',
+        'Phone': this.phonenoFormat(x.userphone) || '',
+        'Role': x.role_name || '',
+        'Job Title': x.userjob_title_name || '',
+        'Department': x.department_name || '',
+        'Status': x.userstatus == 1 ? this.translate.instant('COMMON.STATUS.ACTIVE') : this.translate.instant('COMMON.STATUS.INACTIVE') || '',
+      }));
+
+    TableExportUtil.exportToExcel(exportData, 'excel');
+  }
 }
 
 // This class is used for datatable sorting and searching
@@ -421,7 +438,7 @@ export class UserDataSource extends DataSource<User> {
   }
   filteredData: User[] = [];
   renderedData: User[] = [];
-  constructor(
+  constructor (
     public userService: UserService,
     public paginator: MatPaginator,
     public _sort: MatSort,
