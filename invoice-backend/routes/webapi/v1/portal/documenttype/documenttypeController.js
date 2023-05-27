@@ -89,7 +89,7 @@ module.exports.deleteDocType = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             let connection_db_api = await db_connection.connection_db_api(decodedToken);
-            let userdocCollection = connection_db_api.model(collectionConstant.USERDOCUMENT, userdocSchema);
+            let userdocCollection = connection_db_api.model(collectionConstant.INVOICE_USER_DOCUMENT, userdocSchema);
             let userdocObject = await userdocCollection.find({ userdocument_type_id: ObjectID(req.body._id) });
             if (userdocObject.length > 0) {
                 res.send({ message: translator.getStr('DocumentTypeHasData'), status: false });

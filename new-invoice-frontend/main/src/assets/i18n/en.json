@@ -323,7 +323,9 @@
     },
     "REPORT": {
         "VIEW": {
-            "TITLE": "Report"
+            "TITLE": "Report",
+            "START_DATE": "Start Date",
+            "END_DATE": "End Date"
         },
         "TABLE": {
             "INVOICE": "Invoice",

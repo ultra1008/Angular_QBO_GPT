@@ -6,7 +6,7 @@ export class Invoice {
   due_date: string;
   vendor: Vendor;
   invoice: string;
-  total: string;
+  invoice_total: string;
   net_amount: string;
   approver: string;
   status: string;
@@ -17,7 +17,7 @@ export class Invoice {
       this.due_date = invoice.due_date || '';
       this.vendor = invoice.vendor || '';
       this.invoice = invoice.invoice || '';
-      this.total = invoice.total || '';
+      this.invoice_total = invoice.invoice_total || '';
       this.net_amount = invoice.net_amount || '';
       this.approver = invoice.approver || '';
       this.status = invoice.status || '';

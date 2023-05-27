@@ -21,7 +21,6 @@ import {
   commonNewtworkAttachmentViewer,
   gallery_options,
   showNotification,
-  swalWithBootstrapButtons,
   swalWithBootstrapTwoButtons,
 } from 'src/consts/utils';
 import {
@@ -77,7 +76,7 @@ export class VendorsListComponent
   rform?: any;
   selectedValue!: string;
 
-  constructor (
+  constructor(
     public httpClient: HttpClient,
     private httpCall: HttpCall,
     public dialog: MatDialog,
@@ -151,7 +150,7 @@ export class VendorsListComponent
       ];
     }
 
-    this.loadData();
+    // this.loadData();
 
     this.tmp_gallery = gallery_options();
     this.tmp_gallery.actions = [
@@ -496,7 +495,7 @@ export class VendorDataSource extends DataSource<Vendor> {
   }
   filteredData: Vendor[] = [];
   renderedData: Vendor[] = [];
-  constructor (
+  constructor(
     public vendorService: VendorsService,
     public paginator: MatPaginator,
     public _sort: MatSort,

@@ -9,3 +9,19 @@
     --scrollbar-border-radius: 4px;
     border: 1px solid gray;
 } */
+.user-picture img {
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    background: #fff;
+    position: inherit;
+    border: 1px solid grey;
+}
+
+.my-picture img {
+    margin-left: 10px;
+}
+
+.your-picture {
+    margin-right: 10px;
+}

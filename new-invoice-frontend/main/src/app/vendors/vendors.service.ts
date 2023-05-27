@@ -8,7 +8,6 @@ import { httproutes, httpversion } from 'src/consts/httproutes';
 @Injectable()
 
 export class VendorsService extends UnsubscribeOnDestroyAdapter {
-  private readonly API_URL = 'assets/data/advanceTable.json';
   isTblLoading = true;
   dataChange: BehaviorSubject<Vendor[]> = new BehaviorSubject<Vendor[]>([]);
   // Temporarily stores data from dialogs

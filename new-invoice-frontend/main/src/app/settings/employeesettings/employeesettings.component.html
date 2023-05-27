@@ -25,8 +25,8 @@
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.IMPORT' |
                                     translate}}">
-                                    <input id="file-upload" class="mr-2" type="file" style="display: none"
-                                    (change)="onFileChange($event)" #OpenFilebox />
+                                        <input id="file-upload" class="mr-2" type="file" style="display: none"
+                                            (change)="onFileChange($event)" #OpenFilebox />
                                         <button mat-mini-fab color="primary" (click)="importFileAction()">
                                             <mat-icon class="col-white">file_upload</mat-icon>
                                         </button>
@@ -60,7 +60,6 @@
                                     <br>
                                     <div class="row">
                                         <app-document-type-list></app-document-type-list>
-
                                     </div>
                                 </mat-tab>
                                 <mat-tab

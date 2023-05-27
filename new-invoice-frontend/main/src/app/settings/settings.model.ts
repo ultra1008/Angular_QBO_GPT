@@ -9,7 +9,7 @@ export class Settings {
   userjob_title_name: string;
   department_name: string;
   userstatus: number;
-  constructor(response: Settings) {
+  constructor (response: Settings) {
     {
       this._id = response._id;
       this.userfullname = response.userfullname;
@@ -28,7 +28,7 @@ export class CostCodeTable {
   value: string;
   division: string;
 
-  constructor(costcodeTable: CostCodeTable) {
+  constructor (costcodeTable: CostCodeTable) {
     {
       this._id = costcodeTable._id;
       this.description = costcodeTable.description;
@@ -48,7 +48,7 @@ export class settingTable {
   vendor_status: number;
   vendor_attachment: Array<string>;
   isVendorfromQBO: boolean;
-  constructor(response: settingTable) {
+  constructor (response: settingTable) {
     {
       this._id = response._id;
       this.vendor_name = response.vendor_name;
@@ -71,7 +71,7 @@ export class MailboxTable {
   port: number;
   time: string;
 
-  constructor(mailboxTable: MailboxTable) {
+  constructor (mailboxTable: MailboxTable) {
     {
       this._id = mailboxTable._id;
       this.email = mailboxTable.email;
@@ -100,7 +100,7 @@ export class UsageTable {
   unknown_expense!: number;
   unknown_forms!: number;
 
-  constructor(usageTable: UsageTable) {
+  constructor (usageTable: UsageTable) {
     {
       this._id = usageTable._id;
       this.year = usageTable.year;
@@ -129,7 +129,7 @@ export class usageTable {
   port: number;
   time: string;
 
-  constructor(usageTable: usageTable) {
+  constructor (usageTable: usageTable) {
     {
       this._id = usageTable._id;
       this.email = usageTable.email;
@@ -145,7 +145,7 @@ export class Element {
   position!: number;
   weight!: number;
   symbol!: string;
-  constructor(Element: Element) {
+  constructor (Element: Element) {
     {
       this.name = Element.name;
       this.position = Element.position;
@@ -155,12 +155,12 @@ export class Element {
   }
 }
 
-export class DocumentTable {
+export class DocumentTypeTable {
   _id: string;
   is_expiration!: boolean;
   document_type_name!: string;
 
-  constructor(DocumentTable: DocumentTable) {
+  constructor (DocumentTable: DocumentTypeTable) {
     {
       this._id = DocumentTable._id;
       this.is_expiration = DocumentTable.is_expiration;
@@ -173,7 +173,7 @@ export class DepartmentTable {
   _id: string;
   department_name!: string;
 
-  constructor(DepartmentTable: DepartmentTable) {
+  constructor (DepartmentTable: DepartmentTable) {
     {
       this._id = DepartmentTable._id;
       this.department_name = DepartmentTable.department_name;
@@ -185,7 +185,7 @@ export class JobTitleTable {
   _id: string;
   job_title_name!: string;
 
-  constructor(JobTitleTable: JobTitleTable) {
+  constructor (JobTitleTable: JobTitleTable) {
     {
       this._id = JobTitleTable._id;
       this.job_title_name = JobTitleTable.job_title_name;
@@ -197,7 +197,7 @@ export class JobTypeTable {
   _id: string;
   job_type_name!: string;
 
-  constructor(JobTypeTable: JobTypeTable) {
+  constructor (JobTypeTable: JobTypeTable) {
     {
       this._id = JobTypeTable._id;
       this.job_type_name = JobTypeTable.job_type_name;
@@ -209,7 +209,7 @@ export class RelationshipTable {
   _id: string;
   relationship_name!: string;
 
-  constructor(RelationshipTable: RelationshipTable) {
+  constructor (RelationshipTable: RelationshipTable) {
     {
       this._id = RelationshipTable._id;
       this.relationship_name = RelationshipTable.relationship_name;
@@ -221,7 +221,7 @@ export class LanguageTable {
   _id: string;
   name!: string;
 
-  constructor(LanguageTable: LanguageTable) {
+  constructor (LanguageTable: LanguageTable) {
     {
       this._id = LanguageTable._id;
       this.name = LanguageTable.name;
@@ -236,7 +236,7 @@ export class TermsTable {
   is_discount!: boolean;
   discount!: number;
 
-  constructor(TermsTable: TermsTable) {
+  constructor (TermsTable: TermsTable) {
     {
       this._id = TermsTable._id;
       this.name = TermsTable.name;
@@ -251,7 +251,7 @@ export class TaxrateTable {
   _id: string;
   name!: string;
 
-  constructor(TaxrateTable: TaxrateTable) {
+  constructor (TaxrateTable: TaxrateTable) {
     {
       this._id = TaxrateTable._id;
       this.name = TaxrateTable.name;
@@ -264,7 +264,7 @@ export class DocumentsTable {
   is_expiration!: boolean;
   name!: string;
 
-  constructor(DocumentsTable: DocumentsTable) {
+  constructor (DocumentsTable: DocumentsTable) {
     {
       this._id = DocumentsTable._id;
       this.name = DocumentsTable.name;
@@ -277,7 +277,7 @@ export class VendorTypeTable {
   _id: string;
   name!: string;
 
-  constructor(VendorTypeTable: VendorTypeTable) {
+  constructor (VendorTypeTable: VendorTypeTable) {
     {
       this._id = VendorTypeTable._id;
       this.name = VendorTypeTable.name;
@@ -290,7 +290,7 @@ export class JobNameTable {
   name!: string;
   email_contact!: string;
 
-  constructor(JobNameTable: JobNameTable) {
+  constructor (JobNameTable: JobNameTable) {
     {
       this._id = JobNameTable._id;
       this.name = JobNameTable.name;
@@ -306,7 +306,7 @@ export class ClassNameTable {
   description!: string;
   status!: number;
 
-  constructor(ClassNameTable: ClassNameTable) {
+  constructor (ClassNameTable: ClassNameTable) {
     {
       this._id = ClassNameTable._id;
       this.name = ClassNameTable.name;

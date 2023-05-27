@@ -15,6 +15,13 @@
                         <div class="right">
                             <ul class="tbl-export-btn">
                                 <li class="tbl-header-btn">
+                                    <div class="m-l-10" matTooltip="INVOICE LINK">
+                                        <button mat-mini-fab color="primary" (click)="viewInvoice()">
+                                            <mat-icon class="col-white">insert_link</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="tbl-header-btn">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' | translate}}">
                                         <button mat-mini-fab color="warn" (click)="back()">
                                             <mat-icon class="col-white">close</mat-icon>
@@ -110,12 +117,14 @@
         </span>
         &nbsp; &nbsp;
         <span class="message-data-name">{{message.sender.userfullname}}</span>
+        <span class="user-picture my-picture"><img [src]="message.sender.userpicture" /></span>
     </div>
     <div class="message other-message float-end p-3"> {{message.message}} </div>
 </ng-template>
 
 <ng-template #yourMessageTemplate let-message='message'>
     <div class="message-data">
+        <span class="user-picture your-picture"><img [src]="message.sender.userpicture" /></span>
         <span class="message-data-name">{{message.sender.userfullname}}</span>
         <span class="message-data-time">{{(message.created_at * 1000) | date: 'MM/dd/yyyy hh:mm a'}}</span>
     </div>

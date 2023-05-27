@@ -87,6 +87,10 @@ export class InvoiceMessageViewComponent {
     }
   }
 
+  viewInvoice() {
+    this.router.navigate([WEB_ROUTES.INVOICE_DETAILS], { queryParams: { _id: this.messageData.invoice_id } });
+  }
+
   back() {
     this.router.navigate([WEB_ROUTES.INVOICE_MESSAGES]);
   }

@@ -305,6 +305,21 @@ export function MMDDYYYY(epochTime: any) {
   return date_tmp;
 }
 
+export function MMDDYYYY_HH_MM_A(epochTime: any) {
+  if (epochTime == 0) return '';
+  var dateObj = epochTime * 1000;
+  let date = new Date(dateObj);
+  let date_tmp = ("0" + (date.getMonth() + 1)).slice(-2) + "/" + ("0" + date.getDate()).slice(-2) + "/" + date.getFullYear();
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  var minutes_ = minutes < 10 ? '0' + minutes : minutes;
+  var strTime = ("0" + (hours)).slice(-2) + ':' + ("0" + (minutes_)).slice(-2) + ' ' + ampm;
+  return date_tmp + " " + strTime;
+}
+
 export function isValidMailFormat(email: string): any {
   const EMAIL_REGEXP =
     /^[a-z0-9!#$%&'*+\\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;

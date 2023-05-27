@@ -23,7 +23,7 @@ export class QbointegrationComponent {
 
 
   connact() {
-    this.router.navigate(['settings/qbo-integration-online']);
+    //this.router.navigate(['settings/qbo-integration-online']);
   }
 
   back() {
