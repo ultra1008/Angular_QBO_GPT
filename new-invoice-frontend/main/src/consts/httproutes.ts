@@ -211,4 +211,7 @@ export enum httproutes {
   UPDATE_INVOICE_MESSAGE_SEEN_FLAG = 'updateinvoicemessageseenflag',
   SEND_INVOICE_MESSAGE = 'sendinvoicemessage',
   DELETE_INVOICE_MESSAGE = 'deleteinvoicemessage',
+
+  //mail
+  SEND_INVOICE_EMAIL = 'sendInvoiceEmail'
 }

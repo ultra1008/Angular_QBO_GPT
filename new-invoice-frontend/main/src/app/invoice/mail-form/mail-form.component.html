@@ -23,41 +23,41 @@
         </div>
     </div>
     <div mat-dialog-content>
-        <form class="register-form m-4" [formGroup]="DepartmentInfo" (ngSubmit)="submit">
+        <form class="register-form m-4" [formGroup]="mailInfo" (ngSubmit)="submit">
             <div>
                 <b>From</b>
             </div>
             <div class="row">
                 <div class=" col-xl-12 col-lg-12 col-md-12 col-sm-12 ">
                     <mat-chip  [removable]="removable">
-                        P@gmail.com
+                       {{SmtpEmail}}
                     </mat-chip>
                 </div>
             </div>
             <div class="Row mt-2">
                 <mat-form-field class="example-full-width" appearance="outline">
                     <mat-label>TO</mat-label>
-                    <mat-select formControlName="drop_to"  multiple (selectionChange)="onUserChange($event)">
-                        <mat-select-filter #termListSelect [placeholder]="'Filter'" [displayMember]="'userfullname'"
-                            [array]="variablesUserList" (filteredReturn)="userList =$event">
+                    <mat-select formControlName="to" multiple (selectionChange)="onUsertoChange($event)">
+                        <mat-select-filter #termListtoSelect [placeholder]="'Filter'" [displayMember]="'userfullname'"
+                            [array]="variablesUserToList" (filteredReturn)="usertoList =$event">
                         </mat-select-filter>
-                        <mat-option *ngFor="let user of userList"
+                        <mat-option *ngFor="let user of usertoList"
                             [value]="user.useremail">{{user.userfullname}}</mat-option>
                     </mat-select>
                 </mat-form-field>
                 <div class="row mt-1">
-                    <div *ngFor="let user of selectedUsers">
-                    <mat-chip class="mr-1 mb-1" [removable]="removable" (removed)="removeUseremail(user)">
-                        {{user}}
-                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                    </mat-chip></div>
+                    <div *ngFor="let user of selectedToUsers">
+                        <mat-chip class="mr-1 mb-1" [removable]="removable" (removed)="removeUserTOemail(user)">
+                            {{user}}
+                            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                        </mat-chip>
+                    </div>
                 </div>
-
             </div>
             <div class="Row mt-2">
                 <mat-form-field class="example-full-width" appearance="outline">
                     <mat-label>Copy</mat-label>
-                    <mat-select formControlName="drop_copy" multiple (selectionChange)="onUserCopyChange($event)">
+                    <mat-select formControlName="cc" multiple (selectionChange)="onUserCopyChange($event)">
                         <mat-select-filter #termListSelect [placeholder]="'Filter'" [displayMember]="'userfullname'"
                             [array]="variablesUserList" (filteredReturn)="userList =$event">
                         </mat-select-filter>
@@ -67,20 +67,22 @@
                 </mat-form-field>
                 <div class="row mt-1">
                     <div *ngFor="let user of selectedUsers">
-                    <mat-chip class="mr-1 mb-1" [removable]="removable" (removed)="removeUseremail(user)">
-                        {{user}}
-                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                    </mat-chip></div>
+                        <mat-chip class="mr-1 mb-1" [removable]="removable" (removed)="removeUseremail(user)">
+                            {{user}}
+                            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                        </mat-chip>
+                    </div>
                 </div>
 
             </div>
-            <div class="row">
+            <!-- <div class="row">
                 <div class=" col-xl-12 col-lg-12 col-md-12 col-sm-12 ">
-                    <mat-chip  [removable]="removable">
+                    <mat-chip [removable]="removable">
                         rana@gmail.com
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                     </mat-chip>
                 </div>
-            </div>
+            </div> -->
             <div class="row mt-2">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                     <mat-form-field class="example-full-width" appearance="outline">
@@ -89,18 +91,20 @@
                     </mat-form-field>
                 </div>
             </div>
-            <div class="row mt-2">
+            <div class="row form-old mt-2 textarea-max">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                     <mat-form-field class="example-full-width" appearance="outline">
                         <mat-label>Message</mat-label>
-                        <textarea matInput></textarea>
+                        <textarea matInput formControlName="message">
+                        
+                        </textarea>
                     </mat-form-field>
                 </div>
             </div>
             <div class="row">
                 <div class="align-div">
                     <div class="example-button-row">
-                        <button mat-raised-button color="primary" class="width-set-2" [disabled]="!DepartmentInfo.valid"
+                        <button mat-raised-button color="primary" class="width-set-2" [disabled]="!mailInfo.valid"
                             [mat-dialog-close]="1" (click)="submit()">Send</button>
                         <button mat-raised-button color="warn" class="width-set-1" tabindex="-1"
                             (click)="dialogRef.close()">{{'COMMON.ACTIONS.CANCEL' |
