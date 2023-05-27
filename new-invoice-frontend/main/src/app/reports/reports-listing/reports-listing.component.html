@@ -9,16 +9,8 @@
                                    <ul class="header-buttons-left ms-0">
                                         <li class="tbl-title">
                                              <h2>{{'REPORT.VIEW.TITLE' |
-                                         translate}}</h2>
-
+                                                  translate}}</h2>
                                         </li>
-                                        <!-- <li class="tbl-search-box">
-                                             <label for="search-input"><i
-                                                       class="material-icons search-icon">search</i></label>
-                                             <input placeholder="{{'COMMON.TOOL_TIP.SEARCH' |
-                                         translate}}" type="text" #filter class="browser-default search-field"
-                                                  aria-label="Search box">
-                                        </li> -->
                                    </ul>
                               </div>
                               <div class="right rix1">
@@ -29,22 +21,23 @@
                                                        style="width: 80%;">
                                                        <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
                                                             <input matStartDate formControlName="start_date"
-                                                                 placeholder="{{'Company-Material-Report-StartDate' | translate}}"
+                                                                 placeholder="{{'REPORT.VIEW.START_DATE' | translate}}"
                                                                  [disabled]="false" #dateRangeStart>
                                                             <input matEndDate formControlName="end_date"
-                                                                 placeholder="{{'Company-Material-Report-EndDate' | translate}}"
+                                                                 placeholder="{{'REPORT.VIEW.END_DATE' | translate}}"
                                                                  [disabled]="false" #dateRangeEnd
                                                                  (dateChange)="dateRangeChange(dateRangeStart, dateRangeEnd)">
                                                        </mat-date-range-input>
-                                                       <mat-datepicker-toggle matSuffix
-                                                            [for]="picker"></mat-datepicker-toggle>
-                                                       <mat-date-range-picker #picker
-                                                            [disabled]="false"></mat-date-range-picker>
+                                                       <mat-datepicker-toggle matSuffix [for]="picker">
+                                                       </mat-datepicker-toggle>
+                                                       <mat-date-range-picker #picker [disabled]="false">
+                                                       </mat-date-range-picker>
                                                   </mat-form-field>
                                              </div>
                                         </li>
                                         <li>
-                                             <div class="export-button m-l-10">
+                                             <div class="export-button m-l-10" matTooltip="{{'COMMON.TOOL_TIP.XLSX' |
+                                        translate}}">
                                                   <img src="assets/images/icons/xlsx.png" alt=""
                                                        (click)="exportExcel()" />
                                              </div>
@@ -59,8 +52,8 @@
                          </form>
                          <mat-table class="mat-elevation-z8" [dataSource]="dataSource">
                               <ng-container matColumnDef="invoice">
-                                   <mat-header-cell
-                                        *matHeaderCellDef>{{'REPORT.TABLE.INVOICE' |translate}}</mat-header-cell>
+                                   <mat-header-cell *matHeaderCellDef>{{'REPORT.TABLE.INVOICE' |translate}}
+                                   </mat-header-cell>
                                    <mat-cell *matCellDef="let row;">{{row.invoice}}</mat-cell>
                               </ng-container>
                               <ng-container matColumnDef="p_o">
@@ -68,14 +61,14 @@
                                    <mat-cell *matCellDef="let row;">{{row.p_o}}</mat-cell>
                               </ng-container>
                               <ng-container matColumnDef="vendor_name">
-                                   <mat-header-cell
-                                        *matHeaderCellDef>{{'REPORT.TABLE.VENDOR_NAME' |translate}}</mat-header-cell>
+                                   <mat-header-cell *matHeaderCellDef>{{'REPORT.TABLE.VENDOR_NAME' |translate}}
+                                   </mat-header-cell>
                                    <mat-cell *matCellDef="let row;">{{row.vendor_name}}</mat-cell>
                               </ng-container>
 
                               <ng-container matColumnDef="packing_slip">
-                                   <mat-header-cell
-                                        *matHeaderCellDef>{{'REPORT.TABLE.PACKING_SLIP' |translate}}</mat-header-cell>
+                                   <mat-header-cell *matHeaderCellDef>{{'REPORT.TABLE.PACKING_SLIP' |translate}}
+                                   </mat-header-cell>
                                    <mat-cell *matCellDef="let row;">{{row.packing_slip}}</mat-cell>
                               </ng-container>
                               <ng-container matColumnDef="receiving_slip">
@@ -84,17 +77,15 @@
                                    <mat-cell *matCellDef="let row;">{{row.receiving_slip}}</mat-cell>
                               </ng-container>
                               <ng-container matColumnDef="status">
-                                   <mat-header-cell
-                                        *matHeaderCellDef>{{'REPORT.TABLE.STATUS' |translate}}</mat-header-cell>
+                                   <mat-header-cell *matHeaderCellDef>{{'REPORT.TABLE.STATUS' |translate}}
+                                   </mat-header-cell>
                                    <mat-cell *matCellDef="let row;">{{row.status}}</mat-cell>
                               </ng-container>
 
                               <mat-header-row *matHeaderRowDef="columns">
                               </mat-header-row>
                               <mat-row *matRowDef="let row; columns: columns"></mat-row>
-
                          </mat-table>
-
                     </div>
                </div>
           </div>

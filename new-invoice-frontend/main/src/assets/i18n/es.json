@@ -323,7 +323,9 @@
     },
     "REPORT": {
         "VIEW": {
-            "TITLE": "Informe"
+            "TITLE": "Informe",
+            "START_DATE": "Fecha de inicio",
+            "END_DATE": "Fecha final"
         },
         "TABLE": {
             "INVOICE": "Factura",
