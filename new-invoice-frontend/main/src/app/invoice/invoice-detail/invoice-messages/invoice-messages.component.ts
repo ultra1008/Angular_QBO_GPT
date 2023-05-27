@@ -13,7 +13,7 @@ import { WEB_ROUTES } from 'src/consts/routes';
 import { InvoiceService } from '../../invoice.service';
 import { InvoiceMessage } from '../../invoice.model';
 import { HttpCall } from 'src/app/services/httpcall.service';
-import { showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
+import { showNotification, swalWithBootstrapTwoButtons, MMDDYYYY_HH_MM_A } from 'src/consts/utils';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { TableElement } from 'src/app/shared/TableElement';
@@ -153,7 +153,7 @@ export class InvoiceMessagesComponent extends UnsubscribeOnDestroyAdapter implem
   exportExcel() {
     const exportData: Partial<TableElement>[] =
       this.dataSource.filteredData.map((x) => ({
-        'Date & Time': x.created_at,
+        'Date & Time': MMDDYYYY_HH_MM_A(x.created_at),
         'Sender': x.sender.userfullname,
         'Receiver': x.receiver.userfullname,
         'Ready by Receiver': x.seen_last_message ? 'Yes' : 'No',
