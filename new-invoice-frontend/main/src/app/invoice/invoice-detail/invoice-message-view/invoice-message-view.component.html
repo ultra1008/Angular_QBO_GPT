@@ -1,0 +1,125 @@
+<section class="content">
+    <div class="content-block">
+        <div class="m-4"></div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="card">
+                    <div class="materialTableHeader">
+                        <div class="left">
+                            <ul class="header-buttons-left ms-0">
+                                <li class="tbl-title">
+                                    <h2>Message</h2>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <ul class="tbl-export-btn">
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' | translate}}">
+                                        <button mat-mini-fab color="warn" (click)="back()">
+                                            <mat-icon class="col-white">close</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="chat">
+                        <div class="text-center" *ngIf="isLoading"><app-loading></app-loading></div>
+                        <div *ngIf="!isLoading">
+                            <div class="chat-header clearfix">
+                                <div class="chat-about">
+                                    <div class="chat-with">Invoice Number:
+                                        <span class="chat-with-data">{{messageData.invoice.invoice}}</span>
+                                    </div>
+                                    <div class="chat-with">Invoice Amount:
+                                        <span class="chat-with-data">{{messageData.invoice.total}}</span>
+                                    </div>
+                                    <div class="chat-with">Due Date:
+                                        <span class="chat-with-data">{{messageData.invoice.due_date}}</span>
+                                    </div>
+                                    <div class="chat-with">Vendor:
+                                        <span class="chat-with-data">{{messageData.invoice.vendor.vendor_name}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <ng-scrollbar style="height: 449px" visibility="hover">
+                                <div class="chat-history" id="chat-conversation">
+                                    <ul id="messageListDiv">
+                                        <li *ngFor="let message of messageList"
+                                            [ngClass]="myId === message.sender_id ? 'clearfix' : ''">
+                                            <ng-container *ngIf="myId === message.sender_id"
+                                                [ngTemplateOutlet]="myMessageTemplate"
+                                                [ngTemplateOutletContext]="{message:message}">
+                                            </ng-container>
+                                            <ng-container *ngIf="myId !== message.sender_id"
+                                                [ngTemplateOutlet]="yourMessageTemplate"
+                                                [ngTemplateOutletContext]="{message:message}">
+                                            </ng-container>
+                                        </li>
+                                        <!-- <li class="clearfix">
+                                            <div class="message-data text-end">
+                                                <span class="message-data-time">10:10 AM, Today
+                                                </span>
+                                                &nbsp; &nbsp;
+                                                <span class="message-data-name">Maria</span>
+                                            </div>
+                                            <div class="message other-message float-end"> Hi Robert , how are you? How
+                                                is
+                                                your work going on? </div>
+                                        </li>
+                                        <li>
+                                            <div class="message-data">
+                                                <span class="message-data-name">Robert </span>
+                                                <span class="message-data-time">10:12 AM, Today</span>
+                                            </div>
+                                            <div class="message my-message">
+                                                <p>Its good. We completed almost all task assign by our manager.</p>
+                                                <div class="row">
+                                                </div>
+                                            </div>
+                                        </li> -->
+                                    </ul>
+                                </div>
+                            </ng-scrollbar>
+                            <div class="chat-message clearfix">
+                                <div class="form-group">
+                                    <form [formGroup]="form">
+                                        <mat-form-field class="example-full-width" appearance="outline">
+                                            <input matInput formControlName="message"
+                                                placeholder="Enter message here..">
+                                            <button mat-icon-button matSuffix (click)="sendMessage()">
+                                                <mat-icon>send</mat-icon>
+                                            </button>
+                                        </mat-form-field>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<ng-template #myMessageTemplate let-message='message'>
+    <div class="message-data text-end">
+        <span class="message-data-time">{{(message.created_at * 1000) | date: 'MM/dd/yyyy hh:mm a'}}
+        </span>
+        &nbsp; &nbsp;
+        <span class="message-data-name">{{message.sender.userfullname}}</span>
+    </div>
+    <div class="message other-message float-end p-3"> {{message.message}} </div>
+</ng-template>
+
+<ng-template #yourMessageTemplate let-message='message'>
+    <div class="message-data">
+        <span class="message-data-name">{{message.sender.userfullname}}</span>
+        <span class="message-data-time">{{(message.created_at * 1000) | date: 'MM/dd/yyyy hh:mm a'}}</span>
+    </div>
+    <div class="message my-message p-3">
+        <p>{{message.message}}</p>
+    </div>
+</ng-template>

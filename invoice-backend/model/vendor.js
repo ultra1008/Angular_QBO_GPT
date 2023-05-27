@@ -35,6 +35,6 @@ var vendorSchema = new Schema({
     vendor_type_id: { type: mongoose.ObjectId },
     gl_account: { type: String, default: "" },
     isVendorfromQBO: { type: Boolean },
-}, { collection: 'vendor' }, { timestamps: false });
+}, { timestamps: false });
 
 module.exports = vendorSchema;

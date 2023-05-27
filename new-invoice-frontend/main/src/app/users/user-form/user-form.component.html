@@ -19,6 +19,20 @@
                               </div>
                               <div class="right">
                                    <ul class="tbl-export-btn">
+                                        <li class="tbl-header-btn" *ngIf="id">
+                                             <div class="m-l-10" *ngIf="is_delete == 0" matTooltip="ARCHIVE">
+                                                 <button mat-mini-fab color="warn" (click)="deleteuser()">
+                                                     <mat-icon class="col-white">archive</mat-icon>
+                                                 </button>
+                                             </div>
+                                         </li>
+                                         <li class="tbl-header-btn" *ngIf="id">
+                                             <div class="m-l-10" *ngIf="is_delete == 1" matTooltip="RESTORE">
+                                                 <button mat-mini-fab color="warn" (click)="deleteuser()">
+                                                     <mat-icon class="col-white">archive</mat-icon>
+                                                 </button>
+                                             </div>
+                                         </li>
                                         <li class="tbl-header-btn">
                                              <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' | translate}}">
                                                   <button mat-mini-fab color="warn" (click)="back()">

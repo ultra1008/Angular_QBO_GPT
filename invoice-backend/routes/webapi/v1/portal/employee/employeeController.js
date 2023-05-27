@@ -928,8 +928,7 @@ module.exports.getOneUser = async function (req, res) {
                 {
                     $match:
                     {
-                        _id: ObjectID(req.body._id),
-                        is_delete: 0
+                        _id: ObjectID(req.body._id)
                     },
                 },
                 {
@@ -1198,6 +1197,7 @@ module.exports.getOneUser = async function (req, res) {
                         project_email_group: 1,
                         compliance_officer: 1,
                         vendors: 1,
+                        is_delete: 1,
                     }
                 }
             ]);

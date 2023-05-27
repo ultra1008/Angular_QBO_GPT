@@ -14,7 +14,9 @@
             "CLOSE": "Close",
             "CHANGE_LANGUAGE": "CHANGE LANGUAGE",
             "IMPORT_TEMPLATE": "Download Template",
-            "IMPORT": "Import"
+            "IMPORT": "Import",
+            "MAIL": "Mail",
+            "MESSAGE": "Message"
         },
         "ACTIONS": {
             "EDIT": "Edit",

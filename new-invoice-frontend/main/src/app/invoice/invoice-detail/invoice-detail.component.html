@@ -14,6 +14,20 @@
                          <div class="right ">
                               <ul class="tbl-export-btn">
                                    <li class="tbl-header-btn">
+                                        <div class="m-l-10" matTooltip="MESSAGE">
+                                             <button mat-mini-fab color="primary" (click)="sendMessage()">
+                                                  <img src="{{MAIL_ICON}}" width="18px" height="18px">
+                                             </button>
+                                        </div>
+                                   </li>
+                                   <li class="tbl-header-btn">
+                                        <div class="m-l-10" matTooltip="MAIL">
+                                             <button mat-mini-fab color="primary" (click)="addmail()">
+                                                  <img src="{{MESSAGE_ICON}}" width="18px" height="18px">
+                                             </button>
+                                        </div>
+                                   </li>
+                                   <li class="tbl-header-btn">
                                         <div class="m-l-10" matTooltip="REPORT">
                                              <button mat-mini-fab color="primary">
                                                   <mat-icon class="col-white">insert_drive_file</mat-icon>
@@ -554,137 +568,33 @@
                                                        <div class="doc-file-type">
                                                             <ng-scrollbar class="document-h" visibility="hover">
                                                                  <ul class="list-unstyled">
-                                                                      <div class="row"> <button mat-raised-button
-                                                                                color="primary">{{'COMMON.ACTIONS.SAVE'|
-                                                                           translate}}</button></div>
-                                                                      <li class="d-flex mb-3 mt-2">
-                                                                           <span
-                                                                                class="msr-3 align-self-center img-icon primary-rgba text-primary"><i
-                                                                                     class="far fa-file-word"></i></span>
-                                                                           <div class="set-flex">
-                                                                                <h5 class="font-16 mb-1">Java
-                                                                                     Programming</h5>
-                                                                                <p>04/20/2023, 04:31 PM</p>
+                                                                      <div class="row">
+                                                                           <button mat-raised-button color="primary">
+                                                                                {{'COMMON.ACTIONS.SAVE'| translate}}
+                                                                           </button>
+                                                                      </div>
+                                                                      <li class="d-flex justify-content-between mb-3"
+                                                                           *ngFor="let document of [1,2,3,4,5]; let i = index"
+                                                                           [ngClass]="i === 0 ? 'mt-2' : ''">
+                                                                           <div class="custom-d-flex">
+                                                                                <span
+                                                                                     class="msr-3 align-self-center img-icon primary-rgba text-primary"><i
+                                                                                          class="far fa-file-pdf"></i>
+                                                                                </span>
+                                                                                <div class="set-flex">
+                                                                                     <h5 class="font-16 mb-1">Java
+                                                                                          Programming</h5>
+                                                                                     <p>04/20/2023, 04:31 PM</p>
+                                                                                </div>
                                                                            </div>
-                                                                           <span
-                                                                                class="badge badge-solid-red document-card">
-                                                                                Invoice</span>
-
-
-                                                                           <div class="ms-auto">
+                                                                           <span class="badge badge-solid-red my-auto">
+                                                                                Invoice </span>
+                                                                           <div>
                                                                                 <td>
-                                                                                     <button mat-mini-fab
-                                                                                          class="document-btn">
+                                                                                     <button mat-mini-fab color="warn"
+                                                                                          class="mx-2">
                                                                                           <mat-icon
-                                                                                               class="col-white ">delete</mat-icon>
-                                                                                     </button>
-                                                                                     <button mat-mini-fab
-                                                                                          color="primary">
-                                                                                          <mat-icon
-                                                                                               class="col-white">download</mat-icon>
-                                                                                     </button>
-                                                                                </td>
-                                                                           </div>
-                                                                      </li>
-                                                                      <li class="d-flex mb-3">
-                                                                           <span
-                                                                                class="msr-3 align-self-center img-icon success-rgba text-success"><i
-                                                                                     class="far fa-file-excel"></i></span>
-                                                                           <div class="set-flex">
-                                                                                <h5 class="font-16 mb-1">Angular Theory
-                                                                                </h5>
-                                                                                <p>04/20/2023, 04:31 PM</p>
-                                                                           </div>
-                                                                           <span
-                                                                                class="badge badge-solid-blue document-card">
-                                                                                P.O.</span>
-                                                                           <div class="ms-auto">
-                                                                                <td>
-                                                                                     <button mat-mini-fab
-                                                                                          class="document-btn">
-                                                                                          <mat-icon
-                                                                                               class="col-white ">delete</mat-icon>
-                                                                                     </button>
-                                                                                     <button mat-mini-fab
-                                                                                          color="primary">
-                                                                                          <mat-icon
-                                                                                               class="col-white">download</mat-icon>
-                                                                                     </button>
-                                                                                </td>
-                                                                           </div>
-                                                                      </li>
-                                                                      <li class="d-flex mb-3">
-                                                                           <span
-                                                                                class="msr-3 align-self-center img-icon danger-rgba text-danger"><i
-                                                                                     class="far fa-file-pdf"></i></span>
-                                                                           <div class="set-flex">
-                                                                                <h5 class="font-16 mb-1">Maths Sums
-                                                                                     Solution</h5>
-                                                                                <p>04/20/2023, 04:31 PM</p>
-                                                                           </div>
-                                                                           <span
-                                                                                class="badge badge-solid-orange document-card ">
-                                                                                Packing Slip</span>
-                                                                           <div class="ms-auto">
-                                                                                <td>
-                                                                                     <button mat-mini-fab
-                                                                                          class="document-btn">
-                                                                                          <mat-icon
-                                                                                               class="col-white ">delete</mat-icon>
-                                                                                     </button>
-                                                                                     <button mat-mini-fab
-                                                                                          color="primary">
-                                                                                          <mat-icon
-                                                                                               class="col-white">download</mat-icon>
-                                                                                     </button>
-                                                                                </td>
-                                                                           </div>
-                                                                      </li>
-                                                                      <li class="d-flex mb-3">
-                                                                           <span
-                                                                                class="msr-3 align-self-center img-icon info-rgba text-info"><i
-                                                                                     class="far fa-file-archive"></i></span>
-                                                                           <div class="set-flex">
-                                                                                <h5 class="font-16 mb-1">Submit Science
-                                                                                     Journal</h5>
-                                                                                <p>04/20/2023, 04:31 PM</p>
-                                                                           </div>
-                                                                           <span class="badge badge-solid-green document-card
-                                                                           ">
-                                                                                Reciving Slip</span>
-                                                                           <div class="ms-auto">
-                                                                                <td>
-                                                                                     <button mat-mini-fab
-                                                                                          class="document-btn">
-                                                                                          <mat-icon
-                                                                                               class="col-white ">delete</mat-icon>
-                                                                                     </button>
-                                                                                     <button mat-mini-fab
-                                                                                          color="primary">
-                                                                                          <mat-icon
-                                                                                               class="col-white">download</mat-icon>
-                                                                                     </button>
-                                                                                </td>
-                                                                           </div>
-                                                                      </li>
-                                                                      <li class="d-flex mb-3">
-                                                                           <span
-                                                                                class="msr-3 align-self-center img-icon primary-rgba text-primary"><i
-                                                                                     class="far fa-file-word"></i></span>
-                                                                           <div class="set-flex">
-                                                                                <h5 class="font-16 mb-1">Marketing
-                                                                                     Instructions</h5>
-                                                                                <p>04/20/2023, 04:31 PM</p>
-                                                                           </div>
-                                                                           <span class="badge badge-solid-cyan document-card
-                                                                           ">
-                                                                                Quote</span>
-                                                                           <div class="ms-auto">
-                                                                                <td>
-                                                                                     <button mat-mini-fab
-                                                                                          class="document-btn">
-                                                                                          <mat-icon
-                                                                                               class="col-white ">delete</mat-icon>
+                                                                                               class="col-white">delete</mat-icon>
                                                                                      </button>
                                                                                      <button mat-mini-fab
                                                                                           color="primary">
@@ -707,10 +617,7 @@
                                    <div class="header">
                                         <h2>Info</h2>
                                         <span class="Activity-h">
-
-
                                              <mat-icon class="col-gray mt-1">add</mat-icon>
-
                                         </span>
                                    </div>
                                    <div class="body">

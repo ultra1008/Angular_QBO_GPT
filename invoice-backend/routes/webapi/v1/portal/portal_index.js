@@ -473,7 +473,6 @@ router.post('/webapi/v1/portal/getjobnamefortable', common.checkTokenExistOrNot,
 
 let clientController = require('./client/clientController');
 let clientValidation = require('./client/clientValidation');
-
 router.post('/webapi/v1/portal/saveclient', common.checkTokenExistOrNot, clientValidation.saveclientValidation, clientController.saveclient);
 router.get('/webapi/v1/portal/getclient', common.checkTokenExistOrNot, clientController.getclient);
 router.post('/webapi/v1/portal/deleteclient', common.checkTokenExistOrNot, clientValidation.deleteclientvalidation, clientController.deleteclient);
@@ -492,5 +491,13 @@ router.post('/webapi/v1/portal/deleteclassname', common.checkTokenExistOrNot, Cl
 router.get('/webapi/v1/portal/getclassname', common.checkTokenExistOrNot, Class_nameController.getclassname);
 router.post('/webapi/v1/portal/getclassnameForTable', common.checkTokenExistOrNot, Class_nameController.getclassnameForTable);
 router.post('/webapi/v1/portal/importclassname', common.checkTokenExistOrNot, Class_nameController.importclassname);
+
+let invoiceMessageController = require('./invoice_message/invoiceMessageController');
+let invoiceMessageValidation = require('./invoice_message/invoiceMessageValidation');
+router.get('/webapi/v1/portal/getinvoicemessagefortable', common.checkTokenExistOrNot, invoiceMessageController.getInvoiceMessageForTable);
+router.post('/webapi/v1/portal/getoneinvoicemessage', common.checkTokenExistOrNot, invoiceMessageValidation.getOneInvoiceMessage, invoiceMessageController.getOneInvoiceMessage);
+router.post('/webapi/v1/portal/updateinvoicemessageseenflag', common.checkTokenExistOrNot, invoiceMessageValidation.updateInvoiceMessageSeenFlag, invoiceMessageController.updateInvoiceMessageSeenFlag);
+router.post('/webapi/v1/portal/sendinvoicemessage', common.checkTokenExistOrNot, invoiceMessageValidation.sendInvoiceMessage, invoiceMessageController.sendInvoiceMessage);
+router.post('/webapi/v1/portal/deleteinvoicemessage', common.checkTokenExistOrNot, invoiceMessageValidation.deleteInvoiceMessage, invoiceMessageController.deleteInvoiceMessage);
 
 module.exports = router;

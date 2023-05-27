@@ -16,6 +16,8 @@ export enum WEB_ROUTES {
   USER = '/user',
   INVOICE = '/invoice',
   DETAILS = 'details',
+  MESSAGES = 'messages',
+  MESSAGE_VIEW = 'message-view',
   VIEW_DOCUMENT = 'view-document',
   USER_EMERGENCY_CONTACT = 'emergency-contact',
   USER_DOCUMENT = 'document',
@@ -45,4 +47,6 @@ export enum WEB_ROUTES {
 
   INVOICE_DETAILS = '/invoice/details',
   INVOICE_VIEW_DOCUMENT = '/invoice/view-document',
+  INVOICE_MESSAGES = '/invoice/messages',
+  INVOICE_MESSAGE_VIEW = '/invoice/message-view',
 }

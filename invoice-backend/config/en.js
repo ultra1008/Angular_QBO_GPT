@@ -953,4 +953,7 @@ module.exports = {
         client_cost_cost_id: 'Client Costcode ',
     },
 
+    INVOICE_MESSAGE_LISTING: 'Message Listing',
+    INVOICE_MESSAGE_SEND: 'Message sent successfully.',
+    INVOICE_MESSAGE_DELETED: 'Message deleted successfully.',
 };

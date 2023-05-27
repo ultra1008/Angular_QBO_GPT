@@ -29,7 +29,6 @@ export class SwitchCompanyComponent implements OnInit {
   constructor (public dialogRef: MatDialogRef<SwitchCompanyComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private commonService: CommonService, private snackBar: MatSnackBar, private router: Router, public uiSpinner: UiSpinnerService,
     private formBuilder: FormBuilder) {
-    console.log("window.location.pathname: ", window.location.pathname);
     this.form = this.formBuilder.group({
       password: ["", Validators.required],
     });

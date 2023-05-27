@@ -32,14 +32,24 @@ import { SharedModule } from '../shared/shared.module';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AdvanceTableService } from '../advance-table/advance-table.service';
-import { CustompdfviewerComponent } from '../common-components/custompdfviewer/custompdfviewer.component';
+import { SendInvoiceMessageComponent } from './invoice-detail/send-invoice-message/send-invoice-message.component';
+import { InvoiceMessagesComponent } from './invoice-detail/invoice-messages/invoice-messages.component';
+import { InvoiceMessageViewComponent } from './invoice-detail/invoice-message-view/invoice-message-view.component';
 
+import { MessageFormComponent } from './message-form/message-form.component';
+import { MailFormComponent } from './mail-form/mail-form.component';
+import { DepartmentFormComponent } from '../settings/employeesettings/department-form/department-form.component';
 
 @NgModule({
   declarations: [
     InvoiceListingComponent,
     InvoiceDetailComponent,
-    ViewDocumentComponent
+    ViewDocumentComponent,
+    SendInvoiceMessageComponent,
+    InvoiceMessagesComponent,
+    InvoiceMessageViewComponent,
+    MessageFormComponent,
+    MailFormComponent,
   ],
   providers: [AdvanceTableService],
   imports: [
@@ -85,7 +95,6 @@ import { CustompdfviewerComponent } from '../common-components/custompdfviewer/c
     MatCheckboxModule,
     MatDialogModule,
     NgScrollbarModule,
-
-  ]
+  ],
 })
-export class InvoiceModule { }
+export class InvoiceModule {}
