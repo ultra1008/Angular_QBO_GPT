@@ -426,5 +426,71 @@
             "SAVING": "Are you sure you want to close this window without saving changes?",
             "DELETE": "Are you sure you want to delete this document?"
         }
+    },
+    "INVOICE": {
+        "TITLE": "INVOICE",
+        "INVOICE_DETAILS": {
+            "TITLE": "Invoice Detail",
+            "INFORMATION": {
+                "TITLE": "Information",
+                "FORM": {
+                    "DOCUMENT_TYPE": "Document Type",
+                    "VENDOR_NAME": "Vendor Name",
+                    "INVOICE#": "Invoice#",
+                    "INVOICE_DATE": "Invoice Date",
+                    "DUE_DATE": "Due Date",
+                    "TOTAL_AMOUNT": "Total Amount",
+                    "TAX_AMOUNT": "Tax Amount",
+                    "ASSIGN_TO": "Assign To",
+                    "STATUS": "Status"
+                }
+            },
+            "ACCOUNTING_ACTIVITY": {
+                "ACCOUNTING_ACTIVITY": "Accounting Activity",
+                "TABLE": {
+                    "TOTAL_AMOUNT": "Total Amount",
+                    "COST_CODE": "Cost Code",
+                    "ASSIGN_TO": "Assign To",
+                    "GL_ACCOUNT": "GL Account",
+                    "NOTES": "Notes"
+                }
+            },
+            "MORE_INFORMATION": {
+                "TITLE": "More Information",
+                "FORM": {
+                    "VENDOR_ID": "Vendor ID",
+                    "CUSTOMER_ID": "Customer ID",
+                    "P.O.#": "P.O.#",
+                    "JOB#": "Job#",
+                    "ORDER_DATE": "Order Date",
+                    "SHIP_DATE": "Ship Date",
+                    "PACKING_SLIP": "Packing Slip",
+                    "RECEVING_SLIP": "Receiving Slip",
+                    "TERMS": "terms",
+                    "TAX_ID": "Tax ID",
+                    "SUB_TOTAL": "Sub Total",
+                    "AMOUNT_DUE": "Amount Due",
+                    "COST_CODE": "Cost Code",
+                    "GL_ACCOUNT": "GL Account",
+                    "NOTES": "Notes"
+                }
+            },
+            "NOTES": {
+                "TITLE": "Notes"
+            },
+            "SUPPORTING_DOCUMENT": {
+                "TITLE": "Supporting Documents"
+            },
+            "INFO": {
+                "TITLE": "Info",
+                "TABLE": {
+                    "TOTAL_AMOUNT": "Total Amount",
+                    "COST_CODE": "Cost Code",
+                    "ASSIGN_TO": "Assign To",
+                    "GL_ACCOUNT": "GL Account",
+                    "NOTES": "Notes"
+                }
+            }
+        }
     }
 }

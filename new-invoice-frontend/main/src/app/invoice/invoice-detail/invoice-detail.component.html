@@ -7,7 +7,8 @@
                          <div class="left">
                               <ul class="header-buttons-left ms-0">
                                    <li class="tbl-title">
-                                        <h2 class="title-h">Invoice Detail <span>Pending</span></h2>
+                                        <h2 class="title-h">{{'INVOICE.INVOICE_DETAILS.TITLE' |
+                                             translate}} <span>Pending</span></h2>
                                    </li>
                               </ul>
                          </div>
@@ -56,7 +57,8 @@
                               <div class="Fix-hight">
                                    <div class="card">
                                         <div class="header">
-                                             <h2>Information</h2>
+                                             <h2>{{'INVOICE.INVOICE_DETAILS.INFORMATION.TITLE' |
+                                                  translate}} </h2>
                                         </div>
                                         <div class="body">
                                              <div class="list-group">
@@ -65,7 +67,8 @@
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'Document Type' | translate}}</mat-label>
+                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.DOCUMENT_TYPE' |
+                                                                           translate}}</mat-label>
                                                                       <mat-select formControlName="document_type">
                                                                            <mat-option [value]="1">
                                                                                 Invoice
@@ -79,7 +82,8 @@
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'Vendor Name' | translate}}</mat-label>
+                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.VENDOR_NAME' |
+                                                                           translate}}</mat-label>
                                                                       <input matInput formControlName="vendor_name"
                                                                            capitalOnly>
                                                                  </mat-form-field>
@@ -87,7 +91,8 @@
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'Invoice#' | translate}}</mat-label>
+                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.INVOICE#' |
+                                                                           translate}}</mat-label>
                                                                       <input matInput
                                                                            class="input-capitalized-textfield"
                                                                            formControlName="invoice">
@@ -99,7 +104,8 @@
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'Invoice Date' | translate}}</mat-label>
+                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.INVOICE_DATE' |
+                                                                           translate}}</mat-label>
                                                                       <input matInput formControlName="invoice_date"
                                                                            capitalOnly>
                                                                  </mat-form-field>
@@ -107,7 +113,8 @@
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'Due Date' | translate}}</mat-label>
+                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.DUE_DATE' |
+                                                                           translate}}</mat-label>
                                                                       <input matInput formControlName="due_date"
                                                                            capitalOnly>
                                                                  </mat-form-field>
@@ -115,7 +122,8 @@
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'Total Amount' | translate}}</mat-label>
+                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.TOTAL_AMOUNT' |
+                                                                           translate}}</mat-label>
                                                                       <input matInput
                                                                            class="input-capitalized-textfield"
                                                                            formControlName="total_amount">
@@ -126,7 +134,8 @@
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'Text Amount' | translate}}</mat-label>
+                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.TAX_AMOUNT' |
+                                                                           translate}}</mat-label>
                                                                       <input matInput formControlName="text_amount"
                                                                            capitalOnly>
                                                                  </mat-form-field>
@@ -134,7 +143,8 @@
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'Assign To' | translate}}</mat-label>
+                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.ASSIGN_TO' |
+                                                                           translate}}</mat-label>
                                                                       <mat-select formControlName="assign_to">
                                                                            <mat-option [value]="1">
                                                                                 Rana Rxit
@@ -148,7 +158,8 @@
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'Status' | translate}}</mat-label>
+                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.STATUS' |
+                                                                           translate}}</mat-label>
 
                                                                       <mat-select formControlName="status">
                                                                            <mat-option [value]="1">
@@ -178,7 +189,8 @@
                                    </div>
                                    <div class="card activity">
                                         <div class="header">
-                                             <h2>Accounting Activity</h2>
+                                             <h2>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.ACCOUNTING_ACTIVITY' |
+                                                  translate}}</h2>
 
                                         </div>
                                         <div class="body">
@@ -188,11 +200,16 @@
                                                             <table class="table">
                                                                  <thead>
                                                                       <tr>
-                                                                           <th>Total Amount</th>
-                                                                           <th>Cost Code</th>
-                                                                           <th>Assign To</th>
-                                                                           <th>GL Account</th>
-                                                                           <th>Notes</th>
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TOTAL_AMOUNT' |
+                                                                                translate}}</th>
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.COST_CODE' |
+                                                                                translate}}</th>
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.ASSIGN_TO' |
+                                                                                translate}}</th>
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.GL_ACCOUNT' |
+                                                                                translate}}</th>
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.NOTES' |
+                                                                                translate}}</th>
                                                                       </tr>
                                                                  </thead>
                                                                  <tbody>
@@ -211,13 +228,20 @@
                                                        <div class="body table-responsive">
                                                             <table class="table">
                                                                  <thead>
+
                                                                       <tr>
-                                                                           <th>Total Amount</th>
-                                                                           <th>Cost Code</th>
-                                                                           <th>Assign To</th>
-                                                                           <th>GL Account</th>
-                                                                           <th>Notes</th>
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TOTAL_AMOUNT' |
+                                                                                     translate}}</th>
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.COST_CODE' |
+                                                                                     translate}}</th>
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.ASSIGN_TO' |
+                                                                                     translate}}</th>
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.GL_ACCOUNT' |
+                                                                                     translate}}</th>
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.NOTES' |
+                                                                                     translate}}</th>
                                                                       </tr>
+
                                                                  </thead>
                                                                  <tbody>
                                                                       <tr>
@@ -236,11 +260,16 @@
                                                             <table class="table">
                                                                  <thead>
                                                                       <tr>
-                                                                           <th>Total Amount</th>
-                                                                           <th>Cost Code</th>
-                                                                           <th>Assign To</th>
-                                                                           <th>GL Account</th>
-                                                                           <th>Notes</th>
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TOTAL_AMOUNT' |
+                                                                                translate}}</th>
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.COST_CODE' |
+                                                                                translate}}</th>
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.ASSIGN_TO' |
+                                                                                translate}}</th>
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.GL_ACCOUNT' |
+                                                                                translate}}</th>
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.NOTES' |
+                                                                                translate}}</th>
                                                                       </tr>
                                                                  </thead>
                                                                  <tbody>
@@ -264,7 +293,8 @@
                                              <mat-expansion-panel>
                                                   <mat-expansion-panel-header>
                                                        <mat-panel-title>
-                                                            More information
+                                                            {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.TITLE' |
+                                                            translate}}
                                                        </mat-panel-title>
                                                   </mat-expansion-panel-header>
                                                   <form class="register-form m-1" [formGroup]="moreInformationForm">
@@ -272,7 +302,9 @@
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'Vendor ID' | translate}}</mat-label>
+                                                                      <mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.VENDOR_ID' |
+                                                                           translate}}</mat-label>
                                                                       <input matInput formControlName="vendor_id"
                                                                            capitalOnly>
                                                                  </mat-form-field>
@@ -280,7 +312,9 @@
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'Customer ID' | translate}}</mat-label>
+                                                                      <mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.CUSTOMER_ID' |
+                                                                           translate}}</mat-label>
                                                                       <input matInput formControlName="customer_id"
                                                                            capitalOnly>
                                                                  </mat-form-field>
@@ -288,7 +322,9 @@
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'P.O.#' | translate}}</mat-label>
+                                                                      <mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.P.O.#' |
+                                                                           translate}}</mat-label>
                                                                       <input matInput
                                                                            class="input-capitalized-textfield"
                                                                            formControlName="po_number">
@@ -299,7 +335,9 @@
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'Job#' | translate}}</mat-label>
+                                                                      <mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.JOB#' |
+                                                                           translate}}</mat-label>
                                                                       <input matInput formControlName="job_number"
                                                                            capitalOnly>
                                                                  </mat-form-field>
@@ -307,7 +345,9 @@
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'Order date' | translate}}</mat-label>
+                                                                      <mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.ORDER_DATE' |
+                                                                           translate}}</mat-label>
                                                                       <input matInput formControlName="order_date"
                                                                            capitalOnly>
                                                                  </mat-form-field>
@@ -315,7 +355,9 @@
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'Ship Date' | translate}}</mat-label>
+                                                                      <mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.SHIP_DATE' |
+                                                                           translate}}</mat-label>
                                                                       <input matInput
                                                                            class="input-capitalized-textfield"
                                                                            formControlName="ship_date">
@@ -326,7 +368,9 @@
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'Packing slip' | translate}}</mat-label>
+                                                                      <mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.PACKING_SLIP' |
+                                                                           translate}}</mat-label>
                                                                       <input matInput formControlName="packing_slip"
                                                                            capitalOnly>
                                                                  </mat-form-field>
@@ -334,7 +378,9 @@
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'Receiving slip' | translate}}</mat-label>
+                                                                      <mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.RECEVING_SLIP' |
+                                                                           translate}}</mat-label>
                                                                       <input matInput formControlName="reciving_slip"
                                                                            capitalOnly>
                                                                  </mat-form-field>
@@ -342,7 +388,9 @@
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'Terms' | translate}}</mat-label>
+                                                                      <mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.TERMS' |
+                                                                           translate}}</mat-label>
                                                                       <input matInput formControlName="terms"
                                                                            capitalOnly>
                                                                  </mat-form-field>
@@ -352,7 +400,9 @@
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'Tax ID' | translate}}</mat-label>
+                                                                      <mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.TAX_ID' |
+                                                                           translate}}</mat-label>
                                                                       <input matInput formControlName="tax_id"
                                                                            capitalOnly>
                                                                  </mat-form-field>
@@ -360,7 +410,9 @@
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'Sub total' | translate}}</mat-label>
+                                                                      <mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.SUB_TOTAL' |
+                                                                           translate}}</mat-label>
                                                                       <input matInput formControlName="sub_total"
                                                                            capitalOnly>
                                                                  </mat-form-field>
@@ -368,7 +420,9 @@
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'Amount Due' | translate}}</mat-label>
+                                                                      <mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.AMOUNT_DUE' |
+                                                                           translate}}</mat-label>
                                                                       <input matInput
                                                                            class="input-capitalized-textfield"
                                                                            formControlName="amount_due">
@@ -379,7 +433,9 @@
                                                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'Cost Code' | translate}}</mat-label>
+                                                                      <mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.COST_CODE' |
+                                                                           translate}}</mat-label>
                                                                       <mat-select formControlName="costcode">
                                                                            <mat-option [value]="1">
                                                                                 Invoice
@@ -393,7 +449,9 @@
                                                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'GL Account' | translate}}</mat-label>
+                                                                      <mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.GL_ACCOUNT' |
+                                                                           translate}}</mat-label>
                                                                       <input matInput
                                                                            class="input-capitalized-textfield"
                                                                            formControlName="gl_account">
@@ -404,7 +462,9 @@
                                                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'Notes' | translate}}</mat-label>
+                                                                      <mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.NOTES' |
+                                                                           translate}}</mat-label>
                                                                       <input matInput formControlName="notes"
                                                                            capitalOnly>
                                                                  </mat-form-field>
@@ -421,7 +481,7 @@
                                                   (closed)="panelOpenState = false">
                                                   <mat-expansion-panel-header>
                                                        <mat-panel-title>
-                                                            Notes
+                                                            {{'INVOICE.INVOICE_DETAILS.NOTES.TITLE' | translate}}
                                                        </mat-panel-title>
                                                   </mat-expansion-panel-header>
                                                   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -560,7 +620,7 @@
                                                   (closed)="panelOpenState = false">
                                                   <mat-expansion-panel-header>
                                                        <mat-panel-title>
-                                                            Supporting Documents
+                                                            {{'INVOICE.INVOICE_DETAILS.SUPPORTING_DOCUMENT.TITLE' | translate}}
                                                        </mat-panel-title>
 
                                                   </mat-expansion-panel-header>
@@ -615,7 +675,7 @@
                               </div>
                               <div class="card  activity mt-2 position-f">
                                    <div class="header">
-                                        <h2>Info</h2>
+                                        <h2>{{'INVOICE.INVOICE_DETAILS.INFO.TITLE' | translate}}</h2>
                                         <span class="Activity-h">
                                              <mat-icon class="col-gray mt-1">add</mat-icon>
                                         </span>
@@ -628,11 +688,16 @@
                                                        <table class="table">
                                                             <thead>
                                                                  <tr>
-                                                                      <th>Total amount</th>
-                                                                      <th>cost code</th>
-                                                                      <th>Assign To</th>
-                                                                      <th>GL Account</th>
-                                                                      <th>Notes</th>
+                                                                      <th>{{'INVOICE.INVOICE_DETAILS.INFO.TABLE.TOTAL_AMOUNT' | translate}}
+                                                                      </th>
+                                                                      <th>{{'INVOICE.INVOICE_DETAILS.INFO.TABLE.COST_CODE' | translate}}
+                                                                      </th>
+                                                                      <th>{{'INVOICE.INVOICE_DETAILS.INFO.TABLE.ASSIGN_TO' | translate}}
+                                                                      </th>
+                                                                      <th>{{'INVOICE.INVOICE_DETAILS.INFO.TABLE.GL_ACCOUNT' | translate}}
+                                                                      </th>
+                                                                      <th>{{'INVOICE.INVOICE_DETAILS.INFO.TABLE.NOTES' | translate}}
+                                                                      </th>
                                                                  </tr>
                                                             </thead>
                                                             <tbody>
