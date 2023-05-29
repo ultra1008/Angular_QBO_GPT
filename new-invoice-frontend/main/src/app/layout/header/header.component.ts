@@ -21,6 +21,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { Direction } from '@angular/cdk/bidi';
 import { SwitchCompanyComponent } from './switch-company/switch-company.component';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { CommonService } from 'src/app/services/common.service';
+import { httproutes, httpversion } from 'src/consts/httproutes';
 
 interface Notifications {
   message: string;
@@ -46,9 +48,11 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
   darkIcon?: string;
   userName?: string;
   userPicture?: string;
+  unseenCount = 0;
+
   constructor (@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, public elementRef: ElementRef,
     private rightSidebarService: RightSidebarService, private configService: ConfigService, private authService: AuthService,
-    private router: Router, public translate: TranslateService, public dialog: MatDialog,) {
+    private router: Router, public translate: TranslateService, public dialog: MatDialog, private commonService: CommonService) {
     super();
   }
   notifications: Notifications[] = [
@@ -108,7 +112,7 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
     this.userName = user_data.UserData.userfullname;
     this.userPicture = user_data.UserData.userpicture;
 
-    var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
+    let tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     tmp_locallanguage =
       tmp_locallanguage == '' ||
         tmp_locallanguage == undefined ||
@@ -117,7 +121,16 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
         : tmp_locallanguage;
     this.translate.use(tmp_locallanguage);
     this.translate.stream(['']).subscribe((textarray) => { });
+    this.getNotificationCount();
   }
+
+  async getNotificationCount() {
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_INVOICE_MESSAGE_COUNT);
+    if (data.status) {
+      this.unseenCount = data.unseen;
+    }
+  }
+
   ngAfterViewInit() {
     // set theme on startup
     if (localStorage.getItem(localstorageconstants.DARKMODE)) {

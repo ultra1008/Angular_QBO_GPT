@@ -14,6 +14,48 @@ let sendEmail = require('./../../../../../controller/common/sendEmail');
 var handlebars = require('handlebars');
 // let supplierAlertController = require('./../supplier_alert/supplierAlertController');
 
+module.exports.getInvoiceMessageCount = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            let invoiceMessageCollection = connection_db_api.model(collectionConstant.INVOICE_MESSAGE, invoiceMessageSchema);
+            let get_data = await invoiceMessageCollection.find({
+                $or: [
+                    { sender_id: ObjectID(decodedToken.UserData._id) },
+                    { receiver_id: ObjectID(decodedToken.UserData._id) },
+                ],
+                is_delete: 0,
+                is_first: true
+            });
+            let unseenCount = 0;
+            for (let i = 0; i < get_data.length; i++) {
+                if (get_data[i].receiver_id.toString() == decodedToken.UserData._id) {
+                    if (!get_data[i].is_seen) {
+                        unseenCount++;
+                    }
+                }
+                let get_messages = await invoiceMessageCollection.find({
+                    receiver_id: ObjectID(decodedToken.UserData._id),
+                    invoice_message_id: ObjectID(get_data[i]._id),
+                    is_seen: false,
+
+                });
+                unseenCount += get_messages.length;
+            }
+            res.send({ message: translator.getStr('INVOICE_MESSAGE_LISTING'), unseen: unseenCount, status: true });
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
 module.exports.getInvoiceMessageForTable = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
@@ -22,7 +64,16 @@ module.exports.getInvoiceMessageForTable = async function (req, res) {
         try {
             let invoiceMessageCollection = connection_db_api.model(collectionConstant.INVOICE_MESSAGE, invoiceMessageSchema);
             let get_data = await invoiceMessageCollection.aggregate([
-                { $match: { is_delete: 0, is_first: true } },
+                {
+                    $match: {
+                        $or: [
+                            { sender_id: ObjectID(decodedToken.UserData._id) },
+                            { receiver_id: ObjectID(decodedToken.UserData._id) },
+                        ],
+                        is_delete: 0,
+                        is_first: true
+                    }
+                },
                 {
                     $lookup: {
                         from: collectionConstant.INVOICE,

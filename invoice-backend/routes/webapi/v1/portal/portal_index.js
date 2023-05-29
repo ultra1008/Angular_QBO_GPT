@@ -503,6 +503,7 @@ router.post('/webapi/v1/portal/importclassname', common.checkTokenExistOrNot, cl
 
 let invoiceMessageController = require('./invoice_message/invoiceMessageController');
 let invoiceMessageValidation = require('./invoice_message/invoiceMessageValidation');
+router.get('/webapi/v1/portal/getinvoicemessagecount', common.checkTokenExistOrNot, invoiceMessageController.getInvoiceMessageCount);
 router.get('/webapi/v1/portal/getinvoicemessagefortable', common.checkTokenExistOrNot, invoiceMessageController.getInvoiceMessageForTable);
 router.post('/webapi/v1/portal/getoneinvoicemessage', common.checkTokenExistOrNot, invoiceMessageValidation.getOneInvoiceMessage, invoiceMessageController.getOneInvoiceMessage);
 router.post('/webapi/v1/portal/updateinvoicemessageseenflag', common.checkTokenExistOrNot, invoiceMessageValidation.updateInvoiceMessageSeenFlag, invoiceMessageController.updateInvoiceMessageSeenFlag);

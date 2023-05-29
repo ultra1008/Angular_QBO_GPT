@@ -206,6 +206,7 @@ export enum httproutes {
   CLIENT_GET_HISTORY = 'getClinetHistory',
 
   // Invoice Message
+  GET_INVOICE_MESSAGE_COUNT = 'getinvoicemessagecount',
   GET_INVOICE_MESSAGE_FOR_TABLE = 'getinvoicemessagefortable',
   GET_ONE_INVOICE_MESSAGE = 'getoneinvoicemessage',
   UPDATE_INVOICE_MESSAGE_SEEN_FLAG = 'updateinvoicemessageseenflag',
