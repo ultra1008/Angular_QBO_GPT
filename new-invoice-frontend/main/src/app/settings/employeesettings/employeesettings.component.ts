@@ -19,6 +19,7 @@ import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import * as fs from 'file-saver';
 import * as XLSX from 'xlsx';
 import { ImportEmployeeSettingsComponent } from './import-employee-settings/import-employee-settings.component';
+import { ExistListingComponent } from './exist-listing/exist-listing.component';
 
 @Component({
   selector: 'app-employeesettings',
@@ -32,6 +33,7 @@ export class EmployeesettingsComponent {
   AllJobType: any;
   AllRelationship: any;
   AllLanguage: any;
+  exitData!: any[];
 
   currrent_tab: any = 'document';
 
@@ -43,6 +45,8 @@ export class EmployeesettingsComponent {
     'relationship',
     'language',
   ];
+  showDocType = true;
+  showDepartmentType = true;
   @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
 
   constructor(
@@ -53,7 +57,7 @@ export class EmployeesettingsComponent {
     public dialog: MatDialog,
     public httpCall: HttpCall,
     public uiSpinner: UiSpinnerService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getDataDocumentType();
@@ -64,7 +68,7 @@ export class EmployeesettingsComponent {
     this.getDataLanguage();
   }
 
-  onTabChanged($event: { index: string | number }) {
+  onTabChanged($event: { index: string | number; }) {
     this.currrent_tab = this.tab_Array[$event.index];
     console.log('currrent_tab', this.currrent_tab);
   }
@@ -441,13 +445,14 @@ export class EmployeesettingsComponent {
       const formData_profle = new FormData();
       formData_profle.append('file', file);
       let apiurl = '';
+      let that = this;
 
       if (that.currrent_tab == 'document') {
         apiurl =
-          httpversion.PORTAL_V1 + httproutes.SETTINGS_IMPORT__DOCUMENT_TYPE;
+          httpversion.PORTAL_V1 + httproutes.SETTINGS_CHECK_IMPORT__DOCUMENT_TYPE;
       } else if (that.currrent_tab == 'department') {
         apiurl =
-          httpversion.PORTAL_V1 + httproutes.SETTINGS_IMPORT__DEPARTMENTS;
+          httpversion.PORTAL_V1 + httproutes.SETTINGS_CHECK_IMPORT_DEPARTMENTS;
       } else if (that.currrent_tab == 'jobtitle') {
         apiurl = httpversion.PORTAL_V1 + httproutes.SETTINGS_IMPORT_JOB_TITLE;
       } else if (that.currrent_tab == 'jobtype') {
@@ -464,32 +469,43 @@ export class EmployeesettingsComponent {
         .httpPostCall(apiurl, formData_profle)
         .subscribe(function (params) {
           if (params.status) {
-            if (that.currrent_tab == 'document') {
-              location.reload();
-            } else if (that.currrent_tab == 'department') {
-              location.reload();
-            } else if (that.currrent_tab == 'jobtitle') {
-              location.reload();
-            } else if (that.currrent_tab == 'jobtype') {
-              location.reload();
-            } else if (that.currrent_tab == 'relationship') {
-              location.reload();
-            } else if (that.currrent_tab == 'language') {
-              location.reload();
-            }
-            // that.openErrorDataDialog(params);
+            that.uiSpinner.spin$.next(false);
+            that.exitData = params;
+            const dialogRef = that.dialog.open(ExistListingComponent, {
+              width: '750px',
+              height: '500px',
+              // data: that.exitData,
+              data: { data: that.exitData, tab: that.currrent_tab },
+              disableClose: true,
+            });
 
-            showNotification(that.snackBar, params.message, 'success');
-            that.uiSpinner.spin$.next(false);
+            dialogRef.afterClosed().subscribe((result: any) => {
+              if (result.module) {
+                if (result.module == 'document') {
+                  that.showDocType = false;
+                  setTimeout(() => {
+                    that.showDocType = true;
+                  }, 100);
+                } else if (result.module == 'department') {
+                  that.showDepartmentType = false;
+                  setTimeout(() => {
+                    that.showDepartmentType = true;
+                  }, 100);
+                }
+              }
+
+            });
           } else {
-            showNotification(that.snackBar, params.message, 'error');
             that.uiSpinner.spin$.next(false);
+            showNotification(that.snackBar, params.message, 'error');
+
           }
         });
       // }
     };
     reader.readAsBinaryString(file);
   }
+
 
   downloadImport() {
     if (this.currrent_tab == 'document') {
@@ -499,7 +515,7 @@ export class EmployeesettingsComponent {
         disableClose: true,
       });
 
-      dialogRef.afterClosed().subscribe((result) => {});
+      dialogRef.afterClosed().subscribe((result) => { });
     } else if (this.currrent_tab == 'department') {
       const dialogRef = this.dialog.open(ImportEmployeeSettingsComponent, {
         width: '500px',
@@ -507,7 +523,7 @@ export class EmployeesettingsComponent {
         disableClose: true,
       });
 
-      dialogRef.afterClosed().subscribe((result) => {});
+      dialogRef.afterClosed().subscribe((result) => { });
     } else if (this.currrent_tab == 'jobtitle') {
       const dialogRef = this.dialog.open(ImportEmployeeSettingsComponent, {
         width: '500px',
@@ -515,7 +531,7 @@ export class EmployeesettingsComponent {
         disableClose: true,
       });
 
-      dialogRef.afterClosed().subscribe((result) => {});
+      dialogRef.afterClosed().subscribe((result) => { });
     } else if (this.currrent_tab == 'jobtype') {
       const dialogRef = this.dialog.open(ImportEmployeeSettingsComponent, {
         width: '500px',
@@ -523,7 +539,7 @@ export class EmployeesettingsComponent {
         disableClose: true,
       });
 
-      dialogRef.afterClosed().subscribe((result) => {});
+      dialogRef.afterClosed().subscribe((result) => { });
     } else if (this.currrent_tab == 'relationship') {
       const dialogRef = this.dialog.open(ImportEmployeeSettingsComponent, {
         width: '500px',
@@ -531,7 +547,7 @@ export class EmployeesettingsComponent {
         disableClose: true,
       });
 
-      dialogRef.afterClosed().subscribe((result) => {});
+      dialogRef.afterClosed().subscribe((result) => { });
     } else if (this.currrent_tab == 'language') {
       const dialogRef = this.dialog.open(ImportEmployeeSettingsComponent, {
         width: '500px',
@@ -539,7 +555,7 @@ export class EmployeesettingsComponent {
         disableClose: true,
       });
 
-      dialogRef.afterClosed().subscribe((result) => {});
+      dialogRef.afterClosed().subscribe((result) => { });
     }
   }
 

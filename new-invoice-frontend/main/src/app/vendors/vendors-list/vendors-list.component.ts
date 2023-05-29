@@ -66,7 +66,7 @@ export class VendorsListComponent
   quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
   quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
 
-  constructor (
+  constructor(
     public httpClient: HttpClient,
     private httpCall: HttpCall,
     public dialog: MatDialog,
@@ -87,6 +87,7 @@ export class VendorsListComponent
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
   vendor_status: any = [''];
+  is_quickbooks = false;
 
   ngOnInit() {
     const vendorDisplay =
@@ -117,7 +118,8 @@ export class VendorsListComponent
   async getCompanyTenants() {
     const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP);
     if (data.status) {
-      if (data.data.is_quickbooks_online || data.data.is_quickbooks_desktop) {
+      this.is_quickbooks = data.data.is_quickbooks_online || data.data.is_quickbooks_desktop;
+      if (this.is_quickbooks) {
         this.displayedColumns = ['select', 'vendor_image', 'vendor_name', 'vendor_id', 'customer_id', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks', 'actions'];
       } else {
         this.displayedColumns = ['select', 'vendor_image', 'vendor_name', 'vendor_id', 'customer_id', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions'];
@@ -304,6 +306,8 @@ export class VendorsListComponent
         this.dataSource.filter = this.filter.nativeElement.value;
       }
     );
+    this.selection.clear();
+    this.show = true;
   }
 
   // export table data in excel file
@@ -405,6 +409,19 @@ export class VendorsListComponent
 
   gotoArchiveUnarchive() {
     this.isDelete = this.isDelete == 1 ? 0 : 1;
+    if (this.isDelete === 0) {
+      if (this.is_quickbooks) {
+        this.displayedColumns = ['select', 'vendor_image', 'vendor_name', 'vendor_id', 'customer_id', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks', 'actions'];
+      } else {
+        this.displayedColumns = ['select', 'vendor_image', 'vendor_name', 'vendor_id', 'customer_id', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions'];
+      }
+    } else {
+      if (this.is_quickbooks) {
+        this.displayedColumns = ['vendor_image', 'vendor_name', 'vendor_id', 'customer_id', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks', 'actions'];
+      } else {
+        this.displayedColumns = ['vendor_image', 'vendor_name', 'vendor_id', 'customer_id', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions'];
+      }
+    }
     this.refresh();
   }
 
@@ -456,7 +473,7 @@ export class VendorDataSource extends DataSource<Vendor> {
   }
   filteredData: Vendor[] = [];
   renderedData: Vendor[] = [];
-  constructor (
+  constructor(
     public vendorService: VendorsService,
     public paginator: MatPaginator,
     public _sort: MatSort,

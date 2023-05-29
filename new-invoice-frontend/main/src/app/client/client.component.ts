@@ -31,9 +31,14 @@ import { TermModel } from '../vendors/vendor.model';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { ClientService } from './client.service';
 import { ClientList } from './client.model';
+import { httproutes, httpversion } from 'src/consts/httproutes';
+import { UiSpinnerService } from '../services/ui-spinner.service';
+import * as XLSX from 'xlsx';
+import { ImportClientComponent } from './import-client/import-client.component';
+import { ExitsDataListComponent } from './exits-data-list/exits-data-list.component';
 import { icon } from 'src/consts/icon';
 import { CommonService } from '../services/common.service';
-import { httproutes, httpversion } from 'src/consts/httproutes';
+
 
 @Component({
   selector: 'app-client',
@@ -54,13 +59,16 @@ export class ClientComponent
   titleMessage = '';
   isQBSyncedCompany = false;
   rform?: any;
+  exitData!: any[];
   selectedValue!: string;
+  @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
+
 
   quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
   quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
   is_quickbooks = true;
 
-  constructor (
+  constructor(
     public httpClient: HttpClient,
     private httpCall: HttpCall,
     public dialog: MatDialog,
@@ -69,6 +77,7 @@ export class ClientComponent
     private router: Router,
     public translate: TranslateService,
     private fb: UntypedFormBuilder,
+    public uiSpinner: UiSpinnerService,
     private commonService: CommonService
   ) {
     super();
@@ -189,7 +198,7 @@ export class ClientComponent
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       this.refresh();
-      location.reload();
+
     } else {
       showNotification(this.snackBar, data.message, 'error');
     }
@@ -282,6 +291,8 @@ export class ClientComponent
         this.dataSource.filter = this.filter.nativeElement.value;
       }
     );
+    this.selection.clear();
+    // this.show = true;
   }
 
   // export table data in excel file
@@ -398,6 +409,87 @@ export class ClientComponent
     this.refresh();
   }
 
+  importFileAction() {
+    let el: HTMLElement = this.OpenFilebox.nativeElement;
+    el.click();
+  }
+
+  onFileChange(ev: any) {
+    let that = this;
+    let workBook: any;
+    let jsonData = null;
+    let header_;
+    const reader = new FileReader();
+    const file = ev.target.files[0];
+    reader.onload = (event) => {
+      const data = reader.result;
+      workBook = XLSX.read(data, { type: 'binary' }) || '';
+      jsonData = workBook.SheetNames.reduce((initial: any, name: any) => {
+        const sheet = workBook.Sheets[name];
+        initial[name] = XLSX.utils.sheet_to_json(sheet);
+        let data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        header_ = data.shift();
+
+        return initial;
+      }, {});
+      // const dataString = JSON.stringify(jsonData);
+      // const keys_OLD = ["item_type_name", "packaging_name", "terms_name"];
+      // if (JSON.stringify(keys_OLD.sort()) != JSON.stringify(header_.sort())) {
+      //   that.sb.openSnackBar(that.Company_Equipment_File_Not_Match, "error");
+      //   return;
+      // } else {
+      const formData_profle = new FormData();
+      formData_profle.append('file', file);
+      let apiurl = '';
+      let that = this;
+
+      apiurl = httpversion.PORTAL_V1 + httproutes.CHECK_IMPORT_CLIENT;
+
+
+      that.uiSpinner.spin$.next(true);
+      that.httpCall
+        .httpPostCall(apiurl, formData_profle)
+        .subscribe(function (params) {
+          that.uiSpinner.spin$.next(false);
+          if (params.status) {
+            that.exitData = params;
+
+
+
+            const dialogRef = that.dialog.open(ExitsDataListComponent, {
+              width: '750px',
+              height: '500px',
+              data: that.exitData,
+              disableClose: true,
+            });
+
+            dialogRef.afterClosed().subscribe((result: any) => {
+              // this.getDataTerms();
+              that.loadData();
+            });
+          } else {
+            showNotification(that.snackBar, params.message, 'error');
+            that.uiSpinner.spin$.next(false);
+          }
+        });
+      // }
+    };
+    reader.readAsBinaryString(file);
+  }
+  downloadImport() {
+    const dialogRef = this.dialog.open(ImportClientComponent, {
+      width: '500px',
+      data: {},
+      disableClose: true,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      // this.getDataTerms();
+      this.loadData();
+    });
+  }
+
+
   async getTerms() {
     const data = await this.clientService?.getTerms();
     if (data.status) {
@@ -430,7 +522,7 @@ export class ClientDataSource extends DataSource<ClientList> {
   }
   filteredData: ClientList[] = [];
   renderedData: ClientList[] = [];
-  constructor (
+  constructor(
     public clientService: ClientService,
     public paginator: MatPaginator,
     public _sort: MatSort,

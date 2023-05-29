@@ -32,9 +32,11 @@ import { ComponentsModule } from '../shared/components/components.module';
 import { SharedModule } from '../shared/shared.module';
 import { ClientRoutingModule } from './client-routing.module';
 import { ClientHistoryComponent } from './client-history/client-history.component';
+import { ImportClientComponent } from './import-client/import-client.component';
+import { ExitsDataListComponent } from './exits-data-list/exits-data-list.component';
 
 @NgModule({
-  declarations: [ClientComponent, ClientFormComponent, ClientHistoryComponent],
+  declarations: [ClientComponent, ClientFormComponent, ClientHistoryComponent, ImportClientComponent, ExitsDataListComponent],
   imports: [
     CommonModule,
     CommonModule,

@@ -67,7 +67,7 @@ export class UsersListingComponent
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
 
-  constructor (
+  constructor(
     public httpClient: HttpClient,
     private httpCall: HttpCall,
     public dialog: MatDialog,
@@ -286,6 +286,7 @@ export class UsersListingComponent
         this.dataSource.filter = this.filter.nativeElement.value;
       }
     );
+    this.selection.clear();
   }
 
   // context menu
@@ -438,7 +439,7 @@ export class UserDataSource extends DataSource<User> {
   }
   filteredData: User[] = [];
   renderedData: User[] = [];
-  constructor (
+  constructor(
     public userService: UserService,
     public paginator: MatPaginator,
     public _sort: MatSort,
