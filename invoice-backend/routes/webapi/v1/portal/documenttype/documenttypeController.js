@@ -210,12 +210,12 @@ module.exports.importDocumentType = async function (req, res) {
                 if (one_client) { } else {
                     reqObject.push({
                         document_type_name: requestObject[i].data.document_type_name,
-                        is_expiration: requestObject[i].data.is_expiration.toLowerCase() == "true",
+                        is_expiration: requestObject[i].data.is_expiration.toString().toLowerCase() == "true",
                     });
                 }
             }
-
             let insert_data = await documenttypeCollection.insertMany(reqObject);
+            console.log("insert_data", insert_data);
             if (insert_data) {
                 res.send({ status: true, message: translator.getStr('DocumentTypeAdded'), data: insert_data });
             } else {

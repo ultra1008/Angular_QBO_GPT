@@ -32,7 +32,7 @@ import { CommonService } from 'src/app/services/common.service';
 export class CostcodeComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
-  displayedColumns = ['division', 'value', 'description', 'is_quickbooks', 'actions'];
+  displayedColumns = ['division', 'value', 'description', 'actions'];
   costcodeService?: SettingsService;
   dataSource!: CostCodeDataSource;
   selection = new SelectionModel<CostCodeTable>(true, []);
@@ -63,6 +63,7 @@ export class CostcodeComponent
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
   ngOnInit() {
+    this.loadData();
     this.getCompanyTenants();
   }
 
@@ -75,7 +76,7 @@ export class CostcodeComponent
         this.displayedColumns = ['division', 'value', 'description', 'actions'];
       }
     }
-    this.loadData();
+    // this.loadData();
   }
 
   refresh() {
@@ -210,7 +211,7 @@ export class CostcodeComponent
       jsonData = workBook.SheetNames.reduce((initial: any, name: any) => {
         const sheet = workBook.Sheets[name];
         initial[name] = XLSX.utils.sheet_to_json(sheet);
-        let data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
         header_ = data.shift();
 
         return initial;

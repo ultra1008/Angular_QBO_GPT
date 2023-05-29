@@ -44,7 +44,7 @@ import { httproutes, httpversion } from 'src/consts/httproutes';
 export class ClientComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
-  displayedColumns = ['select', 'client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'is_quickbooks', 'actions'];
+  displayedColumns = ['select', 'client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'actions'];
   clientService?: ClientService;
   dataSource!: ClientDataSource;
   selection = new SelectionModel<ClientList>(true, []);
@@ -85,6 +85,7 @@ export class ClientComponent
     this.rform = this.fb.group({
       client_status: [''],
     });
+    this.loadData();
     this.getCompanyTenants();
     this.getTerms();
   }
@@ -99,7 +100,7 @@ export class ClientComponent
         this.displayedColumns = ['select', 'client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'actions'];
       }
     }
-    this.loadData();
+    // this.loadData();
   }
 
   // TOOLTIPS
