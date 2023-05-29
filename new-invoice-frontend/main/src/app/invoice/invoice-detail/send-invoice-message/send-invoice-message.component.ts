@@ -9,6 +9,7 @@ import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { User } from 'src/app/users/user.model';
 import { DialogData } from 'src/app/vendors/vendor-report/vendor-report.component';
 import { httpversion, httproutes } from 'src/consts/httproutes';
+import { icon } from 'src/consts/icon';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { showNotification } from 'src/consts/utils';
@@ -25,8 +26,8 @@ export class SendInvoiceMessageComponent implements OnInit {
   variablesUserList: any = [];
   userList: Array<User> = this.variablesUserList.slice();
   id: any;
-
-  constructor (public dialogRef: MatDialogRef<SwitchCompanyComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData,
+  invoice_logo = icon.INVOICE_LOGO;
+  constructor(public dialogRef: MatDialogRef<SwitchCompanyComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private commonService: CommonService, private snackBar: MatSnackBar, private router: Router, public uiSpinner: UiSpinnerService,
     private formBuilder: FormBuilder, public route: ActivatedRoute) {
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';

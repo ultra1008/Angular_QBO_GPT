@@ -189,7 +189,7 @@
                                    </div>
                                    <div class="card activity">
                                         <div class="header">
-                                             <h2>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.ACCOUNTING_ACTIVITY' |
+                                             <h2>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TITLE' |
                                                   translate}}</h2>
 
                                         </div>
@@ -200,15 +200,15 @@
                                                             <table class="table">
                                                                  <thead>
                                                                       <tr>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TOTAL_AMOUNT' |
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.TOTAL_AMOUNT' |
                                                                                 translate}}</th>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.COST_CODE' |
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.COST_CODE' |
                                                                                 translate}}</th>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.ASSIGN_TO' |
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.ASSIGN_TO' |
                                                                                 translate}}</th>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.GL_ACCOUNT' |
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.GL_ACCOUNT' |
                                                                                 translate}}</th>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.NOTES' |
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.NOTES' |
                                                                                 translate}}</th>
                                                                       </tr>
                                                                  </thead>
@@ -230,15 +230,15 @@
                                                                  <thead>
 
                                                                       <tr>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TOTAL_AMOUNT' |
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.TOTAL_AMOUNT' |
                                                                                      translate}}</th>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.COST_CODE' |
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.COST_CODE' |
                                                                                      translate}}</th>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.ASSIGN_TO' |
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.ASSIGN_TO' |
                                                                                      translate}}</th>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.GL_ACCOUNT' |
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.GL_ACCOUNT' |
                                                                                      translate}}</th>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.NOTES' |
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.NOTES' |
                                                                                      translate}}</th>
                                                                       </tr>
 
@@ -260,15 +260,15 @@
                                                             <table class="table">
                                                                  <thead>
                                                                       <tr>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TOTAL_AMOUNT' |
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.TOTAL_AMOUNT' |
                                                                                 translate}}</th>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.COST_CODE' |
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.COST_CODE' |
                                                                                 translate}}</th>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.ASSIGN_TO' |
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.ASSIGN_TO' |
                                                                                 translate}}</th>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.GL_ACCOUNT' |
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.GL_ACCOUNT' |
                                                                                 translate}}</th>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.NOTES' |
+                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.NOTES' |
                                                                                 translate}}</th>
                                                                       </tr>
                                                                  </thead>
@@ -735,20 +735,25 @@
                          </div>
                          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                               <div class="card pdf-h">
-                                   <!-- <div class="header">
-                                        <h2>Preview</h2>
+                                   <div class="pdf-btn">
+                                        <button class="m-2" mat-mini-fab (click)="download()" color="primary">
+                                             <mat-icon class="col-white">download</mat-icon>
+                                        </button>
+                                        <button mat-mini-fab (click)="print()" color="primary">
+                                             <mat-icon class="col-white">print</mat-icon>
+                                        </button>
+
                                    </div>
-                                   <div class="body">
-                                        <img src="assets/images/full_bg.jpg" height="690px" width="760px" alt="">
-                                   </div> -->
-                                   <app-custompdfviewer [pdf_url]="pdf_url"></app-custompdfviewer>
-                                   <!-- <div class="pdf-viewer">
-                                        <pdf-viewer id="pdf" [src]="pdf_url" [rotation]="0" [original-size]="false"
-                                             [show-all]="true" [fit-to-page]="false" [zoom]="1"
-                                             [zoom-scale]="'page-width'" [stick-to-page]="false" [render-text]="true"
-                                             [external-link-target]="'blank'" [autoresize]="true" [show-borders]="false"
-                                             [external-link-target]="'blank'"></pdf-viewer>
-                                   </div> -->
+                                   <div id="outerContainer">
+                                        <div class="pdf-container">
+                                             <pdf-viewer [src]="pdf_url" [rotation]="0" [original-size]="false"
+                                                  [show-all]="true" [fit-to-page]="false" [zoom]="1"
+                                                  [zoom-scale]="'page-width'" [stick-to-page]="false"
+                                                  [render-text]="true" [external-link-target]="'blank'"
+                                                  [autoresize]="true" [show-borders]="false"
+                                                  style="width: 100%; height: 600px;"></pdf-viewer>
+                                        </div>
+                                   </div>
                               </div>
                          </div>
                     </div>

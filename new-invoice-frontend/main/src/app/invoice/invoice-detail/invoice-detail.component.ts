@@ -3,14 +3,8 @@ import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroy
 import { WEB_ROUTES } from 'src/consts/routes';
 import { SendInvoiceMessageComponent } from './send-invoice-message/send-invoice-message.component';
 import { Component } from '@angular/core';
-import {
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators,
-} from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Icons } from 'angular-feather/lib/icons.provider';
-import { DepartmentFormComponent } from 'src/app/settings/employeesettings/department-form/department-form.component';
 import { icon } from 'src/consts/icon';
 import { MailFormComponent } from '../mail-form/mail-form.component';
 
@@ -26,8 +20,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   invoiceForm: UntypedFormGroup;
   moreInformationForm!: UntypedFormGroup;
   step = 0;
-  pdf_url =
-    'https://s3.wasabisys.com/r-988514/dailyreport/60c31f3dc5ba8494a2b1070f/60c31f3dc5ba8494a2b1070fdailyreport1630757615234.pdf';
+  pdf_url = '/assets/pdf_url/file-3.pdf';
   loadInvoice = true;
   setStep(index: number) {
     this.step = index;
@@ -100,6 +93,45 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
       height: '600px',
       data: {},
     });
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((result) => { });
+  }
+  print() {
+    fetch(this.pdf_url).then(resp => resp.arrayBuffer()).then(resp => {
+      /*--- set the blog type to final pdf ---*/
+      const file = new Blob([resp], { type: 'application/pdf' });
+      const blobUrl = window.URL.createObjectURL(file);
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = blobUrl;
+      document.body.appendChild(iframe);
+      //iframe.contentWindow.print();
+      iframe.onload = () => {
+        setTimeout(() => {
+          iframe.focus();
+          iframe.contentWindow!.print();
+        });
+      };
+    });
+  }
+
+  download() {
+    let a = document.createElement('a');
+    /*--- Firefox requires the link to be in the body --*/
+    document.body.appendChild(a);
+    a.style.display = 'none';
+    a.target = "_blank";
+    a.href = this.pdf_url;
+    a.click();
+    /*--- Remove the link when done ---*/
+    document.body.removeChild(a);
+  }
+  onKey(event: any) {
+
+    if (event.target.value.length == 0) {
+
+      // this.dashboardHistory = [];
+      // this.start = 0;
+      // this.getTodaysActivity();
+    }
   }
 }

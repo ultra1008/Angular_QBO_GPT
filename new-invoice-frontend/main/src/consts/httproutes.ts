@@ -217,4 +217,14 @@ export enum httproutes {
 
   // Invoice
   INVOICE_SAVE_INVOICE_PROCESS = "saveinvoiceprocess",
+
+  //QuickBook Module
+  QUICKBOOK_SAVE_INFO = "savequickbookinfo",
+  QUICKBOOK_LOGOUT = "/webapi/v1/quickbookslogout",
+  QUICKBOOK_ISCONNECT = "/webapi/v1/isConnecttoQBO",
+
+  //save to Database
+  SAVE_INVOICE_DATABASE = "/webapi/v1/portal/saveinvoicetoDB",
+  SAVE_GLACCOUNTS_DATABASE = "/webapi/v1/portal/saveglaccountstoDB",
+  SAVE_VENDORS_DATABASE = "/webapi/v1/portal/savevendorstoDB",
 }
