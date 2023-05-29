@@ -90,7 +90,7 @@
             "TITLE": "Historial del proveedor"
         },
         "REPORT": {
-            "TITLE": "Vendor Report"
+            "TITLE": "Informe de proveedor"
         },
         "CONFIRMATION_DIALOG": {
             "SUBMIT": "Complete el formulario de proveedor antes de enviarlo.",
@@ -153,6 +153,12 @@
             "JOB_TITLE": "Título profesional",
             "JOB_TYPE": "El tipo de trabajo",
             "LANGUAGE_SPOKEN": "Lenguaje hablado"
+        },
+        "HISTORY": {
+            "TITLE": "Historial de usuario"
+        },
+        "REPORT": {
+            "TITLE": "Informe de usuario"
         }
     },
     "SETTINGS": {
