@@ -122,3 +122,11 @@
         height: 81px !important;
     }
 }
+
+.img-b {
+    border-radius: 50%;
+}
+
+::ng-deep .mdc-menu-surface.mat-mdc-select-panel {
+    padding: unset !important;
+}

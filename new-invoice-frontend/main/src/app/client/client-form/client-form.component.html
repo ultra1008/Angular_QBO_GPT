@@ -41,12 +41,12 @@
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>{{'CLIENT.TABLE.JOB_CONTACT_EMAIL' | translate}}</mat-label>
-                                        <input matInput required formControlName="client_email"/>
+                                        <input matInput required formControlName="client_email" />
                                     </mat-form-field>
                                 </div>
                             </div>
                             <div class="row">
-                               
+
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>{{'CLIENT.TABLE.CLIENT_NUMBER' | translate}}</mat-label>
@@ -78,7 +78,9 @@
                                                 (filteredReturn)="approverList =$event">
                                             </mat-select-filter>
                                             <mat-option *ngFor="let approve of approverList" [value]="approve._id">
-                                                {{approve.userfullname}}
+                                                <span><img class="img-b" [src]="approve.userpicture" height="35px"
+                                                        width="35px" alt="">
+                                                </span> {{approve.userfullname}}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
@@ -98,7 +100,7 @@
                                 </div>
                             </div>
                             <div class="row form-old">
-                             
+
                                 <div class="col-xl-12 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline"
                                         style="height: auto !important;">
@@ -108,7 +110,7 @@
                                             formControlName="client_notes"></textarea>
                                     </mat-form-field>
                                 </div>
-                               
+
                             </div>
 
                             <div class="row">
@@ -128,4 +130,3 @@
         </div>
     </div>
 </section>
-

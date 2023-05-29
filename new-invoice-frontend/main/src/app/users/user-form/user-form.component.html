@@ -506,7 +506,11 @@
                                                                            <mat-option
                                                                                 *ngFor="let manager_user of db_manager_users"
                                                                                 [value]="manager_user._id">
-                                                                                {{manager_user.userfullname}}
+                                                                                <span><img class="img-b"
+                                                                                          [src]="manager_user.userpicture"
+                                                                                          height="35px" width="35px"
+                                                                                          alt="">
+                                                                                </span> {{manager_user.userfullname}}
                                                                            </mat-option>
                                                                       </mat-select>
 
@@ -529,7 +533,11 @@
                                                                            <mat-option
                                                                                 *ngFor="let supervisor_user of db_supervisor_users"
                                                                                 [value]="supervisor_user._id">
-                                                                                {{supervisor_user.userfullname}}
+                                                                                <span><img class="img-b"
+                                                                                          [src]="supervisor_user.userpicture"
+                                                                                          height="35px" width="35px"
+                                                                                          alt="">
+                                                                                </span> {{supervisor_user.userfullname}}
                                                                            </mat-option>
                                                                       </mat-select>
                                                                  </mat-form-field>
