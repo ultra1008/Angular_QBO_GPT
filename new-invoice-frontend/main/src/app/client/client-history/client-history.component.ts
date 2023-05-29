@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonService } from 'src/app/services/common.service';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
-import { VendorsService } from 'src/app/vendors/vendors.service';
 import { httpversion, httproutes } from 'src/consts/httproutes';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { ClientService } from '../client.service';
@@ -14,8 +13,7 @@ import { ClientService } from '../client.service';
 })
 export class ClientHistoryComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit
-{
+  implements OnInit {
   start = 0;
   clientHistory: any;
   historyLoading = true;

@@ -140,17 +140,28 @@
                                                                            capitalOnly>
                                                                  </mat-form-field>
                                                             </div>
-                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                                            <div
+                                                                 class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2 font-small">
+
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.ASSIGN_TO' |
-                                                                           translate}}</mat-label>
-                                                                      <mat-select formControlName="assign_to">
-                                                                           <mat-option [value]="1">
-                                                                                Rana Rxit
-                                                                           </mat-option>
-                                                                           <mat-option [value]="2">
-                                                                                Parth Tailor
+                                                                      translate}}</mat-label>
+                                                                      <mat-select formControlName="users" multiple>
+                                                                           <mat-select-filter #userListSelect
+                                                                                [placeholder]="'Filter'"
+                                                                                [displayMember]="'userfullname'"
+                                                                                [array]="variablesUserList"
+                                                                                (filteredReturn)="userList =$event">
+                                                                           </mat-select-filter>
+                                                                           <mat-option *ngFor="let user of userList"
+                                                                                [value]="user._id">
+                                                                                <span><img class="img-b"
+                                                                                          [src]="user.userpicture"
+                                                                                          height="25px" width="25px"
+                                                                                          alt="">
+                                                                                </span>
+                                                                                {{user.userfullname}}
                                                                            </mat-option>
                                                                       </mat-select>
                                                                  </mat-form-field>
