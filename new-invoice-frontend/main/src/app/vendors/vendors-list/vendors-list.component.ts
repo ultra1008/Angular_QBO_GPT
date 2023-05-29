@@ -35,6 +35,7 @@ import { UntypedFormBuilder } from '@angular/forms';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { CommonService } from 'src/app/services/common.service';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { icon } from 'src/consts/icon';
 
 @Component({
   selector: 'app-vendors-list',
@@ -51,24 +52,7 @@ export class VendorsListComponent
   imageObject = [];
   tmp_gallery: any;
   show = false;
-  displayedColumns = [
-    'select',
-    'vendor_image',
-    'vendor_name',
-    'invoice',
-    'open_invoice',
-    'amount_paid',
-    'amount_open',
-    // 'vendor_id',
-    // 'customer_id',
-    'vendor_phone',
-    'vendor_email',
-    'vendor_address',
-    'vendor_status',
-    'vendor_attachment',
-    'vendor_from',
-    'actions',
-  ];
+  displayedColumns = ['select', 'vendor_image', 'vendor_name', 'vendor_id', 'customer_id', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions',];
   vendorService?: VendorsService;
   dataSource!: VendorDataSource;
   selection = new SelectionModel<Vendor>(true, []);
@@ -76,9 +60,11 @@ export class VendorsListComponent
   isDelete = 0;
   termsList: Array<TermModel> = [];
   titleMessage = '';
-  isQBSyncedCompany = false;
   rform?: any;
   selectedValue!: string;
+
+  quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
+  quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
 
   constructor(
     public httpClient: HttpClient,
@@ -101,12 +87,14 @@ export class VendorsListComponent
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
   vendor_status: any = [''];
+  is_quickbooks = false;
 
   ngOnInit() {
     const vendorDisplay =
       localStorage.getItem(localstorageconstants.VENDOR_DISPLAY) ?? 'list';
     if (vendorDisplay == 'list') {
       this.loadData();
+      this.getCompanyTenants();
     } else {
       this.router.navigate([WEB_ROUTES.VENDOR_GRID]);
     }
@@ -114,47 +102,6 @@ export class VendorsListComponent
     this.rform = this.fb.group({
       vendor_status: [''],
     });
-
-    if (this.isQBSyncedCompany) {
-      this.displayedColumns = [
-        'select',
-        'vendor_image',
-        'vendor_name',
-        'invoice',
-        'open_invoice',
-        'amount_paid',
-        'amount_open',
-        // 'vendor_id',
-        // 'customer_id',
-        'vendor_phone',
-        'vendor_email',
-        'vendor_address',
-        'vendor_status',
-        'vendor_attachment',
-        'vendor_from',
-        'actions',
-      ];
-    } else {
-      this.displayedColumns = [
-        'select',
-        'vendor_image',
-        'vendor_name',
-        'invoice',
-        'open_invoice',
-        'amount_paid',
-        'amount_open',
-        // 'vendor_id',
-        // 'customer_id',
-        'vendor_phone',
-        'vendor_email',
-        'vendor_address',
-        'vendor_status',
-        'vendor_attachment',
-        'actions',
-      ];
-    }
-
-    // this.loadData();
 
     this.tmp_gallery = gallery_options();
     this.tmp_gallery.actions = [
@@ -167,6 +114,20 @@ export class VendorsListComponent
     this.galleryOptions = [this.tmp_gallery];
     this.getTerms();
   }
+
+  async getCompanyTenants() {
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP);
+    if (data.status) {
+      this.is_quickbooks = data.data.is_quickbooks_online || data.data.is_quickbooks_desktop;
+      if (this.is_quickbooks) {
+        this.displayedColumns = ['select', 'vendor_image', 'vendor_name', 'vendor_id', 'customer_id', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks', 'actions'];
+      } else {
+        this.displayedColumns = ['select', 'vendor_image', 'vendor_name', 'vendor_id', 'customer_id', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions'];
+      }
+    }
+    // this.loadData();
+  }
+
 
   listToGrid() {
     localStorage.setItem(localstorageconstants.VENDOR_DISPLAY, 'grid');
@@ -330,7 +291,6 @@ export class VendorsListComponent
   }
   removeSelectedRows() { }
   public loadData() {
-    this.show = false;
     this.vendorService = new VendorsService(this.httpCall);
     this.dataSource = new VendorDataSource(
       this.vendorService,
@@ -450,80 +410,16 @@ export class VendorsListComponent
   gotoArchiveUnarchive() {
     this.isDelete = this.isDelete == 1 ? 0 : 1;
     if (this.isDelete === 0) {
-      if (this.isQBSyncedCompany) {
-        this.displayedColumns = [
-          'select',
-          'vendor_image',
-          'vendor_name',
-          'invoice',
-          'open_invoice',
-          'amount_paid',
-          'amount_open',
-          // 'vendor_id',
-          // 'customer_id',
-          'vendor_phone',
-          'vendor_email',
-          'vendor_address',
-          'vendor_status',
-          'vendor_attachment',
-          'vendor_from',
-          'actions',
-        ];
+      if (this.is_quickbooks) {
+        this.displayedColumns = ['select', 'vendor_image', 'vendor_name', 'vendor_id', 'customer_id', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks', 'actions'];
       } else {
-        this.displayedColumns = [
-          'select',
-          'vendor_image',
-          'vendor_name',
-          'invoice',
-          'open_invoice',
-          'amount_paid',
-          'amount_open',
-          // 'vendor_id',
-          // 'customer_id',
-          'vendor_phone',
-          'vendor_email',
-          'vendor_address',
-          'vendor_status',
-          'vendor_attachment',
-          'actions',
-        ];
+        this.displayedColumns = ['select', 'vendor_image', 'vendor_name', 'vendor_id', 'customer_id', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions'];
       }
     } else {
-      if (this.isQBSyncedCompany) {
-        this.displayedColumns = [
-          'vendor_image',
-          'vendor_name',
-          'invoice',
-          'open_invoice',
-          'amount_paid',
-          'amount_open',
-          // 'vendor_id',
-          // 'customer_id',
-          'vendor_phone',
-          'vendor_email',
-          'vendor_address',
-          'vendor_status',
-          'vendor_attachment',
-          'vendor_from',
-          'actions',
-        ];
+      if (this.is_quickbooks) {
+        this.displayedColumns = ['vendor_image', 'vendor_name', 'vendor_id', 'customer_id', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks', 'actions'];
       } else {
-        this.displayedColumns = [
-          'vendor_image',
-          'vendor_name',
-          'invoice',
-          'open_invoice',
-          'amount_paid',
-          'amount_open',
-          // 'vendor_id',
-          // 'customer_id',
-          'vendor_phone',
-          'vendor_email',
-          'vendor_address',
-          'vendor_status',
-          'vendor_attachment',
-          'actions',
-        ];
+        this.displayedColumns = ['vendor_image', 'vendor_name', 'vendor_id', 'customer_id', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions'];
       }
     }
     this.refresh();

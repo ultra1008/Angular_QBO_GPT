@@ -40,13 +40,16 @@
                                                 (filteredReturn)="userList =$event">
                                             </mat-select-filter>
                                             <mat-option *ngFor="let user of userList" [value]="user._id">
+                                                <span><img class="img-b" [src]="user.userpicture" height="35px"
+                                                        width="35px" alt="">
+                                                </span>
                                                 {{user.userfullname}}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row textarea-max form-old">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>Message</mat-label>

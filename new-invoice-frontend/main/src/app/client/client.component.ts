@@ -36,6 +36,9 @@ import { UiSpinnerService } from '../services/ui-spinner.service';
 import * as XLSX from 'xlsx';
 import { ImportClientComponent } from './import-client/import-client.component';
 import { ExitsDataListComponent } from './exits-data-list/exits-data-list.component';
+import { icon } from 'src/consts/icon';
+import { CommonService } from '../services/common.service';
+
 
 @Component({
   selector: 'app-client',
@@ -46,16 +49,7 @@ import { ExitsDataListComponent } from './exits-data-list/exits-data-list.compon
 export class ClientComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
-  displayedColumns = [
-    'select',
-    'client_name',
-    'client_number',
-    'client_email',
-    'approver_id',
-    'client_cost_cost_id',
-    'client_status',
-    'actions',
-  ];
+  displayedColumns = ['select', 'client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'actions'];
   clientService?: ClientService;
   dataSource!: ClientDataSource;
   selection = new SelectionModel<ClientList>(true, []);
@@ -69,6 +63,11 @@ export class ClientComponent
   selectedValue!: string;
   @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
 
+
+  quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
+  quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
+  is_quickbooks = true;
+
   constructor(
     public httpClient: HttpClient,
     private httpCall: HttpCall,
@@ -78,7 +77,8 @@ export class ClientComponent
     private router: Router,
     public translate: TranslateService,
     private fb: UntypedFormBuilder,
-    public uiSpinner: UiSpinnerService
+    public uiSpinner: UiSpinnerService,
+    private commonService: CommonService
   ) {
     super();
   }
@@ -94,10 +94,22 @@ export class ClientComponent
     this.rform = this.fb.group({
       client_status: [''],
     });
-
     this.loadData();
-
+    this.getCompanyTenants();
     this.getTerms();
+  }
+
+  async getCompanyTenants() {
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP);
+    if (data.status) {
+      this.is_quickbooks = data.data.is_quickbooks_online || data.data.is_quickbooks_desktop;
+      if (this.is_quickbooks) {
+        this.displayedColumns = ['select', 'client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'is_quickbooks', 'actions'];
+      } else {
+        this.displayedColumns = ['select', 'client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'actions'];
+      }
+    }
+    // this.loadData();
   }
 
   // TOOLTIPS
@@ -382,26 +394,17 @@ export class ClientComponent
   gotoArchiveUnarchive() {
     this.isDelete = this.isDelete == 1 ? 0 : 1;
     if (this.isDelete === 0) {
-      this.displayedColumns = [
-        'select',
-        'client_name',
-        'client_number',
-        'client_email',
-        'approver_id',
-        'client_cost_cost_id',
-        'client_status',
-        'actions',
-      ];
+      if (this.is_quickbooks) {
+        this.displayedColumns = ['select', 'client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'is_quickbooks', 'actions'];
+      } else {
+        this.displayedColumns = ['select', 'client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'actions'];
+      }
     } else {
-      this.displayedColumns = [
-        'client_name',
-        'client_number',
-        'client_email',
-        'approver_id',
-        'client_cost_cost_id',
-        'client_status',
-        'actions',
-      ];
+      if (this.is_quickbooks) {
+        this.displayedColumns = ['client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'is_quickbooks', 'actions'];
+      } else {
+        this.displayedColumns = ['client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'actions'];
+      }
     }
     this.refresh();
   }

@@ -9,8 +9,8 @@ const smtpUpdateValidation = (req, res, next) => {
         "tenant_smtp_server": "required",
         "tenant_smtp_timeout": "required",
         "tenant_smtp_username": "required"
-    }
-    
+    };
+
     validator(req.body, validationRule, {}, (err, status) => {
         if (!status) {
             res.send({
@@ -18,17 +18,16 @@ const smtpUpdateValidation = (req, res, next) => {
                 message: err,
             });
         } else {
-            console.log("else")
             next();
         }
     });
-}
+};
 const companyValidation = (req, res, next) => {
     const validationRule = {
-       "companyname": "required",
-       "companyphone": "required",
-       "companyemail" : "required"
-    }
+        "companyname": "required",
+        "companyphone": "required",
+        "companyemail": "required"
+    };
     validator(req.body, validationRule, {}, (err, status) => {
         if (!status) {
             res.send({
@@ -36,16 +35,15 @@ const companyValidation = (req, res, next) => {
                 message: err,
             });
         } else {
-            console.log("else")
             next();
         }
     });
-}
+};
 
 const smtpGetValidation = (req, res, next) => {
     const validationRule = {
         "_id": "required"
-    }
+    };
     validator(req.body, validationRule, {}, (err, status) => {
         if (!status) {
             res.send({
@@ -53,17 +51,16 @@ const smtpGetValidation = (req, res, next) => {
                 message: err,
             });
         } else {
-            console.log("else")
             next();
         }
     });
-}
+};
 
-const compnayupdatequickbooksValidation  = (req, res, next) => {
+const compnayupdatequickbooksValidation = (req, res, next) => {
     const validationRule = {
         "quickbooks_client_id": "required",
         "quickbooks_client_secret": "required"
-    }
+    };
     validator(req.body, validationRule, {}, (err, status) => {
         if (!status) {
             res.send({
@@ -71,14 +68,13 @@ const compnayupdatequickbooksValidation  = (req, res, next) => {
                 message: err,
             });
         } else {
-            console.log("else")
             next();
         }
     });
-}
+};
 module.exports = {
     smtpUpdateValidation,
     smtpGetValidation,
     companyValidation,
     compnayupdatequickbooksValidation
-}
+};

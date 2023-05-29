@@ -70,7 +70,6 @@ module.exports.saveInvoice = async function (req, res) {
                         requestObject.vendor = ObjectID(requestObject.vendor);
                     }
                     let updatedData = await common.findUpdatedFieldHistory(requestObject, get_data._doc);
-                    console.log("updatedData", updatedData);
                     for (let i = 0; i < updatedData.length; i++) {
 
                         let key = `badge.${updatedData[i]['key']}`;
@@ -80,7 +79,6 @@ module.exports.saveInvoice = async function (req, res) {
                     await invoicesConnection.updateOne({ _id: ObjectID(id) }, updateBadgeObject);
 
                     requestObject.invoice_id = id;
-                    console.log("hello notes");
                     // Send Update to as per settings
                     await sendInvoiceUpdateAlerts(decodedToken, id, 'Invoice', translator);
 
@@ -3447,7 +3445,6 @@ module.exports.getInvoiceTableForReport = async function (req, res) {
             if (requestObject.start_date != 0 && requestObject.end_date != 0) {
                 date_query = { created_at: { $gte: requestObject.start_date, $lt: requestObject.end_date } };
             }
-            console.log("date_query", requestObject.start_date != 0 && requestObject.end_date != 0);
             var get_data = await invoicesConnection.aggregate([
                 { $match: { is_delete: requestObject.is_delete } },
                 { $match: date_query },
@@ -3461,7 +3458,6 @@ module.exports.getInvoiceTableForReport = async function (req, res) {
                 },
                 { $unwind: "$vendor" },
             ]);
-            console.log("get_data", get_data);
             if (get_data) {
                 res.send(get_data);
             } else {
@@ -3508,7 +3504,6 @@ module.exports.getViewDocumentsDatatableForTable = async function (req, res) {
                     };
                 }
             }
-            console.log("match_query", match_query);
             var aggregateQuery = [
                 { $match: match_query },
                 {
@@ -3712,7 +3707,6 @@ module.exports.getOrphanDocumentsDatatableForTable = async function (req, res) {
             // } else {
             //     match_query.created_at = { $gte: settingEpoch };
             // }
-            console.log("match_query", match_query);
             var aggregateQuery = [
                 { $match: match_query },
                 {
@@ -3952,7 +3946,7 @@ module.exports.sendInvoiceEmail = async function (req, res) {
             let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
             let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
             let MAP_DIV = "<div></div>";
-
+            requestObject.message = requestObject.message.replace(/\n/g, "<br />");
             let emailTmp = {
                 HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
                 SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
@@ -3962,7 +3956,7 @@ module.exports.sendInvoiceEmail = async function (req, res) {
                 EMAILTITLE: translator.getStr('INVOICE_SEND_TITLE'),
 
                 ANY_QUESTION: translator.getStr('EmailLoginAnyQuestion'),
-                MESSAGE: `${requestObject.message}`,
+                MESSAGE: new handlebars.SafeString(requestObject.message),
 
                 // COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
                 // COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,

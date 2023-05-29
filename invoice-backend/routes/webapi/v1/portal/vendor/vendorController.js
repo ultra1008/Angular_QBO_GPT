@@ -271,7 +271,6 @@ module.exports.getVendorForTable = async function (req, res) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-            console.log("collectionConstant.INVOICE_VENDOR================================================", collectionConstant.INVOICE_VENDOR);
             var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
             var getdata = await vendorConnection.find({ is_delete: requestObject.is_delete }).sort({ vendor_created_at: -1 });
             if (getdata) {

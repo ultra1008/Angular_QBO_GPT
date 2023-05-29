@@ -7,6 +7,9 @@ import { UntypedFormBuilder, UntypedFormGroup, } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { icon } from 'src/consts/icon';
 import { MailFormComponent } from '../mail-form/mail-form.component';
+import { CommonService } from 'src/app/services/common.service';
+import { httproutes, httpversion } from 'src/consts/httproutes';
+import { User } from 'src/app/users/user.model';
 
 @Component({
   selector: 'app-invoice-detail',
@@ -22,6 +25,9 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   step = 0;
   pdf_url = '/assets/pdf_url/file-3.pdf';
   loadInvoice = true;
+  isLoading = true;
+  variablesUserList: any = [];
+  userList: Array<User> = this.variablesUserList.slice();
   setStep(index: number) {
     this.step = index;
   }
@@ -34,7 +40,8 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   constructor(
     private fb: UntypedFormBuilder,
     private router: Router,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private commonService: CommonService,
   ) {
     super();
     this.invoiceForm = this.fb.group({
@@ -71,7 +78,18 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
 
       notes: [''],
     });
+
   }
+  async ngOnInit() {
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ALL_USER);
+    this.isLoading = false;
+    if (data.status) {
+      this.variablesUserList = data.data;
+      this.userList = this.variablesUserList.slice();
+    }
+    this.isLoading = false;
+  }
+
 
   back() {
     this.router.navigate([WEB_ROUTES.INVOICE]);

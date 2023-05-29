@@ -118,7 +118,7 @@ module.exports.deleteTaxRate = async function (req, res) {
 };
 
 // bulk upload 
-module.exports.importtax_rate = async function (req, res) {
+module.exports.checkImportTaxRate = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
     if (decodedToken) {
@@ -142,42 +142,29 @@ module.exports.importtax_rate = async function (req, res) {
                     throw err;
                 }).on('end', async function () {
                     newOpenFile = this.openedFiles;
-
                     if (notFonud == 1) {
-
                         const file = reader.readFile(newOpenFile[0].path);
                         const sheets = file.SheetNames;
                         let data = [];
-                        let exitdata = new Array();
+
                         for (let i = 0; i < sheets.length; i++) {
                             const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
                             temp.forEach((ress) => {
                                 data.push(ress);
                             });
                         }
-
-                        var onecategory_main = "";
+                        let exitdata = [];
+                        var allowImport = true;
                         for (let m = 0; m < data.length; m++) {
-                            onecategory_main = await taxRateConnection.findOne({ name: data[m].name }, { name: 1 });
-                            if (onecategory_main != null) {
-                                exitdata[m] = onecategory_main.name;
+                            var get_one = await taxRateConnection.findOne({ name: data[m].name });
+                            if (get_one != null) {
+                                allowImport = false;
+                                exitdata.push({ message: 'Already exist', valid: false, data: data[m], name: data[m].name });
+                            } else {
+                                exitdata.push({ message: 'Data is correct', valid: true, data: data[m], name: data[m].name });
                             }
                         }
-                        if (exitdata.length > 0) {
-                            res.send({ status: false, exitdata: exitdata, message: "name is allready exist." });
-                        }
-                        else {
-                            for (let m = 0; m < data.length; m++) {
-                                onecategory_main = await taxRateConnection.findOne({ name: data[m].name }, { name: 1 });
-                                requestObject = {};
-                                requestObject.name = data[m].name;
-                                let add_taxRate = new taxRateConnection(requestObject);
-                                let save_taxRate = await add_taxRate.save();
-
-                            }
-                            res.send({ status: true, message: "tax rate info add successfully." });
-                        }
-
+                        res.send({ status: true, allow_import: allowImport, data: exitdata, message: 'Tax Rate Listing' });
                     } else {
                         res.send({ status: false, message: translator.getStr('SomethingWrong'), rerror: e });
                     }
@@ -187,6 +174,43 @@ module.exports.importtax_rate = async function (req, res) {
             res.send({ status: false, message: translator.getStr('SomethingWrong'), rerror: e });
         }
     } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.importTaxRate = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            let taxRateConnection = connection_db_api.model(collectionConstant.INVOICE_TAX_RATE, taxRateSchema);
+
+            let reqObject = [];
+            for (let i = 0; i < requestObject.length; i++) {
+                let one_client = await taxRateConnection.findOne({ name: requestObject[i].data.name });
+                if (one_client) { } else {
+                    reqObject.push({
+                        name: requestObject[i].data.name
+                    });
+                }
+            }
+            let insert_data = await taxRateConnection.insertMany(reqObject);
+            if (insert_data) {
+                res.send({ status: true, message: 'Tax rate added successfully.', data: insert_data });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        }
+        finally {
+            connection_db_api.close();
+        }
+    }
+    else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };

@@ -453,9 +453,9 @@ async function addPersonalInfoHistory(id, requestObject, one_user, decodedToken,
 
     // find difference of object 
     let updatedData = await common.findUpdatedFieldHistory(requestObject, one_user);
-    console.log("requestObject", requestObject);
-    console.log("one_user", one_user);
-    console.log("updatedData", updatedData);
+    // console.log("requestObject", requestObject);
+    // console.log("one_user", one_user);
+    // console.log("updatedData", updatedData);
     // Check for object id fields and if it changed then replace id with specific value
     let found_role = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'userroleId'; });
     if (found_role != -1) {
@@ -2283,7 +2283,6 @@ module.exports.getAllUserHistory = async function (req, res) {
         try {
             let col = [];
             var requestObject = req.body;
-            console.log(requestObject);
             col.push("created_at", "action", "created_by", "taken_device");
             var start = parseInt(req.body.start);
             var perpage = parseInt(req.body.length);
@@ -3005,17 +3004,14 @@ module.exports.getAllEmployeeReport = async function (req, res) {
                     data_Query.push(ObjectID(requestObject.role_ids[i]));
                 }
                 roleQuery.push({ "role_id": { $in: data_Query } });
-                console.log("role: ", data_Query);
                 query.push({ "userroleId": { $in: data_Query } });
             }
 
             if (requestObject.status_ids.length != 0) {
-                console.log("status: ", requestObject.status_ids);
                 query.push({ "userstatus": { $in: requestObject.status_ids } });
             }
             query = query.length == 0 ? {} : { $and: query };
             // let date_query = {};
-            console.log("requestObject:", requestObject);
             // if (requestObject.start_date != 0 && requestObject.end_date != 0) {
             //     date_query = { "timecard_clock_in": { $gte: requestObject.start_date, $lt: requestObject.end_date } };
             // }
@@ -3274,7 +3270,6 @@ module.exports.getAllEmployeeReport = async function (req, res) {
                 { $sort: sort }
             ]);
 
-            console.log("get_user: ", get_user.length);
             let workbook = new excel.Workbook();
             let title_tmp = translator.getStr('EmployeeTitle');
             let worksheet = workbook.addWorksheet(title_tmp);
@@ -3347,7 +3342,6 @@ module.exports.getAllEmployeeReport = async function (req, res) {
                 };
             });
 
-            console.log("xlsx_data: ", xlsx_data.length);
             xlsx_data.forEach(d => {
                 let row = worksheet.addRow(d);
             });
@@ -3417,7 +3411,6 @@ module.exports.getAllEmployeeReport = async function (req, res) {
                     res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
                 } else {
                     let excelUrl = config.wasabisys_url + "/" + companycode + "/" + key_url;
-                    console.log("excelUrl", excelUrl);
                     let emailTmp = {
                         HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
                         SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
@@ -3442,7 +3435,6 @@ module.exports.getAllEmployeeReport = async function (req, res) {
                     let send_Email = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, email_list, translator.getStr('EmailUserReportSubject'), HtmlData,
                         talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
                         talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
-                    console.log("send_Email", send_Email);
                     res.send({ message: translator.getStr('Report_Sent_Successfully'), status: true });
                 }
             });
@@ -3529,7 +3521,6 @@ module.exports.checkAndInsertImportData = async function (req, res) {
                 });
                 if (check_user == null) {
                     //save
-                    //console.log("check_user", check_user)
 
                     let tmp_password = requestObject.data[m].password;
                     requestObject.data[m].password = await common.generateHash(tmp_password);
@@ -3734,7 +3725,6 @@ module.exports.importEmployees = async function (req, res) {
                     fileName = file;
                 })
                 .on('field', function (name, field) {
-                    console.log(name, field);
                     fields[name] = field;
                 })
                 .on('error', function (err) {
@@ -3797,7 +3787,6 @@ module.exports.importEmployees = async function (req, res) {
                                 if (data[m].user_role != undefined && data[m].user_role != null && data[m].user_role != "") {
                                     var Obj_AllRoles = _.find(AllRoles, function (o) { return o.role_name == data[m].user_role; });
                                     if (Obj_AllRoles != null || Obj_AllRoles != undefined) {
-                                        // console.log("***************************** matching role", Obj_AllRoles.role_id, Obj_AllRoles.role_name, Obj_AllRoles._id, Obj_AllRoles);
                                         data[m].userroleId = Obj_AllRoles.role_id;
                                         //delete data[m].user_role
                                     }
@@ -3818,7 +3807,6 @@ module.exports.importEmployees = async function (req, res) {
                                 if (data[m].userdepartment_id == undefined || data[m].userjob_title_id == undefined || data[m].userjob_type_id == undefined ||
                                     data[m].userroleId == undefined || data[m].user_payroll_rules == undefined) {
                                     data[m].status = false;
-                                    // console.log(" data[m].: ", data[m]);
                                     data[m].message = translator.getStr('Data_Missing');
                                     error_data.push({ data: data[m], message: translator.getStr('Data_Missing') });
                                 } else {
@@ -3888,7 +3876,6 @@ async function userInsertCheck(connection_db_api, onedata, talnate_data, company
 }
 
 module.exports.getarchiveteams = async function (req, res) {
-    console.log('getarchiveteams');
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
     if (decodedToken) {
@@ -4320,7 +4307,6 @@ module.exports.importManagementUser = async function (req, res) {
                 management_user.userupdated_at = Math.round(new Date().getTime() / 1000);
                 management_user.usercreated_by = decodedToken.UserData._id;
                 management_user.userupdated_by = decodedToken.UserData._id;
-                // console.log("management_user", management_user);
                 await userConnection.updateOne({ _id: ObjectID(add._id) }, management_user);
                 // let add_user = new userConnection(management_user);
                 // let add = await add_user.save();

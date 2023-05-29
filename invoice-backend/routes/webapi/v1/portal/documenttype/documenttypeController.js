@@ -40,7 +40,6 @@ module.exports.saveDocType = async function (req, res) {
                 if (get_one != null) {
                     if (get_one._id == requestObject._id) {
                         let update_doc_type = await documenttypeCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
-                        console.log(update_doc_type);
                         if (update_doc_type) {
                             res.send({ message: translator.getStr('DocumentTypeUpdated'), data: update_doc_type, status: true });
                         } else {
@@ -51,7 +50,6 @@ module.exports.saveDocType = async function (req, res) {
                     }
                 } else {
                     let update_doc_type = await documenttypeCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
-                    console.log(update_doc_type);
                     if (update_doc_type) {
                         res.send({ message: translator.getStr('DocumentTypeUpdated'), data: update_doc_type, status: true });
                     } else {
@@ -139,7 +137,7 @@ module.exports.getdoctypeForTable = async function (req, res) {
 };
 
 // bulk upload 
-module.exports.importdoctype = async function (req, res) {
+module.exports.checkImportDocumentType = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
     if (decodedToken) {
@@ -162,55 +160,28 @@ module.exports.importdoctype = async function (req, res) {
                     throw err;
                 }).on('end', async function () {
                     newOpenFile = this.openedFiles;
-
                     if (notFonud == 1) {
-
                         const file = reader.readFile(newOpenFile[0].path);
                         const sheets = file.SheetNames;
                         let data = [];
-                        let exitdata = new Array();
+                        let exitdata = [];
                         for (let i = 0; i < sheets.length; i++) {
                             const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
                             temp.forEach((ress) => {
                                 data.push(ress);
                             });
                         }
-                        var onecategory_main = "";
+                        var allowImport = true;
                         for (let m = 0; m < data.length; m++) {
-                            onecategory_main = await documenttypeCollection.findOne({ document_type_name: data[m].document_type_name, due_days: data[m].due_days }, { document_type_name: 1, due_days: 1 });
-                            if (onecategory_main != null) {
-                                exitdata[m] = onecategory_main.document_type_name;
+                            var get_one = await documenttypeCollection.findOne({ document_type_name: data[m].document_type_name });
+                            if (get_one != null) {
+                                allowImport = false;
+                                exitdata.push({ message: 'Already exist', valid: false, data: data[m], name: data[m].document_type_name });
+                            } else {
+                                exitdata.push({ message: 'Data is correct', valid: true, data: data[m], name: data[m].document_type_name });
                             }
                         }
-                        if (exitdata.length > 0) {
-                            res.send({ status: false, exitdata: exitdata, message: "document type name is allready exist." });
-                        }
-                        else {
-                            for (let m = 0; m < data.length; m++) {
-                                onecategory_main = await documenttypeCollection.findOne({ document_type_name: data[m].document_type_name, due_days: data[m].due_days, }, { document_type_name: 1, due_days: 1 });
-                                requestObject = {};
-                                requestObject.document_type_name = data[m].document_type_name;
-                                requestObject.is_expiration = data[m].is_expiration;
-                                let add_documenttype = new documenttypeCollection(requestObject);
-                                let save_documenttype = await add_documenttype.save();
-
-                            }
-                            res.send({ status: true, message: "document type info add successfully." });
-                        }
-                        // for (let m = 0; m < data.length; m++) {
-                        //     requestObject = {};
-                        //     let getdata = await documenttypeCollection.findOne({ document_type_name: data[m].document_type_name, is_expiration: data[m].is_expiration });
-                        //     if (getdata == null) {
-                        //         requestObject.document_type_name = data[m].document_type_name;
-                        //         requestObject.is_expiration = data[m].is_expiration;
-                        //         let add_job_type = new documenttypeCollection(requestObject);
-                        //         let save_job_type = await add_job_type.save();
-                        //     } else {
-                        //         res.send({ status: true, message: "document type name and is_expiration is allready exist." });
-                        //     }
-                        // }
-                        // res.send({ status: true, message: "department info add successfully." });
-
+                        res.send({ status: true, allow_import: allowImport, data: exitdata, message: translator.getStr('DocumentTypeListing') });
                     } else {
                         res.send({ status: false, message: translator.getStr('SomethingWrong') });
                     }
@@ -220,6 +191,45 @@ module.exports.importdoctype = async function (req, res) {
             res.send({ status: false, message: translator.getStr('SomethingWrong'), error: error });
         }
     } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.importDocumentType = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            let documenttypeCollection = connection_db_api.model(collectionConstant.DOCUMENTTYPE, documenttypeSchema);
+
+            let reqObject = [];
+            for (let i = 0; i < requestObject.length; i++) {
+                let one_client = await documenttypeCollection.findOne({ document_type_name: requestObject[i].data.document_type_name });
+                if (one_client) { } else {
+                    reqObject.push({
+                        document_type_name: requestObject[i].data.document_type_name,
+                        is_expiration: requestObject[i].data.is_expiration.toString().toLowerCase() == "true",
+                    });
+                }
+            }
+            let insert_data = await documenttypeCollection.insertMany(reqObject);
+            console.log("insert_data", insert_data);
+            if (insert_data) {
+                res.send({ status: true, message: translator.getStr('DocumentTypeAdded'), data: insert_data });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        }
+        finally {
+            connection_db_api.close();
+        }
+    }
+    else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };

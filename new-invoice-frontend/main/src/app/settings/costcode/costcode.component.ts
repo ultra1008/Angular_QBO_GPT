@@ -21,6 +21,8 @@ import { ImportCostcodeSettingsComponent } from './import-costcode-settings/impo
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import * as XLSX from 'xlsx';
+import { icon } from 'src/consts/icon';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-costcode',
@@ -29,25 +31,28 @@ import * as XLSX from 'xlsx';
 })
 export class CostcodeComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit
-{
+  implements OnInit {
   displayedColumns = ['division', 'value', 'description', 'actions'];
   costcodeService?: SettingsService;
   dataSource!: CostCodeDataSource;
   selection = new SelectionModel<CostCodeTable>(true, []);
   id?: number;
   isDelete = 0;
-  titleMessage: string = '';
+  titleMessage = '';
   @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
 
-  constructor(
+  quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
+  quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
+
+  constructor (
     public dialog: MatDialog,
     public SettingsService: SettingsService,
     private snackBar: MatSnackBar,
     public router: Router,
     private httpCall: HttpCall,
     public translate: TranslateService,
-    public uiSpinner: UiSpinnerService
+    public uiSpinner: UiSpinnerService,
+    private commonService: CommonService,
   ) {
     super();
   }
@@ -59,7 +64,21 @@ export class CostcodeComponent
   contextMenuPosition = { x: '0px', y: '0px' };
   ngOnInit() {
     this.loadData();
+    this.getCompanyTenants();
   }
+
+  async getCompanyTenants() {
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP);
+    if (data.status) {
+      if (data.data.is_quickbooks_online || data.data.is_quickbooks_desktop) {
+        this.displayedColumns = ['division', 'value', 'description', 'is_quickbooks', 'actions'];
+      } else {
+        this.displayedColumns = ['division', 'value', 'description', 'actions'];
+      }
+    }
+    // this.loadData();
+  }
+
   refresh() {
     this.loadData();
   }
@@ -136,8 +155,8 @@ export class CostcodeComponent
     this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.renderedData.forEach((row) =>
-          this.selection.select(row)
-        );
+        this.selection.select(row)
+      );
   }
 
   add() {
@@ -145,7 +164,7 @@ export class CostcodeComponent
       width: '350px',
       data: {},
     });
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((result) => { });
   }
 
   edit(event: any) {
@@ -153,7 +172,7 @@ export class CostcodeComponent
       width: '350px',
       data: event,
     });
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((result) => { });
   }
 
   public loadData() {
@@ -192,7 +211,7 @@ export class CostcodeComponent
       jsonData = workBook.SheetNames.reduce((initial: any, name: any) => {
         const sheet = workBook.Sheets[name];
         initial[name] = XLSX.utils.sheet_to_json(sheet);
-        let data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
         header_ = data.shift();
 
         return initial;
@@ -236,7 +255,7 @@ export class CostcodeComponent
       disableClose: true,
     });
 
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((result) => { });
   }
 
   back() {
@@ -265,7 +284,7 @@ export class CostCodeDataSource extends DataSource<CostCodeTable> {
   }
   filteredData1: CostCodeTable[] = [];
   renderedData: CostCodeTable[] = [];
-  constructor(
+  constructor (
     public costcodeTableService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,

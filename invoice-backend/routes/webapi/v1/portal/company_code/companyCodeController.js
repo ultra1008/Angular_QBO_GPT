@@ -46,23 +46,23 @@ module.exports.getCompanyCodeOcpr = async function (req, res) {
                                 { $sort: { _id: 1 } }
                             ];
 
-                            let getData = await supplierCompnayCodesSchemaConnection.aggregate(aggregateQuery)
+                            let getData = await supplierCompnayCodesSchemaConnection.aggregate(aggregateQuery);
                             res.send({ data: getData, status: true });
                         } catch (e) {
-                            console.log("e", e)
+                            console.log("e", e);
                             res.send({ message: translator.getStr('SomethingWrong'), status: false });
                         } finally {
-                            connection_db_api.close()
+                            connection_db_api.close();
                         }
                     }
-                })
+                });
             } else {
                 res.send({ message: translator.getStr('SponsorNotExist'), error: err, status: false });
             }
         }
-    })
+    });
 
-}
+};
 
 module.exports.getCompanyCode = async function (req, res) {
     var translator = new common.Language('en');
@@ -97,19 +97,19 @@ module.exports.getCompanyCode = async function (req, res) {
                 { $sort: { _id: 1 } }
             ];
 
-            let getData = await supplierCompnayCodesSchemaConnection.aggregate(aggregateQuery)
+            let getData = await supplierCompnayCodesSchemaConnection.aggregate(aggregateQuery);
             res.send({ data: getData, status: true });
 
         } catch (e) {
-            console.log("e", e)
+            console.log("e", e);
             res.send({ message: translator.getStr('SomethingWrong'), status: false });
         } finally {
-            connection_db_api.close()
+            connection_db_api.close();
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
-}
+};
 
 module.exports.saveCompanyCode = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -118,8 +118,8 @@ module.exports.saveCompanyCode = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-            let _id = requestObject._id
-            delete requestObject._id
+            let _id = requestObject._id;
+            delete requestObject._id;
             let supplierCompnayCodesSchemaConnection = connection_db_api.model(collectionConstant.SUPPLIER_COMPANY_CODE, supplier_compnay_codesSchema);
             let get_one = await supplierCompnayCodesSchemaConnection.findOne({ sub_category_code: requestObject.sub_category_code, sub_category_code_name: requestObject.sub_category_code_name, is_delete: 0 });
             if (_id) {
@@ -159,7 +159,7 @@ module.exports.saveCompanyCode = async function (req, res) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         } finally {
-            connection_db_api.close()
+            connection_db_api.close();
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
@@ -189,7 +189,7 @@ module.exports.deleteCompanyCode = async function (req, res) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         } finally {
-            connection_db_api.close()
+            connection_db_api.close();
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
@@ -207,15 +207,15 @@ module.exports.getOneCompanyCode = async function (req, res) {
             let getData = await supplierCompnayCodesSchemaConnection.findOne({ _id: ObjectID(requestObject._id) });
             res.send({ data: getData, status: true });
         } catch (e) {
-            console.log("e", e)
+            console.log("e", e);
             res.send({ message: translator.getStr('SomethingWrong'), status: false });
         } finally {
-            connection_db_api.close()
+            connection_db_api.close();
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
-}
+};
 
 module.exports.getCompanyCodeDatatables = async function (req, res) {
     var translator = new common.Language('en');
@@ -235,7 +235,7 @@ module.exports.getCompanyCodeDatatables = async function (req, res) {
             var columntype = (requestObject.order != undefined && requestObject.order != '') ? requestObject.order[0].dir : '';
             var query_tmp = {
                 is_delete: 0
-            }
+            };
             var sort = {};
             sort[col[columnData]] = (columntype == 'asc') ? 1 : -1;
 
@@ -261,15 +261,15 @@ module.exports.getCompanyCodeDatatables = async function (req, res) {
             dataResponce.recordsFiltered = (requestObject.search.value) ? tmp_get_data.length : count_data;
             res.json(dataResponce);
         } catch (e) {
-            console.log("e", e)
+            console.log("e", e);
             res.send({ message: translator.getStr('SomethingWrong'), status: false });
         } finally {
-            connection_db_api.close()
+            connection_db_api.close();
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
-}
+};
 
 module.exports.importCompnayCode = async function (req, res) {
     var translator = new common.Language('en');
@@ -298,7 +298,7 @@ module.exports.importCompnayCode = async function (req, res) {
                     if (notFonud == 1) {
                         const file = reader.readFile(newOpenFile[0].path);
                         const sheets = file.SheetNames;
-                        let data = []
+                        let data = [];
                         for (let i = 0; i < sheets.length; i++) {
                             const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
                             temp.forEach((ress) => {
@@ -324,8 +324,7 @@ module.exports.importCompnayCode = async function (req, res) {
                                     "sub_category_code": data[i]['__EMPTY_1'].toString(),
                                     "sub_category_code_name": data[i]['__EMPTY_2'],
                                     "is_delete": 0
-                                }
-                                //console.log("requestObject", requestObject)
+                                };
                                 let add_company_code = new supplierCompnayCodesSchemaConnection(requestObject);
                                 let save_company_code = await add_company_code.save();
                                 // main_object.push(requestObject)
@@ -336,7 +335,7 @@ module.exports.importCompnayCode = async function (req, res) {
                         // res.send(main_object)
                         res.send({ status: true, message: translator.getStr('CompanyCodeAdd') });
                     }
-                })
+                });
         } catch (e) {
             res.send({ message: translator.getStr('SomethingWrong'), status: false });
         } finally {
@@ -345,7 +344,7 @@ module.exports.importCompnayCode = async function (req, res) {
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
-}
+};
 
 module.exports.exportcompnaycode = async function (req, res) {
     var translator = new common.Language('en');
@@ -378,17 +377,17 @@ module.exports.exportcompnaycode = async function (req, res) {
                 }
             ];
 
-            let getData = await supplierCompnayCodesSchemaConnection.aggregate(aggregateQuery)
+            let getData = await supplierCompnayCodesSchemaConnection.aggregate(aggregateQuery);
 
             res.send({ data: getData, status: true });
 
         } catch (e) {
-            console.log("e", e)
+            console.log("e", e);
             res.send({ message: translator.getStr('SomethingWrong'), status: false });
         } finally {
-            connection_db_api.close()
+            connection_db_api.close();
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
-}
+};

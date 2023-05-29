@@ -204,7 +204,20 @@
                                         </div>
                                     </mat-cell>
                                 </ng-container>
-
+                                <ng-container matColumnDef="is_quickbooks">
+                                    <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'"
+                                        class="tbl-col-width-per-action" mat-sort-header>
+                                        <img [src]="quickbooksGreenIcon" alt="" height="23" width="23" />
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row" (click)="editClient(row)"
+                                        (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-action">
+                                        <span class="mobile-label">Quickbooks:</span>
+                                        <img *ngIf="!row.is_quickbooks" [src]="quickbooksGreyIcon" alt="" height="23"
+                                            width="23" />
+                                        <img *ngIf="row.is_quickbooks" [src]="quickbooksGreenIcon" alt="" height="23"
+                                            width="23" />
+                                    </mat-cell>
+                                </ng-container>
                                 <ng-container matColumnDef="actions">
                                     <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-action'"
                                         *matHeaderCellDef>{{'VENDOR.TABLE.ACTIONS' |

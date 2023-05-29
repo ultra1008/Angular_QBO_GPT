@@ -136,7 +136,7 @@ module.exports.getJobTitleForTable = async function (req, res) {
 };
 
 // bulk upload 
-module.exports.importJobTitle = async function (req, res) {
+module.exports.checkImportJobTitle = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
     if (decodedToken) {
@@ -159,41 +159,28 @@ module.exports.importJobTitle = async function (req, res) {
                     throw err;
                 }).on('end', async function () {
                     newOpenFile = this.openedFiles;
-
                     if (notFonud == 1) {
-
                         const file = reader.readFile(newOpenFile[0].path);
                         const sheets = file.SheetNames;
                         let data = [];
-                        let exitdata = new Array();
+                        let exitdata = [];
                         for (let i = 0; i < sheets.length; i++) {
                             const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
                             temp.forEach((ress) => {
                                 data.push(ress);
                             });
                         }
-                        var onecategory_main = "";
+                        var allowImport = true;
                         for (let m = 0; m < data.length; m++) {
-                            onecategory_main = await jobtitleCollection.findOne({ job_title_name: data[m].job_title_name }, { job_title_name: 1 });
-                            if (onecategory_main != null) {
-                                exitdata[m] = onecategory_main.job_title_name;
+                            var get_one = await jobtitleCollection.findOne({ job_title_name: data[m].job_title_name });
+                            if (get_one != null) {
+                                allowImport = false;
+                                exitdata.push({ message: 'Already exist', valid: false, data: data[m], name: data[m].job_title_name });
+                            } else {
+                                exitdata.push({ message: 'Data is correct', valid: true, data: data[m], name: data[m].job_title_name });
                             }
                         }
-                        if (exitdata.length > 0) {
-                            res.send({ status: false, exitdata: exitdata, message: "job title name is allready exist." });
-                        }
-                        else {
-                            for (let m = 0; m < data.length; m++) {
-                                onecategory_main = await jobtitleCollection.findOne({ job_title_name: data[m].job_title_name }, { job_title_name: 1 });
-                                requestObject = {};
-                                requestObject.job_title_name = data[m].job_title_name;
-                                let add_job_title = new jobtitleCollection(requestObject);
-                                let save_job_title = await add_job_title.save();
-
-                            }
-                            res.send({ status: true, message: "job title info add successfully." });
-                        }
-
+                        res.send({ status: true, allow_import: allowImport, data: exitdata, message: translator.getStr('JobTitleListing') });
                     } else {
                         res.send({ status: false, message: translator.getStr('SomethingWrong') });
                     }
@@ -203,6 +190,43 @@ module.exports.importJobTitle = async function (req, res) {
             res.send({ status: false, message: translator.getStr('SomethingWrong'), error: error });
         }
     } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.importJobTitle = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            let jobtitleCollection = connection_db_api.model(collectionConstant.JOB_TITLE, jobtitleSchema);
+
+            let reqObject = [];
+            for (let i = 0; i < requestObject.length; i++) {
+                let one_client = await jobtitleCollection.findOne({ job_title_name: requestObject[i].data.job_title_name });
+                if (one_client) { } else {
+                    reqObject.push({
+                        job_title_name: requestObject[i].data.job_title_name,
+                    });
+                }
+            }
+            let insert_data = await jobtitleCollection.insertMany(reqObject);
+            if (insert_data) {
+                res.send({ status: true, message: translator.getStr('JobTitleAdded'), data: insert_data });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        }
+        finally {
+            connection_db_api.close();
+        }
+    }
+    else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };

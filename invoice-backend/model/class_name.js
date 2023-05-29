@@ -5,6 +5,7 @@ var classnameSchema = new Schema({
     number: { type: String, default: "" },
     description: { type: String, default: "" },
     status: { type: Number, default: 1 },
+    is_quickbooks: { type: Boolean, default: false },
     is_delete: { type: Number, default: 0 },
 }, { timestamps: false });
 

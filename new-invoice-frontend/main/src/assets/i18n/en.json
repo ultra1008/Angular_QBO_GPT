@@ -93,6 +93,9 @@
         "HISTORY": {
             "TITLE": "Vendor History"
         },
+        "REPORT": {
+            "TITLE": "Vendor Report"
+        },
         "CONFIRMATION_DIALOG": {
             "SUBMIT": "Please complete the vendor form before submitting.",
             "SAVING": "Are you sure you want to close this window without saving changes?",
@@ -111,8 +114,8 @@
         "VIEW": {
             "ADD_USER": "Add User",
             "EDIT_USER": "Edit User",
-            "TITLE": "User",
-            "ARCHIVED_TITLE": "Archived User"
+            "TITLE": "Users",
+            "ARCHIVED_TITLE": "Archived Users"
         },
         "TABLE": {
             "IMAGE": "Image",
@@ -154,6 +157,12 @@
             "JOB_TITLE": "Job Title",
             "JOB_TYPE": "Job Type",
             "LANGUAGE_SPOKEN": "Language Spoken"
+        },
+        "HISTORY": {
+            "TITLE": "User History"
+        },
+        "REPORT": {
+            "TITLE": "User Report"
         }
     },
     "SETTINGS": {

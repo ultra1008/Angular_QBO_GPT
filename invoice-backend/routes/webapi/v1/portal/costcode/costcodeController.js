@@ -180,11 +180,9 @@ module.exports.deletecostcode = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-            console.log("requestObject", requestObject);
             let costcodeCollection = connection_db_api.model(collectionConstant.COSTCODES, costcodeSchema);
             let deleteObject = await costcodeCollection.updateOne({ _id: ObjectID(requestObject._id) }, { is_delete: requestObject.is_delete });
             let isDelete = deleteObject.nModified;
-            console.log("deleteObject", deleteObject);
             if (deleteObject) {
                 if (isDelete == 0) {
                     res.send({ message: translator.getStr('NoDataWithId'), status: false });
@@ -309,11 +307,8 @@ module.exports.getCostCodeForTable = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-            console.log("requestObject", requestObject);
             let costcodeCollection = connection_db_api.model(collectionConstant.COSTCODES, costcodeSchema);
-
             var getdata = await costcodeCollection.find({ is_delete: requestObject.is_delete, module: requestObject.module });
-            console.log("getdata", getdata);
             if (getdata) {
                 res.send(getdata);
             }
@@ -331,7 +326,7 @@ module.exports.getCostCodeForTable = async function (req, res) {
     }
 };
 
-module.exports.importCostCode = async function (req, res) {
+module.exports.checkImportCostCode = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
     if (decodedToken) {
@@ -359,55 +354,25 @@ module.exports.importCostCode = async function (req, res) {
                         const file = reader.readFile(newOpenFile[0].path);
                         const sheets = file.SheetNames;
                         let data = [];
-                        let exitdata = new Array();
                         for (let i = 0; i < sheets.length; i++) {
                             const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
                             temp.forEach((ress) => {
                                 data.push(ress);
                             });
                         }
-                        var onecategory_main = "";
+                        let exitdata = [];
+                        var allowImport = true;
                         for (let m = 0; m < data.length; m++) {
-                            onecategory_main = await costcodeCollection.findOne({ cost_code: data[m].cost_code, division: data[m].division }, { cost_code: 1 });
-                            if (onecategory_main != null) {
-                                exitdata[m] = onecategory_main.cost_code;
+                            var get_one = await costcodeCollection.findOne({ cost_code: data[m].cost_code, division: data[m].division });
+                            if (get_one != null) {
+                                allowImport = false;
+                                exitdata.push({ message: 'Already exist', valid: false, data: data[m], name: data[m].name });
+                            } else {
+                                exitdata.push({ message: 'Data is correct', valid: true, data: data[m], name: data[m].name });
                             }
                         }
-                        if (exitdata.length > 0) {
-                            res.send({ status: false, exitdata: exitdata, message: "cost code is allready exist." });
-                        }
-                        else {
-                            for (let m = 0; m < data.length; m++) {
-                                onecategory_main = await costcodeCollection.findOne({ cost_code: data[m].cost_code, division: data[m].division }, { cost_code: 1 });
-                                requestObject = {};
-                                requestObject.cost_code = data[m].cost_code;
-                                requestObject.division = data[m].division;
-                                requestObject.module = data[m].module;
-                                requestObject.description = data[m].description;
-                                requestObject.value = data[m].value;
-                                let add_costcode = new costcodeCollection(requestObject);
-                                let save_costcode = await add_costcode.save();
-                            }
-                            res.send({ status: true, message: translator.getStr('CostCodeAdded') });
-                        }
-                        // for (let m = 0; m < data.length; m++) {
-                        //     requestObject = {};
-                        //     let onecategory_main = await costcodeCollection.findOne({ cost_code: data[m].cost_code, division: data[m].division });
-                        //     if (onecategory_main == null) {
-                        //         requestObject.cost_code = data[m].cost_code;
-                        //         requestObject.division = data[m].division;
-                        //         requestObject.module = data[m].module;
-                        //         requestObject.description = data[m].description;
-                        //         requestObject.value = data[m].value;
-                        //         requestObject.is_delete = 0;
-                        //         let add_costcode = new costcodeCollection(requestObject);
-                        //         let save_costcode = await add_costcode.save();
-                        //     } else {
-                        //     }
-                        // }
-                        // res.send({ status: true, message: translator.getStr('CostCodeAdded') });
-                    }
-                    else {
+                        res.send({ status: true, allow_import: allowImport, data: exitdata, message: translator.getStr('CostCodeListing') });
+                    } else {
                         res.send({ message: translator.getStr('SomethingWrong'), status: false });
                     }
                 });
@@ -418,6 +383,47 @@ module.exports.importCostCode = async function (req, res) {
             //connection_db_api.close()
         }
     } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.importCostCode = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            let costcodeCollection = connection_db_api.model(collectionConstant.COSTCODES, costcodeSchema);
+
+            let reqObject = [];
+            for (let i = 0; i < requestObject.length; i++) {
+                let one_data = await costcodeCollection.findOne({ name: requestObject[i].data.name });
+                if (one_data) { } else {
+                    reqObject.push({
+                        cost_code: requestObject[i].data.cost_code,
+                        division: requestObject[i].data.division,
+                        module: requestObject[i].data.module,
+                        description: requestObject[i].data.description,
+                        value: requestObject[i].data.module + "-" + requestObject[i].data.division + "-" + requestObject[i].data.cost_code,
+                    });
+                }
+            }
+            let insert_data = await costcodeCollection.insertMany(reqObject);
+            if (insert_data) {
+                res.send({ status: true, message: translator.getStr('CostCodeAdded'), data: insert_data });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        }
+        finally {
+            connection_db_api.close();
+        }
+    }
+    else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };

@@ -93,6 +93,9 @@
         "HISTORY": {
             "TITLE": "Historial del proveedor"
         },
+        "REPORT": {
+            "TITLE": "Informe de proveedor"
+        },
         "CONFIRMATION_DIALOG": {
             "SUBMIT": "Complete el formulario de proveedor antes de enviarlo.",
             "SAVING": "¿Está seguro de que desea cerrar esta ventana sin guardar los cambios?",
@@ -154,6 +157,12 @@
             "JOB_TITLE": "Título profesional",
             "JOB_TYPE": "El tipo de trabajo",
             "LANGUAGE_SPOKEN": "Lenguaje hablado"
+        },
+        "HISTORY": {
+            "TITLE": "Historial de usuario"
+        },
+        "REPORT": {
+            "TITLE": "Informe de usuario"
         }
     },
     "SETTINGS": {

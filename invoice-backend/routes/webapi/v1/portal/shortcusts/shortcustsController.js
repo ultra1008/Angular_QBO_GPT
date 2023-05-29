@@ -46,7 +46,6 @@ module.exports.saveusershortcuts = async function (req, res) {
             let usershortcutsCollection = connection_db_api.model(collectionConstant.SHORTCUTS, usershortcutsSchema);
             if (requestObject._id) {
                 let update_usershortcuts = await usershortcutsCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
-                console.log(update_usershortcuts);
                 if (update_usershortcuts) {
 
                     res.send({ message: translator.getStr('UsershortcutsUpdated'), data: update_usershortcuts, status: true });
@@ -84,7 +83,6 @@ module.exports.deleteusershortcuts = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             requestObject = req.body;
-            console.log("requestObject._id", requestObject._id);
             let usershortcutsCollection = connection_db_api.model(collectionConstant.SHORTCUTS, usershortcutsSchema);
             let update_usershortcuts = await usershortcutsCollection.updateOne({ _id: ObjectID(requestObject._id) }, { is_delete: 1 });
             let isDelete = update_usershortcuts.nModified;

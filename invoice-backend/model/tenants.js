@@ -20,6 +20,8 @@ var tenantsSchema = new Schema({
     company_id: { type: mongoose.ObjectId, default: "" },
     quickbooks_client_id: { type: String, default: "" },
     quickbooks_client_secret: { type: String, default: "" },
+    is_quickbooks_online: { type: Boolean, default: false },
+    is_quickbooks_desktop: { type: Boolean, default: false },
     tenant_smtp_timeout: { type: String, default: "" },
     googledrive_access_token: { type: String, default: "" },
     googledrive_expiry_date: { type: String, default: "" },

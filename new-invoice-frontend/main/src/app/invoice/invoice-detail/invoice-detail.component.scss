@@ -221,3 +221,17 @@
 .custom-d-flex {
      display: flex;
 }
+
+.img-b {
+     border-radius: 50%;
+}
+
+::ng-deep .mdc-menu-surface.mat-mdc-select-panel {
+     padding: unset !important;
+}
+
+.font-small {
+     ::ng-deep .mdc-list-item__primary-text {
+          font-size: 12px !important;
+     }
+}

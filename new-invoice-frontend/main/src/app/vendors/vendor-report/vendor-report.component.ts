@@ -12,6 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { CommonService } from 'src/app/services/common.service';
 import { httpversion, httproutes } from 'src/consts/httproutes';
+import { icon } from 'src/consts/icon';
 
 export interface DialogData {
   termsList: Array<any>;
@@ -33,8 +34,9 @@ export class VendorReportComponent implements OnInit {
   removable = true;
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  invoice_logo = icon.INVOICE_LOGO;
 
-  constructor (public uiSpinner: UiSpinnerService, public dialogRef: MatDialogRef<VendorReportComponent>, private snackBar: MatSnackBar,
+  constructor(public uiSpinner: UiSpinnerService, public dialogRef: MatDialogRef<VendorReportComponent>, private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: DialogData, public vendorService: VendorsService, private fb: UntypedFormBuilder, public commonService: CommonService,
   ) {
     this.termsList = data.termsList;
