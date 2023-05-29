@@ -34,7 +34,8 @@ const deleteclientvalidation = (req, res, next) => {
         }
     });
 };
+
 module.exports = {
     saveclientValidation,
-    deleteclientvalidation
+    deleteclientvalidation,
 };
