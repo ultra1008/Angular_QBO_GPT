@@ -22,14 +22,12 @@ module.exports.getCertificationTypeOcpr = async function (req, res) {
                         var translator = new common.Language('en');
                         let connection_db_api = await db_connection.connection_db_api(resulttanent);
                         try {
-                            console.log("requestObject: ", requestObject)
                             let vendorCertificationConnection = connection_db_api.model(collectionConstant.SUPPLIER_VENDOR_CERTIFICATES, vendorCertificationSchema);
                             let vendor_certi = await vendorCertificationConnection.find({ vendor_id: ObjectID(requestObject.vendor_id) });
                             let certiIds = [];
                             vendor_certi.forEach((element) => {
                                 certiIds.push(ObjectID(element.certificate_type_id));
                             });
-                            console.log("certiIds: ", certiIds)
                             let certificationTypeConnection = connection_db_api.model(collectionConstant.SUPPLIER_CERTIFICATION_TYPE, certificationTypesSchema);
                             var aggregateQuery = [
                                 {
@@ -40,22 +38,22 @@ module.exports.getCertificationTypeOcpr = async function (req, res) {
                                 },
                                 { $sort: { name: 1 } }
                             ];
-                            let getData = await certificationTypeConnection.aggregate(aggregateQuery)
+                            let getData = await certificationTypeConnection.aggregate(aggregateQuery);
                             res.send({ data: getData, status: true });
                         } catch (e) {
-                            console.log("e", e)
+                            console.log("e", e);
                             res.send({ message: translator.getStr('SomethingWrong'), status: false });
                         } finally {
-                            connection_db_api.close()
+                            connection_db_api.close();
                         }
                     }
-                })
+                });
             } else {
                 res.send({ message: translator.getStr('SponsorNotExist'), error: err, status: false });
             }
         }
-    })
-}
+    });
+};
 
 
 module.exports.getCertificationType = async function (req, res) {
@@ -103,12 +101,12 @@ module.exports.getCertificationType = async function (req, res) {
         } catch (e) {
             res.send({ message: translator.getStr('SomethingWrong'), status: false });
         } finally {
-            connection_db_api.close()
+            connection_db_api.close();
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
-}
+};
 
 module.exports.saveCertificationType = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -117,8 +115,8 @@ module.exports.saveCertificationType = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-            let _id = requestObject._id
-            delete requestObject._id
+            let _id = requestObject._id;
+            delete requestObject._id;
             let certificationTypeConnection = connection_db_api.model(collectionConstant.SUPPLIER_CERTIFICATION_TYPE, certificationTypesSchema);
             let get_one = await certificationTypeConnection.findOne({ name: requestObject.name, is_expiration: requestObject.is_expiration, is_delete: 0 });
             if (_id) {
@@ -158,7 +156,7 @@ module.exports.saveCertificationType = async function (req, res) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         } finally {
-            connection_db_api.close()
+            connection_db_api.close();
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
@@ -188,7 +186,7 @@ module.exports.deleteCertificationType = async function (req, res) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         } finally {
-            connection_db_api.close()
+            connection_db_api.close();
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });

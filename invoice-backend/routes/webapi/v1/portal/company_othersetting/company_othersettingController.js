@@ -17,6 +17,7 @@ var invoiceRoleSchema = require('./../../../../../model/invoice_roles');
 var bucketOpration = require('./../../../../../controller/common/s3-wasabi');
 const nodemailer = require('nodemailer');
 var customerStateSchema = require('./../../../../../model/customer_monthly_states');
+var tenantsSchema = require('../../../../../model/tenants');
 
 module.exports.compnayinformation = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -45,7 +46,6 @@ module.exports.compnayupdateinformation = async function (req, res) {
             delete reqObject["_id"];
             var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
             let company_data = await rest_Api.update(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { _id: ObjectID(id) }, reqObject);
-            console.log("company_data", company_data.result.n);
             if (company_data.result.nModified == 1) {
                 res.send({ message: translator.getStr('CompanyUpdated'), data: company_data.result, status: true });
             }
@@ -96,12 +96,10 @@ module.exports.editCompany = function (req, res) {
                             dirKeyName = "logo/" + file_name;
                             var fileBody = fs.readFileSync(temp_path);
                             params = { Bucket: compnayCode_tmp, Key: dirKeyName, Body: fileBody, ACL: 'public-read-write' };
-                            console.log(params);
                             bucketOpration.uploadFile(params, function (err, resultUpload) {
                                 if (err) {
                                     res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
                                 } else {
-                                    console.log(resultUpload);
                                     urlProfile = config.wasabisys_url + "/" + compnayCode_tmp + "/" + dirKeyName;
                                     DB.update(companyCollection, { _id: ObjectID(id) }, { companylogo: urlProfile }, function (err, resultupdate) {
                                         if (err) {
@@ -125,14 +123,14 @@ module.exports.editCompany = function (req, res) {
 };
 
 module.exports.compnaysmtp = async function (req, res) {
-    console.log('compnaysmtp call');
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
     if (decodedToken) {
         try {
-            var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
-            let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
-            res.send({ message: translator.getStr('CompanySMTP'), data: company_data, status: true });
+            var admin_connection_db_api = await db_connection.connection_db_api(config.ADMIN_CONFIG);
+            var tenantsConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_TENANTS, tenantsSchema);
+            var one_tenants = await tenantsConnection.findOne({ companycode: decodedToken.companycode });
+            res.send({ message: translator.getStr('CompanySMTP'), data: one_tenants, status: true });
         } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
@@ -164,7 +162,6 @@ module.exports.compnayverifysmtp = async function (req, res) {
                 tls: { rejectUnauthorized: false },
                 debug: true
             };
-            console.log(mailerOptions);
 
             // create reusable transporter object using the default SMTP transport
             var transporter = nodemailer.createTransport(mailerOptions);
@@ -292,7 +289,6 @@ module.exports.compnayUsage = async function (req, res) {
                 if (err_bucket) {
                     res.send({ message: translator.getStr('SomethingWrong'), data: resObject, status: true });
                 } else {
-                    console.log(result_bucket);
                     resObject.bucket_size = result_bucket;
                     res.send({ message: translator.getStr('CompanyWasabiUsage'), data: resObject, status: true });
                 }
@@ -490,7 +486,6 @@ module.exports.getCustomerStates = async function (req, res) {
                 },
 
             ]);
-            console.log("getData", getData);
             var dataResponce = {};
             dataResponce = getData;
             res.json(dataResponce);

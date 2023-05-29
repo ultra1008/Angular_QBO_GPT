@@ -6,6 +6,7 @@ var termSchema = new Schema({
     due_days: { type: Number, default: 0 },
     is_discount: { type: Boolean, default: false },
     discount: { type: Number, default: 0 },
+    is_quickbooks: { type: Boolean, default: false },
     is_delete: { type: Number, default: 0 },
 });
 

@@ -168,12 +168,11 @@ module.exports.getDashboardChart = async function (req, res) {
                     }
                 },
             ]);
-            console.log("get_invoice", get_invoice.length);
             /* let data = [
-                { status: 'Pending', data: [65, 59, 80] }, //February,January,December data
-                { status: 'Approve', data: [28, 48, 40] }, //February,January,December data
-                { status: 'Reject', data: [48, 48, 48] }, //February,January,December data
-            ]; */
+              { status: 'Pending', data: [65, 59, 80] }, //February,January,December data
+              { status: 'Approve', data: [28, 48, 40] }, //February,January,December data
+              { status: 'Reject', data: [48, 48, 48] }, //February,January,December data
+          ]; */
             epoch = epoch.slice(0, -1);
             let month = [];
             let pendingList = [];

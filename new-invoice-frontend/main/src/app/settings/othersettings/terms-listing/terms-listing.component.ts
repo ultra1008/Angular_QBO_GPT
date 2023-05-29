@@ -15,6 +15,9 @@ import { DocumentTypeFormComponent } from '../../employeesettings/document-type-
 import { TermsTable } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
 import { TermsFormComponent } from '../terms-form/terms-form.component';
+import { CommonService } from 'src/app/services/common.service';
+import { httproutes, httpversion } from 'src/consts/httproutes';
+import { icon } from 'src/consts/icon';
 
 @Component({
   selector: 'app-terms-listing',
@@ -23,24 +26,27 @@ import { TermsFormComponent } from '../terms-form/terms-form.component';
 })
 export class TermsListingComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit
-{
-  displayedColumns = ['name', 'due_days', 'discount', 'actions'];
+  implements OnInit {
+  displayedColumns = ['name', 'due_days', 'discount', 'is_quickbooks', 'actions'];
   termsService?: SettingsService;
   dataSource!: TermsDataSource;
   selection = new SelectionModel<TermsTable>(true, []);
   id?: number;
   // advanceTable?: TermsTable;
   isDelete = 0;
-  titleMessage: string = '';
+  titleMessage = '';
 
-  constructor(
+  quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
+  quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
+
+  constructor (
     public dialog: MatDialog,
     public SettingsService: SettingsService,
     private snackBar: MatSnackBar,
     public router: Router,
     private httpCall: HttpCall,
-    public translate: TranslateService
+    public translate: TranslateService,
+    public commonService: CommonService,
   ) {
     super();
   }
@@ -51,6 +57,17 @@ export class TermsListingComponent
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
   ngOnInit() {
+    this.getCompanyTenants();
+  }
+  async getCompanyTenants() {
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP);
+    if (data.status) {
+      if (data.data.is_quickbooks_online || data.data.is_quickbooks_desktop) {
+        this.displayedColumns = ['name', 'due_days', 'discount', 'is_quickbooks', 'actions'];
+      } else {
+        this.displayedColumns = ['name', 'due_days', 'discount', 'actions'];
+      }
+    }
     this.loadData();
   }
   refresh() {
@@ -117,8 +134,8 @@ export class TermsListingComponent
     this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.renderedData.forEach((row) =>
-          this.selection.select(row)
-        );
+        this.selection.select(row)
+      );
   }
 
   public loadData() {
@@ -165,7 +182,7 @@ export class TermsDataSource extends DataSource<TermsTable> {
   }
   filteredData: TermsTable[] = [];
   renderedData: TermsTable[] = [];
-  constructor(
+  constructor (
     public termsService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,

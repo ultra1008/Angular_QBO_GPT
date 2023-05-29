@@ -180,11 +180,9 @@ module.exports.deletecostcode = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-            console.log("requestObject", requestObject);
             let costcodeCollection = connection_db_api.model(collectionConstant.COSTCODES, costcodeSchema);
             let deleteObject = await costcodeCollection.updateOne({ _id: ObjectID(requestObject._id) }, { is_delete: requestObject.is_delete });
             let isDelete = deleteObject.nModified;
-            console.log("deleteObject", deleteObject);
             if (deleteObject) {
                 if (isDelete == 0) {
                     res.send({ message: translator.getStr('NoDataWithId'), status: false });
@@ -309,11 +307,8 @@ module.exports.getCostCodeForTable = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-            console.log("requestObject", requestObject);
             let costcodeCollection = connection_db_api.model(collectionConstant.COSTCODES, costcodeSchema);
-
             var getdata = await costcodeCollection.find({ is_delete: requestObject.is_delete, module: requestObject.module });
-            console.log("getdata", getdata);
             if (getdata) {
                 res.send(getdata);
             }

@@ -366,11 +366,9 @@ async function addLocationsHistory(action, data, decodedToken) {
 
 module.exports.getAllLocationHistory = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
-    console.log(decodedToken.UserData);
     var translator = new common.Language(req.headers.language);
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
-        console.log(connection_db_api);
         try {
             let locationCollection = connection_db_api.model(historyCollectionConstant.LOCATIONS_HISTORY, locations_historySchema);
             var col = [];
@@ -382,9 +380,7 @@ module.exports.getAllLocationHistory = async function (req, res) {
             var columnData = (req.body.order != undefined && req.body.order != '') ? req.body.order[0].column : '';
             var columntype = (req.body.order != undefined && req.body.order != '') ? req.body.order[0].dir : '';
             var sort = {};
-            console.log("req.body.draw == 0", req.body.draw, req.body.draw == 0);
             sort[col[columnData]] = (columntype == 'asc') ? 1 : -1;
-            console.log("sort", sort);
             let query = {};
             if (req.body.search.value) {
                 query = {

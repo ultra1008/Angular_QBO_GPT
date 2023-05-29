@@ -17,6 +17,7 @@ import { HttpCall } from 'src/app/services/httpcall.service';
 import { showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
+import { UploadInvoiceFormComponent } from '../upload-invoice-form/upload-invoice-form.component';
 
 @Component({
   selector: 'app-invoice-listing',
@@ -146,6 +147,17 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
       this.contextMenu.menu.focusFirstItem('mouse');
       this.contextMenu.openMenu();
     }
+  }
+
+  uploadInvoice() {
+    const dialogRef = this.dialog.open(UploadInvoiceFormComponent, {
+      width: '40%',
+      data: {
+      },
+    });
+    this.subs.sink = dialogRef.afterClosed().subscribe((result: any) => {
+      //  
+    });
   }
 }
 export class ExampleDataSource extends DataSource<Invoice> {

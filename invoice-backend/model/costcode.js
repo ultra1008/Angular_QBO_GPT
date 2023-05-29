@@ -6,6 +6,7 @@ var costCodeSchema = new Schema({
     module: { type: String, enum: ["Invoice"] },
     description: { type: String, default: "" },
     value: { type: String },
+    is_quickbooks: { type: Boolean, default: false },
     cost_code_created_at: { type: Number },
     cost_code_created_by: { type: mongoose.ObjectId },
     cost_code_updated_at: { type: Number },

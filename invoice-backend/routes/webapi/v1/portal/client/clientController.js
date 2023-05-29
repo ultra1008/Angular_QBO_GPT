@@ -547,7 +547,6 @@ module.exports.importClientname = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var clientConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientSchema);
-            console.log("hdh");
             var form = new formidable.IncomingForm();
             var fields = [];
             var notFonud = 0;

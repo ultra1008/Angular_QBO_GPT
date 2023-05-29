@@ -25,14 +25,17 @@ module.exports.savequickBookInfo = async function (req, res) {
     if (decodedToken) {
         client_id = req.body.quickbooks_client_id;
         client_secret = req.body.quickbooks_client_secret;
+        environment = req.body.environment;
+        redirectUri = req.body.redirectUri;
         companycode = req.body.companycode;
         oauthClient = new OAuthClient({
-            clientId: config.client_id,
-            clientSecret: config.client_secret,
-            environment: 'sandbox',                                // ‘sandbox’ or ‘production’
-            redirectUri: config.redirectUri
+            clientId: client_id,
+            clientSecret: client_secret,
+            environment: environment,                                // ‘sandbox’ or ‘production’
+            redirectUri: redirectUri
         });
-        var authUri = oauthClient.authorizeUri({ scope: [OAuthClient.scopes.Accounting], state: 'intuit-test' });
+        var authUri = oauthClient.authorizeUri({ scope: [OAuthClient.scopes.Accounting, OAuthClient.scopes.Payment, OAuthClient.scopes.OpenId, OAuthClient.scopes.Profile], state: 'intuit-test' });
+        console.log(authUri);
         res.send({ status: true, authUri: authUri });
     }
     else {
@@ -41,6 +44,7 @@ module.exports.savequickBookInfo = async function (req, res) {
 };
 
 module.exports.callback = async function (req, res) {
+    console.log('==== Callback======', req);
     var translator = new common.Language('en');
     let admin_connection_db_api = await db_connection.connection_db_api(config.ADMIN_CONFIG);
     try {
@@ -67,32 +71,10 @@ module.exports.callback = async function (req, res) {
     } finally {
         admin_connection_db_api.close();
     }
-    /* MongoClient.connect(url, function (err, db) {
-        if (err) throw err;
-        var dbo = db.db("rovuk_admin");
-        dbo.collection("tenants").updateOne({ companycode: companycode }, { $set: { 'client_id': config.client_id, 'client_secret': config.client_secret, 'access_token': JSON.parse(oauth2_token_json).access_token, 'realmId': realmId, 'refresh_token': JSON.parse(oauth2_token_json).refresh_token } }, function (err, result) {
-            if (err) throw err;
-            // console.log(result);
-            db.close();
-        });
-    }); */
-    // var qbo = new QuickBooks(config.client_id,
-    //     config.client_secret,
-    //     JSON.parse(oauth2_token_json).access_token,
-    //     false, // no token secret for oAuth 2.0
-    //     realmId,
-    //     false, // use the sandbox?
-    //     false, // enable debugging?
-    //     null, // set minorversion, or null for the latest version
-    //     '2.0', //oAuth version
-    //     JSON.parse(oauth2_token_json).refresh_token);
-    // qbo.getCompanyInfo(realmId, function(err, info){
-    //     console.log(info)
-    // })
-    // res.send("Welcome")
 };
 
 module.exports.refreshToken = async function (companycode) {
+    console.log("refreshToken call =======> ");
     var translator = new common.Language('en');
     let admin_connection_db_api = await db_connection.connection_db_api(config.ADMIN_CONFIG);
     try {
@@ -124,44 +106,26 @@ module.exports.refreshToken = async function (companycode) {
     } finally {
         admin_connection_db_api.close();
     }
-    /* if (oauthClient !== null && oauthClient.isAccessTokenValid()) {
-        console.log("The access_token is valid");
-    }
-    if (oauthClient !== null && !oauthClient.isAccessTokenValid()) {
-        console.log("Iam in here!!!");
-        oauthClient.refresh()
-            .then(function (authResponse) {
-                console.log('The Refresh Token is  ' + JSON.stringify(authResponse.getJson()));
-                oauth2_token_json = JSON.stringify(authResponse.getJson(), null, 2);
-                MongoClient.connect(url, function (err, db) {
-                    if (err) throw err;
-                    var dbo = db.db("rovuk_admin");
-                    dbo.collection("tenants").updateOne({ companycode: companycode }, { $set: { 'access_token': JSON.parse(oauth2_token_json).access_token, 'refresh_token': JSON.parse(oauth2_token_json).refresh_token } }, function (err, result) {
-                        if (err) throw err;
-                        console.log(result);
-                        db.close();
-                    });
-                });
-            })
-            .catch(function (e) {
-                console.error(e);
-            });
-    } */
 };
 
 module.exports.isConnectToQBO = async function (req, res) {
+    console.log('~~~~~~~~ isConnectToQBO');
     if (oauthClient !== null && oauthClient.isAccessTokenValid()) {
+        console.log('~~~~~~~~ isConnectToQBO 1');
         res.send({ isConnect: true });
     }
     else if (oauthClient !== null && !oauthClient.isAccessTokenValid()) {
+        console.log('~~~~~~~~ isConnectToQBO 2');
         res.send({ isConnect: false });
     }
     else {
+        console.log('~~~~~~~~ isConnectToQBO 3');
         res.send({ isConnect: false });
     }
 };
 
 module.exports.logout = async function (req, res) {
+    console.log('~~~~~~~~ logout');
     var translator = new common.Language('en');
     let admin_connection_db_api = await db_connection.connection_db_api(config.ADMIN_CONFIG);
     try {
@@ -192,36 +156,4 @@ module.exports.logout = async function (req, res) {
     } finally {
         admin_connection_db_api.close();
     }
-    /* const companycode = req.body.companycode;
-   console.log("this is companycode");
-   console.log(companycode);
-   if (oauthClient !== null && oauthClient.isAccessTokenValid()) {
-       MongoClient.connect(url, function (err, db) {
-           if (err) throw err;
-           var dbo = db.db("rovuk_admin");
-           oauthClient.revoke()
-               .then(function (response) {
-                   oauthClient = null;
-                   dbo.collection("tenants").updateOne({ companycode: companycode }, { $set: { 'access_token': '', 'refresh_token': '' } }, function (err, result) {
-                       if (err) throw err;
-                       console.log(result);
-                       res.send({ msg: "success" });
-                       db.close();
-                   });
-               })
-               .catch(function (e) {
-
-               });
-       });
-   }
-   if (oauthClient !== null && !oauthClient.isAccessTokenValid()) {
-       oauthClient = null;
-       dbo.collection("tenants").updateOne({ companycode: companycode }, { $set: { 'access_token': '', 'refresh_token': '' } }, function (err, result) {
-           if (err) throw err;
-           console.log(result);
-           res.send({ msg: "success" });
-           db.close();
-       });
-   } */
-
 };

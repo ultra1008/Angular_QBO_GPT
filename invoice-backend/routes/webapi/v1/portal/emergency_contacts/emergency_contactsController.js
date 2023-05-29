@@ -20,7 +20,6 @@ module.exports.saveemergencycontact = async function (req, res) {
             let emergencycontactsCollection = connection_db_api.model(collectionConstant.EMERGENCY_CONTACT, emergency_contactsSchema);
             if (requestObject._id) {
                 let emergencycontacts = await emergencycontactsCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
-                console.log(emergencycontacts);
                 if (emergencycontacts) {
                     requestObject.updated_id = requestObject._id;
                     delete requestObject["_id"];
@@ -61,7 +60,6 @@ module.exports.deleteemergencycontact = async function (req, res) {
 
             let emergencycontactsCollection = connection_db_api.model(collectionConstant.EMERGENCY_CONTACT, emergency_contactsSchema);
             let emergencycontacts = await emergencycontactsCollection.updateOne({ _id: ObjectID(req.body._id) }, requestObject);
-            console.log(emergencycontacts);
             if (emergencycontacts) {
                 addUserEmergencyContactsHistory("Delete", { deleted_id: ObjectID(req.body._id) }, decodedToken);
                 res.send({ message: translator.getStr('EmergencyContactDeleted'), data: emergencycontacts, status: true });

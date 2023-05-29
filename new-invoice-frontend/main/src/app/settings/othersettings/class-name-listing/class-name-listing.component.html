@@ -5,40 +5,43 @@
                 <div class="table-responsive">
                     <table mat-table #table [dataSource]="dataSource" matSort class="table mat-cell">
                         <ng-container matColumnDef="name">
-                            <mat-header-cell *matHeaderCellDef
-                            [ngClass]="'max-h'"  mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CLASS_NAME' |
+                            <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'"
+                                mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CLASS_NAME' |
                                 translate}}</mat-header-cell>
-                            <mat-cell *matCellDef="let row" (click)="edit(row)" (contextmenu)="onContextMenu($event, row)">
+                            <mat-cell *matCellDef="let row" (click)="edit(row)"
+                                (contextmenu)="onContextMenu($event, row)">
                                 <span class="mobile-label">name:</span> {{row.name}}
                             </mat-cell>
                         </ng-container>
 
                         <ng-container matColumnDef="number">
-                            <mat-header-cell *matHeaderCellDef
-                            [ngClass]="'max-h'"  mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.NUMBER' |
+                            <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'"
+                                mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.NUMBER' |
                             translate}}</mat-header-cell>
-                            <mat-cell *matCellDef="let row" (click)="edit(row)" (contextmenu)="onContextMenu($event, row)">
+                            <mat-cell *matCellDef="let row" (click)="edit(row)"
+                                (contextmenu)="onContextMenu($event, row)">
                                 <span class="mobile-label">number:</span> {{row.number}}
                             </mat-cell>
                         </ng-container>
 
                         <ng-container matColumnDef="description">
-                            <mat-header-cell *matHeaderCellDef
-                            [ngClass]="'max-h'"  mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.DESCRIPTION' |
+                            <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'"
+                                mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.DESCRIPTION' |
                             translate}}</mat-header-cell>
-                            <mat-cell *matCellDef="let row" (click)="edit(row)" (contextmenu)="onContextMenu($event, row)">
+                            <mat-cell *matCellDef="let row" (click)="edit(row)"
+                                (contextmenu)="onContextMenu($event, row)">
                                 <span class="mobile-label">description:</span> {{row.description}}
                             </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="status">
-                            <mat-header-cell class="psl-1" [ngClass]="'tbl-col-width-per-action'"
-                                *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.STATUS' |
+                            <mat-header-cell class="psl-1" [ngClass]="'tbl-col-width-per-action'" *matHeaderCellDef
+                                mat-sort-header>{{'VENDOR.TABLE.STATUS' |
                                 translate}}
                             </mat-header-cell>
                             <mat-cell mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row) "
                                 class="tbl-col-width-per-action">
                                 <span class="mobile-label">Status:</span>
-                                <div *ngIf="row.status===1" >
+                                <div *ngIf="row.status===1">
                                     <span class="badge badge-solid-green">
                                         {{'COMMON.STATUS.ACTIVE' | translate}}</span>
                                 </div>
@@ -48,13 +51,27 @@
                                 </div>
                             </mat-cell>
                         </ng-container>
+                        <ng-container matColumnDef="is_quickbooks">
+                            <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'" class="tbl-col-width-per-action"
+                                mat-sort-header>
+                                <!-- <img src='assets/images/icons/hold.svg' alt="" height="25" width="25" /> -->
+                                <img [src]="quickbooksGreenIcon" alt="" height="23" width="23" />
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let row" (click)="edit(row)"
+                                (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-action">
+                                <span class="mobile-label">Quickbooks:</span>
+                                <img *ngIf="!row.is_quickbooks" [src]="quickbooksGreyIcon" alt="" height="23"
+                                    width="23" />
+                                <img *ngIf="row.is_quickbooks" [src]="quickbooksGreenIcon" alt="" height="23"
+                                    width="23" />
+                            </mat-cell>
+                        </ng-container>
                         <!-- actions -->
-
                         <ng-container matColumnDef="actions">
                             <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-action max-h'"
                                 *matHeaderCellDef>{{'VENDOR.TABLE.ACTIONS' |
                                 translate}}</mat-header-cell>
-                            <mat-cell *matCellDef="let row; let i=index;"  class="pr-0 tbl-col-width-per-action">
+                            <mat-cell *matCellDef="let row; let i=index;" class="pr-0 tbl-col-width-per-action">
                                 <button matTooltip="{{'COMMON.ACTIONS.EDIT' |
                                                 translate}}" mat-icon-button color="accent"
                                     (click)="$event.stopPropagation()" (click)="edit(row)" *ngIf="isDelete === 0"

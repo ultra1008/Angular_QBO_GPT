@@ -39,7 +39,6 @@ module.exports.savePayrollgroup = async function (req, res) {
                 if (get_one != null) {
                     if (get_one._id == requestObject._id) {
                         let update_payroll_group = await payrollgroupCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
-                        console.log(update_payroll_group);
                         if (update_payroll_group) {
                             res.send({ message: translator.getStr('PayrollGroupUpdated'), data: update_payroll_group, status: true });
                         } else {
@@ -50,7 +49,6 @@ module.exports.savePayrollgroup = async function (req, res) {
                     }
                 } else {
                     let update_payroll_group = await payrollgroupCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
-                    console.log(update_payroll_group);
                     if (update_payroll_group) {
                         res.send({ message: translator.getStr('PayrollGroupUpdated'), data: update_payroll_group, status: true });
                     } else {

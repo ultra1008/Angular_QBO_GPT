@@ -36,9 +36,9 @@ import { SendInvoiceMessageComponent } from './invoice-detail/send-invoice-messa
 import { InvoiceMessagesComponent } from './invoice-detail/invoice-messages/invoice-messages.component';
 import { InvoiceMessageViewComponent } from './invoice-detail/invoice-message-view/invoice-message-view.component';
 
-import { MessageFormComponent } from './message-form/message-form.component';
 import { MailFormComponent } from './mail-form/mail-form.component';
 import { DepartmentFormComponent } from '../settings/employeesettings/department-form/department-form.component';
+import { UploadInvoiceFormComponent } from './upload-invoice-form/upload-invoice-form.component';
 
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -50,8 +50,8 @@ import { BrowserModule } from '@angular/platform-browser';
     SendInvoiceMessageComponent,
     InvoiceMessagesComponent,
     InvoiceMessageViewComponent,
-    MessageFormComponent,
     MailFormComponent,
+    UploadInvoiceFormComponent,
   ],
   providers: [AdvanceTableService],
   imports: [

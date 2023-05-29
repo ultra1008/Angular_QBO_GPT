@@ -335,7 +335,6 @@ module.exports.login = async function (req, res) {
                                             ...resObject_db,
                                             UserData
                                         };
-                                        //console.log("resObject", resObject)
                                         var resLast = {
                                             "token": "",
                                             UserData,
@@ -1031,7 +1030,6 @@ module.exports.submitOTP = async function (req, res) {
                         ...resObject_db,
                         UserData
                     };
-                    //console.log("resObject", resObject)
                     var resLast = {
                         "token": "",
                         UserData,
@@ -1070,7 +1068,6 @@ module.exports.view_capture = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     if (decodedToken) {
         try {
-            console.log('decodedToken', decodedToken);
             var requestBody = req.body;
             let connection_db_api = await db_connection.connection_db_api(decodedToken);
             let view_capture_Connection = await connection_db_api.model(collectionConstant.VIEW_CAPTURE, view_capture_Schema);
@@ -1548,7 +1545,6 @@ module.exports.getLoginCompanyList = async function (req, res) {
                 ...resObject_db,
                 UserData
             };
-            //console.log("resObject", resObject)
             var resLast = {
                 "token": "",
                 UserData,
@@ -1940,7 +1936,6 @@ module.exports.submitEmailOTP = async function (req, res) {
                             ...resObject_db,
                             UserData
                         };
-                        //console.log("resObject", resObject)
                         var resLast = {
                             "token": "",
                             UserData,
@@ -2276,7 +2271,6 @@ module.exports.loginWithEmailOTP = async function (req, res) {
                 ...resObject_db,
                 UserData
             };
-            //console.log("resObject", resObject)
             var resLast = {
                 "token": "",
                 UserData,
@@ -2464,4 +2458,4 @@ module.exports.getMyCompanyList = async function (req, res) {
     } finally {
         // connection_db_api.close();
     }
-};
+}; 
