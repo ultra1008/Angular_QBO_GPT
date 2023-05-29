@@ -55,8 +55,12 @@ export class VendorsListComponent
     'select',
     'vendor_image',
     'vendor_name',
-    'vendor_id',
-    'customer_id',
+    'invoice',
+    'open_invoice',
+    'amount_paid',
+    'amount_open',
+    // 'vendor_id',
+    // 'customer_id',
     'vendor_phone',
     'vendor_email',
     'vendor_address',
@@ -342,6 +346,7 @@ export class VendorsListComponent
         this.dataSource.filter = this.filter.nativeElement.value;
       }
     );
+    this.selection.clear();
     this.show = true;
   }
 
@@ -444,6 +449,83 @@ export class VendorsListComponent
 
   gotoArchiveUnarchive() {
     this.isDelete = this.isDelete == 1 ? 0 : 1;
+    if (this.isDelete === 0) {
+      if (this.isQBSyncedCompany) {
+        this.displayedColumns = [
+          'select',
+          'vendor_image',
+          'vendor_name',
+          'invoice',
+          'open_invoice',
+          'amount_paid',
+          'amount_open',
+          // 'vendor_id',
+          // 'customer_id',
+          'vendor_phone',
+          'vendor_email',
+          'vendor_address',
+          'vendor_status',
+          'vendor_attachment',
+          'vendor_from',
+          'actions',
+        ];
+      } else {
+        this.displayedColumns = [
+          'select',
+          'vendor_image',
+          'vendor_name',
+          'invoice',
+          'open_invoice',
+          'amount_paid',
+          'amount_open',
+          // 'vendor_id',
+          // 'customer_id',
+          'vendor_phone',
+          'vendor_email',
+          'vendor_address',
+          'vendor_status',
+          'vendor_attachment',
+          'actions',
+        ];
+      }
+    } else {
+      if (this.isQBSyncedCompany) {
+        this.displayedColumns = [
+          'vendor_image',
+          'vendor_name',
+          'invoice',
+          'open_invoice',
+          'amount_paid',
+          'amount_open',
+          // 'vendor_id',
+          // 'customer_id',
+          'vendor_phone',
+          'vendor_email',
+          'vendor_address',
+          'vendor_status',
+          'vendor_attachment',
+          'vendor_from',
+          'actions',
+        ];
+      } else {
+        this.displayedColumns = [
+          'vendor_image',
+          'vendor_name',
+          'invoice',
+          'open_invoice',
+          'amount_paid',
+          'amount_open',
+          // 'vendor_id',
+          // 'customer_id',
+          'vendor_phone',
+          'vendor_email',
+          'vendor_address',
+          'vendor_status',
+          'vendor_attachment',
+          'actions',
+        ];
+      }
+    }
     this.refresh();
   }
 

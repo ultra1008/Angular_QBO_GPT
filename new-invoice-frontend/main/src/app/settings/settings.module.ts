@@ -79,6 +79,7 @@ import { QuickbooksAuthorizationComponent } from './integration/qbointegration/q
 import { ImportCostcodeSettingsComponent } from './costcode/import-costcode-settings/import-costcode-settings.component';
 import { ClassNameListingComponent } from './othersettings/class-name-listing/class-name-listing.component';
 import { ClassNameFormComponent } from './othersettings/class-name-form/class-name-form.component';
+import { ExistListingComponent } from './employeesettings/exist-listing/exist-listing.component';
 
 @NgModule({
   declarations: [
@@ -127,6 +128,7 @@ import { ClassNameFormComponent } from './othersettings/class-name-form/class-na
     ImportCostcodeSettingsComponent,
     ClassNameListingComponent,
     ClassNameFormComponent,
+    ExistListingComponent,
   ],
   providers: [SettingsService],
   imports: [

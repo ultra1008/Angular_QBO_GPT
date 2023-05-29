@@ -36,7 +36,7 @@ export class DocumentTypeListComponent
   isDelete = 0;
   titleMessage = '';
 
-  constructor (
+  constructor(
     public dialog: MatDialog,
     public SettingsService: SettingsService,
     private snackBar: MatSnackBar,
@@ -209,7 +209,7 @@ export class DocumentTypeDataSource extends DataSource<DocumentTypeTable> {
   }
   filteredData: DocumentTypeTable[] = [];
   renderedData: DocumentTypeTable[] = [];
-  constructor (
+  constructor(
     public documentService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,

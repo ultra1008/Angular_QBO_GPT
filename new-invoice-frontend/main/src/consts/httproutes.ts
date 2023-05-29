@@ -101,12 +101,14 @@ export enum httproutes {
   SAVE_SMTP = 'compnayupdatesmtp',
 
   //employee
-  SETTINGS_IMPORT__DOCUMENT_TYPE = 'importdoctype',
+  SETTINGS_CHECK_IMPORT__DOCUMENT_TYPE = 'checkimportdoctype',
+  SETTINGS_IMPORT_DOCUMENT_TYPE = 'importdoctype',
   SETTING_DOCUMENT_TYPE_DATA_TABLE = 'getdoctypefortable',
   SETTING_DOCUMENT_TYPE_GET = 'getalldoctype',
   SETTING_DOCUMENT_TYPE_DELETE = 'deletedoctype',
   SETTING_DOCUMENT_TYPE_SAVE = 'savedoctype',
-  SETTINGS_IMPORT__DEPARTMENTS = 'importdepartment',
+  SETTINGS_CHECK_IMPORT_DEPARTMENTS = 'checkimportdepartment',
+  SETTINGS_IMPORT_DEPARTMENTS = 'importdepartment',
   SETTING_DEPARTMENTS_DATA_TABLE = 'getdepartmentfortable',
   SETTING_DEPARTMENTS_GET = 'getalldepartment',
   SETTING_DEPARTMENTS_DELETE = 'deletedepartment',
@@ -204,6 +206,8 @@ export enum httproutes {
   CLIENT_UPDATE_STATUS = 'updateClientStatus',
   CLIENT_ALL_DELETE = 'deleteMultipleClient ',
   CLIENT_GET_HISTORY = 'getClinetHistory',
+  CHECK_IMPORT_CLIENT = 'checkimportclient',
+  IMPORT_CLIENT = 'importclient',
 
   // Invoice Message
   GET_INVOICE_MESSAGE_FOR_TABLE = 'getinvoicemessagefortable',

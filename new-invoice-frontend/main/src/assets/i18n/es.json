@@ -44,6 +44,10 @@
         "GENDER_ALL": {
             "Male_All": "Masculino",
             "Female_All": "Femenino"
+        },
+        "IMPORT": {
+            "STATUS": "Estado",
+            "NAME": "Nombre"
         }
     },
     "VENDOR": {
