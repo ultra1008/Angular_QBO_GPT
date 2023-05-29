@@ -71,9 +71,9 @@ module.exports.dashboardInvoiceList = async function (req, res) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
-            var pending_data = await invoicesConnection.find({ is_delete: 0, status: 'Pending' }).sort({ created_at: -1 }).limit(3);
+            var pending_data = await invoicesConnection.find({ is_delete: 0, status: 'Pending' }).sort({ created_at: -1 }).limit(2);
             // var process_data = await invoicesConnection.find({ is_delete: 0, status: 'Generated' }).sort({ created_at: -1 }).limit(3);
-            var cancel_data = await invoicesConnection.find({ is_delete: 0, status: 'Rejected' }).sort({ created_at: -1 }).limit(3);
+            var cancel_data = await invoicesConnection.find({ is_delete: 0, status: 'Rejected' }).sort({ created_at: -1 }).limit(2);
             let data = {
                 pending_invoices: pending_data,
                 process_invoices: [],
@@ -225,9 +225,9 @@ module.exports.dashboardInvoiceListForTable = async function (req, res) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
-            var pending_data = await invoicesConnection.find({ is_delete: 0, status: 'Pending' }).sort({ created_at: -1 }).limit(3);
+            var pending_data = await invoicesConnection.find({ is_delete: 0, status: 'Pending' }).sort({ created_at: -1 }).limit(2);
             // var process_data = await invoicesConnection.find({ is_delete: 0, status: 'Generated' }).sort({ created_at: -1 }).limit(3);
-            var cancel_data = await invoicesConnection.find({ is_delete: 0, status: 'Rejected' }).sort({ created_at: -1 }).limit(3);
+            var cancel_data = await invoicesConnection.find({ is_delete: 0, status: 'Rejected' }).sort({ created_at: -1 }).limit(2);
             let data = {
                 pending_invoices: pending_data,
                 process_invoices: [],
