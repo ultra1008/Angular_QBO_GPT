@@ -213,5 +213,8 @@ export enum httproutes {
   DELETE_INVOICE_MESSAGE = 'deleteinvoicemessage',
 
   //mail
-  SEND_INVOICE_EMAIL = 'sendInvoiceEmail'
+  SEND_INVOICE_EMAIL = 'sendInvoiceEmail',
+
+  // Invoice
+  INVOICE_SAVE_INVOICE_PROCESS = "saveinvoiceprocess",
 }

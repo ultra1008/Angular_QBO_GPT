@@ -39,6 +39,7 @@ import { InvoiceMessageViewComponent } from './invoice-detail/invoice-message-vi
 import { MessageFormComponent } from './message-form/message-form.component';
 import { MailFormComponent } from './mail-form/mail-form.component';
 import { DepartmentFormComponent } from '../settings/employeesettings/department-form/department-form.component';
+import { UploadInvoiceFormComponent } from './upload-invoice-form/upload-invoice-form.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { DepartmentFormComponent } from '../settings/employeesettings/department
     InvoiceMessageViewComponent,
     MessageFormComponent,
     MailFormComponent,
+    UploadInvoiceFormComponent,
   ],
   providers: [AdvanceTableService],
   imports: [
