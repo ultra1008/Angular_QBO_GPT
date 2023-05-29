@@ -3946,7 +3946,7 @@ module.exports.sendInvoiceEmail = async function (req, res) {
             let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
             let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
             let MAP_DIV = "<div></div>";
-
+            requestObject.message = requestObject.message.replace(/\n/g, "<br />");
             let emailTmp = {
                 HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
                 SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
@@ -3956,7 +3956,7 @@ module.exports.sendInvoiceEmail = async function (req, res) {
                 EMAILTITLE: translator.getStr('INVOICE_SEND_TITLE'),
 
                 ANY_QUESTION: translator.getStr('EmailLoginAnyQuestion'),
-                MESSAGE: `${requestObject.message}`,
+                MESSAGE: new handlebars.SafeString(requestObject.message),
 
                 // COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
                 // COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
