@@ -88,7 +88,7 @@ export class VendorFormComponent implements OnInit {
   variablestermList: any = [];
   termList: any = this.variablestermList.slice();
 
-  constructor(private modeService: ModeDetectService,
+  constructor (private modeService: ModeDetectService,
     public dialog: MatDialog,
     private sanitiser: DomSanitizer,
     private location: Location,
@@ -332,6 +332,7 @@ export class VendorFormComponent implements OnInit {
     let that = this;
     let req_temp = that.vendorinfo.value;
     var isVendorfromQBO = false; // connection status of QBO
+    var is_quickbooks = false;
 
     if (this.vendorinfo.valid) {
       let reqObject = {
@@ -352,14 +353,17 @@ export class VendorFormComponent implements OnInit {
         vendor_attachment: "",
         vendor_id: req_temp.vendor_id,
         customer_id: req_temp.customer_id,
-        isVendorfromQBO: isVendorfromQBO
+        isVendorfromQBO: isVendorfromQBO,
+        is_quickbooks: is_quickbooks,
       };
 
       this.httpCall.httpPostCall(httproutes.QUICKBOOK_ISCONNECT, { data: "request" }).subscribe(function (params) { //check the status of connection with QBO
         if (params.isConnect === true) {
           reqObject.isVendorfromQBO = true;
+          reqObject.is_quickbooks = true;
         } else {
           delete reqObject.isVendorfromQBO;
+          delete reqObject.is_quickbooks;
         }
       });
 

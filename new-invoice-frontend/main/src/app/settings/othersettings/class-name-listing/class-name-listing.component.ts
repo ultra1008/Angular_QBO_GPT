@@ -15,6 +15,9 @@ import { ClassNameTable } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
 import { JobNameFormComponent } from '../job-name-form/job-name-form.component';
 import { ClassNameFormComponent } from '../class-name-form/class-name-form.component';
+import { icon } from 'src/consts/icon';
+import { CommonService } from 'src/app/services/common.service';
+import { httproutes, httpversion } from 'src/consts/httproutes';
 
 @Component({
   selector: 'app-class-name-listing',
@@ -23,23 +26,25 @@ import { ClassNameFormComponent } from '../class-name-form/class-name-form.compo
 })
 export class ClassNameListingComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit
-{
-  displayedColumns = ['name', 'number', 'description', 'status', 'actions'];
+  implements OnInit {
+  displayedColumns = ['name', 'number', 'description', 'status', 'is_quickbooks', 'actions'];
   classnameService?: SettingsService;
   dataSource!: ClassNameDataSource;
   selection = new SelectionModel<ClassNameTable>(true, []);
   id?: number;
   isDelete = 0;
-  titleMessage: string = '';
+  titleMessage = '';
+  quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
+  quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
 
-  constructor(
+  constructor (
     public dialog: MatDialog,
     public SettingsService: SettingsService,
     private snackBar: MatSnackBar,
     public router: Router,
     private httpCall: HttpCall,
-    public translate: TranslateService
+    public translate: TranslateService,
+    public commonService: CommonService,
   ) {
     super();
   }
@@ -50,10 +55,21 @@ export class ClassNameListingComponent
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
   ngOnInit() {
-    console.log('call');
+    this.getCompanyTenants();
+  }
 
+  async getCompanyTenants() {
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP);
+    if (data.status) {
+      if (data.data.is_quickbooks_online || data.data.is_quickbooks_desktop) {
+        this.displayedColumns = ['name', 'number', 'description', 'status', 'is_quickbooks', 'actions'];
+      } else {
+        this.displayedColumns = ['name', 'number', 'description', 'status', 'actions'];
+      }
+    }
     this.loadData();
   }
+
   refresh() {
     this.loadData();
   }
@@ -120,8 +136,8 @@ export class ClassNameListingComponent
     this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.renderedData.forEach((row) =>
-          this.selection.select(row)
-        );
+        this.selection.select(row)
+      );
   }
   removeSelectedRows() {
     //   const totalSelect = this.selection.selected.length;
@@ -142,7 +158,6 @@ export class ClassNameListingComponent
     //   );
   }
   public loadData() {
-    console.log('call');
     this.classnameService = new SettingsService(this.httpCall);
 
     this.dataSource = new ClassNameDataSource(
@@ -151,7 +166,6 @@ export class ClassNameListingComponent
       this.sort,
       this.isDelete
     );
-    console.log('dataSource', this.dataSource);
     this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
       () => {
         if (!this.dataSource) {
@@ -188,7 +202,7 @@ export class ClassNameDataSource extends DataSource<ClassNameTable> {
   }
   filteredData: ClassNameTable[] = [];
   renderedData: ClassNameTable[] = [];
-  constructor(
+  constructor (
     public classnameService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,

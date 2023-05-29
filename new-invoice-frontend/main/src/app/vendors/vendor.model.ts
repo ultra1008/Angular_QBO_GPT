@@ -9,7 +9,7 @@ export class Vendor {
     vendor_address: string;
     vendor_status: number;
     vendor_attachment: Array<string>;
-    isVendorfromQBO: boolean;
+    is_quickbooks: boolean;
     constructor (response: Vendor) {
         {
             this._id = response._id;
@@ -22,7 +22,7 @@ export class Vendor {
             this.vendor_address = response.vendor_address;
             this.vendor_status = response.vendor_status;
             this.vendor_attachment = response.vendor_attachment;
-            this.isVendorfromQBO = response.isVendorfromQBO;
+            this.is_quickbooks = response.is_quickbooks;
         }
     }
 }

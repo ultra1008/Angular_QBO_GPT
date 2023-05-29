@@ -235,7 +235,6 @@ module.exports.sendInvoiceMessage = async function (req, res) {
                     { $unwind: "$sender" },
                     { $sort: { created_at: 1 } },
                 ]);
-                console.log("get_message: ", get_message);
                 if (get_message.length > 0) {
                     get_message = get_message[0];
                 }

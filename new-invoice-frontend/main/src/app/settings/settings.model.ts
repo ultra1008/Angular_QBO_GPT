@@ -37,32 +37,6 @@ export class CostCodeTable {
     }
   }
 }
-export class settingTable {
-  _id: string;
-  vendor_name: string;
-  vendor_id: string;
-  customer_id: string;
-  vendor_phone: string;
-  vendor_email: string;
-  vendor_address: string;
-  vendor_status: number;
-  vendor_attachment: Array<string>;
-  isVendorfromQBO: boolean;
-  constructor (response: settingTable) {
-    {
-      this._id = response._id;
-      this.vendor_name = response.vendor_name;
-      this.vendor_id = response.vendor_id;
-      this.customer_id = response.customer_id;
-      this.vendor_phone = response.vendor_phone;
-      this.vendor_email = response.vendor_email;
-      this.vendor_address = response.vendor_address;
-      this.vendor_status = response.vendor_status;
-      this.vendor_attachment = response.vendor_attachment;
-      this.isVendorfromQBO = response.isVendorfromQBO;
-    }
-  }
-}
 
 export class MailboxTable {
   _id: string;
@@ -235,6 +209,7 @@ export class TermsTable {
   due_days!: number;
   is_discount!: boolean;
   discount!: number;
+  is_quickbooks: string;
 
   constructor (TermsTable: TermsTable) {
     {
@@ -243,6 +218,7 @@ export class TermsTable {
       this.due_days = TermsTable.due_days;
       this.is_discount = TermsTable.is_discount;
       this.discount = TermsTable.discount;
+      this.is_quickbooks = TermsTable.is_quickbooks;
     }
   }
 }
@@ -304,6 +280,7 @@ export class ClassNameTable {
   name!: string;
   number!: string;
   description!: string;
+  is_quickbooks!: string;
   status!: number;
 
   constructor (ClassNameTable: ClassNameTable) {
@@ -312,6 +289,7 @@ export class ClassNameTable {
       this.name = ClassNameTable.name;
       this.number = ClassNameTable.number;
       this.description = ClassNameTable.description;
+      this.is_quickbooks = ClassNameTable.is_quickbooks;
       this.status = ClassNameTable.status;
     }
   }

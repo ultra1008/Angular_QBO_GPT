@@ -40,7 +40,6 @@ module.exports.saveDocType = async function (req, res) {
                 if (get_one != null) {
                     if (get_one._id == requestObject._id) {
                         let update_doc_type = await documenttypeCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
-                        console.log(update_doc_type);
                         if (update_doc_type) {
                             res.send({ message: translator.getStr('DocumentTypeUpdated'), data: update_doc_type, status: true });
                         } else {
@@ -51,7 +50,6 @@ module.exports.saveDocType = async function (req, res) {
                     }
                 } else {
                     let update_doc_type = await documenttypeCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
-                    console.log(update_doc_type);
                     if (update_doc_type) {
                         res.send({ message: translator.getStr('DocumentTypeUpdated'), data: update_doc_type, status: true });
                     } else {

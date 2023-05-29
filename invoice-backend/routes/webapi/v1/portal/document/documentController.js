@@ -141,7 +141,6 @@ module.exports.editUserDocument = async function (req, res) {
                     fileName = file;
                 })
                 .on('field', function (name, field) {
-                    console.log(name, field);
                     fields[name] = field;
                 })
                 .on('error', function (err) {

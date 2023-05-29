@@ -112,28 +112,37 @@
                     <span class="mobile-label">description:</span> {{row.description}}
                   </mat-cell>
                 </ng-container>
-
+                <ng-container matColumnDef="is_quickbooks">
+                  <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'" class="tbl-col-width-per-action"
+                    mat-sort-header>
+                    <img [src]="quickbooksGreenIcon" alt="" height="23" width="23" />
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
+                    class="tbl-col-width-per-action">
+                    <span class="mobile-label">Quickbooks:</span>
+                    <img *ngIf="!row.is_quickbooks" [src]="quickbooksGreyIcon" alt="" height="23" width="23" />
+                    <img *ngIf="row.is_quickbooks" [src]="quickbooksGreenIcon" alt="" height="23" width="23" />
+                  </mat-cell>
+                </ng-container>
                 <!-- actions -->
 
                 <ng-container matColumnDef="actions">
                   <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-action max-h'"
-                    *matHeaderCellDef>{{'VENDOR.TABLE.ACTIONS' |
-                    translate}}</mat-header-cell>
+                    *matHeaderCellDef>{{'VENDOR.TABLE.ACTIONS' | translate}}</mat-header-cell>
                   <mat-cell *matCellDef="let row; let i=index;" class="pr-0 tbl-col-width-per-action">
-                    <button matTooltip="{{'COMMON.ACTIONS.EDIT' |
-                                              translate}}" mat-icon-button color="accent"
+                    <button matTooltip="{{'COMMON.ACTIONS.EDIT' | translate}}" mat-icon-button color="accent"
                       (click)="$event.stopPropagation()" (click)="edit(row)" *ngIf="isDelete === 0" class="col-blue">
                       <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'">
                       </app-feather-icons>
                     </button>
-                    <button mat-icon-button matTooltip="{{'COMMON.ACTIONS.ARCHIVE' |
-                                              translate}}" color="accent" (click)="$event.stopPropagation()"
-                      (click)="deleteCostCode(row, 1)" *ngIf="isDelete === 0" class="col-red">
+                    <button mat-icon-button matTooltip="{{'COMMON.ACTIONS.ARCHIVE' | translate}}" color="accent"
+                      (click)="$event.stopPropagation()" (click)="deleteCostCode(row, 1)" *ngIf="isDelete === 0"
+                      class="col-red">
                       <mat-icon>archive</mat-icon>
                     </button>
-                    <button mat-icon-button matTooltip="{{'COMMON.ACTIONS.RESTORE' |
-                                              translate}}" color="accent" (click)="$event.stopPropagation()"
-                      (click)="deleteCostCode(row, 0)" *ngIf="isDelete === 1" class="col-red">
+                    <button mat-icon-button matTooltip="{{'COMMON.ACTIONS.RESTORE' | translate}}" color="accent"
+                      (click)="$event.stopPropagation()" (click)="deleteCostCode(row, 0)" *ngIf="isDelete === 1"
+                      class="col-red">
                       <mat-icon>archive</mat-icon>
                     </button>
                   </mat-cell>

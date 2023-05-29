@@ -125,7 +125,6 @@ module.exports.updateProcessInvoice = async function (req, res) {
             if (update_data) {
                 // Insert Process Document as Invoice
                 if (module == 'INVOICE') {
-                    console.log("vendorId", vendorId, newReqObj);
                     if (vendorId != '') {
                         let add_invoice = new invoicesConnection(newReqObj);
                         let save_invoice = await add_invoice.save();
@@ -300,7 +299,6 @@ module.exports.importManagementInvoice = async function (req, res) {
             } else {
                 query = { is_delete: 0, _id: { $nin: tempIds } };
             }
-            console.log("query: ", query);
             let invoices = await managementInvoiceCollection.find(query);
             let saveObj = [];
             for (let i = 0; i < invoices.length; i++) {
@@ -453,7 +451,6 @@ module.exports.checkProcessProgress = async function (req, res) {
                             total: data.data.process_progress_total,
                         };
                         await invoiceProgressCollection.updateOne({ _id: ObjectID(get_data[i]._id) }, reqObj);
-                        console.log("data.data.process_progress_ratio", data.data.process_progress_ratio);
                         if (data.data.process_progress_ratio == 1) {
                             await invoiceProcessCollection.updateMany({ _id: { $in: updateProcessIds } }, { status: 'PROCESS_STATUS_EXTRACTED' });
                             await invoiceProcessCollection.updateMany({ _id: { $in: updateAlreadyProcessIds } }, { status: 'Already Exists' });

@@ -83,7 +83,6 @@ module.exports.deleteinvoicecostCode = async function (req, res) {
             var requestObject = req.body;
             var id = requestObject._id;
             delete requestObject._id;
-            console.log("requestObject", requestObject);
             var costCodeConnection = connection_db_api.model(collectionConstant.INVOICE_COST_CODE, invoice_cost_code_Schema);
             let update_data = await costCodeConnection.updateOne({ _id: ObjectID(id) }, { is_delete: requestObject.is_delete });
             let isDelete = update_data.nModified;

@@ -166,26 +166,30 @@
                                                 Name:</span>{{row.vendor_name}}</span>
                                     </mat-cell>
                                 </ng-container>
-                                <!-- <ng-container matColumnDef="vendor_id">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.VENDOR_ID' |
+                                <ng-container matColumnDef="vendor_id">
+                                    <mat-header-cell [ngClass]="'tbl-col-width-per-max'" *matHeaderCellDef
+                                        mat-sort-header>{{'VENDOR.TABLE.VENDOR_ID' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" [matTooltip]="getVendorIdTooltip(row)"
-                                        (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">
+                                    <mat-cell *matCellDef="let row" [matTooltip]="getNameTooltip(row)"
+                                        (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-max"
+                                        (click)="editVendor(row)">
                                         <span class="truncate-text"> <span class="mobile-label">Vendor
-                                                ID:</span>{{row.vendor_id}}</span>
+                                                Id:</span>{{row.vendor_id}}</span>
                                     </mat-cell>
-                                </ng-container> -->
-                                <!-- <ng-container matColumnDef="customer_id">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.CUSTOMER_ID' |
+                                </ng-container>
+                                <ng-container matColumnDef="customer_id">
+                                    <mat-header-cell [ngClass]="'tbl-col-width-per-max'" *matHeaderCellDef
+                                        mat-sort-header>{{'VENDOR.TABLE.CUSTOMER_ID' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" [matTooltip]="getCustomerIdTooltip(row)"
-                                        (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">
-                                        <span class="truncate-text"> <span class="mobile-label">Customer
-                                                ID:</span>{{row.customer_id}}</span>
+                                    <mat-cell *matCellDef="let row" [matTooltip]="getNameTooltip(row)"
+                                        (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-max"
+                                        (click)="editVendor(row)">
+                                        <span class="truncate-text"> <span class="mobile-label">Vendor
+                                                Id:</span>{{row.customer_id}}</span>
                                     </mat-cell>
-                                </ng-container> -->
+                                </ng-container>
                                 <ng-container matColumnDef="invoice">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.INVOICE' |
                                         translate}}
@@ -291,7 +295,21 @@
                                         </span>
                                     </mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="vendor_from" *ngIf="isQBSyncedCompany">
+                                <ng-container matColumnDef="is_quickbooks">
+                                    <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'"
+                                        class="tbl-col-width-per-action" mat-sort-header>
+                                        <img [src]="quickbooksGreenIcon" alt="" height="23" width="23" />
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row" (click)="editVendor(row)"
+                                        (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-action">
+                                        <span class="mobile-label">Quickbooks:</span>
+                                        <img *ngIf="!row.is_quickbooks" [src]="quickbooksGreyIcon" alt="" height="23"
+                                            width="23" />
+                                        <img *ngIf="row.is_quickbooks" [src]="quickbooksGreenIcon" alt="" height="23"
+                                            width="23" />
+                                    </mat-cell>
+                                </ng-container>
+                                <!-- <ng-container matColumnDef="vendor_from" *ngIf="isQBSyncedCompany">
                                     <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-7'" *matHeaderCellDef
                                         mat-sort-header>
                                         <img src='assets/images/icons/quickbooks.svg' alt="" height="25" width="25" />
@@ -311,7 +329,7 @@
                                             </div>
                                         </span>
                                     </mat-cell>
-                                </ng-container>
+                                </ng-container> -->
                                 <ng-container matColumnDef="actions">
                                     <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-action'"
                                         *matHeaderCellDef>{{'VENDOR.TABLE.ACTIONS' |
