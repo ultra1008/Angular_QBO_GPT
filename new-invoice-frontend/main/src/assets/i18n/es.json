@@ -89,6 +89,9 @@
         "HISTORY": {
             "TITLE": "Historial del proveedor"
         },
+        "REPORT": {
+            "TITLE": "Vendor Report"
+        },
         "CONFIRMATION_DIALOG": {
             "SUBMIT": "Complete el formulario de proveedor antes de enviarlo.",
             "SAVING": "¿Está seguro de que desea cerrar esta ventana sin guardar los cambios?",

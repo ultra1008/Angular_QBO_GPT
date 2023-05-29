@@ -12,6 +12,7 @@ import { UserService } from '../user.service';
 import { RoleModel } from '../user.model';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { httproutes, httpversion } from 'src/consts/httproutes';
+import { icon } from 'src/consts/icon';
 
 export interface DialogData {
   termsList: Array<any>;
@@ -33,6 +34,7 @@ export class UserReportComponent {
   removable = true;
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  invoice_logo = icon.INVOICE_LOGO;
 
   constructor(public uiSpinner: UiSpinnerService, public dialogRef: MatDialogRef<UserReportComponent>, private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: any, public UserReporService: UserService, private fb: UntypedFormBuilder, private commonService: CommonService
