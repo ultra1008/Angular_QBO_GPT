@@ -27,7 +27,7 @@ import { icon } from 'src/consts/icon';
 export class TermsListingComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
-  displayedColumns = ['name', 'due_days', 'discount', 'is_quickbooks', 'actions'];
+  displayedColumns = ['name', 'due_days', 'discount', 'actions'];
   termsService?: SettingsService;
   dataSource!: TermsDataSource;
   selection = new SelectionModel<TermsTable>(true, []);
@@ -57,6 +57,7 @@ export class TermsListingComponent
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
   ngOnInit() {
+    this.loadData();
     this.getCompanyTenants();
   }
   async getCompanyTenants() {
@@ -68,7 +69,7 @@ export class TermsListingComponent
         this.displayedColumns = ['name', 'due_days', 'discount', 'actions'];
       }
     }
-    this.loadData();
+    // this.loadData();
   }
   refresh() {
     this.loadData();

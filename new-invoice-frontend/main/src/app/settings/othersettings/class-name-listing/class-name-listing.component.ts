@@ -27,7 +27,7 @@ import { httproutes, httpversion } from 'src/consts/httproutes';
 export class ClassNameListingComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
-  displayedColumns = ['name', 'number', 'description', 'status', 'is_quickbooks', 'actions'];
+  displayedColumns = ['name', 'number', 'description', 'status', 'actions'];
   classnameService?: SettingsService;
   dataSource!: ClassNameDataSource;
   selection = new SelectionModel<ClassNameTable>(true, []);
@@ -55,6 +55,7 @@ export class ClassNameListingComponent
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
   ngOnInit() {
+    this.loadData();
     this.getCompanyTenants();
   }
 
@@ -67,7 +68,7 @@ export class ClassNameListingComponent
         this.displayedColumns = ['name', 'number', 'description', 'status', 'actions'];
       }
     }
-    this.loadData();
+    // this.loadData();
   }
 
   refresh() {

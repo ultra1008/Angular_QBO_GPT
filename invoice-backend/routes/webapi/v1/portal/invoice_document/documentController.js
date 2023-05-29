@@ -210,7 +210,7 @@ module.exports.importInvoiceDocument = async function (req, res) {
                 if (one_client) { } else {
                     reqObject.push({
                         name: requestObject[i].data.name,
-                        is_expiration: requestObject[i].data.is_expiration.toLowerCase() == "true",
+                        is_expiration: requestObject[i].data.is_expiration.toString().toLowerCase() == "true",
                     });
                 }
             }

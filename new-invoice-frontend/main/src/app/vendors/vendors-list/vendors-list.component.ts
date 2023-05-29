@@ -52,7 +52,7 @@ export class VendorsListComponent
   imageObject = [];
   tmp_gallery: any;
   show = false;
-  displayedColumns = ['select', 'vendor_image', 'vendor_name', 'vendor_id', 'customer_id', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks', 'actions',];
+  displayedColumns = ['select', 'vendor_image', 'vendor_name', 'vendor_id', 'customer_id', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions',];
   vendorService?: VendorsService;
   dataSource!: VendorDataSource;
   selection = new SelectionModel<Vendor>(true, []);
@@ -92,6 +92,7 @@ export class VendorsListComponent
     const vendorDisplay =
       localStorage.getItem(localstorageconstants.VENDOR_DISPLAY) ?? 'list';
     if (vendorDisplay == 'list') {
+      this.loadData();
       this.getCompanyTenants();
     } else {
       this.router.navigate([WEB_ROUTES.VENDOR_GRID]);
@@ -122,7 +123,7 @@ export class VendorsListComponent
         this.displayedColumns = ['select', 'vendor_image', 'vendor_name', 'vendor_id', 'customer_id', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions'];
       }
     }
-    this.loadData();
+    // this.loadData();
   }
 
 
@@ -288,7 +289,6 @@ export class VendorsListComponent
   }
   removeSelectedRows() { }
   public loadData() {
-    this.show = false;
     this.vendorService = new VendorsService(this.httpCall);
     this.dataSource = new VendorDataSource(
       this.vendorService,
@@ -304,7 +304,6 @@ export class VendorsListComponent
         this.dataSource.filter = this.filter.nativeElement.value;
       }
     );
-    this.show = true;
   }
 
   // export table data in excel file
