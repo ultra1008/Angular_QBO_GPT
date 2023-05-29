@@ -110,8 +110,8 @@
         "VIEW": {
             "ADD_USER": "Add User",
             "EDIT_USER": "Edit User",
-            "TITLE": "User",
-            "ARCHIVED_TITLE": "Archived User"
+            "TITLE": "Users",
+            "ARCHIVED_TITLE": "Archived Users"
         },
         "TABLE": {
             "IMAGE": "Image",
