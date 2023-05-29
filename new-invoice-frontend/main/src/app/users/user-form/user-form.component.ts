@@ -135,6 +135,7 @@ export class UserFormComponent
   userfullName = '';
   step_index = 0;
 
+
   constructor(
     private location: Location,
     public uiSpinner: UiSpinnerService,

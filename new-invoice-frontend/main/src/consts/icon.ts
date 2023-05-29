@@ -8,4 +8,9 @@ export enum icon {
   QUICKBOOKS_DESKTOP_LOGO = './assets/images/qb_desktop.png',
   MAIL_ICON = './assets/images/icons/mail.png',
   MESSAGE_ICON = './assets/images/icons/message.png',
+  CONTECT_INFO = './assets/images/icons/contact-info.png',
+  DOCUMENT = './assets/images/icons/document.png',
+  EMERGENCY_CONTECT = './assets/images/icons/emergency-contect.png',
+  EMP_INFO = './assets/images/icons/emp-info.png',
+  PERSONAL_INFO = './assets/images/icons/personal-info.png',
 }
