@@ -167,7 +167,8 @@ router.get('/webapi/v1/portal/getAlljobtype', common.checkTokenExistOrNot, jobty
 router.post('/webapi/v1/portal/savejobtype', common.checkTokenExistOrNot, jobtypeValidation.jobTypeValidation, jobtypeController.savejobtype);
 router.post('/webapi/v1/portal/deletejobtype', common.checkTokenExistOrNot, jobtypeValidation.jobTypeDeleteValidation, jobtypeController.deletejobtype);
 router.post('/webapi/v1/portal/getjobtypefortable', common.checkTokenExistOrNot, jobtypeValidation.getjobtypeForTableValidation, jobtypeController.getJobTypeForTable);
-router.post('/webapi/v1/portal/importjob_type', common.checkTokenExistOrNot, jobtypeController.importjob_type);
+router.post('/webapi/v1/portal/checkimportjobtype', common.checkTokenExistOrNot, jobtypeController.checkImportJobType);
+router.post('/webapi/v1/portal/importjobtype', common.checkTokenExistOrNot, jobtypeController.importJobType);
 
 let jobtitleController = require('./job_title/jobtitleController');
 let jobtitleValidation = require('./job_title/jobtitleValidation');
@@ -175,6 +176,7 @@ router.get('/webapi/v1/portal/getAlljobtitle', common.checkTokenExistOrNot, jobt
 router.post('/webapi/v1/portal/savejobtitle', common.checkTokenExistOrNot, jobtitleValidation.jobtitleValidation, jobtitleController.saveJobTitle);
 router.post('/webapi/v1/portal/deletejobtitle', common.checkTokenExistOrNot, jobtitleValidation.jobtitleDeleteValidation, jobtitleController.deleteJobTitle);
 router.post('/webapi/v1/portal/getjobtitlefortable', common.checkTokenExistOrNot, jobtitleValidation.getjobtitleForTableValidation, jobtitleController.getJobTitleForTable);
+router.post('/webapi/v1/portal/checkimportjobtitle', common.checkTokenExistOrNot, jobtitleController.checkImportJobTitle);
 router.post('/webapi/v1/portal/importjobtitle', common.checkTokenExistOrNot, jobtitleController.importJobTitle);
 
 
@@ -185,8 +187,8 @@ router.post('/webapi/v1/portal/savedepartment', common.checkTokenExistOrNot, dep
 router.post('/webapi/v1/portal/deletedepartment', common.checkTokenExistOrNot, departmentValidation.departmentDeleteValidation, departmentController.deleteDepartment);
 router.post('/webapi/v1/portal/getdepartmentfortable', common.checkTokenExistOrNot, departmentValidation.getdepartmentForTableValidation, departmentController.getdepartmentForTable);
 router.post('/webapi/v1/portal/getdepartmentfortable', common.checkTokenExistOrNot, departmentValidation.getdepartmentForTableValidation, departmentController.getdepartmentForTable);
-router.post('/webapi/v1/portal/importdepartment', common.checkTokenExistOrNot, departmentController.importdepartment);
-
+router.post('/webapi/v1/portal/checkimportdepartment', common.checkTokenExistOrNot, departmentController.checkImportDepartment);
+router.post('/webapi/v1/portal/importdepartment', common.checkTokenExistOrNot, departmentController.importDepartment);
 
 var documenttypeController = require('./documenttype/documenttypeController');
 var documenttypeValidation = require('./documenttype/documenttypeValidation');
@@ -194,8 +196,8 @@ router.get('/webapi/v1/portal/getalldoctype', common.checkTokenExistOrNot, docum
 router.post('/webapi/v1/portal/savedoctype', common.checkTokenExistOrNot, documenttypeValidation.documentTypeValidation, documenttypeController.saveDocType);
 router.post('/webapi/v1/portal/deletedoctype', common.checkTokenExistOrNot, documenttypeValidation.documentTypeDeleteValidation, documenttypeController.deleteDocType);
 router.post('/webapi/v1/portal/getdoctypefortable', common.checkTokenExistOrNot, documenttypeValidation.getdocumentTypeForTableValidation, documenttypeController.getdoctypeForTable);
-router.post('/webapi/v1/portal/importdoctype', common.checkTokenExistOrNot, documenttypeController.importdoctype);
-
+router.post('/webapi/v1/portal/checkimportdoctype', common.checkTokenExistOrNot, documenttypeController.checkImportDocumentType);
+router.post('/webapi/v1/portal/importdoctype', common.checkTokenExistOrNot, documenttypeController.importDocumentType);
 
 let rolespermissionController = require("./roles/rolesandpermissionController");
 router.get('/webapi/v1/portal/getallroles', common.checkTokenExistOrNot, rolespermissionController.getAllRoles);
@@ -235,7 +237,8 @@ router.get('/webapi/v1/portal/getlanguage', common.checkTokenExistOrNot, languag
 router.post('/webapi/v1/portal/savelanguage', common.checkTokenExistOrNot, languageValidation.languageValidation, languageController.savelanguage);
 router.post('/webapi/v1/portal/deletelanguage', common.checkTokenExistOrNot, languageValidation.languageDeleteValidation, languageController.deletelanguage);
 router.post('/webapi/v1/portal/getlanguageForTable', common.checkTokenExistOrNot, languageValidation.getlanguageForTableValidation, languageController.getlanguageForTable);
-router.post('/webapi/v1/portal/importlanguage', common.checkTokenExistOrNot, languageController.importlanguage);
+router.post('/webapi/v1/portal/checkimportlanguage', common.checkTokenExistOrNot, languageController.checkImportlanguage);
+router.post('/webapi/v1/portal/importlanguage', common.checkTokenExistOrNot, languageController.importLanguage);
 
 let costCodeController = require('./costcode/costcodeController');
 let costCodeValidation = require('./costcode/costCodeValidation');
@@ -247,7 +250,8 @@ router.post('/webapi/v1/portal/getcostcodefordatatable', common.checkTokenExistO
 router.post('/webapi/v1/portal/savexlsxcostcode', common.checkTokenExistOrNot, costCodeController.savexlsxcostcode);
 router.post('/webapi/v1/portal/savecostcodeindb', common.checkTokenExistOrNot, costCodeController.savecostcodeindb);
 router.post('/webapi/v1/portal/getCostCodeForTable', common.checkTokenExistOrNot, costCodeValidation.getCostCodeForTableValidation, costCodeController.getCostCodeForTable);
-router.post('/webapi/v1/portal/importCostCode', common.checkTokenExistOrNot, costCodeController.importCostCode);
+router.post('/webapi/v1/portal/checkimportcostcode', common.checkTokenExistOrNot, costCodeController.checkImportCostCode);
+router.post('/webapi/v1/portal/importcostcode', common.checkTokenExistOrNot, costCodeController.importCostCode);
 router.get('/webapi/v1/portal/getCostCode', common.checkTokenExistOrNot, costCodeController.getCostCode);
 
 
@@ -263,6 +267,7 @@ router.get('/webapi/v1/portal/getallrelationships', common.checkTokenExistOrNot,
 router.post('/webapi/v1/portal/saverelationship', common.checkTokenExistOrNot, relationshipsValidation.relationshipValidation, relationshipsController.saveRelationship);
 router.post('/webapi/v1/portal/deleterelationship', common.checkTokenExistOrNot, relationshipsValidation.relationshipDeleteValidation, relationshipsController.deleteRelationship);
 router.post('/webapi/v1/portal/getrelationshipfortable', common.checkTokenExistOrNot, relationshipsValidation.getrelationshipForTableValidation, relationshipsController.getRelationshipForTable);
+router.post('/webapi/v1/portal/checkimportrelationship', common.checkTokenExistOrNot, relationshipsController.checkImportRelationship);
 router.post('/webapi/v1/portal/importrelationship', common.checkTokenExistOrNot, relationshipsController.importRelationship);
 
 let shortcustsController = require("./shortcusts/shortcustsController");
@@ -290,7 +295,8 @@ let taxRateValidation = require('./tax_rate/taxRateValidation');
 router.post('/webapi/v1/portal/savetaxrate', common.checkTokenExistOrNot, taxRateValidation.saveTaxRate, taxRateController.saveTaxRate);
 router.get('/webapi/v1/portal/gettaxrate', common.checkTokenExistOrNot, taxRateController.getTaxRate);
 router.post('/webapi/v1/portal/deletetaxrate', common.checkTokenExistOrNot, taxRateValidation.deleteTaxRate, taxRateController.deleteTaxRate);
-router.post('/webapi/v1/portal/importtax_rate', common.checkTokenExistOrNot, taxRateController.importtax_rate);
+router.post('/webapi/v1/portal/checkimporttaxrate', common.checkTokenExistOrNot, taxRateController.checkImportTaxRate);
+router.post('/webapi/v1/portal/importtaxrate', common.checkTokenExistOrNot, taxRateController.importTaxRate);
 router.post('/webapi/v1/portal/gettax_ratefortable', common.checkTokenExistOrNot, taxRateValidation.getTaxRateForTableValidation, taxRateController.gettax_rateForTable);
 
 let invoice_documentController = require('./invoice_document/documentController');
@@ -298,7 +304,8 @@ let invoice_documentValidation = require('./invoice_document/documentValidation'
 router.post('/webapi/v1/portal/saveinvoicedocument', common.checkTokenExistOrNot, invoice_documentValidation.saveInvoice_Document, invoice_documentController.saveInvoicedocument);
 router.get('/webapi/v1/portal/getinvoicedocument', common.checkTokenExistOrNot, invoice_documentController.getInvoiceDocument);
 router.post('/webapi/v1/portal/deleteInvoiceDocument', common.checkTokenExistOrNot, invoice_documentValidation.deleteInvoice_Document, invoice_documentController.deleteInvoiceDocument);
-router.post('/webapi/v1/portal/importInvoiceDocument', common.checkTokenExistOrNot, invoice_documentController.importInvoiceDocument);
+router.post('/webapi/v1/portal/checkimportinvoicedocument', common.checkTokenExistOrNot, invoice_documentController.checkImportInvoiceDocument);
+router.post('/webapi/v1/portal/importinvoicedocument', common.checkTokenExistOrNot, invoice_documentController.importInvoiceDocument);
 router.post('/webapi/v1/portal/getInvoiceDocumentForTable', common.checkTokenExistOrNot, invoice_documentValidation.getInvoice_DocumentForTableValidation, invoice_documentController.getInvoiceDocumentForTable);
 
 
@@ -307,9 +314,9 @@ let invoice_termValidation = require('./invoice_term/termValidation');
 router.post('/webapi/v1/portal/saveinvoiceterm', common.checkTokenExistOrNot, invoice_termValidation.saveTerm, invoice_termController.saveTerm);
 router.get('/webapi/v1/portal/getinvoiceterm', common.checkTokenExistOrNot, invoice_termController.getTerm);
 router.post('/webapi/v1/portal/deleteinvoiceterm', common.checkTokenExistOrNot, invoice_termValidation.deleteTerm, invoice_termController.deleteTerm);
-router.post('/webapi/v1/portal/importterm', common.checkTokenExistOrNot, invoice_termController.importterm);
+router.post('/webapi/v1/portal/checkimportterm', common.checkTokenExistOrNot, invoice_termController.checkImportTerm);
+router.post('/webapi/v1/portal/importterm', common.checkTokenExistOrNot, invoice_termController.importTerm);
 router.post('/webapi/v1/portal/gettermfortable', common.checkTokenExistOrNot, invoice_termValidation.getTermForTableValidation, invoice_termController.gettermForTable);
-
 
 let invoice_costcodeController = require('./invoice_cost_code/cost_code.Controller');
 let invoice_costcodeValidation = require('./invoice_cost_code/cost_codeValidation');
@@ -449,15 +456,14 @@ let invoiceProgressValidation = require("./invoice_progress/invoiceProgressValid
 router.get('/webapi/v1/portal/getallinvoiceprogress', invoiceProgressController.getAllInvoiceProgress);
 router.get('/webapi/v1/portal/getinvoiceprogress/:companycode/:userid', invoiceProgressController.getInvoiceProgress);
 
-
-
 let vendor_typeController = require('./vendor_type/vendor_typeController');
 let vendor_typeValidation = require('./vendor_type/vendor_typeValidation');
 
 router.post('/webapi/v1/portal/savevendortype', common.checkTokenExistOrNot, vendor_typeValidation.savevendortype, vendor_typeController.savevendortype);
 router.get('/webapi/v1/portal/getvendortype', common.checkTokenExistOrNot, vendor_typeController.getvendortype);
 router.post('/webapi/v1/portal/deletevendortype', common.checkTokenExistOrNot, vendor_typeValidation.deletevendortype, vendor_typeController.deletevendortype);
-router.post('/webapi/v1/portal/importvendortype', common.checkTokenExistOrNot, vendor_typeController.importvendortype);
+router.post('/webapi/v1/portal/checkimportvendortype', common.checkTokenExistOrNot, vendor_typeController.checkImportVendorType);
+router.post('/webapi/v1/portal/importvendortype', common.checkTokenExistOrNot, vendor_typeController.importVendorType);
 router.post('/webapi/v1/portal/getvendortypefortable', common.checkTokenExistOrNot, vendor_typeValidation.getVendorTypeForTableValidation, vendor_typeController.getVendorTypeForTable);
 
 
@@ -482,16 +488,18 @@ router.post('/webapi/v1/portal/updateMultipleClientStatus', common.checkTokenExi
 router.post('/webapi/v1/portal/deleteMultipleClient', common.checkTokenExistOrNot, clientController.deleteMultipleClient);
 router.post('/webapi/v1/portal/getClientForTable', common.checkTokenExistOrNot, clientController.getClientForTable);
 router.post('/webapi/v1/portal/getOneClient', common.checkTokenExistOrNot, clientController.getOneClient);
-router.post('/webapi/v1/portal/importClientname', common.checkTokenExistOrNot, clientController.importClientname);
+router.post('/webapi/v1/portal/checkimportclient', common.checkTokenExistOrNot, clientController.checkImportClient);
+router.post('/webapi/v1/portal/importclient', common.checkTokenExistOrNot, clientController.importClient);
 
 
-Class_nameController = require('./class_name/class_nameController');
-Class_nameValidation = require('./class_name/class_nameValidation');
-router.post('/webapi/v1/portal/saveclassname', common.checkTokenExistOrNot, Class_nameController.saveclassname);
-router.post('/webapi/v1/portal/deleteclassname', common.checkTokenExistOrNot, Class_nameController.deleteclassname);
-router.get('/webapi/v1/portal/getclassname', common.checkTokenExistOrNot, Class_nameController.getclassname);
-router.post('/webapi/v1/portal/getclassnameForTable', common.checkTokenExistOrNot, Class_nameController.getclassnameForTable);
-router.post('/webapi/v1/portal/importclassname', common.checkTokenExistOrNot, Class_nameController.importclassname);
+var classNameController = require('./class_name/class_nameController');
+var Class_nameValidation = require('./class_name/class_nameValidation');
+router.post('/webapi/v1/portal/saveclassname', common.checkTokenExistOrNot, classNameController.saveclassname);
+router.post('/webapi/v1/portal/deleteclassname', common.checkTokenExistOrNot, classNameController.deleteclassname);
+router.get('/webapi/v1/portal/getclassname', common.checkTokenExistOrNot, classNameController.getclassname);
+router.post('/webapi/v1/portal/getclassnameForTable', common.checkTokenExistOrNot, classNameController.getclassnameForTable);
+router.post('/webapi/v1/portal/checkimportclassname', common.checkTokenExistOrNot, classNameController.checkImportClassName);
+router.post('/webapi/v1/portal/importclassname', common.checkTokenExistOrNot, classNameController.importClassName);
 
 let invoiceMessageController = require('./invoice_message/invoiceMessageController');
 let invoiceMessageValidation = require('./invoice_message/invoiceMessageValidation');

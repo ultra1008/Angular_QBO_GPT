@@ -540,7 +540,7 @@ module.exports.getOneClient = async function (req, res) {
 };
 
 // bulk upload 
-module.exports.importClientname = async function (req, res) {
+module.exports.checkImportClient = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
     if (decodedToken) {
@@ -563,47 +563,28 @@ module.exports.importClientname = async function (req, res) {
                     throw err;
                 }).on('end', async function () {
                     newOpenFile = this.openedFiles;
-
                     if (notFonud == 1) {
-
                         const file = reader.readFile(newOpenFile[0].path);
                         const sheets = file.SheetNames;
                         let data = [];
-                        let exitdata = new Array();
+                        let exitdata = [];
                         for (let i = 0; i < sheets.length; i++) {
                             const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
                             temp.forEach((ress) => {
                                 data.push(ress);
                             });
                         }
-                        var onecategory_main = "";
+                        var allowImport = true;
                         for (let m = 0; m < data.length; m++) {
-                            onecategory_main = await clientConnection.findOne({ client_name: data[m].client_name }, { client_name: 1 });
-                            if (onecategory_main != null) {
-                                exitdata[m] = onecategory_main.client_name;
+                            var get_one = await clientConnection.findOne({ client_name: data[m].client_name }, { name: 1, number: 1 });
+                            if (get_one != null) {
+                                allowImport = false;
+                                exitdata.push({ message: 'Already exist', valid: false, data: data[m], name: data[m].client_name });
+                            } else {
+                                exitdata.push({ message: 'Data is correct', valid: true, data: data[m], name: data[m].client_name });
                             }
                         }
-                        if (exitdata.length > 0) {
-                            res.send({ status: false, exitdata: exitdata, message: "client name is allready exist." });
-                        }
-                        else {
-                            for (let m = 0; m < data.length; m++) {
-                                onecategory_main = await clientConnection.findOne({ client_name: data[m].client_name }, { client_name: 1 });
-                                requestObject = {};
-                                requestObject.client_name = data[m].client_name;
-                                requestObject.client_number = data[m].client_number;
-                                requestObject.client_email = data[m].client_email;
-                                requestObject.client_notes = data[m].client_notes;
-                                requestObject.approver_id = data[m].approver_id;
-                                requestObject.gl_account = data[m].gl_account;
-                                requestObject.client_cost_cost_id = data[m].client_cost_cost_id;
-                                let add_clinetname = new clientConnection(requestObject);
-                                let save_clinetname = await add_clinetname.save();
-
-                            }
-                            res.send({ status: true, message: "client name info add successfully." });
-                        }
-
+                        res.send({ status: true, allow_import: allowImport, data: exitdata, message: "Client Listing" });
                     } else {
                         res.send({ status: false, message: translator.getStr('SomethingWrong') });
                     }
@@ -617,7 +598,60 @@ module.exports.importClientname = async function (req, res) {
     }
 };
 
-
-
-
-
+module.exports.importClient = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var clientConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientSchema);
+            let reqObject = [];
+            for (let i = 0; i < requestObject.length; i++) {
+                let one_client = await clientConnection.findOne({ client_name: requestObject[i].data.client_name });
+                if (one_client) { } else {
+                    reqObject.push({
+                        client_name: requestObject[i].data.client_name,
+                        client_number: requestObject[i].data.client_number,
+                        client_email: requestObject[i].data.client_email,
+                        client_notes: requestObject[i].data.client_notes,
+                        approver_id: requestObject[i].data.approver_id,
+                        gl_account: requestObject[i].data.gl_account,
+                        client_cost_cost_id: requestObject[i].data.client_cost_cost_id,
+                        created_at: Math.round(new Date().getTime() / 1000),
+                        updated_at: Math.round(new Date().getTime() / 1000),
+                        created_by: decodedToken.UserData._id,
+                        updated_by: decodedToken.UserData._id,
+                    });
+                }
+            }
+            let insert_data = await clientConnection.insertMany(reqObject);
+            if (insert_data) {
+                for (let i = 0; i < insert_data.length; i++) {
+                    let histioryObject = {
+                        data: [
+                            {
+                                key: translator.getStr(`Client_History.client_name`),
+                                value: insert_data[i].client_name,
+                            }
+                        ],
+                        client_id: insert_data[i].id,
+                    };
+                    addClientHistory("Insert", histioryObject, decodedToken);
+                }
+                res.send({ status: true, message: "Client imported successfully.", data: insert_data });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        }
+        finally {
+            connection_db_api.close();
+        }
+    }
+    else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};

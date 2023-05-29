@@ -139,7 +139,7 @@ module.exports.getJobTypeForTable = async function (req, res) {
 };
 
 // bulk upload 
-module.exports.importjob_type = async function (req, res) {
+module.exports.checkImportJobType = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
     if (decodedToken) {
@@ -168,35 +168,24 @@ module.exports.importjob_type = async function (req, res) {
                         const file = reader.readFile(newOpenFile[0].path);
                         const sheets = file.SheetNames;
                         let data = [];
-                        let exitdata = new Array();
+                        let exitdata = [];
                         for (let i = 0; i < sheets.length; i++) {
                             const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
                             temp.forEach((ress) => {
                                 data.push(ress);
                             });
                         }
-                        var onecategory_main = "";
+                        var allowImport = true;
                         for (let m = 0; m < data.length; m++) {
-                            onecategory_main = await jobtypeCollection.findOne({ job_type_name: data[m].job_type_name }, { job_type_name: 1 });
-                            if (onecategory_main != null) {
-                                exitdata[m] = onecategory_main.job_type_name;
+                            var get_one = await jobtypeCollection.findOne({ job_type_name: data[m].job_type_name });
+                            if (get_one != null) {
+                                allowImport = false;
+                                exitdata.push({ message: 'Already exist', valid: false, data: data[m], name: data[m].job_type_name });
+                            } else {
+                                exitdata.push({ message: 'Data is correct', valid: true, data: data[m], name: data[m].job_type_name });
                             }
                         }
-                        if (exitdata.length > 0) {
-                            res.send({ status: false, exitdata: exitdata, message: "job type name is allready exist." });
-                        }
-                        else {
-                            for (let m = 0; m < data.length; m++) {
-                                onecategory_main = await jobtypeCollection.findOne({ job_type_name: data[m].job_type_name }, { job_type_name: 1 });
-                                requestObject = {};
-                                requestObject.job_type_name = data[m].job_type_name;
-                                let add_job_type = new jobtypeCollection(requestObject);
-                                let save_job_type = await add_job_type.save();
-
-                            }
-                            res.send({ status: true, message: "job type info add successfully." });
-                        }
-
+                        res.send({ status: true, allow_import: allowImport, data: exitdata, message: translator.getStr('JobTypeListing') });
                     } else {
                         res.send({ status: false, message: translator.getStr('SomethingWrong') });
                     }
@@ -206,6 +195,43 @@ module.exports.importjob_type = async function (req, res) {
             res.send({ status: false, message: translator.getStr('SomethingWrong'), error: error });
         }
     } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.importJobType = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            let jobtypeCollection = connection_db_api.model(collectionConstant.JOB_TYPE, jobtypeSchema);
+
+            let reqObject = [];
+            for (let i = 0; i < requestObject.length; i++) {
+                let one_client = await jobtypeCollection.findOne({ job_type_name: requestObject[i].data.job_type_name });
+                if (one_client) { } else {
+                    reqObject.push({
+                        job_type_name: requestObject[i].data.job_type_name,
+                    });
+                }
+            }
+            let insert_data = await jobtypeCollection.insertMany(reqObject);
+            if (insert_data) {
+                res.send({ status: true, message: translator.getStr('JobTypeAdded'), data: insert_data });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        }
+        finally {
+            connection_db_api.close();
+        }
+    }
+    else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
