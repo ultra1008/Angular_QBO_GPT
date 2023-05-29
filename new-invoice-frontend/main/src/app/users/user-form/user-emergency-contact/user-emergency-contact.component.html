@@ -30,7 +30,8 @@
                             <mat-header-cell *matHeaderCellDef mat-sort-header>{{'EMERGENCY_CONTACT.FORM.NAME' |
                                         translate}}
                             </mat-header-cell>
-                            <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
+                            <mat-cell (click)="editEmergencyContact(row)" *matCellDef="let row"
+                                (contextmenu)="onContextMenu($event, row)">
                                 <span
                                     class="mobile-label">{{'EMERGENCY_CONTACT.FORM.NAME' | translate}}:</span>{{row.emergency_contact_name}}
                             </mat-cell>
@@ -39,7 +40,8 @@
                             <mat-header-cell *matHeaderCellDef mat-sort-header>{{'EMERGENCY_CONTACT.FORM.RELATION' |
                                         translate}}
                             </mat-header-cell>
-                            <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
+                            <mat-cell (click)="editEmergencyContact(row)" *matCellDef="let row"
+                                (contextmenu)="onContextMenu($event, row)">
                                 <span
                                     class="mobile-label">{{'EMERGENCY_CONTACT.FORM.RELATION' | translate}}:</span>{{row.relationship_name}}
                             </mat-cell>
@@ -48,7 +50,8 @@
                             <mat-header-cell *matHeaderCellDef mat-sort-header>{{'EMERGENCY_CONTACT.FORM.EMAIL' |
                                         translate}}
                             </mat-header-cell>
-                            <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
+                            <mat-cell (click)="editEmergencyContact(row)" *matCellDef="let row"
+                                (contextmenu)="onContextMenu($event, row)">
                                 <span
                                     class="mobile-label">{{'EMERGENCY_CONTACT.FORM.EMAIL' | translate}}:</span>{{row.emergency_contact_email}}
                             </mat-cell>
@@ -57,7 +60,8 @@
                             <mat-header-cell *matHeaderCellDef mat-sort-header>{{'EMERGENCY_CONTACT.FORM.PHONE' |
                                         translate}}
                             </mat-header-cell>
-                            <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
+                            <mat-cell (click)="editEmergencyContact(row)" *matCellDef="let row"
+                                (contextmenu)="onContextMenu($event, row)">
                                 <span
                                     class="mobile-label">{{'EMERGENCY_CONTACT.FORM.PHONE' | translate}}:</span>{{row.emergency_contact_phone}}
                             </mat-cell>
@@ -66,7 +70,8 @@
                             <mat-header-cell *matHeaderCellDef mat-sort-header>{{'EMERGENCY_CONTACT.FORM.ADDRESS' |
                                         translate}}
                             </mat-header-cell>
-                            <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
+                            <mat-cell (click)="editEmergencyContact(row)" *matCellDef="let row"
+                                (contextmenu)="onContextMenu($event, row)">
                                 <span class="mobile-label">{{'EMERGENCY_CONTACT.FORM.ADDRESS' | translate}}:</span>{{ row.emergency_contact_street1 === "" ? "" :
                                             row.emergency_contact_street1 + "," }}
                                 {{ row.emergency_contact_city === "" ? "" :
@@ -80,7 +85,8 @@
                                 mat-sort-header>{{'EMERGENCY_CONTACT.FORM.LAST_VALIDATION_DATE' |
                                         translate}}
                             </mat-header-cell>
-                            <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
+                            <mat-cell (click)="editEmergencyContact(row)" *matCellDef="let row"
+                                (contextmenu)="onContextMenu($event, row)">
                                 <span
                                     class="mobile-label">{{'EMERGENCY_CONTACT.FORM.LAST_VALIDATION_DATE' | translate}}:</span>{{row.is_validated ? temp_MMDDYYYY(row.validated_at) : ''}}
                             </mat-cell>
