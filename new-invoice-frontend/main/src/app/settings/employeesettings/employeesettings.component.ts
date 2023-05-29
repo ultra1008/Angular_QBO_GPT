@@ -47,6 +47,10 @@ export class EmployeesettingsComponent {
   ];
   showDocType = true;
   showDepartmentType = true;
+  showJobtitle = true;
+  showJobtype = true;
+  showrelationship = true;
+  showlanguage = true;
   @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
 
   constructor(
@@ -454,14 +458,14 @@ export class EmployeesettingsComponent {
         apiurl =
           httpversion.PORTAL_V1 + httproutes.SETTINGS_CHECK_IMPORT_DEPARTMENTS;
       } else if (that.currrent_tab == 'jobtitle') {
-        apiurl = httpversion.PORTAL_V1 + httproutes.SETTINGS_IMPORT_JOB_TITLE;
+        apiurl = httpversion.PORTAL_V1 + httproutes.SETTINGS_CHECK_IMPORT_JOB_TITLE;
       } else if (that.currrent_tab == 'jobtype') {
-        apiurl = httpversion.PORTAL_V1 + httproutes.SETTINGS_IMPORT_JOB_TYPE;
+        apiurl = httpversion.PORTAL_V1 + httproutes.SETTINGS_CHECK_IMPORT_JOB_TYPE;
       } else if (that.currrent_tab == 'relationship') {
         apiurl =
-          httpversion.PORTAL_V1 + httproutes.SETTINGS_IMPORT_RELATIONSHIP;
+          httpversion.PORTAL_V1 + httproutes.SETTINGS_CHECK_IMPORT_RELATIONSHIP;
       } else if (that.currrent_tab == 'language') {
-        apiurl = httpversion.PORTAL_V1 + httproutes.SETTINGS_IMPORT_LANGUAGE;
+        apiurl = httpversion.PORTAL_V1 + httproutes.SETTINGS_CHECK_IMPORT_LANGUAGE;
       }
 
       that.uiSpinner.spin$.next(true);
@@ -491,9 +495,28 @@ export class EmployeesettingsComponent {
                   setTimeout(() => {
                     that.showDepartmentType = true;
                   }, 100);
+                } else if (result.module == 'jobtitle') {
+                  that.showJobtitle = false;
+                  setTimeout(() => {
+                    that.showJobtitle = true;
+                  }, 100);
+                } else if (result.module == 'jobtype') {
+                  that.showJobtype = false;
+                  setTimeout(() => {
+                    that.showJobtype = true;
+                  }, 100);
+                } else if (result.module == 'relationship') {
+                  that.showrelationship = false;
+                  setTimeout(() => {
+                    that.showrelationship = true;
+                  }, 100);
+                } else if (result.module == 'language') {
+                  that.showlanguage = false;
+                  setTimeout(() => {
+                    that.showlanguage = true;
+                  }, 100);
                 }
               }
-
             });
           } else {
             that.uiSpinner.spin$.next(false);

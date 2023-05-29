@@ -77,28 +77,36 @@
                                     label="{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.JOBTITLE' |  translate}}">
                                     <br>
                                     <div class="row">
+                                        <div *ngIf="showJobtitle">
                                         <app-job-title-list></app-job-title-list>
+                                    </div>
                                     </div>
                                 </mat-tab>
                                 <mat-tab
                                     label="{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.JOBTYPE' |  translate}}">
                                     <br>
                                     <div class="row">
-                                        <app-job-type-list></app-job-type-list>
+                                        <div *ngIf="showJobtype">
+                                            <app-job-type-list></app-job-type-list>
+                                        </div> 
                                     </div>
                                 </mat-tab>
                                 <mat-tab
                                     label="{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.RELATIONSHIP' |  translate}}">
                                     <br>
                                     <div class="row">
-                                        <app-relationship-list></app-relationship-list>
+                                        <div *ngIf="showrelationship">
+                                            <app-relationship-list></app-relationship-list>
+                                        </div>
                                     </div>
                                 </mat-tab>
                                 <mat-tab
                                     label="{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.LANGUAGE' |  translate}}">
                                     <br>
                                     <div class="row">
-                                        <app-language-list></app-language-list>
+                                        <div *ngIf="showlanguage">
+                                            <app-language-list></app-language-list>
+                                        </div> 
                                     </div>
                                 </mat-tab>
                             </mat-tab-group>

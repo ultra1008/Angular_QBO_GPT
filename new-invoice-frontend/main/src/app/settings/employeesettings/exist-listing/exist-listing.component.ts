@@ -74,10 +74,21 @@ export class ExistListingComponent extends UnsubscribeOnDestroyAdapter
     this.uiSpinner.spin$.next(true);
     if (this.currrent_tab == "document") {
       this.data_import = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SETTINGS_IMPORT_DOCUMENT_TYPE, this.exitData);
-
     } else if (this.currrent_tab == 'department') {
       this.data_import =
         await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SETTINGS_IMPORT_DEPARTMENTS, this.exitData);
+    } else if (this.currrent_tab == 'jobtitle') {
+      this.data_import =
+        await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SETTINGS_IMPORT_JOB_TITLE, this.exitData);
+    } else if (this.currrent_tab == 'jobtype') {
+      this.data_import =
+        await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SETTINGS_IMPORT_JOB_TYPE, this.exitData);
+    } else if (this.currrent_tab == 'relationship') {
+      this.data_import =
+        await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SETTINGS_IMPORT_RELATIONSHIP, this.exitData);
+    } else if (this.currrent_tab == 'language') {
+      this.data_import =
+        await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SETTINGS_IMPORT_LANGUAGE, this.exitData);
     }
     console.log("this.data_import", this.data_import);
     this.uiSpinner.spin$.next(false);

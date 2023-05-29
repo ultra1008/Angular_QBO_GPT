@@ -80,6 +80,7 @@ import { ImportCostcodeSettingsComponent } from './costcode/import-costcode-sett
 import { ClassNameListingComponent } from './othersettings/class-name-listing/class-name-listing.component';
 import { ClassNameFormComponent } from './othersettings/class-name-form/class-name-form.component';
 import { ExistListingComponent } from './employeesettings/exist-listing/exist-listing.component';
+import { OtherExistListingComponent } from './othersettings/other-exist-listing/other-exist-listing.component';
 
 @NgModule({
   declarations: [
@@ -129,6 +130,7 @@ import { ExistListingComponent } from './employeesettings/exist-listing/exist-li
     ClassNameListingComponent,
     ClassNameFormComponent,
     ExistListingComponent,
+    OtherExistListingComponent,
   ],
   providers: [SettingsService],
   imports: [

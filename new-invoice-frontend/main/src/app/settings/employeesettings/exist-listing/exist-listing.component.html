@@ -9,7 +9,7 @@
                     <div class="modalHeader m-auto text-center clearfix">
                         <div class="modal-about">
                             <div class="fw-bold p-t-5 p-l-10 font-17">
-                                Import Cient/Job Name
+                                <div *ngIf="">Import</div>
                             </div>
                         </div>
                     </div>
@@ -67,7 +67,6 @@
                     <td>{{data.message}}</td>
                     <td>{{data.name}}</td>
                   </tr>
-               
                 </tbody>
               </table>
               <!-- <div *ngIf="data?.isTblLoading" class="no-results"
@@ -77,10 +76,7 @@
             </div>
           </div>
         </div>
-        
       </div>
-
-     
 </div>
 <mat-dialog-actions align="center" *ngIf="button_show">
     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2 align-div">

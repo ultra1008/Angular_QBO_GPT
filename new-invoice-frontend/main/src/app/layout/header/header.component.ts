@@ -50,9 +50,11 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
   userPicture?: string;
   unseenCount = 0;
 
-  constructor (@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, public elementRef: ElementRef,
+  companyList: any = [];
+  isLoading = true;
+  constructor(@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, public elementRef: ElementRef,
     private rightSidebarService: RightSidebarService, private configService: ConfigService, private authService: AuthService,
-    private router: Router, public translate: TranslateService, public dialog: MatDialog, private commonService: CommonService) {
+    private router: Router, public translate: TranslateService, public dialog: MatDialog, private commonService: CommonService,) {
     super();
   }
   notifications: Notifications[] = [
@@ -106,11 +108,23 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
       status: 'msg-read',
     },
   ];
-  ngOnInit() {
+  async ngOnInit() {
+
+
+
     this.config = this.configService.configData;
     const user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
     this.userName = user_data.UserData.userfullname;
     this.userPicture = user_data.UserData.userpicture;
+    const requestObject = {
+      useremail: user_data.UserData.useremail
+    };
+    const data = await this.commonService.postRequestAPI(httpversion.V1 + httproutes.GET_MY_COMPANY_LIST, requestObject);
+    this.isLoading = false;
+    if (data.status) {
+      this.companyList = data.data;
+      console.log("companyList", this.companyList);
+    }
 
     let tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     tmp_locallanguage =
@@ -356,6 +370,7 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
 
   switchCompany() {
     let tempDirection: Direction;
+
     if (localStorage.getItem('isRtl') === 'true') {
       tempDirection = 'rtl';
     } else {
