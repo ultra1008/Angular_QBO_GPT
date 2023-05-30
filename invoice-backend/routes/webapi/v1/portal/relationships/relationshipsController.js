@@ -172,7 +172,7 @@ module.exports.checkImportRelationship = async function (req, res) {
                         }
                         var allowImport = true;
                         for (let m = 0; m < data.length; m++) {
-                            var get_one = await jobtitleCollection.findOne({ relationship_name: data[m].relationship_name });
+                            var get_one = await relationshipsCollection.findOne({ relationship_name: data[m].relationship_name });
                             if (get_one != null) {
                                 allowImport = false;
                                 exitdata.push({ message: 'Already exist', valid: false, data: data[m], name: data[m].relationship_name });
