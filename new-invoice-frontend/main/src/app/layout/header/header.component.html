@@ -105,9 +105,8 @@
             <div class="noti-list">
               <div class="menu ">
                 <div class="user_dw_menu">
-                  <button mat-menu-item>
-                    <app-feather-icons [icon]="'user'" [class]="'user-menu-icons'"></app-feather-icons>Account
-                  </button>
+                  <button mat-menu-item (click)="goUserProfile()">
+                    <app-feather-icons [icon]="'user'" [class]="'user-menu-icons'"></app-feather-icons>Account </button>
                   <button (click)="goChangePassword()" mat-menu-item>
                     <app-feather-icons [icon]="'key'" [class]="'user-menu-icons'"></app-feather-icons>Change Password
                   </button>
