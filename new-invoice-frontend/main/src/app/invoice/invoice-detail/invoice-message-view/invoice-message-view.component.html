@@ -83,10 +83,21 @@
                                                 <mat-form-field class="example-full-width" appearance="outline">
                                                     <input matInput formControlName="message"
                                                         placeholder="Enter message here..">
+                                                    <button mat-icon-button matPrefix (click)="handleAttachment()">
+                                                        <i class="material-icons">attach_file</i>
+                                                    </button>
+                                                    <button mat-icon-button matPrefix (click)="toggled = !toggled"
+                                                        [(emojiPickerIf)]="toggled"
+                                                        [emojiPickerDirection]="emojiPickerDirection"
+                                                        (emojiPickerSelect)="handleSelection($event)">
+                                                        <i class="material-icons">insert_emoticon</i>
+                                                    </button>
                                                     <button mat-icon-button matSuffix (click)="sendMessage()">
                                                         <mat-icon>send</mat-icon>
                                                     </button>
                                                 </mat-form-field>
+                                                <input class="hidden" type="file" id="upload-file" name="upload-file"
+                                                    (change)="addAttachment($event)">
                                             </form>
                                         </div>
                                     </div>
@@ -135,7 +146,10 @@
         <span class="message-data-name">{{message.sender.userfullname}}</span>
         <span class="user-picture my-picture"><img [src]="message.sender.userpicture" /></span>
     </div>
-    <div class="message other-message float-end p-1"> {{message.message}} </div>
+    <div class="message other-message float-end p-1" [ngClass]="message.is_attachment ? 'attachment-message' : ''"
+        (click)="viewAttachment(message)">
+        {{message.message}}
+    </div>
 </ng-template>
 
 <ng-template #yourMessageTemplate let-message='message'>
@@ -144,5 +158,6 @@
         <span class="message-data-name">{{message.sender.userfullname}}</span>
         <span class="message-data-time">{{(message.created_at * 1000) | date: 'MM/dd/yyyy hh:mm a'}}</span>
     </div>
-    <div class="message my-message p-1"> {{message.message}} </div>
+    <div class="message my-message p-1" [ngClass]="message.is_attachment ? 'attachment-message' : ''"
+        (click)="viewAttachment(message)"> {{message.message}} </div>
 </ng-template>

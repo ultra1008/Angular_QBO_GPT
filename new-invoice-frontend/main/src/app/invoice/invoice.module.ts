@@ -35,12 +35,9 @@ import { AdvanceTableService } from '../advance-table/advance-table.service';
 import { SendInvoiceMessageComponent } from './invoice-detail/send-invoice-message/send-invoice-message.component';
 import { InvoiceMessagesComponent } from './invoice-detail/invoice-messages/invoice-messages.component';
 import { InvoiceMessageViewComponent } from './invoice-detail/invoice-message-view/invoice-message-view.component';
-
 import { MailFormComponent } from './mail-form/mail-form.component';
-import { DepartmentFormComponent } from '../settings/employeesettings/department-list/department-form/department-form.component';
 import { UploadInvoiceFormComponent } from './upload-invoice-form/upload-invoice-form.component';
-
-import { BrowserModule } from '@angular/platform-browser';
+import { NgxEmojiPickerModule } from 'ngx-emoji-picker';
 
 @NgModule({
   declarations: [
@@ -97,9 +94,6 @@ import { BrowserModule } from '@angular/platform-browser';
     MatCheckboxModule,
     MatDialogModule,
     NgScrollbarModule,
-
-
-
-  ],
+    NgxEmojiPickerModule,],
 })
 export class InvoiceModule { }

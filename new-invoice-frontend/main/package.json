@@ -58,6 +58,7 @@
     "ng2-pdf-viewer": "^9.1.5",
     "ngx-dropzone-wrapper": "^13.0.0",
     "ngx-echarts": "^15.0.1",
+    "ngx-emoji-picker": "^0.1.6",
     "ngx-gallery-9": "^1.0.6",
     "ngx-gauge": "^7.0.0",
     "ngx-infinite-scroll": "^15.0.0",
@@ -67,6 +68,7 @@
     "subsink": "^1.0.2",
     "sweetalert2": "^11.4.8",
     "tslib": "^2.3.0",
+    "twemoji": "^14.0.2",
     "xlsx": "^0.18.5",
     "zone.js": "~0.12.0"
   },

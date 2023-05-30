@@ -260,6 +260,7 @@ module.exports.sendInvoiceMessage = async function (req, res) {
                     message: requestObject.message,
                     created_at: Math.round(new Date().getTime() / 1000),
                     is_first: requestObject.is_first,
+                    is_attachment: requestObject.is_attachment == undefined || requestObject.is_attachment == undefined ? false : requestObject.is_attachment,
                     invoice_message_id: requestObject.invoice_message_id,
                 };
                 if (obj.invoice_message_id == undefined || obj.invoice_message_id == null) {

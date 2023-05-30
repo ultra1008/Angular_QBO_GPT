@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,6 +9,7 @@ import { httproutes, httpversion } from 'src/consts/httproutes';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { showNotification } from 'src/consts/utils';
+import * as  moment from "moment";
 
 @Component({
   selector: 'app-invoice-message-view',
@@ -16,6 +17,8 @@ import { showNotification } from 'src/consts/utils';
   styleUrls: ['./invoice-message-view.component.scss']
 })
 export class InvoiceMessageViewComponent {
+  @ViewChild('FileSelectInputDialog') FileSelectInputDialog: ElementRef | any;
+
   pdf_url = '/assets/pdf_url/file-3.pdf';
   myId = '';
   id: any;
@@ -26,6 +29,8 @@ export class InvoiceMessageViewComponent {
   form!: UntypedFormGroup;
   endScroll = 0;
   showPDF = true;
+  toggled = false;
+  emojiPickerDirection = "'top'";
 
   constructor (public commonService: CommonService, public route: ActivatedRoute, private formBuilder: FormBuilder,
     public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, private router: Router) {
@@ -104,7 +109,57 @@ export class InvoiceMessageViewComponent {
     //
   }
 
+  handleAttachment() {
+    // const e: HTMLElement = this.FileSelectInputDialog.nativeElement;
+    // e.click();
+    document.getElementById('upload-file')?.click();
+  }
+
+  async addAttachment(fileInput: any) {
+    const fileReaded = fileInput.target.files[0];
+    if (fileReaded) {
+      this.uiSpinner.spin$.next(true);
+      const formData = new FormData();
+      formData.append("file[]", fileReaded);
+      formData.append("dir_name", 'invoice_message');
+      formData.append("local_date", moment().format("DD/MM/YYYY hh:mmA"));
+
+      const attachmentData = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_SAVE_ATTACHMENT, formData);
+
+      const requestObject = {
+        message: attachmentData.data[0],
+        invoice_id: this.messageData.invoice_id,
+        is_first: false,
+        invoice_message_id: this.id,
+        users: this.myId === this.messageData.sender_id ? [this.messageData.receiver_id] : [this.messageData.sender_id],
+        is_attachment: true,
+      };
+
+      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SEND_INVOICE_MESSAGE, requestObject);
+      this.uiSpinner.spin$.next(false);
+      if (data.status) {
+        showNotification(this.snackBar, data.message, 'success');
+        this.messageList.push(data.data);
+      } else {
+        showNotification(this.snackBar, data.message, 'error');
+      }
+    }
+  }
+
   collabPDF() {
     this.showPDF = !this.showPDF;
   }
+
+  viewAttachment(message: any) {
+    if (message.is_attachment) {
+      window.location.href = message.message;
+    }
+  }
+
+  handleSelection(event: any) {
+    const formValues = this.form.value;
+    const message = formValues.message + event.char;
+    this.form.get('message')?.setValue(message);
+  }
+
 }

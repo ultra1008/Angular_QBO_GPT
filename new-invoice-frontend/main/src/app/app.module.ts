@@ -39,6 +39,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { SwitchCompanyComponent } from './layout/header/switch-company/switch-company.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { NgxEmojiPickerModule } from 'ngx-emoji-picker';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
         deps: [HttpClient],
       },
     }),
+    NgxEmojiPickerModule.forRoot(),
   ],
   providers: [
     // { provide: LocationStrategy, useClass: HashLocationStrategy },

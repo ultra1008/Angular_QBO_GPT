@@ -18,6 +18,10 @@
     border: 1px solid grey;
 }
 
+.chat .chat-history .other-message {
+    text-align: right;
+}
+
 .my-picture img {
     margin-left: 10px;
 }
@@ -29,6 +33,17 @@
 .message {
     padding: 0.5rem 0.75rem !important;
     width: 30% !important;
+}
+
+.attachment-message {
+    color: blue !important;
+    line-height: 15px !important;
+    cursor: pointer;
+}
+
+::ng-deep emoji-picker {
+    transform: translate(0px, -360.5px) !important;
+    z-index: 10000 !important;
 }
 
 .pdf-btn {
@@ -79,4 +94,10 @@
     .material-icons {
         font-size: 14px;
     }
+}
+
+.hidden {
+    visibility: hidden;
+    width: 1px;
+    height: 1px;
 }

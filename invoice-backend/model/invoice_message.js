@@ -9,6 +9,7 @@ var invoiceMessageSchema = new Schema({
     message: { type: String, default: "" },
     is_seen: { type: Boolean, default: false },
     is_first: { type: Boolean, default: false },
+    is_attachment: { type: Boolean, default: false },
     is_delete: { type: Number, default: 0 },
     created_at: { type: Number, default: 0 },
 });
