@@ -40,6 +40,7 @@ module.exports.saveJobTitle = async function (req, res) {
             if (requestObject._id) {
                 if (get_one != null) {
                     if (get_one._id == requestObject._id) {
+                        requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                         let update_doc_type = await jobtitleCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
                         if (update_doc_type) {
                             res.send({ message: translator.getStr('JobTitleUpdated'), data: update_doc_type, status: true });
@@ -59,6 +60,8 @@ module.exports.saveJobTitle = async function (req, res) {
                 }
             } else {
                 if (get_one == null) {
+                    requestObject.created_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                     let add_job_title = new jobtitleCollection(requestObject);
                     let save_job_title = await add_job_title.save();
                     if (save_job_title) {
@@ -118,7 +121,7 @@ module.exports.getJobTitleForTable = async function (req, res) {
         try {
             var requestObject = req.body;
             let jobtitleCollection = connection_db_api.model(collectionConstant.JOB_TITLE, jobtitleSchema);
-            var getdata = await jobtitleCollection.find({ is_delete: requestObject.is_delete });
+            var getdata = await jobtitleCollection.find({ is_delete: requestObject.is_delete }).sort({ created_at: -1 });
             if (getdata) {
                 res.send(getdata);
             } else {

@@ -40,6 +40,7 @@ module.exports.saveRelationship = async function (req, res) {
                 requestObject.relationship_updated_by = decodedToken.UserData._id;
                 if (get_one != null) {
                     if (get_one._id == requestObject._id) {
+                        requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                         let update_relationship = await relationshipsCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
                         if (update_relationship) {
                             res.send({ message: translator.getStr('RelationshipUpdated'), data: update_relationship, status: true });
@@ -59,10 +60,8 @@ module.exports.saveRelationship = async function (req, res) {
                 }
             } else {
                 if (get_one == null) {
-                    requestObject.relationship_created_at = Math.round(new Date().getTime() / 1000);
-                    requestObject.relationship_created_by = decodedToken.UserData._id;
-                    requestObject.relationship_updated_at = Math.round(new Date().getTime() / 1000);
-                    requestObject.relationship_updated_by = decodedToken.UserData._id;
+                    requestObject.created_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                     let add_relationship = new relationshipsCollection(requestObject);
                     let save_relationship = await add_relationship.save();
                     if (save_relationship) {
@@ -118,7 +117,7 @@ module.exports.getRelationshipForTable = async function (req, res) {
         try {
             var requestObject = req.body;
             let relationshipsCollection = connection_db_api.model(collectionConstant.RELATIONSHIP, relationshipSchema);
-            var getdata = await relationshipsCollection.find({ is_delete: requestObject.is_delete });
+            var getdata = await relationshipsCollection.find({ is_delete: requestObject.is_delete }).sort({ created_at: -1 });
             if (getdata) {
                 res.send(getdata);
             } else {

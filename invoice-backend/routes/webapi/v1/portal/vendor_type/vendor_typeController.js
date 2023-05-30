@@ -24,6 +24,7 @@ module.exports.savevendortype = async function (req, res) {
                 //update invoice vendor type
                 if (get_data != null) {
                     if (get_data._id == id) {
+                        requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                         let updatevendortype = await vendortypeConnection.updateOne({ _id: ObjectID(id) }, requestObject);
                         if (updatevendortype) {
                             res.send({ status: true, message: "vendor type update successfully..!" });
@@ -53,6 +54,8 @@ module.exports.savevendortype = async function (req, res) {
                     res.send({ status: false, message: "vendor type allready exist" });
                 }
                 else {
+                    requestObject.created_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                     var add_vendortype = new vendortypeConnection(requestObject);
                     var save_vendortype = await add_vendortype.save();
                     res.send({ status: true, message: "vendor type insert successfully..!", data: add_vendortype });
@@ -230,7 +233,7 @@ module.exports.getVendorTypeForTable = async function (req, res) {
         try {
             var requestObject = req.body;
             var vendortypeConnection = connection_db_api.model(collectionConstant.VENDOR_TYPE, vendortypeSchema);
-            var getdata = await vendortypeConnection.find({ is_delete: requestObject.is_delete });
+            var getdata = await vendortypeConnection.find({ is_delete: requestObject.is_delete }).sort({ created_at: -1 });
             if (getdata) {
                 res.send(getdata);
             } else {

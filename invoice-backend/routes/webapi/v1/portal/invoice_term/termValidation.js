@@ -4,7 +4,6 @@ const saveTerm = (req, res, next) => {
     const validationRule = {
         "name": "required",
         "due_days": "required|integer",
-        "is_discount": "required|boolean",
     };
     validator(req.body, validationRule, {}, (err, status) => {
         if (!status) {

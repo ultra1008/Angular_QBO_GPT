@@ -24,6 +24,7 @@ module.exports.saveInvoicedocument = async function (req, res) {
                 //update invoice document
                 if (get_data != null) {
                     if (get_data._id == id) {
+                        requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                         let updateDocument = await documentConnection.updateOne({ _id: ObjectID(id) }, requestObject);
                         if (updateDocument) {
                             res.send({ status: true, message: "document update successfully..!" });
@@ -53,6 +54,8 @@ module.exports.saveInvoicedocument = async function (req, res) {
                     res.send({ status: false, message: "document allready exist" });
                 }
                 else {
+                    requestObject.created_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                     var add_document = new documentConnection(requestObject);
                     var save_document = await add_document.save();
                     res.send({ status: true, message: "Document insert successfully..!", data: save_document });
@@ -241,7 +244,7 @@ module.exports.getInvoiceDocumentForTable = async function (req, res) {
         try {
             var requestObject = req.body;
             let invoiceDocumentConnection = connection_db_api.model(collectionConstant.INVOICE_DOCUMENT, documentSchema);
-            var getdata = await invoiceDocumentConnection.find({ is_delete: requestObject.is_delete });
+            var getdata = await invoiceDocumentConnection.find({ is_delete: requestObject.is_delete }).sort({ created_at: -1 });
             if (getdata) {
                 res.send(getdata);
             } else {
