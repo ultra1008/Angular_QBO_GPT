@@ -193,6 +193,20 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     this.isCostCodeTblLoading = false;
   }
 
+  // Mail Box Datatable Service
+  isMailBoxTblLoading = true;
+  mailBoxDataChange: BehaviorSubject<MailboxTable[]> = new BehaviorSubject<MailboxTable[]>([]);
+
+  get mailBoxData(): MailboxTable[] {
+    return this.mailBoxDataChange.value;
+  }
+
+  async getMailBoxTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.MAILBOX_DATA_TABLE, { is_delete: is_delete }).toPromise();
+    this.mailBoxDataChange.next(data);
+    this.isMailBoxTblLoading = false;
+  }
+
 
 
 

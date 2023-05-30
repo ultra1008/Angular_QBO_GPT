@@ -20,6 +20,8 @@ import {
   swalWithBootstrapTwoButtons,
 } from 'src/consts/utils';
 import { TranslateService } from '@ngx-translate/core';
+import { CommonService } from 'src/app/services/common.service';
+import { httproutes, httpversion } from 'src/consts/httproutes';
 
 @Component({
   selector: 'app-mailbox',
@@ -42,16 +44,17 @@ export class MailboxComponent
   id?: number;
   // advanceTable?: MailboxTable;
   isDelete = 0;
-  titleMessage: string = '';
+  titleMessage = '';
 
 
-  constructor(
+  constructor (
     public dialog: MatDialog,
     public SettingsService: SettingsService,
     private snackBar: MatSnackBar,
     public router: Router,
     private httpCall: HttpCall,
-    public translate: TranslateService
+    public translate: TranslateService,
+    public commonService: CommonService,
   ) {
     super();
   }
@@ -78,21 +81,13 @@ export class MailboxComponent
   }
 
   async archiveRecover(mailbox: MailboxTable, is_delete: number) {
-    const data = await this.SettingsService.deleteMailbox({
-      _id: mailbox._id,
-      is_delete: is_delete,
-    });
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.DELETE_MAILBOX, { _id: mailbox._id, is_delete: is_delete });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
-      const foundIndex = this.SettingsService?.dataChange.value.findIndex(
-        (x) => x._id === mailbox._id
-      );
-
-      // for delete we use splice in order to remove single object from DataService
-      if (foundIndex != null && this.SettingsService) {
-        this.SettingsService.dataChange.value.splice(foundIndex, 1);
+      const foundIndex = this.mailboxService?.mailBoxDataChange.value.findIndex((x) => x._id === mailbox._id);
+      if (foundIndex != null && this.mailboxService) {
+        this.mailboxService.mailBoxDataChange.value.splice(foundIndex, 1);
         this.refreshTable();
-        location.reload();
       }
     } else {
       showNotification(this.snackBar, data.message, 'error');
@@ -155,7 +150,7 @@ export class MailboxComponent
     //       (d) => d === item
     //     );
     //     // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
-    //     this.mailboxService?.dataChange.value.splice(index, 1);
+    //     this.mailboxService?.mailBoxDataChange.value.splice(index, 1);
     //     this.refreshTable();
     //     this.selection = new SelectionModel<MailboxTable>(true, []);
     //   });
@@ -211,7 +206,7 @@ export class MailboxDataSource extends DataSource<MailboxTable> {
   }
   filteredData: MailboxTable[] = [];
   renderedData: MailboxTable[] = [];
-  constructor(
+  constructor (
     public mailboxService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
@@ -225,16 +220,16 @@ export class MailboxDataSource extends DataSource<MailboxTable> {
   connect(): Observable<MailboxTable[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this.mailboxService.dataChange,
+      this.mailboxService.mailBoxDataChange,
       this._sort.sortChange,
       this.filterChange,
       this.paginator.page,
     ];
-    this.mailboxService.getAllMailboxTable(this.isDelete);
+    this.mailboxService.getMailBoxTable(this.isDelete);
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
-        this.filteredData = this.mailboxService.data
+        this.filteredData = this.mailboxService.mailBoxData
           .slice()
           .filter((mailboxTable: MailboxTable) => {
             const searchStr = (

@@ -140,10 +140,10 @@
               </table>
             </div>
             <!-- Loading spinner -->
-            <div *ngIf="mailboxService?.isTblLoading" class="tbl-spinner">
+            <div *ngIf="mailboxService?.isMailBoxTblLoading" class="tbl-spinner">
               <app-loading></app-loading>
             </div>
-            <div *ngIf="!mailboxService?.isTblLoading" class="no-results"
+            <div *ngIf="!mailboxService?.isMailBoxTblLoading" class="no-results"
               [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
               No matching records found
             </div>
