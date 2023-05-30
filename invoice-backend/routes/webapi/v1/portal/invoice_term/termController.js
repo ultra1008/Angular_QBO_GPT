@@ -22,6 +22,7 @@ module.exports.saveTerm = async function (req, res) {
             if (id) {
                 if (get_one != null) {
                     if (get_one._id == id) {
+                        requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                         let update_term = await termConnection.updateOne({ _id: ObjectID(id) }, requestObject);
                         if (update_term) {
                             res.send({ status: true, message: "Term update succesfully", data: update_term });
@@ -42,6 +43,8 @@ module.exports.saveTerm = async function (req, res) {
 
             } else {
                 if (get_one == null) {
+                    requestObject.created_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                     let add_term = new termConnection(requestObject);
                     let save_term = await add_term.save();
                     if (save_term) {
@@ -231,7 +234,7 @@ module.exports.gettermForTable = async function (req, res) {
         try {
             var requestObject = req.body;
             var termConnection = connection_db_api.model(collectionConstant.INVOICE_TERM, termSchema);
-            var getdata = await termConnection.find({ is_delete: requestObject.is_delete });
+            var getdata = await termConnection.find({ is_delete: requestObject.is_delete }).sort({ created_at: -1 });
             if (getdata) {
                 res.send(getdata);
             } else {

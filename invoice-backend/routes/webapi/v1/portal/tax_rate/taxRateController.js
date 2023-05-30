@@ -45,6 +45,7 @@ module.exports.saveTaxRate = async function (req, res) {
                 //Update
                 if (get_name != null) {
                     if (get_name._id == id) {
+                        requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                         let update_data = await taxRateConnection.updateOne({ _id: ObjectID(id) }, requestObject);
                         if (update_data) {
                             res.send({ status: true, message: 'Tax rate updated successfully.', data: update_data });
@@ -72,6 +73,8 @@ module.exports.saveTaxRate = async function (req, res) {
                     res.send({ status: false, message: "Tax rate allready exist." });
                 }
                 else {
+                    requestObject.created_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                     let add_tax_rate = new taxRateConnection(requestObject);
                     let save_tax_rate = await add_tax_rate.save();
                     res.send({ status: true, message: 'Tax rate saved successfully.', data: save_tax_rate });
@@ -223,7 +226,7 @@ module.exports.gettax_rateForTable = async function (req, res) {
         try {
             var requestObject = req.body;
             let taxRateConnection = connection_db_api.model(collectionConstant.INVOICE_TAX_RATE, taxRateSchema);
-            var getdata = await taxRateConnection.find({ is_delete: requestObject.is_delete });
+            var getdata = await taxRateConnection.find({ is_delete: requestObject.is_delete }).sort({ created_at: -1 });
             if (getdata) {
                 res.send(getdata);
             } else {

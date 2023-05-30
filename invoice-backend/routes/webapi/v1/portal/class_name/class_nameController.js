@@ -26,6 +26,7 @@ module.exports.saveclassname = async function (req, res) {
                 //update invoice class name
                 if (get_data != null) {
                     if (get_data._id == id) {
+                        requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                         let updateclass_name = await classNameConnection.updateOne({ _id: ObjectID(id) }, requestObject);
                         if (updateclass_name) {
                             res.send({ status: true, message: "class name update successfully..!" });
@@ -55,6 +56,8 @@ module.exports.saveclassname = async function (req, res) {
                     res.send({ status: false, message: "class name allready exist" });
                 }
                 else {
+                    requestObject.created_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                     var add_vendortype = new classNameConnection(requestObject);
                     var save_vendortype = await add_vendortype.save();
                     res.send({ status: true, message: "class name insert successfully..!", data: add_vendortype });
@@ -135,7 +138,7 @@ module.exports.getclassnameForTable = async function (req, res) {
         try {
             var requestObject = req.body;
             var classNameConnection = connection_db_api.model(collectionConstant.INVOICE_CLASS_NAME, classnameSchema);
-            var getdata = await classNameConnection.find({ is_delete: requestObject.is_delete });
+            var getdata = await classNameConnection.find({ is_delete: requestObject.is_delete }).sort({ created_at: -1 });
             if (getdata) {
                 res.send(getdata);
             } else {
