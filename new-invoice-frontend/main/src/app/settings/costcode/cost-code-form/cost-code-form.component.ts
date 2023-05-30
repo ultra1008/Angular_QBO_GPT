@@ -31,7 +31,7 @@ export class CostCodeFormComponent {
   invoice_logo = icon.INVOICE_LOGO;
 
   roleList: any = this.variablesRoleList.slice();
-  titleMessage: string = '';
+  titleMessage = '';
   userList: any = [];
   isDelete = 0;
   constructor (
@@ -86,7 +86,7 @@ export class CostCodeFormComponent {
 
   async submit() {
     if (this.costcodesave.valid) {
-      let requestObject = this.costcodesave.value;
+      const requestObject = this.costcodesave.value;
       requestObject.module = 'Invoice';
       if (this.data) {
         requestObject._id = this.data._id;
@@ -96,7 +96,7 @@ export class CostCodeFormComponent {
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        location.reload();
+        this.dialogRef.close({ status: true, data: requestObject });
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');

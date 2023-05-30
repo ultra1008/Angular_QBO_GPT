@@ -12,6 +12,11 @@
                   <h2 *ngIf="isDelete === 1"> {{'SETTINGS.SETTINGS_OTHER_OPTION.COST_CODE_MODULE.HEADER_ARCHIVE' |
                     translate}}</h2>
                 </li>
+                <li class="tbl-search-box">
+                  <label for="search-input"><i class="material-icons search-icon">search</i></label>
+                  <input placeholder="{{'COMMON.TOOL_TIP.SEARCH' | translate}}" type="text" #filter
+                    class="browser-default search-field" aria-label="Search box">
+                </li>
               </ul>
             </div>
             <div class="right">
@@ -153,10 +158,10 @@
               </table>
             </div>
             <!-- Loading spinner -->
-            <div *ngIf="!SettingsService?.isTblLoading" class="tbl-spinner">
+            <div *ngIf="!SettingsService?.isCostCodeTblLoading" class="tbl-spinner">
               <app-loading></app-loading>
             </div>
-            <div *ngIf="!SettingsService?.isTblLoading" class="no-results"
+            <div *ngIf="!SettingsService?.isCostCodeTblLoading" class="no-results"
               [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
               No matching records found
             </div>

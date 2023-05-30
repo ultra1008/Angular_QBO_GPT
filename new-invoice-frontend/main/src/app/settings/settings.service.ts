@@ -179,7 +179,19 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     this.isClassNameTblLoading = false;
   }
 
+  // Cost Code Datatable Service
+  isCostCodeTblLoading = true;
+  costCodeDataChange: BehaviorSubject<CostCodeTable[]> = new BehaviorSubject<CostCodeTable[]>([]);
 
+  get costCodeData(): CostCodeTable[] {
+    return this.costCodeDataChange.value;
+  }
+
+  async getCostCodeTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.COSTCODE_DATA_TABLE, { is_delete: is_delete, module: 'Invoice' }).toPromise();
+    this.costCodeDataChange.next(data);
+    this.isCostCodeTblLoading = false;
+  }
 
 
 

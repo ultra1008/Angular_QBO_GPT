@@ -86,29 +86,6 @@ export class CostcodeComponent
     this.router.navigate(['/settings/mailbox-form']);
   }
 
-  async archiveRecover(costcodeTable: CostCodeTable, is_delete: number) {
-    const data = await this.SettingsService.deleteCostCode({
-      _id: costcodeTable._id,
-      is_delete: is_delete,
-    });
-    if (data.status) {
-      showNotification(this.snackBar, data.message, 'success');
-      const foundIndex =
-        this.SettingsService?.dataCostCodeChange.value.findIndex(
-          (x) => x._id === costcodeTable._id
-        );
-
-      // for delete we use splice in order to remove single object from DataService
-      if (foundIndex != null && this.SettingsService) {
-        this.SettingsService.dataCostCodeChange.value.splice(foundIndex, 1);
-        this.refreshTable();
-        location.reload();
-      }
-    } else {
-      showNotification(this.snackBar, data.message, 'error');
-    }
-  }
-
   async deleteCostCode(costcodeTable: CostCodeTable, is_delete: number) {
     if (is_delete == 1) {
       this.titleMessage = this.translate.instant(
@@ -132,6 +109,20 @@ export class CostcodeComponent
           this.archiveRecover(costcodeTable, is_delete);
         }
       });
+  }
+
+  async archiveRecover(costcodeTable: CostCodeTable, is_delete: number) {
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.DELETE_COST_CODE, { _id: costcodeTable._id, is_delete: is_delete });
+    if (data.status) {
+      showNotification(this.snackBar, data.message, 'success');
+      const foundIndex = this.costcodeService?.costCodeDataChange.value.findIndex((x) => x._id === costcodeTable._id);
+      if (foundIndex != null && this.costcodeService) {
+        this.costcodeService.costCodeDataChange.value.splice(foundIndex, 1);
+        this.refreshTable();
+      }
+    } else {
+      showNotification(this.snackBar, data.message, 'error');
+    }
   }
 
   gotoArchiveUnarchive() {
@@ -167,12 +158,23 @@ export class CostcodeComponent
     dialogRef.afterClosed().subscribe((result) => { });
   }
 
-  edit(event: any) {
+  edit(costcode: any) {
     const dialogRef = this.dialog.open(CostCodeFormComponent, {
       width: '350px',
-      data: event,
+      data: costcode,
     });
-    dialogRef.afterClosed().subscribe((result) => { });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result.status) {
+        const foundIndex = this.costcodeService?.costCodeDataChange.value.findIndex((x) => x._id === costcode._id);
+        if (foundIndex != null && this.costcodeService) {
+          this.costcodeService.costCodeDataChange.value[foundIndex].cost_code = result.data.cost_code;
+          this.costcodeService.costCodeDataChange.value[foundIndex].division = result.data.division;
+          this.costcodeService.costCodeDataChange.value[foundIndex].value = `Invoice-${result.data.division}-${result.data.cost_code}`;
+          this.costcodeService.costCodeDataChange.value[foundIndex].description = result.data.description;
+          this.refreshTable();
+        }
+      }
+    });
   }
 
   public loadData() {
@@ -233,8 +235,7 @@ export class CostcodeComponent
         .httpPostCall(apiurl, formData_profle)
         .subscribe(function (params) {
           if (params.status) {
-            // that.openErrorDataDialog(params);
-
+            // that.openErrorDataDialog(params); 
             showNotification(that.snackBar, params.message, 'success');
             that.uiSpinner.spin$.next(false);
             // location.reload();
@@ -298,18 +299,18 @@ export class CostCodeDataSource extends DataSource<CostCodeTable> {
   connect(): Observable<CostCodeTable[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this.costcodeTableService.dataCostCodeChange,
+      this.costcodeTableService.costCodeDataChange,
       this._sort.sortChange,
       this.filterChange,
       this.paginator.page,
     ];
 
-    this.costcodeTableService.getAllCostCodeTable(this.isDelete);
+    this.costcodeTableService.getCostCodeTable(this.isDelete);
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
 
-        this.filteredData1 = this.costcodeTableService.datacostcode
+        this.filteredData1 = this.costcodeTableService.costCodeData
           .slice()
           .filter((costcodeTable: CostCodeTable) => {
             const searchStr = (

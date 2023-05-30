@@ -27,6 +27,7 @@ export class CostCodeTable {
   description: string;
   value: string;
   division: string;
+  cost_code: string;
 
   constructor (costcodeTable: CostCodeTable) {
     {
@@ -34,6 +35,7 @@ export class CostCodeTable {
       this.description = costcodeTable.description;
       this.value = costcodeTable.value;
       this.division = costcodeTable.division;
+      this.cost_code = costcodeTable.cost_code;
     }
   }
 }

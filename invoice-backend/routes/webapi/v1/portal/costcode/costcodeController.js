@@ -187,7 +187,7 @@ module.exports.deletecostcode = async function (req, res) {
                 if (isDelete == 0) {
                     res.send({ message: translator.getStr('NoDataWithId'), status: false });
                 } else {
-                    if (requestObject.is_delete == 0) {
+                    if (requestObject.is_delete == 1) {
                         res.send({ status: true, message: 'Cost code deleted successfully.', data: deleteObject });
                     } else {
                         res.send({ status: true, message: 'Cost code restore successfully.', data: deleteObject });
