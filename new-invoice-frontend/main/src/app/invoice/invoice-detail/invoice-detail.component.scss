@@ -1,17 +1,14 @@
-.Fix-hight {
-     max-height: 70%;
+.Fix-height {
      overflow: scroll;
      overflow-x: hidden;
+     height: 460px !important;
+     position: relative;
+     display: block;
 }
 
 .onhold {
      background: #FF9800;
      color: white
-}
-
-.position-f {
-     position: absolute;
-     width: 42.1%;
 }
 
 .note-card {
@@ -37,13 +34,7 @@
      }
 }
 
-@media only screen and (max-width: 900px) and (min-width: 100px) {
 
-     .position-f {
-          position: unset !important;
-          width: 100%;
-     }
-}
 
 .but-c {
      background-color: #20C997;
