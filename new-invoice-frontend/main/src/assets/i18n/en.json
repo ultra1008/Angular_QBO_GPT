@@ -19,7 +19,7 @@
             "MESSAGE": "Message",
             "VIEW": "View",
             "DOWNLOAD": "Download",
-            "PRINT": "Print"
+            "NOTIFICATION": "Notification"
         },
         "ACTIONS": {
             "EDIT": "Edit",
