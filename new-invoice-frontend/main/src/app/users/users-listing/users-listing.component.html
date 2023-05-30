@@ -137,11 +137,10 @@
                                     <mat-cell *matCellDef="let row">{{row.id}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="img">
-                                    <mat-header-cell mat-header-cell *matHeaderCellDef
-                                        [ngClass]="'tbl-col-width-per-5'"> {{'USERS.TABLE.IMAGE' |
+                                    <mat-header-cell mat-header-cell *matHeaderCellDef> {{'USERS.TABLE.IMAGE' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell mat-cell *matCellDef="let row" class="table-img tbl-col-width-per-5"><span
+                                    <mat-cell mat-cell *matCellDef="let row" class="table-img "><span
                                             class="mobile-label">Image:</span>
                                         <img [src]="row.userpicture" />
                                     </mat-cell>
