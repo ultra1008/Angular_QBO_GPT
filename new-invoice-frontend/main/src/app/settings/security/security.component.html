@@ -27,20 +27,20 @@
                     <div class="body overflow-auto">
                         <div class="main-cust-setting-div">
                             <div class="decorate-div">
-                                <mat-slide-toggle color="primary"  [(ngModel)]="timeoutSwitch"
-                                (ngModelChange)="modelSwitchChangeTimeOut($event)">
-                                {{'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.AMOUNT_MINUTES' | translate}}
-                            </mat-slide-toggle>
-                            <mat-form-field appearance="outline" class="magin-l">
-                                <mat-select [(ngModel)]="timer" (ngModelChange)="modelChangeTimeout($event)" class="dark-cust-color"
-                                    required>
-                                    <mat-option *ngFor="let option of timerOptions" [value]="option.key">
-                                        {{option.name}}{{option.tmp_language | translate}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
+                                <mat-slide-toggle color="primary" [(ngModel)]="timeoutSwitch"
+                                    (ngModelChange)="modelSwitchChangeTimeOut($event)">
+                                    {{'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.AMOUNT_MINUTES' | translate}}
+                                </mat-slide-toggle>
+                                <mat-form-field appearance="outline" class="magin-l">
+                                    <mat-select [(ngModel)]="timer" (ngModelChange)="modelChangeTimeout($event)"
+                                        class="dark-cust-color" required>
+                                        <mat-option *ngFor="let option of timerOptions" [value]="option.key">
+                                            {{option.name}}{{option.tmp_language | translate}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
                             </div>
-                            <div class="decorate-div">
+                            <!-- <div class="decorate-div">
                                 <mat-slide-toggle color="primary"  [(ngModel)]="otpSwitch" (ngModelChange)="modelSwitchChangeOtp($event)">
                                     {{'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.ENABLE_OTP' | translate}}
                                 </mat-slide-toggle>
@@ -51,7 +51,7 @@
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>

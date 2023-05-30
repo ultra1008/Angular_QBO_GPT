@@ -21,20 +21,21 @@
                                    <ul class="tbl-export-btn">
                                         <li class="tbl-header-btn" *ngIf="id">
                                              <div class="m-l-10" *ngIf="is_delete == 0" matTooltip="ARCHIVE">
-                                                  <button mat-mini-fab color="warn" (click)="deleteuser()">
+                                                  <button mat-mini-fab color="primary" (click)="deleteuser()">
                                                        <mat-icon class="col-white">archive</mat-icon>
                                                   </button>
                                              </div>
                                         </li>
                                         <li class="tbl-header-btn" *ngIf="id">
                                              <div class="m-l-10" *ngIf="is_delete == 1" matTooltip="RESTORE">
-                                                  <button mat-mini-fab color="warn" (click)="deleteuser()">
+                                                  <button mat-mini-fab color="primary" (click)="deleteuser()">
                                                        <mat-icon class="col-white">archive</mat-icon>
                                                   </button>
                                              </div>
                                         </li>
                                         <li class="tbl-header-btn">
-                                             <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' | translate}}">
+                                             <div class="m-l-10 back-clr"
+                                                  matTooltip="{{'COMMON.TOOL_TIP.BACK' | translate}}">
                                                   <button mat-mini-fab color="warn" (click)="back()">
                                                        <mat-icon class="col-white">close</mat-icon>
                                                   </button>
@@ -84,31 +85,7 @@
                                                                                      </ng-template>
                                                                                 </div>
                                                                            </div>
-                                                                           <div *ngIf="id !== null"
-                                                                                class="custom-file fileInputProfileWrap mt-4">
-                                                                                <input type="file"
-                                                                                     class="fileInputProfile"
-                                                                                     #OpenFilebox_mobile
-                                                                                     (change)="fileChangeEvent_Mobile($event)">
-                                                                                <div class="circular--landscape"
-                                                                                     (click)="openfilebox_mobile()">
-                                                                                     <ng-container
-                                                                                          *ngIf="isImageSaved_Mobile; else elseTemplate_Mobile">
-                                                                                          <img [src]="cardImageBase64_Mobile"
-                                                                                               alt="" />
-                                                                                     </ng-container>
-                                                                                     <ng-template #elseTemplate_Mobile>
-                                                                                          <img *ngIf="userpersonalinfo.get('usergender')?.value !== 'Female'"
-                                                                                               src="{{defalut_image_mobile}}"
-                                                                                               class="circular--landscape img"
-                                                                                               alt="">
-                                                                                          <img *ngIf="userpersonalinfo.get('usergender')?.value === 'Female'"
-                                                                                               src="{{defalut_female_image_mobile}}"
-                                                                                               class="circular--landscape img"
-                                                                                               alt="">
-                                                                                     </ng-template>
-                                                                                </div>
-                                                                           </div>
+
                                                                       </div>
                                                                  </div>
                                                             </div>
@@ -332,7 +309,7 @@
                                                   </form>
                                                   <div class="row">
                                                        <div class=" col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2 ">
-                                                            <button class="btn-space" mat-raised-button color="primary"
+                                                            <button class="btn-space back-clr" mat-raised-button
                                                                  (click)="back()">{{'COMMON.ACTIONS.BACK'| translate}}</button>
                                                             <button class="btn-space" matStepperNext type="button"
                                                                  mat-raised-button
@@ -432,9 +409,8 @@
                                                        </div>
                                                        <div class="row">
                                                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                                                                 <button matStepperPrevious class="btn-space"
-                                                                      mat-raised-button
-                                                                      color="primary">{{'COMMON.ACTIONS.BACK'| translate}}</button>
+                                                                 <button matStepperPrevious class="btn-space back-clr"
+                                                                      mat-raised-button>{{'COMMON.ACTIONS.BACK'| translate}}</button>
                                                                  <button class="btn-space" matStepperNext type="button"
                                                                       mat-raised-button
                                                                       color="warn">{{'COMMON.ACTIONS.NEXT'| translate}}</button>
@@ -657,17 +633,16 @@
                                                        </div>
                                                        <div class="row">
                                                             <div class=" col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2 ">
-                                                                 <button class="btn-space" mat-raised-button
-                                                                      matStepperPrevious
-                                                                      color="primary">{{'COMMON.ACTIONS.BACK'| translate}}</button>
-                                                                 <button class="btn-space" type="button" matStepperNext
+                                                                 <button class="btn-space back-clr" mat-raised-button
+                                                                      matStepperPrevious>{{'COMMON.ACTIONS.BACK'| translate}}</button>
+                                                                 <button class="btn-space " type="button" matStepperNext
                                                                       mat-raised-button color="warn"
                                                                       *ngIf="id !== null">{{'COMMON.ACTIONS.NEXT'| translate}}</button>
                                                                  <button *ngIf="id === null" class="btn-space"
                                                                       mat-raised-button (click)="savedata()"
                                                                       color="primary">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                                  <button *ngIf="id !== null" mat-raised-button
-                                                                      color="warn"
+                                                                      color="primary"
                                                                       (click)="saveEmployeeInfo()">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                             </div>
                                                        </div>

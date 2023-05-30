@@ -149,7 +149,8 @@ router.post('/webapi/v1/portal/getUserForTable', common.checkTokenExistOrNot, em
 router.post('/webapi/v1/portal/updateUserStatus', common.checkTokenExistOrNot, employeeController.updateUserStatus);
 router.post('/webapi/v1/portal/deleteMultipleTeamMember', common.checkTokenExistOrNot, employeeController.deleteMultipleTeamMember);
 router.post('/webapi/v1/portal/updateMultipleUserStatus', common.checkTokenExistOrNot, employeeController.updateMultipleUserStatus);
-
+router.post('/webapi/v1/portal/view_capture', common.checkTokenExistOrNot, employeeController.view_capture);
+router.post('/webapi/v1/portal/get_view_capture', common.checkTokenExistOrNot, employeeController.get_view_capture);
 
 let employeeCron = require("./employee/employeeCron");
 router.post('/webapi/v1/portal/userdocumentexpiryalert', common.checkTokenExistOrNot, employeeCron.userDocumentExpiryAlert);
