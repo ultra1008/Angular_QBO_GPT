@@ -21,14 +21,14 @@
                                    <ul class="tbl-export-btn">
                                         <li class="tbl-header-btn" *ngIf="id">
                                              <div class="m-l-10" *ngIf="is_delete == 0" matTooltip="ARCHIVE">
-                                                  <button mat-mini-fab color="warn" (click)="deleteuser()">
+                                                  <button mat-mini-fab color="primary" (click)="deleteuser()">
                                                        <mat-icon class="col-white">archive</mat-icon>
                                                   </button>
                                              </div>
                                         </li>
                                         <li class="tbl-header-btn" *ngIf="id">
                                              <div class="m-l-10" *ngIf="is_delete == 1" matTooltip="RESTORE">
-                                                  <button mat-mini-fab color="warn" (click)="deleteuser()">
+                                                  <button mat-mini-fab color="primary" (click)="deleteuser()">
                                                        <mat-icon class="col-white">archive</mat-icon>
                                                   </button>
                                              </div>
@@ -36,7 +36,7 @@
                                         <li class="tbl-header-btn">
                                              <div class="m-l-10 back-clr"
                                                   matTooltip="{{'COMMON.TOOL_TIP.BACK' | translate}}">
-                                                  <button mat-mini-fab (click)="back()">
+                                                  <button mat-mini-fab color="warn" (click)="back()">
                                                        <mat-icon class="col-white">close</mat-icon>
                                                   </button>
                                              </div>
@@ -85,31 +85,7 @@
                                                                                      </ng-template>
                                                                                 </div>
                                                                            </div>
-                                                                           <div *ngIf="id !== null"
-                                                                                class="custom-file fileInputProfileWrap mt-4">
-                                                                                <input type="file"
-                                                                                     class="fileInputProfile"
-                                                                                     #OpenFilebox_mobile
-                                                                                     (change)="fileChangeEvent_Mobile($event)">
-                                                                                <div class="circular--landscape"
-                                                                                     (click)="openfilebox_mobile()">
-                                                                                     <ng-container
-                                                                                          *ngIf="isImageSaved_Mobile; else elseTemplate_Mobile">
-                                                                                          <img [src]="cardImageBase64_Mobile"
-                                                                                               alt="" />
-                                                                                     </ng-container>
-                                                                                     <ng-template #elseTemplate_Mobile>
-                                                                                          <img *ngIf="userpersonalinfo.get('usergender')?.value !== 'Female'"
-                                                                                               src="{{defalut_image_mobile}}"
-                                                                                               class="circular--landscape img"
-                                                                                               alt="">
-                                                                                          <img *ngIf="userpersonalinfo.get('usergender')?.value === 'Female'"
-                                                                                               src="{{defalut_female_image_mobile}}"
-                                                                                               class="circular--landscape img"
-                                                                                               alt="">
-                                                                                     </ng-template>
-                                                                                </div>
-                                                                           </div>
+
                                                                       </div>
                                                                  </div>
                                                             </div>
