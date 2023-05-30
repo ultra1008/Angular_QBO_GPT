@@ -13,7 +13,6 @@ import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroy
 import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
 import { JobTypeTable } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
-import { JobTitleFormComponent } from '../job-title-form/job-title-form.component';
 import { JobTypeFormComponent } from '../job-type-form/job-type-form.component';
 
 @Component({
@@ -23,8 +22,7 @@ import { JobTypeFormComponent } from '../job-type-form/job-type-form.component';
 })
 export class JobTypeListComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit
-{
+  implements OnInit {
   displayedColumns = ['job_type_name', 'actions'];
   jobtypeService?: SettingsService;
   dataSource!: JobTypeDataSource;
@@ -32,9 +30,9 @@ export class JobTypeListComponent
   id?: number;
   // advanceTable?: JobTypeTable;
   isDelete = 0;
-  titleMessage: string = '';
+  titleMessage = '';
 
-  constructor(
+  constructor (
     public dialog: MatDialog,
     public SettingsService: SettingsService,
     private snackBar: MatSnackBar,
@@ -76,7 +74,9 @@ export class JobTypeListComponent
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      that.refreshTable();
+      if (result) {
+        that.refresh();
+      }
     });
   }
 
@@ -122,8 +122,8 @@ export class JobTypeListComponent
     this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.renderedData.forEach((row) =>
-          this.selection.select(row)
-        );
+        this.selection.select(row)
+      );
   }
   removeSelectedRows() {
     //   const totalSelect = this.selection.selected.length;
@@ -187,7 +187,7 @@ export class JobTypeDataSource extends DataSource<JobTypeTable> {
   }
   filteredData: JobTypeTable[] = [];
   renderedData: JobTypeTable[] = [];
-  constructor(
+  constructor (
     public jobtypeService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,

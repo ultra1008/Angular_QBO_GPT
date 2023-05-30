@@ -31,7 +31,7 @@
                                 translate}}</mat-header-cell>
                             <mat-cell *matCellDef="let row" (click)="edit(row)"
                                 (contextmenu)="onContextMenu($event, row)">
-                                <span class="mobile-label">is_expiration:</span> {{row.is_expiration }}
+                                <span class="mobile-label">is_expiration:</span> {{row.is_expiration ? 'Yes' : 'No'}}
                             </mat-cell>
                         </ng-container>
 

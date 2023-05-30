@@ -131,7 +131,7 @@ export class Element {
 
 export class DocumentTypeTable {
   _id: string;
-  is_expiration!: boolean;
+  is_expiration!: string;
   document_type_name!: string;
 
   constructor (DocumentTable: DocumentTypeTable) {

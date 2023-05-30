@@ -30,11 +30,11 @@ export class LanguageFormComponent {
   variablesRoleList: any = [];
 
   roleList: any = this.variablesRoleList.slice();
-  titleMessage: string = '';
+  titleMessage = '';
   userList: any = [];
   isDelete = 0;
   invoice_logo = icon.INVOICE_LOGO;
-  constructor(
+  constructor (
     public dialogRef: MatDialogRef<JobTitleFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: SettingsService,
@@ -47,11 +47,9 @@ export class LanguageFormComponent {
     this.languageInfo = new FormGroup({
       name: new FormControl('', [Validators.required]),
     });
-    console.log('data', data);
     const document_data = data.data;
 
     if (this.data) {
-      console.log('call');
       this.languageInfo = new FormGroup({
         name: new FormControl(this.data.name, [Validators.required]),
       });
@@ -76,13 +74,13 @@ export class LanguageFormComponent {
     return this.formControl.hasError('required')
       ? 'Required field'
       : this.formControl.hasError('email')
-      ? 'Not a valid email'
-      : '';
+        ? 'Not a valid email'
+        : '';
   }
 
   async submit() {
     if (this.languageInfo.valid) {
-      let requestObject = this.languageInfo.value;
+      const requestObject = this.languageInfo.value;
       if (this.data) {
         requestObject._id = this.data._id;
       }
@@ -91,7 +89,7 @@ export class LanguageFormComponent {
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        location.reload();
+        this.dialogRef.close(true);
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');

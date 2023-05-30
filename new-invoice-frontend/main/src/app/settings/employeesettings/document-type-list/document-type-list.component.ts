@@ -36,7 +36,7 @@ export class DocumentTypeListComponent
   isDelete = 0;
   titleMessage = '';
 
-  constructor(
+  constructor (
     public dialog: MatDialog,
     public SettingsService: SettingsService,
     private snackBar: MatSnackBar,
@@ -58,32 +58,26 @@ export class DocumentTypeListComponent
   refresh() {
     this.loadData();
   }
-  addNew() {
-    this.router.navigate(['/settings/mailbox-form']);
-  }
 
-  editMailbox(mailbox: DocumentTypeTable) {
-    this.router.navigate(['/settings/mailbox-form'], {
-      queryParams: { _id: mailbox._id },
-    });
-  }
-
-  edit(Document: any) {
+  edit(document: any) {
     let that = this;
     console.log('document');
     const dialogRef = this.dialog.open(DocumentTypeFormComponent, {
       width: '350px',
-      data: Document,
+      data: document,
       disableClose: true,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      that.refreshTable();
+      if (result) {
+        that.refresh();
+      }
     });
   }
 
-  async deleteDocumentType(Document: any) {
-    let that = this;
+  async deleteDocumentType(document: any) {
+    console.log("this.SettingsService?.dataDocumentTypeChange: ", this.SettingsService?.dataDocumentTypeChange.value);
+    /* let that = this;
     swalWithBootstrapButtons
       .fire({
         title: this.translate.instant(
@@ -98,16 +92,15 @@ export class DocumentTypeListComponent
       .then(async (result) => {
         if (result.isConfirmed) {
           const data = await that.SettingsService.DeleteDocumentType(
-            Document._id
+            document._id
           );
           if (data.status) {
             showNotification(that.snackBar, data.message, 'success');
-            that.loadData();
-            /* console.log("this.SettingsService?.dataDocumentTypeChange: ", this.SettingsService?.dataDocumentTypeChange.value);
+            console.log("this.SettingsService?.dataDocumentTypeChange: ",this.SettingsService?.dataDocumentTypeChange)
             const foundIndex = this.SettingsService?.dataDocumentTypeChange.value.findIndex(
               (x) => {
-                console.log("sagar match: ", x._id, Document._id);
-                x._id === Document._id;
+                console.log("sagar: ", x._id, document._id, " == ", x._id === document._id);
+                return x._id === document._id;
               }
             );
             console.log("foundIndex: ", foundIndex);
@@ -115,56 +108,18 @@ export class DocumentTypeListComponent
             if (foundIndex != null && this.SettingsService) {
               this.SettingsService.dataDocumentTypeChange.value.splice(foundIndex, 1);
               this.refreshTable();
-            } */
+            }
           } else {
             showNotification(that.snackBar, data.message, 'error');
           }
         }
-      });
-  }
-
-  gotoArchiveUnarchive() {
-    this.isDelete = this.isDelete == 1 ? 0 : 1;
-    this.loadData();
+      }); */
   }
 
   private refreshTable() {
     this.paginator._changePageSize(this.paginator.pageSize);
   }
 
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.renderedData.length;
-    return numSelected === numRows;
-  }
-
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-    this.isAllSelected()
-      ? this.selection.clear()
-      : this.dataSource.renderedData.forEach((row) =>
-        this.selection.select(row)
-      );
-  }
-  removeSelectedRows() {
-    //   const totalSelect = this.selection.selected.length;
-    //   this.selection.selected.forEach((item) => {
-    //     const index: number = this.dataSource.renderedData.findIndex(
-    //       (d) => d === item
-    //     );
-    //     // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
-    //     this.documentService?.dataChange.value.splice(index, 1);
-    //     this.refreshTable();
-    //     this.selection = new SelectionModel<DocumentTypeTable>(true, []);
-    //   });
-    //  showNotification(
-    //     'snackbar-danger',
-    //     totalSelect + ' Record Delete Successfully...!!!',
-    //     'bottom',
-    //     'center'
-    //   );
-  }
   public loadData() {
     this.documentService = new SettingsService(this.httpCall);
     this.dataSource = new DocumentTypeDataSource(
@@ -181,6 +136,7 @@ export class DocumentTypeListComponent
         this.dataSource.filter = this.filter.nativeElement.value;
       }
     );
+    this.selection.clear();
   }
 
   back() {
@@ -209,7 +165,7 @@ export class DocumentTypeDataSource extends DataSource<DocumentTypeTable> {
   }
   filteredData: DocumentTypeTable[] = [];
   renderedData: DocumentTypeTable[] = [];
-  constructor(
+  constructor (
     public documentService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
@@ -270,6 +226,9 @@ export class DocumentTypeDataSource extends DataSource<DocumentTypeTable> {
           break;
         case 'document_type_name':
           [propertyA, propertyB] = [a.document_type_name, b.document_type_name];
+          break;
+        case 'is_expiration':
+          [propertyA, propertyB] = [a.is_expiration, b.is_expiration];
           break;
       }
       const valueA = isNaN(+propertyA) ? propertyA : +propertyA;

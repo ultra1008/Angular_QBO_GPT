@@ -13,9 +13,8 @@ import { Router } from '@angular/router';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { AdvanceTable } from 'src/app/users/user.model';
 import { showNotification } from 'src/consts/utils';
-import { SettingsService } from '../../settings.service';
-import { JobTitleFormComponent } from '../job-title-form/job-title-form.component';
 import { icon } from 'src/consts/icon';
+import { SettingsService } from '../../settings.service';
 
 @Component({
   selector: 'app-job-type-form',
@@ -30,12 +29,12 @@ export class JobTypeFormComponent {
   variablesRoleList: any = [];
 
   roleList: any = this.variablesRoleList.slice();
-  titleMessage: string = '';
+  titleMessage = '';
   userList: any = [];
   isDelete = 0;
   invoice_logo = icon.INVOICE_LOGO;
-  constructor(
-    public dialogRef: MatDialogRef<JobTitleFormComponent>,
+  constructor (
+    public dialogRef: MatDialogRef<JobTypeFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: SettingsService,
     private fb: UntypedFormBuilder,
@@ -78,13 +77,13 @@ export class JobTypeFormComponent {
     return this.formControl.hasError('required')
       ? 'Required field'
       : this.formControl.hasError('email')
-      ? 'Not a valid email'
-      : '';
+        ? 'Not a valid email'
+        : '';
   }
 
   async submit() {
     if (this.jobtypeInfo.valid) {
-      let requestObject = this.jobtypeInfo.value;
+      const requestObject = this.jobtypeInfo.value;
       if (this.data) {
         requestObject._id = this.data._id;
       }
@@ -93,7 +92,7 @@ export class JobTypeFormComponent {
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        location.reload();
+        this.dialogRef.close(true);
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');
