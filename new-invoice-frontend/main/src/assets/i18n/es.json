@@ -19,7 +19,9 @@
             "MESSAGE": "Mensaje",
             "VIEW": "Vista",
             "DOWNLOAD": "DESCARGAR",
-            "PRINT": "IMPRIMIR"
+            "PRINT": "IMPRIMIR",
+            "SHOW": "Show",
+            "HIDE": "Hide"
         },
         "ACTIONS": {
             "EDIT": "Editar",

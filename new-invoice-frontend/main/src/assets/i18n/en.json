@@ -19,7 +19,9 @@
             "MESSAGE": "Message",
             "VIEW": "View",
             "DOWNLOAD": "Download",
-            "NOTIFICATION": "Notification"
+            "NOTIFICATION": "Notification",
+            "SHOW": "Show",
+            "HIDE": "Hide"
         },
         "ACTIONS": {
             "EDIT": "Edit",

@@ -16,7 +16,7 @@ import { showNotification } from 'src/consts/utils';
   styleUrls: ['./invoice-message-view.component.scss']
 })
 export class InvoiceMessageViewComponent {
-
+  pdf_url = '/assets/pdf_url/file-3.pdf';
   myId = '';
   id: any;
   messageData: any;
@@ -25,6 +25,7 @@ export class InvoiceMessageViewComponent {
 
   form!: UntypedFormGroup;
   endScroll = 0;
+  showPDF = true;
 
   constructor (public commonService: CommonService, public route: ActivatedRoute, private formBuilder: FormBuilder,
     public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, private router: Router) {
@@ -93,5 +94,17 @@ export class InvoiceMessageViewComponent {
 
   back() {
     this.router.navigate([WEB_ROUTES.INVOICE_MESSAGES]);
+  }
+
+  download() {
+    //
+  }
+
+  print() {
+    //
+  }
+
+  collabPDF() {
+    this.showPDF = !this.showPDF;
   }
 }

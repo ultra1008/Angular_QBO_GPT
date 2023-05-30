@@ -25,3 +25,58 @@
 .your-picture {
     margin-right: 10px;
 }
+
+.message {
+    padding: 0.5rem 0.75rem !important;
+    width: 30% !important;
+}
+
+.pdf-btn {
+    text-align: end;
+    padding-right: 24px;
+}
+
+.pdf-h {
+    height: 700px;
+}
+
+.hide-pdf-button {
+    margin-right: 1.5rem;
+    position: absolute;
+    z-index: 1000000;
+    left: -13px;
+
+    .mdc-fab--mini {
+        width: 25px;
+        height: 25px;
+    }
+
+    .mat-icon {
+        height: 14px;
+        width: 14px;
+    }
+
+    .material-icons {
+        font-size: 14px;
+    }
+}
+
+.show-pdf-button {
+    position: absolute;
+    z-index: 1000000;
+    right: -13px;
+
+    .mdc-fab--mini {
+        width: 25px;
+        height: 25px;
+    }
+
+    .mat-icon {
+        height: 14px;
+        width: 14px;
+    }
+
+    .material-icons {
+        font-size: 14px;
+    }
+}
