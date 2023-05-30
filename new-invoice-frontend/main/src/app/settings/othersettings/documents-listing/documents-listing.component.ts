@@ -13,34 +13,27 @@ import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroy
 import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
 import { DocumentsTable } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
-import { TaxRateFormComponent } from '../tax-rate-form/tax-rate-form.component';
-import { DocumentFormComponent } from '../document-form/document-form.component';
+import { TaxRateFormComponent } from '../tax-rate-listing/tax-rate-form/tax-rate-form.component';
+import { DocumentFormComponent } from './document-form/document-form.component';
+import { CommonService } from 'src/app/services/common.service';
+import { httproutes, httpversion } from 'src/consts/httproutes';
 
 @Component({
   selector: 'app-documents-listing',
   templateUrl: './documents-listing.component.html',
   styleUrls: ['./documents-listing.component.scss'],
 })
-export class DocumentsListingComponent
-  extends UnsubscribeOnDestroyAdapter
-  implements OnInit
-{
+export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
   displayedColumns = ['name', 'actions'];
   documentsService?: SettingsService;
   dataSource!: DocumentsDataSource;
   selection = new SelectionModel<DocumentsTable>(true, []);
   id?: number;
   isDelete = 0;
-  titleMessage: string = '';
+  titleMessage = '';
 
-  constructor(
-    public dialog: MatDialog,
-    public SettingsService: SettingsService,
-    private snackBar: MatSnackBar,
-    public router: Router,
-    private httpCall: HttpCall,
-    public translate: TranslateService
-  ) {
+  constructor (public dialog: MatDialog, public SettingsService: SettingsService, private snackBar: MatSnackBar,
+    public router: Router, private httpCall: HttpCall, public translate: TranslateService, private commonService: CommonService,) {
     super();
   }
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
@@ -69,7 +62,13 @@ export class DocumentsListingComponent
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      that.refreshTable();
+      if (result.status) {
+        const foundIndex = this.documentsService?.documentDataChange.value.findIndex((x) => x._id === document._id);
+        if (foundIndex != null && this.documentsService) {
+          this.documentsService.documentDataChange.value[foundIndex].name = result.data;
+          this.refreshTable();
+        }
+      }
     });
   }
 
@@ -88,11 +87,14 @@ export class DocumentsListingComponent
       })
       .then(async (result) => {
         if (result.isConfirmed) {
-          const data = await that.SettingsService.DeleteDocuments(document._id);
+          const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.OTHER_SETTING_DELETE_DOCUMENT, { _id: document._id });
           if (data.status) {
             showNotification(that.snackBar, data.message, 'success');
-            that.refreshTable();
-            location.reload();
+            const foundIndex = this.documentsService?.documentDataChange.value.findIndex((x) => x._id === document._id);
+            if (foundIndex != null && this.documentsService) {
+              this.documentsService.documentDataChange.value.splice(foundIndex, 1);
+              this.refreshTable();
+            }
           } else {
             showNotification(that.snackBar, data.message, 'error');
           }
@@ -116,8 +118,8 @@ export class DocumentsListingComponent
     this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.renderedData.forEach((row) =>
-          this.selection.select(row)
-        );
+        this.selection.select(row)
+      );
   }
   removeSelectedRows() {
     //   const totalSelect = this.selection.selected.length;
@@ -181,7 +183,7 @@ export class DocumentsDataSource extends DataSource<DocumentsTable> {
   }
   filteredData: DocumentsTable[] = [];
   renderedData: DocumentsTable[] = [];
-  constructor(
+  constructor (
     public documentsService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
@@ -195,16 +197,16 @@ export class DocumentsDataSource extends DataSource<DocumentsTable> {
   connect(): Observable<DocumentsTable[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this.documentsService.dataDocumentsChange,
+      this.documentsService.documentDataChange,
       this._sort.sortChange,
       this.filterChange,
       this.paginator.page,
     ];
-    this.documentsService.getAllDocumentsTable(this.isDelete);
+    this.documentsService.getDocumentTable(this.isDelete);
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
-        this.filteredData = this.documentsService.dataDocuments
+        this.filteredData = this.documentsService.documentData
           .slice()
           .filter((DocumentsTable: DocumentsTable) => {
             const searchStr = DocumentsTable.name.toLowerCase();

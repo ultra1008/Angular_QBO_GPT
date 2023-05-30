@@ -14,28 +14,27 @@ import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { AdvanceTable } from 'src/app/users/user.model';
 import { icon } from 'src/consts/icon';
 import { showNotification } from 'src/consts/utils';
-import { JobTitleFormComponent } from '../../employeesettings/job-title-list/job-title-form/job-title-form.component';
-import { SettingsService } from '../../settings.service';
+import { SettingsService } from '../../../settings.service';
 
 @Component({
-  selector: 'app-job-name-form',
-  templateUrl: './job-name-form.component.html',
-  styleUrls: ['./job-name-form.component.scss'],
+  selector: 'app-vendor-type-form',
+  templateUrl: './vendor-type-form.component.html',
+  styleUrls: ['./vendor-type-form.component.scss'],
 })
-export class JobNameFormComponent {
+export class VendorTypeFormComponent {
   action: string;
   dialogTitle: string;
-  jobnameInfo!: UntypedFormGroup;
+  vendortypeInfo!: UntypedFormGroup;
   advanceTable: AdvanceTable;
   variablesRoleList: any = [];
 
   roleList: any = this.variablesRoleList.slice();
-  titleMessage: string = '';
+  titleMessage = '';
   userList: any = [];
   isDelete = 0;
   invoice_logo = icon.INVOICE_LOGO;
   constructor (
-    public dialogRef: MatDialogRef<JobNameFormComponent>,
+    public dialogRef: MatDialogRef<VendorTypeFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: SettingsService,
     private fb: UntypedFormBuilder,
@@ -44,17 +43,12 @@ export class JobNameFormComponent {
     private router: Router,
     public uiSpinner: UiSpinnerService
   ) {
-    this.jobnameInfo = new FormGroup({
+    this.vendortypeInfo = new FormGroup({
       name: new FormControl('', [Validators.required]),
-      email_contact: new FormControl('', [Validators.required]),
     });
-
     if (this.data) {
-      this.jobnameInfo = new FormGroup({
+      this.vendortypeInfo = new FormGroup({
         name: new FormControl(this.data.name, [Validators.required]),
-        email_contact: new FormControl(this.data.email_contact, [
-          Validators.required,
-        ]),
       });
     }
 
@@ -82,17 +76,17 @@ export class JobNameFormComponent {
   }
 
   async submit() {
-    if (this.jobnameInfo.valid) {
-      let requestObject = this.jobnameInfo.value;
+    if (this.vendortypeInfo.valid) {
+      const requestObject = this.vendortypeInfo.value;
       if (this.data) {
         requestObject._id = this.data._id;
       }
       this.uiSpinner.spin$.next(true);
-      const data = await this.SettingsServices.saveJobName(requestObject);
+      const data = await this.SettingsServices.saveVendorType(requestObject);
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        location.reload();
+        this.dialogRef.close({ status: true, data: requestObject.name });
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');
@@ -104,6 +98,6 @@ export class JobNameFormComponent {
     this.dialogRef.close();
   }
   public confirmAdd(): void {
-    this.advanceTableService.addAdvanceTable(this.jobnameInfo.getRawValue());
+    this.advanceTableService.addAdvanceTable(this.vendortypeInfo.getRawValue());
   }
 }

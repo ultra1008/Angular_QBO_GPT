@@ -14,8 +14,7 @@ import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { AdvanceTable } from 'src/app/users/user.model';
 import { icon } from 'src/consts/icon';
 import { showNotification } from 'src/consts/utils';
-import { SettingsService } from '../../settings.service';
-import { TaxRateFormComponent } from '../tax-rate-form/tax-rate-form.component';
+import { SettingsService } from '../../../settings.service';
 
 @Component({
   selector: 'app-document-form',
@@ -30,11 +29,11 @@ export class DocumentFormComponent {
   variablesRoleList: any = [];
 
   roleList: any = this.variablesRoleList.slice();
-  titleMessage: string = '';
+  titleMessage = '';
   userList: any = [];
   isDelete = 0;
   invoice_logo = icon.INVOICE_LOGO;
-  constructor(
+  constructor (
     public dialogRef: MatDialogRef<DocumentFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: SettingsService,
@@ -72,13 +71,13 @@ export class DocumentFormComponent {
     return this.formControl.hasError('required')
       ? 'Required field'
       : this.formControl.hasError('email')
-      ? 'Not a valid email'
-      : '';
+        ? 'Not a valid email'
+        : '';
   }
 
   async submit() {
     if (this.documentInfo.valid) {
-      let requestObject = this.documentInfo.value;
+      const requestObject = this.documentInfo.value;
       if (this.data) {
         requestObject._id = this.data._id;
       }
@@ -87,7 +86,7 @@ export class DocumentFormComponent {
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        location.reload();
+        this.dialogRef.close({ status: true, data: requestObject.name });
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');

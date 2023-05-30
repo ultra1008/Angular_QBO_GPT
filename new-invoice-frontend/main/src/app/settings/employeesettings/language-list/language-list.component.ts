@@ -72,9 +72,7 @@ export class LanguageListComponent
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result.status) {
-        const foundIndex = this.languageService?.langDataChange.value.findIndex(
-          (x) => x._id === Language._id
-        );
+        const foundIndex = this.languageService?.langDataChange.value.findIndex((x) => x._id === Language._id);
         if (foundIndex != null && this.languageService) {
           this.languageService.langDataChange.value[foundIndex].name = result.data;
           this.refreshTable();
@@ -98,15 +96,10 @@ export class LanguageListComponent
       })
       .then(async (result) => {
         if (result.isConfirmed) {
-          const data = await this.commonService.postRequestAPI(
-            httpversion.PORTAL_V1 + httproutes.OTHER_LANGUAGE_DELETE,
-            { _id: Language._id }
-          );
+          const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.OTHER_LANGUAGE_DELETE, { _id: Language._id });
           if (data.status) {
             showNotification(that.snackBar, data.message, 'success');
-            const foundIndex = this.languageService?.langDataChange.value.findIndex(
-              (x) => x._id === Language._id
-            );
+            const foundIndex = this.languageService?.langDataChange.value.findIndex((x) => x._id === Language._id);
             if (foundIndex != null && this.languageService) {
               this.languageService.langDataChange.value.splice(foundIndex, 1);
               this.refreshTable();

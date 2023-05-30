@@ -24,12 +24,14 @@
         </div>
     </div>
     <div mat-dialog-content>
-        <form class="register-form m-4" [formGroup]="classnameInfo" (ngSubmit)="submit">
+        <form class="register-form m-4" [formGroup]="classnameInfo">
             <div class="row">
                 <div class=" col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                     <mat-form-field appearance="outline" class="example-full-width">
                         <mat-label>{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CLASS_NAME' | translate}}</mat-label>
-                        <input matInput placeholder="{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CLASS_NAME' | translate}}" formControlName="name" required>
+                        <input matInput
+                            placeholder="{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CLASS_NAME' | translate}}"
+                            formControlName="name" required>
                     </mat-form-field>
                 </div>
             </div>
@@ -49,7 +51,9 @@
                 <div class=" col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                     <mat-form-field appearance="outline" class="example-full-width">
                         <mat-label>{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.DESCRIPTION' | translate}}</mat-label>
-                        <input matInput placeholder="{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.DESCRIPTION' | translate}}" formControlName="description" required>
+                        <input matInput
+                            placeholder="{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.DESCRIPTION' | translate}}"
+                            formControlName="description" required>
                     </mat-form-field>
                 </div>
             </div>
@@ -72,7 +76,7 @@
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2 align-div">
                     <div class="example-button-row">
                         <button mat-raised-button color="primary" class="width-set-2" [disabled]="!classnameInfo.valid"
-                            [mat-dialog-close]="1" (click)="submit()">{{'COMMON.ACTIONS.SAVE' |
+                            (click)="submit()">{{'COMMON.ACTIONS.SAVE' |
                             translate}}</button>
                         <button mat-raised-button color="warn" class="width-set-1" (click)="dialogRef.close()"
                             tabindex="-1">{{'COMMON.ACTIONS.CANCEL' |

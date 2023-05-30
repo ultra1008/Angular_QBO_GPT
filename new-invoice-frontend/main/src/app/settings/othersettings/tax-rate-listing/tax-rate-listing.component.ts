@@ -13,35 +13,27 @@ import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroy
 import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
 import { TaxrateTable } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
-import { TermsFormComponent } from '../terms-form/terms-form.component';
-import { TaxRateFormComponent } from '../tax-rate-form/tax-rate-form.component';
+import { TermsFormComponent } from '../terms-listing/terms-form/terms-form.component';
+import { TaxRateFormComponent } from './tax-rate-form/tax-rate-form.component';
+import { CommonService } from 'src/app/services/common.service';
+import { httproutes, httpversion } from 'src/consts/httproutes';
 
 @Component({
   selector: 'app-tax-rate-listing',
   templateUrl: './tax-rate-listing.component.html',
   styleUrls: ['./tax-rate-listing.component.scss'],
 })
-export class TaxRateListingComponent
-  extends UnsubscribeOnDestroyAdapter
-  implements OnInit
-{
+export class TaxRateListingComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
   displayedColumns = ['name', 'actions'];
   taxrateService?: SettingsService;
   dataSource!: TaxrateDataSource;
   selection = new SelectionModel<TaxrateTable>(true, []);
   id?: number;
-  // advanceTable?: TaxrateTable;
   isDelete = 0;
-  titleMessage: string = '';
+  titleMessage = '';
 
-  constructor(
-    public dialog: MatDialog,
-    public SettingsService: SettingsService,
-    private snackBar: MatSnackBar,
-    public router: Router,
-    private httpCall: HttpCall,
-    public translate: TranslateService
-  ) {
+  constructor (public dialog: MatDialog, public SettingsService: SettingsService, private snackBar: MatSnackBar,
+    public router: Router, private httpCall: HttpCall, public translate: TranslateService, private commonService: CommonService,) {
     super();
   }
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
@@ -60,27 +52,31 @@ export class TaxRateListingComponent
     this.router.navigate(['/settings/mailbox-form']);
   }
 
-  edit(Taxrate: any) {
+  edit(taxRate: any) {
     let that = this;
     console.log('document');
     const dialogRef = this.dialog.open(TaxRateFormComponent, {
       width: '350px',
-      data: Taxrate,
+      data: taxRate,
       disableClose: true,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      that.refreshTable();
+      if (result.status) {
+        const foundIndex = this.taxrateService?.taxRateDataChange.value.findIndex((x) => x._id === taxRate._id);
+        if (foundIndex != null && this.taxrateService) {
+          this.taxrateService.taxRateDataChange.value[foundIndex].name = result.data;
+          this.refreshTable();
+        }
+      }
     });
   }
 
-  async deleteDocumentType(Taxrate: any) {
+  async deleteDocumentType(taxRate: any) {
     let that = this;
     swalWithBootstrapButtons
       .fire({
-        title: this.translate.instant(
-          'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CONFIRMATION_DIALOG.TAX_RATE'
-        ),
+        title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CONFIRMATION_DIALOG.TAX_RATE'),
         showDenyButton: true,
         showCancelButton: false,
         confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
@@ -89,11 +85,14 @@ export class TaxRateListingComponent
       })
       .then(async (result) => {
         if (result.isConfirmed) {
-          const data = await that.SettingsService.DeleteTaxrate(Taxrate._id);
+          const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.OTHER_SETTING_DELETE_TEXT_RATE, { _id: taxRate._id });
           if (data.status) {
             showNotification(that.snackBar, data.message, 'success');
-            that.refreshTable();
-            location.reload();
+            const foundIndex = this.taxrateService?.taxRateDataChange.value.findIndex((x) => x._id === taxRate._id);
+            if (foundIndex != null && this.taxrateService) {
+              this.taxrateService.taxRateDataChange.value.splice(foundIndex, 1);
+              this.refreshTable();
+            }
           } else {
             showNotification(that.snackBar, data.message, 'error');
           }
@@ -117,8 +116,8 @@ export class TaxRateListingComponent
     this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.renderedData.forEach((row) =>
-          this.selection.select(row)
-        );
+        this.selection.select(row)
+      );
   }
   removeSelectedRows() {
     //   const totalSelect = this.selection.selected.length;
@@ -182,7 +181,7 @@ export class TaxrateDataSource extends DataSource<TaxrateTable> {
   }
   filteredData: TaxrateTable[] = [];
   renderedData: TaxrateTable[] = [];
-  constructor(
+  constructor (
     public taxrateService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
@@ -196,16 +195,16 @@ export class TaxrateDataSource extends DataSource<TaxrateTable> {
   connect(): Observable<TaxrateTable[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this.taxrateService.dataTaxrateChange,
+      this.taxrateService.taxRateDataChange,
       this._sort.sortChange,
       this.filterChange,
       this.paginator.page,
     ];
-    this.taxrateService.getAllTaxrateTable(this.isDelete);
+    this.taxrateService.getTaxRateTable(this.isDelete);
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
-        this.filteredData = this.taxrateService.dataTaxrate
+        this.filteredData = this.taxrateService.taxRateData
           .slice()
           .filter((TaxrateTable: TaxrateTable) => {
             const searchStr = TaxrateTable.name.toLowerCase();

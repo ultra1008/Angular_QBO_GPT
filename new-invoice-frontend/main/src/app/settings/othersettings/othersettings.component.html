@@ -8,7 +8,8 @@
                         <div class="left">
                             <ul class="header-buttons-left ms-0">
                                 <li class="tbl-title">
-                                    <h2>{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.OTHER_SETTINGS' | translate}}</h2>
+                                    <h2>{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.OTHER_SETTINGS' | translate}}
+                                    </h2>
                                 </li>
                             </ul>
                         </div>
@@ -25,8 +26,8 @@
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.IMPORT' |
                                     translate}}">
-                                    <input id="file-upload" class="mr-2" type="file" style="display: none"
-                                    (change)="onFileChange($event)" #OpenFilebox />
+                                        <input id="file-upload" class="mr-2" type="file" style="display: none"
+                                            (change)="onFileChange($event)" #OpenFilebox />
                                         <button mat-mini-fab color="primary" (click)="importFileAction()">
                                             <mat-icon class="col-white">file_upload</mat-icon>
                                         </button>
@@ -53,39 +54,38 @@
                     <div class="body">
                         <div class="main-cust-setting-div">
                             <mat-tab-group (selectedTabChange)="onTabChanged($event)">
-                                <mat-tab label="{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.TERMS' | translate}}">
+                                <mat-tab
+                                    label="{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.TERMS' | translate}}">
                                     <br>
-                                    <div class="row">
+                                    <div class="row" *ngIf="showTerms">
                                         <app-terms-listing></app-terms-listing>
                                     </div>
                                 </mat-tab>
-                                <mat-tab label="{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.TAX_RATE' | translate}}">
+                                <mat-tab
+                                    label="{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.TAX_RATE' | translate}}">
                                     <br>
-                                    <div class="row">
+                                    <div class="row" *ngIf="showTaxRate">
                                         <app-tax-rate-listing></app-tax-rate-listing>
                                     </div>
                                 </mat-tab>
-                                <mat-tab label="{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.DOCUMENT' | translate}}">
+                                <mat-tab
+                                    label="{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.DOCUMENT' | translate}}">
                                     <br>
-                                    <div class="row">
+                                    <div class="row" *ngIf="showDocument">
                                         <app-documents-listing></app-documents-listing>
                                     </div>
                                 </mat-tab>
-                                <mat-tab label="{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.VENDOR_TYPE' | translate}}">
+                                <mat-tab
+                                    label="{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.VENDOR_TYPE' | translate}}">
                                     <br>
-                                    <div class="row">
+                                    <div class="row" *ngIf="showVendorType">
                                         <app-vendor-type-listing></app-vendor-type-listing>
                                     </div>
                                 </mat-tab>
-                                <!-- <mat-tab label="{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.JOB_NAME' | translate}}">
+                                <mat-tab
+                                    label="{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CLASS_NAME' | translate}}">
                                     <br>
-                                    <div class="row">
-                                        <app-job-name-listing></app-job-name-listing>
-                                    </div>
-                                </mat-tab> -->
-                                <mat-tab label="{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CLASS_NAME' | translate}}">
-                                    <br>
-                                    <div class="row" >
+                                    <div class="row" *ngIf="showClassName">
                                         <app-class-name-listing></app-class-name-listing>
                                     </div>
                                 </mat-tab>

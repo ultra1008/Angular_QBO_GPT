@@ -14,55 +14,43 @@ import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { AdvanceTable } from 'src/app/users/user.model';
 import { icon } from 'src/consts/icon';
 import { showNotification } from 'src/consts/utils';
-import { JobTitleFormComponent } from '../../employeesettings/job-title-list/job-title-form/job-title-form.component';
-import { SettingsService } from '../../settings.service';
+import { SettingsService } from '../../../settings.service';
 
 @Component({
-  selector: 'app-terms-form',
-  templateUrl: './terms-form.component.html',
-  styleUrls: ['./terms-form.component.scss'],
+  selector: 'app-tax-rate-form',
+  templateUrl: './tax-rate-form.component.html',
+  styleUrls: ['./tax-rate-form.component.scss'],
 })
-export class TermsFormComponent {
+export class TaxRateFormComponent {
   action: string;
   dialogTitle: string;
-  TermsInfo!: UntypedFormGroup;
+  textrateInfo!: UntypedFormGroup;
   advanceTable: AdvanceTable;
   variablesRoleList: any = [];
 
   roleList: any = this.variablesRoleList.slice();
-  titleMessage: string = '';
+  titleMessage = '';
   userList: any = [];
   isDelete = 0;
   invoice_logo = icon.INVOICE_LOGO;
   constructor (
-    public dialogRef: MatDialogRef<JobTitleFormComponent>,
+    public dialogRef: MatDialogRef<TaxRateFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: SettingsService,
     private fb: UntypedFormBuilder,
     private snackBar: MatSnackBar,
     public SettingsServices: SettingsService,
     private router: Router,
-    public uiSpinner: UiSpinnerService
+    public uiSpinner: UiSpinnerService,
   ) {
-    this.TermsInfo = new FormGroup({
+    this.textrateInfo = new FormGroup({
       name: new FormControl('', [Validators.required]),
-      due_days: new FormControl('', [Validators.required]),
-      is_discount: new FormControl(false, []),
-      discount: new FormControl('', []),
     });
+
     if (this.data) {
-      this.TermsInfo = new FormGroup({
+      this.textrateInfo = new FormGroup({
         name: new FormControl(this.data.name, [Validators.required]),
-        due_days: new FormControl(this.data.due_days, [Validators.required]),
-        is_discount: new FormControl(this.data.is_discount, []),
-        discount: new FormControl(this.data.discount, []),
       });
-      if (this.data.is_discount) {
-        this.TermsInfo.get('discount')?.setValidators([Validators.required]);
-      } else {
-        this.TermsInfo.get('discount')?.clearValidators();
-      }
-      this.TermsInfo.get('discount')?.updateValueAndValidity();
     }
 
     // Set the defaults
@@ -89,17 +77,17 @@ export class TermsFormComponent {
   }
 
   async submit() {
-    if (this.TermsInfo.valid) {
-      let requestObject = this.TermsInfo.value;
+    if (this.textrateInfo.valid) {
+      const requestObject = this.textrateInfo.value;
       if (this.data) {
         requestObject._id = this.data._id;
       }
       this.uiSpinner.spin$.next(true);
-      const data = await this.SettingsServices.saveTerms(requestObject);
+      const data = await this.SettingsServices.saveTaxrate(requestObject);
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        location.reload();
+        this.dialogRef.close({ status: true, data: requestObject.name });
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');
@@ -107,30 +95,10 @@ export class TermsFormComponent {
     }
   }
 
-  retainagePercentageChange(event: { charCode: number; }) {
-    let values = this.TermsInfo.value;
-    let pattern = /[^0-9.]/g;
-    let digit = String.fromCharCode(event.charCode);
-    let check_digit = digit.match(pattern);
-    let check = check_digit === null;
-    if (check) {
-      let percentage = Number(`${values.discount}${digit}`);
-      if (percentage > 100) {
-        check = false;
-        showNotification(
-          this.snackBar,
-          'Percentage must be less then 100.',
-          'error'
-        );
-      }
-    }
-    return check;
-  }
-
   onNoClick(): void {
     this.dialogRef.close();
   }
   public confirmAdd(): void {
-    this.advanceTableService.addAdvanceTable(this.TermsInfo.getRawValue());
+    this.advanceTableService.addAdvanceTable(this.textrateInfo.getRawValue());
   }
 }

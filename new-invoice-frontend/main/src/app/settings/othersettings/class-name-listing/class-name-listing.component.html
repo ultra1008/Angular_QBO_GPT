@@ -1,6 +1,17 @@
 <div class="content-block">
     <div class="row other">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="materialTableHeader">
+                <div class="left">
+                    <ul class="header-buttons-left ms-0">
+                        <li class="tbl-search-box">
+                            <label for="search-input"><i class="material-icons search-icon">search</i></label>
+                            <input placeholder="{{'COMMON.TOOL_TIP.SEARCH' | translate}}" type="text" #filter
+                                class="browser-default search-field" aria-label="Search box">
+                        </li>
+                    </ul>
+                </div>
+            </div>
             <div class="body overflow-auto">
                 <div class="table-responsive">
                     <table mat-table #table [dataSource]="dataSource" matSort class="table mat-cell">
@@ -97,10 +108,10 @@
                     </table>
                 </div>
                 <!-- Loading spinner -->
-                <div *ngIf="classnameService?.isTblLoading" class="tbl-spinner">
+                <div *ngIf="classnameService?.isClassNameTblLoading" class="tbl-spinner">
                     <app-loading></app-loading>
                 </div>
-                <div *ngIf="!classnameService?.isTblLoading" class="no-results"
+                <div *ngIf="!classnameService?.isClassNameTblLoading" class="no-results"
                     [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
                     No matching records found
                 </div>

@@ -21,6 +21,7 @@ import {
   UsageTable,
   VendorTypeTable,
 } from './settings.model';
+import { TermModel } from '../vendors/vendor.model';
 
 @Injectable()
 export class SettingsService extends UnsubscribeOnDestroyAdapter {
@@ -108,7 +109,75 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     this.isRelationshipTblLoading = false;
   }
 
+  // Terms Datatable Service
+  isTermTblLoading = true;
+  termDataChange: BehaviorSubject<TermModel[]> = new BehaviorSubject<TermModel[]>([]);
 
+  get termData(): TermModel[] {
+    return this.termDataChange.value;
+  }
+
+  async getTermTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.TERMS_DATA_TABLE, { is_delete: is_delete }).toPromise();
+    this.termDataChange.next(data);
+    this.isTermTblLoading = false;
+  }
+
+  // Tax Rate Datatable Service
+  isTaxRateTblLoading = true;
+  taxRateDataChange: BehaviorSubject<TaxrateTable[]> = new BehaviorSubject<TaxrateTable[]>([]);
+
+  get taxRateData(): TaxrateTable[] {
+    return this.taxRateDataChange.value;
+  }
+
+  async getTaxRateTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.TEXT_RATE_DATA_TABLE, { is_delete: is_delete }).toPromise();
+    this.taxRateDataChange.next(data);
+    this.isTaxRateTblLoading = false;
+  }
+
+  // Document Datatable Service
+  isDocumentTblLoading = true;
+  documentDataChange: BehaviorSubject<DocumentsTable[]> = new BehaviorSubject<DocumentsTable[]>([]);
+
+  get documentData(): DocumentsTable[] {
+    return this.documentDataChange.value;
+  }
+
+  async getDocumentTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.DOCUMENTS_DATA_TABLE, { is_delete: is_delete }).toPromise();
+    this.documentDataChange.next(data);
+    this.isDocumentTblLoading = false;
+  }
+
+  // Vendor Type Datatable Service
+  isVendorTypeTblLoading = true;
+  vendorTypeDataChange: BehaviorSubject<VendorTypeTable[]> = new BehaviorSubject<VendorTypeTable[]>([]);
+
+  get vendorTypeData(): VendorTypeTable[] {
+    return this.vendorTypeDataChange.value;
+  }
+
+  async getVendorTypeTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.VENDOR_TYPE_DATA_TABLE, { is_delete: is_delete }).toPromise();
+    this.vendorTypeDataChange.next(data);
+    this.isVendorTypeTblLoading = false;
+  }
+
+  // Class Name Datatable Service
+  isClassNameTblLoading = true;
+  classNameDataChange: BehaviorSubject<ClassNameTable[]> = new BehaviorSubject<ClassNameTable[]>([]);
+
+  get classNameData(): ClassNameTable[] {
+    return this.classNameDataChange.value;
+  }
+
+  async getClassNameTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.CLASS_NAME_DATA_TABLE, { is_delete: is_delete }).toPromise();
+    this.classNameDataChange.next(data);
+    this.isClassNameTblLoading = false;
+  }
 
 
 

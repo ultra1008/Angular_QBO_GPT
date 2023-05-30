@@ -5,12 +5,12 @@ import { showNotification, swalWithBootstrapButtons } from 'src/consts/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
-import { TermsFormComponent } from './terms-form/terms-form.component';
-import { TaxRateFormComponent } from './tax-rate-form/tax-rate-form.component';
-import { DocumentFormComponent } from './document-form/document-form.component';
+import { TermsFormComponent } from './terms-listing/terms-form/terms-form.component';
+import { TaxRateFormComponent } from './tax-rate-listing/tax-rate-form/tax-rate-form.component';
+import { DocumentFormComponent } from './documents-listing/document-form/document-form.component';
 import { VendorFormComponent } from 'src/app/vendors/vendor-form/vendor-form.component';
-import { VendorTypeFormComponent } from './vendor-type-form/vendor-type-form.component';
-import { JobNameFormComponent } from './job-name-form/job-name-form.component';
+import { VendorTypeFormComponent } from './vendor-type-listing/vendor-type-form/vendor-type-form.component';
+import { JobNameFormComponent } from './job-name-listing/job-name-form/job-name-form.component';
 import { saveAs } from 'file-saver';
 import * as fs from 'file-saver';
 import * as XLSX from 'xlsx';
@@ -18,7 +18,7 @@ import { ImportOtherSettingsComponent } from './import-other-settings/import-oth
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
-import { ClassNameFormComponent } from './class-name-form/class-name-form.component';
+import { ClassNameFormComponent } from './class-name-listing/class-name-form/class-name-form.component';
 
 @Component({
   selector: 'app-othersettings',
@@ -41,7 +41,13 @@ export class OthersettingsComponent {
   ];
   @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
 
-  constructor(
+  showTerms = true;
+  showTaxRate = true;
+  showDocument = true;
+  showVendorType = true;
+  showClassName = true;
+
+  constructor (
     private router: Router,
     public SettingsServices: SettingsService,
     private snackBar: MatSnackBar,
@@ -49,7 +55,7 @@ export class OthersettingsComponent {
     public dialog: MatDialog,
     public httpCall: HttpCall,
     public uiSpinner: UiSpinnerService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getDataTerms();
@@ -59,7 +65,7 @@ export class OthersettingsComponent {
     this.getDataJobName();
   }
 
-  onTabChanged($event: { index: string | number }) {
+  onTabChanged($event: { index: string | number; }) {
     this.currrent_tab = this.tab_Array[$event.index];
   }
 
@@ -106,7 +112,10 @@ export class OthersettingsComponent {
         data: {},
       });
       dialogRef.afterClosed().subscribe((result) => {
-        this.getDataTerms();
+        this.showTerms = false;
+        setTimeout(() => {
+          this.showTerms = true;
+        }, 100);
       });
     } else if (this.currrent_tab == 'Tax rate') {
       const dialogRef = this.dialog.open(TaxRateFormComponent, {
@@ -114,7 +123,10 @@ export class OthersettingsComponent {
         data: {},
       });
       dialogRef.afterClosed().subscribe((result) => {
-        this.getDataTaxRate();
+        this.showTaxRate = false;
+        setTimeout(() => {
+          this.showTaxRate = true;
+        }, 100);
       });
     } else if (this.currrent_tab == 'Documents') {
       const dialogRef = this.dialog.open(DocumentFormComponent, {
@@ -122,7 +134,10 @@ export class OthersettingsComponent {
         data: {},
       });
       dialogRef.afterClosed().subscribe((result) => {
-        this.getDataDocuments();
+        this.showDocument = false;
+        setTimeout(() => {
+          this.showDocument = true;
+        }, 100);
       });
     } else if (this.currrent_tab == 'Vendor type') {
       const dialogRef = this.dialog.open(VendorTypeFormComponent, {
@@ -130,23 +145,22 @@ export class OthersettingsComponent {
         data: {},
       });
       dialogRef.afterClosed().subscribe((result) => {
-        this.getDataVendorType();
+        this.showVendorType = false;
+        setTimeout(() => {
+          this.showVendorType = true;
+        }, 100);
       });
-      // }
-      //  else if (this.currrent_tab == 'Job name') {
-      //   const dialogRef = this.dialog.open(JobNameFormComponent, {
-      //     width: '350px',
-      //     data: {},
-      //   });
-      //   dialogRef.afterClosed().subscribe((result) => {
-      //     this.getDataJobName();
-      //   });
     } else if (this.currrent_tab == 'Class name') {
       const dialogRef = this.dialog.open(ClassNameFormComponent, {
         width: '350px',
         data: {},
       });
-      dialogRef.afterClosed().subscribe((result) => {});
+      dialogRef.afterClosed().subscribe((result) => {
+        this.showClassName = false;
+        setTimeout(() => {
+          this.showClassName = true;
+        }, 100);
+      });
     }
   }
 
@@ -450,17 +464,30 @@ export class OthersettingsComponent {
         .subscribe(function (params) {
           if (params.status) {
             if (that.currrent_tab == 'Terms') {
-              that.getDataTerms();
+              this.showTerms = false;
+              setTimeout(() => {
+                this.showTerms = true;
+              }, 100);
             } else if (that.currrent_tab == 'Tax rate') {
-              that.getDataTaxRate();
+              this.showTaxRate = false;
+              setTimeout(() => {
+                this.showTaxRate = true;
+              }, 100);
             } else if (that.currrent_tab == 'Documents') {
-              that.getDataDocuments();
+              this.showDocument = false;
+              setTimeout(() => {
+                this.showDocument = true;
+              }, 100);
             } else if (that.currrent_tab == 'Vendor type') {
-              that.getDataVendorType();
-            } else if (that.currrent_tab == 'Job name') {
-              that.getDataJobName();
+              this.showVendorType = false;
+              setTimeout(() => {
+                this.showVendorType = true;
+              }, 100);
             } else if (that.currrent_tab == 'Class name') {
-              that.getDataJobName();
+              this.showClassName = false;
+              setTimeout(() => {
+                this.showClassName = true;
+              }, 100);
             }
             // that.openErrorDataDialog(params);
 

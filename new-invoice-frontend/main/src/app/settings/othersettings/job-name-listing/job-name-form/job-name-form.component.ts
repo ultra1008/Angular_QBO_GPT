@@ -14,18 +14,18 @@ import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { AdvanceTable } from 'src/app/users/user.model';
 import { icon } from 'src/consts/icon';
 import { showNotification } from 'src/consts/utils';
-import { SettingsService } from '../../settings.service';
-import { DocumentFormComponent } from '../document-form/document-form.component';
+import { JobTitleFormComponent } from '../../../employeesettings/job-title-list/job-title-form/job-title-form.component';
+import { SettingsService } from '../../../settings.service';
 
 @Component({
-  selector: 'app-vendor-type-form',
-  templateUrl: './vendor-type-form.component.html',
-  styleUrls: ['./vendor-type-form.component.scss'],
+  selector: 'app-job-name-form',
+  templateUrl: './job-name-form.component.html',
+  styleUrls: ['./job-name-form.component.scss'],
 })
-export class VendorTypeFormComponent {
+export class JobNameFormComponent {
   action: string;
   dialogTitle: string;
-  vendortypeInfo!: UntypedFormGroup;
+  jobnameInfo!: UntypedFormGroup;
   advanceTable: AdvanceTable;
   variablesRoleList: any = [];
 
@@ -34,8 +34,8 @@ export class VendorTypeFormComponent {
   userList: any = [];
   isDelete = 0;
   invoice_logo = icon.INVOICE_LOGO;
-  constructor(
-    public dialogRef: MatDialogRef<VendorTypeFormComponent>,
+  constructor (
+    public dialogRef: MatDialogRef<JobNameFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: SettingsService,
     private fb: UntypedFormBuilder,
@@ -44,12 +44,17 @@ export class VendorTypeFormComponent {
     private router: Router,
     public uiSpinner: UiSpinnerService
   ) {
-    this.vendortypeInfo = new FormGroup({
+    this.jobnameInfo = new FormGroup({
       name: new FormControl('', [Validators.required]),
+      email_contact: new FormControl('', [Validators.required]),
     });
+
     if (this.data) {
-      this.vendortypeInfo = new FormGroup({
+      this.jobnameInfo = new FormGroup({
         name: new FormControl(this.data.name, [Validators.required]),
+        email_contact: new FormControl(this.data.email_contact, [
+          Validators.required,
+        ]),
       });
     }
 
@@ -72,18 +77,18 @@ export class VendorTypeFormComponent {
     return this.formControl.hasError('required')
       ? 'Required field'
       : this.formControl.hasError('email')
-      ? 'Not a valid email'
-      : '';
+        ? 'Not a valid email'
+        : '';
   }
 
   async submit() {
-    if (this.vendortypeInfo.valid) {
-      let requestObject = this.vendortypeInfo.value;
+    if (this.jobnameInfo.valid) {
+      let requestObject = this.jobnameInfo.value;
       if (this.data) {
         requestObject._id = this.data._id;
       }
       this.uiSpinner.spin$.next(true);
-      const data = await this.SettingsServices.saveVendorType(requestObject);
+      const data = await this.SettingsServices.saveJobName(requestObject);
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
@@ -99,6 +104,6 @@ export class VendorTypeFormComponent {
     this.dialogRef.close();
   }
   public confirmAdd(): void {
-    this.advanceTableService.addAdvanceTable(this.vendortypeInfo.getRawValue());
+    this.advanceTableService.addAdvanceTable(this.jobnameInfo.getRawValue());
   }
 }

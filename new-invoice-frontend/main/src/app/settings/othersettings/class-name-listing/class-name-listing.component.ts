@@ -13,8 +13,8 @@ import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroy
 import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
 import { ClassNameTable } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
-import { JobNameFormComponent } from '../job-name-form/job-name-form.component';
-import { ClassNameFormComponent } from '../class-name-form/class-name-form.component';
+import { JobNameFormComponent } from '../job-name-listing/job-name-form/job-name-form.component';
+import { ClassNameFormComponent } from './class-name-form/class-name-form.component';
 import { icon } from 'src/consts/icon';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
@@ -78,27 +78,34 @@ export class ClassNameListingComponent
     this.router.navigate(['/settings/mailbox-form']);
   }
 
-  edit(classname: any) {
+  edit(className: any) {
     let that = this;
     console.log('vednor');
     const dialogRef = this.dialog.open(ClassNameFormComponent, {
       width: '350px',
-      data: classname,
+      data: className,
       disableClose: true,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      that.refreshTable();
+      if (result.status) {
+        const foundIndex = this.classnameService?.classNameDataChange.value.findIndex((x) => x._id === className._id);
+        if (foundIndex != null && this.classnameService) {
+          this.classnameService.classNameDataChange.value[foundIndex].name = result.data.name;
+          this.classnameService.classNameDataChange.value[foundIndex].number = result.data.number;
+          this.classnameService.classNameDataChange.value[foundIndex].description = result.data.description;
+          this.classnameService.classNameDataChange.value[foundIndex].status = result.data.status;
+          this.refreshTable();
+        }
+      }
     });
   }
 
-  async delete(classname: any) {
+  async delete(className: any) {
     let that = this;
     swalWithBootstrapButtons
       .fire({
-        title: this.translate.instant(
-          'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CONFIRMATION_DIALOG.CLASS_NAME'
-        ),
+        title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CONFIRMATION_DIALOG.CLASS_NAME'),
         showDenyButton: true,
         showCancelButton: false,
         confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
@@ -107,13 +114,14 @@ export class ClassNameListingComponent
       })
       .then(async (result) => {
         if (result.isConfirmed) {
-          const data = await that.SettingsService.DeleteClassName(
-            classname._id
-          );
+          const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.DELETE_CLASS_NAME, { _id: className._id });
           if (data.status) {
             showNotification(that.snackBar, data.message, 'success');
-            that.refreshTable();
-            location.reload();
+            const foundIndex = this.classnameService?.classNameDataChange.value.findIndex((x) => x._id === className._id);
+            if (foundIndex != null && this.classnameService) {
+              this.classnameService.classNameDataChange.value.splice(foundIndex, 1);
+              this.refreshTable();
+            }
           } else {
             showNotification(that.snackBar, data.message, 'error');
           }
@@ -217,17 +225,17 @@ export class ClassNameDataSource extends DataSource<ClassNameTable> {
   connect(): Observable<ClassNameTable[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this.classnameService.dataclassnameChange,
+      this.classnameService.classNameDataChange,
       this._sort.sortChange,
       this.filterChange,
 
       this.paginator.page,
     ];
-    this.classnameService.getAllClassNameTable(this.isDelete);
+    this.classnameService.getClassNameTable(this.isDelete);
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
-        this.filteredData = this.classnameService.dataClassname
+        this.filteredData = this.classnameService.classNameData
           .slice()
           .filter((ClassNameTable: ClassNameTable) => {
             const searchStr =

@@ -11,13 +11,12 @@ import { fromEvent, BehaviorSubject, Observable, merge, map } from 'rxjs';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
-import { DocumentTypeFormComponent } from '../../employeesettings/document-type-list/document-type-form/document-type-form.component';
-import { TermsTable } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
-import { TermsFormComponent } from '../terms-form/terms-form.component';
+import { TermsFormComponent } from './terms-form/terms-form.component';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { icon } from 'src/consts/icon';
+import { TermModel } from 'src/app/vendors/vendor.model';
 
 @Component({
   selector: 'app-terms-listing',
@@ -30,9 +29,9 @@ export class TermsListingComponent
   displayedColumns = ['name', 'due_days', 'discount', 'actions'];
   termsService?: SettingsService;
   dataSource!: TermsDataSource;
-  selection = new SelectionModel<TermsTable>(true, []);
+  selection = new SelectionModel<TermModel>(true, []);
   id?: number;
-  // advanceTable?: TermsTable;
+  // advanceTable?: TermModel;
   isDelete = 0;
   titleMessage = '';
 
@@ -78,21 +77,31 @@ export class TermsListingComponent
     this.router.navigate(['/settings/mailbox-form']);
   }
 
-  edit(Terms: any) {
+  edit(term: TermModel) {
     let that = this;
-    console.log('document');
     const dialogRef = this.dialog.open(TermsFormComponent, {
       width: '350px',
-      data: Terms,
+      data: term,
       disableClose: true,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      that.refreshTable();
+      if (result.status) {
+        const foundIndex = this.termsService?.termDataChange.value.findIndex(
+          (x) => x._id === term._id
+        );
+        if (foundIndex != null && this.termsService) {
+          this.termsService.termDataChange.value[foundIndex].name = result.data.name;
+          this.termsService.termDataChange.value[foundIndex].is_dicount = result.data.is_dicount;
+          this.termsService.termDataChange.value[foundIndex].discount = result.data.discount;
+          this.termsService.termDataChange.value[foundIndex].due_days = result.data.due_days;
+          this.refreshTable();
+        }
+      }
     });
   }
 
-  async deleteDocumentType(Document: any) {
+  async deleteDocumentType(term: TermModel) {
     let that = this;
     swalWithBootstrapButtons
       .fire({
@@ -107,11 +116,17 @@ export class TermsListingComponent
       })
       .then(async (result) => {
         if (result.isConfirmed) {
-          const data = await that.SettingsService.DeleteTerms(Document._id);
+          const data = await this.commonService.postRequestAPI(
+            httpversion.PORTAL_V1 + httproutes.OTHER_SETTING_DELETE_TERMS,
+            { _id: term._id }
+          );
           if (data.status) {
             showNotification(that.snackBar, data.message, 'success');
-            that.refreshTable();
-            location.reload();
+            const foundIndex = this.termsService?.termDataChange.value.findIndex((x) => x._id === term._id);
+            if (foundIndex != null && this.termsService) {
+              this.termsService.termDataChange.value.splice(foundIndex, 1);
+              this.refreshTable();
+            }
           } else {
             showNotification(that.snackBar, data.message, 'error');
           }
@@ -162,7 +177,7 @@ export class TermsListingComponent
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: TermsTable) {
+  onContextMenu(event: MouseEvent, item: TermModel) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -173,7 +188,7 @@ export class TermsListingComponent
     }
   }
 }
-export class TermsDataSource extends DataSource<TermsTable> {
+export class TermsDataSource extends DataSource<TermModel> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -181,8 +196,8 @@ export class TermsDataSource extends DataSource<TermsTable> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: TermsTable[] = [];
-  renderedData: TermsTable[] = [];
+  filteredData: TermModel[] = [];
+  renderedData: TermModel[] = [];
   constructor (
     public termsService: SettingsService,
     public paginator: MatPaginator,
@@ -194,21 +209,21 @@ export class TermsDataSource extends DataSource<TermsTable> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<TermsTable[]> {
+  connect(): Observable<TermModel[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this.termsService.dataTermsChange,
+      this.termsService.termDataChange,
       this._sort.sortChange,
       this.filterChange,
       this.paginator.page,
     ];
-    this.termsService.getAllTermsTable(this.isDelete);
+    this.termsService.getTermTable(this.isDelete);
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
-        this.filteredData = this.termsService.dataTerms
+        this.filteredData = this.termsService.termData
           .slice()
-          .filter((TermsTable: TermsTable) => {
+          .filter((TermsTable: TermModel) => {
             const searchStr = (
               TermsTable.name +
               TermsTable.due_days +
@@ -232,7 +247,7 @@ export class TermsDataSource extends DataSource<TermsTable> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: TermsTable[]): TermsTable[] {
+  sortData(data: TermModel[]): TermModel[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }
@@ -246,7 +261,6 @@ export class TermsDataSource extends DataSource<TermsTable> {
         case 'name':
           [propertyA, propertyB] = [a.name, b.name];
           break;
-
         case 'due_days':
           [propertyA, propertyB] = [a.due_days, b.due_days];
           break;

@@ -13,8 +13,9 @@ import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroy
 import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
 import { VendorTypeTable } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
-import { DocumentFormComponent } from '../document-form/document-form.component';
-import { VendorTypeFormComponent } from '../vendor-type-form/vendor-type-form.component';
+import { VendorTypeFormComponent } from './vendor-type-form/vendor-type-form.component';
+import { CommonService } from 'src/app/services/common.service';
+import { httproutes, httpversion } from 'src/consts/httproutes';
 
 @Component({
   selector: 'app-vendor-type-listing',
@@ -23,24 +24,17 @@ import { VendorTypeFormComponent } from '../vendor-type-form/vendor-type-form.co
 })
 export class VendorTypeListingComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit
-{
+  implements OnInit {
   displayedColumns = ['name', 'actions'];
   vendortypeService?: SettingsService;
   dataSource!: VendorTypeDataSource;
   selection = new SelectionModel<VendorTypeTable>(true, []);
   id?: number;
   isDelete = 0;
-  titleMessage: string = '';
+  titleMessage = '';
 
-  constructor(
-    public dialog: MatDialog,
-    public SettingsService: SettingsService,
-    private snackBar: MatSnackBar,
-    public router: Router,
-    private httpCall: HttpCall,
-    public translate: TranslateService
-  ) {
+  constructor (public dialog: MatDialog, public SettingsService: SettingsService, private snackBar: MatSnackBar,
+    public router: Router, private httpCall: HttpCall, public translate: TranslateService, private commonService: CommonService,) {
     super();
   }
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
@@ -59,27 +53,30 @@ export class VendorTypeListingComponent
     this.router.navigate(['/settings/mailbox-form']);
   }
 
-  edit(vednor: any) {
+  edit(vendorType: any) {
     let that = this;
-    console.log('vednor');
     const dialogRef = this.dialog.open(VendorTypeFormComponent, {
       width: '350px',
-      data: vednor,
+      data: vendorType,
       disableClose: true,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      that.refreshTable();
+      if (result.status) {
+        const foundIndex = this.vendortypeService?.vendorTypeDataChange.value.findIndex((x) => x._id === vendorType._id);
+        if (foundIndex != null && this.vendortypeService) {
+          this.vendortypeService.vendorTypeDataChange.value[foundIndex].name = result.data;
+          this.refreshTable();
+        }
+      }
     });
   }
 
-  async deleteDocumentType(vednor: any) {
+  async deleteDocumentType(vendorType: any) {
     let that = this;
     swalWithBootstrapButtons
       .fire({
-        title: this.translate.instant(
-          'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CONFIRMATION_DIALOG.VENDOR_TYPE'
-        ),
+        title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CONFIRMATION_DIALOG.VENDOR_TYPE'),
         showDenyButton: true,
         showCancelButton: false,
         confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
@@ -88,11 +85,14 @@ export class VendorTypeListingComponent
       })
       .then(async (result) => {
         if (result.isConfirmed) {
-          const data = await that.SettingsService.DeleteVendorType(vednor._id);
+          const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_DELETE_VENDOR_TYPE, { _id: vendorType._id });
           if (data.status) {
             showNotification(that.snackBar, data.message, 'success');
-            that.refreshTable();
-            location.reload();
+            const foundIndex = this.vendortypeService?.vendorTypeDataChange.value.findIndex((x) => x._id === vendorType._id);
+            if (foundIndex != null && this.vendortypeService) {
+              this.vendortypeService.vendorTypeDataChange.value.splice(foundIndex, 1);
+              this.refreshTable();
+            }
           } else {
             showNotification(that.snackBar, data.message, 'error');
           }
@@ -116,8 +116,8 @@ export class VendorTypeListingComponent
     this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.renderedData.forEach((row) =>
-          this.selection.select(row)
-        );
+        this.selection.select(row)
+      );
   }
   removeSelectedRows() {
     //   const totalSelect = this.selection.selected.length;
@@ -181,7 +181,7 @@ export class VendorTypeDataSource extends DataSource<VendorTypeTable> {
   }
   filteredData: VendorTypeTable[] = [];
   renderedData: VendorTypeTable[] = [];
-  constructor(
+  constructor (
     public vendortypeService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
@@ -195,16 +195,16 @@ export class VendorTypeDataSource extends DataSource<VendorTypeTable> {
   connect(): Observable<VendorTypeTable[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this.vendortypeService.dataVendortypeChange,
+      this.vendortypeService.vendorTypeDataChange,
       this._sort.sortChange,
       this.filterChange,
       this.paginator.page,
     ];
-    this.vendortypeService.getAllVendorTypeTable(this.isDelete);
+    this.vendortypeService.getVendorTypeTable(this.isDelete);
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
-        this.filteredData = this.vendortypeService.dataVendortype
+        this.filteredData = this.vendortypeService.vendorTypeData
           .slice()
           .filter((VendorTypeTable: VendorTypeTable) => {
             const searchStr = VendorTypeTable.name.toLowerCase();
