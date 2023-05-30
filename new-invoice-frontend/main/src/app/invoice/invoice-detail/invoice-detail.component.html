@@ -47,7 +47,7 @@
                     </div>
                     <div class="row clearfix mt-2">
                          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                              <div class="Fix-hight">
+                              <div class="Fix-height">
                                    <div class="card">
                                         <div class="header">
                                              <h2>{{'INVOICE.INVOICE_DETAILS.INFORMATION.TITLE' |
@@ -191,107 +191,7 @@
                                              </div>
                                         </div>
                                    </div>
-                                   <div class="card activity">
-                                        <div class="header">
-                                             <h2>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TITLE' |
-                                                  translate}}</h2>
 
-                                        </div>
-                                        <div class="body">
-                                             <mat-tab-group>
-                                                  <mat-tab label="3-28-2023">
-                                                       <div class="body table-responsive">
-                                                            <table class="table">
-                                                                 <thead>
-                                                                      <tr>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.TOTAL_AMOUNT' |
-                                                                                translate}}</th>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.COST_CODE' |
-                                                                                translate}}</th>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.ASSIGN_TO' |
-                                                                                translate}}</th>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.GL_ACCOUNT' |
-                                                                                translate}}</th>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.NOTES' |
-                                                                                translate}}</th>
-                                                                      </tr>
-                                                                 </thead>
-                                                                 <tbody>
-                                                                      <tr>
-                                                                           <th>55.00</th>
-                                                                           <td>Cost Code</td>
-                                                                           <td>Assign To</td>
-                                                                           <td>GL Account</td>
-                                                                           <td>Notes</td>
-                                                                      </tr>
-                                                                 </tbody>
-                                                            </table>
-                                                       </div>
-                                                  </mat-tab>
-                                                  <mat-tab label="3-25-2023">
-                                                       <div class="body table-responsive">
-                                                            <table class="table">
-                                                                 <thead>
-
-                                                                      <tr>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.TOTAL_AMOUNT' |
-                                                                                     translate}}</th>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.COST_CODE' |
-                                                                                     translate}}</th>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.ASSIGN_TO' |
-                                                                                     translate}}</th>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.GL_ACCOUNT' |
-                                                                                     translate}}</th>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.NOTES' |
-                                                                                     translate}}</th>
-                                                                      </tr>
-
-                                                                 </thead>
-                                                                 <tbody>
-                                                                      <tr>
-                                                                           <th>55.00</th>
-                                                                           <td>Cost Code</td>
-                                                                           <td>Assign To</td>
-                                                                           <td>GL Account</td>
-                                                                           <td>Notes</td>
-                                                                      </tr>
-                                                                 </tbody>
-                                                            </table>
-                                                       </div>
-                                                  </mat-tab>
-                                                  <mat-tab label="3-20-2023">
-                                                       <div class="body table-responsive">
-                                                            <table class="table">
-                                                                 <thead>
-                                                                      <tr>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.TOTAL_AMOUNT' |
-                                                                                translate}}</th>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.COST_CODE' |
-                                                                                translate}}</th>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.ASSIGN_TO' |
-                                                                                translate}}</th>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.GL_ACCOUNT' |
-                                                                                translate}}</th>
-                                                                           <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.NOTES' |
-                                                                                translate}}</th>
-                                                                      </tr>
-                                                                 </thead>
-                                                                 <tbody>
-                                                                      <tr>
-                                                                           <th>55.00</th>
-                                                                           <td>Cost Code</td>
-                                                                           <td>Assign To</td>
-                                                                           <td>GL Account</td>
-                                                                           <td>Notes</td>
-                                                                      </tr>
-                                                                 </tbody>
-                                                            </table>
-                                                       </div>
-                                                  </mat-tab>
-                                             </mat-tab-group>
-
-                                        </div>
-                                   </div>
                                    <div class="body e-panal">
                                         <mat-accordion>
                                              <mat-expansion-panel>
@@ -688,10 +588,116 @@
                                                        </div>
                                                   </div>
                                              </mat-expansion-panel>
+                                             <mat-expansion-panel (opened)="panelOpenState = true"
+                                                  (closed)="panelOpenState = false">
+                                                  <mat-expansion-panel-header>
+                                                       <mat-panel-title>
+                                                            {{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TITLE' |
+                                                            translate}}
+                                                       </mat-panel-title>
+
+                                                  </mat-expansion-panel-header>
+                                                  <div class="card activity">
+                                                       <div class="body">
+                                                            <mat-tab-group>
+                                                                 <mat-tab label="3-28-2023">
+                                                                      <div class="body table-responsive">
+                                                                           <table class="table">
+                                                                                <thead>
+                                                                                     <tr>
+                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.TOTAL_AMOUNT' |
+                                                                                          translate}}</th>
+                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.COST_CODE' |
+                                                                                          translate}}</th>
+                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.ASSIGN_TO' |
+                                                                                          translate}}</th>
+                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.GL_ACCOUNT' |
+                                                                                          translate}}</th>
+                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.NOTES' |
+                                                                                          translate}}</th>
+                                                                                     </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                     <tr>
+                                                                                          <th>55.00</th>
+                                                                                          <td>Cost Code</td>
+                                                                                          <td>Assign To</td>
+                                                                                          <td>GL Account</td>
+                                                                                          <td>Notes</td>
+                                                                                     </tr>
+                                                                                </tbody>
+                                                                           </table>
+                                                                      </div>
+                                                                 </mat-tab>
+                                                                 <mat-tab label="3-25-2023">
+                                                                      <div class="body table-responsive">
+                                                                           <table class="table">
+                                                                                <thead>
+
+                                                                                     <tr>
+                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.TOTAL_AMOUNT' |
+                                                                                               translate}}</th>
+                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.COST_CODE' |
+                                                                                               translate}}</th>
+                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.ASSIGN_TO' |
+                                                                                               translate}}</th>
+                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.GL_ACCOUNT' |
+                                                                                               translate}}</th>
+                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.NOTES' |
+                                                                                               translate}}</th>
+                                                                                     </tr>
+
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                     <tr>
+                                                                                          <th>55.00</th>
+                                                                                          <td>Cost Code</td>
+                                                                                          <td>Assign To</td>
+                                                                                          <td>GL Account</td>
+                                                                                          <td>Notes</td>
+                                                                                     </tr>
+                                                                                </tbody>
+                                                                           </table>
+                                                                      </div>
+                                                                 </mat-tab>
+                                                                 <mat-tab label="3-20-2023">
+                                                                      <div class="body table-responsive">
+                                                                           <table class="table">
+                                                                                <thead>
+                                                                                     <tr>
+                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.TOTAL_AMOUNT' |
+                                                                                          translate}}</th>
+                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.COST_CODE' |
+                                                                                          translate}}</th>
+                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.ASSIGN_TO' |
+                                                                                          translate}}</th>
+                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.GL_ACCOUNT' |
+                                                                                          translate}}</th>
+                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.NOTES' |
+                                                                                          translate}}</th>
+                                                                                     </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                     <tr>
+                                                                                          <th>55.00</th>
+                                                                                          <td>Cost Code</td>
+                                                                                          <td>Assign To</td>
+                                                                                          <td>GL Account</td>
+                                                                                          <td>Notes</td>
+                                                                                     </tr>
+                                                                                </tbody>
+                                                                           </table>
+                                                                      </div>
+                                                                 </mat-tab>
+                                                            </mat-tab-group>
+
+                                                       </div>
+                                                  </div>
+                                             </mat-expansion-panel>
                                         </mat-accordion>
                                    </div>
                               </div>
-                              <div class="card  activity mt-2 position-f">
+                              <div class="card  activity mt-2" style="height: 300px;">
                                    <div class="header">
                                         <h2>{{'INVOICE.INVOICE_DETAILS.INFO.TITLE' | translate}}</h2>
                                         <span class="Activity-h">
@@ -755,7 +761,7 @@
                                                   [zoom-scale]="'page-width'" [stick-to-page]="false"
                                                   [render-text]="true" [external-link-target]="'blank'"
                                                   [autoresize]="true" [show-borders]="false"
-                                                  style="width: 100%; height: 600px;"></pdf-viewer>
+                                                  style="width: 100%; height: 710px;"></pdf-viewer>
                                         </div>
                                    </div>
                               </div>
