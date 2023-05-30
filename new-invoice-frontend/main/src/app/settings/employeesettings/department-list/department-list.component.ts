@@ -13,8 +13,8 @@ import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroy
 import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
 import { DepartmentTable } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
-import { DocumentTypeFormComponent } from '../document-type-form/document-type-form.component';
-import { DepartmentFormComponent } from '../department-form/department-form.component';
+import { DocumentTypeFormComponent } from '../document-type-list/document-type-form/document-type-form.component';
+import { DepartmentFormComponent } from './department-form/department-form.component';
 
 @Component({
   selector: 'app-department-list',

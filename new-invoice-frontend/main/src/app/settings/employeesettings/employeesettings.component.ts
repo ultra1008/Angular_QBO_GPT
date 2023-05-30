@@ -5,8 +5,8 @@ import { SettingsService } from '../settings.service';
 import { showNotification, swalWithBootstrapButtons } from 'src/consts/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
-import { RelationshipFormComponent } from './relationship-form/relationship-form.component';
-import { LanguageFormComponent } from './language-form/language-form.component';
+import { RelationshipFormComponent } from './relationship-list/relationship-form/relationship-form.component';
+import { LanguageFormComponent } from './language-list/language-form/language-form.component';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
@@ -14,10 +14,10 @@ import * as fs from 'file-saver';
 import * as XLSX from 'xlsx';
 import { ImportEmployeeSettingsComponent } from './import-employee-settings/import-employee-settings.component';
 import { ExistListingComponent } from './exist-listing/exist-listing.component';
-import { DocumentTypeFormComponent } from './document-type-form/document-type-form.component';
-import { DepartmentFormComponent } from './department-form/department-form.component';
-import { JobTitleFormComponent } from './job-title-form/job-title-form.component';
-import { JobTypeFormComponent } from './job-type-form/job-type-form.component';
+import { DocumentTypeFormComponent } from './document-type-list/document-type-form/document-type-form.component';
+import { DepartmentFormComponent } from './department-list/department-form/department-form.component';
+import { JobTitleFormComponent } from './job-title-list/job-title-form/job-title-form.component';
+import { JobTypeFormComponent } from './job-type-list/job-type-form/job-type-form.component';
 
 @Component({
   selector: 'app-employeesettings',

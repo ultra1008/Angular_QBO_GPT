@@ -11,7 +11,7 @@ import { fromEvent, BehaviorSubject, Observable, merge, map } from 'rxjs';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
-import { DocumentTypeFormComponent } from '../../employeesettings/document-type-form/document-type-form.component';
+import { DocumentTypeFormComponent } from '../../employeesettings/document-type-list/document-type-form/document-type-form.component';
 import { TermsTable } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
 import { TermsFormComponent } from '../terms-form/terms-form.component';

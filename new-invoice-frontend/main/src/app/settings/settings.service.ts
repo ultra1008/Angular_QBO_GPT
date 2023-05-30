@@ -113,6 +113,17 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
   // private readonly API_URL = 'assets/data/advanceTable.json';
   // dataChange: BehaviorSubject<Settings[]> = new BehaviorSubject<Settings[]>([]);
   // Temporarily stores data from dialogs

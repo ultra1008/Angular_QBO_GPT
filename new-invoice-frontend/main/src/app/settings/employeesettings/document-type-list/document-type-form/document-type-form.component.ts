@@ -1,41 +1,43 @@
+import { SelectionModel } from '@angular/cdk/collections';
 import { Component, Inject } from '@angular/core';
 import {
   UntypedFormGroup,
   UntypedFormBuilder,
-  FormGroup,
-  FormControl,
-  Validators,
   UntypedFormControl,
+  Validators,
+  FormControl,
+  FormGroup,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
+import { UserRestoreFormComponent } from 'src/app/users/user-restore-form/user-restore-form.component';
 import { AdvanceTable } from 'src/app/users/user.model';
+import { UserService } from 'src/app/users/user.service';
 import { showNotification } from 'src/consts/utils';
-import { SettingsService } from '../../settings.service';
-import { JobTitleFormComponent } from '../job-title-form/job-title-form.component';
+import { SettingsService } from '../../../settings.service';
+import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { icon } from 'src/consts/icon';
 
 @Component({
-  selector: 'app-relationship-form',
-  templateUrl: './relationship-form.component.html',
-  styleUrls: ['./relationship-form.component.scss'],
+  selector: 'app-document-type-form',
+  templateUrl: './document-type-form.component.html',
+  styleUrls: ['./document-type-form.component.scss'],
 })
-export class RelationshipFormComponent {
+export class DocumentTypeFormComponent {
   action: string;
   dialogTitle: string;
-  relationshipInfo!: UntypedFormGroup;
+  DocumentInfo: UntypedFormGroup;
   advanceTable: AdvanceTable;
   variablesRoleList: any = [];
 
   roleList: any = this.variablesRoleList.slice();
-  titleMessage: string = '';
+  titleMessage = '';
   userList: any = [];
   isDelete = 0;
   invoice_logo = icon.INVOICE_LOGO;
   constructor (
-    public dialogRef: MatDialogRef<JobTitleFormComponent>,
+    public dialogRef: MatDialogRef<DocumentTypeFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: SettingsService,
     private fb: UntypedFormBuilder,
@@ -44,18 +46,17 @@ export class RelationshipFormComponent {
     private router: Router,
     public uiSpinner: UiSpinnerService
   ) {
-    this.relationshipInfo = new FormGroup({
-      relationship_name: new FormControl('', [Validators.required]),
+    this.DocumentInfo = new FormGroup({
+      document_type_name: new FormControl('', [Validators.required]),
+      is_expiration: new FormControl(false),
     });
-    console.log('data', data);
-    const document_data = data.data;
 
     if (this.data) {
-      console.log('call');
-      this.relationshipInfo = new FormGroup({
-        relationship_name: new FormControl(this.data.relationship_name, [
+      this.DocumentInfo = new FormGroup({
+        document_type_name: new FormControl(this.data.document_type_name, [
           Validators.required,
         ]),
+        is_expiration: new FormControl(this.data.is_expiration ?? false),
       });
     }
 
@@ -70,6 +71,7 @@ export class RelationshipFormComponent {
       const blankObject = {} as AdvanceTable;
       this.advanceTable = new AdvanceTable(blankObject);
     }
+    // this.DocumentInfo = this.createDocumentForm();
   }
   formControl = new UntypedFormControl('', [
     Validators.required, // Validators.email,
@@ -83,17 +85,17 @@ export class RelationshipFormComponent {
   }
 
   async submit() {
-    if (this.relationshipInfo.valid) {
-      const requestObject = this.relationshipInfo.value;
+    if (this.DocumentInfo.valid) {
+      const requestObject = this.DocumentInfo.value;
       if (this.data) {
         requestObject._id = this.data._id;
       }
       this.uiSpinner.spin$.next(true);
-      const data = await this.SettingsServices.saveRelatioship(requestObject);
+      const data = await this.SettingsServices.saveDocumentType(requestObject);
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        this.dialogRef.close({ status: true, data: requestObject.relationship_name });
+        this.dialogRef.close({ status: true, data: { name: requestObject.document_type_name, is_expiration: requestObject.is_expiration, } });
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');
@@ -105,8 +107,6 @@ export class RelationshipFormComponent {
     this.dialogRef.close();
   }
   public confirmAdd(): void {
-    this.advanceTableService.addAdvanceTable(
-      this.relationshipInfo.getRawValue()
-    );
+    this.advanceTableService.addAdvanceTable(this.DocumentInfo.getRawValue());
   }
 }

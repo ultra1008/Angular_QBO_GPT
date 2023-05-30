@@ -17,7 +17,7 @@ import {
 } from 'src/consts/utils';
 import { DocumentTypeTable } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
-import { DocumentTypeFormComponent } from '../document-type-form/document-type-form.component';
+import { DocumentTypeFormComponent } from './document-type-form/document-type-form.component';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 

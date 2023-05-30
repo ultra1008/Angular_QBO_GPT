@@ -14,7 +14,7 @@ import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { AdvanceTable } from 'src/app/users/user.model';
 import { icon } from 'src/consts/icon';
 import { showNotification } from 'src/consts/utils';
-import { JobTitleFormComponent } from '../../employeesettings/job-title-form/job-title-form.component';
+import { JobTitleFormComponent } from '../../employeesettings/job-title-list/job-title-form/job-title-form.component';
 import { SettingsService } from '../../settings.service';
 
 @Component({
@@ -34,7 +34,7 @@ export class TermsFormComponent {
   userList: any = [];
   isDelete = 0;
   invoice_logo = icon.INVOICE_LOGO;
-  constructor(
+  constructor (
     public dialogRef: MatDialogRef<JobTitleFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: SettingsService,
@@ -84,8 +84,8 @@ export class TermsFormComponent {
     return this.formControl.hasError('required')
       ? 'Required field'
       : this.formControl.hasError('email')
-      ? 'Not a valid email'
-      : '';
+        ? 'Not a valid email'
+        : '';
   }
 
   async submit() {
@@ -107,7 +107,7 @@ export class TermsFormComponent {
     }
   }
 
-  retainagePercentageChange(event: { charCode: number }) {
+  retainagePercentageChange(event: { charCode: number; }) {
     let values = this.TermsInfo.value;
     let pattern = /[^0-9.]/g;
     let digit = String.fromCharCode(event.charCode);

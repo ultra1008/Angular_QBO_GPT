@@ -13,29 +13,28 @@ import { Router } from '@angular/router';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { AdvanceTable } from 'src/app/users/user.model';
 import { showNotification } from 'src/consts/utils';
-import { SettingsService } from '../../settings.service';
-import { JobTitleFormComponent } from '../job-title-form/job-title-form.component';
+import { SettingsService } from '../../../settings.service';
 import { icon } from 'src/consts/icon';
 
 @Component({
-  selector: 'app-language-form',
-  templateUrl: './language-form.component.html',
-  styleUrls: ['./language-form.component.scss'],
+  selector: 'app-department-form',
+  templateUrl: './department-form.component.html',
+  styleUrls: ['./department-form.component.scss'],
 })
-export class LanguageFormComponent {
+export class DepartmentFormComponent {
   action: string;
   dialogTitle: string;
-  languageInfo!: UntypedFormGroup;
+  DepartmentInfo!: UntypedFormGroup;
   advanceTable: AdvanceTable;
   variablesRoleList: any = [];
+  invoice_logo = icon.INVOICE_LOGO;
 
   roleList: any = this.variablesRoleList.slice();
   titleMessage = '';
   userList: any = [];
   isDelete = 0;
-  invoice_logo = icon.INVOICE_LOGO;
   constructor (
-    public dialogRef: MatDialogRef<JobTitleFormComponent>,
+    public dialogRef: MatDialogRef<DepartmentFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: SettingsService,
     private fb: UntypedFormBuilder,
@@ -44,14 +43,18 @@ export class LanguageFormComponent {
     private router: Router,
     public uiSpinner: UiSpinnerService
   ) {
-    this.languageInfo = new FormGroup({
-      name: new FormControl('', [Validators.required]),
+    this.DepartmentInfo = new FormGroup({
+      department_name: new FormControl('', [Validators.required]),
     });
+    console.log('data', data);
     const document_data = data.data;
 
     if (this.data) {
-      this.languageInfo = new FormGroup({
-        name: new FormControl(this.data.name, [Validators.required]),
+      console.log('call');
+      this.DepartmentInfo = new FormGroup({
+        department_name: new FormControl(this.data.department_name, [
+          Validators.required,
+        ]),
       });
     }
 
@@ -79,17 +82,17 @@ export class LanguageFormComponent {
   }
 
   async submit() {
-    if (this.languageInfo.valid) {
-      const requestObject = this.languageInfo.value;
+    if (this.DepartmentInfo.valid) {
+      const requestObject = this.DepartmentInfo.value;
       if (this.data) {
         requestObject._id = this.data._id;
       }
       this.uiSpinner.spin$.next(true);
-      const data = await this.SettingsServices.saveLanguage(requestObject);
+      const data = await this.SettingsServices.saveDepartment(requestObject);
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        this.dialogRef.close({ status: true, data: requestObject.name });
+        this.dialogRef.close({ status: true, data: requestObject.department_name });
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');
@@ -101,6 +104,6 @@ export class LanguageFormComponent {
     this.dialogRef.close();
   }
   public confirmAdd(): void {
-    this.advanceTableService.addAdvanceTable(this.languageInfo.getRawValue());
+    this.advanceTableService.addAdvanceTable(this.DepartmentInfo.getRawValue());
   }
 }

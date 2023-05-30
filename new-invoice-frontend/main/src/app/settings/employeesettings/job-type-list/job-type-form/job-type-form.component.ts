@@ -13,29 +13,28 @@ import { Router } from '@angular/router';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { AdvanceTable } from 'src/app/users/user.model';
 import { showNotification } from 'src/consts/utils';
-import { SettingsService } from '../../settings.service';
-import { DocumentTypeFormComponent } from '../document-type-form/document-type-form.component';
 import { icon } from 'src/consts/icon';
+import { SettingsService } from '../../../settings.service';
 
 @Component({
-  selector: 'app-department-form',
-  templateUrl: './department-form.component.html',
-  styleUrls: ['./department-form.component.scss'],
+  selector: 'app-job-type-form',
+  templateUrl: './job-type-form.component.html',
+  styleUrls: ['./job-type-form.component.scss'],
 })
-export class DepartmentFormComponent {
+export class JobTypeFormComponent {
   action: string;
   dialogTitle: string;
-  DepartmentInfo!: UntypedFormGroup;
+  jobtypeInfo!: UntypedFormGroup;
   advanceTable: AdvanceTable;
   variablesRoleList: any = [];
-  invoice_logo = icon.INVOICE_LOGO;
 
   roleList: any = this.variablesRoleList.slice();
   titleMessage = '';
   userList: any = [];
   isDelete = 0;
+  invoice_logo = icon.INVOICE_LOGO;
   constructor (
-    public dialogRef: MatDialogRef<DepartmentFormComponent>,
+    public dialogRef: MatDialogRef<JobTypeFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: SettingsService,
     private fb: UntypedFormBuilder,
@@ -44,16 +43,16 @@ export class DepartmentFormComponent {
     private router: Router,
     public uiSpinner: UiSpinnerService
   ) {
-    this.DepartmentInfo = new FormGroup({
-      department_name: new FormControl('', [Validators.required]),
+    this.jobtypeInfo = new FormGroup({
+      job_type_name: new FormControl('', [Validators.required]),
     });
     console.log('data', data);
     const document_data = data.data;
 
     if (this.data) {
       console.log('call');
-      this.DepartmentInfo = new FormGroup({
-        department_name: new FormControl(this.data.department_name, [
+      this.jobtypeInfo = new FormGroup({
+        job_type_name: new FormControl(this.data.job_type_name, [
           Validators.required,
         ]),
       });
@@ -83,17 +82,17 @@ export class DepartmentFormComponent {
   }
 
   async submit() {
-    if (this.DepartmentInfo.valid) {
-      const requestObject = this.DepartmentInfo.value;
+    if (this.jobtypeInfo.valid) {
+      const requestObject = this.jobtypeInfo.value;
       if (this.data) {
         requestObject._id = this.data._id;
       }
       this.uiSpinner.spin$.next(true);
-      const data = await this.SettingsServices.saveDepartment(requestObject);
+      const data = await this.SettingsServices.saveJobType(requestObject);
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        this.dialogRef.close({ status: true, data: requestObject.department_name });
+        this.dialogRef.close({ status: true, data: requestObject.job_type_name });
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');
@@ -105,6 +104,6 @@ export class DepartmentFormComponent {
     this.dialogRef.close();
   }
   public confirmAdd(): void {
-    this.advanceTableService.addAdvanceTable(this.DepartmentInfo.getRawValue());
+    this.advanceTableService.addAdvanceTable(this.jobtypeInfo.getRawValue());
   }
 }

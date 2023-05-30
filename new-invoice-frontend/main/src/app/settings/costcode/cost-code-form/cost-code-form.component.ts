@@ -14,7 +14,7 @@ import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { AdvanceTable } from 'src/app/users/user.model';
 import { icon } from 'src/consts/icon';
 import { showNotification } from 'src/consts/utils';
-import { DepartmentFormComponent } from '../../employeesettings/department-form/department-form.component';
+import { DepartmentFormComponent } from '../../employeesettings/department-list/department-form/department-form.component';
 import { SettingsService } from '../../settings.service';
 
 @Component({
@@ -34,7 +34,7 @@ export class CostCodeFormComponent {
   titleMessage: string = '';
   userList: any = [];
   isDelete = 0;
-  constructor(
+  constructor (
     public dialogRef: MatDialogRef<DepartmentFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: SettingsService,
@@ -80,8 +80,8 @@ export class CostCodeFormComponent {
     return this.formControl.hasError('required')
       ? 'Required field'
       : this.formControl.hasError('email')
-      ? 'Not a valid email'
-      : '';
+        ? 'Not a valid email'
+        : '';
   }
 
   async submit() {

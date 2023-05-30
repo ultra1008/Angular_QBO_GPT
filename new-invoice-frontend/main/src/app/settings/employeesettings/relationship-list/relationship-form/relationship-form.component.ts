@@ -13,23 +13,24 @@ import { Router } from '@angular/router';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { AdvanceTable } from 'src/app/users/user.model';
 import { showNotification } from 'src/consts/utils';
-import { SettingsService } from '../../settings.service';
+import { SettingsService } from '../../../settings.service';
+import { JobTitleFormComponent } from '../../job-title-list/job-title-form/job-title-form.component';
 import { icon } from 'src/consts/icon';
 
 @Component({
-  selector: 'app-job-title-form',
-  templateUrl: './job-title-form.component.html',
-  styleUrls: ['./job-title-form.component.scss'],
+  selector: 'app-relationship-form',
+  templateUrl: './relationship-form.component.html',
+  styleUrls: ['./relationship-form.component.scss'],
 })
-export class JobTitleFormComponent {
+export class RelationshipFormComponent {
   action: string;
   dialogTitle: string;
-  jobtitleInfo!: UntypedFormGroup;
+  relationshipInfo!: UntypedFormGroup;
   advanceTable: AdvanceTable;
   variablesRoleList: any = [];
 
   roleList: any = this.variablesRoleList.slice();
-  titleMessage = '';
+  titleMessage: string = '';
   userList: any = [];
   isDelete = 0;
   invoice_logo = icon.INVOICE_LOGO;
@@ -43,16 +44,16 @@ export class JobTitleFormComponent {
     private router: Router,
     public uiSpinner: UiSpinnerService
   ) {
-    this.jobtitleInfo = new FormGroup({
-      job_title_name: new FormControl('', [Validators.required]),
+    this.relationshipInfo = new FormGroup({
+      relationship_name: new FormControl('', [Validators.required]),
     });
     console.log('data', data);
     const document_data = data.data;
 
     if (this.data) {
       console.log('call');
-      this.jobtitleInfo = new FormGroup({
-        job_title_name: new FormControl(this.data.job_title_name, [
+      this.relationshipInfo = new FormGroup({
+        relationship_name: new FormControl(this.data.relationship_name, [
           Validators.required,
         ]),
       });
@@ -82,17 +83,17 @@ export class JobTitleFormComponent {
   }
 
   async submit() {
-    if (this.jobtitleInfo.valid) {
-      const requestObject = this.jobtitleInfo.value;
+    if (this.relationshipInfo.valid) {
+      const requestObject = this.relationshipInfo.value;
       if (this.data) {
         requestObject._id = this.data._id;
       }
       this.uiSpinner.spin$.next(true);
-      const data = await this.SettingsServices.saveJobTitle(requestObject);
+      const data = await this.SettingsServices.saveRelatioship(requestObject);
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        this.dialogRef.close({ status: true, data: requestObject.job_title_name });
+        this.dialogRef.close({ status: true, data: requestObject.relationship_name });
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');
@@ -104,6 +105,8 @@ export class JobTitleFormComponent {
     this.dialogRef.close();
   }
   public confirmAdd(): void {
-    this.advanceTableService.addAdvanceTable(this.jobtitleInfo.getRawValue());
+    this.advanceTableService.addAdvanceTable(
+      this.relationshipInfo.getRawValue()
+    );
   }
 }

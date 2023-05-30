@@ -13,7 +13,7 @@ import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroy
 import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
 import { JobTypeTable } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
-import { JobTypeFormComponent } from '../job-type-form/job-type-form.component';
+import { JobTypeFormComponent } from './job-type-form/job-type-form.component';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 

@@ -13,8 +13,8 @@ import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroy
 import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
 import { LanguageTable } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
-import { RelationshipFormComponent } from '../relationship-form/relationship-form.component';
-import { LanguageFormComponent } from '../language-form/language-form.component';
+import { RelationshipFormComponent } from '../relationship-list/relationship-form/relationship-form.component';
+import { LanguageFormComponent } from './language-form/language-form.component';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { CommonService } from 'src/app/services/common.service';
 

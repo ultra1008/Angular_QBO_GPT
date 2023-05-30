@@ -1,33 +1,31 @@
-import { SelectionModel } from '@angular/cdk/collections';
 import { Component, Inject } from '@angular/core';
 import {
   UntypedFormGroup,
   UntypedFormBuilder,
-  UntypedFormControl,
-  Validators,
-  FormControl,
   FormGroup,
+  FormControl,
+  Validators,
+  UntypedFormControl,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { UserRestoreFormComponent } from 'src/app/users/user-restore-form/user-restore-form.component';
-import { AdvanceTable } from 'src/app/users/user.model';
-import { UserService } from 'src/app/users/user.service';
-import { showNotification } from 'src/consts/utils';
-import { SettingsService } from '../../settings.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
+import { AdvanceTable } from 'src/app/users/user.model';
+import { showNotification } from 'src/consts/utils';
+import { SettingsService } from '../../../settings.service';
+import { JobTitleFormComponent } from '../../job-title-list/job-title-form/job-title-form.component';
 import { icon } from 'src/consts/icon';
 
 @Component({
-  selector: 'app-document-type-form',
-  templateUrl: './document-type-form.component.html',
-  styleUrls: ['./document-type-form.component.scss'],
+  selector: 'app-language-form',
+  templateUrl: './language-form.component.html',
+  styleUrls: ['./language-form.component.scss'],
 })
-export class DocumentTypeFormComponent {
+export class LanguageFormComponent {
   action: string;
   dialogTitle: string;
-  DocumentInfo: UntypedFormGroup;
+  languageInfo!: UntypedFormGroup;
   advanceTable: AdvanceTable;
   variablesRoleList: any = [];
 
@@ -37,7 +35,7 @@ export class DocumentTypeFormComponent {
   isDelete = 0;
   invoice_logo = icon.INVOICE_LOGO;
   constructor (
-    public dialogRef: MatDialogRef<DocumentTypeFormComponent>,
+    public dialogRef: MatDialogRef<JobTitleFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: SettingsService,
     private fb: UntypedFormBuilder,
@@ -46,17 +44,14 @@ export class DocumentTypeFormComponent {
     private router: Router,
     public uiSpinner: UiSpinnerService
   ) {
-    this.DocumentInfo = new FormGroup({
-      document_type_name: new FormControl('', [Validators.required]),
-      is_expiration: new FormControl(false),
+    this.languageInfo = new FormGroup({
+      name: new FormControl('', [Validators.required]),
     });
+    const document_data = data.data;
 
     if (this.data) {
-      this.DocumentInfo = new FormGroup({
-        document_type_name: new FormControl(this.data.document_type_name, [
-          Validators.required,
-        ]),
-        is_expiration: new FormControl(this.data.is_expiration ?? false),
+      this.languageInfo = new FormGroup({
+        name: new FormControl(this.data.name, [Validators.required]),
       });
     }
 
@@ -71,7 +66,6 @@ export class DocumentTypeFormComponent {
       const blankObject = {} as AdvanceTable;
       this.advanceTable = new AdvanceTable(blankObject);
     }
-    // this.DocumentInfo = this.createDocumentForm();
   }
   formControl = new UntypedFormControl('', [
     Validators.required, // Validators.email,
@@ -85,17 +79,17 @@ export class DocumentTypeFormComponent {
   }
 
   async submit() {
-    if (this.DocumentInfo.valid) {
-      const requestObject = this.DocumentInfo.value;
+    if (this.languageInfo.valid) {
+      const requestObject = this.languageInfo.value;
       if (this.data) {
         requestObject._id = this.data._id;
       }
       this.uiSpinner.spin$.next(true);
-      const data = await this.SettingsServices.saveDocumentType(requestObject);
+      const data = await this.SettingsServices.saveLanguage(requestObject);
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        this.dialogRef.close({ status: true, data: { name: requestObject.document_type_name, is_expiration: requestObject.is_expiration, } });
+        this.dialogRef.close({ status: true, data: requestObject.name });
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');
@@ -107,6 +101,6 @@ export class DocumentTypeFormComponent {
     this.dialogRef.close();
   }
   public confirmAdd(): void {
-    this.advanceTableService.addAdvanceTable(this.DocumentInfo.getRawValue());
+    this.advanceTableService.addAdvanceTable(this.languageInfo.getRawValue());
   }
 }

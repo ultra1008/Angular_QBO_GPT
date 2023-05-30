@@ -13,7 +13,7 @@ import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroy
 import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
 import { JobTitleTable } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
-import { JobTitleFormComponent } from '../job-title-form/job-title-form.component';
+import { JobTitleFormComponent } from './job-title-form/job-title-form.component';
 
 @Component({
   selector: 'app-job-title-list',

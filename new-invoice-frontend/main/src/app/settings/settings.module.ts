@@ -47,8 +47,8 @@ import { CommonComponentsModule } from '../common-components/common-components.m
 import { SharedModule } from '../shared/shared.module';
 import { SettingsService } from './settings.service';
 import { MailboxFormComponent } from './mailbox/mailbox-form/mailbox-form.component';
-import { RelationshipFormComponent } from './employeesettings/relationship-form/relationship-form.component';
-import { LanguageFormComponent } from './employeesettings/language-form/language-form.component';
+import { RelationshipFormComponent } from './employeesettings/relationship-list/relationship-form/relationship-form.component';
+import { LanguageFormComponent } from './employeesettings/language-list/language-form/language-form.component';
 import { TermsFormComponent } from './othersettings/terms-form/terms-form.component';
 import { TaxRateFormComponent } from './othersettings/tax-rate-form/tax-rate-form.component';
 import { DocumentFormComponent } from './othersettings/document-form/document-form.component';
@@ -77,10 +77,10 @@ import { ClassNameListingComponent } from './othersettings/class-name-listing/cl
 import { ClassNameFormComponent } from './othersettings/class-name-form/class-name-form.component';
 import { ExistListingComponent } from './employeesettings/exist-listing/exist-listing.component';
 import { OtherExistListingComponent } from './othersettings/other-exist-listing/other-exist-listing.component';
-import { DepartmentFormComponent } from './employeesettings/department-form/department-form.component';
-import { DocumentTypeFormComponent } from './employeesettings/document-type-form/document-type-form.component';
-import { JobTitleFormComponent } from './employeesettings/job-title-form/job-title-form.component';
-import { JobTypeFormComponent } from './employeesettings/job-type-form/job-type-form.component';
+import { DepartmentFormComponent } from './employeesettings/department-list/department-form/department-form.component';
+import { DocumentTypeFormComponent } from './employeesettings/document-type-list/document-type-form/document-type-form.component';
+import { JobTitleFormComponent } from './employeesettings/job-title-list/job-title-form/job-title-form.component';
+import { JobTypeFormComponent } from './employeesettings/job-type-list/job-type-form/job-type-form.component';
 import { VendorsService } from '../vendors/vendors.service';
 
 @NgModule({

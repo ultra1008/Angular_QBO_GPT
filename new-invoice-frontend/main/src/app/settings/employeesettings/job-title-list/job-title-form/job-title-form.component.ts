@@ -13,18 +13,18 @@ import { Router } from '@angular/router';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { AdvanceTable } from 'src/app/users/user.model';
 import { showNotification } from 'src/consts/utils';
+import { SettingsService } from '../../../settings.service';
 import { icon } from 'src/consts/icon';
-import { SettingsService } from '../../settings.service';
 
 @Component({
-  selector: 'app-job-type-form',
-  templateUrl: './job-type-form.component.html',
-  styleUrls: ['./job-type-form.component.scss'],
+  selector: 'app-job-title-form',
+  templateUrl: './job-title-form.component.html',
+  styleUrls: ['./job-title-form.component.scss'],
 })
-export class JobTypeFormComponent {
+export class JobTitleFormComponent {
   action: string;
   dialogTitle: string;
-  jobtypeInfo!: UntypedFormGroup;
+  jobtitleInfo!: UntypedFormGroup;
   advanceTable: AdvanceTable;
   variablesRoleList: any = [];
 
@@ -34,7 +34,7 @@ export class JobTypeFormComponent {
   isDelete = 0;
   invoice_logo = icon.INVOICE_LOGO;
   constructor (
-    public dialogRef: MatDialogRef<JobTypeFormComponent>,
+    public dialogRef: MatDialogRef<JobTitleFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: SettingsService,
     private fb: UntypedFormBuilder,
@@ -43,16 +43,16 @@ export class JobTypeFormComponent {
     private router: Router,
     public uiSpinner: UiSpinnerService
   ) {
-    this.jobtypeInfo = new FormGroup({
-      job_type_name: new FormControl('', [Validators.required]),
+    this.jobtitleInfo = new FormGroup({
+      job_title_name: new FormControl('', [Validators.required]),
     });
     console.log('data', data);
     const document_data = data.data;
 
     if (this.data) {
       console.log('call');
-      this.jobtypeInfo = new FormGroup({
-        job_type_name: new FormControl(this.data.job_type_name, [
+      this.jobtitleInfo = new FormGroup({
+        job_title_name: new FormControl(this.data.job_title_name, [
           Validators.required,
         ]),
       });
@@ -82,17 +82,17 @@ export class JobTypeFormComponent {
   }
 
   async submit() {
-    if (this.jobtypeInfo.valid) {
-      const requestObject = this.jobtypeInfo.value;
+    if (this.jobtitleInfo.valid) {
+      const requestObject = this.jobtitleInfo.value;
       if (this.data) {
         requestObject._id = this.data._id;
       }
       this.uiSpinner.spin$.next(true);
-      const data = await this.SettingsServices.saveJobType(requestObject);
+      const data = await this.SettingsServices.saveJobTitle(requestObject);
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        this.dialogRef.close({ status: true, data: requestObject.job_type_name });
+        this.dialogRef.close({ status: true, data: requestObject.job_title_name });
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');
@@ -104,6 +104,6 @@ export class JobTypeFormComponent {
     this.dialogRef.close();
   }
   public confirmAdd(): void {
-    this.advanceTableService.addAdvanceTable(this.jobtypeInfo.getRawValue());
+    this.advanceTableService.addAdvanceTable(this.jobtitleInfo.getRawValue());
   }
 }

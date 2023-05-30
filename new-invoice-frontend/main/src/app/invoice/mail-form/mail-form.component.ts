@@ -13,7 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { CommonService } from 'src/app/services/common.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
-import { DepartmentFormComponent } from 'src/app/settings/employeesettings/department-form/department-form.component';
+import { DepartmentFormComponent } from 'src/app/settings/employeesettings/department-list/department-form/department-form.component';
 import { AdvanceTable, User } from 'src/app/users/user.model';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { icon } from 'src/consts/icon';
@@ -46,7 +46,7 @@ export class MailFormComponent {
   selectedToUsers: Array<string> = [];
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-  constructor(
+  constructor (
     public dialogRef: MatDialogRef<MailFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: UntypedFormBuilder,

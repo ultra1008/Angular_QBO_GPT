@@ -37,7 +37,7 @@ import { InvoiceMessagesComponent } from './invoice-detail/invoice-messages/invo
 import { InvoiceMessageViewComponent } from './invoice-detail/invoice-message-view/invoice-message-view.component';
 
 import { MailFormComponent } from './mail-form/mail-form.component';
-import { DepartmentFormComponent } from '../settings/employeesettings/department-form/department-form.component';
+import { DepartmentFormComponent } from '../settings/employeesettings/department-list/department-form/department-form.component';
 import { UploadInvoiceFormComponent } from './upload-invoice-form/upload-invoice-form.component';
 
 import { BrowserModule } from '@angular/platform-browser';
