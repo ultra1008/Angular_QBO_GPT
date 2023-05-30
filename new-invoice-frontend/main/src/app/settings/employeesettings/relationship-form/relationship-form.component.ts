@@ -93,7 +93,7 @@ export class RelationshipFormComponent {
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        this.dialogRef.close(true);
+        this.dialogRef.close({ status: true, data: requestObject.relationship_name });
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');

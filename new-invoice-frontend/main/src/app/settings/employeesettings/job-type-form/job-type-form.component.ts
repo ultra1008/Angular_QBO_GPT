@@ -92,7 +92,7 @@ export class JobTypeFormComponent {
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        this.dialogRef.close(true);
+        this.dialogRef.close({ status: true, data: requestObject.job_type_name });
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');

@@ -23,7 +23,7 @@
           </div>
      </div>
      <div mat-dialog-content>
-          <form class="register-form m-4" [formGroup]="jobtitleInfo" (ngSubmit)="submit">
+          <form class="register-form m-4" [formGroup]="jobtitleInfo">
 
                <div class="row">
                     <div class=" col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
@@ -41,8 +41,7 @@
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2 align-div">
                          <div class="example-button-row">
                               <button mat-raised-button color="primary" class="width-set-2"
-                                   [disabled]="!jobtitleInfo.valid" [mat-dialog-close]="1"
-                                   (click)="submit()">{{'COMMON.ACTIONS.SAVE' |
+                                   [disabled]="!jobtitleInfo.valid" (click)="submit()">{{'COMMON.ACTIONS.SAVE' |
                                    translate}}</button>
                               <button mat-raised-button color="warn" class="width-set-1"
                                    tabindex="-1">{{'COMMON.ACTIONS.CANCEL' |

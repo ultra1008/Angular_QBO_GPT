@@ -57,10 +57,10 @@
                     </table>
                 </div>
                 <!-- Loading spinner -->
-                <div *ngIf="departmentService?.isTblLoading" class="tbl-spinner">
+                <div *ngIf="departmentService?.isDepartmentTblLoading" class="tbl-spinner">
                     <app-loading></app-loading>
                 </div>
-                <div *ngIf="!departmentService?.isTblLoading" class="no-results"
+                <div *ngIf="!departmentService?.isDepartmentTblLoading" class="no-results"
                     [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
                     No matching records found
                 </div>

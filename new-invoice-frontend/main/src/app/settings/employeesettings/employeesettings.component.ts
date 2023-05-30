@@ -85,7 +85,10 @@ export class EmployeesettingsComponent {
         data: {},
       });
       dialogRef.afterClosed().subscribe((result) => {
-        this.getDataDocumentType();
+        this.showDocType = false;
+        setTimeout(() => {
+          this.showDocType = true;
+        }, 100);
       });
     } else if (this.currrent_tab == 'department') {
       const dialogRef = this.dialog.open(DepartmentFormComponent, {
@@ -93,7 +96,10 @@ export class EmployeesettingsComponent {
         data: {},
       });
       dialogRef.afterClosed().subscribe((result) => {
-        this.getDataDepartment();
+        this.showDepartmentType = false;
+        setTimeout(() => {
+          this.showDepartmentType = true;
+        }, 100);
       });
     } else if (this.currrent_tab == 'jobtitle') {
       const dialogRef = this.dialog.open(JobTitleFormComponent, {
@@ -101,7 +107,10 @@ export class EmployeesettingsComponent {
         data: {},
       });
       dialogRef.afterClosed().subscribe((result) => {
-        this.getDataJobTitle();
+        this.showJobtitle = false;
+        setTimeout(() => {
+          this.showJobtitle = true;
+        }, 100);
       });
     } else if (this.currrent_tab == 'jobtype') {
       const dialogRef = this.dialog.open(JobTypeFormComponent, {
@@ -109,7 +118,10 @@ export class EmployeesettingsComponent {
         data: {},
       });
       dialogRef.afterClosed().subscribe((result) => {
-        this.getDataJobType();
+        this.showJobtype = false;
+        setTimeout(() => {
+          this.showJobtype = true;
+        }, 100);
       });
     } else if (this.currrent_tab == 'relationship') {
       const dialogRef = this.dialog.open(RelationshipFormComponent, {
@@ -117,7 +129,10 @@ export class EmployeesettingsComponent {
         data: {},
       });
       dialogRef.afterClosed().subscribe((result) => {
-        this.getDataRelationship();
+        this.showrelationship = false;
+        setTimeout(() => {
+          this.showrelationship = true;
+        }, 100);
       });
     } else if (this.currrent_tab == 'language') {
       const dialogRef = this.dialog.open(LanguageFormComponent, {
@@ -125,7 +140,10 @@ export class EmployeesettingsComponent {
         data: {},
       });
       dialogRef.afterClosed().subscribe((result) => {
-        this.getDataLanguage();
+        this.showlanguage = false;
+        setTimeout(() => {
+          this.showlanguage = true;
+        }, 100);
       });
     }
   }

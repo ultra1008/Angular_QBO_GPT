@@ -74,8 +74,14 @@ export class JobTitleListComponent
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        that.refresh();
+      if (result.status) {
+        const foundIndex = this.jobtitleService?.jobTitleDataChange.value.findIndex(
+          (x) => x._id === jobtitle._id
+        );
+        if (foundIndex != null && this.jobtitleService) {
+          this.jobtitleService.jobTitleDataChange.value[foundIndex].job_title_name = result.data;
+          this.refreshTable();
+        }
       }
     });
   }
@@ -98,7 +104,13 @@ export class JobTitleListComponent
           const data = await that.SettingsService.DeleteJobTitle(jobtitle._id);
           if (data.status) {
             showNotification(that.snackBar, data.message, 'success');
-            that.loadData();
+            const foundIndex = this.jobtitleService?.jobTitleDataChange.value.findIndex(
+              (x) => x._id === jobtitle._id
+            );
+            if (foundIndex != null && this.jobtitleService) {
+              this.jobtitleService.jobTitleDataChange.value.splice(foundIndex, 1);
+              this.refreshTable();
+            }
           } else {
             showNotification(that.snackBar, data.message, 'error');
           }
@@ -201,16 +213,16 @@ export class JobTitleDataSource extends DataSource<JobTitleTable> {
   connect(): Observable<JobTitleTable[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this.jobtitleService.dataJobTitleChange,
+      this.jobtitleService.jobTitleDataChange,
       this._sort.sortChange,
       this.filterChange,
       this.paginator.page,
     ];
-    this.jobtitleService.getAlljobtitleTable(this.isDelete);
+    this.jobtitleService.getJobTitleTable(this.isDelete);
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
-        this.filteredData = this.jobtitleService.datajobtitle
+        this.filteredData = this.jobtitleService.jobTitleData
           .slice()
           .filter((JobTitleTable: JobTitleTable) => {
             const searchStr = JobTitleTable.job_title_name.toLowerCase();

@@ -18,6 +18,8 @@ import {
 import { DocumentTypeTable } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
 import { DocumentTypeFormComponent } from '../document-type-form/document-type-form.component';
+import { CommonService } from 'src/app/services/common.service';
+import { httproutes, httpversion } from 'src/consts/httproutes';
 
 @Component({
   selector: 'app-document-type-list',
@@ -36,14 +38,8 @@ export class DocumentTypeListComponent
   isDelete = 0;
   titleMessage = '';
 
-  constructor (
-    public dialog: MatDialog,
-    public SettingsService: SettingsService,
-    private snackBar: MatSnackBar,
-    public router: Router,
-    private httpCall: HttpCall,
-    public translate: TranslateService
-  ) {
+  constructor (public dialog: MatDialog, public SettingsService: SettingsService, private snackBar: MatSnackBar,
+    public router: Router, private httpCall: HttpCall, public translate: TranslateService, private commonService: CommonService,) {
     super();
   }
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
@@ -69,15 +65,22 @@ export class DocumentTypeListComponent
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        that.refresh();
+      console.log("result", result);
+      if (result.status) {
+        const foundIndex = this.documentService?.documentTypeDataChange.value.findIndex(
+          (x) => x._id === document._id
+        );
+        if (foundIndex != null && this.documentService) {
+          this.documentService.documentTypeDataChange.value[foundIndex].document_type_name = result.data.name;
+          this.documentService.documentTypeDataChange.value[foundIndex].is_expiration = result.data.is_expiration;
+          this.refreshTable();
+        }
       }
     });
   }
 
   async deleteDocumentType(document: any) {
-    console.log("this.SettingsService?.dataDocumentTypeChange: ", this.SettingsService?.dataDocumentTypeChange.value);
-    /* let that = this;
+    let that = this;
     swalWithBootstrapButtons
       .fire({
         title: this.translate.instant(
@@ -91,29 +94,21 @@ export class DocumentTypeListComponent
       })
       .then(async (result) => {
         if (result.isConfirmed) {
-          const data = await that.SettingsService.DeleteDocumentType(
-            document._id
-          );
+          const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SETTING_DOCUMENT_TYPE_DELETE, { _id: document._id });
           if (data.status) {
             showNotification(that.snackBar, data.message, 'success');
-            console.log("this.SettingsService?.dataDocumentTypeChange: ",this.SettingsService?.dataDocumentTypeChange)
-            const foundIndex = this.SettingsService?.dataDocumentTypeChange.value.findIndex(
-              (x) => {
-                console.log("sagar: ", x._id, document._id, " == ", x._id === document._id);
-                return x._id === document._id;
-              }
+            const foundIndex = this.documentService?.documentTypeDataChange.value.findIndex(
+              (x) => x._id === document._id
             );
-            console.log("foundIndex: ", foundIndex);
-            // for delete we use splice in order to remove single object from DataService
-            if (foundIndex != null && this.SettingsService) {
-              this.SettingsService.dataDocumentTypeChange.value.splice(foundIndex, 1);
+            if (foundIndex != null && this.documentService) {
+              this.documentService.documentTypeDataChange.value.splice(foundIndex, 1);
               this.refreshTable();
             }
           } else {
             showNotification(that.snackBar, data.message, 'error');
           }
         }
-      }); */
+      });
   }
 
   private refreshTable() {
@@ -128,6 +123,8 @@ export class DocumentTypeListComponent
       this.sort,
       this.isDelete
     );
+
+
     this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
       () => {
         if (!this.dataSource) {
@@ -137,6 +134,11 @@ export class DocumentTypeListComponent
       }
     );
     this.selection.clear();
+    setTimeout(() => {
+      console.log("this.dataSource: ", this.dataSource);
+      console.log("this.documentService?.documentTypeDataChange.value: ", this.documentService?.documentTypeDataChange.value);
+    }, 2000);
+
   }
 
   back() {
@@ -179,16 +181,16 @@ export class DocumentTypeDataSource extends DataSource<DocumentTypeTable> {
   connect(): Observable<DocumentTypeTable[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this.documentService.dataDocumentTypeChange,
+      this.documentService.documentTypeDataChange,
       this._sort.sortChange,
       this.filterChange,
       this.paginator.page,
     ];
-    this.documentService.getAllDocumentTypeTable(this.isDelete);
+    this.documentService.getDocumentTypeTable(this.isDelete);
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
-        this.filteredData = this.documentService.datadocumenttype
+        this.filteredData = this.documentService.documentTypeData
           .slice()
           .filter((documentTable: DocumentTypeTable) => {
             const searchStr = (

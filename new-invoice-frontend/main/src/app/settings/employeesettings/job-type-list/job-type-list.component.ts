@@ -14,6 +14,8 @@ import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
 import { JobTypeTable } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
 import { JobTypeFormComponent } from '../job-type-form/job-type-form.component';
+import { CommonService } from 'src/app/services/common.service';
+import { httproutes, httpversion } from 'src/consts/httproutes';
 
 @Component({
   selector: 'app-job-type-list',
@@ -32,14 +34,8 @@ export class JobTypeListComponent
   isDelete = 0;
   titleMessage = '';
 
-  constructor (
-    public dialog: MatDialog,
-    public SettingsService: SettingsService,
-    private snackBar: MatSnackBar,
-    public router: Router,
-    private httpCall: HttpCall,
-    public translate: TranslateService
-  ) {
+  constructor (public dialog: MatDialog, public SettingsService: SettingsService, private snackBar: MatSnackBar,
+    public router: Router, private httpCall: HttpCall, public translate: TranslateService, private commonService: CommonService,) {
     super();
   }
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
@@ -64,18 +60,24 @@ export class JobTypeListComponent
     });
   }
 
-  edit(jobtype: any) {
+  edit(jobType: any) {
     let that = this;
     console.log('document');
     const dialogRef = this.dialog.open(JobTypeFormComponent, {
       width: '350px',
-      data: jobtype,
+      data: jobType,
       disableClose: true,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        that.refresh();
+      if (result.status) {
+        const foundIndex = this.jobtypeService?.jobTypeDataChange.value.findIndex(
+          (x) => x._id === jobType._id
+        );
+        if (foundIndex != null && this.jobtypeService) {
+          this.jobtypeService.jobTypeDataChange.value[foundIndex].job_type_name = result.data;
+          this.refreshTable();
+        }
       }
     });
   }
@@ -95,10 +97,16 @@ export class JobTypeListComponent
       })
       .then(async (result) => {
         if (result.isConfirmed) {
-          const data = await that.SettingsService.DeleteJobType(jobType._id);
+          const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SETTING_JOB_TYPE_DELETE, { _id: jobType._id });
           if (data.status) {
             showNotification(that.snackBar, data.message, 'success');
-            that.loadData();
+            const foundIndex = this.jobtypeService?.jobTypeDataChange.value.findIndex(
+              (x) => x._id === jobType._id
+            );
+            if (foundIndex != null && this.jobtypeService) {
+              this.jobtypeService.jobTypeDataChange.value.splice(foundIndex, 1);
+              this.refreshTable();
+            }
           } else {
             showNotification(that.snackBar, data.message, 'error');
           }
@@ -201,16 +209,16 @@ export class JobTypeDataSource extends DataSource<JobTypeTable> {
   connect(): Observable<JobTypeTable[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this.jobtypeService.dataJobTypeChange,
+      this.jobtypeService.jobTypeDataChange,
       this._sort.sortChange,
       this.filterChange,
       this.paginator.page,
     ];
-    this.jobtypeService.getAlljobtypeTable(this.isDelete);
+    this.jobtypeService.getJobTypeTable(this.isDelete);
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
-        this.filteredData = this.jobtypeService.datajobtype
+        this.filteredData = this.jobtypeService.jobTypeData
           .slice()
           .filter((JobTypeTable: JobTypeTable) => {
             const searchStr = JobTypeTable.job_type_name.toLowerCase();

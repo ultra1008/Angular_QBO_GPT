@@ -20,12 +20,99 @@ import {
   TermsTable,
   UsageTable,
   VendorTypeTable,
-  usageTable,
 } from './settings.model';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 @Injectable()
 export class SettingsService extends UnsubscribeOnDestroyAdapter {
+  // Language Datatable Service
+  isLangTblLoading = true;
+  langDataChange: BehaviorSubject<LanguageTable[]> = new BehaviorSubject<LanguageTable[]>([]);
+
+  get langData(): LanguageTable[] {
+    return this.langDataChange.value;
+  }
+
+  async getLangTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.OTHER_LANGUAGE_DATA_TABLE, { is_delete: is_delete }).toPromise();
+    this.langDataChange.next(data);
+    this.isLangTblLoading = false;
+  }
+
+  // Department Datatable Service
+  isDepartmentTblLoading = true;
+  departmentDataChange: BehaviorSubject<DepartmentTable[]> = new BehaviorSubject<DepartmentTable[]>([]);
+
+  get departmentData(): DepartmentTable[] {
+    return this.departmentDataChange.value;
+  }
+
+  async getDepartmentTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.SETTING_DEPARTMENTS_DATA_TABLE, { is_delete: is_delete }).toPromise();
+    this.departmentDataChange.next(data);
+    this.isDepartmentTblLoading = false;
+  }
+
+  // Document Type Datatable Service
+  isDocumentTypeTblLoading = true;
+  documentTypeDataChange: BehaviorSubject<DocumentTypeTable[]> = new BehaviorSubject<DocumentTypeTable[]>([]);
+
+  get documentTypeData(): DocumentTypeTable[] {
+    return this.documentTypeDataChange.value;
+  }
+
+  async getDocumentTypeTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.SETTING_DOCUMENT_TYPE_DATA_TABLE, { is_delete: is_delete }).toPromise();
+    this.documentTypeDataChange.next(data);
+    this.isDocumentTypeTblLoading = false;
+  }
+
+  // Job title Datatable Service
+  isJobTitleTblLoading = true;
+  jobTitleDataChange: BehaviorSubject<JobTitleTable[]> = new BehaviorSubject<JobTitleTable[]>([]);
+
+  get jobTitleData(): JobTitleTable[] {
+    return this.jobTitleDataChange.value;
+  }
+
+  async getJobTitleTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.SETTING_JOB_TITLE_DATA_TABLE, { is_delete: is_delete }).toPromise();
+    this.jobTitleDataChange.next(data);
+    this.isJobTitleTblLoading = false;
+  }
+
+  // Job type Datatable Service
+  isJobTypeTblLoading = true;
+  jobTypeDataChange: BehaviorSubject<JobTypeTable[]> = new BehaviorSubject<JobTypeTable[]>([]);
+
+  get jobTypeData(): JobTypeTable[] {
+    return this.jobTypeDataChange.value;
+  }
+
+  async getJobTypeTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.SETTING_JOB_TYPE_DATA_TABLE, { is_delete: is_delete }).toPromise();
+    this.jobTypeDataChange.next(data);
+    this.isJobTypeTblLoading = false;
+  }
+
+  // Relationship Datatable Service
+  isRelationshipTblLoading = true;
+  relationshipDataChange: BehaviorSubject<RelationshipTable[]> = new BehaviorSubject<RelationshipTable[]>([]);
+
+  get relationshipData(): RelationshipTable[] {
+    return this.relationshipDataChange.value;
+  }
+
+  async getRelationshipTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.SETTING_RELATIONSHIP_DATA_TABLE, { is_delete: is_delete }).toPromise();
+    this.relationshipDataChange.next(data);
+    this.isRelationshipTblLoading = false;
+  }
+
+
+
+
+
+
   // private readonly API_URL = 'assets/data/advanceTable.json';
   // dataChange: BehaviorSubject<Settings[]> = new BehaviorSubject<Settings[]>([]);
   // Temporarily stores data from dialogs

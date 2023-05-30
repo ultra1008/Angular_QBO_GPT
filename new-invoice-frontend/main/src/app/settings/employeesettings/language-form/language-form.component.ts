@@ -89,7 +89,7 @@ export class LanguageFormComponent {
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        this.dialogRef.close(true);
+        this.dialogRef.close({ status: true, data: requestObject.name });
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');

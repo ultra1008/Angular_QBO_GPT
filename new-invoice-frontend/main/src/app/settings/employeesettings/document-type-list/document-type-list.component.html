@@ -67,10 +67,10 @@
                     </table>
                 </div>
                 <!-- Loading spinner -->
-                <div *ngIf="documentService?.isDoctyeTblLoading" class="tbl-spinner">
+                <div *ngIf="documentService?.isDocumentTypeTblLoading" class="tbl-spinner">
                     <app-loading></app-loading>
                 </div>
-                <div *ngIf="!documentService?.isDoctyeTblLoading" class="no-results"
+                <div *ngIf="!documentService?.isDocumentTypeTblLoading" class="no-results"
                     [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
                     No matching records found
                 </div>

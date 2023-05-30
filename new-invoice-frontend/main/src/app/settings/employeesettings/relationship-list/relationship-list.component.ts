@@ -14,6 +14,8 @@ import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
 import { RelationshipTable } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
 import { RelationshipFormComponent } from '../relationship-form/relationship-form.component';
+import { CommonService } from 'src/app/services/common.service';
+import { httproutes, httpversion } from 'src/consts/httproutes';
 
 @Component({
   selector: 'app-relationship-list',
@@ -32,14 +34,8 @@ export class RelationshipListComponent
   isDelete = 0;
   titleMessage = '';
 
-  constructor (
-    public dialog: MatDialog,
-    public SettingsService: SettingsService,
-    private snackBar: MatSnackBar,
-    public router: Router,
-    private httpCall: HttpCall,
-    public translate: TranslateService
-  ) {
+  constructor (public dialog: MatDialog, public SettingsService: SettingsService, private snackBar: MatSnackBar,
+    public router: Router, private httpCall: HttpCall, public translate: TranslateService, private commonService: CommonService,) {
     super();
   }
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
@@ -74,8 +70,14 @@ export class RelationshipListComponent
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        that.refresh();
+      if (result.status) {
+        const foundIndex = this.relationshipService?.relationshipDataChange.value.findIndex(
+          (x) => x._id === relationship._id
+        );
+        if (foundIndex != null && this.relationshipService) {
+          this.relationshipService.relationshipDataChange.value[foundIndex].relationship_name = result.data;
+          this.refreshTable();
+        }
       }
     });
   }
@@ -95,12 +97,16 @@ export class RelationshipListComponent
       })
       .then(async (result) => {
         if (result.isConfirmed) {
-          const data = await that.SettingsService.DeleteRelationship(
-            relationship._id
-          );
+          const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SETTING_RELATIONSHIP_DELETE, { _id: relationship._id });
           if (data.status) {
             showNotification(that.snackBar, data.message, 'success');
-            that.refresh();
+            const foundIndex = this.relationshipService?.relationshipDataChange.value.findIndex(
+              (x) => x._id === relationship._id
+            );
+            if (foundIndex != null && this.relationshipService) {
+              this.relationshipService.relationshipDataChange.value.splice(foundIndex, 1);
+              this.refreshTable();
+            }
           } else {
             showNotification(that.snackBar, data.message, 'error');
           }
@@ -203,16 +209,16 @@ export class RelationshipDataSource extends DataSource<RelationshipTable> {
   connect(): Observable<RelationshipTable[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this.relationshipService.dataRelationShipChange,
+      this.relationshipService.relationshipDataChange,
       this._sort.sortChange,
       this.filterChange,
       this.paginator.page,
     ];
-    this.relationshipService.getAllRelationshipTable(this.isDelete);
+    this.relationshipService.getRelationshipTable(this.isDelete);
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
-        this.filteredData = this.relationshipService.dataRelationship
+        this.filteredData = this.relationshipService.relationshipData
           .slice()
           .filter((RelationshipTable: RelationshipTable) => {
             const searchStr = RelationshipTable.relationship_name.toLowerCase();

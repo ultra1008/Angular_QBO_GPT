@@ -50,16 +50,13 @@ export class DocumentTypeFormComponent {
       document_type_name: new FormControl('', [Validators.required]),
       is_expiration: new FormControl(false),
     });
-    console.log('data', data);
 
     if (this.data) {
-      console.log('call');
-
       this.DocumentInfo = new FormGroup({
         document_type_name: new FormControl(this.data.document_type_name, [
           Validators.required,
         ]),
-        is_expiration: new FormControl(this.data.is_expiration),
+        is_expiration: new FormControl(this.data.is_expiration ?? false),
       });
     }
 
@@ -98,7 +95,7 @@ export class DocumentTypeFormComponent {
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        this.dialogRef.close(true);
+        this.dialogRef.close({ status: true, data: { name: requestObject.document_type_name, is_expiration: requestObject.is_expiration, } });
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');

@@ -15,6 +15,8 @@ import { LanguageTable } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
 import { RelationshipFormComponent } from '../relationship-form/relationship-form.component';
 import { LanguageFormComponent } from '../language-form/language-form.component';
+import { httproutes, httpversion } from 'src/consts/httproutes';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-language-list',
@@ -31,7 +33,7 @@ export class LanguageListComponent
   id?: number;
   // advanceTable?: LanguageTable;
   isDelete = 0;
-  titleMessage: string = '';
+  titleMessage = '';
 
   constructor (
     public dialog: MatDialog,
@@ -39,7 +41,8 @@ export class LanguageListComponent
     private snackBar: MatSnackBar,
     public router: Router,
     private httpCall: HttpCall,
-    public translate: TranslateService
+    public translate: TranslateService,
+    private commonService: CommonService
   ) {
     super();
   }
@@ -61,7 +64,6 @@ export class LanguageListComponent
 
   edit(Language: any) {
     let that = this;
-    console.log('document');
     const dialogRef = this.dialog.open(LanguageFormComponent, {
       width: '350px',
       data: Language,
@@ -69,8 +71,14 @@ export class LanguageListComponent
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        that.refresh();
+      if (result.status) {
+        const foundIndex = this.languageService?.langDataChange.value.findIndex(
+          (x) => x._id === Language._id
+        );
+        if (foundIndex != null && this.languageService) {
+          this.languageService.langDataChange.value[foundIndex].name = result.data;
+          this.refreshTable();
+        }
       }
     });
   }
@@ -90,10 +98,19 @@ export class LanguageListComponent
       })
       .then(async (result) => {
         if (result.isConfirmed) {
-          const data = await that.SettingsService.DeleteLanguage(Language._id);
+          const data = await this.commonService.postRequestAPI(
+            httpversion.PORTAL_V1 + httproutes.OTHER_LANGUAGE_DELETE,
+            { _id: Language._id }
+          );
           if (data.status) {
             showNotification(that.snackBar, data.message, 'success');
-            that.loadData();
+            const foundIndex = this.languageService?.langDataChange.value.findIndex(
+              (x) => x._id === Language._id
+            );
+            if (foundIndex != null && this.languageService) {
+              this.languageService.langDataChange.value.splice(foundIndex, 1);
+              this.refreshTable();
+            }
           } else {
             showNotification(that.snackBar, data.message, 'error');
           }
@@ -154,6 +171,7 @@ export class LanguageListComponent
         this.dataSource.filter = this.filter.nativeElement.value;
       }
     );
+    this.selection.clear();
   }
 
   back() {
@@ -196,16 +214,16 @@ export class LanguageDataSource extends DataSource<LanguageTable> {
   connect(): Observable<LanguageTable[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this.languageService.dataLanguageChange,
+      this.languageService.langDataChange,
       this._sort.sortChange,
       this.filterChange,
       this.paginator.page,
     ];
-    this.languageService.getAllLanguageTable(this.isDelete);
+    this.languageService.getLangTable(this.isDelete);
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
-        this.filteredData = this.languageService.dataLanguage
+        this.filteredData = this.languageService.langData
           .slice()
           .filter((LanguageTable: LanguageTable) => {
             const searchStr = LanguageTable.name.toLowerCase();

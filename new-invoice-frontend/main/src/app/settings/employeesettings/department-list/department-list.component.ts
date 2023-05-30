@@ -67,7 +67,6 @@ export class DepartmentListComponent
 
   edit(Department: any) {
     let that = this;
-    console.log('document');
     const dialogRef = this.dialog.open(DepartmentFormComponent, {
       width: '350px',
       data: Department,
@@ -75,8 +74,14 @@ export class DepartmentListComponent
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        that.refresh();
+      if (result.status) {
+        const foundIndex = this.departmentService?.departmentDataChange.value.findIndex(
+          (x) => x._id === Department._id
+        );
+        if (foundIndex != null && this.departmentService) {
+          this.departmentService.departmentDataChange.value[foundIndex].department_name = result.data;
+          this.refreshTable();
+        }
       }
     });
   }
@@ -101,7 +106,15 @@ export class DepartmentListComponent
           );
           if (data.status) {
             showNotification(that.snackBar, data.message, 'success');
-            that.loadData();
+            const foundIndex = this.departmentService?.departmentDataChange.value.findIndex(
+              (x) => x._id === Department._id
+            );
+            // for delete we use splice in order to remove single object from DataService
+            if (foundIndex != null && this.departmentService) {
+              this.departmentService.departmentDataChange.value.splice(foundIndex, 1);
+              this.refreshTable();
+            }
+            // that.loadData();
           } else {
             showNotification(that.snackBar, data.message, 'error');
           }
@@ -204,16 +217,16 @@ export class DepartmentDataSource extends DataSource<DepartmentTable> {
   connect(): Observable<DepartmentTable[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this.departmentService.dataDepartmentChange,
+      this.departmentService.departmentDataChange,
       this._sort.sortChange,
       this.filterChange,
       this.paginator.page,
     ];
-    this.departmentService.getAllDepartmentTable(this.isDelete);
+    this.departmentService.getDepartmentTable(this.isDelete);
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
-        this.filteredData = this.departmentService.datadepartment
+        this.filteredData = this.departmentService.departmentData
           .slice()
           .filter((DepartmentTable: DepartmentTable) => {
             const searchStr = DepartmentTable.department_name.toLowerCase();
