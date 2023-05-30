@@ -13,7 +13,6 @@ import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroy
 import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
 import { RelationshipTable } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
-import { JobTypeFormComponent } from '../job-type-form/job-type-form.component';
 import { RelationshipFormComponent } from '../relationship-form/relationship-form.component';
 
 @Component({
@@ -23,8 +22,7 @@ import { RelationshipFormComponent } from '../relationship-form/relationship-for
 })
 export class RelationshipListComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit
-{
+  implements OnInit {
   displayedColumns = ['relationship_name', 'actions'];
   relationshipService?: SettingsService;
   dataSource!: RelationshipDataSource;
@@ -32,9 +30,9 @@ export class RelationshipListComponent
   id?: number;
   // advanceTable?: RelationshipTable;
   isDelete = 0;
-  titleMessage: string = '';
+  titleMessage = '';
 
-  constructor(
+  constructor (
     public dialog: MatDialog,
     public SettingsService: SettingsService,
     private snackBar: MatSnackBar,
@@ -66,21 +64,23 @@ export class RelationshipListComponent
     });
   }
 
-  edit(Relationship: any) {
+  edit(relationship: any) {
     let that = this;
     console.log('document');
     const dialogRef = this.dialog.open(RelationshipFormComponent, {
       width: '350px',
-      data: Relationship,
+      data: relationship,
       disableClose: true,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      that.refreshTable();
+      if (result) {
+        that.refresh();
+      }
     });
   }
 
-  async delete(Relationship: any) {
+  async delete(relationship: any) {
     let that = this;
     swalWithBootstrapButtons
       .fire({
@@ -96,11 +96,11 @@ export class RelationshipListComponent
       .then(async (result) => {
         if (result.isConfirmed) {
           const data = await that.SettingsService.DeleteRelationship(
-            Relationship._id
+            relationship._id
           );
           if (data.status) {
             showNotification(that.snackBar, data.message, 'success');
-            that.loadData();
+            that.refresh();
           } else {
             showNotification(that.snackBar, data.message, 'error');
           }
@@ -124,8 +124,8 @@ export class RelationshipListComponent
     this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.renderedData.forEach((row) =>
-          this.selection.select(row)
-        );
+        this.selection.select(row)
+      );
   }
   removeSelectedRows() {
     //   const totalSelect = this.selection.selected.length;
@@ -189,7 +189,7 @@ export class RelationshipDataSource extends DataSource<RelationshipTable> {
   }
   filteredData: RelationshipTable[] = [];
   renderedData: RelationshipTable[] = [];
-  constructor(
+  constructor (
     public relationshipService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,

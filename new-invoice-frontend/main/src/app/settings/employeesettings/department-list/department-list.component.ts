@@ -23,8 +23,7 @@ import { DepartmentFormComponent } from '../department-form/department-form.comp
 })
 export class DepartmentListComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit
-{
+  implements OnInit {
   displayedColumns = ['department_name', 'actions'];
   departmentService?: SettingsService;
   dataSource!: DepartmentDataSource;
@@ -34,7 +33,7 @@ export class DepartmentListComponent
   isDelete = 0;
   titleMessage: string = '';
 
-  constructor(
+  constructor (
     public dialog: MatDialog,
     public SettingsService: SettingsService,
     private snackBar: MatSnackBar,
@@ -76,7 +75,9 @@ export class DepartmentListComponent
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      that.refreshTable();
+      if (result) {
+        that.refresh();
+      }
     });
   }
 
@@ -124,8 +125,8 @@ export class DepartmentListComponent
     this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.renderedData.forEach((row) =>
-          this.selection.select(row)
-        );
+        this.selection.select(row)
+      );
   }
   removeSelectedRows() {
     //   const totalSelect = this.selection.selected.length;
@@ -189,7 +190,7 @@ export class DepartmentDataSource extends DataSource<DepartmentTable> {
   }
   filteredData: DepartmentTable[] = [];
   renderedData: DepartmentTable[] = [];
-  constructor(
+  constructor (
     public departmentService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,

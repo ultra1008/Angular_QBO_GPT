@@ -51,7 +51,6 @@ export class VendorsListComponent
   galleryImages: NgxGalleryImage[] = [];
   imageObject = [];
   tmp_gallery: any;
-  show = false;
   displayedColumns = ['select', 'vendor_image', 'vendor_name', 'vendor_id', 'customer_id', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions',];
   vendorService?: VendorsService;
   dataSource!: VendorDataSource;
@@ -66,7 +65,7 @@ export class VendorsListComponent
   quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
   quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
 
-  constructor(
+  constructor (
     public httpClient: HttpClient,
     private httpCall: HttpCall,
     public dialog: MatDialog,
@@ -307,7 +306,6 @@ export class VendorsListComponent
       }
     );
     this.selection.clear();
-    this.show = true;
   }
 
   // export table data in excel file
@@ -402,7 +400,6 @@ export class VendorsListComponent
       .then((result) => {
         if (result.isConfirmed) {
           this.archiveRecover(vendor, is_delete);
-          this.show = false;
         }
       });
   }
@@ -473,7 +470,7 @@ export class VendorDataSource extends DataSource<Vendor> {
   }
   filteredData: Vendor[] = [];
   renderedData: Vendor[] = [];
-  constructor(
+  constructor (
     public vendorService: VendorsService,
     public paginator: MatPaginator,
     public _sort: MatSort,

@@ -47,10 +47,6 @@ import { CommonComponentsModule } from '../common-components/common-components.m
 import { SharedModule } from '../shared/shared.module';
 import { SettingsService } from './settings.service';
 import { MailboxFormComponent } from './mailbox/mailbox-form/mailbox-form.component';
-import { DocumentTypeFormComponent } from './employeesettings/document-type-form/document-type-form.component';
-import { DepartmentFormComponent } from './employeesettings/department-form/department-form.component';
-import { JobTitleFormComponent } from './employeesettings/job-title-form/job-title-form.component';
-import { JobTypeFormComponent } from './employeesettings/job-type-form/job-type-form.component';
 import { RelationshipFormComponent } from './employeesettings/relationship-form/relationship-form.component';
 import { LanguageFormComponent } from './employeesettings/language-form/language-form.component';
 import { TermsFormComponent } from './othersettings/terms-form/terms-form.component';
@@ -81,6 +77,10 @@ import { ClassNameListingComponent } from './othersettings/class-name-listing/cl
 import { ClassNameFormComponent } from './othersettings/class-name-form/class-name-form.component';
 import { ExistListingComponent } from './employeesettings/exist-listing/exist-listing.component';
 import { OtherExistListingComponent } from './othersettings/other-exist-listing/other-exist-listing.component';
+import { DepartmentFormComponent } from './employeesettings/department-form/department-form.component';
+import { DocumentTypeFormComponent } from './employeesettings/document-type-form/document-type-form.component';
+import { JobTitleFormComponent } from './employeesettings/job-title-form/job-title-form.component';
+import { JobTypeFormComponent } from './employeesettings/job-type-form/job-type-form.component';
 
 @NgModule({
   declarations: [
@@ -175,4 +175,4 @@ import { OtherExistListingComponent } from './othersettings/other-exist-listing/
     TranslateModule,
   ],
 })
-export class SettingsModule {}
+export class SettingsModule { }

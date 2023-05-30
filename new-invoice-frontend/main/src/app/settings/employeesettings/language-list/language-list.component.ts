@@ -23,8 +23,7 @@ import { LanguageFormComponent } from '../language-form/language-form.component'
 })
 export class LanguageListComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit
-{
+  implements OnInit {
   displayedColumns = ['name', 'actions'];
   languageService?: SettingsService;
   dataSource!: LanguageDataSource;
@@ -34,7 +33,7 @@ export class LanguageListComponent
   isDelete = 0;
   titleMessage: string = '';
 
-  constructor(
+  constructor (
     public dialog: MatDialog,
     public SettingsService: SettingsService,
     private snackBar: MatSnackBar,
@@ -70,7 +69,9 @@ export class LanguageListComponent
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      that.refreshTable();
+      if (result) {
+        that.refresh();
+      }
     });
   }
 
@@ -116,8 +117,8 @@ export class LanguageListComponent
     this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.renderedData.forEach((row) =>
-          this.selection.select(row)
-        );
+        this.selection.select(row)
+      );
   }
   removeSelectedRows() {
     //   const totalSelect = this.selection.selected.length;
@@ -181,7 +182,7 @@ export class LanguageDataSource extends DataSource<LanguageTable> {
   }
   filteredData: LanguageTable[] = [];
   renderedData: LanguageTable[] = [];
-  constructor(
+  constructor (
     public languageService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,

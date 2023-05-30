@@ -34,7 +34,7 @@ export class RelationshipFormComponent {
   userList: any = [];
   isDelete = 0;
   invoice_logo = icon.INVOICE_LOGO;
-  constructor(
+  constructor (
     public dialogRef: MatDialogRef<JobTitleFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: SettingsService,
@@ -78,13 +78,13 @@ export class RelationshipFormComponent {
     return this.formControl.hasError('required')
       ? 'Required field'
       : this.formControl.hasError('email')
-      ? 'Not a valid email'
-      : '';
+        ? 'Not a valid email'
+        : '';
   }
 
   async submit() {
     if (this.relationshipInfo.valid) {
-      let requestObject = this.relationshipInfo.value;
+      const requestObject = this.relationshipInfo.value;
       if (this.data) {
         requestObject._id = this.data._id;
       }
@@ -93,7 +93,7 @@ export class RelationshipFormComponent {
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        location.reload();
+        this.dialogRef.close(true);
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');

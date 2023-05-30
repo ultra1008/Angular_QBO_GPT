@@ -4,13 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { SettingsService } from '../settings.service';
 import { showNotification, swalWithBootstrapButtons } from 'src/consts/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DocumentTypeFormComponent } from './document-type-form/document-type-form.component';
 import { MatDialog } from '@angular/material/dialog';
-import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
-import { LogOut } from 'angular-feather/icons';
-import { DepartmentFormComponent } from './department-form/department-form.component';
-import { JobTitleFormComponent } from './job-title-form/job-title-form.component';
-import { JobTypeFormComponent } from './job-type-form/job-type-form.component';
 import { RelationshipFormComponent } from './relationship-form/relationship-form.component';
 import { LanguageFormComponent } from './language-form/language-form.component';
 import { httproutes, httpversion } from 'src/consts/httproutes';
@@ -20,6 +14,10 @@ import * as fs from 'file-saver';
 import * as XLSX from 'xlsx';
 import { ImportEmployeeSettingsComponent } from './import-employee-settings/import-employee-settings.component';
 import { ExistListingComponent } from './exist-listing/exist-listing.component';
+import { DocumentTypeFormComponent } from './document-type-form/document-type-form.component';
+import { DepartmentFormComponent } from './department-form/department-form.component';
+import { JobTitleFormComponent } from './job-title-form/job-title-form.component';
+import { JobTypeFormComponent } from './job-type-form/job-type-form.component';
 
 @Component({
   selector: 'app-employeesettings',
@@ -53,7 +51,7 @@ export class EmployeesettingsComponent {
   showlanguage = true;
   @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
 
-  constructor(
+  constructor (
     private router: Router,
     public translate: TranslateService,
     public SettingsServices: SettingsService,

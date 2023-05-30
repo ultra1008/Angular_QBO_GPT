@@ -31,10 +31,10 @@ export class DepartmentFormComponent {
   invoice_logo = icon.INVOICE_LOGO;
 
   roleList: any = this.variablesRoleList.slice();
-  titleMessage: string = '';
+  titleMessage = '';
   userList: any = [];
   isDelete = 0;
-  constructor(
+  constructor (
     public dialogRef: MatDialogRef<DepartmentFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: SettingsService,
@@ -78,13 +78,13 @@ export class DepartmentFormComponent {
     return this.formControl.hasError('required')
       ? 'Required field'
       : this.formControl.hasError('email')
-      ? 'Not a valid email'
-      : '';
+        ? 'Not a valid email'
+        : '';
   }
 
   async submit() {
     if (this.DepartmentInfo.valid) {
-      let requestObject = this.DepartmentInfo.value;
+      const requestObject = this.DepartmentInfo.value;
       if (this.data) {
         requestObject._id = this.data._id;
       }
@@ -93,7 +93,7 @@ export class DepartmentFormComponent {
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        location.reload();
+        this.dialogRef.close(true);
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');

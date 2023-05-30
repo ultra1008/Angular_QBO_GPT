@@ -52,7 +52,7 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
 
   companyList: any = [];
   isLoading = true;
-  constructor(@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, public elementRef: ElementRef,
+  constructor (@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, public elementRef: ElementRef,
     private rightSidebarService: RightSidebarService, private configService: ConfigService, private authService: AuthService,
     private router: Router, public translate: TranslateService, public dialog: MatDialog, private commonService: CommonService,) {
     super();
@@ -109,9 +109,6 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
     },
   ];
   async ngOnInit() {
-
-
-
     this.config = this.configService.configData;
     const user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
     this.userName = user_data.UserData.userfullname;
@@ -123,7 +120,6 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
     this.isLoading = false;
     if (data.status) {
       this.companyList = data.data;
-      console.log("companyList", this.companyList);
     }
 
     let tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
