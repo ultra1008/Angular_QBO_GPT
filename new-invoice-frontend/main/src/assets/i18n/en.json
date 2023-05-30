@@ -1,22 +1,25 @@
 {
     "COMMON": {
         "TOOL_TIP": {
-            "REFRESH": "REFRESH",
-            "HISTORY": "HISTORY",
-            "REPORT": "REPORT",
-            "ARCHIVE": "ARCHIVE",
-            "ADD": "ADD",
-            "XLSX": "XLSX",
-            "BACK": "BACK",
+            "REFRESH": "Refresh",
+            "HISTORY": "History",
+            "REPORT": "Report",
+            "ARCHIVE": "Archive",
+            "ADD": "Add",
+            "XLSX": "Xlsx",
+            "BACK": "Back",
             "SEARCH": "Search",
-            "MULTI_ARCHIVE": "MULTI ARCHIVE",
-            "LIST_TO_GRID": "LIST TO GRID",
+            "MULTI_ARCHIVE": "Multi Archive",
+            "LIST_TO_GRID": "List To Grid",
             "CLOSE": "Close",
-            "CHANGE_LANGUAGE": "CHANGE LANGUAGE",
+            "CHANGE_LANGUAGE": "Change Language",
             "IMPORT_TEMPLATE": "Download Template",
             "IMPORT": "Import",
             "MAIL": "Mail",
-            "MESSAGE": "Message"
+            "MESSAGE": "Message",
+            "VIEW": "View",
+            "DOWNLOAD": "Download",
+            "NOTIFICATION": "Notification"
         },
         "ACTIONS": {
             "EDIT": "Edit",

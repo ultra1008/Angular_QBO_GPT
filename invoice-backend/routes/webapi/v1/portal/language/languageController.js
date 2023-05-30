@@ -38,6 +38,7 @@ module.exports.savelanguage = async function (req, res) {
 
             let lanaguageCollection = connection_db_api.model(collectionConstant.LANGUAGE, languageSchema);
             if (requestObject._id) {
+                requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                 let update_language = await lanaguageCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
                 if (update_language) {
                     //activityController.updateAllUser({ "api_setting.term": true }, decodedToken);
@@ -46,6 +47,8 @@ module.exports.savelanguage = async function (req, res) {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
                 }
             } else {
+                requestObject.created_at = Math.round(new Date().getTime() / 1000);
+                requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                 let add_language = new lanaguageCollection(requestObject);
                 let save_language = await add_language.save();
                 if (save_language) {
@@ -107,7 +110,7 @@ module.exports.getlanguageForTable = async function (req, res) {
         try {
             var requestObject = req.body;
             let lanaguageCollection = connection_db_api.model(collectionConstant.LANGUAGE, languageSchema);
-            var getdata = await lanaguageCollection.find({ is_delete: requestObject.is_delete });
+            var getdata = await lanaguageCollection.find({ is_delete: requestObject.is_delete }).sort({ created_at: -1 });
             if (getdata) {
                 res.send(getdata);
             } else {

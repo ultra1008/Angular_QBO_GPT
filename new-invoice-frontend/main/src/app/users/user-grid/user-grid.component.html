@@ -21,7 +21,7 @@
                         </div>
                         <div class="right">
                             <ul class="tbl-export-btn">
-                                <li *ngIf="isDelete === 0" class="rix">
+                                <li *ngIf="isDelete === 0" class="users-dropdown">
                                     <mat-form-field class="cust-padding-top" appearance="outline">
                                         <mat-label>{{'Status' | translate }}</mat-label>
                                         <mat-select (change)="changeStatus($event)" [(ngModel)]="username_status">
@@ -88,7 +88,8 @@
                         <div class="row">
                             <div class="test col-xs-12 col-sm-6 col-md-4 col-xl-2"
                                 *ngFor="let user of userList | empListFilter : username_search| empListFilterStatus : username_status">
-                                <div class="card rixit " (click)="editUser(user)" style="border: 2px solid rgb(182, 182, 182);">
+                                <div class="card hover-card" (click)="editUser(user)"
+                                    style="border: 2px solid rgb(182, 182, 182);">
                                     <div class="m-b-20">
                                         <div class="contact-grid" style="height: 260px;">
                                             <div class="profile-header">
@@ -134,7 +135,7 @@
                                             <div class="col-12 m-1 d-flex">
                                                 <div class="col-6">
                                                     <b> Manager</b>
-                                                    <P  class="truncate-text"> {{user.manager_name}}</P>
+                                                    <P class="truncate-text"> {{user.manager_name}}</P>
                                                 </div>
                                                 <div class=" col-6">
                                                     <b> Supervisor</b>

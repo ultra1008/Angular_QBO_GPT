@@ -16,7 +16,10 @@
             "IMPORT_TEMPLATE": "Descargar plantilla de importación",
             "IMPORT": "Importar",
             "MAIL": "Correo",
-            "MESSAGE": "Mensaje"
+            "MESSAGE": "Mensaje",
+            "VIEW": "Vista",
+            "DOWNLOAD": "DESCARGAR",
+            "PRINT": "IMPRIMIR"
         },
         "ACTIONS": {
             "EDIT": "Editar",

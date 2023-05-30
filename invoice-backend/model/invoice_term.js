@@ -8,6 +8,8 @@ var termSchema = new Schema({
     discount: { type: Number, default: 0 },
     is_quickbooks: { type: Boolean, default: false },
     is_delete: { type: Number, default: 0 },
+    created_at: { type: Number },
+    updated_at: { type: Number },
 });
 
 module.exports = termSchema;

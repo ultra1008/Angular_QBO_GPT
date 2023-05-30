@@ -52,7 +52,7 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
 
   companyList: any = [];
   isLoading = true;
-  constructor (@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, public elementRef: ElementRef,
+  constructor(@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, public elementRef: ElementRef,
     private rightSidebarService: RightSidebarService, private configService: ConfigService, private authService: AuthService,
     private router: Router, public translate: TranslateService, public dialog: MatDialog, private commonService: CommonService,) {
     super();
@@ -382,6 +382,12 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
     });
     this.subs.sink = dialogRef.afterClosed().subscribe((result: any) => {
       //  
+    });
+  }
+  goUserProfile() {
+    const user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    this.router.navigate([WEB_ROUTES.USER_FORM], {
+      queryParams: { _id: user_data.UserData._id },
     });
   }
 

@@ -36,7 +36,7 @@
             </i></button> -->
         </li>
         <!-- #END# Language Button -->
-        <li>
+        <li matTooltip="{{'Invice Message' |  translate}}">
           <!-- <mat-icon matBadge="15" matBadgeColor="warn">message</mat-icon>
           <span class="cdk-visually-hidden">
             Example with a home icon with overlaid badge showing the number 15
@@ -49,7 +49,7 @@
           <div class="unseen-count" *ngIf="unseenCount !== 0"><span class="count">{{unseenCount}}</span></div>
         </li>
         <!-- #START# Notifications-->
-        <li>
+        <li matTooltip="{{'COMMON.TOOL_TIP.NOTIFICATION' |  translate}}">
           <button mat-button [matMenuTriggerFor]="notificationMenu" class="nav-notification-icons">
             <i class="material-icons-outlined icon-color">
               notifications_active
@@ -105,9 +105,8 @@
             <div class="noti-list">
               <div class="menu ">
                 <div class="user_dw_menu">
-                  <button mat-menu-item>
-                    <app-feather-icons [icon]="'user'" [class]="'user-menu-icons'"></app-feather-icons>Account
-                  </button>
+                  <button mat-menu-item (click)="goUserProfile()">
+                    <app-feather-icons [icon]="'user'" [class]="'user-menu-icons'"></app-feather-icons>Account </button>
                   <button (click)="goChangePassword()" mat-menu-item>
                     <app-feather-icons [icon]="'key'" [class]="'user-menu-icons'"></app-feather-icons>Change Password
                   </button>

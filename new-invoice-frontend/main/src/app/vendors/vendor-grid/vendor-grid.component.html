@@ -22,7 +22,7 @@
                               </div>
                               <div class="right">
                                    <ul class="tbl-export-btn">
-                                        <li *ngIf="isDelete === 0" class="rix">
+                                        <li *ngIf="isDelete === 0" class="vendor-dropdowns">
                                              <mat-form-field class="cust-padding-top" appearance="outline">
                                                   <mat-label>{{'Status' | translate }}</mat-label>
                                                   <mat-select [(ngModel)]="vendor_status">
@@ -89,7 +89,7 @@
                               <div class="row">
                                    <div class="test col-xs-12 col-sm-6 col-md-4 col-xl-3"
                                         *ngFor="let vendor of vendorList  | vendorListFilter : vendorname_search |vendorListFilterStatus : vendor_status">
-                                        <div class="card rixit" style="border: 2px solid rgb(182, 182, 182);">
+                                        <div class="card hover-card" style="border: 2px solid rgb(182, 182, 182);">
                                              <div class="m-b-20">
                                                   <div class="contact-grid" style="height: 310px"
                                                        (click)="editVendor(vendor)">

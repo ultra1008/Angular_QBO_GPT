@@ -40,6 +40,7 @@ module.exports.savejobtype = async function (req, res) {
             if (requestObject._id) {
                 if (get_one != null) {
                     if (get_one._id == requestObject._id) {
+                        requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                         let update_job_type = await jobtypeCollection.updateOne({ _id: ObjectID(requestObject._id) }, requestObject);
                         if (update_job_type) {
                             res.send({ message: translator.getStr('JobTypeUpdated'), data: update_job_type, status: true });
@@ -59,6 +60,8 @@ module.exports.savejobtype = async function (req, res) {
                 }
             } else {
                 if (get_one == null) {
+                    requestObject.created_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                     let add_job_type = new jobtypeCollection(requestObject);
                     let save_job_type = await add_job_type.save();
                     if (save_job_type) {
