@@ -19,7 +19,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="right rix">
+                        <div class="right Invoicepreview">
                             <ul class="tbl-export-btn">
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
                                     <form [formGroup]="rform">
@@ -62,8 +62,8 @@
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.IMPORT' |
                                     translate}}">
-                                    <input id="file-upload" class="mr-2" type="file" style="display: none"
-                                    (change)="onFileChange($event)" #OpenFilebox />
+                                        <input id="file-upload" class="mr-2" type="file" style="display: none"
+                                            (change)="onFileChange($event)" #OpenFilebox />
                                         <button mat-mini-fab color="primary" (click)="importFileAction()">
                                             <mat-icon class="col-white">file_upload</mat-icon>
                                         </button>

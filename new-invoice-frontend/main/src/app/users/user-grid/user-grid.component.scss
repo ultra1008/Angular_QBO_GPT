@@ -19,7 +19,7 @@
 
 }
 
-.rix {
+.users-dropdown {
      ::ng-deep .mdc-text-field--outlined {
           // c
      }
@@ -67,7 +67,7 @@
      box-shadow: unset !important;
 }
 
-.rixit:hover {
+.hover-card:hover {
      background-color: #2541c0;
      color: #fff;
 
@@ -140,4 +140,4 @@ h1 {
      text-overflow: ellipsis;
      overflow: hidden;
      white-space: nowrap;
-   }
+}
