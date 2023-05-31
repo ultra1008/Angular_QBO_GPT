@@ -265,7 +265,7 @@ module.exports.countInvoiceStatus = async function (req, res) {
                         approved: { $cond: [{ $eq: ["$status", "Approved"] }, 1, 0] },
                         rejected: { $cond: [{ $eq: ["$status", "Rejected"] }, 1, 0] },
                         late: { $cond: [{ $eq: ["$status", "Late"] }, 1, 0] },
-                        on_Hold: { $cond: [{ $eq: ["$status", "On Hold"] }, 1, 0] },
+                        on_hold: { $cond: [{ $eq: ["$status", "On Hold"] }, 1, 0] },
                         overdue: { $cond: [{ $eq: ["$status", "Overdue"] }, 1, 0] },
 
                     }
@@ -277,7 +277,7 @@ module.exports.countInvoiceStatus = async function (req, res) {
                         approved_invoices: { $sum: "$approved" },
                         rejected_invoices: { $sum: "$rejected" },
                         late_invoices: { $sum: "$late" },
-                        On_Hold: { $sum: "$On_Hold" },
+                        on_hold: { $sum: "$on_hold" },
                         overdue: { $sum: "$overdue" },
                     }
                 },

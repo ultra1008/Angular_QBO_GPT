@@ -51,4 +51,5 @@ export enum WEB_ROUTES {
   INVOICE_VIEW_DOCUMENT = '/invoice/view-document',
   INVOICE_MESSAGES = '/invoice/messages',
   INVOICE_MESSAGE_VIEW = '/invoice/message-view',
+  INVOICE_HISTORY = '/invoice/history',
 }

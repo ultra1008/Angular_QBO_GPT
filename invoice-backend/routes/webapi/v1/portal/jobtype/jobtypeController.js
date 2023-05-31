@@ -124,7 +124,7 @@ module.exports.getJobTypeForTable = async function (req, res) {
         try {
             var requestObject = req.body;
             let jobtypeCollection = connection_db_api.model(collectionConstant.JOB_TYPE, jobtypeSchema);
-            var getdata = await jobtypeCollection.find({ is_delete: requestObject.is_delete });
+            var getdata = await jobtypeCollection.find({ is_delete: requestObject.is_delete }).sort({ created_at: -1 });
             if (getdata) {
                 res.send(getdata);
             } else {

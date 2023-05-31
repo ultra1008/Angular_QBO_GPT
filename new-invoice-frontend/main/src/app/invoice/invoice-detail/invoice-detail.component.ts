@@ -357,6 +357,10 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
     this.router.navigate([WEB_ROUTES.INVOICE]);
   }
 
+  openHistory() {
+    this.router.navigate([WEB_ROUTES.INVOICE_HISTORY], { queryParams: { _id: this.id } });
+  }
+
   sendMessage() {
     const dialogRef = this.dialog.open(SendInvoiceMessageComponent, {
       width: '28%',

@@ -520,6 +520,6 @@ router.post('/webapi/v1/portal/getoneapinvoice', common.checkTokenExistOrNot, ap
 router.post('/webapi/v1/portal/saveapinvoice', common.checkTokenExistOrNot, apInvoiceController.saveAPInvoice);
 router.post('/webapi/v1/portal/saveapinvoicenote', common.checkTokenExistOrNot, apInvoiceValidation.saveAPInvoiceNote, apInvoiceController.saveAPInvoiceNote);
 router.post('/webapi/v1/portal/deleteapinvoicenote', common.checkTokenExistOrNot, apInvoiceValidation.deleteAPInvoiceNote, apInvoiceController.deleteAPInvoiceNote);
-
+router.post('/webapi/v1/portal/getapinvoicehistory', common.checkTokenExistOrNot, apInvoiceController.getAPInvoiceHistory);
 
 module.exports = router;
