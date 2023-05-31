@@ -330,8 +330,13 @@ export function isValidMailFormat(email: string): any {
 }
 
 export function timeDateToepoch(new_datetime: any) {
-  var dateObj = new Date(new_datetime).getTime();
+  const dateObj = new Date(new_datetime).getTime();
   return Math.round(dateObj / 1000);
+}
+
+export function epochToDateTime(epochTime: any) {
+  const dateObj = epochTime * 1000;
+  return new Date(dateObj);
 }
 
 export function formatPhoneNumber(str: any) {

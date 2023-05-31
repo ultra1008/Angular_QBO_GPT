@@ -487,5 +487,13 @@ export const configData = {
   QUICKBOOKS_CLIENT_ID: 'ABjPluRwIqH6dfalr4TasRbV16CCzfHzGiXoYqEpIG6klgooK0',
   QUICKBOOKS_CLIENT_SECRET: 'izeuxKkVfZcNptdidDPfcOL8p4wLN2xubQ6Ynjfm',
   QUICKBOOKS_ENVIRONMENT: 'sandbox', // production
-  QUICKBOOKS_REDIRECT_URL: 'http://localhost:4200/callback'
+  QUICKBOOKS_REDIRECT_URL: 'http://localhost:4200/callback',
+  INVOICE_STATUS: [
+    { name: 'Pending', key: 'Pending' },
+    { name: 'Approved', key: 'Approved' },
+    { name: 'Rejected', key: 'Rejected' },
+    { name: 'On Hold', key: 'On Hold' },
+    { name: 'Late', key: 'Late' },
+    { name: 'Overdue', key: 'Overdue' },
+  ]
 };

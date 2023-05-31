@@ -42,6 +42,7 @@ var invoiceSchema = new mongoose.Schema({
     discount: { type: String, default: "" },
     pdf_url: { type: String, default: "" }, // Wasabi s3 bucket invoice document url
     items: { type: Array, default: [] }, // This will be the list of items inside the invoice document
+    notes: { type: String, default: "" },
 
     invoice_notes: { type: [notesSchema], default: [] },
     /*

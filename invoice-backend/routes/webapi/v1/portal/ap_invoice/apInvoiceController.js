@@ -303,6 +303,7 @@ module.exports.getOneAPInvoice = async function (req, res) {
                         updated_at: 1,
                         is_delete: 1,
 
+                        notes: 1,
                         supporting_documents: { $concatArrays: ["$po", "$quote", "$packing_slip", "$receiving_slip"] }
                     }
                 }
