@@ -451,6 +451,9 @@
     },
     "INVOICE": {
         "TITLE": "INVOICE",
+        "HISTORY": {
+            "TITLE": "Invoice History"
+        },
         "INVOICE_DETAILS": {
             "TITLE": "Invoice Detail",
             "INFORMATION": {

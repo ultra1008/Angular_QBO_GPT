@@ -6,6 +6,7 @@ import { InvoiceListingComponent } from './invoice-listing/invoice-listing.compo
 import { ViewDocumentComponent } from './view-document/view-document.component';
 import { InvoiceMessagesComponent } from './invoice-detail/invoice-messages/invoice-messages.component';
 import { InvoiceMessageViewComponent } from './invoice-detail/invoice-message-view/invoice-message-view.component';
+import { InvoiceHistoryComponent } from './invoice-history/invoice-history.component';
 
 const routes: Routes = [
   {
@@ -27,6 +28,10 @@ const routes: Routes = [
   {
     path: WEB_ROUTES.MESSAGE_VIEW,
     component: InvoiceMessageViewComponent,
+  },
+  {
+    path: WEB_ROUTES.HISTORY,
+    component: InvoiceHistoryComponent
   },
 ];
 
