@@ -94,14 +94,14 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
     this.moreInformationForm = this.fb.group({
       vendor_id: [''],
       customer_id: [''],
-      po_number: [''],
+      po_no: [''],
 
       job_client_name: [''],
       order_date_epoch: [''],
       ship_date_epoch: [''],
 
-      packing_slip: [''],
-      reciving_slip: [''],
+      packing_slip_no: [''],
+      receiving_slip_no: [''],
       terms: [''],
 
       tax_id: [''],
@@ -212,14 +212,14 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
       this.moreInformationForm = this.fb.group({
         vendor_id: [this.invoiceData.vendor_id],
         customer_id: [this.invoiceData.customer_id],
-        po_number: [this.invoiceData.po_no],
+        po_no: [this.invoiceData.po_no],
 
         job_client_name: [this.invoiceData.job_client_name],
         order_date_epoch: [orderDate],
         ship_date_epoch: [shipDate],
 
-        packing_slip: [this.invoiceData.packing_slip_no],
-        reciving_slip: [this.invoiceData.receiving_slip_no],
+        packing_slip_no: [this.invoiceData.packing_slip_no],
+        receiving_slip_no: [this.invoiceData.receiving_slip_no],
         terms: [this.invoiceData.terms],
 
         tax_id: [this.invoiceData.tax_id],
