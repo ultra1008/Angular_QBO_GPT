@@ -32,49 +32,56 @@
                                     </mat-form-field>
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" matTooltip="REFRESH">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.REFRESH' |
+                                    translate}}">
                                         <button mat-mini-fab color="primary" (click)="refresh()">
                                             <mat-icon class="col-white">refresh</mat-icon>
                                         </button>
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" matTooltip="REPORT" (click)="userReport()">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.REPORT' |
+                                    translate}}" (click)="userReport()">
                                         <button mat-mini-fab color="primary">
                                             <mat-icon class="col-white">insert_drive_file</mat-icon>
                                         </button>
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" matTooltip="HISTORY">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.HISTORY' |
+                                    translate}}">
                                         <button mat-mini-fab color="primary" (click)="openHistory()">
                                             <mat-icon class="col-white">history</mat-icon>
                                         </button>
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" matTooltip="GRID TO LIST">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.GRID_TO_LIST' |
+                                    translate}}">
                                         <button mat-mini-fab color="warn" (click)="gotoUser()">
                                             <mat-icon class="col-white">view_list </mat-icon>
                                         </button>
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" matTooltip="ARCHIVE">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ARCHIVE' |
+                                    translate}}">
                                         <button mat-mini-fab color="primary" (click)="gotoArchiveUnarchive()">
                                             <mat-icon class="col-white">archive</mat-icon>
                                         </button>
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 1">
-                                    <div class="m-l-10" matTooltip="BACK">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' |
+                                    translate}}">
                                         <button mat-mini-fab color="warn" (click)="gotoArchiveUnarchive()">
                                             <mat-icon class="col-white">close </mat-icon>
                                         </button>
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" matTooltip="ADD">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ADD' |
+                                    translate}}">
                                         <button mat-mini-fab color="primary" (click)="addNewUser()">
                                             <mat-icon class="col-white">add</mat-icon>
                                         </button>

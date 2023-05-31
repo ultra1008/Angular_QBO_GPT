@@ -11,6 +11,7 @@
             "SEARCH": "Buscar",
             "MULTI_ARCHIVE": "ARCHIVO MULTI",
             "LIST_TO_GRID": "LISTA A CUADRO",
+            "GRID_TO_LIST": "Cuadrícula a lista",
             "CLOSE": "Cerca",
             "CHANGE_LANGUAGE": "CAMBIAR IDIOMA",
             "IMPORT_TEMPLATE": "Descargar plantilla de importación",
@@ -19,9 +20,10 @@
             "MESSAGE": "Mensaje",
             "VIEW": "Vista",
             "DOWNLOAD": "DESCARGAR",
-            "PRINT": "IMPRIMIR",
+            "NOTIFICATION": "Notificación",
             "SHOW": "Show",
-            "HIDE": "Hide"
+            "HIDE": "Hide",
+            "PRINT": "IMPRIMIR"
         },
         "ACTIONS": {
             "EDIT": "Editar",

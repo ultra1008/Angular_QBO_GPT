@@ -15,7 +15,8 @@
                         <div class="right">
                             <ul class="tbl-export-btn">
                                 <li class="tbl-header-btn">
-                                    <div class="m-l-10" matTooltip="BACK">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' |
+                                    translate}}">
                                         <button mat-mini-fab color="warn" (click)="back()">
                                             <mat-icon class="col-white">close </mat-icon>
                                         </button>
@@ -40,18 +41,7 @@
                                     </mat-select>
                                 </mat-form-field>
                             </div>
-                            <!-- <div class="decorate-div">
-                                <mat-slide-toggle color="primary"  [(ngModel)]="otpSwitch" (ngModelChange)="modelSwitchChangeOtp($event)">
-                                    {{'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.ENABLE_OTP' | translate}}
-                                </mat-slide-toggle>
-                                <mat-form-field appearance="outline" class="magin-l">
-                                    <mat-select [(ngModel)]="otp" (ngModelChange)="modelChangeOtp($event)" class="dark-cust-color" required>
-                                        <mat-option *ngFor="let option of otpOptions" [value]="option.key">
-                                            {{option.tmp_language | translate}}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div> -->
+
                         </div>
                     </div>
                 </div>

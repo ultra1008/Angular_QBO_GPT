@@ -15,7 +15,8 @@
             <div class="right">
               <ul class="tbl-export-btn">
                 <li class="tbl-header-btn">
-                  <div class="m-l-10" matTooltip="BACK">
+                  <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' |
+                  translate}}">
                     <button mat-mini-fab color="warn" (click)="back()">
                       <mat-icon class="col-white">close </mat-icon>
                     </button>
@@ -60,17 +61,17 @@
                       <div class="example-element-detail"
                         [@detailExpand]="element.isExpanded ? 'expanded' : 'collapsed'">
                         <span class="expanded-contents">
-                         data
+                          data
                         </span>
-                        
+
                       </div>
                     </td>
-                  </ng-container> 
+                  </ng-container>
                   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                   <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="example-element-row"
-                  [class.example-expanded-row]="row.isExpanded" (click)="row.isExpanded = !row.isExpanded">
-                </tr>
-                <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+                    [class.example-expanded-row]="row.isExpanded" (click)="row.isExpanded = !row.isExpanded">
+                  </tr>
+                  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
                   <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'" matRipple>
                   </mat-row>
                 </table>
