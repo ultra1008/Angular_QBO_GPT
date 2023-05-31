@@ -378,6 +378,7 @@ router.get('/webapi/v1/portal/getdashboardcount', common.checkTokenExistOrNot, i
 router.get('/webapi/v1/portal/getdashboardinvoice', common.checkTokenExistOrNot, invoiceDashboard.dashboardInvoiceList);
 router.post('/webapi/v1/portal/getdashboardchart', common.checkTokenExistOrNot, invoiceDashboard.getDashboardChart);
 router.get('/webapi/v1/portal/dashboardInvoiceListForTable', common.checkTokenExistOrNot, invoiceDashboard.dashboardInvoiceListForTable);
+router.get('/webapi/v1/portal/countInvoiceStatus', common.checkTokenExistOrNot, invoiceDashboard.countInvoiceStatus);
 
 
 let invoice_vendorController = require('./vendor/vendorController');
@@ -518,5 +519,6 @@ router.post('/webapi/v1/portal/getoneapinvoice', common.checkTokenExistOrNot, ap
 router.post('/webapi/v1/portal/saveapinvoice', common.checkTokenExistOrNot, apInvoiceController.saveAPInvoice);
 router.post('/webapi/v1/portal/saveapinvoicenote', common.checkTokenExistOrNot, apInvoiceValidation.saveAPInvoiceNote, apInvoiceController.saveAPInvoiceNote);
 router.post('/webapi/v1/portal/deleteapinvoicenote', common.checkTokenExistOrNot, apInvoiceValidation.deleteAPInvoiceNote, apInvoiceController.deleteAPInvoiceNote);
+
 
 module.exports = router;

@@ -6,6 +6,7 @@ let common = require('./../../../../../controller/common/common');
 var ObjectID = require('mongodb').ObjectID;
 var moment = require('moment');
 const _ = require("lodash");
+var apInvoiceSchema = require('./../../../../../model/ap_invoices');
 
 //get dashboard count
 module.exports.getDashboardCount = async function (req, res) {
@@ -242,5 +243,62 @@ module.exports.dashboardInvoiceListForTable = async function (req, res) {
         }
     } else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+module.exports.countInvoiceStatus = async function (req, res) {
+    var translator = new common.Language('en');
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    if (decodedToken) {
+        try {
+
+            var requestObject = req.body;
+            let connection_db_api = await db_connection.connection_db_api(decodedToken);
+            var apInvoiceConnection = connection_db_api.model(collectionConstant.AP_INVOICE, apInvoiceSchema);
+            let match = {};
+            match = { is_delete: 0 };
+            var get_data = await apInvoiceConnection.aggregate([
+                { $match: { is_delete: 0 } },
+                {
+                    $project: {
+                        pending: { $cond: [{ $eq: ["$status", "Pending"] }, 1, 0] },
+                        approved: { $cond: [{ $eq: ["$status", "Approved"] }, 1, 0] },
+                        rejected: { $cond: [{ $eq: ["$status", "Rejected"] }, 1, 0] },
+                        late: { $cond: [{ $eq: ["$status", "Late"] }, 1, 0] },
+                        On_Hold: { $cond: [{ $eq: ["$status", "On Hold"] }, 1, 0] },
+
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        pending_invoices: { $sum: "$pending" },
+                        approved_invoices: { $sum: "$approved" },
+                        rejected_invoices: { $sum: "$rejected" },
+                        late_invoices: { $sum: "$late" },
+                        On_Hold: { $sum: "$On_Hold" },
+                    }
+                },
+            ]);
+            let get_process = await apInvoiceConnection.find({ is_delete: 0 }).count();
+            if (get_data) {
+                if (get_data.length > 0) {
+                    get_data = get_data[0];
+                } else {
+                    get_data = { pending_invoices: 0, approved_invoices: 0, rejected_invoices: 0, late_invoices: 0, On_Hold: 0 };
+                }
+                res.send({ status: true, message: "Invoice data", data: get_data });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+            }
+        }
+        catch (e) {
+            console.log("e", e);
+            res.send({ message: 'SomethingWrong', status: false });
+        }
+
+    }
+    else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
