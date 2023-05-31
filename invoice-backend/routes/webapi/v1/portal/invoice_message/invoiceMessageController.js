@@ -176,10 +176,10 @@ module.exports.getOneInvoiceMessage = async function (req, res) {
                                     from: collectionConstant.INVOICE_VENDOR,
                                     localField: "vendor",
                                     foreignField: "_id",
-                                    as: "vendor"
+                                    as: "vendor_data"
                                 }
                             },
-                            { $unwind: "$vendor" },
+                            { $unwind: "$vendor_data" },
                         ],
                         as: "invoice"
                     }

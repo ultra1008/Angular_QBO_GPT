@@ -157,10 +157,10 @@ export class InvoiceMessagesComponent extends UnsubscribeOnDestroyAdapter implem
         'Sender': x.sender.userfullname,
         'Receiver': x.receiver.userfullname,
         'Ready by Receiver': x.seen_last_message ? 'Yes' : 'No',
-        'Invoice Number': x.invoice.invoice,
-        'Due Date': x.invoice.due_date,
-        'Vendor': x.invoice.vendor.vendor_name,
-        'Total Amount': x.invoice.invoice_total,
+        'Invoice Number': x.invoice.invoice_no,
+        'Due Date': x.invoice.due_date_epoch,
+        'Vendor': x.invoice.vendor_data.vendor_name,
+        'Total Amount': x.invoice.invoice_total_amount,
       }));
 
     TableExportUtil.exportToExcel(exportData, 'excel');
