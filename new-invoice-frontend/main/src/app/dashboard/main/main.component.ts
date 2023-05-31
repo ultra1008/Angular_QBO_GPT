@@ -18,7 +18,7 @@ import {
   ApexGrid,
 } from 'ng-apexcharts';
 import { NgxGaugeType } from 'ngx-gauge/gauge/gauge';
-import { dataSeries } from './chartdata';
+
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { WEB_ROUTES } from 'src/consts/routes';
@@ -52,7 +52,6 @@ export class MainComponent {
   @ViewChild('chart') chart?: ChartComponent;
   public invoiceChartOptions: Partial<ChartOptions> | any;
   public columnChartOptions: Partial<ChartOptions> | any;
-
   gaugeType = 'arch' as NgxGaugeType;
   gaugeValue = 48;
   gaugeSize = 170;
@@ -62,7 +61,6 @@ export class MainComponent {
     40: { color: 'orange' },
     75.5: { color: 'red' },
   };
-
   gaugeType2 = 'arch' as NgxGaugeType;
   gaugeValue2 = 34;
   gaugeSize2 = 170;
@@ -76,11 +74,13 @@ export class MainComponent {
   pendingInvoices: any = [];
   rejectedInvoices: any = [];
   processedInvoices: any = [];
+  countList: any = [];
 
-  constructor (private commonService: CommonService, private router: Router,) {
+  constructor(private commonService: CommonService, private router: Router,) {
     this.getDashboardInvoice();
     this.monthlyInvoiceChart();
     this.monthlyHistoryChart();
+    this.getInvoiceCounts();
   }
 
   async getDashboardInvoice() {
@@ -295,5 +295,13 @@ export class MainComponent {
 
   viewInvoice(type: string) {
     this.router.navigate([WEB_ROUTES.INVOICE], { queryParams: { type: type } });
+  }
+  async getInvoiceCounts() {
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_DASHBOARD_INVOICE_COUNTS);
+    if (data.status) {
+      this.countList = data.data;
+      console.log("this.countList", this.countList);
+
+    }
   }
 }

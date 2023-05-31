@@ -33,12 +33,8 @@ export class VendorFormComponent {
   customForm?: UntypedFormGroup;
   variablestermList: any = [];
   termsList: Array<TermModel> = this.variablestermList.slice();
-
-
-
   variablesVendorTypeList: any = [];
   vendorTypeList: any = this.variablesVendorTypeList.slice();
-
   countryList: Array<CountryModel> = [{ _id: 'USA', name: 'USA' }];
   id = '';
   isDelete = 1;
