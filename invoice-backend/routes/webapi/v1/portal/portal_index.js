@@ -243,7 +243,7 @@ router.post('/webapi/v1/portal/importlanguage', common.checkTokenExistOrNot, lan
 
 let costCodeController = require('./costcode/costcodeController');
 let costCodeValidation = require('./costcode/costCodeValidation');
-router.post('/webapi/v1/portal/getallcostcode', common.checkTokenExistOrNot, costCodeValidation.getAllCostCodeValidation, costCodeController.getallcostcode);
+router.get('/webapi/v1/portal/getallcostcode', common.checkTokenExistOrNot, costCodeController.getallcostcode);
 router.post('/webapi/v1/portal/getcostcode', common.checkTokenExistOrNot, costCodeValidation.getCostCodeValidation, costCodeController.getcostcode);
 router.post('/webapi/v1/portal/savecostcode', common.checkTokenExistOrNot, costCodeValidation.costCodeValidation, costCodeController.savecostcode);
 router.post('/webapi/v1/portal/deletecostcode', common.checkTokenExistOrNot, costCodeValidation.costCodeDeleteValidation, costCodeController.deletecostcode);

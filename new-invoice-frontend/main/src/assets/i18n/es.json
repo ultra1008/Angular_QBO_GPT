@@ -494,6 +494,7 @@
                     "AMOUNT_DUE": "Amount Due",
                     "COST_CODE": "Cost Code",
                     "GL_ACCOUNT": "GL Account",
+                    "CLASS_NAME": "Class Name",
                     "NOTES": "Notes"
                 }
             },

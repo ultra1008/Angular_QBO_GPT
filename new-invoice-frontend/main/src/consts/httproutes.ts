@@ -43,7 +43,7 @@ export enum httproutes {
   GET_COMPNAY_INFO = 'compnayinformation',
   GET_COMPNAY_TYPE = 'getcompanytype',
   GET_COMPNAY_NIGP = 'getcsidivision',
-  GET_COMPNAY_SIZE = 'getcompanysize ',
+  GET_COMPNAY_SIZE = 'getcompanysize',
   GET_COMPNAY_ACTIVE_SINEC = 'compnayinformation',
   SAVE_COMPNAY_INFO = 'editcompany',
   PORTAL_ROVUK_SPONSOR_GET_PRIME_WORK_PERFORMED = 'getsupplierprimeworkperformed',
@@ -164,7 +164,9 @@ export enum httproutes {
   OTHER_SETTINGS_GET_JOB_NAME = 'getjobname',
   OTHER_SETTING_DELETE_JOB_NAME = 'deletejobname',
   OTHER_SETTINGS_IMPORT = 'importjobname',
-  CLASS_NAME_DATA_TABLE = 'getclassnameForTable ',
+
+  GET_CLASS_NAME = 'getclassname',
+  CLASS_NAME_DATA_TABLE = 'getclassnameForTable',
   SAVE_CLASS_NAME = 'saveclassname',
   DELETE_CLASS_NAME = 'deleteclassname',
 
@@ -187,10 +189,11 @@ export enum httproutes {
   DOCUMENTS_DATATABLE = 'getViewDocumentsDatatableForTable',
 
   //costcode
-  SETTINGS_IMPORT_COSTCODE_DATA = 'importCostCode ',
+  SETTINGS_IMPORT_COSTCODE_DATA = 'importCostCode',
   COSTCODE_DATA_TABLE = 'getCostCodeForTable',
   DELETE_COST_CODE = 'deletecostcode',
   COST_CODE_SAVE = 'savecostcode',
+  GET_COST_CODE = 'getallcostcode',
 
   //usage
   USAGE_DATA_TABLE = 'getCustomerStates',
@@ -202,13 +205,14 @@ export enum httproutes {
 
   //clients
   GET_ALL_COSTCODE = 'getCostCode',
-  SAVE_CLIENT = 'saveclient ',
+  SAVE_CLIENT = 'saveclient',
+  GET_CLIENT = 'getclient',
   CLIENT_DATA_TABLE = 'getClientForTable',
   CLIENT_UPDATE_ALL_STATUS = 'updateMultipleClientStatus',
-  CLIENT_DELETE = 'deleteclient ',
+  CLIENT_DELETE = 'deleteclient',
   CLIENT_GET_ONE = 'getOneClient',
   CLIENT_UPDATE_STATUS = 'updateClientStatus',
-  CLIENT_ALL_DELETE = 'deleteMultipleClient ',
+  CLIENT_ALL_DELETE = 'deleteMultipleClient',
   CLIENT_GET_HISTORY = 'getClinetHistory',
   CHECK_IMPORT_CLIENT = 'checkimportclient',
   IMPORT_CLIENT = 'importclient',
@@ -227,6 +231,10 @@ export enum httproutes {
   // Invoice
   INVOICE_SAVE_INVOICE_PROCESS = "saveinvoiceprocess",
   GET_INVOICE_FOR_TABLE = 'getapinvoicefortable',
+  GET_ONE_INVOICE = 'getoneapinvoice',
+  SAVE_INVOICE = 'saveapinvoice',
+  SAVE_INVOICE_NOTE = 'saveapinvoicenote',
+  DELETE_INVOICE_NOTE = 'deleteapinvoicenote',
 
   //QuickBook Module
   QUICKBOOK_SAVE_INFO = "savequickbookinfo",

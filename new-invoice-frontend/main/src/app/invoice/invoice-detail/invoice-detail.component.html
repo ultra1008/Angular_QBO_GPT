@@ -50,8 +50,7 @@
                               <div class="Fix-height">
                                    <div class="card">
                                         <div class="header">
-                                             <h2>{{'INVOICE.INVOICE_DETAILS.INFORMATION.TITLE' |
-                                                  translate}} </h2>
+                                             <h2>{{'INVOICE.INVOICE_DETAILS.INFORMATION.TITLE' | translate}} </h2>
                                         </div>
                                         <div class="body">
                                              <div class="list-group">
@@ -60,14 +59,12 @@
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.DOCUMENT_TYPE' |
-                                                                           translate}}</mat-label>
+                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.DOCUMENT_TYPE' | translate}}</mat-label>
                                                                       <mat-select formControlName="document_type">
-                                                                           <mat-option [value]="1">
-                                                                                Invoice
-                                                                           </mat-option>
-                                                                           <mat-option [value]="2">
-                                                                                P.O.
+                                                                           <mat-option
+                                                                                *ngFor="let docType of documentList"
+                                                                                [value]="docType.key">
+                                                                                {{docType.name}}
                                                                            </mat-option>
                                                                       </mat-select>
                                                                  </mat-form-field>
@@ -75,59 +72,28 @@
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.VENDOR_NAME' |
-                                                                           translate}}</mat-label>
-                                                                      <input matInput formControlName="vendor_name"
-                                                                           capitalOnly>
+                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.VENDOR_NAME' | translate}}</mat-label>
+                                                                      <mat-select formControlName="vendor">
+                                                                           <mat-select-filter #vendorListSelect
+                                                                                [placeholder]="'Filter'"
+                                                                                [displayMember]="'vendor_name'"
+                                                                                [array]="variablesVendorList"
+                                                                                (filteredReturn)="vendorList =$event">
+                                                                           </mat-select-filter>
+                                                                           <mat-option *ngFor="let vendor of vendorList"
+                                                                                [value]="vendor._id">
+                                                                                {{vendor.vendor_name}}
+                                                                           </mat-option>
+                                                                      </mat-select>
                                                                  </mat-form-field>
                                                             </div>
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.INVOICE#' |
-                                                                           translate}}</mat-label>
+                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.INVOICE#' | translate}}</mat-label>
                                                                       <input matInput
                                                                            class="input-capitalized-textfield"
-                                                                           formControlName="invoice">
-                                                                 </mat-form-field>
-                                                            </div>
-                                                       </div>
-                                                       <div class="row ">
-
-                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
-                                                                 <mat-form-field class="example-full-width"
-                                                                      appearance="outline">
-                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.INVOICE_DATE' |
-                                                                           translate}}</mat-label>
-                                                                      <input matInput [max]="maxDate"
-                                                                           [matDatepicker]="picker"
-                                                                           formControlName="invoice_date">
-                                                                      <mat-datepicker-toggle matSuffix
-                                                                           [for]="picker"></mat-datepicker-toggle>
-                                                                      <mat-datepicker #picker></mat-datepicker>
-                                                                 </mat-form-field>
-                                                            </div>
-                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
-                                                                 <mat-form-field class="example-full-width"
-                                                                      appearance="outline">
-                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.DUE_DATE' |
-                                                                           translate}}</mat-label>
-                                                                      <input matInput [max]="maxDate"
-                                                                           [matDatepicker]="picker"
-                                                                           formControlName="due_date">
-                                                                      <mat-datepicker-toggle matSuffix
-                                                                           [for]="picker"></mat-datepicker-toggle>
-                                                                      <mat-datepicker #picker></mat-datepicker>
-                                                                 </mat-form-field>
-                                                            </div>
-                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
-                                                                 <mat-form-field class="example-full-width"
-                                                                      appearance="outline">
-                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.TOTAL_AMOUNT' |
-                                                                           translate}}</mat-label>
-                                                                      <input matInput
-                                                                           class="input-capitalized-textfield"
-                                                                           formControlName="total_amount">
+                                                                           formControlName="invoice_no">
                                                                  </mat-form-field>
                                                             </div>
                                                        </div>
@@ -135,20 +101,53 @@
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.TAX_AMOUNT' |
-                                                                           translate}}</mat-label>
-                                                                      <input matInput formControlName="text_amount"
+                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.INVOICE_DATE' | translate}}</mat-label>
+                                                                      <input matInput [max]="maxDate"
+                                                                           [matDatepicker]="invoiceDatePicker"
+                                                                           formControlName="invoice_date_epoch">
+                                                                      <mat-datepicker-toggle matSuffix
+                                                                           [for]="invoiceDatePicker"></mat-datepicker-toggle>
+                                                                      <mat-datepicker
+                                                                           #invoiceDatePicker></mat-datepicker>
+                                                                 </mat-form-field>
+                                                            </div>
+                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.DUE_DATE' | translate}}</mat-label>
+                                                                      <input matInput [max]="maxDate"
+                                                                           [matDatepicker]="dueDatePicker"
+                                                                           formControlName="due_date_epoch">
+                                                                      <mat-datepicker-toggle matSuffix
+                                                                           [for]="dueDatePicker"></mat-datepicker-toggle>
+                                                                      <mat-datepicker #dueDatePicker></mat-datepicker>
+                                                                 </mat-form-field>
+                                                            </div>
+                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.TOTAL_AMOUNT' | translate}}</mat-label>
+                                                                      <input matInput
+                                                                           class="input-capitalized-textfield"
+                                                                           formControlName="invoice_total_amount">
+                                                                 </mat-form-field>
+                                                            </div>
+                                                       </div>
+                                                       <div class="row ">
+                                                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                                                                 <mat-form-field class="example-full-width"
+                                                                      appearance="outline">
+                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.TAX_AMOUNT' | translate}}</mat-label>
+                                                                      <input matInput formControlName="tax_amount"
                                                                            capitalOnly>
                                                                  </mat-form-field>
                                                             </div>
                                                             <div
                                                                  class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2 font-small">
-
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.ASSIGN_TO' |
-                                                                      translate}}</mat-label>
-                                                                      <mat-select formControlName="users" multiple>
+                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.ASSIGN_TO' | translate}}</mat-label>
+                                                                      <mat-select formControlName="assign_to">
                                                                            <mat-select-filter #userListSelect
                                                                                 [placeholder]="'Filter'"
                                                                                 [displayMember]="'userfullname'"
@@ -157,7 +156,8 @@
                                                                            </mat-select-filter>
                                                                            <mat-option *ngFor="let user of userList"
                                                                                 [value]="user._id">
-                                                                                <span><img class="img-b"
+                                                                                <span>
+                                                                                     <img class="img-b"
                                                                                           [src]="user.userpicture"
                                                                                           height="25px" width="25px"
                                                                                           alt="">
@@ -170,15 +170,11 @@
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.STATUS' |
-                                                                           translate}}</mat-label>
-
+                                                                      <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.STATUS' | translate}}</mat-label>
                                                                       <mat-select formControlName="status">
-                                                                           <mat-option [value]="1">
-                                                                                Active
-                                                                           </mat-option>
-                                                                           <mat-option [value]="2">
-                                                                                Inactive
+                                                                           <mat-option *ngFor="let status of statusList"
+                                                                                [value]="status.key">
+                                                                                {{status.name}}
                                                                            </mat-option>
                                                                       </mat-select>
                                                                  </mat-form-field>
@@ -186,15 +182,15 @@
                                                        </div>
                                                   </form>
                                                   <div class="d-flex form-button">
-                                                       <button class="btn-space" mat-raised-button
-                                                            color="primary">{{'COMMON.ACTIONS.SAVE'|
-                                                            translate}}</button>
-                                                       <button class="btn-space but-c" type="button"
-                                                            mat-raised-button>{{'Approve'| translate}}</button>
+                                                       <button class="btn-space" mat-raised-button color="primary"
+                                                            (click)="saveInformation()">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
+                                                       <button class="btn-space but-c" type="button" mat-raised-button
+                                                            (click)="updateStatus('Approved')">{{'Approve'| translate}}</button>
                                                        <button class="btn-space" type="button" mat-raised-button
-                                                            color="warn">{{'Reject'| translate}}</button>
-                                                       <button type="button" class="onhold" mat-raised-button>{{'On
-                                                            Hold'| translate}}</button>
+                                                            color="warn"
+                                                            (click)="updateStatus('Rejected')">{{'Reject'| translate}}</button>
+                                                       <button type="button" class="onhold" mat-raised-button
+                                                            (click)="updateStatus('On Hold')">{{'On Hold'| translate}}</button>
                                                   </div>
                                              </div>
                                         </div>
@@ -205,8 +201,7 @@
                                              <mat-expansion-panel>
                                                   <mat-expansion-panel-header>
                                                        <mat-panel-title>
-                                                            {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.TITLE' |
-                                                            translate}}
+                                                            {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.TITLE' | translate}}
                                                        </mat-panel-title>
                                                   </mat-expansion-panel-header>
                                                   <form class="register-form m-1" [formGroup]="moreInformationForm">
@@ -215,8 +210,8 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>
-                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.VENDOR_ID' |
-                                                                           translate}}</mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.VENDOR_ID' | translate}}
+                                                                      </mat-label>
                                                                       <input matInput formControlName="vendor_id"
                                                                            capitalOnly>
                                                                  </mat-form-field>
@@ -225,8 +220,8 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>
-                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.CUSTOMER_ID' |
-                                                                           translate}}</mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.CUSTOMER_ID' | translate}}
+                                                                      </mat-label>
                                                                       <input matInput formControlName="customer_id"
                                                                            capitalOnly>
                                                                  </mat-form-field>
@@ -235,8 +230,8 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>
-                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.P.O.#' |
-                                                                           translate}}</mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.P.O.#' | translate}}
+                                                                      </mat-label>
                                                                       <input matInput
                                                                            class="input-capitalized-textfield"
                                                                            formControlName="po_number">
@@ -248,31 +243,49 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>
-                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.JOB#' |
-                                                                           translate}}</mat-label>
-                                                                      <input matInput formControlName="job_number"
-                                                                           capitalOnly>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.JOB#' | translate}}
+                                                                      </mat-label>
+                                                                      <mat-select formControlName="job_client_name">
+                                                                           <mat-select-filter #jobNameListSelect
+                                                                                [placeholder]="'Filter'"
+                                                                                [displayMember]="'client_name'"
+                                                                                [array]="variablesJobNameList"
+                                                                                (filteredReturn)="jobNameList =$event">
+                                                                           </mat-select-filter>
+                                                                           <mat-option
+                                                                                *ngFor="let jobName of jobNameList"
+                                                                                [value]="jobName._id">
+                                                                                {{jobName.client_name}}
+                                                                           </mat-option>
+                                                                      </mat-select>
                                                                  </mat-form-field>
                                                             </div>
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>
-                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.ORDER_DATE' |
-                                                                           translate}}</mat-label>
-                                                                      <input matInput formControlName="order_date"
-                                                                           capitalOnly>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.ORDER_DATE' | translate}}
+                                                                      </mat-label>
+                                                                      <input matInput [max]="maxDate"
+                                                                           [matDatepicker]="orderDatePicker"
+                                                                           formControlName="order_date_epoch">
+                                                                      <mat-datepicker-toggle matSuffix
+                                                                           [for]="orderDatePicker"></mat-datepicker-toggle>
+                                                                      <mat-datepicker #orderDatePicker></mat-datepicker>
                                                                  </mat-form-field>
                                                             </div>
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>
-                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.SHIP_DATE' |
-                                                                           translate}}</mat-label>
-                                                                      <input matInput
-                                                                           class="input-capitalized-textfield"
-                                                                           formControlName="ship_date">
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.SHIP_DATE' | translate}}
+                                                                      </mat-label>
+                                                                      <input matInput [max]="maxDate"
+                                                                           [matDatepicker]="shipDatePicker"
+                                                                           formControlName="ship_date_epoch">
+                                                                      <mat-datepicker-toggle matSuffix
+                                                                           [for]="shipDatePicker"></mat-datepicker-toggle>
+                                                                      <mat-datepicker #shipDatePicker></mat-datepicker>
                                                                  </mat-form-field>
                                                             </div>
                                                        </div>
@@ -281,8 +294,8 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>
-                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.PACKING_SLIP' |
-                                                                           translate}}</mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.PACKING_SLIP' | translate}}
+                                                                      </mat-label>
                                                                       <input matInput formControlName="packing_slip"
                                                                            capitalOnly>
                                                                  </mat-form-field>
@@ -291,8 +304,8 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>
-                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.RECEVING_SLIP' |
-                                                                           translate}}</mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.RECEVING_SLIP' | translate}}
+                                                                      </mat-label>
                                                                       <input matInput formControlName="reciving_slip"
                                                                            capitalOnly>
                                                                  </mat-form-field>
@@ -301,10 +314,20 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>
-                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.TERMS' |
-                                                                           translate}}</mat-label>
-                                                                      <input matInput formControlName="terms"
-                                                                           capitalOnly>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.TERMS' | translate}}
+                                                                      </mat-label>
+                                                                      <mat-select formControlName="terms">
+                                                                           <mat-select-filter #termListSelect
+                                                                                [placeholder]="'Filter'"
+                                                                                [displayMember]="'name'"
+                                                                                [array]="variablesTermList"
+                                                                                (filteredReturn)="termList =$event">
+                                                                           </mat-select-filter>
+                                                                           <mat-option *ngFor="let term of termList"
+                                                                                [value]="term._id">
+                                                                                {{term.name}}
+                                                                           </mat-option>
+                                                                      </mat-select>
                                                                  </mat-form-field>
                                                             </div>
                                                        </div>
@@ -313,8 +336,8 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>
-                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.TAX_ID' |
-                                                                           translate}}</mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.TAX_ID' | translate}}
+                                                                      </mat-label>
                                                                       <input matInput formControlName="tax_id"
                                                                            capitalOnly>
                                                                  </mat-form-field>
@@ -323,8 +346,8 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>
-                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.SUB_TOTAL' |
-                                                                           translate}}</mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.SUB_TOTAL' | translate}}
+                                                                      </mat-label>
                                                                       <input matInput formControlName="sub_total"
                                                                            capitalOnly>
                                                                  </mat-form-field>
@@ -333,8 +356,8 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>
-                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.AMOUNT_DUE' |
-                                                                           translate}}</mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.AMOUNT_DUE' | translate}}
+                                                                      </mat-label>
                                                                       <input matInput
                                                                            class="input-capitalized-textfield"
                                                                            formControlName="amount_due">
@@ -346,14 +369,19 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>
-                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.COST_CODE' |
-                                                                           translate}}</mat-label>
-                                                                      <mat-select formControlName="costcode">
-                                                                           <mat-option [value]="1">
-                                                                                Invoice
-                                                                           </mat-option>
-                                                                           <mat-option [value]="2">
-                                                                                P.O.
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.COST_CODE' | translate}}
+                                                                      </mat-label>
+                                                                      <mat-select formControlName="gl_account">
+                                                                           <mat-select-filter #costCodeListSelect
+                                                                                [placeholder]="'Filter'"
+                                                                                [displayMember]="'value'"
+                                                                                [array]="variablesCostCodeList"
+                                                                                (filteredReturn)="costCodeList =$event">
+                                                                           </mat-select-filter>
+                                                                           <mat-option
+                                                                                *ngFor="let costCode of costCodeList"
+                                                                                [value]="costCode._id">
+                                                                                {{costCode.cost_code}}
                                                                            </mat-option>
                                                                       </mat-select>
                                                                  </mat-form-field>
@@ -362,32 +390,40 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>
-                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.GL_ACCOUNT' |
-                                                                           translate}}</mat-label>
-                                                                      <input matInput
-                                                                           class="input-capitalized-textfield"
-                                                                           formControlName="gl_account">
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.CLASS_NAME' | translate}}
+                                                                      </mat-label>
+                                                                      <mat-select formControlName="class_name">
+                                                                           <mat-select-filter #classNameListSelect
+                                                                                [placeholder]="'Filter'"
+                                                                                [displayMember]="'name'"
+                                                                                [array]="variablesClassNameList"
+                                                                                (filteredReturn)="classNameList =$event">
+                                                                           </mat-select-filter>
+                                                                           <mat-option
+                                                                                *ngFor="let className of classNameList"
+                                                                                [value]="className._id">
+                                                                                {{className.name}}
+                                                                           </mat-option>
+                                                                      </mat-select>
                                                                  </mat-form-field>
                                                             </div>
                                                        </div>
-                                                       <div class="row ">
+                                                       <div class="row form-old">
                                                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>
-                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.NOTES' |
-                                                                           translate}}</mat-label>
-                                                                      <input matInput formControlName="notes"
-                                                                           capitalOnly>
+                                                                           {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.NOTES' | translate}}
+                                                                      </mat-label>
+                                                                      <textarea matInput
+                                                                           formControlName="notes"></textarea>
                                                                  </mat-form-field>
                                                             </div>
                                                        </div>
                                                   </form>
                                                   <div class="d-flex form-button">
-                                                       <button class="btn-space" mat-raised-button
-                                                            color="primary">{{'COMMON.ACTIONS.SAVE'|
-                                                            translate}}</button>
-
+                                                       <button class="btn-space" mat-raised-button color="primary"
+                                                            (click)="saveMoreInformation()">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                   </div>
                                              </mat-expansion-panel>
                                              <mat-expansion-panel (opened)="panelOpenState = true"
@@ -400,131 +436,70 @@
                                                   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                        <div class="card">
                                                             <div class="chat">
-                                                                 <div class="chat-message clearfix">
+                                                                 <div class="clearfix">
                                                                       <div class="form-group d-flex">
-                                                                           <div class="form-line col-11">
-                                                                                <mat-form-field
-                                                                                     class="example-full-width">
-                                                                                     <input matInput
-                                                                                          placeholder="Enter text here..">
-                                                                                </mat-form-field>
-                                                                           </div>
-                                                                           <div class="chat-upload col-1">
-                                                                                <button mat-raised-button
-                                                                                     color="primary">{{'COMMON.ACTIONS.SAVE'|
-                                                                                     translate}}</button>
-
-                                                                           </div>
+                                                                           <form class="register-form m-4 form-old row width-100p"
+                                                                                [formGroup]="noteForm">
+                                                                                <div class="form-line col-10">
+                                                                                     <mat-form-field
+                                                                                          class="example-full-width"
+                                                                                          appearance="outline">
+                                                                                          <mat-label>
+                                                                                               {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.NOTES' | translate}}
+                                                                                          </mat-label>
+                                                                                          <textarea matInput
+                                                                                               formControlName="notes"></textarea>
+                                                                                     </mat-form-field>
+                                                                                </div>
+                                                                                <div
+                                                                                     class="chat-upload col-2 my-auto text-right">
+                                                                                     <button mat-raised-button
+                                                                                          color="primary"
+                                                                                          (click)="saveNote()">
+                                                                                          {{'COMMON.ACTIONS.SAVE'| translate}}
+                                                                                     </button>
+                                                                                </div>
+                                                                           </form>
                                                                       </div>
-
                                                                  </div>
-                                                                 <ng-scrollbar class="chat-main" visibility="hover">
-                                                                      <div class="chat-history" id="chat-conversation">
-                                                                           <ul>
-                                                                                <li class="note-card">
-                                                                                     <div
-                                                                                          class="message-data d-flex chat-p mt-2">
-                                                                                          <div class="col-11">
-                                                                                               <span
-                                                                                                    class="message-data-name"><img
-                                                                                                         class="img-b"
-                                                                                                         src="assets/images/user/user2.jpg"
-                                                                                                         alt="avatar">
-                                                                                               </span>
-                                                                                               <span
-                                                                                                    class="message-data-time">10:12
-                                                                                                    AM, Today</span>
+                                                                 <ng-scrollbar class="chat-main body mt-3"
+                                                                      visibility="hover">
+                                                                      <div *ngFor="let note of notes; let i = index">
+                                                                           <div class="doc-file-type mx-4"
+                                                                                [ngClass]="i !== 0 ? 'mt-2' : ''">
+                                                                                <div class="list-unstyled">
+                                                                                     <div class="m-1">
+                                                                                          <div
+                                                                                               class="d-flex justify-content-between">
+                                                                                               <div class="d-flex mb-2">
+                                                                                                    <div><img class="img-b"
+                                                                                                              [src]="note.userpicture"
+                                                                                                              alt="">
+                                                                                                    </div>
+                                                                                                    <h5
+                                                                                                         class="font-16 my-auto">
+                                                                                                         {{note.userfullname}}
+                                                                                                    </h5>
+                                                                                               </div>
+                                                                                               <button mat-mini-fab
+                                                                                                    color="primary"
+                                                                                                    (click)="deleteNotes(note)">
+                                                                                                    <mat-icon
+                                                                                                         class="col-white">delete</mat-icon>
+                                                                                               </button>
                                                                                           </div>
-                                                                                          <div class="col-1">
-                                                                                               <span>
-                                                                                                    <button mat-mini-fab
-                                                                                                         color="primary">
-                                                                                                         <mat-icon
-                                                                                                              class="col-white">delete</mat-icon>
-                                                                                                    </button>
-
-                                                                                               </span>
-                                                                                          </div>
+                                                                                          <h5 class="font-14 mt-1">
+                                                                                               <span>{{note.notes}}</span>
+                                                                                          </h5>
+                                                                                          <h5 class="font-12">
+                                                                                               {{(note.created_at * 1000) | date: 'MM/dd/yyyy hh:mm a'}}
+                                                                                          </h5>
                                                                                      </div>
-                                                                                     <div class="mr-2 chat-msg">
-                                                                                          <p>Its good. We completed
-                                                                                               almost all task assign by
-                                                                                               our manager.</p>
-                                                                                          <div class="row">
-                                                                                          </div>
-                                                                                     </div>
-                                                                                </li>
-                                                                                <li class="note-card">
-                                                                                     <div
-                                                                                          class="message-data d-flex chat-p mt-2">
-                                                                                          <div class="col-11">
-                                                                                               <span
-                                                                                                    class="message-data-name"><img
-                                                                                                         class="img-b"
-                                                                                                         src="assets/images/user/user2.jpg"
-                                                                                                         alt="avatar">
-                                                                                               </span>
-                                                                                               <span
-                                                                                                    class="message-data-time">10:12
-                                                                                                    AM, Today</span>
-                                                                                          </div>
-                                                                                          <div class="col-1">
-                                                                                               <span>
-                                                                                                    <button mat-mini-fab
-                                                                                                         color="primary">
-                                                                                                         <mat-icon
-                                                                                                              class="col-white">delete</mat-icon>
-                                                                                                    </button>
-
-                                                                                               </span>
-                                                                                          </div>
-                                                                                     </div>
-                                                                                     <div class="mr-2 chat-msg">
-                                                                                          <p>Its good. We completed
-                                                                                               almost all task assign by
-                                                                                               our manager.</p>
-                                                                                          <div class="row">
-                                                                                          </div>
-                                                                                     </div>
-                                                                                </li>
-                                                                                <li class="note-card">
-                                                                                     <div
-                                                                                          class="message-data d-flex chat-p mt-2">
-                                                                                          <div class="col-11">
-                                                                                               <span
-                                                                                                    class="message-data-name "><img
-                                                                                                         class="img-b"
-                                                                                                         src="assets/images/user/user2.jpg"
-                                                                                                         alt="avatar">
-                                                                                               </span>
-                                                                                               <span
-                                                                                                    class="message-data-time">10:12
-                                                                                                    AM, Today</span>
-                                                                                          </div>
-                                                                                          <div class="col-1">
-                                                                                               <span>
-                                                                                                    <button mat-mini-fab
-                                                                                                         color="primary">
-                                                                                                         <mat-icon
-                                                                                                              class="col-white">delete</mat-icon>
-                                                                                                    </button>
-
-                                                                                               </span>
-                                                                                          </div>
-                                                                                     </div>
-                                                                                     <div class="mr-2 chat-msg">
-                                                                                          <p>Its good. We completed
-                                                                                               almost all task assign by
-                                                                                               our manager.</p>
-                                                                                          <div class="row">
-                                                                                          </div>
-                                                                                     </div>
-                                                                                </li>
-
-                                                                           </ul>
+                                                                                </div>
+                                                                           </div>
                                                                       </div>
+                                                                      <div class="mt-3"></div>
                                                                  </ng-scrollbar>
-
                                                             </div>
                                                        </div>
                                                   </div>
@@ -538,62 +513,66 @@
 
                                                   </mat-expansion-panel-header>
                                                   <div class="body">
-                                                       <div class="doc-file-type">
-                                                            <ng-scrollbar class="document-h" visibility="hover">
-                                                                 <ul class="list-unstyled">
-                                                                      <div class="row">
-                                                                           <button mat-raised-button color="primary">
-                                                                                {{'COMMON.ACTIONS.SAVE'| translate}}
-                                                                           </button>
-                                                                      </div>
-                                                                      <li class="d-flex justify-content-between mb-3"
-                                                                           *ngFor="let document of [1,2,3,4,5]; let i = index"
-                                                                           [ngClass]="i === 0 ? 'mt-2' : ''">
-                                                                           <div class="custom-d-flex">
-                                                                                <span
-                                                                                     class="msr-3 align-self-center img-icon primary-rgba text-primary"><i
-                                                                                          class="far fa-file-pdf"></i>
+                                                       <div class="row mx-4">
+                                                            <button mat-raised-button color="primary">
+                                                                 {{'DOCUMENT.ADD'| translate}}
+                                                            </button>
+                                                       </div>
+                                                       <ng-scrollbar class="chat-main body mt-3" visibility="hover">
+                                                            <div
+                                                                 *ngFor="let document of supportingDocuments; let i = index">
+                                                                 <div class="doc-file-type mx-4"
+                                                                      [ngClass]="i !== 0 ? 'mt-2' : ''">
+                                                                      <div class="list-unstyled">
+                                                                           <div
+                                                                                class="m-1 d-flex justify-content-between">
+                                                                                <div class="d-flex">
+                                                                                     <span
+                                                                                          class="msr-3 align-self-center img-icon primary-rgba text-primary"><i
+                                                                                               class="far fa-file-pdf"></i>
+                                                                                     </span>
+                                                                                     <span class="my-auto">
+                                                                                          {{(document.created_at * 1000) | date: 'MM/dd/yyyy hh:mm a'}}
+                                                                                     </span>
+                                                                                </div>
+                                                                                <span class="badge badge-solid-purple my-auto"
+                                                                                     *ngIf="document.document_type === 'PURCHASE_ORDER'">
+                                                                                     P.O.
                                                                                 </span>
-                                                                                <div class="set-flex">
-                                                                                     <h5 class="font-16 mb-1">Java
-                                                                                          Programming</h5>
-                                                                                     <p>04/20/2023, 04:31 PM</p>
+                                                                                <span class="badge badge-solid-cyan my-auto"
+                                                                                     *ngIf="document.document_type === 'QUOTE'">
+                                                                                     Quote
+                                                                                </span>
+                                                                                <span class="badge badge-solid-pink my-auto"
+                                                                                     *ngIf="document.document_type === 'PACKING_SLIP'">
+                                                                                     Packing Slip
+                                                                                </span>
+                                                                                <span class="badge badge-solid-green my-auto"
+                                                                                     *ngIf="document.document_type === 'RECEIVING_SLIP'">
+                                                                                     Receiving Slip
+                                                                                </span>
+                                                                                <div>
+                                                                                     <td>
+                                                                                          <button mat-mini-fab
+                                                                                               color="warn"
+                                                                                               class="mx-2">
+                                                                                               <mat-icon
+                                                                                                    class="col-white">delete</mat-icon>
+                                                                                          </button>
+                                                                                          <button mat-mini-fab
+                                                                                               color="primary"
+                                                                                               (click)="documentDocument(document)">
+                                                                                               <mat-icon
+                                                                                                    class="col-white">download</mat-icon>
+                                                                                          </button>
+                                                                                     </td>
                                                                                 </div>
                                                                            </div>
-                                                                           <span *ngIf="i == 0"
-                                                                                class="badge badge-solid-red my-auto">
-                                                                                Invoice </span>
-                                                                           <span *ngIf="i == 1"
-                                                                                class="badge badge-solid-purple my-auto">
-                                                                                P.O </span>
-                                                                           <span *ngIf="i == 2"
-                                                                                class="badge badge-solid-cyan my-auto">
-                                                                                Quotes </span>
-                                                                           <span *ngIf="i == 3"
-                                                                                class="badge badge-solid-green my-auto">
-                                                                                Reciving Slip </span>
-                                                                           <span *ngIf="i == 4"
-                                                                                class="badge badge-solid-pink my-auto">
-                                                                                Packing Slip </span>
-                                                                           <div>
-                                                                                <td>
-                                                                                     <button mat-mini-fab color="warn"
-                                                                                          class="mx-2">
-                                                                                          <mat-icon
-                                                                                               class="col-white">delete</mat-icon>
-                                                                                     </button>
-                                                                                     <button mat-mini-fab
-                                                                                          color="primary">
-                                                                                          <mat-icon
-                                                                                               class="col-white">download</mat-icon>
-                                                                                     </button>
-                                                                                </td>
-                                                                           </div>
-                                                                      </li>
-                                                                 </ul>
-                                                            </ng-scrollbar>
-
-                                                       </div>
+                                                                      </div>
+                                                                 </div>
+                                                            </div>
+                                                            <div class="mt-3"></div>
+                                                       </ng-scrollbar>
                                                   </div>
                                              </mat-expansion-panel>
                                              <mat-expansion-panel (opened)="panelOpenState = true"
@@ -743,17 +722,14 @@
                                                             </tbody>
                                                        </table>
                                                   </div>
-
-
                                              </div>
-
                                         </div>
                                    </div>
                               </div>
                          </div>
                          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                               <div class="card pdf-h">
-                                   <div class="pdf-btn">
+                                   <div class="pdf-btn" *ngIf="!pdfLoader">
                                         <button class="m-2" mat-mini-fab (click)="download()" color="primary">
                                              <mat-icon class="col-white">download</mat-icon>
                                         </button>
@@ -764,9 +740,12 @@
                                    </div>
                                    <div id="outerContainer">
                                         <div class="pdf-container">
-                                             <pdf-viewer [src]="pdf_url" [rotation]="0" [original-size]="false"
-                                                  [show-all]="true" [fit-to-page]="false" [zoom]="1"
-                                                  [zoom-scale]="'page-width'" [stick-to-page]="false"
+                                             <!--  <div *ngIf="pdfLoader">
+                                                  <app-loading></app-loading>
+                                             </div> -->
+                                             <pdf-viewer *ngIf="!pdfLoader" [src]="pdf_url" [rotation]="0"
+                                                  [original-size]="false" [show-all]="true" [fit-to-page]="false"
+                                                  [zoom]="1" [zoom-scale]="'page-width'" [stick-to-page]="false"
                                                   [render-text]="true" [external-link-target]="'blank'"
                                                   [autoresize]="true" [show-borders]="false"
                                                   style="width: 100%; height: 710px;"></pdf-viewer>
