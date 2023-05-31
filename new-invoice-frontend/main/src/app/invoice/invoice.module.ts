@@ -38,6 +38,8 @@ import { InvoiceMessageViewComponent } from './invoice-detail/invoice-message-vi
 import { MailFormComponent } from './mail-form/mail-form.component';
 import { UploadInvoiceFormComponent } from './upload-invoice-form/upload-invoice-form.component';
 import { NgxEmojiPickerModule } from 'ngx-emoji-picker';
+import { InvoiceHistoryComponent } from './invoice-history/invoice-history.component';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @NgModule({
   declarations: [
@@ -49,6 +51,7 @@ import { NgxEmojiPickerModule } from 'ngx-emoji-picker';
     InvoiceMessageViewComponent,
     MailFormComponent,
     UploadInvoiceFormComponent,
+    InvoiceHistoryComponent,
   ],
   providers: [AdvanceTableService],
   imports: [
@@ -94,6 +97,8 @@ import { NgxEmojiPickerModule } from 'ngx-emoji-picker';
     MatCheckboxModule,
     MatDialogModule,
     NgScrollbarModule,
-    NgxEmojiPickerModule,],
+    NgxEmojiPickerModule,
+    InfiniteScrollModule,
+  ],
 })
 export class InvoiceModule { }
