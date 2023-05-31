@@ -83,12 +83,14 @@ export class MainComponent {
     on_hold: 0,
     duplicates: 0,
   };
+  dashboaedInvoceList: any = [];
 
   constructor (private commonService: CommonService, private router: Router,) {
     this.getDashboardInvoice();
     this.monthlyInvoiceChart();
     this.monthlyHistoryChart();
     this.getInvoiceCounts();
+    this.getInvoiceForTable();
   }
 
   async getDashboardInvoice() {
@@ -308,8 +310,16 @@ export class MainComponent {
     const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_DASHBOARD_INVOICE_COUNTS);
     if (data.status) {
       this.countList = data.data;
-      console.log("this.countList", this.countList);
 
     }
   }
+  async getInvoiceForTable() {
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.DASHBOARD_INVOICE_FOR_TABLE, { is_delete: 0 });
+    if (data.status) {
+      this.dashboaedInvoceList = data.data;
+      console.log("this.dashboaedInvoceList", this.dashboaedInvoceList);
+    }
+
+  }
 }
+

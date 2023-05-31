@@ -66,9 +66,10 @@
                                 <ng-container matColumnDef="vendor">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Vendor</mat-header-cell>
                                     <mat-cell *matCellDef="let row" (click)="editCall(row)"
+                                        [matTooltip]="getVendorNameTooltip(row)"
                                         (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Vendor:</span>
-                                        {{row.vendor_data.vendor_name}}</mat-cell>
+                                        <span class="truncate-text"> <span class="mobile-label">Vendor:</span>
+                                            {{row.vendor_data.vendor_name}}</span></mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="invoice_number">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Invoice Number</mat-header-cell>
@@ -93,8 +94,10 @@
                                 <ng-container matColumnDef="approver">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Approver</mat-header-cell>
                                     <mat-cell *matCellDef="let row" (click)="editCall(row)"
+                                        [matTooltip]="getApproverTooltip(row)"
                                         (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Approver:</span> {{row.approver}}</mat-cell>
+                                        <span class="truncate-text"> <span class="mobile-label">Approver:</span></span>
+                                        {{row.approver}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="status">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
