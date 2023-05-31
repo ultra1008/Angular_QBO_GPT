@@ -47,7 +47,7 @@ export class MailboxComponent
   titleMessage = '';
 
 
-  constructor (
+  constructor(
     public dialog: MatDialog,
     public SettingsService: SettingsService,
     private snackBar: MatSnackBar,
@@ -75,9 +75,11 @@ export class MailboxComponent
   }
 
   editMailbox(mailbox: MailboxTable) {
-    this.router.navigate(['/settings/mailbox-form'], {
-      queryParams: { _id: mailbox._id },
-    });
+    if (this.isDelete == 0) {
+      this.router.navigate(['/settings/mailbox-form'], {
+        queryParams: { _id: mailbox._id },
+      });
+    }
   }
 
   async archiveRecover(mailbox: MailboxTable, is_delete: number) {
@@ -206,7 +208,7 @@ export class MailboxDataSource extends DataSource<MailboxTable> {
   }
   filteredData: MailboxTable[] = [];
   renderedData: MailboxTable[] = [];
-  constructor (
+  constructor(
     public mailboxService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,

@@ -17,7 +17,8 @@
                         <div class="right">
                             <ul class="tbl-export-btn">
                                 <li class="tbl-header-btn" *ngIf="id">
-                                    <div class="m-l-10" matTooltip="ARCHIVE">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ARCHIVE' |
+                                    translate}}">
                                         <button mat-mini-fab color="warn" (click)="archiveRecover()">
                                             <mat-icon class="col-white">archive</mat-icon>
                                         </button>
@@ -53,7 +54,7 @@
                                 <!-- <img src="assets/images/vendor.png" /> -->
                             </div>
                             <div class="row">
-                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2" style="font-size: 12px;">
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>{{'VENDOR.ADD_EDIT.VENDOR_NAME' | translate}}</mat-label>
                                         <input matInput formControlName="vendor_name"
@@ -150,7 +151,7 @@
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>{{'VENDOR.ADD_EDIT.TERMS' | translate}}</mat-label>
-                                        <mat-select formControlName="vendor_terms" style="font-size: 12px;">
+                                        <mat-select formControlName="vendor_terms">
                                             <mat-select-filter #termListSelect [placeholder]="'Filter'"
                                                 [displayMember]="'name'" [array]="variablestermList"
                                                 (filteredReturn)="termsList =$event">
@@ -175,6 +176,22 @@
                                     </mat-form-field>
                                 </div>
                             </div>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                <mat-form-field class="example-full-width" appearance="outline">
+                                    <mat-label>{{'VendorType' | translate}}</mat-label>
+                                    <mat-select formControlName="vendor_type_id">
+                                        <mat-select-filter #vendortypeSelect [placeholder]="'Filter'"
+                                            [displayMember]="'name'" [array]="variablesVendorTypeList"
+                                            (filteredReturn)="vendorTypeList=$event">
+                                        </mat-select-filter>
+                                        <mat-option *ngFor="let vendor_type of vendorTypeList"
+                                            [value]="vendor_type._id">
+                                            {{vendor_type.name}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
                             <div class="row form-old">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">

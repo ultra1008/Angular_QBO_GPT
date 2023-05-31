@@ -33,6 +33,12 @@ export class VendorFormComponent {
   customForm?: UntypedFormGroup;
   variablestermList: any = [];
   termsList: Array<TermModel> = this.variablestermList.slice();
+
+
+
+  variablesVendorTypeList: any = [];
+  vendorTypeList: any = this.variablesVendorTypeList.slice();
+
   countryList: Array<CountryModel> = [{ _id: 'USA', name: 'USA' }];
   id = '';
   isDelete = 1;
@@ -48,7 +54,7 @@ export class VendorFormComponent {
   titleMessage = "";
   show = false;
 
-  constructor (
+  constructor(
     private fb: UntypedFormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
@@ -75,6 +81,7 @@ export class VendorFormComponent {
       vendor_zipcode: ['', [Validators.required]],
       vendor_country: ['USA'],
       vendor_terms: ['', [Validators.required]],
+      vendor_type_id: [''],
       vendor_status: ['', [Validators.required]],
       vendor_description: [''],
     });
@@ -87,7 +94,7 @@ export class VendorFormComponent {
       },
     ];
     this.galleryOptions = [this.tmp_gallery];
-
+    this.getVendorType();
     this.getTerms();
     if (this.id) {
       this.getOneVendor();
@@ -112,6 +119,7 @@ export class VendorFormComponent {
         vendor_zipcode: [vendorData.vendor_zipcode, [Validators.required]],
         vendor_country: [vendorData.vendor_country],
         vendor_terms: [vendorData.vendor_terms, [Validators.required]],
+        vendor_type_id: [vendorData.vendor_type_id],
         vendor_status: [vendorData.vendor_status, [Validators.required]],
         vendor_description: [vendorData.vendor_description],
       });
@@ -133,6 +141,14 @@ export class VendorFormComponent {
     if (data.status) {
       this.variablestermList = data.data;
       this.termsList = this.variablestermList.slice();
+    }
+  }
+
+  async getVendorType() {
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_GET_VENDOR_TYPE);
+    if (data.status) {
+      this.variablesVendorTypeList = data.data;
+      this.vendorTypeList = this.variablesVendorTypeList.slice();
     }
   }
 
