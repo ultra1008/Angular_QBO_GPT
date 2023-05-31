@@ -24,8 +24,15 @@ module.exports.getAPInvoiceForTable = async function (req, res) {
         try {
             var requestObject = req.body;
             var apInvoiceConnection = connection_db_api.model(collectionConstant.AP_INVOICE, apInvoiceSchema);
+            let match = { is_delete: requestObject.is_delete };
+            if (requestObject.type != '' && requestObject.type != undefined && requestObject.type != null) {
+                match = {
+                    is_delete: requestObject.is_delete,
+                    status: requestObject.type,
+                };
+            }
             var get_data = await apInvoiceConnection.aggregate([
-                { $match: { is_delete: requestObject.is_delete } },
+                { $match: match },
                 {
                     $lookup: {
                         from: collectionConstant.INVOICE_USER,
@@ -495,7 +502,6 @@ module.exports.saveAPInvoice = async function (req, res) {
                     if (found_receiving_date_epoch != -1) {
                         updatedData[found_receiving_date_epoch].value = common.MMDDYYYY_local_offset(updatedData[found_receiving_date_epoch].value, 'en', local_offset);
                     }
-                    console.log("updatedData", updatedData);
                     for (let i = 0; i < updatedData.length; i++) {
                         updatedData[i]['key'] = translator.getStr(`Invoice_History.${updatedData[i]['key']}`);
                     }

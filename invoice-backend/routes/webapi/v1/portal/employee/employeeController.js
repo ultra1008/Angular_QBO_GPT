@@ -563,10 +563,10 @@ module.exports.saveUserDocument = async function (req, res) {
                         body.userdocument_updated_at = Math.round(new Date().getTime() / 1000);
                         body.userdocument_user_id = fields.user_id;
                         body.show_on_qrcode_scan = fields.show_on_qrcode_scan == "true" || fields.show_on_qrcode_scan == true ? true : false;
-                        var temp_path = newOpenFile[0].filepath;
-                        var file_name = newOpenFile[0].originalFilename;
+                        var temp_path = newOpenFile[0].path;
+                        var file_name = newOpenFile[0].name;
                         let date = moment().format('D_MMM_YYYY_hh_mm_ss_SSS_A');
-                        let array_name = newOpenFile[0].originalFilename.split(".");
+                        let array_name = newOpenFile[0].name.split(".");
                         var file_name_ext = array_name[array_name.length - 1];
                         //var file_name_ext = newOpenFile[0].name.split(".")[1];
                         var file_name = attachmentLocations.USER_DOCUMENT + "_" + date + "." + file_name_ext;
@@ -1359,8 +1359,8 @@ module.exports.savePersonalInfo = async function (req, res) {
                                 action_from: 'Web',
                             }, decodedToken);
                             if (notFonud == 1) {
-                                var temp_path = newOpenFile[0].filepath;
-                                var file_name = newOpenFile[0].originalFilename;
+                                var temp_path = newOpenFile[0].path;
+                                var file_name = newOpenFile[0].name;
                                 let extension = file_name.split(".")[1];
                                 dirKeyName = config.INVOICE_WASABI_PATH + "/employee/" + user_edit_id + "/" + attachmentLocations.PROFILE_PICTURE + "/user_picture." + extension;
                                 var fileBody = fs.readFileSync(temp_path);
@@ -1463,8 +1463,8 @@ module.exports.saveMobilePhoto = async function (req, res) {
 
                     if (notFonud == 1) {
                         newOpenFile = this.openedFiles;
-                        var temp_path = newOpenFile[0].filepath;
-                        var file_name = newOpenFile[0].originalFilename;
+                        var temp_path = newOpenFile[0].path;
+                        var file_name = newOpenFile[0].name;
                         let extension = file_name.split(".")[1];
                         dirKeyName = config.INVOICE_WASABI_PATH + "/employee/" + user_edit_id + "/" + attachmentLocations.PROFILE_PICTURE + "/mobile_picture." + extension;
                         var fileBody = fs.readFileSync(temp_path);

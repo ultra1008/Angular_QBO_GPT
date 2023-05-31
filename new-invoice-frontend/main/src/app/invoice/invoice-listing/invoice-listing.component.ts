@@ -134,6 +134,7 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
       this.paginator,
       this.sort,
       this.isDelete,
+      this.type,
     );
     this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
       () => {
@@ -143,6 +144,9 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
         this.dataSource.filter = this.filter.nativeElement.value;
       }
     );
+    setTimeout(() => {
+      this.router.navigate([WEB_ROUTES.INVOICE]).then();
+    }, 1000);
   }
 
   // context menu
@@ -187,6 +191,7 @@ export class ExampleDataSource extends DataSource<Invoice> {
     public paginator: MatPaginator,
     public _sort: MatSort,
     public isDelete: number,
+    public type: string,
   ) {
     super();
     // Reset to the first page when the user changes the filter.
@@ -201,7 +206,7 @@ export class ExampleDataSource extends DataSource<Invoice> {
       this.filterChange,
       this.paginator.page,
     ];
-    this.exampleDatabase.getInvoiceTable(this.isDelete);
+    this.exampleDatabase.getInvoiceTable(this.isDelete, this.type);
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data

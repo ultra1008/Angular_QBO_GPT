@@ -37,9 +37,9 @@ module.exports.saveAttechment = async function (req, res) {
                     let tmp_i = 0;
                     if (notFonud == 1) {
                         for (let i = 0; i < this.openedFiles.length; i++) {
-                            var temp_path = this.openedFiles[i].filepath;
+                            var temp_path = this.openedFiles[i].path;
                             let date = moment().format('D_MMM_YYYY_hh_mm_ss_SSS_A');
-                            let array_name = this.openedFiles[i].originalFilename.split(".");
+                            let array_name = this.openedFiles[i].name.split(".");
                             var file_name_ext = array_name[array_name.length - 1];
                             var file_name = date + "." + file_name_ext;
                             var fileBody = fs.readFileSync(temp_path);

@@ -35,8 +35,8 @@ export class InvoiceService extends UnsubscribeOnDestroyAdapter {
   }
 
   /** CRUD METHODS */
-  async getInvoiceTable(is_delete: number): Promise<void> {
-    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.GET_INVOICE_FOR_TABLE, { is_delete: is_delete }).toPromise();
+  async getInvoiceTable(is_delete: number, type: string): Promise<void> {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.GET_INVOICE_FOR_TABLE, { is_delete: is_delete, type: type }).toPromise();
     this.isTblLoading = false;
     this.dataChange.next(data);
   }
