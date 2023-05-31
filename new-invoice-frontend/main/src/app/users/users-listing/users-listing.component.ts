@@ -189,7 +189,7 @@ export class UsersListingComponent
       tmp_ids.push(this.selection.selected[i]._id);
     }
     const data = await this.commonService.postRequestAPI(
-      httpversion.PORTAL_V1 + httproutes.PORTAL_USER_STATUS_UPDATE,
+      httpversion.PORTAL_V1 + httproutes.PORTAL_ALL_USER_STATUS_CHANGE,
       { _id: tmp_ids, userstatus: 1 }
     );
     if (data.status) {
@@ -206,7 +206,7 @@ export class UsersListingComponent
       tmp_ids.push(this.selection.selected[i]._id);
     }
     const data = await this.commonService.postRequestAPI(
-      httpversion.PORTAL_V1 + httproutes.PORTAL_USER_STATUS_UPDATE,
+      httpversion.PORTAL_V1 + httproutes.PORTAL_ALL_USER_STATUS_CHANGE,
       { _id: tmp_ids, userstatus: 2 }
     );
     if (data.status) {
@@ -223,7 +223,7 @@ export class UsersListingComponent
       status = 2;
     }
     const data = await this.commonService.postRequestAPI(
-      httpversion.PORTAL_V1 + httproutes.PORTAL_ALL_USER_STATUS_CHANGE,
+      httpversion.PORTAL_V1 + httproutes.PORTAL_USER_STATUS_UPDATE,
       { _id: User._id, userstatus: status }
     );
     if (data.status) {
@@ -406,9 +406,11 @@ export class UsersListingComponent
     this.router.navigate([WEB_ROUTES.USER_FORM]);
   }
   editUser(user: User) {
-    this.router.navigate([WEB_ROUTES.USER_FORM], {
-      queryParams: { _id: user._id },
-    });
+    if (this.isDelete == 0) {
+      this.router.navigate([WEB_ROUTES.USER_FORM], {
+        queryParams: { _id: user._id },
+      });
+    }
   }
 
   exportExcel() {
