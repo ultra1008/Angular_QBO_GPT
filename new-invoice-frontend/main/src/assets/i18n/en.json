@@ -11,6 +11,7 @@
             "SEARCH": "Search",
             "MULTI_ARCHIVE": "Multi Archive",
             "LIST_TO_GRID": "List To Grid",
+            "GRID_TO_LIST": "Grid To List",
             "CLOSE": "Close",
             "CHANGE_LANGUAGE": "Change Language",
             "IMPORT_TEMPLATE": "Download Template",
@@ -21,7 +22,8 @@
             "DOWNLOAD": "Download",
             "NOTIFICATION": "Notification",
             "SHOW": "Show",
-            "HIDE": "Hide"
+            "HIDE": "Hide",
+            "PRINT": "Print"
         },
         "ACTIONS": {
             "EDIT": "Edit",
@@ -486,7 +488,7 @@
                     "SHIP_DATE": "Ship Date",
                     "PACKING_SLIP": "Packing Slip",
                     "RECEVING_SLIP": "Receiving Slip",
-                    "TERMS": "terms",
+                    "TERMS": "Terms",
                     "TAX_ID": "Tax ID",
                     "SUB_TOTAL": "Sub Total",
                     "AMOUNT_DUE": "Amount Due",

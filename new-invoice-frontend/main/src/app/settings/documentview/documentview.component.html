@@ -15,7 +15,8 @@
                         <div class="right">
                             <ul class="tbl-export-btn">
                                 <li class="tbl-header-btn">
-                                    <div class="m-l-10" matTooltip="BACK">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' |
+                                    translate}}">
                                         <button mat-mini-fab color="warn" (click)="back()">
                                             <mat-icon class="col-white">close</mat-icon>
                                         </button>
@@ -27,16 +28,6 @@
 
                     <div class="body overflow-auto">
                         <div class="main-cust-setting-div">
-                            <!-- <div class="decorate-div">
-                                <mat-slide-toggle class="mr-2" color="primary" [(ngModel)]="Document_View"
-                                    (ngModelChange)="modelChangeSwitch($event,'Document_View')">
-                                </mat-slide-toggle>{{'SETTINGS.DOCUMENT_VIEW.DOCUMENT_VIEW_TEXT' | translate}}&nbsp;
-                                <mat-form-field appearance="outline" class="ml-2">
-                                    <input maxlength="2" (keypress)="numberOnly($event)" class="input" matInput
-                                        placeholder="{{'' | translate }}" [(ngModel)]="Document_View_time_value"
-                                        (keyup.enter)="modelChangeLocationText($any($event.target).value,'Document_View')" />
-                                </mat-form-field>
-                            </div> -->
                             <div class="decorate-div">
                                 <mat-slide-toggle class="mr-2" color="primary" [(ngModel)]="Archive_Orphan_Document"
                                     (ngModelChange)="modelChangeSwitch($event,'Archive_Orphan_Document')">

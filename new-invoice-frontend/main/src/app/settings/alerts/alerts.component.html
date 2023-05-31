@@ -15,7 +15,8 @@
                         <div class="right">
                             <ul class="tbl-export-btn">
                                 <li class="tbl-header-btn">
-                                    <div class="m-l-10" matTooltip="BACK">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' |
+                                    translate}}">
                                         <button mat-mini-fab color="warn" (click)="back()">
                                             <mat-icon class="col-white">close </mat-icon>
                                         </button>
@@ -31,17 +32,17 @@
                             </div>
                             <div class="decorate-div">
                                 <mat-slide-toggle color="primary" [(ngModel)]="Pending_items"
-                                (ngModelChange)="modelChangeSwitch($event,'Pending_items')">
-                                {{'SETTINGS.SETTINGS_OTHER_OPTION.ALERTS_MODULE.ASSIGNED_PERSON' | translate}}
-                            </mat-slide-toggle>
-                            <mat-form-field appearance="outline" class="magin-l">
-                                <!--  (ngModelChange)="modelChangeDropdown($event,'Pending_items',true)" -->
-                                <mat-select class="dark-cust-color" [(ngModel)]="Pending_items_value">
-                                    <mat-option *ngFor="let data of pendingdata" [value]="data.key">
-                                        {{data.name}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
+                                    (ngModelChange)="modelChangeSwitch($event,'Pending_items')">
+                                    {{'SETTINGS.SETTINGS_OTHER_OPTION.ALERTS_MODULE.ASSIGNED_PERSON' | translate}}
+                                </mat-slide-toggle>
+                                <mat-form-field appearance="outline" class="magin-l">
+                                    <!--  (ngModelChange)="modelChangeDropdown($event,'Pending_items',true)" -->
+                                    <mat-select class="dark-cust-color" [(ngModel)]="Pending_items_value">
+                                        <mat-option *ngFor="let data of pendingdata" [value]="data.key">
+                                            {{data.name}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
                             </div>
                             <div class="decorate-div">
                                 <mat-slide-toggle color="primary" [(ngModel)]="Invoice_Not_Assigned"
@@ -133,7 +134,8 @@
                             </mat-slide-toggle>
                             <mat-form-field appearance="outline" class="magin-l">
                                 <!-- (ngModelChange)="modelChangeDropdown($event,'daily_productivity_report',true)" -->
-                                <mat-select #drop [(ngModel)]="daily_productivity_report_value" class="dark-cust-color" multiple>
+                                <mat-select #drop [(ngModel)]="daily_productivity_report_value" class="dark-cust-color"
+                                    multiple>
                                     <mat-option *ngFor="let user of allUser" [value]="user._id">
                                         {{user.userfullname}}
                                     </mat-option>
@@ -146,14 +148,16 @@
                                 {{'SETTINGS.SETTINGS_OTHER_OPTION.ALERTS_MODULE.INVOICE_GREATER' | translate}}
                             </mat-slide-toggle>
                             <mat-form-field appearance="outline" class="magin-l">
-                                <input (keypress)="numberOnly($event)" class="input" matInput placeholder="{{'' | translate }}"
+                                <input (keypress)="numberOnly($event)" class="input" matInput
+                                    placeholder="{{'' | translate }}"
                                     [(ngModel)]="Invoice_Greater_Than_Amount_Approve_amount_value"
                                     (keyup.enter)="modelChangeLocationText($event,'Invoice_Greater_Than_Amount_Approve')" />
                             </mat-form-field>
                             <span>{{'SETTINGS.SETTINGS_OTHER_OPTION.ALERTS_MODULE.THEN_USER' | translate}}</span>
                             <mat-form-field appearance="outline" class="magin-l">
                                 <!-- (ngModelChange)="modelChangeDropdown($event,'Invoice_Greater_Than_Amount_Approve',true)" -->
-                                <mat-select #drop [(ngModel)]="Invoice_Greater_Than_Amount_Approve_value" class="dark-cust-color" multiple>
+                                <mat-select #drop [(ngModel)]="Invoice_Greater_Than_Amount_Approve_value"
+                                    class="dark-cust-color" multiple>
                                     <mat-option *ngFor="let user of allUser" [value]="user._id">
                                         {{user.userfullname}}
                                     </mat-option>
@@ -176,7 +180,7 @@
                         </div>
                         <div class="cust-center-justify">
                             <button mat-raised-button (click)="saveSettings()" color="warn">
-                            {{'COMMON.ACTIONS.SAVE' |  translate}}</button>
+                                {{'COMMON.ACTIONS.SAVE' |  translate}}</button>
                         </div>
                     </div>
                 </div>
