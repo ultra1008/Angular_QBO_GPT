@@ -61,6 +61,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
 
   id: any;
   invoiceData: any;
+  pdfLoader = true;
   notes: any = [];
   supportingDocuments: any = [];
 
@@ -233,6 +234,8 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
 
       this.notes = this.invoiceData.invoice_notes;
       this.supportingDocuments = this.invoiceData.supporting_documents;
+      this.pdf_url = this.invoiceData.pdf_url;
+      this.pdfLoader = false;
       this.uiSpinner.spin$.next(false);
     }
   }
@@ -259,6 +262,18 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
       } else {
         showNotification(this.snackBar, data.message, 'error');
       }
+    }
+  }
+
+  async updateStatus(status: string) {
+    this.uiSpinner.spin$.next(true);
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_INVOICE, { _id: this.id, status: status });
+    this.uiSpinner.spin$.next(false);
+    if (data.status) {
+      showNotification(this.snackBar, 'Invoice status updated successfully.', 'success');
+      this.invoiceForm.get('status')?.setValue(status);
+    } else {
+      showNotification(this.snackBar, data.message, 'error');
     }
   }
 

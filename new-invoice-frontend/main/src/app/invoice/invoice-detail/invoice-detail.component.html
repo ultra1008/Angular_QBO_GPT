@@ -184,12 +184,13 @@
                                                   <div class="d-flex form-button">
                                                        <button class="btn-space" mat-raised-button color="primary"
                                                             (click)="saveInformation()">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
-                                                       <button class="btn-space but-c" type="button"
-                                                            mat-raised-button>{{'Approve'| translate}}</button>
+                                                       <button class="btn-space but-c" type="button" mat-raised-button
+                                                            (click)="updateStatus('Approved')">{{'Approve'| translate}}</button>
                                                        <button class="btn-space" type="button" mat-raised-button
-                                                            color="warn">{{'Reject'| translate}}</button>
-                                                       <button type="button" class="onhold"
-                                                            mat-raised-button>{{'On Hold'| translate}}</button>
+                                                            color="warn"
+                                                            (click)="updateStatus('Rejected')">{{'Reject'| translate}}</button>
+                                                       <button type="button" class="onhold" mat-raised-button
+                                                            (click)="updateStatus('On Hold')">{{'On Hold'| translate}}</button>
                                                   </div>
                                              </div>
                                         </div>
@@ -572,62 +573,6 @@
                                                             </div>
                                                             <div class="mt-3"></div>
                                                        </ng-scrollbar>
-                                                       <!-- <div class="doc-file-type">
-                                                            <ng-scrollbar class="document-h" visibility="hover">
-                                                                 <ul class="list-unstyled">
-                                                                      <div class="row">
-                                                                           <button mat-raised-button color="primary">
-                                                                                {{'DOCUMENT.ADD'| translate}}
-                                                                           </button>
-                                                                      </div>
-                                                                      <li class="d-flex justify-content-between mb-3"
-                                                                           *ngFor="let document of supportingDocuments; let i = index"
-                                                                           [ngClass]="i === 0 ? 'mt-2' : ''">
-                                                                           <div class="custom-d-flex">
-                                                                                <span
-                                                                                     class="msr-3 align-self-center img-icon primary-rgba text-primary"><i
-                                                                                          class="far fa-file-pdf"></i>
-                                                                                </span>
-                                                                                <div class="set-flex">
-                                                                                     <h5 class="font-16 mb-1">Java
-                                                                                          Programming</h5>
-                                                                                     <p>04/20/2023, 04:31 PM</p>
-                                                                                </div>
-                                                                           </div>
-                                                                           <span *ngIf="i === 0"
-                                                                                class="badge badge-solid-red my-auto">
-                                                                                Invoice </span>
-                                                                           <span *ngIf="i === 1"
-                                                                                class="badge badge-solid-purple my-auto">
-                                                                                P.O </span>
-                                                                           <span *ngIf="i === 2"
-                                                                                class="badge badge-solid-cyan my-auto">
-                                                                                Quotes </span>
-                                                                           <span *ngIf="i === 3"
-                                                                                class="badge badge-solid-green my-auto">
-                                                                                Reciving Slip </span>
-                                                                           <span *ngIf="i === 4"
-                                                                                class="badge badge-solid-pink my-auto">
-                                                                                Packing Slip </span>
-                                                                           <div>
-                                                                                <td>
-                                                                                     <button mat-mini-fab color="warn"
-                                                                                          class="mx-2">
-                                                                                          <mat-icon
-                                                                                               class="col-white">delete</mat-icon>
-                                                                                     </button>
-                                                                                     <button mat-mini-fab
-                                                                                          color="primary">
-                                                                                          <mat-icon
-                                                                                               class="col-white">download</mat-icon>
-                                                                                     </button>
-                                                                                </td>
-                                                                           </div>
-                                                                      </li>
-                                                                 </ul>
-                                                            </ng-scrollbar>
-
-                                                       </div> -->
                                                   </div>
                                              </mat-expansion-panel>
                                              <mat-expansion-panel (opened)="panelOpenState = true"
@@ -777,17 +722,14 @@
                                                             </tbody>
                                                        </table>
                                                   </div>
-
-
                                              </div>
-
                                         </div>
                                    </div>
                               </div>
                          </div>
                          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                               <div class="card pdf-h">
-                                   <div class="pdf-btn">
+                                   <div class="pdf-btn" *ngIf="!pdfLoader">
                                         <button class="m-2" mat-mini-fab (click)="download()" color="primary">
                                              <mat-icon class="col-white">download</mat-icon>
                                         </button>
@@ -798,9 +740,12 @@
                                    </div>
                                    <div id="outerContainer">
                                         <div class="pdf-container">
-                                             <pdf-viewer [src]="pdf_url" [rotation]="0" [original-size]="false"
-                                                  [show-all]="true" [fit-to-page]="false" [zoom]="1"
-                                                  [zoom-scale]="'page-width'" [stick-to-page]="false"
+                                             <!--  <div *ngIf="pdfLoader">
+                                                  <app-loading></app-loading>
+                                             </div> -->
+                                             <pdf-viewer *ngIf="!pdfLoader" [src]="pdf_url" [rotation]="0"
+                                                  [original-size]="false" [show-all]="true" [fit-to-page]="false"
+                                                  [zoom]="1" [zoom-scale]="'page-width'" [stick-to-page]="false"
                                                   [render-text]="true" [external-link-target]="'blank'"
                                                   [autoresize]="true" [show-borders]="false"
                                                   style="width: 100%; height: 710px;"></pdf-viewer>
