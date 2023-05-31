@@ -265,7 +265,8 @@ module.exports.countInvoiceStatus = async function (req, res) {
                         approved: { $cond: [{ $eq: ["$status", "Approved"] }, 1, 0] },
                         rejected: { $cond: [{ $eq: ["$status", "Rejected"] }, 1, 0] },
                         late: { $cond: [{ $eq: ["$status", "Late"] }, 1, 0] },
-                        On_Hold: { $cond: [{ $eq: ["$status", "On Hold"] }, 1, 0] },
+                        on_Hold: { $cond: [{ $eq: ["$status", "On Hold"] }, 1, 0] },
+                        overdue: { $cond: [{ $eq: ["$status", "Overdue"] }, 1, 0] },
 
                     }
                 },
@@ -277,6 +278,7 @@ module.exports.countInvoiceStatus = async function (req, res) {
                         rejected_invoices: { $sum: "$rejected" },
                         late_invoices: { $sum: "$late" },
                         On_Hold: { $sum: "$On_Hold" },
+                        overdue: { $sum: "$overdue" },
                     }
                 },
             ]);
@@ -285,7 +287,7 @@ module.exports.countInvoiceStatus = async function (req, res) {
                 if (get_data.length > 0) {
                     get_data = get_data[0];
                 } else {
-                    get_data = { pending_invoices: 0, approved_invoices: 0, rejected_invoices: 0, late_invoices: 0, On_Hold: 0 };
+                    get_data = { pending_invoices: 0, approved_invoices: 0, rejected_invoices: 0, late_invoices: 0, On_Hold: 0, overdue: 0 };
                 }
                 res.send({ status: true, message: "Invoice data", data: get_data });
             } else {
