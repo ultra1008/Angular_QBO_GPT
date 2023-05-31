@@ -74,9 +74,17 @@ export class MainComponent {
   pendingInvoices: any = [];
   rejectedInvoices: any = [];
   processedInvoices: any = [];
-  countList: any = [];
+  countList: any = {
+    pending_documents: 0,
+    pending_invoices: 0,
+    approved_invoices: 0,
+    rejected_invoices: 0,
+    overdue: 0,
+    on_hold: 0,
+    duplicates: 0,
+  };
 
-  constructor(private commonService: CommonService, private router: Router,) {
+  constructor (private commonService: CommonService, private router: Router,) {
     this.getDashboardInvoice();
     this.monthlyInvoiceChart();
     this.monthlyHistoryChart();
