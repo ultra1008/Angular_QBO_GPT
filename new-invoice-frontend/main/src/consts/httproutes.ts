@@ -21,6 +21,7 @@ export enum httproutes {
   // Dashboard
   GET_DASHBOARD_INVOICE = 'getdashboardinvoice',
   GET_DASHBOARD_INVOICE_COUNTS = 'countInvoiceStatus',
+  DASHBOARD_INVOICE_FOR_TABLE = 'dashboardInvoiceListForTable',
 
   // Vendor
   PORTAL_VENDOR_GET_FOR_TABLE = 'getvendorfortable',

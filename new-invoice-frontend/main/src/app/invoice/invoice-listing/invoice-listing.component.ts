@@ -45,7 +45,7 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
   isDelete = 0;
   type = '';
 
-  constructor (public httpClient: HttpClient, public dialog: MatDialog, public settingService: InvoiceService,
+  constructor(public httpClient: HttpClient, public dialog: MatDialog, public settingService: InvoiceService,
     private snackBar: MatSnackBar, public route: ActivatedRoute, private router: Router, private httpCall: HttpCall,
     private commonService: CommonService) {
     super();
@@ -96,6 +96,13 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
         );
       }
     }); */
+  }
+  // TOOLTIPS
+  getVendorNameTooltip(row: any) {
+    return row.vendor_data.vendor_name;
+  }
+  getApproverTooltip(row: any) {
+    return row.approver;
   }
   editCall(row: Invoice) {
     this.router.navigate([WEB_ROUTES.INVOICE_DETAILS], { queryParams: { _id: row._id } });
@@ -175,7 +182,7 @@ export class ExampleDataSource extends DataSource<Invoice> {
   }
   filteredData: Invoice[] = [];
   renderedData: Invoice[] = [];
-  constructor (
+  constructor(
     public exampleDatabase: InvoiceService,
     public paginator: MatPaginator,
     public _sort: MatSort,
