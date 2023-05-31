@@ -33,8 +33,7 @@ import { CommonService } from 'src/app/services/common.service';
 })
 export class UserGridComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit
-{
+  implements OnInit {
   isDelete = 0;
   userList: any = [];
   dataSource!: UserDataSource;
@@ -83,9 +82,11 @@ export class UserGridComponent
   }
 
   editUser(user: User) {
-    this.router.navigate([WEB_ROUTES.USER_FORM], {
-      queryParams: { _id: user._id },
-    });
+    if (this.isDelete == 0) {
+      this.router.navigate([WEB_ROUTES.USER_FORM], {
+        queryParams: { _id: user._id },
+      });
+    }
   }
 
   gotoArchiveUnarchive() {

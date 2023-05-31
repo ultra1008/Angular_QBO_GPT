@@ -7,6 +7,8 @@ var classnameSchema = new Schema({
     status: { type: Number, default: 1 },
     is_quickbooks: { type: Boolean, default: false },
     is_delete: { type: Number, default: 0 },
+    created_at: { type: Number },
+    updated_at: { type: Number },
 }, { timestamps: false });
 
 module.exports = classnameSchema;

@@ -34,7 +34,7 @@ export class ClassNameFormComponent {
   userList: any = [];
   isDelete = 0;
   invoice_logo = icon.INVOICE_LOGO;
-  constructor (
+  constructor(
     public dialogRef: MatDialogRef<JobNameFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: SettingsService,
@@ -47,7 +47,7 @@ export class ClassNameFormComponent {
     this.classnameInfo = new FormGroup({
       name: new FormControl('', [Validators.required]),
       number: new FormControl('', [Validators.required]),
-      description: new FormControl('', [Validators.required]),
+      description: new FormControl('',),
       status: new FormControl('', [Validators.required]),
     });
 
@@ -55,9 +55,7 @@ export class ClassNameFormComponent {
       this.classnameInfo = new FormGroup({
         name: new FormControl(this.data.name, [Validators.required]),
         number: new FormControl(this.data.number, [Validators.required]),
-        description: new FormControl(this.data.description, [
-          Validators.required,
-        ]),
+        description: new FormControl(this.data.description,),
         status: new FormControl(this.data.status, [Validators.required]),
       });
     }
