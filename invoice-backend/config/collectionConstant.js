@@ -104,5 +104,14 @@ module.exports = {
     JOB_NAME: 'job_names',
     INVOICE_CLIENT: "invoice_clients",
     VIEW_CAPTURE: "view_captures",
-    INVOICE_CLASS_NAME: "invoice_class_names"
+    INVOICE_CLASS_NAME: "invoice_class_names",
+
+    AP_DOCUMENT_PROCESS: 'ap_document_processes',
+    AP_DUPLICATE_DOCUMENT: 'ap_duplicate_documents',
+    AP_INVOICE: 'ap_invoices',
+    AP_OTHER_DOCUMENT: 'ap_other_documents',
+    AP_PO: 'ap_pos',
+    AP_QUOUTE: 'ap_quotes',
+    AP_PACKING_SLIP: 'ap_packing_slips',
+    AP_RECEIVING_SLIP: 'ap_receiving_slips',
 };
