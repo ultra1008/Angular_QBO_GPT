@@ -11,7 +11,7 @@ body {
   font-size: 14px;
 }
 
-button,
+
 input,
 select,
 a {
@@ -23,6 +23,17 @@ a {
     text-decoration: none;
   }
 }
+
+button {
+  outline: none !important;
+  font-size: 13px !important;
+  font-weight: bold !important;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
 
 textarea {
   font-size: 14px !important;
