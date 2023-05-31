@@ -219,7 +219,7 @@ module.exports.getDashboardChart = async function (req, res) {
 };
 
 //panding invoice
-module.exports.dashboardInvoiceListForTable = async function (req, res) {
+module.exports.dashboardInvoiceList = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
     if (decodedToken) {
