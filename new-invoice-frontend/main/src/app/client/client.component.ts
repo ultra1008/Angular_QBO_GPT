@@ -243,9 +243,11 @@ export class ClientComponent
   }
 
   editClient(client: ClientList) {
-    this.router.navigate([WEB_ROUTES.CLIENT_FORM], {
-      queryParams: { _id: client._id },
-    });
+    if (this.isDelete == 0) {
+      this.router.navigate([WEB_ROUTES.CLIENT_FORM], {
+        queryParams: { _id: client._id },
+      });
+    }
   }
 
   openHistory() {
