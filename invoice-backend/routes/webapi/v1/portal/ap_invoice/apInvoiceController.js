@@ -1,5 +1,10 @@
 var apInvoiceSchema = require('./../../../../../model/ap_invoices');
 var userSchema = require('./../../../../../model/user');
+var vendorSchema = require('./../../../../../model/vendor');
+var termSchema = require('./../../../../../model/invoice_term');
+var costCodeSchema = require('./../../../../../model/invoice_cost_code');
+var clientSchema = require('./../../../../../model/client');
+var classNameSchema = require('./../../../../../model/class_name');
 var apInvoiceHistorySchema = require('./../../../../../model/history/ap_invoice_history');
 let db_connection = require('./../../../../../controller/common/connectiondb');
 let config = require('./../../../../../config/config');
@@ -362,18 +367,143 @@ function getNotesUserDetails(notes, userConnection) {
 module.exports.saveAPInvoice = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
+    var local_offset = Number(req.headers.local_offset);
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
             var apInvoiceConnection = connection_db_api.model(collectionConstant.AP_INVOICE, apInvoiceSchema);
+            var userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+            var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
+            var termConnection = connection_db_api.model(collectionConstant.INVOICE_TERM, termSchema);
+            var costCodeConnection = connection_db_api.model(collectionConstant.COSTCODES, costCodeSchema);
+            var jobClientConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientSchema);
+            var classNameConnection = connection_db_api.model(collectionConstant.INVOICE_CLASS_NAME, classNameSchema);
             var id = requestObject._id;
             delete requestObject._id;
             if (id) {
-                requestObject.updated_at = Math.round(new Date().getTime() / 1000);
-                requestObject.updated_by = decodedToken.UserData._id;
-                let update_ap_invoice = await apInvoiceConnection.updateOne({ _id: ObjectID(id) }, requestObject);
+                let newReqObj = { ...requestObject };
+                newReqObj.updated_at = Math.round(new Date().getTime() / 1000);
+                newReqObj.updated_by = decodedToken.UserData._id;
+                let findKeys = {};
+                findKeys['_id'] = 0;
+                for (const property in requestObject) {
+                    findKeys[property] = 1;
+                }
+                var get_data = await apInvoiceConnection.findOne({ _id: ObjectID(id) }, findKeys);
+
+                let update_ap_invoice = await apInvoiceConnection.updateOne({ _id: ObjectID(id) }, newReqObj);
                 if (update_ap_invoice) {
+                    delete requestObject.updated_by;
+                    delete requestObject.updated_at;
+                    delete requestObject.created_by;
+                    delete requestObject.created_at;
+                    delete requestObject.is_delete;
+
+                    if (requestObject.assign_to !== undefined && requestObject.assign_to !== null && requestObject.assign_to !== '') {
+                        requestObject.assign_to = ObjectID(requestObject.assign_to);
+                    }
+                    if (requestObject.vendor !== undefined && requestObject.vendor !== null && requestObject.vendor !== '') {
+                        requestObject.vendor = ObjectID(requestObject.vendor);
+                    }
+                    if (requestObject.terms !== undefined && requestObject.terms !== null && requestObject.terms !== '') {
+                        requestObject.terms = ObjectID(requestObject.terms);
+                    }
+                    if (requestObject.gl_account !== undefined && requestObject.gl_account !== null && requestObject.gl_account !== '') {
+                        requestObject.gl_account = ObjectID(requestObject.gl_account);
+                    }
+                    if (requestObject.job_client_name !== undefined && requestObject.job_client_name !== null && requestObject.job_client_name !== '') {
+                        requestObject.job_client_name = ObjectID(requestObject.job_client_name);
+                    }
+                    if (requestObject.class_name !== undefined && requestObject.class_name !== null && requestObject.class_name !== '') {
+                        requestObject.class_name = ObjectID(requestObject.class_name);
+                    }
+                    // Find change data
+                    let updatedData = await common.findUpdatedFieldHistory(requestObject, get_data._doc);
+
+                    // Find and change value of objectid
+                    if (requestObject.assign_to !== undefined && requestObject.assign_to !== null && requestObject.assign_to !== '') {
+                        let found_assign_to = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'assign_to'; });
+                        if (found_assign_to != -1) {
+                            let one_data = await userConnection.findOne({ _id: ObjectID(updatedData[found_assign_to].value) });
+                            updatedData[found_assign_to].value = one_data.userfullname;
+                        }
+                    }
+
+                    if (requestObject.vendor !== undefined && requestObject.vendor !== null && requestObject.vendor !== '') {
+                        let found_vendor = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'vendor'; });
+                        if (found_vendor != -1) {
+                            let one_data = await vendorConnection.findOne({ _id: ObjectID(updatedData[found_vendor].value) });
+                            updatedData[found_vendor].value = one_data.vendor_name;
+                        }
+                    }
+
+                    if (requestObject.terms !== undefined && requestObject.terms !== null && requestObject.terms !== '') {
+                        let found_terms = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'terms'; });
+                        if (found_terms != -1) {
+                            let one_data = await termConnection.findOne({ _id: ObjectID(updatedData[found_terms].value) });
+                            updatedData[found_terms].value = one_data.name;
+                        }
+                    }
+
+                    if (requestObject.gl_account !== undefined && requestObject.gl_account !== null && requestObject.gl_account !== '') {
+                        let found_gl_account = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'gl_account'; });
+                        if (found_gl_account != -1) {
+                            let one_data = await costCodeConnection.findOne({ _id: ObjectID(updatedData[found_gl_account].value) });
+                            updatedData[found_gl_account].value = one_data.cost_code;
+                        }
+                    }
+
+                    if (requestObject.job_client_name !== undefined && requestObject.job_client_name !== null && requestObject.job_client_name !== '') {
+                        let found_job_client_name = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'job_client_name'; });
+                        if (found_job_client_name != -1) {
+                            let one_data = await jobClientConnection.findOne({ _id: ObjectID(updatedData[found_job_client_name].value) });
+                            updatedData[found_job_client_name].value = one_data.client_name;
+                        }
+                    }
+
+                    if (requestObject.class_name !== undefined && requestObject.class_name !== null && requestObject.class_name !== '') {
+                        let found_class_name = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'class_name'; });
+                        if (found_class_name != -1) {
+                            let one_data = await classNameConnection.findOne({ _id: ObjectID(updatedData[found_class_name].value) });
+                            updatedData[found_class_name].value = one_data.name;
+                        }
+                    }
+
+                    // Find and change value of epoch                    
+                    let found_invoice_date_epoch = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'invoice_date_epoch'; });
+                    if (found_invoice_date_epoch != -1) {
+                        updatedData[found_invoice_date_epoch].value = common.MMDDYYYY_local_offset(updatedData[found_invoice_date_epoch].value, 'en', local_offset);
+                    }
+
+                    let found_due_date_epoch = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'due_date_epoch'; });
+                    if (found_due_date_epoch != -1) {
+                        updatedData[found_due_date_epoch].value = common.MMDDYYYY_local_offset(updatedData[found_due_date_epoch].value, 'en', local_offset);
+                    }
+
+                    let found_order_date_epoch = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'order_date_epoch'; });
+                    if (found_order_date_epoch != -1) {
+                        updatedData[found_order_date_epoch].value = common.MMDDYYYY_local_offset(updatedData[found_order_date_epoch].value, 'en', local_offset);
+                    }
+
+                    let found_ship_date_epoch = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'ship_date_epoch'; });
+                    if (found_ship_date_epoch != -1) {
+                        updatedData[found_ship_date_epoch].value = common.MMDDYYYY_local_offset(updatedData[found_ship_date_epoch].value, 'en', local_offset);
+                    }
+
+                    let found_receiving_date_epoch = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'receiving_date_epoch'; });
+                    if (found_receiving_date_epoch != -1) {
+                        updatedData[found_receiving_date_epoch].value = common.MMDDYYYY_local_offset(updatedData[found_receiving_date_epoch].value, 'en', local_offset);
+                    }
+                    console.log("updatedData", updatedData);
+                    for (let i = 0; i < updatedData.length; i++) {
+                        updatedData[i]['key'] = translator.getStr(`Invoice_History.${updatedData[i]['key']}`);
+                    }
+                    let histioryObject = {
+                        data: updatedData,
+                        invoice_id: id,
+                    };
+                    addInvoiceHistory("Update", histioryObject, decodedToken);
                     res.send({ status: true, message: "Invoice updated successfully.", data: update_ap_invoice });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
@@ -481,6 +611,23 @@ module.exports.deleteAPInvoiceNote = async function (req, res) {
     }
 };
 
+async function addInvoiceHistory(action, data, decodedToken) {
+    var connection_db_api = await db_connection.connection_db_api(decodedToken);
+    try {
+        var apInvoiceHistoryConnection = connection_db_api.model(historyCollectionConstant.AP_INVOICE_HISTORY, apInvoiceHistorySchema);
+        data.action = action;
+        data.taken_device = config.WEB_ALL;
+        data.history_created_at = Math.round(new Date().getTime() / 1000);
+        data.history_created_by = decodedToken.UserData._id;
+        var add_invoice_history = new apInvoiceHistoryConnection(data);
+        var save_invoice_history = await add_invoice_history.save();
+    } catch (e) {
+        console.log(e);
+    } finally {
+        // connection_db_api.close();
+    }
+}
+
 module.exports.getAPInvoiceHistory = async function (req, res) {
     var translator = new common.Language('en');
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -495,6 +642,7 @@ module.exports.getAPInvoiceHistory = async function (req, res) {
             let start = requestObject.start == 0 ? 0 : perpage * requestObject.start;
             var apInvoiceHistoryConnection = connection_db_api.model(historyCollectionConstant.AP_INVOICE_HISTORY, apInvoiceHistorySchema);
             let get_data = await apInvoiceHistoryConnection.aggregate([
+                { $match: { invoice_id: ObjectID(requestObject._id) } },
                 {
                     $lookup: {
                         from: collectionConstant.AP_INVOICE,
