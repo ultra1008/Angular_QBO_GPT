@@ -12,7 +12,7 @@ var receiving_slip_schema = new mongoose.Schema({
     vendor: { type: mongoose.ObjectId, default: "" }, // Vendor Collection - Vendor Id
     received_by: { type: String, default: "" },
     is_delete: { type: Number, default: 0 },
-    is_orphan: { type: Number, default: 0 }, // 0 - Orphan document, 1 - already relationship with invoice document
+    is_orphan: { type: Boolean, default: true }, // false - Orphan document, true - already relationship with invoice document
     created_by: { type: mongoose.ObjectId, default: "" },
     created_at: { type: Number, default: 0 },
     updated_by: { type: mongoose.ObjectId, default: "" },

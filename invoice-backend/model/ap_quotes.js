@@ -17,7 +17,7 @@ var quote_schema = new mongoose.Schema({
     receiver_phone: { type: String, default: "" },
     items: { type: Array, default: [] },
     is_delete: { type: Number, default: 0 },
-    is_orphan: { type: Number, default: 0 }, // 0 - Orphan document, 1 - already relationship with invoice document
+    is_orphan: { type: Boolean, default: true }, // false - Orphan document, true - already relationship with invoice document
     created_by: { type: mongoose.ObjectId, default: "" },
     created_at: { type: Number, default: 0 },
     updated_by: { type: mongoose.ObjectId, default: "" },

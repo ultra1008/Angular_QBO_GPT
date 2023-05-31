@@ -7,6 +7,7 @@ let common = require('./../../../../../controller/common/common');
 var ObjectID = require('mongodb').ObjectID;
 var formidable = require('formidable');
 const reader = require('xlsx');
+var _ = require('lodash');
 
 module.exports.getAPInvoiceForTable = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -216,6 +217,38 @@ module.exports.getOneAPInvoice = async function (req, res) {
                     },
                 },
                 {
+                    $lookup: {
+                        from: collectionConstant.AP_PO,
+                        localField: "_id",
+                        foreignField: "invoice_id",
+                        as: "po"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.AP_QUOUTE,
+                        localField: "_id",
+                        foreignField: "invoice_id",
+                        as: "quote"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.AP_PACKING_SLIP,
+                        localField: "_id",
+                        foreignField: "invoice_id",
+                        as: "packing_slip"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.AP_RECEIVING_SLIP,
+                        localField: "_id",
+                        foreignField: "invoice_id",
+                        as: "receiving_slip"
+                    }
+                },
+                {
                     $project: {
                         assign_to: 1,
                         assign_to_data: "$assign_to_data",
@@ -269,6 +302,8 @@ module.exports.getOneAPInvoice = async function (req, res) {
                         updated_by: 1,
                         updated_at: 1,
                         is_delete: 1,
+
+                        supporting_documents: { $concatArrays: ["$po", "$quote", "$packing_slip", "$receiving_slip"] }
                     }
                 }
             ]);
@@ -278,6 +313,7 @@ module.exports.getOneAPInvoice = async function (req, res) {
                 }
                 if (get_data) {
                     get_data.invoice_notes = await getNotesUserDetails(get_data.invoice_notes, userConnection);
+                    get_data.supporting_documents = _.orderBy(get_data.supporting_documents, ['created_at'], ['desc']);
                 }
                 res.send({ status: true, message: "Invoice Listing", data: get_data });
             } else {
@@ -440,4 +476,4 @@ module.exports.deleteAPInvoiceNote = async function (req, res) {
     } else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
-};
+}; 
