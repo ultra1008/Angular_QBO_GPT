@@ -511,4 +511,12 @@ router.post('/webapi/v1/portal/updateinvoicemessageseenflag', common.checkTokenE
 router.post('/webapi/v1/portal/sendinvoicemessage', common.checkTokenExistOrNot, invoiceMessageValidation.sendInvoiceMessage, invoiceMessageController.sendInvoiceMessage);
 router.post('/webapi/v1/portal/deleteinvoicemessage', common.checkTokenExistOrNot, invoiceMessageValidation.deleteInvoiceMessage, invoiceMessageController.deleteInvoiceMessage);
 
+let apInvoiceController = require('./ap_invoice/apInvoiceController');
+let apInvoiceValidation = require('./ap_invoice/apInvoiceValidation');
+router.post('/webapi/v1/portal/getapinvoicefortable', common.checkTokenExistOrNot, apInvoiceValidation.getAPInvoiceForTable, apInvoiceController.getAPInvoiceForTable);
+router.post('/webapi/v1/portal/getoneapinvoice', common.checkTokenExistOrNot, apInvoiceValidation.getOneAPInvoice, apInvoiceController.getOneAPInvoice);
+router.post('/webapi/v1/portal/saveapinvoice', common.checkTokenExistOrNot, apInvoiceController.saveAPInvoice);
+router.post('/webapi/v1/portal/saveapinvoicenote', common.checkTokenExistOrNot, apInvoiceValidation.saveAPInvoiceNote, apInvoiceController.saveAPInvoiceNote);
+router.post('/webapi/v1/portal/deleteapinvoicenote', common.checkTokenExistOrNot, apInvoiceValidation.deleteAPInvoiceNote, apInvoiceController.deleteAPInvoiceNote);
+
 module.exports = router;
