@@ -377,7 +377,7 @@ let invoiceDashboard = require('./dashboard/dashboardController');
 router.get('/webapi/v1/portal/getdashboardcount', common.checkTokenExistOrNot, invoiceDashboard.getDashboardCount);
 router.get('/webapi/v1/portal/getdashboardinvoice', common.checkTokenExistOrNot, invoiceDashboard.dashboardInvoiceList);
 router.post('/webapi/v1/portal/getdashboardchart', common.checkTokenExistOrNot, invoiceDashboard.getDashboardChart);
-router.get('/webapi/v1/portal/dashboardInvoiceListForTable', common.checkTokenExistOrNot, invoiceDashboard.dashboardInvoiceListForTable);
+router.get('/webapi/v1/portal/dashboardInvoiceList', common.checkTokenExistOrNot, invoiceDashboard.dashboardInvoiceList);
 router.get('/webapi/v1/portal/countInvoiceStatus', common.checkTokenExistOrNot, invoiceDashboard.countInvoiceStatus);
 router.post('/webapi/v1/portal/dashboardInvoiceListForTable', common.checkTokenExistOrNot, invoiceDashboard.dashboardInvoiceListForTable);
 
