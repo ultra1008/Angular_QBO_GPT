@@ -410,7 +410,7 @@
             "CLIENT_NUMBER": "Client Number",
             "JOB_CONTACT_EMAIL": "Job Contact Email",
             "APPROVER": "Approver",
-            "COST_CODE": "Cost Code",
+            "COST_CODE": "Cost Code/GL Account",
             "STATUS": "Status",
             "ACTIONS": "Action"
         },
@@ -471,7 +471,7 @@
                 "TITLE": "Accounting Activity",
                 "TABLE": {
                     "TOTAL_AMOUNT": "Total Amount",
-                    "COST_CODE": "Cost Code",
+                    "COST_CODE": "Cost Code/GL Account",
                     "ASSIGN_TO": "Assign To",
                     "GL_ACCOUNT": "GL Account",
                     "NOTES": "Notes"
@@ -483,7 +483,7 @@
                     "VENDOR_ID": "Vendor ID",
                     "CUSTOMER_ID": "Customer ID",
                     "P.O.#": "P.O.#",
-                    "JOB#": "Job#",
+                    "JOB#": "Client/Job Name",
                     "ORDER_DATE": "Order Date",
                     "SHIP_DATE": "Ship Date",
                     "PACKING_SLIP": "Packing Slip",
@@ -492,8 +492,7 @@
                     "TAX_ID": "Tax ID",
                     "SUB_TOTAL": "Sub Total",
                     "AMOUNT_DUE": "Amount Due",
-                    "COST_CODE": "Cost Code",
-                    "GL_ACCOUNT": "GL Account",
+                    "COST_CODE": "Cost Code/GL Account",
                     "NOTES": "Notes"
                 }
             },
@@ -507,7 +506,7 @@
                 "TITLE": "Info",
                 "TABLE": {
                     "TOTAL_AMOUNT": "Total Amount",
-                    "COST_CODE": "Cost Code",
+                    "COST_CODE": "Cost Code/GL Account",
                     "ASSIGN_TO": "Assign To",
                     "GL_ACCOUNT": "GL Account",
                     "NOTES": "Notes"

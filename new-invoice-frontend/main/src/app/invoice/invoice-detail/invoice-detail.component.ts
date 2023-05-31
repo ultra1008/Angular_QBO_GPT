@@ -26,6 +26,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   pdf_url = '/assets/pdf_url/file-3.pdf';
   loadInvoice = true;
   isLoading = true;
+  maxDate = new Date();
   variablesUserList: any = [];
   userList: Array<User> = this.variablesUserList.slice();
   setStep(index: number) {
