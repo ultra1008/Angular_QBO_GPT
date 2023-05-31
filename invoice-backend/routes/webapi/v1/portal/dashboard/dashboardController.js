@@ -304,3 +304,37 @@ module.exports.countInvoiceStatus = async function (req, res) {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
+
+//panding  and Rejected invoice list
+module.exports.dashboardInvoiceListForTable = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var apInvoiceConnection = connection_db_api.model(collectionConstant.AP_INVOICE, apInvoiceSchema);
+            var pending_data = await apInvoiceConnection.find({ is_delete: requestObject.is_delete, status: 'Pending' }).sort({ created_at: -1 }).limit(2);
+            var cancel_data = await apInvoiceConnection.find({ is_delete: requestObject.is_delete, status: 'Rejected' }).sort({ created_at: -1 }).limit(2);
+            let data = {
+                pending_invoices: pending_data,
+                process_invoices: [],
+                cancelled_invoices: cancel_data,
+            };
+            if (data) {
+                res.send(data);
+            }
+            else {
+                res.send([]);
+            }
+
+        } catch (e) {
+            console.log(e);
+            res.send([]);
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
