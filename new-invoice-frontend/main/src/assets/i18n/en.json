@@ -23,7 +23,9 @@
             "NOTIFICATION": "Notification",
             "SHOW": "Show",
             "HIDE": "Hide",
-            "PRINT": "Print"
+            "PRINT": "Print",
+            "INVOICEMSG": "Invoice Message",
+            "INVOICELINK": "Invoice Link"
         },
         "ACTIONS": {
             "EDIT": "Edit",
