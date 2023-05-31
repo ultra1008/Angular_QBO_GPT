@@ -226,6 +226,7 @@ export enum httproutes {
 
   // Invoice
   INVOICE_SAVE_INVOICE_PROCESS = "saveinvoiceprocess",
+  GET_INVOICE_FOR_TABLE = 'getapinvoicefortable',
 
   //QuickBook Module
   QUICKBOOK_SAVE_INFO = "savequickbookinfo",

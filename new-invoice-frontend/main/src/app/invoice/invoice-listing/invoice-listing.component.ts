@@ -32,20 +32,20 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
     'vendor',
     'invoice_number',
     'total_amount',
-    'net_amount',
+    'sub_total',
     'approver',
     'status',
     'actions',
   ];
-  exampleDatabase?: InvoiceService;
+  invoiceService?: InvoiceService;
   dataSource!: ExampleDataSource;
   selection = new SelectionModel<Invoice>(true, []);
   id?: number;
   invoiceTable?: Invoice;
-
+  isDelete = 0;
   type = '';
 
-  constructor (public httpClient: HttpClient, public dialog: MatDialog, public invoiceService: InvoiceService,
+  constructor (public httpClient: HttpClient, public dialog: MatDialog, public settingService: InvoiceService,
     private snackBar: MatSnackBar, public route: ActivatedRoute, private router: Router, private httpCall: HttpCall,
     private commonService: CommonService) {
     super();
@@ -98,7 +98,7 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
     }); */
   }
   editCall(row: Invoice) {
-    this.router.navigate([WEB_ROUTES.INVOICE_DETAILS], { queryParams: { _id: '642aa86f28667a73474c388c' } });
+    this.router.navigate([WEB_ROUTES.INVOICE_DETAILS], { queryParams: { _id: row._id } });
   }
 
 
@@ -121,11 +121,12 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
       );
   }
   public loadData() {
-    this.exampleDatabase = new InvoiceService(this.httpClient, this.httpCall);
+    this.invoiceService = new InvoiceService(this.httpClient, this.httpCall);
     this.dataSource = new ExampleDataSource(
-      this.exampleDatabase,
+      this.invoiceService,
       this.paginator,
-      this.sort
+      this.sort,
+      this.isDelete,
     );
     this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
       () => {
@@ -159,6 +160,10 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
       //  
     });
   }
+
+  exportExcel() {
+    //
+  }
 }
 export class ExampleDataSource extends DataSource<Invoice> {
   filterChange = new BehaviorSubject('');
@@ -173,7 +178,8 @@ export class ExampleDataSource extends DataSource<Invoice> {
   constructor (
     public exampleDatabase: InvoiceService,
     public paginator: MatPaginator,
-    public _sort: MatSort
+    public _sort: MatSort,
+    public isDelete: number,
   ) {
     super();
     // Reset to the first page when the user changes the filter.
@@ -188,7 +194,7 @@ export class ExampleDataSource extends DataSource<Invoice> {
       this.filterChange,
       this.paginator.page,
     ];
-    this.exampleDatabase.getInvoiceTable();
+    this.exampleDatabase.getInvoiceTable(this.isDelete);
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
@@ -196,12 +202,12 @@ export class ExampleDataSource extends DataSource<Invoice> {
           .slice()
           .filter((invoice: Invoice) => {
             const searchStr = (
-              invoice.invoice_date +
-              invoice.due_date +
-              invoice.vendor +
-              invoice.invoice +
-              invoice.invoice_total +
-              invoice.net_amount +
+              invoice.invoice_date_epoch +
+              invoice.due_date_epoch +
+              invoice.vendor_data.vendor_name +
+              invoice.invoice_no +
+              invoice.invoice_total_amount +
+              invoice.sub_total +
               invoice.approver +
               invoice.status
             ).toLowerCase();
@@ -234,23 +240,23 @@ export class ExampleDataSource extends DataSource<Invoice> {
         case '_id':
           [propertyA, propertyB] = [a._id, b._id];
           break;
-        case 'invoice_date':
-          [propertyA, propertyB] = [a.invoice_date, b.invoice_date];
+        case 'invoice_date_epoch':
+          [propertyA, propertyB] = [a.invoice_date_epoch, b.invoice_date_epoch];
           break;
-        case 'due_date':
-          [propertyA, propertyB] = [a.due_date, b.due_date];
+        case 'due_date_epoch':
+          [propertyA, propertyB] = [a.due_date_epoch, b.due_date_epoch];
           break;
-        /* case 'vendor':
-          [propertyA, propertyB] = [a.vendor, b.vendor];
-          break; */
-        case 'invoice':
-          [propertyA, propertyB] = [a.invoice, b.invoice];
+        /*  case 'vendor_data':
+           [propertyA, propertyB] = [a.vendor_data, b.vendor_data];
+           break; */
+        case 'invoice_no':
+          [propertyA, propertyB] = [a.invoice_no, b.invoice_no];
           break;
-        case 'invoice_total':
-          [propertyA, propertyB] = [a.invoice_total, b.invoice_total];
+        case 'invoice_total_amount':
+          [propertyA, propertyB] = [a.invoice_total_amount, b.invoice_total_amount];
           break;
-        case 'net_amount':
-          [propertyA, propertyB] = [a.net_amount, b.net_amount];
+        case 'sub_total':
+          [propertyA, propertyB] = [a.sub_total, b.sub_total];
           break;
         case 'approver':
           [propertyA, propertyB] = [a.approver, b.approver];

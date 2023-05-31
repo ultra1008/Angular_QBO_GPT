@@ -1,4 +1,4 @@
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { SendInvoiceMessageComponent } from './send-invoice-message/send-invoice-message.component';
@@ -29,6 +29,9 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   maxDate = new Date();
   variablesUserList: any = [];
   userList: Array<User> = this.variablesUserList.slice();
+
+  id: any;
+
   setStep(index: number) {
     this.step = index;
   }
@@ -38,13 +41,10 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   prevStep() {
     this.step--;
   }
-  constructor(
-    private fb: UntypedFormBuilder,
-    private router: Router,
-    public dialog: MatDialog,
-    private commonService: CommonService,
-  ) {
+  constructor (private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog, private commonService: CommonService,
+    public route: ActivatedRoute,) {
     super();
+    this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
     this.invoiceForm = this.fb.group({
       document_type: [''],
       vendor_name: [''],

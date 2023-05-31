@@ -19,7 +19,7 @@ export class InvoiceService extends UnsubscribeOnDestroyAdapter {
   >([]);
   // Temporarily stores data from dialogs
   dialogData!: Invoice;
-  constructor(private httpClient: HttpClient, private httpCall: HttpCall) {
+  constructor (private httpClient: HttpClient, private httpCall: HttpCall) {
     super();
   }
   get data(): Invoice[] {
@@ -33,28 +33,17 @@ export class InvoiceService extends UnsubscribeOnDestroyAdapter {
   getDialogData() {
     return this.dialogData;
   }
+
   /** CRUD METHODS */
-  getInvoiceTable(): void {
-    this.subs.sink = this.httpClient.get<Invoice[]>(this.API_URL).subscribe({
-      next: (data) => {
-        this.isTblLoading = false;
-        this.dataChange.next(data);
-      },
-      error: (error: HttpErrorResponse) => {
-        this.isTblLoading = false;
-        console.log(error.name + ' ' + error.message);
-      },
-    });
+  async getInvoiceTable(is_delete: number): Promise<void> {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.GET_INVOICE_FOR_TABLE, { is_delete: is_delete }).toPromise();
+    this.isTblLoading = false;
+    this.dataChange.next(data);
   }
 
   // Message Datatable API
   async getMessageForTable(): Promise<void> {
-    const data = await this.httpCall
-      .httpGetCall(
-        httpversion.PORTAL_V1 + httproutes.GET_INVOICE_MESSAGE_FOR_TABLE
-      )
-      .toPromise();
-    // Only write this for datatable api otherwise return data
+    const data = await this.httpCall.httpGetCall(httpversion.PORTAL_V1 + httproutes.GET_INVOICE_MESSAGE_FOR_TABLE).toPromise();
     this.isMessageTblLoading = false;
     this.messageDataChange.next(data);
   }
