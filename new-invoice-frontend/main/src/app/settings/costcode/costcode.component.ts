@@ -44,7 +44,7 @@ export class CostcodeComponent
   quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
   quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
 
-  constructor(
+  constructor (
     public dialog: MatDialog,
     public SettingsService: SettingsService,
     private snackBar: MatSnackBar,
@@ -165,14 +165,16 @@ export class CostcodeComponent
         data: costcode,
       });
       dialogRef.afterClosed().subscribe((result) => {
-        if (result.status) {
-          const foundIndex = this.costcodeService?.costCodeDataChange.value.findIndex((x) => x._id === costcode._id);
-          if (foundIndex != null && this.costcodeService) {
-            this.costcodeService.costCodeDataChange.value[foundIndex].cost_code = result.data.cost_code;
-            this.costcodeService.costCodeDataChange.value[foundIndex].division = result.data.division;
-            this.costcodeService.costCodeDataChange.value[foundIndex].value = `Invoice-${result.data.division}-${result.data.cost_code}`;
-            this.costcodeService.costCodeDataChange.value[foundIndex].description = result.data.description;
-            this.refreshTable();
+        if (result) {
+          if (result.status) {
+            const foundIndex = this.costcodeService?.costCodeDataChange.value.findIndex((x) => x._id === costcode._id);
+            if (foundIndex != null && this.costcodeService) {
+              this.costcodeService.costCodeDataChange.value[foundIndex].cost_code = result.data.cost_code;
+              this.costcodeService.costCodeDataChange.value[foundIndex].division = result.data.division;
+              this.costcodeService.costCodeDataChange.value[foundIndex].value = `Invoice-${result.data.division}-${result.data.cost_code}`;
+              this.costcodeService.costCodeDataChange.value[foundIndex].description = result.data.description;
+              this.refreshTable();
+            }
           }
         }
       });
@@ -287,7 +289,7 @@ export class CostCodeDataSource extends DataSource<CostCodeTable> {
   }
   filteredData1: CostCodeTable[] = [];
   renderedData: CostCodeTable[] = [];
-  constructor(
+  constructor (
     public costcodeTableService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,

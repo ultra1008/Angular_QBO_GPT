@@ -349,13 +349,15 @@ export class InvoiceFormComponent implements OnInit {
               disableClose: true
             });
             dialogRef.afterClosed().subscribe(result => {
-              if (result.status) {
-                var reqObject = {
-                  _id: id,
-                  status: status,
-                  reject_reason: result.reject_reason,
-                };
-                that.updateInvoiceStatus(reqObject);
+              if (result) {
+                if (result.status) {
+                  var reqObject = {
+                    _id: id,
+                    status: status,
+                    reject_reason: result.reject_reason,
+                  };
+                  that.updateInvoiceStatus(reqObject);
+                }
               }
             });
           }

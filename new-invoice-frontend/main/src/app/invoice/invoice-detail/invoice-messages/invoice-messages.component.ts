@@ -90,7 +90,7 @@ export class InvoiceMessagesComponent extends UnsubscribeOnDestroyAdapter implem
   }
 
   public loadData() {
-    this.exampleDatabase = new InvoiceService(this.httpClient, this.httpCall);
+    this.exampleDatabase = new InvoiceService(this.httpCall);
     this.dataSource = new ExampleDataSource(
       this.exampleDatabase,
       this.paginator,

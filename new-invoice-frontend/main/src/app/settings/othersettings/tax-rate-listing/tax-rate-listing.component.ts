@@ -62,11 +62,13 @@ export class TaxRateListingComponent extends UnsubscribeOnDestroyAdapter impleme
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result.status) {
-        const foundIndex = this.taxrateService?.taxRateDataChange.value.findIndex((x) => x._id === taxRate._id);
-        if (foundIndex != null && this.taxrateService) {
-          this.taxrateService.taxRateDataChange.value[foundIndex].name = result.data;
-          this.refreshTable();
+      if (result) {
+        if (result.status) {
+          const foundIndex = this.taxrateService?.taxRateDataChange.value.findIndex((x) => x._id === taxRate._id);
+          if (foundIndex != null && this.taxrateService) {
+            this.taxrateService.taxRateDataChange.value[foundIndex].name = result.data;
+            this.refreshTable();
+          }
         }
       }
     });

@@ -68,7 +68,7 @@ export class ClientComponent
   quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
   is_quickbooks = true;
 
-  constructor(
+  constructor (
     public httpClient: HttpClient,
     private httpCall: HttpCall,
     public dialog: MatDialog,
@@ -524,7 +524,7 @@ export class ClientDataSource extends DataSource<ClientList> {
   }
   filteredData: ClientList[] = [];
   renderedData: ClientList[] = [];
-  constructor(
+  constructor (
     public clientService: ClientService,
     public paginator: MatPaginator,
     public _sort: MatSort,
@@ -589,23 +589,20 @@ export class ClientDataSource extends DataSource<ClientList> {
         case 'vendor_name':
           [propertyA, propertyB] = [a.client_name, b.client_name];
           break;
-        case 'vendor_id':
+        case 'client_number':
           [propertyA, propertyB] = [a.client_number, b.client_number];
           break;
-        case 'customer_id':
+        case 'client_email':
           [propertyA, propertyB] = [a.client_email, b.client_email];
           break;
-        case 'vendor_phone':
-          [propertyA, propertyB] = [a.client_status, b.client_status];
+        case 'approver_id':
+          [propertyA, propertyB] = [a.approver?.userfullname, b.approver?.userfullname];
           break;
-        case 'vendor_email':
-          [propertyA, propertyB] = [a.approver_id, b.approver_id];
+        case 'client_cost_cost_id':
+          [propertyA, propertyB] = [a.client_cost_cost?.value, b.client_cost_cost?.value];
           break;
-        case 'vendor_address':
-          [propertyA, propertyB] = [
-            a.client_cost_cost_id,
-            b.client_cost_cost_id,
-          ];
+        case 'client_status':
+          [propertyA, propertyB] = [a.client_status, b.client_status,];
           break;
       }
       const valueA = isNaN(+propertyA) ? propertyA : +propertyA;

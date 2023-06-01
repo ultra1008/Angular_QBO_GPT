@@ -70,13 +70,13 @@ export class JobTypeListComponent
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result.status) {
-        const foundIndex = this.jobtypeService?.jobTypeDataChange.value.findIndex(
-          (x) => x._id === jobType._id
-        );
-        if (foundIndex != null && this.jobtypeService) {
-          this.jobtypeService.jobTypeDataChange.value[foundIndex].job_type_name = result.data;
-          this.refreshTable();
+      if (result) {
+        if (result.status) {
+          const foundIndex = this.jobtypeService?.jobTypeDataChange.value.findIndex((x) => x._id === jobType._id);
+          if (foundIndex != null && this.jobtypeService) {
+            this.jobtypeService.jobTypeDataChange.value[foundIndex].job_type_name = result.data;
+            this.refreshTable();
+          }
         }
       }
     });

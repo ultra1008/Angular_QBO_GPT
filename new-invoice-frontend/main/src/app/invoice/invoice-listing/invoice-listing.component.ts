@@ -19,6 +19,9 @@ import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { UploadInvoiceFormComponent } from '../upload-invoice-form/upload-invoice-form.component';
 import { TranslateService } from '@ngx-translate/core';
+import { TableElement } from 'src/app/shared/TableElement';
+import { formatDate } from '@angular/common';
+import { TableExportUtil } from 'src/app/shared/tableExportUtil';
 
 @Component({
   selector: 'app-invoice-listing',
@@ -126,7 +129,7 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
       );
   }
   public loadData() {
-    this.invoiceService = new InvoiceService(this.httpClient, this.httpCall);
+    this.invoiceService = new InvoiceService(this.httpCall);
     this.dataSource = new ExampleDataSource(
       this.invoiceService,
       this.paginator,
@@ -171,7 +174,19 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
   }
 
   exportExcel() {
-    //
+    const exportData: Partial<TableElement>[] =
+      this.dataSource.filteredData.map((x) => ({
+        'Invoice Date': formatDate(new Date(Number(x.invoice_date_epoch.toString()) * 1000), 'MM/dd/yyyy', 'en'),
+        'Due Date': formatDate(new Date(Number(x.due_date_epoch.toString()) * 1000), 'MM/dd/yyyy', 'en'),
+        'Vendor': x.vendor_data.vendor_name,
+        'Invoice Number': x.invoice_no,
+        'Total Amount': x.invoice_total_amount,
+        'Sub Total': x.sub_total,
+        'Approver': x.assign_to_data?.userfullname,
+        'Status': x.status,
+      }));
+
+    TableExportUtil.exportToExcel(exportData, 'excel');
   }
 }
 export class ExampleDataSource extends DataSource<Invoice> {
@@ -247,18 +262,15 @@ export class ExampleDataSource extends DataSource<Invoice> {
       let propertyA: number | string = '';
       let propertyB: number | string = '';
       switch (this._sort.active) {
-        case '_id':
-          [propertyA, propertyB] = [a._id, b._id];
-          break;
         case 'invoice_date_epoch':
           [propertyA, propertyB] = [a.invoice_date_epoch, b.invoice_date_epoch];
           break;
         case 'due_date_epoch':
           [propertyA, propertyB] = [a.due_date_epoch, b.due_date_epoch];
           break;
-        /*  case 'vendor_data':
-           [propertyA, propertyB] = [a.vendor_data, b.vendor_data];
-           break; */
+        case 'vendor':
+          [propertyA, propertyB] = [a.vendor_data.vendor_name, b.vendor_data.vendor_name];
+          break;
         case 'invoice_no':
           [propertyA, propertyB] = [a.invoice_no, b.invoice_no];
           break;
@@ -268,9 +280,9 @@ export class ExampleDataSource extends DataSource<Invoice> {
         case 'sub_total':
           [propertyA, propertyB] = [a.sub_total, b.sub_total];
           break;
-        /* case 'approver':
-          [propertyA, propertyB] = [a.approver, b.approver];
-          break; */
+        case 'approver':
+          [propertyA, propertyB] = [a.assign_to_data?.userfullname, b.assign_to_data?.userfullname];
+          break;
         case 'status':
           [propertyA, propertyB] = [a.status, b.status];
           break;

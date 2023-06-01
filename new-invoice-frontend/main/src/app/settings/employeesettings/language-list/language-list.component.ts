@@ -71,11 +71,13 @@ export class LanguageListComponent
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result.status) {
-        const foundIndex = this.languageService?.langDataChange.value.findIndex((x) => x._id === Language._id);
-        if (foundIndex != null && this.languageService) {
-          this.languageService.langDataChange.value[foundIndex].name = result.data;
-          this.refreshTable();
+      if (result) {
+        if (result.status) {
+          const foundIndex = this.languageService?.langDataChange.value.findIndex((x) => x._id === Language._id);
+          if (foundIndex != null && this.languageService) {
+            this.languageService.langDataChange.value[foundIndex].name = result.data;
+            this.refreshTable();
+          }
         }
       }
     });

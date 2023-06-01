@@ -74,13 +74,13 @@ export class DepartmentListComponent
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result.status) {
-        const foundIndex = this.departmentService?.departmentDataChange.value.findIndex(
-          (x) => x._id === Department._id
-        );
-        if (foundIndex != null && this.departmentService) {
-          this.departmentService.departmentDataChange.value[foundIndex].department_name = result.data;
-          this.refreshTable();
+      if (result) {
+        if (result.status) {
+          const foundIndex = this.departmentService?.departmentDataChange.value.findIndex((x) => x._id === Department._id);
+          if (foundIndex != null && this.departmentService) {
+            this.departmentService.departmentDataChange.value[foundIndex].department_name = result.data;
+            this.refreshTable();
+          }
         }
       }
     });
