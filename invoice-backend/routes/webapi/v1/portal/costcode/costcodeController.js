@@ -184,7 +184,7 @@ module.exports.deletecostcode = async function (req, res) {
             let costcodeCollection = connection_db_api.model(collectionConstant.COSTCODES, costcodeSchema);
 
             var apInvoiceConnection = connection_db_api.model(collectionConstant.AP_INVOICE, apInvoiceSchema);
-            let apInvoicedocObject = await apInvoiceConnection.find({ gl_account: ObjectID(req.body._id) });
+            let apInvoicedocObject = await apInvoiceConnection.find({ gl_account: ObjectID(requestObject._id) });
 
             if (apInvoicedocObject.length > 0) {
                 res.send({ message: translator.getStr('CostCodeHasData'), status: false });
