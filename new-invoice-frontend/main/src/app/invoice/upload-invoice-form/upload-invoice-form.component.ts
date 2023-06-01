@@ -77,7 +77,7 @@ export class UploadInvoiceFormComponent {
       if (attachmentData.status) {
         pdfUrls = attachmentData.data;
       }
-      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.INVOICE_SAVE_INVOICE_PROCESS, { pdf_urls: pdfUrls });
+      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_DOCUMENT_PROCESS, { pdf_urls: pdfUrls });
       this.uiSpinner.spin$.next(false);
       if (data.status) {
         this.dialogRef.close();

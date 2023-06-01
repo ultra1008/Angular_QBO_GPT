@@ -249,4 +249,7 @@ export enum httproutes {
   SAVE_INVOICE_DATABASE = "/webapi/v1/portal/saveinvoicetoDB",
   SAVE_GLACCOUNTS_DATABASE = "/webapi/v1/portal/saveglaccountstoDB",
   SAVE_VENDORS_DATABASE = "/webapi/v1/portal/savevendorstoDB",
+
+  // Document Process
+  SAVE_DOCUMENT_PROCESS = 'saveapdocumentprocess',
 }
