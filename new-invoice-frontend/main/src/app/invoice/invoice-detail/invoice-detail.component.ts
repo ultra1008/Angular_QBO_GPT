@@ -268,37 +268,50 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   }
 
   async updateStatus(status: string) {
-    if (status == 'Rejected') {
-      const dialogRef = this.dialog.open(InvoiceRejectedReasonComponent, {
-        width: '28%',
-        data: {},
-      });
-      this.subs.sink = dialogRef.afterClosed().subscribe(async (result: any) => {
-        if (result.status) {
-          this.uiSpinner.spin$.next(true);
-          const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_INVOICE, { _id: this.id, status: status, reject_reason: result.reject_reason });
-          this.uiSpinner.spin$.next(false);
-          if (data.status) {
-            showNotification(this.snackBar, 'Invoice status updated successfully.', 'success');
-            this.rejectReason = result.reject_reason;
-            this.invoiceForm.get('status')?.setValue(status);
+    swalWithBootstrapTwoButtons
+      .fire({
+        title: `Are you sure you want to ${status} this invoice?`,
+        showDenyButton: true,
+        confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+        denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+        allowOutsideClick: false,
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          if (status == 'Rejected') {
+            const dialogRef = this.dialog.open(InvoiceRejectedReasonComponent, {
+              width: '28%',
+              data: {},
+            });
+            this.subs.sink = dialogRef.afterClosed().subscribe(async (result: any) => {
+              if (result.status) {
+                this.uiSpinner.spin$.next(true);
+                const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_INVOICE, { _id: this.id, status: status, reject_reason: result.reject_reason });
+                this.uiSpinner.spin$.next(false);
+                if (data.status) {
+                  showNotification(this.snackBar, 'Invoice status updated successfully.', 'success');
+                  this.rejectReason = result.reject_reason;
+                  this.invoiceForm.get('status')?.setValue(status);
+                } else {
+                  showNotification(this.snackBar, data.message, 'error');
+                }
+              }
+            });
           } else {
-            showNotification(this.snackBar, data.message, 'error');
+            this.rejectReason = '';
+            this.uiSpinner.spin$.next(true);
+            const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_INVOICE, { _id: this.id, status: status });
+            this.uiSpinner.spin$.next(false);
+            if (data.status) {
+              showNotification(this.snackBar, 'Invoice status updated successfully.', 'success');
+              this.invoiceForm.get('status')?.setValue(status);
+            } else {
+              showNotification(this.snackBar, data.message, 'error');
+            }
           }
         }
       });
-    } else {
-      this.rejectReason = '';
-      this.uiSpinner.spin$.next(true);
-      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_INVOICE, { _id: this.id, status: status });
-      this.uiSpinner.spin$.next(false);
-      if (data.status) {
-        showNotification(this.snackBar, 'Invoice status updated successfully.', 'success');
-        this.invoiceForm.get('status')?.setValue(status);
-      } else {
-        showNotification(this.snackBar, data.message, 'error');
-      }
-    }
+
   }
 
   async saveMoreInformation() {
