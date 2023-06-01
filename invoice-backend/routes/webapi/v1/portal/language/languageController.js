@@ -7,6 +7,7 @@ let collectionConstant = require('../../../../../config/collectionConstant');
 //let activityController = require("../todaysActivity/todaysActivityController");
 var formidable = require('formidable');
 const reader = require('xlsx');
+var userSchema = require('./../../../../../model/user');
 
 module.exports.getlanguage = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -78,18 +79,27 @@ module.exports.deletelanguage = async function (req, res) {
             requestObject = req.body;
 
             let lanaguageCollection = connection_db_api.model(collectionConstant.LANGUAGE, languageSchema);
-            let update_language = await lanaguageCollection.updateOne({ _id: ObjectID(requestObject._id) }, { is_delete: 1 });
-            let isDelete = update_language.nModified;
-            if (update_language) {
-                if (isDelete == 0) {
-                    res.send({ message: translator.getStr('NoDataWithId'), status: false });
-                } else {
-                    //activityController.updateAllUser({ "api_setting.term": true }, decodedToken);
-                    res.send({ message: translator.getStr('LanguageDeleted'), status: true });
+
+            let userCollection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+            let userObject = await userCollection.find({ user_languages: ObjectID(requestObject._id) });
+            if (userObject.length > 0) {
+                res.send({ message: translator.getStr('LanguageHasData'), status: false });
+            }
+            else {
+                let update_language = await lanaguageCollection.updateOne({ _id: ObjectID(requestObject._id) }, { is_delete: 1 });
+                let isDelete = update_language.nModified;
+                if (update_language) {
+                    if (isDelete == 0) {
+                        res.send({ message: translator.getStr('NoDataWithId'), status: false });
+                    } else {
+                        //activityController.updateAllUser({ "api_setting.term": true }, decodedToken);
+                        res.send({ message: translator.getStr('LanguageDeleted'), status: true });
+                    }
                 }
-            } else {
-                console.log(e);
-                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                else {
+                    console.log(e);
+                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                }
             }
         } catch (e) {
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });

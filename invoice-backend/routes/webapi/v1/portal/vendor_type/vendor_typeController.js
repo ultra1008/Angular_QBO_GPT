@@ -5,6 +5,7 @@ let common = require('../../../../../controller/common/common');
 var ObjectID = require('mongodb').ObjectID;
 var formidable = require('formidable');
 const reader = require('xlsx');
+var vendorSchema = require('../../../../../model/vendor');
 
 // vendor type insert Edit 
 module.exports.savevendortype = async function (req, res) {
@@ -108,12 +109,21 @@ module.exports.deletevendortype = async function (req, res) {
             let id = requestObject._id;
             delete requestObject._id;
             var vendortypeConnection = connection_db_api.model(collectionConstant.VENDOR_TYPE, vendortypeSchema);
-            let updated_data = await vendortypeConnection.updateOne({ _id: ObjectID(id) }, { is_delete: 1 });
-            var is_delete = updated_data.nModified;
-            if (is_delete == 0) {
-                res.send({ status: false, message: "There is no data with this id" });
-            } else {
-                res.send({ status: true, message: "vendor type deleted successfully..!", data: updated_data });
+
+            var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
+            let VendordocObject = await vendorConnection.find({ vendor_type_id: ObjectID(id) });
+
+            if (VendordocObject.length > 0) {
+                res.send({ message: translator.getStr('VendorTypeHasData'), status: false });
+            }
+            else {
+                let updated_data = await vendortypeConnection.updateOne({ _id: ObjectID(id) }, { is_delete: 1 });
+                var is_delete = updated_data.nModified;
+                if (is_delete == 0) {
+                    res.send({ status: false, message: "There is no data with this id" });
+                } else {
+                    res.send({ status: true, message: "vendor type deleted successfully..!", data: updated_data });
+                }
             }
         } catch (e) {
             console.log(e);
