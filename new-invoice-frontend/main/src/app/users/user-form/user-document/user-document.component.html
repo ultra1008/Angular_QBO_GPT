@@ -14,11 +14,23 @@
                 <div class="right ">
                     <ul class="tbl-export-btn">
                         <li class="tbl-header-btn">
-                            <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ADD' |
-                            translate}}">
+                            <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.REFRESH' | translate}}">
+                                <button mat-mini-fab color="primary" (click)="refresh()">
+                                    <mat-icon class="col-white">refresh</mat-icon>
+                                </button>
+                            </div>
+                        </li>
+                        <li class="tbl-header-btn">
+                            <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ADD' | translate}}">
                                 <button mat-mini-fab color="primary" (click)="addNewEmergencyContact()">
                                     <mat-icon class="col-white">add</mat-icon>
                                 </button>
+                            </div>
+                        </li>
+                        <li class="tbl-header-btn">
+                            <div class="export-button m-l-10" matTooltip="{{'COMMON.TOOL_TIP.XLSX' |
+                                translate}}">
+                                <img src="assets/images/icons/xlsx.png" alt="" (click)="exportExcel()" />
                             </div>
                         </li>
                     </ul>

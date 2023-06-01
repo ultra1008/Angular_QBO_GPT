@@ -7,6 +7,7 @@ var ObjectID = require('mongodb').ObjectID;
 var formidable = require('formidable');
 const reader = require('xlsx');
 const config = require('../../../../../config/config');
+var apInvoiceSchema = require('./../../../../../model/ap_invoices');
 
 // class name  insert Edit 
 module.exports.saveclassname = async function (req, res) {
@@ -110,14 +111,24 @@ module.exports.deleteclassname = async function (req, res) {
             let id = requestObject._id;
             delete requestObject._id;
             var classNameConnection = connection_db_api.model(collectionConstant.INVOICE_CLASS_NAME, classnameSchema);
-            let updated_data = await classNameConnection.updateOne({ _id: ObjectID(id) }, { is_delete: 1 });
-            var is_delete = updated_data.nModified;
-            if (is_delete == 0) {
-                res.send({ status: false, message: "There is no data with this id" });
+
+            var apInvoiceConnection = connection_db_api.model(collectionConstant.AP_INVOICE, apInvoiceSchema);
+            let apInvoicedocObject = await apInvoiceConnection.find({ class_name: ObjectID(id) });
+
+            if (apInvoicedocObject.length > 0) {
+                res.send({ message: translator.getStr('ClassNameHasData'), status: false });
             }
             else {
-                res.send({ status: true, message: "class name deleted successfully..!", data: updated_data });
+                let updated_data = await classNameConnection.updateOne({ _id: ObjectID(id) }, { is_delete: 1 });
+                var is_delete = updated_data.nModified;
+                if (is_delete == 0) {
+                    res.send({ status: false, message: "There is no data with this id" });
+                }
+                else {
+                    res.send({ status: true, message: translator.getStr('ClassNameDeleted'), data: updated_data });
+                }
             }
+
         } catch (e) {
             console.log(e);
             res.send({ status: false, message: translator.getStr('SomethingWrong'), rerror: e });

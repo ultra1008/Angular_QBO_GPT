@@ -448,7 +448,7 @@ module.exports.getCostCode = async function (req, res) {
         try {
             var requestObject = req.body;
             let costcodeCollection = connection_db_api.model(collectionConstant.COSTCODES, costcodeSchema);
-            let get_data = await costcodeCollection.find({ is_delete: 0 }).sort({ name: 1 }).collation({ locale: "en_US" });
+            let get_data = await costcodeCollection.find({ is_delete: 0, module: "Invoice" }).sort({ name: 1 }).collation({ locale: "en_US" });
             res.send({ status: true, message: "costcode data", data: get_data });
         } catch (e) {
             console.log(e);

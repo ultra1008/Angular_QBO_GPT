@@ -6,6 +6,7 @@ let common = require('./../../../../../controller/common/common');
 var ObjectID = require('mongodb').ObjectID;
 var formidable = require('formidable');
 const reader = require('xlsx');
+var apInvoiceSchema = require('./../../../../../model/ap_invoices');
 
 //save term
 module.exports.saveTerm = async function (req, res) {
@@ -102,17 +103,27 @@ module.exports.deleteTerm = async function (req, res) {
             delete requestObject._id;
 
             let termConnection = connection_db_api.model(collectionConstant.INVOICE_TERM, termSchema);
-            let update_data = await termConnection.updateOne({ _id: ObjectID(id) }, { is_delete: 1 });
-            let isDelete = update_data.nModified;
-            if (update_data) {
-                if (isDelete == 0) {
-                    res.send({ status: false, message: 'There is no data with this id.' });
-                } else {
-                    res.send({ status: true, message: 'Term deleted successfully.', data: update_data });
-                }
-            } else {
-                res.send({ status: false, message: "something wrong" });
+
+            var apInvoiceConnection = connection_db_api.model(collectionConstant.AP_INVOICE, apInvoiceSchema);
+            let apInvoicedocObject = await apInvoiceConnection.find({ terms: ObjectID(id) });
+
+            if (apInvoicedocObject.length > 0) {
+                res.send({ message: translator.getStr('TermHasData'), status: false });
             }
+            else {
+                let update_data = await termConnection.updateOne({ _id: ObjectID(id) }, { is_delete: 1 });
+                let isDelete = update_data.nModified;
+                if (update_data) {
+                    if (isDelete == 0) {
+                        res.send({ status: false, message: 'There is no data with this id.' });
+                    } else {
+                        res.send({ status: true, message: 'Term deleted successfully.', data: update_data });
+                    }
+                } else {
+                    res.send({ status: false, message: "something wrong" });
+                }
+            }
+
         } catch (e) {
             console.log(e);
             res.send({ status: false, message: "something wrong", error: e });

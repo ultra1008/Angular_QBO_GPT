@@ -127,6 +127,7 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.TOTAL_AMOUNT' | translate}}</mat-label>
+                                                                      <span class="dollar-align" matPrefix>$</span>
                                                                       <input matInput
                                                                            class="input-capitalized-textfield"
                                                                            formControlName="invoice_total_amount">
@@ -138,6 +139,7 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>{{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.TAX_AMOUNT' | translate}}</mat-label>
+                                                                      <span class="dollar-align" matPrefix>$</span>
                                                                       <input matInput formControlName="tax_amount"
                                                                            capitalOnly>
                                                                  </mat-form-field>
@@ -356,6 +358,7 @@
                                                                       <mat-label>
                                                                            {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.SUB_TOTAL' | translate}}
                                                                       </mat-label>
+                                                                      <span class="dollar-align" matPrefix>$</span>
                                                                       <input matInput formControlName="sub_total"
                                                                            capitalOnly>
                                                                  </mat-form-field>
@@ -366,6 +369,7 @@
                                                                       <mat-label>
                                                                            {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.AMOUNT_DUE' | translate}}
                                                                       </mat-label>
+                                                                      <span class="dollar-align" matPrefix>$</span>
                                                                       <input matInput
                                                                            class="input-capitalized-textfield"
                                                                            formControlName="amount_due">
