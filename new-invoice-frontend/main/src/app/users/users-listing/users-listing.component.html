@@ -163,7 +163,7 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.PHONE' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell [matTooltip]="getPhoneTooltip(row)" (click)="editUser(row)"
+                                    <mat-cell  (click)="editUser(row)"
                                         *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
                                         <span class="truncate-text"> <span
                                                 class="mobile-label">Phone:</span>{{phonenoFormat(row.userphone)}}</span>
@@ -183,7 +183,7 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USERS.TABLE.ROLE' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell [matTooltip]="getRoleTooltip(row)" (click)="editUser(row)"
+                                    <mat-cell  (click)="editUser(row)"
                                         *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
                                         <span class="truncate-text"> <span
                                                 class="mobile-label">Role:</span>{{row.role_name}}</span>

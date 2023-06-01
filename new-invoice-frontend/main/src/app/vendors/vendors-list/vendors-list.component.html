@@ -235,9 +235,7 @@
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
                                         [ngClass]="'tbl-col-width-per-mid'">{{'VENDOR.TABLE.PHONE' |
                                         translate}}</mat-header-cell>
-                                    <mat-cell *matCellDef="let row" [matTooltip]="getPhonTooltip(row)"
-                                        (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-mid"
-                                        (click)="editVendor(row)">
+                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-mid" (click)="editVendor(row)">
                                         <span class="mobile-label">Phone:</span>
                                         {{row.vendor_phone | phoneFormatPipe}}
                                     </mat-cell>
