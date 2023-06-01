@@ -347,6 +347,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
       const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_INVOICE_NOTE, formValues);
       this.uiSpinner.spin$.next(false);
       if (data.status) {
+        this.noteForm.get('notes')?.setValue('');
         showNotification(this.snackBar, data.message, 'success');
         this.getOneInvoice();
       } else {
@@ -370,6 +371,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
           const requestObject = {
             invoice_id: this.id,
             _id: note._id,
+            notes: note.notes,
           };
           const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.DELETE_INVOICE_NOTE, requestObject);
           this.uiSpinner.spin$.next(false);

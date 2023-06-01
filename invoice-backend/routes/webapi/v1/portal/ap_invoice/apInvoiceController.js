@@ -597,6 +597,16 @@ module.exports.saveAPInvoiceNote = async function (req, res) {
                 requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                 let update_ap_invoice = await apInvoiceConnection.updateOne({ _id: ObjectID(invoice_id), "invoice_notes._id": id }, { $set: { "invoice_notes.$.updated_by": decodedToken.UserData._id, "invoice_notes.$.updated_at": Math.round(new Date().getTime() / 1000), "invoice_notes.$.notes": requestObject.notes } });
                 if (update_ap_invoice) {
+                    let histioryObject = {
+                        data: [
+                            {
+                                key: translator.getStr('Invoice_History.notes'),
+                                value: requestObject.notes,
+                            }
+                        ],
+                        invoice_id: invoice_id,
+                    };
+                    addInvoiceHistory("Update Note", histioryObject, decodedToken);
                     res.send({ status: true, message: "Invoice note updated successfully.", data: update_ap_invoice });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
@@ -609,6 +619,16 @@ module.exports.saveAPInvoiceNote = async function (req, res) {
                 requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                 let save_ap_invoice_note = await apInvoiceConnection.updateOne({ _id: ObjectID(invoice_id) }, { $push: { invoice_notes: requestObject } });
                 if (save_ap_invoice_note) {
+                    let histioryObject = {
+                        data: [
+                            {
+                                key: translator.getStr('Invoice_History.notes'),
+                                value: requestObject.notes,
+                            }
+                        ],
+                        invoice_id: invoice_id,
+                    };
+                    addInvoiceHistory("Insert Note", histioryObject, decodedToken);
                     res.send({ status: true, message: "Invoice note saved successfully." });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
@@ -641,8 +661,17 @@ module.exports.deleteAPInvoiceNote = async function (req, res) {
             requestObject.updated_by = decodedToken.UserData._id;
             requestObject.updated_at = Math.round(new Date().getTime() / 1000);
             let update_ap_invoice = await apInvoiceConnection.updateOne({ _id: ObjectID(invoice_id), "invoice_notes._id": id }, { $set: { "invoice_notes.$.updated_by": decodedToken.UserData._id, "invoice_notes.$.updated_at": Math.round(new Date().getTime() / 1000), "invoice_notes.$.is_delete": 1 } });
-            let get_ap_invoice = await apInvoiceConnection.findOne({ _id: ObjectID(invoice_id) });
             if (update_ap_invoice) {
+                let histioryObject = {
+                    data: [
+                        {
+                            key: translator.getStr('Invoice_History.notes'),
+                            value: requestObject.notes,
+                        }
+                    ],
+                    invoice_id: invoice_id,
+                };
+                addInvoiceHistory("Delete Note", histioryObject, decodedToken);
                 res.send({ status: true, message: "Invoice note deleted successfully.", data: update_ap_invoice });
             } else {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
