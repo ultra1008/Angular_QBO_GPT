@@ -8,6 +8,7 @@ let collectionConstant = require('../../../../../config/collectionConstant');
 //let activityController = require("./../todaysActivity/todaysActivityController");
 var formidable = require('formidable');
 const reader = require('xlsx');
+var apInvoiceSchema = require('./../../../../../model/ap_invoices');
 
 module.exports.getallcostcode = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -181,23 +182,33 @@ module.exports.deletecostcode = async function (req, res) {
         try {
             var requestObject = req.body;
             let costcodeCollection = connection_db_api.model(collectionConstant.COSTCODES, costcodeSchema);
-            let deleteObject = await costcodeCollection.updateOne({ _id: ObjectID(requestObject._id) }, { is_delete: requestObject.is_delete });
-            let isDelete = deleteObject.nModified;
-            if (deleteObject) {
-                if (isDelete == 0) {
-                    res.send({ message: translator.getStr('NoDataWithId'), status: false });
-                } else {
-                    if (requestObject.is_delete == 1) {
-                        res.send({ status: true, message: 'Cost code deleted successfully.', data: deleteObject });
-                    } else {
-                        res.send({ status: true, message: 'Cost code restore successfully.', data: deleteObject });
-                    }
-                    res.send({ message: translator.getStr('CostCodeDeleted'), status: true });
-                }
-            } else {
-                console.log(e);
-                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+
+            var apInvoiceConnection = connection_db_api.model(collectionConstant.AP_INVOICE, apInvoiceSchema);
+            let apInvoicedocObject = await apInvoiceConnection.find({ gl_account: ObjectID(req.body._id) });
+
+            if (apInvoicedocObject.length > 0) {
+                res.send({ message: translator.getStr('CostCodeHasData'), status: false });
             }
+            else {
+                let deleteObject = await costcodeCollection.updateOne({ _id: ObjectID(requestObject._id) }, { is_delete: requestObject.is_delete });
+                let isDelete = deleteObject.nModified;
+                if (deleteObject) {
+                    if (isDelete == 0) {
+                        res.send({ message: translator.getStr('NoDataWithId'), status: false });
+                    } else {
+                        if (requestObject.is_delete == 1) {
+                            res.send({ status: true, message: 'Cost code deleted successfully.', data: deleteObject });
+                        } else {
+                            res.send({ status: true, message: 'Cost code restore successfully.', data: deleteObject });
+                        }
+                        res.send({ message: translator.getStr('CostCodeDeleted'), status: true });
+                    }
+                } else {
+                    console.log(e);
+                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                }
+            }
+
         } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
