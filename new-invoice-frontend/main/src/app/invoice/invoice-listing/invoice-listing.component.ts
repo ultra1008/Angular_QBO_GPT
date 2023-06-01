@@ -262,18 +262,15 @@ export class ExampleDataSource extends DataSource<Invoice> {
       let propertyA: number | string = '';
       let propertyB: number | string = '';
       switch (this._sort.active) {
-        case '_id':
-          [propertyA, propertyB] = [a._id, b._id];
-          break;
         case 'invoice_date_epoch':
           [propertyA, propertyB] = [a.invoice_date_epoch, b.invoice_date_epoch];
           break;
         case 'due_date_epoch':
           [propertyA, propertyB] = [a.due_date_epoch, b.due_date_epoch];
           break;
-        /*  case 'vendor_data':
-           [propertyA, propertyB] = [a.vendor_data, b.vendor_data];
-           break; */
+        case 'vendor':
+          [propertyA, propertyB] = [a.vendor_data.vendor_name, b.vendor_data.vendor_name];
+          break;
         case 'invoice_no':
           [propertyA, propertyB] = [a.invoice_no, b.invoice_no];
           break;
@@ -283,9 +280,9 @@ export class ExampleDataSource extends DataSource<Invoice> {
         case 'sub_total':
           [propertyA, propertyB] = [a.sub_total, b.sub_total];
           break;
-        /* case 'approver':
-          [propertyA, propertyB] = [a.approver, b.approver];
-          break; */
+        case 'approver':
+          [propertyA, propertyB] = [a.assign_to_data?.userfullname, b.assign_to_data?.userfullname];
+          break;
         case 'status':
           [propertyA, propertyB] = [a.status, b.status];
           break;
