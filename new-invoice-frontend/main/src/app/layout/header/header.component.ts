@@ -52,7 +52,7 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
 
   companyList: any = [];
   isLoading = true;
-  constructor(@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, public elementRef: ElementRef,
+  constructor (@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, public elementRef: ElementRef,
     private rightSidebarService: RightSidebarService, private configService: ConfigService, private authService: AuthService,
     private router: Router, public translate: TranslateService, public dialog: MatDialog, private commonService: CommonService,) {
     super();
@@ -123,12 +123,7 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
     }
 
     let tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
-    tmp_locallanguage =
-      tmp_locallanguage == '' ||
-        tmp_locallanguage == undefined ||
-        tmp_locallanguage == null
-        ? configData.INITIALLANGUAGE
-        : tmp_locallanguage;
+    tmp_locallanguage = tmp_locallanguage == '' || tmp_locallanguage == undefined || tmp_locallanguage == null ? configData.INITIALLANGUAGE : tmp_locallanguage;
     this.translate.use(tmp_locallanguage);
     this.translate.stream(['']).subscribe((textarray) => { });
     this.getNotificationCount();

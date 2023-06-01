@@ -18,6 +18,7 @@ import { epochToDateTime, showNotification, swalWithBootstrapTwoButtons } from '
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { TranslateService } from '@ngx-translate/core';
+import { InvoiceRejectedReasonComponent } from './invoice-rejected-reason/invoice-rejected-reason.component';
 
 @Component({
   selector: 'app-invoice-detail',
@@ -64,6 +65,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   pdfLoader = true;
   notes: any = [];
   supportingDocuments: any = [];
+  rejectReason = '';
 
   setStep(index: number) {
     this.step = index;
@@ -231,7 +233,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
 
         notes: [this.invoiceData.notes],
       });
-
+      this.rejectReason = this.invoiceData.reject_reason;
       this.notes = this.invoiceData.invoice_notes;
       this.supportingDocuments = this.invoiceData.supporting_documents;
       this.pdf_url = this.invoiceData.pdf_url;
@@ -266,14 +268,36 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   }
 
   async updateStatus(status: string) {
-    this.uiSpinner.spin$.next(true);
-    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_INVOICE, { _id: this.id, status: status });
-    this.uiSpinner.spin$.next(false);
-    if (data.status) {
-      showNotification(this.snackBar, 'Invoice status updated successfully.', 'success');
-      this.invoiceForm.get('status')?.setValue(status);
+    if (status == 'Rejected') {
+      const dialogRef = this.dialog.open(InvoiceRejectedReasonComponent, {
+        width: '28%',
+        data: {},
+      });
+      this.subs.sink = dialogRef.afterClosed().subscribe(async (result: any) => {
+        if (result.status) {
+          this.uiSpinner.spin$.next(true);
+          const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_INVOICE, { _id: this.id, status: status, reject_reason: result.reject_reason });
+          this.uiSpinner.spin$.next(false);
+          if (data.status) {
+            showNotification(this.snackBar, 'Invoice status updated successfully.', 'success');
+            this.rejectReason = result.reject_reason;
+            this.invoiceForm.get('status')?.setValue(status);
+          } else {
+            showNotification(this.snackBar, data.message, 'error');
+          }
+        }
+      });
     } else {
-      showNotification(this.snackBar, data.message, 'error');
+      this.rejectReason = '';
+      this.uiSpinner.spin$.next(true);
+      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_INVOICE, { _id: this.id, status: status });
+      this.uiSpinner.spin$.next(false);
+      if (data.status) {
+        showNotification(this.snackBar, 'Invoice status updated successfully.', 'success');
+        this.invoiceForm.get('status')?.setValue(status);
+      } else {
+        showNotification(this.snackBar, data.message, 'error');
+      }
     }
   }
 

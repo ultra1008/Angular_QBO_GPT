@@ -40,6 +40,7 @@ import { UploadInvoiceFormComponent } from './upload-invoice-form/upload-invoice
 import { NgxEmojiPickerModule } from 'ngx-emoji-picker';
 import { InvoiceHistoryComponent } from './invoice-history/invoice-history.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { InvoiceRejectedReasonComponent } from './invoice-detail/invoice-rejected-reason/invoice-rejected-reason.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     MailFormComponent,
     UploadInvoiceFormComponent,
     InvoiceHistoryComponent,
+    InvoiceRejectedReasonComponent,
   ],
   providers: [AdvanceTableService],
   imports: [

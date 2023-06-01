@@ -184,13 +184,20 @@
                                                   <div class="d-flex form-button">
                                                        <button class="btn-space" mat-raised-button color="primary"
                                                             (click)="saveInformation()">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
+                                                       <button type="button" class="btn-space onhold" mat-raised-button
+                                                            (click)="updateStatus('On Hold')"
+                                                            *ngIf="invoiceForm.get('status')?.value !== 'On Hold'">{{'On Hold'| translate}}</button>
                                                        <button class="btn-space but-c" type="button" mat-raised-button
-                                                            (click)="updateStatus('Approved')">{{'Approve'| translate}}</button>
+                                                            (click)="updateStatus('Approved')"
+                                                            *ngIf="invoiceForm.get('status')?.value !== 'Approved'">{{'Approve'| translate}}</button>
                                                        <button class="btn-space" type="button" mat-raised-button
-                                                            color="warn"
-                                                            (click)="updateStatus('Rejected')">{{'Reject'| translate}}</button>
-                                                       <button type="button" class="onhold" mat-raised-button
-                                                            (click)="updateStatus('On Hold')">{{'On Hold'| translate}}</button>
+                                                            color="warn" (click)="updateStatus('Rejected')"
+                                                            *ngIf="invoiceForm.get('status')?.value !== 'Rejected'">{{'Reject'| translate}}</button>
+                                                       <div *ngIf="invoiceForm.get('status')?.value === 'Rejected'"
+                                                            class="m-l-10 my-auto"
+                                                            matTooltip="{{rejectReason | translate}}">
+                                                            <mat-icon>info</mat-icon>
+                                                       </div>
                                                   </div>
                                              </div>
                                         </div>
