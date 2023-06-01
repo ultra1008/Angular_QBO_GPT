@@ -22,15 +22,15 @@
                                         <li class="tbl-header-btn" *ngIf="id">
                                              <div class="m-l-10" *ngIf="is_delete == 0"
                                                   matTooltip="{{'COMMON.TOOL_TIP.ARCHIVE' | translate}}">
-                                                  <button mat-mini-fab color="primary" (click)="deleteuser()">
+                                                  <button mat-mini-fab color="warn" (click)="deleteuser()">
                                                        <mat-icon class="col-white">archive</mat-icon>
                                                   </button>
                                              </div>
                                         </li>
                                         <li class="tbl-header-btn" *ngIf="id">
                                              <div class="m-l-10" *ngIf="is_delete == 1"
-                                                  matTooltip="{{'COMMON.TOOL_TIP.RESTORE' | translate}}">
-                                                  <button mat-mini-fab color="primary" (click)="deleteuser()">
+                                                  matTooltip="{{'COMMON.ACTIONS.RESTORE' | translate}}">
+                                                  <button mat-mini-fab color="warn" (click)="deleteuser()">
                                                        <mat-icon class="col-white">archive</mat-icon>
                                                   </button>
                                              </div>
