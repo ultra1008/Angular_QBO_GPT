@@ -19,7 +19,7 @@ export class InvoiceService extends UnsubscribeOnDestroyAdapter {
   >([]);
   // Temporarily stores data from dialogs
   dialogData!: Invoice;
-  constructor (private httpClient: HttpClient, private httpCall: HttpCall) {
+  constructor (private httpCall: HttpCall) {
     super();
   }
   get data(): Invoice[] {

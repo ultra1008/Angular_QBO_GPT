@@ -86,16 +86,16 @@ export class TermsListingComponent
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result.status) {
-        const foundIndex = this.termsService?.termDataChange.value.findIndex(
-          (x) => x._id === term._id
-        );
-        if (foundIndex != null && this.termsService) {
-          this.termsService.termDataChange.value[foundIndex].name = result.data.name;
-          this.termsService.termDataChange.value[foundIndex].is_dicount = result.data.is_dicount;
-          this.termsService.termDataChange.value[foundIndex].discount = result.data.discount;
-          this.termsService.termDataChange.value[foundIndex].due_days = result.data.due_days;
-          this.refreshTable();
+      if (result) {
+        if (result.status) {
+          const foundIndex = this.termsService?.termDataChange.value.findIndex((x) => x._id === term._id);
+          if (foundIndex != null && this.termsService) {
+            this.termsService.termDataChange.value[foundIndex].name = result.data.name;
+            this.termsService.termDataChange.value[foundIndex].is_dicount = result.data.is_dicount;
+            this.termsService.termDataChange.value[foundIndex].discount = result.data.discount;
+            this.termsService.termDataChange.value[foundIndex].due_days = result.data.due_days;
+            this.refreshTable();
+          }
         }
       }
     });

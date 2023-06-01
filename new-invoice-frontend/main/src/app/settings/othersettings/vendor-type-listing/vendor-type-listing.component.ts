@@ -62,11 +62,13 @@ export class VendorTypeListingComponent
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result.status) {
-        const foundIndex = this.vendortypeService?.vendorTypeDataChange.value.findIndex((x) => x._id === vendorType._id);
-        if (foundIndex != null && this.vendortypeService) {
-          this.vendortypeService.vendorTypeDataChange.value[foundIndex].name = result.data;
-          this.refreshTable();
+      if (result) {
+        if (result.status) {
+          const foundIndex = this.vendortypeService?.vendorTypeDataChange.value.findIndex((x) => x._id === vendorType._id);
+          if (foundIndex != null && this.vendortypeService) {
+            this.vendortypeService.vendorTypeDataChange.value[foundIndex].name = result.data;
+            this.refreshTable();
+          }
         }
       }
     });

@@ -66,14 +66,14 @@ export class DocumentTypeListComponent
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log("result", result);
-      if (result.status) {
-        const foundIndex = this.documentService?.documentTypeDataChange.value.findIndex(
-          (x) => x._id === document._id
-        );
-        if (foundIndex != null && this.documentService) {
-          this.documentService.documentTypeDataChange.value[foundIndex].document_type_name = result.data.name;
-          this.documentService.documentTypeDataChange.value[foundIndex].is_expiration = result.data.is_expiration;
-          this.refreshTable();
+      if (result) {
+        if (result.status) {
+          const foundIndex = this.documentService?.documentTypeDataChange.value.findIndex((x) => x._id === document._id);
+          if (foundIndex != null && this.documentService) {
+            this.documentService.documentTypeDataChange.value[foundIndex].document_type_name = result.data.name;
+            this.documentService.documentTypeDataChange.value[foundIndex].is_expiration = result.data.is_expiration;
+            this.refreshTable();
+          }
         }
       }
     });

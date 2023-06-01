@@ -70,13 +70,13 @@ export class RelationshipListComponent
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result.status) {
-        const foundIndex = this.relationshipService?.relationshipDataChange.value.findIndex(
-          (x) => x._id === relationship._id
-        );
-        if (foundIndex != null && this.relationshipService) {
-          this.relationshipService.relationshipDataChange.value[foundIndex].relationship_name = result.data;
-          this.refreshTable();
+      if (result) {
+        if (result.status) {
+          const foundIndex = this.relationshipService?.relationshipDataChange.value.findIndex((x) => x._id === relationship._id);
+          if (foundIndex != null && this.relationshipService) {
+            this.relationshipService.relationshipDataChange.value[foundIndex].relationship_name = result.data;
+            this.refreshTable();
+          }
         }
       }
     });

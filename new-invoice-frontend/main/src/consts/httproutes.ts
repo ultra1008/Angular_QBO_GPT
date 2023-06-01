@@ -252,4 +252,7 @@ export enum httproutes {
 
   // Document Process
   SAVE_DOCUMENT_PROCESS = 'saveapdocumentprocess',
+
+  // Report
+  GET_INVOICE_FOR_REPORT = 'getapinvoiceforreports'
 }

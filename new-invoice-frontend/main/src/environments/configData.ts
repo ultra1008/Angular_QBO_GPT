@@ -495,5 +495,13 @@ export const configData = {
     { name: 'On Hold', key: 'On Hold' },
     { name: 'Late', key: 'Late' },
     { name: 'Overdue', key: 'Overdue' },
-  ]
+    { name: 'Paid', key: 'Paid' },
+  ],
+  REPORT_TYPE: {
+    reportVendor: 'Report By Vendor',
+    openApprover: 'Open Item By Approver',
+    openClass: 'Open Item By Class',
+    openClientJob: 'Open Item By Client/Job Name',
+    openVendor: 'Open Item By Vendor',
+  },
 };

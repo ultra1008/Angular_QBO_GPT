@@ -62,11 +62,13 @@ export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter imple
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result.status) {
-        const foundIndex = this.documentsService?.documentDataChange.value.findIndex((x) => x._id === document._id);
-        if (foundIndex != null && this.documentsService) {
-          this.documentsService.documentDataChange.value[foundIndex].name = result.data;
-          this.refreshTable();
+      if (result) {
+        if (result.status) {
+          const foundIndex = this.documentsService?.documentDataChange.value.findIndex((x) => x._id === document._id);
+          if (foundIndex != null && this.documentsService) {
+            this.documentsService.documentDataChange.value[foundIndex].name = result.data;
+            this.refreshTable();
+          }
         }
       }
     });

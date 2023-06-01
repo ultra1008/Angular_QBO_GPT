@@ -88,14 +88,16 @@ export class ClassNameListingComponent
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result.status) {
-        const foundIndex = this.classnameService?.classNameDataChange.value.findIndex((x) => x._id === className._id);
-        if (foundIndex != null && this.classnameService) {
-          this.classnameService.classNameDataChange.value[foundIndex].name = result.data.name;
-          this.classnameService.classNameDataChange.value[foundIndex].number = result.data.number;
-          this.classnameService.classNameDataChange.value[foundIndex].description = result.data.description;
-          this.classnameService.classNameDataChange.value[foundIndex].status = result.data.status;
-          this.refreshTable();
+      if (result) {
+        if (result.status) {
+          const foundIndex = this.classnameService?.classNameDataChange.value.findIndex((x) => x._id === className._id);
+          if (foundIndex != null && this.classnameService) {
+            this.classnameService.classNameDataChange.value[foundIndex].name = result.data.name;
+            this.classnameService.classNameDataChange.value[foundIndex].number = result.data.number;
+            this.classnameService.classNameDataChange.value[foundIndex].description = result.data.description;
+            this.classnameService.classNameDataChange.value[foundIndex].status = result.data.status;
+            this.refreshTable();
+          }
         }
       }
     });

@@ -113,7 +113,7 @@ export class InvoiceDetailPageComponent implements OnInit {
   Remove_Attchment: any;
 
 
-  constructor(private sanitiser: DomSanitizer, private formBuilder: FormBuilder, public dialog: MatDialog, private location: Location, private modeService: ModeDetectService, private router: Router, public route: ActivatedRoute, public uiSpinner: UiSpinnerService, public httpCall: HttpCall,
+  constructor (private sanitiser: DomSanitizer, private formBuilder: FormBuilder, public dialog: MatDialog, private location: Location, private modeService: ModeDetectService, private router: Router, public route: ActivatedRoute, public uiSpinner: UiSpinnerService, public httpCall: HttpCall,
     public snackbarservice: Snackbarservice, public translate: TranslateService,) {
     this.translate.stream([""]).subscribe((textarray) => {
 
@@ -530,13 +530,15 @@ export class InvoiceDetailPageComponent implements OnInit {
               disableClose: true
             });
             dialogRef.afterClosed().subscribe(result => {
-              if (result.status) {
-                var reqObject = {
-                  _id: id,
-                  status: status,
-                  reject_reason: result.reject_reason,
-                };
-                that.updateInvoiceStatus(reqObject);
+              if (result) {
+                if (result.status) {
+                  var reqObject = {
+                    _id: id,
+                    status: status,
+                    reject_reason: result.reject_reason,
+                  };
+                  that.updateInvoiceStatus(reqObject);
+                }
               }
             });
           }

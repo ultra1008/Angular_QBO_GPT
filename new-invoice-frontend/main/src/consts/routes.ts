@@ -11,6 +11,7 @@ export enum WEB_ROUTES {
   LOGIN = '/authentication/signin',
 
   FORM = 'form',
+  VIEW = 'view',
   HISTORY = 'history',
   GRID = 'grid',
   CLIENT = '/client',
@@ -52,4 +53,6 @@ export enum WEB_ROUTES {
   INVOICE_MESSAGES = '/invoice/messages',
   INVOICE_MESSAGE_VIEW = '/invoice/message-view',
   INVOICE_HISTORY = '/invoice/history',
+
+  VIEW_REPORT = 'reports/view',
 }

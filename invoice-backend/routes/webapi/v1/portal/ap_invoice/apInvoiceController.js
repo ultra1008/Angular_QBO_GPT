@@ -771,12 +771,12 @@ module.exports.getAPInvoiceForReports = async function (req, res) {
                     match = {
                         is_delete: 0,
                         vendor: { $in: data_Query },
+                        status: { $ne: 'Paid' },
                     };
                 } else {
                     match = {
                         is_delete: 0,
                         vendor: { $in: data_Query },
-                        status: { $ne: 'Paid' },
                     };
                 }
             } else if (requestObject.assign_to_ids != undefined && requestObject.assign_to_ids != null) {
@@ -810,6 +810,7 @@ module.exports.getAPInvoiceForReports = async function (req, res) {
                     status: { $ne: 'Paid' },
                 };
             }
+            console.log("match", match);
             var get_data = await apInvoiceConnection.aggregate([
                 { $match: match },
                 {

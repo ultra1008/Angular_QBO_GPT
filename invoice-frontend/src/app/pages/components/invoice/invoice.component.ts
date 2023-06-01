@@ -526,10 +526,12 @@ export class InvoiceAttachment {
    */
   fileBrowseHandler(files: any) {
     commonFileChangeEvent(files, "pdf").then((result: any) => {
-      if (result.status) {
-        this.prepareFilesList(files.target.files);
-      } else {
-        this.snackbarservice.openSnackBar(this.FILE_NOT_SUPPORTED, "error");
+      if (result) {
+        if (result.status) {
+          this.prepareFilesList(files.target.files);
+        } else {
+          this.snackbarservice.openSnackBar(this.FILE_NOT_SUPPORTED, "error");
+        }
       }
     });
 
