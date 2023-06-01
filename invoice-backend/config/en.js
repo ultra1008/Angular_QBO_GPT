@@ -857,6 +857,8 @@ module.exports = {
     CostCodeAdded: 'Cost Code added successfully.',
     CostCodeUpdated: 'Cost Code updated successfully.',
     CostCodeDeleted: 'Cost Code deleted successfully.',
+    CostCodeHasData: 'You can not delete this Cost Code. There is data related to this Cost Code.',
+
 
     Vendor_History: {
         vendor_name: 'Name',
