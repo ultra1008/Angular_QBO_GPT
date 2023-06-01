@@ -47,7 +47,7 @@ export class OthersettingsComponent {
   showVendorType = true;
   showClassName = true;
 
-  constructor (
+  constructor(
     private router: Router,
     public SettingsServices: SettingsService,
     private snackBar: MatSnackBar,
@@ -501,6 +501,36 @@ export class OthersettingsComponent {
       // }
     };
     reader.readAsBinaryString(file);
+  }
+
+  refresh() {
+    let that = this;
+    if (that.currrent_tab == 'Terms') {
+      that.showTerms = false;
+      setTimeout(() => {
+        that.showTerms = true;
+      }, 100);
+    } else if (that.currrent_tab == 'Tax rate') {
+      that.showTaxRate = false;
+      setTimeout(() => {
+        that.showTaxRate = true;
+      }, 100);
+    } else if (that.currrent_tab == 'Documents') {
+      that.showDocument = false;
+      setTimeout(() => {
+        that.showDocument = true;
+      }, 100);
+    } else if (that.currrent_tab == 'Vendor type') {
+      that.showVendorType = false;
+      setTimeout(() => {
+        that.showVendorType = true;
+      }, 100);
+    } else if (that.currrent_tab == 'Class name') {
+      that.showClassName = false;
+      setTimeout(() => {
+        that.showClassName = true;
+      }, 100);
+    }
   }
 
   downloadImport() {

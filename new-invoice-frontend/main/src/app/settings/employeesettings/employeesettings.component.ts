@@ -51,7 +51,7 @@ export class EmployeesettingsComponent {
   showlanguage = true;
   @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
 
-  constructor (
+  constructor(
     private router: Router,
     public translate: TranslateService,
     public SettingsServices: SettingsService,
@@ -543,6 +543,41 @@ export class EmployeesettingsComponent {
       // }
     };
     reader.readAsBinaryString(file);
+  }
+
+  refresh() {
+    let that = this;
+    if (that.currrent_tab == 'document') {
+      that.showDocType = false;
+      setTimeout(() => {
+        that.showDocType = true;
+      }, 100);
+    } else if (that.currrent_tab == 'department') {
+      that.showDepartmentType = false;
+      setTimeout(() => {
+        that.showDepartmentType = true;
+      }, 100);
+    } else if (that.currrent_tab == 'jobtitle') {
+      that.showJobtitle = false;
+      setTimeout(() => {
+        that.showJobtitle = true;
+      }, 100);
+    } else if (that.currrent_tab == 'jobtype') {
+      that.showJobtype = false;
+      setTimeout(() => {
+        that.showJobtype = true;
+      }, 100);
+    } else if (that.currrent_tab == 'relationship') {
+      that.showrelationship = false;
+      setTimeout(() => {
+        that.showrelationship = true;
+      }, 100);
+    } else if (that.currrent_tab == 'language') {
+      that.showlanguage = false;
+      setTimeout(() => {
+        that.showlanguage = true;
+      }, 100);
+    }
   }
 
 
