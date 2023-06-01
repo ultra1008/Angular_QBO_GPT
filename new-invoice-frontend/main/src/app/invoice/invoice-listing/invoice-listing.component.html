@@ -102,7 +102,7 @@
                                         [matTooltip]="getApproverTooltip(row)"
                                         (contextmenu)="onContextMenu($event, row)">
                                         <span class="truncate-text"> <span class="mobile-label">Approver:</span></span>
-                                        {{row.approver}}</mat-cell>
+                                        {{row.assign_to_data?.userfullname}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="status">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>

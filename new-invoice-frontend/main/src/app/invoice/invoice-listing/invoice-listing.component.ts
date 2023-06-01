@@ -5,11 +5,11 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { BehaviorSubject, Observable, fromEvent, map, merge } from 'rxjs';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
-import { Invoice, InvoiceMessage } from '../invoice.model';
+import { Invoice } from '../invoice.model';
 import { InvoiceService } from '../invoice.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WEB_ROUTES } from 'src/consts/routes';
@@ -218,7 +218,7 @@ export class ExampleDataSource extends DataSource<Invoice> {
               invoice.invoice_no +
               invoice.invoice_total_amount +
               invoice.sub_total +
-              invoice.approver +
+              invoice.assign_to_data?.userfullname +
               invoice.status
             ).toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
@@ -268,9 +268,9 @@ export class ExampleDataSource extends DataSource<Invoice> {
         case 'sub_total':
           [propertyA, propertyB] = [a.sub_total, b.sub_total];
           break;
-        case 'approver':
+        /* case 'approver':
           [propertyA, propertyB] = [a.approver, b.approver];
-          break;
+          break; */
         case 'status':
           [propertyA, propertyB] = [a.status, b.status];
           break;

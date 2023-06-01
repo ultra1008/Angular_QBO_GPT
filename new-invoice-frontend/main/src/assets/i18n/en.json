@@ -468,7 +468,7 @@
                     "DUE_DATE": "Due Date",
                     "TOTAL_AMOUNT": "Total Amount",
                     "TAX_AMOUNT": "Tax Amount",
-                    "ASSIGN_TO": "Assign To",
+                    "ASSIGN_TO": "Approver",
                     "STATUS": "Status"
                 }
             },
@@ -477,7 +477,7 @@
                 "TABLE": {
                     "TOTAL_AMOUNT": "Total Amount",
                     "COST_CODE": "Cost Code/GL Account",
-                    "ASSIGN_TO": "Assign To",
+                    "ASSIGN_TO": "Approver",
                     "GL_ACCOUNT": "GL Account",
                     "NOTES": "Notes"
                 }
@@ -513,7 +513,7 @@
                 "TABLE": {
                     "TOTAL_AMOUNT": "Total Amount",
                     "COST_CODE": "Cost Code/GL Account",
-                    "ASSIGN_TO": "Assign To",
+                    "ASSIGN_TO": "Approver",
                     "GL_ACCOUNT": "GL Account",
                     "NOTES": "Notes"
                 }
