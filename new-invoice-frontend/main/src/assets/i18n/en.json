@@ -246,7 +246,7 @@
                 "DIVISON": "Divison",
                 "GL_ACCOUNTS": "GL Account Type/Cost Code Type",
                 "DISCRIPTION": "Description",
-                "HEADER_ARCHIVE": "Archive Cost Code",
+                "HEADER_ARCHIVE": "Archive Cost Code/GL Account",
                 "CONFIRMATION_DIALOG": {
                     "ARCHIVE": "Are you sure you want to archive this cost code?",
                     "RESTORE": "Are you sure you want to restore this cost code?"
