@@ -17,9 +17,11 @@ import { UntypedFormBuilder } from '@angular/forms';
 import { UserService } from '../../user.service';
 import { EmergencyContact } from '../../user.model';
 import { WEB_ROUTES } from 'src/consts/routes';
-import { MMDDYYYY, showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
+import { MMDDYYYY, formatPhoneNumber, showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { CommonService } from 'src/app/services/common.service';
+import { TableElement } from 'src/app/shared/TableElement';
+import { TableExportUtil } from 'src/app/shared/tableExportUtil';
 
 @Component({
   selector: 'app-user-emergency-contact',
@@ -141,6 +143,25 @@ export class UserEmergencyContactComponent extends UnsubscribeOnDestroyAdapter i
 
   temp_MMDDYYYY(epoch: number) {
     return MMDDYYYY(epoch);
+  }
+
+  tmpFormatPhone(phone: string) {
+    return formatPhoneNumber(phone);
+  }
+
+  exportExcel() {
+    const exportData: Partial<TableElement>[] =
+      this.dataSource.filteredData.map((x) => ({
+        'Name': x.emergency_contact_name || '',
+        'Relation': x.relationship_name || '',
+        'Email': x.emergency_contact_email || '',
+        'Phone': formatPhoneNumber(x.emergency_contact_phone) || '',
+        'Address': `${x.emergency_contact_street1 === '' ? '' : x.emergency_contact_street1 + ","} 
+        ${x.emergency_contact_city === "" ? "" : x.emergency_contact_city + ","} 
+        ${x.emergency_contact_state === "" ? "" : x.emergency_contact_state}`,
+        'Last Validation Date': x.is_validated ? this.temp_MMDDYYYY(Number(x.validated_at.toString())) : '',
+      }));
+    TableExportUtil.exportToExcel(exportData, 'excel');
   }
 }
 

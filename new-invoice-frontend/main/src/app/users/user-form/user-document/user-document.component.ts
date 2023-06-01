@@ -18,6 +18,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { UserDocument } from '../../user.model';
+import { TableElement } from 'src/app/shared/TableElement';
+import { formatDate } from '@angular/common';
+import { TableExportUtil } from 'src/app/shared/tableExportUtil';
 
 @Component({
   selector: 'app-user-document',
@@ -132,6 +135,16 @@ export class UserDocumentComponent extends UnsubscribeOnDestroyAdapter implement
 
   temp_MMDDYYYY(epoch: number) {
     return MMDDYYYY(epoch);
+  }
+
+  exportExcel() {
+    // key name with space add in brackets
+    const exportData: Partial<TableElement>[] =
+      this.dataSource.filteredData.map((x) => ({
+        'Document': x.document_name || '',
+        'Expiration Date': x.userdocument_expire_date == 0 ? '' : formatDate(new Date(Number(x.userdocument_expire_date.toString()) * 1000), 'MM/dd/yyyy', 'en'),
+      }));
+    TableExportUtil.exportToExcel(exportData, 'excel');
   }
 }
 
