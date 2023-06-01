@@ -36,7 +36,7 @@
                         <div class="row clearfix mt-2">
                             <div
                                 [ngClass]="showPDF ? 'col-lg-6 col-md-6 col-sm-12 col-xs-12' : 'col-lg-12 col-md-12 col-sm-12 col-xs-12'">
-                                <div class="card">
+                                <div class="card font-white">
                                     <div *ngIf="!showPDF" class="show-pdf-button"
                                         matTooltip="{{'COMMON.TOOL_TIP.SHOW' | translate}}">
                                         <button mat-mini-fab color="primary" (click)="collabPDF()">
@@ -80,7 +80,7 @@
                                     <div class="chat-message clearfix">
                                         <div class="form-group">
                                             <form [formGroup]="form">
-                                                <mat-form-field class="example-full-width" appearance="outline">
+                                                <mat-form-field class="example-full-width font-white-placeholder" appearance="outline">
                                                     <input matInput formControlName="message"
                                                         placeholder="Enter message here..">
                                                     <button mat-icon-button matPrefix (click)="handleAttachment()">
