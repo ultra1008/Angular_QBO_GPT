@@ -248,8 +248,8 @@
                 "DISCRIPTION": "Description",
                 "HEADER_ARCHIVE": "Archive Cost Code/GL Account",
                 "CONFIRMATION_DIALOG": {
-                    "ARCHIVE": "Are you sure you want to archive this cost code?",
-                    "RESTORE": "Are you sure you want to restore this cost code?"
+                    "ARCHIVE": "Are you sure you want to archive this cost code/GL account?",
+                    "RESTORE": "Are you sure you want to restore this cost code/GL account?"
                 }
             },
             "OTHER_SETTINGS_MODULE": {

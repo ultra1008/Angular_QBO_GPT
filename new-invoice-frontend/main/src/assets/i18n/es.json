@@ -248,8 +248,8 @@
                 "DISCRIPTION": "Descripción",
                 "HEADER_ARCHIVE": "Código de costo de archivo",
                 "CONFIRMATION_DIALOG": {
-                    "ARCHIVE": "¿Está seguro de que desea archivar este código de costo?",
-                    "RESTORE": "¿Está seguro de que desea restaurar este código de costo?"
+                    "ARCHIVE": "¿Está seguro de que desea archivar este código de costo/cuenta GL?",
+                    "RESTORE": "¿Está seguro de que desea restaurar este código de costo/cuenta GL?"
                 }
             },
             "OTHER_SETTINGS_MODULE": {

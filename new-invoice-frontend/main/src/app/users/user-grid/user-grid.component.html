@@ -58,7 +58,7 @@
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.GRID_TO_LIST' |
                                     translate}}">
-                                        <button mat-mini-fab color="warn" (click)="gotoUser()">
+                                        <button mat-mini-fab color="primary" (click)="gotoUser()">
                                             <mat-icon class="col-white">view_list </mat-icon>
                                         </button>
                                     </div>
@@ -66,7 +66,7 @@
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ARCHIVE' |
                                     translate}}">
-                                        <button mat-mini-fab color="primary" (click)="gotoArchiveUnarchive()">
+                                        <button mat-mini-fab color="warn" (click)="gotoArchiveUnarchive()">
                                             <mat-icon class="col-white">archive</mat-icon>
                                         </button>
                                     </div>
@@ -95,26 +95,23 @@
                         <div class="row">
                             <div class="test col-xs-12 col-sm-6 col-md-4 col-xl-2"
                                 *ngFor="let user of userList | empListFilter : username_search| empListFilterStatus : username_status">
-                                <div class="card hover-card" (click)="editUser(user)"
-                                    style="border: 2px solid rgb(182, 182, 182);">
+                                <div class="card hover-card border-bg" (click)="editUser(user)">
                                     <div class="m-b-20">
-                                        <div class="contact-grid" style="height: 260px;">
+                                        <div class="contact-grid card-h">
                                             <div class="profile-header">
                                                 <div class="col-12 m-1 d-flex">
                                                     <div class="col-4">
-                                                        <img src={{user.userpicture}} class="user-img1"
-                                                            style="background-color: white;" width="80px" height="80px "
-                                                            alt="">
+                                                        <img src={{user.userpicture}} class="user-img1 img-bg" width="80px" height="80px" alt="">
                                                     </div>
                                                     <div class="mt-4 m-1 col-8">
-                                                        <div *ngIf="isDelete === 0" style="text-align:initial;"
-                                                            class="name-cente font-white">
+                                                        <div *ngIf="isDelete === 0" 
+                                                            class="name-cente font-white txt-alg">
                                                             <div>
                                                                 <span class="badge font-white">
                                                                     {{user.role_name}}</span>
                                                             </div>
                                                         </div>
-                                                        <div class="m-1 font-white font-s" style="text-align:initial;">
+                                                        <div class="m-1 font-white font-s txt-alg" >
                                                             <b> {{user.userfullname}}</b>
                                                         </div>
                                                     </div>
@@ -122,29 +119,29 @@
                                             </div>
                                             <div class="m-1 text-a">
                                                 <div class="d-flex font-s">
-                                                    <i class="material-icons my-auto font-s">email</i>
-                                                    <span class="font-sp"> {{user.useremail}}</span>
+                                                    <i class="material-icons my-auto font-s font-white">email</i>
+                                                    <span class="font-sp font-white"> {{user.useremail}}</span>
                                                 </div>
                                             </div>
                                             <div class="m-1 text-a" *ngIf="user.userphone!=0">
-                                                <div class="d-flex font-s">
+                                                <div class="d-flex font-s font-white">
                                                     <i class="material-icons my-auto font-s">phone</i>
                                                     <span class="font-sp"> {{user.userphone}}</span>
                                                 </div>
                                             </div>
                                             <div class="m-1 text-a" *ngIf="user.userstartdate!=0">
-                                                <div class="d-flex font-s">
+                                                <div class="d-flex font-s font-white">
                                                     <i class="material-icons my-auto font-s">insert_invitation</i>
                                                     <span
                                                         class="font-sp">{{convertDate(user.userstartdate) | dateString }}</span>
                                                 </div>
                                             </div>
                                             <div class="col-12 m-1 d-flex">
-                                                <div class="col-6">
+                                                <div class="col-6 font-white">
                                                     <b> Manager</b>
                                                     <P class="truncate-text"> {{user.manager_name}}</P>
                                                 </div>
-                                                <div class=" col-6">
+                                                <div class="col-6 font-white">
                                                     <b> Supervisor</b>
                                                     <P class="truncate-text"> {{user.supervisor_name}}</P>
                                                 </div>

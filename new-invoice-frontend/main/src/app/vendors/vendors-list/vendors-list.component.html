@@ -87,7 +87,7 @@
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ARCHIVE' |
                                         translate}}">
-                                        <button mat-mini-fab color="primary" (click)="gotoArchiveUnarchive()">
+                                        <button mat-mini-fab color="warn" (click)="gotoArchiveUnarchive()">
                                             <mat-icon class="col-white">archive</mat-icon>
                                         </button>
                                     </div>
@@ -120,7 +120,7 @@
                     </div>
                     <div class="body overflow-auto">
                         <div class="table-responsive">
-                            <table mat-table #table [dataSource]="dataSource" matSort class="table mat-cell">
+                            <table mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
                                 <ng-container matColumnDef="select">
                                     <mat-header-cell *matHeaderCellDef class="psl-1"
                                         [ngClass]="'tbl-col-width-per-selected'">

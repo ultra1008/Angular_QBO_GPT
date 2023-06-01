@@ -59,7 +59,7 @@
                                         <li class="tbl-header-btn" *ngIf="isDelete === 0">
                                              <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.GRID_TO_LIST' |
                                              translate}}">
-                                                  <button mat-mini-fab color="warn" (click)="gotolist()">
+                                                  <button mat-mini-fab color="primary" (click)="gotolist()">
                                                        <mat-icon class="col-white">view_list </mat-icon>
                                                   </button>
                                              </div>
@@ -67,7 +67,7 @@
                                         <li class="tbl-header-btn" *ngIf="isDelete === 0">
                                              <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ARCHIVE' |
                                              translate}}">
-                                                  <button mat-mini-fab color="primary" (click)="gotoArchiveUnarchive()">
+                                                  <button mat-mini-fab color="warn" (click)="gotoArchiveUnarchive()">
                                                        <mat-icon class="col-white">archive</mat-icon>
                                                   </button>
                                              </div>
@@ -96,29 +96,25 @@
                               <div class="row">
                                    <div class="test col-xs-12 col-sm-6 col-md-4 col-xl-3"
                                         *ngFor="let vendor of vendorList  | vendorListFilter : vendorname_search |vendorListFilterStatus : vendor_status">
-                                        <div class="card hover-card" style="border: 2px solid rgb(182, 182, 182);">
+                                        <div class="card hover-card font-white card-border">
                                              <div class="m-b-20">
-                                                  <div class="contact-grid" style="height: 310px"
-                                                       (click)="editVendor(vendor)">
+                                                  <div class="contact-grid card-h" (click)="editVendor(vendor)">
                                                        <div class="profile-header">
                                                             <div class="col-12 m-1 d-flex">
                                                                  <div class="col-4">
                                                                       <img [src]="vendor.vendor_image || 'assets/images/vendor.png'"
-                                                                           class="user-img1"
-                                                                           style="background-color: white;" width="80px"
+                                                                           class="user-img1 img-bg" width="80px"
                                                                            height="80px " alt="">
                                                                  </div>
                                                                  <div class="mt-4 m-1 col-8">
                                                                       <div *ngIf="isDelete === 0"
-                                                                           style="text-align:initial;"
-                                                                           class="name-cente font-white">
+                                                                           class="name-cente font-white txt-alg">
                                                                            <div>
                                                                                 <span class="font-white">
                                                                                      {{vendor.vendor_id}}</span>
                                                                            </div>
                                                                       </div>
-                                                                      <div class="m-1 font-white font-s"
-                                                                           style="text-align:initial;">
+                                                                      <div class="m-1 font-white font-s txt-alg">
                                                                            <b> {{vendor.vendor_name}}</b>
                                                                       </div>
                                                                  </div>
