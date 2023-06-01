@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var processDocumentSchema = new mongoose.Schema; ({
+var processDocumentSchema = new mongoose.Schema({
     pdf_url: { type: String, default: "" },
     status: { type: String, default: "Pending" }, // Pending, Already Exists, Process, Complete
     created_by: { type: mongoose.ObjectId, default: "" }, // User collection

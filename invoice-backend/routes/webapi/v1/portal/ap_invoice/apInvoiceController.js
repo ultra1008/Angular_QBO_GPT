@@ -723,3 +723,164 @@ module.exports.getAPInvoiceHistory = async function (req, res) {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
+
+module.exports.getAPInvoiceForReports = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var apInvoiceConnection = connection_db_api.model(collectionConstant.AP_INVOICE, apInvoiceSchema);
+            let match = { is_delete: 0 };
+            if (requestObject.vendor_ids != undefined && requestObject.vendor_ids != null) {
+                let data_Query = [];
+                for (let i = 0; i < requestObject.vendor_ids.length; i++) {
+                    data_Query.push(ObjectID(requestObject.vendor_ids[i]));
+                }
+                if (requestObject.open_invoice) {
+                    match = {
+                        is_delete: 0,
+                        vendor: { $in: data_Query },
+                    };
+                } else {
+                    match = {
+                        is_delete: 0,
+                        vendor: { $in: data_Query },
+                        status: { $ne: 'Paid' },
+                    };
+                }
+            } else if (requestObject.assign_to_ids != undefined && requestObject.assign_to_ids != null) {
+                let data_Query = [];
+                for (let i = 0; i < requestObject.assign_to_ids.length; i++) {
+                    data_Query.push(ObjectID(requestObject.assign_to_ids[i]));
+                }
+                match = {
+                    is_delete: 0,
+                    assign_to: { $in: data_Query },
+                    status: { $ne: 'Paid' },
+                };
+            } else if (requestObject.class_name_ids != undefined && requestObject.class_name_ids != null) {
+                let data_Query = [];
+                for (let i = 0; i < requestObject.class_name_ids.length; i++) {
+                    data_Query.push(ObjectID(requestObject.class_name_ids[i]));
+                }
+                match = {
+                    is_delete: 0,
+                    class_name: { $in: data_Query },
+                    status: { $ne: 'Paid' },
+                };
+            } else if (requestObject.job_client_name_ids != undefined && requestObject.job_client_name_ids != null) {
+                let data_Query = [];
+                for (let i = 0; i < requestObject.job_client_name_ids.length; i++) {
+                    data_Query.push(ObjectID(requestObject.job_client_name_ids[i]));
+                }
+                match = {
+                    is_delete: 0,
+                    job_client_name: { $in: data_Query },
+                    status: { $ne: 'Paid' },
+                };
+            }
+            var get_data = await apInvoiceConnection.aggregate([
+                { $match: match },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "assign_to",
+                        foreignField: "_id",
+                        as: "assign_to_data"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$assign_to_data",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_VENDOR,
+                        localField: "vendor",
+                        foreignField: "_id",
+                        as: "vendor_data"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$vendor_data",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_TERM,
+                        localField: "terms",
+                        foreignField: "_id",
+                        as: "terms_data"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$terms_data",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.COSTCODES,
+                        localField: "gl_account",
+                        foreignField: "_id",
+                        as: "gl_account_data"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$gl_account_data",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_CLIENT,
+                        localField: "job_client_name",
+                        foreignField: "_id",
+                        as: "job_client_data"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$job_client_data",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_CLASS_NAME,
+                        localField: "class_name",
+                        foreignField: "_id",
+                        as: "class_name_data"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$class_name_data",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                { $sort: { created_at: -1 } },
+            ]);
+            if (get_data) {
+                res.send(get_data);
+            } else {
+                res.send([]);
+            }
+        } catch (e) {
+            console.log(e);
+            res.send([]);
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};

@@ -522,5 +522,12 @@ router.post('/webapi/v1/portal/deleteapinvoice', common.checkTokenExistOrNot, ap
 router.post('/webapi/v1/portal/saveapinvoicenote', common.checkTokenExistOrNot, apInvoiceValidation.saveAPInvoiceNote, apInvoiceController.saveAPInvoiceNote);
 router.post('/webapi/v1/portal/deleteapinvoicenote', common.checkTokenExistOrNot, apInvoiceValidation.deleteAPInvoiceNote, apInvoiceController.deleteAPInvoiceNote);
 router.post('/webapi/v1/portal/getapinvoicehistory', common.checkTokenExistOrNot, apInvoiceController.getAPInvoiceHistory);
+router.post('/webapi/v1/portal/getapinvoiceforreports', common.checkTokenExistOrNot, apInvoiceController.getAPInvoiceForReports);
+
+let apDocumentProcessController = require('./ap_document_process/apDocumentProcessController');
+let apDocumentProcessValidation = require('./ap_document_process/apDocumentProcessValidation');
+router.get('/webapi/v1/portal/getapdocumentprocess', common.checkTokenExistOrNot, apDocumentProcessController.getAPDocumentProcess);
+router.post('/webapi/v1/portal/getoneapdocumentprocess', common.checkTokenExistOrNot, apDocumentProcessValidation.getOneAPDocumentProcess, apDocumentProcessController.getOneAPDocumentProcess);
+router.post('/webapi/v1/portal/saveapdocumentprocess', common.checkTokenExistOrNot, apDocumentProcessValidation.saveAPDocumentProcess, apDocumentProcessController.saveAPDocumentProcess);
 
 module.exports = router;

@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var duplicateDocumentSchema = new mongoose.Schema; ({
+var duplicateDocumentSchema = new mongoose.Schema({
     pdf_url: { type: String, default: "" },
     status: { type: String, default: "Pending" }, // Pending, Already Exists, Process, Complete
     document_type: { type: String, default: "" },
