@@ -41,7 +41,7 @@ export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter
   step_index = 0;
   titleMessage = '';
   showTable = true;
-  tab_Array: any = ['INVOICE', 'PURCHASE_ORDER', 'PACKING_SLIP', 'RECEIVING_SLIP', 'QUOTE', 'Other', 'Delete'];
+  tab_Array: any = ['PURCHASE_ORDER', 'PACKING_SLIP', 'RECEIVING_SLIP', 'QUOTE', 'Other'];
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   @ViewChild('filter', { static: true }) filter!: ElementRef;
@@ -74,7 +74,6 @@ export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter
 
   public loadData() {
 
-    console.log("this.t", this.tab_Array[this.step_index]);
     if (this.step_index == this.tab_Array.length - 1) {
       // this.isDelete = 1;
     } else {

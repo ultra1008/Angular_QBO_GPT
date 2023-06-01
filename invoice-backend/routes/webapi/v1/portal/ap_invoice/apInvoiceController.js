@@ -538,6 +538,47 @@ module.exports.saveAPInvoice = async function (req, res) {
     }
 };
 
+module.exports.deleteAPInvoice = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var id = requestObject._id;
+            delete requestObject._id;
+            var apInvoiceConnection = connection_db_api.model(collectionConstant.AP_INVOICE, apInvoiceSchema);
+            requestObject.updated_by = decodedToken.UserData._id;
+            requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+            var update_data = await apInvoiceConnection.updateOne({ _id: ObjectID(id) }, requestObject);
+            let isDelete = update_data.nModified;
+            if (isDelete == 0) {
+                res.send({ status: false, message: "There is no data with this id." });
+            } else {
+                let histioryObject = {
+                    data: [],
+                    invoice_id: id,
+                };
+                if (requestObject.is_delete == 0) {
+                    addInvoiceHistory("Restore", histioryObject, decodedToken);
+                    res.send({ message: "Invoice restored successfully.", status: true });
+                } else {
+                    addInvoiceHistory("Archive", histioryObject, decodedToken);
+                    res.send({ message: "Invoice archived successfully.", status: true });
+                }
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    }
+    else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
 // Save Invoice Notes
 module.exports.saveAPInvoiceNote = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);

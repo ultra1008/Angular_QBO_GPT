@@ -235,6 +235,7 @@ export enum httproutes {
   GET_INVOICE_FOR_TABLE = 'getapinvoicefortable',
   GET_ONE_INVOICE = 'getoneapinvoice',
   SAVE_INVOICE = 'saveapinvoice',
+  DELETE_INVOICE = 'deleteapinvoice',
   SAVE_INVOICE_NOTE = 'saveapinvoicenote',
   DELETE_INVOICE_NOTE = 'deleteapinvoicenote',
   GET_INVOICE_HISTORY = 'getapinvoicehistory',

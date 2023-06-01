@@ -26,6 +26,21 @@ const getOneAPInvoice = (req, res, next) => {
     });
 };
 
+const deleteAPInvoice = (req, res, next) => {
+    const validationRule = {
+        "_id": "required",
+        "is_delete": "required|integer",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({ status: false, message: err });
+        }
+        else {
+            next();
+        }
+    });
+};
+
 const saveAPInvoiceNote = (req, res, next) => {
     const validationRule = {
         "invoice_id": "required",
@@ -59,6 +74,7 @@ const deleteAPInvoiceNote = (req, res, next) => {
 module.exports = {
     getAPInvoiceForTable,
     getOneAPInvoice,
+    deleteAPInvoice,
     saveAPInvoiceNote,
     deleteAPInvoiceNote,
 };

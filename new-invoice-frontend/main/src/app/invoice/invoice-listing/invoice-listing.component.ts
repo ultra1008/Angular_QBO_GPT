@@ -18,6 +18,7 @@ import { showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils'
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { UploadInvoiceFormComponent } from '../upload-invoice-form/upload-invoice-form.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-invoice-listing',
@@ -26,17 +27,7 @@ import { UploadInvoiceFormComponent } from '../upload-invoice-form/upload-invoic
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
 })
 export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
-  displayedColumns = [
-    'invoice_date',
-    'due_date',
-    'vendor',
-    'invoice_number',
-    'total_amount',
-    'sub_total',
-    'approver',
-    'status',
-    'actions',
-  ];
+  displayedColumns = ['invoice_date', 'due_date', 'vendor', 'invoice_number', 'total_amount', 'sub_total', 'approver', 'status', 'actions'];
   invoiceService?: InvoiceService;
   dataSource!: ExampleDataSource;
   selection = new SelectionModel<Invoice>(true, []);
@@ -45,9 +36,9 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
   isDelete = 0;
   type = '';
 
-  constructor(public httpClient: HttpClient, public dialog: MatDialog, public settingService: InvoiceService,
+  constructor (public httpClient: HttpClient, public dialog: MatDialog, public settingService: InvoiceService,
     private snackBar: MatSnackBar, public route: ActivatedRoute, private router: Router, private httpCall: HttpCall,
-    private commonService: CommonService) {
+    private commonService: CommonService, public translate: TranslateService) {
     super();
     route.queryParams.subscribe(queryParams => {
       this.type = queryParams['type'] ?? '';
@@ -66,37 +57,7 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
   refresh() {
     this.loadData();
   }
-  addNew() {
-    /* let tempDirection: Direction;
-    if (localStorage.getItem('isRtl') === 'true') {
-      tempDirection = 'rtl';
-    } else {
-      tempDirection = 'ltr';
-    }
-    const dialogRef = this.dialog.open(FormComponent, {
-      data: {
-        invoiceTable: this.invoiceTable,
-        action: 'add',
-      },
-      direction: tempDirection,
-    });
-    this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-      if (result === 1) {
-        // After dialog is closed we're doing frontend updates
-        // For add we're just pushing a new row inside DataService
-        this.exampleDatabase?.dataChange.value.unshift(
-          this.invoiceService.getDialogData()
-        );
-        this.refreshTable();
-        this.showNotification(
-          'snackbar-success',
-          'Add Record Successfully...!!!',
-          'bottom',
-          'center'
-        );
-      }
-    }); */
-  }
+
   // TOOLTIPS
   getVendorNameTooltip(row: any) {
     return row.vendor_data.vendor_name;
@@ -104,10 +65,47 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
   getApproverTooltip(row: any) {
     return row.approver;
   }
-  editCall(row: Invoice) {
+
+  editInvoice(row: Invoice) {
     this.router.navigate([WEB_ROUTES.INVOICE_DETAILS], { queryParams: { _id: row._id } });
   }
 
+  deleteInvoice(invoice: Invoice, is_delete: number) {
+    let titleMessage;
+    if (is_delete == 1) {
+      titleMessage = this.translate.instant('CLIENT.CONFIRMATION_DIALOG.ARCHIVE');
+    } else {
+      titleMessage = this.translate.instant('CLIENT.CONFIRMATION_DIALOG.RESTORE');
+    }
+    swalWithBootstrapTwoButtons
+      .fire({
+        title: titleMessage,
+        showDenyButton: true,
+        confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+        denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+        allowOutsideClick: false,
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.DELETE_INVOICE, { _id: invoice._id, is_delete: is_delete });
+          if (data.status) {
+            showNotification(this.snackBar, data.message, 'success');
+            const foundIndex = this.invoiceService?.dataChange.value.findIndex((x) => x._id === invoice._id);
+            if (foundIndex != null && this.invoiceService) {
+              this.invoiceService.dataChange.value.splice(foundIndex, 1);
+              this.refreshTable();
+            }
+          } else {
+            showNotification(this.snackBar, data.message, 'error');
+          }
+        }
+      });
+  }
+
+  gotoArchiveUnarchive() {
+    this.isDelete = this.isDelete == 1 ? 0 : 1;
+    this.refresh();
+  }
 
   private refreshTable() {
     this.paginator._changePageSize(this.paginator.pageSize);
@@ -186,7 +184,7 @@ export class ExampleDataSource extends DataSource<Invoice> {
   }
   filteredData: Invoice[] = [];
   renderedData: Invoice[] = [];
-  constructor(
+  constructor (
     public exampleDatabase: InvoiceService,
     public paginator: MatPaginator,
     public _sort: MatSort,

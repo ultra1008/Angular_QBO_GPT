@@ -117,7 +117,7 @@
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="mobile-label">Document Type:</span>
-                                                        <div *ngIf="row.document_type == ''">
+                                                        <div *ngIf="row.document_type === ''">
                                                             No Identifying Information
                                                         </div>
                                                         {{row.document_type}}
@@ -206,7 +206,7 @@
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="mobile-label">Document Type:</span>
-                                                        <div *ngIf="row.document_type == ''">
+                                                        <div *ngIf="row.document_type === ''">
                                                             No Identifying Information
                                                         </div>
                                                         {{row.document_type}}
@@ -295,7 +295,7 @@
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="mobile-label">Document Type:</span>
-                                                        <div *ngIf="row.document_type == ''">
+                                                        <div *ngIf="row.document_type === ''">
                                                             No Identifying Information
                                                         </div>
                                                         {{row.document_type}}
@@ -383,7 +383,7 @@
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="mobile-label">Document Type:</span>
-                                                        <div *ngIf="row.document_type == ''">
+                                                        <div *ngIf="row.document_type === ''">
                                                             No Identifying Information
                                                         </div>
                                                         {{row.document_type}}
@@ -471,7 +471,7 @@
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="mobile-label">Document Type:</span>
-                                                        <div *ngIf="row.document_type == ''">
+                                                        <div *ngIf="row.document_type === ''">
                                                             No Identifying Information
                                                         </div>
                                                         {{row.document_type}}
@@ -546,7 +546,7 @@
                                         </mat-paginator>
                                     </div>
                                 </mat-tab>
-                                <mat-tab label="Archive Orphan Documents">
+                                <!--  <mat-tab label="Archive Orphan Documents">
                                     <div class="body overflow-auto">
                                         <div class="table-responsive">
                                             <table mat-table #table [dataSource]="dataSource" matSort
@@ -620,8 +620,7 @@
                                                     [style.cursor]="'pointer'" matRipple>
                                                 </mat-row>
                                             </table>
-                                        </div>
-                                        <!-- Loading spinner -->
+                                        </div> 
                                         <div *ngIf="DocumentsServices?.isTblLoading" class="tbl-spinner">
                                             <app-loading></app-loading>
                                         </div>
@@ -633,7 +632,7 @@
                                             [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
                                         </mat-paginator>
                                     </div>
-                                </mat-tab>
+                                </mat-tab> -->
                             </mat-tab-group>
                         </div>
                     </div>
