@@ -643,6 +643,7 @@ module.exports = {
     RelationshipUpdated: 'Relationship updated successfully.',
     RelationshipDeleted: 'Relationship deleted successfully.',
     RelationshipAlreadyExist: 'Relationship already exist.',
+    RelationshipHasData: 'You can not delete this Relationship. There is data related to this Relationship.',
 
     // Department
     DepartmentListing: 'Department listing',
@@ -938,6 +939,7 @@ module.exports = {
     LanguageUpdated: "Language updated successfully.",
     LanguageAdded: "Language added successfully.",
     LanguageDeleted: "Language deleted successfully.",
+    LanguageHasData: 'You can not delete this Language. There is data related to this Language.',
 
     Client_History: {
         client_name: 'Client Name',
@@ -954,4 +956,16 @@ module.exports = {
     INVOICE_MESSAGE_LISTING: 'Message Listing',
     INVOICE_MESSAGE_SEND: 'Message sent successfully.',
     INVOICE_MESSAGE_DELETED: 'Message deleted successfully.',
+
+    //ClassName
+    ClassNameListing: "ClassName listing",
+    ClassNameUpdated: "ClassName updated successfully.",
+    ClassNameAdded: "ClassName added successfully.",
+    ClassNameDeleted: "ClassName deleted successfully.",
+    ClassNameHasData: 'You can not delete this Class Name. There is data related to this Class Name.',
+
+    TermHasData: 'You can not delete this Term. There is data related to this Term.',
+    VendorTypeHasData: 'You can not delete this Vendor Type. There is data related to this Vendor Type.',
+
+
 };

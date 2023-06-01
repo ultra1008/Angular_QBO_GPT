@@ -641,6 +641,7 @@ module.exports = {
     RelationshipUpdated: 'Relación actualizada exitosamente.',
     RelationshipDeleted: 'Relación eliminada exitosamente.',
     RelationshipAlreadyExist: 'Relationship already exist.',
+    RelationshipHasData: 'You can not delete this Relationship. There is data related to this Relationship.',
 
     // Department
     DepartmentListing: 'Listado de departamentos',
@@ -953,4 +954,5 @@ module.exports = {
     INVOICE_MESSAGE_LISTING: 'Message Listing',
     INVOICE_MESSAGE_SEND: 'Message sent successfully.',
     INVOICE_MESSAGE_DELETED: 'Message deleted successfully.',
+
 };

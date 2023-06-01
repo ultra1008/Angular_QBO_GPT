@@ -5,6 +5,7 @@ let common = require('../../../../../controller/common/common');
 let collectionConstant = require('../../../../../config/collectionConstant');
 var formidable = require('formidable');
 const reader = require('xlsx');
+var emergency_contactsSchema = require('./../../../../../model/emergency_contacts');
 
 module.exports.getAllRelationships = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -88,15 +89,27 @@ module.exports.deleteRelationship = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
     if (decodedToken) {
+        var requestObject = req.body;
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             let relationshipsCollection = connection_db_api.model(collectionConstant.RELATIONSHIP, relationshipSchema);
-            let jobTitleObject = await relationshipsCollection.updateOne({ _id: ObjectID(req.body._id) }, { is_delete: 1 });
-            if (jobTitleObject) {
-                res.send({ message: translator.getStr('RelationshipDeleted'), status: true });
-            } else {
-                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+
+            let emergencycontactsCollection = connection_db_api.model(collectionConstant.EMERGENCY_CONTACT, emergency_contactsSchema);
+            let emergencycontactdocObject = await emergencycontactsCollection.find({ emergency_contact_relation: ObjectID(requestObject._id) });
+
+            if (emergencycontactdocObject.length > 0) {
+                res.send({ message: translator.getStr('RelationshipHasData'), status: false });
             }
+            else {
+
+                let jobTitleObject = await relationshipsCollection.updateOne({ _id: ObjectID(req.body._id) }, { is_delete: 1 });
+                if (jobTitleObject) {
+                    res.send({ message: translator.getStr('RelationshipDeleted'), status: true });
+                } else {
+                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                }
+            }
+
         } catch (e) {
             console.log("e: ", e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
