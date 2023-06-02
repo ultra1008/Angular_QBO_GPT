@@ -25,11 +25,11 @@ var invoiceSchema = new mongoose.Schema({
     order_date_epoch: { type: Number, default: 0 },
     ship_date_epoch: { type: Number, default: 0 },
     terms: { type: mongoose.ObjectId, default: "" }, // Vendor terms OR coming from Terms Setting master
-    invoice_total_amount: { type: String, default: "" },
-    tax_amount: { type: String, default: "" },
+    invoice_total_amount: { type: Number, default: 0 },
+    tax_amount: { type: Number, default: 0 },
     tax_id: { type: String, default: "" },
-    sub_total: { type: String, default: "" },
-    amount_due: { type: String, default: "" },
+    sub_total: { type: Number, default: 0 },
+    amount_due: { type: Number, default: 0 },
     gl_account: { type: mongoose.ObjectId, default: "" }, // Coming from settings costcode/glaccount table  - Job #
     receiving_date_epoch: { type: Number, default: 0 },
     status: { type: String, default: "Pending", enum: ['Pending', 'Approved', 'Rejected', 'On Hold', 'Late', 'Paid', 'Unpaid', 'Overdue'] },

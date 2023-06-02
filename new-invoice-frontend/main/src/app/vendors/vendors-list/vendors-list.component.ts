@@ -19,6 +19,7 @@ import { Router } from '@angular/router';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import {
   commonNewtworkAttachmentViewer,
+  formateAmount,
   gallery_options,
   showNotification,
   swalWithBootstrapTwoButtons,
@@ -65,7 +66,7 @@ export class VendorsListComponent
   quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
   quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
 
-  constructor(
+  constructor (
     public httpClient: HttpClient,
     private httpCall: HttpCall,
     public dialog: MatDialog,
@@ -457,6 +458,10 @@ export class VendorsListComponent
       //
     });
   }
+
+  formateAmount(price: any) {
+    return formateAmount(price);
+  }
 }
 
 // This class is used for datatable sorting and searching
@@ -470,7 +475,7 @@ export class VendorDataSource extends DataSource<Vendor> {
   }
   filteredData: Vendor[] = [];
   renderedData: Vendor[] = [];
-  constructor(
+  constructor (
     public vendorService: VendorsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
@@ -498,11 +503,14 @@ export class VendorDataSource extends DataSource<Vendor> {
           .filter((vendorTable: Vendor) => {
             const searchStr = (
               vendorTable.vendor_name +
-              vendorTable.vendor_id +
-              vendorTable.customer_id +
+              vendorTable.invoices +
+              vendorTable.open_invoices +
+              vendorTable.invoices_total +
+              vendorTable.open_invoices_total +
               vendorTable.vendor_phone +
               vendorTable.vendor_email +
-              vendorTable.vendor_address
+              vendorTable.vendor_address +
+              vendorTable.vendor_status
             ).toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
@@ -536,11 +544,17 @@ export class VendorDataSource extends DataSource<Vendor> {
         case 'vendor_name':
           [propertyA, propertyB] = [a.vendor_name, b.vendor_name];
           break;
-        case 'vendor_id':
-          [propertyA, propertyB] = [a.vendor_id, b.vendor_id];
+        case 'invoices':
+          [propertyA, propertyB] = [a.invoices, b.invoices];
           break;
-        case 'customer_id':
-          [propertyA, propertyB] = [a.customer_id, b.customer_id];
+        case 'open_invoices':
+          [propertyA, propertyB] = [a.open_invoices, b.open_invoices];
+          break;
+        case 'invoices_total':
+          [propertyA, propertyB] = [a.invoices_total, b.invoices_total];
+          break;
+        case 'open_invoices_total':
+          [propertyA, propertyB] = [a.open_invoices_total, b.open_invoices_total];
           break;
         case 'vendor_phone':
           [propertyA, propertyB] = [a.vendor_phone, b.vendor_phone];

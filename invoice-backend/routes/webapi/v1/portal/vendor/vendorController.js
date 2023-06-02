@@ -246,7 +246,88 @@ module.exports.getVendor = async function (req, res) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
-            var getdata = await vendorConnection.find({ is_delete: requestObject.is_delete });
+            var getdata = await vendorConnection.aggregate([
+                { $match: { is_delete: requestObject.is_delete } },
+                {
+                    $lookup: {
+                        from: collectionConstant.AP_INVOICE,
+                        let: { id: "$_id" },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $and: [
+                                            { $eq: ["$vendor", "$$id"] },
+                                            { $eq: ["$is_delete", 0] },
+                                        ]
+                                    }
+                                },
+                            },
+                        ],
+                        as: "invoices"
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.AP_INVOICE,
+                        let: { id: "$_id" },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $and: [
+                                            { $eq: ["$vendor", "$$id"] },
+                                            { $eq: ["$is_delete", 0] },
+                                            { $ne: ["$status", 'Paid'] },
+                                        ]
+                                    }
+                                },
+                            },
+                        ],
+                        as: "open_invoices"
+                    },
+                },
+                {
+                    $project: {
+                        vendor_name: 1,
+                        vendor_phone: 1,
+                        vendor_email: 1,
+                        vendor_image: 1,
+                        vendor_cost_cost_id: 1,
+                        vendor_address: 1,
+                        vendor_address2: 1,
+                        vendor_city: 1,
+                        vendor_state: 1,
+                        vendor_zipcode: 1,
+                        vendor_country: 1,
+                        vendor_terms: 1,
+                        vendor_status: 1,
+                        vendor_description: 1,
+                        vendor_attachment: 1,
+
+                        vendor_created_at: 1,
+                        vendor_created_by: 1,
+                        vendor_updated_at: 1,
+                        vendor_updated_by: 1,
+                        is_delete: 1,
+
+                        invitation_sent: 1,
+                        is_password_temp: 1,
+                        password: 1,
+                        vendor_id: 1,
+                        customer_id: 1,
+                        vendor_type_id: 1,
+                        gl_account: 1,
+                        isVendorfromQBO: 1,
+                        is_quickbooks: 1,
+                        invoices: { $size: "$invoices" },
+                        invoices_total: { $sum: "$invoices.invoice_total_amount" },
+                        open_invoices: { $size: "$open_invoices" },
+                        open_invoices_total: { $sum: "$open_invoices.invoice_total_amount" },
+                    }
+                },
+                { $sort: { vendor_created_at: -1 } },
+            ]);
             if (getdata) {
                 res.send({ status: true, message: "Vendor data", data: getdata });
             } else {
@@ -272,7 +353,88 @@ module.exports.getVendorForTable = async function (req, res) {
         try {
             var requestObject = req.body;
             var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
-            var getdata = await vendorConnection.find({ is_delete: requestObject.is_delete }).sort({ vendor_created_at: -1 });
+            var getdata = await vendorConnection.aggregate([
+                { $match: { is_delete: requestObject.is_delete } },
+                {
+                    $lookup: {
+                        from: collectionConstant.AP_INVOICE,
+                        let: { id: "$_id" },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $and: [
+                                            { $eq: ["$vendor", "$$id"] },
+                                            { $eq: ["$is_delete", 0] },
+                                        ]
+                                    }
+                                },
+                            },
+                        ],
+                        as: "invoices"
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.AP_INVOICE,
+                        let: { id: "$_id" },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $and: [
+                                            { $eq: ["$vendor", "$$id"] },
+                                            { $eq: ["$is_delete", 0] },
+                                            { $ne: ["$status", 'Paid'] },
+                                        ]
+                                    }
+                                },
+                            },
+                        ],
+                        as: "open_invoices"
+                    },
+                },
+                {
+                    $project: {
+                        vendor_name: 1,
+                        vendor_phone: 1,
+                        vendor_email: 1,
+                        vendor_image: 1,
+                        vendor_cost_cost_id: 1,
+                        vendor_address: 1,
+                        vendor_address2: 1,
+                        vendor_city: 1,
+                        vendor_state: 1,
+                        vendor_zipcode: 1,
+                        vendor_country: 1,
+                        vendor_terms: 1,
+                        vendor_status: 1,
+                        vendor_description: 1,
+                        vendor_attachment: 1,
+
+                        vendor_created_at: 1,
+                        vendor_created_by: 1,
+                        vendor_updated_at: 1,
+                        vendor_updated_by: 1,
+                        is_delete: 1,
+
+                        invitation_sent: 1,
+                        is_password_temp: 1,
+                        password: 1,
+                        vendor_id: 1,
+                        customer_id: 1,
+                        vendor_type_id: 1,
+                        gl_account: 1,
+                        isVendorfromQBO: 1,
+                        is_quickbooks: 1,
+                        invoices: { $size: "$invoices" },
+                        invoices_total: { $sum: "$invoices.invoice_total_amount" },
+                        open_invoices: { $size: "$open_invoices" },
+                        open_invoices_total: { $sum: "$open_invoices.invoice_total_amount" },
+                    }
+                },
+                { $sort: { vendor_created_at: -1 } },
+            ]);
             if (getdata) {
                 res.send(getdata);
             } else {

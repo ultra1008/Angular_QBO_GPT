@@ -196,7 +196,8 @@
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
                                         (click)="editVendor(row)">
-                                        <span class="truncate-text"> <span class="mobile-label">Invoice:</span></span>
+                                        <span class="truncate-text"> <span class="mobile-label">Invoice:</span>
+                                            {{row.invoices}}</span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="open_invoice">
@@ -206,7 +207,8 @@
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
                                         (click)="editVendor(row)">
                                         <span class="truncate-text"> <span class="mobile-label">Open
-                                                Invoice:</span></span>
+                                                Invoice:</span>
+                                            {{row.open_invoices}}</span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="amount_paid">
@@ -217,7 +219,8 @@
                                     <mat-cell class="tbl-col-width-per-max" *matCellDef="let row"
                                         (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">
                                         <span class="truncate-text"> <span class="mobile-label">Amount
-                                                Paid:</span></span>
+                                                Paid:</span>
+                                            {{formateAmount(row.invoices_total)}}</span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="amount_open">
@@ -228,14 +231,16 @@
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
                                         (click)="editVendor(row)">
                                         <span class="truncate-text"> <span class="mobile-label">Amount
-                                                Open:</span></span>
+                                                Open:</span>
+                                            {{formateAmount(row.open_invoices_total)}}</span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_phone">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
                                         [ngClass]="'tbl-col-width-per-mid'">{{'VENDOR.TABLE.PHONE' |
                                         translate}}</mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-mid" (click)="editVendor(row)">
+                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
+                                        class="tbl-col-width-per-mid" (click)="editVendor(row)">
                                         <span class="mobile-label">Phone:</span>
                                         {{row.vendor_phone | phoneFormatPipe}}
                                     </mat-cell>

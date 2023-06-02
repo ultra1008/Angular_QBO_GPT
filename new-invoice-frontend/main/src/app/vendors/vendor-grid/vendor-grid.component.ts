@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { VendorsService } from '../vendors.service';
-import { timeDateToepoch } from 'src/consts/utils';
+import { formateAmount, timeDateToepoch } from 'src/consts/utils';
 import { VendorReportComponent } from '../vendor-report/vendor-report.component';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { FormateDateStringPipe } from 'src/app/users/users-filter.pipe';
@@ -37,7 +37,7 @@ export class VendorGridComponent
   vendor_status: any;
   termsList: Array<TermModel> = [];
 
-  constructor(
+  constructor (
     public httpClient: HttpClient,
     private httpCall: HttpCall,
     public dialog: MatDialog,
@@ -128,9 +128,6 @@ export class VendorGridComponent
   }
 
   formateAmount(price: any) {
-    return Number(price).toLocaleString('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    });
+    return formateAmount(price);
   }
 }

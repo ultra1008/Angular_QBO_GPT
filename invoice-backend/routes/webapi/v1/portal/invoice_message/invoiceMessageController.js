@@ -76,7 +76,7 @@ module.exports.getInvoiceMessageForTable = async function (req, res) {
                 },
                 {
                     $lookup: {
-                        from: collectionConstant.INVOICE,
+                        from: collectionConstant.AP_INVOICE,
                         let: { id: "$invoice_id" },
                         pipeline: [
                             {
@@ -159,7 +159,7 @@ module.exports.getOneInvoiceMessage = async function (req, res) {
                 { $match: { _id: ObjectID(requestObject._id) } },
                 {
                     $lookup: {
-                        from: collectionConstant.INVOICE,
+                        from: collectionConstant.AP_INVOICE,
                         let: { id: "$invoice_id" },
                         pipeline: [
                             {
