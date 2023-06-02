@@ -257,12 +257,34 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
       } else {
         formValues.due_date_epoch = Math.round(formValues.due_date_epoch.valueOf() / 1000);
       }
-      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_INVOICE, formValues);
-      this.uiSpinner.spin$.next(false);
-      if (data.status) {
-        showNotification(this.snackBar, data.message, 'success');
+      if (formValues.status == 'Rejected') {
+        const dialogRef = this.dialog.open(InvoiceRejectedReasonComponent, {
+          width: '28%',
+          data: {},
+        });
+        this.subs.sink = dialogRef.afterClosed().subscribe(async (result: any) => {
+          if (result) {
+            if (result.status) {
+              formValues.reject_reason = result.reject_reason;
+              const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_INVOICE, formValues);
+              this.uiSpinner.spin$.next(false);
+              if (data.status) {
+                showNotification(this.snackBar, data.message, 'success');
+                this.rejectReason = result.reject_reason;
+              } else {
+                showNotification(this.snackBar, data.message, 'error');
+              }
+            }
+          }
+        });
       } else {
-        showNotification(this.snackBar, data.message, 'error');
+        const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_INVOICE, formValues);
+        this.uiSpinner.spin$.next(false);
+        if (data.status) {
+          showNotification(this.snackBar, data.message, 'success');
+        } else {
+          showNotification(this.snackBar, data.message, 'error');
+        }
       }
     }
   }

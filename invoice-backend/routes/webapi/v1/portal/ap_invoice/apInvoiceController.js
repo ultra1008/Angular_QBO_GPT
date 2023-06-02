@@ -398,7 +398,11 @@ module.exports.saveAPInvoice = async function (req, res) {
                     findKeys[property] = 1;
                 }
                 var get_data = await apInvoiceConnection.findOne({ _id: ObjectID(id) }, findKeys);
-
+                if (newReqObj.status) {
+                    if (newReqObj.status != 'Rejected') {
+                        newReqObj.reject_reason = '';
+                    }
+                }
                 let update_ap_invoice = await apInvoiceConnection.updateOne({ _id: ObjectID(id) }, newReqObj);
                 if (update_ap_invoice) {
                     delete requestObject.updated_by;
