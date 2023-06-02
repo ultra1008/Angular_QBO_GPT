@@ -91,6 +91,7 @@
                             </ul>
                         </div>
                     </div>
+
                     <div class="body overflow-auto">
                         <div class="row">
                             <div class="test col-xs-12 col-sm-6 col-md-4 col-xl-2"
@@ -101,17 +102,18 @@
                                             <div class="profile-header">
                                                 <div class="col-12 m-1 d-flex">
                                                     <div class="col-4">
-                                                        <img src={{user.userpicture}} class="user-img1 img-bg" width="80px" height="80px" alt="">
+                                                        <img src={{user.userpicture}} class="user-img1 img-bg"
+                                                            width="80px" height="80px" alt="">
                                                     </div>
                                                     <div class="mt-4 m-1 col-8">
-                                                        <div *ngIf="isDelete === 0" 
+                                                        <div *ngIf="isDelete === 0"
                                                             class="name-cente font-white txt-alg">
                                                             <div>
                                                                 <span class="badge font-white">
                                                                     {{user.role_name}}</span>
                                                             </div>
                                                         </div>
-                                                        <div class="m-1 font-white font-s txt-alg" >
+                                                        <div class="m-1 font-white font-s txt-alg">
                                                             <b> {{user.userfullname}}</b>
                                                         </div>
                                                     </div>
@@ -159,6 +161,7 @@
                     <div *ngIf="cardLoading" class="tbl-spinner">
                         <app-loading></app-loading>
                     </div>
+
                 </div>
             </div>
         </div>
