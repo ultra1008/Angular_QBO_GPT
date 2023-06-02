@@ -10,6 +10,7 @@ import { TermModel, CountryModel } from 'src/app/vendors/vendor.model';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { showNotification, swalWithBootstrapButtons, } from 'src/consts/utils';
 import { ClientService } from '../client.service';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
 
 @Component({
   selector: 'app-client-form',
@@ -33,6 +34,7 @@ export class ClientFormComponent {
   submitting_text: string = '';
   titleMessage: string = '';
   show: boolean = false;
+  role_permission: any;
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -46,6 +48,7 @@ export class ClientFormComponent {
     public commonService: CommonService
   ) {
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
 
     this.vendorForm = this.fb.group({
       client_name: ['', [Validators.required]],
