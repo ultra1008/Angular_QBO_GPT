@@ -65,6 +65,7 @@ export class UsersListingComponent
   userSelectForm?: any;
   selectedValue!: string;
   exitData!: any[];
+  role_permission: any;
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   @ViewChild('filter', { static: true }) filter!: ElementRef;
@@ -85,6 +86,7 @@ export class UsersListingComponent
     public uiSpinner: UiSpinnerService
   ) {
     super();
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
   }
 
   ngOnInit() {

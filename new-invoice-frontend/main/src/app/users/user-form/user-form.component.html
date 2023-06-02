@@ -316,8 +316,9 @@
                                                             <button class="btn-space" matStepperNext type="button"
                                                                  mat-raised-button
                                                                  color="warn">{{'COMMON.ACTIONS.NEXT'| translate}}</button>
-                                                            <button *ngIf="id !== null" mat-raised-button
-                                                                 color="primary"
+                                                            <button
+                                                                 *ngIf="id !== null && role_permission.role_permission.users.Edit"
+                                                                 mat-raised-button color="primary"
                                                                  (click)="savePersonalInfo()">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                        </div>
                                                   </div>
@@ -416,8 +417,9 @@
                                                                  <button class="btn-space" matStepperNext type="button"
                                                                       mat-raised-button
                                                                       color="warn">{{'COMMON.ACTIONS.NEXT'| translate}}</button>
-                                                                 <button *ngIf="id !== null" mat-raised-button
-                                                                      color="primary"
+                                                                 <button
+                                                                      *ngIf="id !== null && role_permission.role_permission.users.Edit "
+                                                                      mat-raised-button color="primary"
                                                                       (click)="saveContactInfo()">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                             </div>
                                                        </div>
@@ -640,11 +642,14 @@
                                                                  <button class="btn-space " type="button" matStepperNext
                                                                       mat-raised-button color="warn"
                                                                       *ngIf="id !== null">{{'COMMON.ACTIONS.NEXT'| translate}}</button>
-                                                                 <button *ngIf="id === null" class="btn-space"
-                                                                      mat-raised-button (click)="savedata()"
+                                                                 <button
+                                                                      *ngIf="id === null && role_permission.role_permission.users.Edit"
+                                                                      class="btn-space" mat-raised-button
+                                                                      (click)="savedata()"
                                                                       color="primary">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
-                                                                 <button *ngIf="id !== null" mat-raised-button
-                                                                      color="primary"
+                                                                 <button
+                                                                      *ngIf="id !== null && role_permission.role_permission.users.Edit"
+                                                                      mat-raised-button color="primary"
                                                                       (click)="saveEmployeeInfo()">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                             </div>
                                                        </div>

@@ -83,9 +83,8 @@ export class MainComponent {
     on_hold: 0,
     duplicates: 0,
   };
-  dashboaedInvoceList: any = [];
 
-  constructor (private commonService: CommonService, private router: Router,) {
+  constructor(private commonService: CommonService, private router: Router,) {
     this.getDashboardInvoice();
     this.monthlyInvoiceChart();
     this.monthlyHistoryChart();
@@ -315,10 +314,14 @@ export class MainComponent {
   }
   async getInvoiceForTable() {
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.DASHBOARD_INVOICE_FOR_TABLE, { is_delete: 0 });
-    if (data.status) {
-      this.dashboaedInvoceList = data.data;
-      console.log("this.dashboaedInvoceList", this.dashboaedInvoceList);
-    }
+    this.pendingInvoices = data.pending_invoices;
+    this.rejectedInvoices = data.cancelled_invoices;
+    this.processedInvoices = data.process_invoices;
+    /* if (data.status) {
+     this.pendingInvoices = data.data.pending_invoices;
+     this.rejectedInvoices = data.data.cancelled_invoices;
+     this.processedInvoices = data.data.process_invoices;
+   } */
 
   }
 }
