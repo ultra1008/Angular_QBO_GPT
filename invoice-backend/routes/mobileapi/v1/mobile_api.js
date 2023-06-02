@@ -63,4 +63,15 @@ router.post('/mobile/v1/alert/save', common.checkTokenExistOrNot, alertControlle
 router.post('/mobile/v1/alert/update', common.checkTokenExistOrNot, alertController.updateAlert);
 router.post('/mobile/v1/alert/updateall', common.checkTokenExistOrNot, alertController.updateAllAlert);
 
+// AP Invoice
+let apInvoiceController = require('./ap_invoice/apInvoiceController');
+let apInvoiceValidation = require('./ap_invoice/apInvoiceValidation');
+router.get('/mobile/v1/apinvoice/get', common.checkTokenExistOrNot, apInvoiceController.getAPInvoice);
+router.post('/mobile/v1/apinvoice/getone', common.checkTokenExistOrNot, apInvoiceValidation.getOneAPInvoice, apInvoiceController.getOneAPInvoice);
+router.post('/mobile/v1/apinvoice/save', common.checkTokenExistOrNot, apInvoiceController.saveAPInvoice);
+router.post('/mobile/v1/apinvoice/delete', common.checkTokenExistOrNot, apInvoiceValidation.deleteAPInvoice, apInvoiceController.deleteAPInvoice);
+router.post('/mobile/v1/apinvoice/savenote', common.checkTokenExistOrNot, apInvoiceValidation.saveAPInvoiceNote, apInvoiceController.saveAPInvoiceNote);
+router.post('/mobile/v1/apinvoice/deletenote', common.checkTokenExistOrNot, apInvoiceValidation.deleteAPInvoiceNote, apInvoiceController.deleteAPInvoiceNote);
+router.post('/mobile/v1/apinvoice/gethistory', common.checkTokenExistOrNot, apInvoiceController.getAPInvoiceHistory);
+
 module.exports = router;
