@@ -36,6 +36,8 @@ import { MatSelectFilterModule } from 'mat-select-filter';
 import { TranslateModule } from '@ngx-translate/core';
 import { VendorGridComponent } from './vendor-grid/vendor-grid.component';
 import { VendorListFilterPipe, VendorListFilterStatusPipe } from './vendors-filter.pipe';
+import { ImportVendorComponent } from './import-vendor/import-vendor.component';
+import { VendorExistListComponent } from './vendor-exist-list/vendor-exist-list.component';
 @NgModule({
   declarations: [
     VendorsListComponent,
@@ -44,7 +46,9 @@ import { VendorListFilterPipe, VendorListFilterStatusPipe } from './vendors-filt
     VendorReportComponent,
     VendorGridComponent,
     VendorListFilterStatusPipe,
-    VendorListFilterPipe
+    VendorListFilterPipe,
+    ImportVendorComponent,
+    VendorExistListComponent
   ],
   providers: [VendorsService],
   imports: [
