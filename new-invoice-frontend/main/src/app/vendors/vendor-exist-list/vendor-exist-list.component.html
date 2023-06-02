@@ -40,9 +40,10 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let data of exitData" [ngClass]="data.valid ? 'data-sucess' : 'data-error'">
+                    {{data.vendor_name}}
                     <td [ngClass]="data.valid ? 'data-sucess' : 'data-error'">{{data.message}}</td>
-                    <td [ngClass]="data.valid ? 'data-sucess' : 'data-error'">{{data.data.userfirstname}}</td>
-                    <td [ngClass]="data.valid ? 'data-sucess' : 'data-error'">{{data.data.useremail}}</td>
+                    <td [ngClass]="data.valid ? 'data-sucess' : 'data-error'">{{data.data.vendor_name}}</td>
+                    <td [ngClass]="data.valid ? 'data-sucess' : 'data-error'">{{data.data.vendor_email}}</td>
                   </tr>
                 </tbody>
               </table>

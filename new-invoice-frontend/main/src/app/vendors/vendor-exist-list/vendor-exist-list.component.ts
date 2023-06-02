@@ -68,11 +68,7 @@ export class VendorExistListComponent extends UnsubscribeOnDestroyAdapter
 
   async import() {
     this.uiSpinner.spin$.next(true);
-    var userData = [];
-    for (let i = 0; i < this.exitData.length; i++) {
-      userData.push(this.exitData[i].data);
-    }
-    this.data_import = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.IMPORT_VENDOR, { data: userData });
+    this.data_import = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.IMPORT_VENDOR, this.exitData);
 
     this.uiSpinner.spin$.next(false);
     if (this.data_import.status) {
