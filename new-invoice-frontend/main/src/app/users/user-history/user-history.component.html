@@ -30,7 +30,7 @@
                               [ngStyle]="setHeightStyles()">
                               <ul class="list-unstyled user-progress list-unstyled-border list-unstyled-noborder">
                                    <app-history *ngFor="let history of userHistory; let i = index" [history]="history"
-                                        [title]="userHistory[i].user.user_name" class="full-width"></app-history>
+                                        [title]="userHistory[i].user.userfullname" class="full-width"></app-history>
                               </ul>
                               <div *ngIf="historyLoading" class="tbl-spinner">
                                    <app-loading></app-loading>
