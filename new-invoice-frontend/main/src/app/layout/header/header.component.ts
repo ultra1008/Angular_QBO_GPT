@@ -19,13 +19,19 @@ import { httproutes, httpversion } from 'src/consts/httproutes';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { Observable, map, startWith } from 'rxjs';
 import { Invoice } from 'src/app/invoice/invoice.model';
+import { notificationRoutes } from 'src/consts/utils';
+import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 
 interface Notifications {
-  message: string;
-  time: string;
-  icon: string;
-  color: string;
-  status: string;
+  _id: string;
+  notification_title: string;
+  notification_description: string;
+  module_name: string;
+  module_route: any;
+  is_complete: boolean;
+  is_seen: boolean;
+  created_at: number;
+  tab_index: number;
 }
 
 @Component({
@@ -34,6 +40,8 @@ interface Notifications {
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnInit, AfterViewInit {
+  @ViewChild("menuTrigger") trigger: MatMenuTrigger | any;
+
   public config!: InConfiguration;
   isNavbarCollapsed = true;
   isOpenSidebar?: boolean;
@@ -49,61 +57,14 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
   companyList: any = [];
   isLoading = true;
   constructor (@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, public elementRef: ElementRef,
-    private rightSidebarService: RightSidebarService, private configService: ConfigService, private authService: AuthService,
+    public uiSpinner: UiSpinnerService, private configService: ConfigService, private authService: AuthService,
     private router: Router, public translate: TranslateService, public dialog: MatDialog, private commonService: CommonService,) {
     super();
   }
-  notifications: Notifications[] = [
-    {
-      message: 'Please check your mail',
-      time: '14 mins ago',
-      icon: 'mail',
-      color: 'nfc-green',
-      status: 'msg-unread',
-    },
-    {
-      message: 'New Patient Added..',
-      time: '22 mins ago',
-      icon: 'person_add',
-      color: 'nfc-blue',
-      status: 'msg-read',
-    },
-    {
-      message: 'Your leave is approved!! ',
-      time: '3 hours ago',
-      icon: 'event_available',
-      color: 'nfc-orange',
-      status: 'msg-read',
-    },
-    {
-      message: 'Lets break for lunch...',
-      time: '5 hours ago',
-      icon: 'lunch_dining',
-      color: 'nfc-blue',
-      status: 'msg-read',
-    },
-    {
-      message: 'Patient report generated',
-      time: '14 mins ago',
-      icon: 'description',
-      color: 'nfc-green',
-      status: 'msg-read',
-    },
-    {
-      message: 'Please check your mail',
-      time: '22 mins ago',
-      icon: 'mail',
-      color: 'nfc-red',
-      status: 'msg-read',
-    },
-    {
-      message: 'Salary credited...',
-      time: '3 hours ago',
-      icon: 'paid',
-      color: 'nfc-purple',
-      status: 'msg-read',
-    },
-  ];
+  notificationList: Notifications[] = [];
+  notificationCount = 0;
+  notificationLoading = true;
+  start = 0;
   myControl = new UntypedFormControl();
   invoiceList: Array<Invoice> = [];
   invoiceLoader = true;
@@ -126,13 +87,85 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
     tmp_locallanguage = tmp_locallanguage == '' || tmp_locallanguage == undefined || tmp_locallanguage == null ? configData.INITIALLANGUAGE : tmp_locallanguage;
     this.translate.use(tmp_locallanguage);
     this.translate.stream(['']).subscribe((textarray) => { });
-    this.getNotificationCount();
+    this.getNotification();
+    this.getInvoiceMessageCount();
   }
 
-  async getNotificationCount() {
+  async getNotification() {
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ALL_ALERTS, { start: this.start });
+    this.notificationLoading = false;
+    if (data.status) {
+      if (this.start == 0) {
+        this.notificationList = data.data;
+      } else {
+        this.notificationList = this.notificationList.concat(data.data);
+      }
+      this.notificationCount = data.unseen_count;
+    }
+  }
+
+  setHeightStyles() {
+    const styles = {
+      height: '350px',
+      "overflow-y": "scroll",
+    };
+    return styles;
+  }
+
+  onScroll() {
+    this.start++;
+    this.getNotification();
+  }
+
+  async openNotificationPage(notification: Notifications) {
+    this.uiSpinner.spin$.next(true);
+    if (!notification.is_seen) {
+      await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.UPDATE_ALERT, { _id: notification._id, is_seen: true });
+      const foundIndex = this.notificationList.findIndex((element) => element._id === notification._id);
+      if (foundIndex != null) {
+        this.notificationList[foundIndex].is_seen = true;
+        this.notificationCount--;
+      }
+    }
+    const found = notificationRoutes().find((element: any) => element.name == notification.module_name);
+    this.uiSpinner.spin$.next(false);
+    if (found) {
+      if (notification.tab_index) {
+        if (notification.tab_index != -1) {
+          this.router
+            .navigate([found.url], {
+              queryParams: notification.module_route,
+              state: { value: notification.tab_index },
+            })
+            .then();
+        } else {
+          this.router
+            .navigate([found.url], { queryParams: notification.module_route })
+            .then();
+        }
+      } else {
+        this.router
+          .navigate([found.url], { queryParams: notification.module_route })
+          .then();
+      }
+    }
+    this.trigger.closeMenu();
+  }
+
+  async getInvoiceMessageCount() {
     const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_INVOICE_MESSAGE_COUNT);
     if (data.status) {
       this.unseenCount = data.unseen;
+    }
+  }
+
+  async markAllRead() {
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.UPDATE_ALL_ALERTS, { is_seen: true });
+    if (data.status) {
+      this.notificationCount = 0;
+      for (let i = 0; i < this.notificationList.length; i++) {
+        this.notificationList[i].is_seen = true;
+      }
     }
   }
 
@@ -397,7 +430,6 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
       if (data.status) {
         this.invoiceList = data.data;
         this.invoiceLoader = false;
-        console.log("data: ", data);
       }
     } else {
       this.invoiceLoader = false;

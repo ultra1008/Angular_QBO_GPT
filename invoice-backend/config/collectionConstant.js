@@ -114,4 +114,5 @@ module.exports = {
     AP_QUOUTE: 'ap_quotes',
     AP_PACKING_SLIP: 'ap_packing_slips',
     AP_RECEIVING_SLIP: 'ap_receiving_slips',
+    AP_ALERTS: "ap_alerts",
 };

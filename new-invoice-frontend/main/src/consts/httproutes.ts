@@ -265,5 +265,10 @@ export enum httproutes {
   GET_INVOICE_FOR_REPORT = 'getapinvoiceforreports',
 
   // Header
-  GET_HEADER_INVOICE_SERACH = 'getheaderapinvoicesearch'
+  GET_HEADER_INVOICE_SERACH = 'getheaderapinvoicesearch',
+
+  // Alerts
+  GET_ALL_ALERTS = 'getallinvoicealert',
+  UPDATE_ALL_ALERTS = 'updateallinvoicealert',
+  UPDATE_ALERT = 'updateinvoicealert',
 }

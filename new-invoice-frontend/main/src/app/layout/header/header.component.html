@@ -85,59 +85,53 @@
         </li>
         <!-- #END# Language Button -->
         <li matTooltip="{{'COMMON.TOOL_TIP.INVOICEMSG' |  translate}}">
-          <!-- <mat-icon matBadge="15" matBadgeColor="warn">message</mat-icon>
-          <span class="cdk-visually-hidden">
-            Example with a home icon with overlaid badge showing the number 15
-          </span> -->
           <button mat-button class="nav-notification-icons" (click)="viewMessage()">
-            <i class="material-icons-outlined icon-color">
-              message
-            </i>
+            <mat-icon matBadge="{{unseenCount}}" matBadgeColor="warn">message</mat-icon>
           </button>
-          <div class="unseen-count" *ngIf="unseenCount !== 0"><span class="count">{{unseenCount}}</span></div>
         </li>
         <!-- #START# Notifications-->
         <li matTooltip="{{'COMMON.TOOL_TIP.NOTIFICATION' |  translate}}">
           <button mat-button [matMenuTriggerFor]="notificationMenu" class="nav-notification-icons">
-            <i class="material-icons-outlined icon-color">
+            <mat-icon matBadge="{{notificationCount}}" matBadgeColor="warn"
+              class="material-icons-outlined icon-color">notifications_active</mat-icon>
+            <!-- <i class="material-icons-outlined icon-color">
               notifications_active
-            </i>
+            </i> -->
           </button>
 
-          <mat-menu #notificationMenu="matMenu" class="nfc-menu">
+          <mat-menu #notificationMenu="matMenu" class="nfc-menu notification-div">
             <div class="nfc-header">
               <h5 class="mb-0">Notitications</h5>
-              <a class="nfc-mark-as-read">Mark all as read</a>
+              <a class="nfc-mark-as-read" (click)="markAllRead()">Mark all as read</a>
             </div>
-            <div class="nfc-dropdown">
-              <ng-scrollbar style="height: 350px" visibility="hover">
+            <div class="nfc-dropdown" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50"
+              (scrolled)="onScroll()" [scrollWindow]="false" [ngStyle]="setHeightStyles()">
+              <div class="d-flex align-items-center justify-content-center">
+                <app-loading *ngIf="notificationLoading"></app-loading>
+              </div>
+              <div *ngIf="!notificationLoading">
+                <div *ngIf="notificationList.length === 0" class="no-search-data text-center">
+                  No Notification Available
+                </div>
                 <div class="noti-list header-menu">
                   <div class="menu">
                     <div>
-                      <button mat-menu-item *ngFor="let notification of notifications" onClick="return false;"
-                        [ngClass]="[notification.status]">
-                        <span class="table-img msg-user ">
-                          <i class="material-icons-two-tone nfc-type-icon"
-                            [ngClass]="[notification.color]">{{notification.icon}}</i>
-                        </span>
+                      <button mat-menu-item *ngFor="let notification of notificationList"
+                        (click)="openNotificationPage(notification)" class="notification-button"
+                        [ngClass]="!notification.is_seen ? 'unseen-msg' : ''">
                         <span class="menu-info">
-                          <span class="menu-title">{{notification.message}}</span>
+                          <span class="menu-title fw-bold">{{notification.notification_title}}</span>
+                          <span class="menu-title mt-2">{{notification.notification_description}}</span>
                           <span class="menu-desc mt-2">
-                            <i class="material-icons">access_time</i> {{notification.time}}
+                            <i class="material-icons">access_time</i>
+                            {{(notification.created_at * 1000) | date: 'dd MMM, yyyy hh:mm a'}}
                           </span>
-                        </span>
-                        <span class="nfc-close">
-                          <app-feather-icons [icon]="'x'" [class]="'user-menu-icons'"></app-feather-icons>
                         </span>
                       </button>
                     </div>
                   </div>
                 </div>
-              </ng-scrollbar>
-            </div>
-            <div class="nfc-footer">
-              <a class="nfc-read-all">Read
-                All Notifications</a>
+              </div>
             </div>
           </mat-menu>
         </li>

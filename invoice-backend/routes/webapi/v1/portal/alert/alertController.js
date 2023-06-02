@@ -2,7 +2,7 @@ var ObjectID = require('mongodb').ObjectID;
 let collectionConstant = require('../../../../../config/collectionConstant');
 let superadminCollection = require('../../../../../config/superadminCollection');
 var alertSchema = require('../../../../../model/alerts');
-var invoiceSchema = require('../../../../../model/invoice');
+var apInvoiceSchema = require('../../../../../model/ap_invoices');
 var tenantSchema = require('../../../../../model/tenants');
 var ObjectID = require('mongodb').ObjectID;
 let common = require('../../../../../controller/common/common');
@@ -25,8 +25,8 @@ module.exports.getAllAlert = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-            let alertConnection = connection_db_api.model(collectionConstant.INVOICE_ALERTS, alertSchema);
-            let invoiceConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
+            let alertConnection = connection_db_api.model(collectionConstant.AP_ALERTS, alertSchema);
+            let invoiceConnection = connection_db_api.model(collectionConstant.AP_INVOICE, apInvoiceSchema);
 
             let perpage = 10;
             let start = requestObject.start == 0 ? 0 : perpage * requestObject.start;
@@ -93,7 +93,7 @@ module.exports.getUnseenCount = async function (req, res) {
         });
 
         setInterval(async function () {
-            let alertConnection = connection_db_api.model(collectionConstant.INVOICE_ALERTS, alertSchema);
+            let alertConnection = connection_db_api.model(collectionConstant.AP_ALERTS, alertSchema);
             let count_query = {
                 user_id: ObjectID(req.params.userid),
                 is_delete: 0,
@@ -164,7 +164,7 @@ module.exports.getAlertDatatables = async function (req, res) {
                 { $sort: sort },
                 { $limit: perpage + start },
                 { $skip: start }];
-            let alertConnection = connection_db_api.model(collectionConstant.INVOICE_ALERTS, alertSchema);
+            let alertConnection = connection_db_api.model(collectionConstant.AP_ALERTS, alertSchema);
             let count = 0;
             count = await alertConnection.countDocuments(match);
             let alertData = await alertConnection.aggregate(agg_query).collation({ locale: "en_US" });
@@ -186,7 +186,7 @@ module.exports.getAlertDatatables = async function (req, res) {
 };
 
 module.exports.saveAlert = async function (requestObject, connection_db_api) {
-    let alertConnection = connection_db_api.model(collectionConstant.INVOICE_ALERTS, alertSchema);
+    let alertConnection = connection_db_api.model(collectionConstant.AP_ALERTS, alertSchema);
     requestObject.created_at = Math.round(new Date().getTime() / 1000);
     requestObject.updated_at = Math.round(new Date().getTime() / 1000);
     let add_alert = new alertConnection(requestObject);
@@ -202,7 +202,7 @@ module.exports.updateAlert = async function (req, res) {
             var requestObject = req.body;
             let _id = requestObject._id;
             delete requestObject._id;
-            let alertConnection = connection_db_api.model(collectionConstant.INVOICE_ALERTS, alertSchema);
+            let alertConnection = connection_db_api.model(collectionConstant.AP_ALERTS, alertSchema);
             let updateObject = await alertConnection.updateOne({ _id: ObjectID(_id) }, requestObject);
             if (updateObject) {
                 let isDelete = updateObject.nModified;
@@ -232,7 +232,7 @@ module.exports.updateAllAlert = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-            let alertConnection = connection_db_api.model(collectionConstant.INVOICE_ALERTS, alertSchema);
+            let alertConnection = connection_db_api.model(collectionConstant.AP_ALERTS, alertSchema);
             let updateObject = await alertConnection.updateMany({ user_id: ObjectID(decodedToken.UserData._id) }, requestObject);
             if (updateObject) {
                 let isDelete = updateObject.nModified;
@@ -270,7 +270,7 @@ module.exports.getAlertExcelReport = async function (req, res) {
             let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
             let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
 
-            let alertConnection = connection_db_api.model(collectionConstant.INVOICE_ALERTS, alertSchema);
+            let alertConnection = connection_db_api.model(collectionConstant.AP_ALERTS, alertSchema);
 
             if (requestObject.seen && requestObject.seen.length != 0) {
                 let data_Query = [];

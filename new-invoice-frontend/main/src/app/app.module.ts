@@ -41,6 +41,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NgxEmojiPickerModule } from 'ngx-emoji-picker';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatBadgeModule } from '@angular/material/badge';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @NgModule({
   declarations: [
@@ -72,6 +74,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatChipsModule,
     MatDialogModule,
     MatSnackBarModule,
+    MatBadgeModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -81,6 +84,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     }),
     NgxEmojiPickerModule.forRoot(),
     MatAutocompleteModule,
+    InfiniteScrollModule,
   ],
   providers: [
     // { provide: LocationStrategy, useClass: HashLocationStrategy },

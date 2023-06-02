@@ -14,9 +14,9 @@ import { SwitchCompanyComponent } from './header/switch-company/switch-company.c
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { FormsRoutingModule } from '../forms/forms-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ComponentsModule } from '../shared/components/components.module';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @NgModule({
   imports: [
@@ -31,11 +31,11 @@ import { ComponentsModule } from '../shared/components/components.module';
     TranslateModule,
     MatDialogModule,
     MatSnackBarModule,
-    FormsRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
     ComponentsModule,
+    InfiniteScrollModule,
   ],
   declarations: [
     LanguageComponent,

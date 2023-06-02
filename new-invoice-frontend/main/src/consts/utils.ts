@@ -2,6 +2,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NgxGalleryAnimation, NgxGalleryImageSize } from 'ngx-gallery-9';
 import Swal from 'sweetalert2';
+import { WEB_ROUTES } from './routes';
 
 export const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
@@ -359,3 +360,12 @@ export function formateAmount(price: any) {
     currency: 'USD',
   });
 }
+
+export function notificationRoutes() {
+  return [
+    {
+      name: 'Invoice',
+      url: WEB_ROUTES.INVOICE_DETAILS,
+    },
+  ];
+} 
