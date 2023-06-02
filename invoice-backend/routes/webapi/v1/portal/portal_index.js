@@ -523,6 +523,8 @@ router.post('/webapi/v1/portal/saveapinvoicenote', common.checkTokenExistOrNot, 
 router.post('/webapi/v1/portal/deleteapinvoicenote', common.checkTokenExistOrNot, apInvoiceValidation.deleteAPInvoiceNote, apInvoiceController.deleteAPInvoiceNote);
 router.post('/webapi/v1/portal/getapinvoicehistory', common.checkTokenExistOrNot, apInvoiceController.getAPInvoiceHistory);
 router.post('/webapi/v1/portal/getapinvoiceforreports', common.checkTokenExistOrNot, apInvoiceController.getAPInvoiceForReports);
+router.post('/webapi/v1/portal/getheaderapinvoicesearch', common.checkTokenExistOrNot, apInvoiceValidation.getHeaderAPInvoiceSerach, apInvoiceController.getHeaderAPInvoiceSerach);
+
 
 let apDocumentProcessController = require('./ap_document_process/apDocumentProcessController');
 let apDocumentProcessValidation = require('./ap_document_process/apDocumentProcessValidation');

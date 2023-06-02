@@ -92,6 +92,7 @@
                                    </ul>
                               </div>
                          </div>
+
                          <div class="body overflow-auto">
                               <div class="row">
                                    <div class="test col-xs-12 col-sm-6 col-md-4 col-xl-3"
@@ -107,13 +108,7 @@
                                                                            height="80px " alt="">
                                                                  </div>
                                                                  <div class="mt-4 m-1 col-8">
-                                                                      <div *ngIf="isDelete === 0"
-                                                                           class="name-cente font-white txt-alg">
-                                                                           <div>
-                                                                                <span class="font-white">
-                                                                                     {{vendor.vendor_id}}</span>
-                                                                           </div>
-                                                                      </div>
+
                                                                       <div class="m-1 font-white font-s txt-alg">
                                                                            <b> {{vendor.vendor_name}}</b>
                                                                       </div>
@@ -123,13 +118,15 @@
                                                        <div class="m-1 text-a">
                                                             <div class="d-flex font-s">
                                                                  <i class="material-icons my-auto font-s">email</i>
-                                                                 <span class="font-sp"> {{vendor.vendor_email}}</span>
+                                                                 <span class="font-sp">
+                                                                      {{vendor.vendor_email}}</span>
                                                             </div>
                                                        </div>
                                                        <div class="m-1 text-a" *ngIf="vendor.userphone!=0">
                                                             <div class="d-flex font-s">
                                                                  <i class="material-icons my-auto font-s">phone</i>
-                                                                 <span class="font-sp"> {{vendor.vendor_phone}}</span>
+                                                                 <span class="font-sp">
+                                                                      {{vendor.vendor_phone}}</span>
                                                             </div>
                                                        </div>
                                                        <div class="col-12 d-flex">
@@ -165,12 +162,27 @@
                                                   </div>
                                              </div>
                                         </div>
-                                       
+
                                    </div>
                               </div>
                          </div>
                          <div *ngIf="cardLoading" class="tbl-spinner">
                               <app-loading></app-loading>
+                         </div>
+
+                         <div *ngIf="vendor_status === '2' && vendorInactiveList?.length === 0">
+                              <div>
+                                   <h1 class="font-white massge-sttus">
+                                        {{'VENDOR.VIEW.ACTIVE_STATUS_MASSAGE' | translate}}
+                                   </h1>
+                              </div>
+                         </div>
+                         <div *ngIf="vendor_status === '1' && vendorActiveList?.length === 0">
+                              <div>
+                                   <h1 class="font-white massge-sttus">
+                                        {{'VENDOR.VIEW.INACTIVE_STATUS_MASSAGE' | translate}}
+                                   </h1>
+                              </div>
                          </div>
                     </div>
                </div>

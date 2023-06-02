@@ -195,9 +195,8 @@
                                                        <button class="btn-space" type="button" mat-raised-button
                                                             color="warn" (click)="updateStatus('Rejected')"
                                                             *ngIf="invoiceForm.get('status')?.value !== 'Rejected'">{{'Reject'| translate}}</button>
-                                                       <div *ngIf="invoiceForm.get('status')?.value === 'Rejected'"
-                                                            class="m-l-10 my-auto"
-                                                            matTooltip="{{rejectReason | translate}}">
+                                                       <div *ngIf="invoiceForm.get('status')?.value === 'Rejected' && rejectReason !== ''"
+                                                            class="m-l-10 my-auto" [matTooltip]="rejectReason">
                                                             <mat-icon>info</mat-icon>
                                                        </div>
                                                   </div>

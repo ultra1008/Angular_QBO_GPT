@@ -72,10 +72,25 @@ const deleteAPInvoiceNote = (req, res, next) => {
     });
 };
 
+const getHeaderAPInvoiceSerach = (req, res, next) => {
+    const validationRule = {
+        "search": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({ status: false, message: err });
+        }
+        else {
+            next();
+        }
+    });
+};
+
 module.exports = {
     getAPInvoiceForTable,
     getOneAPInvoice,
     deleteAPInvoice,
     saveAPInvoiceNote,
     deleteAPInvoiceNote,
+    getHeaderAPInvoiceSerach,
 };

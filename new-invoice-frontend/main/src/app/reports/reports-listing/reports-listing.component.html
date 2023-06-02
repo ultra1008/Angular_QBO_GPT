@@ -8,7 +8,7 @@
                               <div class="left">
                                    <ul class="header-buttons-left ms-0">
                                         <li class="tbl-title">
-                                             <h2>{{'REPORT.VIEW.TITLE' | translate}}</h2>
+                                             <h2>{{reportType}}</h2>
                                         </li>
                                         <li class="tbl-search-box">
                                              <label for="search-input"><i
@@ -20,6 +20,21 @@
                               </div>
                               <div class="right">
                                    <ul class="tbl-export-btn">
+                                        <!-- <li class="tbl-header-btn">
+                                             <mat-form-field class="example-full-width" appearance="outline">
+                                                  <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                                                       <input matStartDate formControlName="start_date"
+                                                            placeholder="Start Date" [disabled]="true" #dateRangeStart>
+                                                       <input matEndDate formControlName="end_date"
+                                                            placeholder="End Date" [disabled]="true" #dateRangeEnd
+                                                            (dateChange)="dateRangeChange(dateRangeStart, dateRangeEnd)">
+                                                  </mat-date-range-input>
+                                                  <mat-datepicker-toggle matSuffix
+                                                       [for]="picker"></mat-datepicker-toggle>
+                                                  <mat-date-range-picker #picker
+                                                       disabled="false"></mat-date-range-picker>
+                                             </mat-form-field>
+                                        </li> -->
                                         <li class="tbl-header-btn">
                                              <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' | translate}}">
                                                   <button mat-mini-fab color="warn" (click)="back()">
@@ -109,13 +124,13 @@
                                                   [ngClass]="'tbl-col-width-per-action'">Actions</mat-header-cell>
                                              <mat-cell *matCellDef="let row; let i=index;"
                                                   class="pr-0 tbl-col-width-per-action">
-                                                  <!-- <button mat-icon-button color="accent"
+                                                  <button mat-icon-button color="accent"
                                                        (click)="$event.stopPropagation()" (click)="editInvoice(row)"
-                                                       *ngIf="isDelete === 0" class="tbl-action-btn">
+                                                       class="tbl-action-btn">
                                                        <app-feather-icons [icon]="'edit'"
                                                             [class]="'tbl-fav-edit'"></app-feather-icons>
                                                   </button>
-                                                  <button mat-icon-button matTooltip="{{'COMMON.ACTIONS.ARCHIVE' |
+                                                  <!--  <button mat-icon-button matTooltip="{{'COMMON.ACTIONS.ARCHIVE' |
                                                      translate}}" color="accent" (click)="$event.stopPropagation()"
                                                        (click)="deleteInvoice(row, 1)" *ngIf="isDelete === 0"
                                                        class="col-red">

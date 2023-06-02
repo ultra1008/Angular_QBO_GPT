@@ -1,18 +1,11 @@
 import { RightSidebarService } from 'src/app/core/service/rightsidebar.service';
 import { AuthService } from 'src/app/core/service/auth.service';
 import { DOCUMENT } from '@angular/common';
-import {
-  Component,
-  Inject,
-  ElementRef,
-  OnInit,
-  Renderer2,
-  AfterViewInit,
-} from '@angular/core';
+import { Component, Inject, ElementRef, OnInit, Renderer2, AfterViewInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfigService } from 'src/app/config/config.service';
 import { InConfiguration } from 'src/app/core/models/config.interface';
-import { FormControl } from '@angular/forms';
+import { FormControl, UntypedFormControl } from '@angular/forms';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { TranslateService } from '@ngx-translate/core';
 import { configData } from 'src/environments/configData';
@@ -23,6 +16,9 @@ import { SwitchCompanyComponent } from './switch-company/switch-company.componen
 import { WEB_ROUTES } from 'src/consts/routes';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
+import { MatMenuTrigger } from '@angular/material/menu';
+import { Observable, map, startWith } from 'rxjs';
+import { Invoice } from 'src/app/invoice/invoice.model';
 
 interface Notifications {
   message: string;
@@ -108,6 +104,10 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
       status: 'msg-read',
     },
   ];
+  myControl = new UntypedFormControl();
+  invoiceList: Array<Invoice> = [];
+  invoiceLoader = true;
+
   async ngOnInit() {
     this.config = this.configService.configData;
     const user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
@@ -388,5 +388,23 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
 
   viewMessage() {
     this.router.navigate([WEB_ROUTES.INVOICE_MESSAGES]);
+  }
+
+  async onSearch() {
+    if (this.myControl.value) {
+      this.invoiceLoader = true;
+      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_HEADER_INVOICE_SERACH, { search: this.myControl.value });
+      if (data.status) {
+        this.invoiceList = data.data;
+        this.invoiceLoader = false;
+        console.log("data: ", data);
+      }
+    } else {
+      this.invoiceLoader = false;
+    }
+  }
+
+  openInvoiceDetail(invoice: Invoice) {
+    this.router.navigate([WEB_ROUTES.INVOICE_DETAILS], { queryParams: { _id: invoice._id } });
   }
 }
