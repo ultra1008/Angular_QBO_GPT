@@ -1288,19 +1288,18 @@ module.exports.getVendorExcelReport = async function (req, res) {
     }
 };
 
-module.exports.importVendor = async function (req, res) {
+// bulk upload 
+module.exports.checkImportVendor = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
-
             var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
             var form = new formidable.IncomingForm();
             var fields = [];
             var notFonud = 0;
             var newOpenFile;
-            // var fileType;
             var fileName;
             form.parse(req)
                 .on('file', function (name, file) {
@@ -1317,98 +1316,76 @@ module.exports.importVendor = async function (req, res) {
                         const file = reader.readFile(newOpenFile[0].path);
                         const sheets = file.SheetNames;
                         let data = [];
-                        let exitdata = new Array();
+                        let exitdata = [];
                         for (let i = 0; i < sheets.length; i++) {
                             const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
                             temp.forEach((ress) => {
                                 data.push(ress);
                             });
                         }
-
-                        var onecategory_main = "";
+                        var allowImport = true;
                         for (let m = 0; m < data.length; m++) {
-                            onecategory_main = await vendorConnection.findOne({ vendor_email: data[m].vendor_email }, { vendor_email: 1 });
-                            if (onecategory_main != null) {
-                                exitdata[m] = onecategory_main.vendor_email;
+                            var get_one = await vendorConnection.findOne({ vendor_email: data[m].vendor_email });
+                            if (get_one != null) {
+                                allowImport = false;
+                                exitdata.push({ message: 'Already exist', valid: false, data: data[m], vendor_email: data[m].vendor_email });
+                            } else {
+                                exitdata.push({ message: 'Data is correct', valid: true, data: data[m], vendor_email: data[m].vendor_email });
                             }
                         }
-                        if (exitdata.length > 0) {
-                            res.send({ status: false, exitdata: exitdata, message: " vendor email is allready exist." });
-                        }
-                        else {
-                            for (let m = 0; m < data.length; m++) {
-                                onecategory_main = await vendorConnection.findOne({ vendor_email: data[m].vendor_email }, { vendor_email: 1 });
-                                requestObject = {};
-                                requestObject.vendor_name = data[m].vendor_name;
-                                requestObject.vendor_phone = data[m].vendor_phone;
-                                requestObject.vendor_email = data[m].vendor_email;
-                                requestObject.vendor_address = data[m].vendor_address;
-                                requestObject.vendor_city = data[m].vendor_city;
-                                requestObject.vendor_state = data[m].vendor_state;
-                                requestObject.vendor_zipcode = data[m].vendor_zipcode;
-                                requestObject.vendor_terms = data[m].vendor_terms;
-                                let add_vendor = new vendorConnection(requestObject);
-                                let save_vendor = await add_vendor.save();
-
-                            }
-                            res.send({ status: true, message: translator.getStr('VENDOR_ADD_MESSAGE') });
-
-                        }
-
-                        // for (let m = 0; m < data.length; m++) {
-                        //     requestObject = {};
-                        //     let onecategory_main = await vendorConnection.findOne({ vendor_name: data[m].vendor_name, vendor_email: data[m].vendor_email });
-                        //     if (onecategory_main == null) {
-                        //         requestObject.vendor_name = data[m].vendor_name;
-                        //         requestObject.vendor_phone = data[m].vendor_phone;
-                        //         requestObject.vendor_email = data[m].vendor_email;
-                        //         requestObject.vendor_address = data[m].vendor_address;
-                        //         requestObject.vendor_city = data[m].vendor_city;
-                        //         requestObject.vendor_state = data[m].vendor_state;
-                        //         requestObject.vendor_zipcode = data[m].vendor_zipcode;
-                        //         requestObject.vendor_terms = data[m].vendor_terms;
-                        //         let add_costcode = new vendorConnection(requestObject);
-                        //         let save_costcode = await add_costcode.save();
-                        //     } else {
-                        //     }
-                        // }
-                        // res.send({ status: true, message: translator.getStr('VENDOR_ADD_MESSAGE') });
-                    }
-                    else {
-                        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                        res.send({ status: true, allow_import: allowImport, data: exitdata, message: 'Vendor Listing' });
+                    } else {
+                        res.send({ status: false, message: translator.getStr('SomethingWrong') });
                     }
                 });
-
-        } catch (e) {
-            console.log(e);
-            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
-        } finally {
-            //connection_db_api.close()
+        } catch (error) {
+            console.log(error);
+            res.send({ status: false, message: translator.getStr('SomethingWrong'), error: error });
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
 
-
-async function userInsertCheck(connection_db_api, onedata) {
-
-    try {
-        onedata.username = onedata.vendor_name;
-        //onedata.vendor_name = onedata.vendor_name + " " + onedata.vendor_name;
-        var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
-        let check_user = await vendorConnection.findOne({
-            vendor_email: onedata.vendor_email
-        });
-        if (check_user == null) {
-            return {
-                status: true, message: ('Data_Correct')
-            };
-        } else {
-            return { status: false, message: ("EmailAlreadyExists") };
+module.exports.importVendor = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
+            let reqObject = [];
+            for (let i = 0; i < requestObject.length; i++) {
+                let one_client = await vendorConnection.findOne({ vendor_email: requestObject[i].data.vendor_email });
+                if (one_client) { } else {
+                    reqObject.push({
+                        vendor_name: requestObject[i].data.vendor_name,
+                        vendor_phone: requestObject[i].data.vendor_phone,
+                        vendor_email: requestObject[i].data.vendor_email,
+                        vendor_address: requestObject[i].data.vendor_address,
+                        vendor_city: requestObject[i].data.vendor_city,
+                        vendor_state: requestObject[i].data.vendor_state,
+                        vendor_zipcode: requestObject[i].data.vendor_zipcode,
+                        vendor_terms: requestObject[i].data.vendor_terms,
+                    });
+                }
+            }
+            let insert_data = await vendorConnection.insertMany(reqObject);
+            if (insert_data) {
+                res.send({ status: true, message: 'Vendor added sucessfully.!', data: insert_data });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         }
-
-    } catch (e) {
-        return { status: false, message: ("Somthing_Wrong_with_connection") };
+        finally {
+            connection_db_api.close();
+        }
     }
-}
+    else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
