@@ -88,16 +88,18 @@ export class UsersListingComponent
   }
 
   ngOnInit() {
+
     this.userSelectForm = this.fb.group({
       userstatus: [''],
     });
     this.getRole();
+    let that = this;
     const userDisplay =
       localStorage.getItem(localstorageconstants.USER_DISPLAY) ?? 'list';
     if (userDisplay == 'list') {
-      this.loadData();
+      that.loadData();
     } else {
-      this.router.navigate([WEB_ROUTES.USER_GRID]);
+      that.router.navigate([WEB_ROUTES.USER_GRID]);
     }
   }
 
