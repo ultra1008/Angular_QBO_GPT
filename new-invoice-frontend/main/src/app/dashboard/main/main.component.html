@@ -325,14 +325,14 @@
       <div class="m-1">
         <div class="d-flex justify-content-between">
           <h5 class="font-16">White Cap</h5>
-          <h5 class="font-16">#{{invoice.invoice}}</h5>
+          <h5 class="font-16">#{{invoice.invoice_no}}</h5>
         </div>
         <div class="d-flex justify-content-between">
           <div>
-            <h5 class="font-14"><span><b>Invoice Date </b></span> <span>10/02/2022</span></h5>
-            <h5 class="font-14 last-updated"><span><b>Last updated </b></span> <span>10/02/2022</span></h5>
+            <h5 class="font-14"><span><b>Invoice Date </b></span> <span>{{(invoice.invoice_date_epoch * 1000 | date: 'MM/dd/yyyy')}}</span></h5>
+            <h5 class="font-14 last-updated"><span><b>Last updated </b></span> <span>{{(invoice.updated_at * 1000 | date: 'MM/dd/yyyy')}}</span></h5>
           </div>
-          <h5 class="font-20 my-auto amount">$24</h5>
+          <h5 class="font-20 my-auto amount">${{invoice.invoice_total_amount}}</h5>
         </div>
       </div>
     </div>
