@@ -36,7 +36,7 @@ export class UserEmergencyContactComponent extends UnsubscribeOnDestroyAdapter i
     'email',
     'phone',
     'address',
-    'validate',
+    // 'validate',
     'actions',
   ];
   userService?: UserService;
@@ -52,7 +52,7 @@ export class UserEmergencyContactComponent extends UnsubscribeOnDestroyAdapter i
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
 
-  constructor (
+  constructor(
     public httpClient: HttpClient, private httpCall: HttpCall, public dialog: MatDialog, private snackBar: MatSnackBar,
     private router: Router, public userTableService: UserService, public translate: TranslateService,
     private fb: UntypedFormBuilder, public route: ActivatedRoute, private commonService: CommonService,) {
@@ -176,7 +176,7 @@ export class EmergencyContactDataSource extends DataSource<EmergencyContact> {
   }
   filteredData: EmergencyContact[] = [];
   renderedData: EmergencyContact[] = [];
-  constructor (
+  constructor(
     public userService: UserService,
     public paginator: MatPaginator,
     public _sort: MatSort,
