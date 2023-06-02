@@ -31,7 +31,6 @@ import { ComponentsModule } from '../shared/components/components.module';
 import { SharedModule } from '../shared/shared.module';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
-import { AdvanceTableService } from '../advance-table/advance-table.service';
 import { SendInvoiceMessageComponent } from './invoice-detail/send-invoice-message/send-invoice-message.component';
 import { InvoiceMessagesComponent } from './invoice-detail/invoice-messages/invoice-messages.component';
 import { InvoiceMessageViewComponent } from './invoice-detail/invoice-message-view/invoice-message-view.component';
@@ -41,6 +40,7 @@ import { NgxEmojiPickerModule } from 'ngx-emoji-picker';
 import { InvoiceHistoryComponent } from './invoice-history/invoice-history.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { InvoiceRejectedReasonComponent } from './invoice-detail/invoice-rejected-reason/invoice-rejected-reason.component';
+import { InvoiceService } from './invoice.service';
 
 @NgModule({
   declarations: [
@@ -55,7 +55,7 @@ import { InvoiceRejectedReasonComponent } from './invoice-detail/invoice-rejecte
     InvoiceHistoryComponent,
     InvoiceRejectedReasonComponent,
   ],
-  providers: [AdvanceTableService],
+  providers: [InvoiceService],
   imports: [
     CommonModule,
     TranslateModule,
