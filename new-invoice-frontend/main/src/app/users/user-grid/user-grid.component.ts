@@ -24,6 +24,10 @@ import {
 } from '../users-filter.pipe';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { CommonService } from 'src/app/services/common.service';
+import { ImportUserComponent } from '../import-user/import-user.component';
+import { UserExistListComponent } from '../user-exist-list/user-exist-list.component';
+import * as XLSX from 'xlsx';
+import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 
 @Component({
   selector: 'app-user-grid',
@@ -48,7 +52,8 @@ export class UserGridComponent
   username_status: any;
   tweet_epochs: any = [];
   cardLoading = true;
-
+  exitData!: any[];
+  @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
   constructor(
     public httpClient: HttpClient,
     private httpCall: HttpCall,
@@ -56,7 +61,8 @@ export class UserGridComponent
     public userService: UserService,
     private snackBar: MatSnackBar,
     private router: Router,
-    private commonService: CommonService
+    private commonService: CommonService,
+    public uiSpinner: UiSpinnerService
   ) {
     super();
   }
@@ -185,6 +191,89 @@ export class UserGridComponent
           });
         }
       });
+  }
+
+  importFileAction() {
+    let el: HTMLElement = this.OpenFilebox.nativeElement;
+    el.click();
+  }
+
+  onFileChange(ev: any) {
+    let that = this;
+    let workBook: any;
+    let jsonData = null;
+    let header_;
+    const reader = new FileReader();
+    const file = ev.target.files[0];
+    reader.onload = (event) => {
+      const data = reader.result;
+      workBook = XLSX.read(data, { type: 'binary' }) || '';
+      jsonData = workBook.SheetNames.reduce((initial: any, name: any) => {
+        const sheet = workBook.Sheets[name];
+        initial[name] = XLSX.utils.sheet_to_json(sheet);
+        let data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        header_ = data.shift();
+
+        return initial;
+      }, {});
+      // const dataString = JSON.stringify(jsonData);
+      // const keys_OLD = ["item_type_name", "packaging_name", "terms_name"];
+      // if (JSON.stringify(keys_OLD.sort()) != JSON.stringify(header_.sort())) {
+      //   that.sb.openSnackBar(that.Company_Equipment_File_Not_Match, "error");
+      //   return;
+      // } else {
+      const formData_profle = new FormData();
+      formData_profle.append('file', file);
+      let apiurl = '';
+
+
+      apiurl = httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_CHECK_IMPORT_TERMS;
+
+
+      that.uiSpinner.spin$.next(true);
+      that.httpCall
+        .httpPostCall(apiurl, formData_profle)
+        .subscribe(function (params) {
+          if (params.status) {
+            that.uiSpinner.spin$.next(false);
+            that.exitData = params;
+            const dialogRef = that.dialog.open(UserExistListComponent, {
+              width: '750px',
+              height: '500px',
+              // data: that.exitData,
+              data: { data: that.exitData },
+              disableClose: true,
+            });
+
+            dialogRef.afterClosed().subscribe((result: any) => {
+              this.loadData();
+            });
+            // that.openErrorDataDialog(params);
+
+          } else {
+            showNotification(that.snackBar, params.message, 'error');
+            that.uiSpinner.spin$.next(false);
+          }
+        });
+      // }
+    };
+    reader.readAsBinaryString(file);
+  }
+
+
+
+  downloadImport() {
+
+    const dialogRef = this.dialog.open(ImportUserComponent, {
+      width: '500px',
+      data: {},
+      disableClose: true,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      this.refresh();
+    });
+
   }
 
   gotoUser() {
