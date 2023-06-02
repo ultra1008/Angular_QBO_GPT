@@ -10,6 +10,10 @@ export class Vendor {
     vendor_status: number;
     vendor_attachment: Array<string>;
     is_quickbooks: boolean;
+    invoices: number;
+    invoices_total: number;
+    open_invoices: number;
+    open_invoices_total: number;
     constructor (response: Vendor) {
         {
             this._id = response._id;
@@ -23,6 +27,10 @@ export class Vendor {
             this.vendor_status = response.vendor_status;
             this.vendor_attachment = response.vendor_attachment;
             this.is_quickbooks = response.is_quickbooks;
+            this.invoices = response.invoices;
+            this.invoices_total = response.invoices_total;
+            this.open_invoices = response.open_invoices;
+            this.open_invoices_total = response.open_invoices_total;
         }
     }
 }

@@ -352,3 +352,10 @@ export function formatPhoneNumber(str: any) {
 
   return '';
 }
+
+export function formateAmount(price: any) {
+  return Number(price).toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
+}

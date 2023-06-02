@@ -126,7 +126,7 @@
                                                                  <span class="font-sp"> {{vendor.vendor_email}}</span>
                                                             </div>
                                                        </div>
-                                                       <div class="m-1 text-a" *ngIf="vendor.userphone!=0">
+                                                       <div class="m-1 text-a" *ngIf="vendor.userphone !== 0">
                                                             <div class="d-flex font-s">
                                                                  <i class="material-icons my-auto font-s">phone</i>
                                                                  <span class="font-sp"> {{vendor.vendor_phone}}</span>
@@ -135,37 +135,37 @@
                                                        <div class="col-12 d-flex">
                                                             <div class="col-6">
                                                                  <b> Invoice</b>
-                                                                 <P> {{514}}</P>
+                                                                 <P> {{vendor.invoices}}</P>
                                                             </div>
                                                             <div class="col-6">
                                                                  <b> Amount Paid This Year</b>
                                                                  <P class="truncate-text">
-                                                                      {{formateAmount(50000000000)}}
+                                                                      {{formateAmount(vendor.invoices_total)}}
                                                                  </P>
                                                             </div>
                                                        </div>
                                                        <div class="col-12 d-flex">
                                                             <div class="col-6">
                                                                  <b>Open Invoice</b>
-                                                                 <P> {{514}}</P>
+                                                                 <P> {{vendor.open_invoices}}</P>
                                                             </div>
                                                             <div class="col-6 mb-1">
                                                                  <b>Amount open</b>
                                                                  <P class="truncate-text">
-                                                                      {{formateAmount(50000000000)}}
+                                                                      {{formateAmount(vendor.open_invoices_total)}}
                                                                  </P>
                                                             </div>
                                                        </div>
                                                        <div class="chip"
-                                                            [ngClass]="vendor.vendor_status == 1 ? 'active' :'inactive'">
+                                                            [ngClass]="vendor.vendor_status === 1 ? 'active' :'inactive'">
 
-                                                            {{vendor.vendor_status == 1 ? active_word :inactive_word }}
+                                                            {{vendor.vendor_status === 1 ? active_word :inactive_word }}
                                                        </div>
 
                                                   </div>
                                              </div>
                                         </div>
-                                       
+
                                    </div>
                               </div>
                          </div>
