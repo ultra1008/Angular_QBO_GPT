@@ -53,6 +53,7 @@ export class UserGridComponent
   tweet_epochs: any = [];
   cardLoading = true;
   exitData!: any[];
+  role_permission: any;
   @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
   constructor(
     public httpClient: HttpClient,
@@ -65,6 +66,7 @@ export class UserGridComponent
     public uiSpinner: UiSpinnerService
   ) {
     super();
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
   }
 
   ngOnInit() {
