@@ -914,3 +914,123 @@ module.exports.getAPInvoiceForReports = async function (req, res) {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
+
+module.exports.getHeaderAPInvoiceSerach = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var apInvoiceConnection = connection_db_api.model(collectionConstant.AP_INVOICE, apInvoiceSchema);
+            var get_data = await apInvoiceConnection.aggregate([
+                { $match: { is_delete: 0 } },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "assign_to",
+                        foreignField: "_id",
+                        as: "assign_to_data"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$assign_to_data",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_VENDOR,
+                        localField: "vendor",
+                        foreignField: "_id",
+                        as: "vendor_data"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$vendor_data",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_TERM,
+                        localField: "terms",
+                        foreignField: "_id",
+                        as: "terms_data"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$terms_data",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.COSTCODES,
+                        localField: "gl_account",
+                        foreignField: "_id",
+                        as: "gl_account_data"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$gl_account_data",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_CLIENT,
+                        localField: "job_client_name",
+                        foreignField: "_id",
+                        as: "job_client_data"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$job_client_data",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_CLASS_NAME,
+                        localField: "class_name",
+                        foreignField: "_id",
+                        as: "class_name_data"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$class_name_data",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $match: {
+                        $or: [
+                            { 'vendor_data.vendor_name': new RegExp(requestObject.search, 'i') },
+                            { 'status': new RegExp(requestObject.search, 'i') },
+                            { 'invoice_no': new RegExp(requestObject.search, 'i') },
+                        ]
+                    }
+                },
+            ]);
+            if (get_data) {
+                res.send({ status: true, message: "Invoice Listing", data: get_data });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};

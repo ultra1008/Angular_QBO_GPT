@@ -35,6 +35,54 @@
               language
             </i></button> -->
         </li>
+        <li class="tbl-search-box">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <input matInput class="input-capitalized-textfield" placeholder="Search here" [formControl]="myControl">
+          </mat-form-field>
+        </li>
+        <li class="tbl-header-btn serach-dialog">
+          <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.SEARCH' | translate}}">
+            <button mat-mini-fab color="primary" (click)="onSearch()" [matMenuTriggerFor]="searchMenu">
+              <mat-icon class="col-white">search</mat-icon>
+            </button>
+          </div>
+          <mat-menu #searchMenu="matMenu" class="nfc-menu search-div">
+            <div class="nfc-header">
+              <h5 class="mb-0">Serach</h5>
+            </div>
+            <div class="nfc-dropdown">
+              <ng-scrollbar style="height: 350px" visibility="hover">
+                <div class="d-flex align-items-center justify-content-center">
+                  <app-loading *ngIf="invoiceLoader"></app-loading>
+                </div>
+                <div *ngIf="!invoiceLoader">
+                  <div *ngIf="invoiceList.length === 0" class="no-search-data text-center">
+                    No Invoice Available
+                  </div>
+                  <div class="noti-list header-menu">
+                    <div class="menu">
+                      <div>
+                        <button mat-menu-item *ngFor="let invoice of invoiceList" (click)="openInvoiceDetail(invoice)"
+                          class="search-button">
+                          <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 menu-info">
+                              <span class="menu-title"><b>Vendor</b> {{invoice.vendor_data.vendor_name}}</span>
+                              <span class="menu-title mt-2"><b>Invoice Number</b> {{invoice.invoice_no}}</span>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 menu-info">
+                              <span class="menu-title"><b>Amount</b> {{invoice.invoice_total_amount}}</span>
+                              <span class="menu-title mt-2"><b>Status</b> {{invoice.status}}</span>
+                            </div>
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-scrollbar>
+            </div>
+          </mat-menu>
+        </li>
         <!-- #END# Language Button -->
         <li matTooltip="{{'COMMON.TOOL_TIP.INVOICEMSG' |  translate}}">
           <!-- <mat-icon matBadge="15" matBadgeColor="warn">message</mat-icon>

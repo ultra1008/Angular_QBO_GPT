@@ -40,6 +40,7 @@ import { SwitchCompanyComponent } from './layout/header/switch-company/switch-co
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NgxEmojiPickerModule } from 'ngx-emoji-picker';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [
@@ -79,6 +80,7 @@ import { NgxEmojiPickerModule } from 'ngx-emoji-picker';
       },
     }),
     NgxEmojiPickerModule.forRoot(),
+    MatAutocompleteModule,
   ],
   providers: [
     // { provide: LocationStrategy, useClass: HashLocationStrategy },

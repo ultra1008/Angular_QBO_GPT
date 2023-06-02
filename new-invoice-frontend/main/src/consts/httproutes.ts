@@ -254,5 +254,8 @@ export enum httproutes {
   SAVE_DOCUMENT_PROCESS = 'saveapdocumentprocess',
 
   // Report
-  GET_INVOICE_FOR_REPORT = 'getapinvoiceforreports'
+  GET_INVOICE_FOR_REPORT = 'getapinvoiceforreports',
+
+  // Header
+  GET_HEADER_INVOICE_SERACH = 'getheaderapinvoicesearch'
 }
