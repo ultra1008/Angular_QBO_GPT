@@ -27,6 +27,8 @@ export class VendorGridComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   vendorList: any = [];
+  vendorActiveList: any = [];
+  vendorInactiveList: any = [];
   cardLoading = true;
   isDelete = 0;
   active_word = 'Active';
@@ -63,6 +65,12 @@ export class VendorGridComponent
       { is_delete: this.isDelete }
     );
     this.vendorList = data.data;
+    this.vendorActiveList = this.vendorList.filter((obj: any) => {
+      return obj.vendor_status == 1;
+    });
+    this.vendorInactiveList = this.vendorList.filter((obj: any) => {
+      return obj.vendor_status == 2;
+    });
     this.cardLoading = false;
   }
 

@@ -43,6 +43,8 @@ import { UserEmergencyContactComponent } from './user-form/user-emergency-contac
 import { UserDocumentComponent } from './user-form/user-document/user-document.component';
 import { AddUserEmergenctContactComponent } from './user-form/user-emergency-contact/add-user-emergenct-contact/add-user-emergenct-contact.component';
 import { UserDocumentFormComponent } from './user-form/user-document/user-document-form/user-document-form.component';
+import { ImportUserComponent } from './import-user/import-user.component';
+import { UserExistListComponent } from './user-exist-list/user-exist-list.component';
 
 
 @NgModule({
@@ -60,7 +62,9 @@ import { UserDocumentFormComponent } from './user-form/user-document/user-docume
     UserEmergencyContactComponent,
     UserDocumentComponent,
     AddUserEmergenctContactComponent,
-    UserDocumentFormComponent
+    UserDocumentFormComponent,
+    ImportUserComponent,
+    UserExistListComponent
   ],
   providers: [UserService],
   imports: [

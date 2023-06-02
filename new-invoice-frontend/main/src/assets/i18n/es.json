@@ -62,7 +62,9 @@
     "VENDOR": {
         "VIEW": {
             "TITLE": "Vendedor",
-            "ARCHIVED_TITLE": "Proveedor archivado"
+            "ARCHIVED_TITLE": "Proveedor archivado",
+            "ACTIVE_STATUS_MASSAGE": "No hay datos de proveedores activos disponibles",
+            "INACTIVE_STATUS_MASSAGE": "No hay datos de proveedores inactivos disponibles"
         },
         "TABLE": {
             "VENDOR_IMAGE": "Image",

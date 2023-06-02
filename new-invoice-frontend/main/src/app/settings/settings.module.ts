@@ -82,6 +82,7 @@ import { DocumentTypeFormComponent } from './employeesettings/document-type-list
 import { JobTitleFormComponent } from './employeesettings/job-title-list/job-title-form/job-title-form.component';
 import { JobTypeFormComponent } from './employeesettings/job-type-list/job-type-form/job-type-form.component';
 import { VendorsService } from '../vendors/vendors.service';
+import { OtherExistsListingComponent } from './othersettings/other-exists-listing/other-exists-listing.component';
 
 @NgModule({
   declarations: [
@@ -132,6 +133,7 @@ import { VendorsService } from '../vendors/vendors.service';
     ClassNameFormComponent,
     ExistListingComponent,
     OtherExistListingComponent,
+    OtherExistsListingComponent,
   ],
   providers: [SettingsService, VendorsService],
   imports: [
