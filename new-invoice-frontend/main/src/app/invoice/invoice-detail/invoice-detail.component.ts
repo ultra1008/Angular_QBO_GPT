@@ -19,6 +19,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { TranslateService } from '@ngx-translate/core';
 import { InvoiceRejectedReasonComponent } from './invoice-rejected-reason/invoice-rejected-reason.component';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
 
 @Component({
   selector: 'app-invoice-detail',
@@ -60,6 +61,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   documentList: any = configData.DOCUMENT_TYPE_LIST;
   statusList: any = configData.INVOICE_STATUS;
 
+  role_permission: any;
   id: any;
   invoiceData: any;
   pdfLoader = true;
@@ -76,10 +78,11 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   prevStep() {
     this.step--;
   }
-  constructor (private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog, private commonService: CommonService,
+  constructor(private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog, private commonService: CommonService,
     public route: ActivatedRoute, public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, public translate: TranslateService,) {
     super();
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
     this.uiSpinner.spin$.next(true);
     this.invoiceForm = this.fb.group({
       document_type: [''],
