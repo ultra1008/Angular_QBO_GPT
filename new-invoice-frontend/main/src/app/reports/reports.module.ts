@@ -24,6 +24,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSortModule } from '@angular/material/sort';
+import { SharedModule } from '../shared/shared.module';
 
 
 @NgModule({
@@ -55,6 +56,7 @@ import { MatSortModule } from '@angular/material/sort';
     MatSortModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
+    SharedModule,
   ]
 })
 export class ReportsModule { }

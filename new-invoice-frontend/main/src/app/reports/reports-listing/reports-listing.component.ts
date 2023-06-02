@@ -21,6 +21,7 @@ import { Vendor } from 'src/app/vendors/vendor.model';
 import { configData } from 'src/environments/configData';
 import { TableElement } from 'src/app/shared/TableElement';
 import { formatDate } from '@angular/common';
+import { timeDateToepoch } from 'src/consts/utils';
 
 @Component({
   selector: 'app-reports-listing',
@@ -45,12 +46,18 @@ export class ReportsListingComponent extends UnsubscribeOnDestroyAdapter impleme
 
   reportType = '';
   ids: Array<string> = [];
+  range = new FormGroup({
+    start_date: new FormControl(),
+    end_date: new FormControl()
+  });
 
   constructor (public ReportServices: ReportService, public httpCall: HttpCall, public uiSpinner: UiSpinnerService,
     public route: ActivatedRoute, private router: Router, public translate: TranslateService,) {
     super();
     route.queryParams.subscribe(queryParams => {
-      this.reportType = queryParams['report_type'];
+      if (queryParams['report_type']) {
+        this.reportType = queryParams['report_type'];
+      }
       if (queryParams['vendor_ids']) {
         this.ids = queryParams['vendor_ids'];
       } else if (queryParams['assign_to_ids']) {
@@ -137,6 +144,14 @@ export class ReportsListingComponent extends UnsubscribeOnDestroyAdapter impleme
   back() {
     this.router.navigate([WEB_ROUTES.SIDEMENU_REPORTS]).then();
   }
+
+  dateRangeChange(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
+    console.log("start: ", dateRangeStart.value, timeDateToepoch(new Date(dateRangeStart.value)));
+    console.log("end: ", dateRangeEnd.value, timeDateToepoch(new Date(dateRangeEnd.value)));
+
+    // this.dateRange = [dateRangeStart.value, dateRangeEnd.value];
+    // this.dateRange = [timeDateToepoch(dateRangeStart.value), timeDateToepoch(dateRangeEnd.value)];
+  }
 }
 
 export class ExampleDataSource extends DataSource<Report> {
@@ -164,8 +179,6 @@ export class ExampleDataSource extends DataSource<Report> {
       this.filterChange,
       this.paginator.page,
     ];
-    console.log("this.reportType ", this.reportType);
-    console.log("this.ids ", this.ids);
     let requestObject;
     if (this.reportType == configData.REPORT_TYPE.reportVendor) {
       requestObject = { vendor_ids: this.ids };
