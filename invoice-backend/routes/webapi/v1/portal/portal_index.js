@@ -398,6 +398,7 @@ router.post('/webapi/v1/portal/savevendorstoDB', common.checkTokenExistOrNot, in
 router.post('/webapi/v1/portal/updateMultipleVendorStatus', common.checkTokenExistOrNot, invoice_vendorValidation.updateMultipleVendorStatus, invoice_vendorController.updateMultipleVendorStatus);
 router.post('/webapi/v1/portal/deleteMultipleVendor', common.checkTokenExistOrNot, invoice_vendorValidation.deleteMultipleVendor, invoice_vendorController.deleteMultipleVendor);
 router.post('/webapi/v1/portal/importVendor', common.checkTokenExistOrNot, invoice_vendorController.importVendor);
+router.post('/webapi/v1/portal/checkImportVendor', common.checkTokenExistOrNot, invoice_vendorController.checkImportVendor);
 
 
 
