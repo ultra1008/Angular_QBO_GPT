@@ -19,6 +19,7 @@ import { httproutes, httpversion } from 'src/consts/httproutes';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { ClassNameFormComponent } from './class-name-listing/class-name-form/class-name-form.component';
+import { OtherExistsListingComponent } from './other-exists-listing/other-exists-listing.component';
 
 @Component({
   selector: 'app-othersettings',
@@ -26,6 +27,7 @@ import { ClassNameFormComponent } from './class-name-listing/class-name-form/cla
   styleUrls: ['./othersettings.component.scss'],
 })
 export class OthersettingsComponent {
+  exitData!: any[];
   AllTerms: any;
   AllTaxrate: any;
   AllDocument: any;
@@ -442,20 +444,20 @@ export class OthersettingsComponent {
       let apiurl = '';
 
       if (that.currrent_tab == 'Terms') {
-        apiurl = httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_IMPORT_TERMS;
+        apiurl = httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_CHECK_IMPORT_TERMS;
       } else if (that.currrent_tab == 'Tax rate') {
         apiurl =
-          httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_IMPORT_TEXT_RATE;
+          httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_CHECK_IMPORT_TEXT_RATE;
       } else if (that.currrent_tab == 'Documents') {
         apiurl =
-          httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_IMPORT_DOCUMENT;
+          httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_CHECK_IMPORT_DOCUMENT;
       } else if (that.currrent_tab == 'Vendor type') {
         apiurl =
-          httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_IMPORT_VENDOR_TYPE;
+          httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_CHECK_IMPORT_VENDOR_TYPE;
       } else if (that.currrent_tab == 'Job name') {
         apiurl = httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_IMPORT;
       } else if (that.currrent_tab == 'Class name') {
-        apiurl = httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_IMPORT;
+        apiurl = httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_CHECK_IMPORT_CLASS;
       }
 
       that.uiSpinner.spin$.next(true);
@@ -463,36 +465,49 @@ export class OthersettingsComponent {
         .httpPostCall(apiurl, formData_profle)
         .subscribe(function (params) {
           if (params.status) {
-            if (that.currrent_tab == 'Terms') {
-              this.showTerms = false;
-              setTimeout(() => {
-                this.showTerms = true;
-              }, 100);
-            } else if (that.currrent_tab == 'Tax rate') {
-              this.showTaxRate = false;
-              setTimeout(() => {
-                this.showTaxRate = true;
-              }, 100);
-            } else if (that.currrent_tab == 'Documents') {
-              this.showDocument = false;
-              setTimeout(() => {
-                this.showDocument = true;
-              }, 100);
-            } else if (that.currrent_tab == 'Vendor type') {
-              this.showVendorType = false;
-              setTimeout(() => {
-                this.showVendorType = true;
-              }, 100);
-            } else if (that.currrent_tab == 'Class name') {
-              this.showClassName = false;
-              setTimeout(() => {
-                this.showClassName = true;
-              }, 100);
-            }
+            that.uiSpinner.spin$.next(false);
+            that.exitData = params;
+            const dialogRef = that.dialog.open(OtherExistsListingComponent, {
+              width: '750px',
+              height: '500px',
+              // data: that.exitData,
+              data: { data: that.exitData, tab: that.currrent_tab },
+              disableClose: true,
+            });
+
+            dialogRef.afterClosed().subscribe((result: any) => {
+              console.log("result", result);
+              if (result.module) {
+                if (result.module == 'Terms') {
+                  this.showTerms = false;
+                  setTimeout(() => {
+                    this.showTerms = true;
+                  }, 100);
+                } else if (result.module == 'Tax rate') {
+                  this.showTaxRate = false;
+                  setTimeout(() => {
+                    this.showTaxRate = true;
+                  }, 100);
+                } else if (result.module == 'Documents') {
+                  this.showDocument = false;
+                  setTimeout(() => {
+                    this.showDocument = true;
+                  }, 100);
+                } else if (result.module == 'Vendor type') {
+                  this.showVendorType = false;
+                  setTimeout(() => {
+                    this.showVendorType = true;
+                  }, 100);
+                } else if (result.module == 'Class name') {
+                  this.showClassName = false;
+                  setTimeout(() => {
+                    this.showClassName = true;
+                  }, 100);
+                }
+              }
+            });
             // that.openErrorDataDialog(params);
 
-            showNotification(that.snackBar, params.message, 'success');
-            that.uiSpinner.spin$.next(false);
           } else {
             showNotification(that.snackBar, params.message, 'error');
             that.uiSpinner.spin$.next(false);

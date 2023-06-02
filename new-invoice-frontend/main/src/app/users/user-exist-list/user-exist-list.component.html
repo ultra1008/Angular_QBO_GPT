@@ -35,12 +35,14 @@
                         translate}}</th>
                     <th>{{'COMMON.IMPORT.NAME' |
                         translate}}</th>
+                        <th>{{'USERS.ADD_EDIT.EMAIL' | translate}}</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr *ngFor="let data of exitData" [ngClass]="data.valid ? 'data-sucess' : 'data-error'">
                     <td [ngClass]="data.valid ? 'data-sucess' : 'data-error'">{{data.message}}</td>
-                    <td [ngClass]="data.valid ? 'data-sucess' : 'data-error'">{{data.name}}</td>
+                    <td [ngClass]="data.valid ? 'data-sucess' : 'data-error'">{{data.data.userfirstname}}</td>
+                    <td [ngClass]="data.valid ? 'data-sucess' : 'data-error'">{{data.data.useremail}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -63,4 +65,3 @@
         </div>
    </div>
 </mat-dialog-actions>
-

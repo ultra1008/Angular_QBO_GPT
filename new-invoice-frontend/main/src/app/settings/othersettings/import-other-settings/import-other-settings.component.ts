@@ -78,8 +78,8 @@ export class ImportOtherSettingsComponent {
         './assets/files/importvendortype.xlsx',
         'importvendortype.xlsx'
       );
-    } else if (this.currrent_tab == 'Job name') {
-      return saveAs('./assets/files/jobnameimport.xlsx', 'jobnameimport.xlsx');
+    } else if (this.currrent_tab == 'Class name') {
+      return saveAs('./assets/files/importclassname.xlsx', 'importclassname.xlsx');
     }
   }
   onNoClick(): void {

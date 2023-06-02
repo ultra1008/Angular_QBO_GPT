@@ -15,6 +15,11 @@ var ObjectID = require('mongodb').ObjectID;
 var formidable = require('formidable');
 const reader = require('xlsx');
 var _ = require('lodash');
+var alertController = require('./../alert/alertController');
+var handlebars = require('handlebars');
+let sendEmail = require('./../../../../../controller/common/sendEmail');
+var fs = require('fs');
+let rest_Api = require('./../../../../../config/db_rest_api');
 
 module.exports.getAPInvoiceForTable = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -438,6 +443,7 @@ module.exports.saveAPInvoice = async function (req, res) {
                         if (found_assign_to != -1) {
                             let one_data = await userConnection.findOne({ _id: ObjectID(updatedData[found_assign_to].value) });
                             updatedData[found_assign_to].value = one_data.userfullname;
+                            sendInvoiceAssignUpdateAlerts(decodedToken, id, translator);
                         }
                     }
 
@@ -540,6 +546,105 @@ module.exports.saveAPInvoice = async function (req, res) {
     } else {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
+};
+
+function sendInvoiceAssignUpdateAlerts(decodedToken, id, translator) {
+    return new Promise(async function (resolve, reject) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        var apInvoiceConnection = connection_db_api.model(collectionConstant.AP_INVOICE, apInvoiceSchema);
+        // let settingsCollection = connection_db_api.model(collectionConstant.INVOICE_SETTING, settingsSchema);
+        let userCollection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+        let one_invoice = await apInvoiceConnection.findOne({ _id: ObjectID(id) });
+        if (one_invoice) {
+            if (one_invoice.assign_to) {
+                // let get_settings = await settingsCollection.findOne({});
+                // if (get_settings) {
+                //     if (get_settings.settings.User_Notify_By.setting_status == 'Active') {
+                // var notifyOptions = get_settings.settings.User_Notify_By.setting_value;
+                var allowEmail = true;
+                var allowAlert = true;
+                var allowNotification = true;
+                /* var allowEmail = (notifyOptions.indexOf('Email') !== -1) ? true : false;
+                var allowAlert = (notifyOptions.indexOf('Alert') !== -1) ? true : false;
+                var allowNotification = (notifyOptions.indexOf('Notification') !== -1) ? true : false; */
+
+                let get_users = await userCollection.findOne({ _id: ObjectID(one_invoice.assign_to) });
+                let title = `Invoice #${one_invoice.invoice_no} Assigned Alert`;
+                let description = `Invoice #${one_invoice.invoice_no} has been assigned to you.`;
+                let viewRoute = `${config.SITE_URL}/invoice/details?_id=${id}`;
+
+                // Notification
+                if (allowNotification) {
+                    let notification_data = {
+                        title: title,
+                        body: description,
+                    };
+                    let temp_data = {
+                        "module": 'Invoice',
+                        "_id": one_invoice._id,
+                        "status": one_invoice.status,
+                    };
+                    await common.sendNotificationWithData([get_users.invoice_firebase_token], notification_data, temp_data);
+                }
+
+                // Alert
+                if (allowAlert) {
+                    let alertObject = {
+                        user_id: get_users._id,
+                        module_name: 'Invoice',
+                        module_route: { _id: id },
+                        notification_title: title,
+                        notification_description: description,
+                    };
+                    alertController.saveAlert(alertObject, connection_db_api);
+                }
+
+                // Email
+                if (allowEmail) {
+                    var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+                    let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
+                    let company_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
+                    const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/commonEmailTemplate.html', 'utf8');
+                    let emailTmp = {
+                        HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
+                        SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
+                        ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                        THANKS: translator.getStr('EmailTemplateThanks'),
+                        ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                        ROVUK_TEAM_SEC: translator.getStr('EmailTemplateRovukTeamSec'),
+                        VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
+
+                        TITLE: `${title}`,
+                        TEXT: new handlebars.SafeString(`<h4>Hello ${get_users.userfullname},</h4><h4>${description}</h4>
+                                <div style="text-align: center;">
+                                    <a style="background-color: #023E8A;border: #0077bc solid;color: white;padding: 15px 32px;
+                                                text-align: center;text-decoration: none;display: inline-block;font-size: 16px; width: 20%;" 
+                                                target="_blank" href="${viewRoute}">View Invoice</a>
+                                </div>`),
+
+                        COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
+                        COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
+                    };
+                    var template = handlebars.compile(file_data);
+                    var HtmlData = await template(emailTmp);
+                    sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, [get_users.useremail], title, HtmlData,
+                        talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
+                        talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                }
+                resolve();
+            } else {
+                resolve();
+            }
+            // } else {
+            //     resolve();
+            // }
+            // } else {
+            //     resolve();
+            // }
+        } else {
+            resolve();
+        }
+    });
 };
 
 module.exports.deleteAPInvoice = async function (req, res) {
