@@ -280,7 +280,7 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     ClassNameTable[]
   >([]);
 
-  constructor (private httpCall: HttpCall) {
+  constructor(private httpCall: HttpCall) {
     super();
   }
   get data(): MailboxTable[] {
@@ -342,6 +342,7 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
   get dataClassname(): ClassNameTable[] {
     return this.dataclassnameChange.value;
   }
+
   async getCompanyType() {
     const data = await this.httpCall
       .httpGetCall(httpversion.V1 + httproutes.GET_COMPNAY_TYPE)
