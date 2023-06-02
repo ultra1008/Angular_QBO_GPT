@@ -54,7 +54,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
       };
       this.sidebarItems.splice(index++, 0, reqObj);
     }
-    if (this.role_permission.role_permission.vendor.View == false) {
+    if (this.role_permission.role_permission.vendor.View == true) {
       let reqObj = {
         path: WEB_ROUTES.VENDOR,
         title: 'Vendor',

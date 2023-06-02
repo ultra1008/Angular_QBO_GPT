@@ -84,7 +84,8 @@
                                         </button>
                                     </div>
                                 </li>
-                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                                <li class="tbl-header-btn"
+                                    *ngIf="role_permission.role_permission.vendor.Delete && isDelete === 0">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ARCHIVE' |
                                         translate}}">
                                         <button mat-mini-fab color="warn" (click)="gotoArchiveUnarchive()">
@@ -101,7 +102,8 @@
                                         </button>
                                     </div>
                                 </li>
-                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                                <li class="tbl-header-btn"
+                                    *ngIf="role_permission.role_permission.vendor.Add && isDelete === 0">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ADD' |
                                         translate}}">
                                         <button mat-mini-fab color="primary" (click)="addNew()">

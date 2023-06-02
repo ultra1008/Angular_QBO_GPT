@@ -14,6 +14,7 @@ import { WEB_ROUTES } from 'src/consts/routes';
 import { TranslateService } from '@ngx-translate/core';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { commonFileChangeEvent } from 'src/app/services/utils';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
 
 @Component({
   selector: 'app-vendor-form',
@@ -50,6 +51,7 @@ export class VendorFormComponent {
   titleMessage = "";
   show = false;
   is_delete: any;
+  role_permission: any;
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -63,6 +65,7 @@ export class VendorFormComponent {
     public commonService: CommonService,
   ) {
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
 
     this.vendorForm = this.fb.group({
       vendor_name: ['', [Validators.required]],
