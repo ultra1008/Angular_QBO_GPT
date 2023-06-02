@@ -56,7 +56,8 @@
                                              <div class="header">
                                                   <h2>{{'USERS.TABS.PERSONAL_INFORMATION' | translate}}</h2>
                                              </div>
-                                             <div class="body">
+                                             <div class="body"
+                                                  *ngIf="role_permission.role_permission.users.personalInformation.View">
                                                   <form [formGroup]="userpersonalinfo!">
                                                        <div class="main-cust-emp-from">
                                                             <div class="main-cust-emp-profile">
@@ -323,6 +324,12 @@
                                                        </div>
                                                   </div>
                                              </div>
+                                             <div *ngIf="!role_permission.role_permission.users.personalInformation.View"
+                                                  class="d-flex align-items-center justify-content-center">
+                                                  <h1 class="font-28 font-white">
+                                                       {{'COMMON.ACTIONS.Access_denied_all' | translate}}
+                                                  </h1>
+                                             </div>
                                         </div>
                                    </div>
                               </mat-step>
@@ -334,7 +341,8 @@
                                                   <h2>{{'USERS.TABS.CONTACT_INFORMATION' | translate}}</h2>
 
                                              </div>
-                                             <div class="body">
+                                             <div class="body"
+                                                  *ngIf="role_permission.role_permission.users.contactInformation.View">
                                                   <form class="register-form m-4" [formGroup]="usercontactinfo!"
                                                        (ngSubmit)="onRegister()">
 
@@ -425,6 +433,12 @@
                                                        </div>
                                                   </form>
                                              </div>
+                                             <div *ngIf="!role_permission.role_permission.users.contactInformation.View"
+                                                  class="d-flex align-items-center justify-content-center">
+                                                  <h1 class="font-28 font-white">
+                                                       {{'COMMON.ACTIONS.Access_denied_all' | translate}}
+                                                  </h1>
+                                             </div>
                                         </div>
                                    </div>
 
@@ -436,7 +450,8 @@
                                                   <h2>{{'USERS.TABS.EMPLOYEE_INFORMATION' | translate}}</h2>
 
                                              </div>
-                                             <div class="body">
+                                             <div class="body"
+                                                  *ngIf="role_permission.role_permission.users.employeeInformation.View">
                                                   <form class="useremployeeinfo-form m-4"
                                                        [formGroup]="useremployeeinfo!">
                                                        <div class="row">
@@ -655,6 +670,12 @@
                                                        </div>
                                                   </form>
                                              </div>
+                                             <div *ngIf="!role_permission.role_permission.users.employeeInformation.View"
+                                                  class="d-flex align-items-center justify-content-center">
+                                                  <h1 class="font-28 font-white">
+                                                       {{'COMMON.ACTIONS.Access_denied_all' | translate}}
+                                                  </h1>
+                                             </div>
                                         </div>
                                    </div>
 
@@ -666,11 +687,20 @@
                                              <div class="header">
                                                   <h2>{{'USERS.TABS.EMERGENCY_CONTACT' | translate}}</h2>
                                              </div>
-                                             <div class="body">
+                                             <div class="body"
+                                                  *ngIf="role_permission.role_permission.users.emergencyContact.View">
                                                   <app-user-emergency-contact></app-user-emergency-contact>
+                                             </div>
+                                             <div *ngIf="!role_permission.role_permission.users.emergencyContact.View"
+                                                  class="d-flex align-items-center justify-content-center">
+                                                  <h1 class="font-28 font-white">
+                                                       {{'COMMON.ACTIONS.Access_denied_all' | translate}}
+                                                  </h1>
                                              </div>
                                         </div>
                                    </div>
+
+
                               </mat-step>
                               <mat-step state="document" [completed]="false" [stepControl]="HFormGroup5!"
                                    *ngIf="id !== null">
@@ -679,8 +709,15 @@
                                              <div class="header">
                                                   <h2>{{'USERS.TABS.DOCUMENT' | translate}}</h2>
                                              </div>
-                                             <div class="body">
+                                             <div class="body"
+                                                  *ngIf="role_permission.role_permission.users.employeeDocument.View">
                                                   <app-user-document></app-user-document>
+                                             </div>
+                                             <div *ngIf="!role_permission.role_permission.users.employeeDocument.View"
+                                                  class="d-flex align-items-center justify-content-center">
+                                                  <h1 class="font-28 font-white">
+                                                       {{'COMMON.ACTIONS.Access_denied_all' | translate}}
+                                                  </h1>
                                              </div>
                                         </div>
                                    </div>

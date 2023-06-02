@@ -40,7 +40,8 @@
             "NO": "No",
             "BACK": "Back",
             "NEXT": "Next",
-            "DELETE": "Delete"
+            "DELETE": "Delete",
+            "Access_denied_all": "Access denied"
         },
         "HISTORY": {
             "KEY": "Key",

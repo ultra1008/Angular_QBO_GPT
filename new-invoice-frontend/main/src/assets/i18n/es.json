@@ -40,7 +40,8 @@
             "NO": "No",
             "BACK": "Atrás",
             "NEXT": "Próxima",
-            "DELETE": "Eliminar"
+            "DELETE": "Eliminar",
+            "Access_denied_all": "Access denied"
         },
         "HISTORY": {
             "KEY": "Llave",
@@ -500,7 +501,6 @@
                     "SUB_TOTAL": "Sub Total",
                     "AMOUNT_DUE": "Amount Due",
                     "COST_CODE": "Cost Code",
-                    "GL_ACCOUNT": "GL Account",
                     "CLASS_NAME": "Class Name",
                     "NOTES": "Notes"
                 }
