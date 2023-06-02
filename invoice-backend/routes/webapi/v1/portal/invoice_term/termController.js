@@ -212,7 +212,7 @@ module.exports.importTerm = async function (req, res) {
                         name: requestObject[i].data.name,
                         due_days: requestObject[i].data.due_days,
                         is_discount: requestObject[i].data.is_discount,
-                        is_discount: requestObject[i].data.is_discount.toLowerCase() == "true",
+                        is_discount: requestObject[i].data.is_discount.toString().toLowerCase() == "true",
                         discount: requestObject[i].data.discount,
                     });
                 }

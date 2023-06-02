@@ -53,7 +53,7 @@ export class ImportVendorComponent {
 
   downloadImport() {
     this.dialogRef.close();
-    return saveAs('./assets/files/userimport.xlsx', 'userimport.xlsx');
+    return saveAs('./assets/files/importvendor.xlsx', 'importvendor.xlsx');
   }
   onNoClick(): void {
     this.dialogRef.close();

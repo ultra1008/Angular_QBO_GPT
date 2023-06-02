@@ -49,7 +49,7 @@ export class OthersettingsComponent {
   showVendorType = true;
   showClassName = true;
 
-  constructor(
+  constructor (
     private router: Router,
     public SettingsServices: SettingsService,
     private snackBar: MatSnackBar,
@@ -479,29 +479,29 @@ export class OthersettingsComponent {
               console.log("result", result);
               if (result.module) {
                 if (result.module == 'Terms') {
-                  this.showTerms = false;
+                  that.showTerms = false;
                   setTimeout(() => {
-                    this.showTerms = true;
+                    that.showTerms = true;
                   }, 100);
                 } else if (result.module == 'Tax rate') {
-                  this.showTaxRate = false;
+                  that.showTaxRate = false;
                   setTimeout(() => {
-                    this.showTaxRate = true;
+                    that.showTaxRate = true;
                   }, 100);
                 } else if (result.module == 'Documents') {
-                  this.showDocument = false;
+                  that.showDocument = false;
                   setTimeout(() => {
-                    this.showDocument = true;
+                    that.showDocument = true;
                   }, 100);
                 } else if (result.module == 'Vendor type') {
-                  this.showVendorType = false;
+                  that.showVendorType = false;
                   setTimeout(() => {
-                    this.showVendorType = true;
+                    that.showVendorType = true;
                   }, 100);
                 } else if (result.module == 'Class name') {
-                  this.showClassName = false;
+                  that.showClassName = false;
                   setTimeout(() => {
-                    this.showClassName = true;
+                    that.showClassName = true;
                   }, 100);
                 }
               }
