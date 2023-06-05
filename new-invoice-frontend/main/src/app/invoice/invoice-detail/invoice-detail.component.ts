@@ -68,6 +68,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   pdfLoader = true;
   notes: any = [];
   supportingDocuments: any = [];
+  invoiceMessages: any = [];
   rejectReason = '';
 
   invoiceInfo: any = [];
@@ -321,7 +322,8 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
       this.rejectReason = this.invoiceData.reject_reason;
       this.notes = this.invoiceData.invoice_notes;
       this.supportingDocuments = this.invoiceData.supporting_documents;
-      this.invoiceInfo = this.invoiceData.invoice_info ?? [];
+      this.invoiceInfo = this.invoiceData.invoice_info;
+      this.invoiceMessages = this.invoiceData.invoice_messages;
       this.pdf_url = this.invoiceData.pdf_url;
       this.pdfLoader = false;
       this.uiSpinner.spin$.next(false);
@@ -511,13 +513,17 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   }
 
   sendMessage() {
-    const dialogRef = this.dialog.open(SendInvoiceMessageComponent, {
-      width: '28%',
-      data: {},
-    });
-    this.subs.sink = dialogRef.afterClosed().subscribe((result: any) => {
-      //
-    });
+    if (this.invoiceMessages.length == 0) {
+      const dialogRef = this.dialog.open(SendInvoiceMessageComponent, {
+        width: '28%',
+        data: {},
+      });
+      this.subs.sink = dialogRef.afterClosed().subscribe((result: any) => {
+        //
+      });
+    } else {
+      this.router.navigate([WEB_ROUTES.INVOICE_MESSAGE_VIEW], { queryParams: { invoice_id: this.id } });
+    }
   }
 
   addmail() {

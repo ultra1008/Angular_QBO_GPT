@@ -27,12 +27,12 @@ export class SendInvoiceMessageComponent implements OnInit {
   userList: Array<User> = this.variablesUserList.slice();
   id: any;
   invoice_logo = icon.INVOICE_LOGO;
-  constructor(public dialogRef: MatDialogRef<SwitchCompanyComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData,
+  constructor (public dialogRef: MatDialogRef<SwitchCompanyComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private commonService: CommonService, private snackBar: MatSnackBar, private router: Router, public uiSpinner: UiSpinnerService,
     private formBuilder: FormBuilder, public route: ActivatedRoute) {
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
     this.form = this.formBuilder.group({
-      users: [[], Validators.required],
+      users: ["", Validators.required],
       message: ["", Validators.required],
     });
   }
@@ -54,6 +54,7 @@ export class SendInvoiceMessageComponent implements OnInit {
       const formValues = this.form.value;
       formValues.invoice_id = this.id;
       formValues.is_first = true;
+      formValues.users = [formValues.users];
 
       const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SEND_INVOICE_MESSAGE, formValues);
       this.uiSpinner.spin$.next(false);

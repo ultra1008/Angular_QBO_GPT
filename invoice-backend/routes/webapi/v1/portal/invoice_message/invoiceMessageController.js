@@ -156,7 +156,7 @@ module.exports.getOneInvoiceMessage = async function (req, res) {
             var requestObject = req.body;
             let invoiceMessageCollection = connection_db_api.model(collectionConstant.INVOICE_MESSAGE, invoiceMessageSchema);
             let get_data = await invoiceMessageCollection.aggregate([
-                { $match: { _id: ObjectID(requestObject._id) } },
+                { $match: { invoice_id: ObjectID(requestObject.invoice_id) } },
                 {
                     $lookup: {
                         from: collectionConstant.AP_INVOICE,
@@ -212,8 +212,8 @@ module.exports.getOneInvoiceMessage = async function (req, res) {
                     {
                         $match: {
                             $or: [
-                                { _id: ObjectID(requestObject._id) },
-                                { invoice_message_id: ObjectID(requestObject._id) },
+                                { invoice_id: ObjectID(requestObject.invoice_id) },
+                                // { invoice_message_id: ObjectID(requestObject._id) },
                             ]
                         }
                     },

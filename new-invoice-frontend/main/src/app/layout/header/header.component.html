@@ -86,17 +86,16 @@
         <!-- #END# Language Button -->
         <li matTooltip="{{'COMMON.TOOL_TIP.INVOICEMSG' |  translate}}">
           <button mat-button class="nav-notification-icons" (click)="viewMessage()">
-            <mat-icon matBadge="{{unseenCount}}" matBadgeColor="warn">message</mat-icon>
+            <mat-icon matBadge="{{unseenCount}}" matBadgeColor="warn" *ngIf="unseenCount !== 0">message</mat-icon>
+            <mat-icon *ngIf="unseenCount === 0">message</mat-icon>
           </button>
         </li>
         <!-- #START# Notifications-->
         <li matTooltip="{{'COMMON.TOOL_TIP.NOTIFICATION' |  translate}}">
           <button mat-button [matMenuTriggerFor]="notificationMenu" class="nav-notification-icons">
-            <mat-icon matBadge="{{notificationCount}}" matBadgeColor="warn"
-              class="material-icons-outlined icon-color">notifications_active</mat-icon>
-            <!-- <i class="material-icons-outlined icon-color">
-              notifications_active
-            </i> -->
+            <mat-icon matBadge="{{notificationCount}}" matBadgeColor="warn" class="material-icons-outlined icon-color"
+              *ngIf="notificationCount !== 0">notifications_active</mat-icon>
+            <mat-icon *ngIf="notificationCount === 0">notifications_active</mat-icon>
           </button>
 
           <mat-menu #notificationMenu="matMenu" class="nfc-menu notification-div">

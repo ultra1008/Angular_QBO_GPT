@@ -2,7 +2,7 @@ var validator = require("../../../../../controller/common/validationforrequest")
 
 const getOneInvoiceMessage = (req, res, next) => {
     const validationRule = {
-        "_id": "required",
+        "invoice_id": "required",
     };
     validator(req.body, validationRule, {}, (err, status) => {
         if (!status) {

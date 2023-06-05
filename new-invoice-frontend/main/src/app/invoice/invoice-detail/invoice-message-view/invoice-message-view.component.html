@@ -46,17 +46,19 @@
                                     <div class="chat-header clearfix">
                                         <div class="chat-about">
                                             <div class="chat-with">Invoice Number:
-                                                <span class="chat-with-data">{{messageData.invoice.invoice}}</span>
+                                                <span class="chat-with-data">{{messageData.invoice.invoice_no}}</span>
                                             </div>
                                             <div class="chat-with">Invoice Amount:
-                                                <span class="chat-with-data">{{messageData.invoice.total}}</span>
+                                                <span
+                                                    class="chat-with-data">{{messageData.invoice.invoice_total_amount}}</span>
                                             </div>
                                             <div class="chat-with">Due Date:
-                                                <span class="chat-with-data">{{messageData.invoice.due_date}}</span>
+                                                <span
+                                                    class="chat-with-data">{{messageData.invoice.due_date_epoch}}</span>
                                             </div>
                                             <div class="chat-with">Vendor:
                                                 <span
-                                                    class="chat-with-data">{{messageData.invoice.vendor.vendor_name}}</span>
+                                                    class="chat-with-data">{{messageData.invoice.vendor_data.vendor_name}}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -80,7 +82,8 @@
                                     <div class="chat-message clearfix">
                                         <div class="form-group">
                                             <form [formGroup]="form">
-                                                <mat-form-field class="example-full-width font-white-placeholder" appearance="outline">
+                                                <mat-form-field class="example-full-width font-white-placeholder"
+                                                    appearance="outline">
                                                     <input matInput formControlName="message"
                                                         placeholder="Enter message here..">
                                                     <button mat-icon-button matPrefix (click)="handleAttachment()">

@@ -270,6 +270,25 @@ module.exports.getOneAPInvoice = async function (req, res) {
                     }
                 },
                 {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_MESSAGE,
+                        let: { id: "$_id" },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $and: [
+                                            { $eq: ["$invoice_id", "$$id"] },
+                                            { $eq: ["$is_first", true] }
+                                        ]
+                                    }
+                                },
+                            },
+                        ],
+                        as: "invoice_messages"
+                    }
+                },
+                {
                     $project: {
                         assign_to: 1,
                         assign_to_data: "$assign_to_data",
@@ -334,6 +353,8 @@ module.exports.getOneAPInvoice = async function (req, res) {
                                 cond: { $eq: ['$$info.is_delete', 0] }
                             }
                         },
+
+                        invoice_messages: "$invoice_messages",
                     }
                 }
             ]);

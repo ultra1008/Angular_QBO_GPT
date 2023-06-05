@@ -22,6 +22,7 @@ export class InvoiceMessageViewComponent {
   pdf_url = '/assets/pdf_url/file-3.pdf';
   myId = '';
   id: any;
+  invoiceId: any;
   messageData: any;
   messageList: any = [];
   isLoading = true;
@@ -36,7 +37,7 @@ export class InvoiceMessageViewComponent {
     public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, private router: Router) {
     const userData = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA) ?? '{}');
     this.myId = userData.UserData._id;
-    this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
+    this.invoiceId = this.route.snapshot.queryParamMap.get('invoice_id') ?? '';
     this.getOneInvoiceMessage();
     this.form = this.formBuilder.group({
       message: ["", Validators.required],
@@ -44,7 +45,7 @@ export class InvoiceMessageViewComponent {
   }
 
   async getOneInvoiceMessage() {
-    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ONE_INVOICE_MESSAGE, { _id: this.id });
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ONE_INVOICE_MESSAGE, { invoice_id: this.invoiceId });
     if (data.status) {
       this.messageData = data.data;
       this.messageList = data.messages;
@@ -98,7 +99,12 @@ export class InvoiceMessageViewComponent {
   }
 
   back() {
-    this.router.navigate([WEB_ROUTES.INVOICE_MESSAGES]);
+    const from = this.route.snapshot.queryParamMap.get('from') ?? '';
+    if (from) {
+      this.router.navigate([WEB_ROUTES.INVOICE_MESSAGES]);
+    } else {
+      this.viewInvoice();
+    }
   }
 
   download() {
