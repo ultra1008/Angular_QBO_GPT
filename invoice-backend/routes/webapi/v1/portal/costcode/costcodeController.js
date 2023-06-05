@@ -475,7 +475,10 @@ module.exports.checkQBDImportCostcode = async function (req, res) {
                 if (nameexist == null) {
                     requestObject.created_at = Math.round(new Date().getTime() / 1000);
                     requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.is_quickbooks = true;
+                    requestObject.module = "Invoice";
                     requestObject.cost_code = requestObject[m].Name;
+                    requestObject.division = requestObject[m].AccountType;
                     var add_Costcode = new costcodeCollection(requestObject);
                     var save_Costcode = await add_Costcode.save();
                 }
