@@ -541,25 +541,25 @@
                                                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'USERS.ADD_EDIT.LOCATION' | translate}}</mat-label>
-                                                                      <mat-select formControlName="userlocation_id"
-                                                                           #db_locationsSelect class="dark-cust-color">
+                                                                      <mat-label>{{'USERS.ADD_EDIT.LANGUAGE_SPOKEN' | translate}}</mat-label>
+                                                                      <mat-select formControlName="user_languages"
+                                                                           #languageListSelect
+                                                                           (selectionChange)="language_change($event)"
+                                                                           required multiple>
                                                                            <mat-select-filter [placeholder]="'Filter'"
-                                                                                [displayMember]="'location_name'"
-                                                                                *ngIf="db_locationsSelect.focused"
-                                                                                [array]="variablesdb_locations"
-                                                                                (filteredReturn)="db_locations =$event">
+                                                                                [displayMember]="'name'"
+                                                                                *ngIf="languageListSelect.focused"
+                                                                                [array]="variableslanguageList"
+                                                                                (filteredReturn)="languageList =$event">
                                                                            </mat-select-filter>
-                                                                           <mat-option
-                                                                                *ngFor="let db_location of db_locations"
-                                                                                [value]="db_location._id">
-                                                                                {{db_location.location_name}}
+                                                                           <mat-option *ngFor="let item of languageList"
+                                                                                [value]="item._id">
+                                                                                {{item.name}}
                                                                            </mat-option>
                                                                       </mat-select>
-
-
                                                                  </mat-form-field>
                                                             </div>
+
                                                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
@@ -628,27 +628,7 @@
                                                             </div>
                                                        </div>
                                                        <div class="row">
-                                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                                                                 <mat-form-field class="example-full-width"
-                                                                      appearance="outline">
-                                                                      <mat-label>{{'USERS.ADD_EDIT.LANGUAGE_SPOKEN' | translate}}</mat-label>
-                                                                      <mat-select formControlName="user_languages"
-                                                                           #languageListSelect
-                                                                           (selectionChange)="language_change($event)"
-                                                                           required multiple>
-                                                                           <mat-select-filter [placeholder]="'Filter'"
-                                                                                [displayMember]="'name'"
-                                                                                *ngIf="languageListSelect.focused"
-                                                                                [array]="variableslanguageList"
-                                                                                (filteredReturn)="languageList =$event">
-                                                                           </mat-select-filter>
-                                                                           <mat-option *ngFor="let item of languageList"
-                                                                                [value]="item._id">
-                                                                                {{item.name}}
-                                                                           </mat-option>
-                                                                      </mat-select>
-                                                                 </mat-form-field>
-                                                            </div>
+
                                                        </div>
                                                        <div class="row">
                                                             <div class=" col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2 ">
@@ -658,12 +638,12 @@
                                                                       mat-raised-button color="warn"
                                                                       *ngIf="id !== null">{{'COMMON.ACTIONS.NEXT'| translate}}</button>
                                                                  <button
-                                                                      *ngIf="role_permission.role_permission.users.employeeInformation.Edit"
+                                                                      *ngIf="id === null && role_permission.role_permission.users.employeeInformation.Edit"
                                                                       class="btn-space" mat-raised-button
                                                                       (click)="savedata()"
                                                                       color="primary">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                                  <button
-                                                                      *ngIf="role_permission.role_permission.users.employeeInformation.Edit"
+                                                                      *ngIf="id !== null && role_permission.role_permission.users.employeeInformation.Edit"
                                                                       mat-raised-button color="primary"
                                                                       (click)="saveEmployeeInfo()">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                             </div>
