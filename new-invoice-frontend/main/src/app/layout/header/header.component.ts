@@ -56,7 +56,7 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
 
   companyList: any = [];
   isLoading = true;
-  constructor (@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, public elementRef: ElementRef,
+  constructor(@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, public elementRef: ElementRef,
     public uiSpinner: UiSpinnerService, private configService: ConfigService, private authService: AuthService,
     private router: Router, public translate: TranslateService, public dialog: MatDialog, private commonService: CommonService,) {
     super();
@@ -253,7 +253,7 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
         this.renderer.removeClass(this.document.body, 'submenu-closed');
       }
     } else {
-      if (this.config.layout.sidebar.collapsed === true) {
+      if (this.config.layout.sidebar.collapsed === false) {
         this.renderer.addClass(this.document.body, 'side-closed');
         this.renderer.addClass(this.document.body, 'submenu-closed');
       }

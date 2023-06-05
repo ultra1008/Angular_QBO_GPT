@@ -40,7 +40,8 @@
             "NO": "No",
             "BACK": "Back",
             "NEXT": "Next",
-            "DELETE": "Delete"
+            "DELETE": "Delete",
+            "Access_denied_all": "Access denied"
         },
         "HISTORY": {
             "KEY": "Key",
@@ -309,6 +310,7 @@
                 "VENDORS": "Vendors",
                 "INVOICE": "Invoice",
                 "REPORT": "Report",
+                "Client_Job": "Client/Job Name",
                 "TEMPLATES": "Templates",
                 "USERS": "Users",
                 "SETTING": "Setting",

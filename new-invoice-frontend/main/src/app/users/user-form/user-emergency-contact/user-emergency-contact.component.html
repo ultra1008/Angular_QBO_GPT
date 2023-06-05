@@ -20,7 +20,7 @@
                                 </button>
                             </div>
                         </li>
-                        <li class="tbl-header-btn">
+                        <li class="tbl-header-btn" *ngIf="role_permission.role_permission.users.emergencyContact.Edit">
                             <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ADD' | translate}}">
                                 <button mat-mini-fab color="primary" (click)="addNewEmergencyContact()">
                                     <mat-icon class="col-white">add</mat-icon>

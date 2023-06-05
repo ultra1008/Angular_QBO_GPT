@@ -12,7 +12,7 @@ import { showNotification } from 'src/consts/utils';
 export class RolesettingsComponent {
   allRoles: any = [];
   roleName: any;
-  constructor(private router: Router, public httpCall: HttpCall) {}
+  constructor(private router: Router, public httpCall: HttpCall) { }
 
   ngOnInit() {
     this.getAllRoles();
@@ -57,48 +57,23 @@ export class RolesettingsComponent {
     this.allRoles[index].role_permission[key_].Edit = event.checked;
     this.allRoles[index].role_permission[key_].Delete = event.checked;
     this.allRoles[index].role_permission[key_].View = event.checked;
-    if (key_ == 'projects') {
-      this.allRoles[index].role_permission[key_].Settings = event.checked;
+    /* if (key_ == 'vendor') {
+
       this.allRoles[index].role_permission[key_].Restore = event.checked;
-    } else if (key_ == 'changeOrders') {
+    } else if (key_ == 'clientJob') {
       this.allRoles[index].role_permission[key_].Restore = event.checked;
-    } else if (key_ == 'vendors') {
+    } else if (key_ == 'invoice') {
       this.allRoles[index].role_permission[key_].Restore = event.checked;
-    } else if (key_ == 'emailTemplates') {
+    } else if (key_ == 'users') {
       this.allRoles[index].role_permission[key_].Restore = event.checked;
-    }
+    } */
   }
 
   oneAllSettingChange(event: any, index: any, key_: any) {
     if (event.checked) {
-      if (
-        this.allRoles[index].role_permission[key_].Add &&
-        this.allRoles[index].role_permission[key_].Edit &&
-        this.allRoles[index].role_permission[key_].Delete &&
-        this.allRoles[index].role_permission[key_].View
-      ) {
-        if (key_ == 'projects') {
-          if (
-            this.allRoles[index].role_permission[key_].Settings &&
-            this.allRoles[index].role_permission[key_].Restore
-          ) {
-            this.allRoles[index].role_permission[key_].All = event.checked;
-          }
-        } else if (key_ == 'changeOrders') {
-          if (this.allRoles[index].role_permission[key_].Restore) {
-            this.allRoles[index].role_permission[key_].All = event.checked;
-          }
-        } else if (key_ == 'vendors') {
-          if (this.allRoles[index].role_permission[key_].Restore) {
-            this.allRoles[index].role_permission[key_].All = event.checked;
-          }
-        } else if (key_ == 'emailTemplates') {
-          if (this.allRoles[index].role_permission[key_].Restore) {
-            this.allRoles[index].role_permission[key_].All = event.checked;
-          }
-        } else {
-          this.allRoles[index].role_permission[key_].All = event.checked;
-        }
+      if (this.allRoles[index].role_permission[key_].Add && this.allRoles[index].role_permission[key_].Edit
+        && this.allRoles[index].role_permission[key_].Delete && this.allRoles[index].role_permission[key_].View) {
+        this.allRoles[index].role_permission[key_].All = event.checked;
       }
     } else {
       this.allRoles[index].role_permission[key_].All = event.checked;
@@ -114,14 +89,13 @@ export class RolesettingsComponent {
         this.allRoles[index].role_permission[key_][key].Delete = event.checked;
         this.allRoles[index].role_permission[key_][key].Edit = event.checked;
         this.allRoles[index].role_permission[key_][key].View = event.checked;
-        if (key_ == 'projects') {
-          this.allRoles[index].role_permission[key_].Settings = event.checked;
+        if (key_ == 'vendor') {
           this.allRoles[index].role_permission[key_].Restore = event.checked;
-        } else if (key_ == 'changeOrders') {
+        } else if (key_ == 'clientJob') {
           this.allRoles[index].role_permission[key_].Restore = event.checked;
-        } else if (key_ == 'vendors') {
+        } else if (key_ == 'invoice') {
           this.allRoles[index].role_permission[key_].Restore = event.checked;
-        } else if (key_ == 'emailTemplates') {
+        } else if (key_ == 'users') {
           this.allRoles[index].role_permission[key_].Restore = event.checked;
         }
       }
