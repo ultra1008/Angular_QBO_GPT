@@ -112,3 +112,24 @@
 .unseen-msg {
      background-color: #dfecff;
 }
+
+.field-h {
+     ::ng-deep .mat-mdc-form-field {
+
+          height: 40px !important;
+     }
+}
+
+.button-set {
+     ::ng-deep .mdc-fab--mini {
+          width: 30px;
+          height: 30px;
+          margin-top: 14px;
+     }
+
+     .material-icons {
+          line-height: 1;
+          height: 19px;
+          font-size: 20px;
+     }
+}
