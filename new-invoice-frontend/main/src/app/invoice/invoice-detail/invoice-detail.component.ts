@@ -262,9 +262,9 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
       this.classNameList = this.variablesClassNameList.slice();
     }
   }
-  gotoEdit(document_type: any) {
+  gotoEdit(document: any) {
 
-    this.router.navigate([WEB_ROUTES.INVOICE_VIEW_DOCUMENT], { queryParams: { document: document_type } });
+    this.router.navigate([WEB_ROUTES.INVOICE_VIEW_DOCUMENT], { queryParams: { document: document.document_type, _id: document._id } });
   }
 
   async getOneInvoice() {
