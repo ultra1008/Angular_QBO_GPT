@@ -9,6 +9,21 @@ var notesSchema = new mongoose.Schema({
     is_delete: { type: Number, default: 0 },
 });
 
+var infoSchema = new mongoose.Schema({
+    amount: { type: Number, default: 0 },
+    job_client_name: { type: mongoose.ObjectId, default: "" },
+    class_name: { type: mongoose.ObjectId, default: "" },
+    cost_code_gl_account: { type: mongoose.ObjectId, default: "" },
+    assign_to: { type: mongoose.ObjectId, default: "" },
+    notes: { type: String, default: "" },
+    created_by: { type: mongoose.ObjectId },
+    created_at: { type: Number },
+    created_by: { type: mongoose.ObjectId },
+    updated_at: { type: Number },
+    updated_by: { type: mongoose.ObjectId },
+    is_delete: { type: Number, default: 0 },
+});
+
 var invoiceSchema = new mongoose.Schema({
     assign_to: { type: mongoose.ObjectId, default: "" }, //user collection - All By default empty like rillion
     vendor: { type: mongoose.ObjectId, default: "" }, // vendor collection
@@ -45,19 +60,7 @@ var invoiceSchema = new mongoose.Schema({
     notes: { type: String, default: "" },
 
     invoice_notes: { type: [notesSchema], default: [] },
-    /*
-
-    has_packing_slip: { type: Boolean, default: false }, // if any related packaging slip is matched with this invoice
-    packing_slip_data: { type: packing_slip_schema, default: packingSlipData }, // ap_packagingslips schema Object Id
-
-    has_receiving_slip: { type: Boolean, default: false }, // if any related receiving slip is matched with this invoice
-    receiving_slip_data: { type: receiving_slip_schema, default: receivingSlipData }, // ap_receivingslips schema Object Id
-
-    has_po: { type: Boolean, default: false }, // if any related po is matched with this invoice
-    po_data: { type: po_schema, default: poData }, // ap_po schema Object Id
-
-    has_quote: { type: Boolean, default: false }, // if any related quote is matched with this invoice
-    quote_data: { type: quote_schema, default: quoteData }, // ap_quotes schema Object Id */
+    invoice_info: { type: [infoSchema], default: [] },
 
     document_type: { type: String, default: "INVOICE" }, // Fixed Invoice document type
     created_by: { type: mongoose.ObjectId, default: "" },  // User collection

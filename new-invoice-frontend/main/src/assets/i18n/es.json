@@ -516,9 +516,10 @@
                 "TITLE": "Info",
                 "TABLE": {
                     "TOTAL_AMOUNT": "Total Amount",
-                    "COST_CODE": "Cost Code",
+                    "COST_CODE": "Cost Code/GL Account",
                     "ASSIGN_TO": "Approver",
-                    "GL_ACCOUNT": "GL Account",
+                    "CLIENT_JOB_NAME": "Client/Job Name",
+                    "CLASS_NAME": "Class Name",
                     "NOTES": "Notes"
                 }
             }

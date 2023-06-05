@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { SettingsService } from '../settings.service';
 import { showNotification, swalWithBootstrapButtons } from 'src/consts/utils';
@@ -8,11 +8,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { TermsFormComponent } from './terms-listing/terms-form/terms-form.component';
 import { TaxRateFormComponent } from './tax-rate-listing/tax-rate-form/tax-rate-form.component';
 import { DocumentFormComponent } from './documents-listing/document-form/document-form.component';
-import { VendorFormComponent } from 'src/app/vendors/vendor-form/vendor-form.component';
 import { VendorTypeFormComponent } from './vendor-type-listing/vendor-type-form/vendor-type-form.component';
 import { JobNameFormComponent } from './job-name-listing/job-name-form/job-name-form.component';
-import { saveAs } from 'file-saver';
-import * as fs from 'file-saver';
 import * as XLSX from 'xlsx';
 import { ImportOtherSettingsComponent } from './import-other-settings/import-other-settings.component';
 import { httproutes, httpversion } from 'src/consts/httproutes';
@@ -26,7 +23,7 @@ import { OtherExistsListingComponent } from './other-exists-listing/other-exists
   templateUrl: './othersettings.component.html',
   styleUrls: ['./othersettings.component.scss'],
 })
-export class OthersettingsComponent {
+export class OthersettingsComponent implements OnInit {
   exitData!: any[];
   AllTerms: any;
   AllTaxrate: any;

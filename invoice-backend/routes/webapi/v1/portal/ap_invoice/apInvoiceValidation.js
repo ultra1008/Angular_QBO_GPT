@@ -86,6 +86,25 @@ const getHeaderAPInvoiceSerach = (req, res, next) => {
     });
 };
 
+const saveAPInvoiceInfo = (req, res, next) => {
+    const validationRule = {
+        "amount": "required",
+        /*  "job_client_name": "required",
+         "class_name": "required",
+         "cost_code_gl_account": "required",
+         "assign_to": "required",
+         "notes": "required", */
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({ status: false, message: err });
+        }
+        else {
+            next();
+        }
+    });
+};
+
 module.exports = {
     getAPInvoiceForTable,
     getOneAPInvoice,
@@ -93,4 +112,5 @@ module.exports = {
     saveAPInvoiceNote,
     deleteAPInvoiceNote,
     getHeaderAPInvoiceSerach,
+    saveAPInvoiceInfo,
 };

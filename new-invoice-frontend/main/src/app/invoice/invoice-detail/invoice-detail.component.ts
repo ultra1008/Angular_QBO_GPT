@@ -3,7 +3,7 @@ import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroy
 import { WEB_ROUTES } from 'src/consts/routes';
 import { SendInvoiceMessageComponent } from './send-invoice-message/send-invoice-message.component';
 import { Component } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators, } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators, } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { icon } from 'src/consts/icon';
 import { MailFormComponent } from '../mail-form/mail-form.component';
@@ -14,12 +14,13 @@ import { TermModel, Vendor } from 'src/app/vendors/vendor.model';
 import { configData } from 'src/environments/configData';
 import { ClassNameTable, CostCodeTable } from 'src/app/settings/settings.model';
 import { ClientList } from 'src/app/client/client.model';
-import { epochToDateTime, showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
+import { amountChange, epochToDateTime, numberWithCommas, showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { TranslateService } from '@ngx-translate/core';
 import { InvoiceRejectedReasonComponent } from './invoice-rejected-reason/invoice-rejected-reason.component';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { Observable, map, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-invoice-detail',
@@ -69,6 +70,35 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   supportingDocuments: any = [];
   rejectReason = '';
 
+  invoiceInfo: any = [];
+  showInfoForm = false;
+  infoAmount = '';
+  infoNotes = '';
+
+  filteredUsers?: Observable<User[]>;
+  userControl = new UntypedFormControl();
+  displayUserFn(user: User): string {
+    return user && user.userfullname ? user.userfullname : '';
+  }
+
+  filteredCostCode?: Observable<CostCodeTable[]>;
+  costCodeControl = new UntypedFormControl();
+  displayCostCodeFn(costcode: CostCodeTable): string {
+    return costcode && costcode.cost_code ? costcode.cost_code : '';
+  }
+
+  filteredClient?: Observable<ClientList[]>;
+  clientControl = new UntypedFormControl();
+  displayClientFn(client: ClientList): string {
+    return client && client.client_name ? client.client_name : '';
+  }
+
+  filteredClassName?: Observable<ClassNameTable[]>;
+  classNameControl = new UntypedFormControl();
+  displayClassNameFn(className: ClassNameTable): string {
+    return className && className.name ? className.name : '';
+  }
+
   setStep(index: number) {
     this.step = index;
   }
@@ -78,7 +108,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   prevStep() {
     this.step--;
   }
-  constructor(private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog, private commonService: CommonService,
+  constructor (private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog, private commonService: CommonService,
     public route: ActivatedRoute, public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, public translate: TranslateService,) {
     super();
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
@@ -130,6 +160,58 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
     this.getCostCode();
     this.getClassName();
     this.getOneInvoice();
+    this.filteredUsers = this.userControl.valueChanges.pipe(
+      startWith(''),
+      map((value) => (typeof value === 'string' ? value : value.userfullname)),
+      map((userfullname) => (userfullname ? this._userFilter(userfullname) : this.userList.slice()))
+    );
+
+    this.filteredCostCode = this.costCodeControl.valueChanges.pipe(
+      startWith(''),
+      map((value) => (typeof value === 'string' ? value : value.cost_code)),
+      map((cost_code) => (cost_code ? this._costCodeFilter(cost_code) : this.costCodeList.slice()))
+    );
+
+    this.filteredClient = this.clientControl.valueChanges.pipe(
+      startWith(''),
+      map((value) => (typeof value === 'string' ? value : value.client_name)),
+      map((client_name) => (client_name ? this._clientFilter(client_name) : this.jobNameList.slice()))
+    );
+
+    this.filteredClassName = this.classNameControl.valueChanges.pipe(
+      startWith(''),
+      map((value) => (typeof value === 'string' ? value : value.name)),
+      map((name) => (name ? this._classNameFilter(name) : this.classNameList.slice()))
+    );
+
+  }
+
+  private _userFilter(userfullname: string): User[] {
+    const filterValue = userfullname.toLowerCase();
+    return this.userList.filter(
+      (option) => option.userfullname.toLowerCase().indexOf(filterValue) === 0
+    );
+  }
+
+  private _costCodeFilter(costCode: string): CostCodeTable[] {
+    const filterValue = costCode.toLowerCase();
+    return this.costCodeList.filter(
+      (option) => option.cost_code.toLowerCase().indexOf(filterValue) === 0
+    );
+  }
+
+  private _clientFilter(client: string): ClientList[] {
+    const filterValue = client.toLowerCase();
+    return this.jobNameList.filter(
+      (option) => option.client_name.toLowerCase().indexOf(filterValue) === 0
+    );
+  }
+
+  private _classNameFilter(className: string): ClassNameTable[] {
+    const filterValue = className.toLowerCase();
+    return this.classNameList.filter(
+      (option) => option.name.toLowerCase().indexOf(filterValue) === 0
+    );
   }
 
   async getVendor() {
@@ -199,8 +281,8 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
         invoice_no: [this.invoiceData.invoice_no],
         invoice_date_epoch: [invoiceDate],
         due_date_epoch: [dueDate],
-        invoice_total_amount: [this.invoiceData.invoice_total_amount],
-        tax_amount: [this.invoiceData.tax_amount],
+        invoice_total_amount: [numberWithCommas(this.invoiceData.invoice_total_amount.toFixed(2))],
+        tax_amount: [numberWithCommas(this.invoiceData.tax_amount.toFixed(2))],
         assign_to: [this.invoiceData.assign_to],
         status: [this.invoiceData.status],
       });
@@ -228,8 +310,8 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
         terms: [this.invoiceData.terms],
 
         tax_id: [this.invoiceData.tax_id],
-        sub_total: [this.invoiceData.sub_total],
-        amount_due: [this.invoiceData.amount_due],
+        sub_total: [numberWithCommas(this.invoiceData.sub_total.toFixed(2))],
+        amount_due: [numberWithCommas(this.invoiceData.amount_due.toFixed(2))],
 
         gl_account: [this.invoiceData.gl_account],
         class_name: [this.invoiceData.class_name],
@@ -239,6 +321,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
       this.rejectReason = this.invoiceData.reject_reason;
       this.notes = this.invoiceData.invoice_notes;
       this.supportingDocuments = this.invoiceData.supporting_documents;
+      this.invoiceInfo = this.invoiceData.invoice_info ?? [];
       this.pdf_url = this.invoiceData.pdf_url;
       this.pdfLoader = false;
       this.uiSpinner.spin$.next(false);
@@ -482,6 +565,90 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
       // this.dashboardHistory = [];
       // this.start = 0;
       // this.getTodaysActivity();
+    }
+  }
+
+  addCloseInvoiceInfo() {
+    this.showInfoForm = !this.showInfoForm;
+  }
+  async saveInvoiceInfo() {
+    let assignTo = '';
+    if (this.userControl.value) {
+      assignTo = this.userControl.value._id;
+    }
+    /* if (this.infoAmount == '') {
+      showNotification(this.snackBar, 'Please enter invoice amount.', 'error');
+    } else {
+      const requestObject = {
+        invoice_id: this.id,
+        amount: this.infoAmount,
+        job_client_name: this.infoCostCode,
+        class_name: this.infoAssignTo,
+        cost_code_gl_account: this.infoClientJobName,
+        assign_to: assignTo,
+        notes: this.infoNotes,
+      };
+      this.uiSpinner.spin$.next(true);
+      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_INVOICE_INFO, requestObject);
+      this.uiSpinner.spin$.next(false);
+      if (data.status) {
+        showNotification(this.snackBar, data.message, 'success');
+        this.addCloseInvoiceInfo();
+      } else {
+        showNotification(this.snackBar, data.message, 'error');
+      }
+    } */
+  }
+
+  infoAmountChange(params: any, controller: string) {
+    this.invoiceForm.get(controller)?.setValue(amountChange(params));
+  }
+
+  moreInfoAmountChange(params: any, controller: string) {
+    this.moreInformationForm.get(controller)?.setValue(amountChange(params));
+  }
+
+  amountChange(params: any) {
+    this.infoAmount = amountChange(params);
+  }
+
+  numberWithCommas(amount: number) {
+    return numberWithCommas(amount.toFixed(2));
+  }
+
+  setInfoCostCode(id: string) {
+    const found = this.costCodeList.find((x: CostCodeTable) => x._id === id);
+    if (found) {
+      return found.cost_code;
+    } else {
+      return '';
+    }
+  }
+
+  setInfoApprover(id: string) {
+    const found = this.userList.find((x: User) => x._id === id);
+    if (found) {
+      return found.userfullname;
+    } else {
+      return '';
+    }
+  }
+
+  setInfoClientJob(id: string) {
+    const found = this.jobNameList.find((x: ClientList) => x._id === id);
+    if (found) {
+      return found.client_name;
+    } else {
+      return '';
+    }
+  }
+
+  setInfoClassName(id: string) {
+    const found = this.classNameList.find((x: ClassNameTable) => x._id === id);
+    if (found) {
+      return found.name;
+    } else {
+      return '';
     }
   }
 }
