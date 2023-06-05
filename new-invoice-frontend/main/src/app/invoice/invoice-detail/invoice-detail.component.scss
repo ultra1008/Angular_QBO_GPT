@@ -289,3 +289,38 @@
 .text-right {
      text-align: right;
 }
+
+.info-table {
+     .column-1 {
+          width: 12%;
+     }
+
+     .column-2 {
+          width: 15%;
+     }
+
+     .column-3 {
+          width: 15%;
+     }
+
+     .column-4 {
+          width: 15%;
+     }
+
+     .column-5 {
+          width: 15%;
+     }
+
+     .column-6 {
+          width: 12%;
+     }
+}
+
+.info-header {
+     height: 45px;
+     padding: 10px;
+
+     .add-icon {
+          cursor: pointer;
+     }
+}

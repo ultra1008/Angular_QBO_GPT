@@ -249,6 +249,7 @@ export enum httproutes {
   SAVE_INVOICE_NOTE = 'saveapinvoicenote',
   DELETE_INVOICE_NOTE = 'deleteapinvoicenote',
   GET_INVOICE_HISTORY = 'getapinvoicehistory',
+  SAVE_INVOICE_INFO = 'saveapinvoiceinfo',
 
   //QuickBook Module
   QUICKBOOK_SAVE_INFO = "savequickbookinfo",

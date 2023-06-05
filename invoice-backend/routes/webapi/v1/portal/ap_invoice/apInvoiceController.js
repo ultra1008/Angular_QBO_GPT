@@ -323,7 +323,15 @@ module.exports.getOneAPInvoice = async function (req, res) {
                         is_delete: 1,
 
                         notes: 1,
-                        supporting_documents: { $concatArrays: ["$po", "$quote", "$packing_slip", "$receiving_slip"] }
+                        supporting_documents: { $concatArrays: ["$po", "$quote", "$packing_slip", "$receiving_slip"] },
+
+                        invoice_info: {
+                            $filter: {
+                                input: '$invoice_info',
+                                as: 'info',
+                                cond: { $eq: ['$$info.is_delete', 0] }
+                            }
+                        },
                     }
                 }
             ]);
@@ -1136,6 +1144,62 @@ module.exports.getHeaderAPInvoiceSerach = async function (req, res) {
         } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+// Save Invoice Notes
+module.exports.saveAPInvoiceInfo = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var apInvoiceConnection = connection_db_api.model(collectionConstant.AP_INVOICE, apInvoiceSchema);
+            var invoice_id = requestObject.invoice_id;
+            delete requestObject.invoice_id;
+            var id = requestObject._id;
+            delete requestObject._id;
+            if (id) {
+                requestObject.updated_by = decodedToken.UserData._id;
+                requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+                let updateObject = {
+                    "invoice_info.$.updated_by": decodedToken.UserData._id,
+                    "invoice_info.$.updated_at": Math.round(new Date().getTime() / 1000),
+                    "invoice_info.$.amount": requestObject.amount,
+                    "invoice_info.$.job_client_name": requestObject.job_client_name,
+                    "invoice_info.$.class_name": requestObject.class_name,
+                    "invoice_info.$.cost_code_gl_account": requestObject.cost_code_gl_account,
+                    "invoice_info.$.assign_to": requestObject.assign_to,
+                    "invoice_info.$.notes": requestObject.notes,
+                };
+                let update_ap_invoice = await apInvoiceConnection.updateOne({ _id: ObjectID(invoice_id), "invoice_info._id": id }, { $set: updateObject });
+                if (update_ap_invoice) {
+                    res.send({ status: true, message: "Invoice info updated successfully.", data: update_ap_invoice });
+                } else {
+                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                }
+            } else {
+                //save invoice info
+                requestObject.created_by = decodedToken.UserData._id;
+                requestObject.created_at = Math.round(new Date().getTime() / 1000);
+                requestObject.updated_by = decodedToken.UserData._id;
+                requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+                let save_ap_invoice_info = await apInvoiceConnection.updateOne({ _id: ObjectID(invoice_id) }, { $push: { invoice_info: requestObject } });
+                if (save_ap_invoice_info) {
+                    res.send({ status: true, message: "Invoice info added successfully." });
+                } else {
+                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                }
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false });
         } finally {
             connection_db_api.close();
         }
