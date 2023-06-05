@@ -16,6 +16,7 @@ export class ViewDocumentComponent {
   quoteForm: UntypedFormGroup;
   packingSlipForm: UntypedFormGroup;
   receivingSlipForm: UntypedFormGroup;
+  showPoEdit: boolean = false;
 
   pdf_url = 'https://s3.wasabisys.com/r-988514/dailyreport/60c31f3dc5ba8494a2b1070f/60c31f3dc5ba8494a2b1070fdailyreport1630757615234.pdf';
 
@@ -86,6 +87,9 @@ export class ViewDocumentComponent {
       this.variablestermList = data.data;
       this.termsList = this.variablestermList.slice();
     }
+  }
+  goEdit() {
+    this.showPoEdit = true;
   }
   print() {
     fetch(this.pdf_url).then(resp => resp.arrayBuffer()).then(resp => {

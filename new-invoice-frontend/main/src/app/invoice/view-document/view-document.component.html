@@ -27,7 +27,7 @@
                     </div>
                     <div class="body overflow-auto">
                         <div class="row">
-                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div *ngIf="showPoEdit" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <form class="register-form m-4" [formGroup]="poForm">
                                     <div class="row">
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
@@ -110,7 +110,7 @@
                                             </mat-form-field>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row form-old ">
                                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Address</mat-label>
@@ -142,6 +142,9 @@
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <div class="card pdf-h">
                                     <div class="pdf-btn">
+                                        <button class="m-2" mat-mini-fab (click)="goEdit()" color="primary">
+                                            <mat-icon class="col-white">edit</mat-icon>
+                                        </button>
                                         <button class="m-2" mat-mini-fab (click)="download()" color="primary">
                                             <mat-icon class="col-white">download</mat-icon>
                                         </button>
@@ -156,10 +159,35 @@
                                                 [show-all]="true" [fit-to-page]="false" [zoom]="1"
                                                 [zoom-scale]="'page-width'" [stick-to-page]="false" [render-text]="true"
                                                 [external-link-target]="'blank'" [autoresize]="true"
-                                                [show-borders]="false" style="width: 100%; height: 600px;"></pdf-viewer>
+                                                [show-borders]="false" style="width: 100%; height: 710px;"></pdf-viewer>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div *ngIf="!showPoEdit" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <ng-container [ngTemplateOutlet]="viewPDFTemplate"
+                                    [ngTemplateOutletContext]="{url:pdf_url}">
+                                </ng-container>
+                                <!-- <div class="card pdf-h">
+                                    <div class="pdf-btn">
+                                        <button class="m-2" mat-mini-fab (click)="download()" color="primary">
+                                            <mat-icon class="col-white">download</mat-icon>
+                                        </button>
+                                        <button mat-mini-fab (click)="print()" color="primary">
+                                            <mat-icon class="col-white">print</mat-icon>
+                                        </button>
+
+                                    </div>
+                                    <div id="outerContainer">
+                                        <div class="pdf-container">
+                                            <pdf-viewer [src]="pdf_url" [rotation]="0" [original-size]="false"
+                                                [show-all]="true" [fit-to-page]="false" [zoom]="1"
+                                                [zoom-scale]="'page-width'" [stick-to-page]="false" [render-text]="true"
+                                                [external-link-target]="'blank'" [autoresize]="true"
+                                                [show-borders]="false" style="width: 100%; height: 710px;"></pdf-viewer>
+                                        </div>
+                                    </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -192,7 +220,7 @@
                     </div>
                     <div class="body overflow-auto">
                         <div class="row">
-                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div *ngIf="showPoEdit" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <form class="register-form m-4" [formGroup]="quoteForm">
                                     <div class="row">
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
@@ -275,7 +303,7 @@
                                             </mat-form-field>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row .form-old">
                                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Address</mat-label>
@@ -297,6 +325,9 @@
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <div class="card pdf-h">
                                     <div class="pdf-btn">
+                                        <button class="m-2" mat-mini-fab (click)="goEdit()" color="primary">
+                                            <mat-icon class="col-white">edit</mat-icon>
+                                        </button>
                                         <button class="m-2" mat-mini-fab (click)="download()" color="primary">
                                             <mat-icon class="col-white">download</mat-icon>
                                         </button>
@@ -315,6 +346,11 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div *ngIf="!showPoEdit" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <ng-container [ngTemplateOutlet]="viewPDFTemplate"
+                                    [ngTemplateOutletContext]="{url:pdf_url}">
+                                </ng-container>
                             </div>
                         </div>
                     </div>
@@ -347,7 +383,7 @@
                     </div>
                     <div class="body overflow-auto">
                         <div class="row">
-                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div *ngIf="showPoEdit" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <form class="register-form m-4" [formGroup]="packingSlipForm">
                                     <div class="row">
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
@@ -416,6 +452,9 @@
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <div class="card pdf-h">
                                     <div class="pdf-btn">
+                                        <button class="m-2" mat-mini-fab (click)="goEdit()" color="primary">
+                                            <mat-icon class="col-white">edit</mat-icon>
+                                        </button>
                                         <button class="m-2" mat-mini-fab (click)="download()" color="primary">
                                             <mat-icon class="col-white">download</mat-icon>
                                         </button>
@@ -434,6 +473,11 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div *ngIf="!showPoEdit" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <ng-container [ngTemplateOutlet]="viewPDFTemplate"
+                                    [ngTemplateOutletContext]="{url:pdf_url}">
+                                </ng-container>
                             </div>
                         </div>
                     </div>
@@ -466,7 +510,7 @@
                     </div>
                     <div class="body overflow-auto">
                         <div class="row">
-                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div *ngIf="showPoEdit" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <form class="register-form m-4" [formGroup]="receivingSlipForm">
                                     <div class="row">
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
@@ -535,6 +579,9 @@
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <div class="card pdf-h">
                                     <div class="pdf-btn">
+                                        <button class="m-2" mat-mini-fab (click)="goEdit()" color="primary">
+                                            <mat-icon class="col-white">edit</mat-icon>
+                                        </button>
                                         <button class="m-2" mat-mini-fab (click)="download()" color="primary">
                                             <mat-icon class="col-white">download</mat-icon>
                                         </button>
@@ -554,6 +601,11 @@
                                     </div>
                                 </div>
                             </div>
+                            <div *ngIf="!showPoEdit" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <ng-container [ngTemplateOutlet]="viewPDFTemplate"
+                                    [ngTemplateOutletContext]="{url:pdf_url}">
+                                </ng-container>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -561,3 +613,42 @@
         </div>
     </div>
 </section>
+
+<ng-template #viewPDFTemplate let-url='url'>
+    <div class="card pdf-h">
+        <div class="pdf-btn">
+            <button class="m-2" mat-mini-fab (click)="download()" color="primary">
+                <mat-icon class="col-white">download</mat-icon>
+            </button>
+            <button mat-mini-fab (click)="print()" color="primary">
+                <mat-icon class="col-white">print</mat-icon>
+            </button>
+
+        </div>
+        <div id="outerContainer">
+            <div class="pdf-container">
+                <pdf-viewer [src]="url" [rotation]="0" [original-size]="false" [show-all]="true" [fit-to-page]="false"
+                    [zoom]="1" [zoom-scale]="'page-width'" [stick-to-page]="false" [render-text]="true"
+                    [external-link-target]="'blank'" [autoresize]="true" [show-borders]="false"
+                    style="width: 100%; height: 710px;"></pdf-viewer>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="doc-file-type mb-2"  >
+      <div class="list-unstyled">
+        <div class="m-1">
+          <div class="d-flex justify-content-between">
+            <h5 class="font-16">White Cap</h5>
+            <h5 class="font-16">#{{invoice.invoice_no}}</h5>
+          </div>
+          <div class="d-flex justify-content-between">
+            <div>
+              <h5 class="font-14"><span><b>Invoice Date </b></span> <span>{{(invoice.invoice_date_epoch * 1000 | date: 'MM/dd/yyyy')}}</span></h5>
+              <h5 class="font-14 last-updated"><span><b>Last updated </b></span> <span>{{(invoice.updated_at * 1000 | date: 'MM/dd/yyyy')}}</span></h5>
+            </div>
+            <h5 class="font-20 my-auto amount">${{invoice.invoice_total_amount}}</h5>
+          </div>
+        </div>
+      </div>
+    </div> -->
+</ng-template>

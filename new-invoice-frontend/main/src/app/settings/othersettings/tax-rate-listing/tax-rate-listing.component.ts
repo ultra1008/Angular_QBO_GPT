@@ -32,7 +32,7 @@ export class TaxRateListingComponent extends UnsubscribeOnDestroyAdapter impleme
   isDelete = 0;
   titleMessage = '';
 
-  constructor (public dialog: MatDialog, public SettingsService: SettingsService, private snackBar: MatSnackBar,
+  constructor(public dialog: MatDialog, public SettingsService: SettingsService, private snackBar: MatSnackBar,
     public router: Router, private httpCall: HttpCall, public translate: TranslateService, private commonService: CommonService,) {
     super();
   }
@@ -183,7 +183,7 @@ export class TaxrateDataSource extends DataSource<TaxrateTable> {
   }
   filteredData: TaxrateTable[] = [];
   renderedData: TaxrateTable[] = [];
-  constructor (
+  constructor(
     public taxrateService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,

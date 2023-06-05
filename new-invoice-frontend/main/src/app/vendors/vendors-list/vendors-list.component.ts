@@ -266,11 +266,11 @@ export class VendorsListComponent
   }
 
   editVendor(vendor: Vendor) {
-    if (this.isDelete == 0) {
-      this.router.navigate([WEB_ROUTES.VENDOR_FORM], {
-        queryParams: { _id: vendor._id },
-      });
-    }
+
+    this.router.navigate([WEB_ROUTES.VENDOR_FORM], {
+      queryParams: { _id: vendor._id },
+    });
+
   }
 
   openHistory() {
