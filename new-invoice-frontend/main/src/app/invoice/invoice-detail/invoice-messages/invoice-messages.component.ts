@@ -67,7 +67,7 @@ export class InvoiceMessagesComponent extends UnsubscribeOnDestroyAdapter implem
   }
 
   viewMessage(row: InvoiceMessage) {
-    this.router.navigate([WEB_ROUTES.INVOICE_MESSAGE_VIEW], { queryParams: { _id: row._id } });
+    this.router.navigate([WEB_ROUTES.INVOICE_MESSAGE_VIEW], { queryParams: { invoice_id: row.invoice_id, from: 'message' } });
   }
 
   private refreshTable() {

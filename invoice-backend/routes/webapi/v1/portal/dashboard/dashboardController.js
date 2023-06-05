@@ -40,7 +40,7 @@ module.exports.getDashboardCount = async function (req, res) {
                     }
                 },
             ]);
-            let get_process = await invoicesProcessConnection.find({ status: 'Process', is_delete: 0 }).count();
+            let get_process = await invoicesProcessConnection.find({ status: 'Process', is_delete: 0 }).countDocuments();
             if (get_data) {
                 if (get_data.length > 0) {
                     get_data = get_data[0];
@@ -123,7 +123,7 @@ module.exports.getDashboardChart = async function (req, res) {
                     }
                 },
             ]);
-            let get_process = await invoicesProcessConnection.find({ status: 'Complete', document_type: { $ne: 'INVOICE' } }).count();
+            let get_process = await invoicesProcessConnection.find({ status: 'Complete', document_type: { $ne: 'INVOICE' } }).countDocuments();
             if (get_data) {
                 if (get_data.length > 0) {
                     get_data = get_data[0];
@@ -282,12 +282,11 @@ module.exports.countInvoiceStatus = async function (req, res) {
                     }
                 },
             ]);
-            let get_process = await apInvoiceConnection.find({ is_delete: 0 }).count();
             if (get_data) {
                 if (get_data.length > 0) {
                     get_data = get_data[0];
                 } else {
-                    get_data = { pending_invoices: 0, approved_invoices: 0, rejected_invoices: 0, late_invoices: 0, On_Hold: 0, overdue: 0 };
+                    get_data = { pending_invoices: 0, approved_invoices: 0, rejected_invoices: 0, late_invoices: 0, on_hold: 0, overdue: 0 };
                 }
                 res.send({ status: true, message: "Invoice data", data: get_data });
             } else {

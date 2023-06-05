@@ -254,7 +254,7 @@ router.post('/webapi/v1/portal/getCostCodeForTable', common.checkTokenExistOrNot
 router.post('/webapi/v1/portal/checkimportcostcode', common.checkTokenExistOrNot, costCodeController.checkImportCostCode);
 router.post('/webapi/v1/portal/importcostcode', common.checkTokenExistOrNot, costCodeController.importCostCode);
 router.get('/webapi/v1/portal/getCostCode', common.checkTokenExistOrNot, costCodeController.getCostCode);
-
+router.post('/webapi/v1/portal/checkQBDImportCostcode', common.checkTokenExistOrNot, costCodeController.checkQBDImportCostcode);
 
 let creditcardsettingsController = require("./creditcardsettings/creditcardsettingsController");
 let creditcardsettingsValidation = require('./creditcardsettings/creditcardsettingsValidation');
@@ -494,6 +494,7 @@ router.post('/webapi/v1/portal/getClientForTable', common.checkTokenExistOrNot, 
 router.post('/webapi/v1/portal/getOneClient', common.checkTokenExistOrNot, clientController.getOneClient);
 router.post('/webapi/v1/portal/checkimportclient', common.checkTokenExistOrNot, clientController.checkImportClient);
 router.post('/webapi/v1/portal/importclient', common.checkTokenExistOrNot, clientController.importClient);
+router.post('/webapi/v1/portal/checkQBDImportClient', common.checkTokenExistOrNot, clientController.checkQBDImportClient);
 
 
 var classNameController = require('./class_name/class_nameController');
@@ -504,6 +505,8 @@ router.get('/webapi/v1/portal/getclassname', common.checkTokenExistOrNot, classN
 router.post('/webapi/v1/portal/getclassnameForTable', common.checkTokenExistOrNot, classNameController.getclassnameForTable);
 router.post('/webapi/v1/portal/checkimportclassname', common.checkTokenExistOrNot, classNameController.checkImportClassName);
 router.post('/webapi/v1/portal/importclassname', common.checkTokenExistOrNot, classNameController.importClassName);
+router.post('/webapi/v1/portal/checkQBDImportClassName', common.checkTokenExistOrNot, classNameController.checkQBDImportClassName);
+
 
 let invoiceMessageController = require('./invoice_message/invoiceMessageController');
 let invoiceMessageValidation = require('./invoice_message/invoiceMessageValidation');

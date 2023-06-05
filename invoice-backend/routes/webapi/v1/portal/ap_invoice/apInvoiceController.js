@@ -5,6 +5,8 @@ var termSchema = require('./../../../../../model/invoice_term');
 var costCodeSchema = require('./../../../../../model/invoice_cost_code');
 var clientSchema = require('./../../../../../model/client');
 var classNameSchema = require('./../../../../../model/class_name');
+var companySchema = require('./../../../../../model/company');
+var tenantSchema = require('./../../../../../model/tenants');
 var apInvoiceHistorySchema = require('./../../../../../model/history/ap_invoice_history');
 let db_connection = require('./../../../../../controller/common/connectiondb');
 let config = require('./../../../../../config/config');
@@ -268,6 +270,25 @@ module.exports.getOneAPInvoice = async function (req, res) {
                     }
                 },
                 {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_MESSAGE,
+                        let: { id: "$_id" },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $and: [
+                                            { $eq: ["$invoice_id", "$$id"] },
+                                            { $eq: ["$is_first", true] }
+                                        ]
+                                    }
+                                },
+                            },
+                        ],
+                        as: "invoice_messages"
+                    }
+                },
+                {
                     $project: {
                         assign_to: 1,
                         assign_to_data: "$assign_to_data",
@@ -332,6 +353,8 @@ module.exports.getOneAPInvoice = async function (req, res) {
                                 cond: { $eq: ['$$info.is_delete', 0] }
                             }
                         },
+
+                        invoice_messages: "$invoice_messages",
                     }
                 }
             ]);
@@ -724,6 +747,11 @@ module.exports.saveAPInvoiceNote = async function (req, res) {
                         invoice_id: invoice_id,
                     };
                     addInvoiceHistory("Update Note", histioryObject, decodedToken);
+
+                    let subject = translator.getStr('InvoiceNote_Added_Subject');
+                    let title = translator.getStr('InvoiceNote_Added_Title');
+                    let description = translator.getStr('InvoiceNote_Added_Description');
+                    sendAPInvoiceNoteAlert(invoice_id, decodedToken, subject, title, description, translator);
                     res.send({ status: true, message: "Invoice note updated successfully.", data: update_ap_invoice });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
@@ -746,6 +774,11 @@ module.exports.saveAPInvoiceNote = async function (req, res) {
                         invoice_id: invoice_id,
                     };
                     addInvoiceHistory("Insert Note", histioryObject, decodedToken);
+
+                    let subject = translator.getStr('InvoiceNote_Added_Subject');
+                    let title = translator.getStr('InvoiceNote_Added_Title');
+                    let description = translator.getStr('InvoiceNote_Added_Description');
+                    sendAPInvoiceNoteAlert(invoice_id, decodedToken, subject, title, description, translator);
                     res.send({ status: true, message: "Invoice note saved successfully." });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
@@ -789,6 +822,11 @@ module.exports.deleteAPInvoiceNote = async function (req, res) {
                     invoice_id: invoice_id,
                 };
                 addInvoiceHistory("Delete Note", histioryObject, decodedToken);
+
+                let subject = translator.getStr('InvoiceNote_Deleted_Subject');
+                let title = translator.getStr('InvoiceNote_Deleted_Title');
+                let description = translator.getStr('InvoiceNote_Deleted_Description');
+                sendAPInvoiceNoteAlert(invoice_id, decodedToken, subject, title, description, translator);
                 res.send({ status: true, message: "Invoice note deleted successfully.", data: update_ap_invoice });
             } else {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
@@ -803,6 +841,98 @@ module.exports.deleteAPInvoiceNote = async function (req, res) {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
+
+async function sendAPInvoiceNoteAlert(id, decodedToken, subject, title, description, translator) {
+    var admin_connection_db_api = await db_connection.connection_db_api(config.ADMIN_CONFIG);
+    var companyConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_COMPANY, companySchema);
+    var tenantConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_TENANTS, tenantSchema);
+    let company_data = await companyConnection.findOne({ companycode: decodedToken.companycode });
+    let talnate_data = await tenantConnection.findOne({ companycode: decodedToken.companycode });
+
+    var connection_db_api = await db_connection.connection_db_api(decodedToken);
+    var apInvoiceConnection = connection_db_api.model(collectionConstant.AP_INVOICE, apInvoiceSchema);
+
+    var get_data = await apInvoiceConnection.aggregate([
+        { $match: { _id: ObjectID(id) } },
+        {
+            $lookup: {
+                from: collectionConstant.INVOICE_USER,
+                localField: "assign_to",
+                foreignField: "_id",
+                as: "assign_to_data"
+            }
+        },
+        {
+            $unwind: {
+                path: "$assign_to_data",
+                preserveNullAndEmptyArrays: true
+            },
+        }
+    ]);
+    if (get_data) {
+        if (get_data.length > 0) {
+            get_data = get_data[0];
+        }
+        if (get_data) {
+            if (get_data.assign_to != '' && get_data.assign_to != undefined && get_data.assign_to != null) {
+                description = description.replace(/#user/g, decodedToken.UserData.userfullname);
+                let viewRoute = `${config.SITE_URL}/invoice/details?_id=${id}`;
+
+                // Notification 
+                let notification_data = {
+                    title: title,
+                    body: description,
+                };
+                let temp_data = {
+                    "module": 'Invoice',
+                    "_id": get_data._id,
+                    "status": get_data.status,
+                };
+                let notificaton = await common.sendNotificationWithData([get_data.assign_to_data.invoice_firebase_token], notification_data, temp_data);
+                console.log("notificaton", notificaton);
+
+                // Alert
+                let alertObject = {
+                    user_id: get_data.assign_to_data._id,
+                    module_name: 'Invoice Note',
+                    module_route: { _id: id },
+                    notification_title: title,
+                    notification_description: description,
+                };
+                alertController.saveAlert(alertObject, connection_db_api);
+
+                // Email
+                const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/commonEmailTemplate.html', 'utf8');
+                let emailTmp = {
+                    HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
+                    SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
+                    ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                    THANKS: translator.getStr('EmailTemplateThanks'),
+                    ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                    ROVUK_TEAM_SEC: translator.getStr('EmailTemplateRovukTeamSec'),
+                    VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
+
+                    TITLE: `${title}`,
+                    TEXT: new handlebars.SafeString(`<h4>Hello ${get_data.assign_to_data.userfullname},</h4><h4>${description}</h4>
+                    <div style="text-align: center;">
+                        <a style="background-color: #023E8A;border: #0077bc solid;color: white;padding: 15px 32px;
+                                    text-align: center;text-decoration: none;display: inline-block;font-size: 16px; width: 20%;" 
+                                    target="_blank" href="${viewRoute}">View Invoice</a>
+                    </div>`),
+
+                    COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
+                    COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
+                };
+                var template = handlebars.compile(file_data);
+                var HtmlData = await template(emailTmp);
+                var mail = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, [get_data.assign_to_data.useremail], subject, HtmlData,
+                    talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
+                    talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                console.log("mail: ", mail);
+            }
+        }
+    } else { }
+}
 
 async function addInvoiceHistory(action, data, decodedToken) {
     var connection_db_api = await db_connection.connection_db_api(decodedToken);

@@ -967,5 +967,11 @@ module.exports = {
     TermHasData: 'You can not delete this Term. There is data related to this Term.',
     VendorTypeHasData: 'You can not delete this Vendor Type. There is data related to this Vendor Type.',
 
+    InvoiceNote_Added_Subject: 'Invoice Note Added',
+    InvoiceNote_Added_Title: 'Note is added for your invoice document.',
+    InvoiceNote_Added_Description: '#user has just added note for invoice document.',
 
+    InvoiceNote_Deleted_Subject: 'Invoice Note Deleted',
+    InvoiceNote_Deleted_Title: 'Note is deleted for your invoice document.',
+    InvoiceNote_Deleted_Description: '#user has just deleted note for invoice document.',
 };

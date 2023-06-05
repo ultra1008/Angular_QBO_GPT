@@ -152,7 +152,7 @@ module.exports.saveEmployee = async function (req, res) {
                         // let get_user_roles = connection_db_api.model(collectionConstant.INVOICE_ROLES, invoiceRoleSchema);
                         // let onerole = await get_user_roles.findOne({ role_id: ObjectID(body.userroleId) });
                         // let allowed_count = billingPlan.BILLING_PLAN[selectedPlan]['ADMIN_ALL'];
-                        // let current_count = await userConnection.find({}).count();
+                        // let current_count = await userConnection.find({}).countDocuments();
                         // console.log("count: ", current_count, allowed_count, ">=", current_count >= allowed_count);
                         // if (current_count >= allowed_count) {
                         //     res.send({ message: translator.getStr('UserLimitExceed'), status: false });

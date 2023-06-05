@@ -45,6 +45,7 @@ export class InvoiceMessage {
   receiver: InvoiceUser;
   invoice: Invoice;
   seen_last_message: string;
+  invoice_id: string;
   constructor (response: InvoiceMessage) {
     {
       this._id = response._id;
@@ -53,7 +54,7 @@ export class InvoiceMessage {
       this.receiver = response.receiver;
       this.invoice = response.invoice;
       this.seen_last_message = response.seen_last_message;
-
+      this.invoice_id = response.invoice_id;
     }
   }
 }
