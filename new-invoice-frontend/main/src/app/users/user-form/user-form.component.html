@@ -318,7 +318,7 @@
                                                                  mat-raised-button
                                                                  color="warn">{{'COMMON.ACTIONS.NEXT'| translate}}</button>
                                                             <button
-                                                                 *ngIf="id !== null && role_permission.role_permission.users.Edit"
+                                                                 *ngIf="role_permission.role_permission.users.personalInformation.Edit"
                                                                  mat-raised-button color="primary"
                                                                  (click)="savePersonalInfo()">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                        </div>
@@ -426,7 +426,7 @@
                                                                       mat-raised-button
                                                                       color="warn">{{'COMMON.ACTIONS.NEXT'| translate}}</button>
                                                                  <button
-                                                                      *ngIf="id !== null && role_permission.role_permission.users.Edit "
+                                                                      *ngIf="!role_permission.role_permission.users.contactInformation.Edit"
                                                                       mat-raised-button color="primary"
                                                                       (click)="saveContactInfo()">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                             </div>
@@ -658,12 +658,12 @@
                                                                       mat-raised-button color="warn"
                                                                       *ngIf="id !== null">{{'COMMON.ACTIONS.NEXT'| translate}}</button>
                                                                  <button
-                                                                      *ngIf="id === null && role_permission.role_permission.users.Edit"
+                                                                      *ngIf="role_permission.role_permission.users.employeeInformation.Edit"
                                                                       class="btn-space" mat-raised-button
                                                                       (click)="savedata()"
                                                                       color="primary">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                                  <button
-                                                                      *ngIf="id !== null && role_permission.role_permission.users.Edit"
+                                                                      *ngIf="role_permission.role_permission.users.employeeInformation.Edit"
                                                                       mat-raised-button color="primary"
                                                                       (click)="saveEmployeeInfo()">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                             </div>
