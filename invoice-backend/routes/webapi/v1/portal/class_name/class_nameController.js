@@ -265,3 +265,43 @@ module.exports.importClassName = async function (req, res) {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
+
+
+module.exports.checkQBDImportClassName = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var classNameConnection = connection_db_api.model(collectionConstant.INVOICE_CLASS_NAME, classnameSchema);
+
+            for (let m = 0; m < requestObject.length; m++) {
+                var nameexist = await classNameConnection.findOne({ "name": requestObject[m].Name });
+                if (nameexist == null) {
+                    requestObject.created_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.name = requestObject[m].Name;
+                    if (requestObject[m].IsActive == true) {
+                        requestObject.status = 1;
+                    }
+                    else if (requestObject[m].IsActive == false) {
+                        requestObject.status = 2;
+                    }
+
+                    var add_vendortype = new classNameConnection(requestObject);
+                    var save_vendortype = await add_vendortype.save();
+                }
+
+            }
+            res.send({ status: true, message: "class name insert successfully..!" });
+
+        } catch (error) {
+            console.log(error);
+            res.send({ status: false, message: translator.getStr('SomethingWrong'), error: error });
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+

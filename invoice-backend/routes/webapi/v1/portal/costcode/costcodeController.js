@@ -460,3 +460,34 @@ module.exports.getCostCode = async function (req, res) {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
+
+module.exports.checkQBDImportCostcode = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            let costcodeCollection = connection_db_api.model(collectionConstant.COSTCODES, costcodeSchema);
+
+            for (let m = 0; m < requestObject.length; m++) {
+                var nameexist = await costcodeCollection.findOne({ "cost_code": requestObject[m].Name });
+                if (nameexist == null) {
+                    requestObject.created_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.cost_code = requestObject[m].Name;
+                    var add_Costcode = new costcodeCollection(requestObject);
+                    var save_Costcode = await add_Costcode.save();
+                }
+
+            }
+            res.send({ status: true, message: "Costcode insert successfully..!" });
+
+        } catch (error) {
+            console.log(error);
+            res.send({ status: false, message: translator.getStr('SomethingWrong'), error: error });
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
