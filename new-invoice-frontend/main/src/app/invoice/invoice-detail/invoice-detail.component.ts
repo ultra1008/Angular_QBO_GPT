@@ -72,7 +72,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
 
   invoiceInfo: any = [];
   showInfoForm = false;
-  infoAmount = '';
+  infoAmount = '0.00';
   infoNotes = '';
 
   filteredUsers?: Observable<User[]>;
@@ -576,15 +576,27 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
     if (this.userControl.value) {
       assignTo = this.userControl.value._id;
     }
-    /* if (this.infoAmount == '') {
+    let costCodeId = '';
+    if (this.costCodeControl.value) {
+      costCodeId = this.costCodeControl.value._id;
+    }
+    let clientId = '';
+    if (this.clientControl.value) {
+      clientId = this.clientControl.value._id;
+    }
+    let classId = '';
+    if (this.classNameControl.value) {
+      classId = this.classNameControl.value._id;
+    }
+    if (this.infoAmount == '') {
       showNotification(this.snackBar, 'Please enter invoice amount.', 'error');
     } else {
       const requestObject = {
         invoice_id: this.id,
         amount: this.infoAmount,
-        job_client_name: this.infoCostCode,
-        class_name: this.infoAssignTo,
-        cost_code_gl_account: this.infoClientJobName,
+        job_client_name: clientId,
+        class_name: classId,
+        cost_code_gl_account: costCodeId,
         assign_to: assignTo,
         notes: this.infoNotes,
       };
@@ -594,10 +606,11 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
       if (data.status) {
         showNotification(this.snackBar, data.message, 'success');
         this.addCloseInvoiceInfo();
+        this.getOneInvoice();
       } else {
         showNotification(this.snackBar, data.message, 'error');
       }
-    } */
+    }
   }
 
   infoAmountChange(params: any, controller: string) {
