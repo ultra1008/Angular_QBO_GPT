@@ -655,3 +655,42 @@ module.exports.importClient = async function (req, res) {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
+
+
+module.exports.checkQBDImportClient = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var clientConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientSchema);
+
+            for (let m = 0; m < requestObject.length; m++) {
+                var nameexist = await clientConnection.findOne({ "client_name": requestObject[m].Name });
+                if (nameexist == null) {
+                    requestObject.created_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.client_name = requestObject[m].Name;
+                    requestObject.name = requestObject[m].Name;
+                    if (requestObject[m].IsActive == true) {
+                        requestObject.client_status = 1;
+                    }
+                    else if (requestObject[m].IsActive == false) {
+                        requestObject.client_status = 2;
+                    }
+                    var add_client = new clientConnection(requestObject);
+                    var save_client = await add_client.save();
+                }
+
+            }
+            res.send({ status: true, message: "Client insert successfully..!" });
+
+        } catch (error) {
+            console.log(error);
+            res.send({ status: false, message: translator.getStr('SomethingWrong'), error: error });
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
