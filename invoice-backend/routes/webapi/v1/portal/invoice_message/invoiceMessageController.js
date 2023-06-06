@@ -1,4 +1,5 @@
 var invoiceMessageSchema = require('./../../../../../model/invoice_message');
+var invoiceMessageSeenSchema = require('./../../../../../model/invoice_message_seen');
 let db_connection = require('./../../../../../controller/common/connectiondb');
 let common = require('./../../../../../controller/common/common');
 let collectionConstant = require('./../../../../../config/collectionConstant');
@@ -21,28 +22,31 @@ module.exports.getInvoiceMessageCount = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             let invoiceMessageCollection = connection_db_api.model(collectionConstant.INVOICE_MESSAGE, invoiceMessageSchema);
+            let invoiceMessageSeenCollection = connection_db_api.model(collectionConstant.INVOICE_MESSAGE_SEEN, invoiceMessageSeenSchema);
             let get_data = await invoiceMessageCollection.find({
-                $or: [
+                /* $or: [
                     { sender_id: ObjectID(decodedToken.UserData._id) },
                     { receiver_id: ObjectID(decodedToken.UserData._id) },
-                ],
+                ], */
+                participants: ObjectID(decodedToken.UserData._id),
                 is_delete: 0,
                 is_first: true
             });
             let unseenCount = 0;
             for (let i = 0; i < get_data.length; i++) {
-                if (get_data[i].receiver_id.toString() == decodedToken.UserData._id) {
-                    if (!get_data[i].is_seen) {
-                        unseenCount++;
-                    }
-                }
-                let get_messages = await invoiceMessageCollection.find({
-                    receiver_id: ObjectID(decodedToken.UserData._id),
-                    invoice_message_id: ObjectID(get_data[i]._id),
-                    is_seen: false,
+                unseenCount += await invoiceMessageSeenCollection.find({ invoice_message_id: get_data[i]._id, user_id: ObjectID(decodedToken.UserData._id), is_seen: false }).countDocuments();
+                /* if (get_data[i].receiver_id.toString() == decodedToken.UserData._id) {
+                   if (!get_data[i].is_seen) {
+                       unseenCount++;
+                   }
+               }
+               let get_messages = await invoiceMessageCollection.find({
+                   receiver_id: ObjectID(decodedToken.UserData._id),
+                   invoice_message_id: ObjectID(get_data[i]._id),
+                   is_seen: false,
 
-                });
-                unseenCount += get_messages.length;
+               });
+               unseenCount += get_messages.length; */
             }
             res.send({ message: translator.getStr('INVOICE_MESSAGE_LISTING'), unseen: unseenCount, status: true });
         } catch (e) {
@@ -67,10 +71,11 @@ module.exports.getInvoiceMessageForTable = async function (req, res) {
             let get_data = await invoiceMessageCollection.aggregate([
                 {
                     $match: {
-                        $or: [
+                        /* $or: [
                             { sender_id: ObjectID(decodedToken.UserData._id) },
                             { receiver_id: ObjectID(decodedToken.UserData._id) },
-                        ],
+                        ], */
+                        participants: ObjectID(decodedToken.UserData._id),
                         is_delete: 0,
                         is_first: true
                     }
@@ -124,6 +129,7 @@ module.exports.getInvoiceMessageForTable = async function (req, res) {
                 { $sort: { created_at: -1 } }
             ]);
             for (let i = 0; i < get_data.length; i++) {
+                console.log("get_data[i]._id", get_data[i]._id);
                 let last_messages = await invoiceMessageCollection.findOne({
                     $or: [
                         { _id: ObjectID(get_data[i]._id) },
@@ -132,10 +138,14 @@ module.exports.getInvoiceMessageForTable = async function (req, res) {
                 }).sort({ created_at: -1 });
                 if (last_messages) {
                     get_data[i].last_message = last_messages;
-                    // get_data[i].seen_last_message = last_messages.is_seen;
                 } else {
                     get_data[i].last_message = get_data[i];
-                    // get_data[i].seen_last_message = false;
+                }
+                if (get_data[i].last_message.message[0] == '@') {
+                    let endIndex = 25;
+                    // let mentionId = get_data[i].last_message.substring(index, endIndex).toString().trim();
+                    // let one_user = await getUser(userCollection, mentionId);
+                    get_data[i].last_message.message = get_data[i].last_message.message.substring(endIndex);
                 }
                 get_data[i].last_message_sender = await getUser(userCollection, get_data[i].last_message.sender_id);
             }
@@ -271,6 +281,7 @@ module.exports.sendInvoiceMessage = async function (req, res) {
         try {
             var requestObject = req.body;
             let invoiceMessageCollection = connection_db_api.model(collectionConstant.INVOICE_MESSAGE, invoiceMessageSchema);
+            let invoiceMessageSeenCollection = connection_db_api.model(collectionConstant.INVOICE_MESSAGE_SEEN, invoiceMessageSeenSchema);
             let userCollection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             let reqObject = [];
             for (let i = 0; i < requestObject.users.length; i++) {
@@ -284,7 +295,12 @@ module.exports.sendInvoiceMessage = async function (req, res) {
                     is_attachment: requestObject.is_attachment == undefined || requestObject.is_attachment == undefined ? false : requestObject.is_attachment,
                     invoice_message_id: requestObject.invoice_message_id,
                     mention_user: requestObject.mention_user,
+                    participants: []
                 };
+                if (obj.is_first) {
+                    obj.participants.push(decodedToken.UserData._id);
+                    obj.participants.push(requestObject.users[i]);
+                }
                 if (obj.invoice_message_id == undefined || obj.invoice_message_id == null) {
                     obj.invoice_message_id = '';
                 }
@@ -295,6 +311,18 @@ module.exports.sendInvoiceMessage = async function (req, res) {
                 var ids = [];
                 for (let i = 0; i < save_invoice_message.length; i++) {
                     ids.push(ObjectID(save_invoice_message[i]._id));
+
+                    let seenObject = [];
+                    for (let j = 0; j < save_invoice_message[i].participants.length; j++) {
+                        seenObject.push({
+                            invoice_message_id: save_invoice_message[i]._id,
+                            user_id: save_invoice_message[i].participants[j],
+                            is_seen: save_invoice_message[i].participants[j] == decodedToken.UserData._id,
+                            seen_at: 0,
+                            created_at: Math.round(new Date().getTime() / 1000),
+                        });
+                    }
+                    let save_seen_obj = await invoiceMessageSeenCollection.insertMany(seenObject);
                 }
                 let get_message = await invoiceMessageCollection.aggregate([
                     { $match: { _id: { $in: ids } } },
@@ -318,6 +346,7 @@ module.exports.sendInvoiceMessage = async function (req, res) {
                         let mentionId = get_message.message.substring(index, endIndex).toString().trim();
                         let one_user = await userCollection.findOne({ _id: ObjectID(mentionId) });
                         get_message.message = `@${one_user.userfullname}${get_message.message.substring(endIndex)}`;
+                        await invoiceMessageCollection.updateMany({ invoice_id: requestObject.invoice_id, is_first: true }, { $push: { participants: ObjectID(mentionId) } });
                     }
                 }
                 res.send({ message: translator.getStr('INVOICE_MESSAGE_SEND'), data: get_message, status: true });
@@ -343,18 +372,24 @@ module.exports.updateInvoiceMessageSeenFlag = async function (req, res) {
         try {
             var requestObject = req.body;
             let invoiceMessageCollection = connection_db_api.model(collectionConstant.INVOICE_MESSAGE, invoiceMessageSchema);
-            let update_seen_flag = await invoiceMessageCollection.updateMany({
-                $or: [
-                    { _id: ObjectID(requestObject._id) },
-                    { invoice_message_id: ObjectID(requestObject._id) },
-                ],
-                receiver_id: ObjectID(requestObject.receiver_id),
-            }, { is_seen: true });
-            if (update_seen_flag) {
-                res.send({ message: 'Flag updated successfully.', status: true });
-            } else {
-                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            let invoiceMessageSeenCollection = connection_db_api.model(collectionConstant.INVOICE_MESSAGE_SEEN, invoiceMessageSeenSchema);
+            let get_data = await invoiceMessageCollection.find({
+                /* $or: [
+                    { sender_id: ObjectID(decodedToken.UserData._id) },
+                    { receiver_id: ObjectID(decodedToken.UserData._id) },
+                ], */
+                participants: ObjectID(decodedToken.UserData._id),
+                is_delete: 0,
+                is_first: true
+            });
+            for (let i = 0; i < get_data.length; i++) {
+                let updateObject = {
+                    is_seen: true,
+                    seen_at: Math.round(new Date().getTime() / 1000),
+                };
+                await invoiceMessageSeenCollection.updateMany({ invoice_message_id: get_data[i]._id, user_id: ObjectID(decodedToken.UserData._id), is_seen: false }, updateObject);
             }
+            res.send({ message: 'Flag updated successfully.', status: true });
         } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
