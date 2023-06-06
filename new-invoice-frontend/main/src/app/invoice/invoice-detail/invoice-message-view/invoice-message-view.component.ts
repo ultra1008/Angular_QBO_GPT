@@ -75,11 +75,7 @@ export class InvoiceMessageViewComponent {
   }
 
   async updateSeenFlag() {
-    const requestObject = {
-      _id: this.invoiceId,
-      receiver_id: this.myId,
-    };
-    await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.UPDATE_INVOICE_MESSAGE_SEEN_FLAG, requestObject);
+    await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.UPDATE_INVOICE_MESSAGE_SEEN_FLAG);
     // this.headerComponent.getInvoiceMessageCount();
   }
 

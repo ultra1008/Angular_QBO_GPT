@@ -1,17 +1,17 @@
-var invoiceMessageSchema = require('./../../../../../model/invoice_message');
-var invoiceMessageSeenSchema = require('./../../../../../model/invoice_message_seen');
-let db_connection = require('./../../../../../controller/common/connectiondb');
-let common = require('./../../../../../controller/common/common');
-let collectionConstant = require('./../../../../../config/collectionConstant');
-var userSchema = require('./../../../../../model/user');
+var invoiceMessageSchema = require('./../../../../model/invoice_message');
+var invoiceMessageSeenSchema = require('./../../../../model/invoice_message_seen');
+let db_connection = require('./../../../../controller/common/connectiondb');
+let common = require('./../../../../controller/common/common');
+let collectionConstant = require('./../../../../config/collectionConstant');
+var userSchema = require('./../../../../model/user');
 const mongoose = require('mongoose');
 var ObjectID = require('mongodb').ObjectID;
 var formidable = require('formidable');
 var fs = require('fs');
-var bucketOpration = require('../../../../../controller/common/s3-wasabi');
-var config = require('./../../../../../config/config');
-let rest_Api = require('./../../../../../config/db_rest_api');
-let sendEmail = require('./../../../../../controller/common/sendEmail');
+var bucketOpration = require('../../../../controller/common/s3-wasabi');
+var config = require('./../../../../config/config');
+let rest_Api = require('./../../../../config/db_rest_api');
+let sendEmail = require('./../../../../controller/common/sendEmail');
 var handlebars = require('handlebars');
 // let supplierAlertController = require('./../supplier_alert/supplierAlertController');
 
@@ -143,21 +143,19 @@ module.exports.getInvoiceMessageForTable = async function (req, res) {
                 }
                 if (get_data[i].last_message.message[0] == '@') {
                     let endIndex = 25;
-                    // let mentionId = get_data[i].last_message.substring(index, endIndex).toString().trim();
-                    // let one_user = await getUser(userCollection, mentionId);
                     get_data[i].last_message.message = get_data[i].last_message.message.substring(endIndex);
                 }
                 get_data[i].last_message_sender = await getUser(userCollection, get_data[i].last_message.sender_id);
             }
-            res.json(get_data);
+            res.send({ message: translator.getStr('INVOICE_MESSAGE_LISTING'), data: get_data, status: true });
         } catch (e) {
             console.log(e);
-            res.send([]);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         } finally {
             connection_db_api.close();
         }
     } else {
-        res.send([]);
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
 

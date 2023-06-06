@@ -74,4 +74,13 @@ router.post('/mobile/v1/apinvoice/savenote', common.checkTokenExistOrNot, apInvo
 router.post('/mobile/v1/apinvoice/deletenote', common.checkTokenExistOrNot, apInvoiceValidation.deleteAPInvoiceNote, apInvoiceController.deleteAPInvoiceNote);
 router.post('/mobile/v1/apinvoice/gethistory', common.checkTokenExistOrNot, apInvoiceController.getAPInvoiceHistory);
 
+let invoiceMessageController = require('./invoice_message/invoiceMessageController');
+let invoiceMessageValidation = require('./invoice_message/invoiceMessageValidation');
+router.get('/mobile/v1/invoicemessage/getcount', common.checkTokenExistOrNot, invoiceMessageController.getInvoiceMessageCount);
+router.get('/mobile/v1/invoicemessage/get', common.checkTokenExistOrNot, invoiceMessageController.getInvoiceMessageForTable);
+router.post('/mobile/v1/invoicemessage/getone', common.checkTokenExistOrNot, invoiceMessageValidation.getOneInvoiceMessage, invoiceMessageController.getOneInvoiceMessage);
+router.get('/mobile/v1/invoicemessage/updateseenflag', common.checkTokenExistOrNot, invoiceMessageController.updateInvoiceMessageSeenFlag);
+router.post('/mobile/v1/invoicemessage/sendemessage', common.checkTokenExistOrNot, invoiceMessageValidation.sendInvoiceMessage, invoiceMessageController.sendInvoiceMessage);
+router.post('/mobile/v1/invoicemessage/delete', common.checkTokenExistOrNot, invoiceMessageValidation.deleteInvoiceMessage, invoiceMessageController.deleteInvoiceMessage);
+
 module.exports = router;
