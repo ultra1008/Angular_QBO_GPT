@@ -1,12 +1,15 @@
 import { Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonService } from 'src/app/services/common.service';
+import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { TermModel } from 'src/app/vendors/vendor.model';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { WEB_ROUTES } from 'src/consts/routes';
-import { epochToDateTime } from 'src/consts/utils';
+import { amountChange, epochToDateTime, numberWithCommas, showNotification } from 'src/consts/utils';
 import { configData } from 'src/environments/configData';
+import { InvoiceRejectedReasonComponent } from '../invoice-detail/invoice-rejected-reason/invoice-rejected-reason.component';
 
 @Component({
   selector: 'app-view-document',
@@ -36,7 +39,7 @@ export class ViewDocumentComponent {
   maxDate = new Date();
   invoice_id: any;
 
-  constructor(private fb: UntypedFormBuilder, public commonService: CommonService, public route: ActivatedRoute, private router: Router,) {
+  constructor(public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, private fb: UntypedFormBuilder, public commonService: CommonService, public route: ActivatedRoute, private router: Router,) {
     this.document = this.route.snapshot.queryParamMap.get('document') ?? '';
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
 
@@ -125,18 +128,43 @@ export class ViewDocumentComponent {
     this.invoice_id = this.poList.invoice_id;
     this.poForm = this.fb.group({
       document_type: [this.poList.document_type],
-      vendor_name: [this.poList.vendor_name],
+      vendor_name: [this.poList.vendor_data.vendor_name],
       quote_number: [this.poList.quote_number],
       date: [poDate],
       shipping_method: [this.poList.shipping_method],
       sub_total: [this.poList.sub_total],
       tax: [this.poList.tax],
-      quote_total: [this.poList.quote_total],
+      quote_total: [numberWithCommas(this.poList.quote_total.toFixed(2))],
       receiver_phone: [this.poList.receiver_phone],
       terms: [this.poList.terms],
       address: [this.poList.address],
     });
   }
+  poAmountChange(params: any, controller: string) {
+    this.poForm.get(controller)?.setValue(amountChange(params));
+  }
+
+  async savePoForm() {
+    if (this.poForm.valid) {
+      this.uiSpinner.spin$.next(true);
+      const formValues = this.poForm.value;
+      formValues._id = this.id;
+      if (formValues.date == null) {
+        formValues.date = 0;
+      } else {
+        formValues.date = Math.round(formValues.date.valueOf() / 1000);
+      }
+
+      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_AP_PO, formValues);
+      this.uiSpinner.spin$.next(false);
+      if (data.status) {
+        showNotification(this.snackBar, data.message, 'success');
+      } else {
+        showNotification(this.snackBar, data.message, 'error');
+      }
+    }
+  }
+
   async getOneQuote() {
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ONE_AP_QUOET, { _id: this.id });
     if (data.status) {

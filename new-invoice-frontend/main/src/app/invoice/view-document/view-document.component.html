@@ -95,8 +95,15 @@
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Quote Total</mat-label>
-                                                <input formControlName="quote_total" matInput />
+                                                <input matInput class="input-capitalized-textfield"
+                                                    onkeypress="return String.fromCharCode(event.charCode).match(/[^0-9]/g) === null"
+                                                    (input)="poAmountChange($event,'quote_total')" numbersOnly
+                                                    formControlName="quote_total">
                                             </mat-form-field>
+
+
+
+
                                         </div>
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
@@ -131,8 +138,8 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                                            <button class="btn-space" mat-raised-button color="primary"
-                                                [disabled]="!poForm.valid">{{'COMMON.ACTIONS.SAVE'|
+                                            <button (click)="savePoForm()" class="btn-space" mat-raised-button
+                                                color="primary">{{'COMMON.ACTIONS.SAVE'|
                                                 translate}}</button>
                                             <button type="button" mat-raised-button
                                                 color="warn">{{'COMMON.ACTIONS.CANCEL'| translate}}</button>
