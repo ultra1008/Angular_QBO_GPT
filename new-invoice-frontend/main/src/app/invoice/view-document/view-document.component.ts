@@ -1,11 +1,15 @@
 import { Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonService } from 'src/app/services/common.service';
+import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { TermModel } from 'src/app/vendors/vendor.model';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { amountChange, epochToDateTime, numberWithCommas, showNotification } from 'src/consts/utils';
 import { configData } from 'src/environments/configData';
+import { InvoiceRejectedReasonComponent } from '../invoice-detail/invoice-rejected-reason/invoice-rejected-reason.component';
 
 @Component({
   selector: 'app-view-document',
@@ -35,7 +39,7 @@ export class ViewDocumentComponent {
   maxDate = new Date();
   invoice_id: any;
 
-  constructor(private fb: UntypedFormBuilder, public commonService: CommonService, public route: ActivatedRoute, private router: Router,) {
+  constructor(public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, private fb: UntypedFormBuilder, public commonService: CommonService, public route: ActivatedRoute, private router: Router,) {
     this.document = this.route.snapshot.queryParamMap.get('document') ?? '';
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
 
@@ -117,32 +121,65 @@ export class ViewDocumentComponent {
     if (data.status) {
       this.poList = data.data;
     }
+    let poDate;
+    if (this.poList.date_epoch != undefined && this.poList.date_epoch != null && this.poList.date_epoch != 0) {
+      poDate = epochToDateTime(this.poList.date_epoch);
+    }
     this.invoice_id = this.poList.invoice_id;
     this.poForm = this.fb.group({
       document_type: [this.poList.document_type],
-      vendor_name: [this.poList.vendor_name],
+      vendor_name: [this.poList.vendor_data.vendor_name],
       quote_number: [this.poList.quote_number],
-      date: [this.poList.date],
+      date: [poDate],
       shipping_method: [this.poList.shipping_method],
       sub_total: [this.poList.sub_total],
       tax: [this.poList.tax],
-      quote_total: [this.poList.quote_total],
+      quote_total: [numberWithCommas(this.poList.quote_total.toFixed(2))],
       receiver_phone: [this.poList.receiver_phone],
       terms: [this.poList.terms],
       address: [this.poList.address],
     });
   }
+  poAmountChange(params: any, controller: string) {
+    this.poForm.get(controller)?.setValue(amountChange(params));
+  }
+
+  async savePoForm() {
+    if (this.poForm.valid) {
+      this.uiSpinner.spin$.next(true);
+      const formValues = this.poForm.value;
+      formValues._id = this.id;
+      if (formValues.date == null) {
+        formValues.date = 0;
+      } else {
+        formValues.date = Math.round(formValues.date.valueOf() / 1000);
+      }
+
+      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_AP_PO, formValues);
+      this.uiSpinner.spin$.next(false);
+      if (data.status) {
+        showNotification(this.snackBar, data.message, 'success');
+      } else {
+        showNotification(this.snackBar, data.message, 'error');
+      }
+    }
+  }
+
   async getOneQuote() {
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ONE_AP_QUOET, { _id: this.id });
     if (data.status) {
       this.quoteList = data.data;
+    }
+    let quoteDate;
+    if (this.quoteList.date_epoch != undefined && this.quoteList.date_epoch != null && this.quoteList.date_epoch != 0) {
+      quoteDate = epochToDateTime(this.quoteList.date_epoch);
     }
     this.invoice_id = this.quoteList.invoice_id;
     this.quoteForm = this.fb.group({
       document_type: [this.quoteList.document_type],
       vendor_name: [this.quoteList.vendor_name],
       quote_number: [this.quoteList.quote_number],
-      date: [this.quoteList.date],
+      date: [quoteDate],
       shipping_method: [this.quoteList.shipping_method],
       sub_total: [this.quoteList.sub_total],
       tax: [this.quoteList.tax],
@@ -157,12 +194,16 @@ export class ViewDocumentComponent {
     if (data.status) {
       this.packingSlipList = data.data;
     }
+    let packingSlipDate;
+    if (this.packingSlipList.date_epoch != undefined && this.packingSlipList.date_epoch != null && this.packingSlipList.date_epoch != 0) {
+      packingSlipDate = epochToDateTime(this.packingSlipList.date_epoch);
+    }
     this.invoice_id = this.packingSlipList.invoice_id;
     this.packingSlipForm = this.fb.group({
       document_type: [this.packingSlipList.document_type],
       vendor_name: [this.packingSlipList.vendor_name],
       invoice: [this.packingSlipList.invoice],
-      date: [this.packingSlipList.date],
+      date: [packingSlipDate],
       po: [this.packingSlipList.po],
       address: [this.packingSlipList.address],
       received_by: [this.packingSlipList.received_by],
@@ -174,12 +215,16 @@ export class ViewDocumentComponent {
     if (data.status) {
       this.receivingSlipList = data.data;
     }
+    let receivingSliDate;
+    if (this.receivingSlipList.date_epoch != undefined && this.receivingSlipList.date_epoch != null && this.receivingSlipList.date_epoch != 0) {
+      receivingSliDate = epochToDateTime(this.receivingSlipList.date_epoch);
+    }
     this.invoice_id = this.receivingSlipList.invoice_id;
     this.receivingSlipForm = this.fb.group({
       document_type: [this.receivingSlipList.document_type],
       vendor_name: [this.receivingSlipList.vendor_name],
       invoice: [this.receivingSlipList.invoice],
-      date: [this.receivingSlipList.date],
+      date: [receivingSliDate],
       po: [this.receivingSlipList.po],
       address: [this.receivingSlipList.address],
       received_by: [this.receivingSlipList.received_by],

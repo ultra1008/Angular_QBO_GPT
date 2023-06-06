@@ -252,6 +252,7 @@ export enum httproutes {
   SAVE_INVOICE_INFO = 'saveapinvoiceinfo',
   DELETE_INVOICE_INFO = 'deleteapinvoiceinfo',
   GET_ONE_AP_PO = 'getoneappo',
+  SAVE_AP_PO = 'saveappo',
   GET_ONE_AP_QUOET = 'getoneapquote',
   GET_ONE_AP_PACKLING_SLIP = 'getoneappackingslip',
   GET_ONE_AP_RECEVING_SLIP = 'getoneapreceivingslip',
