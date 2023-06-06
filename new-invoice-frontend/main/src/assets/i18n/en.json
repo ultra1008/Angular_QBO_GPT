@@ -65,8 +65,8 @@
     },
     "VENDOR": {
         "VIEW": {
-            "TITLE": "Vendor",
-            "ARCHIVED_TITLE": "Archived Vendor",
+            "TITLE": "Vendors",
+            "ARCHIVED_TITLE": "Archived Vendors",
             "ACTIVE_STATUS_MASSAGE": "No active vendor data is available",
             "INACTIVE_STATUS_MASSAGE": "No inactive vendor data is available"
         },
@@ -352,7 +352,7 @@
     },
     "REPORT": {
         "VIEW": {
-            "TITLE": "Report",
+            "TITLE": "Reports",
             "START_DATE": "Start Date",
             "END_DATE": "End Date"
         },
@@ -411,8 +411,8 @@
     },
     "CLIENT": {
         "VIEW": {
-            "TITLE": "Client/Job Name",
-            "ARCHIVED_TITLE": "Archived Client/Job Name"
+            "TITLE": "Client/Job Names",
+            "ARCHIVED_TITLE": "Archived Client/Job Names"
         },
         "TABLE": {
             "CLIENT_NAME": "Client/Job Name",

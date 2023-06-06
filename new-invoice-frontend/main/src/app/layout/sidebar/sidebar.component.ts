@@ -57,7 +57,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     if (this.role_permission.role_permission.vendor.View == true) {
       let reqObj = {
         path: WEB_ROUTES.VENDOR,
-        title: 'Vendor',
+        title: 'Vendors',
         iconType: 'material-icons-two-tone',
         icon: 'local_shipping',
         class: '',
@@ -71,7 +71,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     if (this.role_permission.role_permission.clientJob.View == true) {
       let reqObj = {
         path: WEB_ROUTES.CLIENT,
-        title: 'Client/Job Name',
+        title: 'Client/Job Names',
         iconType: 'material-icons-two-tone',
         icon: 'account_circle',
         class: '',
