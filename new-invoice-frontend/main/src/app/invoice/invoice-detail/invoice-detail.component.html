@@ -15,6 +15,13 @@
                          <div class="right ">
                               <ul class="tbl-export-btn">
                                    <li class="tbl-header-btn">
+                                        <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.HISTORY' |  translate}}">
+                                             <button mat-mini-fab color="primary" (click)="goToDashboard()">
+                                                  <mat-icon class="col-white">Dashboard</mat-icon>
+                                             </button>
+                                        </div>
+                                   </li>
+                                   <li class="tbl-header-btn">
                                         <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.MESSAGE' |  translate}}">
                                              <button mat-mini-fab color="primary" (click)="sendMessage()">
                                                   <img src="{{MAIL_ICON}}" width="15px" height="15px">
