@@ -45,7 +45,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
         path: WEB_ROUTES.DASHBOARD,
         title: 'Dashboard',
         iconType: 'material-icons-two-tone',
-        icon: 'home',
+        icon: 'dashboard',
         class: '',
         groupTitle: false,
         badge: '',

@@ -26,7 +26,8 @@
             "PRINT": "IMPRIMIR",
             "INVOICEMSG": "Invoice Message",
             "INVOICELINK": "Invoice Link",
-            "EDIT": "Edit"
+            "EDIT": "Edit",
+            "DASHBOARD": "Dashboard"
         },
         "ACTIONS": {
             "ACTIONS": "Actions",
