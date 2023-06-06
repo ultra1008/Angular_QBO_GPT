@@ -155,6 +155,7 @@ module.exports.getOneInvoiceMessage = async function (req, res) {
         try {
             var requestObject = req.body;
             let invoiceMessageCollection = connection_db_api.model(collectionConstant.INVOICE_MESSAGE, invoiceMessageSchema);
+            let userCollection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             let get_data = await invoiceMessageCollection.aggregate([
                 { $match: { invoice_id: ObjectID(requestObject.invoice_id) } },
                 {
@@ -228,6 +229,14 @@ module.exports.getOneInvoiceMessage = async function (req, res) {
                     { $unwind: "$sender" },
                     { $sort: { created_at: 1 } },
                 ]);
+                for (let i = 0; i < get_messages.length; i++) {
+                    if (get_messages[i].message[0] == '@') {
+                        let index = 1, endIndex = 25;
+                        let mentionId = get_messages[i].message.substring(index, endIndex).toString().trim();
+                        let one_user = await getUser(userCollection, mentionId);
+                        get_messages[i].message = `@${one_user.userfullname}${get_messages[i].message.substring(endIndex)}`;
+                    }
+                }
                 res.send({ message: translator.getStr('INVOICE_MESSAGE_LISTING'), data: get_data, messages: get_messages, status: true });
             } else {
                 res.send({ message: translator.getStr('NoDataWithId'), status: false });
@@ -243,6 +252,13 @@ module.exports.getOneInvoiceMessage = async function (req, res) {
     }
 };
 
+function getUser(collection, id) {
+    return new Promise(async function (resolve, reject) {
+        let one_user = await collection.findOne({ _id: ObjectID(id) });
+        resolve(one_user);
+    });
+}
+
 module.exports.sendInvoiceMessage = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
@@ -251,6 +267,7 @@ module.exports.sendInvoiceMessage = async function (req, res) {
         try {
             var requestObject = req.body;
             let invoiceMessageCollection = connection_db_api.model(collectionConstant.INVOICE_MESSAGE, invoiceMessageSchema);
+            let userCollection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             let reqObject = [];
             for (let i = 0; i < requestObject.users.length; i++) {
                 let obj = {
@@ -262,6 +279,7 @@ module.exports.sendInvoiceMessage = async function (req, res) {
                     is_first: requestObject.is_first,
                     is_attachment: requestObject.is_attachment == undefined || requestObject.is_attachment == undefined ? false : requestObject.is_attachment,
                     invoice_message_id: requestObject.invoice_message_id,
+                    mention_user: requestObject.mention_user,
                 };
                 if (obj.invoice_message_id == undefined || obj.invoice_message_id == null) {
                     obj.invoice_message_id = '';
@@ -289,6 +307,14 @@ module.exports.sendInvoiceMessage = async function (req, res) {
                 ]);
                 if (get_message.length > 0) {
                     get_message = get_message[0];
+                }
+                if (get_message) {
+                    if (get_message.message[0] == '@') {
+                        let index = 1, endIndex = 25;
+                        let mentionId = get_message.message.substring(index, endIndex).toString().trim();
+                        let one_user = await userCollection.findOne({ _id: ObjectID(mentionId) });
+                        get_message.message = `@${one_user.userfullname}${get_message.message.substring(endIndex)}`;
+                    }
                 }
                 res.send({ message: translator.getStr('INVOICE_MESSAGE_SEND'), data: get_message, status: true });
             } else {

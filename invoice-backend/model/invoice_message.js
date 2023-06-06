@@ -10,6 +10,7 @@ var invoiceMessageSchema = new Schema({
     is_seen: { type: Boolean, default: false },
     is_first: { type: Boolean, default: false },
     is_attachment: { type: Boolean, default: false },
+    mention_user: { type: mongoose.ObjectId, default: "" },
     is_delete: { type: Number, default: 0 },
     created_at: { type: Number, default: 0 },
 });

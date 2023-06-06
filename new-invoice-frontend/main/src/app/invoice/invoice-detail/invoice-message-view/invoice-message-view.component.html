@@ -85,7 +85,10 @@
                                                 <mat-form-field class="example-full-width font-white-placeholder"
                                                     appearance="outline">
                                                     <input matInput formControlName="message"
-                                                        placeholder="Enter message here..">
+                                                        placeholder="Enter message here.."
+                                                        [mentionConfig]="{items:userList, labelKey:'userfullname'}"
+                                                        [mentionListTemplate]="mentionListTemplate"
+                                                        (itemSelected)="onMentionSelected($event)">
                                                     <button mat-icon-button matPrefix (click)="handleAttachment()">
                                                         <i class="material-icons">attach_file</i>
                                                     </button>
@@ -163,4 +166,10 @@
     </div>
     <div class="message my-message p-1" [ngClass]="message.is_attachment ? 'attachment-message' : ''"
         (click)="viewAttachment(message)"> {{message.message}} </div>
+</ng-template>
+
+<ng-template #mentionListTemplate let-item="item">
+    <span><img class="img-b" [src]="item.userpicture" height="35px" width="35px" alt="">
+    </span>
+    <span>{{item.userfullname}}</span>
 </ng-template>

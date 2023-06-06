@@ -10,6 +10,8 @@ import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { showNotification } from 'src/consts/utils';
 import * as  moment from "moment";
+import { MatMenuTrigger } from '@angular/material/menu';
+import { User } from 'src/app/users/user.model';
 
 @Component({
   selector: 'app-invoice-message-view',
@@ -33,15 +35,28 @@ export class InvoiceMessageViewComponent {
   toggled = false;
   emojiPickerDirection = "'top'";
 
+  userList: Array<User> = [];
+  mentionId = '';
+  mentionUserName = '';
+
   constructor (public commonService: CommonService, public route: ActivatedRoute, private formBuilder: FormBuilder,
     public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, private router: Router) {
     const userData = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA) ?? '{}');
     this.myId = userData.UserData._id;
     this.invoiceId = this.route.snapshot.queryParamMap.get('invoice_id') ?? '';
     this.getOneInvoiceMessage();
+    this.getUser();
     this.form = this.formBuilder.group({
       message: ["", Validators.required],
     });
+  }
+
+  async getUser() {
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ALL_USER);
+    this.isLoading = false;
+    if (data.status) {
+      this.userList = data.data;
+    }
   }
 
   async getOneInvoiceMessage() {
@@ -61,7 +76,7 @@ export class InvoiceMessageViewComponent {
 
   updateSeenFlag() {
     const requestObject = {
-      _id: this.id,
+      _id: this.invoiceId,
       receiver_id: this.myId,
     };
     this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.UPDATE_INVOICE_MESSAGE_SEEN_FLAG, requestObject);
@@ -73,21 +88,28 @@ export class InvoiceMessageViewComponent {
       const formValues = this.form.value;
       formValues.invoice_id = this.messageData.invoice_id;
       formValues.is_first = false;
-      formValues.invoice_message_id = this.id;
+      formValues.invoice_message_id = this.invoiceId;
+      formValues.mention_user = this.mentionId;
+      if (formValues.message[0] == '@') {
+        console.log("formValues.message", formValues.message);
+        const index = formValues.message.indexOf(this.mentionUserName);
+        if (index !== -1) {
+          const endIndex = index + this.mentionUserName.length;
+          console.log(index, endIndex, "--->", formValues.message.substring(endIndex));
+          formValues.message = `@${this.mentionId}${formValues.message.substring(endIndex)}`;
+        }
+      }
       if (this.myId === this.messageData.sender_id) {
         formValues.users = [this.messageData.receiver_id];
       } else {
         formValues.users = [this.messageData.sender_id];
       }
-
       const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SEND_INVOICE_MESSAGE, formValues);
       this.uiSpinner.spin$.next(false);
       if (data.status) {
         showNotification(this.snackBar, data.message, 'success');
         this.form.reset();
         this.messageList.push(data.data);
-        /* this.endScroll = document.getElementById('messageListDiv')?.scrollHeight;
-        window.scrollTo(0,document.getElementById('messageListDiv')?.scrollHeight) */
       } else {
         showNotification(this.snackBar, data.message, 'error');
       }
@@ -136,7 +158,7 @@ export class InvoiceMessageViewComponent {
         message: attachmentData.data[0],
         invoice_id: this.messageData.invoice_id,
         is_first: false,
-        invoice_message_id: this.id,
+        invoice_message_id: this.invoiceId,
         users: this.myId === this.messageData.sender_id ? [this.messageData.receiver_id] : [this.messageData.sender_id],
         is_attachment: true,
       };
@@ -168,4 +190,23 @@ export class InvoiceMessageViewComponent {
     this.form.get('message')?.setValue(message);
   }
 
+  onMentionSelected(event: any) {
+    this.mentionId = event._id;
+    this.mentionUserName = event.userfullname;
+  }
+
+  onMessageType(event: any) {
+    if (event.target.value.length == '') {
+      this.mentionId = '';
+      this.mentionUserName = '';
+    }
+    /* if (event.target.value.length == 1 && event.target.value == '@') {
+      console.log("dialog");
+      event.preventDefault();
+      this.menuX = event.x - 10;
+      this.menuY = event.y - 10;
+      this.menuTrigger.closeMenu();
+      this.menuTrigger.openMenu();
+    } */
+  }
 }
