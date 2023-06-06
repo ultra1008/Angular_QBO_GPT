@@ -227,9 +227,14 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Date</mat-label>
-                                                <input formControlName="date" matInput />
+                                                <input matInput [max]="maxDate" [matDatepicker]="quoteDatePicker"
+                                                    formControlName="date">
+                                                <mat-datepicker-toggle matSuffix
+                                                    [for]="quoteDatePicker"></mat-datepicker-toggle>
+                                                <mat-datepicker #quoteDatePicker></mat-datepicker>
                                             </mat-form-field>
                                         </div>
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
@@ -281,7 +286,7 @@
                                             </mat-form-field>
                                         </div>
                                     </div>
-                                    <div class="row .form-old">
+                                    <div class="row form-old">
                                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Address</mat-label>
@@ -379,7 +384,11 @@
                                         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Date</mat-label>
-                                                <input formControlName="date" matInput />
+                                                <input matInput [max]="maxDate" [matDatepicker]="packingSlipDatePicker"
+                                                    formControlName="date">
+                                                <mat-datepicker-toggle matSuffix
+                                                    [for]="packingSlipDatePicker"></mat-datepicker-toggle>
+                                                <mat-datepicker #packingSlipDatePicker></mat-datepicker>
                                             </mat-form-field>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
@@ -493,7 +502,11 @@
                                         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Date</mat-label>
-                                                <input formControlName="date" matInput />
+                                                <input matInput [max]="maxDate"
+                                                    [matDatepicker]="receivingSlipDatePicker" formControlName="date">
+                                                <mat-datepicker-toggle matSuffix
+                                                    [for]="receivingSlipDatePicker"></mat-datepicker-toggle>
+                                                <mat-datepicker #receivingSlipDatePicker></mat-datepicker>
                                             </mat-form-field>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
