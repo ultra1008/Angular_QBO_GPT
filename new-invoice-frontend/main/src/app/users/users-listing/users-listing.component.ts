@@ -416,11 +416,11 @@ export class UsersListingComponent
     this.router.navigate([WEB_ROUTES.USER_FORM]);
   }
   editUser(user: User) {
-    if (this.isDelete == 0) {
-      this.router.navigate([WEB_ROUTES.USER_FORM], {
-        queryParams: { _id: user._id },
-      });
-    }
+
+    this.router.navigate([WEB_ROUTES.USER_FORM], {
+      queryParams: { _id: user._id },
+    });
+
   }
 
   importFileAction() {

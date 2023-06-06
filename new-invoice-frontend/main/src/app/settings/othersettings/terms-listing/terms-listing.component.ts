@@ -38,7 +38,7 @@ export class TermsListingComponent
   quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
   quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
 
-  constructor (
+  constructor(
     public dialog: MatDialog,
     public SettingsService: SettingsService,
     private snackBar: MatSnackBar,
@@ -198,7 +198,7 @@ export class TermsDataSource extends DataSource<TermModel> {
   }
   filteredData: TermModel[] = [];
   renderedData: TermModel[] = [];
-  constructor (
+  constructor(
     public termsService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,

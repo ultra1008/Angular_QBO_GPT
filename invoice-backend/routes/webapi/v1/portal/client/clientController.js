@@ -671,6 +671,7 @@ module.exports.checkQBDImportClient = async function (req, res) {
                 if (nameexist == null) {
                     requestObject.created_at = Math.round(new Date().getTime() / 1000);
                     requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.is_quickbooks = true;
                     requestObject.client_name = requestObject[m].Name;
                     requestObject.name = requestObject[m].Name;
                     if (requestObject[m].IsActive == true) {
