@@ -1,6 +1,5 @@
 ::ng-deep .mat-mdc-table .mdc-data-table__row {
      height: 35px !important;
-
 }
 
 ::ng-deep .mat-mdc-table .mdc-data-table__header-row {
@@ -37,6 +36,9 @@
      max-width: 7% !important;
 }
 
+::ng-deep .tbl-header-btn .mat-mdc-form-field {
+     flex-direction: unset !important;
+}
 
 .report-date {
      ::ng-deep .mdc-text-field--outlined {
@@ -86,6 +88,5 @@
 }
 
 .report-date[_ngcontent-rwx-c116] .mat-mdc-icon-button svg {
-
      padding-top: 10px !important;
 }
