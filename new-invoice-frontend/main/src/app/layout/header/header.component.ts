@@ -19,7 +19,7 @@ import { httproutes, httpversion } from 'src/consts/httproutes';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { Observable, map, startWith } from 'rxjs';
 import { Invoice } from 'src/app/invoice/invoice.model';
-import { notificationRoutes } from 'src/consts/utils';
+import { notificationRoutes, numberWithCommas } from 'src/consts/utils';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 
 interface Notifications {
@@ -56,7 +56,7 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
 
   companyList: any = [];
   isLoading = true;
-  constructor(@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, public elementRef: ElementRef,
+  constructor (@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, public elementRef: ElementRef,
     public uiSpinner: UiSpinnerService, private configService: ConfigService, private authService: AuthService,
     private router: Router, public translate: TranslateService, public dialog: MatDialog, private commonService: CommonService,) {
     super();
@@ -431,6 +431,7 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
         this.invoiceList = data.data;
         this.invoiceLoader = false;
       }
+      this.myControl.setValue('');
     } else {
       this.invoiceLoader = false;
     }
@@ -438,5 +439,10 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
 
   openInvoiceDetail(invoice: Invoice) {
     this.router.navigate([WEB_ROUTES.INVOICE_DETAILS], { queryParams: { _id: invoice._id } });
+  }
+
+  numberWithCommas(amount: any) {
+    amount = Number(amount.toString());
+    return numberWithCommas(amount.toFixed(2));
   }
 }

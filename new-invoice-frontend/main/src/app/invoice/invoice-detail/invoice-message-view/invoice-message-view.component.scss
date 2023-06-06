@@ -58,7 +58,7 @@
 .hide-pdf-button {
     margin-right: 1.5rem;
     position: absolute;
-    z-index: 1000000;
+    z-index: 1;
     left: -13px;
 
     .mdc-fab--mini {
@@ -105,3 +105,15 @@
 // ::ng-deep .mat-form-field-placeholder {
 //     color:red;
 //   }
+
+.mention-list {
+    text-decoration: none;
+}
+
+.mention-item {
+    height: 50px;
+}
+
+.img-b {
+    border-radius: 50%;
+}

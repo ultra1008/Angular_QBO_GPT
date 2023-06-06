@@ -14,7 +14,7 @@ import { InvoiceService } from '../invoice.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { HttpCall } from 'src/app/services/httpcall.service';
-import { showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
+import { numberWithCommas, showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { UploadInvoiceFormComponent } from '../upload-invoice-form/upload-invoice-form.component';
@@ -41,7 +41,7 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
   type = '';
   role_permission: any;
 
-  constructor(public httpClient: HttpClient, public dialog: MatDialog, public settingService: InvoiceService,
+  constructor (public httpClient: HttpClient, public dialog: MatDialog, public settingService: InvoiceService,
     private snackBar: MatSnackBar, public route: ActivatedRoute, private router: Router, private httpCall: HttpCall,
     private commonService: CommonService, public translate: TranslateService) {
     super();
@@ -191,6 +191,10 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
 
     TableExportUtil.exportToExcel(exportData, 'excel');
   }
+
+  numberWithCommas(amount: number) {
+    return numberWithCommas(amount.toFixed(2));
+  }
 }
 export class ExampleDataSource extends DataSource<Invoice> {
   filterChange = new BehaviorSubject('');
@@ -202,7 +206,7 @@ export class ExampleDataSource extends DataSource<Invoice> {
   }
   filteredData: Invoice[] = [];
   renderedData: Invoice[] = [];
-  constructor(
+  constructor (
     public exampleDatabase: InvoiceService,
     public paginator: MatPaginator,
     public _sort: MatSort,

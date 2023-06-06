@@ -70,7 +70,8 @@
                               <span class="menu-title mt-2"><b>Invoice Number</b> {{invoice.invoice_no}}</span>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 menu-info">
-                              <span class="menu-title"><b>Amount</b> {{invoice.invoice_total_amount}}</span>
+                              <span class="menu-title"><b>Amount</b>
+                                ${{numberWithCommas(invoice.invoice_total_amount)}} </span>
                               <span class="menu-title mt-2"><b>Status</b> {{invoice.status}}</span>
                             </div>
                           </div>

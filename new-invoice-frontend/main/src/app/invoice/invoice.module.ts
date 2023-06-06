@@ -42,6 +42,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { InvoiceRejectedReasonComponent } from './invoice-detail/invoice-rejected-reason/invoice-rejected-reason.component';
 import { InvoiceService } from './invoice.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MentionModule } from 'angular-mentions';
 
 @NgModule({
   declarations: [
@@ -98,6 +99,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     NgxEmojiPickerModule,
     InfiniteScrollModule,
     MatAutocompleteModule,
+    MentionModule,
   ],
 })
 export class InvoiceModule { }
