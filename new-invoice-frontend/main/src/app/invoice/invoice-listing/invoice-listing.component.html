@@ -90,13 +90,14 @@
                                     <mat-cell *matCellDef="let row" (click)="editInvoice(row)"
                                         (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Total Amount:</span>
-                                        {{row.invoice_total_amount}}</mat-cell>
+                                        $ {{numberWithCommas(row.invoice_total_amount)}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="sub_total">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Sub Total</mat-header-cell>
                                     <mat-cell *matCellDef="let row" (click)="editInvoice(row)"
                                         (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Sub Total:</span> {{row.sub_total}}</mat-cell>
+                                        <span class="mobile-label">Sub Total:</span>
+                                        $ {{numberWithCommas(row.sub_total)}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="approver">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Approver</mat-header-cell>

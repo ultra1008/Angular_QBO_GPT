@@ -13,7 +13,7 @@ import { WEB_ROUTES } from 'src/consts/routes';
 import { InvoiceService } from '../../invoice.service';
 import { InvoiceMessage } from '../../invoice.model';
 import { HttpCall } from 'src/app/services/httpcall.service';
-import { showNotification, swalWithBootstrapTwoButtons, MMDDYYYY_HH_MM_A } from 'src/consts/utils';
+import { showNotification, swalWithBootstrapTwoButtons, MMDDYYYY_HH_MM_A, numberWithCommas } from 'src/consts/utils';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { TableElement } from 'src/app/shared/TableElement';
@@ -28,8 +28,7 @@ export class InvoiceMessagesComponent extends UnsubscribeOnDestroyAdapter implem
   displayedColumns = [
     'created_at',
     'sender',
-    'receiver',
-    'seen',
+    'last_message',
     'invoice_number',
     'due_date',
     'vendor',
@@ -154,9 +153,8 @@ export class InvoiceMessagesComponent extends UnsubscribeOnDestroyAdapter implem
     const exportData: Partial<TableElement>[] =
       this.dataSource.filteredData.map((x) => ({
         'Date & Time': MMDDYYYY_HH_MM_A(x.created_at),
-        'Sender': x.sender.userfullname,
-        'Receiver': x.receiver.userfullname,
-        'Ready by Receiver': x.seen_last_message ? 'Yes' : 'No',
+        'Sender': x.last_message.sender.userfullname,
+        'Last Message': x.last_message.message,
         'Invoice Number': x.invoice.invoice_no,
         'Due Date': x.invoice.due_date_epoch,
         'Vendor': x.invoice.vendor_data.vendor_name,
@@ -164,6 +162,10 @@ export class InvoiceMessagesComponent extends UnsubscribeOnDestroyAdapter implem
       }));
 
     TableExportUtil.exportToExcel(exportData, 'excel');
+  }
+
+  numberWithCommas(amount: number) {
+    return numberWithCommas(amount.toFixed(2));
   }
 }
 export class ExampleDataSource extends DataSource<InvoiceMessage> {
@@ -236,6 +238,24 @@ export class ExampleDataSource extends DataSource<InvoiceMessage> {
           break;
         case 'created_at':
           [propertyA, propertyB] = [a.created_at, b.created_at];
+          break;
+        case 'sender':
+          [propertyA, propertyB] = [a.last_message_sender.userfullname, b.last_message_sender.userfullname];
+          break;
+        case 'last_message':
+          [propertyA, propertyB] = [a.last_message.message, b.last_message.message];
+          break;
+        case 'invoice_number':
+          [propertyA, propertyB] = [a.invoice.invoice_no, b.invoice.invoice_no];
+          break;
+        case 'due_date':
+          [propertyA, propertyB] = [a.invoice.due_date_epoch, b.invoice.due_date_epoch];
+          break;
+        case 'vendor':
+          [propertyA, propertyB] = [a.invoice.vendor.vendor_name, b.invoice.vendor.vendor_name];
+          break;
+        case 'total_amount':
+          [propertyA, propertyB] = [a.invoice.invoice_total_amount, b.invoice.invoice_total_amount];
           break;
       }
       const valueA = isNaN(+propertyA) ? propertyA : +propertyA;

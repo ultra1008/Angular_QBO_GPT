@@ -63,6 +63,7 @@ module.exports.getInvoiceMessageForTable = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             let invoiceMessageCollection = connection_db_api.model(collectionConstant.INVOICE_MESSAGE, invoiceMessageSchema);
+            let userCollection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
             let get_data = await invoiceMessageCollection.aggregate([
                 {
                     $match: {
@@ -123,17 +124,20 @@ module.exports.getInvoiceMessageForTable = async function (req, res) {
                 { $sort: { created_at: -1 } }
             ]);
             for (let i = 0; i < get_data.length; i++) {
-                let get_messages = await invoiceMessageCollection.findOne({
+                let last_messages = await invoiceMessageCollection.findOne({
                     $or: [
                         { _id: ObjectID(get_data[i]._id) },
                         { invoice_message_id: ObjectID(get_data[i]._id) },
                     ]
                 }).sort({ created_at: -1 });
-                if (get_messages) {
-                    get_data[i].seen_last_message = get_messages.is_seen;
+                if (last_messages) {
+                    get_data[i].last_message = last_messages;
+                    // get_data[i].seen_last_message = last_messages.is_seen;
                 } else {
-                    get_data[i].seen_last_message = false;
+                    get_data[i].last_message = get_data[i];
+                    // get_data[i].seen_last_message = false;
                 }
+                get_data[i].last_message_sender = await getUser(userCollection, get_data[i].last_message.sender_id);
             }
             res.json(get_data);
         } catch (e) {

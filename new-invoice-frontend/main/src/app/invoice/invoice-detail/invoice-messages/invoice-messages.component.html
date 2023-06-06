@@ -44,23 +44,16 @@
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (click)="viewMessage(row)"
                                         (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Sender:</span>{{row.sender.userfullname}}</mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="receiver">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Receiver
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (click)="viewMessage(row)"
-                                        (contextmenu)="onContextMenu($event, row)">
                                         <span
-                                            class="mobile-label">Receiver:</span>{{row.receiver.userfullname}}</mat-cell>
+                                            class="mobile-label">Sender:</span>{{row.last_message_sender.userfullname}}</mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="seen">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Read by Receiver
+                                <ng-container matColumnDef="last_message">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Last Message
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (click)="viewMessage(row)"
                                         (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Read by
-                                            Receiver:</span>{{row.seen_last_message ? 'Yes' : 'No'}}</mat-cell>
+                                        <span class="mobile-label">Last
+                                            Message:</span>{{row.last_message.message}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="invoice_number">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Invoice Number
@@ -68,14 +61,15 @@
                                     <mat-cell *matCellDef="let row" (click)="viewMessage(row)"
                                         (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Invoice
-                                            Number:</span>{{row.invoice.invoice}}</mat-cell>
+                                            Number:</span>{{row.invoice.invoice_no}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="due_date">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Due Date
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (click)="viewMessage(row)"
                                         (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Due Date:</span>{{row.invoice.due_date}}</mat-cell>
+                                        <span class="mobile-label">Due
+                                            Date:</span>{{(row.invoice.due_date_epoch * 1000) | date: 'MM/dd/yyyy'}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Vendor
@@ -91,7 +85,8 @@
                                     <mat-cell *matCellDef="let row" (click)="viewMessage(row)"
                                         (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Total
-                                            Amount:</span>{{row.invoice.invoice_total}}</mat-cell>
+                                            Amount:</span>$
+                                        {{numberWithCommas(row.invoice.invoice_total_amount)}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="actions">
                                     <mat-header-cell class="pr-0 tbl-col-width-per-action"
