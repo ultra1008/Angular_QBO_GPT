@@ -399,7 +399,7 @@ router.post('/webapi/v1/portal/updateMultipleVendorStatus', common.checkTokenExi
 router.post('/webapi/v1/portal/deleteMultipleVendor', common.checkTokenExistOrNot, invoice_vendorValidation.deleteMultipleVendor, invoice_vendorController.deleteMultipleVendor);
 router.post('/webapi/v1/portal/importVendor', common.checkTokenExistOrNot, invoice_vendorController.importVendor);
 router.post('/webapi/v1/portal/checkImportVendor', common.checkTokenExistOrNot, invoice_vendorController.checkImportVendor);
-
+router.post('/webapi/v1/portal/checkQBDImportVendor', common.checkTokenExistOrNot, invoice_vendorController.checkQBDImportVendor);
 
 
 let invoice_templateController = require('./template/templateController');

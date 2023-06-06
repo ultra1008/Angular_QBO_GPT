@@ -1389,3 +1389,42 @@ module.exports.importVendor = async function (req, res) {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
+
+module.exports.checkQBDImportVendor = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
+
+            for (let m = 0; m < requestObject.length; m++) {
+                var nameexist = await vendorConnection.findOne({ "vendor_name": requestObject[m].Name });
+                if (nameexist == null) {
+                    requestObject.created_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.is_quickbooks = true;
+                    requestObject.vendor_name = requestObject[m].Name;
+                    requestObject.name = requestObject[m].Name;
+                    if (requestObject[m].IsActive == true) {
+                        requestObject.vendor_status = 1;
+                    }
+                    else if (requestObject[m].IsActive == false) {
+                        requestObject.vendor_status = 2;
+                    }
+                    var add_vendor = new vendorConnection(requestObject);
+                    var save_vendor = await add_vendor.save();
+                }
+
+            }
+            res.send({ status: true, message: "Vendor insert successfully..!" });
+
+        } catch (error) {
+            console.log(error);
+            res.send({ status: false, message: translator.getStr('SomethingWrong'), error: error });
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};

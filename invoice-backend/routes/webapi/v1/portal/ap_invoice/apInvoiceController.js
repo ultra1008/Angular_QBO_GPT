@@ -1061,7 +1061,6 @@ module.exports.getAPInvoiceForReports = async function (req, res) {
             if (requestObject.start_date != 0 && requestObject.end_date != 0) {
                 date_query = { invoice_date_epoch: { $gte: requestObject.start_date, $lt: requestObject.end_date } };
             }
-            console.log("date_query", date_query);
             var get_data = await apInvoiceConnection.aggregate([
                 { $match: match },
                 { $match: date_query },
