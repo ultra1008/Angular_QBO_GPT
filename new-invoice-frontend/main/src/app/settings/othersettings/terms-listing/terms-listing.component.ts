@@ -62,11 +62,11 @@ export class TermsListingComponent
   async getCompanyTenants() {
     const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP);
     if (data.status) {
-      if (data.data.is_quickbooks_online || data.data.is_quickbooks_desktop) {
-        this.displayedColumns = ['name', 'due_days', 'discount', 'is_quickbooks', 'actions'];
-      } else {
+      // if (data.data.is_quickbooks_online || data.data.is_quickbooks_desktop) {
+      //   this.displayedColumns = ['name', 'due_days', 'discount', 'is_quickbooks', 'actions'];
+      // } else {
         this.displayedColumns = ['name', 'due_days', 'discount', 'actions'];
-      }
+      // }
     }
     // this.loadData();
   }
