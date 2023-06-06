@@ -250,6 +250,7 @@ export enum httproutes {
   DELETE_INVOICE_NOTE = 'deleteapinvoicenote',
   GET_INVOICE_HISTORY = 'getapinvoicehistory',
   SAVE_INVOICE_INFO = 'saveapinvoiceinfo',
+  DELETE_INVOICE_INFO = 'deleteapinvoiceinfo',
   GET_ONE_AP_PO = 'getoneappo',
   GET_ONE_AP_QUOET = 'getoneapquote',
   GET_ONE_AP_PACKLING_SLIP = 'getoneappackingslip',

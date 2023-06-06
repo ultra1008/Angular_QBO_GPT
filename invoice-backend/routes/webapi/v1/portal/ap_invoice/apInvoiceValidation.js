@@ -89,11 +89,21 @@ const getHeaderAPInvoiceSerach = (req, res, next) => {
 const saveAPInvoiceInfo = (req, res, next) => {
     const validationRule = {
         "amount": "required",
-        /*  "job_client_name": "required",
-         "class_name": "required",
-         "cost_code_gl_account": "required",
-         "assign_to": "required",
-         "notes": "required", */
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({ status: false, message: err });
+        }
+        else {
+            next();
+        }
+    });
+};
+
+const deleteAPInvoiceInfo = (req, res, next) => {
+    const validationRule = {
+        "invoice_id": "required",
+        "_id": "required",
     };
     validator(req.body, validationRule, {}, (err, status) => {
         if (!status) {
@@ -113,4 +123,5 @@ module.exports = {
     deleteAPInvoiceNote,
     getHeaderAPInvoiceSerach,
     saveAPInvoiceInfo,
+    deleteAPInvoiceInfo,
 };

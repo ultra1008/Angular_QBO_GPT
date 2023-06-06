@@ -29,6 +29,7 @@
             "EDIT": "Edit"
         },
         "ACTIONS": {
+            "ACTIONS": "Actions",
             "EDIT": "Edit",
             "ARCHIVE": "Archive",
             "RESTORE": "Restore",
