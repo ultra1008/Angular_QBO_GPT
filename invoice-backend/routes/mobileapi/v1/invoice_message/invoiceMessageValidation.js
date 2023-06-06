@@ -1,4 +1,4 @@
-var validator = require("../../../../../controller/common/validationforrequest");
+var validator = require("../../../../controller/common/validationforrequest");
 
 const getOneInvoiceMessage = (req, res, next) => {
     const validationRule = {
