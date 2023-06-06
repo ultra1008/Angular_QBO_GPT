@@ -289,6 +289,35 @@ module.exports.getOneAPInvoice = async function (req, res) {
                     }
                 },
                 {
+                    $lookup: {
+                        from: collectionConstant.AP_INVOICE,
+                        let: { id: "$_id", vendor: "$vendor" },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $and: [
+                                            { $ne: ["$_id", "$$id"] },
+                                            { $eq: ["$vendor", "$$vendor"] },
+                                            { $eq: ["$is_delete", 0] },
+                                            { $ne: [{ $size: "$invoice_info" }, 0] },
+                                        ]
+                                    }
+                                },
+                            },
+                            {
+                                $project: {
+                                    invoice_date_epoch: 1,
+                                    invoice_info: 1,
+                                }
+                            },
+                            { $sort: { 'invoice_info.invoice_date_epoch': -1 } },
+                            { $limit: 3 },
+                        ],
+                        as: "accounting_info"
+                    }
+                },
+                {
                     $project: {
                         assign_to: 1,
                         assign_to_data: "$assign_to_data",
@@ -355,6 +384,7 @@ module.exports.getOneAPInvoice = async function (req, res) {
                         },
 
                         invoice_messages: "$invoice_messages",
+                        accounting_info: "$accounting_info",
                     }
                 }
             ]);

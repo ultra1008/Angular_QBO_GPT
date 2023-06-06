@@ -68,6 +68,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   notes: any = [];
   supportingDocuments: any = [];
   invoiceMessages: any = [];
+  accountInfo: any = [];
   rejectReason = '';
 
   invoiceInfo: any = [];
@@ -109,7 +110,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   prevStep() {
     this.step--;
   }
-  constructor(private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog, private commonService: CommonService,
+  constructor (private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog, private commonService: CommonService,
     public route: ActivatedRoute, public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, public translate: TranslateService,) {
     super();
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
@@ -331,6 +332,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
       this.supportingDocuments = this.invoiceData.supporting_documents;
       this.invoiceInfo = this.invoiceData.invoice_info;
       this.invoiceMessages = this.invoiceData.invoice_messages;
+      this.accountInfo = this.invoiceData.accounting_info;
       this.pdf_url = this.invoiceData.pdf_url;
       this.pdfLoader = false;
       this.uiSpinner.spin$.next(false);
