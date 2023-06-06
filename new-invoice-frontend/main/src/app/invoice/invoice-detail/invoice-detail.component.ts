@@ -108,7 +108,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   prevStep() {
     this.step--;
   }
-  constructor (private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog, private commonService: CommonService,
+  constructor(private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog, private commonService: CommonService,
     public route: ActivatedRoute, public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, public translate: TranslateService,) {
     super();
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
@@ -264,6 +264,9 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   gotoEdit(document: any) {
 
     this.router.navigate([WEB_ROUTES.INVOICE_VIEW_DOCUMENT], { queryParams: { document: document.document_type, _id: document._id } });
+  }
+  goToDashboard() {
+    this.router.navigate([WEB_ROUTES.DASHBOARD]);
   }
 
   async getOneInvoice() {
