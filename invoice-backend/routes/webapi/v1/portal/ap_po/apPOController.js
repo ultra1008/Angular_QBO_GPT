@@ -32,8 +32,26 @@ module.exports.getOneAPPO = async function (req, res) {
         try {
             var requestObject = req.body;
             var apPOConnection = connection_db_api.model(collectionConstant.AP_PO, apPOSchema);
-            var get_data = await apPOConnection.findOne({ _id: ObjectID(requestObject._id) });
-            res.send({ status: true, message: "PO Listing", data: get_data });
+            var get_data = await apPOConnection.aggregate([
+                { $match: { _id: ObjectID(requestObject._id) } },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_VENDOR,
+                        localField: "vendor",
+                        foreignField: "_id",
+                        as: "vendor_data"
+                    }
+                },
+                { $unwind: "$vendor_data" },
+            ]);
+            if (get_data) {
+                if (get_data.length > 0) {
+                    get_data = get_data[0];
+                }
+                res.send({ status: true, message: "PO Listing", data: get_data });
+            } else {
+                res.send({ message: translator.getStr('NoDataWithId'), status: false });
+            }
         } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
