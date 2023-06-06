@@ -32,6 +32,11 @@
 /invoice-frontend/package-lock.json
 /invoice-frontend/.angular
 
+/quickbooks-js-master/node_modules
+/quickbooks-js-master/package-lock.json
+/quickbooks-js-master/.angular
+/quickbooks-js-master/.travis.yml
+
 
 
 # profiling files
