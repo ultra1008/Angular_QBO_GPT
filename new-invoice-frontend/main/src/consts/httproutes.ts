@@ -251,6 +251,11 @@ export enum httproutes {
   GET_INVOICE_HISTORY = 'getapinvoicehistory',
   SAVE_INVOICE_INFO = 'saveapinvoiceinfo',
   DELETE_INVOICE_INFO = 'deleteapinvoiceinfo',
+  GET_ONE_AP_PO = 'getoneappo',
+  GET_ONE_AP_QUOET = 'getoneapquote',
+  GET_ONE_AP_PACKLING_SLIP = 'getoneappackingslip',
+  GET_ONE_AP_RECEVING_SLIP = 'getoneapreceivingslip',
+
 
   //QuickBook Module
   QUICKBOOK_SAVE_INFO = "savequickbookinfo",

@@ -25,7 +25,8 @@
             "HIDE": "Hide",
             "PRINT": "IMPRIMIR",
             "INVOICEMSG": "Invoice Message",
-            "INVOICELINK": "Invoice Link"
+            "INVOICELINK": "Invoice Link",
+            "EDIT": "Edit"
         },
         "ACTIONS": {
             "ACTIONS": "Actions",

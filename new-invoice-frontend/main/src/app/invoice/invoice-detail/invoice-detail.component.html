@@ -937,10 +937,12 @@
                          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                               <div class="card pdf-h">
                                    <div class="pdf-btn" *ngIf="!pdfLoader">
-                                        <button class="m-2" mat-mini-fab (click)="download()" color="primary">
+                                        <button matTooltip="{{'COMMON.TOOL_TIP.DOWNLOAD' |  translate}}" class="m-2"
+                                             mat-mini-fab (click)="download()" color="primary">
                                              <mat-icon class="col-white">download</mat-icon>
                                         </button>
-                                        <button mat-mini-fab (click)="print()" color="primary">
+                                        <button matTooltip="{{'COMMON.TOOL_TIP.PRINT' |  translate}}" mat-mini-fab
+                                             (click)="print()" color="primary">
                                              <mat-icon class="col-white">print</mat-icon>
                                         </button>
 

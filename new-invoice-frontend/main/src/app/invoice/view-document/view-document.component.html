@@ -13,12 +13,19 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="right ">
+                        <div class="right">
                             <ul class="tbl-export-btn">
                                 <li class="tbl-header-btn">
-                                    <div class="m-l-10" matTooltip="BACK">
-                                        <button mat-mini-fab color="warn">
-                                            <mat-icon class="col-white">close </mat-icon>
+                                    <div class="m-l-10" matTooltip="Back">
+                                        <button (click)="back()" mat-mini-fab color="primary">
+                                            <mat-icon class="col-white">keyboard_return</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" matTooltip="Back To Invoice Listing">
+                                        <button (click)="backListing()" mat-mini-fab color="warn">
+                                            <mat-icon class="col-white">close</mat-icon>
                                         </button>
                                     </div>
                                 </li>
@@ -58,7 +65,11 @@
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Date</mat-label>
-                                                <input formControlName="date" matInput />
+                                                <input matInput [max]="maxDate" [matDatepicker]="poDatePicker"
+                                                    formControlName="date">
+                                                <mat-datepicker-toggle matSuffix
+                                                    [for]="poDatePicker"></mat-datepicker-toggle>
+                                                <mat-datepicker #poDatePicker></mat-datepicker>
                                             </mat-form-field>
                                         </div>
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
@@ -169,8 +180,15 @@
                         <div class="right ">
                             <ul class="tbl-export-btn">
                                 <li class="tbl-header-btn">
-                                    <div class="m-l-10" matTooltip="BACK">
-                                        <button mat-mini-fab color="warn">
+                                    <div class="m-l-10" matTooltip="Back">
+                                        <button (click)="back()" mat-mini-fab color="primary">
+                                            <mat-icon class="col-white">keyboard_return</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" matTooltip="Back To Invoice Listing">
+                                        <button (click)="backListing()" mat-mini-fab color="warn">
                                             <mat-icon class="col-white">close </mat-icon>
                                         </button>
                                     </div>
@@ -312,8 +330,15 @@
                         <div class="right ">
                             <ul class="tbl-export-btn">
                                 <li class="tbl-header-btn">
-                                    <div class="m-l-10" matTooltip="BACK">
-                                        <button mat-mini-fab color="warn">
+                                    <div class="m-l-10" matTooltip="Back">
+                                        <button (click)="back()" mat-mini-fab color="primary">
+                                            <mat-icon class="col-white">keyboard_return</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" matTooltip="Back To Invoice Listing">
+                                        <button (click)="backListing()" mat-mini-fab color="warn">
                                             <mat-icon class="col-white">close </mat-icon>
                                         </button>
                                     </div>
@@ -419,8 +444,15 @@
                         <div class="right ">
                             <ul class="tbl-export-btn">
                                 <li class="tbl-header-btn">
-                                    <div class="m-l-10" matTooltip="BACK">
-                                        <button mat-mini-fab color="warn">
+                                    <div class="m-l-10" matTooltip="Back">
+                                        <button (click)="back()" mat-mini-fab color="primary">
+                                            <mat-icon class="col-white">keyboard_return</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" matTooltip="Back To Invoice Listing">
+                                        <button (click)="backListing()" mat-mini-fab color="warn">
                                             <mat-icon class="col-white">close </mat-icon>
                                         </button>
                                     </div>
@@ -517,10 +549,12 @@
 <ng-template #viewPDFTemplate let-url='url'>
     <div class="card pdf-h">
         <div class="pdf-btn">
-            <button class="m-2" mat-mini-fab (click)="download()" color="primary">
+            <button matTooltip="{{'COMMON.TOOL_TIP.DOWNLOAD' |  translate}}" class="m-2" mat-mini-fab
+                (click)="download()" color="primary">
                 <mat-icon class="col-white">download</mat-icon>
             </button>
-            <button mat-mini-fab (click)="print()" color="primary">
+            <button matTooltip="{{'COMMON.TOOL_TIP.PRINT' |  translate}}" mat-mini-fab (click)="print()"
+                color="primary">
                 <mat-icon class="col-white">print</mat-icon>
             </button>
 
@@ -541,13 +575,16 @@
 <ng-template #viewPDFEditTemplate let-url='url'>
     <div class="card pdf-h">
         <div class="pdf-btn">
-            <button class="m-2" mat-mini-fab (click)="goEdit()" color="primary">
+            <button matTooltip="{{'COMMON.TOOL_TIP.EDIT' |  translate}}" class="m-2" mat-mini-fab
+                (click)="goDocumentForm()" color="primary">
                 <mat-icon class="col-white">edit</mat-icon>
             </button>
-            <button class="m-2" mat-mini-fab (click)="download()" color="primary">
+            <button matTooltip="{{'COMMON.TOOL_TIP.DOWNLOAD' |  translate}}" class="m-2" mat-mini-fab
+                (click)="download()" color="primary">
                 <mat-icon class="col-white">download</mat-icon>
             </button>
-            <button mat-mini-fab (click)="print()" color="primary">
+            <button matTooltip="{{'COMMON.TOOL_TIP.PRINT' |  translate}}" mat-mini-fab (click)="print()"
+                color="primary">
                 <mat-icon class="col-white">print</mat-icon>
             </button>
 
@@ -561,7 +598,4 @@
             </div>
         </div>
     </div>
-
-
-
 </ng-template>

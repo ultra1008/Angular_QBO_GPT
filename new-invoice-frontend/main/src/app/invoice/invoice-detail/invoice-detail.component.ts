@@ -34,7 +34,6 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   invoiceForm: UntypedFormGroup;
   moreInformationForm!: UntypedFormGroup;
   noteForm!: UntypedFormGroup;
-
   step = 0;
   pdf_url = '/assets/pdf_url/file-3.pdf';
   loadInvoice = true;
