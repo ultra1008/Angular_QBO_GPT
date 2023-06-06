@@ -617,92 +617,73 @@
 
                                                   </mat-expansion-panel-header>
                                                   <div class="card activity">
-                                                       <div class="body">
+                                                       <div class="body custom-min-height">
+                                                            <div class="text-center custom-min-height no-account-info"
+                                                                 *ngIf="accountInfo.length === 0">
+                                                                 No data available
+                                                            </div>
                                                             <mat-tab-group>
-                                                                 <mat-tab label="3-28-2023">
+                                                                 <mat-tab *ngFor="let account of accountInfo;"
+                                                                      label="{{(account.invoice_date_epoch * 1000) | date: 'MM/dd/yyyy'}}">
                                                                       <div class="body table-responsive">
-                                                                           <table class="table">
+                                                                           <table class="table info-table">
                                                                                 <thead>
                                                                                      <tr>
-                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.TOTAL_AMOUNT' |
-                                                                                          translate}}</th>
-                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.COST_CODE' |
-                                                                                          translate}}</th>
-                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.ASSIGN_TO' |
-                                                                                          translate}}</th>
-                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.GL_ACCOUNT' |
-                                                                                          translate}}</th>
-                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.NOTES' |
-                                                                                          translate}}</th>
+                                                                                          <th class="column-1">
+                                                                                               {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.TOTAL_AMOUNT' | translate}}
+                                                                                          </th>
+                                                                                          <th class="column-2">
+                                                                                               {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.COST_CODE' | translate}}
+                                                                                          </th>
+                                                                                          <th class="column-3">
+                                                                                               {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.ASSIGN_TO' | translate}}
+                                                                                          </th>
+                                                                                          <th class="column-4">
+                                                                                               {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.CLIENT_JOB_NAME' | translate}}
+                                                                                          </th>
+                                                                                          <th class="column-5">
+                                                                                               {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.CLASS_NAME' | translate}}
+                                                                                          </th>
+                                                                                          <th class="column-6">
+                                                                                               {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.NOTES' | translate}}
+                                                                                          </th>
+                                                                                          <th class="column-7">
+                                                                                               {{'COMMON.ACTIONS.ACTIONS' | translate}}
+                                                                                          </th>
                                                                                      </tr>
                                                                                 </thead>
                                                                                 <tbody>
-                                                                                     <tr>
-                                                                                          <th>55.00</th>
-                                                                                          <td>Cost Code</td>
-                                                                                          <td>Assign To</td>
-                                                                                          <td>GL Account</td>
-                                                                                          <td>Notes</td>
-                                                                                     </tr>
-                                                                                </tbody>
-                                                                           </table>
-                                                                      </div>
-                                                                 </mat-tab>
-                                                                 <mat-tab label="3-25-2023">
-                                                                      <div class="body table-responsive">
-                                                                           <table class="table">
-                                                                                <thead>
-
-                                                                                     <tr>
-                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.TOTAL_AMOUNT' |
-                                                                                               translate}}</th>
-                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.COST_CODE' |
-                                                                                               translate}}</th>
-                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.ASSIGN_TO' |
-                                                                                               translate}}</th>
-                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.GL_ACCOUNT' |
-                                                                                               translate}}</th>
-                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.NOTES' |
-                                                                                               translate}}</th>
-                                                                                     </tr>
-
-                                                                                </thead>
-                                                                                <tbody>
-                                                                                     <tr>
-                                                                                          <th>55.00</th>
-                                                                                          <td>Cost Code</td>
-                                                                                          <td>Assign To</td>
-                                                                                          <td>GL Account</td>
-                                                                                          <td>Notes</td>
-                                                                                     </tr>
-                                                                                </tbody>
-                                                                           </table>
-                                                                      </div>
-                                                                 </mat-tab>
-                                                                 <mat-tab label="3-20-2023">
-                                                                      <div class="body table-responsive">
-                                                                           <table class="table">
-                                                                                <thead>
-                                                                                     <tr>
-                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.TOTAL_AMOUNT' |
-                                                                                          translate}}</th>
-                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.COST_CODE' |
-                                                                                          translate}}</th>
-                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.ASSIGN_TO' |
-                                                                                          translate}}</th>
-                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.GL_ACCOUNT' |
-                                                                                          translate}}</th>
-                                                                                          <th>{{'INVOICE.INVOICE_DETAILS.ACCOUNTING_ACTIVITY.TABLE.NOTES' |
-                                                                                          translate}}</th>
-                                                                                     </tr>
-                                                                                </thead>
-                                                                                <tbody>
-                                                                                     <tr>
-                                                                                          <th>55.00</th>
-                                                                                          <td>Cost Code</td>
-                                                                                          <td>Assign To</td>
-                                                                                          <td>GL Account</td>
-                                                                                          <td>Notes</td>
+                                                                                     <tr
+                                                                                          *ngFor="let info of account.invoice_info;">
+                                                                                          <td class="column-1">
+                                                                                               $
+                                                                                               {{numberWithCommas(info.amount)}}
+                                                                                          </td>
+                                                                                          <td class="column-2">
+                                                                                               {{setInfoCostCode(info.cost_code_gl_account)}}
+                                                                                          </td>
+                                                                                          <td class="column-3">
+                                                                                               {{setInfoApprover(info.assign_to)}}
+                                                                                          </td>
+                                                                                          <td class="column-4">
+                                                                                               {{setInfoClientJob(info.job_client_name)}}
+                                                                                          </td>
+                                                                                          <td class="column-5">
+                                                                                               {{setInfoClassName(info.class_name)}}
+                                                                                          </td>
+                                                                                          <td class="column-6">
+                                                                                               {{info.notes}}
+                                                                                          </td>
+                                                                                          <td class="column-7">
+                                                                                               <button mat-icon-button
+                                                                                                    matTooltip="{{'COMMON.ACTIONS.ARCHIVE' | translate}}"
+                                                                                                    color="accent"
+                                                                                                    (click)="$event.stopPropagation()"
+                                                                                                    class="col-red"
+                                                                                                    (click)="deleteInvoiceInfo(info)">
+                                                                                                    <mat-icon>archive</mat-icon>
+                                                                                               </button>
+                                                                                          </td>
                                                                                      </tr>
                                                                                 </tbody>
                                                                            </table>
