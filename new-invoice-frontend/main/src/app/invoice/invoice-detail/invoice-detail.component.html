@@ -766,9 +766,12 @@
                                                                       <th class="column-6">
                                                                            {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.NOTES' | translate}}
                                                                       </th>
+                                                                      <th class="column-7">
+                                                                           {{'COMMON.ACTIONS.ACTIONS' | translate}}
+                                                                      </th>
                                                                  </tr>
                                                             </thead>
-                                                            <tbody>
+                                                            <tbody *ngIf="loadInvoiceInfo">
                                                                  <tr *ngFor="let info of invoiceInfo;">
                                                                       <td class="column-1">
                                                                            $ {{numberWithCommas(info.amount)}}
@@ -787,6 +790,16 @@
                                                                       </td>
                                                                       <td class="column-6">
                                                                            {{info.notes}}
+                                                                      </td>
+                                                                      <td class="column-7">
+                                                                           <button mat-icon-button
+                                                                                matTooltip="{{'COMMON.ACTIONS.ARCHIVE' | translate}}"
+                                                                                color="accent"
+                                                                                (click)="$event.stopPropagation()"
+                                                                                class="col-red"
+                                                                                (click)="deleteInvoiceInfo(info)">
+                                                                                <mat-icon>archive</mat-icon>
+                                                                           </button>
                                                                       </td>
                                                                  </tr>
                                                                  <tr *ngIf="invoiceInfo.length === 0 && !showInfoForm">

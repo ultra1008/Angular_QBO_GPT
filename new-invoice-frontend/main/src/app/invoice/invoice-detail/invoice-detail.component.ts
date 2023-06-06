@@ -72,6 +72,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   rejectReason = '';
 
   invoiceInfo: any = [];
+  loadInvoiceInfo = true;
   showInfoForm = false;
   infoAmount = '0.00';
   infoNotes = '';
@@ -581,6 +582,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   addCloseInvoiceInfo() {
     this.showInfoForm = !this.showInfoForm;
   }
+
   async saveInvoiceInfo() {
     let assignTo = '';
     if (this.userControl.value) {
@@ -601,26 +603,62 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
     if (this.infoAmount == '') {
       showNotification(this.snackBar, 'Please enter invoice amount.', 'error');
     } else {
-      const requestObject = {
-        invoice_id: this.id,
-        amount: this.infoAmount,
-        job_client_name: clientId,
-        class_name: classId,
-        cost_code_gl_account: costCodeId,
-        assign_to: assignTo,
-        notes: this.infoNotes,
-      };
-      this.uiSpinner.spin$.next(true);
-      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_INVOICE_INFO, requestObject);
-      this.uiSpinner.spin$.next(false);
-      if (data.status) {
-        showNotification(this.snackBar, data.message, 'success');
-        this.addCloseInvoiceInfo();
-        this.getOneInvoice();
+      this.infoAmount = this.infoAmount.toString().replace(/,/g, "");
+      if (Number(this.infoAmount) > this.invoiceData.invoice_total_amount) {
+        showNotification(this.snackBar, 'Amount is not greate then invoice amount.', 'error');
       } else {
-        showNotification(this.snackBar, data.message, 'error');
+        const requestObject = {
+          invoice_id: this.id,
+          amount: this.infoAmount,
+          job_client_name: clientId,
+          class_name: classId,
+          cost_code_gl_account: costCodeId,
+          assign_to: assignTo,
+          notes: this.infoNotes,
+        };
+        this.uiSpinner.spin$.next(true);
+        const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_INVOICE_INFO, requestObject);
+        this.uiSpinner.spin$.next(false);
+        if (data.status) {
+          showNotification(this.snackBar, data.message, 'success');
+          this.addCloseInvoiceInfo();
+          this.getOneInvoice();
+        } else {
+          showNotification(this.snackBar, data.message, 'error');
+        }
       }
     }
+  }
+
+  deleteInvoiceInfo(info: any) {
+    swalWithBootstrapTwoButtons
+      .fire({
+        title: 'Are you sure you want to delete this info?',
+        showDenyButton: true,
+        confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+        denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+        allowOutsideClick: false,
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          this.uiSpinner.spin$.next(true);
+          const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.DELETE_INVOICE_INFO, { _id: info._id, invoice_id: this.id });
+          this.uiSpinner.spin$.next(false);
+          if (data.status) {
+            showNotification(this.snackBar, data.message, 'success');
+            const foundIndex = this.invoiceInfo.findIndex((x: any) => x._id === info._id);
+            if (foundIndex != null) {
+              this.invoiceInfo.splice(foundIndex, 1);
+            }
+            this.loadInvoiceInfo = false;
+            setTimeout(() => {
+              this.loadInvoiceInfo = true;
+            }, 100);
+          } else {
+            showNotification(this.snackBar, data.message, 'error');
+          }
+        }
+      });
   }
 
   infoAmountChange(params: any, controller: string) {

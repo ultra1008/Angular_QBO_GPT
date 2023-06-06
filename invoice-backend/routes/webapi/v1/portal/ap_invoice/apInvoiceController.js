@@ -1337,3 +1337,34 @@ module.exports.saveAPInvoiceInfo = async function (req, res) {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
+
+module.exports.deleteAPInvoiceInfo = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var apInvoiceConnection = connection_db_api.model(collectionConstant.AP_INVOICE, apInvoiceSchema);
+            var invoice_id = requestObject.invoice_id;
+            delete requestObject.invoice_id;
+            var id = requestObject._id;
+            delete requestObject._id;
+            requestObject.updated_by = decodedToken.UserData._id;
+            requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+            let update_ap_invoice = await apInvoiceConnection.updateOne({ _id: ObjectID(invoice_id), "invoice_info._id": id }, { $set: { "invoice_info.$.updated_by": decodedToken.UserData._id, "invoice_info.$.updated_at": Math.round(new Date().getTime() / 1000), "invoice_info.$.is_delete": 1 } });
+            if (update_ap_invoice) {
+                res.send({ status: true, message: "Invoice info deleted successfully.", data: update_ap_invoice });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};

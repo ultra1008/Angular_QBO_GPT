@@ -28,6 +28,7 @@
             "INVOICELINK": "Invoice Link"
         },
         "ACTIONS": {
+            "ACTIONS": "Actions",
             "EDIT": "Editar",
             "ARCHIVE": "Archivo",
             "RESTORE": "Restaurar",
