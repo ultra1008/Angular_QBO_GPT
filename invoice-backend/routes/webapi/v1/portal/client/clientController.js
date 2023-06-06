@@ -486,6 +486,7 @@ module.exports.getClientForTable = async function (req, res) {
                         client_notes: 1,
                         gl_account: 1,
                         is_delete: 1,
+                        is_quickbooks: 1,
                         approver_id: 1,
                         client_cost_cost_id: 1,
                         approver: "$invoice_user",

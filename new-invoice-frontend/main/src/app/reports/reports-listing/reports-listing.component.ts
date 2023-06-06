@@ -50,6 +50,7 @@ export class ReportsListingComponent extends UnsubscribeOnDestroyAdapter impleme
     start_date: new FormControl(),
     end_date: new FormControl()
   });
+  dateRange: Array<number> = [0, 0];
 
   constructor (public ReportServices: ReportService, public httpCall: HttpCall, public uiSpinner: UiSpinnerService,
     public route: ActivatedRoute, private router: Router, public translate: TranslateService,) {
@@ -100,6 +101,7 @@ export class ReportsListingComponent extends UnsubscribeOnDestroyAdapter impleme
       this.sort,
       this.reportType,
       this.ids,
+      this.dateRange,
     );
     this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
       () => {
@@ -137,7 +139,6 @@ export class ReportsListingComponent extends UnsubscribeOnDestroyAdapter impleme
         'Approver': x.assign_to_data?.userfullname,
         'Status': x.status,
       }));
-
     TableExportUtil.exportToExcel(exportData, 'excel');
   }
 
@@ -146,11 +147,10 @@ export class ReportsListingComponent extends UnsubscribeOnDestroyAdapter impleme
   }
 
   dateRangeChange(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
-    console.log("start: ", dateRangeStart.value, timeDateToepoch(new Date(dateRangeStart.value)));
-    console.log("end: ", dateRangeEnd.value, timeDateToepoch(new Date(dateRangeEnd.value)));
-
-    // this.dateRange = [dateRangeStart.value, dateRangeEnd.value];
-    // this.dateRange = [timeDateToepoch(dateRangeStart.value), timeDateToepoch(dateRangeEnd.value)];
+    if (dateRangeStart.value != null && dateRangeStart.value != undefined && dateRangeEnd.value != null && dateRangeEnd.value != undefined) {
+      this.dateRange = [timeDateToepoch(dateRangeStart.value), timeDateToepoch(dateRangeEnd.value)];
+      this.loadData();
+    }
   }
 }
 
@@ -165,7 +165,7 @@ export class ExampleDataSource extends DataSource<Report> {
   filteredData: Report[] = [];
   renderedData: Report[] = [];
   constructor (public exampleDatabase: ReportService, public paginator: MatPaginator, public _sort: MatSort,
-    public reportType: string, public ids: Array<string>,) {
+    public reportType: string, public ids: Array<string>, public dateRange: Array<number>) {
     super();
     // Reset to the first page when the user changes the filter.
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
@@ -181,15 +181,15 @@ export class ExampleDataSource extends DataSource<Report> {
     ];
     let requestObject;
     if (this.reportType == configData.REPORT_TYPE.reportVendor) {
-      requestObject = { vendor_ids: this.ids };
+      requestObject = { vendor_ids: this.ids, start_date: this.dateRange[0], end_date: this.dateRange[1] };
     } else if (this.reportType == configData.REPORT_TYPE.openApprover) {
-      requestObject = { assign_to_ids: this.ids };
+      requestObject = { assign_to_ids: this.ids, start_date: this.dateRange[0], end_date: this.dateRange[1] };
     } else if (this.reportType == configData.REPORT_TYPE.openClass) {
-      requestObject = { class_name_ids: this.ids };
+      requestObject = { class_name_ids: this.ids, start_date: this.dateRange[0], end_date: this.dateRange[1] };
     } else if (this.reportType == configData.REPORT_TYPE.openClientJob) {
-      requestObject = { job_client_name_ids: this.ids };
+      requestObject = { job_client_name_ids: this.ids, start_date: this.dateRange[0], end_date: this.dateRange[1] };
     } else if (this.reportType == configData.REPORT_TYPE.openVendor) {
-      requestObject = { open_invoice: true, vendor_ids: this.ids };
+      requestObject = { open_invoice: true, vendor_ids: this.ids, start_date: this.dateRange[0], end_date: this.dateRange[1] };
     }
 
     this.exampleDatabase.getInvoiceReportTable(requestObject);
