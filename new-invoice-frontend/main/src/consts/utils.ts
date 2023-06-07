@@ -14,7 +14,7 @@ export const swalWithBootstrapButtons = Swal.mixin({
   allowOutsideClick: false,
   imageUrl: './assets/images/rovukinvoice.png',
   imageHeight: 50,
-  imageAlt: 'ROVUK A/P',
+  imageAlt: 'Smartaccupay',
 });
 
 export const swalWithBootstrapTwoButtons = Swal.mixin({
@@ -26,7 +26,7 @@ export const swalWithBootstrapTwoButtons = Swal.mixin({
   allowOutsideClick: false,
   imageUrl: './assets/images/rovukinvoice.png',
   imageHeight: 50,
-  imageAlt: 'ROVUK A/P',
+  imageAlt: 'Smartaccupay',
 });
 
 export function showNotification(
@@ -372,4 +372,4 @@ export function notificationRoutes() {
       url: WEB_ROUTES.INVOICE_DETAILS,
     },
   ];
-} 
+}
