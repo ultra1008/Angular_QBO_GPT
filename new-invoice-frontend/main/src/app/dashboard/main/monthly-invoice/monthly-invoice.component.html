@@ -39,7 +39,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="body overflow-auto" id="chart">
+                    <div class="body overflow-auto" id="chart" *ngIf="showInvoiceChart">
                         <apx-chart [series]="invoiceChartOptions.series!" [chart]="invoiceChartOptions.chart!"
                             [tooltip]="invoiceChartOptions.tooltip!" [xaxis]="invoiceChartOptions.xaxis!"
                             [yaxis]="invoiceChartOptions.yaxis!" [title]="invoiceChartOptions.title!"

@@ -164,7 +164,7 @@
                 </div>
               </div>
               <div class="body">
-                <div style="text-align:center" *ngIf="showMonthlyChart">
+                <div style="text-align:center" *ngIf="showInvoiceChart">
                   <apx-chart [series]="invoiceChartOptions.series!" [chart]="invoiceChartOptions.chart!"
                     [tooltip]="invoiceChartOptions.tooltip!" [xaxis]="invoiceChartOptions.xaxis!"
                     [yaxis]="invoiceChartOptions.yaxis!" [title]="invoiceChartOptions.title!"
@@ -204,10 +204,10 @@
                     </div>
                   </div>
                   <div class="body">
-                    <div style="text-align:center">
-                      <apx-chart [series]="columnChartOptions.series!" [chart]="columnChartOptions.chart!"
-                        [title]="columnChartOptions.title!" [dataLabels]="columnChartOptions.dataLabels"
-                        [xaxis]="columnChartOptions.xaxis"></apx-chart>
+                    <div style="text-align:center" *ngIf="showHistoryChart">
+                      <apx-chart [series]="historyChartOptions.series!" [chart]="historyChartOptions.chart!"
+                        [title]="historyChartOptions.title!" [dataLabels]="historyChartOptions.dataLabels!"
+                        [xaxis]="historyChartOptions.xaxis!" [yaxis]="historyChartOptions.yaxis!"></apx-chart>
                     </div>
                   </div>
                 </div>

@@ -37,7 +37,7 @@ const colors = ['#C5B7FF', '#94D4FE', '#FF99B1'];
   styleUrls: ['./monthly-invoice.component.scss']
 })
 export class MonthlyInvoiceComponent {
-  showMonthlyChart = true;
+  showInvoiceChart = true;
   public invoiceChartOptions: Partial<ChartOptions> = {
     chart: {
       height: 350,
@@ -154,9 +154,9 @@ export class MonthlyInvoiceComponent {
         }, */
       console.log("series: ", series);
       this.invoiceChartOptions.series = series;
-      this.showMonthlyChart = false;
+      this.showInvoiceChart = false;
       setTimeout(() => {
-        this.showMonthlyChart = true;
+        this.showInvoiceChart = true;
       }, 100);
     }
   }

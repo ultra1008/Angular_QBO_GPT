@@ -44,7 +44,8 @@ export type ChartOptions = {
   responsive: ApexResponsive[];
 };
 
-const colors = ['#C5B7FF', '#94D4FE', '#FF99B1'];
+const invoiceColors = ['#C5B7FF', '#94D4FE', '#FF99B1'];
+const historyColors = ['#008FFB', '#E1E0E0', '#F44336'];
 
 @Component({
   selector: 'app-main',
@@ -53,7 +54,7 @@ const colors = ['#C5B7FF', '#94D4FE', '#FF99B1'];
 })
 export class MainComponent {
   @ViewChild('chart') chart?: ChartComponent;
-  showMonthlyChart = true;
+  showInvoiceChart = true;
   public invoiceChartOptions: Partial<ChartOptions> = {
     chart: {
       height: 350,
@@ -124,15 +125,69 @@ export class MainComponent {
       },
     },
     legend: {
-      position: 'top',
-      horizontalAlign: 'right',
-      floating: true,
-      offsetY: -25,
-      offsetX: -5,
+      position: 'bottom',
+      offsetY: 0,
     },
   };
 
-  public columnChartOptions: Partial<ChartOptions> | any;
+  showHistoryChart = true;
+  public historyChartOptions: Partial<ChartOptions> = {
+    chart: {
+      height: 350,
+      type: 'bar',
+      stacked: true,
+      toolbar: {
+        show: false,
+      },
+      zoom: {
+        enabled: false,
+      },
+      foreColor: '#9aa0ac',
+    },
+    series: [
+      {
+        name: 'Paid',
+        data: [0, 0, 0],
+        color: '#008FFB',
+      },
+      {
+        name: 'On Hold',
+        data: [0, 0, 0],
+        color: '#E1E0E0',
+      },
+      {
+        name: 'Rejected',
+        data: [0, 0, 0],
+        color: '#F44336',
+      },
+    ],
+    xaxis: {
+      categories: ['Mar', 'Apr', 'May'],
+      title: {
+        text: 'Month',
+      },
+      labels: {
+        style: {
+          colors: '#9aa0ac',
+        },
+      },
+    },
+    yaxis: {
+      labels: {
+        style: {
+          colors: ['#9aa0ac'],
+        },
+      },
+    },
+    legend: {
+      position: 'bottom',
+      offsetY: 0,
+    },
+    dataLabels: {
+      enabled: false,
+    },
+  };
+
   gaugeType = 'arch' as NgxGaugeType;
   gaugeValue = 48;
   gaugeSize = 170;
@@ -190,95 +245,35 @@ export class MainComponent {
         series.push({
           name: data.data[i].status,
           data: data.data[i].data,
-          color: colors[i],
+          color: invoiceColors[i],
         });
       }
       this.invoiceChartOptions.series = series;
-      this.showMonthlyChart = false;
+      this.showInvoiceChart = false;
       setTimeout(() => {
-        this.showMonthlyChart = true;
+        this.showInvoiceChart = true;
       }, 100);
     }
   }
 
-  monthlyHistoryChart() {
-    this.columnChartOptions = {
-      chart: {
-        height: 350,
-        type: 'bar',
-        stacked: true,
-        toolbar: {
-          show: false,
-        },
-        zoom: {
-          enabled: false,
-        },
-        foreColor: '#9aa0ac',
-      },
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            legend: {
-              position: 'bottom',
-              offsetX: -5,
-              offsetY: 0,
-            },
-          },
-        },
-      ],
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: '180%',
-        },
-      },
-      series: [
-        {
-          name: 'Paid',
-          data: [44, 55, 41],
-          color: '#008FFB',
-        },
-        {
-          name: 'On Hold',
-          data: [13, 23, 20],
-          color: '#E1E0E0',
-        },
-        {
-          name: 'Decline',
-          data: [11, 17, 15],
-          color: '#F44336',
-        },
-      ],
-      xaxis: {
-        categories: ['Mar', 'Apr', 'May'],
-        title: {
-          text: 'Month',
-        },
-        labels: {
-          style: {
-            colors: '#9aa0ac',
-          },
-        },
-      },
-      yaxis: {
-        labels: {
-          style: {
-            colors: ['#9aa0ac'],
-          },
-        },
-      },
-      legend: {
-        position: 'bottom',
-        offsetY: 0,
-      },
-      fill: {
-        opacity: 1,
-      },
-      dataLabels: {
-        enabled: false,
-      },
-    };
+  async monthlyHistoryChart() {
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.DASHBOARD_MONTHLY_HISTORY_CHART, { data_type: 'top' });
+    if (data.status) {
+      this.historyChartOptions.xaxis!.categories = data.month;
+      const series = [];
+      for (let i = 0; i < data.data.length; i++) {
+        series.push({
+          name: data.data[i].status,
+          data: data.data[i].data,
+          color: historyColors[i],
+        });
+      }
+      this.historyChartOptions.series = series;
+      this.showHistoryChart = false;
+      setTimeout(() => {
+        this.showHistoryChart = true;
+      }, 100);
+    }
   }
 
   viewMonthlyInvoiceChart() {

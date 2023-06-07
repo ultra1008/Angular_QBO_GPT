@@ -40,10 +40,10 @@
                         </div>
                     </div>
                     <div class="body overflow-auto">
-                        <div style="text-align:center">
-                            <apx-chart [series]="columnChartOptions.series!" [chart]="columnChartOptions.chart!"
-                                [title]="columnChartOptions.title!" [dataLabels]="columnChartOptions.dataLabels"
-                                [xaxis]="columnChartOptions.xaxis"></apx-chart>
+                        <div style="text-align:center" *ngIf="showHistoryChart">
+                            <apx-chart [series]="historyChartOptions.series!" [chart]="historyChartOptions.chart!"
+                                [title]="historyChartOptions.title!" [dataLabels]="historyChartOptions.dataLabels!"
+                                [xaxis]="historyChartOptions.xaxis!" [yaxis]="historyChartOptions.yaxis!"></apx-chart>
                         </div>
                     </div>
                 </div>

@@ -263,9 +263,10 @@ module.exports.getDashboardMonthlyHistoryChart = async function (req, res) {
                     let pending = _.filter(found.data, function (o) { return o.status == 'Pending'; });
                     let approved = _.filter(found.data, function (o) { return o.status == 'Approved'; });
                     let rejected = _.filter(found.data, function (o) { return o.status == 'Rejected'; });
-                    pendingList.push(pending.length);
-                    approvedList.push(approved.length);
-                    rejectedList.push(rejected.length);
+
+                    pendingList.push(_.sumBy(pending, 'invoice_total_amount'));
+                    approvedList.push(_.sumBy(approved, 'invoice_total_amount'));
+                    rejectedList.push(_.sumBy(rejected, 'invoice_total_amount'));
                     month.push(common.FULL_MONTH(date + local_offset));
                 } else {
                     pendingList.push(0);
