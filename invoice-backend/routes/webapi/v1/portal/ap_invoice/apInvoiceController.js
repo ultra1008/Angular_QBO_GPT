@@ -1536,8 +1536,6 @@ module.exports.checkQBDImportapInvoices = async function (req, res) {
             for (let m = 0; m < requestObject.length; m++) {
                 var getvendordata = await vendorConnection.findOne({ "vendor_name": requestObject[m].VendorRef.FullName });
                 var getcostcodedata = await costcodeCollection.findOne({ "cost_code": requestObject[m].APAccountRef.FullName });
-                console.log("getvendordata", getvendordata);
-                console.log("getcostcodedata", getcostcodedata);
                 requestObject.created_at = Math.round(new Date().getTime() / 1000);
                 requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                 requestObject.isInvoicefromQBO = true;
