@@ -1406,7 +1406,16 @@ module.exports.checkQBDImportVendor = async function (req, res) {
                     requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                     requestObject.is_quickbooks = true;
                     requestObject.vendor_name = requestObject[m].Name;
-                    requestObject.name = requestObject[m].Name;
+                    requestObject.vendor_phone = requestObject[m].Phone;
+                    requestObject.vendor_email = requestObject[m].Email;
+                    if (requestObject[m].VendorAddress != undefined) {
+                        requestObject.vendor_address = requestObject[m].VendorAddress.Addr1;
+                        requestObject.vendor_city = requestObject[m].VendorAddress.City;
+                        requestObject.vendor_state = requestObject[m].VendorAddress.State;
+                        requestObject.vendor_zipcode = requestObject[m].VendorAddress.PostalCode;
+                        requestObject.vendor_country = requestObject[m].VendorAddress.Country;
+                    }
+
                     if (requestObject[m].IsActive == true) {
                         requestObject.vendor_status = 1;
                     }

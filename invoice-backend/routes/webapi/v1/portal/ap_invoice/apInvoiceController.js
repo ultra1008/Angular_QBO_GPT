@@ -26,6 +26,7 @@ var handlebars = require('handlebars');
 let sendEmail = require('./../../../../../controller/common/sendEmail');
 var fs = require('fs');
 let rest_Api = require('./../../../../../config/db_rest_api');
+var costcodeSchema = require('../../../../../model/costcode');
 
 module.exports.getAPInvoiceForTable = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -1519,4 +1520,50 @@ function sendInvoiceUpdateAlerts(decodedToken, id, invoiceId, module, translator
             resolve();
         }
     });
+};
+
+module.exports.checkQBDImportapInvoices = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var id = requestObject._id;
+            var apInvoiceConnection = connection_db_api.model(collectionConstant.AP_INVOICE, apInvoiceSchema);
+            var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
+            let costcodeCollection = connection_db_api.model(collectionConstant.COSTCODES, costcodeSchema);
+            for (let m = 0; m < requestObject.length; m++) {
+                var getvendordata = await vendorConnection.findOne({ "vendor_name": requestObject[m].VendorRef.FullName });
+                var getcostcodedata = await costcodeCollection.findOne({ "cost_code": requestObject[m].APAccountRef.FullName });
+                console.log("getvendordata", getvendordata);
+                console.log("getcostcodedata", getcostcodedata);
+                requestObject.created_at = Math.round(new Date().getTime() / 1000);
+                requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+                requestObject.isInvoicefromQBO = true;
+                requestObject.vendor = getvendordata._id;
+                requestObject.gl_account = getcostcodedata._id;
+                requestObject.due_date = requestObject[m].DueDate;
+                requestObject.invoice_total_amount = requestObject[m].AmountDue;
+
+                if (requestObject[m].IsActive == true) {
+                    requestObject.vendor_status = 1;
+                }
+                else if (requestObject[m].IsActive == false) {
+                    requestObject.vendor_status = 2;
+                }
+                var add_invoice = new apInvoiceConnection(requestObject);
+                var save_invoice = await add_invoice.save();
+
+
+            }
+            res.send({ status: true, message: "ap invoice insert successfully..!" });
+
+        } catch (error) {
+            console.log(error);
+            res.send({ status: false, message: translator.getStr('SomethingWrong'), error: error });
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
 };
