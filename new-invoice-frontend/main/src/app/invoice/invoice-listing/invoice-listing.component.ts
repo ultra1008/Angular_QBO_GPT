@@ -24,6 +24,7 @@ import { formatDate } from '@angular/common';
 import { TableExportUtil } from 'src/app/shared/tableExportUtil';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { RolePermission } from 'src/consts/common.model';
+import { icon } from 'src/consts/icon';
 
 @Component({
   selector: 'app-invoice-listing',
@@ -41,6 +42,9 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
   isDelete = 0;
   type = '';
   role_permission!: RolePermission;
+  is_quickbooks = false;
+  quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
+  quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
 
   constructor (public httpClient: HttpClient, public dialog: MatDialog, public settingService: InvoiceService,
     private snackBar: MatSnackBar, public route: ActivatedRoute, private router: Router, private httpCall: HttpCall,
@@ -59,10 +63,24 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
   ngOnInit() {
+    this.getCompanyTenants();
     this.loadData();
   }
   refresh() {
     this.loadData();
+  }
+
+  async getCompanyTenants() {
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP);
+    if (data.status) {
+      this.is_quickbooks = data.data.is_quickbooks_online || data.data.is_quickbooks_desktop;
+      if (this.is_quickbooks) {
+        this.displayedColumns = ['invoice_date', 'due_date', 'vendor', 'invoice_no', 'total_amount', 'sub_total', 'approver', 'status', 'is_quickbooks', 'actions'];
+      } else {
+        this.displayedColumns = ['invoice_date', 'due_date', 'vendor', 'invoice_no', 'total_amount', 'sub_total', 'approver', 'status', 'actions'];
+      }
+    }
+    // this.loadData();
   }
 
   // TOOLTIPS

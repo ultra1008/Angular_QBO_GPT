@@ -1538,10 +1538,11 @@ module.exports.checkQBDImportapInvoices = async function (req, res) {
                 var getcostcodedata = await costcodeCollection.findOne({ "cost_code": requestObject[m].APAccountRef.FullName });
                 requestObject.created_at = Math.round(new Date().getTime() / 1000);
                 requestObject.updated_at = Math.round(new Date().getTime() / 1000);
-                requestObject.isInvoicefromQBO = true;
+                requestObject.is_quickbooks = true;
                 requestObject.vendor = getvendordata._id;
                 requestObject.gl_account = getcostcodedata._id;
-                requestObject.due_date = requestObject[m].DueDate;
+                requestObject.invoice_date_epoch = new Date(requestObject[m].TxnDate).getTime() / 1000;
+                requestObject.due_date_epoch = new Date(requestObject[m].DueDate).getTime() / 1000;
                 requestObject.invoice_total_amount = requestObject[m].AmountDue;
 
                 if (requestObject[m].IsActive == true) {
