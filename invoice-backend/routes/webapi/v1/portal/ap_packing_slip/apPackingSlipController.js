@@ -3,6 +3,8 @@ let db_connection = require('./../../../../../controller/common/connectiondb');
 let collectionConstant = require('./../../../../../config/collectionConstant');
 let common = require('./../../../../../controller/common/common');
 var ObjectID = require('mongodb').ObjectID;
+var apInvoiceController = require('./../ap_invoice/apInvoiceController');
+let config = require('./../../../../../config/config');
 
 module.exports.getAPPackingSlip = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -88,6 +90,8 @@ module.exports.saveAPPackingSlip = async function (req, res) {
                 requestObject.updated_by = decodedToken.UserData._id;
                 let update_ap_packing_slip = await apPackingSlipConnection.updateOne({ _id: ObjectID(id) }, requestObject);
                 if (update_ap_packing_slip) {
+                    let get_one = await apPackingSlipConnection.findOne({ _id: ObjectID(id) });
+                    apInvoiceController.sendInvoiceUpdateAlerts(decodedToken, get_one._id, get_one.invoice_id, config.DOCUMENT_TYPES.packingSlip.name, translator);
                     res.send({ status: true, message: "Packing Slip updated successfully.", data: update_ap_packing_slip });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
@@ -100,6 +104,7 @@ module.exports.saveAPPackingSlip = async function (req, res) {
                 let add_ap_packing_slip = new apPackingSlipConnection(requestObject);
                 let save_ap_packing_slip = await add_ap_packing_slip.save();
                 if (save_ap_packing_slip) {
+                    apInvoiceController.sendInvoiceUpdateAlerts(decodedToken, save_ap_packing_slip._id, save_ap_packing_slip.invoice_id, config.DOCUMENT_TYPES.packingSlip.name, translator);
                     res.send({ status: true, message: "Packing Slip added successfully.", data: save_ap_packing_slip });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });

@@ -45,4 +45,4 @@ async function deleteOrphanDocumentCronFunction() {
 var invoiceDueCron = new CronJob(config.CRON_JOB.ARCHIVE_ORPHAN_DOCUMENT, async function () {
     deleteOrphanDocumentCronFunction();
 });
-invoiceDueCron.start();
+// invoiceDueCron.start();

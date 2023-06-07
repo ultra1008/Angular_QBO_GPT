@@ -3,6 +3,8 @@ let db_connection = require('./../../../../../controller/common/connectiondb');
 let collectionConstant = require('./../../../../../config/collectionConstant');
 let common = require('./../../../../../controller/common/common');
 var ObjectID = require('mongodb').ObjectID;
+var apInvoiceController = require('./../ap_invoice/apInvoiceController');
+let config = require('./../../../../../config/config');
 
 module.exports.getAPQuote = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -88,6 +90,8 @@ module.exports.saveAPQuote = async function (req, res) {
                 requestObject.updated_by = decodedToken.UserData._id;
                 let update_ap_quote = await apQuoteConnection.updateOne({ _id: ObjectID(id) }, requestObject);
                 if (update_ap_quote) {
+                    let get_one = await apQuoteConnection.findOne({ _id: ObjectID(id) });
+                    apInvoiceController.sendInvoiceUpdateAlerts(decodedToken, get_one._id, get_one.invoice_id, config.DOCUMENT_TYPES.quote.name, translator);
                     res.send({ status: true, message: "Quote updated successfully.", data: update_ap_quote });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
@@ -100,6 +104,7 @@ module.exports.saveAPQuote = async function (req, res) {
                 let add_ap_quote = new apQuoteConnection(requestObject);
                 let save_ap_quote = await add_ap_quote.save();
                 if (save_ap_quote) {
+                    apInvoiceController.sendInvoiceUpdateAlerts(decodedToken, save_ap_quote._id, save_ap_quote.invoice_id, config.DOCUMENT_TYPES.quote.name, translator);
                     res.send({ status: true, message: "Quote added successfully.", data: save_ap_quote });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });

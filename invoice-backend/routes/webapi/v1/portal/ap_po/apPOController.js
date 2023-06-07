@@ -3,6 +3,8 @@ let db_connection = require('./../../../../../controller/common/connectiondb');
 let collectionConstant = require('./../../../../../config/collectionConstant');
 let common = require('./../../../../../controller/common/common');
 var ObjectID = require('mongodb').ObjectID;
+var apInvoiceController = require('./../ap_invoice/apInvoiceController');
+let config = require('./../../../../../config/config');
 
 module.exports.getAPPO = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -88,6 +90,8 @@ module.exports.saveAPPO = async function (req, res) {
                 requestObject.updated_by = decodedToken.UserData._id;
                 let update_ap_po = await apPOConnection.updateOne({ _id: ObjectID(id) }, requestObject);
                 if (update_ap_po) {
+                    let get_one = await apPOConnection.findOne({ _id: ObjectID(id) });
+                    apInvoiceController.sendInvoiceUpdateAlerts(decodedToken, get_one._id, get_one.invoice_id, config.DOCUMENT_TYPES.po.name, translator);
                     res.send({ status: true, message: "PO updated successfully.", data: update_ap_po });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
@@ -100,6 +104,7 @@ module.exports.saveAPPO = async function (req, res) {
                 let add_ap_po = new apPOConnection(requestObject);
                 let save_ap_po = await add_ap_po.save();
                 if (save_ap_po) {
+                    apInvoiceController.sendInvoiceUpdateAlerts(decodedToken, save_ap_po._id, save_ap_po.invoice_id, config.DOCUMENT_TYPES.po.name, translator);
                     res.send({ status: true, message: "PO added successfully.", data: save_ap_po });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });

@@ -3,6 +3,8 @@ let db_connection = require('./../../../../../controller/common/connectiondb');
 let collectionConstant = require('./../../../../../config/collectionConstant');
 let common = require('./../../../../../controller/common/common');
 var ObjectID = require('mongodb').ObjectID;
+var apInvoiceController = require('./../ap_invoice/apInvoiceController');
+let config = require('./../../../../../config/config');
 
 module.exports.getAPReceivingSlip = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -90,6 +92,8 @@ module.exports.saveAPReceivingSlip = async function (req, res) {
                 requestObject.updated_by = decodedToken.UserData._id;
                 let update_ap_receiving_slip = await apReceivingSlipConnection.updateOne({ _id: ObjectID(id) }, requestObject);
                 if (update_ap_receiving_slip) {
+                    let get_one = await apReceivingSlipConnection.findOne({ _id: ObjectID(id) });
+                    apInvoiceController.sendInvoiceUpdateAlerts(decodedToken, get_one._id, get_one.invoice_id, config.DOCUMENT_TYPES.receivingSlip.name, translator);
                     res.send({ status: true, message: "Receiving Slip updated successfully.", data: update_ap_receiving_slip });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
@@ -102,6 +106,7 @@ module.exports.saveAPReceivingSlip = async function (req, res) {
                 let add_ap_receiving_slip = new apReceivingSlipConnection(requestObject);
                 let save_ap_receiving_slip = await add_ap_receiving_slip.save();
                 if (save_ap_receiving_slip) {
+                    apInvoiceController.sendInvoiceUpdateAlerts(decodedToken, save_ap_receiving_slip._id, save_ap_receiving_slip.invoice_id, config.DOCUMENT_TYPES.receivingSlip.name, translator);
                     res.send({ status: true, message: "Receiving Slip added successfully.", data: save_ap_receiving_slip });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
