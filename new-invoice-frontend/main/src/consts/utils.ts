@@ -367,5 +367,9 @@ export function notificationRoutes() {
       name: 'Invoice',
       url: WEB_ROUTES.INVOICE_DETAILS,
     },
+    {
+      name: 'Invoice Note',
+      url: WEB_ROUTES.INVOICE_DETAILS,
+    },
   ];
 } 
