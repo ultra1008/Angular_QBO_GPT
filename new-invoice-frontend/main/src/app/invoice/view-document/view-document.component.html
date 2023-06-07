@@ -40,18 +40,19 @@
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Document Type</mat-label>
-                                                <mat-select formControlName="document_type" required>
+                                                <input formControlName="document_type" matInput readonly />
+                                                <!-- <mat-select formControlName="document_type" required>
                                                     <mat-option *ngFor="let type of documentTypesList"
                                                         [value]="type.key">
                                                         {{type.name}}
                                                     </mat-option>
-                                                </mat-select>
+                                                </mat-select> -->
                                             </mat-form-field>
                                         </div>
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Vendor Name</mat-label>
-                                                <input required formControlName="vendor_name" matInput />
+                                                <input formControlName="vendor_name" matInput readonly />
                                             </mat-form-field>
                                         </div>
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
@@ -81,7 +82,11 @@
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Sub Total</mat-label>
-                                                <input formControlName="sub_total" matInput />
+                                                <span class="dollar-align" matPrefix>$</span>
+                                                <input matInput class="input-capitalized-textfield"
+                                                    onkeypress="return String.fromCharCode(event.charCode).match(/[^0-9]/g) === null"
+                                                    (input)="poAmountChange($event,'sub_total')" numbersOnly
+                                                    formControlName="sub_total" />
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -89,21 +94,22 @@
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Tax Amount</mat-label>
-                                                <input formControlName="tax" matInput />
+                                                <span class="dollar-align" matPrefix>$</span>
+                                                <input matInput class="input-capitalized-textfield"
+                                                    onkeypress="return String.fromCharCode(event.charCode).match(/[^0-9]/g) === null"
+                                                    (input)="poAmountChange($event,'tax')" numbersOnly
+                                                    formControlName="tax" />
                                             </mat-form-field>
                                         </div>
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
-                                                <mat-label>Quote Total</mat-label>
+                                                <mat-label>PO Total</mat-label>
+                                                <span class="dollar-align" matPrefix>$</span>
                                                 <input matInput class="input-capitalized-textfield"
                                                     onkeypress="return String.fromCharCode(event.charCode).match(/[^0-9]/g) === null"
-                                                    (input)="poAmountChange($event,'quote_total')" numbersOnly
-                                                    formControlName="quote_total">
+                                                    (input)="poAmountChange($event,'po_total')" numbersOnly
+                                                    formControlName="po_total">
                                             </mat-form-field>
-
-
-
-
                                         </div>
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
@@ -138,33 +144,23 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                                            <button (click)="savePoForm()" class="btn-space" mat-raised-button
+                                            <button (click)="savePO()" class="btn-space" mat-raised-button
                                                 color="primary">{{'COMMON.ACTIONS.SAVE'|
                                                 translate}}</button>
                                             <button type="button" mat-raised-button
                                                 color="warn">{{'COMMON.ACTIONS.CANCEL'| translate}}</button>
                                         </div>
                                     </div>
-                                    <!--  <div class="row">
-                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                                            <button class="btn-space" mat-raised-button color="primary"
-                                                [disabled]="!poForm.valid" (click)="saveVendor()">{{'COMMON.ACTIONS.SAVE'|
-                                                translate}}</button>
-                                            <button type="button" mat-raised-button color="warn"
-                                                (click)="confirmExit()">{{'COMMON.ACTIONS.CANCEL'| translate}}</button>
-                                        </div>
-                                    </div> -->
-
                                 </form>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <ng-container [ngTemplateOutlet]="viewPDFEditTemplate"
-                                    [ngTemplateOutletContext]="{url:pdf_url}">
+                                    [ngTemplateOutletContext]="{url:pdf_url}" *ngIf="loadPDF">
                                 </ng-container>
                             </div>
                             <div *ngIf="!showPoEdit" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <ng-container [ngTemplateOutlet]="viewPDFTemplate"
-                                    [ngTemplateOutletContext]="{url:pdf_url}">
+                                    [ngTemplateOutletContext]="{url:invoicePDF}" *ngIf="loadPDF">
                                 </ng-container>
                             </div>
                         </div>
@@ -211,18 +207,19 @@
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Document Type</mat-label>
-                                                <mat-select formControlName="document_type" required>
+                                                <input formControlName="document_type" matInput readonly />
+                                                <!-- <mat-select formControlName="document_type" required>
                                                     <mat-option *ngFor="let type of documentTypesList"
                                                         [value]="type.key">
                                                         {{type.name}}
                                                     </mat-option>
-                                                </mat-select>
+                                                </mat-select> -->
                                             </mat-form-field>
                                         </div>
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Vendor Name</mat-label>
-                                                <input required formControlName="vendor_name" matInput />
+                                                <input formControlName="vendor_name" matInput readonly />
                                             </mat-form-field>
                                         </div>
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
@@ -234,7 +231,6 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
-
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Date</mat-label>
                                                 <input matInput [max]="maxDate" [matDatepicker]="quoteDatePicker"
@@ -253,7 +249,11 @@
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Sub Total</mat-label>
-                                                <input formControlName="sub_total" matInput />
+                                                <span class="dollar-align" matPrefix>$</span>
+                                                <input matInput class="input-capitalized-textfield"
+                                                    onkeypress="return String.fromCharCode(event.charCode).match(/[^0-9]/g) === null"
+                                                    (input)="quoteAmountChange($event,'sub_total')" numbersOnly
+                                                    formControlName="sub_total">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -261,13 +261,21 @@
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Tax Amount</mat-label>
-                                                <input formControlName="tax" matInput />
+                                                <span class="dollar-align" matPrefix>$</span>
+                                                <input matInput class="input-capitalized-textfield"
+                                                    onkeypress="return String.fromCharCode(event.charCode).match(/[^0-9]/g) === null"
+                                                    (input)="quoteAmountChange($event,'tax')" numbersOnly
+                                                    formControlName="tax">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Quote Total</mat-label>
-                                                <input formControlName="quote_total" matInput />
+                                                <span class="dollar-align" matPrefix>$</span>
+                                                <input matInput class="input-capitalized-textfield"
+                                                    onkeypress="return String.fromCharCode(event.charCode).match(/[^0-9]/g) === null"
+                                                    (input)="quoteAmountChange($event,'quote_total')" numbersOnly
+                                                    formControlName="quote_total">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
@@ -303,8 +311,8 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                                            <button class="btn-space" mat-raised-button color="primary"
-                                                [disabled]="!quoteForm.valid">{{'COMMON.ACTIONS.SAVE'|
+                                            <button class="btn-space" (click)="saveQuote()" mat-raised-button
+                                                color="primary" [disabled]="!quoteForm.valid">{{'COMMON.ACTIONS.SAVE'|
                                                 translate}}</button>
                                             <button type="button" mat-raised-button
                                                 color="warn">{{'COMMON.ACTIONS.CANCEL'| translate}}</button>
@@ -314,12 +322,12 @@
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <ng-container [ngTemplateOutlet]="viewPDFEditTemplate"
-                                    [ngTemplateOutletContext]="{url:pdf_url}">
+                                    [ngTemplateOutletContext]="{url:pdf_url}" *ngIf="loadPDF">
                                 </ng-container>
                             </div>
                             <div *ngIf="!showPoEdit" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <ng-container [ngTemplateOutlet]="viewPDFTemplate"
-                                    [ngTemplateOutletContext]="{url:pdf_url}">
+                                    [ngTemplateOutletContext]="{url:invoicePDF}" *ngIf="loadPDF">
                                 </ng-container>
                             </div>
                         </div>
@@ -366,24 +374,25 @@
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Document Type</mat-label>
-                                                <mat-select formControlName="document_type" required>
+                                                <input formControlName="document_type" matInput readonly />
+                                                <!-- <mat-select formControlName="document_type" required>
                                                     <mat-option *ngFor="let type of documentTypesList"
                                                         [value]="type.key">
                                                         {{type.name}}
                                                     </mat-option>
-                                                </mat-select>
+                                                </mat-select> -->
                                             </mat-form-field>
                                         </div>
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Vendor Name</mat-label>
-                                                <input required formControlName="vendor_name" matInput />
+                                                <input formControlName="vendor_name" matInput readonly />
                                             </mat-form-field>
                                         </div>
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Invoice#</mat-label>
-                                                <input formControlName="invoice" matInput />
+                                                <input formControlName="invoice_number" matInput />
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -401,7 +410,7 @@
                                         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>PO#</mat-label>
-                                                <input formControlName="po" matInput />
+                                                <input formControlName="po_number" matInput />
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -421,7 +430,8 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                                            <button class="btn-space" mat-raised-button color="primary"
+                                            <button (click)="savePackingSlip()" class="btn-space" mat-raised-button
+                                                color="primary"
                                                 [disabled]="!packingSlipForm.valid">{{'COMMON.ACTIONS.SAVE'|
                                                 translate}}</button>
                                             <button type="button" mat-raised-button
@@ -432,12 +442,12 @@
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <ng-container [ngTemplateOutlet]="viewPDFEditTemplate"
-                                    [ngTemplateOutletContext]="{url:pdf_url}">
+                                    [ngTemplateOutletContext]="{url:pdf_url}" *ngIf="loadPDF">
                                 </ng-container>
                             </div>
                             <div *ngIf="!showPoEdit" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <ng-container [ngTemplateOutlet]="viewPDFTemplate"
-                                    [ngTemplateOutletContext]="{url:pdf_url}">
+                                    [ngTemplateOutletContext]="{url:invoicePDF}" *ngIf="loadPDF">
                                 </ng-container>
                             </div>
                         </div>
@@ -484,24 +494,25 @@
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Document Type</mat-label>
-                                                <mat-select formControlName="document_type" required>
+                                                <input formControlName="document_type" matInput readonly />
+                                                <!-- <mat-select formControlName="document_type" required>
                                                     <mat-option *ngFor="let type of documentTypesList"
                                                         [value]="type.key">
                                                         {{type.name}}
                                                     </mat-option>
-                                                </mat-select>
+                                                </mat-select> -->
                                             </mat-form-field>
                                         </div>
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Vendor Name</mat-label>
-                                                <input required formControlName="vendor_name" matInput />
+                                                <input formControlName="vendor_name" matInput readonly />
                                             </mat-form-field>
                                         </div>
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Invoice#</mat-label>
-                                                <input formControlName="invoice" matInput />
+                                                <input formControlName="invoice_number" matInput />
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -519,7 +530,7 @@
                                         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>PO#</mat-label>
-                                                <input formControlName="po" matInput />
+                                                <input formControlName="po_number" matInput />
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -539,7 +550,8 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                                            <button class="btn-space" mat-raised-button color="primary"
+                                            <button (click)="saveReceivingSlip()" class="btn-space" mat-raised-button
+                                                color="primary"
                                                 [disabled]="!receivingSlipForm.valid">{{'COMMON.ACTIONS.SAVE'|
                                                 translate}}</button>
                                             <button type="button" mat-raised-button
@@ -550,12 +562,12 @@
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <ng-container [ngTemplateOutlet]="viewPDFEditTemplate"
-                                    [ngTemplateOutletContext]="{url:pdf_url}">
+                                    [ngTemplateOutletContext]="{url:pdf_url}" *ngIf="loadPDF">
                                 </ng-container>
                             </div>
                             <div *ngIf="!showPoEdit" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <ng-container [ngTemplateOutlet]="viewPDFTemplate"
-                                    [ngTemplateOutletContext]="{url:pdf_url}">
+                                    [ngTemplateOutletContext]="{url:invoicePDF}" *ngIf="loadPDF">
                                 </ng-container>
                             </div>
                         </div>

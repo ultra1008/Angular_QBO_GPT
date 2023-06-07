@@ -36,6 +36,15 @@ module.exports.getOneAPReceivingSlip = async function (req, res) {
                 { $match: { _id: ObjectID(requestObject._id) } },
                 {
                     $lookup: {
+                        from: collectionConstant.AP_INVOICE,
+                        localField: "invoice_id",
+                        foreignField: "_id",
+                        as: "invoice"
+                    }
+                },
+                { $unwind: "$invoice" },
+                {
+                    $lookup: {
                         from: collectionConstant.INVOICE_VENDOR,
                         localField: "vendor",
                         foreignField: "_id",
@@ -81,7 +90,7 @@ module.exports.saveAPReceivingSlip = async function (req, res) {
                 requestObject.updated_by = decodedToken.UserData._id;
                 let update_ap_receiving_slip = await apReceivingSlipConnection.updateOne({ _id: ObjectID(id) }, requestObject);
                 if (update_ap_receiving_slip) {
-                    res.send({ status: true, message: "Receiving Slip updated successfully.", data: update_ap_invoice });
+                    res.send({ status: true, message: "Receiving Slip updated successfully.", data: update_ap_receiving_slip });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
                 }

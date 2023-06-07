@@ -9,7 +9,6 @@ import { httproutes, httpversion } from 'src/consts/httproutes';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { amountChange, epochToDateTime, numberWithCommas, showNotification } from 'src/consts/utils';
 import { configData } from 'src/environments/configData';
-import { InvoiceRejectedReasonComponent } from '../invoice-detail/invoice-rejected-reason/invoice-rejected-reason.component';
 
 @Component({
   selector: 'app-view-document',
@@ -21,9 +20,11 @@ export class ViewDocumentComponent {
   quoteForm: UntypedFormGroup;
   packingSlipForm: UntypedFormGroup;
   receivingSlipForm: UntypedFormGroup;
-  showPoEdit: boolean = false;
+  showPoEdit = false;
 
-  pdf_url = 'https://s3.wasabisys.com/r-988514/dailyreport/60c31f3dc5ba8494a2b1070f/60c31f3dc5ba8494a2b1070fdailyreport1630757615234.pdf';
+  pdf_url = '';
+  invoicePDF = '';
+  loadPDF = false;
 
   variablestermList: any = [];
   termsList: Array<TermModel> = this.variablestermList.slice();
@@ -31,15 +32,15 @@ export class ViewDocumentComponent {
 
   document: any;
   documentTypes = configData.DOCUMENT_TYPES;
-  poList: any = [];
-  quoteList: any = [];
-  packingSlipList: any = [];
-  receivingSlipList: any = [];
+  poData: any = [];
+  quoteData: any = [];
+  packingSlipData: any = [];
+  receivingSlipData: any = [];
   id: any;
   maxDate = new Date();
   invoice_id: any;
 
-  constructor(public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, private fb: UntypedFormBuilder, public commonService: CommonService, public route: ActivatedRoute, private router: Router,) {
+  constructor (public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, private fb: UntypedFormBuilder, public commonService: CommonService, public route: ActivatedRoute, private router: Router,) {
     this.document = this.route.snapshot.queryParamMap.get('document') ?? '';
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
 
@@ -119,41 +120,60 @@ export class ViewDocumentComponent {
   async getOnePo() {
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ONE_AP_PO, { _id: this.id });
     if (data.status) {
-      this.poList = data.data;
+      this.poData = data.data;
+      let poDate;
+      if (this.poData.date_epoch != undefined && this.poData.date_epoch != null && this.poData.date_epoch != 0) {
+        poDate = epochToDateTime(this.poData.date_epoch);
+      }
+      this.invoice_id = this.poData.invoice_id;
+      let document_type = '';
+      const foundIndex = this.documentTypesList.findIndex((x: any) => x.key === this.poData.document_type);
+      if (foundIndex != null) {
+        document_type = this.documentTypesList[foundIndex].name;
+      }
+      this.poForm = this.fb.group({
+        document_type: [document_type],
+        vendor_name: [this.poData.vendor_data.vendor_name],
+        quote_number: [this.poData.quote_number],
+        date: [poDate],
+        shipping_method: [this.poData.shipping_method],
+        sub_total: [numberWithCommas(this.poData.sub_total.toFixed(2))],
+        tax: [numberWithCommas(this.poData.tax.toFixed(2))],
+        po_total: [numberWithCommas(this.poData.po_total.toFixed(2))],
+        receiver_phone: [this.poData.receiver_phone],
+        terms: [this.poData.terms],
+        address: [this.poData.address],
+      });
+      this.pdf_url = this.poData.pdf_url;
+      this.invoicePDF = this.poData.invoice.pdf_url;
+      this.loadPDF = false;
+      setTimeout(() => {
+        this.loadPDF = true;
+      }, 100);
     }
-    let poDate;
-    if (this.poList.date_epoch != undefined && this.poList.date_epoch != null && this.poList.date_epoch != 0) {
-      poDate = epochToDateTime(this.poList.date_epoch);
-    }
-    this.invoice_id = this.poList.invoice_id;
-    this.poForm = this.fb.group({
-      document_type: [this.poList.document_type],
-      vendor_name: [this.poList.vendor_data.vendor_name],
-      quote_number: [this.poList.quote_number],
-      date: [poDate],
-      shipping_method: [this.poList.shipping_method],
-      sub_total: [this.poList.sub_total],
-      tax: [this.poList.tax],
-      quote_total: [numberWithCommas(this.poList.quote_total.toFixed(2))],
-      receiver_phone: [this.poList.receiver_phone],
-      terms: [this.poList.terms],
-      address: [this.poList.address],
-    });
   }
   poAmountChange(params: any, controller: string) {
     this.poForm.get(controller)?.setValue(amountChange(params));
   }
 
-  async savePoForm() {
+  async savePO() {
     if (this.poForm.valid) {
       this.uiSpinner.spin$.next(true);
       const formValues = this.poForm.value;
+
+      delete formValues.document_type;
+      delete formValues.vendor_name;
       formValues._id = this.id;
+
       if (formValues.date == null) {
         formValues.date = 0;
       } else {
         formValues.date = Math.round(formValues.date.valueOf() / 1000);
       }
+
+      formValues.sub_total = formValues.sub_total.toString().replace(/,/g, "");
+      formValues.tax = formValues.tax.toString().replace(/,/g, "");
+      formValues.po_total = formValues.po_total.toString().replace(/,/g, "");
 
       const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_AP_PO, formValues);
       this.uiSpinner.spin$.next(false);
@@ -168,68 +188,179 @@ export class ViewDocumentComponent {
   async getOneQuote() {
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ONE_AP_QUOET, { _id: this.id });
     if (data.status) {
-      this.quoteList = data.data;
+      this.quoteData = data.data;
+      let quoteDate;
+      if (this.quoteData.date_epoch != undefined && this.quoteData.date_epoch != null && this.quoteData.date_epoch != 0) {
+        quoteDate = epochToDateTime(this.quoteData.date_epoch);
+      }
+      let document_type = '';
+      const foundIndex = this.documentTypesList.findIndex((x: any) => x.key === this.quoteData.document_type);
+      if (foundIndex != null) {
+        document_type = this.documentTypesList[foundIndex].name;
+      }
+      this.invoice_id = this.quoteData.invoice_id;
+      this.quoteForm = this.fb.group({
+        document_type: [document_type],
+        vendor_name: [this.quoteData.vendor_data.vendor_name],
+        quote_number: [this.quoteData.quote_number],
+        date: [quoteDate],
+        shipping_method: [this.quoteData.shipping_method],
+        sub_total: [numberWithCommas(this.quoteData.sub_total.toFixed(2))],
+        tax: [numberWithCommas(this.quoteData.tax.toFixed(2))],
+        quote_total: [numberWithCommas(this.quoteData.quote_total.toFixed(2))],
+        receiver_phone: [this.quoteData.receiver_phone],
+        terms: [this.quoteData.terms],
+        address: [this.quoteData.address],
+      });
+      this.pdf_url = this.quoteData.pdf_url;
+      this.invoicePDF = this.quoteData.invoice.pdf_url;
+      this.loadPDF = false;
+      setTimeout(() => {
+        this.loadPDF = true;
+      }, 100);
     }
-    let quoteDate;
-    if (this.quoteList.date_epoch != undefined && this.quoteList.date_epoch != null && this.quoteList.date_epoch != 0) {
-      quoteDate = epochToDateTime(this.quoteList.date_epoch);
-    }
-    this.invoice_id = this.quoteList.invoice_id;
-    this.quoteForm = this.fb.group({
-      document_type: [this.quoteList.document_type],
-      vendor_name: [this.quoteList.vendor_name],
-      quote_number: [this.quoteList.quote_number],
-      date: [quoteDate],
-      shipping_method: [this.quoteList.shipping_method],
-      sub_total: [this.quoteList.sub_total],
-      tax: [this.quoteList.tax],
-      quote_total: [this.quoteList.quote_total],
-      receiver_phone: [this.quoteList.receiver_phone],
-      terms: [this.quoteList.terms],
-      address: [this.quoteList.address],
-    });
   }
+
+  quoteAmountChange(params: any, controller: string) {
+    this.quoteForm.get(controller)?.setValue(amountChange(params));
+  }
+
+  async saveQuote() {
+    if (this.quoteForm.valid) {
+      this.uiSpinner.spin$.next(true);
+      const formValues = this.quoteForm.value;
+
+      delete formValues.document_type;
+      delete formValues.vendor_name;
+      formValues._id = this.id;
+
+      if (formValues.date == null) {
+        formValues.date = 0;
+      } else {
+        formValues.date = Math.round(formValues.date.valueOf() / 1000);
+      }
+
+      formValues.sub_total = formValues.sub_total.toString().replace(/,/g, "");
+      formValues.tax = formValues.tax.toString().replace(/,/g, "");
+      formValues.quote_total = formValues.quote_total.toString().replace(/,/g, "");
+
+      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_AP_QUOTE, formValues);
+      this.uiSpinner.spin$.next(false);
+      if (data.status) {
+        showNotification(this.snackBar, data.message, 'success');
+      } else {
+        showNotification(this.snackBar, data.message, 'error');
+      }
+    }
+  }
+
   async getOnePackingSlipList() {
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ONE_AP_PACKLING_SLIP, { _id: this.id });
     if (data.status) {
-      this.packingSlipList = data.data;
+      this.packingSlipData = data.data;
+      let packingSlipDate;
+      if (this.packingSlipData.date_epoch != undefined && this.packingSlipData.date_epoch != null && this.packingSlipData.date_epoch != 0) {
+        packingSlipDate = epochToDateTime(this.packingSlipData.date_epoch);
+      }
+      let document_type = '';
+      const foundIndex = this.documentTypesList.findIndex((x: any) => x.key === this.packingSlipData.document_type);
+      if (foundIndex != null) {
+        document_type = this.documentTypesList[foundIndex].name;
+      }
+      this.invoice_id = this.packingSlipData.invoice_id;
+      this.packingSlipForm = this.fb.group({
+        document_type: [document_type],
+        vendor_name: [this.packingSlipData.vendor_data.vendor_name],
+        invoice_number: [this.packingSlipData.invoice_number],
+        date: [packingSlipDate],
+        po_number: [this.packingSlipData.po_number],
+        address: [this.packingSlipData.address],
+        received_by: [this.packingSlipData.received_by],
+      });
+      this.pdf_url = this.packingSlipData.pdf_url;
+      this.invoicePDF = this.packingSlipData.invoice.pdf_url;
+      this.loadPDF = false;
+      setTimeout(() => {
+        this.loadPDF = true;
+      }, 100);
     }
-    let packingSlipDate;
-    if (this.packingSlipList.date_epoch != undefined && this.packingSlipList.date_epoch != null && this.packingSlipList.date_epoch != 0) {
-      packingSlipDate = epochToDateTime(this.packingSlipList.date_epoch);
-    }
-    this.invoice_id = this.packingSlipList.invoice_id;
-    this.packingSlipForm = this.fb.group({
-      document_type: [this.packingSlipList.document_type],
-      vendor_name: [this.packingSlipList.vendor_name],
-      invoice: [this.packingSlipList.invoice],
-      date: [packingSlipDate],
-      po: [this.packingSlipList.po],
-      address: [this.packingSlipList.address],
-      received_by: [this.packingSlipList.received_by],
-    });
-
   }
+
+  async savePackingSlip() {
+    if (this.packingSlipForm.valid) {
+      this.uiSpinner.spin$.next(true);
+      const formValues = this.packingSlipForm.value;
+
+      delete formValues.document_type;
+      delete formValues.vendor_name;
+      formValues._id = this.id;
+
+      if (formValues.date == null) {
+        formValues.date = 0;
+      } else {
+        formValues.date = Math.round(formValues.date.valueOf() / 1000);
+      }
+
+      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_AP_PACKLING_SLIP, formValues);
+      this.uiSpinner.spin$.next(false);
+      if (data.status) {
+        showNotification(this.snackBar, data.message, 'success');
+      } else {
+        showNotification(this.snackBar, data.message, 'error');
+      }
+    }
+  }
+
   async getOneRecevingSlipList() {
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ONE_AP_RECEVING_SLIP, { _id: this.id });
     if (data.status) {
-      this.receivingSlipList = data.data;
+      this.receivingSlipData = data.data;
+      let receivingSliDate;
+      if (this.receivingSlipData.date_epoch != undefined && this.receivingSlipData.date_epoch != null && this.receivingSlipData.date_epoch != 0) {
+        receivingSliDate = epochToDateTime(this.receivingSlipData.date_epoch);
+      }
+      this.invoice_id = this.receivingSlipData.invoice_id;
+      this.receivingSlipForm = this.fb.group({
+        document_type: [this.receivingSlipData.document_type],
+        vendor_name: [this.receivingSlipData.vendor_name],
+        invoice_number: [this.receivingSlipData.invoice_number],
+        date: [receivingSliDate],
+        po_number: [this.receivingSlipData.po_number],
+        address: [this.receivingSlipData.address],
+        received_by: [this.receivingSlipData.received_by],
+      });
+      this.pdf_url = this.receivingSlipData.pdf_url;
+      this.invoicePDF = this.receivingSlipData.invoice.pdf_url;
+      this.loadPDF = false;
+      setTimeout(() => {
+        this.loadPDF = true;
+      }, 100);
     }
-    let receivingSliDate;
-    if (this.receivingSlipList.date_epoch != undefined && this.receivingSlipList.date_epoch != null && this.receivingSlipList.date_epoch != 0) {
-      receivingSliDate = epochToDateTime(this.receivingSlipList.date_epoch);
-    }
-    this.invoice_id = this.receivingSlipList.invoice_id;
-    this.receivingSlipForm = this.fb.group({
-      document_type: [this.receivingSlipList.document_type],
-      vendor_name: [this.receivingSlipList.vendor_name],
-      invoice: [this.receivingSlipList.invoice],
-      date: [receivingSliDate],
-      po: [this.receivingSlipList.po],
-      address: [this.receivingSlipList.address],
-      received_by: [this.receivingSlipList.received_by],
-    });
+  }
 
+  async saveReceivingSlip() {
+    if (this.receivingSlipForm.valid) {
+      this.uiSpinner.spin$.next(true);
+      const formValues = this.receivingSlipForm.value;
+
+      delete formValues.document_type;
+      delete formValues.vendor_name;
+      formValues._id = this.id;
+
+      if (formValues.date == null) {
+        formValues.date = 0;
+      } else {
+        formValues.date = Math.round(formValues.date.valueOf() / 1000);
+      }
+
+      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_AP_RECEVING_SLIP, formValues);
+      this.uiSpinner.spin$.next(false);
+      if (data.status) {
+        showNotification(this.snackBar, data.message, 'success');
+      } else {
+        showNotification(this.snackBar, data.message, 'error');
+      }
+    }
   }
 
   backListing() {

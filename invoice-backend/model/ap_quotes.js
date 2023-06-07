@@ -7,13 +7,13 @@ var quote_schema = new mongoose.Schema({
     document_type: { type: String, default: "" }, // Process document type
     date_epoch: { type: Number, default: 0 },
     quote_number: { type: String, default: "" },
-    terms: { type: String, default: "" },
+    terms: { type: mongoose.ObjectId, default: "" },
     address: { type: String, default: "" },
     vendor: { type: mongoose.ObjectId, default: "" }, // Vendor Collection - Vendor Id
     shipping_method: { type: String, default: "" },
-    sub_total: { type: String, default: "" },
-    tax: { type: String, default: "" },
-    quote_total: { type: String, default: "" },
+    sub_total: { type: Number, default: 0 },
+    tax: { type: Number, default: 0 },
+    quote_total: { type: Number, default: 0 },
     receiver_phone: { type: String, default: "" },
     items: { type: Array, default: [] },
     is_delete: { type: Number, default: 0 },

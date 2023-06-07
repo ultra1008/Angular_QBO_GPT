@@ -36,6 +36,15 @@ module.exports.getOneAPPO = async function (req, res) {
                 { $match: { _id: ObjectID(requestObject._id) } },
                 {
                     $lookup: {
+                        from: collectionConstant.AP_INVOICE,
+                        localField: "invoice_id",
+                        foreignField: "_id",
+                        as: "invoice"
+                    }
+                },
+                { $unwind: "$invoice" },
+                {
+                    $lookup: {
                         from: collectionConstant.INVOICE_VENDOR,
                         localField: "vendor",
                         foreignField: "_id",
@@ -77,9 +86,9 @@ module.exports.saveAPPO = async function (req, res) {
             if (id) {
                 requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                 requestObject.updated_by = decodedToken.UserData._id;
-                let update_ap_packing_slip = await apPOConnection.updateOne({ _id: ObjectID(id) }, requestObject);
-                if (update_ap_packing_slip) {
-                    res.send({ status: true, message: "PO updated successfully.", data: update_ap_invoice });
+                let update_ap_po = await apPOConnection.updateOne({ _id: ObjectID(id) }, requestObject);
+                if (update_ap_po) {
+                    res.send({ status: true, message: "PO updated successfully.", data: update_ap_po });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
                 }
@@ -88,10 +97,10 @@ module.exports.saveAPPO = async function (req, res) {
                 requestObject.created_by = decodedToken.UserData._id;
                 requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                 requestObject.updated_by = decodedToken.UserData._id;
-                let add_ap_packing_slip = new apPOConnection(requestObject);
-                let save_ap_packing_slip = await add_ap_packing_slip.save();
-                if (save_ap_packing_slip) {
-                    res.send({ status: true, message: "PO added successfully.", data: save_ap_packing_slip });
+                let add_ap_po = new apPOConnection(requestObject);
+                let save_ap_po = await add_ap_po.save();
+                if (save_ap_po) {
+                    res.send({ status: true, message: "PO added successfully.", data: save_ap_po });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
                 }

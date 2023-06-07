@@ -254,9 +254,11 @@ export enum httproutes {
   GET_ONE_AP_PO = 'getoneappo',
   SAVE_AP_PO = 'saveappo',
   GET_ONE_AP_QUOET = 'getoneapquote',
+  SAVE_AP_QUOTE = 'saveapquote',
   GET_ONE_AP_PACKLING_SLIP = 'getoneappackingslip',
+  SAVE_AP_PACKLING_SLIP = 'saveappackingslip',
   GET_ONE_AP_RECEVING_SLIP = 'getoneapreceivingslip',
-
+  SAVE_AP_RECEVING_SLIP = 'saveapreceivingslip',
 
   //QuickBook Module
   QUICKBOOK_SAVE_INFO = "savequickbookinfo",

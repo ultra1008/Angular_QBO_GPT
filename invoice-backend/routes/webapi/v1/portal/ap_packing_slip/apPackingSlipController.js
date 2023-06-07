@@ -36,6 +36,15 @@ module.exports.getOneAPPackingSlip = async function (req, res) {
                 { $match: { _id: ObjectID(requestObject._id) } },
                 {
                     $lookup: {
+                        from: collectionConstant.AP_INVOICE,
+                        localField: "invoice_id",
+                        foreignField: "_id",
+                        as: "invoice"
+                    }
+                },
+                { $unwind: "$invoice" },
+                {
+                    $lookup: {
                         from: collectionConstant.INVOICE_VENDOR,
                         localField: "vendor",
                         foreignField: "_id",
@@ -79,7 +88,7 @@ module.exports.saveAPPackingSlip = async function (req, res) {
                 requestObject.updated_by = decodedToken.UserData._id;
                 let update_ap_packing_slip = await apPackingSlipConnection.updateOne({ _id: ObjectID(id) }, requestObject);
                 if (update_ap_packing_slip) {
-                    res.send({ status: true, message: "Packing Slip updated successfully.", data: update_ap_invoice });
+                    res.send({ status: true, message: "Packing Slip updated successfully.", data: update_ap_packing_slip });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
                 }
