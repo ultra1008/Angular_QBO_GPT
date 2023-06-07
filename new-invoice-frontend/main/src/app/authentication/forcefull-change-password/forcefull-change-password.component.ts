@@ -50,7 +50,6 @@ export class ForcefullChangePasswordComponent {
 
   back() {
     const logout = localStorage.getItem(localstorageconstants.LOGOUT) ?? 'true';
-    console.log("logoutlogout", logout);
     if (logout == 'true') {
       this.router.navigate([WEB_ROUTES.LOGIN]);
     } else {

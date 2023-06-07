@@ -52,7 +52,7 @@ export class CompanyInfoFormComponent {
   company_logo: any;
   imageError: any;
   isImageSaved: any;
-  defalut_image: string = '../assets/images/placeholder_logo.png';
+  defalut_image = '../assets/images/placeholder_logo.png';
   cardImageBase64: any;
   files_old: string[] = [];
   last_files_array: string[] = [];
@@ -115,7 +115,7 @@ export class CompanyInfoFormComponent {
       companyactivesince: ['', [Validators.required]],
       companytype: [''],
     });
-    for (var i = 0; i < 100; i++) {
+    for (let i = 0; i < 100; i++) {
       this.range.push(this.year - i);
     }
     this.tmp_gallery = gallery_options();
@@ -180,7 +180,7 @@ export class CompanyInfoFormComponent {
         companyaddressstate: [CompanyInfoData.companyaddressstate],
         companyaddresszip: [CompanyInfoData.companyaddresszip],
       });
-      let found = that.CompnayTypes_data.find(
+      const found = that.CompnayTypes_data.find(
         (element: any) => element._id == CompanyInfoData.companytype
       );
       that.selectedVendorType = found.name
@@ -203,9 +203,6 @@ export class CompanyInfoFormComponent {
     let that = this;
     if (this.companyinfoForm.valid) {
       let requestObject = this.companyinfoForm.value;
-      let userData = JSON.parse(
-        localStorage.getItem(localstorageconstants.USERDATA)!
-      );
       const formData = new FormData();
       formData.append('file', this.filepath);
       formData.append('reqObject', JSON.stringify(requestObject));
@@ -222,40 +219,7 @@ export class CompanyInfoFormComponent {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');
       }
-
-      // this.httpCall
-      //   .httpPostCall(httproutes.COMPNAY_INFO_OTHER_SETTING_UPDATE, formData)
-      //   .subscribe(function (params) {
-      //     that.uiSpinner.spin$.next(false);
-      //     if (params.status) {
-      //       that.snackbarservice.openSnackBar(params.message, "success");
-      //       that.httpCall
-      //         .httpGetCall(httproutes.COMPNAY_INFO_OTHER_SETTING_GET)
-      //         .subscribe(function (compnayData: any) {
-      //           if (compnayData.status) {
-      //             userData.companydata = compnayData.data;
-      //             localStorage.setItem(
-      //               localstorageconstants.USERDATA,
-      //               JSON.stringify(userData)
-      //             );
-      //             that.mostusedservice.userupdatecompnayEmit();
-      //           }
-      //         });
-      //     } else {
-      //       that.snackbarservice.openSnackBar(params.message, "error");
-      //     }
-      //   });
     }
-
-    // const data = await this.vendorService.saveVendor(requestObject);
-    // if (data.status) {
-    //   this.uiSpinner.spin$.next(false);
-    //   showNotification(this.snackBar, data.message, 'success');
-    //   this.router.navigate([WEB_ROUTES.VENDOR]);
-    // } else {
-    //   this.uiSpinner.spin$.next(false);
-    //   showNotification(this.snackBar, data.message, 'error');
-    // }
   }
 
   async getCompanyType() {
@@ -302,7 +266,7 @@ export class CompanyInfoFormComponent {
     } else {
       url = httproutes.PORTAL_ROVUK_SPONSOR_GET_CSIDIVISION_WORK_PERFORMED;
     }
-    let data = await this.httpCall.httpGetCall(url).toPromise();
+    const data = await this.httpCall.httpGetCall(url).toPromise();
     if (data.status) {
       this.variablesCSIDivisions = data.data;
       this.csiDivisions = this.variablesCSIDivisions.slice();

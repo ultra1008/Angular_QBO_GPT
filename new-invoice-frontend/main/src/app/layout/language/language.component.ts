@@ -35,9 +35,9 @@ export class LanguageComponent {
   /*
     Constructor
   */
-  constructor(public translate: TranslateService) {
-    var tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
-    var locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configData.INITIALLANGUAGE : tmp_locallanguage;
+  constructor (public translate: TranslateService) {
+    const tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
+    const locallanguage = tmp_locallanguage == "" || tmp_locallanguage == undefined || tmp_locallanguage == null ? configData.INITIALLANGUAGE : tmp_locallanguage;
     this.selectlanguage = locallanguage;
   }
 

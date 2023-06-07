@@ -4,6 +4,7 @@ import { Component, Inject, ElementRef, OnInit, Renderer2, HostListener, OnDestr
 import { AuthService } from 'src/app/core/service/auth.service';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { RolePermission } from 'src/consts/common.model';
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
@@ -12,7 +13,7 @@ import { WEB_ROUTES } from 'src/consts/routes';
 export class SidebarComponent implements OnInit, OnDestroy {
   public sidebarItems!: any;
   public userrole: any;
-  public role_permission: any;
+  public role_permission!: RolePermission;
   public innerHeight?: number;
   public bodyTag!: HTMLElement;
   listMaxHeight?: string;
@@ -23,7 +24,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   headerHeight = 60;
   currentRoute?: string;
   routerObj;
-  constructor(
+  constructor (
     @Inject(DOCUMENT) private document: Document,
     private renderer: Renderer2,
     public elementRef: ElementRef,
@@ -37,11 +38,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
       }
     });
     this.userrole = localStorage.getItem(localstorageconstants.USERROLE) ? localStorage.getItem(localstorageconstants.USERROLE) : 1;
-    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
     let index = 0;
     this.sidebarItems = [];
-    if (this.role_permission.role_permission.dashboard.View == true) {
-      let reqObj = {
+    if (this.role_permission.dashboard.View == true) {
+      const reqObj = {
         path: WEB_ROUTES.DASHBOARD,
         title: 'Dashboard',
         iconType: 'material-icons-two-tone',
@@ -54,8 +55,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
       };
       this.sidebarItems.splice(index++, 0, reqObj);
     }
-    if (this.role_permission.role_permission.vendor.View == true) {
-      let reqObj = {
+    if (this.role_permission.vendor.View == true) {
+      const reqObj = {
         path: WEB_ROUTES.VENDOR,
         title: 'Vendors',
         iconType: 'material-icons-two-tone',
@@ -68,8 +69,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
       };
       this.sidebarItems.splice(index++, 0, reqObj);
     }
-    if (this.role_permission.role_permission.clientJob.View == true) {
-      let reqObj = {
+    if (this.role_permission.clientJob.View == true) {
+      const reqObj = {
         path: WEB_ROUTES.CLIENT,
         title: 'Client/Job Names',
         iconType: 'material-icons-two-tone',
@@ -82,8 +83,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
       };
       this.sidebarItems.splice(index++, 0, reqObj);
     }
-    if (this.role_permission.role_permission.invoice.View == true) {
-      let reqObj = {
+    if (this.role_permission.invoice.View == true) {
+      const reqObj = {
         path: 'invoice',
         title: 'Invoices',
         iconType: 'material-icons-two-tone',
@@ -96,8 +97,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
       };
       this.sidebarItems.splice(index++, 0, reqObj);
     }
-    if (this.role_permission.role_permission.documents.View == true) {
-      let reqObj = {
+    if (this.role_permission.documents.View == true) {
+      const reqObj = {
         path: WEB_ROUTES.SIDEMENU_DOCUMENTS,
         title: 'Documents',
         iconType: 'material-icons-two-tone',
@@ -110,8 +111,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
       };
       this.sidebarItems.splice(index++, 0, reqObj);
     }
-    if (this.role_permission.role_permission.reports.View == true) {
-      let reqObj = {
+    if (this.role_permission.reports.View == true) {
+      const reqObj = {
         path: WEB_ROUTES.SIDEMENU_REPORTS,
         title: 'Reports',
         iconType: 'material-icons-two-tone',
@@ -124,8 +125,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
       };
       this.sidebarItems.splice(index++, 0, reqObj);
     }
-    if (this.role_permission.role_permission.users.View == true) {
-      let reqObj = {
+    if (this.role_permission.users.View == true) {
+      const reqObj = {
         path: WEB_ROUTES.SIDEMENU_USER,
         title: 'Users',
         iconType: 'material-icons-two-tone',
@@ -140,8 +141,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
     }
 
-    if (this.role_permission.role_permission.settings.View == true) {
-      let reqObj = {
+    if (this.role_permission.settings.View == true) {
+      const reqObj = {
         path: WEB_ROUTES.SIDEMENU_SETTINGS,
         title: 'Settings',
         iconType: 'material-icons-two-tone',
@@ -182,7 +183,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     }
   }
   ngOnInit() {
-    let user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    const user_data = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
     this.companyName = user_data.companydata.companyname;
     this.companyLogo = user_data.companydata.companylogo;
     this.companyCode = user_data.companydata.companycode;

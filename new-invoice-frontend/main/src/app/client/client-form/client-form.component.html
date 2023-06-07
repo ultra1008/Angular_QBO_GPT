@@ -8,7 +8,7 @@
                         <div class="left">
                             <ul class="header-buttons-left ms-0">
                                 <li class="tbl-title">
-                                    <h2 *ngIf="id.length == 0">{{'CLIENT.ADD_EDIT.ADD_TITLE' | translate}}</h2>
+                                    <h2 *ngIf="id.length === 0">{{'CLIENT.ADD_EDIT.ADD_TITLE' | translate}}</h2>
                                     <h2 *ngIf="id.length > 0">{{'CLIENT.ADD_EDIT.EDIT_TITLE' | translate}}</h2>
                                 </li>
                             </ul>
@@ -115,9 +115,9 @@
 
                             <div class="row">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                                    <button *ngIf="isDelete === 0 && role_permission.role_permission.clientJob.Edit"
-                                        class="btn-space" mat-raised-button color="primary"
-                                        [disabled]="!vendorForm.valid" (click)="saveVendor()">{{'COMMON.ACTIONS.SAVE'|
+                                    <button *ngIf="isDelete === 0 && role_permission.clientJob.Edit" class="btn-space"
+                                        mat-raised-button color="primary" [disabled]="!vendorForm.valid"
+                                        (click)="saveVendor()">{{'COMMON.ACTIONS.SAVE'|
                                         translate}}</button>
                                     <button type="button" mat-raised-button color="warn"
                                         (click)="confirmExit()">{{'COMMON.ACTIONS.CANCEL'| translate}}</button>

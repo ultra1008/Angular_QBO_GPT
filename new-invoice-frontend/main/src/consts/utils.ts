@@ -3,6 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { NgxGalleryAnimation, NgxGalleryImageSize } from 'ngx-gallery-9';
 import Swal from 'sweetalert2';
 import { WEB_ROUTES } from './routes';
+import { RolePermission } from './common.model';
 
 export const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
@@ -239,53 +240,32 @@ export function amountChange(params: any) {
   if (params == '') {
     return '00.00';
   } else {
-    var tempText = '';
+    let tempText = '';
     if (params.match(numbers!)) {
       var numbers = /^[0-9]+$/;
-      var a = params;
-      a = a.replace(/\,/g, '');
-      let dotIndex = a.indexOf('.');
-      let count = a.substring(dotIndex + 1).length;
+      let a = params;
+      a = a.replace(/,/g, '');
+      const dotIndex = a.indexOf('.');
+      const count = a.substring(dotIndex + 1).length;
       let multiply;
       if (count == 1) {
         multiply = 10;
       } else {
         multiply = 1000;
       }
-      var temp = (Number(a) * multiply) / 100;
+      const temp = (Number(a) * multiply) / 100;
       tempText = temp.toFixed(2);
     }
-    var dotSplit = tempText.split('.');
+    const dotSplit = tempText.split('.');
     if (dotSplit[0].length > 3) {
-      var code = dotSplit[0];
-      var modules =
-        code.length % 3 == 0 ? 0 : code.length + (3 - (code.length % 3));
-      var newCode: any = code.padStart(modules, 'X');
-      var finalCode = newCode.match(/.{1,3}/g).join(',');
+      const code = dotSplit[0];
+      const modules = code.length % 3 == 0 ? 0 : code.length + (3 - (code.length % 3));
+      const newCode: any = code.padStart(modules, 'X');
+      let finalCode = newCode.match(/.{1,3}/g).join(',');
       finalCode = finalCode.toString().replace(/X/g, '');
       tempText = `${finalCode}.${dotSplit[1]}`;
     }
     return tempText;
-    /*  params = params.target.value;
-         if (params == "") {
-           return "00.00";
-         } else {
-           if (params.match(numbers)) {
-             var numbers = /^[0-9]+$/;
-             let dotIndex = params.indexOf(".");
-             let count = params.substring(dotIndex + 1).length;
-             let multiply;
-             if (count == 1) {
-               multiply = 10;
-             } else {
-               multiply = 1000;
-             }
-             var temp = (Number(params) * multiply) / 100;
-             return temp.toFixed(2);
-           } else {
-             return "00.00";
-           }
-         } */
   }
 }
 
@@ -295,9 +275,9 @@ export function numberWithCommas(x: any) {
 
 export function MMDDYYYY(epochTime: any) {
   if (epochTime == 0) return '';
-  var dateObj = epochTime * 1000;
-  let date = new Date(dateObj);
-  let date_tmp =
+  const dateObj = epochTime * 1000;
+  const date = new Date(dateObj);
+  const date_tmp =
     ('0' + (date.getMonth() + 1)).slice(-2) +
     '/' +
     ('0' + date.getDate()).slice(-2) +
@@ -306,18 +286,18 @@ export function MMDDYYYY(epochTime: any) {
   return date_tmp;
 }
 
-export function MMDDYYYY_HH_MM_A(epochTime: any) {
+export function MMDDYYYY_HH_MM_A(epochTime: number) {
   if (epochTime == 0) return '';
-  var dateObj = epochTime * 1000;
-  let date = new Date(dateObj);
-  let date_tmp = ("0" + (date.getMonth() + 1)).slice(-2) + "/" + ("0" + date.getDate()).slice(-2) + "/" + date.getFullYear();
-  var hours = date.getHours();
-  var minutes = date.getMinutes();
-  var ampm = hours >= 12 ? 'PM' : 'AM';
+  const dateObj = epochTime * 1000;
+  const date = new Date(dateObj);
+  const date_tmp = ("0" + (date.getMonth() + 1)).slice(-2) + "/" + ("0" + date.getDate()).slice(-2) + "/" + date.getFullYear();
+  let hours = date.getHours();
+  const minutes = date.getMinutes();
+  const ampm = hours >= 12 ? 'PM' : 'AM';
   hours = hours % 12;
   hours = hours ? hours : 12; // the hour '0' should be '12'
-  var minutes_ = minutes < 10 ? '0' + minutes : minutes;
-  var strTime = ("0" + (hours)).slice(-2) + ':' + ("0" + (minutes_)).slice(-2) + ' ' + ampm;
+  const minutes_ = minutes < 10 ? '0' + minutes : minutes;
+  const strTime = ("0" + (hours)).slice(-2) + ':' + ("0" + (minutes_)).slice(-2) + ' ' + ampm;
   return date_tmp + " " + strTime;
 }
 
@@ -342,15 +322,12 @@ export function epochToDateTime(epochTime: any) {
 
 export function formatPhoneNumber(str: any) {
   //Filter only numbers from the input
-  let cleaned = ('' + str).replace(/\D/g, '');
-
+  const cleaned = ('' + str).replace(/\D/g, '');
   //Check if the input is of correct length
-  let match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
-
+  const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
   if (match) {
     return '(' + match[1] + ') ' + match[2] + '-' + match[3];
   }
-
   return '';
 }
 
@@ -372,4 +349,24 @@ export function notificationRoutes() {
       url: WEB_ROUTES.INVOICE_DETAILS,
     },
   ];
+}
+
+export function checkPermissionAfterLogin(permissions: RolePermission) {
+  if (permissions.dashboard.View) {
+    return WEB_ROUTES.DASHBOARD;
+  } else if (permissions.vendor.View) {
+    return WEB_ROUTES.VENDOR;
+  } else if (permissions.clientJob.View) {
+    return WEB_ROUTES.CLIENT;
+  } else if (permissions.invoice.View) {
+    return WEB_ROUTES.INVOICE;
+  } else if (permissions.documents.View) {
+    return WEB_ROUTES.DOCUMENTS;
+  } else if (permissions.reports.View) {
+    return WEB_ROUTES.REPORTS;
+  } else if (permissions.users.View) {
+    return WEB_ROUTES.USER;
+  } else {
+    return WEB_ROUTES.DASHBOARD;
+  }
 }

@@ -11,6 +11,7 @@ import { WEB_ROUTES } from 'src/consts/routes';
 import { showNotification, swalWithBootstrapButtons, } from 'src/consts/utils';
 import { ClientService } from '../client.service';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { RolePermission } from 'src/consts/common.model';
 
 @Component({
   selector: 'app-client-form',
@@ -31,12 +32,12 @@ export class ClientFormComponent {
   countryList: Array<CountryModel> = [{ _id: 'USA', name: 'USA' }];
   id = '';
   isDelete = 1;
-  submitting_text: string = '';
-  titleMessage: string = '';
-  show: boolean = false;
-  role_permission: any;
+  submitting_text = '';
+  titleMessage = '';
+  show = false;
+  role_permission!: RolePermission;
 
-  constructor(
+  constructor (
     private fb: UntypedFormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
@@ -48,7 +49,7 @@ export class ClientFormComponent {
     public commonService: CommonService
   ) {
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
-    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
 
     this.vendorForm = this.fb.group({
       client_name: ['', [Validators.required]],

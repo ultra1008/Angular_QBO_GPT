@@ -28,7 +28,7 @@ const routes: Routes = [
           import('./client/client.module').then((m) => m.ClientModule),
       },
       {
-        path: WEB_ROUTES.SIDEMENU_INVOICES,
+        path: WEB_ROUTES.SIDEMENU_INVOICE,
         loadChildren: () =>
           import('./invoice/invoice.module').then((m) => m.InvoiceModule),
       },

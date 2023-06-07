@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { AuthenticationService } from '../authentication.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { showNotification } from 'src/consts/utils';
+import { checkPermissionAfterLogin, showNotification } from 'src/consts/utils';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { Theme } from '@fullcalendar/core/internal';
 import { DOCUMENT } from '@angular/common';
@@ -149,7 +149,7 @@ export class SigninComponent implements OnInit {
         } else {
           setTimeout(() => {
             localStorage.setItem(localstorageconstants.LOGOUT, 'false');
-            this.router.navigate([WEB_ROUTES.DASHBOARD]);
+            this.router.navigate([checkPermissionAfterLogin(data.data.role_permission)]);
           }, 300);
         }
         localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.user_data.token);
@@ -219,39 +219,6 @@ export class SigninComponent implements OnInit {
     localStorage.setItem('menuOption', menuOption);
   }
 
-  onSubmit() {
-    this.submitted = true;
-    this.error = '';
-    if (this.authForm.invalid) {
-      this.error = 'Username and Password not valid !';
-      return;
-    } else {
-      this.authService
-        .login(this.f['username'].value, this.f['password'].value)
-        .subscribe({
-          next: (res) => {
-            if (res) {
-              if (res) {
-                const token = this.authService.currentUserValue.token;
-                if (token) {
-                  this.router.navigate([WEB_ROUTES.DASHBOARD]);
-                }
-              } else {
-                this.error = 'Invalid Login';
-              }
-            } else {
-              this.error = 'Invalid Login';
-            }
-          },
-          error: (error) => {
-            this.error = error;
-            this.submitted = false;
-            this.loading = false;
-          },
-        });
-    }
-  }
-
   removeUseremail() {
     this.useremail = '';
     this.showLogin = true;
@@ -271,9 +238,10 @@ export class SigninComponent implements OnInit {
       } else {
         localStorage.setItem(localstorageconstants.LOGOUT, 'false');
         setTimeout(() => {
-          this.router.navigate([WEB_ROUTES.DASHBOARD]);
+          this.router.navigate([checkPermissionAfterLogin(data.data.role_permission)]);
         }, 300);
       }
+
       localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.data.token);
       localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.data));
       localStorage.setItem(localstorageconstants.COMPANYID, data.data.companydata._id);

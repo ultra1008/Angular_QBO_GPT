@@ -15,6 +15,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { commonFileChangeEvent } from 'src/app/services/utils';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { RolePermission } from 'src/consts/common.model';
 
 @Component({
   selector: 'app-vendor-form',
@@ -51,9 +52,9 @@ export class VendorFormComponent {
   titleMessage = "";
   show = false;
   is_delete: any;
-  role_permission: any;
+  role_permission!: RolePermission;
 
-  constructor(
+  constructor (
     private fb: UntypedFormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
@@ -65,7 +66,7 @@ export class VendorFormComponent {
     public commonService: CommonService,
   ) {
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
-    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
 
     this.vendorForm = this.fb.group({
       vendor_name: ['', [Validators.required]],

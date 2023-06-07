@@ -21,6 +21,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { InvoiceRejectedReasonComponent } from './invoice-rejected-reason/invoice-rejected-reason.component';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { Observable, map, startWith } from 'rxjs';
+import { RolePermission } from 'src/consts/common.model';
 
 @Component({
   selector: 'app-invoice-detail',
@@ -61,7 +62,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   documentList: any = configData.DOCUMENT_TYPE_LIST;
   statusList: any = configData.INVOICE_STATUS;
 
-  role_permission: any;
+  role_permission!: RolePermission;
   id: any;
   invoiceData: any;
   pdfLoader = true;
@@ -114,7 +115,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
     public route: ActivatedRoute, public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, public translate: TranslateService,) {
     super();
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
-    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
     this.uiSpinner.spin$.next(true);
     this.invoiceForm = this.fb.group({
       document_type: [''],

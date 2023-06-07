@@ -195,8 +195,7 @@
                                                             </div>
                                                        </div>
                                                   </form>
-                                                  <div *ngIf="role_permission.role_permission.invoice.Edit"
-                                                       class="d-flex form-button">
+                                                  <div *ngIf="role_permission.invoice.Edit" class="d-flex form-button">
                                                        <button class="btn-space" mat-raised-button color="primary"
                                                             (click)="saveInformation()">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                        <button type="button" class="btn-space onhold" mat-raised-button
@@ -449,8 +448,7 @@
                                                             </div>
                                                        </div>
                                                   </form>
-                                                  <div *ngIf="role_permission.role_permission.invoice.Edit"
-                                                       class="d-flex form-button">
+                                                  <div *ngIf="role_permission.invoice.Edit" class="d-flex form-button">
                                                        <button class="btn-space" mat-raised-button color="primary"
                                                             (click)="saveMoreInformation()">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                   </div>
@@ -480,7 +478,7 @@
                                                                                                formControlName="notes"></textarea>
                                                                                      </mat-form-field>
                                                                                 </div>
-                                                                                <div *ngIf="role_permission.role_permission.invoice.Add"
+                                                                                <div *ngIf="role_permission.invoice.Add"
                                                                                      class="chat-upload col-2 my-auto text-right">
                                                                                      <button mat-raised-button
                                                                                           color="primary"
@@ -511,7 +509,7 @@
                                                                                                     </h5>
                                                                                                </div>
                                                                                                <button mat-mini-fab
-                                                                                                    *ngIf="role_permission.role_permission.invoice.Delete"
+                                                                                                    *ngIf="role_permission.invoice.Delete"
                                                                                                     color="primary"
                                                                                                     (click)="deleteNotes(note)">
                                                                                                     <mat-icon
@@ -543,8 +541,7 @@
 
                                                   </mat-expansion-panel-header>
                                                   <div class="body">
-                                                       <div *ngIf="role_permission.role_permission.invoice.Edit"
-                                                            class="row mx-4">
+                                                       <div *ngIf="role_permission.invoice.Edit" class="row mx-4">
                                                             <button mat-raised-button color="primary">
                                                                  {{'DOCUMENT.ADD'| translate}}
                                                             </button>
@@ -585,7 +582,7 @@
                                                                                 <div>
                                                                                      <td>
                                                                                           <button
-                                                                                               *ngIf="role_permission.role_permission.invoice.Delete"
+                                                                                               *ngIf="role_permission.invoice.Delete"
                                                                                                mat-mini-fab color="warn"
                                                                                                class="mx-2">
                                                                                                <mat-icon

@@ -19,8 +19,7 @@
                         </div>
                         <div class="right">
                             <ul class="tbl-export-btn">
-                                <li *ngIf="role_permission.role_permission.invoice.Delete && isDelete === 0"
-                                    class="tbl-header-btn">
+                                <li *ngIf="role_permission.invoice.Delete && isDelete === 0" class="tbl-header-btn">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ARCHIVE' | translate}}">
                                         <button mat-mini-fab color="warn" (click)="gotoArchiveUnarchive()">
                                             <mat-icon class="col-white">archive</mat-icon>
@@ -34,8 +33,7 @@
                                         </button>
                                     </div>
                                 </li>
-                                <li *ngIf="role_permission.role_permission.invoice.Add && isDelete === 0"
-                                    class="tbl-header-btn">
+                                <li *ngIf="role_permission.invoice.Add && isDelete === 0" class="tbl-header-btn">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ADD' | translate}}">
                                         <button mat-mini-fab color="primary" (click)="uploadInvoice()">
                                             <mat-icon class="col-white">add</mat-icon>

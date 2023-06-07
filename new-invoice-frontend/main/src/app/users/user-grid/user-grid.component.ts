@@ -28,6 +28,7 @@ import { ImportUserComponent } from '../import-user/import-user.component';
 import { UserExistListComponent } from '../user-exist-list/user-exist-list.component';
 import * as XLSX from 'xlsx';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
+import { RolePermission } from 'src/consts/common.model';
 
 @Component({
   selector: 'app-user-grid',
@@ -53,7 +54,7 @@ export class UserGridComponent
   tweet_epochs: any = [];
   cardLoading = true;
   exitData!: any[];
-  role_permission: any;
+  role_permission!: RolePermission;
   @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
   constructor (
     public httpClient: HttpClient,
@@ -66,7 +67,7 @@ export class UserGridComponent
     public uiSpinner: UiSpinnerService
   ) {
     super();
-    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
   }
 
   ngOnInit() {

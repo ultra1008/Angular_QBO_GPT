@@ -124,14 +124,14 @@ Total Amount: $12,000`);
     this.selectedUsers = event.value;
   }
   removeUseremail(user: string) {
-    var index = this.selectedUsers.indexOf(user);
+    const index = this.selectedUsers.indexOf(user);
     if (index !== -1) {
       this.selectedUsers.splice(index, 1);
     }
   }
 
   removeUserTOemail(user: string) {
-    var index = this.selectedToUsers.indexOf(user);
+    const index = this.selectedToUsers.indexOf(user);
     if (index !== -1) {
       this.selectedToUsers.splice(index, 1);
     }

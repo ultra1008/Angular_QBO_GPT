@@ -33,6 +33,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { UserRestoreFormComponent } from '../user-restore-form/user-restore-form.component';
 import { MatDialog } from '@angular/material/dialog';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { RolePermission } from 'src/consts/common.model';
 @Component({
   selector: 'app-user-form',
   templateUrl: './user-form.component.html',
@@ -135,10 +136,10 @@ export class UserFormComponent
   id: any;
   userfullName = '';
   step_index = 0;
-  role_permission: any;
+  role_permission!: RolePermission;
 
 
-  constructor(
+  constructor (
     private location: Location,
     public uiSpinner: UiSpinnerService,
     public UserService: UserService,
@@ -153,7 +154,7 @@ export class UserFormComponent
   ) {
     super();
     this.id = this.route.snapshot.queryParamMap.get('_id');
-    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
     // this.is_delete = this.route.snapshot.queryParamMap.get('is_delete');
     // console.log('is_delete', this.is_delete);
     if (this.router.getCurrentNavigation()?.extras.state) {

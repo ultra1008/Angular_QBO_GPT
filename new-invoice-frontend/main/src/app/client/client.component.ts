@@ -39,6 +39,7 @@ import { ExitsDataListComponent } from './exits-data-list/exits-data-list.compon
 import { icon } from 'src/consts/icon';
 import { CommonService } from '../services/common.service';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { RolePermission } from 'src/consts/common.model';
 
 
 @Component({
@@ -63,13 +64,13 @@ export class ClientComponent
   exitData!: any[];
   selectedValue!: string;
   @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
-  role_permission: any;
+  role_permission!: RolePermission;
 
   quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
   quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
   is_quickbooks = true;
 
-  constructor(
+  constructor (
     public httpClient: HttpClient,
     private httpCall: HttpCall,
     public dialog: MatDialog,
@@ -82,7 +83,7 @@ export class ClientComponent
     private commonService: CommonService
   ) {
     super();
-    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
   }
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -526,7 +527,7 @@ export class ClientDataSource extends DataSource<ClientList> {
   }
   filteredData: ClientList[] = [];
   renderedData: ClientList[] = [];
-  constructor(
+  constructor (
     public clientService: ClientService,
     public paginator: MatPaginator,
     public _sort: MatSort,

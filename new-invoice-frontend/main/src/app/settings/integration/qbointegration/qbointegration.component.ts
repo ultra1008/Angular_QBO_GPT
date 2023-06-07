@@ -20,31 +20,27 @@ export class QbointegrationComponent {
   horizontalPosition: MatSnackBarHorizontalPosition = 'right';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
 
-  constructor(private formBuilder: FormBuilder, private router: Router, public httpCall: HttpCall, private _snackBar: MatSnackBar) {
+  constructor (private formBuilder: FormBuilder, private router: Router, public httpCall: HttpCall, private _snackBar: MatSnackBar) {
     this.integrationinfo = this.formBuilder.group({
       quickbooks_client_id: ['', Validators.required],
       quickbooks_client_secret: ['', Validators.required],
     });
   }
 
-  ngOnInit() {
-
-  }
-
   logout(): void {
-    var reqObject = {
+    const reqObject = {
       companycode: localStorage.getItem('companycode')
     };
     document.getElementById('blogin_id')!.style.display = "block";
     document.getElementById('blogout_id')!.style.display = "none";
     localStorage.removeItem("isCheckSync_QBO");
     this.httpCall.httpPostCall(httproutes.QUICKBOOK_LOGOUT, reqObject).subscribe(function (resdata) {
-
+      //
     });
   }
   saveData(): void {
     let that = this;
-    var reqObject = this.integrationinfo.value;
+    const reqObject = this.integrationinfo.value;
     localStorage.setItem('integratewithQBO', 'no');
     reqObject.quickbooks_client_id = configData.QUICKBOOKS_CLIENT_ID;
     reqObject.quickbooks_client_secret = configData.QUICKBOOKS_CLIENT_SECRET;
@@ -54,10 +50,10 @@ export class QbointegrationComponent {
     this.httpCall.httpPostCall(httpversion.V1 + httproutes.QUICKBOOK_SAVE_INFO, reqObject).subscribe(function (resdata) {
       const authUri = resdata.authUri;
       console.log(authUri);
-      var parameters = "location=1,width=800,height=650";
+      let parameters = "location=1,width=800,height=650";
       parameters += ",left=" + (screen.width - 800) / 2 + ",top=" + (screen.height - 650) / 2;
-      var win = window.open(authUri, 'connectPopup', parameters);
-      var pollOAuth = window.setInterval(function () {
+      const win = window.open(authUri, 'connectPopup', parameters);
+      const pollOAuth = window.setInterval(function () {
         try {
           if (win?.closed === true) {
             console.log(localStorage.getItem('integratewithQBO'));
@@ -104,20 +100,13 @@ export class QbointegrationComponent {
         }
       });
     });
-
   }
-
-  // connact() {
-  //   //this.router.navigate(['settings/qbo-integration-online']);
-  //   console.log('connect called');
-
-  // }
 
   back() {
     this.router.navigate(['/settings/integration']);
   }
 
   connect() {
-
+    //
   }
 }

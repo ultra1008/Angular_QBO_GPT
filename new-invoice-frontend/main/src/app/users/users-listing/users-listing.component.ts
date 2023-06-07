@@ -33,6 +33,7 @@ import { ImportUserComponent } from '../import-user/import-user.component';
 import { UserExistListComponent } from '../user-exist-list/user-exist-list.component';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import * as XLSX from 'xlsx';
+import { RolePermission } from 'src/consts/common.model';
 
 @Component({
   selector: 'app-users-listing',
@@ -65,7 +66,7 @@ export class UsersListingComponent
   userSelectForm?: any;
   selectedValue!: string;
   exitData!: any[];
-  role_permission: any;
+  role_permission!: RolePermission;
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   @ViewChild('filter', { static: true }) filter!: ElementRef;
@@ -73,7 +74,7 @@ export class UsersListingComponent
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
   @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
-  constructor(
+  constructor (
     public httpClient: HttpClient,
     private httpCall: HttpCall,
     public dialog: MatDialog,
@@ -86,7 +87,7 @@ export class UsersListingComponent
     public uiSpinner: UiSpinnerService
   ) {
     super();
-    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
   }
 
   ngOnInit() {
@@ -534,7 +535,7 @@ export class UserDataSource extends DataSource<User> {
   }
   filteredData: User[] = [];
   renderedData: User[] = [];
-  constructor(
+  constructor (
     public userService: UserService,
     public paginator: MatPaginator,
     public _sort: MatSort,

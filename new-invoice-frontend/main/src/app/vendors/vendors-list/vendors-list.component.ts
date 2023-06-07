@@ -41,6 +41,7 @@ import { ImportVendorComponent } from '../import-vendor/import-vendor.component'
 import { VendorExistListComponent } from '../vendor-exist-list/vendor-exist-list.component';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import * as XLSX from 'xlsx';
+import { RolePermission } from 'src/consts/common.model';
 
 @Component({
   selector: 'app-vendors-list',
@@ -66,13 +67,13 @@ export class VendorsListComponent
   titleMessage = '';
   rform?: any;
   selectedValue!: string;
-  role_permission: any;
+  role_permission!: RolePermission;
   exitData!: any[];
   @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
   quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
   quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
 
-  constructor(
+  constructor (
     public httpClient: HttpClient,
     private httpCall: HttpCall,
     public dialog: MatDialog,
@@ -98,7 +99,7 @@ export class VendorsListComponent
 
   ngOnInit() {
     const vendorDisplay = localStorage.getItem(localstorageconstants.VENDOR_DISPLAY) ?? 'list';
-    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
     if (vendorDisplay == 'list') {
       this.loadData();
       this.getCompanyTenants();
@@ -565,7 +566,7 @@ export class VendorDataSource extends DataSource<Vendor> {
   }
   filteredData: Vendor[] = [];
   renderedData: Vendor[] = [];
-  constructor(
+  constructor (
     public vendorService: VendorsService,
     public paginator: MatPaginator,
     public _sort: MatSort,

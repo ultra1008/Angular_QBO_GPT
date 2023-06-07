@@ -20,6 +20,7 @@ import * as XLSX from 'xlsx';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { ImportVendorComponent } from '../import-vendor/import-vendor.component';
 import { VendorExistListComponent } from '../vendor-exist-list/vendor-exist-list.component';
+import { RolePermission } from 'src/consts/common.model';
 
 @Component({
   selector: 'app-vendor-grid',
@@ -40,11 +41,11 @@ export class VendorGridComponent
   vendorname_search: any;
   vendor_status: any;
   termsList: Array<TermModel> = [];
-  role_permission: any;
+  role_permission!: RolePermission;
   exitData!: any[];
   @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
 
-  constructor(
+  constructor (
     public httpClient: HttpClient,
     private httpCall: HttpCall,
     public dialog: MatDialog,
@@ -57,7 +58,7 @@ export class VendorGridComponent
     public uiSpinner: UiSpinnerService
   ) {
     super();
-    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
   }
   ngOnInit() {
     this.getVendor();

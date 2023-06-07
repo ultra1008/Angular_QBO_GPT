@@ -23,6 +23,7 @@ import { TableElement } from 'src/app/shared/TableElement';
 import { formatDate } from '@angular/common';
 import { TableExportUtil } from 'src/app/shared/tableExportUtil';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { RolePermission } from 'src/consts/common.model';
 
 @Component({
   selector: 'app-invoice-listing',
@@ -39,7 +40,7 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
   invoiceTable?: Invoice;
   isDelete = 0;
   type = '';
-  role_permission: any;
+  role_permission!: RolePermission;
 
   constructor (public httpClient: HttpClient, public dialog: MatDialog, public settingService: InvoiceService,
     private snackBar: MatSnackBar, public route: ActivatedRoute, private router: Router, private httpCall: HttpCall,
@@ -49,7 +50,7 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
       this.type = queryParams['type'] ?? '';
       this.type = this.type.replace(/_/g, ' ');
     });
-    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
   }
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;

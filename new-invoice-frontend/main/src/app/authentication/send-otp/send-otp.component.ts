@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntypedFormBuilder, UntypedFormGroup, Validators, } from '@angular/forms';
-import { showNotification } from 'src/consts/utils';
+import { checkPermissionAfterLogin, showNotification } from 'src/consts/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { AuthService } from 'src/app/core/service/auth.service';
@@ -85,7 +85,7 @@ export class SendOtpComponent {
             this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);
           } else {
             setTimeout(() => {
-              this.router.navigate([WEB_ROUTES.DASHBOARD]);
+              this.router.navigate([checkPermissionAfterLogin(data.data.role_permission)]);
             }, 300);
           }
           localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.user_data.token);

@@ -56,8 +56,7 @@
                                              <div class="header">
                                                   <h2>{{'USERS.TABS.PERSONAL_INFORMATION' | translate}}</h2>
                                              </div>
-                                             <div class="body"
-                                                  *ngIf="role_permission.role_permission.users.personalInformation.View">
+                                             <div class="body" *ngIf="role_permission.users.personalInformation.View">
                                                   <form [formGroup]="userpersonalinfo!">
                                                        <div class="main-cust-emp-from">
                                                             <div class="main-cust-emp-profile">
@@ -318,13 +317,13 @@
                                                                  mat-raised-button
                                                                  color="warn">{{'COMMON.ACTIONS.NEXT'| translate}}</button>
                                                             <button
-                                                                 *ngIf="role_permission.role_permission.users.personalInformation.Edit"
+                                                                 *ngIf="role_permission.users.personalInformation.Edit"
                                                                  mat-raised-button color="primary"
                                                                  (click)="savePersonalInfo()">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                        </div>
                                                   </div>
                                              </div>
-                                             <div *ngIf="!role_permission.role_permission.users.personalInformation.View"
+                                             <div *ngIf="!role_permission.users.personalInformation.View"
                                                   class="d-flex align-items-center justify-content-center">
                                                   <h1 class="font-28 font-white">
                                                        {{'COMMON.ACTIONS.Access_denied_all' | translate}}
@@ -341,8 +340,7 @@
                                                   <h2>{{'USERS.TABS.CONTACT_INFORMATION' | translate}}</h2>
 
                                              </div>
-                                             <div class="body"
-                                                  *ngIf="role_permission.role_permission.users.contactInformation.View">
+                                             <div class="body" *ngIf="role_permission.users.contactInformation.View">
                                                   <form class="register-form m-4" [formGroup]="usercontactinfo!"
                                                        (ngSubmit)="onRegister()">
 
@@ -426,14 +424,14 @@
                                                                       mat-raised-button
                                                                       color="warn">{{'COMMON.ACTIONS.NEXT'| translate}}</button>
                                                                  <button
-                                                                      *ngIf="!role_permission.role_permission.users.contactInformation.Edit"
+                                                                      *ngIf="!role_permission.users.contactInformation.Edit"
                                                                       mat-raised-button color="primary"
                                                                       (click)="saveContactInfo()">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                             </div>
                                                        </div>
                                                   </form>
                                              </div>
-                                             <div *ngIf="!role_permission.role_permission.users.contactInformation.View"
+                                             <div *ngIf="!role_permission.users.contactInformation.View"
                                                   class="d-flex align-items-center justify-content-center">
                                                   <h1 class="font-28 font-white">
                                                        {{'COMMON.ACTIONS.Access_denied_all' | translate}}
@@ -450,8 +448,7 @@
                                                   <h2>{{'USERS.TABS.EMPLOYEE_INFORMATION' | translate}}</h2>
 
                                              </div>
-                                             <div class="body"
-                                                  *ngIf="role_permission.role_permission.users.employeeInformation.View">
+                                             <div class="body" *ngIf="role_permission.users.employeeInformation.View">
                                                   <form class="useremployeeinfo-form m-4"
                                                        [formGroup]="useremployeeinfo!">
                                                        <div class="row">
@@ -638,19 +635,19 @@
                                                                       mat-raised-button color="warn"
                                                                       *ngIf="id !== null">{{'COMMON.ACTIONS.NEXT'| translate}}</button>
                                                                  <button
-                                                                      *ngIf="id === null && role_permission.role_permission.users.employeeInformation.Edit"
+                                                                      *ngIf="id === null && role_permission.users.employeeInformation.Edit"
                                                                       class="btn-space" mat-raised-button
                                                                       (click)="savedata()"
                                                                       color="primary">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                                  <button
-                                                                      *ngIf="id !== null && role_permission.role_permission.users.employeeInformation.Edit"
+                                                                      *ngIf="id !== null && role_permission.users.employeeInformation.Edit"
                                                                       mat-raised-button color="primary"
                                                                       (click)="saveEmployeeInfo()">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                             </div>
                                                        </div>
                                                   </form>
                                              </div>
-                                             <div *ngIf="!role_permission.role_permission.users.employeeInformation.View"
+                                             <div *ngIf="!role_permission.users.employeeInformation.View"
                                                   class="d-flex align-items-center justify-content-center">
                                                   <h1 class="font-28 font-white">
                                                        {{'COMMON.ACTIONS.Access_denied_all' | translate}}
@@ -667,11 +664,10 @@
                                              <div class="header">
                                                   <h2>{{'USERS.TABS.EMERGENCY_CONTACT' | translate}}</h2>
                                              </div>
-                                             <div class="body"
-                                                  *ngIf="role_permission.role_permission.users.emergencyContact.View">
+                                             <div class="body" *ngIf="role_permission.users.emergencyContact.View">
                                                   <app-user-emergency-contact></app-user-emergency-contact>
                                              </div>
-                                             <div *ngIf="!role_permission.role_permission.users.emergencyContact.View"
+                                             <div *ngIf="!role_permission.users.emergencyContact.View"
                                                   class="d-flex align-items-center justify-content-center">
                                                   <h1 class="font-28 font-white">
                                                        {{'COMMON.ACTIONS.Access_denied_all' | translate}}
@@ -689,11 +685,10 @@
                                              <div class="header">
                                                   <h2>{{'USERS.TABS.DOCUMENT' | translate}}</h2>
                                              </div>
-                                             <div class="body"
-                                                  *ngIf="role_permission.role_permission.users.employeeDocument.View">
+                                             <div class="body" *ngIf="role_permission.users.employeeDocument.View">
                                                   <app-user-document></app-user-document>
                                              </div>
-                                             <div *ngIf="!role_permission.role_permission.users.employeeDocument.View"
+                                             <div *ngIf="!role_permission.users.employeeDocument.View"
                                                   class="d-flex align-items-center justify-content-center">
                                                   <h1 class="font-28 font-white">
                                                        {{'COMMON.ACTIONS.Access_denied_all' | translate}}

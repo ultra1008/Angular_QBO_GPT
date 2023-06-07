@@ -23,6 +23,7 @@ import { CommonService } from 'src/app/services/common.service';
 import { TableElement } from 'src/app/shared/TableElement';
 import { TableExportUtil } from 'src/app/shared/tableExportUtil';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { RolePermission } from 'src/consts/common.model';
 
 @Component({
   selector: 'app-user-emergency-contact',
@@ -45,7 +46,7 @@ export class UserEmergencyContactComponent extends UnsubscribeOnDestroyAdapter i
   selection = new SelectionModel<EmergencyContact>(true, []);
   advanceTable?: EmergencyContact;
   id: any;
-  role_permission: any;
+  role_permission!: RolePermission;
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   @ViewChild('filter', { static: true }) filter!: ElementRef;
@@ -53,13 +54,13 @@ export class UserEmergencyContactComponent extends UnsubscribeOnDestroyAdapter i
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
 
-  constructor(
+  constructor (
     public httpClient: HttpClient, private httpCall: HttpCall, public dialog: MatDialog, private snackBar: MatSnackBar,
     private router: Router, public userTableService: UserService, public translate: TranslateService,
     private fb: UntypedFormBuilder, public route: ActivatedRoute, private commonService: CommonService,) {
     super();
     this.id = this.route.snapshot.queryParamMap.get("_id");
-    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
   }
 
   ngOnInit() {
@@ -178,7 +179,7 @@ export class EmergencyContactDataSource extends DataSource<EmergencyContact> {
   }
   filteredData: EmergencyContact[] = [];
   renderedData: EmergencyContact[] = [];
-  constructor(
+  constructor (
     public userService: UserService,
     public paginator: MatPaginator,
     public _sort: MatSort,
