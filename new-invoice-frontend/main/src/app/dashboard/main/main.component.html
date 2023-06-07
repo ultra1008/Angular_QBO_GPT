@@ -164,10 +164,11 @@
                 </div>
               </div>
               <div class="body">
-                <div style="text-align:center">
+                <div style="text-align:center" *ngIf="showMonthlyChart">
                   <apx-chart [series]="invoiceChartOptions.series!" [chart]="invoiceChartOptions.chart!"
-                    [xaxis]="invoiceChartOptions.xaxis!" [title]="invoiceChartOptions.title!"
-                    [stroke]="invoiceChartOptions.stroke"></apx-chart>
+                    [tooltip]="invoiceChartOptions.tooltip!" [xaxis]="invoiceChartOptions.xaxis!"
+                    [yaxis]="invoiceChartOptions.yaxis!" [title]="invoiceChartOptions.title!"
+                    [stroke]="invoiceChartOptions.stroke!" [legend]="invoiceChartOptions.legend!"></apx-chart>
                 </div>
               </div>
             </div>
@@ -330,9 +331,11 @@
         <div class="d-flex justify-content-between">
           <div>
             <h5 class="font-14"><span><b>Invoice Date </b></span>
-              <span>{{(invoice.invoice_date_epoch * 1000 | date: 'MM/dd/yyyy')}}</span></h5>
+              <span>{{(invoice.invoice_date_epoch * 1000 | date: 'MM/dd/yyyy')}}</span>
+            </h5>
             <h5 class="font-14 last-updated"><span><b>Last updated </b></span>
-              <span>{{(invoice.updated_at * 1000 | date: 'MM/dd/yyyy')}}</span></h5>
+              <span>{{(invoice.updated_at * 1000 | date: 'MM/dd/yyyy')}}</span>
+            </h5>
           </div>
           <h5 class="font-20 my-auto amount">${{invoice.invoice_total_amount}}</h5>
         </div>

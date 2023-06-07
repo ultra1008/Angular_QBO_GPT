@@ -6,6 +6,8 @@ import * as ApexCharts from 'apexcharts';
 import { ApexAxisChartSeries, ApexNonAxisChartSeries, ApexChart, ApexDataLabels, ApexPlotOptions, ApexYAxis, ApexXAxis, ApexFill, ApexTooltip, ApexStroke, ApexLegend, ApexTitleSubtitle, ApexGrid, ApexMarkers, ApexResponsive } from 'ng-apexcharts';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { saveAs } from 'file-saver';
+import { CommonService } from 'src/app/services/common.service';
+import { httproutes, httpversion } from 'src/consts/httproutes';
 
 export type ChartOptions = {
   series?: ApexAxisChartSeries;
@@ -27,46 +29,115 @@ export type ChartOptions = {
   responsive: ApexResponsive[];
 };
 
+const colors = ['#C5B7FF', '#94D4FE', '#FF99B1'];
+
 @Component({
   selector: 'app-monthly-invoice',
   templateUrl: './monthly-invoice.component.html',
   styleUrls: ['./monthly-invoice.component.scss']
 })
 export class MonthlyInvoiceComponent {
-  public invoiceChartOptions: Partial<ChartOptions> | any;
+  showMonthlyChart = true;
+  public invoiceChartOptions: Partial<ChartOptions> = {
+    chart: {
+      height: 350,
+      type: 'line',
+      dropShadow: {
+        enabled: false,
+        color: '#000',
+        top: 18,
+        left: 7,
+        blur: 10,
+        opacity: 1,
+      },
+      toolbar: {
+        show: false,
+      },
+      foreColor: '#9aa0ac',
+    },
+    dataLabels: {
+      enabled: true,
+    },
+    xaxis: {
+      categories: ['June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May'],
+      title: {
+        text: 'Month',
+      },
+      labels: {
+        style: {
+          colors: '#9aa0ac',
+        },
+      },
+    },
+    yaxis: {
+      title: {
+        text: 'Invoice',
+      },
+      labels: {
+        style: {
+          colors: ['#9aa0ac'],
+        },
+      },
+      // tickAmount: 1,
+      // min: 1,
+    },
+    stroke: {
+      curve: 'smooth',
+    },
+    series: [
+      {
+        name: 'Pending Invoice',
+        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        color: '#C5B7FF',
+      },
+      {
+        name: 'Approved Invoice',
+        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        color: '#94D4FE',
+      },
+      {
+        name: 'Rejected Invoice',
+        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        color: '#FF99B1',
+      },
+    ],
+    tooltip: {
+      theme: 'dark',
+      marker: {
+        show: true,
+      },
+      x: {
+        show: true,
+      },
+    },
+    legend: {
+      position: 'top',
+      horizontalAlign: 'right',
+      floating: true,
+      offsetY: -25,
+      offsetX: -5,
+    },
+  };
   chartdiv: HTMLElement | any;
   printWindow: Window | any;
 
-  constructor (private router: Router, public translate: TranslateService, private _sanitizer: DomSanitizer) {
+  constructor (private commonService: CommonService, private router: Router, public translate: TranslateService, private _sanitizer: DomSanitizer) {
     this.monthlyInvoiceChart();
   }
 
-  monthlyInvoiceChart() {
-    this.invoiceChartOptions = {
-      chart: {
-        height: 650,
-        type: 'line',
-        dropShadow: {
-          enabled: false,
-          color: '#000',
-          top: 18,
-          left: 7,
-          blur: 10,
-          opacity: 1,
-        },
-        toolbar: {
-          show: false,
-        },
-        foreColor: '#9aa0ac',
-      },
-      dataLabels: {
-        enabled: true,
-      },
-      stroke: {
-        curve: 'smooth',
-      },
-      series: [
-        {
+  async monthlyInvoiceChart() {
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.DASHBOARD_MONTHLY_INVOICE_CHART, { data_type: 'all' });
+    if (data.status) {
+      this.invoiceChartOptions.xaxis!.categories = data.month;
+      const series = [];
+      for (let i = 0; i < data.data.length; i++) {
+        series.push({
+          name: data.data[i].status,
+          data: data.data[i].data,
+          color: colors[i],
+        });
+      }
+      /*  {
           name: 'Pending Invoice',
           data: [28, 29, 33, 36, 32, 32, 33, 12, 11, 14, 36, 24],
           color: '#C5B7FF',
@@ -80,53 +151,14 @@ export class MonthlyInvoiceComponent {
           name: 'Rejected Invoice',
           data: [21, 15, 13, 61, 28, 33, 23, 28, 29, 33, 36, 32],
           color: '#FF99B1',
-        },
-      ],
-      grid: {
-        borderColor: '#e7e7e7',
-        row: {
-          colors: ['#f3f3f3', 'transparent'],
-          opacity: 0.5,
-        },
-      },
-      markers: {
-        size: 6,
-      },
-      xaxis: {
-        categories: ['June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May'],
-        title: {
-          text: 'Month',
-        },
-        labels: {
-          style: {
-            colors: '#9aa0ac',
-          },
-        },
-      },
-      yaxis: {
-        title: {
-          text: 'Invoice',
-        },
-        labels: {
-          style: {
-            colors: ['#9aa0ac'],
-          },
-        },
-      },
-      tooltip: {
-        theme: 'dark',
-        marker: {
-          show: true,
-        },
-        x: {
-          show: true,
-        },
-      },
-      legend: {
-        position: 'bottom',
-        horizontalAlign: 'center',
-      },
-    };
+        }, */
+      console.log("series: ", series);
+      this.invoiceChartOptions.series = series;
+      this.showMonthlyChart = false;
+      setTimeout(() => {
+        this.showMonthlyChart = true;
+      }, 100);
+    }
   }
 
   downloadHistoryChart() {
