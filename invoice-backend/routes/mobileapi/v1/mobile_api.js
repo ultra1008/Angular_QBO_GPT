@@ -67,6 +67,7 @@ router.post('/mobile/v1/alert/updateall', common.checkTokenExistOrNot, alertCont
 let apInvoiceController = require('./ap_invoice/apInvoiceController');
 let apInvoiceValidation = require('./ap_invoice/apInvoiceValidation');
 router.get('/mobile/v1/apinvoice/get', common.checkTokenExistOrNot, apInvoiceController.getAPInvoice);
+router.post('/mobile/v1/apinvoice/getstatuswise', common.checkTokenExistOrNot, apInvoiceValidation.getStatusWiseAPInvoice, apInvoiceController.getStatusWiseAPInvoice);
 router.post('/mobile/v1/apinvoice/getone', common.checkTokenExistOrNot, apInvoiceValidation.getOneAPInvoice, apInvoiceController.getOneAPInvoice);
 router.post('/mobile/v1/apinvoice/save', common.checkTokenExistOrNot, apInvoiceController.saveAPInvoice);
 router.post('/mobile/v1/apinvoice/delete', common.checkTokenExistOrNot, apInvoiceValidation.deleteAPInvoice, apInvoiceController.deleteAPInvoice);
