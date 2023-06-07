@@ -71,10 +71,36 @@ module.exports.dashboardInvoiceList = async function (req, res) {
     if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
-            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
-            var pending_data = await invoicesConnection.find({ is_delete: 0, status: 'Pending' }).sort({ created_at: -1 }).limit(2);
-            // var process_data = await invoicesConnection.find({ is_delete: 0, status: 'Generated' }).sort({ created_at: -1 }).limit(3);
-            var cancel_data = await invoicesConnection.find({ is_delete: 0, status: 'Rejected' }).sort({ created_at: -1 }).limit(2);
+            var apInvoiceConnection = connection_db_api.model(collectionConstant.AP_INVOICE, apInvoiceSchema);
+            var pending_data = await apInvoiceConnection.aggregate([
+                { $match: { is_delete: 0, status: 'Pending' } },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_VENDOR,
+                        localField: "vendor",
+                        foreignField: "_id",
+                        as: "vendor_data"
+                    }
+                },
+                { $unwind: "$vendor_data" },
+                { $sort: { created_at: -1 } },
+                { $limit: 2 }
+            ]);
+            // var process_data = await apInvoiceConnection.find({ is_delete: 0, status: 'Generated' }).sort({ created_at: -1 }).limit(2);
+            var cancel_data = await apInvoiceConnection.aggregate([
+                { $match: { is_delete: 0, status: 'Rejected' } },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_VENDOR,
+                        localField: "vendor",
+                        foreignField: "_id",
+                        as: "vendor_data"
+                    }
+                },
+                { $unwind: "$vendor_data" },
+                { $sort: { created_at: -1 } },
+                { $limit: 2 }
+            ]);
             let data = {
                 pending_invoices: pending_data,
                 process_invoices: [],
@@ -218,34 +244,6 @@ module.exports.getDashboardChart = async function (req, res) {
     }
 };
 
-//panding invoice
-module.exports.dashboardInvoiceList = async function (req, res) {
-    var decodedToken = common.decodedJWT(req.headers.authorization);
-    var translator = new common.Language(req.headers.Language);
-    if (decodedToken) {
-        var connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try {
-            var invoicesConnection = connection_db_api.model(collectionConstant.INVOICE, invoiceSchema);
-            var pending_data = await invoicesConnection.find({ is_delete: 0, status: 'Pending' }).sort({ created_at: -1 }).limit(2);
-            // var process_data = await invoicesConnection.find({ is_delete: 0, status: 'Generated' }).sort({ created_at: -1 }).limit(3);
-            var cancel_data = await invoicesConnection.find({ is_delete: 0, status: 'Rejected' }).sort({ created_at: -1 }).limit(2);
-            let data = {
-                pending_invoices: pending_data,
-                process_invoices: [],
-                cancelled_invoices: cancel_data,
-            };
-            res.send(data);
-        } catch (e) {
-            console.log(e);
-            res.send([]);
-        } finally {
-
-        }
-    } else {
-        res.send({ status: false, message: translator.getStr('InvalidUser') });
-    }
-};
-
 module.exports.countInvoiceStatus = async function (req, res) {
     var translator = new common.Language('en');
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -302,38 +300,4 @@ module.exports.countInvoiceStatus = async function (req, res) {
     else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
-};
-
-//panding  and Rejected invoice list
-module.exports.dashboardInvoiceListForTable = async function (req, res) {
-    var decodedToken = common.decodedJWT(req.headers.authorization);
-    var translator = new common.Language(req.headers.Language);
-    if (decodedToken) {
-        var connection_db_api = await db_connection.connection_db_api(decodedToken);
-        try {
-            var requestObject = req.body;
-            var apInvoiceConnection = connection_db_api.model(collectionConstant.AP_INVOICE, apInvoiceSchema);
-            var pending_data = await apInvoiceConnection.find({ is_delete: requestObject.is_delete, status: 'Pending' }).sort({ created_at: -1 }).limit(2);
-            var cancel_data = await apInvoiceConnection.find({ is_delete: requestObject.is_delete, status: 'Rejected' }).sort({ created_at: -1 }).limit(2);
-            let data = {
-                pending_invoices: pending_data,
-                process_invoices: [],
-                cancelled_invoices: cancel_data,
-            };
-            if (data) {
-                res.send(data);
-            }
-            else {
-                res.send([]);
-            }
-
-        } catch (e) {
-            console.log(e);
-            res.send([]);
-        } finally {
-            connection_db_api.close();
-        }
-    } else {
-        res.send({ status: false, message: translator.getStr('InvalidUser') });
-    }
-};
+}; 

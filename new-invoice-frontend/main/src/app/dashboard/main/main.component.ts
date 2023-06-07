@@ -23,6 +23,7 @@ import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { Router } from '@angular/router';
+import { Invoice } from 'src/app/invoice/invoice.model';
 export type ChartOptions = {
   series?: ApexAxisChartSeries;
   series2?: ApexNonAxisChartSeries;
@@ -84,12 +85,11 @@ export class MainComponent {
     duplicates: 0,
   };
 
-  constructor(private commonService: CommonService, private router: Router,) {
+  constructor (private commonService: CommonService, private router: Router,) {
     this.getDashboardInvoice();
     this.monthlyInvoiceChart();
     this.monthlyHistoryChart();
     this.getInvoiceCounts();
-    this.getInvoiceForTable();
   }
 
   async getDashboardInvoice() {
@@ -298,8 +298,8 @@ export class MainComponent {
     //
   }
 
-  invoiceDetail(invoice: any) {
-    this.router.navigate([WEB_ROUTES.INVOICE_DETAILS]);
+  invoiceDetail(invoice: Invoice) {
+    this.router.navigate([WEB_ROUTES.INVOICE_DETAILS], { queryParams: { _id: invoice._id } });
   }
 
   viewInvoice(type: string) {
@@ -311,18 +311,6 @@ export class MainComponent {
       this.countList = data.data;
 
     }
-  }
-  async getInvoiceForTable() {
-    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.DASHBOARD_INVOICE_FOR_TABLE, { is_delete: 0 });
-    this.pendingInvoices = data.pending_invoices;
-    this.rejectedInvoices = data.cancelled_invoices;
-    this.processedInvoices = data.process_invoices;
-    /* if (data.status) {
-     this.pendingInvoices = data.data.pending_invoices;
-     this.rejectedInvoices = data.data.cancelled_invoices;
-     this.processedInvoices = data.data.process_invoices;
-   } */
-
   }
 }
 
