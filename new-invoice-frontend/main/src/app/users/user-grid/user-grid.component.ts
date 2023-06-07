@@ -55,7 +55,7 @@ export class UserGridComponent
   exitData!: any[];
   role_permission: any;
   @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
-  constructor(
+  constructor (
     public httpClient: HttpClient,
     private httpCall: HttpCall,
     public dialog: MatDialog,

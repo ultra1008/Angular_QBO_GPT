@@ -147,17 +147,18 @@
                                                     <span class="font-sp font-white"> {{user.useremail}}</span>
                                                 </div>
                                             </div>
-                                            <div class="m-1 text-a" *ngIf="user.userphone!=0">
+                                            <div class="m-1 text-a" *ngIf="user.userphone !== 0">
                                                 <div class="d-flex font-s font-white">
                                                     <i class="material-icons my-auto font-s">phone</i>
                                                     <span class="font-sp"> {{user.userphone}}</span>
                                                 </div>
                                             </div>
-                                            <div class="m-1 text-a" *ngIf="user.userstartdate!=0">
+                                            <div class="m-1 text-a" *ngIf="user.userstartdate !== 0">
                                                 <div class="d-flex font-s font-white">
                                                     <i class="material-icons my-auto font-s">insert_invitation</i>
-                                                    <span
-                                                        class="font-sp">{{convertDate(user.userstartdate) | dateString }}</span>
+                                                    <span class="font-sp">
+                                                        {{ convertDate(user.userstartdate) | dateString }}
+                                                    </span>
                                                 </div>
                                             </div>
                                             <div class="col-12 m-1 d-flex">
@@ -170,8 +171,8 @@
                                                     <P class="truncate-text"> {{user.supervisor_name}}</P>
                                                 </div>
                                             </div>
-                                            <div class="chip" [ngClass]="user.userstatus == 1 ? 'active' :'inactive'">
-                                                {{user.userstatus == 1 ? active_word :inactive_word }}
+                                            <div class="chip" [ngClass]="user.userstatus === 1 ? 'active' :'inactive'">
+                                                {{user.userstatus === 1 ? active_word :inactive_word }}
                                             </div>
 
                                         </div>
