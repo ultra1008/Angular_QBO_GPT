@@ -134,6 +134,10 @@ export class SendOtpComponent {
   }
 
   removeUseremail() {
-    this.router.navigate(['/authentication/signin']);
+    this.router.navigate([WEB_ROUTES.LOGIN]);
+  }
+
+  openLogin() {
+    this.router.navigate([WEB_ROUTES.LOGIN]);
   }
 }

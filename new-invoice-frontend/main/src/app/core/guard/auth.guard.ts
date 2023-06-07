@@ -7,18 +7,19 @@ import {
 } from '@angular/router';
 
 import { AuthService } from '../service/auth.service';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor (private authService: AuthService, private router: Router) { }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     if (this.authService.currentUserValue) {
       return true;
     }
-    this.router.navigate(['/authentication/signin']);
+    this.router.navigate([WEB_ROUTES.LOGIN]);
     return false;
   }
 }

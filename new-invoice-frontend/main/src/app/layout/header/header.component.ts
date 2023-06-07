@@ -325,7 +325,7 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
         localStorage.removeItem('choose_skin');
         localStorage.removeItem('menuOption');
         localStorage.removeItem('thinvoicetheme');
-        this.router.navigate(['/authentication/signin']);
+        this.router.navigate([WEB_ROUTES.LOGIN]);
       }
     });
   }
@@ -444,5 +444,9 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
   numberWithCommas(amount: any) {
     amount = Number(amount.toString());
     return numberWithCommas(amount.toFixed(2));
+  }
+
+  openDashboard() {
+    this.router.navigate([WEB_ROUTES.DASHBOARD]);
   }
 }

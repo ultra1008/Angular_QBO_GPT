@@ -5,13 +5,13 @@ import { WEB_ROUTES } from 'src/consts/routes';
 import { MonthlyHistoryComponent } from './main/monthly-history/monthly-history.component';
 import { MonthlyInvoiceComponent } from './main/monthly-invoice/monthly-invoice.component';
 const routes: Routes = [
-  {
+  /* {
     path: '',
     redirectTo: 'main',
     pathMatch: 'full'
-  },
+  }, */
   {
-    path: 'main',
+    path: '',
     component: MainComponent
   },
   {

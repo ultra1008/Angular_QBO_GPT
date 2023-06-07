@@ -6,6 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { AuthService } from 'src/app/core/service/auth.service';
 import { AuthenticationService } from '../authentication.service';
+import { WEB_ROUTES } from 'src/consts/routes';
 @Component({
   selector: 'app-forgot-password',
   templateUrl: './forgot-password.component.html',
@@ -46,7 +47,7 @@ export class ForgotPasswordComponent implements OnInit {
       if (data.status) {
         if (data.data.length == 1) {
           showNotification(this.snackBar, data.message, 'success');
-          this.router.navigate(['/authentication/signin']);
+          this.router.navigate([WEB_ROUTES.LOGIN]);
         } else {
           this.useremail = formValues.useremail;
           this.companyList = data.data;
@@ -64,7 +65,7 @@ export class ForgotPasswordComponent implements OnInit {
     const data = await this.authenticationService.sendEmailForgotPassword(formValues);
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
-      this.router.navigate(['/authentication/signin']);
+      this.router.navigate([WEB_ROUTES.LOGIN]);
     } else {
       showNotification(this.snackBar, data.message, 'error');
     }
@@ -74,5 +75,9 @@ export class ForgotPasswordComponent implements OnInit {
     this.useremail = '';
     this.showForm = true;
     this.authForm.reset();
+  }
+
+  openLogin() {
+    this.router.navigate([WEB_ROUTES.LOGIN]);
   }
 }

@@ -8,7 +8,7 @@ export enum WEB_ROUTES {
   SIDEMENU_USER = 'user',
   SIDEMENU_SETTINGS = 'settings',
 
-  LOGIN = '/authentication/signin',
+  LOGIN = '/authentication',
 
   FORM = 'form',
   VIEW = 'view',
@@ -25,7 +25,7 @@ export enum WEB_ROUTES {
   USER_EMERGENCY_CONTACT = 'emergency-contact',
   USER_DOCUMENT = 'document',
 
-  DASHBOARD = '/dashboard/main',
+  DASHBOARD = '/dashboard',
   MONTHLY_HISTORY = 'monthly-history',
   MONTHLY_INVOICE = 'monthly-invoice',
   DASHBOARD_MONTHLY_HISTORY = '/dashboard/monthly-history',

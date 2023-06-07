@@ -87,7 +87,7 @@ export class LockedComponent implements OnInit {
         localStorage.removeItem('choose_skin');
         localStorage.removeItem('menuOption');
         localStorage.removeItem('thinvoicetheme');
-        this.router.navigate(['/authentication/signin']);
+        this.router.navigate([WEB_ROUTES.LOGIN]);
       }
     });
   }
