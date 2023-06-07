@@ -6,13 +6,13 @@ var po_schema = new mongoose.Schema({
     document_id: { type: mongoose.ObjectId, default: "" }, // Process document id
     document_type: { type: String, default: "" }, // Process document type PO
     date_epoch: { type: Number, default: 0 },
-    po_number: { type: String, default: "" },
+    po_no: { type: String, default: "" },
     customer_id: { type: String, default: "" },
     terms: { type: mongoose.ObjectId, default: "" },
     delivery_date_epoch: { type: Number, default: 0 },
     delivery_address: { type: String, default: "" },
     due_date_epoch: { type: Number, default: 0 },
-    quote_number: { type: String, default: "" },
+    quote_no: { type: String, default: "" },
     contract_number: { type: String, default: "" },
     vendor_id: { type: String, default: "" },
     vendor: { type: mongoose.ObjectId, default: "" },

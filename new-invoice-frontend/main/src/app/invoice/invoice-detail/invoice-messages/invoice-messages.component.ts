@@ -29,7 +29,7 @@ export class InvoiceMessagesComponent extends UnsubscribeOnDestroyAdapter implem
     'created_at',
     'sender',
     'last_message',
-    'invoice_number',
+    'invoice_no',
     'due_date',
     'vendor',
     'total_amount',
@@ -245,7 +245,7 @@ export class ExampleDataSource extends DataSource<InvoiceMessage> {
         case 'last_message':
           [propertyA, propertyB] = [a.last_message.message, b.last_message.message];
           break;
-        case 'invoice_number':
+        case 'invoice_no':
           [propertyA, propertyB] = [a.invoice.invoice_no, b.invoice.invoice_no];
           break;
         case 'due_date':

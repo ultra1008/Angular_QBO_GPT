@@ -6,8 +6,8 @@ var receiving_slip_schema = new mongoose.Schema({
     document_id: { type: mongoose.ObjectId, default: "" }, // Process document id
     document_type: { type: String, default: "" }, // Process document type
     date_epoch: { type: Number, default: 0 },
-    invoice_number: { type: String, default: "" },
-    po_number: { type: String, default: "" },
+    invoice_no: { type: String, default: "" },
+    po_no: { type: String, default: "" },
     ship_to_address: { type: String, default: "" },
     vendor: { type: mongoose.ObjectId, default: "" }, // Vendor Collection - Vendor Id
     received_by: { type: String, default: "" },

@@ -30,7 +30,7 @@ import { timeDateToepoch } from 'src/consts/utils';
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
 })
 export class ReportsListingComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
-  displayedColumns = ['invoice_date', 'due_date', 'vendor', 'invoice_number', 'total_amount', 'sub_total', 'approver', 'status', 'actions'];
+  displayedColumns = ['invoice_date', 'due_date', 'vendor', 'invoice_no', 'total_amount', 'sub_total', 'approver', 'status', 'actions'];
   reportService?: ReportService;
   dataSource!: ExampleDataSource;
   selection = new SelectionModel<Report>(true, []);

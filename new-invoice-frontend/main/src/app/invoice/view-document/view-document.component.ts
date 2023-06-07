@@ -47,7 +47,7 @@ export class ViewDocumentComponent {
     this.poForm = this.fb.group({
       document_type: ['', [Validators.required]],
       vendor_name: [''],
-      quote_number: ['',],
+      quote_no: ['',],
       date: [''],
       shipping_method: [''],
       sub_total: [''],
@@ -61,7 +61,7 @@ export class ViewDocumentComponent {
     this.quoteForm = this.fb.group({
       document_type: ['', [Validators.required]],
       vendor_name: [''],
-      quote_number: ['',],
+      quote_no: ['',],
       date: [''],
       shipping_method: [''],
       sub_total: [''],
@@ -134,7 +134,7 @@ export class ViewDocumentComponent {
       this.poForm = this.fb.group({
         document_type: [document_type],
         vendor_name: [this.poData.vendor_data.vendor_name],
-        quote_number: [this.poData.quote_number],
+        quote_no: [this.poData.quote_no],
         date: [poDate],
         shipping_method: [this.poData.shipping_method],
         sub_total: [numberWithCommas(this.poData.sub_total.toFixed(2))],
@@ -202,7 +202,7 @@ export class ViewDocumentComponent {
       this.quoteForm = this.fb.group({
         document_type: [document_type],
         vendor_name: [this.quoteData.vendor_data.vendor_name],
-        quote_number: [this.quoteData.quote_number],
+        quote_no: [this.quoteData.quote_no],
         date: [quoteDate],
         shipping_method: [this.quoteData.shipping_method],
         sub_total: [numberWithCommas(this.quoteData.sub_total.toFixed(2))],
@@ -271,9 +271,9 @@ export class ViewDocumentComponent {
       this.packingSlipForm = this.fb.group({
         document_type: [document_type],
         vendor_name: [this.packingSlipData.vendor_data.vendor_name],
-        invoice_number: [this.packingSlipData.invoice_number],
+        invoice_no: [this.packingSlipData.invoice_no],
         date: [packingSlipDate],
-        po_number: [this.packingSlipData.po_number],
+        po_no: [this.packingSlipData.po_no],
         address: [this.packingSlipData.address],
         received_by: [this.packingSlipData.received_by],
       });
@@ -323,9 +323,9 @@ export class ViewDocumentComponent {
       this.receivingSlipForm = this.fb.group({
         document_type: [this.receivingSlipData.document_type],
         vendor_name: [this.receivingSlipData.vendor_name],
-        invoice_number: [this.receivingSlipData.invoice_number],
+        invoice_no: [this.receivingSlipData.invoice_no],
         date: [receivingSliDate],
-        po_number: [this.receivingSlipData.po_number],
+        po_no: [this.receivingSlipData.po_no],
         address: [this.receivingSlipData.address],
         received_by: [this.receivingSlipData.received_by],
       });

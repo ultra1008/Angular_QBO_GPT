@@ -6,7 +6,7 @@ var quote_schema = new mongoose.Schema({
     document_id: { type: mongoose.ObjectId, default: "" }, // Process document id
     document_type: { type: String, default: "" }, // Process document type
     date_epoch: { type: Number, default: 0 },
-    quote_number: { type: String, default: "" },
+    quote_no: { type: String, default: "" },
     terms: { type: mongoose.ObjectId, default: "" },
     address: { type: String, default: "" },
     vendor: { type: mongoose.ObjectId, default: "" }, // Vendor Collection - Vendor Id
