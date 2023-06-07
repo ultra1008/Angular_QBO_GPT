@@ -24,7 +24,7 @@ module.exports.userDocumentExpiryAlert = async function (req, res) {
 async function userDocumentExpiryAlertCronFunction() {
     try {
         let connection_MDM_main = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
-        let All_Compnay = await rest_Api.find(connection_MDM_main, companyCollection, { companystatus: 1 });
+        let All_Compnay = await rest_Api.find(connection_MDM_main, companyCollection, { companystatus: 1, companycode: { $ne: '' } });
         let final_object = [];
         for (const item_new of All_Compnay) {
             //employee 
@@ -205,7 +205,7 @@ module.exports.userEmergencyContactAlertCron = async function (req, res) {
 async function userEmergencyContactAlertCronFunction() {
     try {
         let connection_MDM_main = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
-        let All_Compnay = await rest_Api.find(connection_MDM_main, companyCollection, { companystatus: 1 });
+        let All_Compnay = await rest_Api.find(connection_MDM_main, companyCollection, { companystatus: 1, companycode: { $ne: '' } });
         let final_object = [];
         for (const item_new of All_Compnay) {
             var translator = new common.Language(item_new.companylanguage);
