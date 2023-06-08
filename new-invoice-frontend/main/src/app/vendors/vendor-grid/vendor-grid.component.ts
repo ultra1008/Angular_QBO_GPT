@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { WEB_ROUTES } from 'src/consts/routes';
-import { TermModel, Vendor } from '../vendor.model';
+import { VendorModel } from '../vendor.model';
 import { HttpClient } from '@angular/common/http';
 import { UntypedFormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -21,6 +21,7 @@ import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { ImportVendorComponent } from '../import-vendor/import-vendor.component';
 import { VendorExistListComponent } from '../vendor-exist-list/vendor-exist-list.component';
 import { RolePermission } from 'src/consts/common.model';
+import { TermModel } from 'src/app/settings/settings.model';
 
 @Component({
   selector: 'app-vendor-grid',
@@ -31,18 +32,17 @@ import { RolePermission } from 'src/consts/common.model';
 export class VendorGridComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
-  vendorList: any = [];
-  vendorActiveList: any = [];
-  vendorInactiveList: any = [];
+  vendorList: Array<VendorModel> = [];
+  vendorActiveList: Array<VendorModel> = [];
+  vendorInactiveList: Array<VendorModel> = [];
   cardLoading = true;
   isDelete = 0;
   active_word = 'Active';
   inactive_word = 'Inactive';
-  vendorname_search: any;
-  vendor_status: any;
+  vendorname_search = '';
+  vendor_status = '';
   termsList: Array<TermModel> = [];
   role_permission!: RolePermission;
-  exitData!: any[];
   @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
 
   constructor (
@@ -125,7 +125,7 @@ export class VendorGridComponent
     });
   }
 
-  editVendor(vendor: Vendor) {
+  editVendor(vendor: VendorModel) {
 
     this.router.navigate([WEB_ROUTES.VENDOR_FORM], {
       queryParams: { _id: vendor._id },
@@ -159,9 +159,8 @@ export class VendorGridComponent
       jsonData = workBook.SheetNames.reduce((initial: any, name: any) => {
         const sheet = workBook.Sheets[name];
         initial[name] = XLSX.utils.sheet_to_json(sheet);
-        let data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
         header_ = data.shift();
-
         return initial;
       }, {});
       // const dataString = JSON.stringify(jsonData);
@@ -184,12 +183,10 @@ export class VendorGridComponent
         .subscribe(function (params) {
           if (params.status) {
             that.uiSpinner.spin$.next(false);
-            that.exitData = params;
             const dialogRef = that.dialog.open(VendorExistListComponent, {
               width: '750px',
               height: '500px',
-              // data: that.exitData,
-              data: { data: that.exitData },
+              data: { data: params },
               disableClose: true,
             });
 

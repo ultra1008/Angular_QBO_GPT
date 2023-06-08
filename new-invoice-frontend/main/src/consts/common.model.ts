@@ -1,6 +1,5 @@
-import { Invoice } from "src/app/invoice/invoice.model";
-import { User } from "src/app/users/user.model";
-import { Vendor } from "src/app/vendors/vendor.model";
+import { UserModel } from "src/app/users/user.model";
+import { VendorModel } from "src/app/vendors/vendor.model";
 
 export interface Permission {
     Add: boolean;
@@ -35,12 +34,11 @@ export interface RolePermission {
 export class ProcessDocument {
     _id: string;
     document_type: string;
-    vendor_data: Vendor;
+    vendor_data: VendorModel;
     invoice_no: string;
     status: string;
     po_no: string;
-    created_by: User;
-    // action-edit open associated edit page
+    created_by: UserModel;
     constructor (responce: ProcessDocument) {
         {
             this._id = responce._id;
@@ -53,3 +51,42 @@ export class ProcessDocument {
         }
     }
 }
+
+
+export class CompanyModel {
+    _id: string;
+    companyname: string;
+    companyemail: string;
+    companystatus: string;
+    companylogo: string;
+    companylanguage: string;
+    companycode: string;
+    constructor (responce: CompanyModel) {
+        {
+            this._id = responce._id;
+            this.companyname = responce.companyname;
+            this.companyemail = responce.companyemail;
+            this.companystatus = responce.companystatus;
+            this.companylogo = responce.companylogo;
+            this.companylanguage = responce.companylanguage;
+            this.companycode = responce.companycode;
+        }
+    }
+}
+
+export class UserDataModel {
+    _id: string;
+    UserData: UserModel;
+    companydata: CompanyModel;
+    role_permission: RolePermission;
+    token: string;
+    constructor (responce: UserDataModel) {
+        {
+            this._id = responce._id;
+            this.UserData = responce.UserData;
+            this.companydata = responce.companydata;
+            this.role_permission = responce.role_permission;
+            this.token = responce.token;
+        }
+    }
+} 

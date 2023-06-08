@@ -11,7 +11,7 @@ import { fromEvent, BehaviorSubject, Observable, merge, map } from 'rxjs';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
-import { VendorTypeTable } from '../../settings.model';
+import { VendorTypeModel } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
 import { VendorTypeFormComponent } from './vendor-type-form/vendor-type-form.component';
 import { CommonService } from 'src/app/services/common.service';
@@ -28,7 +28,7 @@ export class VendorTypeListingComponent
   displayedColumns = ['name', 'actions'];
   vendortypeService?: SettingsService;
   dataSource!: VendorTypeDataSource;
-  selection = new SelectionModel<VendorTypeTable>(true, []);
+  selection = new SelectionModel<VendorTypeModel>(true, []);
   id?: number;
   isDelete = 0;
   titleMessage = '';
@@ -130,7 +130,7 @@ export class VendorTypeListingComponent
     //     // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
     //     this.vendortypeService?.dataChange.value.splice(index, 1);
     //     this.refreshTable();
-    //     this.selection = new SelectionModel<VendorTypeTable>(true, []);
+    //     this.selection = new SelectionModel<VendorTypeModel>(true, []);
     //   });
     //  showNotification(
     //     'snackbar-danger',
@@ -162,7 +162,7 @@ export class VendorTypeListingComponent
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: VendorTypeTable) {
+  onContextMenu(event: MouseEvent, item: VendorTypeModel) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -173,7 +173,7 @@ export class VendorTypeListingComponent
     }
   }
 }
-export class VendorTypeDataSource extends DataSource<VendorTypeTable> {
+export class VendorTypeDataSource extends DataSource<VendorTypeModel> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -181,8 +181,8 @@ export class VendorTypeDataSource extends DataSource<VendorTypeTable> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: VendorTypeTable[] = [];
-  renderedData: VendorTypeTable[] = [];
+  filteredData: VendorTypeModel[] = [];
+  renderedData: VendorTypeModel[] = [];
   constructor (
     public vendortypeService: SettingsService,
     public paginator: MatPaginator,
@@ -194,7 +194,7 @@ export class VendorTypeDataSource extends DataSource<VendorTypeTable> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<VendorTypeTable[]> {
+  connect(): Observable<VendorTypeModel[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this.vendortypeService.vendorTypeDataChange,
@@ -208,8 +208,8 @@ export class VendorTypeDataSource extends DataSource<VendorTypeTable> {
         // Filter data
         this.filteredData = this.vendortypeService.vendorTypeData
           .slice()
-          .filter((VendorTypeTable: VendorTypeTable) => {
-            const searchStr = VendorTypeTable.name.toLowerCase();
+          .filter((VendorTypeModel: VendorTypeModel) => {
+            const searchStr = VendorTypeModel.name.toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
         // Sort filtered data
@@ -228,7 +228,7 @@ export class VendorTypeDataSource extends DataSource<VendorTypeTable> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: VendorTypeTable[]): VendorTypeTable[] {
+  sortData(data: VendorTypeModel[]): VendorTypeModel[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }

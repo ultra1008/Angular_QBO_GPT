@@ -9,11 +9,11 @@ import { icon } from 'src/consts/icon';
 import { MailFormComponent } from '../mail-form/mail-form.component';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
-import { User } from 'src/app/users/user.model';
-import { TermModel, Vendor } from 'src/app/vendors/vendor.model';
+import { UserModel } from 'src/app/users/user.model';
+import { VendorModel } from 'src/app/vendors/vendor.model';
 import { configData } from 'src/environments/configData';
-import { ClassNameTable, CostCodeTable } from 'src/app/settings/settings.model';
-import { ClientList } from 'src/app/client/client.model';
+import { ClassNameModel, CostCodeModel, TermModel } from 'src/app/settings/settings.model';
+import { ClientJobModel } from 'src/app/client/client.model';
 import { amountChange, epochToDateTime, numberWithCommas, showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
@@ -41,23 +41,23 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   isLoading = true;
   maxDate = new Date();
 
-  variablesVendorList: any = [];
-  vendorList: Array<Vendor> = this.variablesVendorList.slice();
+  variablesVendorList: Array<VendorModel> = [];
+  vendorList: Array<VendorModel> = this.variablesVendorList.slice();
 
-  variablesUserList: any = [];
-  userList: Array<User> = this.variablesUserList.slice();
+  variablesUserList: Array<UserModel> = [];
+  userList: Array<UserModel> = this.variablesUserList.slice();
 
-  variablesJobNameList: any = [];
-  jobNameList: Array<ClientList> = this.variablesJobNameList.slice();
+  variablesJobNameList: Array<ClientJobModel> = [];
+  jobNameList: Array<ClientJobModel> = this.variablesJobNameList.slice();
 
-  variablesTermList: any = [];
+  variablesTermList: Array<TermModel> = [];
   termList: Array<TermModel> = this.variablesTermList.slice();
 
-  variablesCostCodeList: any = [];
-  costCodeList: Array<CostCodeTable> = this.variablesCostCodeList.slice();
+  variablesCostCodeList: Array<CostCodeModel> = [];
+  costCodeList: Array<CostCodeModel> = this.variablesCostCodeList.slice();
 
-  variablesClassNameList: any = [];
-  classNameList: Array<ClassNameTable> = this.variablesClassNameList.slice();
+  variablesClassNameList: Array<ClassNameModel> = [];
+  classNameList: Array<ClassNameModel> = this.variablesClassNameList.slice();
 
   documentList: any = configData.DOCUMENT_TYPE_LIST;
   statusList: any = configData.INVOICE_STATUS;
@@ -78,27 +78,27 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   infoAmount = '0.00';
   infoNotes = '';
 
-  filteredUsers?: Observable<User[]>;
+  filteredUsers?: Observable<UserModel[]>;
   userControl = new UntypedFormControl();
-  displayUserFn(user: User): string {
+  displayUserFn(user: UserModel): string {
     return user && user.userfullname ? user.userfullname : '';
   }
 
-  filteredCostCode?: Observable<CostCodeTable[]>;
+  filteredCostCode?: Observable<CostCodeModel[]>;
   costCodeControl = new UntypedFormControl();
-  displayCostCodeFn(costcode: CostCodeTable): string {
+  displayCostCodeFn(costcode: CostCodeModel): string {
     return costcode && costcode.cost_code ? costcode.cost_code : '';
   }
 
-  filteredClient?: Observable<ClientList[]>;
+  filteredClient?: Observable<ClientJobModel[]>;
   clientControl = new UntypedFormControl();
-  displayClientFn(client: ClientList): string {
+  displayClientFn(client: ClientJobModel): string {
     return client && client.client_name ? client.client_name : '';
   }
 
-  filteredClassName?: Observable<ClassNameTable[]>;
+  filteredClassName?: Observable<ClassNameModel[]>;
   classNameControl = new UntypedFormControl();
-  displayClassNameFn(className: ClassNameTable): string {
+  displayClassNameFn(className: ClassNameModel): string {
     return className && className.name ? className.name : '';
   }
 
@@ -111,7 +111,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   prevStep() {
     this.step--;
   }
-  constructor(private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog, private commonService: CommonService,
+  constructor (private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog, private commonService: CommonService,
     public route: ActivatedRoute, public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, public translate: TranslateService,) {
     super();
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
@@ -189,28 +189,28 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
 
   }
 
-  private _userFilter(userfullname: string): User[] {
+  private _userFilter(userfullname: string): UserModel[] {
     const filterValue = userfullname.toLowerCase();
     return this.userList.filter(
       (option) => option.userfullname.toLowerCase().indexOf(filterValue) === 0
     );
   }
 
-  private _costCodeFilter(costCode: string): CostCodeTable[] {
+  private _costCodeFilter(costCode: string): CostCodeModel[] {
     const filterValue = costCode.toLowerCase();
     return this.costCodeList.filter(
       (option) => option.cost_code.toLowerCase().indexOf(filterValue) === 0
     );
   }
 
-  private _clientFilter(client: string): ClientList[] {
+  private _clientFilter(client: string): ClientJobModel[] {
     const filterValue = client.toLowerCase();
     return this.jobNameList.filter(
       (option) => option.client_name.toLowerCase().indexOf(filterValue) === 0
     );
   }
 
-  private _classNameFilter(className: string): ClassNameTable[] {
+  private _classNameFilter(className: string): ClassNameModel[] {
     const filterValue = className.toLowerCase();
     return this.classNameList.filter(
       (option) => option.name.toLowerCase().indexOf(filterValue) === 0
@@ -683,7 +683,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   }
 
   setInfoCostCode(id: string) {
-    const found = this.costCodeList.find((x: CostCodeTable) => x._id === id);
+    const found = this.costCodeList.find((x: CostCodeModel) => x._id === id);
     if (found) {
       return found.cost_code;
     } else {
@@ -692,7 +692,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   }
 
   setInfoApprover(id: string) {
-    const found = this.userList.find((x: User) => x._id === id);
+    const found = this.userList.find((x: UserModel) => x._id === id);
     if (found) {
       return found.userfullname;
     } else {
@@ -701,7 +701,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   }
 
   setInfoClientJob(id: string) {
-    const found = this.jobNameList.find((x: ClientList) => x._id === id);
+    const found = this.jobNameList.find((x: ClientJobModel) => x._id === id);
     if (found) {
       return found.client_name;
     } else {
@@ -710,7 +710,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   }
 
   setInfoClassName(id: string) {
-    const found = this.classNameList.find((x: ClassNameTable) => x._id === id);
+    const found = this.classNameList.find((x: ClassNameModel) => x._id === id);
     if (found) {
       return found.name;
     } else {

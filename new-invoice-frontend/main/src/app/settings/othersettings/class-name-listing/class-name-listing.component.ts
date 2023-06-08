@@ -11,7 +11,7 @@ import { fromEvent, BehaviorSubject, Observable, merge, map } from 'rxjs';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
-import { ClassNameTable } from '../../settings.model';
+import { ClassNameModel } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
 import { JobNameFormComponent } from '../job-name-listing/job-name-form/job-name-form.component';
 import { ClassNameFormComponent } from './class-name-form/class-name-form.component';
@@ -30,7 +30,7 @@ export class ClassNameListingComponent
   displayedColumns = ['name', 'number', 'description', 'status', 'actions'];
   classnameService?: SettingsService;
   dataSource!: ClassNameDataSource;
-  selection = new SelectionModel<ClassNameTable>(true, []);
+  selection = new SelectionModel<ClassNameModel>(true, []);
   id?: number;
   isDelete = 0;
   titleMessage = '';
@@ -159,7 +159,7 @@ export class ClassNameListingComponent
     //     // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
     //     this.classnameService?.dataChange.value.splice(index, 1);
     //     this.refreshTable();
-    //     this.selection = new SelectionModel<ClassNameTable>(true, []);
+    //     this.selection = new SelectionModel<ClassNameModel>(true, []);
     //   });
     //  showNotification(
     //     'snackbar-danger',
@@ -192,7 +192,7 @@ export class ClassNameListingComponent
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: ClassNameTable) {
+  onContextMenu(event: MouseEvent, item: ClassNameModel) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -203,7 +203,7 @@ export class ClassNameListingComponent
     }
   }
 }
-export class ClassNameDataSource extends DataSource<ClassNameTable> {
+export class ClassNameDataSource extends DataSource<ClassNameModel> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -211,8 +211,8 @@ export class ClassNameDataSource extends DataSource<ClassNameTable> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: ClassNameTable[] = [];
-  renderedData: ClassNameTable[] = [];
+  filteredData: ClassNameModel[] = [];
+  renderedData: ClassNameModel[] = [];
   constructor (
     public classnameService: SettingsService,
     public paginator: MatPaginator,
@@ -224,7 +224,7 @@ export class ClassNameDataSource extends DataSource<ClassNameTable> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<ClassNameTable[]> {
+  connect(): Observable<ClassNameModel[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this.classnameService.classNameDataChange,
@@ -239,11 +239,11 @@ export class ClassNameDataSource extends DataSource<ClassNameTable> {
         // Filter data
         this.filteredData = this.classnameService.classNameData
           .slice()
-          .filter((ClassNameTable: ClassNameTable) => {
+          .filter((ClassNameModel: ClassNameModel) => {
             const searchStr =
-              ClassNameTable.name +
-              ClassNameTable.number +
-              ClassNameTable.description.toLowerCase();
+              ClassNameModel.name +
+              ClassNameModel.number +
+              ClassNameModel.description.toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
         // Sort filtered data
@@ -262,7 +262,7 @@ export class ClassNameDataSource extends DataSource<ClassNameTable> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: ClassNameTable[]): ClassNameTable[] {
+  sortData(data: ClassNameModel[]): ClassNameModel[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }

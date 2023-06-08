@@ -7,6 +7,8 @@ import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { AuthService } from 'src/app/core/service/auth.service';
 import { AuthenticationService } from '../authentication.service';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { CommonService } from 'src/app/services/common.service';
+import { httproutes, httpversion } from 'src/consts/httproutes';
 @Component({
   selector: 'app-send-otp',
   templateUrl: './send-otp.component.html',
@@ -30,12 +32,13 @@ export class SendOtpComponent {
   showCompanyList = false;
   removable = true;
 
-  constructor(
+  constructor (
     private formBuilder: UntypedFormBuilder,
     private router: Router,
     private authService: AuthService,
     private authenticationService: AuthenticationService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private commonService: CommonService,
   ) { }
 
   ngOnInit() {
@@ -56,7 +59,7 @@ export class SendOtpComponent {
     if (that.authForm.valid) {
       const reqObject = this.authForm.value;
       reqObject.companycode = this.companyCode;
-      const data = await this.authenticationService.sendOTP(reqObject);
+      const data = await this.commonService.postRequestAPI(httpversion.V1 + httproutes.SEND_OTP_EMAIL, reqObject);
       if (data.status) {
         showNotification(this.snackBar, data.message, 'success');
         this.sentOTP = true;
@@ -73,8 +76,7 @@ export class SendOtpComponent {
       const reqObject = this.authForm.value;
       reqObject.companycode = this.companyCode;
       reqObject.otp = this.otp;
-
-      const data = await this.authenticationService.submitOTP(reqObject);
+      const data = await this.commonService.postRequestAPI(httpversion.V1 + httproutes.SUBMITT_OTP, reqObject);
       if (data.status) {
         if (data.data.length === 0) {
           showNotification(this.snackBar, 'You are not associated with any company. Kindly contact superadmin.', 'error');
@@ -110,8 +112,7 @@ export class SendOtpComponent {
   async selectCompany(company: any) {
     const formValues = this.authForm.value;
     formValues._id = company._id;
-
-    const data = await this.authenticationService.loginwithOTP(formValues);
+    const data = await this.commonService.postRequestAPI(httpversion.V1 + httproutes.LOGIN_WITH_OTP, formValues);
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       if (data.user_data.UserData.useris_password_temp == true) {

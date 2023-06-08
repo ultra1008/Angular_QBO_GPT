@@ -3,7 +3,6 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators, } from '@angular/form
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { VendorsService } from '../vendors.service';
-import { CountryModel, TermModel } from '../vendor.model';
 import { commonLocalThumbImage, commonNetworkThumbImage, commonNewtworkAttachmentViewer, gallery_options, showNotification, swalWithBootstrapButtons, swalWithBootstrapTwoButtons, } from 'src/consts/utils';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NgxGalleryComponent, NgxGalleryImage, NgxGalleryOptions, } from 'ngx-gallery-9';
@@ -16,6 +15,7 @@ import { httproutes, httpversion } from 'src/consts/httproutes';
 import { commonFileChangeEvent } from 'src/app/services/utils';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { RolePermission } from 'src/consts/common.model';
+import { CountryModel, TermModel } from 'src/app/settings/settings.model';
 
 @Component({
   selector: 'app-vendor-form',

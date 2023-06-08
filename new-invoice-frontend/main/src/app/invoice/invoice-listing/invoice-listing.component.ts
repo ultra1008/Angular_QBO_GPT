@@ -84,11 +84,11 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
   }
 
   // TOOLTIPS
-  getVendorNameTooltip(row: any) {
+  getVendorNameTooltip(row: Invoice) {
     return row.vendor_data?.vendor_name;
   }
-  getApproverTooltip(row: any) {
-    return row.approver;
+  getApproverTooltip(row: Invoice) {
+    return row.assign_to_data?.userfullname;
   }
 
   editInvoice(row: Invoice) {

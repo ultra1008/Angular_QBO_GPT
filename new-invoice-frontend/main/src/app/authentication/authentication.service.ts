@@ -40,49 +40,4 @@ export class AuthenticationService {
   changeTokenValue(value: string) {
     this.currentTokenSubject.next(value);
   }
-
-  async getCompanySettings(companycode: string) {
-    const data = await this.httpCall.httpPostCall(httpversion.V1 + httproutes.GET_COMPANY_SETTINGS, { companycode: companycode }).toPromise();
-    return data;
-  }
-
-  async userLogin(reqObject: any) {
-    const data = await this.httpCall.httpPostCall(httpversion.V1 + httproutes.USER_LOGIN, reqObject).toPromise();
-    return data;
-  }
-
-  async checkUserCompany(reqObject: any) {
-    const data = await this.httpCall.httpPostCall(httpversion.V1 + httproutes.GET_USER_COMPANY, reqObject).toPromise();
-    return data;
-  }
-
-  async sendOTP(reqObject: any) {
-    const data = await this.httpCall.httpPostCall(httpversion.V1 + httproutes.SEND_OTP_EMAIL, reqObject).toPromise();
-    return data;
-  }
-
-  async submitOTP(reqObject: any) {
-    const data = await this.httpCall.httpPostCall(httpversion.V1 + httproutes.SUBMITT_OTP, reqObject).toPromise();
-    return data;
-  }
-
-  async loginwithOTP(reqObject: any) {
-    const data = await this.httpCall.httpPostCall(httpversion.V1 + httproutes.LOGIN_WITH_OTP, reqObject).toPromise();
-    return data;
-  }
-
-  async emailForgotPassword(reqObject: any) {
-    const data = await this.httpCall.httpPostCall(httpversion.V1 + httproutes.EMAIL_FORGET_PASSWORD, reqObject).toPromise();
-    return data;
-  }
-
-  async sendEmailForgotPassword(reqObject: any) {
-    const data = await this.httpCall.httpPostCall(httpversion.V1 + httproutes.SEND_EMAIL_FORGET_PASSWORD, reqObject).toPromise();
-    return data;
-  }
-
-  async changePassword(reqObject: any) {
-    const data = await this.httpCall.httpPostCall(httpversion.V1 + httproutes.CHANGEPASSWORD, reqObject).toPromise();
-    return data;
-  }
 }

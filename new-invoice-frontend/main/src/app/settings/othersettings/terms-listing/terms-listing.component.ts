@@ -16,7 +16,7 @@ import { TermsFormComponent } from './terms-form/terms-form.component';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { icon } from 'src/consts/icon';
-import { TermModel } from 'src/app/vendors/vendor.model';
+import { TermModel } from '../../settings.model';
 
 @Component({
   selector: 'app-terms-listing',
@@ -38,7 +38,7 @@ export class TermsListingComponent
   quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
   quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
 
-  constructor(
+  constructor (
     public dialog: MatDialog,
     public SettingsService: SettingsService,
     private snackBar: MatSnackBar,
@@ -65,7 +65,7 @@ export class TermsListingComponent
       // if (data.data.is_quickbooks_online || data.data.is_quickbooks_desktop) {
       //   this.displayedColumns = ['name', 'due_days', 'discount', 'is_quickbooks', 'actions'];
       // } else {
-        this.displayedColumns = ['name', 'due_days', 'discount', 'actions'];
+      this.displayedColumns = ['name', 'due_days', 'discount', 'actions'];
       // }
     }
     // this.loadData();
@@ -198,7 +198,7 @@ export class TermsDataSource extends DataSource<TermModel> {
   }
   filteredData: TermModel[] = [];
   renderedData: TermModel[] = [];
-  constructor(
+  constructor (
     public termsService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
@@ -223,11 +223,11 @@ export class TermsDataSource extends DataSource<TermModel> {
         // Filter data
         this.filteredData = this.termsService.termData
           .slice()
-          .filter((TermsTable: TermModel) => {
+          .filter((response: TermModel) => {
             const searchStr = (
-              TermsTable.name +
-              TermsTable.due_days +
-              TermsTable.discount
+              response.name +
+              response.due_days +
+              response.discount
             ).toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });

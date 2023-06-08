@@ -15,7 +15,7 @@ import {
 } from 'src/consts/utils';
 import { SettingsService } from '../settings.service';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
-import { CostCodeTable } from '../settings.model';
+import { CostCodeModel } from '../settings.model';
 import { CostCodeFormComponent } from './cost-code-form/cost-code-form.component';
 import { ImportCostcodeSettingsComponent } from './import-costcode-settings/import-costcode-settings.component';
 import { httproutes, httpversion } from 'src/consts/httproutes';
@@ -35,7 +35,7 @@ export class CostcodeComponent
   displayedColumns = ['division', 'value', 'description', 'actions'];
   costcodeService?: SettingsService;
   dataSource!: CostCodeDataSource;
-  selection = new SelectionModel<CostCodeTable>(true, []);
+  selection = new SelectionModel<CostCodeModel>(true, []);
   id?: number;
   isDelete = 0;
   titleMessage = '';
@@ -86,7 +86,7 @@ export class CostcodeComponent
     this.router.navigate(['/settings/mailbox-form']);
   }
 
-  async deleteCostCode(costcodeTable: CostCodeTable, is_delete: number) {
+  async deleteCostCode(costcodeTable: CostCodeModel, is_delete: number) {
     if (is_delete == 1) {
       this.titleMessage = this.translate.instant(
         'SETTINGS.SETTINGS_OTHER_OPTION.COST_CODE_MODULE.CONFIRMATION_DIALOG.ARCHIVE'
@@ -111,7 +111,7 @@ export class CostcodeComponent
       });
   }
 
-  async archiveRecover(costcodeTable: CostCodeTable, is_delete: number) {
+  async archiveRecover(costcodeTable: CostCodeModel, is_delete: number) {
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.DELETE_COST_CODE, { _id: costcodeTable._id, is_delete: is_delete });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
@@ -268,7 +268,7 @@ export class CostcodeComponent
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: CostCodeTable) {
+  onContextMenu(event: MouseEvent, item: CostCodeModel) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -279,7 +279,7 @@ export class CostcodeComponent
     }
   }
 }
-export class CostCodeDataSource extends DataSource<CostCodeTable> {
+export class CostCodeDataSource extends DataSource<CostCodeModel> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -287,8 +287,8 @@ export class CostCodeDataSource extends DataSource<CostCodeTable> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData1: CostCodeTable[] = [];
-  renderedData: CostCodeTable[] = [];
+  filteredData1: CostCodeModel[] = [];
+  renderedData: CostCodeModel[] = [];
   constructor (
     public costcodeTableService: SettingsService,
     public paginator: MatPaginator,
@@ -300,7 +300,7 @@ export class CostCodeDataSource extends DataSource<CostCodeTable> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<CostCodeTable[]> {
+  connect(): Observable<CostCodeModel[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this.costcodeTableService.costCodeDataChange,
@@ -316,7 +316,7 @@ export class CostCodeDataSource extends DataSource<CostCodeTable> {
 
         this.filteredData1 = this.costcodeTableService.costCodeData
           .slice()
-          .filter((costcodeTable: CostCodeTable) => {
+          .filter((costcodeTable: CostCodeModel) => {
             const searchStr = (
               costcodeTable.division +
               costcodeTable.value +
@@ -340,7 +340,7 @@ export class CostCodeDataSource extends DataSource<CostCodeTable> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: CostCodeTable[]): CostCodeTable[] {
+  sortData(data: CostCodeModel[]): CostCodeModel[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }

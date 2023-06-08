@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { HttpCall } from '../services/httpcall.service';
 import { UnsubscribeOnDestroyAdapter } from '../shared/UnsubscribeOnDestroyAdapter';
-import { EmergencyContact, User, UserDocument } from './user.model';
+import { EmergencyContact, UserModel, UserDocument } from './user.model';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
@@ -10,16 +10,16 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
   isTblLoading = true;
   isEmergencyTblLoading = true;
   documentTblLoading = true;
-  dataChange: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
+  dataChange: BehaviorSubject<UserModel[]> = new BehaviorSubject<UserModel[]>([]);
   emergencyDataChange: BehaviorSubject<EmergencyContact[]> = new BehaviorSubject<EmergencyContact[]>([]);
   documentDataChange: BehaviorSubject<UserDocument[]> = new BehaviorSubject<UserDocument[]>([]);
   // Temporarily stores data from dialogs
-  dialogData!: User;
+  dialogData!: UserModel;
 
   constructor (private httpCall: HttpCall) {
     super();
   }
-  get data(): User[] {
+  get data(): UserModel[] {
     return this.dataChange.value;
   }
 
@@ -74,8 +74,8 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
     this.documentDataChange.next(data);
   }
 
-  addAdvanceTable(User: User): void {
-    this.dialogData = User;
+  addAdvanceTable(user: UserModel): void {
+    this.dialogData = user;
     // this.httpClient.post(this.API_URL, advanceTable)
     //   .subscribe({
     //     next: (data) => {

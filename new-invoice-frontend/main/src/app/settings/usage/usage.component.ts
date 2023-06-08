@@ -25,7 +25,7 @@ import {
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { DataSource, SelectionModel } from '@angular/cdk/collections';
-import { UsageTable } from '../settings.model';
+import { UsageModel } from '../settings.model';
 import { MailboxDataSource } from '../mailbox/mailbox.component';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
@@ -52,8 +52,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class UsageComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit
-{
+  implements OnInit {
   // displayedColumns = ['_id'];
 
   AllUsage: any;
@@ -62,9 +61,9 @@ export class UsageComponent
   displayedColumns = ['_id'];
   usageService?: SettingsService;
   dataSource!: UsageDataSource;
-  selection = new SelectionModel<UsageTable>(true, []);
+  selection = new SelectionModel<UsageModel>(true, []);
   id?: number;
-  // advanceTable?: UsageTable;
+  // advanceTable?: UsageModel;
   isDelete = 0;
   titleMessage: string = '';
 
@@ -88,7 +87,7 @@ export class UsageComponent
     row.hasOwnProperty('detailRow');
   // expandedElement!: Element;
 
-  constructor(
+  constructor (
     public SettingsService: SettingsService,
     public router: Router,
     public translate: TranslateService,
@@ -172,13 +171,13 @@ export class UsageComponent
     this.router.navigate(['/settings/mailbox-form']);
   }
 
-  editMailbox(mailbox: UsageTable) {
+  editMailbox(mailbox: UsageModel) {
     this.router.navigate(['/settings/mailbox-form'], {
       queryParams: { _id: mailbox._id },
     });
   }
 
-  async archiveRecover(mailbox: UsageTable, is_delete: number) {
+  async archiveRecover(mailbox: UsageModel, is_delete: number) {
     const data = await this.SettingsService.deleteMailbox({
       _id: mailbox._id,
       is_delete: is_delete,
@@ -200,7 +199,7 @@ export class UsageComponent
     }
   }
 
-  async deleteMailbox(mailbox: UsageTable, is_delete: number) {
+  async deleteMailbox(mailbox: UsageModel, is_delete: number) {
     if (is_delete == 1) {
       this.titleMessage = this.translate.instant(
         'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOX.CONFIRMATION_DIALOG.ARCHIVE'
@@ -246,8 +245,8 @@ export class UsageComponent
     this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.renderedData.forEach((row) =>
-          this.selection.select(row)
-        );
+        this.selection.select(row)
+      );
   }
   removeSelectedRows() {
     //   const totalSelect = this.selection.selected.length;
@@ -258,7 +257,7 @@ export class UsageComponent
     //     // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
     //     this.usageService?.dataChange.value.splice(index, 1);
     //     this.refreshTable();
-    //     this.selection = new SelectionModel<UsageTable>(true, []);
+    //     this.selection = new SelectionModel<UsageModel>(true, []);
     //   });
     //  showNotification(
     //     'snackbar-danger',
@@ -286,7 +285,7 @@ export class UsageComponent
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: UsageTable) {
+  onContextMenu(event: MouseEvent, item: UsageModel) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -298,7 +297,7 @@ export class UsageComponent
   }
 }
 
-export class UsageDataSource extends DataSource<UsageTable> {
+export class UsageDataSource extends DataSource<UsageModel> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -306,9 +305,9 @@ export class UsageDataSource extends DataSource<UsageTable> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: UsageTable[] = [];
-  renderedData: UsageTable[] = [];
-  constructor(
+  filteredData: UsageModel[] = [];
+  renderedData: UsageModel[] = [];
+  constructor (
     public usageService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
@@ -319,7 +318,7 @@ export class UsageDataSource extends DataSource<UsageTable> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<UsageTable[]> {
+  connect(): Observable<UsageModel[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this.usageService.dataUsageChange,
@@ -333,8 +332,8 @@ export class UsageDataSource extends DataSource<UsageTable> {
         // Filter data
         this.filteredData = this.usageService.datausage
           .slice()
-          .filter((UsageTable: UsageTable) => {
-            const searchStr = UsageTable._id.toLowerCase();
+          .filter((UsageModel: UsageModel) => {
+            const searchStr = UsageModel._id.toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
 
@@ -358,7 +357,7 @@ export class UsageDataSource extends DataSource<UsageTable> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: UsageTable[]): UsageTable[] {
+  sortData(data: UsageModel[]): UsageModel[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }

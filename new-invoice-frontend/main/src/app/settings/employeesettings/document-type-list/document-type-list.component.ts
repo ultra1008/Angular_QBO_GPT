@@ -15,7 +15,7 @@ import {
   swalWithBootstrapButtons,
   swalWithBootstrapTwoButtons,
 } from 'src/consts/utils';
-import { DocumentTypeTable } from '../../settings.model';
+import { DocumentTypeModel } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
 import { DocumentTypeFormComponent } from './document-type-form/document-type-form.component';
 import { CommonService } from 'src/app/services/common.service';
@@ -32,9 +32,9 @@ export class DocumentTypeListComponent
   displayedColumns = ['document_type_name', 'is_expiration', 'actions'];
   documentService?: SettingsService;
   dataSource!: DocumentTypeDataSource;
-  selection = new SelectionModel<DocumentTypeTable>(true, []);
+  selection = new SelectionModel<DocumentTypeModel>(true, []);
   id?: number;
-  // advanceTable?: DocumentTypeTable;
+  // advanceTable?: DocumentTypeModel;
   isDelete = 0;
   titleMessage = '';
 
@@ -146,7 +146,7 @@ export class DocumentTypeListComponent
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: DocumentTypeTable) {
+  onContextMenu(event: MouseEvent, item: DocumentTypeModel) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -157,7 +157,7 @@ export class DocumentTypeListComponent
     }
   }
 }
-export class DocumentTypeDataSource extends DataSource<DocumentTypeTable> {
+export class DocumentTypeDataSource extends DataSource<DocumentTypeModel> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -165,8 +165,8 @@ export class DocumentTypeDataSource extends DataSource<DocumentTypeTable> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: DocumentTypeTable[] = [];
-  renderedData: DocumentTypeTable[] = [];
+  filteredData: DocumentTypeModel[] = [];
+  renderedData: DocumentTypeModel[] = [];
   constructor (
     public documentService: SettingsService,
     public paginator: MatPaginator,
@@ -178,7 +178,7 @@ export class DocumentTypeDataSource extends DataSource<DocumentTypeTable> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<DocumentTypeTable[]> {
+  connect(): Observable<DocumentTypeModel[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this.documentService.documentTypeDataChange,
@@ -192,7 +192,7 @@ export class DocumentTypeDataSource extends DataSource<DocumentTypeTable> {
         // Filter data
         this.filteredData = this.documentService.documentTypeData
           .slice()
-          .filter((documentTable: DocumentTypeTable) => {
+          .filter((documentTable: DocumentTypeModel) => {
             const searchStr = (
               documentTable.document_type_name +
               documentTable.is_expiration
@@ -215,7 +215,7 @@ export class DocumentTypeDataSource extends DataSource<DocumentTypeTable> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: DocumentTypeTable[]): DocumentTypeTable[] {
+  sortData(data: DocumentTypeModel[]): DocumentTypeModel[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }

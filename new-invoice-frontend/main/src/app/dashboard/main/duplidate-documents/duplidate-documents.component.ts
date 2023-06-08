@@ -60,11 +60,8 @@ export class DuplidateDocumentsComponent extends UnsubscribeOnDestroyAdapter imp
   }
 
   // TOOLTIPS
-  getVendorNameTooltip(row: any) {
+  getVendorNameTooltip(row: ProcessDocument) {
     return row.vendor_data.vendor_name;
-  }
-  getApproverTooltip(row: any) {
-    return row.approver;
   }
 
   back() {

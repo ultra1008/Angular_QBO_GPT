@@ -92,7 +92,7 @@
                                     <mat-label>Client/Job Name</mat-label>
                                     <mat-select formControlName="job_client_name_ids" multiple>
                                         <mat-select-filter #clientListSelect [placeholder]="'Filter'"
-                                            [displayMember]="'client_name'" [array]="variablesClientList"
+                                            [displayMember]="'client_name'" [array]="variablesClientJob"
                                             (filteredReturn)="clientList =$event">
                                         </mat-select-filter>
                                         <mat-option *ngFor="let client of clientList" [value]="client._id">

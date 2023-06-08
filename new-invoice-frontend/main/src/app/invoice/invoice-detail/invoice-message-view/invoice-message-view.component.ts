@@ -9,8 +9,7 @@ import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { showNotification } from 'src/consts/utils';
 import * as  moment from "moment";
-import { User } from 'src/app/users/user.model';
-// import { HeaderComponent } from 'src/app/layout/header/header.component';
+import { UserModel } from 'src/app/users/user.model';
 
 @Component({
   selector: 'app-invoice-message-view',
@@ -34,11 +33,11 @@ export class InvoiceMessageViewComponent {
   toggled = false;
   emojiPickerDirection = "'top'";
 
-  userList: Array<User> = [];
+  userList: Array<UserModel> = [];
   mentionId = '';
   mentionUserName = '';
 
-  constructor(public commonService: CommonService, public route: ActivatedRoute, private formBuilder: FormBuilder,
+  constructor (public commonService: CommonService, public route: ActivatedRoute, private formBuilder: FormBuilder,
     public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, private router: Router,
     /* public headerComponent: HeaderComponent, */) {
     const userData = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA) ?? '{}');

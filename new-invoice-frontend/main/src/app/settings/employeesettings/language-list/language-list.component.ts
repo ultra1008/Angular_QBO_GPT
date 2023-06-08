@@ -11,7 +11,7 @@ import { fromEvent, BehaviorSubject, Observable, merge, map } from 'rxjs';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
-import { LanguageTable } from '../../settings.model';
+import { LanguageModel } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
 import { RelationshipFormComponent } from '../relationship-list/relationship-form/relationship-form.component';
 import { LanguageFormComponent } from './language-form/language-form.component';
@@ -29,9 +29,9 @@ export class LanguageListComponent
   displayedColumns = ['name', 'actions'];
   languageService?: SettingsService;
   dataSource!: LanguageDataSource;
-  selection = new SelectionModel<LanguageTable>(true, []);
+  selection = new SelectionModel<LanguageModel>(true, []);
   id?: number;
-  // advanceTable?: LanguageTable;
+  // advanceTable?: LanguageModel;
   isDelete = 0;
   titleMessage = '';
 
@@ -141,7 +141,7 @@ export class LanguageListComponent
     //     // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
     //     this.languageService?.dataChange.value.splice(index, 1);
     //     this.refreshTable();
-    //     this.selection = new SelectionModel<LanguageTable>(true, []);
+    //     this.selection = new SelectionModel<LanguageModel>(true, []);
     //   });
     //  showNotification(
     //     'snackbar-danger',
@@ -174,7 +174,7 @@ export class LanguageListComponent
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: LanguageTable) {
+  onContextMenu(event: MouseEvent, item: LanguageModel) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -185,7 +185,7 @@ export class LanguageListComponent
     }
   }
 }
-export class LanguageDataSource extends DataSource<LanguageTable> {
+export class LanguageDataSource extends DataSource<LanguageModel> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -193,8 +193,8 @@ export class LanguageDataSource extends DataSource<LanguageTable> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: LanguageTable[] = [];
-  renderedData: LanguageTable[] = [];
+  filteredData: LanguageModel[] = [];
+  renderedData: LanguageModel[] = [];
   constructor (
     public languageService: SettingsService,
     public paginator: MatPaginator,
@@ -206,7 +206,7 @@ export class LanguageDataSource extends DataSource<LanguageTable> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<LanguageTable[]> {
+  connect(): Observable<LanguageModel[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this.languageService.langDataChange,
@@ -220,8 +220,8 @@ export class LanguageDataSource extends DataSource<LanguageTable> {
         // Filter data
         this.filteredData = this.languageService.langData
           .slice()
-          .filter((LanguageTable: LanguageTable) => {
-            const searchStr = LanguageTable.name.toLowerCase();
+          .filter((LanguageModel: LanguageModel) => {
+            const searchStr = LanguageModel.name.toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
         // Sort filtered data
@@ -240,7 +240,7 @@ export class LanguageDataSource extends DataSource<LanguageTable> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: LanguageTable[]): LanguageTable[] {
+  sortData(data: LanguageModel[]): LanguageModel[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }

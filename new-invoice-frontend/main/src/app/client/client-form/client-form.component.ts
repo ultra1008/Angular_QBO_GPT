@@ -6,12 +6,13 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { CommonService } from 'src/app/services/common.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
-import { TermModel, CountryModel } from 'src/app/vendors/vendor.model';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { showNotification, swalWithBootstrapButtons, } from 'src/consts/utils';
 import { ClientService } from '../client.service';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { RolePermission } from 'src/consts/common.model';
+import { CostCodeModel, CountryModel, TermModel } from 'src/app/settings/settings.model';
+import { UserModel } from 'src/app/users/user.model';
 
 @Component({
   selector: 'app-client-form',
@@ -23,12 +24,12 @@ export class ClientFormComponent {
   hide = true;
   agree = false;
   customForm?: UntypedFormGroup;
-  variablestermList: any = [];
+  variablestermList: Array<TermModel> = [];
   termsList: Array<TermModel> = this.variablestermList.slice();
-  variablecostcodeList: any = [];
-  costcodeList: any = this.variablecostcodeList.slice();
-  variableapproverList: any = [];
-  approverList: any = this.variableapproverList.slice();
+  variablecostcodeList: Array<CostCodeModel> = [];
+  costcodeList: Array<CostCodeModel> = this.variablecostcodeList.slice();
+  variableapproverList: Array<UserModel> = [];
+  approverList: Array<UserModel> = this.variableapproverList.slice();
   countryList: Array<CountryModel> = [{ _id: 'USA', name: 'USA' }];
   id = '';
   isDelete = 1;
@@ -74,10 +75,7 @@ export class ClientFormComponent {
       this.vendorForm = this.fb.group({
         client_name: [clientData.client_name, [Validators.required]],
         client_number: [clientData.client_number],
-        client_email: [
-          clientData.client_email,
-          [Validators.required, Validators.email, Validators.minLength(5)],
-        ],
+        client_email: [clientData.client_email, [Validators.required, Validators.email, Validators.minLength(5)],],
         client_cost_cost_id: [clientData.client_cost_cost_id],
         approver_id: [clientData.approver_id],
         client_status: [clientData.client_status],

@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
-import { RoleModel, User } from './../user.model';
+import { RoleModel, UserModel } from './../user.model';
 import { UserService } from '../user.service';
 import { BehaviorSubject, Observable, fromEvent, merge } from 'rxjs';
 import { DataSource, SelectionModel } from '@angular/cdk/collections';
@@ -58,9 +58,9 @@ export class UsersListingComponent
   ];
   userService?: UserService;
   dataSource!: UserDataSource;
-  selection = new SelectionModel<User>(true, []);
+  selection = new SelectionModel<UserModel>(true, []);
   isDelete = 0;
-  advanceTable?: User;
+  advanceTable?: UserModel;
   titleMessage = '';
   roleLists: Array<RoleModel> = [];
   userSelectForm?: any;
@@ -113,22 +113,22 @@ export class UsersListingComponent
     this.router.navigate([WEB_ROUTES.USER_HISTORY]);
   }
   // TOOLTIP
-  getEmailTooltip(row: any) {
+  getEmailTooltip(row: UserModel) {
     return row.useremail;
   }
-  getNameTooltip(row: any) {
+  getNameTooltip(row: UserModel) {
     return row.userfullname;
   }
-  getPhoneTooltip(row: any) {
+  getPhoneTooltip(row: UserModel) {
     return row.userphone;
   }
-  getRoleTooltip(row: any) {
+  getRoleTooltip(row: UserModel) {
     return row.role_name;
   }
-  getJobTitleTooltip(row: any) {
+  getJobTitleTooltip(row: UserModel) {
     return row.userjob_title_name;
   }
-  getDepartmentTooltip(row: any) {
+  getDepartmentTooltip(row: UserModel) {
     return row.department_name;
   }
   onBookChange(ob: any) {
@@ -228,19 +228,19 @@ export class UsersListingComponent
     }
   }
 
-  async updateStatus(User: User) {
+  async updateStatus(user: UserModel) {
     let status = 1;
-    if (User.userstatus == 1) {
+    if (user.userstatus == 1) {
       status = 2;
     }
     const data = await this.commonService.postRequestAPI(
       httpversion.PORTAL_V1 + httproutes.PORTAL_USER_STATUS_UPDATE,
-      { _id: User._id, userstatus: status }
+      { _id: user._id, userstatus: status }
     );
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       const foundIndex = this.userService?.dataChange.value.findIndex(
-        (x) => x._id === User._id
+        (x) => x._id === user._id
       );
       if (foundIndex != null && this.userService) {
         this.userService.dataChange.value[foundIndex].userstatus = status;
@@ -301,7 +301,7 @@ export class UsersListingComponent
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: User) {
+  onContextMenu(event: MouseEvent, item: UserModel) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -358,7 +358,7 @@ export class UsersListingComponent
     localStorage.setItem(localstorageconstants.USER_DISPLAY, 'grid');
     this.router.navigate([WEB_ROUTES.USER_GRID]);
   }
-  async archiveRecover(user: User, is_delete: number) {
+  async archiveRecover(user: UserModel, is_delete: number) {
     const data = await this.commonService.postRequestAPI(
       httpversion.PORTAL_V1 + httproutes.USER_DELETE,
       { _id: user._id, is_delete: is_delete }
@@ -378,7 +378,7 @@ export class UsersListingComponent
     }
   }
 
-  async deleteUser(user: User, is_delete: number) {
+  async deleteUser(user: UserModel, is_delete: number) {
     if (is_delete == 1) {
       this.titleMessage = 'Are you sure you want to archive this user?';
     } else {
@@ -403,7 +403,7 @@ export class UsersListingComponent
       });
   }
 
-  addNew(user: User) {
+  addNew(user: UserModel) {
     const _id = user._id;
     const dialogRef = this.dialog.open(UserRestoreFormComponent, {
       data: _id,
@@ -416,7 +416,7 @@ export class UsersListingComponent
   addNewUser() {
     this.router.navigate([WEB_ROUTES.USER_FORM]);
   }
-  editUser(user: User) {
+  editUser(user: UserModel) {
 
     this.router.navigate([WEB_ROUTES.USER_FORM], {
       queryParams: { _id: user._id },
@@ -442,7 +442,7 @@ export class UsersListingComponent
       jsonData = workBook.SheetNames.reduce((initial: any, name: any) => {
         const sheet = workBook.Sheets[name];
         initial[name] = XLSX.utils.sheet_to_json(sheet);
-        let data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
         header_ = data.shift();
 
         return initial;
@@ -525,7 +525,7 @@ export class UsersListingComponent
 }
 
 // This class is used for datatable sorting and searching
-export class UserDataSource extends DataSource<User> {
+export class UserDataSource extends DataSource<UserModel> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -533,8 +533,8 @@ export class UserDataSource extends DataSource<User> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: User[] = [];
-  renderedData: User[] = [];
+  filteredData: UserModel[] = [];
+  renderedData: UserModel[] = [];
   constructor (
     public userService: UserService,
     public paginator: MatPaginator,
@@ -546,7 +546,7 @@ export class UserDataSource extends DataSource<User> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<User[]> {
+  connect(): Observable<UserModel[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this.userService.dataChange,
@@ -560,7 +560,7 @@ export class UserDataSource extends DataSource<User> {
         // Filter data
         this.filteredData = this.userService.data
           .slice()
-          .filter((advanceTable: User) => {
+          .filter((advanceTable: UserModel) => {
             const searchStr = (
               advanceTable.userfullname +
               advanceTable.useremail +
@@ -588,7 +588,7 @@ export class UserDataSource extends DataSource<User> {
   }
 
   /** Returns a sorted copy of the database data. */
-  sortData(data: User[]): User[] {
+  sortData(data: UserModel[]): UserModel[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }

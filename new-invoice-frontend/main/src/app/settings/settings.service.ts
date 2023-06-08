@@ -4,32 +4,31 @@ import { HttpCall } from '../services/httpcall.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { BehaviorSubject } from 'rxjs';
 import {
-  ClassNameTable,
-  CostCodeTable,
-  DepartmentTable,
-  DocumentTypeTable,
-  DocumentsTable,
-  JobNameTable,
-  JobTitleTable,
-  JobTypeTable,
-  LanguageTable,
-  MailboxTable,
-  RelationshipTable,
-  Settings,
-  TaxrateTable,
-  TermsTable,
-  UsageTable,
-  VendorTypeTable,
+  ClassNameModel,
+  CostCodeModel,
+  DeartmentModel,
+  DocumentTypeModel,
+  DocumentsModel,
+  JobNameModel,
+  JobTitleModel,
+  JobTypeModel,
+  LanguageModel,
+  MailboxModel,
+  RelationshipModel,
+  SettingsModel,
+  TaxRateModel,
+  TermModel,
+  UsageModel,
+  VendorTypeModel,
 } from './settings.model';
-import { TermModel } from '../vendors/vendor.model';
 
 @Injectable()
 export class SettingsService extends UnsubscribeOnDestroyAdapter {
   // Language Datatable Service
   isLangTblLoading = true;
-  langDataChange: BehaviorSubject<LanguageTable[]> = new BehaviorSubject<LanguageTable[]>([]);
+  langDataChange: BehaviorSubject<LanguageModel[]> = new BehaviorSubject<LanguageModel[]>([]);
 
-  get langData(): LanguageTable[] {
+  get langData(): LanguageModel[] {
     return this.langDataChange.value;
   }
 
@@ -41,9 +40,9 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
 
   // Department Datatable Service
   isDepartmentTblLoading = true;
-  departmentDataChange: BehaviorSubject<DepartmentTable[]> = new BehaviorSubject<DepartmentTable[]>([]);
+  departmentDataChange: BehaviorSubject<DeartmentModel[]> = new BehaviorSubject<DeartmentModel[]>([]);
 
-  get departmentData(): DepartmentTable[] {
+  get departmentData(): DeartmentModel[] {
     return this.departmentDataChange.value;
   }
 
@@ -55,9 +54,9 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
 
   // Document Type Datatable Service
   isDocumentTypeTblLoading = true;
-  documentTypeDataChange: BehaviorSubject<DocumentTypeTable[]> = new BehaviorSubject<DocumentTypeTable[]>([]);
+  documentTypeDataChange: BehaviorSubject<DocumentTypeModel[]> = new BehaviorSubject<DocumentTypeModel[]>([]);
 
-  get documentTypeData(): DocumentTypeTable[] {
+  get documentTypeData(): DocumentTypeModel[] {
     return this.documentTypeDataChange.value;
   }
 
@@ -69,9 +68,9 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
 
   // Job title Datatable Service
   isJobTitleTblLoading = true;
-  jobTitleDataChange: BehaviorSubject<JobTitleTable[]> = new BehaviorSubject<JobTitleTable[]>([]);
+  jobTitleDataChange: BehaviorSubject<JobTitleModel[]> = new BehaviorSubject<JobTitleModel[]>([]);
 
-  get jobTitleData(): JobTitleTable[] {
+  get jobTitleData(): JobTitleModel[] {
     return this.jobTitleDataChange.value;
   }
 
@@ -83,9 +82,9 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
 
   // Job type Datatable Service
   isJobTypeTblLoading = true;
-  jobTypeDataChange: BehaviorSubject<JobTypeTable[]> = new BehaviorSubject<JobTypeTable[]>([]);
+  jobTypeDataChange: BehaviorSubject<JobTypeModel[]> = new BehaviorSubject<JobTypeModel[]>([]);
 
-  get jobTypeData(): JobTypeTable[] {
+  get jobTypeData(): JobTypeModel[] {
     return this.jobTypeDataChange.value;
   }
 
@@ -97,9 +96,9 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
 
   // Relationship Datatable Service
   isRelationshipTblLoading = true;
-  relationshipDataChange: BehaviorSubject<RelationshipTable[]> = new BehaviorSubject<RelationshipTable[]>([]);
+  relationshipDataChange: BehaviorSubject<RelationshipModel[]> = new BehaviorSubject<RelationshipModel[]>([]);
 
-  get relationshipData(): RelationshipTable[] {
+  get relationshipData(): RelationshipModel[] {
     return this.relationshipDataChange.value;
   }
 
@@ -125,9 +124,9 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
 
   // Tax Rate Datatable Service
   isTaxRateTblLoading = true;
-  taxRateDataChange: BehaviorSubject<TaxrateTable[]> = new BehaviorSubject<TaxrateTable[]>([]);
+  taxRateDataChange: BehaviorSubject<TaxRateModel[]> = new BehaviorSubject<TaxRateModel[]>([]);
 
-  get taxRateData(): TaxrateTable[] {
+  get taxRateData(): TaxRateModel[] {
     return this.taxRateDataChange.value;
   }
 
@@ -139,9 +138,9 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
 
   // Document Datatable Service
   isDocumentTblLoading = true;
-  documentDataChange: BehaviorSubject<DocumentsTable[]> = new BehaviorSubject<DocumentsTable[]>([]);
+  documentDataChange: BehaviorSubject<DocumentsModel[]> = new BehaviorSubject<DocumentsModel[]>([]);
 
-  get documentData(): DocumentsTable[] {
+  get documentData(): DocumentsModel[] {
     return this.documentDataChange.value;
   }
 
@@ -153,9 +152,9 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
 
   // Vendor Type Datatable Service
   isVendorTypeTblLoading = true;
-  vendorTypeDataChange: BehaviorSubject<VendorTypeTable[]> = new BehaviorSubject<VendorTypeTable[]>([]);
+  vendorTypeDataChange: BehaviorSubject<VendorTypeModel[]> = new BehaviorSubject<VendorTypeModel[]>([]);
 
-  get vendorTypeData(): VendorTypeTable[] {
+  get vendorTypeData(): VendorTypeModel[] {
     return this.vendorTypeDataChange.value;
   }
 
@@ -167,9 +166,9 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
 
   // Class Name Datatable Service
   isClassNameTblLoading = true;
-  classNameDataChange: BehaviorSubject<ClassNameTable[]> = new BehaviorSubject<ClassNameTable[]>([]);
+  classNameDataChange: BehaviorSubject<ClassNameModel[]> = new BehaviorSubject<ClassNameModel[]>([]);
 
-  get classNameData(): ClassNameTable[] {
+  get classNameData(): ClassNameModel[] {
     return this.classNameDataChange.value;
   }
 
@@ -181,9 +180,9 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
 
   // Cost Code Datatable Service
   isCostCodeTblLoading = true;
-  costCodeDataChange: BehaviorSubject<CostCodeTable[]> = new BehaviorSubject<CostCodeTable[]>([]);
+  costCodeDataChange: BehaviorSubject<CostCodeModel[]> = new BehaviorSubject<CostCodeModel[]>([]);
 
-  get costCodeData(): CostCodeTable[] {
+  get costCodeData(): CostCodeModel[] {
     return this.costCodeDataChange.value;
   }
 
@@ -195,9 +194,9 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
 
   // Mail Box Datatable Service
   isMailBoxTblLoading = true;
-  mailBoxDataChange: BehaviorSubject<MailboxTable[]> = new BehaviorSubject<MailboxTable[]>([]);
+  mailBoxDataChange: BehaviorSubject<MailboxModel[]> = new BehaviorSubject<MailboxModel[]>([]);
 
-  get mailBoxData(): MailboxTable[] {
+  get mailBoxData(): MailboxModel[] {
     return this.mailBoxDataChange.value;
   }
 
@@ -220,126 +219,126 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
 
 
   // private readonly API_URL = 'assets/data/advanceTable.json';
-  // dataChange: BehaviorSubject<Settings[]> = new BehaviorSubject<Settings[]>([]);
+  // dataChange: BehaviorSubject<SettingsModel[]> = new BehaviorSubject<SettingsModel[]>([]);
   // Temporarily stores data from dialogs
   dialogData!: any;
   isTblLoading = true;
   isDoctyeTblLoading = true;
-  dataChange: BehaviorSubject<MailboxTable[]> = new BehaviorSubject<
-    MailboxTable[]
+  dataChange: BehaviorSubject<MailboxModel[]> = new BehaviorSubject<
+    MailboxModel[]
   >([]);
 
-  dataCostCodeChange: BehaviorSubject<CostCodeTable[]> = new BehaviorSubject<
-    CostCodeTable[]
+  dataCostCodeChange: BehaviorSubject<CostCodeModel[]> = new BehaviorSubject<
+    CostCodeModel[]
   >([]);
 
-  dataUsageChange: BehaviorSubject<UsageTable[]> = new BehaviorSubject<
-    UsageTable[]
+  dataUsageChange: BehaviorSubject<UsageModel[]> = new BehaviorSubject<
+    UsageModel[]
   >([]);
 
-  dataDocumentTypeChange: BehaviorSubject<DocumentTypeTable[]> = new BehaviorSubject<DocumentTypeTable[]>([]);
+  dataDocumentTypeChange: BehaviorSubject<DocumentTypeModel[]> = new BehaviorSubject<DocumentTypeModel[]>([]);
 
-  dataDepartmentChange: BehaviorSubject<DepartmentTable[]> =
-    new BehaviorSubject<DepartmentTable[]>([]);
+  dataDepartmentChange: BehaviorSubject<DeartmentModel[]> =
+    new BehaviorSubject<DeartmentModel[]>([]);
 
-  dataJobTitleChange: BehaviorSubject<JobTitleTable[]> = new BehaviorSubject<
-    JobTitleTable[]
+  dataJobTitleChange: BehaviorSubject<JobTitleModel[]> = new BehaviorSubject<
+    JobTitleModel[]
   >([]);
 
-  dataJobTypeChange: BehaviorSubject<JobTypeTable[]> = new BehaviorSubject<
-    JobTypeTable[]
+  dataJobTypeChange: BehaviorSubject<JobTypeModel[]> = new BehaviorSubject<
+    JobTypeModel[]
   >([]);
 
-  dataRelationShipChange: BehaviorSubject<RelationshipTable[]> =
-    new BehaviorSubject<RelationshipTable[]>([]);
+  dataRelationShipChange: BehaviorSubject<RelationshipModel[]> =
+    new BehaviorSubject<RelationshipModel[]>([]);
 
-  dataLanguageChange: BehaviorSubject<LanguageTable[]> = new BehaviorSubject<
-    LanguageTable[]
+  dataLanguageChange: BehaviorSubject<LanguageModel[]> = new BehaviorSubject<
+    LanguageModel[]
   >([]);
 
-  dataTermsChange: BehaviorSubject<TermsTable[]> = new BehaviorSubject<
-    TermsTable[]
+  dataTermsChange: BehaviorSubject<TermModel[]> = new BehaviorSubject<
+    TermModel[]
   >([]);
 
-  dataTaxrateChange: BehaviorSubject<TaxrateTable[]> = new BehaviorSubject<
-    TaxrateTable[]
+  dataTaxrateChange: BehaviorSubject<TaxRateModel[]> = new BehaviorSubject<
+    TaxRateModel[]
   >([]);
 
-  dataDocumentsChange: BehaviorSubject<DocumentsTable[]> = new BehaviorSubject<
-    DocumentsTable[]
+  dataDocumentsChange: BehaviorSubject<DocumentsModel[]> = new BehaviorSubject<
+    DocumentsModel[]
   >([]);
 
-  dataVendortypeChange: BehaviorSubject<VendorTypeTable[]> =
-    new BehaviorSubject<VendorTypeTable[]>([]);
+  dataVendortypeChange: BehaviorSubject<VendorTypeModel[]> =
+    new BehaviorSubject<VendorTypeModel[]>([]);
 
-  dataJobnameChange: BehaviorSubject<JobNameTable[]> = new BehaviorSubject<
-    JobNameTable[]
+  dataJobnameChange: BehaviorSubject<JobNameModel[]> = new BehaviorSubject<
+    JobNameModel[]
   >([]);
 
-  dataclassnameChange: BehaviorSubject<ClassNameTable[]> = new BehaviorSubject<
-    ClassNameTable[]
+  dataclassnameChange: BehaviorSubject<ClassNameModel[]> = new BehaviorSubject<
+    ClassNameModel[]
   >([]);
 
-  constructor(private httpCall: HttpCall) {
+  constructor (private httpCall: HttpCall) {
     super();
   }
-  get data(): MailboxTable[] {
+  get data(): MailboxModel[] {
     return this.dataChange.value;
   }
 
-  get datacostcode(): CostCodeTable[] {
+  get datacostcode(): CostCodeModel[] {
     return this.dataCostCodeChange.value;
   }
 
-  get datausage(): UsageTable[] {
+  get datausage(): UsageModel[] {
     return this.dataUsageChange.value;
   }
 
-  get datadocumenttype(): DocumentTypeTable[] {
+  get datadocumenttype(): DocumentTypeModel[] {
     return this.dataDocumentTypeChange.value;
   }
 
-  get datadepartment(): DepartmentTable[] {
+  get datadepartment(): DeartmentModel[] {
     return this.dataDepartmentChange.value;
   }
 
-  get datajobtitle(): JobTitleTable[] {
+  get datajobtitle(): JobTitleModel[] {
     return this.dataJobTitleChange.value;
   }
 
-  get datajobtype(): JobTypeTable[] {
+  get datajobtype(): JobTypeModel[] {
     return this.dataJobTypeChange.value;
   }
 
-  get dataRelationship(): RelationshipTable[] {
+  get dataRelationship(): RelationshipModel[] {
     return this.dataRelationShipChange.value;
   }
 
-  get dataLanguage(): LanguageTable[] {
+  get dataLanguage(): LanguageModel[] {
     return this.dataLanguageChange.value;
   }
 
-  get dataTerms(): TermsTable[] {
+  get dataTerms(): TermModel[] {
     return this.dataTermsChange.value;
   }
 
-  get dataTaxrate(): TaxrateTable[] {
+  get dataTaxrate(): TaxRateModel[] {
     return this.dataTaxrateChange.value;
   }
 
-  get dataDocuments(): DocumentsTable[] {
+  get dataDocuments(): DocumentsModel[] {
     return this.dataDocumentsChange.value;
   }
 
-  get dataVendortype(): VendorTypeTable[] {
+  get dataVendortype(): VendorTypeModel[] {
     return this.dataVendortypeChange.value;
   }
 
-  get dataJobname(): JobNameTable[] {
+  get dataJobname(): JobNameModel[] {
     return this.dataJobnameChange.value;
   }
 
-  get dataClassname(): ClassNameTable[] {
+  get dataClassname(): ClassNameModel[] {
     return this.dataclassnameChange.value;
   }
 
@@ -855,7 +854,7 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     return data;
   }
 
-  addAdvanceTable(Document: Settings): void {
+  addAdvanceTable(Document: SettingsModel): void {
     this.dialogData = Document;
   }
 

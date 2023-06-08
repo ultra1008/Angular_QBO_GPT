@@ -3,8 +3,8 @@ import { UnsubscribeOnDestroyAdapter } from '../shared/UnsubscribeOnDestroyAdapt
 import { BehaviorSubject } from 'rxjs';
 import { httpversion, httproutes } from 'src/consts/httproutes';
 import { HttpCall } from '../services/httpcall.service';
-import { Vendor } from '../vendors/vendor.model';
-import { ClientList } from './client.model';
+import { VendorModel } from '../vendors/vendor.model';
+import { ClientJobModel } from './client.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,21 +12,21 @@ import { ClientList } from './client.model';
 export class ClientService extends UnsubscribeOnDestroyAdapter {
   private readonly API_URL = 'assets/data/advanceTable.json';
   isTblLoading = true;
-  dataChange: BehaviorSubject<Vendor[]> = new BehaviorSubject<Vendor[]>([]);
+  dataChange: BehaviorSubject<VendorModel[]> = new BehaviorSubject<VendorModel[]>([]);
 
-  dataClientChange: BehaviorSubject<ClientList[]> = new BehaviorSubject<
-    ClientList[]
+  dataClientChange: BehaviorSubject<ClientJobModel[]> = new BehaviorSubject<
+    ClientJobModel[]
   >([]);
   // Temporarily stores data from dialogs
-  dialogData!: Vendor;
+  dialogData!: VendorModel;
   constructor (private httpCall: HttpCall) {
     super();
   }
-  get data(): Vendor[] {
+  get data(): VendorModel[] {
     return this.dataChange.value;
   }
 
-  get dataClient(): ClientList[] {
+  get dataClient(): ClientJobModel[] {
     return this.dataClientChange.value;
   }
 

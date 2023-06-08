@@ -12,7 +12,7 @@ import { showNotification } from 'src/consts/utils';
 export class RolesettingsComponent {
   allRoles: any = [];
   roleName: any;
-  constructor(private router: Router, public httpCall: HttpCall) { }
+  constructor (private router: Router, public httpCall: HttpCall) { }
 
   ngOnInit() {
     this.getAllRoles();
@@ -46,7 +46,7 @@ export class RolesettingsComponent {
     if (rName == 'Admin') {
       this.roleName = 'Admin';
     } else if (rName == 'Manager') {
-      this.roleName = 'Admin Without Settings';
+      this.roleName = 'Admin Without SettingsModel';
     } else {
       this.roleName = '';
     }

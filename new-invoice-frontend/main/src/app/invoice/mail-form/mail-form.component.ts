@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 import { CommonService } from 'src/app/services/common.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { DepartmentFormComponent } from 'src/app/settings/employeesettings/department-list/department-form/department-form.component';
-import { AdvanceTable, User } from 'src/app/users/user.model';
+import { AdvanceTable, UserModel } from 'src/app/users/user.model';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { icon } from 'src/consts/icon';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
@@ -33,11 +33,11 @@ export class MailFormComponent {
   invoice_logo = icon.INVOICE_LOGO;
 
 
-  titleMessage: string = '';
-  variablesUserList: any = [];
-  userList: Array<User> = this.variablesUserList.slice();
-  variablesUserToList: any = [];
-  usertoList: Array<User> = this.variablesUserToList.slice();
+  titleMessage = '';
+  variablesUserList: Array<UserModel> = [];
+  userList: Array<UserModel> = this.variablesUserList.slice();
+  variablesUserToList: Array<UserModel> = [];
+  usertoList: Array<UserModel> = this.variablesUserToList.slice();
   isDelete = 0;
   SmtpEmail: any;
   removable = true;

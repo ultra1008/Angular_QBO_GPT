@@ -15,7 +15,7 @@ import {
   timeDateToepoch,
 } from 'src/consts/utils';
 import { SelectionModel } from '@angular/cdk/collections';
-import { AdvanceTable, RoleModel, User } from '../user.model';
+import { AdvanceTable, RoleModel, UserModel } from '../user.model';
 import { UserRestoreFormComponent } from '../user-restore-form/user-restore-form.component';
 import { UserReportComponent } from '../user-report/user-report.component';
 import {
@@ -46,7 +46,7 @@ export class UserGridComponent
   active_word = 'Active';
   inactive_word = 'Inactive';
   titleMessage = '';
-  selection = new SelectionModel<User>(true, []);
+  selection = new SelectionModel<UserModel>(true, []);
   advanceTable?: AdvanceTable;
   roleLists: Array<RoleModel> = [];
   username_search: any;
@@ -90,8 +90,7 @@ export class UserGridComponent
     return timeDateToepoch(date);
   }
 
-  editUser(user: User) {
-
+  editUser(user: UserModel) {
     this.router.navigate([WEB_ROUTES.USER_FORM], {
       queryParams: { _id: user._id },
     });
@@ -139,7 +138,7 @@ export class UserGridComponent
     this.getUser();
   }
 
-  async archiveRecover(user: User, is_delete: number) {
+  async archiveRecover(user: UserModel, is_delete: number) {
     const data = await this.commonService.postRequestAPI(
       httpversion.PORTAL_V1 + httproutes.USER_DELETE,
       { _id: user._id, is_delete: is_delete }
@@ -152,7 +151,7 @@ export class UserGridComponent
     }
   }
 
-  async deleteUser(user: User, is_delete: number) {
+  async deleteUser(user: UserModel, is_delete: number) {
     if (is_delete == 1) {
       this.titleMessage = 'Are you sure you want to archive this user?';
     } else {
@@ -173,7 +172,7 @@ export class UserGridComponent
       });
   }
 
-  addNew(user: User) {
+  addNew(user: UserModel) {
     this.titleMessage = 'Are you sure you want to restore this user?';
     swalWithBootstrapTwoButtons
       .fire({

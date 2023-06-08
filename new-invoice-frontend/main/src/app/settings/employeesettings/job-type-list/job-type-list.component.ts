@@ -11,7 +11,7 @@ import { fromEvent, BehaviorSubject, Observable, merge, map } from 'rxjs';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
-import { JobTypeTable } from '../../settings.model';
+import { JobTypeModel } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
 import { JobTypeFormComponent } from './job-type-form/job-type-form.component';
 import { CommonService } from 'src/app/services/common.service';
@@ -28,9 +28,9 @@ export class JobTypeListComponent
   displayedColumns = ['job_type_name', 'actions'];
   jobtypeService?: SettingsService;
   dataSource!: JobTypeDataSource;
-  selection = new SelectionModel<JobTypeTable>(true, []);
+  selection = new SelectionModel<JobTypeModel>(true, []);
   id?: number;
-  // advanceTable?: JobTypeTable;
+  // advanceTable?: JobTypeModel;
   isDelete = 0;
   titleMessage = '';
 
@@ -54,7 +54,7 @@ export class JobTypeListComponent
     this.router.navigate(['/settings/mailbox-form']);
   }
 
-  editMailbox(mailbox: JobTypeTable) {
+  editMailbox(mailbox: JobTypeModel) {
     this.router.navigate(['/settings/mailbox-form'], {
       queryParams: { _id: mailbox._id },
     });
@@ -142,7 +142,7 @@ export class JobTypeListComponent
     //     // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
     //     this.jobtypeService?.dataChange.value.splice(index, 1);
     //     this.refreshTable();
-    //     this.selection = new SelectionModel<JobTypeTable>(true, []);
+    //     this.selection = new SelectionModel<JobTypeModel>(true, []);
     //   });
     //  showNotification(
     //     'snackbar-danger',
@@ -174,7 +174,7 @@ export class JobTypeListComponent
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: JobTypeTable) {
+  onContextMenu(event: MouseEvent, item: JobTypeModel) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -185,7 +185,7 @@ export class JobTypeListComponent
     }
   }
 }
-export class JobTypeDataSource extends DataSource<JobTypeTable> {
+export class JobTypeDataSource extends DataSource<JobTypeModel> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -193,8 +193,8 @@ export class JobTypeDataSource extends DataSource<JobTypeTable> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: JobTypeTable[] = [];
-  renderedData: JobTypeTable[] = [];
+  filteredData: JobTypeModel[] = [];
+  renderedData: JobTypeModel[] = [];
   constructor (
     public jobtypeService: SettingsService,
     public paginator: MatPaginator,
@@ -206,7 +206,7 @@ export class JobTypeDataSource extends DataSource<JobTypeTable> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<JobTypeTable[]> {
+  connect(): Observable<JobTypeModel[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this.jobtypeService.jobTypeDataChange,
@@ -220,8 +220,8 @@ export class JobTypeDataSource extends DataSource<JobTypeTable> {
         // Filter data
         this.filteredData = this.jobtypeService.jobTypeData
           .slice()
-          .filter((JobTypeTable: JobTypeTable) => {
-            const searchStr = JobTypeTable.job_type_name.toLowerCase();
+          .filter((JobTypeModel: JobTypeModel) => {
+            const searchStr = JobTypeModel.job_type_name.toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
         // Sort filtered data
@@ -240,7 +240,7 @@ export class JobTypeDataSource extends DataSource<JobTypeTable> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: JobTypeTable[]): JobTypeTable[] {
+  sortData(data: JobTypeModel[]): JobTypeModel[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }

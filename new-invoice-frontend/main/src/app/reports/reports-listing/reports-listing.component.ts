@@ -3,7 +3,6 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { BehaviorSubject, Observable, fromEvent, map, merge } from 'rxjs';
 import { ReportService } from '../report.service';
-import { httproutes, httpversion } from 'src/consts/httproutes';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -17,7 +16,6 @@ import { MatSort } from '@angular/material/sort';
 import { DataSource, SelectionModel } from '@angular/cdk/collections';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { WEB_ROUTES } from 'src/consts/routes';
-import { Vendor } from 'src/app/vendors/vendor.model';
 import { configData } from 'src/environments/configData';
 import { TableElement } from 'src/app/shared/TableElement';
 import { formatDate } from '@angular/common';
@@ -78,11 +76,11 @@ export class ReportsListingComponent extends UnsubscribeOnDestroyAdapter impleme
     this.loadData();
   }
 
-  getVendorNameTooltip(row: any) {
+  getVendorNameTooltip(row: Report) {
     return row.vendor_data?.vendor_name;
   }
-  getApproverTooltip(row: any) {
-    return row.approver;
+  getApproverTooltip(row: Report) {
+    return row.assign_to_data?.userfullname;
   }
 
   editInvoice(row: Report) {

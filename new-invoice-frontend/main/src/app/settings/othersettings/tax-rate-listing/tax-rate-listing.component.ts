@@ -11,7 +11,7 @@ import { fromEvent, BehaviorSubject, Observable, merge, map } from 'rxjs';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
-import { TaxrateTable } from '../../settings.model';
+import { TaxRateModel } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
 import { TermsFormComponent } from '../terms-listing/terms-form/terms-form.component';
 import { TaxRateFormComponent } from './tax-rate-form/tax-rate-form.component';
@@ -27,12 +27,12 @@ export class TaxRateListingComponent extends UnsubscribeOnDestroyAdapter impleme
   displayedColumns = ['name', 'actions'];
   taxrateService?: SettingsService;
   dataSource!: TaxrateDataSource;
-  selection = new SelectionModel<TaxrateTable>(true, []);
+  selection = new SelectionModel<TaxRateModel>(true, []);
   id?: number;
   isDelete = 0;
   titleMessage = '';
 
-  constructor(public dialog: MatDialog, public SettingsService: SettingsService, private snackBar: MatSnackBar,
+  constructor (public dialog: MatDialog, public SettingsService: SettingsService, private snackBar: MatSnackBar,
     public router: Router, private httpCall: HttpCall, public translate: TranslateService, private commonService: CommonService,) {
     super();
   }
@@ -130,7 +130,7 @@ export class TaxRateListingComponent extends UnsubscribeOnDestroyAdapter impleme
     //     // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
     //     this.taxrateService?.dataChange.value.splice(index, 1);
     //     this.refreshTable();
-    //     this.selection = new SelectionModel<TaxrateTable>(true, []);
+    //     this.selection = new SelectionModel<TaxRateModel>(true, []);
     //   });
     //  showNotification(
     //     'snackbar-danger',
@@ -162,7 +162,7 @@ export class TaxRateListingComponent extends UnsubscribeOnDestroyAdapter impleme
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: TaxrateTable) {
+  onContextMenu(event: MouseEvent, item: TaxRateModel) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -173,7 +173,7 @@ export class TaxRateListingComponent extends UnsubscribeOnDestroyAdapter impleme
     }
   }
 }
-export class TaxrateDataSource extends DataSource<TaxrateTable> {
+export class TaxrateDataSource extends DataSource<TaxRateModel> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -181,9 +181,9 @@ export class TaxrateDataSource extends DataSource<TaxrateTable> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: TaxrateTable[] = [];
-  renderedData: TaxrateTable[] = [];
-  constructor(
+  filteredData: TaxRateModel[] = [];
+  renderedData: TaxRateModel[] = [];
+  constructor (
     public taxrateService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
@@ -194,7 +194,7 @@ export class TaxrateDataSource extends DataSource<TaxrateTable> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<TaxrateTable[]> {
+  connect(): Observable<TaxRateModel[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this.taxrateService.taxRateDataChange,
@@ -208,8 +208,8 @@ export class TaxrateDataSource extends DataSource<TaxrateTable> {
         // Filter data
         this.filteredData = this.taxrateService.taxRateData
           .slice()
-          .filter((TaxrateTable: TaxrateTable) => {
-            const searchStr = TaxrateTable.name.toLowerCase();
+          .filter((TaxRateModel: TaxRateModel) => {
+            const searchStr = TaxRateModel.name.toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
         // Sort filtered data
@@ -228,7 +228,7 @@ export class TaxrateDataSource extends DataSource<TaxrateTable> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: TaxrateTable[]): TaxrateTable[] {
+  sortData(data: TaxRateModel[]): TaxRateModel[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }

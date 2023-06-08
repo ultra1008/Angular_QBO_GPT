@@ -14,21 +14,11 @@ import { TableExportUtil } from 'src/app/shared/tableExportUtil';
 import { TableElement } from 'src/app/shared/TableElement';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { VendorsService } from '../vendors.service';
-import { TermModel, Vendor } from '../vendor.model';
+import { VendorModel } from '../vendor.model';
 import { Router } from '@angular/router';
 import { HttpCall } from 'src/app/services/httpcall.service';
-import {
-  commonNewtworkAttachmentViewer,
-  formateAmount,
-  gallery_options,
-  showNotification,
-  swalWithBootstrapTwoButtons,
-} from 'src/consts/utils';
-import {
-  NgxGalleryComponent,
-  NgxGalleryImage,
-  NgxGalleryOptions,
-} from 'ngx-gallery-9';
+import { commonNewtworkAttachmentViewer, formateAmount, gallery_options, showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
+import { NgxGalleryComponent, NgxGalleryImage, NgxGalleryOptions } from 'ngx-gallery-9';
 import { VendorReportComponent } from '../vendor-report/vendor-report.component';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { TranslateService } from '@ngx-translate/core';
@@ -42,7 +32,7 @@ import { VendorExistListComponent } from '../vendor-exist-list/vendor-exist-list
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import * as XLSX from 'xlsx';
 import { RolePermission } from 'src/consts/common.model';
-
+import { TermModel } from 'src/app/settings/settings.model';
 @Component({
   selector: 'app-vendors-list',
   templateUrl: './vendors-list.component.html',
@@ -60,7 +50,7 @@ export class VendorsListComponent
   displayedColumns = ['select', 'vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'amount_paid', 'amount_open', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions',];
   vendorService?: VendorsService;
   dataSource!: VendorDataSource;
-  selection = new SelectionModel<Vendor>(true, []);
+  selection = new SelectionModel<VendorModel>(true, []);
   id?: number;
   isDelete = 0;
   termsList: Array<TermModel> = [];
@@ -142,22 +132,17 @@ export class VendorsListComponent
     this.router.navigate([WEB_ROUTES.VENDOR_GRID]);
   }
   // TOOLTIPS
-  getTooltip(row: any) {
+  getTooltip(row: VendorModel) {
     return row.vendor_email;
   }
-  getAddTooltip(row: any) {
+  getAddTooltip(row: VendorModel) {
     return row.vendor_address;
   }
-  getNameTooltip(row: any) {
+  getNameTooltip(row: VendorModel) {
     return row.vendor_name;
   }
-  // getCustomerIdTooltip(row: any) {
-  //   return row.customer_id;
-  // }
-  // getVendorIdTooltip(row: any) {
-  //   return row.vendor_id;
-  // }
-  getPhonTooltip(row: any) {
+
+  getPhonTooltip(row: VendorModel) {
     return row.vendor_phone;
   }
 
@@ -266,7 +251,7 @@ export class VendorsListComponent
     this.router.navigate([WEB_ROUTES.VENDOR_FORM]);
   }
 
-  editVendor(vendor: Vendor) {
+  editVendor(vendor: VendorModel) {
 
     this.router.navigate([WEB_ROUTES.VENDOR_FORM], {
       queryParams: { _id: vendor._id },
@@ -418,7 +403,7 @@ export class VendorsListComponent
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: Vendor) {
+  onContextMenu(event: MouseEvent, item: VendorModel) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -428,7 +413,7 @@ export class VendorsListComponent
       this.contextMenu.openMenu();
     }
   }
-  async updateStatus(vendor: Vendor) {
+  async updateStatus(vendor: VendorModel) {
     let status = 1;
     if (vendor.vendor_status == 1) {
       status = 2;
@@ -451,7 +436,7 @@ export class VendorsListComponent
     }
   }
 
-  async archiveRecover(vendor: Vendor, is_delete: number) {
+  async archiveRecover(vendor: VendorModel, is_delete: number) {
     const data = await this.commonService.postRequestAPI(
       httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_DELETE,
       { _id: vendor._id, is_delete: is_delete }
@@ -471,7 +456,7 @@ export class VendorsListComponent
     }
   }
 
-  async deleteVendor(vendor: Vendor, is_delete: number) {
+  async deleteVendor(vendor: VendorModel, is_delete: number) {
     if (is_delete == 1) {
       this.titleMessage = this.translate.instant(
         'VENDOR.CONFIRMATION_DIALOG.ARCHIVE'
@@ -515,7 +500,7 @@ export class VendorsListComponent
   }
 
   // View Network Attachment
-  viewAttachment(vendor: Vendor) {
+  viewAttachment(vendor: VendorModel) {
     this.galleryImages = commonNewtworkAttachmentViewer(
       vendor.vendor_attachment
     );
@@ -556,7 +541,7 @@ export class VendorsListComponent
 }
 
 // This class is used for datatable sorting and searching
-export class VendorDataSource extends DataSource<Vendor> {
+export class VendorDataSource extends DataSource<VendorModel> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -564,8 +549,8 @@ export class VendorDataSource extends DataSource<Vendor> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: Vendor[] = [];
-  renderedData: Vendor[] = [];
+  filteredData: VendorModel[] = [];
+  renderedData: VendorModel[] = [];
   constructor (
     public vendorService: VendorsService,
     public paginator: MatPaginator,
@@ -577,7 +562,7 @@ export class VendorDataSource extends DataSource<Vendor> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<Vendor[]> {
+  connect(): Observable<VendorModel[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this.vendorService.dataChange,
@@ -591,17 +576,17 @@ export class VendorDataSource extends DataSource<Vendor> {
         // Filter data
         this.filteredData = this.vendorService.data
           .slice()
-          .filter((vendorTable: Vendor) => {
+          .filter((vendor: VendorModel) => {
             const searchStr = (
-              vendorTable.vendor_name +
-              vendorTable.invoices +
-              vendorTable.open_invoices +
-              vendorTable.invoices_total +
-              vendorTable.open_invoices_total +
-              vendorTable.vendor_phone +
-              vendorTable.vendor_email +
-              vendorTable.vendor_address +
-              vendorTable.vendor_status
+              vendor.vendor_name +
+              vendor.invoices +
+              vendor.open_invoices +
+              vendor.invoices_total +
+              vendor.open_invoices_total +
+              vendor.vendor_phone +
+              vendor.vendor_email +
+              vendor.vendor_address +
+              vendor.vendor_status
             ).toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
@@ -621,7 +606,7 @@ export class VendorDataSource extends DataSource<Vendor> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: Vendor[]): Vendor[] {
+  sortData(data: VendorModel[]): VendorModel[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }

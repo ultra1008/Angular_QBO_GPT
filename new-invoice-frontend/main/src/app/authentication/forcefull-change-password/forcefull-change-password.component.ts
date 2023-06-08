@@ -14,6 +14,8 @@ import { Location } from '@angular/common';
 import { icon } from 'src/consts/icon';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { httproutes, httpversion } from 'src/consts/httproutes';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-forcefull-change-password',
@@ -21,11 +23,11 @@ import { localstorageconstants } from 'src/consts/localstorageconstants';
   styleUrls: ['./forcefull-change-password.component.scss'],
 })
 export class ForcefullChangePasswordComponent {
-  forcefullyPasswordInfo?: any;
+  forcefullyPasswordInfo!: UntypedFormGroup;
   hide = true;
-  hideOld: boolean = true;
-  hideNew: boolean = true;
-  hideConfirm: boolean = true;
+  hideOld = true;
+  hideNew = true;
+  hideConfirm = true;
   eyeButtonForOldPassword() {
     this.hideOld = !this.hideOld;
   }
@@ -44,6 +46,7 @@ export class ForcefullChangePasswordComponent {
     private authenticationService: AuthenticationService,
     private snackBar: MatSnackBar,
     private location: Location,
+    private commonService: CommonService,
   ) {
     this.initForm();
   }
@@ -91,11 +94,11 @@ export class ForcefullChangePasswordComponent {
     console.log('cantrol', control.value);
     console.log(
       'forcefully',
-      this.forcefullyPasswordInfo?.controls.password.value
+      this.forcefullyPasswordInfo?.controls['password'].value
     );
     if (
       this.forcefullyPasswordInfo &&
-      control.value !== this.forcefullyPasswordInfo?.controls.password.value
+      control.value !== this.forcefullyPasswordInfo?.controls['password'].value
     ) {
       return { passwordNotMatch: true };
     } else {
@@ -137,7 +140,7 @@ export class ForcefullChangePasswordComponent {
     }
     // console.log("call change passwoed", that.forcefullyPasswordInfo?.valid, that.forcefullyPasswordInfo?.value);
     if (that.forcefullyPasswordInfo?.valid) {
-      const data = await this.authenticationService.changePassword(reqObject);
+      const data = await this.commonService.postRequestAPI(httpversion.V1 + httproutes.CHANGEPASSWORD, reqObject);
       if (data.status) {
         this.authenticationService.changeLoginValue(false);
         localStorage.setItem(localstorageconstants.LOGOUT, 'false');

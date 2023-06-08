@@ -5,6 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { HttpCall } from 'src/app/services/httpcall.service';
+import { configData } from 'src/environments/configData';
 
 @Component({
   selector: 'app-custompdfviewer',
@@ -12,46 +13,12 @@ import { HttpCall } from 'src/app/services/httpcall.service';
   styleUrls: ['./custompdfviewer.component.scss']
 })
 export class CustompdfviewerComponent {
-  @Input() pdf_url: any;
+  @Input() pdf_url!: string;
 
-  isrefresh: boolean = false;
-  isspoStatusapprovepending: boolean = false;
-  isCertificateStatusPending: boolean = false;
-
-  Custom_Pdf_Viewer_Please_Confirm: string = "";
-  Custom_Pdf_Viewer_Want_Approve_Change_Order: string = "";
-  Compnay_Equipment_Delete_Yes: string = "";
-  Compnay_Equipment_Delete_No: string = "";
-  Custom_Pdf_Viewer_Want_Deny_Change_Order: string = "";
-
-  mode: any;
-  isDocumentEdit: boolean = false;
-  isDocumentDelete: boolean = false;
-  documentDeletValue: any;
-  editIcon: any;
-  deleteIcon: any;
-  restoreIcon: any;
-  Custom_Pdf_Viewer_Want_Approve_Owner_Direct_Purchase: string = '';
-  Custom_Pdf_Viewer_Want_Deny_Owner_Direct_Purchase: string = '';
-  Custom_Pdf_Viewer_Want_Accept_Vendor_Certificate: string = '';
-  Custom_Pdf_Viewer_Want_Reject_Vendor_Certificate: string = '';
-  documentTypes: any = {
-    invoice: 'INVOICE',
-    po: 'PURCHASE_ORDER',
-    packingSlip: 'PACKING_SLIP',
-    receivingSlip: 'RECEIVING_SLIP',
-    quote: 'QUOTE',
-  };
-  Archive_Orphan_Document_value: any = [];
-  Archive_Orphan_Document: any;
-  role_permission: any;
-  archivedIcon: any;
-  constructor(private location: Location, public route: ActivatedRoute, private router: Router,
-    public httpCall: HttpCall, public spinner: UiSpinnerService,
+  constructor (public route: ActivatedRoute, public httpCall: HttpCall, public spinner: UiSpinnerService,
     public translate: TranslateService, public dialog: MatDialog) {
-
-
   }
+
   print() {
     fetch(this.pdf_url).then(resp => resp.arrayBuffer()).then(resp => {
       /*--- set the blog type to final pdf ---*/
@@ -81,20 +48,4 @@ export class CustompdfviewerComponent {
     /*--- Remove the link when done ---*/
     document.body.removeChild(a);
   }
-
-
-
-  ngOnInit(): void {
-
-
-
-
-  }
-
-
-
-
-
-
-
 }

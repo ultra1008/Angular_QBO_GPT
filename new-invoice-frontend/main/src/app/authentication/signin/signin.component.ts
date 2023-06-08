@@ -14,6 +14,9 @@ import { Theme } from '@fullcalendar/core/internal';
 import { DOCUMENT } from '@angular/common';
 import { InConfiguration } from 'src/app/core/models/config.interface';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { CommonService } from 'src/app/services/common.service';
+import { httproutes, httpversion } from 'src/consts/httproutes';
+import { CompanyModel } from 'src/consts/common.model';
 export interface ChipColor {
   name: string;
   color: string;
@@ -44,16 +47,11 @@ export class SigninComponent implements OnInit {
     { name: 'Warn', color: 'warn' },
   ];
   showForm = false;
-  companyList: any = [];
+  companyList: Array<CompanyModel> = [];
 
-  constructor (
-    private formBuilder: UntypedFormBuilder,
-    private router: Router,
-    private authService: AuthService,
-    private AuthenticationService: AuthenticationService,
-    private snackBar: MatSnackBar,
-    private renderer: Renderer2,
-    @Inject(DOCUMENT) private document: Document
+  constructor (private formBuilder: UntypedFormBuilder, private router: Router, private authService: AuthService,
+    private AuthenticationService: AuthenticationService, private snackBar: MatSnackBar,
+    private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private commonService: CommonService,
   ) {
     //localStorage.setItem(localstorageconstants.DARKMODE, 'dark');
     setTimeout(() => {
@@ -121,9 +119,7 @@ export class SigninComponent implements OnInit {
   async getCompanySettings() {
     const formValues = this.authForm.value;
     // this.companyCode = 'R-' + formValues.companycode;
-    const data = await this.AuthenticationService.getCompanySettings(
-      this.companyCode
-    );
+    const data = await this.commonService.postRequestAPI(httpversion.V1 + httproutes.GET_COMPANY_SETTINGS, { companycode: this.companyCode });
     if (data.status) {
       this.showLogin = true;
       localStorage.setItem(localstorageconstants.COMPANYCODE, this.companyCode);
@@ -136,8 +132,7 @@ export class SigninComponent implements OnInit {
     }
     const formValues = this.authForm.value;
     // formValues.companycode = 'R-' + formValues.companycode;
-
-    const data = await this.AuthenticationService.checkUserCompany(formValues);
+    const data = await this.commonService.postRequestAPI(httpversion.V1 + httproutes.GET_USER_COMPANY, formValues);
     if (data.status) {
       if (data.data.length === 0) {
         showNotification(this.snackBar, 'Invalid email or password!', 'error');
@@ -226,13 +221,11 @@ export class SigninComponent implements OnInit {
     this.authForm.reset();
   }
 
-  async selectCompany(company: any) {
+  async selectCompany(company: CompanyModel) {
     const formValues = this.authForm.value;
     formValues.companycode = company.companycode;
-
-    const data = await this.AuthenticationService.userLogin(formValues);
+    const data = await this.commonService.postRequestAPI(httpversion.V1 + httproutes.USER_LOGIN, formValues);
     if (data.status) {
-
       showNotification(this.snackBar, data.message, 'success');
       if (data.data.UserData.useris_password_temp == true) {
         this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);

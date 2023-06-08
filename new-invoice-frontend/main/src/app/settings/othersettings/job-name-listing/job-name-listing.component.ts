@@ -11,7 +11,7 @@ import { fromEvent, BehaviorSubject, Observable, merge, map } from 'rxjs';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
-import { JobNameTable } from '../../settings.model';
+import { JobNameModel } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
 import { VendorTypeFormComponent } from '../vendor-type-listing/vendor-type-form/vendor-type-form.component';
 import { JobNameFormComponent } from './job-name-form/job-name-form.component';
@@ -27,7 +27,7 @@ export class JobNameListingComponent
   displayedColumns = ['name', 'email_contact', 'actions'];
   jobnameService?: SettingsService;
   dataSource!: JobNameDataSource;
-  selection = new SelectionModel<JobNameTable>(true, []);
+  selection = new SelectionModel<JobNameModel>(true, []);
   id?: number;
   isDelete = 0;
   titleMessage: string = '';
@@ -127,7 +127,7 @@ export class JobNameListingComponent
     //     // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
     //     this.jobnameService?.dataChange.value.splice(index, 1);
     //     this.refreshTable();
-    //     this.selection = new SelectionModel<JobNameTable>(true, []);
+    //     this.selection = new SelectionModel<JobNameModel>(true, []);
     //   });
     //  showNotification(
     //     'snackbar-danger',
@@ -159,7 +159,7 @@ export class JobNameListingComponent
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: JobNameTable) {
+  onContextMenu(event: MouseEvent, item: JobNameModel) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -170,7 +170,7 @@ export class JobNameListingComponent
     }
   }
 }
-export class JobNameDataSource extends DataSource<JobNameTable> {
+export class JobNameDataSource extends DataSource<JobNameModel> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -178,8 +178,8 @@ export class JobNameDataSource extends DataSource<JobNameTable> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: JobNameTable[] = [];
-  renderedData: JobNameTable[] = [];
+  filteredData: JobNameModel[] = [];
+  renderedData: JobNameModel[] = [];
   constructor (
     public jobnameService: SettingsService,
     public paginator: MatPaginator,
@@ -191,7 +191,7 @@ export class JobNameDataSource extends DataSource<JobNameTable> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<JobNameTable[]> {
+  connect(): Observable<JobNameModel[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this.jobnameService.dataJobnameChange,
@@ -205,9 +205,9 @@ export class JobNameDataSource extends DataSource<JobNameTable> {
         // Filter data
         this.filteredData = this.jobnameService.dataJobname
           .slice()
-          .filter((JobNameTable: JobNameTable) => {
+          .filter((JobNameModel: JobNameModel) => {
             const searchStr =
-              JobNameTable.name + JobNameTable.email_contact.toLowerCase();
+              JobNameModel.name + JobNameModel.email_contact.toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
         // Sort filtered data
@@ -226,7 +226,7 @@ export class JobNameDataSource extends DataSource<JobNameTable> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: JobNameTable[]): JobNameTable[] {
+  sortData(data: JobNameModel[]): JobNameModel[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }

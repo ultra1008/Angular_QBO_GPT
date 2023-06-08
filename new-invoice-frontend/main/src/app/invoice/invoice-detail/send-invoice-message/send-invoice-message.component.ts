@@ -6,12 +6,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SwitchCompanyComponent } from 'src/app/layout/header/switch-company/switch-company.component';
 import { CommonService } from 'src/app/services/common.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
-import { User } from 'src/app/users/user.model';
+import { UserModel } from 'src/app/users/user.model';
 import { DialogData } from 'src/app/vendors/vendor-report/vendor-report.component';
 import { httpversion, httproutes } from 'src/consts/httproutes';
 import { icon } from 'src/consts/icon';
-import { localstorageconstants } from 'src/consts/localstorageconstants';
-import { WEB_ROUTES } from 'src/consts/routes';
 import { showNotification } from 'src/consts/utils';
 
 @Component({
@@ -24,7 +22,7 @@ export class SendInvoiceMessageComponent implements OnInit {
   form!: UntypedFormGroup;
   hide = true;
   variablesUserList: any = [];
-  userList: Array<User> = this.variablesUserList.slice();
+  userList: Array<UserModel> = this.variablesUserList.slice();
   id: any;
   invoice_logo = icon.INVOICE_LOGO;
   constructor (public dialogRef: MatDialogRef<SwitchCompanyComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData,

@@ -15,7 +15,6 @@ import {
 import { CommonService } from 'src/app/services/common.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { commonFileChangeEvent } from 'src/app/services/utils';
-import { TermModel, CountryModel } from 'src/app/vendors/vendor.model';
 import { VendorsService } from 'src/app/vendors/vendors.service';
 import { WEB_ROUTES } from 'src/consts/routes';
 import {
@@ -34,6 +33,7 @@ import { configData } from 'src/environments/configData';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { TranslateService } from '@ngx-translate/core';
+import { CountryModel, TermModel } from '../settings.model';
 
 @Component({
   selector: 'app-company-info-form',
@@ -80,7 +80,7 @@ export class CompanyInfoFormComponent {
   compnay_code: any;
   compnay_id: any;
 
-  constructor(
+  constructor (
     private fb: UntypedFormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,

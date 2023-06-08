@@ -1,16 +1,16 @@
-import { User } from "../users/user.model";
-import { Vendor } from "../vendors/vendor.model";
+import { UserModel } from "../users/user.model";
+import { VendorModel } from "../vendors/vendor.model";
 
 export class Invoice {
   _id: string;
   invoice_date_epoch: number;
   due_date_epoch: number;
-  vendor_data: Vendor;
-  vendor: Vendor;
+  vendor_data: VendorModel;
+  vendor: VendorModel;
   invoice_no: string;
   invoice_total_amount: string;
   sub_total: string;
-  assign_to_data: User;
+  assign_to_data: UserModel;
   status: string;
   constructor (invoice: Invoice) {
     {

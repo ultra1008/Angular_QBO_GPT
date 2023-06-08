@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonService } from 'src/app/services/common.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
-import { TermModel } from 'src/app/vendors/vendor.model';
+import { TermModel } from 'src/app/settings/settings.model';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { amountChange, epochToDateTime, numberWithCommas, showNotification } from 'src/consts/utils';
