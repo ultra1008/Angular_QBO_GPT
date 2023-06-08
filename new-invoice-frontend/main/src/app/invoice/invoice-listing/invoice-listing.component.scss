@@ -17,7 +17,7 @@
 ::ng-deep .mdc-data-table__cell,
 .mdc-data-table__header-cell {
     border: 1px solid #f8f8f8 !important;
-    padding: 0 0 0 24px !important;
+    //padding: 0 0 0 24px !important;
 }
 
 ::ng-deep .table {
@@ -34,7 +34,13 @@
 .tbl-col-width-per-action {
     min-width: 100px !important;
     max-width: 7% !important;
+    justify-content: center;
+}
 
+.tbl-col-width-per-quickbooks {
+    min-width: 50px !important;
+    max-width: 4% !important;
+    justify-content: center;
 }
 
 .tbl-col-width-per-mid {
