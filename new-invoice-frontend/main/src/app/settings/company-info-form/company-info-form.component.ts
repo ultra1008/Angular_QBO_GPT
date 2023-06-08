@@ -33,6 +33,7 @@ import { httproutes } from 'src/consts/httproutes';
 import { configData } from 'src/environments/configData';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-company-info-form',
@@ -79,7 +80,7 @@ export class CompanyInfoFormComponent {
   compnay_code: any;
   compnay_id: any;
 
-  constructor (
+  constructor(
     private fb: UntypedFormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
@@ -88,7 +89,8 @@ export class CompanyInfoFormComponent {
     private sanitiser: DomSanitizer,
     public httpCall: HttpCall,
     // public commonService: CommonService,
-    public SettingsServices: SettingsService
+    public SettingsServices: SettingsService,
+    public translate: TranslateService
   ) {
     this.getCompanyType();
     this.getCompanyNigp();
@@ -277,12 +279,12 @@ export class CompanyInfoFormComponent {
     swalWithBootstrapButtons
       .fire({
         title:
-          'Are you sure you want to close this window without saving changes?',
+          this.translate.instant('DOCUMENT.CONFIRMATION_DIALOG.SAVING'),
         showDenyButton: true,
         showCancelButton: true,
-        confirmButtonText: 'Save And Exit',
-        cancelButtonText: 'Dont Save',
-        denyButtonText: 'Cancel',
+        confirmButtonText: this.translate.instant('COMMON.ACTIONS.SAVE_EXIT'),
+        cancelButtonText: this.translate.instant('COMMON.ACTIONS.DONT_SAVE'),
+        denyButtonText: this.translate.instant('COMMON.ACTIONS.CANCEL'),
         allowOutsideClick: false,
       })
       .then((result) => {
