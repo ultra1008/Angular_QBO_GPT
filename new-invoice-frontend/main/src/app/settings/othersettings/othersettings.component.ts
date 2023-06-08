@@ -33,8 +33,8 @@ export class OthersettingsComponent implements OnInit {
   currrent_tab: any = 'Terms';
   tab_Array: any = [
     'Terms',
-    'Tax rate',
-    'Documents',
+    // 'Tax rate',
+    // 'Documents',
     'Vendor type',
     'Class name',
   ];
@@ -46,7 +46,7 @@ export class OthersettingsComponent implements OnInit {
   showVendorType = true;
   showClassName = true;
 
-  constructor (
+  constructor(
     private router: Router,
     public SettingsServices: SettingsService,
     private snackBar: MatSnackBar,

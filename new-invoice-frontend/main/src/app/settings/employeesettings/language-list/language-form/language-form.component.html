@@ -2,7 +2,7 @@
      <div class="mr-set">
           <div class="row">
                <div class="col-2">
-                    <img src="{{ invoice_logo }}" height="45px" width="45px" />
+                    <img src="{{ invoice_logo }}" height="57px" width="45px" />
                </div>
                <div class="col-8 align-div">
                     <div class="editRowModal">
@@ -10,7 +10,7 @@
 
                               <div class="modal-about">
                                    <div class="fw-bold p-t-5 p-l-10 font-17">
-                                        {{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.LANGUAGE' |  translate}}
+                                        {{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.LANGUAGE' | translate}}
                                    </div>
                               </div>
                          </div>
@@ -28,7 +28,8 @@
                <div class="row">
                     <div class=" col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                          <mat-form-field appearance="outline" class="example-full-width">
-                              <mat-label>{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.LANGUAGE' |  translate}}</mat-label>
+                              <mat-label>{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.LANGUAGE' | translate}}
+                              </mat-label>
                               <input matInput
                                    placeholder="{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.LANGUAGE' |  translate}}"
                                    formControlName="name" required>
@@ -41,10 +42,10 @@
                          <div class="example-button-row">
                               <button mat-raised-button color="primary" class="width-set-2"
                                    [disabled]="!languageInfo.valid" (click)="submit()">{{'COMMON.ACTIONS.SAVE' |
-                                  translate}}</button>
+                                   translate}}</button>
                               <button mat-raised-button color="warn" class="width-set-1" (click)="dialogRef.close()"
                                    tabindex="-1">{{'COMMON.ACTIONS.CANCEL' |
-                              translate}}</button>
+                                   translate}}</button>
                          </div>
                     </div>
                </div>

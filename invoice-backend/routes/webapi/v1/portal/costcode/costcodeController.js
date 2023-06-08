@@ -482,6 +482,12 @@ module.exports.checkQBDImportCostcode = async function (req, res) {
                     var add_Costcode = new costcodeCollection(requestObject);
                     var save_Costcode = await add_Costcode.save();
                 }
+                else {
+                    var requestObjectData = {
+                        division: requestObject[m].AccountType,
+                    };
+                    let updatecost_code = await costcodeCollection.updateOne({ cost_code: requestObject[m].Name }, requestObjectData);
+                }
 
             }
             res.send({ status: true, message: "Costcode insert successfully..!" });

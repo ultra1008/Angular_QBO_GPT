@@ -1,5 +1,28 @@
 <div class="addContainer">
-    <div class="modalHeader">
+    <div class="mr-set">
+        <div class="row">
+            <div class="col-2">
+                <img src="{{invoice_logo}}" height="57px" width="45px">
+            </div>
+            <div class="col-8 align-div">
+                <div class="editRowModal">
+                    <div class=" clearfix">
+                        <div class="modal-about">
+                            <div class="fw-bold  font-17">
+                                Choose Organization
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2">
+                <button mat-mini-fab (click)="dialogRef.close()" color="warn" aria-label="Close dialog">
+                    <mat-icon class="col-white">close</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="modalHeader">
         <div class="editRowModal">
             <div class="modalHeader clearfix">
                 <div class="modal-about">
@@ -10,8 +33,8 @@
         </div>
         <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
             <mat-icon>close</mat-icon>
-        </button>
-    </div>
+        </button> 
+    </div> -->
     <div mat-dialog-content>
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
             <div class="card-body">
