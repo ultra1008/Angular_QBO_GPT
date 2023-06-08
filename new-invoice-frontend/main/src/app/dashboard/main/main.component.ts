@@ -210,7 +210,7 @@ export class MainComponent {
   pendingInvoices: any = [];
   rejectedInvoices: any = [];
   processedInvoices: any = [];
-  countList: any = {
+  countData: any = {
     pending_documents: 0,
     pending_invoices: 0,
     approved_invoices: 0,
@@ -305,13 +305,16 @@ export class MainComponent {
   }
 
   viewInvoice(type: string) {
-    this.router.navigate([WEB_ROUTES.INVOICE], { queryParams: { type: type } });
+    if (type == 'Duplicate') {
+      this.router.navigate([WEB_ROUTES.DASHBOARD_DUPLICATE_DOCUMENTS]);
+    } else {
+      this.router.navigate([WEB_ROUTES.INVOICE], { queryParams: { type: type } });
+    }
   }
   async getInvoiceCounts() {
     const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_DASHBOARD_INVOICE_COUNTS);
     if (data.status) {
-      this.countList = data.data;
-
+      this.countData = data.data;
     }
   }
 }

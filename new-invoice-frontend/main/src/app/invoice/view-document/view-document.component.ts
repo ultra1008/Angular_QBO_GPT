@@ -366,9 +366,16 @@ export class ViewDocumentComponent {
   backListing() {
     this.router.navigate([WEB_ROUTES.INVOICE]);
   }
+
   back() {
-    this.router.navigate([WEB_ROUTES.INVOICE_DETAILS], { queryParams: { _id: this.invoice_id } });
+    const from = this.route.snapshot.queryParamMap.get('from');
+    if (from) {
+      this.router.navigate([WEB_ROUTES.DASHBOARD]);
+    } else {
+      this.router.navigate([WEB_ROUTES.INVOICE_DETAILS], { queryParams: { _id: this.invoice_id } });
+    }
   }
+
   print() {
     fetch(this.pdf_url).then(resp => resp.arrayBuffer()).then(resp => {
       /*--- set the blog type to final pdf ---*/
@@ -389,7 +396,7 @@ export class ViewDocumentComponent {
   }
 
   download() {
-    let a = document.createElement('a');
+    const a = document.createElement('a');
     /*--- Firefox requires the link to be in the body --*/
     document.body.appendChild(a);
     a.style.display = 'none';

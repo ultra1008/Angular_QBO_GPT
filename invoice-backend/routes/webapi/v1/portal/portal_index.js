@@ -378,8 +378,7 @@ router.get('/webapi/v1/portal/getdashboardcount', common.checkTokenExistOrNot, i
 router.get('/webapi/v1/portal/getdashboardinvoice', common.checkTokenExistOrNot, invoiceDashboard.dashboardInvoiceList);
 router.post('/webapi/v1/portal/getdashboardmonthlyinvoicechart', common.checkTokenExistOrNot, invoiceDashboard.getDashboardMonthlyInvoiceChart);
 router.post('/webapi/v1/portal/getdashboardmonthlyhistorychart', common.checkTokenExistOrNot, invoiceDashboard.getDashboardMonthlyHistoryChart);
-router.get('/webapi/v1/portal/countInvoiceStatus', common.checkTokenExistOrNot, invoiceDashboard.countInvoiceStatus);
-// router.post('/webapi/v1/portal/dashboardInvoiceListForTable', common.checkTokenExistOrNot, invoiceDashboard.dashboardInvoiceListForTable);
+router.get('/webapi/v1/portal/getduplicatedocumentsfortable', common.checkTokenExistOrNot, invoiceDashboard.getDuplicateDocumentsForTable);
 
 
 let invoice_vendorController = require('./vendor/vendorController');
