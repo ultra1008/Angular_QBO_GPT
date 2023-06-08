@@ -58,7 +58,7 @@
                                     <mat-cell *matCellDef="let row" (click)="editInvoice(row)"
                                         (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Invoice
-                                            Date:</span>{{(row.invoice_date_epoch * 1000) | date: 'MM/dd/yyyy'}}
+                                            Date:</span>{{row.invoice_date_epoch === 0 ? '' : (row.invoice_date_epoch * 1000) | date: 'MM/dd/yyyy'}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="due_date">
@@ -67,7 +67,7 @@
                                     <mat-cell *matCellDef="let row" (click)="editInvoice(row)"
                                         (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Due
-                                            Date:</span>{{(row.due_date_epoch * 1000) | date: 'MM/dd/yyyy'}}
+                                            Date:</span>{{row.due_date_epoch === 0 ? '' : (row.due_date_epoch * 1000) | date: 'MM/dd/yyyy'}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor">
@@ -76,7 +76,7 @@
                                         [matTooltip]="getVendorNameTooltip(row)"
                                         (contextmenu)="onContextMenu($event, row)">
                                         <span class="truncate-text"> <span class="mobile-label">Vendor:</span>
-                                            {{row.vendor_data.vendor_name}}</span>
+                                            {{row.vendor_data?.vendor_name}}</span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="invoice_no">

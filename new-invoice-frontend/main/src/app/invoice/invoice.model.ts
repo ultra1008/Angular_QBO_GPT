@@ -3,8 +3,8 @@ import { Vendor } from "../vendors/vendor.model";
 
 export class Invoice {
   _id: string;
-  invoice_date_epoch: string;
-  due_date_epoch: string;
+  invoice_date_epoch: number;
+  due_date_epoch: number;
   vendor_data: Vendor;
   vendor: Vendor;
   invoice_no: string;
@@ -15,8 +15,8 @@ export class Invoice {
   constructor (invoice: Invoice) {
     {
       this._id = invoice._id;
-      this.invoice_date_epoch = invoice.invoice_date_epoch || '';
-      this.due_date_epoch = invoice.due_date_epoch || '';
+      this.invoice_date_epoch = invoice.invoice_date_epoch || 0;
+      this.due_date_epoch = invoice.due_date_epoch || 0;
       this.vendor_data = invoice.vendor_data || '';
       this.vendor = invoice.vendor || '';
       this.invoice_no = invoice.invoice_no || '';

@@ -62,7 +62,7 @@
                                              <mat-cell *matCellDef="let row" (click)="editInvoice(row)"
                                                   (contextmenu)="onContextMenu($event, row)">
                                                   <span class="mobile-label">Invoice
-                                                       Date:</span>{{(row.invoice_date_epoch * 1000) | date: 'MM/dd/yyyy'}}</mat-cell>
+                                                       Date:</span>{{row.invoice_date_epoch === 0 ? '' : (row.invoice_date_epoch * 1000) | date: 'MM/dd/yyyy'}}</mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="due_date">
                                              <mat-header-cell *matHeaderCellDef mat-sort-header>Due Date
@@ -70,7 +70,7 @@
                                              <mat-cell *matCellDef="let row" (click)="editInvoice(row)"
                                                   (contextmenu)="onContextMenu($event, row)">
                                                   <span class="mobile-label">Due
-                                                       Date:</span>{{(row.due_date_epoch * 1000) | date: 'MM/dd/yyyy'}}</mat-cell>
+                                                       Date:</span>{{row.due_date_epoch === 0 ? '' : (row.due_date_epoch * 1000) | date: 'MM/dd/yyyy'}}</mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="vendor">
                                              <mat-header-cell *matHeaderCellDef mat-sort-header>Vendor</mat-header-cell>
@@ -78,7 +78,7 @@
                                                   [matTooltip]="getVendorNameTooltip(row)"
                                                   (contextmenu)="onContextMenu($event, row)">
                                                   <span class="truncate-text"> <span class="mobile-label">Vendor:</span>
-                                                       {{row.vendor_data.vendor_name}}</span></mat-cell>
+                                                       {{row.vendor_data?.vendor_name}}</span></mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="invoice_no">
                                              <mat-header-cell *matHeaderCellDef mat-sort-header>Invoice
@@ -94,7 +94,7 @@
                                              <mat-cell *matCellDef="let row" (click)="editInvoice(row)"
                                                   (contextmenu)="onContextMenu($event, row)">
                                                   <span class="mobile-label">Total Amount:</span>
-                                                  {{row.invoice_total_amount}}</mat-cell>
+                                                  $ {{numberWithCommas(row.invoice_total_amount)}}</mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="sub_total">
                                              <mat-header-cell *matHeaderCellDef mat-sort-header>Sub
@@ -102,7 +102,7 @@
                                              <mat-cell *matCellDef="let row" (click)="editInvoice(row)"
                                                   (contextmenu)="onContextMenu($event, row)">
                                                   <span class="mobile-label">Sub Total:</span>
-                                                  {{row.sub_total}}</mat-cell>
+                                                  $ {{numberWithCommas(row.sub_total)}}</mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="approver">
                                              <mat-header-cell *matHeaderCellDef

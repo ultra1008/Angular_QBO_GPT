@@ -21,7 +21,7 @@ import { Vendor } from 'src/app/vendors/vendor.model';
 import { configData } from 'src/environments/configData';
 import { TableElement } from 'src/app/shared/TableElement';
 import { formatDate } from '@angular/common';
-import { timeDateToepoch } from 'src/consts/utils';
+import { numberWithCommas, timeDateToepoch } from 'src/consts/utils';
 
 @Component({
   selector: 'app-reports-listing',
@@ -79,7 +79,7 @@ export class ReportsListingComponent extends UnsubscribeOnDestroyAdapter impleme
   }
 
   getVendorNameTooltip(row: any) {
-    return row.vendor_data.vendor_name;
+    return row.vendor_data?.vendor_name;
   }
   getApproverTooltip(row: any) {
     return row.approver;
@@ -130,9 +130,9 @@ export class ReportsListingComponent extends UnsubscribeOnDestroyAdapter impleme
   exportExcel() {
     const exportData: Partial<TableElement>[] =
       this.dataSource.filteredData.map((x) => ({
-        'Invoice Date': formatDate(new Date(Number(x.invoice_date_epoch.toString()) * 1000), 'MM/dd/yyyy', 'en'),
-        'Due Date': formatDate(new Date(Number(x.due_date_epoch.toString()) * 1000), 'MM/dd/yyyy', 'en'),
-        'Vendor': x.vendor_data.vendor_name,
+        'Invoice Date': x.invoice_date_epoch === 0 ? '' : formatDate(new Date(Number(x.invoice_date_epoch.toString()) * 1000), 'MM/dd/yyyy', 'en'),
+        'Due Date': x.due_date_epoch === 0 ? '' : formatDate(new Date(Number(x.due_date_epoch.toString()) * 1000), 'MM/dd/yyyy', 'en'),
+        'Vendor': x.vendor_data?.vendor_name,
         'Invoice Number': x.invoice_no,
         'Total Amount': x.invoice_total_amount,
         'Sub Total': x.sub_total,
@@ -140,6 +140,10 @@ export class ReportsListingComponent extends UnsubscribeOnDestroyAdapter impleme
         'Status': x.status,
       }));
     TableExportUtil.exportToExcel(exportData, 'excel');
+  }
+
+  numberWithCommas(amount: number) {
+    return numberWithCommas(amount.toFixed(2));
   }
 
   back() {
@@ -202,7 +206,7 @@ export class ExampleDataSource extends DataSource<Report> {
             const searchStr = (
               invoice.invoice_date_epoch +
               invoice.due_date_epoch +
-              invoice.vendor_data.vendor_name +
+              invoice.vendor_data?.vendor_name +
               invoice.invoice_no +
               invoice.invoice_total_amount +
               invoice.sub_total +
@@ -242,7 +246,7 @@ export class ExampleDataSource extends DataSource<Report> {
           [propertyA, propertyB] = [a.due_date_epoch, b.due_date_epoch];
           break;
         case 'vendor':
-          [propertyA, propertyB] = [a.vendor_data.vendor_name, b.vendor_data.vendor_name];
+          [propertyA, propertyB] = [a.vendor_data?.vendor_name, b.vendor_data?.vendor_name];
           break;
         case 'invoice_no':
           [propertyA, propertyB] = [a.invoice_no, b.invoice_no];
