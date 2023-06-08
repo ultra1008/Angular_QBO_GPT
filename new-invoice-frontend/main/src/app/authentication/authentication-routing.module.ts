@@ -6,6 +6,7 @@ import { LockedComponent } from './locked/locked.component';
 import { SendOtpComponent } from './send-otp/send-otp.component';
 import { ForcefullChangePasswordComponent } from './forcefull-change-password/forcefull-change-password.component';
 import { Page404Component } from './page404/page404.component';
+import { LoggedInAuthGuard } from '../core/guard/loggedIn.guard';
 const routes: Routes = [
   /* {
     path: '',
@@ -14,23 +15,28 @@ const routes: Routes = [
   }, */
   {
     path: '',
-    component: SigninComponent
+    component: SigninComponent,
+    canActivate: [LoggedInAuthGuard],
   },
   {
     path: 'signin',
-    component: SigninComponent
+    component: SigninComponent,
+    canActivate: [LoggedInAuthGuard],
   },
   {
     path: 'forgot-password',
-    component: ForgotPasswordComponent
+    component: ForgotPasswordComponent,
+    canActivate: [LoggedInAuthGuard],
   },
   {
     path: 'change-password',
-    component: ForcefullChangePasswordComponent
+    component: ForcefullChangePasswordComponent,
+    canActivate: [LoggedInAuthGuard],
   },
   {
     path: 'send-otp',
-    component: SendOtpComponent
+    component: SendOtpComponent,
+    canActivate: [LoggedInAuthGuard],
   },
   {
     path: 'locked',

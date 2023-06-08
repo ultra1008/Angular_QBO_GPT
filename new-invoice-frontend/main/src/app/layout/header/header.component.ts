@@ -20,7 +20,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { Invoice } from 'src/app/invoice/invoice.model';
 import { notificationRoutes, numberWithCommas } from 'src/consts/utils';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
-
+import { AuthenticationService } from '../../authentication/authentication.service';
 interface Notifications {
   _id: string;
   notification_title: string;
@@ -55,8 +55,9 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
 
   companyList: any = [];
   isLoading = true;
-  constructor(@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, public elementRef: ElementRef,
+  constructor (@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, public elementRef: ElementRef,
     public uiSpinner: UiSpinnerService, private configService: ConfigService, private authService: AuthService,
+    private AuthenticationService: AuthenticationService,
     private router: Router, public translate: TranslateService, public dialog: MatDialog, private commonService: CommonService,) {
     super();
   }
@@ -326,22 +327,23 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
     }
   }
   logout() {
-    this.authService.logout().subscribe((res) => {
-      if (!res.success) {
-        localStorage.removeItem(localstorageconstants.DARKMODE);
-        localStorage.removeItem(localstorageconstants.USERDATA);
-        localStorage.removeItem(localstorageconstants.COMPANYDATA);
-        localStorage.removeItem(localstorageconstants.COMPANYID);
-        localStorage.removeItem(localstorageconstants.INVOICE_GIF);
-        localStorage.removeItem(localstorageconstants.INVOICE_TOKEN);
-        localStorage.setItem(localstorageconstants.LOGOUT, 'true');
-        localStorage.removeItem('choose_logoheader');
-        localStorage.removeItem('choose_skin');
-        localStorage.removeItem('menuOption');
-        localStorage.removeItem('thinvoicetheme');
-        this.router.navigate([WEB_ROUTES.LOGIN]);
-      }
-    });
+    // this.authService.logout().subscribe((res) => {
+    //   if (!res.success) {
+    this.AuthenticationService.changeLoginValue(true);
+    localStorage.removeItem(localstorageconstants.DARKMODE);
+    localStorage.removeItem(localstorageconstants.USERDATA);
+    localStorage.removeItem(localstorageconstants.COMPANYDATA);
+    localStorage.removeItem(localstorageconstants.COMPANYID);
+    localStorage.removeItem(localstorageconstants.INVOICE_GIF);
+    localStorage.removeItem(localstorageconstants.INVOICE_TOKEN);
+    localStorage.setItem(localstorageconstants.LOGOUT, 'true');
+    localStorage.removeItem('choose_logoheader');
+    localStorage.removeItem('choose_skin');
+    localStorage.removeItem('menuOption');
+    localStorage.removeItem('thinvoicetheme');
+    this.router.navigate([WEB_ROUTES.LOGIN]);
+    //   }
+    // });
   }
 
   lightThemeBtnClick() {

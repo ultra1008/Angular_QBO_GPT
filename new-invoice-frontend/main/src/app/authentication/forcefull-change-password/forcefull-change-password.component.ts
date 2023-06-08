@@ -9,7 +9,7 @@ import {
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../authentication.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { showNotification } from 'src/consts/utils';
+import { checkPermissionAfterLogin, showNotification } from 'src/consts/utils';
 import { Location } from '@angular/common';
 import { icon } from 'src/consts/icon';
 import { WEB_ROUTES } from 'src/consts/routes';
@@ -139,9 +139,11 @@ export class ForcefullChangePasswordComponent {
     if (that.forcefullyPasswordInfo?.valid) {
       const data = await this.authenticationService.changePassword(reqObject);
       if (data.status) {
+        this.authenticationService.changeLoginValue(false);
         localStorage.setItem(localstorageconstants.LOGOUT, 'false');
         showNotification(this.snackBar, data.message, 'success');
-        this.router.navigate([WEB_ROUTES.DASHBOARD]);
+        const role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
+        this.router.navigate([checkPermissionAfterLogin(role_permission)]);
         // for delete we use splice in order to remove single object from DataService
       } else {
         showNotification(this.snackBar, data.message, 'error');

@@ -46,7 +46,7 @@ export class SigninComponent implements OnInit {
   showForm = false;
   companyList: any = [];
 
-  constructor(
+  constructor (
     private formBuilder: UntypedFormBuilder,
     private router: Router,
     private authService: AuthService,
@@ -147,10 +147,11 @@ export class SigninComponent implements OnInit {
         if (data.user_data.UserData.useris_password_temp == true) {
           this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);
         } else {
+          this.AuthenticationService.changeLoginValue(false);
+          localStorage.setItem(localstorageconstants.LOGOUT, 'false');
           setTimeout(() => {
-            localStorage.setItem(localstorageconstants.LOGOUT, 'false');
             this.router.navigate([checkPermissionAfterLogin(data.user_data.role_permission)]);
-          }, 300);
+          }, 500);
         }
         localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.user_data.token);
         localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.user_data));
@@ -236,10 +237,12 @@ export class SigninComponent implements OnInit {
       if (data.data.UserData.useris_password_temp == true) {
         this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);
       } else {
+        this.AuthenticationService.changeLoginValue(false);
         localStorage.setItem(localstorageconstants.LOGOUT, 'false');
         setTimeout(() => {
-          this.router.navigate([checkPermissionAfterLogin(data.user_data.role_permission)]);
-        }, 300);
+          this.router.navigate([checkPermissionAfterLogin(data.data.role_permission)]);
+          location.reload();
+        }, 500);
       }
 
       localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.data.token);
