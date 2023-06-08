@@ -20,15 +20,12 @@ export class AllsettingsComponent {
   companyTypeName: any;
   companySizeName: any;
   NigpCode: any;
-  constructor(
+  constructor (
     private router: Router,
     public translate: TranslateService,
     public SettingsServices: SettingsService
   ) {
     this.getOneCompany();
-    this.getCompanyType();
-    this.getCompanyNigp();
-    this.getCompanySize();
     //constructor
   }
 
@@ -39,6 +36,9 @@ export class AllsettingsComponent {
     that.getOne_CompanyType_id = that.CompanyData.companytype;
     that.getOne_Nigp_id = that.CompanyData.companydivision;
     that.getOne_Company_Size_id = that.CompanyData.companysize;
+    this.getCompanyType();
+    this.getCompanyNigp();
+    this.getCompanySize();
   }
 
   async getCompanyType() {
@@ -47,9 +47,7 @@ export class AllsettingsComponent {
       this.variablesCompnayTypes_data = data.data;
       if (this.variablesCompnayTypes_data.length > 0) {
         for (let i = 0; i < this.variablesCompnayTypes_data.length; i++) {
-          if (
-            this.variablesCompnayTypes_data[i]._id == this.getOne_CompanyType_id
-          ) {
+          if (this.variablesCompnayTypes_data[i]._id == this.getOne_CompanyType_id) {
             this.companyTypeName = this.variablesCompnayTypes_data[i].name;
           }
         }
@@ -77,10 +75,7 @@ export class AllsettingsComponent {
       this.variablesCompnaySizes_data = data.data;
       if (this.variablesCompnaySizes_data.length > 0) {
         for (let i = 0; i < this.variablesCompnaySizes_data.length; i++) {
-          if (
-            this.variablesCompnaySizes_data[i]._id ==
-            this.getOne_Company_Size_id
-          ) {
+          if (this.variablesCompnaySizes_data[i]._id == this.getOne_Company_Size_id) {
             this.companySizeName = this.variablesCompnaySizes_data[i].name;
           }
         }
