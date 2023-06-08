@@ -151,8 +151,8 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="client_number">
-                                    <mat-header-cell *matHeaderCellDef
-                                        mat-sort-header>{{'CLIENT.TABLE.CLIENT_NUMBER' | translate}}
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'CLIENT.TABLE.CLIENT_NUMBER' |
+                                        translate}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" [matTooltip]="getNumberTooltip(row)"
                                         (contextmenu)="onContextMenu($event, row)" (click)="editClient(row)">
@@ -161,8 +161,8 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="client_email">
-                                    <mat-header-cell *matHeaderCellDef
-                                        mat-sort-header>{{'CLIENT.TABLE.JOB_CONTACT_EMAIL' | translate}}
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                        {{'CLIENT.TABLE.JOB_CONTACT_EMAIL' | translate}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" [matTooltip]="getTooltip(row)"
                                         (contextmenu)="onContextMenu($event, row)" (click)="editClient(row)">
@@ -172,7 +172,8 @@
                                 </ng-container>
                                 <ng-container matColumnDef="approver_id">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        [ngClass]="'tbl-col-width-per-mid'">{{'CLIENT.TABLE.APPROVER' | translate}}</mat-header-cell>
+                                        [ngClass]="'tbl-col-width-per-mid'">{{'CLIENT.TABLE.APPROVER' | translate}}
+                                    </mat-header-cell>
                                     <mat-cell *matCellDef="let row" [matTooltip]="getApproverTooltip(row)"
                                         (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-mid"
                                         (click)="editClient(row)">
@@ -181,8 +182,8 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="client_cost_cost_id">
-                                    <mat-header-cell *matHeaderCellDef
-                                        mat-sort-header>{{'CLIENT.ADD_EDIT.COST_GL' | translate}}</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'CLIENT.ADD_EDIT.COST_GL' |
+                                        translate}}</mat-header-cell>
                                     <mat-cell *matCellDef="let row" [matTooltip]="getCostCodeTooltip(row)"
                                         (contextmenu)="onContextMenu($event, row)" (click)="editClient(row)">
                                         <span class="truncate-text"> <span class="mobile-label">Cost Code:</span>
@@ -209,11 +210,11 @@
                                 </ng-container>
                                 <ng-container matColumnDef="is_quickbooks">
                                     <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'"
-                                        class="tbl-col-width-per-action" mat-sort-header>
+                                        class="tbl-col-width-per-quickbooks">
                                         <img [src]="quickbooksGreenIcon" alt="" height="23" width="23" />
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (click)="editClient(row)"
-                                        (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-action">
+                                        (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-quickbooks">
                                         <span class="mobile-label">Quickbooks:</span>
                                         <img *ngIf="!row.is_quickbooks" [src]="quickbooksGreyIcon" alt="" height="23"
                                             width="23" />

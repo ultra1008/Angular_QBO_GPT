@@ -70,7 +70,7 @@ export class ClientComponent
   quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
   is_quickbooks = true;
 
-  constructor (
+  constructor(
     public httpClient: HttpClient,
     private httpCall: HttpCall,
     public dialog: MatDialog,
@@ -527,7 +527,7 @@ export class ClientDataSource extends DataSource<ClientList> {
   }
   filteredData: ClientList[] = [];
   renderedData: ClientList[] = [];
-  constructor (
+  constructor(
     public clientService: ClientService,
     public paginator: MatPaginator,
     public _sort: MatSort,
