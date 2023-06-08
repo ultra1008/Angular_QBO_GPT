@@ -16,8 +16,8 @@
                 <div class="table-responsive">
                     <table mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
                         <ng-container matColumnDef="name">
-                            <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'"
-                                mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CLASS_NAME' |
+                            <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'" mat-sort-header>
+                                {{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CLASS_NAME' |
                                 translate}}</mat-header-cell>
                             <mat-cell *matCellDef="let row" (click)="edit(row)"
                                 (contextmenu)="onContextMenu($event, row)">
@@ -26,9 +26,9 @@
                         </ng-container>
 
                         <ng-container matColumnDef="number">
-                            <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'"
-                                mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.NUMBER' |
-                            translate}}</mat-header-cell>
+                            <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'" mat-sort-header>
+                                {{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.NUMBER' |
+                                translate}}</mat-header-cell>
                             <mat-cell *matCellDef="let row" (click)="edit(row)"
                                 (contextmenu)="onContextMenu($event, row)">
                                 <span class="mobile-label">number:</span> {{row.number}}
@@ -36,9 +36,9 @@
                         </ng-container>
 
                         <ng-container matColumnDef="description">
-                            <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'"
-                                mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.DESCRIPTION' |
-                            translate}}</mat-header-cell>
+                            <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'" mat-sort-header>
+                                {{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.DESCRIPTION' |
+                                translate}}</mat-header-cell>
                             <mat-cell *matCellDef="let row" (click)="edit(row)"
                                 (contextmenu)="onContextMenu($event, row)">
                                 <span class="mobile-label">description:</span> {{row.description}}
@@ -63,13 +63,11 @@
                             </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="is_quickbooks">
-                            <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'" class="tbl-col-width-per-action"
-                                mat-sort-header>
-                                <!-- <img src='assets/images/icons/hold.svg' alt="" height="25" width="25" /> -->
+                            <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'" class="tbl-col-width-per-quickbooks">
                                 <img [src]="quickbooksGreenIcon" alt="" height="23" width="23" />
                             </mat-header-cell>
                             <mat-cell *matCellDef="let row" (click)="edit(row)"
-                                (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-action">
+                                (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-quickbooks">
                                 <span class="mobile-label">Quickbooks:</span>
                                 <img *ngIf="!row.is_quickbooks" [src]="quickbooksGreyIcon" alt="" height="23"
                                     width="23" />
