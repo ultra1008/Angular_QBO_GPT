@@ -46,7 +46,7 @@ export class SigninComponent implements OnInit {
   showForm = false;
   companyList: any = [];
 
-  constructor (
+  constructor(
     private formBuilder: UntypedFormBuilder,
     private router: Router,
     private authService: AuthService,
@@ -149,7 +149,7 @@ export class SigninComponent implements OnInit {
         } else {
           setTimeout(() => {
             localStorage.setItem(localstorageconstants.LOGOUT, 'false');
-            this.router.navigate([checkPermissionAfterLogin(data.data.role_permission)]);
+            this.router.navigate([checkPermissionAfterLogin(data.user_data.role_permission)]);
           }, 300);
         }
         localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.user_data.token);
@@ -238,7 +238,7 @@ export class SigninComponent implements OnInit {
       } else {
         localStorage.setItem(localstorageconstants.LOGOUT, 'false');
         setTimeout(() => {
-          this.router.navigate([checkPermissionAfterLogin(data.data.role_permission)]);
+          this.router.navigate([checkPermissionAfterLogin(data.user_data.role_permission)]);
         }, 300);
       }
 
