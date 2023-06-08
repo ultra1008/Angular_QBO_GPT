@@ -20,10 +20,11 @@ export enum httproutes {
 
   // Dashboard
   GET_DASHBOARD_INVOICE = 'getdashboardinvoice',
-  GET_DASHBOARD_INVOICE_COUNTS = 'countInvoiceStatus',
+  GET_DASHBOARD_INVOICE_COUNTS = 'getdashboardcount',
   DASHBOARD_INVOICE_FOR_TABLE = 'dashboardInvoiceListForTable',
   DASHBOARD_MONTHLY_INVOICE_CHART = 'getdashboardmonthlyinvoicechart',
   DASHBOARD_MONTHLY_HISTORY_CHART = 'getdashboardmonthlyhistorychart',
+  GET_DUPLICATE_DOCUMENT_FOR_TABLE = 'getduplicatedocumentsfortable',
 
   // Vendor
   PORTAL_VENDOR_GET_FOR_TABLE = 'getvendorfortable',

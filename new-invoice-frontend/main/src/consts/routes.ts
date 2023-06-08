@@ -30,8 +30,10 @@ export enum WEB_ROUTES {
   DASHBOARD = '/dashboard',
   MONTHLY_HISTORY = 'monthly-history',
   MONTHLY_INVOICE = 'monthly-invoice',
+  DUPLICATE_DOCUMENTS = 'duplicate-documents',
   DASHBOARD_MONTHLY_HISTORY = '/dashboard/monthly-history',
   DASHBOARD_MONTHLY_INVOICE = '/dashboard/monthly-invoice',
+  DASHBOARD_DUPLICATE_DOCUMENTS = '/dashboard/duplicate-documents',
 
   CHANGE_PASSWORD = '/authentication/change-password',
 

@@ -39,7 +39,7 @@
                             <img src='assets/images/icons/pending_invoice.svg' alt="" height="25" width="25" />
                           </div>
                           <div class="details">
-                            <div class="count">{{countList.pending_invoices}}</div>
+                            <div class="count">{{countData.pending_invoices}}</div>
                             <div class="description">Pending Invoice</div>
                           </div>
                         </div>
@@ -59,7 +59,7 @@
                             <img src='assets/images/icons/approval.svg' alt="" height="25" width="25" />
                           </div>
                           <div class="details">
-                            <div class="count">{{countList.approved_invoices}}</div>
+                            <div class="count">{{countData.approved_invoices}}</div>
                             <div class="description">Sent For Approval</div>
                           </div>
                         </div>
@@ -70,7 +70,7 @@
                             <img src='assets/images/icons/reject.svg' alt="" height="25" width="25" />
                           </div>
                           <div class="details">
-                            <div class="count">{{countList.rejected_invoices}}</div>
+                            <div class="count">{{countData.rejected_invoices}}</div>
                             <div class="description">Rejected Invoice</div>
                           </div>
                         </div>
@@ -90,7 +90,7 @@
                             <img src='assets/images/icons/due_date.svg' alt="" height="25" width="25" />
                           </div>
                           <div class="details">
-                            <div class="count">{{countList.overdue}}</div>
+                            <div class="count">{{countData.overdue}}</div>
                             <div class="description">Close To Due Date</div>
                           </div>
                         </div>
@@ -101,7 +101,7 @@
                             <img src='assets/images/icons/hold.svg' alt="" height="25" width="25" />
                           </div>
                           <div class="details">
-                            <div class="count">{{countList.on_hold}}</div>
+                            <div class="count">{{countData.on_hold}}</div>
                             <div class="description">On Hold</div>
                           </div>
                         </div>
@@ -113,7 +113,7 @@
               <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                 <div class="card profile-header">
                   <div class="body">
-                    <h6 class="card-title"><b>Duplicate Invoice</b></h6>
+                    <h6 class="card-title"><b>Duplicate Document</b></h6>
                     <div class="row">
                       <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                         <div class="dashboard-count duplicate-bg" (click)="viewInvoice('Duplicate')">
@@ -121,7 +121,7 @@
                             <img src='assets/images/icons/duplicate.svg' alt="" height="25" width="25" />
                           </div>
                           <div class="details">
-                            <div class="count">314</div>
+                            <div class="count">{{countData.duplicates}}</div>
                             <div class="description">Duplicates</div>
                           </div>
                         </div>

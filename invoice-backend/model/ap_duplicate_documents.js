@@ -5,7 +5,7 @@ var duplicateDocumentSchema = new mongoose.Schema({
     status: { type: String, default: "Pending" }, // Pending, Already Exists, Process, Complete
     document_type: { type: String, default: "" },
     invoice_no: { type: String, default: "" },
-    popo_no_number: { type: String, default: "" },
+    po_no: { type: String, default: "" },
     vendor: { type: mongoose.ObjectId, default: "" }, // Vendor Collection 
     created_by: { type: mongoose.ObjectId, default: "" },
     created_at: { type: Number, default: 0 },

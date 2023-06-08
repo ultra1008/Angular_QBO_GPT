@@ -13,8 +13,14 @@ import { NgxGaugeModule } from 'ngx-gauge';
 import { MonthlyHistoryComponent } from './main/monthly-history/monthly-history.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { MonthlyInvoiceComponent } from './main/monthly-invoice/monthly-invoice.component';
+import { DuplidateDocumentsComponent } from './main/duplidate-documents/duplidate-documents.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
+import { SharedModule } from '../shared/shared.module';
+import { MatSortModule } from '@angular/material/sort';
 @NgModule({
-  declarations: [MainComponent, MonthlyHistoryComponent, MonthlyInvoiceComponent],
+  declarations: [MainComponent, MonthlyHistoryComponent, MonthlyInvoiceComponent, DuplidateDocumentsComponent],
   imports: [
     CommonModule,
     DashboardRoutingModule,
@@ -29,6 +35,11 @@ import { MonthlyInvoiceComponent } from './main/monthly-invoice/monthly-invoice.
     MatTabsModule,
     NgxGaugeModule,
     TranslateModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatProgressSpinnerModule,
+    MatTableModule,
+    SharedModule,
   ],
 })
 export class DashboardModule { }
