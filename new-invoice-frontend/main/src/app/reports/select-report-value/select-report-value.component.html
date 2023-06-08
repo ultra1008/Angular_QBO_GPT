@@ -2,7 +2,7 @@
     <div class="modalHeader">
         <div class="row model-header">
             <div class="col-2">
-                <img src="{{ invoice_logo }}" height="45px" width="45px" />
+                <img src="{{ invoice_logo }}" height="57px" width="45px" />
             </div>
             <div class="col-8 align-div">
                 <div class="editRowModal">
@@ -66,8 +66,8 @@
                         </div>
                         <div class="row" *ngIf="data.title === reportType.openClass">
                             <mat-checkbox formControlName="All_ClassNames"
-                                (change)="onChangeValueAll_ClassNames($event)" class="example-margin"
-                                color="primary">All Class Name</mat-checkbox>
+                                (change)="onChangeValueAll_ClassNames($event)" class="example-margin" color="primary">
+                                All Class Name</mat-checkbox>
                             <div class="col-xl-12col-lg-12 col-md-12 col-sm-12 mb-2">
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>Class Name</mat-label>
@@ -85,8 +85,8 @@
                         </div>
                         <div class="row" *ngIf="data.title === reportType.openClientJob">
                             <mat-checkbox formControlName="All_JobClients"
-                                (change)="onChangeValueAll_JobClients($event)" class="example-margin"
-                                color="primary">All Client/Job Names</mat-checkbox>
+                                (change)="onChangeValueAll_JobClients($event)" class="example-margin" color="primary">
+                                All Client/Job Names</mat-checkbox>
                             <div class="col-xl-12col-lg-12 col-md-12 col-sm-12 mb-2">
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>Client/Job Name</mat-label>

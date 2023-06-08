@@ -7,6 +7,7 @@ import { CommonService } from 'src/app/services/common.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { DialogData } from 'src/app/vendors/vendor-report/vendor-report.component';
 import { httproutes, httpversion } from 'src/consts/httproutes';
+import { icon } from 'src/consts/icon';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { showNotification } from 'src/consts/utils';
@@ -25,8 +26,9 @@ export class SwitchCompanyComponent implements OnInit {
   showCompanyList = true;
   selectedCompany: any;
   removable = true;
+  invoice_logo = icon.INVOICE_LOGO;
 
-  constructor (public dialogRef: MatDialogRef<SwitchCompanyComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData,
+  constructor(public dialogRef: MatDialogRef<SwitchCompanyComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private commonService: CommonService, private snackBar: MatSnackBar, private router: Router, public uiSpinner: UiSpinnerService,
     private formBuilder: FormBuilder) {
     this.form = this.formBuilder.group({
