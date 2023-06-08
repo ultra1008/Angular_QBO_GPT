@@ -1,5 +1,6 @@
 var apInvoiceSchema = require('./../../../../../model/ap_invoices');
 var apDuplicateDocumentSchema = require('./../../../../../model/ap_duplicate_documents');
+var clientJobSchema = require('./../../../../../model/client');
 let db_connection = require('./../../../../../controller/common/connectiondb');
 let collectionConstant = require('./../../../../../config/collectionConstant');
 let common = require('./../../../../../controller/common/common');
@@ -345,5 +346,59 @@ module.exports.getDuplicateDocumentsForTable = async function (req, res) {
     }
     else {
         res.send([]);
+    }
+};
+
+module.exports.getDashboardJobCost = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            let connection_db_api = await db_connection.connection_db_api(decodedToken);
+            var clientJobConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientJobSchema);
+            var get_data = await clientJobConnection.aggregate([
+                { $match: { is_delete: 0 } },
+                {
+                    $lookup: {
+                        from: collectionConstant.AP_INVOICE,
+                        let: { id: "$_id" },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $and: [
+                                            { $eq: ["$job_client_name", "$$id"] },
+                                        ]
+                                    }
+                                },
+                            },
+                        ],
+                        as: "invoice"
+                    }
+                },
+                {
+                    $project: {
+                        client_name: 1,
+                        total: { $sum: "$invoice.invoice_total_amount" },
+                    }
+                },
+                { $sort: { total: -1 } },
+                { $limit: 10 },
+            ]);
+            if (get_data) {
+                res.send({ message: 'Job Cost Listing', data: get_data, status: true });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    }
+    else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };

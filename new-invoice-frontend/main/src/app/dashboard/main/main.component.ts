@@ -24,6 +24,7 @@ import { httproutes, httpversion } from 'src/consts/httproutes';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { Router } from '@angular/router';
 import { Invoice } from 'src/app/invoice/invoice.model';
+import { numberWithCommas } from 'src/consts/utils';
 export type ChartOptions = {
   series?: ApexAxisChartSeries;
   series2?: ApexNonAxisChartSeries;
@@ -207,6 +208,7 @@ export class MainComponent {
     75.5: { color: 'red' },
   };
 
+  jobCostList: any = [];
   pendingInvoices: any = [];
   rejectedInvoices: any = [];
   processedInvoices: any = [];
@@ -225,6 +227,7 @@ export class MainComponent {
     this.monthlyInvoiceChart();
     this.monthlyHistoryChart();
     this.getInvoiceCounts();
+    this.getDashboardJobCost();
   }
 
   async getDashboardInvoice() {
@@ -274,6 +277,11 @@ export class MainComponent {
         this.showHistoryChart = true;
       }, 100);
     }
+  } async getDashboardJobCost() {
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_DASHBOARD_JOB_COST);
+    if (data.status) {
+      this.jobCostList = data.data;
+    }
   }
 
   viewMonthlyInvoiceChart() {
@@ -316,6 +324,10 @@ export class MainComponent {
     if (data.status) {
       this.countData = data.data;
     }
+  }
+
+  numberWithCommas(amount: number) {
+    return numberWithCommas(amount.toFixed(2));
   }
 }
 

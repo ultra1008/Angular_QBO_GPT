@@ -114,3 +114,16 @@
 .profile-header .col-lg-6 {
     margin-bottom: 0px !important;
 }
+
+.job-cost-table {
+    display: block;
+    height: 390px;
+
+    tbody {
+        height: 330px;
+    }
+
+    .amount {
+        width: 100px;
+    }
+}

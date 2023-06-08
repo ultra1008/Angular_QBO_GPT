@@ -25,6 +25,7 @@ export enum httproutes {
   DASHBOARD_MONTHLY_INVOICE_CHART = 'getdashboardmonthlyinvoicechart',
   DASHBOARD_MONTHLY_HISTORY_CHART = 'getdashboardmonthlyhistorychart',
   GET_DUPLICATE_DOCUMENT_FOR_TABLE = 'getduplicatedocumentsfortable',
+  GET_DASHBOARD_JOB_COST = 'getdashboardjobcost',
 
   // Vendor
   PORTAL_VENDOR_GET_FOR_TABLE = 'getvendorfortable',

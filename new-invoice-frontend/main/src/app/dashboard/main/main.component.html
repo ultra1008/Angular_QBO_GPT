@@ -220,7 +220,7 @@
                   <div class="card-body">
                     <div class="media-list position-relative">
                       <div class="table-responsive" id="project-team-scroll">
-                        <table class="table table-hover table-xl mb-0">
+                        <table class="table table-hover table-xl mb-0 job-cost-table">
                           <thead>
                             <tr>
                               <th>Job Name</th>
@@ -228,29 +228,9 @@
                             </tr>
                           </thead>
                           <tbody>
-                            <tr>
-                              <td class="text-truncate">Project X</td>
-                              <td class="text-truncate">$8999</td>
-                            </tr>
-                            <tr>
-                              <td class="text-truncate">Project AB2</td>
-                              <td class="text-truncate">$5550</td>
-                            </tr>
-                            <tr>
-                              <td class="text-truncate">Project DS3</td>
-                              <td class="text-truncate">$9000</td>
-                            </tr>
-                            <tr>
-                              <td class="text-truncate">Project XCD</td>
-                              <td class="text-truncate">$7500</td>
-                            </tr>
-                            <tr>
-                              <td class="text-truncate">Project Z2</td>
-                              <td class="text-truncate">$8500</td>
-                            </tr>
-                            <tr>
-                              <td class="text-truncate">Project GTe</td>
-                              <td class="text-truncate">$8500</td>
+                            <tr *ngFor="let jobCost of jobCostList">
+                              <td>{{jobCost.client_name}}</td>
+                              <td class="amount">$ {{numberWithCommas(jobCost.total)}}</td>
                             </tr>
                           </tbody>
                         </table>
