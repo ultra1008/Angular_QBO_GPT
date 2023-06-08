@@ -666,8 +666,11 @@ module.exports.checkQBDImportClient = async function (req, res) {
         try {
             var requestObject = req.body;
             var clientConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientSchema);
+            var userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+            var costCodeConnection = connection_db_api.model(collectionConstant.COSTCODES, costCodeSchema);
 
             for (let m = 0; m < requestObject.length; m++) {
+
                 var nameexist = await clientConnection.findOne({ "client_name": requestObject[m].Name });
                 if (nameexist == null) {
                     requestObject.created_at = Math.round(new Date().getTime() / 1000);
@@ -683,8 +686,93 @@ module.exports.checkQBDImportClient = async function (req, res) {
                     }
                     var add_client = new clientConnection(requestObject);
                     var save_client = await add_client.save();
-                }
 
+                    var historyobj = {
+                        client_status: requestObject[m].IsActive,
+                        client_name: requestObject[m].Name,
+
+                    };
+                    // find difference of object 
+                    let insertedData = await common.setInsertedFieldHistory(historyobj);
+
+                    if (requestObject[m].approver_id !== '') {
+                        let found_approver = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'approver_id'; });
+                        if (found_approver != -1) {
+                            let one_term = await userConnection.findOne({ _id: ObjectID(insertedData[found_approver].value) });
+                            insertedData[found_approver].value = one_term.userfullname;
+                        }
+                    }
+
+                    if (requestObject[m].client_cost_cost_id !== '') {
+                        let found_costcode = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'client_cost_cost_id'; });
+                        if (found_costcode != -1) {
+                            let one_term = await costCodeConnection.findOne({ _id: ObjectID(insertedData[found_costcode].value) });
+                            insertedData[found_costcode].value = one_term.value;
+                        }
+                    }
+
+                    let found_status = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'client_status'; });
+                    if (found_status != -1) {
+                        insertedData[found_status].value = insertedData[found_status].value == 1 ? 'Active' : insertedData[found_status].value == 2 ? 'Inactive' : '';
+                    }
+                    for (let i = 0; i < insertedData.length; i++) {
+                        insertedData[i]['key'] = translator.getStr(`Client_History.${insertedData[i]['key']}`);
+                    }
+
+                    let histioryObject = {
+                        data: insertedData,
+                        client_id: save_client.id,
+                    };
+                    addClientHistory("Insert", histioryObject, decodedToken);
+                }
+                else {
+                    let one_client = await clientConnection.findOne({ client_name: requestObject[m].Name });
+
+                    if (requestObject[m].IsActive == true) {
+                        requestObject.status = 1;
+                    }
+                    else if (requestObject[m].IsActive == false) {
+                        requestObject.status = 2;
+                    }
+                    let updateclass_name = await clientConnection.updateOne({ name: requestObject[m].Name }, { status: requestObject.status });
+
+                    var historyobj = {
+                        client_status: requestObject.status,
+                        // client_name: requestObject[m].Name,
+                    };
+                    // find difference of object 
+                    let updatedData = await common.findUpdatedFieldHistory(historyobj, one_client._doc);
+
+                    // if (requestObject[m].approver_id !== '') {
+                    //     let found_approver = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'approver_id'; });
+                    //     if (found_approver != -1) {
+                    //         let one_term = await userConnection.findOne({ _id: ObjectID(updatedData[found_approver].value) });
+                    //         updatedData[found_approver].value = one_term.userfullname;
+                    //     }
+                    // }
+
+                    // if (requestObject[m].client_cost_cost_id !== '') {
+                    //     let found_costcode = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'client_cost_cost_id'; });
+                    //     if (found_costcode != -1) {
+                    //         let one_term = await costCodeConnection.findOne({ _id: ObjectID(updatedData[found_costcode].value) });
+                    //         updatedData[found_costcode].value = one_term.value;
+                    //     }
+                    // }
+
+                    let found_status = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'client_status'; });
+                    if (found_status != -1) {
+                        updatedData[found_status].value = updatedData[found_status].value == 1 ? 'Active' : updatedData[found_status].value == 2 ? 'Inactive' : '';
+                    }
+                    for (let i = 0; i < updatedData.length; i++) {
+                        updatedData[i]['key'] = translator.getStr(`Client_History.${updatedData[i]['key']}`);
+                    }
+                    let histioryObject = {
+                        data: updatedData,
+                        client_id: one_client.id,
+                    };
+                    addClientHistory("Update", histioryObject, decodedToken);
+
+                }
             }
             res.send({ status: true, message: "Client insert successfully..!" });
 

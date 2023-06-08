@@ -292,6 +292,20 @@ module.exports.checkQBDImportClassName = async function (req, res) {
 
                     var add_vendortype = new classNameConnection(requestObject);
                     var save_vendortype = await add_vendortype.save();
+
+                }
+                else {
+
+                    if (requestObject[m].IsActive == true) {
+                        requestObject.status = 1;
+                    }
+                    else if (requestObject[m].IsActive == false) {
+                        requestObject.status = 2;
+                    }
+                    // var requestObjectData = {
+                    //     status: requestObject[m].IsActive,
+                    // };
+                    let updateclass_name = await classNameConnection.updateOne({ name: requestObject[m].Name }, { status: requestObject.status });
                 }
 
             }
