@@ -20,7 +20,7 @@ import { User } from 'src/app/users/user.model';
 export class InvoiceMessageViewComponent {
   @ViewChild('FileSelectInputDialog') FileSelectInputDialog: ElementRef | any;
 
-  pdf_url = '/assets/pdf_url/file-3.pdf';
+  pdf_url = '';
   myId = '';
   id: any;
   invoiceId: any;
@@ -38,12 +38,13 @@ export class InvoiceMessageViewComponent {
   mentionId = '';
   mentionUserName = '';
 
-  constructor (public commonService: CommonService, public route: ActivatedRoute, private formBuilder: FormBuilder,
+  constructor(public commonService: CommonService, public route: ActivatedRoute, private formBuilder: FormBuilder,
     public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, private router: Router,
     /* public headerComponent: HeaderComponent, */) {
     const userData = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA) ?? '{}');
     this.myId = userData.UserData._id;
     this.invoiceId = this.route.snapshot.queryParamMap.get('invoice_id') ?? '';
+
     this.getOneInvoiceMessage();
     this.getUser();
     this.form = this.formBuilder.group({
@@ -63,7 +64,9 @@ export class InvoiceMessageViewComponent {
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ONE_INVOICE_MESSAGE, { invoice_id: this.invoiceId });
     if (data.status) {
       this.messageData = data.data;
+      console.log(this.messageData);
       this.messageList = data.messages;
+      this.pdf_url = this.messageData.invoice.pdf_url;
       this.isLoading = false;
       this.updateSeenFlag();
     }

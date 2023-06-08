@@ -36,7 +36,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   moreInformationForm!: UntypedFormGroup;
   noteForm!: UntypedFormGroup;
   step = 0;
-  pdf_url = '/assets/pdf_url/file-3.pdf';
+  pdf_url = '';
   loadInvoice = true;
   isLoading = true;
   maxDate = new Date();
@@ -111,7 +111,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   prevStep() {
     this.step--;
   }
-  constructor (private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog, private commonService: CommonService,
+  constructor(private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog, private commonService: CommonService,
     public route: ActivatedRoute, public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, public translate: TranslateService,) {
     super();
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';

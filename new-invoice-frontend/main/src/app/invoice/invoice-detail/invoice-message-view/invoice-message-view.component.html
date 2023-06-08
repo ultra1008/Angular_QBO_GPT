@@ -31,7 +31,9 @@
                     </div>
                 </div>
                 <div class="chat">
-                    <div class="text-center" *ngIf="isLoading"><app-loading></app-loading></div>
+                    <div class="text-center" *ngIf="isLoading">
+                        <app-loading></app-loading>
+                    </div>
                     <div *ngIf="!isLoading">
                         <div class="row clearfix mt-2">
                             <div
@@ -117,10 +119,13 @@
                                         </button>
                                     </div>
                                     <div class="pdf-btn">
-                                        <button class="m-2" mat-mini-fab (click)="download()" color="primary">
+                                        <button class="m-2" mat-mini-fab
+                                            matTooltip="{{'COMMON.TOOL_TIP.DOWNLOAD' | translate}}" (click)="download()"
+                                            color="primary">
                                             <mat-icon class="col-white">download</mat-icon>
                                         </button>
-                                        <button mat-mini-fab (click)="print()" color="primary">
+                                        <button mat-mini-fab (click)="print()"
+                                            matTooltip="{{'COMMON.TOOL_TIP.PRINT' | translate}}" color="primary">
                                             <mat-icon class="col-white">print</mat-icon>
                                         </button>
 
