@@ -204,9 +204,9 @@ module.exports.sendEmergencyContactReminder = async function (req, res) {
             };
             await common.sendNotificationWithData([tmp_user['invoice_firebase_token']], notification_data, temp_data);
 
-            sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, tmp_user['useremail'], translator.getStr("Emergency_Contact_Email_Subject"), HtmlData,
-                talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+            sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, tmp_user['useremail'], translator.getStr("Emergency_Contact_Email_Subject"), HtmlData,
+                talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
             res.send({ message: translator.getStr('EmergencyContactReminderSent'), status: true });
         } catch (e) {
             console.log(e);

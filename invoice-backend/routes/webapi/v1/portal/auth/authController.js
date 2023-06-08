@@ -578,9 +578,9 @@ module.exports.forgetpassword = async function (req, res) {
                             let tmp_subject = translator.getStr('MailForgotPassword_Subject');
                             var template = handlebars.compile(data);
                             var HtmlData = await template(emailTmp);
-                            let tenant_smtp_security = config.tenants.tenant_smtp_security == "Yes" || config.tenants.tenant_smtp_security == "YES" || config.tenants.tenant_smtp_security == "yes" ? true : false;
-                            let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, find_one_vendor.useremail, tmp_subject, HtmlData,
-                                config.tenants.tenant_smtp_server, config.tenants.tenant_smtp_port, config.tenants.tenant_smtp_reply_to_mail, config.tenants.tenant_smtp_password, config.tenants.tenant_smtp_timeout,
+                            let tenant_smtp_security = config.smartaccupay_tenants.tenant_smtp_security == "Yes" || config.smartaccupay_tenants.tenant_smtp_security == "YES" || config.smartaccupay_tenants.tenant_smtp_security == "yes" ? true : false;
+                            let mailsend = await sendEmail.sendEmail_client(config.smartaccupay_tenants.tenant_smtp_username, find_one_vendor.useremail, tmp_subject, HtmlData,
+                                config.smartaccupay_tenants.tenant_smtp_server, config.smartaccupay_tenants.tenant_smtp_port, config.smartaccupay_tenants.tenant_smtp_reply_to_mail, config.smartaccupay_tenants.tenant_smtp_password, config.smartaccupay_tenants.tenant_smtp_timeout,
                                 tenant_smtp_security);
                             if (mailsend) {
                                 res.send({ message: translator.getStr('CheckMailForgotPassword'), status: true, update_user: update_user });
@@ -1606,9 +1606,9 @@ module.exports.sendEmailOTP = async function (req, res) {
                 const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/emailOTP.html', 'utf8');
                 var template = handlebars.compile(file_data);
                 var HtmlData = await template(emailTmp);
-                sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, [requestObject.useremail], "OTP Verification", HtmlData,
-                    config.tenants.tenant_smtp_server, config.tenants.tenant_smtp_port, config.tenants.tenant_smtp_reply_to_mail,
-                    config.tenants.tenant_smtp_password, config.tenants.tenant_smtp_timeout, config.tenants.tenant_smtp_security);
+                sendEmail.sendEmail_client(config.smartaccupay_tenants.tenant_smtp_username, [requestObject.useremail], "OTP Verification", HtmlData,
+                    config.smartaccupay_tenants.tenant_smtp_server, config.smartaccupay_tenants.tenant_smtp_port, config.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                    config.smartaccupay_tenants.tenant_smtp_password, config.smartaccupay_tenants.tenant_smtp_timeout, config.smartaccupay_tenants.tenant_smtp_security);
                 res.send({ message: 'One Time Password (OTP) sent successfully.', status: true });
             } else {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
@@ -2348,9 +2348,9 @@ module.exports.emailForgotPassword = async function (req, res) {
                 let tmp_subject = translator.getStr('MailForgotPassword_Subject');
                 var template = handlebars.compile(data);
                 var HtmlData = await template(emailTmp);
-                let tenant_smtp_security = config.tenants.tenant_smtp_security == "Yes" || config.tenants.tenant_smtp_security == "YES" || config.tenants.tenant_smtp_security == "yes" ? true : false;
-                sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, one_user.useremail, tmp_subject, HtmlData,
-                    config.tenants.tenant_smtp_server, config.tenants.tenant_smtp_port, config.tenants.tenant_smtp_reply_to_mail, config.tenants.tenant_smtp_password, config.tenants.tenant_smtp_timeout,
+                let tenant_smtp_security = config.smartaccupay_tenants.tenant_smtp_security == "Yes" || config.smartaccupay_tenants.tenant_smtp_security == "YES" || config.smartaccupay_tenants.tenant_smtp_security == "yes" ? true : false;
+                sendEmail.sendEmail_client(config.smartaccupay_tenants.tenant_smtp_username, one_user.useremail, tmp_subject, HtmlData,
+                    config.smartaccupay_tenants.tenant_smtp_server, config.smartaccupay_tenants.tenant_smtp_port, config.smartaccupay_tenants.tenant_smtp_reply_to_mail, config.smartaccupay_tenants.tenant_smtp_password, config.smartaccupay_tenants.tenant_smtp_timeout,
                     tenant_smtp_security);
                 res.send({ message: translator.getStr('CheckMailForgotPassword'), status: true, data: get_company });
             } else {
@@ -2420,9 +2420,9 @@ module.exports.sendEmailForgotPassword = async function (req, res) {
             let tmp_subject = translator.getStr('MailForgotPassword_Subject');
             var template = handlebars.compile(data);
             var HtmlData = await template(emailTmp);
-            let tenant_smtp_security = config.tenants.tenant_smtp_security == "Yes" || config.tenants.tenant_smtp_security == "YES" || config.tenants.tenant_smtp_security == "yes" ? true : false;
-            sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, one_user.useremail, tmp_subject, HtmlData,
-                config.tenants.tenant_smtp_server, config.tenants.tenant_smtp_port, config.tenants.tenant_smtp_reply_to_mail, config.tenants.tenant_smtp_password, config.tenants.tenant_smtp_timeout,
+            let tenant_smtp_security = config.smartaccupay_tenants.tenant_smtp_security == "Yes" || config.smartaccupay_tenants.tenant_smtp_security == "YES" || config.smartaccupay_tenants.tenant_smtp_security == "yes" ? true : false;
+            sendEmail.sendEmail_client(config.smartaccupay_tenants.tenant_smtp_username, one_user.useremail, tmp_subject, HtmlData,
+                config.smartaccupay_tenants.tenant_smtp_server, config.smartaccupay_tenants.tenant_smtp_port, config.smartaccupay_tenants.tenant_smtp_reply_to_mail, config.smartaccupay_tenants.tenant_smtp_password, config.smartaccupay_tenants.tenant_smtp_timeout,
                 tenant_smtp_security);
             res.send({ message: translator.getStr('CheckMailForgotPassword'), status: true, data: get_company });
         } else {

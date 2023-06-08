@@ -239,9 +239,9 @@ function sendInvoiceUpdateAlerts(decodedToken, id, module, translator) {
                                     };
                                     var template = handlebars.compile(file_data);
                                     var HtmlData = await template(emailTmp);
-                                    sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, emailList, title, HtmlData,
-                                        talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                                        talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                                    sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, emailList, title, HtmlData,
+                                        talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                                        talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
                                 }
                                 resolve();
                             }
@@ -348,9 +348,9 @@ function sendInvoiceAssignUpdateAlerts(decodedToken, id, module, translator) {
                             };
                             var template = handlebars.compile(file_data);
                             var HtmlData = await template(emailTmp);
-                            sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, [get_users.useremail], title, HtmlData,
-                                talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                                talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                            sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, [get_users.useremail], title, HtmlData,
+                                talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                                talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
                         }
                         resolve();
                     } else {
@@ -1820,9 +1820,9 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
                     };
                     var template = handlebars.compile(file_data);
                     var HtmlData = await template(emailTmp);
-                    sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, email_list, translator.getStr('Invoice_Report_Title'), HtmlData,
-                        talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                        talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                    sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, email_list, translator.getStr('Invoice_Report_Title'), HtmlData,
+                        talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                        talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
 
                     res.send({ message: translator.getStr('Report_Sent_Successfully'), status: true });
                 }
@@ -3416,9 +3416,9 @@ module.exports.requestForInvoiceFile = async function (req, res) {
             };
             var template = handlebars.compile(file_data);
             var HtmlData = await template(emailTmp);
-            sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, email_list, 'Missing Document request!', HtmlData,
-                talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+            sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, email_list, 'Missing Document request!', HtmlData,
+                talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
             res.send({ message: `Request for ${requestObject.module} files sent successfully.`, status: true });
         } catch (e) {
             console.log("error:", e);
@@ -3970,9 +3970,9 @@ module.exports.sendInvoiceEmail = async function (req, res) {
             const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/invoicesend.html', 'utf8');
             var template = handlebars.compile(file_data);
             var HtmlData = await template(emailTmp);
-            let mailsend = await sendEmail.sendEmail_client_invoice(talnate_data.tenant_smtp_username, [requestObject.to], [requestObject.cc], `${requestObject.subject}`, HtmlData,
-                talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+            let mailsend = await sendEmail.sendEmail_client_invoice(talnate_data.smartaccupay_tenants.tenant_smtp_username, [requestObject.to], [requestObject.cc], `${requestObject.subject}`, HtmlData,
+                talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
             if (mailsend) {
                 res.send({ message: translator.getStr('INVOICE_SEND'), status: true });
             } else {

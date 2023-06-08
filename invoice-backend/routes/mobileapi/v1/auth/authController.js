@@ -798,9 +798,9 @@ module.exports.saveLoginDetails = async function (req, res) {
                 const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/loginFromNewDevice.html', 'utf8');
                 var template = handlebars.compile(file_data);
                 var HtmlData = await template(emailTmp);
-                sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [decodedToken.UserData.useremail], "Login from a new device", HtmlData,
-                    talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                    talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, [decodedToken.UserData.useremail], "Login from a new device", HtmlData,
+                    talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                    talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
                 res.send({ message: translator.getStr('LoginDetails'), status: true });
             } else {
                 console.log("Something went wrong.!", e);
@@ -890,9 +890,9 @@ module.exports.sendOTPforLogin = async function (req, res) {
                     const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/emailOTP.html', 'utf8');
                     var template = handlebars.compile(file_data);
                     var HtmlData = await template(emailTmp);
-                    sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [requestObject.useremail], "OTP Verification", HtmlData,
-                        talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                        talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                    sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, [requestObject.useremail], "OTP Verification", HtmlData,
+                        talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                        talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
                     res.send({ message: 'One Time Password (OTP) sent successfully.', status: true });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
@@ -1259,12 +1259,12 @@ module.exports.submitEmailOTPforLogin = async function (req, res) {
                         var settings_tmp = await settingConnection.findOne({});
                         // var questions_tmp = await questionscollection.find({ question_status: true });
                         var resObject_db = {
-                            "DB_HOST": talnate_data.DB_HOST,
-                            "DB_NAME": talnate_data.DB_NAME,
-                            "DB_PORT": talnate_data.DB_PORT,
-                            "DB_USERNAME": talnate_data.DB_USERNAME,
-                            "DB_PASSWORD": talnate_data.DB_PASSWORD,
-                            "companycode": talnate_data.companycode,
+                            "DB_HOST": talnate_data.smartaccupay_tenants.DB_HOST,
+                            "DB_NAME": talnate_data.smartaccupay_tenants.DB_NAME,
+                            "DB_PORT": talnate_data.smartaccupay_tenants.DB_PORT,
+                            "DB_USERNAME": talnate_data.smartaccupay_tenants.DB_USERNAME,
+                            "DB_PASSWORD": talnate_data.smartaccupay_tenants.DB_PASSWORD,
+                            "companycode": talnate_data.smartaccupay_tenants.companycode,
                             "companylanguage": compnay_data.companylanguage,
                             "token": ""
                         };
@@ -1415,8 +1415,8 @@ module.exports.helpMail = async function (req, res) {
         let help_phone = requestObject.help_phone;
         let help_message = requestObject.help_message;
         let help_body = 'Email : ' + help_email + '<br>Phone : ' + help_phone + '<br>' + help_message;
-        let mailsend = await sendEmail.sendEmail(config.tenants.tenant_smtp_username, config.NEWHELPDESKEMAIL, subject, help_body);
-        res.send({ message: translator.getStr('RequestSent'), data: mailsend, status: true });
+        sendEmail.sendEmail(config.smartaccupay_tenants.tenant_smtp_username, config.NEWHELPDESKEMAIL, subject, help_body);
+        res.send({ message: translator.getStr('RequestSent'), status: true });
     } catch (e) {
         console.log(e);
         res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
@@ -1808,9 +1808,9 @@ module.exports.sendEmailOTP = async function (req, res) {
                 const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/emailOTP.html', 'utf8');
                 var template = handlebars.compile(file_data);
                 var HtmlData = await template(emailTmp);
-                sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, [requestObject.useremail], "OTP Verification", HtmlData,
-                    config.tenants.tenant_smtp_server, config.tenants.tenant_smtp_port, config.tenants.tenant_smtp_reply_to_mail,
-                    config.tenants.tenant_smtp_password, config.tenants.tenant_smtp_timeout, config.tenants.tenant_smtp_security);
+                sendEmail.sendEmail_client(config.smartaccupay_tenants.tenant_smtp_username, [requestObject.useremail], "OTP Verification", HtmlData,
+                    config.smartaccupay_tenants.tenant_smtp_server, config.smartaccupay_tenants.tenant_smtp_port, config.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                    config.smartaccupay_tenants.tenant_smtp_password, config.smartaccupay_tenants.tenant_smtp_timeout, config.smartaccupay_tenants.tenant_smtp_security);
                 res.send({ message: 'One Time Password (OTP) sent successfully.', status: true });
             } else {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
@@ -2552,9 +2552,9 @@ module.exports.emailForgotPassword = async function (req, res) {
                 let tmp_subject = translator.getStr('MailForgotPassword_Subject');
                 var template = handlebars.compile(data);
                 var HtmlData = await template(emailTmp);
-                let tenant_smtp_security = config.tenants.tenant_smtp_security == "Yes" || config.tenants.tenant_smtp_security == "YES" || config.tenants.tenant_smtp_security == "yes" ? true : false;
-                sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, one_user.useremail, tmp_subject, HtmlData,
-                    config.tenants.tenant_smtp_server, config.tenants.tenant_smtp_port, config.tenants.tenant_smtp_reply_to_mail, config.tenants.tenant_smtp_password, config.tenants.tenant_smtp_timeout,
+                let tenant_smtp_security = config.smartaccupay_tenants.tenant_smtp_security == "Yes" || config.smartaccupay_tenants.tenant_smtp_security == "YES" || config.smartaccupay_tenants.tenant_smtp_security == "yes" ? true : false;
+                sendEmail.sendEmail_client(config.smartaccupay_tenants.tenant_smtp_username, one_user.useremail, tmp_subject, HtmlData,
+                    config.smartaccupay_tenants.tenant_smtp_server, config.smartaccupay_tenants.tenant_smtp_port, config.smartaccupay_tenants.tenant_smtp_reply_to_mail, config.smartaccupay_tenants.tenant_smtp_password, config.smartaccupay_tenants.tenant_smtp_timeout,
                     tenant_smtp_security);
                 res.send({ message: translator.getStr('CheckMailForgotPassword'), status: true, data: get_company });
             } else {
@@ -2624,9 +2624,9 @@ module.exports.sendEmailForgotPassword = async function (req, res) {
             let tmp_subject = translator.getStr('MailForgotPassword_Subject');
             var template = handlebars.compile(data);
             var HtmlData = await template(emailTmp);
-            let tenant_smtp_security = config.tenants.tenant_smtp_security == "Yes" || config.tenants.tenant_smtp_security == "YES" || config.tenants.tenant_smtp_security == "yes" ? true : false;
-            sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, one_user.useremail, tmp_subject, HtmlData,
-                config.tenants.tenant_smtp_server, config.tenants.tenant_smtp_port, config.tenants.tenant_smtp_reply_to_mail, config.tenants.tenant_smtp_password, config.tenants.tenant_smtp_timeout,
+            let tenant_smtp_security = config.smartaccupay_tenants.tenant_smtp_security == "Yes" || config.smartaccupay_tenants.tenant_smtp_security == "YES" || config.smartaccupay_tenants.tenant_smtp_security == "yes" ? true : false;
+            sendEmail.sendEmail_client(config.smartaccupay_tenants.tenant_smtp_username, one_user.useremail, tmp_subject, HtmlData,
+                config.smartaccupay_tenants.tenant_smtp_server, config.smartaccupay_tenants.tenant_smtp_port, config.smartaccupay_tenants.tenant_smtp_reply_to_mail, config.smartaccupay_tenants.tenant_smtp_password, config.smartaccupay_tenants.tenant_smtp_timeout,
                 tenant_smtp_security);
             res.send({ message: translator.getStr('CheckMailForgotPassword'), status: true, data: get_company });
         } else {

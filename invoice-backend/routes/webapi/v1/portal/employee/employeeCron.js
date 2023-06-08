@@ -167,12 +167,12 @@ async function userDocumentExpiryAlertCronFunction() {
                         var HtmlData_user = await template(emailTmp_user);
                         var HTML_ADMIN = await templateAdmin(emailTmp_Admin);
 
-                        sendEmail.sendEmail_client(item.tenant_smtp_username, [get_employee_document[aa].useremail], "Contact admin: Documents about to expire ", HtmlData_user,
-                            item.tenant_smtp_server, item.tenant_smtp_port, item.tenant_smtp_reply_to_mail,
-                            item.tenant_smtp_password, item.tenant_smtp_timeout, item.tenant_smtp_security);
-                        sendEmail.sendEmail_client(item.tenant_smtp_username, employee_list, "Documents are about to expire for one of your employee", HTML_ADMIN,
-                            item.tenant_smtp_server, item.tenant_smtp_port, item.tenant_smtp_reply_to_mail,
-                            item.tenant_smtp_password, item.tenant_smtp_timeout, item.tenant_smtp_security);
+                        sendEmail.sendEmail_client(item.smartaccupay_tenants.tenant_smtp_username, [get_employee_document[aa].useremail], "Contact admin: Documents about to expire ", HtmlData_user,
+                            item.smartaccupay_tenants.tenant_smtp_server, item.smartaccupay_tenants.tenant_smtp_port, item.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                            item.smartaccupay_tenants.tenant_smtp_password, item.smartaccupay_tenants.tenant_smtp_timeout, item.smartaccupay_tenants.tenant_smtp_security);
+                        sendEmail.sendEmail_client(item.smartaccupay_tenants.tenant_smtp_username, employee_list, "Documents are about to expire for one of your employee", HTML_ADMIN,
+                            item.smartaccupay_tenants.tenant_smtp_server, item.smartaccupay_tenants.tenant_smtp_port, item.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                            item.smartaccupay_tenants.tenant_smtp_password, item.smartaccupay_tenants.tenant_smtp_timeout, item.smartaccupay_tenants.tenant_smtp_security);
 
                         let alertObject = {
                             user_id: get_employee_document[aa]._id,
@@ -242,9 +242,9 @@ async function userEmergencyContactAlertCronFunction() {
                 };
                 // supplierAlertController.saveSupplierAlert(alertObject, connection_db_api);
 
-                sendEmail.sendEmail_client(item.tenant_smtp_username, [all_user[i]['useremail']], `Important message about contact information`, HtmlData,
-                    item.tenant_smtp_server, item.tenant_smtp_port, item.tenant_smtp_reply_to_mail,
-                    item.tenant_smtp_password, item.tenant_smtp_timeout, item.tenant_smtp_security);
+                sendEmail.sendEmail_client(item.smartaccupay_tenants.tenant_smtp_username, [all_user[i]['useremail']], `Important message about contact information`, HtmlData,
+                    item.smartaccupay_tenants.tenant_smtp_server, item.smartaccupay_tenants.tenant_smtp_port, item.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                    item.smartaccupay_tenants.tenant_smtp_password, item.smartaccupay_tenants.tenant_smtp_timeout, item.smartaccupay_tenants.tenant_smtp_security);
 
             }
         }

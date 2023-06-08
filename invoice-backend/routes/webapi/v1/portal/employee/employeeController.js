@@ -222,9 +222,9 @@ module.exports.saveEmployee = async function (req, res) {
                             history_object.usercostcode = usercostcode;
                             let updateuser = await userConnection.updateOne({ _id: ObjectID(add._id) }, { usercostcode: usercostcode });
                             if (updateuser) {
-                                sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, body.useremail, "Rovuk Registration", HtmlData,
-                                    talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                                    talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                                sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, body.useremail, "Rovuk Registration", HtmlData,
+                                    talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                                    talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
 
                                 recentActivity.saveRecentActivity({
                                     user_id: decodedToken.UserData._id,
@@ -1870,9 +1870,9 @@ module.exports.sendappinvitation = async function (req, res) {
             const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/appinvitation.html', 'utf8');
             var template = handlebars.compile(file_data);
             var HtmlData = await template(emailTmp);
-            sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [requestObject.recipient], "App Download Invitation", HtmlData,
-                talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+            sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, [requestObject.recipient], "App Download Invitation", HtmlData,
+                talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
             res.send({ message: translator.getStr('AppInvitationSent'), status: true });
         }
         catch (e) {
@@ -2108,9 +2108,9 @@ module.exports.senddocumentexpiration = async function (req, res) {
                 } else if (sendResponse == 2) {
                     subject = "Documents about to expire";
                 }
-                sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, recipients, subject, HtmlData,
-                    talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                    talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, recipients, subject, HtmlData,
+                    talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                    talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
                 res.send({ message: translator.getStr('DocumentExpirationWarningSent'), status: true });
             }
         }
@@ -3433,9 +3433,9 @@ module.exports.getAllEmployeeReport = async function (req, res) {
                     };
                     var template = handlebars.compile(file_data);
                     var HtmlData = await template(emailTmp);
-                    let send_Email = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, email_list, translator.getStr('EmailUserReportSubject'), HtmlData,
-                        talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                        talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                    sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, email_list, translator.getStr('EmailUserReportSubject'), HtmlData,
+                        talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                        talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
                     res.send({ message: translator.getStr('Report_Sent_Successfully'), status: true });
                 }
             });
@@ -3573,12 +3573,10 @@ module.exports.checkAndInsertImportData = async function (req, res) {
                     var template = handlebars.compile(file_data);
                     var HtmlData = await template(emailTmp);
 
-                    var mail = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, requestObject.data[m].useremail, "Rovuk Registration", HtmlData,
-                        talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                        talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
-                    console.log("mail: ", mail);
+                    sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, requestObject.data[m].useremail, "Rovuk Registration", HtmlData,
+                        talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                        talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
                 }
-
             }
             res.send({ status: true, message: translator.getStr('Data_Insert_message') });
         } catch (e) {
@@ -4343,9 +4341,9 @@ module.exports.importManagementUser = async function (req, res) {
                     let LowerCase_bucket = decodedToken.companycode.toLowerCase();
                     var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
                     let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
-                    sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, management_user.useremail, "Rovuk Registration", HtmlData,
-                        talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                        talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                    sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, management_user.useremail, "Rovuk Registration", HtmlData,
+                        talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                        talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
                 }
                 if (i == requestObject.users.length - 1) {
                     res.send({ message: translator.getStr('ManagementUserImported'), status: true });

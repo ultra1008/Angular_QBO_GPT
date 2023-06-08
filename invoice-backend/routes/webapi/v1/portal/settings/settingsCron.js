@@ -212,9 +212,9 @@ async function pendingInvoiceToAssignedToUserCronFunction(companycode) {
                     };
                     var template = handlebars.compile(file_data);
                     var HtmlData = await template(emailTmp);
-                    sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, get_data[i].assign_to.useremail, title, HtmlData,
-                        item.tenant_smtp_server, item.tenant_smtp_port, item.tenant_smtp_reply_to_mail,
-                        item.tenant_smtp_password, item.tenant_smtp_timeout, item.tenant_smtp_security);
+                    sendEmail.sendEmail_client(item.smartaccupay_tenants.tenant_smtp_username, get_data[i].assign_to.useremail, title, HtmlData,
+                        item.smartaccupay_tenants.tenant_smtp_server, item.smartaccupay_tenants.tenant_smtp_port, item.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                        item.smartaccupay_tenants.tenant_smtp_password, item.smartaccupay_tenants.tenant_smtp_timeout, item.smartaccupay_tenants.tenant_smtp_security);
                 }
             }
             // }
@@ -326,9 +326,9 @@ async function pendingInvoiceNotAssignedToUserCronFunction(companycode) {
                     };
                     var template = handlebars.compile(file_data);
                     var HtmlData = await template(emailTmp);
-                    sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, emailList, title, HtmlData,
-                        item.tenant_smtp_server, item.tenant_smtp_port, item.tenant_smtp_reply_to_mail,
-                        item.tenant_smtp_password, item.tenant_smtp_timeout, item.tenant_smtp_security);
+                    sendEmail.sendEmail_client(item.smartaccupay_tenants.tenant_smtp_username, emailList, title, HtmlData,
+                        item.smartaccupay_tenants.tenant_smtp_server, item.smartaccupay_tenants.tenant_smtp_port, item.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                        item.smartaccupay_tenants.tenant_smtp_password, item.smartaccupay_tenants.tenant_smtp_timeout, item.smartaccupay_tenants.tenant_smtp_security);
                 }
             }
             // }
@@ -448,10 +448,9 @@ async function dueDateLessThenToAdminCronFunction(companycode, days) {
                     };
                     var template = handlebars.compile(file_data);
                     var HtmlData = await template(emailTmp);
-                    var mail = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, emailList, title, HtmlData,
-                        item.tenant_smtp_server, item.tenant_smtp_port, item.tenant_smtp_reply_to_mail,
-                        item.tenant_smtp_password, item.tenant_smtp_timeout, item.tenant_smtp_security);
-                    console.log("mail", mail);
+                    sendEmail.sendEmail_client(item.smartaccupay_tenants.tenant_smtp_username, emailList, title, HtmlData,
+                        item.smartaccupay_tenants.tenant_smtp_server, item.smartaccupay_tenants.tenant_smtp_port, item.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                        item.smartaccupay_tenants.tenant_smtp_password, item.smartaccupay_tenants.tenant_smtp_timeout, item.smartaccupay_tenants.tenant_smtp_security);
                 }
             }
             // }

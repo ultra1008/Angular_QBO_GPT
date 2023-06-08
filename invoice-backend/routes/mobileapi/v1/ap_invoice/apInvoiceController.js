@@ -875,9 +875,9 @@ function sendInvoiceAssignUpdateAlerts(decodedToken, id, translator) {
                     };
                     var template = handlebars.compile(file_data);
                     var HtmlData = await template(emailTmp);
-                    sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, [get_users.useremail], title, HtmlData,
-                        talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                        talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                    sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, [get_users.useremail], title, HtmlData,
+                        talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                        talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
                 }
                 resolve();
             } else {
