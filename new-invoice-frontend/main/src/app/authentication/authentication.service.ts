@@ -12,10 +12,17 @@ export class AuthenticationService {
   private currentUserSubject: BehaviorSubject<boolean>;
   public currentUser: Observable<boolean>;
 
+  private currentTokenSubject: BehaviorSubject<string>;
+  public currentToken: Observable<string>;
+
   constructor (private httpClient: HttpClient, private httpCall: HttpCall) {
     const logout = localStorage.getItem(localstorageconstants.LOGOUT) ?? 'true';
     this.currentUserSubject = new BehaviorSubject<boolean>(logout == 'true');
     this.currentUser = this.currentUserSubject.asObservable();
+
+    const token = localStorage.getItem(localstorageconstants.INVOICE_TOKEN) ?? '';
+    this.currentTokenSubject = new BehaviorSubject<string>(token);
+    this.currentToken = this.currentTokenSubject.asObservable();
   }
 
   public get currentUserValue(): boolean {
@@ -23,8 +30,15 @@ export class AuthenticationService {
   }
 
   changeLoginValue(value: boolean) {
-    console.log("update value", value);
     this.currentUserSubject.next(value);
+  }
+
+  public get currentTokenValue(): string {
+    return this.currentTokenSubject.value;
+  }
+
+  changeTokenValue(value: string) {
+    this.currentTokenSubject.next(value);
   }
 
   async getCompanySettings(companycode: string) {
