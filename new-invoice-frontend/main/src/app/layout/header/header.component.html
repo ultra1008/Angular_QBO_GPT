@@ -5,8 +5,10 @@
         (click)="isNavbarCollapsed = !isNavbarCollapsed" aria-expanded="false"></a>
       <a href="#" onClick="return false;" class="bars" (click)="mobileMenuSidebarOpen($event,'overlay-open')"></a>
       <a class="navbar-brand" (click)="openDashboard()">
-        <img src="assets/images/rovukinvoice.png" alt="" height="30px" width="30px" />
-        <span class="logo-name">Smart<b>accu</b>pay</span>
+        <img src="assets/images/rovukinvoice.png" alt="" height="38px" width="30px" />
+        <span class="logo-name">
+          Smart<b>Accu</b>Pay
+        </span>
       </a>
     </div>
     <div class="collapse navbar-collapse" [ngClass]="isNavbarCollapsed ? '' : 'show'">
@@ -37,7 +39,8 @@
         </li>
         <li class="tbl-search-box">
           <mat-form-field class="example-full-width" appearance="outline">
-            <input matInput class="input-capitalized-textfield" placeholder="Search here" [formControl]="myControl">
+            <input matInput class="input-capitalized-textfield" placeholder="{{'COMMON.TOOL_TIP.SEARCH' | translate}}"
+              [formControl]="myControl">
           </mat-form-field>
         </li>
         <li class="tbl-header-btn serach-dialog button-set">

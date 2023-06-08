@@ -17,7 +17,6 @@ import { WEB_ROUTES } from 'src/consts/routes';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { Observable, map, startWith } from 'rxjs';
 import { Invoice } from 'src/app/invoice/invoice.model';
 import { notificationRoutes, numberWithCommas } from 'src/consts/utils';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
@@ -56,7 +55,7 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
 
   companyList: any = [];
   isLoading = true;
-  constructor (@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, public elementRef: ElementRef,
+  constructor(@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, public elementRef: ElementRef,
     public uiSpinner: UiSpinnerService, private configService: ConfigService, private authService: AuthService,
     private router: Router, public translate: TranslateService, public dialog: MatDialog, private commonService: CommonService,) {
     super();
@@ -170,6 +169,21 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
   }
 
   ngAfterViewInit() {
+
+
+
+    if (
+      window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches
+    ) {
+      // dark mode
+      this.darkThemeBtnClick();
+    } else {
+      //Light mode
+      this.lightThemeBtnClick();
+    }
+
+
     // set theme on startup
     if (localStorage.getItem(localstorageconstants.DARKMODE)) {
       if (localStorage.getItem(localstorageconstants.DARKMODE) === 'dark') {
