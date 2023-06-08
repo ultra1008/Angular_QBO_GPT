@@ -318,11 +318,11 @@
                                 </ng-container>
                                 <ng-container matColumnDef="is_quickbooks">
                                     <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'"
-                                        class="tbl-col-width-per-action" mat-sort-header>
+                                        class="tbl-col-width-per-quickbooks">
                                         <img [src]="quickbooksGreenIcon" alt="" height="23" width="23" />
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (click)="editVendor(row)"
-                                        (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-action">
+                                        (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-quickbooks">
                                         <span class="mobile-label">Quickbooks:</span>
                                         <img *ngIf="!row.is_quickbooks" [src]="quickbooksGreyIcon" alt="" height="23"
                                             width="23" />

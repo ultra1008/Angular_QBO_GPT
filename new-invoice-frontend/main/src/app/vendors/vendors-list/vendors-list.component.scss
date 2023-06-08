@@ -85,10 +85,16 @@
     max-width: 4% !important;
 }
 
+.tbl-col-width-per-quickbooks {
+    min-width: 50px !important;
+    max-width: 4% !important;
+    justify-content: center;
+    padding-left: 1px !important;
+}
+
 .tbl-col-width-per-action {
     min-width: 100px !important;
     max-width: 7% !important;
-
 }
 
 .tbl-col-width-per-mid {
