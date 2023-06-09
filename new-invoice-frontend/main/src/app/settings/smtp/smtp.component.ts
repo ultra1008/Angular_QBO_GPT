@@ -30,7 +30,7 @@ export class SmtpComponent {
   cronTime: any;
   compnay_id: any;
 
-  constructor(
+  constructor (
     private fb: UntypedFormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
@@ -62,26 +62,23 @@ export class SmtpComponent {
       let stmp = data.data;
       this.compnay_id = stmp.company_id;
       this.companyinfoForm = this.fb.group({
-        tenant_smtp_server: [stmp.tenant_smtp_server, Validators.required],
-        tenant_smtp_username: [stmp.tenant_smtp_username, Validators.required],
-        tenant_smtp_port: [stmp.tenant_smtp_port, Validators.required],
-        tenant_smtp_timeout: [stmp.tenant_smtp_timeout, Validators.required],
-        tenant_smtp_password: [stmp.tenant_smtp_password, Validators.required],
-        tenant_smtp_security: [stmp.tenant_smtp_security, Validators.required],
-        tenant_smtp_reply_to_mail: [
-          stmp.tenant_smtp_reply_to_mail,
-          [Validators.required, Validators.email],
-        ],
+        tenant_smtp_server: [stmp.smartaccupay_tenants.tenant_smtp_server, Validators.required],
+        tenant_smtp_username: [stmp.smartaccupay_tenants.tenant_smtp_username, Validators.required],
+        tenant_smtp_port: [stmp.smartaccupay_tenants.tenant_smtp_port, Validators.required],
+        tenant_smtp_timeout: [stmp.smartaccupay_tenants.tenant_smtp_timeout, Validators.required],
+        tenant_smtp_password: [stmp.smartaccupay_tenants.tenant_smtp_password, Validators.required],
+        tenant_smtp_security: [stmp.smartaccupay_tenants.tenant_smtp_security, Validators.required],
+        tenant_smtp_reply_to_mail: [stmp.smartaccupay_tenants.tenant_smtp_reply_to_mail, [Validators.required, Validators.email],],
       });
     }
   }
 
   async saveSMTP() {
     if (this.companyinfoForm.valid) {
-      let requestObject = this.companyinfoForm.value;
-      requestObject._id = this.compnay_id;
-      this.uiSpinner.spin$.next(true);
-      const data = await this.SettingsServices.SaveSmtp(requestObject);
+      const formValues = this.companyinfoForm.value;
+      formValues._id = this.compnay_id,
+        this.uiSpinner.spin$.next(true);
+      const data = await this.SettingsServices.SaveSmtp(formValues);
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
@@ -94,9 +91,10 @@ export class SmtpComponent {
 
   async verifySMTP() {
     if (this.companyinfoForm.valid) {
-      let requestObject = this.companyinfoForm.value;
-      this.uiSpinner.spin$.next(true);
-      const data = await this.SettingsServices.VerifySmtp(requestObject);
+      const formValues = this.companyinfoForm.value;
+      formValues._id = this.compnay_id,
+        this.uiSpinner.spin$.next(true);
+      const data = await this.SettingsServices.VerifySmtp(formValues);
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');

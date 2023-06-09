@@ -200,10 +200,19 @@ module.exports.compnayupdatesmtp = async function (req, res) {
     var translator = new common.Language(req.headers.language);
     if (decodedToken) {
         try {
-            let reqObject = req.body;
-            let id = reqObject._id;
-            delete reqObject["_id"];
+            let requestObject = req.body;
+            let id = requestObject._id;
+            delete requestObject["_id"];
             var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+            let reqObject = {
+                'smartaccupay_tenants.tenant_smtp_server': requestObject.tenant_smtp_server,
+                'smartaccupay_tenants.tenant_smtp_username': requestObject.tenant_smtp_username,
+                'smartaccupay_tenants.tenant_smtp_port': requestObject.tenant_smtp_port,
+                'smartaccupay_tenants.tenant_smtp_timeout': requestObject.tenant_smtp_timeout,
+                'smartaccupay_tenants.tenant_smtp_password': requestObject.tenant_smtp_password,
+                'smartaccupay_tenants.tenant_smtp_security': requestObject.tenant_smtp_security,
+                'smartaccupay_tenants.tenant_smtp_reply_to_mail': requestObject.tenant_smtp_reply_to_mail,
+            };
             let company_data = await rest_Api.update(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { company_id: ObjectID(id) }, reqObject);
             if (company_data.result.nModified == 1) {
                 res.send({ message: translator.getStr('CompanySMPTUpdated'), data: company_data.result, status: true });
