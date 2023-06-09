@@ -684,6 +684,9 @@ module.exports.checkQBDImportClient = async function (req, res) {
                     else if (requestObject[m].IsActive == false) {
                         requestObject.client_status = 2;
                     }
+                    if (requestObject[m].Email != undefined) {
+                        requestObject.client_email = requestObject[m].Email;
+                    }
                     var add_client = new clientConnection(requestObject);
                     var save_client = await add_client.save();
 
@@ -727,7 +730,9 @@ module.exports.checkQBDImportClient = async function (req, res) {
                 }
                 else {
                     let one_client = await clientConnection.findOne({ client_name: requestObject[m].Name });
-
+                    if (requestObject[m].Email != undefined) {
+                        requestObject.client_email = requestObject[m].Email;
+                    }
                     if (requestObject[m].IsActive == true) {
                         requestObject.status = 1;
                     }

@@ -274,11 +274,14 @@ module.exports.checkQBDImportClassName = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
+
             var classNameConnection = connection_db_api.model(collectionConstant.INVOICE_CLASS_NAME, classnameSchema);
 
             for (let m = 0; m < requestObject.length; m++) {
                 var nameexist = await classNameConnection.findOne({ "name": requestObject[m].Name });
                 if (nameexist == null) {
+                    delete requestObject[m].ListID;
+                    delete requestObject[m].TimeCreated;
                     requestObject.created_at = Math.round(new Date().getTime() / 1000);
                     requestObject.updated_at = Math.round(new Date().getTime() / 1000);
                     requestObject.is_quickbooks = true;
@@ -294,22 +297,23 @@ module.exports.checkQBDImportClassName = async function (req, res) {
                     var save_vendortype = await add_vendortype.save();
 
                 }
-                else {
+                // else {
 
-                    if (requestObject[m].IsActive == true) {
-                        requestObject.status = 1;
-                    }
-                    else if (requestObject[m].IsActive == false) {
-                        requestObject.status = 2;
-                    }
-                    // var requestObjectData = {
-                    //     status: requestObject[m].IsActive,
-                    // };
-                    let updateclass_name = await classNameConnection.updateOne({ name: requestObject[m].Name }, { status: requestObject.status });
-                }
+                //     delete requestObject[m].ListID;
+                //     delete requestObject[m].TimeCreated;
+                //     console.log(requestObject[m]);
+                //     if (requestObject[m].IsActive == true) {
+                //         requestObject.status = 1;
+                //     }
+                //     else if (requestObject[m].IsActive == false) {
+                //         requestObject.status = 2;
+                //     }
+
+                //     let updateclass_name = await classNameConnection.updateOne({ name: requestObject[m].Name }, requestObject);
+                // }
 
             }
-            res.send({ status: true, message: "class name insert successfully..!" });
+            res.send({ status: true, message: "Class name inserted successfully..!" });
 
         } catch (error) {
             console.log(error);
