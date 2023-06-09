@@ -7,7 +7,7 @@ import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { WEB_ROUTES } from 'src/consts/routes';
-import { showNotification } from 'src/consts/utils';
+import { numberWithCommas, showNotification } from 'src/consts/utils';
 import * as  moment from "moment";
 import { UserModel } from 'src/app/users/user.model';
 
@@ -37,7 +37,7 @@ export class InvoiceMessageViewComponent {
   mentionId = '';
   mentionUserName = '';
 
-  constructor (public commonService: CommonService, public route: ActivatedRoute, private formBuilder: FormBuilder,
+  constructor(public commonService: CommonService, public route: ActivatedRoute, private formBuilder: FormBuilder,
     public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, private router: Router,
     /* public headerComponent: HeaderComponent, */) {
     const userData = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA) ?? '{}');
@@ -126,12 +126,39 @@ export class InvoiceMessageViewComponent {
     }
   }
 
-  download() {
-    //
+  print() {
+    fetch(this.pdf_url).then(resp => resp.arrayBuffer()).then(resp => {
+      /*--- set the blog type to final pdf ---*/
+      const file = new Blob([resp], { type: 'application/pdf' });
+      const blobUrl = window.URL.createObjectURL(file);
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = blobUrl;
+      document.body.appendChild(iframe);
+      //iframe.contentWindow.print();
+      iframe.onload = () => {
+        setTimeout(() => {
+          iframe.focus();
+          iframe.contentWindow!.print();
+        });
+      };
+    });
   }
 
-  print() {
-    //
+  download() {
+    let a = document.createElement('a');
+    /*--- Firefox requires the link to be in the body --*/
+    document.body.appendChild(a);
+    a.style.display = 'none';
+    a.target = "_blank";
+    a.href = this.pdf_url;
+    a.click();
+    /*--- Remove the link when done ---*/
+    document.body.removeChild(a);
+  }
+
+  numberWithCommas(amount: number) {
+    return numberWithCommas(amount.toFixed(2));
   }
 
   handleAttachment() {
