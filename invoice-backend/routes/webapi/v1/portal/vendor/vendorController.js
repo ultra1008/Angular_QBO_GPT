@@ -1504,18 +1504,23 @@ module.exports.checkQBDImportVendor = async function (req, res) {
                         reqdata.vendor_status = 2;
                     }
                     let updatecost_code = await vendorConnection.update({ vendor_name: requestObject[m].Name }, reqdata);
+                    if (updatecost_code.nModified > 0) {
+                        // find difference of object 
+                        let updatedData = await common.findUpdatedFieldHistory(reqdata, one_vendor._doc);
 
-                    // find difference of object 
-                    let updatedData = await common.findUpdatedFieldHistory(reqdata, one_vendor._doc);
-
-                    for (let i = 0; i < updatedData.length; i++) {
-                        updatedData[i]['key'] = translator.getStr(`Vendor_History.${updatedData[i]['key']}`);
+                        let found_status = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'client_status'; });
+                        if (found_status != -1) {
+                            updatedData[found_status].value = updatedData[found_status].value == 1 ? 'Active' : updatedData[found_status].value == 2 ? 'Inactive' : '';
+                        }
+                        for (let i = 0; i < updatedData.length; i++) {
+                            updatedData[i]['key'] = translator.getStr(`Vendor_History.${updatedData[i]['key']}`);
+                        }
+                        let histioryObject = {
+                            data: updatedData,
+                            vendor_id: nameexist._id,
+                        };
+                        addVendorHistory("Update", histioryObject, decodedToken);
                     }
-                    let histioryObject = {
-                        data: updatedData,
-                        vendor_id: nameexist._id,
-                    };
-                    addVendorHistory("Update", histioryObject, decodedToken);
 
                 }
 

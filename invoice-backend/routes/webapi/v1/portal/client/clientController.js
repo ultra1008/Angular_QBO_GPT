@@ -737,52 +737,61 @@ module.exports.checkQBDImportClient = async function (req, res) {
                 }
                 else {
                     let one_client = await clientConnection.findOne({ client_name: requestObject[m].Name });
+                    var reqdata = {};
                     if (requestObject[m].Email != undefined) {
-                        requestObject.client_email = requestObject[m].Email;
+                        reqdata.client_email = requestObject[m].Email;
                     }
                     if (requestObject[m].IsActive == true) {
-                        requestObject.status = 1;
+                        reqdata.client_status = 1;
                     }
                     else if (requestObject[m].IsActive == false) {
-                        requestObject.status = 2;
+                        reqdata.client_status = 2;
                     }
-                    let updateclass_name = await clientConnection.updateOne({ name: requestObject[m].Name }, { status: requestObject.status });
 
-                    var historyobj = {
-                        client_status: requestObject.status,
-                        // client_name: requestObject[m].Name,
-                    };
-                    // find difference of object 
-                    let updatedData = await common.findUpdatedFieldHistory(historyobj, one_client._doc);
+                    let updateclass_name = await clientConnection.updateOne({ client_name: requestObject[m].Name }, reqdata);
 
-                    // if (requestObject[m].approver_id !== '') {
-                    //     let found_approver = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'approver_id'; });
-                    //     if (found_approver != -1) {
-                    //         let one_term = await userConnection.findOne({ _id: ObjectID(updatedData[found_approver].value) });
-                    //         updatedData[found_approver].value = one_term.userfullname;
-                    //     }
-                    // }
 
-                    // if (requestObject[m].client_cost_cost_id !== '') {
-                    //     let found_costcode = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'client_cost_cost_id'; });
-                    //     if (found_costcode != -1) {
-                    //         let one_term = await costCodeConnection.findOne({ _id: ObjectID(updatedData[found_costcode].value) });
-                    //         updatedData[found_costcode].value = one_term.value;
-                    //     }
-                    // }
+                    if (updateclass_name.nModified > 0) {
+                        var historyobj = {
+                            client_status: reqdata.client_status,
+                            client_email: requestObject[m].Email,
+                        };
+                        console.log("historyobj", historyobj);
+                        console.log("one_client", one_client._doc);
 
-                    let found_status = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'client_status'; });
-                    if (found_status != -1) {
-                        updatedData[found_status].value = updatedData[found_status].value == 1 ? 'Active' : updatedData[found_status].value == 2 ? 'Inactive' : '';
+                        // find difference of object 
+                        let updatedData = await common.findUpdatedFieldHistory(historyobj, one_client._doc);
+
+                        // if (requestObject[m].approver_id !== '') {
+                        //     let found_approver = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'approver_id'; });
+                        //     if (found_approver != -1) {
+                        //         let one_term = await userConnection.findOne({ _id: ObjectID(updatedData[found_approver].value) });
+                        //         updatedData[found_approver].value = one_term.userfullname;
+                        //     }
+                        // }
+
+                        // if (requestObject[m].client_cost_cost_id !== '') {
+                        //     let found_costcode = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'client_cost_cost_id'; });
+                        //     if (found_costcode != -1) {
+                        //         let one_term = await costCodeConnection.findOne({ _id: ObjectID(updatedData[found_costcode].value) });
+                        //         updatedData[found_costcode].value = one_term.value;
+                        //     }
+                        // }
+
+                        let found_status = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'client_status'; });
+                        if (found_status != -1) {
+                            updatedData[found_status].value = updatedData[found_status].value == 1 ? 'Active' : updatedData[found_status].value == 2 ? 'Inactive' : '';
+                        }
+                        for (let i = 0; i < updatedData.length; i++) {
+                            updatedData[i]['key'] = translator.getStr(`Client_History.${updatedData[i]['key']}`);
+                        }
+                        let histioryObject = {
+                            data: updatedData,
+                            client_id: one_client.id,
+                        };
+                        addClientHistory("Update", histioryObject, decodedToken);
                     }
-                    for (let i = 0; i < updatedData.length; i++) {
-                        updatedData[i]['key'] = translator.getStr(`Client_History.${updatedData[i]['key']}`);
-                    }
-                    let histioryObject = {
-                        data: updatedData,
-                        client_id: one_client.id,
-                    };
-                    addClientHistory("Update", histioryObject, decodedToken);
+
 
                 }
             }
