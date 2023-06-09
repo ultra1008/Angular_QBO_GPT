@@ -237,7 +237,7 @@
             },
             "MAIL_BOX": {
                 "HEADER": "Mailboxes to Monitor",
-                "HEADER_ARCHIVE": "Archive Mailboxes to Monitor",
+                "HEADER_ARCHIVE": "Archived Mailboxes to Monitor",
                 "EMAIL": "Email",
                 "IMAP": "IMAP",
                 "PORT": "Port",
