@@ -61,6 +61,17 @@ export class CompanyModel {
     companylogo: string;
     companylanguage: string;
     companycode: string;
+    companytype: string;
+    companydivision: string;
+    companysize: string;
+    companyphone: string;
+    companyphone2: string;
+    companywebsite: string;
+    companyaddress: string;
+    companyaddresscity: string;
+    companyaddressstate: string;
+    companyaddresszip: string;
+    companyactivesince: string;
     constructor (responce: CompanyModel) {
         {
             this._id = responce._id;
@@ -70,6 +81,17 @@ export class CompanyModel {
             this.companylogo = responce.companylogo;
             this.companylanguage = responce.companylanguage;
             this.companycode = responce.companycode;
+            this.companytype = responce.companytype;
+            this.companydivision = responce.companydivision;
+            this.companysize = responce.companysize;
+            this.companyphone = responce.companyphone;
+            this.companyphone2 = responce.companyphone2;
+            this.companywebsite = responce.companywebsite;
+            this.companyaddress = responce.companyaddress;
+            this.companyaddresscity = responce.companyaddresscity;
+            this.companyaddressstate = responce.companyaddressstate;
+            this.companyaddresszip = responce.companyaddresszip;
+            this.companyactivesince = responce.companyactivesince;
         }
     }
 }

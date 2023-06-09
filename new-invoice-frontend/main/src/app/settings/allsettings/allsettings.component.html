@@ -1,24 +1,26 @@
 <section class="content">
     <div class="content-block">
-        <div class="m-4"></div>
+        <!-- <div class="m-4"></div> -->
         <!-- Your content goes here  -->
-        <div class="row  clearfix mt-2">
+        <div class="row  clearfix mt-5">
             <div class="col-lg-4 col-md-12">
-                <div class="card">
+                <div class="card company-card">
                     <div class="m-b-20">
                         <div class="contact-grid font-white">
                             <div class="editButton" (click)="editPress()">
                                 <i class="fas fa-pen pull-left card-icon col-white font-20 mt-2"></i>
                             </div>
                             <div class="profile-header bg-indigo">
-                                <div class="user-name">{{CompanyData?.companyname}}</div>
-                                <div class="name-center">{{CompanyData?.companycode}}</div>
+                                <p class="user-name">{{companyData.companyname}}</p>
+                                <p class="name-center">{{companyData.companycode}}</p>
                             </div>
-                            <img src="{{CompanyData?.companylogo}}" width="112px" height="112px"
+                            <img src="{{companyData.companylogo}}" width="112px" height="112px"
                                 class="user-img img-color" alt="">
-                            <p>
-                                {{CompanyData?.companyaddress}}, {{CompanyData?.companyaddresscity}},
-                                {{CompanyData?.companyaddressstate}}, {{CompanyData?.companyaddresszip}}
+                            <p class="mt-3">
+                                <span *ngIf="loadData">
+                                    {{companyData.companyaddress}}, {{companyData.companyaddresscity}},
+                                    {{companyData.companyaddressstate}}, {{companyData.companyaddresszip}}
+                                </span>
                             </p>
                         </div>
                     </div>
@@ -30,16 +32,16 @@
                         <h4><strong>{{'SETTINGS.VIEW.CONTACT_INFORMATION' | translate}}</strong></h4>
                         <strong>{{'SETTINGS.VIEW.EMAIL_ADDRESS' | translate}}</strong>
                         <br>
-                        <p class="text-muted">{{CompanyData?.companyemail}}</p>
+                        <p class="text-muted">{{companyData.companyemail}}&nbsp;</p>
                         <strong>{{'SETTINGS.VIEW.PHONE' | translate}}</strong>
                         <br>
-                        <p class="text-muted">{{CompanyData?.companyphone}}</p>
+                        <p class="text-muted">{{companyData.companyphone}}&nbsp;</p>
                         <strong>{{'SETTINGS.VIEW.PHONE2' | translate}}</strong>
                         <br>
-                        <p class="text-muted">{{CompanyData?.companyphone2}}</p>
+                        <p class="text-muted">{{companyData.companyphone2}}&nbsp;</p>
                         <strong>{{'SETTINGS.VIEW.WEBSITE' | translate}}</strong>
                         <br>
-                        <p class="text-muted">{{CompanyData?.companywebsite}}</p>
+                        <p class="text-muted">{{companyData.companywebsite}}&nbsp;</p>
                     </div>
                 </div>
             </div>
@@ -49,16 +51,16 @@
                         <h4><strong>{{'SETTINGS.VIEW.COMPANY_INFORMATION' | translate}}</strong></h4>
                         <strong>{{'SETTINGS.VIEW.TYPE_OF_COMPANY' | translate}}</strong>
                         <br>
-                        <p class="text-muted">{{companyTypeName}}</p>
+                        <p class="text-muted">{{companyTypeName}}&nbsp;</p>
                         <strong>{{'SETTINGS.VIEW.NIGP_CODE' | translate}}</strong>
                         <br>
-                        <p class="text-muted">{{NigpCode}}</p>
+                        <p class="text-muted">{{NigpCode}}&nbsp;</p>
                         <strong>{{'SETTINGS.VIEW.COMPANY_SIZE' | translate}}</strong>
                         <br>
-                        <p class="text-muted">{{companySizeName}}</p>
+                        <p class="text-muted">{{companySizeName}}&nbsp;</p>
                         <strong>{{'SETTINGS.VIEW.COMPANY_ACTIVE_SINCE' | translate}}</strong>
                         <br>
-                        <p class="text-muted">{{CompanyData?.companyactivesince}}</p>
+                        <p class="text-muted">{{companyData.companyactivesince}}&nbsp;</p>
                     </div>
                 </div>
             </div>

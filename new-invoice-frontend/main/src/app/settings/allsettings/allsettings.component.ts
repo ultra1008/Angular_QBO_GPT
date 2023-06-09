@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { SettingsService } from '../settings.service';
+import { CompanyModel } from 'src/consts/common.model';
+import { icon } from 'src/consts/icon';
 
 @Component({
   selector: 'app-allsettings',
@@ -61,37 +63,38 @@ export class AllsettingsComponent {
       icon: 'fas fa-dollar-sign bg-orange sell-icon',
       click: this.openCostcode,
     },
-    /* {
-      title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOXES'),
-      icon: 'fas fa-inbox bg-red sell-icon',
-      click: this.openMailboxListing,
-    },
-    {
-      title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOXES'),
-      icon: 'fas fa-inbox bg-red sell-icon',
-      click: this.openMailboxListing,
-    },
-    {
-      title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOXES'),
-      icon: 'fas fa-inbox bg-red sell-icon',
-      click: this.openMailboxListing,
-    },
-    {
-      title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOXES'),
-      icon: 'fas fa-inbox bg-red sell-icon',
-      click: this.openMailboxListing,
-    } */
   ];
-  CompanyData: any;
+  companyData: CompanyModel = {
+    _id: '',
+    companyname: '',
+    companyemail: '',
+    companystatus: '',
+    companylogo: icon.INVOICE_LOGO,
+    companylanguage: '',
+    companycode: '',
+    companytype: '',
+    companydivision: '',
+    companysize: '',
+    companyphone: '',
+    companyphone2: '',
+    companywebsite: '',
+    companyaddress: '',
+    companyaddresscity: '',
+    companyaddressstate: '',
+    companyaddresszip: '',
+    companyactivesince: '',
+  };
   variablesCompnayTypes_data: any = [];
   variablesCSIDivisions: any = [];
   variablesCompnaySizes_data: any = [];
-  getOne_CompanyType_id: any;
-  getOne_Nigp_id: any;
-  getOne_Company_Size_id: any;
-  companyTypeName: any;
-  companySizeName: any;
-  NigpCode: any;
+  getOne_CompanyType_id = ' ';
+  getOne_Nigp_id = ' ';
+  getOne_Company_Size_id = ' ';
+  companyTypeName = ' ';
+  companySizeName = ' ';
+  NigpCode = ' ';
+  loadData = false;
+
   constructor (
     private router: Router,
     public translate: TranslateService,
@@ -104,13 +107,14 @@ export class AllsettingsComponent {
   async getOneCompany() {
     let that = this;
     const data = await this.SettingsServices.getCompanyInfo();
-    that.CompanyData = data.data;
-    that.getOne_CompanyType_id = that.CompanyData.companytype;
-    that.getOne_Nigp_id = that.CompanyData.companydivision;
-    that.getOne_Company_Size_id = that.CompanyData.companysize;
+    that.companyData = data.data;
+    that.getOne_CompanyType_id = that.companyData.companytype;
+    that.getOne_Nigp_id = that.companyData.companydivision;
+    that.getOne_Company_Size_id = that.companyData.companysize;
     this.getCompanyType();
     this.getCompanyNigp();
     this.getCompanySize();
+    this.loadData = true;
   }
 
   async getCompanyType() {
