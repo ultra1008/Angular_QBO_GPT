@@ -156,23 +156,6 @@ export class VendorFormComponent {
 
   async archiveRecover() {
 
-    // this.titleMessage = this.translate.instant('VENDOR.CONFIRMATION_DIALOG.ARCHIVE');
-
-    // swalWithBootstrapTwoButtons
-    //   .fire({
-    //     title: this.titleMessage,
-    //     showDenyButton: true,
-    //     confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
-    //     denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
-    //     allowOutsideClick: false,
-    //   })
-    //   .then((result) => {
-    //     if (result.isConfirmed) {
-    //       this.deletvendor();
-    //       this.show = false;
-    //     }
-    //   });
-
     const data = await this.commonService.postRequestAPI(
       httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_DELETE,
       { _id: this.id, is_delete: this.is_delete == 1 ? 0 : 1 }
@@ -185,7 +168,7 @@ export class VendorFormComponent {
       // for delete we use splice in order to remove single object from DataService
       if (foundIndex != null && this.vendorService) {
         this.vendorService.dataChange.value.splice(foundIndex, 1);
-        this.router.navigate([WEB_ROUTES.VENDOR_GRID]);
+        this.router.navigate([WEB_ROUTES.VENDOR]);
       }
     } else {
       showNotification(this.snackBar, data.message, 'error');
@@ -193,14 +176,6 @@ export class VendorFormComponent {
 
   }
   async deletvendor() {
-    // const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_DELETE, { _id: this.id, is_delete: 1 });
-    // if (data.status) {
-    //   showNotification(this.snackBar, data.message, 'success');
-
-    //   this.router.navigate([WEB_ROUTES.VENDOR], { queryParams: { is_delete: 1 }, });
-    // } else {
-    //   showNotification(this.snackBar, data.message, 'error');
-    // }
 
     if (this.is_delete == 0) {
       this.titleMessage = this.translate.instant('VENDOR.CONFIRMATION_DIALOG.ARCHIVE');
@@ -219,7 +194,6 @@ export class VendorFormComponent {
         if (result.isConfirmed) {
           if (this.is_delete == 0) {
             this.archiveRecover();
-            this.router.navigate([WEB_ROUTES.VENDOR_GRID]);
           } else {
             this.archiveRecover();
           }

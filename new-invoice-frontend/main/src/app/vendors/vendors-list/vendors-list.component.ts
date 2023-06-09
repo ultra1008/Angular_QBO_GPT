@@ -89,6 +89,7 @@ export class VendorsListComponent
 
   ngOnInit() {
     const vendorDisplay = localStorage.getItem(localstorageconstants.VENDOR_DISPLAY) ?? 'list';
+    console.log("vendorDisplay: ", vendorDisplay);
     this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
     if (vendorDisplay == 'list') {
       this.loadData();
