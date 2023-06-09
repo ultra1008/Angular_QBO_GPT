@@ -95,14 +95,11 @@ export class ViewDocumentComponent {
     this.getTerms();
     if (this.document == 'PURCHASE_ORDER') {
       this.getOnePo();
-    }
-    if (this.document == 'QUOTE') {
+    } else if (this.document == 'QUOTE') {
       this.getOneQuote();
-    }
-    if (this.document == 'PACKING_SLIP') {
+    } else if (this.document == 'PACKING_SLIP') {
       this.getOnePackingSlipList();
-    }
-    if (this.document == 'RECEIVING_SLIP') {
+    } else if (this.document == 'RECEIVING_SLIP') {
       this.getOneRecevingSlipList();
     }
   }
@@ -145,7 +142,11 @@ export class ViewDocumentComponent {
         address: [this.poData.address],
       });
       this.pdf_url = this.poData.pdf_url;
-      this.invoicePDF = this.poData.invoice.pdf_url;
+      if (this.poData.invoice) {
+        this.invoicePDF = this.poData.invoice.pdf_url;
+      } else {
+        this.showPoEdit = true;
+      }
       this.loadPDF = false;
       setTimeout(() => {
         this.loadPDF = true;
@@ -186,7 +187,7 @@ export class ViewDocumentComponent {
   }
 
   async getOneQuote() {
-    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ONE_AP_QUOET, { _id: this.id });
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ONE_AP_QUOTE, { _id: this.id });
     if (data.status) {
       this.quoteData = data.data;
       let quoteDate;
@@ -213,7 +214,11 @@ export class ViewDocumentComponent {
         address: [this.quoteData.address],
       });
       this.pdf_url = this.quoteData.pdf_url;
-      this.invoicePDF = this.quoteData.invoice.pdf_url;
+      if (this.poData.invoice) {
+        this.invoicePDF = this.quoteData.invoice.pdf_url;
+      } else {
+        this.showPoEdit = true;
+      }
       this.loadPDF = false;
       setTimeout(() => {
         this.loadPDF = true;
@@ -278,7 +283,11 @@ export class ViewDocumentComponent {
         received_by: [this.packingSlipData.received_by],
       });
       this.pdf_url = this.packingSlipData.pdf_url;
-      this.invoicePDF = this.packingSlipData.invoice.pdf_url;
+      if (this.poData.invoice) {
+        this.invoicePDF = this.packingSlipData.invoice.pdf_url;
+      } else {
+        this.showPoEdit = true;
+      }
       this.loadPDF = false;
       setTimeout(() => {
         this.loadPDF = true;
@@ -330,7 +339,11 @@ export class ViewDocumentComponent {
         received_by: [this.receivingSlipData.received_by],
       });
       this.pdf_url = this.receivingSlipData.pdf_url;
-      this.invoicePDF = this.receivingSlipData.invoice.pdf_url;
+      if (this.poData.invoice) {
+        this.invoicePDF = this.receivingSlipData.invoice.pdf_url;
+      } else {
+        this.showPoEdit = true;
+      }
       this.loadPDF = false;
       setTimeout(() => {
         this.loadPDF = true;
@@ -370,7 +383,23 @@ export class ViewDocumentComponent {
   back() {
     const from = this.route.snapshot.queryParamMap.get('from');
     if (from) {
-      this.router.navigate([WEB_ROUTES.DASHBOARD]);
+      if (from == 'dashboard') {
+        this.router.navigate([WEB_ROUTES.DASHBOARD]);
+      } else if (from == 'document') {
+        let value;
+        if (this.document == 'PURCHASE_ORDER') {
+          value = 0;
+        } else if (this.document == 'PACKING_SLIP') {
+          value = 1;
+        } else if (this.document == 'RECEIVING_SLIP') {
+          value = 2;
+        } else if (this.document == 'QUOTE') {
+          value = 3;
+        }
+        this.router.navigate([WEB_ROUTES.DOCUMENTS], { state: { value: value } });
+      } else {
+        this.router.navigate([WEB_ROUTES.INVOICE_DETAILS], { queryParams: { _id: this.invoice_id } });
+      }
     } else {
       this.router.navigate([WEB_ROUTES.INVOICE_DETAILS], { queryParams: { _id: this.invoice_id } });
     }

@@ -18,6 +18,7 @@ import { SettingsService } from '../settings/settings.service';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSelectModule } from '@angular/material/select';
 import { DocumentsService } from './documents.service';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -33,11 +34,12 @@ import { DocumentsService } from './documents.service';
     MatMenuModule,
     MatIconModule,
     MatPaginatorModule,
-    CommonComponentsModule, // App Loading module
-    MatTooltipModule, // Tooltip Module
+    CommonComponentsModule,
+    MatTooltipModule,
     MatDialogModule,
-    MatSortModule, // Datatable sorting module
-    MatSelectModule // Datatable filter module
+    MatSortModule,
+    MatSelectModule,
+    SharedModule,
   ]
 })
 export class DocumentsModule { }

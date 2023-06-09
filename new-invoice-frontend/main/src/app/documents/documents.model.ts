@@ -1,19 +1,24 @@
+import { UserModel } from "../users/user.model";
+import { VendorModel } from "../vendors/vendor.model";
+
 export class DocumentTable {
+     _id: string;
      document_type: string;
      po_no: string;
      invoice_no: string;
-     vendor_name: number;
-     updated_by: string;
+     vendor_data: VendorModel;
+     updated_by: UserModel;
      updated_at: string;
 
-     constructor(DocumentTable: DocumentTable) {
+     constructor (response: DocumentTable) {
           {
-               this.document_type = DocumentTable.document_type;
-               this.po_no = DocumentTable.po_no;
-               this.invoice_no = DocumentTable.invoice_no;
-               this.vendor_name = DocumentTable.vendor_name;
-               this.updated_by = DocumentTable.updated_by;
-               this.updated_at = DocumentTable.updated_at;
+               this._id = response._id;
+               this.document_type = response.document_type;
+               this.po_no = response.po_no;
+               this.invoice_no = response.invoice_no;
+               this.vendor_data = response.vendor_data;
+               this.updated_by = response.updated_by;
+               this.updated_at = response.updated_at;
 
           }
      }
