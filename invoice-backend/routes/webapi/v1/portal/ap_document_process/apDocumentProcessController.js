@@ -75,15 +75,16 @@ module.exports.saveAPDocumentProcess = async function (req, res) {
                 }
                 let insert_data = await apDocumentProcessCollection.insertMany(saveObj);
                 if (insert_data) {
-                    /* let apiObj = [];
+                    let documentId = [];
                     for (let i = 0; i < insert_data.length; i++) {
-                        apiObj.push({
-                            document_id: insert_data[i]._id,
-                            document_url: insert_data[i].pdf_url,
-                        });
+                        documentId.push(insert_data[i]._id);
                     }
-                    let data = await common.sendInvoiceForProcess(apiObj);
-                    let json = JSON.parse(data.body);
+                    var data = await common.sendInvoiceForProcess({
+                        pdf_urls: documentId,
+                        company: decodedToken.companycode,
+                    });
+                    console.log("process document response: ", data);
+                    /*let json = JSON.parse(data.body);
                     invoiceProgressController.saveInvoiceProgress({ process_id: json.process_id }, decodedToken);  */
                     res.send({ message: 'Document sent for process added successfully.', data: insert_data, status: true });
                 } else {
