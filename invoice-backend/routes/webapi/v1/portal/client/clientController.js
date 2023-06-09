@@ -33,6 +33,13 @@ module.exports.saveclient = async function (req, res) {
                 requestObject.updated_by = decodedToken.UserData._id;
                 let updateclient = await clientConnection.updateOne({ _id: id }, requestObject);
                 if (updateclient) {
+                    delete requestObject.created_at;
+                    delete requestObject.created_by;
+                    delete requestObject.updated_at;
+                    delete requestObject.updated_by;
+                    delete requestObject.is_delete;
+                    delete requestObject.is_quickbooks;
+
                     // find difference of object 
                     let updatedData = await common.findUpdatedFieldHistory(requestObject, one_client._doc);
 
