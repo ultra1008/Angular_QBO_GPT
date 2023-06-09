@@ -51,12 +51,12 @@
                                                 <span class="chat-with-data">{{messageData.invoice.invoice_no}}</span>
                                             </div>
                                             <div class="chat-with">Invoice Amount:
-                                                <span
-                                                    class="chat-with-data">{{messageData.invoice.invoice_total_amount}}</span>
+                                                <span class="chat-with-data">$
+                                                    {{numberWithCommas(messageData.invoice.invoice_total_amount)}}</span>
                                             </div>
                                             <div class="chat-with">Due Date:
-                                                <span
-                                                    class="chat-with-data">{{messageData.invoice.due_date_epoch}}</span>
+                                                <span class="chat-with-data"> {{ (messageData.invoice.due_date_epoch *
+                                                    1000) | date: 'MM/dd/yyyy'}}</span>
                                             </div>
                                             <div class="chat-with">Vendor:
                                                 <span
