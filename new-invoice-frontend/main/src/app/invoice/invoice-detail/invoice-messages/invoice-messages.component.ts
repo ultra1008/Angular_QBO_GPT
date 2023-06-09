@@ -13,7 +13,7 @@ import { WEB_ROUTES } from 'src/consts/routes';
 import { InvoiceService } from '../../invoice.service';
 import { InvoiceMessage } from '../../invoice.model';
 import { HttpCall } from 'src/app/services/httpcall.service';
-import { showNotification, swalWithBootstrapTwoButtons, MMDDYYYY_HH_MM_A, numberWithCommas } from 'src/consts/utils';
+import { showNotification, swalWithBootstrapTwoButtons, MMDDYYYY_HH_MM_A, numberWithCommas, formateAmount } from 'src/consts/utils';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { TableElement } from 'src/app/shared/TableElement';
@@ -43,7 +43,7 @@ export class InvoiceMessagesComponent extends UnsubscribeOnDestroyAdapter implem
 
   type = '';
 
-  constructor (public httpClient: HttpClient, public dialog: MatDialog, public invoiceService: InvoiceService,
+  constructor(public httpClient: HttpClient, public dialog: MatDialog, public invoiceService: InvoiceService,
     private snackBar: MatSnackBar, public route: ActivatedRoute, private router: Router, private httpCall: HttpCall,
     private commonService: CommonService) {
     super();
@@ -151,15 +151,17 @@ export class InvoiceMessagesComponent extends UnsubscribeOnDestroyAdapter implem
 
   exportExcel() {
     const exportData: Partial<TableElement>[] =
-      this.dataSource.filteredData.map((x) => ({
+      this.dataSource.filteredData.map((x: any) =>
+      ({
         'Date & Time': MMDDYYYY_HH_MM_A(x.created_at),
-        'Sender': x.last_message.sender.userfullname,
-        'Last Message': x.last_message.message,
+        'Sender': x.last_message_sender.userfullname,
+        'Last Message': x.message,
         'Invoice Number': x.invoice.invoice_no,
-        'Due Date': x.invoice.due_date_epoch,
-        'Vendor': x.invoice.vendor_data.vendor_name,
-        'Total Amount': x.invoice.invoice_total_amount,
-      }));
+        'Due Date': MMDDYYYY_HH_MM_A(x.invoice.due_date_epoch),
+        'Vendor': x.invoice.vendor.vendor_name,
+        'Total Amount': formateAmount(x.invoice.invoice_total_amount),
+      })
+      );
 
     TableExportUtil.exportToExcel(exportData, 'excel');
   }
@@ -178,7 +180,7 @@ export class ExampleDataSource extends DataSource<InvoiceMessage> {
   }
   filteredData: InvoiceMessage[] = [];
   renderedData: InvoiceMessage[] = [];
-  constructor (
+  constructor(
     public exampleDatabase: InvoiceService,
     public paginator: MatPaginator,
     public _sort: MatSort
