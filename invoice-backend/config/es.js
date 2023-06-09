@@ -879,6 +879,7 @@ module.exports = {
         Approved: 'Approved Invoices',
         Rejected: 'Rejected Invoices',
         Late: 'Late Invoices',
+        vendor_type_id: "Vendor Type",
     },
 
     // Vendor Report

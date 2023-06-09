@@ -1,4 +1,5 @@
 var vendorSchema = require('../../../../../model/vendor');
+var vendorTypeSchema = require('../../../../../model/vendor_type');
 var termSchema = require('../../../../../model/invoice_term');
 var vendor_history_Schema = require('../../../../../model/history/vendor_history');
 let db_connection = require('../../../../../controller/common/connectiondb');
@@ -38,6 +39,7 @@ module.exports.saveVendor = async function (req, res) {
             var requestObject = req.body;
             requestObject.vendor_email = requestObject.vendor_email.toLowerCase();
             var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
+            var vendorTypeConnection = connection_db_api.model(collectionConstant.VENDOR_TYPE, vendorTypeSchema);
             var termConnection = connection_db_api.model(collectionConstant.INVOICE_TERM, termSchema);
             var id = requestObject._id;
             delete requestObject._id;
@@ -58,6 +60,9 @@ module.exports.saveVendor = async function (req, res) {
                     if (requestObject.vendor_terms) {
                         requestObject.vendor_terms = ObjectID(requestObject.vendor_terms);
                     }
+                    if (requestObject.vendor_type_id) {
+                        requestObject.vendor_type_id = ObjectID(requestObject.vendor_type_id);
+                    }
 
                     // find difference of object 
                     let updatedData = await common.findUpdatedFieldHistory(requestObject, one_vendor._doc);
@@ -66,6 +71,12 @@ module.exports.saveVendor = async function (req, res) {
                     if (found_term != -1) {
                         let one_term = await termConnection.findOne({ _id: ObjectID(updatedData[found_term].value) });
                         updatedData[found_term].value = one_term.name;
+                    }
+
+                    let found_vendor_type = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'vendor_type_id'; });
+                    if (found_vendor_type != -1) {
+                        let one_vendor_type = await vendorTypeConnection.findOne({ _id: ObjectID(updatedData[found_vendor_type].value) });
+                        updatedData[found_vendor_type].value = one_vendor_type.name;
                     }
 
                     let found_status = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'vendor_status'; });
@@ -144,10 +155,15 @@ module.exports.saveVendor = async function (req, res) {
                     let insertedData = await common.setInsertedFieldHistory(requestObject);
                     // Check for object id fields and if it changed then replace id with specific value
                     let found_term = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'vendor_terms'; });
-
                     if (found_term != -1) {
                         let one_term = await termConnection.findOne({ _id: ObjectID(insertedData[found_term].value) });
                         insertedData[found_term].value = one_term.name;
+                    }
+
+                    let found_vendor_type = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'vendor_type_id'; });
+                    if (found_vendor_type != -1) {
+                        let one_vendor_type = await vendorTypeConnection.findOne({ _id: ObjectID(insertedData[found_vendor_type].value) });
+                        insertedData[found_vendor_type].value = one_vendor_type.name;
                     }
 
                     let found_status = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'vendor_status'; });
