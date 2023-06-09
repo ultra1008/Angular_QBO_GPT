@@ -2639,3 +2639,32 @@ module.exports.sendEmailForgotPassword = async function (req, res) {
         // connection_db_api.close();
     }
 };
+
+
+module.exports.getUserList = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            let requestObject = req.body;
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+            let get_data = await userConnection.find({ is_delete: 0, userstatus: 1 });
+            if (get_data) {
+                res.send({ message: translator.getStr('UserListing'), status: true, data: get_data });
+            }
+            else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+
+        } catch (e) {
+            console.log("e:", e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            console.log("db close check: mobile get User");
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
