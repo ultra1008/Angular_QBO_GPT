@@ -60,7 +60,6 @@ export class JobNameListingComponent
 
   edit(jobname: any) {
     let that = this;
-    console.log('vednor');
     const dialogRef = this.dialog.open(JobNameFormComponent, {
       width: '350px',
       data: jobname,

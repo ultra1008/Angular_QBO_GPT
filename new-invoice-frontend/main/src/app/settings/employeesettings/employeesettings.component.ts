@@ -51,7 +51,7 @@ export class EmployeesettingsComponent {
   showlanguage = true;
   @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
 
-  constructor(
+  constructor (
     private router: Router,
     public translate: TranslateService,
     public SettingsServices: SettingsService,
@@ -72,14 +72,10 @@ export class EmployeesettingsComponent {
 
   onTabChanged($event: { index: string | number; }) {
     this.currrent_tab = this.tab_Array[$event.index];
-    console.log('currrent_tab', this.currrent_tab);
   }
 
   add() {
-    console.log('call', this.currrent_tab == 'document');
-
     if (this.currrent_tab == 'document') {
-      console.log('document');
       const dialogRef = this.dialog.open(DocumentTypeFormComponent, {
         width: '350px',
         data: {},
@@ -150,7 +146,6 @@ export class EmployeesettingsComponent {
 
   edit(Document: any) {
     if (this.currrent_tab == 'document') {
-      console.log('document');
       const dialogRef = this.dialog.open(DocumentTypeFormComponent, {
         width: '350px',
         data: Document,
@@ -445,6 +440,9 @@ export class EmployeesettingsComponent {
     let header_;
     const reader = new FileReader();
     const file = ev.target.files[0];
+    setTimeout(() => {
+      ev.target.value = null;
+    }, 200);
     reader.onload = (event) => {
       const data = reader.result;
       workBook = XLSX.read(data, { type: 'binary' }) || '';

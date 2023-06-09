@@ -80,7 +80,6 @@ export class ClassNameListingComponent
 
   edit(className: any) {
     let that = this;
-    console.log('vednor');
     const dialogRef = this.dialog.open(ClassNameFormComponent, {
       width: '350px',
       data: className,

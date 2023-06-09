@@ -54,7 +54,6 @@ export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter imple
 
   edit(document: any) {
     let that = this;
-    console.log('document');
     const dialogRef = this.dialog.open(DocumentFormComponent, {
       width: '350px',
       data: document,

@@ -54,7 +54,6 @@ export class TaxRateListingComponent extends UnsubscribeOnDestroyAdapter impleme
 
   edit(taxRate: any) {
     let that = this;
-    console.log('document');
     const dialogRef = this.dialog.open(TaxRateFormComponent, {
       width: '350px',
       data: taxRate,

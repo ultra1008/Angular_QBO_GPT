@@ -117,7 +117,6 @@ export class UsageComponent
     this.router.navigate(['/settings']);
   }
   myFunc = (i: number, row: Object) => {
-    console.log(row.hasOwnProperty('position'));
     row.hasOwnProperty('position');
   };
   ngOnInit() {

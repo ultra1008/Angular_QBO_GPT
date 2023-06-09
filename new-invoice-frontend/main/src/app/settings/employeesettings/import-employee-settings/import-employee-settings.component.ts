@@ -27,7 +27,7 @@ export class ImportEmployeeSettingsComponent {
   userList: any = [];
   isDelete = 0;
   invoice_logo = icon.INVOICE_LOGO;
-  constructor(
+  constructor (
     public dialogRef: MatDialogRef<ImportEmployeeSettingsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: SettingsService,
@@ -38,7 +38,6 @@ export class ImportEmployeeSettingsComponent {
     public uiSpinner: UiSpinnerService,
     public translate: TranslateService
   ) {
-    console.log('data', data);
     this.currrent_tab = data;
     // Set the defaults
     this.action = data.action;

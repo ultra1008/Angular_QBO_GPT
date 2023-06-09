@@ -57,7 +57,6 @@ export class DocumentTypeListComponent
 
   edit(document: any) {
     let that = this;
-    console.log('document');
     const dialogRef = this.dialog.open(DocumentTypeFormComponent, {
       width: '350px',
       data: document,
@@ -65,7 +64,6 @@ export class DocumentTypeListComponent
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log("result", result);
       if (result) {
         if (result.status) {
           const foundIndex = this.documentService?.documentTypeDataChange.value.findIndex((x) => x._id === document._id);
@@ -134,11 +132,6 @@ export class DocumentTypeListComponent
       }
     );
     this.selection.clear();
-    setTimeout(() => {
-      console.log("this.dataSource: ", this.dataSource);
-      console.log("this.documentService?.documentTypeDataChange.value: ", this.documentService?.documentTypeDataChange.value);
-    }, 2000);
-
   }
 
   back() {

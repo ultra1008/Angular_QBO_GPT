@@ -147,7 +147,6 @@ export class CompanyInfoFormComponent {
   async getOneVendor() {
     let that = this;
     const data = await this.SettingsServices.getCompanyInfo();
-    console.log('data', data);
     if (data.status) {
       const CompanyInfoData = data.data;
       that.compnay_code = CompanyInfoData.companycode;
@@ -328,7 +327,6 @@ export class CompanyInfoFormComponent {
     this.prepareFilesList($event);
   }
   fileChange(event: Event) {
-    // console.log("event:' ", event);
     const element = event.currentTarget as HTMLInputElement;
     const fileList = element.files;
     if (fileList) {

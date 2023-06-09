@@ -16,16 +16,16 @@ import { httproutes, httpversion } from 'src/consts/httproutes';
 export class DocumentviewComponent {
 
   Document_View_time_value!: string;
-  Document_View: boolean = false;
+  Document_View = false;
   Archive_Orphan_Document_time_value!: string;
-  Archive_Orphan_Document: boolean = false;
+  Archive_Orphan_Document = false;
   settingObject: any;
   setting_id!: string;
-  Document_Settings_Alert_Sure_Want_Change: string = "";
-  Compnay_Equipment_Delete_Yes: string = "";
-  Compnay_Equipment_Delete_No: string = "";
+  Document_Settings_Alert_Sure_Want_Change = "";
+  Compnay_Equipment_Delete_Yes = "";
+  Compnay_Equipment_Delete_No = "";
 
-  constructor(private router: Router, private formBuilder: FormBuilder, public httpCall: HttpCall, private snackBar: MatSnackBar,
+  constructor (private router: Router, private formBuilder: FormBuilder, public httpCall: HttpCall, private snackBar: MatSnackBar,
     public SettingsServices: SettingsService, public translate: TranslateService) {
 
   }
@@ -37,8 +37,6 @@ export class DocumentviewComponent {
       .subscribe(function (params) {
         if (params.status) {
           if (params.data) {
-            console.log("settingObject", params.data);
-
             that.settingObject = params.data.settings;
             that.setting_id = params.data._id;
             if (params.data.settings.Document_View) {

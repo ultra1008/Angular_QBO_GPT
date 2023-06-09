@@ -62,7 +62,6 @@ export class RelationshipListComponent
 
   edit(relationship: any) {
     let that = this;
-    console.log('document');
     const dialogRef = this.dialog.open(RelationshipFormComponent, {
       width: '350px',
       data: relationship,

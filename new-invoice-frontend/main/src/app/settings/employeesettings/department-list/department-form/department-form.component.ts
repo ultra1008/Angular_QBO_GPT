@@ -46,11 +46,8 @@ export class DepartmentFormComponent {
     this.DepartmentInfo = new FormGroup({
       department_name: new FormControl('', [Validators.required]),
     });
-    console.log('data', data);
-    const document_data = data.data;
 
     if (this.data) {
-      console.log('call');
       this.DepartmentInfo = new FormGroup({
         department_name: new FormControl(this.data.department_name, [
           Validators.required,

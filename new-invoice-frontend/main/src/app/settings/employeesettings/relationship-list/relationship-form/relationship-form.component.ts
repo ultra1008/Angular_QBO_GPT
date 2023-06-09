@@ -47,11 +47,9 @@ export class RelationshipFormComponent {
     this.relationshipInfo = new FormGroup({
       relationship_name: new FormControl('', [Validators.required]),
     });
-    console.log('data', data);
     const document_data = data.data;
 
     if (this.data) {
-      console.log('call');
       this.relationshipInfo = new FormGroup({
         relationship_name: new FormControl(this.data.relationship_name, [
           Validators.required,

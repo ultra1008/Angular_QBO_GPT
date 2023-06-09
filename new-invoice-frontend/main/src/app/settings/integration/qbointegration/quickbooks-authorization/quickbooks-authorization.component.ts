@@ -9,7 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class QuickbooksAuthorizationComponent {
 
-  constructor(
+  constructor (
     private readonly route: ActivatedRoute,
     private readonly http: HttpClient
   ) { }
@@ -37,10 +37,7 @@ export class QuickbooksAuthorizationComponent {
         reportProgress: true,
         observe: "events",
       })
-
       .subscribe((res) => {
-        console.log("my res", res);
-
         this.loadClients = 0;
         if (res.type === HttpEventType.DownloadProgress) {
           // this.loadClients = Math.round((100 * res.loaded) / res.total);
@@ -48,7 +45,7 @@ export class QuickbooksAuthorizationComponent {
 
         if (res.type === HttpEventType.Response) {
           this.loadClients = 100;
-          this.loadInvoices = 0
+          this.loadInvoices = 0;
         }
       });
   }

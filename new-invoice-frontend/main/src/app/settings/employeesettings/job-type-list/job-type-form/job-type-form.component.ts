@@ -46,11 +46,8 @@ export class JobTypeFormComponent {
     this.jobtypeInfo = new FormGroup({
       job_type_name: new FormControl('', [Validators.required]),
     });
-    console.log('data', data);
-    const document_data = data.data;
 
     if (this.data) {
-      console.log('call');
       this.jobtypeInfo = new FormGroup({
         job_type_name: new FormControl(this.data.job_type_name, [
           Validators.required,

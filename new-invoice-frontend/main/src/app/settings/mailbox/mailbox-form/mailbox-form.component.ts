@@ -26,7 +26,7 @@ export class MailboxFormComponent {
   frequency = configData.MAILBOX_MONITOR_TIME;
   cronTime: any;
 
-  constructor(
+  constructor (
     private fb: UntypedFormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
@@ -56,18 +56,14 @@ export class MailboxFormComponent {
   }
 
   onSelectTime(event: any) {
-    console.log('element', this.frequency, event);
     let found = this.frequency.find((element) => element.time == event);
-    console.log('found', found);
     this.cronTime = found?.cron_time;
-    console.log('crontime', this.cronTime);
   }
 
   async getOneMailbox() {
     const data = await this.SettingsServices.getOneMailBox(this.id);
     if (data.status) {
       let mailBox = data.data;
-      console.log('data', mailBox);
       this.companyinfoForm = this.fb.group({
         email: [mailBox.email, [Validators.required, Validators.email]],
         password: ['', Validators.required],

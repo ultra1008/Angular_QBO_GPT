@@ -24,7 +24,7 @@ import { OtherExistsListingComponent } from './other-exists-listing/other-exists
   styleUrls: ['./othersettings.component.scss'],
 })
 export class OthersettingsComponent implements OnInit {
-  exitData!: any[];
+  @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
   AllTerms: any;
   AllTaxrate: any;
   AllDocument: any;
@@ -38,7 +38,6 @@ export class OthersettingsComponent implements OnInit {
     'Vendor type',
     'Class name',
   ];
-  @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
 
   showTerms = true;
   showTaxRate = true;
@@ -46,7 +45,7 @@ export class OthersettingsComponent implements OnInit {
   showVendorType = true;
   showClassName = true;
 
-  constructor(
+  constructor (
     private router: Router,
     public SettingsServices: SettingsService,
     private snackBar: MatSnackBar,
@@ -100,7 +99,6 @@ export class OthersettingsComponent implements OnInit {
     const data = await this.SettingsServices.getJobName();
     if (data.status) {
       this.AllJobName = data.data;
-      console.log('AllJobName', this.AllJobName);
     }
   }
 
@@ -413,12 +411,16 @@ export class OthersettingsComponent implements OnInit {
   }
 
   onFileChange(ev: any) {
+    console.log('file change');
     let that = this;
     let workBook: any;
     let jsonData = null;
     let header_;
     const reader = new FileReader();
     const file = ev.target.files[0];
+    setTimeout(() => {
+      ev.target.value = null;
+    }, 200);
     reader.onload = (event) => {
       const data = reader.result;
       workBook = XLSX.read(data, { type: 'binary' }) || '';
@@ -463,17 +465,14 @@ export class OthersettingsComponent implements OnInit {
         .subscribe(function (params) {
           if (params.status) {
             that.uiSpinner.spin$.next(false);
-            that.exitData = params;
             const dialogRef = that.dialog.open(OtherExistsListingComponent, {
               width: '750px',
               height: '500px',
-              // data: that.exitData,
-              data: { data: that.exitData, tab: that.currrent_tab },
+              data: { data: params, tab: that.currrent_tab },
               disableClose: true,
             });
 
             dialogRef.afterClosed().subscribe((result: any) => {
-              console.log("result", result);
               if (result.module) {
                 if (result.module == 'Terms') {
                   that.showTerms = false;

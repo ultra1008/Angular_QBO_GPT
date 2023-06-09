@@ -436,6 +436,9 @@ export class UsersListingComponent
     let header_;
     const reader = new FileReader();
     const file = ev.target.files[0];
+    setTimeout(() => {
+      ev.target.value = null;
+    }, 200);
     reader.onload = (event) => {
       const data = reader.result;
       workBook = XLSX.read(data, { type: 'binary' }) || '';

@@ -62,7 +62,6 @@ export class JobTypeListComponent
 
   edit(jobType: any) {
     let that = this;
-    console.log('document');
     const dialogRef = this.dialog.open(JobTypeFormComponent, {
       width: '350px',
       data: jobType,

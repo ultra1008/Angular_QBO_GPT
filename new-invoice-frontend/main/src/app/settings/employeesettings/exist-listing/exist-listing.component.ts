@@ -34,7 +34,7 @@ export class ExistListingComponent extends UnsubscribeOnDestroyAdapter
   isDelete = 0;
   invoice_logo = icon.INVOICE_LOGO;
   data_import: any = [];
-  constructor(
+  constructor (
     public dialogRef: MatDialogRef<ExistListingComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: SettingsService,
@@ -46,12 +46,9 @@ export class ExistListingComponent extends UnsubscribeOnDestroyAdapter
     public uiSpinner: UiSpinnerService
   ) {
     super();
-    console.log('data', data);
     this.exitData = data.data.data;
     this.button_show = data.data.allow_import;
-    console.log("exitData", this.exitData);
     this.currrent_tab = data.tab;
-    console.log("tab", this.currrent_tab);
     // Set the defaults
     this.action = data.action;
     if (this.action === 'edit') {
@@ -90,7 +87,6 @@ export class ExistListingComponent extends UnsubscribeOnDestroyAdapter
       this.data_import =
         await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SETTINGS_IMPORT_LANGUAGE, this.exitData);
     }
-    console.log("this.data_import", this.data_import);
     this.uiSpinner.spin$.next(false);
     if (this.data_import.status) {
       this.dialogRef.close({ module: this.currrent_tab });

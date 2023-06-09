@@ -49,27 +49,20 @@ export class QbointegrationComponent {
     reqObject.companycode = localStorage.getItem('companycode');
     this.httpCall.httpPostCall(httpversion.V1 + httproutes.QUICKBOOK_SAVE_INFO, reqObject).subscribe(function (resdata) {
       const authUri = resdata.authUri;
-      console.log(authUri);
       let parameters = "location=1,width=800,height=650";
       parameters += ",left=" + (screen.width - 800) / 2 + ",top=" + (screen.height - 650) / 2;
       const win = window.open(authUri, 'connectPopup', parameters);
       const pollOAuth = window.setInterval(function () {
         try {
           if (win?.closed === true) {
-            console.log(localStorage.getItem('integratewithQBO'));
             clearInterval(pollOAuth);
           }
-
         } catch (e) {
-
           console.log(e);
         }
       }, 100);
       window.addEventListener('message', (event) => {
-        console.log('I am Here');
         if (event.data?.msg && win?.closed === false) {
-          console.log(event.data);
-          console.log(win?.closed);
           that._snackBar.open("You have integrated with QB", "Close", {
             horizontalPosition: that.horizontalPosition,
             verticalPosition: that.verticalPosition,
