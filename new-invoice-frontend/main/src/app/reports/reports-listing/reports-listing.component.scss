@@ -1,92 +1,93 @@
-::ng-deep .mat-mdc-table .mdc-data-table__row {
-     height: 35px !important;
-}
+ ::ng-deep .mat-mdc-table .mdc-data-table__row {
+      height: 35px !important;
+ }
 
-::ng-deep .mat-mdc-table .mdc-data-table__header-row {
-     height: 35px !important;
-}
+ ::ng-deep .mat-mdc-table .mdc-data-table__header-row {
+      height: 35px !important;
+ }
 
-::ng-deep .mat-header-row {
-     min-height: 0px !important;
-}
+ ::ng-deep .mat-header-row {
+      min-height: 0px !important;
+ }
 
-::ng-deep .mdc-data-table__cell {
-     font-size: var(--mdc-typography-body2-font-size, 12px);
-}
+ ::ng-deep .mdc-data-table__cell {
+      font-size: var(--mdc-typography-body2-font-size, 12px);
+ }
 
-::ng-deep .mdc-data-table__cell,
-.mdc-data-table__header-cell {
-     border: 1px solid #f8f8f8 !important;
-     // padding: 0 16px 0 10px !important;
-}
+ ::ng-deep .mdc-data-table__cell,
+ .mdc-data-table__header-cell {
+      border: 1px solid #f8f8f8 !important;
+      // padding: 0 16px 0 10px !important;
+ }
 
-::ng-deep .table {
-     // border: 1px solid aquamarine !important;
-     padding: unset !important;
+ ::ng-deep .table {
+      // border: 1px solid aquamarine !important;
+      padding: unset !important;
 
-}
+ }
 
-.tbl-col-width-per-selected {
-     min-width: 50px !important;
-     max-width: 4% !important;
-}
+ .tbl-col-width-per-selected {
+      min-width: 50px !important;
+      max-width: 4% !important;
+ }
 
-.tbl-col-width-per-action {
-     min-width: 100px !important;
-     max-width: 7% !important;
-}
+ .tbl-col-width-per-action {
+      min-width: 100px !important;
+      max-width: 7% !important;
+ }
 
-::ng-deep .tbl-header-btn .mat-mdc-form-field {
-     flex-direction: unset !important;
-}
 
-.report-date {
-     ::ng-deep .mdc-text-field--outlined {
-          // c
-     }
+ ::ng-deep .tbl-header-btn .mat-mdc-form-field {
+      flex-direction: unset !important;
+ }
 
-     ::ng-deep.mat-mdc-icon-button svg {
-          padding-bottom: 6px !important;
-     }
+ .report-date {
+      ::ng-deep .mdc-text-field--outlined {
+           // c
+      }
 
-     ::ng-deep .mat-mdc-form-field-icon-suffix {
-          padding-bottom: 10px !important;
-     }
+      ::ng-deep.mat-mdc-icon-button svg {
+           padding-bottom: 6px !important;
+      }
 
-     ::ng-deep .mat-mdc-form-field .mat-mdc-floating-label.mdc-floating-label {
-          line-height: normal;
-          pointer-events: all;
-          padding-bottom: 16px;
-     }
+      ::ng-deep .mat-mdc-form-field-icon-suffix {
+           padding-bottom: 10px !important;
+      }
 
-     ::ng-deep .mdc-notched-outline {
-          height: 38px !important;
-     }
+      ::ng-deep .mat-mdc-form-field .mat-mdc-floating-label.mdc-floating-label {
+           line-height: normal;
+           pointer-events: all;
+           padding-bottom: 16px;
+      }
 
-     ::ng-deep .mat-mdc-text-field-wrapper {
+      ::ng-deep .mdc-notched-outline {
+           height: 38px !important;
+      }
 
-          margin-top: 10px !important;
-          height: 40px !important;
-     }
+      ::ng-deep .mat-mdc-text-field-wrapper {
 
-     ::ng-deep .example-full-width {
-          height: 30px !important;
-          margin-top: -14px !important;
-     }
+           margin-top: 10px !important;
+           height: 40px !important;
+      }
 
-     // ::ng-deep.mat-mdc-text-field-wrapper {
-     //     margin-top: 14px;
-     // }
+      ::ng-deep .example-full-width {
+           height: 30px !important;
+           margin-top: -14px !important;
+      }
 
-     ::ng-deep .mat-mdc-select-arrow svg {
-          top: -36%;
-     }
+      // ::ng-deep.mat-mdc-text-field-wrapper {
+      //     margin-top: 14px;
+      // }
 
-     ::ng-deep .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
-          padding-top: 8px;
-     }
-}
+      ::ng-deep .mat-mdc-select-arrow svg {
+           top: -36%;
+      }
 
-.report-date[_ngcontent-rwx-c116] .mat-mdc-icon-button svg {
-     padding-top: 10px !important;
-}
+      ::ng-deep .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+           padding-top: 8px;
+      }
+ }
+
+ .report-date[_ngcontent-rwx-c116] .mat-mdc-icon-button svg {
+      padding-top: 10px !important;
+ }

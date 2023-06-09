@@ -214,7 +214,7 @@ export class ViewDocumentComponent {
         address: [this.quoteData.address],
       });
       this.pdf_url = this.quoteData.pdf_url;
-      if (this.poData.invoice) {
+      if (this.quoteData.invoice) {
         this.invoicePDF = this.quoteData.invoice.pdf_url;
       } else {
         this.showPoEdit = true;
@@ -283,7 +283,7 @@ export class ViewDocumentComponent {
         received_by: [this.packingSlipData.received_by],
       });
       this.pdf_url = this.packingSlipData.pdf_url;
-      if (this.poData.invoice) {
+      if (this.packingSlipData.invoice) {
         this.invoicePDF = this.packingSlipData.invoice.pdf_url;
       } else {
         this.showPoEdit = true;
@@ -339,7 +339,7 @@ export class ViewDocumentComponent {
         received_by: [this.receivingSlipData.received_by],
       });
       this.pdf_url = this.receivingSlipData.pdf_url;
-      if (this.poData.invoice) {
+      if (this.receivingSlipData.invoice) {
         this.invoicePDF = this.receivingSlipData.invoice.pdf_url;
       } else {
         this.showPoEdit = true;

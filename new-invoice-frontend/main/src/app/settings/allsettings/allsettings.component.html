@@ -63,6 +63,18 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12 " *ngFor="let setting of settingsList">
+                    <div class="card top-sell p-2" (click)="setting.click.apply(this)">
+                        <div class="d-flex">
+                            <i [ngClass]="setting.icon"></i>
+                            <div class="product-title my-auto">
+                                {{setting.title}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="row">
                 <div class="col-lg-4 ">
                     <div class="info-box7 order-info-box7" (click)="openMailboxListing()">
                         <ul class="list-unstyled list-unstyled-noborder">
@@ -70,7 +82,8 @@
                                 <i class="fas fa-inbox bg-red sell-icon"></i>
                                 <div class="set-flex">
                                     <div class="product-title">
-                                        {{'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOXES' | translate}}</div>
+                                        {{'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOXES' | translate}}
+                                    </div>
                                 </div>
                             </li>
                         </ul>
@@ -82,7 +95,8 @@
                             <li class="sales-group-list top-sell">
                                 <i class="fas fa-user bg-pink sell-icon"></i>
                                 <div class="set-flex">
-                                    <div class="product-title">{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE' | translate}}
+                                    <div class="product-title">
+                                        {{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE' | translate}}
                                     </div>
                                 </div>
                             </li>
@@ -110,7 +124,8 @@
                             <li class="sales-group-list top-sell">
                                 <i class="fas fa-bell bg-indigo sell-icon"></i>
                                 <div class="set-flex">
-                                    <div class="product-title">{{'SETTINGS.SETTINGS_OTHER_OPTION.ALERTS' | translate}}
+                                    <div class="product-title">
+                                        {{'SETTINGS.SETTINGS_OTHER_OPTION.ALERTS' | translate}}
                                     </div>
                                 </div>
                             </li>
@@ -137,7 +152,8 @@
                                 <i class="fas fa-puzzle-piece bg-cyan sell-icon"></i>
                                 <div class="set-flex">
                                     <div class="product-title">
-                                        {{'SETTINGS.SETTINGS_OTHER_OPTION.INTEGRATION' | translate}}</div>
+                                        {{'SETTINGS.SETTINGS_OTHER_OPTION.INTEGRATION' | translate}}
+                                    </div>
                                 </div>
                             </li>
                         </ul>
@@ -151,7 +167,8 @@
                             <li class="sales-group-list top-sell">
                                 <i class="fas fa-database bg-teal sell-icon"></i>
                                 <div class="set-flex">
-                                    <div class="product-title">{{'SETTINGS.SETTINGS_OTHER_OPTION.USAGE' | translate}}
+                                    <div class="product-title">
+                                        {{'SETTINGS.SETTINGS_OTHER_OPTION.USAGE' | translate}}
                                     </div>
                                 </div>
                             </li>
@@ -165,7 +182,8 @@
                                 <i class="fas fa-cog bg-green sell-icon"></i>
                                 <div class="set-flex">
                                     <div class="product-title">
-                                        {{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS' | translate}}</div>
+                                        {{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS' | translate}}
+                                    </div>
                                 </div>
                             </li>
                         </ul>
@@ -177,7 +195,8 @@
                             <li class="sales-group-list top-sell">
                                 <i class="fas fa-lock bg-yellow sell-icon"></i>
                                 <div class="set-flex">
-                                    <div class="product-title">{{'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY' | translate}}
+                                    <div class="product-title">
+                                        {{'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY' | translate}}
                                     </div>
                                 </div>
                             </li>
@@ -193,13 +212,14 @@
                                 <i class="fas fa-dollar-sign bg-orange sell-icon"></i>
                                 <div class="set-flex">
                                     <div class="product-title">
-                                        {{'SETTINGS.SETTINGS_OTHER_OPTION.COST_CODE' | translate}}</div>
+                                        {{'SETTINGS.SETTINGS_OTHER_OPTION.COST_CODE' | translate}}
+                                    </div>
                                 </div>
                             </li>
                         </ul>
                     </div>
                 </div>
-                <!-- <div class="col-lg-4">
+                  <div class="col-lg-4">
                     <div class="info-box7 order-info-box7" (click)="openDocumentView()">
                         <ul class="list-unstyled list-unstyled-noborder">
                             <li class="sales-group-list top-sell">
@@ -210,9 +230,9 @@
                             </li>
                         </ul>
                     </div>
-                </div> -->
+                </div>  
 
-            </div>
+            </div> -->
         </div>
     </div>
 </section>

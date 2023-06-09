@@ -26,7 +26,7 @@ body.dark {
   }
 
   .list-unstyled {
-    background-color: #1a202e !important;
+    background-color: transparent !important;
   }
 
   input {
@@ -361,6 +361,7 @@ body.dark {
 
         td,
         th {
+          background-color: transparent;
           border-right: 1px solid rgba(120, 130, 140, 0.5);
           border-bottom: none;
         }
@@ -1391,10 +1392,12 @@ body.dark {
 
   .app-list {
     background: #181c27;
+    color: white;
   }
 
   .lecture-list {
     background: #181c27;
+    color: white;
   }
 
   .media .media-body {
@@ -1767,7 +1770,7 @@ body.dark {
   .font-white {
     color: white;
   }
-  
+
   .font-white-placeholder {
     -webkit-text-fill-color: white;
   }

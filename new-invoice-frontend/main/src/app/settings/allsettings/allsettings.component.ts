@@ -10,6 +10,78 @@ import { SettingsService } from '../settings.service';
   styleUrls: ['./allsettings.component.scss'],
 })
 export class AllsettingsComponent {
+  settingsList: any = [
+    {
+      title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOXES'),
+      icon: 'fas fa-inbox bg-red sell-icon',
+      click: this.openMailboxListing,
+    },
+    {
+      title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE'),
+      icon: 'fas fa-user bg-pink sell-icon',
+      click: this.openEmployeeSettings,
+    },
+    {
+      title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.ROLE'),
+      icon: 'fas fa-sliders-h bg-purple sell-icon',
+      click: this.openRolesSettings,
+    },
+    {
+      title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.ALERTS'),
+      icon: 'fas fa-bell bg-indigo sell-icon',
+      click: this.openAlertsSettings,
+    },
+    {
+      title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.SMTP'),
+      icon: 'fas fa-envelope bg-blue sell-icon',
+      click: this.openSMTPSettings,
+    },
+    {
+      title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.INTEGRATION'),
+      icon: 'fas fa-puzzle-piece bg-cyan sell-icon',
+      click: this.openIntegrations,
+    },
+    {
+      title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.USAGE'),
+      icon: 'fas fa-database bg-teal sell-icon',
+      click: this.openUsage,
+    },
+    {
+      title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS'),
+      icon: 'fas fa-cog bg-green sell-icon',
+      click: this.openOtherSettings,
+    },
+    {
+      title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.SECURITY'),
+      icon: 'fas fa-lock bg-yellow sell-icon',
+      click: this.openSecurity,
+    },
+    {
+      title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.COST_CODE'),
+      icon: 'fas fa-dollar-sign bg-orange sell-icon',
+      click: this.openCostcode,
+    },
+    /* {
+      title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOXES'),
+      icon: 'fas fa-inbox bg-red sell-icon',
+      click: this.openMailboxListing,
+    },
+    {
+      title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOXES'),
+      icon: 'fas fa-inbox bg-red sell-icon',
+      click: this.openMailboxListing,
+    },
+    {
+      title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOXES'),
+      icon: 'fas fa-inbox bg-red sell-icon',
+      click: this.openMailboxListing,
+    },
+    {
+      title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOXES'),
+      icon: 'fas fa-inbox bg-red sell-icon',
+      click: this.openMailboxListing,
+    } */
+  ];
   CompanyData: any;
   variablesCompnayTypes_data: any = [];
   variablesCSIDivisions: any = [];
