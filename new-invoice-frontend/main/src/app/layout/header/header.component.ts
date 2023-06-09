@@ -55,7 +55,7 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
 
   companyList: any = [];
   isLoading = true;
-  constructor (@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, public elementRef: ElementRef,
+  constructor(@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, public elementRef: ElementRef,
     public uiSpinner: UiSpinnerService, private configService: ConfigService, private authService: AuthService,
     private AuthenticationService: AuthenticationService,
     private router: Router, public translate: TranslateService, public dialog: MatDialog, private commonService: CommonService,) {
@@ -173,16 +173,16 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
 
 
 
-    if (
-      window.matchMedia &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-    ) {
-      // dark mode
-      this.darkThemeBtnClick();
-    } else {
-      //Light mode
-      this.lightThemeBtnClick();
-    }
+    // if (
+    //   window.matchMedia &&
+    //   window.matchMedia('(prefers-color-scheme: dark)').matches
+    // ) {
+    //   // dark mode
+    //   this.darkThemeBtnClick();
+    // } else {
+    //   //Light mode
+    //   this.lightThemeBtnClick();
+    // }
 
 
     // set theme on startup
@@ -190,15 +190,19 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
       if (localStorage.getItem(localstorageconstants.DARKMODE) === 'dark') {
         this.isDarTheme = true;
         this.darkIcon = 'moon';
+        this.darkThemeBtnClick();
       } else if (localStorage.getItem(localstorageconstants.DARKMODE) === 'light') {
         this.isDarTheme = false;
         this.darkIcon = 'sun';
+        this.lightThemeBtnClick();
       } else {
         this.isDarTheme = this.config.layout.variant === 'dark' ? true : false;
         if (this.isDarTheme) {
           this.darkIcon = 'moon';
+          this.darkThemeBtnClick();
         } else {
           this.darkIcon = 'sun';
+          this.lightThemeBtnClick();
         }
       }
     } else {
