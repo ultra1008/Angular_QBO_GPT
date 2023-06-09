@@ -399,6 +399,7 @@ module.exports.getOneAPInvoice = async function (req, res) {
                 }
                 if (get_data) {
                     get_data.invoice_notes = await getNotesUserDetails(get_data.invoice_notes, userConnection);
+                    get_data.invoice_notes = _.orderBy(get_data.invoice_notes, 'created_at', 'desc');
                     get_data.supporting_documents = _.orderBy(get_data.supporting_documents, ['created_at'], ['desc']);
                 }
                 res.send({ status: true, message: "Invoice Listing", data: get_data });
