@@ -31,7 +31,7 @@ const routes: Routes = [
   {
     path: 'change-password',
     component: ForcefullChangePasswordComponent,
-    canActivate: [LoggedInAuthGuard],
+    // canActivate: [LoggedInAuthGuard],
   },
   {
     path: 'send-otp',

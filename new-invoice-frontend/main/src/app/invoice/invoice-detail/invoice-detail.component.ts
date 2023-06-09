@@ -540,7 +540,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
     const dialogRef = this.dialog.open(MailFormComponent, {
       width: '600px',
       height: '600px',
-      data: {},
+      data: this.invoiceData,
     });
     dialogRef.afterClosed().subscribe((result) => { });
   }

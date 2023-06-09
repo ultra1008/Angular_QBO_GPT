@@ -206,7 +206,7 @@
             "SMTP": "SMTP",
             "INTEGRATION": "Integration",
             "USAGE": "Usage",
-            "OTHER_SETTINGS": "Other SettingsModel",
+            "OTHER_SETTINGS": "Other Settings",
             "SECURITY": "Security",
             "COST_CODE": "Cost Code/GL Account",
             "DOCUMENT_VIEW": "Document View",
@@ -259,7 +259,7 @@
                 }
             },
             "OTHER_SETTINGS_MODULE": {
-                "OTHER_SETTINGS": "Other SettingsModel",
+                "OTHER_SETTINGS": "Other Settings",
                 "DISCOUNT": "Discount",
                 "TERMS": "Terms",
                 "TAX_RATE": "Tax Rate",
