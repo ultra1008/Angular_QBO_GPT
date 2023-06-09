@@ -211,7 +211,7 @@
             "COST_CODE": "Cost Code/GL Account",
             "DOCUMENT_VIEW": "Document View",
             "SECURITY_MODULE": {
-                "ALERT_SURE_WANT_CHANGE": "This is a global setting that will affect all projects. Are you sure you want to make the change?",
+                "ALERT_SURE_WANT_CHANGE": "This is a global setting that will affect all users. Are you sure you want to make the change?",
                 "AMOUNT_MINUTES": "Amount of minutes before auto log off",
                 "ENABLE_OTP": "Enable OTP",
                 "TIMEROPTIONS": "min"
@@ -233,7 +233,7 @@
                 "NEEDS_APPROVE": "needs to approve",
                 "NOTIFY": "Notify by",
                 "ALL_DOCUMENT": "This is a global setting that will affect all document. Are you sure you want to make the change?",
-                "ALL_PROJECT": "This is a global setting that will affect all projects. Are you sure you want to make the change?"
+                "ALL_PROJECT": "This is a global setting that will affect all users. Are you sure you want to make the change?"
             },
             "MAIL_BOX": {
                 "HEADER": "Mailboxes to Monitor",
