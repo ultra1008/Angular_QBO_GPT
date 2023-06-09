@@ -1424,6 +1424,83 @@ module.exports.checkQBDImportVendor = async function (req, res) {
                     }
                     var add_vendor = new vendorConnection(requestObject);
                     var save_vendor = await add_vendor.save();
+
+                    var historyObjectdata = {};
+                    historyObjectdata.vendor_name = requestObject[m].Name;
+                    if (requestObject[m].Phone != undefined) {
+
+                        historyObjectdata.vendor_phone = requestObject[m].Phone;
+                    }
+                    if (requestObject[m].Email != undefined) {
+
+                        historyObjectdata.vendor_email = requestObject[m].Email;
+                    }
+                    if (requestObject[m].VendorAddress != undefined) {
+                        historyObjectdata.vendor_address = requestObject[m].VendorAddress.Addr1;
+                        historyObjectdata.vendor_city = requestObject[m].VendorAddress.City;
+                        historyObjectdata.vendor_state = requestObject[m].VendorAddress.State;
+                        historyObjectdata.vendor_zipcode = requestObject[m].VendorAddress.PostalCode;
+                        historyObjectdata.vendor_country = requestObject[m].VendorAddress.Country;
+                    }
+                    if (requestObject[m].IsActive == true) {
+                        historyObjectdata.vendor_status = 1;
+                    }
+                    else if (requestObject[m].IsActive == false) {
+                        historyObjectdata.vendor_status = 2;
+                    }
+
+
+                    // find difference of object 
+                    let insertedData = await common.setInsertedFieldHistory(historyObjectdata);
+
+                    for (let i = 0; i < insertedData.length; i++) {
+                        insertedData[i]['key'] = translator.getStr(`Vendor_History.${insertedData[i]['key']}`);
+                    }
+                    let histioryObject = {
+                        data: insertedData,
+                        vendor_id: save_vendor._id,
+                    };
+                    addVendorHistory("Insert", histioryObject, decodedToken);
+                }
+                else {
+
+                    let one_vendor = await vendorConnection.findOne({ vendor_name: requestObject[m].Name });
+                    // requestObject.vendor_name = requestObject[m].Name;
+                    var reqdata = {};
+
+                    if (requestObject[m].Phone != undefined) {
+                        reqdata.vendor_phone = requestObject[m].Phone;
+                    }
+                    if (requestObject[m].Email != undefined) {
+                        reqdata.vendor_email = requestObject[m].Email;
+                    }
+                    if (requestObject[m].VendorAddress != undefined) {
+                        reqdata.vendor_address = requestObject[m].VendorAddress.Addr1;
+                        reqdata.vendor_city = requestObject[m].VendorAddress.City;
+                        reqdata.vendor_state = requestObject[m].VendorAddress.State;
+                        reqdata.vendor_zipcode = requestObject[m].VendorAddress.PostalCode;
+                        reqdata.vendor_country = requestObject[m].VendorAddress.Country;
+                    }
+                    if (requestObject[m].IsActive == true) {
+                        reqdata.vendor_status = 1;
+                    }
+                    else if (requestObject[m].IsActive == false) {
+                        reqdata.vendor_status = 2;
+                    }
+                    let updatecost_code = await vendorConnection.update({ vendor_name: requestObject[m].Name }, reqdata);
+
+                    // find difference of object 
+                    let updatedData = await common.findUpdatedFieldHistory(reqdata, one_vendor._doc);
+
+                    for (let i = 0; i < updatedData.length; i++) {
+                        updatedData[i]['key'] = translator.getStr(`Vendor_History.${updatedData[i]['key']}`);
+                    }
+                    let histioryObject = {
+                        data: updatedData,
+                        vendor_id: nameexist._id,
+                    };
+                    addVendorHistory("Update", histioryObject, decodedToken);
+
                 }
 
             }
