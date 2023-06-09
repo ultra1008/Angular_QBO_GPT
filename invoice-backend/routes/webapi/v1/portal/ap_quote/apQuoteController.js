@@ -26,6 +26,52 @@ module.exports.getAPQuote = async function (req, res) {
     }
 };
 
+module.exports.getOrphanAPQuote = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var apQuoteConnection = connection_db_api.model(collectionConstant.AP_QUOUTE, apQuoteSchema);
+            // var get_data = await apQuoteConnection.find({ is_delete: 0, is_orphan: true });
+            var get_data = await apQuoteConnection.aggregate([
+                { $match: { is_delete: 0, is_orphan: true } },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "updated_by",
+                        foreignField: "_id",
+                        as: "updated_by"
+                    }
+                },
+                { $unwind: "$updated_by" },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_VENDOR,
+                        localField: "vendor",
+                        foreignField: "_id",
+                        as: "vendor_data"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$vendor_data",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+            ]);
+            res.send(get_data);
+        } catch (e) {
+            console.log(e);
+            res.send([]);
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send([]);
+    }
+};
+
 module.exports.getOneAPQuote = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
@@ -44,7 +90,12 @@ module.exports.getOneAPQuote = async function (req, res) {
                         as: "invoice"
                     }
                 },
-                { $unwind: "$invoice" },
+                {
+                    $unwind: {
+                        path: "$invoice",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
                 {
                     $lookup: {
                         from: collectionConstant.INVOICE_VENDOR,
@@ -53,7 +104,12 @@ module.exports.getOneAPQuote = async function (req, res) {
                         as: "vendor_data"
                     }
                 },
-                { $unwind: "$vendor_data" },
+                {
+                    $unwind: {
+                        path: "$vendor_data",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
             ]);
             if (get_data) {
                 if (get_data.length > 0) {

@@ -255,14 +255,20 @@ export enum httproutes {
   GET_INVOICE_HISTORY = 'getapinvoicehistory',
   SAVE_INVOICE_INFO = 'saveapinvoiceinfo',
   DELETE_INVOICE_INFO = 'deleteapinvoiceinfo',
+
+  GET_ORPHAN_AP_PO = 'getorphanappo',
   GET_ONE_AP_PO = 'getoneappo',
   SAVE_AP_PO = 'saveappo',
-  GET_ONE_AP_QUOET = 'getoneapquote',
+  GET_ORPHAN_AP_QUOTE = 'getorphanapquote',
+  GET_ONE_AP_QUOTE = 'getoneapquote',
   SAVE_AP_QUOTE = 'saveapquote',
+  GET_ORPHAN_AP_PACKLING_SLIP = 'getorphanappackingslip',
   GET_ONE_AP_PACKLING_SLIP = 'getoneappackingslip',
   SAVE_AP_PACKLING_SLIP = 'saveappackingslip',
+  GET_ORPHAN_AP_RECEVING_SLIP = 'getorphanapreceivingslip',
   GET_ONE_AP_RECEVING_SLIP = 'getoneapreceivingslip',
   SAVE_AP_RECEVING_SLIP = 'saveapreceivingslip',
+  GET_AP_OTHER_DOCUMENT = 'getapotherdocument',
 
   //QuickBook Module
   QUICKBOOK_SAVE_INFO = "savequickbookinfo",

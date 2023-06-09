@@ -9,7 +9,6 @@ var otherdocument_schema = new mongoose.Schema({
     po_no: { type: String, default: "" },
     vendor: { type: mongoose.ObjectId, default: "" }, // Vendor Collection - Vendor Id
     is_delete: { type: Number, default: 0 },
-    is_orphan: { type: Number, default: 0 }, // 0 - Orphan document, 1 - already relationship with invoice document
     created_by: { type: mongoose.ObjectId, default: "" },
     created_at: { type: Number, default: 0 },
     updated_by: { type: mongoose.ObjectId, default: "" },
