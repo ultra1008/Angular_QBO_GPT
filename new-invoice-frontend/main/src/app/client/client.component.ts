@@ -235,11 +235,7 @@ export class ClientComponent
   }
 
   editClient(client: ClientJobModel) {
-    if (this.isDelete == 0) {
-      this.router.navigate([WEB_ROUTES.CLIENT_FORM], {
-        queryParams: { _id: client._id },
-      });
-    }
+    this.router.navigate([WEB_ROUTES.CLIENT_FORM], { queryParams: { _id: client._id } });
   }
 
   openHistory() {

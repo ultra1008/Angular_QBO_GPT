@@ -105,8 +105,8 @@ export class VendorFormComponent {
   async getOneVendor() {
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_GET_ONE, { _id: this.id });
     if (data.status) {
-      this.is_delete = data.data.is_delete;
       const vendorData = data.data;
+      this.is_delete = vendorData.is_delete;
       this.vendorForm = this.fb.group({
         vendor_name: [vendorData.vendor_name, [Validators.required]],
         vendor_phone: [vendorData.vendor_phone, [Validators.required]],

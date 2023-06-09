@@ -7,12 +7,14 @@ import { TranslateService } from '@ngx-translate/core';
 import { CommonService } from 'src/app/services/common.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { WEB_ROUTES } from 'src/consts/routes';
-import { showNotification, swalWithBootstrapButtons, } from 'src/consts/utils';
+import { showNotification, swalWithBootstrapButtons, swalWithBootstrapTwoButtons, } from 'src/consts/utils';
 import { ClientService } from '../client.service';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { RolePermission } from 'src/consts/common.model';
 import { CostCodeModel, CountryModel, TermModel } from 'src/app/settings/settings.model';
 import { UserModel } from 'src/app/users/user.model';
+import { ClientJobModel } from '../client.model';
+import { httproutes, httpversion } from 'src/consts/httproutes';
 
 @Component({
   selector: 'app-client-form',
@@ -31,13 +33,12 @@ export class ClientFormComponent {
   variableapproverList: Array<UserModel> = [];
   approverList: Array<UserModel> = this.variableapproverList.slice();
   countryList: Array<CountryModel> = [{ _id: 'USA', name: 'USA' }];
-  id = '';
-  isDelete = 1;
+  id: any;
   submitting_text = '';
   titleMessage = '';
   show = false;
   role_permission!: RolePermission;
-
+  is_delete: any;
   constructor (
     private fb: UntypedFormBuilder,
     private router: Router,
@@ -54,7 +55,7 @@ export class ClientFormComponent {
 
     this.vendorForm = this.fb.group({
       client_name: ['', [Validators.required]],
-      client_number: [''],
+      client_number: ['', [Validators.required]],
       client_email: ['', [Validators.required, Validators.email, Validators.minLength(5)],],
       client_cost_cost_id: [''],
       approver_id: [''],
@@ -72,9 +73,10 @@ export class ClientFormComponent {
     const data = await this.vendorService.getOneClient(this.id);
     if (data.status) {
       const clientData = data.data;
+      this.is_delete = clientData.is_delete;
       this.vendorForm = this.fb.group({
         client_name: [clientData.client_name, [Validators.required]],
-        client_number: [clientData.client_number],
+        client_number: [clientData.client_number, [Validators.required]],
         client_email: [clientData.client_email, [Validators.required, Validators.email, Validators.minLength(5)],],
         client_cost_cost_id: [clientData.client_cost_cost_id],
         approver_id: [clientData.approver_id],
@@ -108,8 +110,7 @@ export class ClientFormComponent {
       if (this.id) {
         requestObject._id = this.id;
       }
-
-      const data = await this.vendorService.saveClient(requestObject);
+      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_CLIENT, requestObject);
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
@@ -150,6 +151,37 @@ export class ClientFormComponent {
           setTimeout(() => {
             this.router.navigate([WEB_ROUTES.CLIENT]);
           }, 100);
+        }
+      });
+  }
+
+  async deleteClient() {
+    if (this.is_delete == 1) {
+      this.titleMessage = this.translate.instant('CLIENT.CONFIRMATION_DIALOG.ARCHIVE');
+    } else {
+      this.titleMessage = this.translate.instant('CLIENT.CONFIRMATION_DIALOG.RESTORE');
+    }
+    swalWithBootstrapTwoButtons
+      .fire({
+        title: this.titleMessage,
+        showDenyButton: true,
+        confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+        denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+        allowOutsideClick: false,
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          const requestObject = {
+            _id: this.id,
+            is_delete: this.is_delete == 1 ? 0 : 1,
+          };
+          const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.CLIENT_DELETE, requestObject);
+          if (data.status) {
+            showNotification(this.snackBar, data.message, 'success');
+            this.router.navigate([WEB_ROUTES.CLIENT]);
+          } else {
+            showNotification(this.snackBar, data.message, 'error');
+          }
         }
       });
   }

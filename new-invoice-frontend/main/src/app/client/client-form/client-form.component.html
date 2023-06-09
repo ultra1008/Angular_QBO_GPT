@@ -15,9 +15,24 @@
                         </div>
                         <div class="right">
                             <ul class="tbl-export-btn">
+                                <li class="tbl-header-btn" *ngIf="id">
+                                    <div class="m-l-10" *ngIf="is_delete === 0"
+                                        matTooltip="{{'COMMON.TOOL_TIP.ARCHIVE' | translate}}">
+                                        <button mat-mini-fab color="warn" (click)="deleteClient()">
+                                            <mat-icon class="col-white">archive</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="tbl-header-btn" *ngIf="id">
+                                    <div class="m-l-10" *ngIf="is_delete === 1"
+                                        matTooltip="{{'COMMON.ACTIONS.RESTORE' | translate}}">
+                                        <button mat-mini-fab color="warn" (click)="deleteClient()">
+                                            <mat-icon class="col-white">archive</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
                                 <li class="tbl-header-btn">
-                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' |
-                                        translate}}">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' | translate}}">
                                         <button mat-mini-fab color="warn" (click)="confirmExit()">
                                             <mat-icon class="col-white">close</mat-icon>
                                         </button>
@@ -50,7 +65,7 @@
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>{{'CLIENT.TABLE.CLIENT_NUMBER' | translate}}</mat-label>
-                                        <input matInput formControlName="client_number">
+                                        <input matInput required formControlName="client_number">
                                     </mat-form-field>
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
@@ -115,7 +130,7 @@
 
                             <div class="row">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                                    <button *ngIf="isDelete === 0 && role_permission.clientJob.Edit" class="btn-space"
+                                    <button *ngIf="is_delete === 0 && role_permission.clientJob.Edit" class="btn-space"
                                         mat-raised-button color="primary" [disabled]="!vendorForm.valid"
                                         (click)="saveVendor()">{{'COMMON.ACTIONS.SAVE'|
                                         translate}}</button>

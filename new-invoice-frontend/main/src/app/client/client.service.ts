@@ -158,7 +158,7 @@ export class ClientService extends UnsubscribeOnDestroyAdapter {
     return data;
   }
 
-  async saveClient(requestObject: any) {
+  /* async saveClient(requestObject: any) {
     const data = await this.httpCall
       .httpPostCall(
         httpversion.PORTAL_V1 + httproutes.SAVE_CLIENT,
@@ -166,5 +166,5 @@ export class ClientService extends UnsubscribeOnDestroyAdapter {
       )
       .toPromise();
     return data;
-  }
+  } */
 }
