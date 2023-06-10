@@ -90,39 +90,48 @@ module.exports.saveclient = async function (req, res) {
                     requestObject.updated_by = decodedToken.UserData._id;
                     var add_client = new clientConnection(requestObject);
                     var save_client = await add_client.save();
-                    // find difference of object 
-                    let insertedData = await common.setInsertedFieldHistory(requestObject);
+                    if (save_client) {
+                        delete requestObject.created_at;
+                        delete requestObject.updated_at;
+                        delete requestObject.created_by;
+                        delete requestObject.updated_by;
 
-                    if (requestObject.approver_id !== '') {
-                        let found_approver = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'approver_id'; });
-                        if (found_approver != -1) {
-                            let one_term = await userConnection.findOne({ _id: ObjectID(insertedData[found_approver].value) });
-                            insertedData[found_approver].value = one_term.userfullname;
+                        // find difference of object 
+                        let insertedData = await common.setInsertedFieldHistory(requestObject);
+
+                        if (requestObject.approver_id !== '') {
+                            let found_approver = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'approver_id'; });
+                            if (found_approver != -1) {
+                                let one_term = await userConnection.findOne({ _id: ObjectID(insertedData[found_approver].value) });
+                                insertedData[found_approver].value = one_term.userfullname;
+                            }
                         }
-                    }
 
-                    if (requestObject.client_cost_cost_id !== '') {
-                        let found_costcode = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'client_cost_cost_id'; });
-                        if (found_costcode != -1) {
-                            let one_term = await costCodeConnection.findOne({ _id: ObjectID(insertedData[found_costcode].value) });
-                            insertedData[found_costcode].value = one_term.value;
+                        if (requestObject.client_cost_cost_id !== '') {
+                            let found_costcode = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'client_cost_cost_id'; });
+                            if (found_costcode != -1) {
+                                let one_term = await costCodeConnection.findOne({ _id: ObjectID(insertedData[found_costcode].value) });
+                                insertedData[found_costcode].value = one_term.value;
+                            }
                         }
-                    }
 
-                    let found_status = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'client_status'; });
-                    if (found_status != -1) {
-                        insertedData[found_status].value = insertedData[found_status].value == 1 ? 'Active' : insertedData[found_status].value == 2 ? 'Inactive' : '';
-                    }
+                        let found_status = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'client_status'; });
+                        if (found_status != -1) {
+                            insertedData[found_status].value = insertedData[found_status].value == 1 ? 'Active' : insertedData[found_status].value == 2 ? 'Inactive' : '';
+                        }
 
-                    for (let i = 0; i < insertedData.length; i++) {
-                        insertedData[i]['key'] = translator.getStr(`Client_History.${insertedData[i]['key']}`);
+                        for (let i = 0; i < insertedData.length; i++) {
+                            insertedData[i]['key'] = translator.getStr(`Client_History.${insertedData[i]['key']}`);
+                        }
+                        let histioryObject = {
+                            data: insertedData,
+                            client_id: save_client.id,
+                        };
+                        addClientHistory("Insert", histioryObject, decodedToken);
+                        res.send({ status: true, message: "client insert successfully..!", data: add_client });
+                    } else {
+                        res.send({ message: translator.getStr('SomethingWrong'), status: false });
                     }
-                    let histioryObject = {
-                        data: insertedData,
-                        client_id: save_client.id,
-                    };
-                    addClientHistory("Insert", histioryObject, decodedToken);
-                    res.send({ status: true, message: "client insert successfully..!", data: add_client });
                 }
             }
         } catch (e) {
