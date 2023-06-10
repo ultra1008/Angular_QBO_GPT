@@ -28,7 +28,7 @@ export class SwitchCompanyComponent implements OnInit {
   removable = true;
   invoice_logo = icon.INVOICE_LOGO;
 
-  constructor(public dialogRef: MatDialogRef<SwitchCompanyComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData,
+  constructor (public dialogRef: MatDialogRef<SwitchCompanyComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private commonService: CommonService, private snackBar: MatSnackBar, private router: Router, public uiSpinner: UiSpinnerService,
     private formBuilder: FormBuilder) {
     this.form = this.formBuilder.group({
@@ -91,7 +91,7 @@ export class SwitchCompanyComponent implements OnInit {
         localStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
 
         if (data.data.UserData.useris_password_temp == true) {
-          this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);
+          this.router.navigate([WEB_ROUTES.FORCEFULLY_CHANGE_PASSWORD]);
         } else {
           if (window.location.pathname === WEB_ROUTES.DASHBOARD) {
             setTimeout(() => {

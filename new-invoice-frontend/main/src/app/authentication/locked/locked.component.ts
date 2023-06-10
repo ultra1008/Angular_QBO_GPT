@@ -65,7 +65,7 @@ export class LockedComponent implements OnInit {
       if (data.status) {
         showNotification(this.snackBar, data.message, 'success');
         if (data.data.UserData.useris_password_temp == true) {
-          this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);
+          this.router.navigate([WEB_ROUTES.FORCEFULLY_CHANGE_PASSWORD]);
         } else {
           setTimeout(() => {
             this.router.navigate([WEB_ROUTES.DASHBOARD]);

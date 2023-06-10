@@ -21,6 +21,7 @@ import { NgOtpInputModule } from 'ng-otp-input';
 import { ForcefullChangePasswordComponent } from './forcefull-change-password/forcefull-change-password.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     LockedComponent,
     ForgotPasswordComponent,
     SendOtpComponent,
-    ForcefullChangePasswordComponent
+    ForcefullChangePasswordComponent,
+    ChangePasswordComponent
   ],
   providers: [AuthenticationService],
   imports: [

@@ -83,7 +83,7 @@ export class SendOtpComponent {
           // only one compant so direct login
           showNotification(this.snackBar, data.message, 'success');
           if (data.user_data.UserData.useris_password_temp == true) {
-            this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);
+            this.router.navigate([WEB_ROUTES.FORCEFULLY_CHANGE_PASSWORD]);
           } else {
             setTimeout(() => {
               this.router.navigate([checkPermissionAfterLogin(data.user_data.role_permission)]);
@@ -117,7 +117,7 @@ export class SendOtpComponent {
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       if (data.user_data.UserData.useris_password_temp == true) {
-        this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);
+        this.router.navigate([WEB_ROUTES.FORCEFULLY_CHANGE_PASSWORD]);
       } else {
         setTimeout(() => {
           this.router.navigate([WEB_ROUTES.DASHBOARD]);

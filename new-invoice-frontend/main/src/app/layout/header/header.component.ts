@@ -55,7 +55,7 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
 
   companyList: any = [];
   isLoading = true;
-  constructor(@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, public elementRef: ElementRef,
+  constructor (@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, public elementRef: ElementRef,
     public uiSpinner: UiSpinnerService, private configService: ConfigService, private authService: AuthService,
     private AuthenticationService: AuthenticationService,
     private router: Router, public translate: TranslateService, public dialog: MatDialog, private commonService: CommonService,) {
@@ -291,11 +291,11 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
   }
 
   goChangePassword() {
-    this.router.navigate(['/authentication/change-password']);
+    this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);
   }
 
   gotoSettings() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 
   languageSwitcher() {

@@ -140,7 +140,7 @@ export class SigninComponent implements OnInit {
         // only one compant so direct login
         showNotification(this.snackBar, data.message, 'success');
         if (data.user_data.UserData.useris_password_temp == true) {
-          this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);
+          this.router.navigate([WEB_ROUTES.FORCEFULLY_CHANGE_PASSWORD]);
         } else {
           this.AuthenticationService.changeLoginValue(false);
           localStorage.setItem(localstorageconstants.LOGOUT, 'false');
@@ -230,7 +230,7 @@ export class SigninComponent implements OnInit {
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       if (data.data.UserData.useris_password_temp == true) {
-        this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);
+        this.router.navigate([WEB_ROUTES.FORCEFULLY_CHANGE_PASSWORD]);
       } else {
         this.AuthenticationService.changeLoginValue(false);
         localStorage.setItem(localstorageconstants.LOGOUT, 'false');

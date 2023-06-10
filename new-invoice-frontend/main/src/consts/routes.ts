@@ -35,6 +35,7 @@ export enum WEB_ROUTES {
   DASHBOARD_MONTHLY_INVOICE = '/dashboard/monthly-invoice',
   DASHBOARD_DUPLICATE_DOCUMENTS = '/dashboard/duplicate-documents',
 
+  FORCEFULLY_CHANGE_PASSWORD = '/authentication/forcefully-change-password',
   CHANGE_PASSWORD = '/authentication/change-password',
 
   CLIENT_FORM = '/client/form',
