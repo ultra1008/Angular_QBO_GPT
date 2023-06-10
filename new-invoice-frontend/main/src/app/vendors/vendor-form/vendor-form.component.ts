@@ -162,14 +162,7 @@ export class VendorFormComponent {
     );
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
-      const foundIndex = this.vendorService?.dataChange.value.findIndex(
-        (x) => x._id === this.id
-      );
-      // for delete we use splice in order to remove single object from DataService
-      if (foundIndex != null && this.vendorService) {
-        this.vendorService.dataChange.value.splice(foundIndex, 1);
-        this.router.navigate([WEB_ROUTES.VENDOR]);
-      }
+      this.router.navigate([WEB_ROUTES.VENDOR]);
     } else {
       showNotification(this.snackBar, data.message, 'error');
     }

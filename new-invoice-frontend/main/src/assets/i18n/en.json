@@ -61,6 +61,9 @@
         "IMPORT": {
             "STATUS": "Status",
             "NAME": "Name"
+        },
+        "LISTING": {
+            "EPMTY": "No matching records found"
         }
     },
     "VENDOR": {

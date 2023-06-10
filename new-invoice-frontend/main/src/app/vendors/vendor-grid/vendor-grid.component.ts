@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { VendorsService } from '../vendors.service';
-import { formateAmount, showNotification, timeDateToepoch } from 'src/consts/utils';
+import { formatPhoneNumber, formateAmount, showNotification, timeDateToepoch } from 'src/consts/utils';
 import { VendorReportComponent } from '../vendor-report/vendor-report.component';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { FormateDateStringPipe } from 'src/app/users/users-filter.pipe';
@@ -205,8 +205,6 @@ export class VendorGridComponent
     reader.readAsBinaryString(file);
   }
 
-
-
   downloadImport() {
     let that = this;
     const dialogRef = that.dialog.open(ImportVendorComponent, {
@@ -218,6 +216,9 @@ export class VendorGridComponent
     dialogRef.afterClosed().subscribe((result) => {
       that.refresh();
     });
+  }
 
+  formatPhoneNumber(phone: any) {
+    return formatPhoneNumber(phone);
   }
 }

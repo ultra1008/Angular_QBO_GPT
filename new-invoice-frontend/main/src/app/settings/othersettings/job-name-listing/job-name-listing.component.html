@@ -5,19 +5,21 @@
                 <div class="table-responsive">
                     <table mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
                         <ng-container matColumnDef="name">
-                            <mat-header-cell *matHeaderCellDef
-                            [ngClass]="'max-h'"  mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.JOB_NAME' |
+                            <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'"
+                                mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.JOB_NAME' |
                                 translate}}</mat-header-cell>
-                            <mat-cell *matCellDef="let row" (click)="edit(row)" (contextmenu)="onContextMenu($event, row)">
+                            <mat-cell *matCellDef="let row" (click)="edit(row)"
+                                (contextmenu)="onContextMenu($event, row)">
                                 <span class="mobile-label">name:</span> {{row.name}}
                             </mat-cell>
                         </ng-container>
 
                         <ng-container matColumnDef="email_contact">
-                            <mat-header-cell *matHeaderCellDef
-                            [ngClass]="'max-h'"  mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.JOB_CONTACT_EMAIL' |
+                            <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'"
+                                mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.JOB_CONTACT_EMAIL' |
                                 translate}}</mat-header-cell>
-                            <mat-cell *matCellDef="let row" (click)="edit(row)" (contextmenu)="onContextMenu($event, row)">
+                            <mat-cell *matCellDef="let row" (click)="edit(row)"
+                                (contextmenu)="onContextMenu($event, row)">
                                 <span class="mobile-label">email_contact:</span> {{row.email_contact}}
                             </mat-cell>
                         </ng-container>
@@ -27,7 +29,7 @@
                             <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-action max-h'"
                                 *matHeaderCellDef>{{'VENDOR.TABLE.ACTIONS' |
                                 translate}}</mat-header-cell>
-                            <mat-cell *matCellDef="let row; let i=index;"  class="pr-0 tbl-col-width-per-action">
+                            <mat-cell *matCellDef="let row; let i=index;" class="pr-0 tbl-col-width-per-action">
                                 <button matTooltip="{{'COMMON.ACTIONS.EDIT' |
                                                 translate}}" mat-icon-button color="accent"
                                     (click)="$event.stopPropagation()" (click)="edit(row)" *ngIf="isDelete === 0"
@@ -58,7 +60,7 @@
                 </div>
                 <div *ngIf="!jobnameService?.isTblLoading" class="no-results"
                     [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-                    No matching records found
+                    {{'COMMON.LISTING.EPMTY' | translate}}
                 </div>
                 <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="10"
                     [pageSizeOptions]="[5, 10, 25, 100]">

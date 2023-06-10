@@ -10,9 +10,25 @@
                                 <li class="tbl-title">
                                     <h2>{{'DOCUMENTS.VIEW.TITLE' |translate}}</h2>
                                 </li>
+                                <li class="tbl-search-box">
+                                    <label for="search-input"><i class="material-icons search-icon">search</i></label>
+                                    <input placeholder="{{'COMMON.TOOL_TIP.SEARCH' | translate}}" type="text" #filter
+                                        class="browser-default search-field" aria-label="Search box">
+                                </li>
                             </ul>
                         </div>
                     </div>
+                    <!-- <div class="materialTableHeader">
+                <div class="left">
+                    <ul class="header-buttons-left ms-0">
+                        <li class="tbl-search-box">
+                            <label for="search-input"><i class="material-icons search-icon">search</i></label>
+                            <input placeholder="{{'COMMON.TOOL_TIP.SEARCH' | translate}}" type="text" #filter
+                                class="browser-default search-field" aria-label="Search box">
+                        </li>
+                    </ul>
+                </div>
+            </div> -->
                     <div class="body overflow-auto">
                         <div class="main-cust-setting-div">
                             <mat-tab-group [selectedIndex]="step_index" (selectedTabChange)="onTabChanged($event)"
@@ -106,7 +122,7 @@
                                         </div>
                                         <div *ngIf="!documentsServices?.isTblLoading" class="no-results"
                                             [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-                                            No matching records found
+                                            {{'COMMON.LISTING.EPMTY' | translate}}
                                         </div>
                                         <mat-paginator #paginator [length]="dataSource.filteredData.length"
                                             [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
@@ -201,7 +217,7 @@
                                         </div>
                                         <div *ngIf="!documentsServices?.isTblLoading" class="no-results"
                                             [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-                                            No matching records found
+                                            {{'COMMON.LISTING.EPMTY' | translate}}
                                         </div>
                                         <mat-paginator #paginator [length]="dataSource.filteredData.length"
                                             [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
@@ -297,7 +313,7 @@
                                         </div>
                                         <div *ngIf="!documentsServices?.isTblLoading" class="no-results"
                                             [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-                                            No matching records found
+                                            {{'COMMON.LISTING.EPMTY' | translate}}
                                         </div>
                                         <mat-paginator #paginator [length]="dataSource.filteredData.length"
                                             [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
@@ -392,7 +408,7 @@
                                         </div>
                                         <div *ngIf="!documentsServices?.isTblLoading" class="no-results"
                                             [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-                                            No matching records found
+                                            {{'COMMON.LISTING.EPMTY' | translate}}
                                         </div>
                                         <mat-paginator #paginator [length]="dataSource.filteredData.length"
                                             [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
@@ -487,7 +503,7 @@
                                         </div>
                                         <div *ngIf="!documentsServices?.isTblLoading" class="no-results"
                                             [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-                                            No matching records found
+                                            {{'COMMON.LISTING.EPMTY' | translate}}
                                         </div>
                                         <mat-paginator #paginator [length]="dataSource.filteredData.length"
                                             [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">

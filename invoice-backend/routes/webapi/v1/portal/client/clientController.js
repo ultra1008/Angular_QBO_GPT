@@ -493,22 +493,6 @@ module.exports.getClientForTable = async function (req, res) {
                         path: "$costcode"
                     }
                 },
-                {
-                    $project: {
-                        client_name: 1,
-                        client_number: 1,
-                        client_email: 1,
-                        client_status: 1,
-                        client_notes: 1,
-                        gl_account: 1,
-                        is_delete: 1,
-                        is_quickbooks: 1,
-                        approver_id: 1,
-                        client_cost_cost_id: 1,
-                        approver: "$invoice_user",
-                        client_cost_cost: "$costcode",
-                    }
-                },
                 { $sort: { created_at: -1 } }
             ]);
             // var getdata = await clientConnection.find({ is_delete: requestObject.is_delete });
