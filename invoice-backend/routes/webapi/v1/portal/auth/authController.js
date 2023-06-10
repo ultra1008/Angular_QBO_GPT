@@ -648,7 +648,7 @@ module.exports.sendUserPassword = async function (req, res) {
                     };
                     var template = handlebars.compile(data);
                     var HtmlData = await template(emailTmp);
-                    sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [requestObject.useremail], "Rovuk Forgot Password", HtmlData,
+                    sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [requestObject.useremail], "SmartAccuPay Forgot Password", HtmlData,
                         talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail, talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout,
                         talnate_data.tenant_smtp_security);
                     res.send({ message: translator.getStr('CheckMailNewPassword'), status: true, update_user: update_user });

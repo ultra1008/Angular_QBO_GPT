@@ -1378,7 +1378,7 @@ module.exports.forgetPassword = async function (req, res) {
                                 var template = handlebars.compile(data);
                                 var HtmlData = await template(emailTmp);
                                 let tenant_smtp_security = result.tenant_smtp_security == "Yes" || result.tenant_smtp_security == "YES" || result.tenant_smtp_security == "yes" ? true : false;
-                                let mailsend = await sendEmail.sendEmail_client(result.tenant_smtp_username, req.body.useremail, "Rovuk Forgot Password", HtmlData,
+                                let mailsend = await sendEmail.sendEmail_client(result.tenant_smtp_username, req.body.useremail, "SmartAccuPay Forgot Password", HtmlData,
                                     result.tenant_smtp_server, result.tenant_smtp_port, result.tenant_smtp_reply_to_mail, result.tenant_smtp_password, result.tenant_smtp_timeout,
                                     tenant_smtp_security);
                                 if (mailsend) {

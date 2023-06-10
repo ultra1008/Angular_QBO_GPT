@@ -221,7 +221,7 @@ module.exports.saveEmployee = async function (req, res) {
                             history_object.usercostcode = usercostcode;
                             let updateuser = await userConnection.updateOne({ _id: ObjectID(add._id) }, { usercostcode: usercostcode });
                             if (updateuser) {
-                                sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, body.useremail, "Rovuk Registration", HtmlData,
+                                sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, body.useremail, "SmartAccuPay Registration", HtmlData,
                                     talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
                                     talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
 
@@ -3572,7 +3572,7 @@ module.exports.checkAndInsertImportData = async function (req, res) {
                     var template = handlebars.compile(file_data);
                     var HtmlData = await template(emailTmp);
 
-                    sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, requestObject.data[m].useremail, "Rovuk Registration", HtmlData,
+                    sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, requestObject.data[m].useremail, "SmartAccuPay Registration", HtmlData,
                         talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
                         talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
                 }
@@ -4340,7 +4340,7 @@ module.exports.importManagementUser = async function (req, res) {
                     let LowerCase_bucket = decodedToken.companycode.toLowerCase();
                     var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
                     let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
-                    sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, management_user.useremail, "Rovuk Registration", HtmlData,
+                    sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, management_user.useremail, "SmartAccuPay Registration", HtmlData,
                         talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
                         talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
                 }
