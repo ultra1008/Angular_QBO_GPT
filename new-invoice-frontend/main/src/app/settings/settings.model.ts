@@ -58,21 +58,15 @@ export class MailboxModel {
 
 export class UsageModel {
   _id: string;
-  year!: number;
-  month!: number;
-  month_name!: string;
-  po_expense!: number;
-  po_forms!: number;
-  packing_slip_expense!: number;
-  packing_slip_forms!: number;
-  receiving_slip_expense!: number;
-  receiving_slip_forms!: number;
-  quote_expense!: number;
-  quote_forms!: number;
-  invoice_expense!: number;
-  invoice_forms!: number;
-  unknown_expense!: number;
-  unknown_forms!: number;
+  year: number;
+  month: number;
+  month_name: string;
+  INVOICE: number;
+  PURCHASE_ORDER: number;
+  PACKING_SLIP: number;
+  RECEIVING_SLIP: number;
+  QUOTE: number;
+  OTHER: number;
 
   constructor (usageTable: UsageModel) {
     {
@@ -80,18 +74,12 @@ export class UsageModel {
       this.year = usageTable.year;
       this.month = usageTable.month;
       this.month_name = usageTable.month_name;
-      this.po_expense = usageTable.po_expense;
-      this.po_forms = usageTable.po_forms;
-      this.packing_slip_expense = usageTable.packing_slip_expense;
-      this.packing_slip_forms = usageTable.packing_slip_forms;
-      this.receiving_slip_expense = usageTable.receiving_slip_expense;
-      this.receiving_slip_forms = usageTable.receiving_slip_forms;
-      this.quote_expense = usageTable.quote_expense;
-      this.quote_forms = usageTable.quote_forms;
-      this.invoice_expense = usageTable.invoice_expense;
-      this.invoice_forms = usageTable.invoice_forms;
-      this.unknown_expense = usageTable.unknown_expense;
-      this.unknown_forms = usageTable.unknown_forms;
+      this.INVOICE = usageTable.INVOICE;
+      this.PURCHASE_ORDER = usageTable.PURCHASE_ORDER;
+      this.PACKING_SLIP = usageTable.PACKING_SLIP;
+      this.RECEIVING_SLIP = usageTable.RECEIVING_SLIP;
+      this.QUOTE = usageTable.QUOTE;
+      this.OTHER = usageTable.OTHER;
     }
   }
 }

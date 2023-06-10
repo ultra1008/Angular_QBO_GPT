@@ -1,30 +1,51 @@
-// .example-container {
-//     display: flex;
-//     flex-direction: column;
-//     max-height: 500px;
-//     min-width: 300px;
-//   }
-  
-//   .mat-table {
-//     overflow: auto;
-//     max-height: 500px;
-//   }
-  
-//   .element-row {
-//     position: relative;
-//   }
-  
-//   .element-row:not(.expanded) {
-//     cursor: pointer;
-//   }
-  
-//   .element-row:not(.expanded):hover {
-//     background: #f5f5f5;
-//   }
-  
-//   .element-row.expanded {
-//     border-bottom-color: transparent;
-//   }
+::ng-deep .mat-mdc-table .mdc-data-table__row {
+  height: 35px !important;
+}
+
+::ng-deep .mat-mdc-table .mdc-data-table__header-row {
+  height: 35px !important;
+}
+
+::ng-deep .mat-header-row {
+  min-height: 0px !important;
+}
+
+::ng-deep .mdc-data-table__cell {
+  font-size: var(--mdc-typography-body2-font-size, 12px);
+}
+
+::ng-deep .mdc-data-table__cell,
+.mdc-data-table__header-cell {
+  border: 1px solid #f8f8f8 !important;
+  // padding: 0 16px 0 10px !important;
+}
+
+::ng-deep .table {
+  // border: 1px solid aquamarine !important;
+  padding: unset !important;
+
+}
+
+.tbl-col-width-per-selected {
+  min-width: 50px !important;
+  max-width: 4% !important;
+}
+
+.tbl-col-width-per-action {
+  min-width: 100px !important;
+  max-width: 7% !important;
+}
+
+.tbl-col-width-per-quickbooks {
+  min-width: 50px !important;
+  max-width: 4% !important;
+  justify-content: center;
+}
+
+.tbl-col-width-per-mid {
+  min-width: 120px !important;
+  max-width: 9% !important;
+}
 
 table {
   width: 100%;
@@ -75,7 +96,7 @@ tr.example-element-row:not(.example-expanded-row):active {
 }
 
 
-  /* table {
+/* table {
     width: 100%;
   }
 

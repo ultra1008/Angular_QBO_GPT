@@ -34,58 +34,25 @@ import {
   swalWithBootstrapTwoButtons,
 } from 'src/consts/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-usage',
   templateUrl: './usage.component.html',
   styleUrls: ['./usage.component.scss'],
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({ height: '0px', minHeight: '0' })),
-      state('expanded', style({ height: '*' })),
-      transition(
-        'expanded <=> collapsed',
-        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
-      ),
-    ]),
-  ],
 })
-export class UsageComponent
-  extends UnsubscribeOnDestroyAdapter
-  implements OnInit {
-  // displayedColumns = ['_id'];
+export class UsageComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
+  displayedColumns = ['month_name', 'invoice', 'po', 'packing_slip', 'receiving_slip', 'quote', 'other'];
 
   AllUsage: any;
   usageinfo: FormGroup;
 
-  displayedColumns = ['_id'];
   usageService?: SettingsService;
   dataSource!: UsageDataSource;
   selection = new SelectionModel<UsageModel>(true, []);
   id?: number;
-  // advanceTable?: UsageModel;
   isDelete = 0;
-  titleMessage: string = '';
-
-  // columnsToDisplay = ['year'];
-  // expandedElement!: Element;
-
-  // tmp_arr: any = [
-  //   {
-  //     name: 'Parth',
-  //     facility_no: 'TC1234',
-  //     Amount: '124.45',
-  //   },
-  //   {
-  //     name: 'Parth1',
-  //     facility_no: 'TC123',
-  //     Amount: '123.45',
-  //   },
-  // ];
-
-  isExpansionDetailRow = (i: number, row: Object) =>
-    row.hasOwnProperty('detailRow');
-  // expandedElement!: Element;
+  titleMessage = '';
 
   constructor (
     public SettingsService: SettingsService,
@@ -102,9 +69,7 @@ export class UsageComponent
       totalSuervisor: [''],
       bucket_size: [''],
     });
-    let that = this;
-    // that.getusagedata();
-    that.getcompanyusage();
+    this.getcompanyusage();
   }
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
@@ -114,19 +79,13 @@ export class UsageComponent
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
-  myFunc = (i: number, row: Object) => {
-    row.hasOwnProperty('position');
-  };
+
   ngOnInit() {
     let that = this;
     this.loadData();
     that.getcompanyusage();
-    // that.getusagedata();
-    // that.dataSource.sort = that.sort;
-    // that.dataSource.paginator = that.paginator;
-    // that.dataSource = new MatTableDataSource(that.AllUsage.slice());
   }
 
   async getcompanyusage() {
@@ -144,25 +103,6 @@ export class UsageComponent
         }
       });
   }
-
-  // async getusagedata() {
-  //   let that = this;
-  //   that.httpCall
-  //     .httpGetCall(httpversion.PORTAL_V1 + httproutes.USAGE_DATA_TABLE)
-  //     .subscribe(function (params) {
-  //       if (params.length > 0) {
-  //         that.AllUsage = [];
-  //         for (let i = 0; i < params.length; i++) {
-  //           that.AllUsage.push({
-  //             year: params[i].year,
-  //           });
-  //           console.log('daafsAFSAJsd', that.AllUsage);
-  //         }
-
-  //       }
-  //     });
-  // }
-
   refresh() {
     this.loadData();
   }
@@ -273,14 +213,14 @@ export class UsageComponent
       this.sort,
       this.isDelete
     );
-    this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
+    /* this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
       () => {
         if (!this.dataSource) {
           return;
         }
         this.dataSource.filter = this.filter.nativeElement.value;
       }
-    );
+    ); */
   }
 
   // context menu
@@ -320,19 +260,19 @@ export class UsageDataSource extends DataSource<UsageModel> {
   connect(): Observable<UsageModel[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this.usageService.dataUsageChange,
+      this.usageService.aPCountDataChange,
       this._sort.sortChange,
       this.filterChange,
       this.paginator.page,
     ];
-    this.usageService.getAllUsageTable();
+    this.usageService.getAPCount();
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
-        this.filteredData = this.usageService.datausage
+        this.filteredData = this.usageService.aPCountData
           .slice()
-          .filter((UsageModel: UsageModel) => {
-            const searchStr = UsageModel._id.toLowerCase();
+          .filter((response: UsageModel) => {
+            const searchStr = response._id.toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
 
@@ -375,10 +315,4 @@ export class UsageDataSource extends DataSource<UsageModel> {
       );
     });
   }
-}
-// export interface Element {
-//   name: string;
-//   position: number;
-//   weight: number;
-//   symbol: string;
-// }
+} 

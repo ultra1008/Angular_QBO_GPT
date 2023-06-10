@@ -214,6 +214,8 @@ export enum httproutes {
   //usage
   USAGE_DATA_TABLE = 'getCustomerStates',
   PORTAL_SETTING_USEAGE = 'compnayusage',
+  GET_AP_API_COUNT = 'getapapicount',
+
 
   //role
   SETTING_ROLES_ALL = 'getallrolespermission',

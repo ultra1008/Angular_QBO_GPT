@@ -206,6 +206,20 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
     this.isMailBoxTblLoading = false;
   }
 
+  // Usage Datatable Service
+  isAPCountTblLoading = true;
+  aPCountDataChange: BehaviorSubject<UsageModel[]> = new BehaviorSubject<UsageModel[]>([]);
+
+  get aPCountData(): UsageModel[] {
+    return this.aPCountDataChange.value;
+  }
+
+  async getAPCount(): Promise<void> {
+    const data = await this.httpCall.httpGetCall(httpversion.PORTAL_V1 + httproutes.GET_AP_API_COUNT).toPromise();
+    this.aPCountDataChange.next(data);
+    this.isAPCountTblLoading = false;
+  }
+
 
 
 

@@ -17,6 +17,7 @@ var invoiceRoleSchema = require('./../../../../../model/invoice_roles');
 var bucketOpration = require('./../../../../../controller/common/s3-wasabi');
 const nodemailer = require('nodemailer');
 var customerStateSchema = require('./../../../../../model/customer_monthly_states');
+var apiCountSchema = require('./../../../../../model/api_count');
 var tenantsSchema = require('../../../../../model/tenants');
 
 module.exports.compnayinformation = async function (req, res) {
@@ -329,11 +330,7 @@ module.exports.getCustomerStatesDatatable = async function (req, res) {
             var columnData = (requestObject.order != undefined && requestObject.order != '') ? requestObject.order[0].column : '';
             var columntype = (requestObject.order != undefined && requestObject.order != '') ? requestObject.order[0].dir : '';
             var sort = {};
-            /*  if (requestObject.draw == 1) {
-                 sort = { "month_name": 1 };
-             } else { */
             sort[col[columnData]] = (columntype == 'asc') ? 1 : -1;
-            // }
             let query = {};
             if (requestObject.search.value) {
                 query = {
@@ -389,22 +386,41 @@ module.exports.getCustomerStatesDatatable = async function (req, res) {
     }
 };
 
-// Customer Monthly States
-module.exports.getCustomerStatesDatatableForTable = async function (req, res) {
+module.exports.getAPAPICount = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
     if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-            let customerStateCollection = connection_db_api.model(collectionConstant.INVOICE_CUSTOMER_STATES, customerStateSchema);
-            var match_query = { is_delete: requestObject.is_delete };
-            var aggregateQuery = [
-                { $match: match_query },
-                // { $match: query },
-            ];
-            let get_data = await customerStateCollection.aggregate(aggregateQuery).collation({ locale: "en_US" });
-            res.send(get_data);
+            let apiCountCollection = connection_db_api.model(collectionConstant.API_COUNT, apiCountSchema);
+            let get_data = await apiCountCollection.aggregate([
+                { $match: { is_delete: 0 } },
+                {
+                    $project: {
+                        year: 1,
+                        month: 1,
+                        month_name: {
+                            $concat: [
+                                {
+                                    $arrayElemAt: [
+                                        ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                                        "$month"
+                                    ]
+                                }, ", ", { $toString: "$year" }
+                            ]
+                        },
+                        PURCHASE_ORDER: 1,
+                        PACKING_SLIP: 1,
+                        RECEIVING_SLIP: 1,
+                        QUOTE: 1,
+                        INVOICE: 1,
+                        OTHER: 1,
+                    }
+                },
+                { $sort: { year: -1, month: -1 } },
+            ]).collation({ locale: "en_US" });
+            res.json(get_data);
         } catch (e) {
             console.log(e);
             res.send([]);
@@ -412,7 +428,7 @@ module.exports.getCustomerStatesDatatableForTable = async function (req, res) {
             connection_db_api.close();
         }
     } else {
-        res.send({ status: false, message: translator.getStr('InvalidUser') });
+        res.send([]);
     }
 };
 
