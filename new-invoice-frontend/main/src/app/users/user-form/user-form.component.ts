@@ -162,6 +162,7 @@ export class UserFormComponent
         this.router.getCurrentNavigation()?.extras.state?.['value']
       );
     }
+    this.maxDate.setFullYear(this.maxDate.getFullYear() - 14);
   }
   ngOnInit() {
     this.getRole();
