@@ -43,7 +43,7 @@
                         </div>
                     </div>
                     <div class="body">
-                        <form class="register-form m-4" [formGroup]="vendorForm">
+                        <form class="register-form m-4" [formGroup]="clientForm">
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2" style="font-size: 12px;">
                                     <mat-form-field class="example-full-width" appearance="outline">
@@ -119,8 +119,8 @@
                                 <div class="col-xl-12 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline"
                                         style="height: auto !important;">
-                                        <mat-label
-                                            style="height: auto !important;">{{'CLIENT.ADD_EDIT.NOTES' | translate}}</mat-label>
+                                        <mat-label style="height: auto !important;">{{'CLIENT.ADD_EDIT.NOTES' |
+                                            translate}}</mat-label>
                                         <textarea matInput style="height: auto !important;"
                                             formControlName="client_notes"></textarea>
                                     </mat-form-field>
@@ -130,9 +130,9 @@
 
                             <div class="row">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                                    <button *ngIf="is_delete === 0 && role_permission.clientJob.Edit" class="btn-space"
-                                        mat-raised-button color="primary" [disabled]="!vendorForm.valid"
-                                        (click)="saveVendor()">{{'COMMON.ACTIONS.SAVE'|
+                                    <button *ngIf="role_permission.clientJob.Edit" class="btn-space" mat-raised-button
+                                        color="primary" [disabled]="!clientForm.valid"
+                                        (click)="saveClient()">{{'COMMON.ACTIONS.SAVE'|
                                         translate}}</button>
                                     <button type="button" mat-raised-button color="warn"
                                         (click)="confirmExit()">{{'COMMON.ACTIONS.CANCEL'| translate}}</button>
