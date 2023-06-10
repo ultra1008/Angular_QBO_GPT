@@ -72,6 +72,7 @@ export enum WEB_ROUTES {
   SMTP_SETTING = '/settings/alerts',
   INTEGRATION_SETTING = '/settings/integration',
   QBO_INTEGRATION_SETTING = '/settings/qbo-integration',
+  QBD_INTEGRATION_SETTING = '/settings/qbd-integration',
   USAGE_SETTING = '/settings/usage',
   OTHER_SETTING = '/settings/othersettings',
   SECURITY_SETTING = '/settings/security',
