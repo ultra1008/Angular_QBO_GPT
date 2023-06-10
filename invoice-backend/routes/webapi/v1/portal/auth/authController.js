@@ -2319,6 +2319,7 @@ module.exports.emailForgotPassword = async function (req, res) {
                 }
             }
         }
+        console.log("data.length", data.length);
         if (data.length == 1) {
             var get_tenants = await tenantsConnection.findOne({ company_id: data[0]._id });
             let connection_db_api = await db_connection.connection_db_api(get_tenants);

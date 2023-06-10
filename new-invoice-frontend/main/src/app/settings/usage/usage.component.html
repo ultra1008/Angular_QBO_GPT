@@ -46,121 +46,84 @@
               </div>
 
 
-              <!-- new code -->
-
               <div class="table-responsive">
-                <table mat-table #table [dataSource]="dataSource" matSort class="table mat-cell" multiTemplateDataRows>
-                  <ng-container matColumnDef="_id">
-                    <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'" mat-sort-header>Date</mat-header-cell>
-                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                      <span class="mobile-label">Email:</span> {{row._id}}
-                    </mat-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="expandedDetail">
-                    <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
-                      <div class="example-element-detail"
-                        [@detailExpand]="element.isExpanded ? 'expanded' : 'collapsed'">
-                        <span class="expanded-contents">
-                          data
-                        </span>
+                <table mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
 
-                      </div>
-                    </td>
+                  <ng-container matColumnDef="month_name">
+                    <mat-header-cell class="psl-1" *matHeaderCellDef mat-sort-header>Month
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row" class="psl-1">{{row.month_name}}</mat-cell>
                   </ng-container>
+                  <ng-container matColumnDef="invoice">
+                    <mat-header-cell class="psl-1" *matHeaderCellDef mat-sort-header>Invoice
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row" class="psl-1">{{row.INVOICE}}</mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="po">
+                    <mat-header-cell class="psl-1" *matHeaderCellDef mat-sort-header>PO
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row" class="psl-1">{{row.PURCHASE_ORDER}}</mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="packing_slip">
+                    <mat-header-cell class="psl-1" *matHeaderCellDef mat-sort-header>Packing Slip
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row" class="psl-1">{{row.PACKING_SLIP}}</mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="receiving_slip">
+                    <mat-header-cell class="psl-1" *matHeaderCellDef mat-sort-header>Receiving Slip
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row" class="psl-1">{{row.RECEIVING_SLIP}}</mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="quote">
+                    <mat-header-cell class="psl-1" *matHeaderCellDef mat-sort-header>Quote
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row" class="psl-1">{{row.QUOTE}}</mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="other">
+                    <mat-header-cell class="psl-1" *matHeaderCellDef mat-sort-header>Other
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row" class="psl-1">{{row.OTHER}}</mat-cell>
+                  </ng-container>
+                  <!-- <ng-container matColumnDef="actions">
+                    <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-action'"
+                      *matHeaderCellDef>{{'VENDOR.TABLE.ACTIONS' |
+                            translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let row; let i=index;" class="pr-0 tbl-col-width-per-action">
+                      <button matTooltip="{{'COMMON.ACTIONS.EDIT' |
+                                        translate}}" mat-icon-button color="accent" (click)="$event.stopPropagation()"
+                          *ngIf="isDelete === 0" class="col-blue">
+                        <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'">
+                        </app-feather-icons>
+                      </button>
+                      <button mat-icon-button matTooltip="{{'COMMON.ACTIONS.ARCHIVE' |
+                                        translate}}" color="accent" (click)="$event.stopPropagation()"
+                        (click)="deleteClient(row, 1)" *ngIf="isDelete === 0" class="col-red">
+                        <mat-icon>archive</mat-icon>
+                      </button>
+                      <button *ngIf="role_permission.clientJob.Delete && isDelete === 1" mat-icon-button matTooltip="{{'COMMON.ACTIONS.RESTORE' |
+                                        translate}}" color="accent" (click)="$event.stopPropagation()"
+                        (click)="deleteClient(row, 0)" class="col-red">
+                        <mat-icon>archive</mat-icon>
+                      </button>
+                    </mat-cell>
+                  </ng-container> -->
+
                   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                  <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="example-element-row"
-                    [class.example-expanded-row]="row.isExpanded" (click)="row.isExpanded = !row.isExpanded">
-                  </tr>
-                  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
                   <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'" matRipple>
                   </mat-row>
                 </table>
               </div>
               <!-- Loading spinner -->
-              <div *ngIf="usageService?.isTblLoading" class="tbl-spinner">
+              <div *ngIf="usageService?.isAPCountTblLoading" class="tbl-spinner">
                 <app-loading></app-loading>
               </div>
-              <div *ngIf="!usageService?.isTblLoading" class="no-results"
+              <div *ngIf="!usageService?.isAPCountTblLoading" class="no-results"
                 [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
                 No matching records found
               </div>
               <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="10"
                 [pageSizeOptions]="[5, 10, 25, 100]">
               </mat-paginator>
-
-              <!------- new code over -------->
-
-
-              <!-- old code -->
-
-              <!-- <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort>
-                  <ng-container matColumnDef="_id">
-                    <mat-header-cell class="psl-1" *matHeaderCellDef mat-sort-header>Date
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let row" class="psl-1">{{row._id}}</mat-cell>
-                </ng-container> -->
-
-              <!-- <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
-                    <td mat-cell *matCellDef="let element"> {{element._id}} </td>
-                  </ng-container> -->
-
-              <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
-              <!-- <ng-container matColumnDef="expandedDetail">
-                    <td colspan="4" mat-cell *matCellDef="let element">
-                      <div style="overflow: hidden"
-                        [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-
-                        <table class="mat-table  ">
-                          <thead>
-                            <tr class="mat-header-row">
-                              <th class="mat-header-cell">
-                                Name
-                              </th>
-                              <th class="mat-header-cell">
-                                Facility Number
-                              </th>
-                              <th class="mat-header-cell">
-                                Amount
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr class="mat-row" *ngFor="let data of tmp_arr">
-                              <td class="mat-cell">
-                                {{data.name}}
-                              </td>
-                              <td class="mat-cell">
-                                TC140414
-                              </td>
-                              <td class="mat-cell">
-                                $524.65
-                              </td>
-                            </tr>
-
-
-                          </tbody>
-                        </table>
-                      </div>
-                    </td>
-                  </ng-container> -->
-
-              <!-- <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-                  <tr mat-row *matRowDef="let row; columns: columnsToDisplay;" class="demo-element-row"
-                    [class.demo-expanded]="expandedElement == row"
-                    (click)="expandedElement = expandedElement === row ? undefined : row"></tr>
-                  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="demo-detail-row"></tr> -->
-              <!-- <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                  <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'"
-                      matRipple>
-                  </mat-row>
-                </table> -->
-
-
-
-              <!-- <mat-paginator pageSize="20" [pageSizeOptions]="[5, 20]"></mat-paginator> -->
-
-              <!-- old code over -->
             </form>
           </div>
         </div>
