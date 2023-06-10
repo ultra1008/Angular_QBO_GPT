@@ -1243,7 +1243,7 @@ module.exports.getLoginCompanyList = async function (req, res) {
             let user = get_company[i].invoice_user.find(o => o.useremail === requestObject.useremail);
             if (user) {
                 var psss_tnp = await common.validPassword(requestObject.password, user.password);
-                if (psss_tnp) {
+                if (psss_tnp && user.userstatus == 1 && user.is_delete == 0) {
                     data.push(get_company[i]);
                 }
             }
@@ -2309,8 +2309,18 @@ module.exports.emailForgotPassword = async function (req, res) {
             'invoice_user.is_delete': 0,
         };
         var get_company = await companyConnection.find(match);
-        if (get_company.length == 1) {
-            var get_tenants = await tenantsConnection.findOne({ company_id: get_company[0]._id });
+        var data = [];
+        for (let i = 0; i < get_company.length; i++) {
+            let user = get_company[i].invoice_user.find(o => o.useremail === requestObject.useremail);
+            if (user) {
+                var psss_tnp = await common.validPassword(requestObject.password, user.password);
+                if (psss_tnp && user.userstatus == 1 && user.is_delete == 0) {
+                    data.push(get_company[i]);
+                }
+            }
+        }
+        if (data.length == 1) {
+            var get_tenants = await tenantsConnection.findOne({ company_id: data[0]._id });
             let connection_db_api = await db_connection.connection_db_api(get_tenants);
             let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
 
@@ -2323,7 +2333,7 @@ module.exports.emailForgotPassword = async function (req, res) {
                 let companyUserObj = {
                     'invoice_user.$.password': passwordHash,
                 };
-                let update_invoice_user = await companyConnection.updateOne({ _id: ObjectID(get_company[0]._id), 'invoice_user.user_id': ObjectID(one_user._id) }, { $set: companyUserObj });
+                let update_invoice_user = await companyConnection.updateOne({ _id: ObjectID(data[0]._id), 'invoice_user.user_id': ObjectID(one_user._id) }, { $set: companyUserObj });
 
                 const data = await fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/resetPassword.html', 'utf8');
                 let emailTmp = {
@@ -2342,8 +2352,8 @@ module.exports.emailForgotPassword = async function (req, res) {
                     BUTTON_TEXT: translator.getStr('EmailInvitationLogIn'),
                     LINK: config.SITE_URL + "/login",
 
-                    COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${get_company[0].companyname}`,
-                    COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${get_company[0].companycode}`,
+                    COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${data[0].companyname}`,
+                    COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${data[0].companycode}`,
                 };
                 let tmp_subject = translator.getStr('MailForgotPassword_Subject');
                 var template = handlebars.compile(data);
@@ -2352,12 +2362,12 @@ module.exports.emailForgotPassword = async function (req, res) {
                 sendEmail.sendEmail_client(config.smartaccupay_tenants.tenant_smtp_username, one_user.useremail, tmp_subject, HtmlData,
                     config.smartaccupay_tenants.tenant_smtp_server, config.smartaccupay_tenants.tenant_smtp_port, config.smartaccupay_tenants.tenant_smtp_reply_to_mail, config.smartaccupay_tenants.tenant_smtp_password, config.smartaccupay_tenants.tenant_smtp_timeout,
                     tenant_smtp_security);
-                res.send({ message: translator.getStr('CheckMailForgotPassword'), status: true, data: get_company });
+                res.send({ message: translator.getStr('CheckMailForgotPassword'), status: true, data: data });
             } else {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
             }
         } else {
-            res.send({ message: translator.getStr('CompanyListing'), status: true, data: get_company });
+            res.send({ message: translator.getStr('CompanyListing'), status: true, data: data });
         }
     } catch (e) {
         console.log(e);
