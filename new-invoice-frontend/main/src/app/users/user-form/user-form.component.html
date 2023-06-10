@@ -317,7 +317,7 @@
                                                                  mat-raised-button
                                                                  color="warn">{{'COMMON.ACTIONS.NEXT'| translate}}</button>
                                                             <button
-                                                                 *ngIf="role_permission.users.personalInformation.Edit"
+                                                                 *ngIf="role_permission.users.personalInformation.Edit && id !== null"
                                                                  mat-raised-button color="primary"
                                                                  (click)="savePersonalInfo()">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                        </div>
@@ -424,7 +424,7 @@
                                                                       mat-raised-button
                                                                       color="warn">{{'COMMON.ACTIONS.NEXT'| translate}}</button>
                                                                  <button
-                                                                      *ngIf="!role_permission.users.contactInformation.Edit"
+                                                                      *ngIf="role_permission.users.contactInformation.Edit && id !== null"
                                                                       mat-raised-button color="primary"
                                                                       (click)="saveContactInfo()">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                             </div>
