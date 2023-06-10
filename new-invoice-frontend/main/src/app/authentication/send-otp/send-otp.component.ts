@@ -32,21 +32,20 @@ export class SendOtpComponent {
   showCompanyList = false;
   removable = true;
 
-  constructor(
+  constructor (
     private formBuilder: UntypedFormBuilder,
     private router: Router,
     private authService: AuthService,
     private authenticationService: AuthenticationService,
     private snackBar: MatSnackBar,
     private commonService: CommonService,
-  ) { }
-
-  ngOnInit() {
+  ) {
     this.companyCode = localStorage.getItem(localstorageconstants.COMPANYCODE) ?? '';
     this.authForm = this.formBuilder.group({
       useremail: ['', [Validators.required, Validators.email, Validators.minLength(5)],],
     });
   }
+
   get f() {
     return this.authForm.controls;
   }
@@ -91,6 +90,7 @@ export class SendOtpComponent {
               location.reload();
             }, 300);
           }
+          this.authenticationService.changeTokenValue(data.user_data.token);
           localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.user_data.token);
           localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.user_data));
           localStorage.setItem(localstorageconstants.COMPANYID, data.user_data.companydata._id);
