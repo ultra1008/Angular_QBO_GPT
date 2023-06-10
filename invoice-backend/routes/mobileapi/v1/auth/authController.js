@@ -781,7 +781,7 @@ module.exports.saveLoginDetails = async function (req, res) {
                     SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
                     ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                     THANKS: translator.getStr('EmailTemplateThanks'),
-                    ROVUK_TEAM: `${company_data.companyname} team`,
+                    ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
                     EMAILTITLE: translator.getStr('EmailLoginTitle'),
                     USERNAME: `${translator.getStr('EmailLoginHello')} ${decodedToken.UserData.userfullname}`,
                     LOGINLOCATION: `${translator.getStr('EmailLoginLoginFromNewDevice')} ${requestObject.location}`,
@@ -878,7 +878,7 @@ module.exports.sendOTPforLogin = async function (req, res) {
                         SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
                         ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                         THANKS: translator.getStr('EmailTemplateThanks'),
-                        ROVUK_TEAM: `${company_data.companyname} team`,
+                        ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
 
                         TITLE: 'One Time Password (OTP) verification',
                         LINE1: new handlebars.SafeString(`Your One Time Password (OTP) is <b>${sixdidgitnumber}</b>.`),
@@ -1796,7 +1796,7 @@ module.exports.sendEmailOTP = async function (req, res) {
                     SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2} `,
                     ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')} `,
                     THANKS: translator.getStr('EmailTemplateThanks'),
-                    ROVUK_TEAM: `Rovuk A/P ${translator.getStr('team_mail_all')}`,
+                    ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
 
                     TITLE: 'One Time Password (OTP) verification',
                     LINE1: new handlebars.SafeString(`Your One Time Password(OTP) is <b> ${sixdidgitnumber}</b>.`),
@@ -2535,7 +2535,7 @@ module.exports.emailForgotPassword = async function (req, res) {
                     SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
                     ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                     THANKS: translator.getStr('EmailTemplateThanks'),
-                    ROVUK_TEAM: ` Rovuk A/P ${translator.getStr('team_mail_all')}`,
+                    ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
 
                     TITLE: translator.getStr('MailForgotPassword_Title'),
                     HI_USERNAME: translator.getStr('Hello_mail'),
@@ -2607,7 +2607,7 @@ module.exports.sendEmailForgotPassword = async function (req, res) {
                 SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
                 ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                 THANKS: translator.getStr('EmailTemplateThanks'),
-                ROVUK_TEAM: ` Rovuk A/P ${translator.getStr('team_mail_all')}`,
+                ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
 
                 TITLE: translator.getStr('MailForgotPassword_Title'),
                 HI_USERNAME: translator.getStr('Hello_mail'),

@@ -18,6 +18,7 @@ import { ClassNameFormComponent } from './class-name-form/class-name-form.compon
 import { icon } from 'src/consts/icon';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-class-name-listing',
@@ -187,7 +188,7 @@ export class ClassNameListingComponent
   }
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 
   // context menu

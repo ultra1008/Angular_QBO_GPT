@@ -3952,7 +3952,7 @@ module.exports.sendInvoiceEmail = async function (req, res) {
                 SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
                 ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                 THANKS: translator.getStr('EmailTemplateThanks'),
-                ROVUK_TEAM: `${company_data.companyname} team`,
+                ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
                 EMAILTITLE: translator.getStr('INVOICE_SEND_TITLE'),
 
                 ANY_QUESTION: translator.getStr('EmailLoginAnyQuestion'),

@@ -455,7 +455,7 @@ module.exports.savelogindetails = async function (req, res) {
                     SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
                     ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                     THANKS: translator.getStr('EmailTemplateThanks'),
-                    ROVUK_TEAM: `${company_data.companyname} team`,
+                    ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
                     EMAILTITLE: translator.getStr('EmailLoginTitle'),
                     USERNAME: `${translator.getStr('EmailLoginHello')} ${decodedToken.UserData.userfullname}`,
                     LOGINLOCATION: `${translator.getStr('EmailLoginLoginFromNewDevice')} ${requestObject.location}`,
@@ -561,7 +561,7 @@ module.exports.forgetpassword = async function (req, res) {
                                 SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
                                 ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                                 THANKS: translator.getStr('EmailTemplateThanks'),
-                                ROVUK_TEAM: ` Rovuk A/P ${translator.getStr('team_mail_all')}`,
+                                ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
 
                                 TITLE: translator.getStr('MailForgotPassword_Title'),
                                 HI_USERNAME: translator.getStr('Hello_mail'),
@@ -723,14 +723,14 @@ module.exports.sendOTP = async function (req, res) {
                     SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2} `,
                     ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')} `,
                     THANKS: translator.getStr('EmailTemplateThanks'),
-                    ROVUK_TEAM: `${company_data.companyname} team`,
+                    ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam')`,
 
                     TITLE: 'One Time Password (OTP) verification',
-                    LINE1: new handlebars.SafeString(`Your One Time Password(OTP) is <b> ${sixdidgitnumber}</b>.`),
+                    LINE1: new handlebars.SafeString(`Your One Time Password(OTP) is<b> ${ sixdidgitnumber }</b>.`),
                     LINE2: 'Make sure to enter it in the web browser, since your account can’t be accessed without it.',
 
-                    COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname} `,
-                    COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode} `,
+                    COMPANYNAME: `${ translator.getStr('EmailCompanyName'); } ${ company_data.companyname; } `,
+                    COMPANYCODE: `${ translator.getStr('EmailCompanyCode'); } ${ company_data.companycode; } `,
                 };
                 const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/emailOTP.html', 'utf8');
                 var template = handlebars.compile(file_data);
@@ -1590,14 +1590,14 @@ module.exports.sendEmailOTP = async function (req, res) {
             let save_email_otp = await send_email_otp.save();
             if (save_email_otp) {
                 let emailTmp = {
-                    HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE} `,
-                    SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2} `,
-                    ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')} `,
+                    HELP: `${ translator.getStr('EmailTemplateHelpEmailAt'); } ${ config.HELPEMAIL; } ${ translator.getStr('EmailTemplateCallSupportAt'); } ${ config.NUMBERPHONE; } `,
+                    SUPPORT: `${ translator.getStr('EmailTemplateEmail'); } ${ config.SUPPORTEMAIL; } l ${ translator.getStr('EmailTemplatePhone'); } ${ config.NUMBERPHONE2; } `,
+                    ALL_RIGHTS_RESERVED: `${ translator.getStr('EmailTemplateAllRightsReserved'); } `,
                     THANKS: translator.getStr('EmailTemplateThanks'),
-                    ROVUK_TEAM: `Rovuk A/P ${translator.getStr('team_mail_all')}`,
+                    ROVUK_TEAM:  translator.getStr('EmailTemplateRovukTeam') ,
 
                     TITLE: 'One Time Password (OTP) verification',
-                    LINE1: new handlebars.SafeString(`Your One Time Password(OTP) is <b> ${sixdidgitnumber}</b>.`),
+                    LINE1: new handlebars.SafeString(`Your One Time Password(OTP) is < b > ${ sixdidgitnumber; }</b >.`),
                     LINE2: 'Make sure to enter it in the web browser, since your account can’t be accessed without it.',
 
                     COMPANYNAME: ``,
@@ -2338,23 +2338,23 @@ module.exports.emailForgotPassword = async function (req, res) {
 
                 const data = await fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/resetPassword.html', 'utf8');
                 let emailTmp = {
-                    HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
-                    SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
-                    ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                    HELP: `${ translator.getStr('EmailTemplateHelpEmailAt'); } ${ config.HELPEMAIL; } ${ translator.getStr('EmailTemplateCallSupportAt'); } ${ config.NUMBERPHONE; } `,
+                    SUPPORT: `${ translator.getStr('EmailTemplateEmail'); } ${ config.SUPPORTEMAIL; } l ${ translator.getStr('EmailTemplatePhone'); } ${ config.NUMBERPHONE2; } `,
+                    ALL_RIGHTS_RESERVED: `${ translator.getStr('EmailTemplateAllRightsReserved'); } `,
                     THANKS: translator.getStr('EmailTemplateThanks'),
-                    ROVUK_TEAM: ` Rovuk A/P ${translator.getStr('team_mail_all')}`,
+                    ROVUK_TEAM:  translator.getStr('EmailTemplateRovukTeam') ,
 
                     TITLE: translator.getStr('MailForgotPassword_Title'),
                     HI_USERNAME: translator.getStr('Hello_mail'),
                     TEXT1: translator.getStr('vendor_mail_forgotpass_line1_1'),
                     TEXT2: translator.getStr('vendor_mail_forgotpass_line3_1'),
-                    TEMP_PASSWORD: `${translator.getStr('vendor_mail_forgotpass_line2_1')} ${temp_password}`,
+                    TEMP_PASSWORD: `${ translator.getStr('vendor_mail_forgotpass_line2_1'); } ${ temp_password; } `,
 
                     BUTTON_TEXT: translator.getStr('EmailInvitationLogIn'),
                     LINK: config.SITE_URL + "/login",
 
-                    COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${data[0].companyname}`,
-                    COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${data[0].companycode}`,
+                    COMPANYNAME: `${ translator.getStr('EmailCompanyName'); } ${ data[0].companyname; } `,
+                    COMPANYCODE: `${ translator.getStr('EmailCompanyCode'); } ${ data[0].companycode; } `,
                 };
                 let tmp_subject = translator.getStr('MailForgotPassword_Subject');
                 var template = handlebars.compile(data);
@@ -2410,23 +2410,23 @@ module.exports.sendEmailForgotPassword = async function (req, res) {
 
             const data = await fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/resetPassword.html', 'utf8');
             let emailTmp = {
-                HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
-                SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
-                ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                HELP: `${ translator.getStr('EmailTemplateHelpEmailAt'); } ${ config.HELPEMAIL; } ${ translator.getStr('EmailTemplateCallSupportAt'); } ${ config.NUMBERPHONE; } `,
+                SUPPORT: `${ translator.getStr('EmailTemplateEmail'); } ${ config.SUPPORTEMAIL; } l ${ translator.getStr('EmailTemplatePhone'); } ${ config.NUMBERPHONE2; } `,
+                ALL_RIGHTS_RESERVED: `${ translator.getStr('EmailTemplateAllRightsReserved'); } `,
                 THANKS: translator.getStr('EmailTemplateThanks'),
-                ROVUK_TEAM: ` Rovuk A/P ${translator.getStr('team_mail_all')}`,
+                ROVUK_TEAM:  translator.getStr('EmailTemplateRovukTeam') ,
 
                 TITLE: translator.getStr('MailForgotPassword_Title'),
                 HI_USERNAME: translator.getStr('Hello_mail'),
                 TEXT1: translator.getStr('vendor_mail_forgotpass_line1_1'),
                 TEXT2: translator.getStr('vendor_mail_forgotpass_line3_1'),
-                TEMP_PASSWORD: `${translator.getStr('vendor_mail_forgotpass_line2_1')} ${temp_password}`,
+                TEMP_PASSWORD: `${ translator.getStr('vendor_mail_forgotpass_line2_1'); } ${ temp_password; } `,
 
                 BUTTON_TEXT: translator.getStr('EmailInvitationLogIn'),
                 LINK: config.SITE_URL + "/login",
 
-                COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${get_company.companyname}`,
-                COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${get_company.companycode}`,
+                COMPANYNAME: `${ translator.getStr('EmailCompanyName'); } ${ get_company.companyname; } `,
+                COMPANYCODE: `${ translator.getStr('EmailCompanyCode'); } ${ get_company.companycode; } `,
             };
             let tmp_subject = translator.getStr('MailForgotPassword_Subject');
             var template = handlebars.compile(data);
@@ -2469,4 +2469,4 @@ module.exports.getMyCompanyList = async function (req, res) {
     } finally {
         // connection_db_api.close();
     }
-}; 
+}; ;
