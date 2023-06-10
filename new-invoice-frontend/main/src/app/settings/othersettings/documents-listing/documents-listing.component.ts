@@ -17,6 +17,7 @@ import { TaxRateFormComponent } from '../tax-rate-listing/tax-rate-form/tax-rate
 import { DocumentFormComponent } from './document-form/document-form.component';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-documents-listing',
@@ -47,9 +48,6 @@ export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter imple
   }
   refresh() {
     this.loadData();
-  }
-  addNew() {
-    this.router.navigate(['/settings/mailbox-form']);
   }
 
   edit(document: any) {
@@ -159,7 +157,7 @@ export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter imple
   }
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 
   // context menu

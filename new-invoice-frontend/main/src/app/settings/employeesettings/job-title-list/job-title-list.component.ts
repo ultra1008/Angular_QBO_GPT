@@ -14,6 +14,7 @@ import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
 import { JobTitleModel } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
 import { JobTitleFormComponent } from './job-title-form/job-title-form.component';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-job-title-list',
@@ -53,15 +54,6 @@ export class JobTitleListComponent
   }
   refresh() {
     this.loadData();
-  }
-  addNew() {
-    this.router.navigate(['/settings/mailbox-form']);
-  }
-
-  editMailbox(mailbox: JobTitleModel) {
-    this.router.navigate(['/settings/mailbox-form'], {
-      queryParams: { _id: mailbox._id },
-    });
   }
 
   edit(jobtitle: any) {
@@ -173,7 +165,7 @@ export class JobTitleListComponent
   }
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 
   // context menu

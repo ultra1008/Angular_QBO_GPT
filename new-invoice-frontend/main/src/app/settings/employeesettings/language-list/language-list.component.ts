@@ -17,6 +17,7 @@ import { RelationshipFormComponent } from '../relationship-list/relationship-for
 import { LanguageFormComponent } from './language-form/language-form.component';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { CommonService } from 'src/app/services/common.service';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-language-list',
@@ -57,9 +58,6 @@ export class LanguageListComponent
   }
   refresh() {
     this.loadData();
-  }
-  addNew() {
-    this.router.navigate(['/settings/mailbox-form']);
   }
 
   edit(Language: any) {
@@ -170,7 +168,7 @@ export class LanguageListComponent
   }
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 
   // context menu

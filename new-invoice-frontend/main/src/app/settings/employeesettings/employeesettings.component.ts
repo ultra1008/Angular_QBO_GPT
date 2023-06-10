@@ -18,6 +18,7 @@ import { DocumentTypeFormComponent } from './document-type-list/document-type-fo
 import { DepartmentFormComponent } from './department-list/department-form/department-form.component';
 import { JobTitleFormComponent } from './job-title-list/job-title-form/job-title-form.component';
 import { JobTypeFormComponent } from './job-type-list/job-type-form/job-type-form.component';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-employeesettings',
@@ -632,6 +633,6 @@ export class EmployeesettingsComponent {
   }
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 }

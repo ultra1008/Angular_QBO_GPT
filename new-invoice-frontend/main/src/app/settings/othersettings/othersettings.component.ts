@@ -17,6 +17,7 @@ import { HttpCall } from 'src/app/services/httpcall.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { ClassNameFormComponent } from './class-name-listing/class-name-form/class-name-form.component';
 import { OtherExistsListingComponent } from './other-exists-listing/other-exists-listing.component';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-othersettings',
@@ -609,6 +610,6 @@ export class OthersettingsComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 }

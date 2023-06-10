@@ -15,6 +15,7 @@ import { JobNameModel } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
 import { VendorTypeFormComponent } from '../vendor-type-listing/vendor-type-form/vendor-type-form.component';
 import { JobNameFormComponent } from './job-name-form/job-name-form.component';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-job-name-listing',
@@ -53,9 +54,6 @@ export class JobNameListingComponent
   }
   refresh() {
     this.loadData();
-  }
-  addNew() {
-    this.router.navigate(['/settings/mailbox-form']);
   }
 
   edit(jobname: any) {
@@ -154,7 +152,7 @@ export class JobNameListingComponent
   }
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 
   // context menu

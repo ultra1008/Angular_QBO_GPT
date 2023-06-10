@@ -75,9 +75,6 @@ export class ClassNameListingComponent
   refresh() {
     this.loadData();
   }
-  addNew() {
-    this.router.navigate(['/settings/mailbox-form']);
-  }
 
   edit(className: any) {
     let that = this;

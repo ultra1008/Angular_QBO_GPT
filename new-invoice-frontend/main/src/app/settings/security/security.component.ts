@@ -9,6 +9,7 @@ import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
 import { SettingsService } from '../settings.service';
 import { configData } from 'src/environments/configData';
 import { AppComponent } from 'src/app/app.component';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-security',
@@ -20,13 +21,13 @@ export class SecurityComponent {
   otpOptions = configData.OTPOPTIONS;
   settingObject: any;
   setting_id!: string;
-  otpSwitch: boolean = false;
-  timeoutSwitch: boolean = false;
-  timer: string = '';
-  tempTimer: string = '';
-  tempTimerSwitch: string = '';
+  otpSwitch = false;
+  timeoutSwitch = false;
+  timer = '';
+  tempTimer = '';
+  tempTimerSwitch = '';
   otp = 'Yes';
-  tempOtpSwitch: string = '';
+  tempOtpSwitch = '';
 
   constructor (
     private router: Router,
@@ -72,10 +73,10 @@ export class SecurityComponent {
   }
 
   modelSwitchChangeTimeOut(event: any) {
-    let settingKey = 'settings.' + 'Auto_Log_Off';
-    let obj = this.settingObject['Auto_Log_Off'];
+    const settingKey = 'settings.' + 'Auto_Log_Off';
+    const obj = this.settingObject['Auto_Log_Off'];
     obj.setting_status = event ? 'Active' : 'Inactive';
-    let reqObject = {
+    const reqObject = {
       [settingKey]: obj,
     };
     let that = this;
@@ -105,10 +106,10 @@ export class SecurityComponent {
 
   modelChangeTimeout(event: any) {
     // this.timer = event;
-    let settingKey = 'settings.' + 'Auto_Log_Off';
-    let obj = this.settingObject['Auto_Log_Off'];
+    const settingKey = 'settings.' + 'Auto_Log_Off';
+    const obj = this.settingObject['Auto_Log_Off'];
     obj.setting_value = event;
-    let reqObject = {
+    const reqObject = {
       [settingKey]: obj,
     };
     let that = this;
@@ -143,7 +144,7 @@ export class SecurityComponent {
       .subscribe(function (data) {
         if (data.status) {
           showNotification(that.snackBar, data.message, 'success');
-          // that.myapp.updateIdealTimeout();
+          that.myapp.updateIdealTimeout();
         } else {
           showNotification(that.snackBar, data.message, 'error');
         }
@@ -152,10 +153,10 @@ export class SecurityComponent {
 
   modelChangeOtp(event: any) {
     // this.timer = event;
-    let settingKey = 'settings.' + 'Enable_OTP';
-    let obj = this.settingObject['Enable_OTP'];
+    const settingKey = 'settings.' + 'Enable_OTP';
+    const obj = this.settingObject['Enable_OTP'];
     obj.setting_value = event;
-    let reqObject = {
+    const reqObject = {
       [settingKey]: obj,
     };
     let that = this;
@@ -180,10 +181,10 @@ export class SecurityComponent {
   }
 
   modelSwitchChangeOtp(event: any) {
-    let settingKey = 'settings.' + 'Enable_OTP';
-    let obj = this.settingObject['Enable_OTP'];
+    const settingKey = 'settings.' + 'Enable_OTP';
+    const obj = this.settingObject['Enable_OTP'];
     obj.setting_status = event ? 'Active' : 'Inactive';
-    let reqObject = {
+    const reqObject = {
       [settingKey]: obj,
     };
     let that = this;
@@ -212,6 +213,6 @@ export class SecurityComponent {
   }
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 }

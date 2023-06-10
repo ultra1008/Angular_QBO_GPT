@@ -11,6 +11,7 @@ import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { showNotification } from 'src/consts/utils';
 import { configData } from 'src/environments/configData';
 import { SettingsService } from '../settings.service';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-smtp',
@@ -106,6 +107,6 @@ export class SmtpComponent {
   }
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 }

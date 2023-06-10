@@ -106,15 +106,6 @@ export class UsageComponent extends UnsubscribeOnDestroyAdapter implements OnIni
   refresh() {
     this.loadData();
   }
-  addNew() {
-    this.router.navigate(['/settings/mailbox-form']);
-  }
-
-  editMailbox(mailbox: UsageModel) {
-    this.router.navigate(['/settings/mailbox-form'], {
-      queryParams: { _id: mailbox._id },
-    });
-  }
 
   async archiveRecover(mailbox: UsageModel, is_delete: number) {
     const data = await this.SettingsService.deleteMailbox({

@@ -22,6 +22,7 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-mailbox',
@@ -71,14 +72,12 @@ export class MailboxComponent
     this.loadData();
   }
   addNew() {
-    this.router.navigate(['/settings/mailbox-form']);
+    this.router.navigate([WEB_ROUTES.MAILBOX_FOR_SETTING]);
   }
 
   editMailbox(mailbox: MailboxModel) {
     if (this.isDelete == 0) {
-      this.router.navigate(['/settings/mailbox-form'], {
-        queryParams: { _id: mailbox._id },
-      });
+      this.router.navigate([WEB_ROUTES.MAILBOX_FOR_SETTING], { queryParams: { _id: mailbox._id } });
     }
   }
 
@@ -183,7 +182,7 @@ export class MailboxComponent
 
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 
   // context menu

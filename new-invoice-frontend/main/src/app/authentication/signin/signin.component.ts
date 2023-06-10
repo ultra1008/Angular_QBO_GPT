@@ -98,10 +98,10 @@ export class SigninComponent implements OnInit {
     this.getCompanySettings();
   }
   goResetPasswordForm() {
-    this.router.navigate(['/authentication/forgot-password']);
+    this.router.navigate([WEB_ROUTES.FORGOT_PASSWORD]);
   }
   goSendOtpForm() {
-    this.router.navigate(['/authentication/send-otp']);
+    this.router.navigate([WEB_ROUTES.SEND_OTP]);
   }
   public removeCompanyCode() {
     this.companyCode = '';

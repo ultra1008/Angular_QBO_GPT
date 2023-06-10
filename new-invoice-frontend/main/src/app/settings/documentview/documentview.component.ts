@@ -7,6 +7,7 @@ import { HttpCall } from 'src/app/services/httpcall.service';
 import { showNotification, swalWithBootstrapButtons } from 'src/consts/utils';
 import { SettingsService } from '../settings.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-documentview',
@@ -71,7 +72,7 @@ export class DocumentviewComponent {
 
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 
   modelChangeSwitch(event: any, checkoption: any) {

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
+import { WEB_ROUTES } from 'src/consts/routes';
 import { showNotification } from 'src/consts/utils';
 
 @Component({
@@ -103,6 +104,6 @@ export class RolesettingsComponent {
   }
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 }

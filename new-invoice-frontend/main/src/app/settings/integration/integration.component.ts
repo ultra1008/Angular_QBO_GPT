@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { icon } from 'src/consts/icon';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-integration',
@@ -12,23 +13,19 @@ export class IntegrationComponent {
   qboIcon: any = icon.QUICKBOOKS_ONLINE_LOGO;
   qbdIcon: any = icon.QUICKBOOKS_DESKTOP_LOGO;
 
-  constructor(private router: Router) {
-
-  }
-
-  ngOnInit() {
+  constructor (private router: Router) {
 
   }
 
   clickOnCard(type: any) {
     if (type == "qbo") {
-      this.router.navigate(['settings/qbo-integration']);
+      this.router.navigate([WEB_ROUTES.QBO_INTEGRATION_SETTING]);
     } else if (type == "qbd") {
-      this.router.navigate(['settings/qbd-integration']);
+      this.router.navigate([WEB_ROUTES.QBO_INTEGRATION_SETTING]);
     }
   }
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 }

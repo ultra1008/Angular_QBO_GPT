@@ -15,6 +15,7 @@ import { DeartmentModel } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
 import { DocumentTypeFormComponent } from '../document-type-list/document-type-form/document-type-form.component';
 import { DepartmentFormComponent } from './department-form/department-form.component';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-department-list',
@@ -54,15 +55,6 @@ export class DepartmentListComponent
   }
   refresh() {
     this.loadData();
-  }
-  addNew() {
-    this.router.navigate(['/settings/mailbox-form']);
-  }
-
-  editMailbox(mailbox: DeartmentModel) {
-    this.router.navigate(['/settings/mailbox-form'], {
-      queryParams: { _id: mailbox._id },
-    });
   }
 
   edit(Department: any) {
@@ -178,7 +170,7 @@ export class DepartmentListComponent
   }
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 
   // context menu

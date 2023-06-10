@@ -16,6 +16,7 @@ import { SettingsService } from '../../settings.service';
 import { JobTypeFormComponent } from './job-type-form/job-type-form.component';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-job-type-list',
@@ -49,15 +50,6 @@ export class JobTypeListComponent
   }
   refresh() {
     this.loadData();
-  }
-  addNew() {
-    this.router.navigate(['/settings/mailbox-form']);
-  }
-
-  editMailbox(mailbox: JobTypeModel) {
-    this.router.navigate(['/settings/mailbox-form'], {
-      queryParams: { _id: mailbox._id },
-    });
   }
 
   edit(jobType: any) {
@@ -169,7 +161,7 @@ export class JobTypeListComponent
   }
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 
   // context menu

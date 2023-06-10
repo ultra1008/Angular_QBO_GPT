@@ -23,6 +23,7 @@ import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import * as XLSX from 'xlsx';
 import { icon } from 'src/consts/icon';
 import { CommonService } from 'src/app/services/common.service';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-costcode',
@@ -81,9 +82,6 @@ export class CostcodeComponent
 
   refresh() {
     this.loadData();
-  }
-  addNew() {
-    this.router.navigate(['/settings/mailbox-form']);
   }
 
   async deleteCostCode(costcodeTable: CostCodeModel, is_delete: number) {
@@ -264,7 +262,7 @@ export class CostcodeComponent
   }
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 
   // context menu

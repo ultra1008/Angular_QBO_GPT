@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { icon } from 'src/consts/icon';
+import { WEB_ROUTES } from 'src/consts/routes';
 import { configData } from 'src/environments/configData';
 
 @Component({
@@ -96,7 +97,7 @@ export class QbointegrationComponent {
   }
 
   back() {
-    this.router.navigate(['/settings/integration']);
+    this.router.navigate([WEB_ROUTES.INTEGRATION_SETTING]);
   }
 
   connect() {

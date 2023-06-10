@@ -160,50 +160,50 @@ export class AllsettingsComponent {
   }
 
   openMailboxListing() {
-    this.router.navigate(['/settings/mailbox']);
+    this.router.navigate([WEB_ROUTES.MAILBOX_SETTING]);
   }
 
   openEmployeeSettings() {
-    this.router.navigate(['/settings/employeesettings']);
+    this.router.navigate([WEB_ROUTES.EMPLOYEE_SETTING]);
   }
 
   openRolesSettings() {
-    this.router.navigate(['/settings/rolesettings']);
+    this.router.navigate([WEB_ROUTES.ROLE_SETTING]);
   }
 
   openAlertsSettings() {
-    this.router.navigate(['/settings/alerts']);
+    this.router.navigate([WEB_ROUTES.ALERT_SETTING]);
   }
 
   openSMTPSettings() {
-    this.router.navigate(['/settings/smtp']);
+    this.router.navigate([WEB_ROUTES.SMTP_SETTING]);
   }
 
   openIntegrations() {
-    this.router.navigate(['/settings/integration']);
+    this.router.navigate([WEB_ROUTES.INTEGRATION_SETTING]);
   }
 
   openUsage() {
-    this.router.navigate(['/settings/usage']);
+    this.router.navigate([WEB_ROUTES.USAGE_SETTING]);
   }
 
   openOtherSettings() {
-    this.router.navigate(['/settings/othersettings']);
+    this.router.navigate([WEB_ROUTES.OTHER_SETTING]);
   }
 
   openSecurity() {
-    this.router.navigate(['/settings/security']);
+    this.router.navigate([WEB_ROUTES.SECURITY_SETTING]);
   }
 
   openCostcode() {
-    this.router.navigate(['/settings/costcode']);
+    this.router.navigate([WEB_ROUTES.COSTCODE_SETTING]);
   }
 
   openDocumentView() {
-    this.router.navigate(['/settings/documentview']);
+    this.router.navigate([WEB_ROUTES.DOCUMENT_VIEW_SETTING]);
   }
 
   editPress() {
-    this.router.navigate(['/settings/company-info-form']);
+    this.router.navigate([WEB_ROUTES.COMPANY_INFO_FORM]);
   }
 }

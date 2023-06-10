@@ -127,21 +127,21 @@
                             </mat-form-field>
                             {{'SETTINGS.SETTINGS_OTHER_OPTION.ALERTS_MODULE.SENT_BATCH' | translate}}
                         </div>
-                        <div class="decorate-div">
+                        <!-- <div class="decorate-div">
                             <mat-slide-toggle color="primary" [(ngModel)]="daily_productivity_report"
                                 (ngModelChange)="modelChangeSwitch($event,'daily_productivity_report')">
                                 {{'SETTINGS.SETTINGS_OTHER_OPTION.ALERTS_MODULE.SEND_DAILY' | translate}}
                             </mat-slide-toggle>
-                            <mat-form-field appearance="outline" class="magin-l">
-                                <!-- (ngModelChange)="modelChangeDropdown($event,'daily_productivity_report',true)" -->
-                                <mat-select #drop [(ngModel)]="daily_productivity_report_value" class="dark-cust-color"
+                            <mat-form-field appearance="outline" class="magin-l"> -->
+                        <!-- (ngModelChange)="modelChangeDropdown($event,'daily_productivity_report',true)" -->
+                        <!-- <mat-select #drop [(ngModel)]="daily_productivity_report_value" class="dark-cust-color"
                                     multiple>
                                     <mat-option *ngFor="let user of allUser" [value]="user._id">
                                         {{user.userfullname}}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                        </div>
+                        </div> -->
                         <div class="decorate-div">
                             <mat-slide-toggle color="primary" [(ngModel)]="Invoice_Greater_Than_Amount_Approve"
                                 (ngModelChange)="modelChangeSwitch($event,'Invoice_Greater_Than_Amount_Approve')">

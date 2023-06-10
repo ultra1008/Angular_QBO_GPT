@@ -215,7 +215,7 @@ export class CompanyInfoFormComponent {
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        this.router.navigate(['/settings']);
+        this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');
@@ -303,7 +303,7 @@ export class CompanyInfoFormComponent {
           // ;
         } else {
           setTimeout(() => {
-            this.router.navigate(['/settings']);
+            this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
           }, 100);
         }
       });

@@ -9,6 +9,7 @@ import { showNotification, swalWithBootstrapButtons } from 'src/consts/utils';
 import { SettingsService } from '../../settings.service';
 import { configData } from 'src/environments/configData';
 import { TranslateService } from '@ngx-translate/core';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-mailbox-form',
@@ -103,7 +104,7 @@ export class MailboxFormComponent {
           // ;
         } else {
           setTimeout(() => {
-            this.router.navigate(['/settings/mailbox']);
+            this.back();
           }, 100);
         }
       });
@@ -122,14 +123,15 @@ export class MailboxFormComponent {
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        this.router.navigate(['/settings/mailbox']);
+        this.back();
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');
       }
-
     }
+  }
 
+  back() {
+    this.router.navigate([WEB_ROUTES.MAILBOX_SETTING]);
   }
 }
-

@@ -17,6 +17,7 @@ import { TermsFormComponent } from '../terms-listing/terms-form/terms-form.compo
 import { TaxRateFormComponent } from './tax-rate-form/tax-rate-form.component';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-tax-rate-listing',
@@ -47,9 +48,6 @@ export class TaxRateListingComponent extends UnsubscribeOnDestroyAdapter impleme
   }
   refresh() {
     this.loadData();
-  }
-  addNew() {
-    this.router.navigate(['/settings/mailbox-form']);
   }
 
   edit(taxRate: any) {
@@ -157,7 +155,7 @@ export class TaxRateListingComponent extends UnsubscribeOnDestroyAdapter impleme
   }
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 
   // context menu
