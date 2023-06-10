@@ -1,6 +1,5 @@
 var ObjectID = require('mongodb').ObjectID;
 let collectionConstant = require('../../../../../config/collectionConstant');
-let superadminCollection = require('../../../../../config/superadminCollection');
 var ObjectID = require('mongodb').ObjectID;
 var projectTypeSchema = require('../../../../../model/supplier_project_type');
 let common = require('../../../../../controller/common/common');
@@ -15,17 +14,17 @@ module.exports.getProjectType = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             let projectTypeConnection = connection_db_api.model(collectionConstant.SUPPLIER_PROJECT_TYPE, projectTypeSchema);
-            let getData = await projectTypeConnection.find({ is_delete: 0 })
+            let getData = await projectTypeConnection.find({ is_delete: 0 });
             res.send({ data: getData, status: true });
         } catch (e) {
             res.send({ message: translator.getStr('SomethingWrong'), status: false });
         } finally {
-            connection_db_api.close()
+            connection_db_api.close();
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
-}
+};
 
 module.exports.saveProjectType = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -34,8 +33,8 @@ module.exports.saveProjectType = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-            let _id = requestObject._id
-            delete requestObject._id
+            let _id = requestObject._id;
+            delete requestObject._id;
             let projectTypeConnection = connection_db_api.model(collectionConstant.SUPPLIER_PROJECT_TYPE, projectTypeSchema);
             let get_one = await projectTypeConnection.findOne({ name: requestObject.name, is_delete: 0 });
             if (_id) {
@@ -75,7 +74,7 @@ module.exports.saveProjectType = async function (req, res) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         } finally {
-            connection_db_api.close()
+            connection_db_api.close();
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
@@ -105,7 +104,7 @@ module.exports.deleteProjectType = async function (req, res) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         } finally {
-            connection_db_api.close()
+            connection_db_api.close();
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
@@ -149,20 +148,20 @@ module.exports.importProjectType = async function (req, res) {
                             });
                         }
                         for (let m = 0; m < data.length; m++) {
-                            requestObject = {}
+                            requestObject = {};
                             let onecategory_main = await projectTypeConnection.findOne({ name: data[m].name, is_delete: 0 });
                             //let onecategory_main = await db_rest_api.findOne(main_db, collectionConstantOcps.SUPPLIER_PROJECT_TYPE, { name: data[m].name, is_delete: 0 });
                             if (onecategory_main == null) {
                                 requestObject.name = data[m].name;
-                                requestObject.is_delete = 0
+                                requestObject.is_delete = 0;
                                 let add_project_type = new projectTypeConnection(requestObject);
-                                await add_project_type.save()
+                                await add_project_type.save();
                             } else {
                             }
                         }
                         res.send({ status: true, message: "Project type added successfully" });
                     }
-                })
+                });
         } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
@@ -172,7 +171,7 @@ module.exports.importProjectType = async function (req, res) {
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
-}
+};
 
 module.exports.exportProjectType = async function (req, res) {
 
@@ -182,7 +181,7 @@ module.exports.exportProjectType = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             let projectTypeConnection = connection_db_api.model(collectionConstant.SUPPLIER_PROJECT_TYPE, projectTypeSchema);
-            let getData = await projectTypeConnection.find({ is_delete: 0 })
+            let getData = await projectTypeConnection.find({ is_delete: 0 });
             res.send({ data: getData, status: true });
         } catch (e) {
             console.log(e);
@@ -193,4 +192,4 @@ module.exports.exportProjectType = async function (req, res) {
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
-}
+};

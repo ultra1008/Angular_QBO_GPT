@@ -1,6 +1,5 @@
 var ObjectID = require('mongodb').ObjectID;
 let collectionConstant = require('../../../../../config/collectionConstant');
-let superadminCollection = require('../../../../../config/superadminCollection');
 var ObjectID = require('mongodb').ObjectID;
 let common = require('../../../../../controller/common/common');
 let db_connection = require('../../../../../controller/common/connectiondb');
@@ -18,15 +17,15 @@ module.exports.getContractType = async function (req, res) {
             let getData = await contractTypeConnection.find({ is_delete: 0 });
             res.send({ data: getData, status: true });
         } catch (e) {
-            console.log("e", e)
+            console.log("e", e);
             res.send({ message: translator.getStr('SomethingWrong'), status: false });
         } finally {
-            connection_db_api.close()
+            connection_db_api.close();
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
-}
+};
 
 module.exports.saveContractType = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -35,8 +34,8 @@ module.exports.saveContractType = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-            let _id = requestObject._id
-            delete requestObject._id
+            let _id = requestObject._id;
+            delete requestObject._id;
             let contractTypeConnection = connection_db_api.model(collectionConstant.SUPPLIER_CONTRACT_TYPE, supplierContractTypeSchema);
             let get_one = await contractTypeConnection.findOne({ name: requestObject.name, is_delete: 0 });
             if (_id) {
@@ -76,7 +75,7 @@ module.exports.saveContractType = async function (req, res) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         } finally {
-            connection_db_api.close()
+            connection_db_api.close();
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
@@ -106,7 +105,7 @@ module.exports.deleteContractType = async function (req, res) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         } finally {
-            connection_db_api.close()
+            connection_db_api.close();
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
@@ -151,7 +150,7 @@ module.exports.importContractType = async function (req, res) {
                             });
                         }
                         for (let m = 0; m < data.length; m++) {
-                            requestObject = {}
+                            requestObject = {};
                             let onecategory_main = await contractTypeConnection.findOne({ name: data[m].name, is_expiration: data[m].is_expiration, is_delete: 0 });
 
                             if (onecategory_main == null) {
@@ -172,7 +171,7 @@ module.exports.importContractType = async function (req, res) {
                             status: true, message: translator.getStr('ContractTypeAdd')
                         });
                     }
-                })
+                });
         } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
@@ -182,7 +181,7 @@ module.exports.importContractType = async function (req, res) {
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
-}
+};
 
 
 module.exports.exportContractType = async function (req, res) {
@@ -198,9 +197,9 @@ module.exports.exportContractType = async function (req, res) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         } finally {
-            connection_db_api.close()
+            connection_db_api.close();
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
-}
+};

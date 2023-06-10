@@ -34,7 +34,6 @@ var payrollgroupSchema = require('../../../../../model/payroll_group');
 var creditcardsettingsSchema = require('../../../../../model/creditcardsettings');
 const reader = require('xlsx');
 var _ = require('lodash');
-let superadminCollection = require('../../../../../config/superadminCollection');
 let billingPlan = require('./../../../../../config/billing_plan');
 let attachmentLocations = require('./../../../../../config/attachmentLocations');
 var recentActivity = require('./../recent_activity/recentActivityController');

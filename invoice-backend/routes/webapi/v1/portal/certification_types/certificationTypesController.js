@@ -1,6 +1,5 @@
 var ObjectID = require('mongodb').ObjectID;
 let collectionConstant = require('../../../../../config/collectionConstant');
-let superadminCollection = require('../../../../../config/superadminCollection');
 var ObjectID = require('mongodb').ObjectID;
 var certificationTypesSchema = require('../../../../../model/supplier_certifications_types');
 var vendorCertificationSchema = require('../../../../../model/supplier_vendor_certificates');
@@ -10,12 +9,12 @@ let db_connection = require('../../../../../controller/common/connectiondb');
 module.exports.getCertificationTypeOcpr = async function (req, res) {
     var requestObject = req.body;
     var translator = new common.Language('en');
-    DB.findOne(superadminCollection.COMPANY, { _id: ObjectID(requestObject.sponsor_id) }, function (err, resultfind) {
+    DB.findOne(collectionConstant.SUPER_ADMIN_COMPANY, { _id: ObjectID(requestObject.sponsor_id) }, function (err, resultfind) {
         if (err) {
             res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
         } else {
             if (resultfind != null) {
-                DB.findOne(superadminCollection.TENANTS, { companycode: resultfind.companycode }, async function (err, resulttanent) {
+                DB.findOne(collectionConstant.SUPER_ADMIN_TENANTS, { companycode: resultfind.companycode }, async function (err, resulttanent) {
                     if (err) {
                         res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
                     } else {

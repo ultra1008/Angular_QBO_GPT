@@ -5,7 +5,6 @@ let common = require('./../../../../../controller/common/common');
 var ObjectID = require('mongodb').ObjectID;
 var handlebars = require('handlebars');
 let sendEmail = require('./../../../../../controller/common/sendEmail');
-let superadminCollection = require('./../../../../../config/superadminCollection');
 let rest_Api = require('../../../../../config/db_rest_api');
 var formidable = require('formidable');
 var fs = require('fs');

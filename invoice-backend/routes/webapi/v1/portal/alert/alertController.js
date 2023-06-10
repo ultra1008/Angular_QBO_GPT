@@ -1,6 +1,5 @@
 var ObjectID = require('mongodb').ObjectID;
 let collectionConstant = require('../../../../../config/collectionConstant');
-let superadminCollection = require('../../../../../config/superadminCollection');
 var alertSchema = require('../../../../../model/alerts');
 var apInvoiceSchema = require('../../../../../model/ap_invoices');
 var tenantSchema = require('../../../../../model/tenants');
