@@ -13,7 +13,7 @@ export class IntegrationComponent {
   qboIcon: any = icon.QUICKBOOKS_ONLINE_LOGO;
   qbdIcon: any = icon.QUICKBOOKS_DESKTOP_LOGO;
 
-  constructor (private router: Router) {
+  constructor(private router: Router) {
 
   }
 
@@ -21,7 +21,7 @@ export class IntegrationComponent {
     if (type == "qbo") {
       this.router.navigate([WEB_ROUTES.QBO_INTEGRATION_SETTING]);
     } else if (type == "qbd") {
-      this.router.navigate([WEB_ROUTES.QBO_INTEGRATION_SETTING]);
+      this.router.navigate([WEB_ROUTES.QBD_INTEGRATION_SETTING]);
     }
   }
 
