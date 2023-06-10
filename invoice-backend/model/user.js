@@ -1,8 +1,10 @@
 var mongoose = require('mongoose');
 let collectionConstant = require('../config/collectionConstant');
+let config = require('../config/config');
 var Schema = mongoose.Schema;
 const castObjectId = mongoose.ObjectId.cast();
 mongoose.ObjectId.cast(v => v === '' ? v : castObjectId(v));
+
 var api_setting = new mongoose.Schema({
     location: { type: Boolean, default: false },
     employee: { type: Boolean, default: false },
@@ -54,8 +56,8 @@ var userSchema = new Schema({
     usergender: { type: String, default: "" },
     userdob: { type: String, default: "" },
     userstatus: { type: Number, default: 1 },
-    userpicture: { type: String, default: "" },
-    usermobile_picture: { type: String, default: "" },
+    userpicture: { type: String, default: config.DEFAULT_MALE_PICTURE },
+    usermobile_picture: { type: String, default: config.DEFAULT_MALE_PICTURE },
     userfulladdress: { type: String, default: "" },
     userstreet1: { type: String, default: "" },
     userstreet2: { type: String, default: "" },
