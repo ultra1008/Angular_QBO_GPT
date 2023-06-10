@@ -20,7 +20,6 @@ export class ClientHistoryComponent
 
   constructor(
     private router: Router,
-    public vendorService: ClientService,
     public commonService: CommonService
   ) {
     super();
