@@ -47,7 +47,7 @@ module.exports.getDashboardCount = async function (req, res) {
                     get_data = get_data[0];
                     get_data.duplicates = await apDuplicateDocumentConnection.find({ status: 'Pending', is_delete: 0 }).countDocuments();
                 } else {
-                    get_data = { pending_invoices: 0, approved_invoices: 0, rejected_invoices: 0, late_invoices: 0, on_hold: 0, overdue: 0, duplicates };
+                    get_data = { pending_invoices: 0, approved_invoices: 0, rejected_invoices: 0, late_invoices: 0, on_hold: 0, overdue: 0, duplicates: 0 };
                 }
                 res.send({ status: true, message: "Invoice data", data: get_data });
             } else {
