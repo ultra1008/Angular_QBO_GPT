@@ -366,6 +366,8 @@ export function checkPermissionAfterLogin(permissions: RolePermission) {
     return WEB_ROUTES.REPORTS;
   } else if (permissions.users.View) {
     return WEB_ROUTES.USER;
+  } else if (permissions.settings.View) {
+    return WEB_ROUTES.SIDEMENU_SETTINGS;
   } else {
     return WEB_ROUTES.DASHBOARD;
   }
