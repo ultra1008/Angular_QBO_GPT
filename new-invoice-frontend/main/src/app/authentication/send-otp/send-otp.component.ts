@@ -32,7 +32,7 @@ export class SendOtpComponent {
   showCompanyList = false;
   removable = true;
 
-  constructor (
+  constructor(
     private formBuilder: UntypedFormBuilder,
     private router: Router,
     private authService: AuthService,
@@ -88,6 +88,7 @@ export class SendOtpComponent {
           } else {
             setTimeout(() => {
               this.router.navigate([checkPermissionAfterLogin(data.user_data.role_permission)]);
+              location.reload();
             }, 300);
           }
           localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.user_data.token);

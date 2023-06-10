@@ -49,7 +49,7 @@ export class SigninComponent implements OnInit {
   showForm = false;
   companyList: Array<CompanyModel> = [];
 
-  constructor (private formBuilder: UntypedFormBuilder, private router: Router, private authService: AuthService,
+  constructor(private formBuilder: UntypedFormBuilder, private router: Router, private authService: AuthService,
     private AuthenticationService: AuthenticationService, private snackBar: MatSnackBar,
     private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private commonService: CommonService,
   ) {
@@ -146,6 +146,7 @@ export class SigninComponent implements OnInit {
           localStorage.setItem(localstorageconstants.LOGOUT, 'false');
           setTimeout(() => {
             this.router.navigate([checkPermissionAfterLogin(data.user_data.role_permission)]);
+            location.reload();
           }, 500);
         }
         localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.user_data.token);
