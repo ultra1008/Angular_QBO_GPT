@@ -17,7 +17,7 @@
                         <div class="right">
                             <ul class="tbl-export-btn" *ngIf="role_permission.vendor.Delete">
                                 <li class="tbl-header-btn" *ngIf="id">
-                                    <div class="m-l-10" *ngIf="is_delete === 0"
+                                    <div class="m-l-10" *ngIf="!isHideArchiveActionQBD && is_delete === 0"
                                         matTooltip="{{'COMMON.TOOL_TIP.ARCHIVE' | translate}}">
                                         <button mat-mini-fab color="warn" (click)="deletvendor()">
                                             <mat-icon class="col-white">archive</mat-icon>
@@ -25,7 +25,7 @@
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="id">
-                                    <div class="m-l-10" *ngIf="is_delete === 1"
+                                    <div class="m-l-10" *ngIf="!isHideArchiveActionQBD && is_delete === 1"
                                         matTooltip="{{'COMMON.ACTIONS.RESTORE' | translate}}">
                                         <button mat-mini-fab color="warn" (click)="deletvendor()">
                                             <mat-icon class="col-white">archive</mat-icon>
@@ -44,7 +44,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="body">
+                    <div [ngClass]="{'disableDiv': isHideEditActionQBD}">
                         <form class="register-form m-4" [formGroup]="vendorForm">
                             <div class="vendor-image text-center mb-4">
                                 <div class="custom-file fileInputProfileWrap">
@@ -59,7 +59,6 @@
                                         </ng-template>
                                     </div>
                                 </div>
-                                <!-- <img src="assets/images/vendor.png" /> -->
                             </div>
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
@@ -263,11 +262,11 @@
 
                             <div class="row">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                                    <button *ngIf="role_permission.vendor.Edit " class="btn-space" mat-raised-button
-                                        color="primary" [disabled]="!vendorForm.valid"
-                                        (click)="saveVendor()">{{'COMMON.ACTIONS.SAVE'|
+                                    <button *ngIf="role_permission.vendor.Edit && !isHideEditActionQBD"
+                                        class="btn-space" mat-raised-button color="primary"
+                                        [disabled]="!vendorForm.valid" (click)="saveVendor()">{{'COMMON.ACTIONS.SAVE'|
                                         translate}}</button>
-                                    <button type="button" mat-raised-button color="warn"
+                                    <button *ngIf="!isHideEditActionQBD" type="button" mat-raised-button color="warn"
                                         (click)="confirmExit()">{{'COMMON.ACTIONS.CANCEL'| translate}}</button>
                                 </div>
                             </div>
