@@ -7,6 +7,8 @@ import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
 import { CommonService } from './services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
+import { swalWithBootstrapButtons } from 'src/consts/utils';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-root',
@@ -19,15 +21,6 @@ export class AppComponent {
   timedOut = false;
   lastPing?: Date;
   title = 'angular-idle-timeout';
-
-  swalWithBootstrapButtons = Swal.mixin({
-    customClass: {
-      confirmButton: 'btn btn-success',
-      denyButton: 'btn btn-warning',
-      cancelButton: 'btn btn-danger',
-    },
-    buttonsStyling: false,
-  });
 
   constructor (public translate: TranslateService, public _router: Router, private idle: Idle, private keepalive: Keepalive,
     public commonService: CommonService) {
@@ -68,8 +61,8 @@ export class AppComponent {
           this.idleState = 'Timed out!';
           this.timedOut = true;
           console.log(this.idleState);
-          this.swalWithBootstrapButtons.close();
-          // Open User Lock screen
+          swalWithBootstrapButtons.close();
+          this.reset();// Open User Lock screen
           this._router.navigate(['/authentication/locked']);
         });
 
@@ -78,9 +71,9 @@ export class AppComponent {
           console.log(this.idleState);
 
           //display diaglog here
-          this.swalWithBootstrapButtons.fire({
+          swalWithBootstrapButtons.fire({
             title: 'Are you sure?',
-            text: "You have been inactive for " + 5 + " minutes, your session is about to end due to inactivity.",
+            text: "You have been inactive for " + Number(data.data.settings.Auto_Log_Off.setting_value) + " minutes, your session is about to end due to inactivity.",
             html: "As a security precaution, if there is no additional activity in your ROVUK session, the session will end and you will be brought to the login page.</br></br>If you are still working please click OK to continue.",
             icon: 'warning',
             showCancelButton: true,
@@ -91,14 +84,14 @@ export class AppComponent {
             showDenyButton: true,
             allowOutsideClick: false
           }).then((result) => {
+            this.reset();
             if (result.value) {
               console.log('Logout press');
-            } else if (
-              /* Read more about handling dismissals below */
-              result.dismiss === Swal.DismissReason.cancel
-            ) {
+              this._router.navigate([WEB_ROUTES.LOGIN]);
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
               console.log('Ok press');
-              this.swalWithBootstrapButtons.close();
+              this.reset();
+              swalWithBootstrapButtons.close();
             }
           });
         });

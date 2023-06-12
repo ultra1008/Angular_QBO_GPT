@@ -1960,7 +1960,7 @@ module.exports.sendInvoiceForProcess = function (requestObject) {
         // 'url': 'http://db-invoice.rovuk.us:8000/process', 
         const options = {
             'method': 'POST',
-            'url': 'http://db-invoice.rovuk.us:5000/process_document',
+            'url': 'http://74.208.214.203:5000/process_invoice',
             'headers': {
                 'Content-Type': 'application/json'
             },
