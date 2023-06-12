@@ -184,7 +184,6 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
     //   this.lightThemeBtnClick();
     // }
 
-    console.log("hey: ", localStorage.getItem(localstorageconstants.DARKMODE));
     // set theme on startup
     if (localStorage.getItem(localstorageconstants.DARKMODE)) {
       if (localStorage.getItem(localstorageconstants.DARKMODE) === 'dark') {

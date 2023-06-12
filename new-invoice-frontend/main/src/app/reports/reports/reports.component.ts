@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,6 +14,7 @@ import { WEB_ROUTES } from 'src/consts/routes';
 import { UserModel } from 'src/app/users/user.model';
 import { ClassNameModel } from 'src/app/settings/settings.model';
 import { ClientJobModel } from 'src/app/client/client.model';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
 
 @Component({
   selector: 'app-reports',
@@ -53,6 +54,7 @@ export class ReportsComponent extends UnsubscribeOnDestroyAdapter {
   classNameList: Array<ClassNameModel> = [];
   clientList: Array<ClientJobModel> = [];
   reportType = configData.REPORT_TYPE;
+  dark = false;
 
   constructor (public dialog: MatDialog, private commonService: CommonService, public route: ActivatedRoute,
     public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, public translate: TranslateService, private router: Router,) {
