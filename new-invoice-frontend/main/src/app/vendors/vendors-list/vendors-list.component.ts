@@ -63,7 +63,7 @@ export class VendorsListComponent
   quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
   quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
 
-  constructor (
+  constructor(
     public httpClient: HttpClient,
     private httpCall: HttpCall,
     public dialog: MatDialog,
@@ -86,11 +86,15 @@ export class VendorsListComponent
   contextMenuPosition = { x: '0px', y: '0px' };
   vendor_status: any = [''];
   is_quickbooks = false;
+  isHideAddActionQBD = false;
+  isHideEditActionQBD = false;
+  isHideArchiveActionQBD = false;
+
 
   ngOnInit() {
     const vendorDisplay = localStorage.getItem(localstorageconstants.VENDOR_DISPLAY) ?? 'list';
-    console.log("vendorDisplay: ", vendorDisplay);
     this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
+
     if (vendorDisplay == 'list') {
       this.loadData();
       this.getCompanyTenants();
@@ -117,9 +121,29 @@ export class VendorsListComponent
   async getCompanyTenants() {
     const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP);
     if (data.status) {
+      if (data.data.is_quickbooks_desktop) {
+        if (this.role_permission.vendor.Add) {
+          this.isHideAddActionQBD = true;
+        } else {
+          this.isHideAddActionQBD = false;
+        }
+
+        if (this.role_permission.vendor.Edit) {
+          this.isHideEditActionQBD = true;
+        } else {
+          this.isHideEditActionQBD = false;
+        }
+
+        if (this.role_permission.vendor.Delete) {
+          this.isHideArchiveActionQBD = true;
+        } else {
+          this.isHideArchiveActionQBD = false;
+        }
+      }
+
       this.is_quickbooks = data.data.is_quickbooks_online || data.data.is_quickbooks_desktop;
       if (this.is_quickbooks) {
-        this.displayedColumns = ['select', 'vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'amount_paid', 'amount_open', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks', 'actions'];
+        this.displayedColumns = ['select', 'vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'amount_paid', 'amount_open', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks'];
       } else {
         this.displayedColumns = ['select', 'vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'amount_paid', 'amount_open', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions'];
       }
@@ -141,10 +165,6 @@ export class VendorsListComponent
   }
   getNameTooltip(row: VendorModel) {
     return row.vendor_name;
-  }
-
-  getPhonTooltip(row: VendorModel) {
-    return row.vendor_phone;
   }
 
   refresh() {
@@ -253,7 +273,6 @@ export class VendorsListComponent
   }
 
   editVendor(vendor: VendorModel) {
-
     this.router.navigate([WEB_ROUTES.VENDOR_FORM], {
       queryParams: { _id: vendor._id },
     });
@@ -489,13 +508,13 @@ export class VendorsListComponent
     this.isDelete = this.isDelete == 1 ? 0 : 1;
     if (this.isDelete === 0) {
       if (this.is_quickbooks) {
-        this.displayedColumns = ['select', 'vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'amount_paid', 'amount_open', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks', 'actions'];
+        this.displayedColumns = ['select', 'vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'amount_paid', 'amount_open', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks'];
       } else {
         this.displayedColumns = ['select', 'vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'amount_paid', 'amount_open', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions'];
       }
     } else {
       if (this.is_quickbooks) {
-        this.displayedColumns = ['vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'amount_paid', 'amount_open', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks', 'actions'];
+        this.displayedColumns = ['vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'amount_paid', 'amount_open', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks'];
       } else {
         this.displayedColumns = ['vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'amount_paid', 'amount_open', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions'];
       }
@@ -555,7 +574,7 @@ export class VendorDataSource extends DataSource<VendorModel> {
   }
   filteredData: VendorModel[] = [];
   renderedData: VendorModel[] = [];
-  constructor (
+  constructor(
     public vendorService: VendorsService,
     public paginator: MatPaginator,
     public _sort: MatSort,

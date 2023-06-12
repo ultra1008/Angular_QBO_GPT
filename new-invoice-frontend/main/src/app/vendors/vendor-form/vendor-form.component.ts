@@ -53,8 +53,10 @@ export class VendorFormComponent {
   show = false;
   is_delete: any;
   role_permission!: RolePermission;
+  isHideEditActionQBD = false;
+  isHideArchiveActionQBD = false;
 
-  constructor (
+  constructor(
     private fb: UntypedFormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
@@ -96,6 +98,7 @@ export class VendorFormComponent {
     ];
     this.galleryOptions = [this.tmp_gallery];
     this.getVendorType();
+    this.getCompanyTenants();
     this.getTerms();
     if (this.id) {
       this.getOneVendor();
@@ -135,6 +138,29 @@ export class VendorFormComponent {
       }
       this.last_files_array = vendorData.vendor_attachment;
       this.vendorForm.markAllAsTouched();
+    }
+  }
+
+  async getCompanyTenants() {
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP);
+    if (data.status) {
+      if (data.data.is_quickbooks_desktop) {
+
+        if (this.role_permission.vendor.Edit) {
+          this.isHideEditActionQBD = true;
+        } else {
+          this.isHideEditActionQBD = false;
+        }
+
+        if (this.role_permission.vendor.Delete) {
+          this.isHideArchiveActionQBD = true;
+        } else {
+          this.isHideArchiveActionQBD = false;
+        }
+
+        console.log(this.isHideEditActionQBD);
+        console.log(this.role_permission.vendor.Edit);
+      }
     }
   }
 
@@ -240,36 +266,42 @@ export class VendorFormComponent {
   }
 
   confirmExit() {
-    swalWithBootstrapButtons
-      .fire({
-        title: this.translate.instant('VENDOR.CONFIRMATION_DIALOG.SAVING'),
-        showDenyButton: true,
-        showCancelButton: true,
-        confirmButtonText: this.translate.instant('COMMON.ACTIONS.SAVE_EXIT'),
-        cancelButtonText: this.translate.instant('COMMON.ACTIONS.DONT_SAVE'),
-        denyButtonText: this.translate.instant('COMMON.ACTIONS.CANCEL'),
-        allowOutsideClick: false,
-      })
-      .then((result) => {
-        if (result.isConfirmed) {
-          this.submitting_text = this.translate.instant(
-            'VENDOR.CONFIRMATION_DIALOG.SUBMIT'
-          );
-          // Move to the vendor listing
-          if (this.vendorForm.valid) {
-            this.saveVendor();
+    if (this.isHideArchiveActionQBD) {
+      console.log('Archive button');
+      this.router.navigate([WEB_ROUTES.VENDOR]);
+    } else {
+      console.log('Archive button Not');
+      swalWithBootstrapButtons
+        .fire({
+          title: this.translate.instant('VENDOR.CONFIRMATION_DIALOG.SAVING'),
+          showDenyButton: true,
+          showCancelButton: true,
+          confirmButtonText: this.translate.instant('COMMON.ACTIONS.SAVE_EXIT'),
+          cancelButtonText: this.translate.instant('COMMON.ACTIONS.DONT_SAVE'),
+          denyButtonText: this.translate.instant('COMMON.ACTIONS.CANCEL'),
+          allowOutsideClick: false,
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.submitting_text = this.translate.instant(
+              'VENDOR.CONFIRMATION_DIALOG.SUBMIT'
+            );
+            // Move to the vendor listing
+            if (this.vendorForm.valid) {
+              this.saveVendor();
+            } else {
+              // alert form invalidation
+              showNotification(this.snackBar, this.submitting_text, 'error');
+            }
+          } else if (result.isDenied) {
+            // ;
           } else {
-            // alert form invalidation
-            showNotification(this.snackBar, this.submitting_text, 'error');
+            setTimeout(() => {
+              this.router.navigate([WEB_ROUTES.VENDOR]);
+            }, 100);
           }
-        } else if (result.isDenied) {
-          // ;
-        } else {
-          setTimeout(() => {
-            this.router.navigate([WEB_ROUTES.VENDOR]);
-          }, 100);
-        }
-      });
+        });
+    }
   }
 
   onFileDropped($event: any) {
