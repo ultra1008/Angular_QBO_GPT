@@ -22,18 +22,16 @@
                </div>
           </div>
      </div>
-
-
      <div mat-dialog-content>
           <form class="register-form m-4" [formGroup]="userRoleInfo" (ngSubmit)="submit">
-
                <div class="row">
                     <div class=" col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                          <mat-form-field class="example-full-width" appearance="outline">
                               <mat-label>{{'Role' | translate}}</mat-label>
-                              <mat-select formControlName="userroleId">
+                              <mat-select formControlName="userroleId" #roleSelect>
                                    <mat-select-filter [placeholder]="'Role'" [displayMember]="'role_name'"
-                                        [array]="variablesRoleList" (filteredReturn)="roleList =$event">
+                                        [array]="variablesRoleList" (filteredReturn)="roleList =$event"
+                                        *ngIf="roleSelect.focused">
                                    </mat-select-filter>
                                    <mat-option *ngFor="let item of roleList" [value]="item.role_id">
                                         {{item.role_name}}
@@ -46,7 +44,6 @@
                     <div class=" col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                          <mat-form-field class="example-full-width" appearance="outline">
                               <mat-label>{{'Status' | translate}}</mat-label>
-
                               <mat-select formControlName="userstatus" required>
                                    <mat-option [value]="1">
                                         Active

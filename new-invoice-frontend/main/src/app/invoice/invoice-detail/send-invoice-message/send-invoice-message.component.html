@@ -34,10 +34,10 @@
                                 <div class="col-xl-12col-lg-12 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>User</mat-label>
-                                        <mat-select formControlName="users">
-                                            <mat-select-filter #userListSelect [placeholder]="'Filter'"
-                                                [displayMember]="'userfullname'" [array]="variablesUserList"
-                                                (filteredReturn)="userList =$event">
+                                        <mat-select formControlName="users" #userSelect>
+                                            <mat-select-filter [placeholder]="'Filter'" [displayMember]="'userfullname'"
+                                                [array]="variablesUserList" (filteredReturn)="userList =$event"
+                                                *ngIf="userSelect.focused">
                                             </mat-select-filter>
                                             <mat-option *ngFor="let user of userList" [value]="user._id">
                                                 <span><img class="img-b" [src]="user.userpicture" height="35px"
@@ -55,8 +55,7 @@
                                         appearance="outline">
                                         <mat-label>Message</mat-label>
                                         <textarea matInput appTextareaAutoresizeproject
-                                            class="input-capitalized-textArea" placeholder="Type message here"
-                                            formControlName="message"></textarea>
+                                            class="input-capitalized-textArea" formControlName="message"></textarea>
                                     </mat-form-field>
                                 </div>
                             </div>

@@ -71,10 +71,11 @@
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>{{'CLIENT.ADD_EDIT.COST_GL' | translate}}</mat-label>
-                                        <mat-select formControlName="client_cost_cost_id" style="font-size: 12px;">
-                                            <mat-select-filter #costcodeListSelect [placeholder]="'Filter'"
-                                                [displayMember]="'value'" [array]="variablecostcodeList"
-                                                (filteredReturn)="costcodeList =$event">
+                                        <mat-select formControlName="client_cost_cost_id" #costCodeSelect
+                                            style="font-size: 12px;">
+                                            <mat-select-filter [placeholder]="'Filter'" [displayMember]="'value'"
+                                                [array]="variablecostcodeList" (filteredReturn)="costcodeList =$event"
+                                                *ngIf="costCodeSelect.focused">
                                             </mat-select-filter>
                                             <mat-option *ngFor="let costcode of costcodeList" [value]="costcode._id">
                                                 {{costcode.value}}
@@ -87,10 +88,10 @@
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>{{'CLIENT.TABLE.APPROVER' | translate}}</mat-label>
-                                        <mat-select formControlName="approver_id" style="font-size: 12px;">
-                                            <mat-select-filter #termListSelect [placeholder]="'Filter'"
-                                                [displayMember]="'userfullname'" [array]="variableapproverList"
-                                                (filteredReturn)="approverList =$event">
+                                        <mat-select formControlName="approver_id" style="font-size: 12px;" #userSelect>
+                                            <mat-select-filter [placeholder]="'Filter'" [displayMember]="'userfullname'"
+                                                [array]="variableapproverList" (filteredReturn)="approverList =$event"
+                                                *ngIf="userSelect.focused">
                                             </mat-select-filter>
                                             <mat-option *ngFor="let approve of approverList" [value]="approve._id">
                                                 <span><img class="img-b" [src]="approve.userpicture" height="35px"

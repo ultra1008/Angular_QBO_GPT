@@ -122,10 +122,11 @@
                                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Terms</mat-label>
-                                                <mat-select formControlName="terms" style="font-size: 12px;">
-                                                    <mat-select-filter #termListSelect [placeholder]="'Filter'"
-                                                        [displayMember]="'name'" [array]="variablestermList"
-                                                        (filteredReturn)="termsList =$event">
+                                                <mat-select formControlName="terms" style="font-size: 12px;"
+                                                    #termListSelect>
+                                                    <mat-select-filter [placeholder]="'Filter'" [displayMember]="'name'"
+                                                        [array]="variablestermList" (filteredReturn)="termsList =$event"
+                                                        *ngIf="termListSelect.focused">
                                                     </mat-select-filter>
                                                     <mat-option *ngFor="let term of termsList" [value]="term._id">
                                                         {{term.name}}
@@ -289,10 +290,11 @@
                                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Terms</mat-label>
-                                                <mat-select formControlName="terms" style="font-size: 12px;">
-                                                    <mat-select-filter #termListSelect [placeholder]="'Filter'"
-                                                        [displayMember]="'name'" [array]="variablestermList"
-                                                        (filteredReturn)="termsList =$event">
+                                                <mat-select formControlName="terms" style="font-size: 12px;"
+                                                    #termSelect>
+                                                    <mat-select-filter [placeholder]="'Filter'" [displayMember]="'name'"
+                                                        [array]="variablestermList" (filteredReturn)="termsList =$event"
+                                                        *ngIf="termSelect.focused">
                                                     </mat-select-filter>
                                                     <mat-option *ngFor="let term of termsList" [value]="term._id">
                                                         {{term.name}}

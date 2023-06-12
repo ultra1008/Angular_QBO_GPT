@@ -159,10 +159,10 @@
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>{{'VENDOR.ADD_EDIT.TERMS' | translate}}</mat-label>
-                                        <mat-select formControlName="vendor_terms">
-                                            <mat-select-filter #termListSelect [placeholder]="'Filter'"
-                                                [displayMember]="'name'" [array]="variablestermList"
-                                                (filteredReturn)="termsList =$event">
+                                        <mat-select formControlName="vendor_terms" #termSelect>
+                                            <mat-select-filter [placeholder]="'Filter'" [displayMember]="'name'"
+                                                [array]="variablestermList" (filteredReturn)="termsList =$event"
+                                                *ngIf="termSelect.focused">
                                             </mat-select-filter>
                                             <mat-option *ngFor="let term of termsList" [value]="term._id">
                                                 {{term.name}}
@@ -187,10 +187,10 @@
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>{{'VendorType' | translate}}</mat-label>
-                                    <mat-select formControlName="vendor_type_id">
-                                        <mat-select-filter #vendortypeSelect [placeholder]="'Filter'"
-                                            [displayMember]="'name'" [array]="variablesVendorTypeList"
-                                            (filteredReturn)="vendorTypeList=$event">
+                                    <mat-select formControlName="vendor_type_id" #vendorTypeSelect>
+                                        <mat-select-filter [placeholder]="'Filter'" [displayMember]="'name'"
+                                            [array]="variablesVendorTypeList" (filteredReturn)="vendorTypeList=$event"
+                                            *ngIf="vendorTypeSelect.focused">
                                         </mat-select-filter>
                                         <mat-option *ngFor="let vendor_type of vendorTypeList"
                                             [value]="vendor_type._id">

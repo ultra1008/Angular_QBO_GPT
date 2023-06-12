@@ -84,12 +84,13 @@
                                                                       <mat-label>
                                                                            {{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.VENDOR_NAME'
                                                                            | translate}}</mat-label>
-                                                                      <mat-select formControlName="vendor">
-                                                                           <mat-select-filter #vendorListSelect
-                                                                                [placeholder]="'Filter'"
+                                                                      <mat-select formControlName="vendor"
+                                                                           #vendorSelect>
+                                                                           <mat-select-filter [placeholder]="'Filter'"
                                                                                 [displayMember]="'vendor_name'"
                                                                                 [array]="variablesVendorList"
-                                                                                (filteredReturn)="vendorList =$event">
+                                                                                (filteredReturn)="vendorList =$event"
+                                                                                *ngIf="vendorSelect.focused">
                                                                            </mat-select-filter>
                                                                            <mat-option *ngFor="let vendor of vendorList"
                                                                                 [value]="vendor._id">
@@ -179,12 +180,13 @@
                                                                       <mat-label>
                                                                            {{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.ASSIGN_TO'
                                                                            | translate}}</mat-label>
-                                                                      <mat-select formControlName="assign_to">
-                                                                           <mat-select-filter #userListSelect
-                                                                                [placeholder]="'Filter'"
+                                                                      <mat-select formControlName="assign_to"
+                                                                           #userSelect>
+                                                                           <mat-select-filter [placeholder]="'Filter'"
                                                                                 [displayMember]="'userfullname'"
                                                                                 [array]="variablesUserList"
-                                                                                (filteredReturn)="userList =$event">
+                                                                                (filteredReturn)="userList =$event"
+                                                                                *ngIf="userSelect.focused">
                                                                            </mat-select-filter>
                                                                            <mat-option *ngFor="let user of userList"
                                                                                 [value]="user._id">
@@ -294,12 +296,13 @@
                                                                            {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.JOB#'
                                                                            | translate}}
                                                                       </mat-label>
-                                                                      <mat-select formControlName="job_client_name">
-                                                                           <mat-select-filter #jobNameListSelect
-                                                                                [placeholder]="'Filter'"
+                                                                      <mat-select formControlName="job_client_name"
+                                                                           #jobNameSelect>
+                                                                           <mat-select-filter [placeholder]="'Filter'"
                                                                                 [displayMember]="'client_name'"
                                                                                 [array]="variablesJobNameList"
-                                                                                (filteredReturn)="jobNameList =$event">
+                                                                                (filteredReturn)="jobNameList =$event"
+                                                                                *ngIf="jobNameSelect.focused">
                                                                            </mat-select-filter>
                                                                            <mat-option
                                                                                 *ngFor="let jobName of jobNameList"
@@ -373,12 +376,12 @@
                                                                            {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.TERMS'
                                                                            | translate}}
                                                                       </mat-label>
-                                                                      <mat-select formControlName="terms">
-                                                                           <mat-select-filter #termListSelect
-                                                                                [placeholder]="'Filter'"
+                                                                      <mat-select formControlName="terms" #termSelect>
+                                                                           <mat-select-filter [placeholder]="'Filter'"
                                                                                 [displayMember]="'name'"
                                                                                 [array]="variablesTermList"
-                                                                                (filteredReturn)="termList =$event">
+                                                                                (filteredReturn)="termList =$event"
+                                                                                *ngIf="termSelect.focused">
                                                                            </mat-select-filter>
                                                                            <mat-option *ngFor="let term of termList"
                                                                                 [value]="term._id">
@@ -438,12 +441,13 @@
                                                                            {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.COST_CODE'
                                                                            | translate}}
                                                                       </mat-label>
-                                                                      <mat-select formControlName="gl_account">
-                                                                           <mat-select-filter #costCodeListSelect
-                                                                                [placeholder]="'Filter'"
+                                                                      <mat-select formControlName="gl_account"
+                                                                           #costCodeSelect>
+                                                                           <mat-select-filter [placeholder]="'Filter'"
                                                                                 [displayMember]="'value'"
                                                                                 [array]="variablesCostCodeList"
-                                                                                (filteredReturn)="costCodeList =$event">
+                                                                                (filteredReturn)="costCodeList =$event"
+                                                                                *ngIf="costCodeSelect.focused">
                                                                            </mat-select-filter>
                                                                            <mat-option
                                                                                 *ngFor="let costCode of costCodeList"
@@ -460,12 +464,13 @@
                                                                            {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.CLASS_NAME'
                                                                            | translate}}
                                                                       </mat-label>
-                                                                      <mat-select formControlName="class_name">
-                                                                           <mat-select-filter #classNameListSelect
-                                                                                [placeholder]="'Filter'"
+                                                                      <mat-select formControlName="class_name"
+                                                                           #classNameSelect>
+                                                                           <mat-select-filter [placeholder]="'Filter'"
                                                                                 [displayMember]="'name'"
                                                                                 [array]="variablesClassNameList"
-                                                                                (filteredReturn)="classNameList =$event">
+                                                                                (filteredReturn)="classNameList =$event"
+                                                                                *ngIf="classNameSelect.focused">
                                                                            </mat-select-filter>
                                                                            <mat-option
                                                                                 *ngFor="let className of classNameList"

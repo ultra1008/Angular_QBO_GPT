@@ -34,10 +34,10 @@
                             <div class="col-xl-12col-lg-12 col-md-12 col-sm-12 mb-2">
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>Vendor</mat-label>
-                                    <mat-select formControlName="vendor_ids" multiple>
-                                        <mat-select-filter #vendorListSelect [placeholder]="'Filter'"
-                                            [displayMember]="'vendor_name'" [array]="variablesVendorList"
-                                            (filteredReturn)="vendorList =$event">
+                                    <mat-select formControlName="vendor_ids" multiple #vendorSelect>
+                                        <mat-select-filter [placeholder]="'Filter'" [displayMember]="'vendor_name'"
+                                            [array]="variablesVendorList" (filteredReturn)="vendorList =$event"
+                                            *ngIf="vendorSelect.focused">
                                         </mat-select-filter>
                                         <mat-option *ngFor="let vendor of vendorList" [value]="vendor._id">
                                             {{vendor.vendor_name}}
@@ -52,10 +52,10 @@
                             <div class="col-xl-12col-lg-12 col-md-12 col-sm-12 mb-2">
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>User</mat-label>
-                                    <mat-select formControlName="assign_to_ids" multiple>
-                                        <mat-select-filter #userListSelect [placeholder]="'Filter'"
-                                            [displayMember]="'userfullname'" [array]="variablesUserList"
-                                            (filteredReturn)="userList =$event">
+                                    <mat-select formControlName="assign_to_ids" multiple #userSelect>
+                                        <mat-select-filter [placeholder]="'Filter'" [displayMember]="'userfullname'"
+                                            [array]="variablesUserList" (filteredReturn)="userList =$event"
+                                            *ngIf="userSelect.focused">
                                         </mat-select-filter>
                                         <mat-option *ngFor="let user of userList" [value]="user._id">
                                             {{user.userfullname}}
@@ -71,10 +71,10 @@
                             <div class="col-xl-12col-lg-12 col-md-12 col-sm-12 mb-2">
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>Class Name</mat-label>
-                                    <mat-select formControlName="class_name_ids" multiple>
-                                        <mat-select-filter #classNameListSelect [placeholder]="'Filter'"
-                                            [displayMember]="'name'" [array]="variablesClassNameList"
-                                            (filteredReturn)="classNameList =$event">
+                                    <mat-select formControlName="class_name_ids" multiple #classNameSelect>
+                                        <mat-select-filter [placeholder]="'Filter'" [displayMember]="'name'"
+                                            [array]="variablesClassNameList" (filteredReturn)="classNameList =$event"
+                                            *ngIf="classNameSelect.focused">
                                         </mat-select-filter>
                                         <mat-option *ngFor="let class of classNameList" [value]="class._id">
                                             {{class.name}}
@@ -90,10 +90,10 @@
                             <div class="col-xl-12col-lg-12 col-md-12 col-sm-12 mb-2">
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>Client/Job Name</mat-label>
-                                    <mat-select formControlName="job_client_name_ids" multiple>
-                                        <mat-select-filter #clientListSelect [placeholder]="'Filter'"
-                                            [displayMember]="'client_name'" [array]="variablesClientJob"
-                                            (filteredReturn)="clientList =$event">
+                                    <mat-select formControlName="job_client_name_ids" multiple #clientSelect>
+                                        <mat-select-filter [placeholder]="'Filter'" [displayMember]="'client_name'"
+                                            [array]="variablesClientJob" (filteredReturn)="clientList =$event"
+                                            *ngIf="clientSelect.focused">
                                         </mat-select-filter>
                                         <mat-option *ngFor="let client of clientList" [value]="client._id">
                                             {{client.client_name}}
