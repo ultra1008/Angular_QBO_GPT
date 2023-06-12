@@ -148,36 +148,40 @@ export class ClientFormComponent {
   }
 
   confirmExit() {
-    swalWithBootstrapButtons
-      .fire({
-        title: this.translate.instant('VENDOR.CONFIRMATION_DIALOG.SAVING'),
-        showDenyButton: true,
-        showCancelButton: true,
-        confirmButtonText: this.translate.instant('COMMON.ACTIONS.SAVE_EXIT'),
-        cancelButtonText: this.translate.instant('COMMON.ACTIONS.DONT_SAVE'),
-        denyButtonText: this.translate.instant('COMMON.ACTIONS.CANCEL'),
-        allowOutsideClick: false,
-      })
-      .then((result) => {
-        if (result.isConfirmed) {
-          this.submitting_text = this.translate.instant(
-            'VENDOR.CONFIRMATION_DIALOG.SUBMIT'
-          );
-          // Move to the client listing
-          if (this.clientForm.valid) {
-            this.saveClient();
+    if (this.isHideArchiveActionQBD) {
+      this.router.navigate([WEB_ROUTES.VENDOR]);
+    } else {
+      swalWithBootstrapButtons
+        .fire({
+          title: this.translate.instant('VENDOR.CONFIRMATION_DIALOG.SAVING'),
+          showDenyButton: true,
+          showCancelButton: true,
+          confirmButtonText: this.translate.instant('COMMON.ACTIONS.SAVE_EXIT'),
+          cancelButtonText: this.translate.instant('COMMON.ACTIONS.DONT_SAVE'),
+          denyButtonText: this.translate.instant('COMMON.ACTIONS.CANCEL'),
+          allowOutsideClick: false,
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.submitting_text = this.translate.instant(
+              'VENDOR.CONFIRMATION_DIALOG.SUBMIT'
+            );
+            // Move to the client listing
+            if (this.clientForm.valid) {
+              this.saveClient();
+            } else {
+              // alert form invalidation
+              showNotification(this.snackBar, this.submitting_text, 'error');
+            }
+          } else if (result.isDenied) {
+            // ;
           } else {
-            // alert form invalidation
-            showNotification(this.snackBar, this.submitting_text, 'error');
+            setTimeout(() => {
+              this.router.navigate([WEB_ROUTES.CLIENT]);
+            }, 100);
           }
-        } else if (result.isDenied) {
-          // ;
-        } else {
-          setTimeout(() => {
-            this.router.navigate([WEB_ROUTES.CLIENT]);
-          }, 100);
-        }
-      });
+        });
+    }
   }
 
   async deleteClient() {

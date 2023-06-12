@@ -267,10 +267,8 @@ export class VendorFormComponent {
 
   confirmExit() {
     if (this.isHideArchiveActionQBD) {
-      console.log('Archive button');
       this.router.navigate([WEB_ROUTES.VENDOR]);
     } else {
-      console.log('Archive button Not');
       swalWithBootstrapButtons
         .fire({
           title: this.translate.instant('VENDOR.CONFIRMATION_DIALOG.SAVING'),
