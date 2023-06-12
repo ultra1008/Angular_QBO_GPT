@@ -24,6 +24,8 @@ import * as XLSX from 'xlsx';
 import { icon } from 'src/consts/icon';
 import { CommonService } from 'src/app/services/common.service';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { RolePermission } from 'src/consts/common.model';
 
 @Component({
   selector: 'app-costcode',
@@ -45,7 +47,15 @@ export class CostcodeComponent
   quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
   quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
 
-  constructor (
+  isHideAddActionQBD = false;
+  isHideEditActionQBD = false;
+  isHideArchiveActionQBD = false;
+
+  is_quickbooks_online = false;
+  is_quickbooks_desktop = false;
+  role_permission!: RolePermission;
+
+  constructor(
     public dialog: MatDialog,
     public SettingsService: SettingsService,
     private snackBar: MatSnackBar,
@@ -66,18 +76,33 @@ export class CostcodeComponent
   ngOnInit() {
     this.loadData();
     this.getCompanyTenants();
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
   }
 
   async getCompanyTenants() {
     const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP);
     if (data.status) {
-      if (data.data.is_quickbooks_online || data.data.is_quickbooks_desktop) {
+      if (data.data.is_quickbooks_desktop) {
+        this.isHideAddActionQBD = true;
+        this.isHideEditActionQBD = true;
+        this.isHideArchiveActionQBD = true;
+      } else {
+        this.isHideAddActionQBD = false;
+        this.isHideEditActionQBD = false;
+        this.isHideArchiveActionQBD = false;
+      }
+
+      this.is_quickbooks_online = data.data.is_quickbooks_online;
+      this.is_quickbooks_desktop = data.data.is_quickbooks_desktop;
+
+      if (this.is_quickbooks_online) {
         this.displayedColumns = ['division', 'value', 'description', 'is_quickbooks', 'actions'];
+      } else if (this.is_quickbooks_desktop) {
+        this.displayedColumns = ['division', 'value', 'description', 'is_quickbooks'];
       } else {
         this.displayedColumns = ['division', 'value', 'description', 'actions'];
       }
     }
-    // this.loadData();
   }
 
   refresh() {
@@ -157,25 +182,27 @@ export class CostcodeComponent
   }
 
   edit(costcode: any) {
-    if (this.isDelete == 0) {
-      const dialogRef = this.dialog.open(CostCodeFormComponent, {
-        width: '350px',
-        data: costcode,
-      });
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          if (result.status) {
-            const foundIndex = this.costcodeService?.costCodeDataChange.value.findIndex((x) => x._id === costcode._id);
-            if (foundIndex != null && this.costcodeService) {
-              this.costcodeService.costCodeDataChange.value[foundIndex].cost_code = result.data.cost_code;
-              this.costcodeService.costCodeDataChange.value[foundIndex].division = result.data.division;
-              this.costcodeService.costCodeDataChange.value[foundIndex].value = `Invoice-${result.data.division}-${result.data.cost_code}`;
-              this.costcodeService.costCodeDataChange.value[foundIndex].description = result.data.description;
-              this.refreshTable();
+    if (!this.isHideEditActionQBD) {
+      if (this.isDelete == 0) {
+        const dialogRef = this.dialog.open(CostCodeFormComponent, {
+          width: '350px',
+          data: costcode,
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+          if (result) {
+            if (result.status) {
+              const foundIndex = this.costcodeService?.costCodeDataChange.value.findIndex((x) => x._id === costcode._id);
+              if (foundIndex != null && this.costcodeService) {
+                this.costcodeService.costCodeDataChange.value[foundIndex].cost_code = result.data.cost_code;
+                this.costcodeService.costCodeDataChange.value[foundIndex].division = result.data.division;
+                this.costcodeService.costCodeDataChange.value[foundIndex].value = `Invoice-${result.data.division}-${result.data.cost_code}`;
+                this.costcodeService.costCodeDataChange.value[foundIndex].description = result.data.description;
+                this.refreshTable();
+              }
             }
           }
-        }
-      });
+        });
+      }
     }
   }
 
@@ -287,7 +314,7 @@ export class CostCodeDataSource extends DataSource<CostCodeModel> {
   }
   filteredData1: CostCodeModel[] = [];
   renderedData: CostCodeModel[] = [];
-  constructor (
+  constructor(
     public costcodeTableService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,

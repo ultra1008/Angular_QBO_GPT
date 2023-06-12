@@ -57,9 +57,14 @@ export class ClientComponent
 
   quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
   quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
-  is_quickbooks = true;
+  is_quickbooks_online = false;
+  is_quickbooks_desktop = false;
 
-  constructor (
+  isHideAddActionQBD = false;
+  isHideEditActionQBD = false;
+  isHideArchiveActionQBD = false;
+
+  constructor(
     public httpClient: HttpClient,
     private httpCall: HttpCall,
     public dialog: MatDialog,
@@ -94,14 +99,36 @@ export class ClientComponent
   async getCompanyTenants() {
     const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP);
     if (data.status) {
-      this.is_quickbooks = data.data.is_quickbooks_online || data.data.is_quickbooks_desktop;
-      if (this.is_quickbooks) {
+
+      if (data.data.is_quickbooks_desktop) {
+        if (this.role_permission.clientJob.Add) {
+          this.isHideAddActionQBD = true;
+        } else {
+          this.isHideAddActionQBD = false;
+        }
+
+        if (this.role_permission.clientJob.Edit) {
+          this.isHideEditActionQBD = true;
+        } else {
+          this.isHideEditActionQBD = false;
+        }
+
+        if (this.role_permission.clientJob.Delete) {
+          this.isHideArchiveActionQBD = true;
+        } else {
+          this.isHideArchiveActionQBD = false;
+        }
+      }
+      this.is_quickbooks_online = data.data.is_quickbooks_online;
+      this.is_quickbooks_desktop = data.data.is_quickbooks_desktop;
+      if (this.is_quickbooks_online) {
         this.displayedColumns = ['select', 'client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'is_quickbooks', 'actions'];
+      } else if (this.is_quickbooks_desktop) {
+        this.displayedColumns = ['client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'is_quickbooks'];
       } else {
         this.displayedColumns = ['select', 'client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'actions'];
       }
     }
-    // this.loadData();
   }
 
   // TOOLTIPS
@@ -124,6 +151,7 @@ export class ClientComponent
   refresh() {
     this.loadData();
   }
+
   onBookChange(ob: any) {
     const selectedBook = ob.value;
     console.log(selectedBook);
@@ -384,14 +412,18 @@ export class ClientComponent
   gotoArchiveUnarchive() {
     this.isDelete = this.isDelete == 1 ? 0 : 1;
     if (this.isDelete === 0) {
-      if (this.is_quickbooks) {
+      if (this.is_quickbooks_online) {
         this.displayedColumns = ['select', 'client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'is_quickbooks', 'actions'];
+      } else if (this.is_quickbooks_desktop) {
+        this.displayedColumns = ['client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'is_quickbooks'];
       } else {
         this.displayedColumns = ['select', 'client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'actions'];
       }
     } else {
-      if (this.is_quickbooks) {
+      if (this.is_quickbooks_online) {
         this.displayedColumns = ['client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'is_quickbooks', 'actions'];
+      } else if (this.is_quickbooks_desktop) {
+        this.displayedColumns = ['client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'is_quickbooks'];
       } else {
         this.displayedColumns = ['client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'actions'];
       }
@@ -508,7 +540,7 @@ export class ClientDataSource extends DataSource<ClientJobModel> {
   }
   filteredData: ClientJobModel[] = [];
   renderedData: ClientJobModel[] = [];
-  constructor (
+  constructor(
     public clientService: ClientService,
     public paginator: MatPaginator,
     public _sort: MatSort,

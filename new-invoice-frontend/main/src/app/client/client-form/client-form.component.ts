@@ -38,6 +38,10 @@ export class ClientFormComponent {
   show = false;
   role_permission!: RolePermission;
   is_delete: any;
+
+  isHideEditActionQBD = false;
+  isHideArchiveActionQBD = false;
+
   constructor(
     private fb: UntypedFormBuilder,
     private router: Router,
@@ -62,9 +66,31 @@ export class ClientFormComponent {
       client_notes: [''],
     });
     this.getapprover();
+    this.getCompanyTenants();
     this.getcostcode();
     if (this.id) {
       this.getOneClient();
+    }
+  }
+
+  async getCompanyTenants() {
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP);
+    if (data.status) {
+
+      if (data.data.is_quickbooks_desktop) {
+
+        if (this.role_permission.clientJob.Edit) {
+          this.isHideEditActionQBD = true;
+        } else {
+          this.isHideEditActionQBD = false;
+        }
+
+        if (this.role_permission.clientJob.Delete) {
+          this.isHideArchiveActionQBD = true;
+        } else {
+          this.isHideArchiveActionQBD = false;
+        }
+      }
     }
   }
 
@@ -122,36 +148,40 @@ export class ClientFormComponent {
   }
 
   confirmExit() {
-    swalWithBootstrapButtons
-      .fire({
-        title: this.translate.instant('VENDOR.CONFIRMATION_DIALOG.SAVING'),
-        showDenyButton: true,
-        showCancelButton: true,
-        confirmButtonText: this.translate.instant('COMMON.ACTIONS.SAVE_EXIT'),
-        cancelButtonText: this.translate.instant('COMMON.ACTIONS.DONT_SAVE'),
-        denyButtonText: this.translate.instant('COMMON.ACTIONS.CANCEL'),
-        allowOutsideClick: false,
-      })
-      .then((result) => {
-        if (result.isConfirmed) {
-          this.submitting_text = this.translate.instant(
-            'VENDOR.CONFIRMATION_DIALOG.SUBMIT'
-          );
-          // Move to the client listing
-          if (this.clientForm.valid) {
-            this.saveClient();
+    if (this.isHideArchiveActionQBD) {
+      this.router.navigate([WEB_ROUTES.VENDOR]);
+    } else {
+      swalWithBootstrapButtons
+        .fire({
+          title: this.translate.instant('VENDOR.CONFIRMATION_DIALOG.SAVING'),
+          showDenyButton: true,
+          showCancelButton: true,
+          confirmButtonText: this.translate.instant('COMMON.ACTIONS.SAVE_EXIT'),
+          cancelButtonText: this.translate.instant('COMMON.ACTIONS.DONT_SAVE'),
+          denyButtonText: this.translate.instant('COMMON.ACTIONS.CANCEL'),
+          allowOutsideClick: false,
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.submitting_text = this.translate.instant(
+              'VENDOR.CONFIRMATION_DIALOG.SUBMIT'
+            );
+            // Move to the client listing
+            if (this.clientForm.valid) {
+              this.saveClient();
+            } else {
+              // alert form invalidation
+              showNotification(this.snackBar, this.submitting_text, 'error');
+            }
+          } else if (result.isDenied) {
+            // ;
           } else {
-            // alert form invalidation
-            showNotification(this.snackBar, this.submitting_text, 'error');
+            setTimeout(() => {
+              this.router.navigate([WEB_ROUTES.CLIENT]);
+            }, 100);
           }
-        } else if (result.isDenied) {
-          // ;
-        } else {
-          setTimeout(() => {
-            this.router.navigate([WEB_ROUTES.CLIENT]);
-          }, 100);
-        }
-      });
+        });
+    }
   }
 
   async deleteClient() {
