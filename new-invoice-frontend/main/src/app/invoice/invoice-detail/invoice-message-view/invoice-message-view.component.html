@@ -157,9 +157,15 @@
         <span class="message-data-name">{{message.sender.userfullname}}</span>
         <span class="user-picture my-picture"><img [src]="message.sender.userpicture" /></span>
     </div>
-    <div class="message other-message float-end p-1" [ngClass]="message.is_attachment ? 'attachment-message' : ''"
-        (click)="viewAttachment(message)">
-        {{message.message}}
+    <div class="d-flex justify-content-end">
+        <div class="m-r-10 delete-message col-red my-auto" matTooltip="{{'COMMON.TOOL_TIP.DELETE' | translate}}"
+            (click)="deleteMessage(message)">
+            <mat-icon>close</mat-icon>
+        </div>
+        <div class="message other-message p-1" [ngClass]="message.is_attachment ? 'attachment-message' : ''"
+            (click)="viewAttachment(message)">
+            {{message.message}}
+        </div>
     </div>
 </ng-template>
 
@@ -169,8 +175,16 @@
         <span class="message-data-name">{{message.sender.userfullname}}</span>
         <span class="message-data-time">{{(message.created_at * 1000) | date: 'MM/dd/yyyy hh:mm a'}}</span>
     </div>
-    <div class="message my-message p-1" [ngClass]="message.is_attachment ? 'attachment-message' : ''"
-        (click)="viewAttachment(message)"> {{message.message}} </div>
+    <div class="d-flex">
+        <div class="message my-message p-1" [ngClass]="message.is_attachment ? 'attachment-message' : ''"
+            (click)="viewAttachment(message)">
+            {{message.message}}
+        </div>
+        <div class="m-l-10 delete-message col-red my-auto" matTooltip="{{'COMMON.TOOL_TIP.DELETE' | translate}}"
+            (click)="deleteMessage(message)">
+            <mat-icon>close</mat-icon>
+        </div>
+    </div>
 </ng-template>
 
 <ng-template #mentionListTemplate let-item="item">

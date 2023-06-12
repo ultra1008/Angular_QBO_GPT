@@ -27,7 +27,8 @@
             "INVOICEMSG": "Invoice Message",
             "INVOICELINK": "Invoice Link",
             "EDIT": "Edit",
-            "DASHBOARD": "Dashboard"
+            "DASHBOARD": "Dashboard",
+            "DELETE": "Delete"
         },
         "ACTIONS": {
             "ACTIONS": "Actions",

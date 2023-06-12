@@ -34,7 +34,7 @@ module.exports.getInvoiceMessageCount = async function (req, res) {
             });
             let unseenCount = 0;
             for (let i = 0; i < get_data.length; i++) {
-                unseenCount += await invoiceMessageSeenCollection.find({ invoice_message_id: get_data[i]._id, user_id: ObjectID(decodedToken.UserData._id), is_seen: false }).countDocuments();
+                unseenCount += await invoiceMessageSeenCollection.find({ invoice_message_id: get_data[i]._id, user_id: ObjectID(decodedToken.UserData._id), is_seen: false, is_delete: 0 }).countDocuments();
                 /* if (get_data[i].receiver_id.toString() == decodedToken.UserData._id) {
                    if (!get_data[i].is_seen) {
                        unseenCount++;
@@ -224,6 +224,7 @@ module.exports.getOneInvoiceMessage = async function (req, res) {
                 let get_messages = await invoiceMessageCollection.aggregate([
                     {
                         $match: {
+                            is_delete: 0,
                             $or: [
                                 { invoice_id: ObjectID(requestObject.invoice_id) },
                                 // { invoice_message_id: ObjectID(requestObject._id) },

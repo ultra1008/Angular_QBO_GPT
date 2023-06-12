@@ -30,7 +30,12 @@
     margin-right: 10px;
 }
 
+.message-data {
+    margin-top: 5px;
+}
+
 .message {
+    margin-bottom: 0px !important;
     padding: 0.5rem 0.75rem !important;
     width: 30% !important;
 }
@@ -38,6 +43,10 @@
 .attachment-message {
     color: blue !important;
     line-height: 15px !important;
+    cursor: pointer;
+}
+
+.delete-message {
     cursor: pointer;
 }
 

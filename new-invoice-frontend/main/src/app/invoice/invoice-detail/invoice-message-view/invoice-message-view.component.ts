@@ -37,7 +37,7 @@ export class InvoiceMessageViewComponent {
   mentionId = '';
   mentionUserName = '';
 
-  constructor(public commonService: CommonService, public route: ActivatedRoute, private formBuilder: FormBuilder,
+  constructor (public commonService: CommonService, public route: ActivatedRoute, private formBuilder: FormBuilder,
     public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, private router: Router,
     /* public headerComponent: HeaderComponent, */) {
     const userData = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA) ?? '{}');
@@ -53,7 +53,6 @@ export class InvoiceMessageViewComponent {
 
   async getUser() {
     const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ALL_USER);
-    this.isLoading = false;
     if (data.status) {
       this.userList = data.data;
     }
@@ -63,22 +62,16 @@ export class InvoiceMessageViewComponent {
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ONE_INVOICE_MESSAGE, { invoice_id: this.invoiceId });
     if (data.status) {
       this.messageData = data.data;
-      console.log(this.messageData);
       this.messageList = data.messages;
       this.pdf_url = this.messageData.invoice.pdf_url;
-      this.isLoading = false;
+
       this.updateSeenFlag();
     }
-    setTimeout(() => {
-      /*  const myElement = document.getElementById("myPageId");
-       myElement.scrollTop = document.getElementById('messageListDiv')?.scrollHeight; */
-      // this.endScroll = document.getElementById('messageListDiv')?.scrollHeight;
-    }, 100);
+    this.isLoading = false;
   }
 
   async updateSeenFlag() {
     await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.UPDATE_INVOICE_MESSAGE_SEEN_FLAG);
-    // this.headerComponent.getInvoiceMessageCount();
   }
 
   async sendMessage() {
@@ -224,13 +217,18 @@ export class InvoiceMessageViewComponent {
       this.mentionId = '';
       this.mentionUserName = '';
     }
-    /* if (event.target.value.length == 1 && event.target.value == '@') {
-      console.log("dialog");
-      event.preventDefault();
-      this.menuX = event.x - 10;
-      this.menuY = event.y - 10;
-      this.menuTrigger.closeMenu();
-      this.menuTrigger.openMenu();
-    } */
+  }
+
+  async deleteMessage(message: any) {
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.DELETE_INVOICE_MESSAGE, { _id: message._id });
+    if (data.status) {
+      showNotification(this.snackBar, data.message, 'success');
+      const foundIndex = this.messageList.findIndex((x: any) => x._id === message._id);
+      if (foundIndex != null) {
+        this.messageList.splice(foundIndex, 1);
+      }
+    } else {
+      showNotification(this.snackBar, data.message, 'error');
+    }
   }
 }
