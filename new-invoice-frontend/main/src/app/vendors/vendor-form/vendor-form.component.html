@@ -141,7 +141,8 @@
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>{{'VENDOR.ADD_EDIT.ZIP_CODE' | translate}}</mat-label>
-                                        <input matInput formControlName="vendor_zipcode" required>
+                                        <input matInput formControlName="vendor_zipcode" required maxlength="5"
+                                            onkeypress="return String.fromCharCode(event.charCode).match(/[^0-9]/g) === null">
                                     </mat-form-field>
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">

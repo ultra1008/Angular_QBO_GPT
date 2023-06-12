@@ -405,7 +405,9 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>{{'USERS.ADD_EDIT.USER_ZIPCODE' | translate}}</mat-label>
-                                                                      <input matInput formControlName="userzipcode">
+                                                                      <input matInput formControlName="userzipcode"
+                                                                           maxlength="5"
+                                                                           onkeypress="return String.fromCharCode(event.charCode).match(/[^0-9]/g) === null">
                                                                  </mat-form-field>
                                                             </div>
                                                             <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-2">
