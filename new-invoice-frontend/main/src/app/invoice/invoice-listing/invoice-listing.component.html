@@ -74,9 +74,9 @@
                                 </ng-container>
                                 <ng-container matColumnDef="vendor">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="tbl-col-width-per-max">Vendor</mat-header-cell>
+                                        class="tbl-col-width-per-15-per">Vendor</mat-header-cell>
                                     <mat-cell *matCellDef="let row" (click)="editInvoice(row)"
-                                        class="tbl-col-width-per-max" [matTooltip]="getVendorNameTooltip(row)"
+                                        class="tbl-col-width-per-15-per" [matTooltip]="getVendorNameTooltip(row)"
                                         (contextmenu)="onContextMenu($event, row)">
                                         <span class="truncate-text"> <span class="mobile-label">Vendor:</span>
                                             {{row.vendor_data?.vendor_name}}</span>
@@ -93,28 +93,28 @@
                                 </ng-container>
                                 <ng-container matColumnDef="total_amount">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="tbl-col-width-per-action">Total Amount</mat-header-cell>
+                                        class="tbl-col-width-per-xmax">Total Amount</mat-header-cell>
                                     <mat-cell *matCellDef="let row" (click)="editInvoice(row)"
-                                        class="tbl-col-width-per-action" (contextmenu)="onContextMenu($event, row)">
+                                        class="tbl-col-width-per-xmax" (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Total Amount:</span>
                                         $ {{numberWithCommas(row.invoice_total_amount)}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="sub_total">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="tbl-col-width-per-action">Sub
+                                        class="tbl-col-width-per-xmax">Sub
                                         Total</mat-header-cell>
                                     <mat-cell *matCellDef="let row" (click)="editInvoice(row)"
-                                        class="tbl-col-width-per-action" (contextmenu)="onContextMenu($event, row)">
+                                        class="tbl-col-width-per-xmax" (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Sub Total:</span>
                                         $ {{numberWithCommas(row.sub_total)}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="approver">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="tbl-col-width-per-max">Approver</mat-header-cell>
+                                        class="tbl-col-width-per-15-per">Approver</mat-header-cell>
                                     <mat-cell *matCellDef="let row" (click)="editInvoice(row)"
-                                        class="tbl-col-width-per-max" [matTooltip]="getApproverTooltip(row)"
+                                        class="tbl-col-width-per-15-per" [matTooltip]="getApproverTooltip(row)"
                                         (contextmenu)="onContextMenu($event, row)">
                                         <span class="truncate-text"> <span class="mobile-label">Approver:</span></span>
                                         {{row.assign_to_data?.userfullname}}
@@ -129,12 +129,12 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="is_quickbooks">
-                                    <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'"
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header
                                         class="tbl-col-width-per-quickbooks">
                                         <img [src]="quickbooksGreenIcon" alt="" height="23" width="23" />
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (click)="editInvoice(row)"
-                                        (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-quickbooks">
+                                        class="tbl-col-width-per-quickbooks" (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Quickbooks:</span>
                                         <img *ngIf="!row.is_quickbooks" [src]="quickbooksGreyIcon" alt="" height="23"
                                             width="23" />

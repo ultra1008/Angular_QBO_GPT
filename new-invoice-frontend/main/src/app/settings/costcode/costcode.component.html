@@ -96,7 +96,7 @@
             <div class="table-responsive">
               <table mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
                 <ng-container matColumnDef="division">
-                  <mat-header-cell [ngClass]="'max-h'" *matHeaderCellDef mat-sort-header>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>
                     {{'SETTINGS.SETTINGS_OTHER_OPTION.COST_CODE_MODULE.GL_ACCOUNTS' |
                     translate}}</mat-header-cell>
                   <mat-cell (click)="edit(row)" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
@@ -104,14 +104,14 @@
                   </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="value">
-                  <mat-header-cell [ngClass]="'max-h'" *matHeaderCellDef mat-sort-header>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>
                     {{'SETTINGS.SETTINGS_OTHER_OPTION.COST_CODE' | translate}}</mat-header-cell>
                   <mat-cell (click)="edit(row)" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
                     <span class="mobile-label">cost code:</span> {{row.cost_code }}
                   </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="description">
-                  <mat-header-cell [ngClass]="'max-h'" *matHeaderCellDef mat-sort-header>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>
                     {{'SETTINGS.SETTINGS_OTHER_OPTION.COST_CODE_MODULE.DISCRIPTION' |
                     translate}}</mat-header-cell>
                   <mat-cell (click)="edit(row)" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
@@ -119,7 +119,7 @@
                   </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="is_quickbooks">
-                  <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'" class="tbl-col-width-per-quickbooks">
+                  <mat-header-cell *matHeaderCellDef class="tbl-col-width-per-quickbooks">
                     <img [src]="quickbooksGreenIcon" alt="" height="23" width="23" />
                   </mat-header-cell>
                   <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
@@ -132,7 +132,7 @@
                 <!-- actions -->
 
                 <ng-container matColumnDef="actions">
-                  <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-action max-h'" *matHeaderCellDef>
+                  <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-action'" *matHeaderCellDef>
                     {{'VENDOR.TABLE.ACTIONS' | translate}}</mat-header-cell>
                   <mat-cell *matCellDef="let row; let i=index;" class="pr-0 tbl-col-width-per-action">
                     <button matTooltip="{{'COMMON.ACTIONS.EDIT' | translate}}" mat-icon-button color="accent"

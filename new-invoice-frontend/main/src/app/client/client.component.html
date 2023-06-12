@@ -133,18 +133,12 @@
                                         </mat-checkbox>
                                     </mat-cell>
                                 </ng-container>
-                                <!-- ID Column -->
-                                <ng-container matColumnDef="id">
-                                    <mat-header-cell class="psl-1" *matHeaderCellDef mat-sort-header>Id
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" class="psl-1">{{row.id}}</mat-cell>
-                                </ng-container>
                                 <ng-container matColumnDef="client_name">
-                                    <mat-header-cell [ngClass]="'tbl-col-width-per-max'" *matHeaderCellDef
-                                        mat-sort-header>{{'CLIENT.TABLE.CLIENT_NAME' | translate}}
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                                        [ngClass]="'tbl-col-width-per-25-per'">{{'CLIENT.TABLE.CLIENT_NAME' | translate}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" [matTooltip]="getNameTooltip(row)"
-                                        (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-max"
+                                        class="tbl-col-width-per-25-per" (contextmenu)="onContextMenu($event, row)"
                                         (click)="editClient(row)">
                                         <span class="truncate-text"> <span class="mobile-label">Client
                                                 Name:</span>{{row.client_name}}</span>
@@ -152,22 +146,23 @@
                                 </ng-container>
                                 <ng-container matColumnDef="client_number">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="tbl-col-width-per-max">{{'CLIENT.TABLE.CLIENT_NUMBER' |
+                                        [ngClass]="'tbl-col-width-per-15-per'">{{'CLIENT.TABLE.CLIENT_NUMBER' |
                                         translate}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" [matTooltip]="getNumberTooltip(row)"
-                                        class="tbl-col-width-per-max" (contextmenu)="onContextMenu($event, row)"
+                                        class="tbl-col-width-per-15-per" (contextmenu)="onContextMenu($event, row)"
                                         (click)="editClient(row)">
                                         <span class="truncate-text"> <span class="mobile-label">Vendor
                                                 ID:</span>{{row.client_number}}</span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="client_email">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="tbl-col-width-per-max">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                                        [ngClass]="'tbl-col-width-per-15-per'">
                                         {{'CLIENT.TABLE.JOB_CONTACT_EMAIL' | translate}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" [matTooltip]="getTooltip(row)"
-                                        class="tbl-col-width-per-max" (contextmenu)="onContextMenu($event, row)"
+                                        class="tbl-col-width-per-15-per" (contextmenu)="onContextMenu($event, row)"
                                         (click)="editClient(row)">
                                         <span class="truncate-text"> <span class="mobile-label">Job Contact
                                                 Email:</span>{{row.client_email}}</span>
@@ -175,10 +170,10 @@
                                 </ng-container>
                                 <ng-container matColumnDef="approver_id">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        [ngClass]="'tbl-col-width-per-max'">{{'CLIENT.TABLE.APPROVER' | translate}}
+                                        [ngClass]="'tbl-col-width-per-15-per'">{{'CLIENT.TABLE.APPROVER' | translate}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" [matTooltip]="getApproverTooltip(row)"
-                                        (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-max"
+                                        class="tbl-col-width-per-15-per" (contextmenu)="onContextMenu($event, row)"
                                         (click)="editClient(row)">
                                         <span class="mobile-label">Approver:</span>
                                         {{row.approver?.userfullname}}
@@ -186,10 +181,10 @@
                                 </ng-container>
                                 <ng-container matColumnDef="client_cost_cost_id">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="tbl-col-width-per-max">{{'CLIENT.ADD_EDIT.COST_GL' |
+                                        [ngClass]="'tbl-col-width-per-15-per'">{{'CLIENT.ADD_EDIT.COST_GL' |
                                         translate}}</mat-header-cell>
                                     <mat-cell *matCellDef="let row" [matTooltip]="getCostCodeTooltip(row)"
-                                        class="tbl-col-width-per-max" (contextmenu)="onContextMenu($event, row)"
+                                        class="tbl-col-width-per-15-per" (contextmenu)="onContextMenu($event, row)"
                                         (click)="editClient(row)">
                                         <span class="truncate-text"> <span class="mobile-label">Cost Code:</span>
                                             {{row.client_cost_cost?.value}}</span>
@@ -214,8 +209,7 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="is_quickbooks">
-                                    <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'"
-                                        class="tbl-col-width-per-quickbooks">
+                                    <mat-header-cell *matHeaderCellDef class="tbl-col-width-per-quickbooks">
                                         <img [src]="quickbooksGreenIcon" alt="" height="23" width="23" />
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (click)="editClient(row)"

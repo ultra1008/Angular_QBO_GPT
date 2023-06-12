@@ -69,7 +69,7 @@ export enum WEB_ROUTES {
   EMPLOYEE_SETTING = '/settings/employeesettings',
   ROLE_SETTING = '/settings/rolesettings',
   ALERT_SETTING = '/settings/alerts',
-  SMTP_SETTING = '/settings/alerts',
+  SMTP_SETTING = '/settings/smtp',
   INTEGRATION_SETTING = '/settings/integration',
   QBO_INTEGRATION_SETTING = '/settings/qbo-integration',
   QBD_INTEGRATION_SETTING = '/settings/qbd-integration',

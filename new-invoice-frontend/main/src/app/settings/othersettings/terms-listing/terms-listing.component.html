@@ -16,7 +16,7 @@
                 <div class="table-responsive">
                     <table mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
                         <ng-container matColumnDef="name">
-                            <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'"
+                            <mat-header-cell *matHeaderCellDef
                                 mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.TERMS' |
                                 translate}}</mat-header-cell>
                             <mat-cell *matCellDef="let row" (click)="edit(row)"
@@ -25,7 +25,7 @@
                             </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="due_days">
-                            <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'"
+                            <mat-header-cell *matHeaderCellDef
                                 mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.DUE_DAYS' |
                                 translate}}</mat-header-cell>
                             <mat-cell *matCellDef="let row" (click)="edit(row)"
@@ -34,7 +34,7 @@
                             </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="discount">
-                            <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'"
+                            <mat-header-cell *matHeaderCellDef
                                 mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.DISCOUNT' |
                                 translate}}</mat-header-cell>
                             <mat-cell *matCellDef="let row" (click)="edit(row)"
@@ -44,8 +44,7 @@
                             </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="is_quickbooks">
-                            <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'" class="tbl-col-width-per-action"
-                                mat-sort-header>
+                            <mat-header-cell *matHeaderCellDef class="tbl-col-width-per-action" mat-sort-header>
                                 <img [src]="quickbooksGreenIcon" alt="" height="23" width="23" />
                             </mat-header-cell>
                             <mat-cell *matCellDef="let row" (click)="edit(row)"
@@ -59,7 +58,7 @@
                         </ng-container>
                         <!-- actions -->
                         <ng-container matColumnDef="actions">
-                            <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-action max-h'"
+                            <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-action'"
                                 *matHeaderCellDef>{{'VENDOR.TABLE.ACTIONS' |
                                 translate}}</mat-header-cell>
                             <mat-cell *matCellDef="let row; let i=index;" class="pr-0 tbl-col-width-per-action">
