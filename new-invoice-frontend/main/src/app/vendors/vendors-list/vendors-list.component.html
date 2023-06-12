@@ -173,8 +173,7 @@
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_name">
                                     <mat-header-cell [ngClass]="'tbl-col-width-per-max'" *matHeaderCellDef
-                                        mat-sort-header>{{'VENDOR.TABLE.VENDOR_NAME' |
-                                        translate}}
+                                        mat-sort-header>{{'VENDOR.TABLE.VENDOR_NAME' | translate}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" [matTooltip]="getNameTooltip(row)"
                                         (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-max"
@@ -209,8 +208,8 @@
                                 </ng-container> -->
 
                                 <ng-container matColumnDef="invoice">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.INVOICE' |
-                                        translate}}
+                                    <mat-header-cell *matHeaderCellDef
+                                        mat-sort-header>{{'VENDOR.TABLE.INVOICE' | translate}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
                                         (click)="editVendor(row)">
@@ -219,8 +218,8 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="open_invoice">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.OPEN_INVOICE' |
-                                        translate}}
+                                    <mat-header-cell *matHeaderCellDef
+                                        mat-sort-header>{{'VENDOR.TABLE.OPEN_INVOICE' | translate}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
                                         (click)="editVendor(row)">
@@ -231,8 +230,7 @@
                                 </ng-container>
                                 <ng-container matColumnDef="amount_paid">
                                     <mat-header-cell [ngClass]="'tbl-col-width-per-max'" *matHeaderCellDef
-                                        mat-sort-header>{{'VENDOR.TABLE.AMOUNT_PAID' |
-                                        translate}}
+                                        mat-sort-header>{{'VENDOR.TABLE.AMOUNT_PAID' | translate}}
                                     </mat-header-cell>
                                     <mat-cell class="tbl-col-width-per-max" *matCellDef="let row"
                                         (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">

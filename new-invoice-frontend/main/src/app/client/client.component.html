@@ -151,41 +151,46 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="client_number">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'CLIENT.TABLE.CLIENT_NUMBER' |
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                                        class="tbl-col-width-per-max">{{'CLIENT.TABLE.CLIENT_NUMBER' |
                                         translate}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" [matTooltip]="getNumberTooltip(row)"
-                                        (contextmenu)="onContextMenu($event, row)" (click)="editClient(row)">
+                                        class="tbl-col-width-per-max" (contextmenu)="onContextMenu($event, row)"
+                                        (click)="editClient(row)">
                                         <span class="truncate-text"> <span class="mobile-label">Vendor
                                                 ID:</span>{{row.client_number}}</span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="client_email">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="tbl-col-width-per-max">
                                         {{'CLIENT.TABLE.JOB_CONTACT_EMAIL' | translate}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" [matTooltip]="getTooltip(row)"
-                                        (contextmenu)="onContextMenu($event, row)" (click)="editClient(row)">
+                                        class="tbl-col-width-per-max" (contextmenu)="onContextMenu($event, row)"
+                                        (click)="editClient(row)">
                                         <span class="truncate-text"> <span class="mobile-label">Job Contact
                                                 Email:</span>{{row.client_email}}</span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="approver_id">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        [ngClass]="'tbl-col-width-per-mid'">{{'CLIENT.TABLE.APPROVER' | translate}}
+                                        [ngClass]="'tbl-col-width-per-max'">{{'CLIENT.TABLE.APPROVER' | translate}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" [matTooltip]="getApproverTooltip(row)"
-                                        (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-mid"
+                                        (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-max"
                                         (click)="editClient(row)">
                                         <span class="mobile-label">Approver:</span>
                                         {{row.approver?.userfullname}}
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="client_cost_cost_id">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'CLIENT.ADD_EDIT.COST_GL' |
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                                        class="tbl-col-width-per-max">{{'CLIENT.ADD_EDIT.COST_GL' |
                                         translate}}</mat-header-cell>
                                     <mat-cell *matCellDef="let row" [matTooltip]="getCostCodeTooltip(row)"
-                                        (contextmenu)="onContextMenu($event, row)" (click)="editClient(row)">
+                                        class="tbl-col-width-per-max" (contextmenu)="onContextMenu($event, row)"
+                                        (click)="editClient(row)">
                                         <span class="truncate-text"> <span class="mobile-label">Cost Code:</span>
                                             {{row.client_cost_cost?.value}}</span>
                                     </mat-cell>
