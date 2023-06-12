@@ -40,7 +40,9 @@ export class UserGridComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   isDelete = 0;
-  userList: any = [];
+  userList: Array<UserModel> = [];
+  activeUserList: Array<UserModel> = [];
+  inactiveUserList: Array<UserModel> = [];
   dataSource!: UserDataSource;
   @ViewChild('filter', { static: true }) filter!: ElementRef;
   active_word = 'Active';
@@ -83,6 +85,12 @@ export class UserGridComponent
       { is_delete: this.isDelete }
     );
     this.userList = data;
+    this.activeUserList = this.userList.filter((obj: any) => {
+      return obj.userstatus == 1;
+    });
+    this.inactiveUserList = this.userList.filter((obj: any) => {
+      return obj.userstatus == 2;
+    });
     this.cardLoading = false;
   }
 

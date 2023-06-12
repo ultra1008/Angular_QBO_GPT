@@ -180,7 +180,20 @@
                     <div *ngIf="cardLoading" class="tbl-spinner">
                         <app-loading></app-loading>
                     </div>
-
+                    <div *ngIf="username_status === '2' && inactiveUserList?.length === 0">
+                        <div>
+                            <h5 class="font-white text-center">
+                                {{'USERS.VIEW.ACTIVE_STATUS_MASSAGE' | translate}}
+                            </h5>
+                        </div>
+                    </div>
+                    <div *ngIf="username_status === '1' && activeUserList?.length === 0">
+                        <div>
+                            <h5 class="font-white text-center">
+                                {{'USERS.VIEW.INACTIVE_STATUS_MASSAGE' | translate}}
+                            </h5>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

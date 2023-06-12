@@ -545,7 +545,6 @@ module.exports.forgetpassword = async function (req, res) {
                     } else {
                         let temp_password = common.rendomPassword(8);
                         let passwordHash = common.generateHash(temp_password);
-
                         let update_user = await userConnection.updateOne({ useremail: req.body.useremail }, { password: passwordHash, useris_password_temp: true });
                         if (update_user) {
                             let company_data = await companyConnection.findOne({ companycode: requestObject.companycode });
@@ -591,7 +590,7 @@ module.exports.forgetpassword = async function (req, res) {
                     }
                 } catch (e) {
                     console.log("e", e);
-                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
                 } finally {
                     connection_db_api.close();
                 }
@@ -1597,7 +1596,7 @@ module.exports.sendEmailOTP = async function (req, res) {
                     ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
 
                     TITLE: 'One Time Password (OTP) verification',
-                    LINE1: new handlebars.SafeString(`Your One Time Password(OTP) is < b > ${sixdidgitnumber}</b >.`),
+                    LINE1: new handlebars.SafeString(`Your One Time Password(OTP) is <b> ${sixdidgitnumber}</b>`),
                     LINE2: 'Make sure to enter it in the web browser, since your account can’t be accessed without it.',
 
                     COMPANYNAME: ``,
@@ -2313,13 +2312,15 @@ module.exports.emailForgotPassword = async function (req, res) {
         for (let i = 0; i < get_company.length; i++) {
             let user = get_company[i].invoice_user.find(o => o.useremail === requestObject.useremail);
             if (user) {
-                var psss_tnp = await common.validPassword(requestObject.password, user.password);
+                data.push(get_company[i]);
+                /* var psss_tnp = await common.validPassword(requestObject.password, user.password);
+                console.log("psss_tnp", psss_tnp);
+                console.log("user", user);
                 if (psss_tnp && user.userstatus == 1 && user.is_delete == 0) {
                     data.push(get_company[i]);
-                }
+                } */
             }
         }
-        console.log("data.length", data.length);
         if (data.length == 1) {
             var get_tenants = await tenantsConnection.findOne({ company_id: data[0]._id });
             let connection_db_api = await db_connection.connection_db_api(get_tenants);
@@ -2372,7 +2373,7 @@ module.exports.emailForgotPassword = async function (req, res) {
         }
     } catch (e) {
         console.log(e);
-        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
     } finally {
         // connection_db_api.close();
     }

@@ -134,7 +134,9 @@
             "ADD_USER": "Agregar usuario",
             "EDIT_USER": "Edit User",
             "TITLE": "Usuario",
-            "ARCHIVED_TITLE": "Usuario archivado"
+            "ARCHIVED_TITLE": "Usuario archivado",
+            "ACTIVE_STATUS_MASSAGE": "No active user data is available",
+            "INACTIVE_STATUS_MASSAGE": "No inactive user data is available"
         },
         "TABLE": {
             "IMAGE": "Imagen",

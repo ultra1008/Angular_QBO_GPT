@@ -78,19 +78,21 @@ export class SendOtpComponent {
       const data = await this.commonService.postRequestAPI(httpversion.V1 + httproutes.SUBMITT_OTP, reqObject);
       if (data.status) {
         if (data.data.length === 0) {
-          showNotification(this.snackBar, 'You are not associated with any company. Kindly contact superadmin.', 'error');
+          showNotification(that.snackBar, 'You are not associated with any company. Kindly contact superadmin.', 'error');
         } else if (data.data.length === 1) {
           // only one compant so direct login
-          showNotification(this.snackBar, data.message, 'success');
+          showNotification(that.snackBar, data.message, 'success');
           if (data.user_data.UserData.useris_password_temp == true) {
-            this.router.navigate([WEB_ROUTES.FORCEFULLY_CHANGE_PASSWORD]);
+            that.router.navigate([WEB_ROUTES.FORCEFULLY_CHANGE_PASSWORD]);
           } else {
+            that.authenticationService.changeLoginValue(false);
+            localStorage.setItem(localstorageconstants.LOGOUT, 'false');
             setTimeout(() => {
-              this.router.navigate([checkPermissionAfterLogin(data.user_data.role_permission)]);
+              that.router.navigate([checkPermissionAfterLogin(data.user_data.role_permission)]);
               location.reload();
-            }, 300);
+            }, 500);
           }
-          this.authenticationService.changeTokenValue(data.user_data.token);
+          that.authenticationService.changeTokenValue(data.user_data.token);
           localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.user_data.token);
           localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.user_data));
           localStorage.setItem(localstorageconstants.COMPANYID, data.user_data.companydata._id);
@@ -99,13 +101,13 @@ export class SendOtpComponent {
           sessionStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
           localStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
         } else {
-          this.useremail = reqObject.useremail;
-          this.companyList = data.data;
-          this.showCompanyList = true;
+          that.useremail = reqObject.useremail;
+          that.companyList = data.data;
+          that.showCompanyList = true;
         }
         // for delete we use splice in order to remove single object from DataService
       } else {
-        showNotification(this.snackBar, data.message, 'error');
+        showNotification(that.snackBar, data.message, 'error');
       }
     }
   }
@@ -119,9 +121,12 @@ export class SendOtpComponent {
       if (data.user_data.UserData.useris_password_temp == true) {
         this.router.navigate([WEB_ROUTES.FORCEFULLY_CHANGE_PASSWORD]);
       } else {
+        this.authenticationService.changeLoginValue(false);
+        localStorage.setItem(localstorageconstants.LOGOUT, 'false');
         setTimeout(() => {
-          this.router.navigate([WEB_ROUTES.DASHBOARD]);
-        }, 300);
+          this.router.navigate([checkPermissionAfterLogin(data.user_data.role_permission)]);
+          location.reload();
+        }, 500);
       }
       localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.user_data.token);
       localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.user_data));
