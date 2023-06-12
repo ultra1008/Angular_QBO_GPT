@@ -44,8 +44,11 @@ export class VendorGridComponent
   termsList: Array<TermModel> = [];
   role_permission!: RolePermission;
   @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
+  isHideAddActionQBD = false;
+  isHideEditActionQBD = false;
+  isHideArchiveActionQBD = false;
 
-  constructor (
+  constructor(
     public httpClient: HttpClient,
     private httpCall: HttpCall,
     public dialog: MatDialog,
@@ -61,12 +64,38 @@ export class VendorGridComponent
     this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
   }
   ngOnInit() {
+    this.getCompanyTenants();
     this.getVendor();
   }
 
   gotolist() {
     localStorage.setItem(localstorageconstants.VENDOR_DISPLAY, 'list');
     this.router.navigate([WEB_ROUTES.VENDOR]);
+  }
+
+  async getCompanyTenants() {
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP);
+    if (data.status) {
+      if (data.data.is_quickbooks_desktop) {
+        if (this.role_permission.vendor.Add) {
+          this.isHideAddActionQBD = true;
+        } else {
+          this.isHideAddActionQBD = false;
+        }
+
+        if (this.role_permission.vendor.Edit) {
+          this.isHideEditActionQBD = true;
+        } else {
+          this.isHideEditActionQBD = false;
+        }
+
+        if (this.role_permission.vendor.Delete) {
+          this.isHideArchiveActionQBD = true;
+        } else {
+          this.isHideArchiveActionQBD = false;
+        }
+      }
+    }
   }
 
   async getVendor() {
