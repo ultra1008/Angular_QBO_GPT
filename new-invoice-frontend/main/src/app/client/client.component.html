@@ -51,7 +51,7 @@
                                         </button>
                                     </div>
                                 </li>
-                                <li class="tbl-header-btn" *ngIf="isDelete === 0 && role_permission.clientJob.Add">
+                                <li class="tbl-header-btn" *ngIf="isDelete === 0 && !isHideAddActionQBD">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.IMPORT_TEMPLATE' |
                                     translate}}">
                                         <button mat-mini-fab color="primary" (click)="downloadImport()">
@@ -60,7 +60,7 @@
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn"
-                                    *ngIf="isDelete === 0 && isDelete === 0 && role_permission.clientJob.Add">
+                                    *ngIf="isDelete === 0 && isDelete === 0 && !isHideAddActionQBD">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.IMPORT' |
                                     translate}}">
                                         <input id="file-upload" class="mr-2" type="file" style="display: none"
@@ -79,7 +79,7 @@
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn"
-                                    *ngIf="isDelete === 0 && isDelete === 0 && role_permission.clientJob.Delete">
+                                    *ngIf="isDelete === 0 && isDelete === 0 && !isHideArchiveActionQBD">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ARCHIVE' |
                                         translate}}">
                                         <button mat-mini-fab color="warn" (click)="gotoArchiveUnarchive()">
@@ -96,7 +96,7 @@
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn"
-                                    *ngIf="isDelete === 0 && isDelete === 0 && role_permission.clientJob.Add">
+                                    *ngIf="isDelete === 0 && isDelete === 0 && !isHideAddActionQBD">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ADD' |
                                         translate}}">
                                         <button mat-mini-fab color="primary" (click)="addNew()">
@@ -151,8 +151,8 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="client_number">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="tbl-col-width-per-max">{{'CLIENT.TABLE.CLIENT_NUMBER' |
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="tbl-col-width-per-max">
+                                        {{'CLIENT.TABLE.CLIENT_NUMBER' |
                                         translate}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" [matTooltip]="getNumberTooltip(row)"
@@ -185,8 +185,8 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="client_cost_cost_id">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="tbl-col-width-per-max">{{'CLIENT.ADD_EDIT.COST_GL' |
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="tbl-col-width-per-max">
+                                        {{'CLIENT.ADD_EDIT.COST_GL' |
                                         translate}}</mat-header-cell>
                                     <mat-cell *matCellDef="let row" [matTooltip]="getCostCodeTooltip(row)"
                                         class="tbl-col-width-per-max" (contextmenu)="onContextMenu($event, row)"

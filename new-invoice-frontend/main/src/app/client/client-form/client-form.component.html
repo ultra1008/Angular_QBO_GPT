@@ -16,7 +16,7 @@
                         <div class="right">
                             <ul class="tbl-export-btn">
                                 <li class="tbl-header-btn" *ngIf="id">
-                                    <div class="m-l-10" *ngIf="is_delete === 0"
+                                    <div class="m-l-10" *ngIf="is_delete === 0 && !isHideArchiveActionQBD"
                                         matTooltip="{{'COMMON.TOOL_TIP.ARCHIVE' | translate}}">
                                         <button mat-mini-fab color="warn" (click)="deleteClient()">
                                             <mat-icon class="col-white">archive</mat-icon>
@@ -24,7 +24,7 @@
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="id">
-                                    <div class="m-l-10" *ngIf="is_delete === 1"
+                                    <div class="m-l-10" *ngIf="is_delete === 1 && !isHideArchiveActionQBD"
                                         matTooltip="{{'COMMON.ACTIONS.RESTORE' | translate}}">
                                         <button mat-mini-fab color="warn" (click)="deleteClient()">
                                             <mat-icon class="col-white">archive</mat-icon>
@@ -42,7 +42,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="body">
+                    <div [ngClass]="{'disableDiv': isHideEditActionQBD}">
                         <form class="register-form m-4" [formGroup]="clientForm">
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2" style="font-size: 12px;">
@@ -131,11 +131,11 @@
 
                             <div class="row">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                                    <button *ngIf="role_permission.clientJob.Edit" class="btn-space" mat-raised-button
-                                        color="primary" [disabled]="!clientForm.valid"
-                                        (click)="saveClient()">{{'COMMON.ACTIONS.SAVE'|
+                                    <button *ngIf="role_permission.clientJob.Edit && !isHideEditActionQBD"
+                                        class="btn-space" mat-raised-button color="primary"
+                                        [disabled]="!clientForm.valid" (click)="saveClient()">{{'COMMON.ACTIONS.SAVE'|
                                         translate}}</button>
-                                    <button type="button" mat-raised-button color="warn"
+                                    <button *ngIf="!isHideEditActionQBD" type="button" mat-raised-button color="warn"
                                         (click)="confirmExit()">{{'COMMON.ACTIONS.CANCEL'| translate}}</button>
                                 </div>
                             </div>
