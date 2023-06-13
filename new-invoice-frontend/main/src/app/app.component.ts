@@ -22,7 +22,7 @@ export class AppComponent {
   lastPing?: Date;
   title = 'angular-idle-timeout';
 
-  constructor (public translate: TranslateService, public _router: Router, private idle: Idle, private keepalive: Keepalive,
+  constructor(public translate: TranslateService, public _router: Router, private idle: Idle, private keepalive: Keepalive,
     public commonService: CommonService) {
     this.translate.addLangs(['en', 'es']);
     this.translate.setDefaultLang('en');
@@ -75,7 +75,6 @@ export class AppComponent {
             title: 'Are you sure?',
             text: "You have been inactive for " + Number(data.data.settings.Auto_Log_Off.setting_value) + " minutes, your session is about to end due to inactivity.",
             html: "As a security precaution, if there is no additional activity in your ROVUK session, the session will end and you will be brought to the login page.</br></br>If you are still working please click OK to continue.",
-            icon: 'warning',
             showCancelButton: true,
             // confirmButtonColor: '#3085d6',
             // cancelButtonColor: '#d33',
