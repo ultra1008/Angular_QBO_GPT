@@ -608,7 +608,11 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   }
 
   back() {
-    this.router.navigate([WEB_ROUTES.INVOICE]);
+    if (this.documentId) {
+      this.router.navigate([WEB_ROUTES.DOCUMENTS]);
+    } else {
+      this.router.navigate([WEB_ROUTES.INVOICE]);
+    }
   }
 
   openHistory() {

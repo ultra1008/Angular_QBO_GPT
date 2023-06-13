@@ -37,12 +37,15 @@ export class ViewDocumentComponent {
   packingSlipData: any = [];
   receivingSlipData: any = [];
   id: any;
+  documentId: any;
+  documentData: any;
   maxDate = new Date();
   invoice_id: any;
 
   constructor (public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, private fb: UntypedFormBuilder, public commonService: CommonService, public route: ActivatedRoute, private router: Router,) {
     this.document = this.route.snapshot.queryParamMap.get('document') ?? '';
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
+    this.documentId = this.route.snapshot.queryParamMap.get('document_id') ?? '';
 
     this.poForm = this.fb.group({
       document_type: ['', [Validators.required]],
@@ -93,14 +96,89 @@ export class ViewDocumentComponent {
     });
 
     this.getTerms();
-    if (this.document == 'PURCHASE_ORDER') {
-      this.getOnePo();
-    } else if (this.document == 'QUOTE') {
-      this.getOneQuote();
-    } else if (this.document == 'PACKING_SLIP') {
-      this.getOnePackingSlipList();
-    } else if (this.document == 'RECEIVING_SLIP') {
-      this.getOneRecevingSlipList();
+    if (this.id) {
+      if (this.document == 'PURCHASE_ORDER') {
+        this.getOnePo();
+      } else if (this.document == 'QUOTE') {
+        this.getOneQuote();
+      } else if (this.document == 'PACKING_SLIP') {
+        this.getOnePackingSlipList();
+      } else if (this.document == 'RECEIVING_SLIP') {
+        this.getOneRecevingSlipList();
+      }
+    } else if (this.documentId) {
+      this.getOneOtherDocument();
+    }
+  }
+
+  async getOneOtherDocument() {
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ONE_AP_OTHER_DOCUMENT, { _id: this.documentId });
+    if (data.status) {
+      this.documentData = data.data;
+      let date;
+      if (this.documentData.date_epoch != undefined && this.documentData.date_epoch != null && this.documentData.date_epoch != 0) {
+        date = epochToDateTime(this.documentData.date_epoch);
+      }
+      let document_type = '';
+      const foundIndex = this.documentTypesList.findIndex((x: any) => x.key === this.document);
+      if (foundIndex != null) {
+        document_type = this.documentTypesList[foundIndex].name;
+      }
+      if (this.document == this.documentTypes.po) {
+        this.poForm = this.fb.group({
+          document_type: [document_type],
+          vendor_name: [this.documentData.vendor_data.vendor_name],
+          quote_no: [''],
+          date: [date],
+          shipping_method: [''],
+          sub_total: ['0.00'],
+          tax: ['0.00'],
+          po_total: ['0.00'],
+          receiver_phone: [''],
+          terms: [''],
+          address: [''],
+        });
+      } else if (this.document == this.documentTypes.quote) {
+        this.quoteForm = this.fb.group({
+          document_type: [document_type],
+          vendor_name: [this.documentData.vendor_data.vendor_name],
+          quote_no: [''],
+          date: [date],
+          shipping_method: [''],
+          sub_total: ['0.00'],
+          tax: ['0.00'],
+          quote_total: ['0.00'],
+          receiver_phone: [''],
+          terms: [''],
+          address: [''],
+        });
+      } else if (this.document == this.documentTypes.packingSlip) {
+        this.packingSlipForm = this.fb.group({
+          document_type: [document_type],
+          vendor_name: [this.documentData.vendor_data.vendor_name],
+          invoice_no: [this.documentData.invoice_no],
+          date: [date],
+          po_no: [this.documentData.po_no],
+          address: [''],
+          received_by: [''],
+        });
+      } else if (this.document == this.documentTypes.receivingSlip) {
+        this.receivingSlipForm = this.fb.group({
+          document_type: [document_type],
+          vendor_name: [this.documentData.vendor_data.vendor_name],
+          invoice_no: [this.documentData.invoice_no],
+          date: [date],
+          po_no: [this.documentData.po_no],
+          address: [''],
+          received_by: [''],
+        });
+      }
+      this.pdf_url = this.documentData.pdf_url;
+      this.showPoEdit = true;
+      this.loadPDF = false;
+      setTimeout(() => {
+        this.loadPDF = true;
+      }, 100);
     }
   }
 
@@ -111,9 +189,11 @@ export class ViewDocumentComponent {
       this.termsList = this.variablestermList.slice();
     }
   }
+
   goDocumentForm() {
     this.showPoEdit = true;
   }
+
   async getOnePo() {
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ONE_AP_PO, { _id: this.id });
     if (data.status) {
@@ -153,6 +233,7 @@ export class ViewDocumentComponent {
       }, 100);
     }
   }
+
   poAmountChange(params: any, controller: string) {
     this.poForm.get(controller)?.setValue(amountChange(params));
   }
@@ -164,7 +245,19 @@ export class ViewDocumentComponent {
 
       delete formValues.document_type;
       delete formValues.vendor_name;
-      formValues._id = this.id;
+      let apiUrl = '';
+      if (this.id) {
+        formValues._id = this.id;
+        apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_PO;
+      } else if (this.documentId) {
+        formValues.document_type = this.documentTypes.po;
+        formValues.pdf_url = this.documentData.pdf_url;
+        formValues.document_id = this.documentId;
+        formValues.vendor = this.documentData.vendor;
+        formValues.invoice_no = this.documentData.invoice_no;
+        formValues.po_no = this.documentData.po_no;
+        apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_OTHER_DOCUMENT_PO;
+      }
 
       if (formValues.date == null) {
         formValues.date = 0;
@@ -176,10 +269,13 @@ export class ViewDocumentComponent {
       formValues.tax = formValues.tax.toString().replace(/,/g, "");
       formValues.po_total = formValues.po_total.toString().replace(/,/g, "");
 
-      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_AP_PO, formValues);
+      const data = await this.commonService.postRequestAPI(apiUrl, formValues);
       this.uiSpinner.spin$.next(false);
       if (data.status) {
         showNotification(this.snackBar, data.message, 'success');
+        if (this.documentId) {
+          this.router.navigate([WEB_ROUTES.DOCUMENTS], { state: { value: 0 } });
+        }
       } else {
         showNotification(this.snackBar, data.message, 'error');
       }
@@ -237,7 +333,19 @@ export class ViewDocumentComponent {
 
       delete formValues.document_type;
       delete formValues.vendor_name;
-      formValues._id = this.id;
+      let apiUrl = '';
+      if (this.id) {
+        formValues._id = this.id;
+        apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_QUOTE;
+      } else if (this.documentId) {
+        formValues.document_type = this.documentTypes.quote;
+        formValues.pdf_url = this.documentData.pdf_url;
+        formValues.document_id = this.documentId;
+        formValues.vendor = this.documentData.vendor;
+        formValues.invoice_no = this.documentData.invoice_no;
+        formValues.po_no = this.documentData.po_no;
+        apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_OTHER_DOCUMENT_QUOTE;
+      }
 
       if (formValues.date == null) {
         formValues.date = 0;
@@ -249,10 +357,13 @@ export class ViewDocumentComponent {
       formValues.tax = formValues.tax.toString().replace(/,/g, "");
       formValues.quote_total = formValues.quote_total.toString().replace(/,/g, "");
 
-      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_AP_QUOTE, formValues);
+      const data = await this.commonService.postRequestAPI(apiUrl, formValues);
       this.uiSpinner.spin$.next(false);
       if (data.status) {
         showNotification(this.snackBar, data.message, 'success');
+        if (this.documentId) {
+          this.router.navigate([WEB_ROUTES.DOCUMENTS], { state: { value: 3 } });
+        }
       } else {
         showNotification(this.snackBar, data.message, 'error');
       }
@@ -302,7 +413,17 @@ export class ViewDocumentComponent {
 
       delete formValues.document_type;
       delete formValues.vendor_name;
-      formValues._id = this.id;
+      let apiUrl = '';
+      if (this.id) {
+        formValues._id = this.id;
+        apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_PACKLING_SLIP;
+      } else if (this.documentId) {
+        formValues.document_type = this.documentTypes.packingSlip;
+        formValues.pdf_url = this.documentData.pdf_url;
+        formValues.document_id = this.documentId;
+        formValues.vendor = this.documentData.vendor;
+        apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_OTHER_DOCUMENT_PACKLING_SLIP;
+      }
 
       if (formValues.date == null) {
         formValues.date = 0;
@@ -310,10 +431,13 @@ export class ViewDocumentComponent {
         formValues.date = Math.round(formValues.date.valueOf() / 1000);
       }
 
-      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_AP_PACKLING_SLIP, formValues);
+      const data = await this.commonService.postRequestAPI(apiUrl, formValues);
       this.uiSpinner.spin$.next(false);
       if (data.status) {
         showNotification(this.snackBar, data.message, 'success');
+        if (this.documentId) {
+          this.router.navigate([WEB_ROUTES.DOCUMENTS], { state: { value: 1 } });
+        }
       } else {
         showNotification(this.snackBar, data.message, 'error');
       }
@@ -328,10 +452,15 @@ export class ViewDocumentComponent {
       if (this.receivingSlipData.date_epoch != undefined && this.receivingSlipData.date_epoch != null && this.receivingSlipData.date_epoch != 0) {
         receivingSliDate = epochToDateTime(this.receivingSlipData.date_epoch);
       }
+      let document_type = '';
+      const foundIndex = this.documentTypesList.findIndex((x: any) => x.key === this.receivingSlipData.document_type);
+      if (foundIndex != null) {
+        document_type = this.documentTypesList[foundIndex].name;
+      }
       this.invoice_id = this.receivingSlipData.invoice_id;
       this.receivingSlipForm = this.fb.group({
-        document_type: [this.receivingSlipData.document_type],
-        vendor_name: [this.receivingSlipData.vendor_name],
+        document_type: [document_type],
+        vendor_name: [this.receivingSlipData.vendor_data.vendor_name],
         invoice_no: [this.receivingSlipData.invoice_no],
         date: [receivingSliDate],
         po_no: [this.receivingSlipData.po_no],
@@ -358,7 +487,17 @@ export class ViewDocumentComponent {
 
       delete formValues.document_type;
       delete formValues.vendor_name;
-      formValues._id = this.id;
+      let apiUrl = '';
+      if (this.id) {
+        formValues._id = this.id;
+        apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_RECEVING_SLIP;
+      } else if (this.documentId) {
+        formValues.document_type = this.documentTypes.receivingSlip;
+        formValues.pdf_url = this.documentData.pdf_url;
+        formValues.document_id = this.documentId;
+        formValues.vendor = this.documentData.vendor;
+        apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_OTHER_DOCUMENT_RECEVING_SLIP;
+      }
 
       if (formValues.date == null) {
         formValues.date = 0;
@@ -366,10 +505,13 @@ export class ViewDocumentComponent {
         formValues.date = Math.round(formValues.date.valueOf() / 1000);
       }
 
-      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_AP_RECEVING_SLIP, formValues);
+      const data = await this.commonService.postRequestAPI(apiUrl, formValues);
       this.uiSpinner.spin$.next(false);
       if (data.status) {
         showNotification(this.snackBar, data.message, 'success');
+        if (this.documentId) {
+          this.router.navigate([WEB_ROUTES.DOCUMENTS], { state: { value: 2 } });
+        }
       } else {
         showNotification(this.snackBar, data.message, 'error');
       }
@@ -435,6 +577,7 @@ export class ViewDocumentComponent {
     /*--- Remove the link when done ---*/
     document.body.removeChild(a);
   }
+
   onKey(event: any) {
 
     if (event.target.value.length == 0) {

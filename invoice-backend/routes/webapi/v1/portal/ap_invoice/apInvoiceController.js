@@ -637,8 +637,8 @@ module.exports.saveAPOtherDocumentInvoice = async function (req, res) {
             let add_ap_invoice = new apInvoiceConnection(requestObject);
             let save_ap_invoice = await add_ap_invoice.save();
             if (save_ap_invoice) {
-                let update = await apOtherDocumentConnection.updateOne({ _id: ObjectID(documentId) }, { is_delete: 1 });
-                console.log("othe rdocument update", update);
+                await apOtherDocumentConnection.updateOne({ _id: ObjectID(documentId) }, { is_delete: 1 });
+
                 delete requestObject.updated_by;
                 delete requestObject.updated_at;
                 delete requestObject.created_by;

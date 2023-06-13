@@ -59,8 +59,31 @@ module.exports.getOneAPOtherDocument = async function (req, res) {
         try {
             var requestObject = req.body;
             var apOtherDocumentConnection = connection_db_api.model(collectionConstant.AP_OTHER_DOCUMENT, apOtherDocumentSchema);
-            var get_data = await apOtherDocumentConnection.findOne({ _id: ObjectID(requestObject._id) });
-            res.send({ status: true, message: "Other Document listing", data: get_data });
+            var get_data = await apOtherDocumentConnection.aggregate([
+                { $match: { _id: ObjectID(requestObject._id) } },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_VENDOR,
+                        localField: "vendor",
+                        foreignField: "_id",
+                        as: "vendor_data"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$vendor_data",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+            ]);
+            if (get_data) {
+                if (get_data.length > 0) {
+                    get_data = get_data[0];
+                }
+                res.send({ status: true, message: "Other Document listing", data: get_data });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
         } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });

@@ -543,6 +543,7 @@ router.get('/webapi/v1/portal/getappo', common.checkTokenExistOrNot, apPOControl
 router.get('/webapi/v1/portal/getorphanappo', common.checkTokenExistOrNot, apPOController.getOrphanAPPO);
 router.post('/webapi/v1/portal/getoneappo', common.checkTokenExistOrNot, apPOValidation.getOneAPPO, apPOController.getOneAPPO);
 router.post('/webapi/v1/portal/saveappo', common.checkTokenExistOrNot, apPOController.saveAPPO);
+router.post('/webapi/v1/portal/saveapotherdocumentpo', common.checkTokenExistOrNot, apPOController.saveAPOtherDocumentPO);
 
 let apQuoteController = require('./ap_quote/apQuoteController');
 let apQuoteValidation = require('./ap_quote/apQuoteValidation');
@@ -550,6 +551,7 @@ router.get('/webapi/v1/portal/getapquote', common.checkTokenExistOrNot, apQuoteC
 router.get('/webapi/v1/portal/getorphanapquote', common.checkTokenExistOrNot, apQuoteController.getOrphanAPQuote);
 router.post('/webapi/v1/portal/getoneapquote', common.checkTokenExistOrNot, apQuoteValidation.getOneAPQuote, apQuoteController.getOneAPQuote);
 router.post('/webapi/v1/portal/saveapquote', common.checkTokenExistOrNot, apQuoteController.saveAPQuote);
+router.post('/webapi/v1/portal/saveapotherdocumentquote', common.checkTokenExistOrNot, apQuoteController.saveAPOtherDocumentQuote);
 
 let apPackingSlipController = require('./ap_packing_slip/apPackingSlipController');
 let apPackingSlipValidation = require('./ap_packing_slip/apPackingSlipValidation');
@@ -557,6 +559,7 @@ router.get('/webapi/v1/portal/getappackingslip', common.checkTokenExistOrNot, ap
 router.get('/webapi/v1/portal/getorphanappackingslip', common.checkTokenExistOrNot, apPackingSlipController.getOrphanAPPackingSlip);
 router.post('/webapi/v1/portal/getoneappackingslip', common.checkTokenExistOrNot, apPackingSlipValidation.getOneAPPackingSlip, apPackingSlipController.getOneAPPackingSlip);
 router.post('/webapi/v1/portal/saveappackingslip', common.checkTokenExistOrNot, apPackingSlipController.saveAPPackingSlip);
+router.post('/webapi/v1/portal/saveapotherdocumentpackingslip', common.checkTokenExistOrNot, apPackingSlipController.saveAPOtherDocumentPackingSlip);
 
 let apReceivingSlipController = require('./ap_receiving_slip/apReceivingSlipController');
 let apReceivingSlipValidation = require('./ap_receiving_slip/apReceivingSlipValidation');
@@ -564,6 +567,7 @@ router.get('/webapi/v1/portal/getapreceivingslip', common.checkTokenExistOrNot, 
 router.get('/webapi/v1/portal/getorphanapreceivingslip', common.checkTokenExistOrNot, apReceivingSlipController.getOrphanAPReceivingSlip);
 router.post('/webapi/v1/portal/getoneapreceivingslip', common.checkTokenExistOrNot, apReceivingSlipValidation.getOneAPReceivingSlip, apReceivingSlipController.getOneAPReceivingSlip);
 router.post('/webapi/v1/portal/saveapreceivingslip', common.checkTokenExistOrNot, apReceivingSlipController.saveAPReceivingSlip);
+router.post('/webapi/v1/portal/saveapotherdocumentreceivingslip', common.checkTokenExistOrNot, apReceivingSlipController.saveAPOtherDocumentReceivingSlip);
 
 let apOtherDocumentController = require('./ap_other_document/apOtherDocumentController');
 let apOtherDocumentValidation = require('./ap_other_document/apOtherDocumentValidation');

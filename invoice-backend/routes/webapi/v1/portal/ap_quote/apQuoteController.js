@@ -1,4 +1,5 @@
 var apQuoteSchema = require('./../../../../../model/ap_quotes');
+var apOtherDocumentSchema = require('./../../../../../model/ap_other_documents');
 let db_connection = require('./../../../../../controller/common/connectiondb');
 let collectionConstant = require('./../../../../../config/collectionConstant');
 let common = require('./../../../../../controller/common/common');
@@ -169,6 +170,43 @@ module.exports.saveAPQuote = async function (req, res) {
         } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+module.exports.saveAPOtherDocumentQuote = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    var local_offset = Number(req.headers.local_offset);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var apQuoteConnection = connection_db_api.model(collectionConstant.AP_QUOUTE, apQuoteSchema);
+            var apOtherDocumentConnection = connection_db_api.model(collectionConstant.AP_OTHER_DOCUMENT, apOtherDocumentSchema);
+            var documentId = requestObject.document_id;
+            delete requestObject.document_id;
+
+            requestObject.is_orphan = true;
+            requestObject.created_at = Math.round(new Date().getTime() / 1000);
+            requestObject.created_by = decodedToken.UserData._id;
+            requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+            requestObject.updated_by = decodedToken.UserData._id;
+            let add_ap_quote = new apQuoteConnection(requestObject);
+            let save_ap_quote = await add_ap_quote.save();
+            if (save_ap_quote) {
+                await apOtherDocumentConnection.updateOne({ _id: ObjectID(documentId) }, { is_delete: 1 });
+                res.send({ status: true, message: "Quote added successfully.", data: save_ap_quote });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         } finally {
             connection_db_api.close();
         }

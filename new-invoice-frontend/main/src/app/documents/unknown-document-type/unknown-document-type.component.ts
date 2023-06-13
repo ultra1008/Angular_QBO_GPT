@@ -37,7 +37,7 @@ export class UnknownDocumentTypeComponent extends UnsubscribeOnDestroyAdapter {
     if (event.value == configData.DOCUMENT_TYPES.invoice) {
       this.router.navigate([WEB_ROUTES.INVOICE_DETAILS], { queryParams: { document_id: this.id } });
     } else {
-      this.router.navigate([WEB_ROUTES.INVOICE_VIEW_DOCUMENT], { queryParams: { document_id: this.id, document: event.value } });
+      this.router.navigate([WEB_ROUTES.INVOICE_VIEW_DOCUMENT], { queryParams: { document_id: this.id, document: event.value, from: 'document' } });
     }
   }
 
