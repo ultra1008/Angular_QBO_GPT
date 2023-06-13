@@ -26,7 +26,8 @@ module.exports.getallcostcode = async function (req, res) {
                         division: 1,
                         module: 1,
                         description: 1,
-                        cost_code: "$value"
+                        cost_code: 1,
+                        value: 1,
                     }
                 }
             ]);
@@ -65,7 +66,8 @@ module.exports.getcostcode = async function (req, res) {
                         division: 1,
                         module: 1,
                         description: 1,
-                        cost_code: "$value"
+                        cost_code: 1,
+                        value: 1,
                     }
                 }
             ]);
@@ -93,7 +95,7 @@ module.exports.getCostCodeForDatatable = async function (req, res) {
             let costcodeCollection = connection_db_api.model(collectionConstant.COSTCODES, costcodeSchema);
             var col = [];
             match = { is_delete: 0, module: requestObject.module };
-            col.push("division", "value", "description");
+            col.push("division", "cost_code", "description");
             var start = parseInt(req.body.start);
             var perpage = parseInt(req.body.length);
             var columnData = (req.body.order != undefined && req.body.order != '') ? req.body.order[0].column : '';
@@ -102,7 +104,7 @@ module.exports.getCostCodeForDatatable = async function (req, res) {
             sort[col[columnData]] = (columntype == 'asc') ? 1 : -1;
             var query = {
                 $or: [{ "division": new RegExp(req.body.search.value, 'i') },
-                { "value": new RegExp(req.body.search.value, 'i') },
+                { "cost_code": new RegExp(req.body.search.value, 'i') },
                 { "description": new RegExp(req.body.search.value, 'i') }]
             };
             var aggregateQuery = [
@@ -326,7 +328,6 @@ module.exports.getCostCodeForTable = async function (req, res) {
             else {
                 res.send([]);
             }
-
         } catch (e) {
             res.send([]);
         } finally {
@@ -479,19 +480,17 @@ module.exports.checkQBDImportCostcode = async function (req, res) {
                     requestObject.module = "Invoice";
                     requestObject.cost_code = requestObject[m].Name;
                     requestObject.division = requestObject[m].AccountType;
+                    requestObject.value = "Invoice-" + requestObject[m].AccountType + "-" + requestObject[m].Name;
                     var add_Costcode = new costcodeCollection(requestObject);
                     var save_Costcode = await add_Costcode.save();
-                }
-                else {
+                } else {
                     var requestObjectData = {
                         division: requestObject[m].AccountType,
                     };
                     let updatecost_code = await costcodeCollection.updateOne({ cost_code: requestObject[m].Name }, requestObjectData);
                 }
-
             }
             res.send({ status: true, message: "Costcode insert successfully..!" });
-
         } catch (error) {
             console.log(error);
             res.send({ status: false, message: translator.getStr('SomethingWrong'), error: error });

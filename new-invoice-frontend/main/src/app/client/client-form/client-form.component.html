@@ -78,7 +78,7 @@
                                                 *ngIf="costCodeSelect.focused">
                                             </mat-select-filter>
                                             <mat-option *ngFor="let costcode of costcodeList" [value]="costcode._id">
-                                                {{costcode.value}}
+                                                {{costcode.cost_code}}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
