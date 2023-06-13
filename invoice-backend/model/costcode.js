@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 var costCodeSchema = new Schema({
     cost_code: { type: String },
     division: { type: String },
-    module: { type: String, enum: ["Invoice"] },
+    module: { type: String, enum: ["Invoice"], default: "Invoice" },
     description: { type: String, default: "" },
     value: { type: String },
     is_quickbooks: { type: Boolean, default: false },

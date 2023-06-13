@@ -415,7 +415,7 @@ module.exports.importCostCode = async function (req, res) {
                     reqObject.push({
                         cost_code: requestObject[i].data.cost_code,
                         division: requestObject[i].data.division,
-                        module: requestObject[i].data.module,
+                        //module: requestObject[i].data.module,
                         description: requestObject[i].data.description,
                         value: requestObject[i].data.module + "-" + requestObject[i].data.division + "-" + requestObject[i].data.cost_code,
                     });
