@@ -7,7 +7,7 @@ var clientSchema = require('./../../../../../model/client');
 var classNameSchema = require('./../../../../../model/class_name');
 var companySchema = require('./../../../../../model/company');
 var tenantSchema = require('./../../../../../model/tenants');
-var invoiceSettingsSchema = require('./../../../../../model/settings');
+var apOtherDocumentSchema = require('./../../../../../model/ap_other_documents');
 var settingsSchema = require('./../../../../../model/settings');
 var invoiceRoleSchema = require('./../../../../../model/invoice_roles');
 var userSchema = require('./../../../../../model/user');
@@ -603,6 +603,91 @@ module.exports.saveAPInvoice = async function (req, res) {
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
                 }
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
+module.exports.saveAPOtherDocumentInvoice = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    var local_offset = Number(req.headers.local_offset);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var apInvoiceConnection = connection_db_api.model(collectionConstant.AP_INVOICE, apInvoiceSchema);
+            var userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+            var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
+            var apOtherDocumentConnection = connection_db_api.model(collectionConstant.AP_OTHER_DOCUMENT, apOtherDocumentSchema);
+            var documentId = requestObject.document_id;
+            delete requestObject.document_id;
+
+            requestObject.created_at = Math.round(new Date().getTime() / 1000);
+            requestObject.created_by = decodedToken.UserData._id;
+            requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+            requestObject.updated_by = decodedToken.UserData._id;
+            let add_ap_invoice = new apInvoiceConnection(requestObject);
+            let save_ap_invoice = await add_ap_invoice.save();
+            if (save_ap_invoice) {
+                let update = await apOtherDocumentConnection.updateOne({ _id: ObjectID(documentId) }, { is_delete: 1 });
+                console.log("othe rdocument update", update);
+                delete requestObject.updated_by;
+                delete requestObject.updated_at;
+                delete requestObject.created_by;
+                delete requestObject.created_at;
+                delete requestObject.is_delete;
+                delete requestObject.pdf_url;
+
+                // find difference of object 
+                let insertedData = await common.setInsertedFieldHistory(requestObject);
+
+                if (requestObject.assign_to !== undefined && requestObject.assign_to !== null && requestObject.assign_to !== '') {
+                    let found_assign_to = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'assign_to'; });
+                    if (found_assign_to != -1) {
+                        let one_data = await userConnection.findOne({ _id: ObjectID(insertedData[found_assign_to].value) });
+                        insertedData[found_assign_to].value = one_data.userfullname;
+                        sendInvoiceAssignUpdateAlerts(decodedToken, id, translator);
+                    }
+                }
+
+                if (requestObject.vendor !== undefined && requestObject.vendor !== null && requestObject.vendor !== '') {
+                    let found_vendor = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'vendor'; });
+                    if (found_vendor != -1) {
+                        let one_data = await vendorConnection.findOne({ _id: ObjectID(insertedData[found_vendor].value) });
+                        insertedData[found_vendor].value = one_data.vendor_name;
+                    }
+                }
+
+                let found_invoice_date_epoch = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'invoice_date_epoch'; });
+                if (found_invoice_date_epoch != -1) {
+                    insertedData[found_invoice_date_epoch].value = common.MMDDYYYY_local_offset(insertedData[found_invoice_date_epoch].value, 'en', local_offset);
+                }
+
+                let found_due_date_epoch = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'due_date_epoch'; });
+                if (found_due_date_epoch != -1) {
+                    insertedData[found_due_date_epoch].value = common.MMDDYYYY_local_offset(insertedData[found_due_date_epoch].value, 'en', local_offset);
+                }
+
+                for (let i = 0; i < insertedData.length; i++) {
+                    insertedData[i]['key'] = translator.getStr(`Invoice_History.${insertedData[i]['key']}`);
+                }
+                let histioryObject = {
+                    data: insertedData,
+                    invoice_id: save_ap_invoice._id,
+                };
+                addInvoiceHistory("Insert", histioryObject, decodedToken);
+
+                res.send({ status: true, message: "Invoice added successfully.", data: save_ap_invoice });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
             }
         } catch (e) {
             console.log(e);

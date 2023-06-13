@@ -7,9 +7,9 @@
                          <div class="left">
                               <ul class="header-buttons-left ms-0">
                                    <li class="tbl-title">
-                                        <h2 class="title-h">{{'INVOICE.INVOICE_DETAILS.TITLE' |
-                                             translate}} <span>Pending</span></h2>
+                                        <h2 class="title-h"> {{'INVOICE.INVOICE_DETAILS.TITLE' | translate}} </h2>
                                    </li>
+                                   <!-- <span>{{invoiceData.status}}</span> -->
                               </ul>
                          </div>
                          <div class="right ">
@@ -21,21 +21,21 @@
                                              </button>
                                         </div>
                                    </li>
-                                   <li class="tbl-header-btn">
+                                   <li class="tbl-header-btn" *ngIf="documentId === null">
                                         <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.MESSAGE' |  translate}}">
                                              <button mat-mini-fab color="primary" (click)="sendMessage()">
                                                   <img src="{{MAIL_ICON}}" width="15px" height="15px">
                                              </button>
                                         </div>
                                    </li>
-                                   <li class="tbl-header-btn">
+                                   <li class="tbl-header-btn" *ngIf="documentId === null">
                                         <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.MAIL' |  translate}}">
                                              <button mat-mini-fab color="primary" (click)="addmail()">
                                                   <img src="{{MESSAGE_ICON}}" width="15px" height="15px">
                                              </button>
                                         </div>
                                    </li>
-                                   <li class="tbl-header-btn">
+                                   <li class="tbl-header-btn" *ngIf="documentId === null">
                                         <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.HISTORY' |  translate}}">
                                              <button mat-mini-fab color="primary" (click)="openHistory()">
                                                   <mat-icon class="col-white">history</mat-icon>
@@ -219,21 +219,29 @@
                                                   </form>
                                                   <div *ngIf="role_permission.invoice.Edit" class="d-flex form-button">
                                                        <button class="btn-space" mat-raised-button color="primary"
-                                                            (click)="saveInformation()">{{'COMMON.ACTIONS.SAVE'|
-                                                            translate}}</button>
+                                                            (click)="saveInformation()" *ngIf="documentId === null">
+                                                            {{'COMMON.ACTIONS.SAVE'| translate}}
+                                                       </button>
+                                                       <button class="btn-space" mat-raised-button color="primary"
+                                                            (click)="saveOtherDocument()" *ngIf="documentId !== null">
+                                                            {{'COMMON.ACTIONS.SAVE'| translate}}
+                                                       </button>
                                                        <button type="button" class="btn-space onhold" mat-raised-button
                                                             (click)="updateStatus('On Hold')"
-                                                            *ngIf="invoiceForm.get('status')?.value !== 'On Hold'">{{'On
-                                                            Hold'| translate}}</button>
+                                                            *ngIf="documentId === null && invoiceForm.get('status')?.value !== 'On Hold'">
+                                                            {{'On Hold'| translate}}
+                                                       </button>
                                                        <button class="btn-space but-c" type="button" mat-raised-button
                                                             (click)="updateStatus('Approved')"
-                                                            *ngIf="invoiceForm.get('status')?.value !== 'Approved'">{{'Approve'|
-                                                            translate}}</button>
+                                                            *ngIf="documentId === null && invoiceForm.get('status')?.value !== 'Approved'">
+                                                            {{'Approve'| translate}}
+                                                       </button>
                                                        <button class="btn-space" type="button" mat-raised-button
                                                             color="warn" (click)="updateStatus('Rejected')"
-                                                            *ngIf="invoiceForm.get('status')?.value !== 'Rejected'">{{'Reject'|
-                                                            translate}}</button>
-                                                       <div *ngIf="invoiceForm.get('status')?.value === 'Rejected' && rejectReason !== ''"
+                                                            *ngIf="documentId === null && invoiceForm.get('status')?.value !== 'Rejected'">
+                                                            {{'Reject'| translate}}
+                                                       </button>
+                                                       <div *ngIf="documentId === null && invoiceForm.get('status')?.value === 'Rejected' && rejectReason !== ''"
                                                             class="m-l-10 my-auto" [matTooltip]="rejectReason">
                                                             <mat-icon>info</mat-icon>
                                                        </div>
@@ -1015,12 +1023,8 @@
                                              <!--  <div *ngIf="pdfLoader">
                                                   <app-loading></app-loading>
                                              </div> -->
-                                             <pdf-viewer *ngIf="!pdfLoader" [src]="pdf_url" [rotation]="0"
-                                                  [original-size]="false" [show-all]="true" [fit-to-page]="false"
-                                                  [zoom]="1" [zoom-scale]="'page-width'" [stick-to-page]="false"
-                                                  [render-text]="true" [external-link-target]="'blank'"
-                                                  [autoresize]="true" [show-borders]="false"
-                                                  style="width: 100%; height: 710px;"></pdf-viewer>
+                                             <app-custompdfviewer *ngIf="!pdfLoader"
+                                                  [pdf_url]="pdf_url"></app-custompdfviewer>
                                         </div>
                                    </div>
                               </div>

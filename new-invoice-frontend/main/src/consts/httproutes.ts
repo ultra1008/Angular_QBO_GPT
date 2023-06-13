@@ -251,6 +251,7 @@ export enum httproutes {
   GET_INVOICE_FOR_TABLE = 'getapinvoicefortable',
   GET_ONE_INVOICE = 'getoneapinvoice',
   SAVE_INVOICE = 'saveapinvoice',
+  SAVE_OTHER_DOCUMENT_INVOICE = 'saveapotherdocumentinvoice',
   DELETE_INVOICE = 'deleteapinvoice',
   SAVE_INVOICE_NOTE = 'saveapinvoicenote',
   DELETE_INVOICE_NOTE = 'deleteapinvoicenote',
@@ -271,6 +272,7 @@ export enum httproutes {
   GET_ONE_AP_RECEVING_SLIP = 'getoneapreceivingslip',
   SAVE_AP_RECEVING_SLIP = 'saveapreceivingslip',
   GET_AP_OTHER_DOCUMENT = 'getapotherdocument',
+  GET_ONE_AP_OTHER_DOCUMENT = 'getoneapotherdocument',
 
   //QuickBook Module
   QUICKBOOK_SAVE_INFO = "savequickbookinfo",

@@ -49,4 +49,25 @@ module.exports.getAPOtherDocument = async function (req, res) {
     } else {
         res.send([]);
     }
+};
+
+module.exports.getOneAPOtherDocument = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var apOtherDocumentConnection = connection_db_api.model(collectionConstant.AP_OTHER_DOCUMENT, apOtherDocumentSchema);
+            var get_data = await apOtherDocumentConnection.findOne({ _id: ObjectID(requestObject._id) });
+            res.send({ status: true, message: "Other Document listing", data: get_data });
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
 }; 

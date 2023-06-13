@@ -106,7 +106,11 @@ export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter imple
   }
 
   openEditDocument(document: DocumentTable) {
-    this.router.navigate([WEB_ROUTES.INVOICE_VIEW_DOCUMENT], { queryParams: { _id: document._id, document: document.document_type, from: 'document' } });
+    if (document.document_type == '') {
+      this.router.navigate([WEB_ROUTES.DOCUMENT_UNKNOWN_TYPE], { queryParams: { _id: document._id } });
+    } else {
+      this.router.navigate([WEB_ROUTES.INVOICE_VIEW_DOCUMENT], { queryParams: { _id: document._id, document: document.document_type, from: 'document' } });
+    }
   }
 
   setDocumentType(documentType: string) {

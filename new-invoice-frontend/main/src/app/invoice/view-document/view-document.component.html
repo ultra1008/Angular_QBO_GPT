@@ -595,10 +595,11 @@
         </div>
         <div id="outerContainer">
             <div class="pdf-container">
-                <pdf-viewer [src]="url" [rotation]="0" [original-size]="false" [show-all]="true" [fit-to-page]="false"
+                <app-custompdfviewer [pdf_url]="url"></app-custompdfviewer>
+                <!-- <pdf-viewer [src]="url" [rotation]="0" [original-size]="false" [show-all]="true" [fit-to-page]="false"
                     [zoom]="1" [zoom-scale]="'page-width'" [stick-to-page]="false" [render-text]="true"
                     [external-link-target]="'blank'" [autoresize]="true" [show-borders]="false"
-                    style="width: 100%; height: 710px;"></pdf-viewer>
+                    style="width: 100%; height: 710px;"></pdf-viewer> -->
             </div>
         </div>
     </div>
@@ -625,10 +626,11 @@
         </div>
         <div id="outerContainer">
             <div class="pdf-container">
-                <pdf-viewer [src]="pdf_url" [rotation]="0" [original-size]="false" [show-all]="true"
+                <app-custompdfviewer [pdf_url]="pdf_url"></app-custompdfviewer>
+                <!--   <pdf-viewer [src]="pdf_url" [rotation]="0" [original-size]="false" [show-all]="true"
                     [fit-to-page]="false" [zoom]="1" [zoom-scale]="'page-width'" [stick-to-page]="false"
                     [render-text]="true" [external-link-target]="'blank'" [autoresize]="true" [show-borders]="false"
-                    style="width: 100%; height: 710px;"></pdf-viewer>
+                    style="width: 100%; height: 710px;"></pdf-viewer> -->
             </div>
         </div>
     </div>

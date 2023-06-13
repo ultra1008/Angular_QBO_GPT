@@ -520,6 +520,7 @@ let apInvoiceValidation = require('./ap_invoice/apInvoiceValidation');
 router.post('/webapi/v1/portal/getapinvoicefortable', common.checkTokenExistOrNot, apInvoiceValidation.getAPInvoiceForTable, apInvoiceController.getAPInvoiceForTable);
 router.post('/webapi/v1/portal/getoneapinvoice', common.checkTokenExistOrNot, apInvoiceValidation.getOneAPInvoice, apInvoiceController.getOneAPInvoice);
 router.post('/webapi/v1/portal/saveapinvoice', common.checkTokenExistOrNot, apInvoiceController.saveAPInvoice);
+router.post('/webapi/v1/portal/saveapotherdocumentinvoice', common.checkTokenExistOrNot, apInvoiceController.saveAPOtherDocumentInvoice);
 router.post('/webapi/v1/portal/deleteapinvoice', common.checkTokenExistOrNot, apInvoiceValidation.deleteAPInvoice, apInvoiceController.deleteAPInvoice);
 router.post('/webapi/v1/portal/saveapinvoicenote', common.checkTokenExistOrNot, apInvoiceValidation.saveAPInvoiceNote, apInvoiceController.saveAPInvoiceNote);
 router.post('/webapi/v1/portal/deleteapinvoicenote', common.checkTokenExistOrNot, apInvoiceValidation.deleteAPInvoiceNote, apInvoiceController.deleteAPInvoiceNote);
@@ -567,5 +568,6 @@ router.post('/webapi/v1/portal/saveapreceivingslip', common.checkTokenExistOrNot
 let apOtherDocumentController = require('./ap_other_document/apOtherDocumentController');
 let apOtherDocumentValidation = require('./ap_other_document/apOtherDocumentValidation');
 router.get('/webapi/v1/portal/getapotherdocument', common.checkTokenExistOrNot, apOtherDocumentController.getAPOtherDocument);
+router.post('/webapi/v1/portal/getoneapotherdocument', common.checkTokenExistOrNot, apOtherDocumentValidation.getOneAPOtherDocument, apOtherDocumentController.getOneAPOtherDocument);
 
 module.exports = router;

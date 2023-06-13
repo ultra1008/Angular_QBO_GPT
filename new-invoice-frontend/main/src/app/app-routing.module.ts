@@ -56,6 +56,11 @@ const routes: Routes = [
     ],
   },
   {
+    path: 'common',
+    loadChildren: () =>
+      import('./common-components/common-components.module').then((m) => m.CommonComponentsModule),
+  },
+  {
     path: 'authentication',
     component: AuthLayoutComponent,
     loadChildren: () =>

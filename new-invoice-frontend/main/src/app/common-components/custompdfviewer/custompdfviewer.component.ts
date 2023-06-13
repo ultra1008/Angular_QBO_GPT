@@ -1,11 +1,9 @@
 import { Component, Input, } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { HttpCall } from 'src/app/services/httpcall.service';
-import { configData } from 'src/environments/configData';
 
 @Component({
   selector: 'app-custompdfviewer',

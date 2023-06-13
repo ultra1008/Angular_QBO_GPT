@@ -27,6 +27,8 @@ export enum WEB_ROUTES {
   USER_EMERGENCY_CONTACT = 'emergency-contact',
   USER_DOCUMENT = 'document',
 
+  DOCUMENT_UNKNOWN_TYPE = '/documents/unknown-document',
+
   DASHBOARD = '/dashboard',
   MONTHLY_HISTORY = 'monthly-history',
   MONTHLY_INVOICE = 'monthly-invoice',

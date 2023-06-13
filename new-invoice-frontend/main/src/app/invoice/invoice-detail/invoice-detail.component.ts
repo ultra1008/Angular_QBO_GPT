@@ -64,7 +64,9 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
 
   role_permission!: RolePermission;
   id: any;
+  documentId: any;
   invoiceData: any;
+  documentData: any;
   pdfLoader = true;
   notes: any = [];
   supportingDocuments: any = [];
@@ -115,6 +117,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
     public route: ActivatedRoute, public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, public translate: TranslateService,) {
     super();
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
+    this.documentId = this.route.snapshot.queryParamMap.get('document_id') ?? '';
     this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
     this.uiSpinner.spin$.next(true);
     this.invoiceForm = this.fb.group({
@@ -162,7 +165,12 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
     this.getTerms();
     this.getCostCode();
     this.getClassName();
-    this.getOneInvoice();
+
+    if (this.id) {
+      this.getOneInvoice();
+    } else if (this.documentId) {
+      this.getOneOtherDocument();
+    }
     this.filteredUsers = this.userControl.valueChanges.pipe(
       startWith(''),
       map((value) => (typeof value === 'string' ? value : value.userfullname)),
@@ -264,10 +272,11 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
       this.classNameList = this.variablesClassNameList.slice();
     }
   }
-  gotoEdit(document: any) {
 
+  gotoEdit(document: any) {
     this.router.navigate([WEB_ROUTES.INVOICE_VIEW_DOCUMENT], { queryParams: { document: document.document_type, _id: document._id } });
   }
+
   goToDashboard() {
     this.router.navigate([WEB_ROUTES.DASHBOARD]);
   }
@@ -340,6 +349,31 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
     }
   }
 
+  async getOneOtherDocument() {
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ONE_AP_OTHER_DOCUMENT, { _id: this.documentId });
+    if (data.status) {
+      this.documentData = data.data;
+      let invoiceDate;
+      if (this.documentData.date_epoch != undefined && this.documentData.date_epoch != null && this.documentData.date_epoch != 0) {
+        invoiceDate = epochToDateTime(this.documentData.date_epoch);
+      }
+      this.invoiceForm = this.fb.group({
+        document_type: [configData.DOCUMENT_TYPES.invoice],
+        vendor: [this.documentData.vendor],
+        invoice_no: [this.documentData.invoice_no],
+        invoice_date_epoch: [invoiceDate],
+        due_date_epoch: [],
+        invoice_total_amount: ['0.00'],
+        tax_amount: ['0.00'],
+        assign_to: [''],
+        status: [''],
+      });
+      this.pdf_url = this.documentData.pdf_url;
+      this.pdfLoader = false;
+      this.uiSpinner.spin$.next(false);
+    }
+  }
+
   async saveInformation() {
     if (this.invoiceForm.valid) {
       this.uiSpinner.spin$.next(true);
@@ -382,6 +416,61 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
         this.uiSpinner.spin$.next(false);
         if (data.status) {
           showNotification(this.snackBar, data.message, 'success');
+        } else {
+          showNotification(this.snackBar, data.message, 'error');
+        }
+      }
+    }
+  }
+
+  async saveOtherDocument() {
+    if (this.invoiceForm.valid) {
+      this.uiSpinner.spin$.next(true);
+      const formValues = this.invoiceForm.value;
+      formValues.invoice_total_amount = formValues.invoice_total_amount.toString().replace(/,/g, '');
+      formValues.tax_amount = formValues.tax_amount.toString().replace(/,/g, '');
+      formValues.pdf_url = this.documentData.pdf_url;
+      formValues.document_id = this.documentId;
+      if (formValues.status == '') {
+        formValues.status = 'Pending';
+      }
+      if (formValues.invoice_date_epoch == null) {
+        formValues.invoice_date_epoch = 0;
+      } else {
+        formValues.invoice_date_epoch = Math.round(formValues.invoice_date_epoch.valueOf() / 1000);
+      }
+      if (formValues.due_date_epoch == null) {
+        formValues.due_date_epoch = 0;
+      } else {
+        formValues.due_date_epoch = Math.round(formValues.due_date_epoch.valueOf() / 1000);
+      }
+      if (formValues.status == 'Rejected') {
+        const dialogRef = this.dialog.open(InvoiceRejectedReasonComponent, {
+          width: '28%',
+          data: {},
+        });
+        this.subs.sink = dialogRef.afterClosed().subscribe(async (result: any) => {
+          if (result) {
+            if (result.status) {
+              formValues.reject_reason = result.reject_reason;
+              const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_OTHER_DOCUMENT_INVOICE, formValues);
+              this.uiSpinner.spin$.next(false);
+              if (data.status) {
+                showNotification(this.snackBar, data.message, 'success');
+                this.rejectReason = result.reject_reason;
+                this.back();
+              } else {
+                showNotification(this.snackBar, data.message, 'error');
+              }
+            }
+          }
+        });
+      } else {
+        const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_OTHER_DOCUMENT_INVOICE, formValues);
+        this.uiSpinner.spin$.next(false);
+        if (data.status) {
+          showNotification(this.snackBar, data.message, 'success');
+          this.back();
         } else {
           showNotification(this.snackBar, data.message, 'error');
         }

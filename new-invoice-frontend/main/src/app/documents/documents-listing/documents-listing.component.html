@@ -18,17 +18,6 @@
                             </ul>
                         </div>
                     </div>
-                    <!-- <div class="materialTableHeader">
-                <div class="left">
-                    <ul class="header-buttons-left ms-0">
-                        <li class="tbl-search-box">
-                            <label for="search-input"><i class="material-icons search-icon">search</i></label>
-                            <input placeholder="{{'COMMON.TOOL_TIP.SEARCH' | translate}}" type="text" #filter
-                                class="browser-default search-field" aria-label="Search box">
-                        </li>
-                    </ul>
-                </div>
-            </div> -->
                     <div class="body overflow-auto">
                         <div class="main-cust-setting-div">
                             <mat-tab-group [selectedIndex]="step_index" (selectedTabChange)="onTabChanged($event)"
@@ -482,12 +471,12 @@
                                                         [ngClass]="'tbl-col-width-per-action'">Actions</mat-header-cell>
                                                     <mat-cell *matCellDef="let row; let i=index;"
                                                         class="pr-0 tbl-col-width-per-action">
-                                                        <!-- <button mat-icon-button color="accent"
+                                                        <button mat-icon-button color="accent"
                                                             (click)="$event.stopPropagation()"
                                                             (click)="openEditDocument(row)" class="tbl-action-btn">
                                                             <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'">
                                                             </app-feather-icons>
-                                                        </button> -->
+                                                        </button>
                                                     </mat-cell>
                                                 </ng-container>
 
