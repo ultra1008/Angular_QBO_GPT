@@ -18,6 +18,7 @@ import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { ClassNameFormComponent } from './class-name-listing/class-name-form/class-name-form.component';
 import { OtherExistsListingComponent } from './other-exists-listing/other-exists-listing.component';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-othersettings',
@@ -46,17 +47,22 @@ export class OthersettingsComponent implements OnInit {
   showVendorType = true;
   showClassName = true;
 
-  constructor (
+  isHideAddActionQBD = false;
+  isHideArchiveActionQBD = false;
+
+  constructor(
     private router: Router,
     public SettingsServices: SettingsService,
     private snackBar: MatSnackBar,
     public translate: TranslateService,
     public dialog: MatDialog,
     public httpCall: HttpCall,
+    public commonService: CommonService,
     public uiSpinner: UiSpinnerService
   ) { }
 
   ngOnInit() {
+    this.getCompanyTenants();
     this.getDataTerms();
     this.getDataTaxRate();
     this.getDataDocuments();
@@ -66,6 +72,20 @@ export class OthersettingsComponent implements OnInit {
 
   onTabChanged($event: { index: string | number; }) {
     this.currrent_tab = this.tab_Array[$event.index];
+  }
+
+  async getCompanyTenants() {
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP);
+
+    if (data.status) {
+      if (data.data.is_quickbooks_desktop) {
+        this.isHideAddActionQBD = true;
+        this.isHideArchiveActionQBD = true;
+      } else {
+        this.isHideAddActionQBD = false;
+        this.isHideArchiveActionQBD = false;
+      }
+    }
   }
 
   async getDataTerms() {
@@ -149,16 +169,21 @@ export class OthersettingsComponent implements OnInit {
         }, 100);
       });
     } else if (this.currrent_tab == 'Class name') {
-      const dialogRef = this.dialog.open(ClassNameFormComponent, {
-        width: '350px',
-        data: {},
-      });
-      dialogRef.afterClosed().subscribe((result) => {
-        this.showClassName = false;
-        setTimeout(() => {
-          this.showClassName = true;
-        }, 100);
-      });
+      if (this.isHideAddActionQBD) {
+        showNotification(this.snackBar, 'Your organization is enabled Quick books desktop so this action is not allowed.', 'error');
+      } else {
+        const dialogRef = this.dialog.open(ClassNameFormComponent, {
+          width: '350px',
+          data: {},
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+          this.showClassName = false;
+          setTimeout(() => {
+            this.showClassName = true;
+          }, 100);
+        });
+      }
+
     }
   }
 
@@ -407,12 +432,15 @@ export class OthersettingsComponent implements OnInit {
   }
 
   importFileAction() {
-    let el: HTMLElement = this.OpenFilebox.nativeElement;
-    el.click();
+    if (this.currrent_tab == 'Class name' && this.isHideAddActionQBD) {
+      showNotification(this.snackBar, 'Your organization is enabled Quick books desktop so this action is not allowed.', 'error');
+    } else {
+      let el: HTMLElement = this.OpenFilebox.nativeElement;
+      el.click();
+    }
   }
 
   onFileChange(ev: any) {
-    console.log('file change');
     let that = this;
     let workBook: any;
     let jsonData = null;
@@ -597,15 +625,19 @@ export class OthersettingsComponent implements OnInit {
         this.getDataJobName();
       });
     } else if (this.currrent_tab == 'Class name') {
-      const dialogRef = this.dialog.open(ImportOtherSettingsComponent, {
-        width: '500px',
-        data: this.currrent_tab,
-        disableClose: true,
-      });
+      if (this.isHideAddActionQBD) {
+        showNotification(this.snackBar, 'Your organization is enabled Quick books desktop so this action is not allowed.', 'error');
+      } else {
+        const dialogRef = this.dialog.open(ImportOtherSettingsComponent, {
+          width: '500px',
+          data: this.currrent_tab,
+          disableClose: true,
+        });
 
-      dialogRef.afterClosed().subscribe((result) => {
-        this.getDataJobName();
-      });
+        dialogRef.afterClosed().subscribe((result) => {
+          this.getDataJobName();
+        });
+      }
     }
   }
 

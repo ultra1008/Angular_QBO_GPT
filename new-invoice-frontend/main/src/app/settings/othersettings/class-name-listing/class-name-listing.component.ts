@@ -38,7 +38,14 @@ export class ClassNameListingComponent
   quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
   quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
 
-  constructor (
+  isHideAddActionQBD = false;
+  isHideEditActionQBD = false;
+  isHideArchiveActionQBD = false;
+
+  is_quickbooks_online = false;
+  is_quickbooks_desktop = false;
+
+  constructor(
     public dialog: MatDialog,
     public SettingsService: SettingsService,
     private snackBar: MatSnackBar,
@@ -62,14 +69,29 @@ export class ClassNameListingComponent
 
   async getCompanyTenants() {
     const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP);
+
     if (data.status) {
-      if (data.data.is_quickbooks_online || data.data.is_quickbooks_desktop) {
+      if (data.data.is_quickbooks_desktop) {
+        this.isHideAddActionQBD = true;
+        this.isHideEditActionQBD = true;
+        this.isHideArchiveActionQBD = true;
+      } else {
+        this.isHideAddActionQBD = false;
+        this.isHideEditActionQBD = false;
+        this.isHideArchiveActionQBD = false;
+      }
+
+      this.is_quickbooks_online = data.data.is_quickbooks_online;
+      this.is_quickbooks_desktop = data.data.is_quickbooks_desktop;
+
+      if (data.data.is_quickbooks_online) {
         this.displayedColumns = ['name', 'number', 'description', 'status', 'is_quickbooks', 'actions'];
+      } else if (data.data.is_quickbooks_desktop) {
+        this.displayedColumns = ['name', 'number', 'description', 'status', 'is_quickbooks'];
       } else {
         this.displayedColumns = ['name', 'number', 'description', 'status', 'actions'];
       }
     }
-    // this.loadData();
   }
 
   refresh() {
@@ -77,27 +99,29 @@ export class ClassNameListingComponent
   }
 
   edit(className: any) {
-    let that = this;
-    const dialogRef = this.dialog.open(ClassNameFormComponent, {
-      width: '350px',
-      data: className,
-      disableClose: true,
-    });
+    if (!this.isHideEditActionQBD) {
+      let that = this;
+      const dialogRef = this.dialog.open(ClassNameFormComponent, {
+        width: '350px',
+        data: className,
+        disableClose: true,
+      });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        if (result.status) {
-          const foundIndex = this.classnameService?.classNameDataChange.value.findIndex((x) => x._id === className._id);
-          if (foundIndex != null && this.classnameService) {
-            this.classnameService.classNameDataChange.value[foundIndex].name = result.data.name;
-            this.classnameService.classNameDataChange.value[foundIndex].number = result.data.number;
-            this.classnameService.classNameDataChange.value[foundIndex].description = result.data.description;
-            this.classnameService.classNameDataChange.value[foundIndex].status = result.data.status;
-            this.refreshTable();
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          if (result.status) {
+            const foundIndex = this.classnameService?.classNameDataChange.value.findIndex((x) => x._id === className._id);
+            if (foundIndex != null && this.classnameService) {
+              this.classnameService.classNameDataChange.value[foundIndex].name = result.data.name;
+              this.classnameService.classNameDataChange.value[foundIndex].number = result.data.number;
+              this.classnameService.classNameDataChange.value[foundIndex].description = result.data.description;
+              this.classnameService.classNameDataChange.value[foundIndex].status = result.data.status;
+              this.refreshTable();
+            }
           }
         }
-      }
-    });
+      });
+    }
   }
 
   async delete(className: any) {
@@ -210,7 +234,7 @@ export class ClassNameDataSource extends DataSource<ClassNameModel> {
   }
   filteredData: ClassNameModel[] = [];
   renderedData: ClassNameModel[] = [];
-  constructor (
+  constructor(
     public classnameService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
