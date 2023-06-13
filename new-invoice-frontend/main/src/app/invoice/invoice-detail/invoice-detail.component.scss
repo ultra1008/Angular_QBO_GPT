@@ -353,3 +353,18 @@
 .no-account-info {
      padding: 15px;
 }
+
+.pdf-container {
+     height: 710px;
+     max-height: 710px;
+}
+
+.no-pdf {
+     font-weight: 500;
+     font-size: 17px;
+     padding-top: 30%;
+
+     input {
+          display: none;
+     }
+}

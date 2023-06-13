@@ -45,7 +45,8 @@
             "BACK": "Back",
             "NEXT": "Next",
             "DELETE": "Delete",
-            "Access_denied_all": "Access denied"
+            "Access_denied_all": "Access denied",
+            "UPLOAD": "Upload"
         },
         "HISTORY": {
             "KEY": "Key",

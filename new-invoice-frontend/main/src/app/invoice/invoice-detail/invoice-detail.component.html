@@ -1020,9 +1020,15 @@
                                    </div>
                                    <div id="outerContainer">
                                         <div class="pdf-container">
-                                             <!--  <div *ngIf="pdfLoader">
-                                                  <app-loading></app-loading>
-                                             </div> -->
+                                             <div *ngIf="pdf_url === ''" class="no-pdf text-center">
+                                                  <div> No PDF document available </div>
+                                                  <input type="file" #fileDropRef id="fileDropRef"
+                                                       (change)="fileBrowseHandler($event)" #OpenFilebox />
+                                                  <button class="btn-space" mat-raised-button color="primary"
+                                                       (click)="uploadDocument()">
+                                                       {{'COMMON.ACTIONS.UPLOAD'| translate}}
+                                                  </button>
+                                             </div>
                                              <app-custompdfviewer *ngIf="!pdfLoader"
                                                   [pdf_url]="pdf_url"></app-custompdfviewer>
                                         </div>

@@ -2,7 +2,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { SendInvoiceMessageComponent } from './send-invoice-message/send-invoice-message.component';
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators, } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { icon } from 'src/consts/icon';
@@ -22,6 +22,8 @@ import { InvoiceRejectedReasonComponent } from './invoice-rejected-reason/invoic
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { Observable, map, startWith } from 'rxjs';
 import { RolePermission } from 'src/consts/common.model';
+import { commonFileChangeEvent } from 'src/app/services/utils';
+import * as  moment from "moment";
 
 @Component({
   selector: 'app-invoice-detail',
@@ -29,6 +31,8 @@ import { RolePermission } from 'src/consts/common.model';
   styleUrls: ['./invoice-detail.component.scss'],
 })
 export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
+  @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
+
   MAIL_ICON = icon.MAIL_ICON;
   MESSAGE_ICON = icon.MESSAGE_ICON;
   panelOpenState = false;
@@ -813,5 +817,46 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
     } else {
       return '';
     }
+  }
+
+  uploadDocument() {
+    let el: HTMLElement = this.OpenFilebox.nativeElement;
+    el.click();
+  }
+
+  fileBrowseHandler(files: any) {
+    commonFileChangeEvent(files, "pdf").then(async (result: any) => {
+      if (result.status) {
+        this.uiSpinner.spin$.next(true);
+        const formData = new FormData();
+        formData.append("file[]", files.target.files[0]);
+        formData.append("dir_name", 'invoice');
+        formData.append("local_date", moment().format("DD/MM/YYYY hh:mmA"));
+        const attachmentData = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_SAVE_ATTACHMENT, formData);
+        if (attachmentData.status) {
+          const requestObject = {
+            pdf_url: attachmentData.data[0],
+            _id: this.id,
+          };
+          const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_INVOICE, requestObject);
+          this.uiSpinner.spin$.next(false);
+          if (data.status) {
+            showNotification(this.snackBar, data.message, 'success');
+            this.pdf_url = requestObject.pdf_url;
+            this.pdfLoader = true;
+            setTimeout(() => {
+              this.pdfLoader = false;
+            }, 200);
+          } else {
+            showNotification(this.snackBar, data.message, 'error');
+          }
+        } else {
+          this.uiSpinner.spin$.next(false);
+          showNotification(this.snackBar, attachmentData.message, 'error');
+        }
+      } else {
+        showNotification(this.snackBar, 'File type is not supported.', 'error');
+      }
+    });
   }
 }
