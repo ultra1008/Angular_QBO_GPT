@@ -606,7 +606,7 @@ module.exports.saveAPInvoice = async function (req, res) {
             }
         } catch (e) {
             console.log(e);
-            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         } finally {
             connection_db_api.close();
         }

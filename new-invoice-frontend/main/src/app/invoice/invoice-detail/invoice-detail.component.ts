@@ -344,6 +344,8 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
     if (this.invoiceForm.valid) {
       this.uiSpinner.spin$.next(true);
       const formValues = this.invoiceForm.value;
+      formValues.invoice_total_amount = formValues.invoice_total_amount.toString().replace(/,/g, '');
+      formValues.tax_amount = formValues.tax_amount.toString().replace(/,/g, '');
       formValues._id = this.id;
       if (formValues.invoice_date_epoch == null) {
         formValues.invoice_date_epoch = 0;
@@ -440,6 +442,8 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
     if (this.moreInformationForm.valid) {
       this.uiSpinner.spin$.next(true);
       const formValues = this.moreInformationForm.value;
+      formValues.sub_total = formValues.sub_total.toString().replace(/,/g, '');
+      formValues.amount_due = formValues.amount_due.toString().replace(/,/g, '');
       formValues._id = this.id;
       if (formValues.order_date_epoch == null) {
         formValues.order_date_epoch = 0;
