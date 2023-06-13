@@ -319,6 +319,11 @@ export class MainComponent {
       this.router.navigate([WEB_ROUTES.INVOICE], { queryParams: { type: type } });
     }
   }
+
+  viewUnknwon() {
+    this.router.navigate([WEB_ROUTES.SIDEMENU_DOCUMENTS], { state: { value: 4 } });
+  }
+
   async getInvoiceCounts() {
     const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_DASHBOARD_INVOICE_COUNTS);
     if (data.status) {
