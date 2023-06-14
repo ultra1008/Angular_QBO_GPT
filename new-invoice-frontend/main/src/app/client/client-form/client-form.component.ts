@@ -58,7 +58,7 @@ export class ClientFormComponent {
     console.log(this.role_permission);
     this.clientForm = this.fb.group({
       client_name: ['', [Validators.required]],
-      client_number: ['', [Validators.required]],
+      client_number: [''],
       client_email: ['', [Validators.required, Validators.email, Validators.minLength(5)],],
       client_cost_cost_id: [''],
       approver_id: [''],
@@ -101,7 +101,7 @@ export class ClientFormComponent {
       this.is_delete = clientData.is_delete;
       this.clientForm = this.fb.group({
         client_name: [clientData.client_name, [Validators.required]],
-        client_number: [clientData.client_number, [Validators.required]],
+        client_number: [clientData.client_number],
         client_email: [clientData.client_email, [Validators.required, Validators.email, Validators.minLength(5)],],
         client_cost_cost_id: [clientData.client_cost_cost_id],
         approver_id: [clientData.approver_id],
