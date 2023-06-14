@@ -117,7 +117,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   prevStep() {
     this.step--;
   }
-  constructor (private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog, private commonService: CommonService,
+  constructor(private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog, private commonService: CommonService,
     public route: ActivatedRoute, public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, public translate: TranslateService,) {
     super();
     this.id = this.route.snapshot.queryParamMap.get('_id');
@@ -712,7 +712,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
     } else {
       this.infoAmount = this.infoAmount.toString().replace(/,/g, "");
       if (Number(this.infoAmount) > this.invoiceData.invoice_total_amount) {
-        showNotification(this.snackBar, 'Amount is not greate then invoice amount.', 'error');
+        showNotification(this.snackBar, 'Amount must be not more then invoice amount.', 'error');
       } else {
         const requestObject = {
           invoice_id: this.id,
