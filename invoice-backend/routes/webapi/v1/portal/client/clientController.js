@@ -307,8 +307,7 @@ module.exports.updateClientStatus = async function (req, res) {
 
             var one_client = await clientConnection.findOne({ _id: ObjectID(id) });
             if (one_client) {
-                var updateStatus = await clientConnection.updateMany({ _id: requestObject.id }, { client_status: requestObject.client_status });
-
+                var updateStatus = await clientConnection.updateOne({ _id: ObjectID(id) }, { client_status: requestObject.client_status });
                 if (updateStatus) {
                     let action = '';
                     let message = '';

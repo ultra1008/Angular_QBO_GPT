@@ -1651,3 +1651,141 @@ module.exports.checkQBDImportapInvoices = async function (req, res) {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };
+
+module.exports.getApprovedapInvoicesForQBD = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var apInvoiceConnection = connection_db_api.model(collectionConstant.AP_INVOICE, apInvoiceSchema);
+
+            match = {
+                is_delete: 0,
+                status: "Approved",
+            };
+
+            var get_data = await apInvoiceConnection.aggregate([
+                { $match: match },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "assign_to",
+                        foreignField: "_id",
+                        as: "assign_to_data"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$assign_to_data",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_VENDOR,
+                        localField: "vendor",
+                        foreignField: "_id",
+                        as: "vendor_data"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$vendor_data",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_TERM,
+                        localField: "terms",
+                        foreignField: "_id",
+                        as: "terms_data"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$terms_data",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.COSTCODES,
+                        localField: "gl_account",
+                        foreignField: "_id",
+                        as: "gl_account_data"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$gl_account_data",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_CLIENT,
+                        localField: "job_client_name",
+                        foreignField: "_id",
+                        as: "job_client_data"
+                    }
+                },
+                // {
+                //     $unwind: {
+                //         path: "$job_client_data",
+                //         preserveNullAndEmptyArrays: true
+                //     },
+                // },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_CLASS_NAME,
+                        localField: "class_name",
+                        foreignField: "_id",
+                        as: "class_name_data"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$class_name_data",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $project: {
+                        BillAddRq: {
+                            BillAdd: {
+                                VendorRef: {
+                                    FullName: "$vendor_data.vendor_name",
+                                },
+                                TxnDate: "$invoice_date_epoch",
+                                DueDate: "$due_date_epoch",
+                                RefNumber: "1234567",
+                                ExpenseLineAdd: {
+                                    AccountRef: {
+                                        FullName: "$job_client_data.client_name"
+                                    },
+                                    Amount: "$invoice_info.amount"
+                                }
+                            }
+                        }
+                    }
+                },
+                { $sort: { created_at: -1 } },
+            ]);
+            if (get_data) {
+                res.send(get_data);
+            } else {
+                res.send([]);
+            }
+        } catch (e) {
+            console.log(e);
+            res.send([]);
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};

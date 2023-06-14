@@ -530,6 +530,7 @@ router.post('/webapi/v1/portal/getheaderapinvoicesearch', common.checkTokenExist
 router.post('/webapi/v1/portal/saveapinvoiceinfo', common.checkTokenExistOrNot, apInvoiceValidation.saveAPInvoiceInfo, apInvoiceController.saveAPInvoiceInfo);
 router.post('/webapi/v1/portal/deleteapinvoiceinfo', common.checkTokenExistOrNot, apInvoiceValidation.deleteAPInvoiceInfo, apInvoiceController.deleteAPInvoiceInfo);
 router.post('/webapi/v1/portal/checkqbdimportapinvoices', common.checkTokenExistOrNot, apInvoiceController.checkQBDImportapInvoices);
+router.get('/webapi/v1/portal/getapprovedapinvoicesforqbd', common.checkTokenExistOrNot, apInvoiceController.getApprovedapInvoicesForQBD);
 
 let apDocumentProcessController = require('./ap_document_process/apDocumentProcessController');
 let apDocumentProcessValidation = require('./ap_document_process/apDocumentProcessValidation');
