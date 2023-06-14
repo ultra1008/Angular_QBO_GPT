@@ -1008,6 +1008,10 @@
                          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                               <div class="card pdf-h">
                                    <div class="pdf-btn" *ngIf="!pdfLoader">
+                                        <button matTooltip="{{'COMMON.TOOL_TIP.REMOVE' |  translate}}" class="m-2"
+                                             mat-mini-fab (click)="removePDF()" color="primary">
+                                             <mat-icon class="col-white">remove_circle_outline</mat-icon>
+                                        </button>
                                         <button matTooltip="{{'COMMON.TOOL_TIP.DOWNLOAD' |  translate}}" class="m-2"
                                              mat-mini-fab (click)="download()" color="primary">
                                              <mat-icon class="col-white">download</mat-icon>
@@ -1016,7 +1020,6 @@
                                              (click)="print()" color="primary">
                                              <mat-icon class="col-white">print</mat-icon>
                                         </button>
-
                                    </div>
                                    <div id="outerContainer">
                                         <div class="pdf-container">

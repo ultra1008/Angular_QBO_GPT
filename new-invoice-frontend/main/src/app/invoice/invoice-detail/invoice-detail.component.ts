@@ -117,7 +117,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   prevStep() {
     this.step--;
   }
-  constructor(private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog, private commonService: CommonService,
+  constructor (private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog, private commonService: CommonService,
     public route: ActivatedRoute, public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, public translate: TranslateService,) {
     super();
     this.id = this.route.snapshot.queryParamMap.get('_id');
@@ -663,6 +663,23 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
         });
       };
     });
+  }
+
+  async removePDF() {
+    this.uiSpinner.spin$.next(true);
+    const requestObject = {
+      _id: this.id,
+      pdf_url: '',
+    };
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_INVOICE, requestObject);
+    this.uiSpinner.spin$.next(false);
+    if (data.status) {
+      this.pdf_url = '';
+      this.pdfLoader = true;
+      setTimeout(() => {
+        this.pdfLoader = false;
+      }, 200);
+    }
   }
 
   download() {

@@ -28,7 +28,8 @@
             "INVOICELINK": "Invoice Link",
             "EDIT": "Edit",
             "DASHBOARD": "Dashboard",
-            "DELETE": "Delete"
+            "DELETE": "Delete",
+            "REMOVE": "Remove"
         },
         "ACTIONS": {
             "ACTIONS": "Actions",
