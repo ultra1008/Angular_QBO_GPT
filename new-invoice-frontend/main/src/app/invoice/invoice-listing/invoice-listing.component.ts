@@ -46,7 +46,7 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
   quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
   quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
 
-  constructor (public httpClient: HttpClient, public dialog: MatDialog, public settingService: InvoiceService,
+  constructor(public httpClient: HttpClient, public dialog: MatDialog, public settingService: InvoiceService,
     private snackBar: MatSnackBar, public route: ActivatedRoute, private router: Router, private httpCall: HttpCall,
     private commonService: CommonService, public translate: TranslateService) {
     super();
@@ -186,7 +186,7 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
 
   uploadInvoice() {
     const dialogRef = this.dialog.open(UploadInvoiceFormComponent, {
-      width: '40%',
+      width: '80%',
       data: {
       },
     });
@@ -225,7 +225,7 @@ export class ExampleDataSource extends DataSource<Invoice> {
   }
   filteredData: Invoice[] = [];
   renderedData: Invoice[] = [];
-  constructor (
+  constructor(
     public exampleDatabase: InvoiceService,
     public paginator: MatPaginator,
     public _sort: MatSort,
