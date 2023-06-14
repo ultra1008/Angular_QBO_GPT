@@ -773,24 +773,24 @@
                                         <div class="d-flex justify-content-between width-100p info-header">
                                              <div class="d-flex my-auto">
                                                   <h2>{{'INVOICE.INVOICE_DETAILS.INFO.TITLE' | translate}}</h2>
-                                                  <span class="Activity-h">
+                                                  <span class="Activity-h" *ngIf="!showInfoForm && !allowEditInfo">
                                                        <mat-icon class="col-gray mt-1 add-icon"
                                                             (click)="addCloseInvoiceInfo()">add</mat-icon>
                                                   </span>
                                              </div>
                                              <ul class="tbl-export-btn d-flex">
-                                                  <li class="tbl-header-btn" *ngIf="showInfoForm">
+                                                  <li class="tbl-header-btn" *ngIf="showInfoForm || allowEditInfo">
                                                        <div class="m-l-10"
-                                                            matTooltip="{{'COMMON.TOOL_TIP.BACK' |  translate}}">
+                                                            matTooltip="{{'COMMON.TOOL_TIP.SAVE' |  translate}}">
                                                             <button mat-mini-fab color="primary"
                                                                  (click)="saveInvoiceInfo()">
                                                                  <mat-icon class="col-white">save </mat-icon>
                                                             </button>
                                                        </div>
                                                   </li>
-                                                  <li class="tbl-header-btn" *ngIf="showInfoForm">
+                                                  <li class="tbl-header-btn" *ngIf="showInfoForm || allowEditInfo">
                                                        <div class="m-l-10"
-                                                            matTooltip="{{'COMMON.TOOL_TIP.BACK' |  translate}}">
+                                                            matTooltip="{{'COMMON.TOOL_TIP.CANCEL' |  translate}}">
                                                             <button mat-mini-fab color="warn"
                                                                  (click)="addCloseInvoiceInfo()">
                                                                  <mat-icon class="col-white">close </mat-icon>
@@ -837,44 +837,11 @@
                                                                  </tr>
                                                             </thead>
                                                             <tbody *ngIf="loadInvoiceInfo">
-                                                                 <tr *ngFor="let info of invoiceInfo;">
-                                                                      <td class="column-1">
-                                                                           $ {{numberWithCommas(info.amount)}}
-                                                                      </td>
-                                                                      <td class="column-2">
-                                                                           {{setInfoCostCode(info.cost_code_gl_account)}}
-                                                                      </td>
-                                                                      <td class="column-3">
-                                                                           {{setInfoApprover(info.assign_to)}}
-                                                                      </td>
-                                                                      <td class="column-4">
-                                                                           {{setInfoClientJob(info.job_client_name)}}
-                                                                      </td>
-                                                                      <td class="column-5">
-                                                                           {{setInfoClassName(info.class_name)}}
-                                                                      </td>
-                                                                      <td class="column-6">
-                                                                           {{info.notes}}
-                                                                      </td>
-                                                                      <td class="column-7">
-                                                                           <button mat-icon-button
-                                                                                matTooltip="{{'COMMON.ACTIONS.ARCHIVE' | translate}}"
-                                                                                color="accent"
-                                                                                (click)="$event.stopPropagation()"
-                                                                                class="col-red"
-                                                                                (click)="deleteInvoiceInfo(info)">
-                                                                                <mat-icon>archive</mat-icon>
-                                                                           </button>
-                                                                      </td>
-                                                                 </tr>
-                                                                 <tr *ngIf="invoiceInfo.length === 0 && !showInfoForm">
-                                                                      <td colspan="6" class="text-center">
-                                                                           No data available
-                                                                      </td>
-                                                                 </tr>
+                                                                 <!-- Form -->
                                                                  <tr *ngIf="showInfoForm">
                                                                       <td class="column-1">
-                                                                           <mat-form-field class="example-full-width"
+                                                                           <mat-form-field
+                                                                                class="example-full-width info-form-field"
                                                                                 appearance="outline">
                                                                                 <mat-label>
                                                                                      {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.TOTAL_AMOUNT'
@@ -891,7 +858,8 @@
                                                                            </mat-form-field>
                                                                       </td>
                                                                       <td class="column-2">
-                                                                           <mat-form-field class="example-full-width"
+                                                                           <mat-form-field
+                                                                                class="example-full-width info-form-field"
                                                                                 appearance="outline">
                                                                                 <mat-label>
                                                                                      {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.COST_CODE'
@@ -913,7 +881,8 @@
                                                                            </mat-form-field>
                                                                       </td>
                                                                       <td class="column-3">
-                                                                           <mat-form-field class="example-full-width"
+                                                                           <mat-form-field
+                                                                                class="example-full-width info-form-field"
                                                                                 appearance="outline">
                                                                                 <mat-label>
                                                                                      {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.ASSIGN_TO'
@@ -941,7 +910,8 @@
                                                                            </mat-form-field>
                                                                       </td>
                                                                       <td class="column-4">
-                                                                           <mat-form-field class="example-full-width"
+                                                                           <mat-form-field
+                                                                                class="example-full-width info-form-field"
                                                                                 appearance="outline">
                                                                                 <mat-label>
                                                                                      {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.CLIENT_JOB_NAME'
@@ -963,7 +933,8 @@
                                                                            </mat-form-field>
                                                                       </td>
                                                                       <td class="column-5">
-                                                                           <mat-form-field class="example-full-width"
+                                                                           <mat-form-field
+                                                                                class="example-full-width info-form-field"
                                                                                 appearance="outline">
                                                                                 <mat-label>
                                                                                      {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.CLASS_NAME'
@@ -985,7 +956,8 @@
                                                                            </mat-form-field>
                                                                       </td>
                                                                       <td class="column-6">
-                                                                           <mat-form-field class="example-full-width"
+                                                                           <mat-form-field
+                                                                                class="example-full-width info-form-field"
                                                                                 appearance="outline">
                                                                                 <mat-label>
                                                                                      {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.NOTES'
@@ -995,6 +967,210 @@
                                                                                      class="input-capitalized-textfield"
                                                                                      [(ngModel)]="infoNotes">
                                                                            </mat-form-field>
+                                                                      </td>
+                                                                      <td class="column-7"> &nbsp;</td>
+                                                                 </tr>
+                                                                 <!-- List -->
+                                                                 <tr *ngFor="let info of invoiceInfo;let i = index">
+                                                                      <td class="column-1">
+                                                                           <div
+                                                                                *ngIf="allowEditInfo && infoEditIndex === i;else elseAmount">
+                                                                                <mat-form-field
+                                                                                     class="example-full-width info-form-field"
+                                                                                     appearance="outline">
+                                                                                     <mat-label>
+                                                                                          {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.TOTAL_AMOUNT'
+                                                                                     | translate}}
+                                                                                     </mat-label>
+                                                                                     <span class="dollar-align"
+                                                                                          matPrefix>$</span>
+                                                                                     <input matInput
+                                                                                          class="input-capitalized-textfield"
+                                                                                          onkeypress="return String.fromCharCode(event.charCode).match(/[^0-9]/g) === null"
+                                                                                          (input)="amountChange($event)"
+                                                                                          numbersOnly
+                                                                                          [(ngModel)]="infoAmount">
+                                                                                </mat-form-field>
+                                                                           </div>
+                                                                           <ng-template #elseAmount> $
+                                                                                {{numberWithCommas(info.amount)}}
+                                                                           </ng-template>
+                                                                      </td>
+                                                                      <td class="column-2">
+                                                                           <div
+                                                                                *ngIf="allowEditInfo && infoEditIndex === i;else elseCostCode">
+                                                                                <mat-form-field
+                                                                                     class="example-full-width info-form-field"
+                                                                                     appearance="outline">
+                                                                                     <mat-label>
+                                                                                          {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.COST_CODE'
+                                                                                     | translate}}
+                                                                                     </mat-label>
+                                                                                     <input matInput
+                                                                                          class="input-capitalized-textfield"
+                                                                                          [formControl]="costCodeControl"
+                                                                                          [matAutocomplete]="costCodeAuto">
+                                                                                     <mat-autocomplete
+                                                                                          #costCodeAuto="matAutocomplete"
+                                                                                          [displayWith]="displayCostCodeFn">
+                                                                                          <mat-option
+                                                                                               *ngFor="let costCode of filteredCostCode | async"
+                                                                                               [value]="costCode">
+                                                                                               {{costCode.cost_code}}
+                                                                                          </mat-option>
+                                                                                     </mat-autocomplete>
+                                                                                </mat-form-field>
+                                                                           </div>
+                                                                           <ng-template #elseCostCode>
+                                                                                {{setInfoCostCode(info.cost_code_gl_account)}}
+                                                                           </ng-template>
+                                                                      </td>
+                                                                      <td class="column-3">
+                                                                           <div
+                                                                                *ngIf="allowEditInfo && infoEditIndex === i;else elseAssignTo">
+                                                                                <mat-form-field
+                                                                                     class="example-full-width info-form-field"
+                                                                                     appearance="outline">
+                                                                                     <mat-label>
+                                                                                          {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.ASSIGN_TO'
+                                                                                     | translate}}
+                                                                                     </mat-label>
+                                                                                     <input matInput
+                                                                                          class="input-capitalized-textfield"
+                                                                                          [formControl]="userControl"
+                                                                                          [matAutocomplete]="userAuto">
+                                                                                     <mat-autocomplete
+                                                                                          #userAuto="matAutocomplete"
+                                                                                          [displayWith]="displayUserFn">
+                                                                                          <mat-option
+                                                                                               *ngFor="let user of filteredUsers | async"
+                                                                                               [value]="user">
+                                                                                               <span>
+                                                                                                    <img class="img-b"
+                                                                                                         [src]="user.userpicture"
+                                                                                                         height="25px"
+                                                                                                         width="25px"
+                                                                                                         alt="">
+                                                                                               </span>
+                                                                                               {{user.userfullname}}
+                                                                                          </mat-option>
+                                                                                     </mat-autocomplete>
+                                                                                </mat-form-field>
+                                                                           </div>
+                                                                           <ng-template #elseAssignTo>
+                                                                                {{setInfoApprover(info.assign_to)}}
+                                                                           </ng-template>
+                                                                      </td>
+                                                                      <td class="column-4">
+                                                                           <div
+                                                                                *ngIf="allowEditInfo && infoEditIndex === i;else elseClient">
+                                                                                <mat-form-field
+                                                                                     class="example-full-width info-form-field"
+                                                                                     appearance="outline">
+                                                                                     <mat-label>
+                                                                                          {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.CLIENT_JOB_NAME'
+                                                                                     | translate}}
+                                                                                     </mat-label>
+                                                                                     <input matInput
+                                                                                          class="input-capitalized-textfield"
+                                                                                          [formControl]="clientControl"
+                                                                                          [matAutocomplete]="clientAuto">
+                                                                                     <mat-autocomplete
+                                                                                          #clientAuto="matAutocomplete"
+                                                                                          [displayWith]="displayClientFn">
+                                                                                          <mat-option
+                                                                                               *ngFor="let client of filteredClient | async"
+                                                                                               [value]="client">
+                                                                                               {{client.client_name}}
+                                                                                          </mat-option>
+                                                                                     </mat-autocomplete>
+                                                                                </mat-form-field>
+                                                                           </div>
+                                                                           <ng-template #elseClient>
+                                                                                {{setInfoClientJob(info.job_client_name)}}
+                                                                           </ng-template>
+                                                                      </td>
+                                                                      <td class="column-5">
+                                                                           <div
+                                                                                *ngIf="allowEditInfo && infoEditIndex === i;else elseClassName">
+                                                                                <mat-form-field
+                                                                                     class="example-full-width info-form-field"
+                                                                                     appearance="outline">
+                                                                                     <mat-label>
+                                                                                          {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.CLASS_NAME'
+                                                                                     | translate}}
+                                                                                     </mat-label>
+                                                                                     <input matInput
+                                                                                          class="input-capitalized-textfield"
+                                                                                          [formControl]="classNameControl"
+                                                                                          [matAutocomplete]="classAuto">
+                                                                                     <mat-autocomplete
+                                                                                          #classAuto="matAutocomplete"
+                                                                                          [displayWith]="displayClassNameFn">
+                                                                                          <mat-option
+                                                                                               *ngFor="let class of filteredClassName | async"
+                                                                                               [value]="class">
+                                                                                               {{class.name}}
+                                                                                          </mat-option>
+                                                                                     </mat-autocomplete>
+                                                                                </mat-form-field>
+                                                                           </div>
+                                                                           <ng-template #elseClassName>
+                                                                                {{setInfoClassName(info.class_name)}}
+                                                                           </ng-template>
+                                                                      </td>
+                                                                      <td class="column-6">
+                                                                           <div
+                                                                                *ngIf="allowEditInfo && infoEditIndex === i;else elseNotes">
+                                                                                <mat-form-field
+                                                                                     class="example-full-width info-form-field"
+                                                                                     appearance="outline">
+                                                                                     <mat-label>
+                                                                                          {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.NOTES'
+                                                                                | translate}}
+                                                                                     </mat-label>
+                                                                                     <input matInput
+                                                                                          class="input-capitalized-textfield"
+                                                                                          [(ngModel)]="infoNotes">
+                                                                                </mat-form-field>
+                                                                           </div>
+                                                                           <ng-template #elseNotes>
+                                                                                {{info.notes}}
+                                                                           </ng-template>
+                                                                      </td>
+                                                                      <td class="column-7">
+                                                                           <!-- <button mat-icon-button
+                                                                                *ngIf="allowEditInfo && infoEditIndex === i"
+                                                                                matTooltip="{{'COMMON.ACTIONS.SAVE' | translate}}"
+                                                                                (click)="$event.stopPropagation()"
+                                                                                color="accent"
+                                                                                (click)="deleteInvoiceInfo(info)">
+                                                                                <mat-icon>save</mat-icon>
+                                                                           </button> -->
+                                                                           <button mat-icon-button
+                                                                                *ngIf="!allowEditInfo"
+                                                                                matTooltip="{{'COMMON.ACTIONS.EDIT' | translate}}"
+                                                                                color="accent"
+                                                                                (click)="$event.stopPropagation()"
+                                                                                (click)="editInvoiceInfo(info,i)">
+                                                                                <app-feather-icons [icon]="'edit'"
+                                                                                     [class]="'tbl-fav-edit'">
+                                                                                </app-feather-icons>
+                                                                           </button>
+                                                                           <button mat-icon-button
+                                                                                *ngIf="!allowEditInfo"
+                                                                                matTooltip="{{'COMMON.ACTIONS.ARCHIVE' | translate}}"
+                                                                                (click)="$event.stopPropagation()"
+                                                                                class="col-red"
+                                                                                (click)="deleteInvoiceInfo(info)">
+                                                                                <mat-icon>archive</mat-icon>
+                                                                           </button>
+                                                                      </td>
+                                                                 </tr>
+                                                                 <!-- No Data -->
+                                                                 <tr *ngIf="invoiceInfo.length === 0 && !showInfoForm">
+                                                                      <td colspan="6" class="text-center">
+                                                                           No data available
                                                                       </td>
                                                                  </tr>
                                                             </tbody>
@@ -1010,7 +1186,7 @@
                                    <div class="pdf-btn" *ngIf="!pdfLoader">
                                         <button matTooltip="{{'COMMON.TOOL_TIP.REMOVE' |  translate}}" class="m-2"
                                              mat-mini-fab (click)="removePDF()" color="primary">
-                                             <mat-icon class="col-white">remove_circle_outline</mat-icon>
+                                             <mat-icon class="col-white">archive</mat-icon>
                                         </button>
                                         <button matTooltip="{{'COMMON.TOOL_TIP.DOWNLOAD' |  translate}}" class="m-2"
                                              mat-mini-fab (click)="download()" color="primary">

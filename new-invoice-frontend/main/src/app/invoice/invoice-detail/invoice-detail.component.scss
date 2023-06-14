@@ -122,6 +122,13 @@
      height: 13px !important;
 }
 
+::ng-deep .mat-mdc-autocomplete-panel-above {
+     width: 250px !important;
+}
+
+/* .mat-mdc-option.mdc-list-item {
+        border-bottom: 1px solid red;
+} */
 .e-panal {
      ::ng-deep .mat-expansion-panel-body {
           //  h
@@ -308,32 +315,48 @@
 }
 
 .info-table {
+
+     thead th,
+     td {
+          border: 1px solid grey;
+          padding-left: 5px;
+     }
+
+     tbody tr td mat-form-field {
+          width: 120px;
+     }
+
+     .info-form-field {
+          padding: 0.5rem !important;
+          margin-top: 0.5rem !important;
+     }
+
      .column-1 {
-          width: 12%;
+          width: 160px;
      }
 
      .column-2 {
-          width: 15%;
+          width: 160px;
      }
 
      .column-3 {
-          width: 15%;
+          width: 160px;
      }
 
      .column-4 {
-          width: 15%;
+          width: 160px;
      }
 
      .column-5 {
-          width: 15%;
+          width: 160px;
      }
 
      .column-6 {
-          width: 12%;
+          width: 160px;
      }
 
      .column-7 {
-          width: 12%;
+          width: 160px;
      }
 }
 

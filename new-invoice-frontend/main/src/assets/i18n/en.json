@@ -29,7 +29,9 @@
             "EDIT": "Edit",
             "DASHBOARD": "Dashboard",
             "DELETE": "Delete",
-            "REMOVE": "Remove"
+            "REMOVE": "Remove",
+            "SAVE": "Save",
+            "CANCEL": "Cancel"
         },
         "ACTIONS": {
             "ACTIONS": "Actions",

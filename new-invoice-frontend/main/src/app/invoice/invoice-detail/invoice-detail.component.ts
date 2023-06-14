@@ -81,6 +81,9 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   invoiceInfo: any = [];
   loadInvoiceInfo = true;
   showInfoForm = false;
+  allowEditInfo = false;
+  infoId: any;
+  infoEditIndex = -1;
   infoAmount = '0.00';
   infoNotes = '';
 
@@ -646,6 +649,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
     });
     dialogRef.afterClosed().subscribe((result) => { });
   }
+
   print() {
     fetch(this.pdf_url).then(resp => resp.arrayBuffer()).then(resp => {
       /*--- set the blog type to final pdf ---*/
@@ -693,6 +697,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
     /*--- Remove the link when done ---*/
     document.body.removeChild(a);
   }
+
   onKey(event: any) {
 
     if (event.target.value.length == 0) {
@@ -704,7 +709,18 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   }
 
   addCloseInvoiceInfo() {
-    this.showInfoForm = !this.showInfoForm;
+    if (this.allowEditInfo) {
+      this.allowEditInfo = false;
+      this.userControl.setValue('');
+      this.costCodeControl.setValue('');
+      this.clientControl.setValue('');
+      this.classNameControl.setValue('');
+      this.infoNotes = '';
+      this.infoAmount = '0.00';
+      this.infoId = null;
+    } else {
+      this.showInfoForm = !this.showInfoForm;
+    }
   }
 
   async saveInvoiceInfo() {
@@ -731,15 +747,29 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
       if (Number(this.infoAmount) > this.invoiceData.invoice_total_amount) {
         showNotification(this.snackBar, 'Amount must be not more then invoice amount.', 'error');
       } else {
-        const requestObject = {
-          invoice_id: this.id,
-          amount: this.infoAmount,
-          job_client_name: clientId,
-          class_name: classId,
-          cost_code_gl_account: costCodeId,
-          assign_to: assignTo,
-          notes: this.infoNotes,
-        };
+        let requestObject;
+        if (this.infoId) {
+          requestObject = {
+            _id: this.infoId,
+            invoice_id: this.id,
+            amount: this.infoAmount,
+            job_client_name: clientId,
+            class_name: classId,
+            cost_code_gl_account: costCodeId,
+            assign_to: assignTo,
+            notes: this.infoNotes,
+          };
+        } else {
+          requestObject = {
+            invoice_id: this.id,
+            amount: this.infoAmount,
+            job_client_name: clientId,
+            class_name: classId,
+            cost_code_gl_account: costCodeId,
+            assign_to: assignTo,
+            notes: this.infoNotes,
+          };
+        }
         this.uiSpinner.spin$.next(true);
         const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_INVOICE_INFO, requestObject);
         this.uiSpinner.spin$.next(false);
@@ -752,6 +782,31 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
         }
       }
     }
+  }
+
+  editInvoiceInfo(info: any, index: number) {
+    // this.invoiceInfoData = info;
+    this.infoId = info._id;
+    const foundUser = this.userList.find((x: UserModel) => x._id === info.assign_to);
+    if (foundUser) {
+      this.userControl.setValue(foundUser);
+    }
+    const foundCostCode = this.costCodeList.find((x: CostCodeModel) => x._id === info.cost_code_gl_account);
+    if (foundCostCode) {
+      this.costCodeControl.setValue(foundCostCode);
+    }
+    const foundClient = this.jobNameList.find((x: ClientJobModel) => x._id === info.job_client_name);
+    if (foundClient) {
+      this.clientControl.setValue(foundClient);
+    }
+    const foundClass = this.classNameList.find((x: ClassNameModel) => x._id === info.class_name);
+    if (foundClass) {
+      this.classNameControl.setValue(foundClass);
+    }
+    this.infoNotes = info.notes;
+    this.infoAmount = numberWithCommas(info.amount.toFixed(2));
+    this.infoEditIndex = index;
+    this.allowEditInfo = true;
   }
 
   deleteInvoiceInfo(info: any) {
