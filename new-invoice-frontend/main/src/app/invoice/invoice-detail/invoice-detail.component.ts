@@ -120,8 +120,9 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   constructor (private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog, private commonService: CommonService,
     public route: ActivatedRoute, public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, public translate: TranslateService,) {
     super();
-    this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
-    this.documentId = this.route.snapshot.queryParamMap.get('document_id') ?? '';
+    this.id = this.route.snapshot.queryParamMap.get('_id');
+    this.documentId = this.route.snapshot.queryParamMap.get('document_id');
+
     this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
     this.uiSpinner.spin$.next(true);
     this.invoiceForm = this.fb.group({
