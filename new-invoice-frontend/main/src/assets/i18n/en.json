@@ -534,5 +534,10 @@
                 }
             }
         }
+    },
+    "DASHBOARD": {
+        "CHART": {
+            "MONTHLY_TITLE": "Monthly History"
+        }
     }
 }

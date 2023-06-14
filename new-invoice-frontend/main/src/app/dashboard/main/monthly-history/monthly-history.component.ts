@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ApexAxisChartSeries, ApexNonAxisChartSeries, ApexChart, ApexDataLabels, ApexPlotOptions, ApexYAxis, ApexXAxis, ApexFill, ApexTooltip, ApexStroke, ApexLegend, ApexTitleSubtitle, ApexGrid, ApexMarkers, ApexResponsive } from 'ng-apexcharts';
@@ -35,11 +35,13 @@ const historyColors = ['#008FFB', '#E1E0E0', '#F44336'];
 })
 export class MonthlyHistoryComponent {
   showHistoryChart = true;
+  @Input() chart!: ApexChart;
   public historyChartOptions: Partial<ChartOptions> = {
     chart: {
       height: 350,
       type: 'bar',
       stacked: true,
+      id: 'salesChart',
       toolbar: {
         show: false,
       },
@@ -81,6 +83,9 @@ export class MonthlyHistoryComponent {
         style: {
           colors: ['#9aa0ac'],
         },
+        formatter: function (value) {
+          return "$" + value.toFixed(2);
+        }
       },
     },
     legend: {
@@ -92,7 +97,7 @@ export class MonthlyHistoryComponent {
     },
   };
 
-  constructor (private router: Router, public translate: TranslateService, private commonService: CommonService) {
+  constructor(private router: Router, public translate: TranslateService, private commonService: CommonService) {
     this.monthlyHistoryChart();
   }
 
@@ -116,8 +121,25 @@ export class MonthlyHistoryComponent {
     }
   }
 
-  downloadHistoryChart() {
-    //
+  async downloadHistoryChart(chartId: any) {
+    // const chartInstance = window.ApexCharts._chartInstances.find(
+    //   (chart: any) => chart.id === chartId
+    // );
+    // console.log("chartInstance ", chartInstance);
+    // const base64 = await chartInstance.chart.dataURI();
+    // console.log("base 64", base64.imgURI);
+    // const downloadLink = document.createElement("a");
+    // downloadLink.href = base64.imgURI;
+    // downloadLink.download = "image.png";
+
+    // // Add the anchor element to the document
+    // document.body.appendChild(downloadLink);
+
+    // // Simulate a click event to initiate the download
+    // downloadLink.click();
+
+    // // Remove the anchor element from the document
+    // document.body.removeChild(downloadLink);
   }
 
   printHistoryChart() {

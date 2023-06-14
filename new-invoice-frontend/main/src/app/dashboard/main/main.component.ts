@@ -178,6 +178,9 @@ export class MainComponent {
         style: {
           colors: ['#9aa0ac'],
         },
+        formatter: function (value) {
+          return "$" + value.toFixed(2);
+        }
       },
     },
     legend: {
@@ -222,7 +225,7 @@ export class MainComponent {
     duplicates: 0,
   };
 
-  constructor (private commonService: CommonService, private router: Router,) {
+  constructor(private commonService: CommonService, private router: Router,) {
     this.getDashboardInvoice();
     this.monthlyInvoiceChart();
     this.monthlyHistoryChart();
