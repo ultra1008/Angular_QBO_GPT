@@ -22,6 +22,7 @@ import { ImportVendorComponent } from '../import-vendor/import-vendor.component'
 import { VendorExistListComponent } from '../vendor-exist-list/vendor-exist-list.component';
 import { RolePermission } from 'src/consts/common.model';
 import { TermModel } from 'src/app/settings/settings.model';
+import { icon } from 'src/consts/icon';
 
 @Component({
   selector: 'app-vendor-grid',
@@ -47,6 +48,8 @@ export class VendorGridComponent
   isHideAddActionQBD = false;
   isHideEditActionQBD = false;
   isHideArchiveActionQBD = false;
+  quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
+  quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
 
   constructor(
     public httpClient: HttpClient,

@@ -126,9 +126,15 @@
                                                                            height="80px " alt="">
                                                                  </div>
                                                                  <div class="mt-4 m-1 col-8">
-
                                                                       <div class="m-1 font-white font-s txt-alg">
                                                                            <b> {{vendor.vendor_name}}</b>
+                                                                           <br>
+                                                                           <img *ngIf="!vendor.is_quickbooks"
+                                                                                [src]="quickbooksGreyIcon" alt=""
+                                                                                height="23" width="23" />
+                                                                           <img *ngIf="vendor.is_quickbooks"
+                                                                                [src]="quickbooksGreenIcon" alt=""
+                                                                                height="23" width="23" />
                                                                       </div>
                                                                  </div>
                                                             </div>
