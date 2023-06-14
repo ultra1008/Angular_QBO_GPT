@@ -42,7 +42,7 @@ export class ClientFormComponent {
   isHideEditActionQBD = false;
   isHideArchiveActionQBD = false;
 
-  constructor(
+  constructor (
     private fb: UntypedFormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
@@ -131,6 +131,7 @@ export class ClientFormComponent {
 
   async saveClient() {
     if (this.clientForm.valid) {
+      this.uiSpinner.spin$.next(true);
       const requestObject = this.clientForm.value;
       if (this.id) {
         requestObject._id = this.id;

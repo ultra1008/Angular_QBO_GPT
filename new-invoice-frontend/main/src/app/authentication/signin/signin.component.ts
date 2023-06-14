@@ -17,6 +17,7 @@ import { WEB_ROUTES } from 'src/consts/routes';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { CompanyModel } from 'src/consts/common.model';
+import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 export interface ChipColor {
   name: string;
   color: string;
@@ -50,7 +51,7 @@ export class SigninComponent implements OnInit {
   companyList: Array<CompanyModel> = [];
 
   constructor (private formBuilder: UntypedFormBuilder, private router: Router, private authService: AuthService,
-    private AuthenticationService: AuthenticationService, private snackBar: MatSnackBar,
+    private AuthenticationService: AuthenticationService, private snackBar: MatSnackBar, public uiSpinner: UiSpinnerService,
     private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private commonService: CommonService,
   ) {
     //localStorage.setItem(localstorageconstants.DARKMODE, 'dark');
@@ -131,9 +132,11 @@ export class SigninComponent implements OnInit {
       return;
     }
     const formValues = this.authForm.value;
+    this.uiSpinner.spin$.next(true);
     // formValues.companycode = 'R-' + formValues.companycode;
     const data = await this.commonService.postRequestAPI(httpversion.V1 + httproutes.GET_USER_COMPANY, formValues);
     if (data.status) {
+      this.uiSpinner.spin$.next(false);
       if (data.data.length === 0) {
         showNotification(this.snackBar, 'Invalid email or password!', 'error');
       } else if (data.data.length === 1) {
@@ -226,7 +229,9 @@ export class SigninComponent implements OnInit {
   async selectCompany(company: CompanyModel) {
     const formValues = this.authForm.value;
     formValues.companycode = company.companycode;
+    this.uiSpinner.spin$.next(true);
     const data = await this.commonService.postRequestAPI(httpversion.V1 + httproutes.USER_LOGIN, formValues);
+    this.uiSpinner.spin$.next(false);
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       if (data.data.UserData.useris_password_temp == true) {

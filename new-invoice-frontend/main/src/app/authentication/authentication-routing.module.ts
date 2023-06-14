@@ -47,7 +47,8 @@ const routes: Routes = [
   },
   {
     path: 'locked',
-    component: LockedComponent
+    component: LockedComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'page404',
