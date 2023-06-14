@@ -168,9 +168,8 @@
                                         {{'VENDOR.TABLE.VENDOR_IMAGE' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell mat-cell *matCellDef="let row"
-                                        class="table-img tbl-col-width-per-image"><span
-                                            class="mobile-label">Image:</span>
+                                    <mat-cell mat-cell *matCellDef="let row" class="table-img tbl-col-width-per-image">
+                                        <span class="mobile-label">Image:</span>
                                         <img [src]="row.vendor_image || 'assets/images/vendor.png'" />
                                     </mat-cell>
                                 </ng-container>
@@ -293,8 +292,7 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="is_quickbooks">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header
-                                        class="tbl-col-width-per-quickbooks">
+                                    <mat-header-cell *matHeaderCellDef class="tbl-col-width-per-quickbooks">
                                         <img [src]="quickbooksGreenIcon" alt="" height="23" width="23" />
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (click)="editVendor(row)"
