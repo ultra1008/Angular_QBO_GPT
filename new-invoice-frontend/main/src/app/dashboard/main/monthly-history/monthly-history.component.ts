@@ -5,6 +5,9 @@ import { ApexAxisChartSeries, ApexNonAxisChartSeries, ApexChart, ApexDataLabels,
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { WEB_ROUTES } from 'src/consts/routes';
+import * as pdfMake from "pdfmake/build/pdfmake";
+import * as pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake!.vfs = pdfFonts.pdfMake.vfs;
 
 export type ChartOptions = {
   series?: ApexAxisChartSeries;
@@ -101,6 +104,30 @@ export class MonthlyHistoryComponent {
     this.monthlyHistoryChart();
   }
 
+  getBase64Image() {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const svgElement: SVGGraphicsElement =
+        document.querySelector('.apexcharts-svg')!;
+      const imageBlobURL =
+        'data:image/svg+xml;charset=utf-8,' +
+        encodeURIComponent(svgElement.outerHTML);
+      img.onload = () => {
+        var canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx!.drawImage(img, 0, 0);
+        const dataURL = canvas.toDataURL('image/png');
+        resolve(dataURL);
+      };
+      img.onerror = (error) => {
+        reject(error);
+      };
+      img.src = imageBlobURL;
+    });
+  }
+
   async monthlyHistoryChart() {
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.DASHBOARD_MONTHLY_HISTORY_CHART, { data_type: 'all' });
     if (data.status) {
@@ -121,29 +148,36 @@ export class MonthlyHistoryComponent {
     }
   }
 
-  async downloadHistoryChart(chartId: any) {
-    // const chartInstance = window.ApexCharts._chartInstances.find(
-    //   (chart: any) => chart.id === chartId
-    // );
-    // console.log("chartInstance ", chartInstance);
-    // const base64 = await chartInstance.chart.dataURI();
-    // console.log("base 64", base64.imgURI);
-    // const downloadLink = document.createElement("a");
-    // downloadLink.href = base64.imgURI;
-    // downloadLink.download = "image.png";
-
-    // // Add the anchor element to the document
-    // document.body.appendChild(downloadLink);
-
-    // // Simulate a click event to initiate the download
-    // downloadLink.click();
-
-    // // Remove the anchor element from the document
-    // document.body.removeChild(downloadLink);
+  async downloadHistoryChart() {
+    const docDefinition: any = {
+      content: [
+        {
+          text: 'Monthly Invoice',
+          fontSize: 14,
+        },
+        {
+          image: await this.getBase64Image(),
+          width: 500
+        },
+      ],
+    };
+    pdfMake.createPdf(docDefinition).open();
   }
 
-  printHistoryChart() {
-    //
+  async printHistoryChart() {
+    const docDefinition: any = {
+      content: [
+        {
+          text: 'Monthly Invoice',
+          fontSize: 14,
+        },
+        {
+          image: await this.getBase64Image(),
+          width: 500
+        },
+      ],
+    };
+    pdfMake.createPdf(docDefinition).print();
   }
 
   back() {

@@ -2,10 +2,8 @@ import { Component } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import * as ApexCharts from 'apexcharts';
 import { ApexAxisChartSeries, ApexNonAxisChartSeries, ApexChart, ApexDataLabels, ApexPlotOptions, ApexYAxis, ApexXAxis, ApexFill, ApexTooltip, ApexStroke, ApexLegend, ApexTitleSubtitle, ApexGrid, ApexMarkers, ApexResponsive } from 'ng-apexcharts';
 import { WEB_ROUTES } from 'src/consts/routes';
-import { saveAs } from 'file-saver';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import * as pdfMake from "pdfmake/build/pdfmake";
@@ -81,8 +79,6 @@ export class MonthlyInvoiceComponent {
           colors: ['#9aa0ac'],
         },
       },
-      // tickAmount: 1,
-      // min: 1,
     },
     stroke: {
       curve: 'smooth',
