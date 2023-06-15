@@ -8,21 +8,24 @@
                         <div class="left">
                             <ul class="header-buttons-left ms-0">
                                 <li class="tbl-title">
-                                    <h2>Monthly Invoice</h2>
+                                    <h2>{{'DASHBOARD.CHART.MONTHLY_INVOICE' |
+                                        translate}}</h2>
                                 </li>
                             </ul>
                         </div>
                         <div class="right">
                             <ul class="tbl-export-btn">
                                 <li class="tbl-header-btn">
-                                    <div class="m-l-10" matTooltip="DOWNLOAD">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.DOWNLOAD' |
+                      translate}}">
                                         <button mat-mini-fab color="primary" (click)="downloadHistoryChart()">
                                             <img src='assets/images/icons/download.svg' alt="" height="17" width="17" />
                                         </button>
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn">
-                                    <div class="m-l-10" matTooltip="PRINT">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.PRINT' |
+                      translate}}">
                                         <button mat-mini-fab color="primary" (click)="printHistoryChart()">
                                             <img src='assets/images/icons/print.svg' alt="" height="17" width="17" />
                                         </button>

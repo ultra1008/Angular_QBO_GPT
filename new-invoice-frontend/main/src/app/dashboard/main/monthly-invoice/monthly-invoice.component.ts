@@ -8,6 +8,9 @@ import { WEB_ROUTES } from 'src/consts/routes';
 import { saveAs } from 'file-saver';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
+import * as pdfMake from "pdfmake/build/pdfmake";
+import * as pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake!.vfs = pdfFonts.pdfMake.vfs;
 
 export type ChartOptions = {
   series?: ApexAxisChartSeries;
@@ -121,8 +124,32 @@ export class MonthlyInvoiceComponent {
   chartdiv: HTMLElement | any;
   printWindow: Window | any;
 
-  constructor (private commonService: CommonService, private router: Router, public translate: TranslateService, private _sanitizer: DomSanitizer) {
+  constructor(private commonService: CommonService, private router: Router, public translate: TranslateService, private _sanitizer: DomSanitizer) {
     this.monthlyInvoiceChart();
+  }
+
+  getBase64Image() {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const svgElement: SVGGraphicsElement =
+        document.querySelector('.apexcharts-svg')!;
+      const imageBlobURL =
+        'data:image/svg+xml;charset=utf-8,' +
+        encodeURIComponent(svgElement.outerHTML);
+      img.onload = () => {
+        var canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx!.drawImage(img, 0, 0);
+        const dataURL = canvas.toDataURL('image/png');
+        resolve(dataURL);
+      };
+      img.onerror = (error) => {
+        reject(error);
+      };
+      img.src = imageBlobURL;
+    });
   }
 
   async monthlyInvoiceChart() {
@@ -161,49 +188,64 @@ export class MonthlyInvoiceComponent {
     }
   }
 
-  downloadHistoryChart() {
-    const chart = new ApexCharts(document.querySelector("#chart"), this.invoiceChartOptions);
-    chart.render().then(() => {
-      window.setTimeout(function () {
-        chart.dataURI().then((uri: any) => {
-          console.log(uri.imgURI);
-          const downloadLink = document.createElement('a');
-          const fileName = 'Monthly Invoice Chart.png';
+  async downloadHistoryChart() {
 
-          downloadLink.href = uri.imgURI;
-          downloadLink.download = fileName;
-          downloadLink.click();
-          // downloadLink.remove();
-          /*  window.setTimeout(function () {
-              // downloadLink.remove();
-            }, 1000); */
+    const docDefinition: any = {
+      content: [
+        {
+          text: 'Monthly Invoice',
+          fontSize: 14,
+        },
+        {
+          image: await this.getBase64Image(),
+          width: 500
+        },
+      ],
+    };
+    pdfMake.createPdf(docDefinition).open();
 
-          /*  const blob = new Blob([uri.imgURI], { type: "image/png" });
-           console.log(blob); 
- 
-           saveAs(blob, 'attachment'); */
-          /* const img = new Image();
-          img.src = uri.imgURI;
+    // const chart = new ApexCharts(document.querySelector("#chart"), this.invoiceChartOptions);
+    // chart.render().then(() => {
+    //   window.setTimeout(function () {
+    //     chart.dataURI().then((uri: any) => {
+    //       console.log(uri.imgURI);
+    //       const downloadLink = document.createElement('a');
+    //       const fileName = 'Monthly Invoice Chart.png';
 
-          const winparams =
-            "dependent=yes,locationbar=no,scrollbars=yes,menubar=yes," +
-            "resizable,screenX=50,screenY=50,width=850,height=1050";
+    //       downloadLink.href = uri.imgURI;
+    //       downloadLink.download = fileName;
+    //       downloadLink.click();
+    //       // downloadLink.remove();
+    //       /*  window.setTimeout(function () {
+    //           // downloadLink.remove();
+    //         }, 1000); */
 
-          const htmlPop =
-            "<embed width=100% height=100%" +
-            ' type="image/png"' +
-            ' src="' +
-            uri.imgURI +
-            '" ' +
-            '"></embed>';
+    //       /*  const blob = new Blob([uri.imgURI], { type: "image/png" });
+    //        console.log(blob); 
 
-          this.printWindow = window.open("", "PDF", winparams);
-          this.printWindow.document.write(htmlPop);
-          this.printWindow.print();
-          this.loadingBuffer = false; */
-        });
-      }, 2500);
-    });
+    //        saveAs(blob, 'attachment'); */
+    //       /* const img = new Image();
+    //       img.src = uri.imgURI;
+
+    //       const winparams =
+    //         "dependent=yes,locationbar=no,scrollbars=yes,menubar=yes," +
+    //         "resizable,screenX=50,screenY=50,width=850,height=1050";
+
+    //       const htmlPop =
+    //         "<embed width=100% height=100%" +
+    //         ' type="image/png"' +
+    //         ' src="' +
+    //         uri.imgURI +
+    //         '" ' +
+    //         '"></embed>';
+
+    //       this.printWindow = window.open("", "PDF", winparams);
+    //       this.printWindow.document.write(htmlPop);
+    //       this.printWindow.print();
+    //       this.loadingBuffer = false; */
+    //     });
+    //   }, 2500);
+    // });
 
 
 
@@ -228,6 +270,21 @@ export class MonthlyInvoiceComponent {
   }
 
   async printHistoryChart() {
+
+    const docDefinition: any = {
+      content: [
+        {
+          text: 'Monthly Invoice',
+          fontSize: 14,
+        },
+        {
+          image: await this.getBase64Image(),
+          width: 500
+        },
+      ],
+    };
+    pdfMake.createPdf(docDefinition).print();
+
     /* console.log(window.ApexCharts._chartInstances);
     const chartInstance = window.ApexCharts._chartInstances.find(
       (chart: any) => chart.id === 'chart'
@@ -246,14 +303,14 @@ export class MonthlyInvoiceComponent {
 
     // Remove the anchor element from the document
     document.body.removeChild(downloadLink); */
-    const chart = new ApexCharts(document.querySelector("#chart"), this.invoiceChartOptions);
-    chart.render().then(() => {
-      window.setTimeout(function () {
-        chart.dataURI().then((uri: any) => {
-          console.log(uri.imgURI);
-        });
-      }, 1000);
-    });
+    // const chart = new ApexCharts(document.querySelector("#chart"), this.invoiceChartOptions);
+    // chart.render().then(() => {
+    //   window.setTimeout(function () {
+    //     chart.dataURI().then((uri: any) => {
+    //       console.log(uri.imgURI);
+    //     });
+    //   }, 1000);
+    // });
     /* const chart = new ApexCharts(document.querySelector("#chart"), this.invoiceChartOptions);
     chart.render().then(() => {
       chart.dataURI().then((uri: any) => {  // Here shows an error
