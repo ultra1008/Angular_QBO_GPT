@@ -65,9 +65,10 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
   notificationCount = 0;
   notificationLoading = true;
   start = 0;
-  myControl = new UntypedFormControl();
+  searchControl = new UntypedFormControl();
   invoiceList: Array<Invoice> = [];
   invoiceLoader = true;
+  openSearchDialog = false;
 
   async ngOnInit() {
     this.config = this.configService.configData;
@@ -442,15 +443,31 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
     this.router.navigate([WEB_ROUTES.INVOICE_MESSAGES]);
   }
 
+  onSearchChange(event: any) {
+    if (this.openSearchDialog) {
+      document.getElementById('global-search')?.click();
+    }
+    this.openSearchDialog = false;
+    if (event.target.value == '') {
+      this.invoiceList = [];
+      this.invoiceLoader = false;
+    } else {
+      this.onSearch();
+      document.getElementById('global-search')?.click();
+      this.openSearchDialog = true;
+    }
+  }
+
   async onSearch() {
-    if (this.myControl.value) {
+    if (this.searchControl.value) {
       this.invoiceLoader = true;
-      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_HEADER_INVOICE_SERACH, { search: this.myControl.value });
+      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_HEADER_INVOICE_SERACH, { search: this.searchControl.value });
       if (data.status) {
         this.invoiceList = data.data;
         this.invoiceLoader = false;
       }
-      this.myControl.setValue('');
+      // document.getElementById('search')?.blur();
+      // this.searchControl.setValue('');
     } else {
       this.invoiceLoader = false;
     }

@@ -70,7 +70,8 @@
      }
 } */
 ::ng-deep .search-div {
-     width: 500px;
+     width: 500px !important;
+     top: 55px !important;
 }
 
 .search-button {
