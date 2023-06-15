@@ -567,10 +567,17 @@
                 color="primary">
                 <mat-icon class="col-white">print</mat-icon>
             </button>
-
         </div>
         <div id="outerContainer">
             <div class="pdf-container">
+                <div *ngIf="pdf_url === ''" class="no-pdf text-center">
+                    <div> No PDF document available </div>
+                    <input type="file" #fileDropRef id="fileDropRef" (change)="fileBrowseHandler($event)"
+                        #OpenFilebox />
+                    <button class="btn-space" mat-raised-button color="primary" (click)="uploadDocument()">
+                        {{'COMMON.ACTIONS.UPLOAD'| translate}}
+                    </button>
+                </div>
                 <app-custompdfviewer [pdf_url]="url"></app-custompdfviewer>
                 <!-- <pdf-viewer [src]="url" [rotation]="0" [original-size]="false" [show-all]="true" [fit-to-page]="false"
                     [zoom]="1" [zoom-scale]="'page-width'" [stick-to-page]="false" [render-text]="true"
@@ -586,15 +593,19 @@
 <ng-template #viewPDFEditTemplate let-url='url'>
     <div class="card pdf-h">
         <div class="pdf-btn">
-            <button matTooltip="{{'COMMON.TOOL_TIP.EDIT' |  translate}}" class="m-2" mat-mini-fab
+            <button matTooltip="{{'COMMON.TOOL_TIP.EDIT' |  translate}}" class="mr-2 mt-2" mat-mini-fab
                 (click)="goDocumentForm()" color="primary">
                 <mat-icon class="col-white">edit</mat-icon>
             </button>
-            <button matTooltip="{{'COMMON.TOOL_TIP.DOWNLOAD' |  translate}}" class="m-2" mat-mini-fab
+            <button matTooltip="{{'COMMON.TOOL_TIP.REMOVE' |  translate}}" class="mr-2 mt-2" mat-mini-fab
+                (click)="removePDF()" color="primary" *ngIf="id !== null && pdf_url !== ''">
+                <mat-icon class="col-white">archive</mat-icon>
+            </button>
+            <button matTooltip="{{'COMMON.TOOL_TIP.DOWNLOAD' |  translate}}" class="mr-2 mt-2" mat-mini-fab
                 (click)="download()" color="primary">
                 <mat-icon class="col-white">download</mat-icon>
             </button>
-            <button matTooltip="{{'COMMON.TOOL_TIP.PRINT' |  translate}}" mat-mini-fab (click)="print()"
+            <button matTooltip="{{'COMMON.TOOL_TIP.PRINT' |  translate}}" class="mt-2" mat-mini-fab (click)="print()"
                 color="primary">
                 <mat-icon class="col-white">print</mat-icon>
             </button>
@@ -602,7 +613,15 @@
         </div>
         <div id="outerContainer">
             <div class="pdf-container">
-                <app-custompdfviewer [pdf_url]="pdf_url"></app-custompdfviewer>
+                <div *ngIf="pdf_url === ''" class="no-pdf text-center">
+                    <div> No PDF document available </div>
+                    <input type="file" #fileDropRef id="fileDropRef" (change)="fileBrowseHandler($event)"
+                        #OpenFilebox />
+                    <button class="btn-space" mat-raised-button color="primary" (click)="uploadDocument()">
+                        {{'COMMON.ACTIONS.UPLOAD'| translate}}
+                    </button>
+                </div>
+                <app-custompdfviewer [pdf_url]="pdf_url" *ngIf="!pdfLoader"></app-custompdfviewer>
                 <!--   <pdf-viewer [src]="pdf_url" [rotation]="0" [original-size]="false" [show-all]="true"
                     [fit-to-page]="false" [zoom]="1" [zoom-scale]="'page-width'" [stick-to-page]="false"
                     [render-text]="true" [external-link-target]="'blank'" [autoresize]="true" [show-borders]="false"

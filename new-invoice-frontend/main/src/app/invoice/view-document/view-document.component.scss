@@ -100,3 +100,26 @@
     text-align: end;
     padding-right: 24px;
 }
+
+.pdf-container {
+    height: 710px;
+    max-height: 710px;
+}
+
+.no-pdf {
+    font-weight: 500;
+    font-size: 17px;
+    padding-top: 30%;
+
+    input {
+        display: none;
+    }
+}
+
+.mr-2 {
+    margin-right: 0.5rem !important;
+}
+
+.mt-2 {
+    margin-top: 0.5rem !important;
+}

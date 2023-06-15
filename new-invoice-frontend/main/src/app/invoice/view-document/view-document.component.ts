@@ -1,14 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonService } from 'src/app/services/common.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
+import { commonFileChangeEvent } from 'src/app/services/utils';
 import { TermModel } from 'src/app/settings/settings.model';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { amountChange, epochToDateTime, numberWithCommas, showNotification } from 'src/consts/utils';
 import { configData } from 'src/environments/configData';
+import * as  moment from "moment";
 
 @Component({
   selector: 'app-view-document',
@@ -16,6 +18,8 @@ import { configData } from 'src/environments/configData';
   styleUrls: ['./view-document.component.scss']
 })
 export class ViewDocumentComponent {
+  @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
+
   poForm: UntypedFormGroup;
   quoteForm: UntypedFormGroup;
   packingSlipForm: UntypedFormGroup;
@@ -41,6 +45,7 @@ export class ViewDocumentComponent {
   documentData: any;
   maxDate = new Date();
   invoice_id: any;
+  pdfLoader = true;
 
   constructor (public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, private fb: UntypedFormBuilder, public commonService: CommonService, public route: ActivatedRoute, private router: Router,) {
     this.document = this.route.snapshot.queryParamMap.get('document') ?? '';
@@ -228,8 +233,10 @@ export class ViewDocumentComponent {
         this.showPoEdit = true;
       }
       this.loadPDF = false;
+      this.pdfLoader = true;
       setTimeout(() => {
         this.loadPDF = true;
+        this.pdfLoader = false;
       }, 100);
     }
   }
@@ -316,8 +323,10 @@ export class ViewDocumentComponent {
         this.showPoEdit = true;
       }
       this.loadPDF = false;
+      this.pdfLoader = true;
       setTimeout(() => {
         this.loadPDF = true;
+        this.pdfLoader = false;
       }, 100);
     }
   }
@@ -400,8 +409,10 @@ export class ViewDocumentComponent {
         this.showPoEdit = true;
       }
       this.loadPDF = false;
+      this.pdfLoader = true;
       setTimeout(() => {
         this.loadPDF = true;
+        this.pdfLoader = false;
       }, 100);
     }
   }
@@ -474,8 +485,10 @@ export class ViewDocumentComponent {
         this.showPoEdit = true;
       }
       this.loadPDF = false;
+      this.pdfLoader = true;
       setTimeout(() => {
         this.loadPDF = true;
+        this.pdfLoader = false;
       }, 100);
     }
   }
@@ -586,5 +599,83 @@ export class ViewDocumentComponent {
       // this.start = 0;
       // this.getTodaysActivity();
     }
+  }
+
+  async removePDF() {
+    this.uiSpinner.spin$.next(true);
+    const requestObject = {
+      _id: this.id,
+      pdf_url: '',
+    };
+    let apiUrl = '';
+    if (this.document == 'PURCHASE_ORDER') {
+      apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_PO;
+    } else if (this.document == 'QUOTE') {
+      apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_QUOTE;
+    } else if (this.document == 'PACKING_SLIP') {
+      apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_PACKLING_SLIP;
+    } else if (this.document == 'RECEIVING_SLIP') {
+      apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_RECEVING_SLIP;
+    }
+    const data = await this.commonService.postRequestAPI(apiUrl, requestObject);
+    this.uiSpinner.spin$.next(false);
+    if (data.status) {
+      this.pdf_url = '';
+      this.pdfLoader = true;
+      setTimeout(() => {
+        this.pdfLoader = false;
+      }, 200);
+    }
+  }
+
+  uploadDocument() {
+    let el: HTMLElement = this.OpenFilebox.nativeElement;
+    el.click();
+  }
+
+  fileBrowseHandler(files: any) {
+    commonFileChangeEvent(files, "pdf").then(async (result: any) => {
+      if (result.status) {
+        this.uiSpinner.spin$.next(true);
+        const formData = new FormData();
+        formData.append("file[]", files.target.files[0]);
+        formData.append("dir_name", 'invoice');
+        formData.append("local_date", moment().format("DD/MM/YYYY hh:mmA"));
+        const attachmentData = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_SAVE_ATTACHMENT, formData);
+        if (attachmentData.status) {
+          const requestObject = {
+            pdf_url: attachmentData.data[0],
+            _id: this.id,
+          };
+          let apiUrl = '';
+          if (this.document == 'PURCHASE_ORDER') {
+            apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_PO;
+          } else if (this.document == 'QUOTE') {
+            apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_QUOTE;
+          } else if (this.document == 'PACKING_SLIP') {
+            apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_PACKLING_SLIP;
+          } else if (this.document == 'RECEIVING_SLIP') {
+            apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_RECEVING_SLIP;
+          }
+          const data = await this.commonService.postRequestAPI(apiUrl, requestObject);
+          this.uiSpinner.spin$.next(false);
+          if (data.status) {
+            showNotification(this.snackBar, data.message, 'success');
+            this.pdf_url = requestObject.pdf_url;
+            this.pdfLoader = true;
+            setTimeout(() => {
+              this.pdfLoader = false;
+            }, 200);
+          } else {
+            showNotification(this.snackBar, data.message, 'error');
+          }
+        } else {
+          this.uiSpinner.spin$.next(false);
+          showNotification(this.snackBar, attachmentData.message, 'error');
+        }
+      } else {
+        showNotification(this.snackBar, 'File type is not supported.', 'error');
+      }
+    });
   }
 }
