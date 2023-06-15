@@ -129,12 +129,15 @@
                                                                       <div class="m-1 font-white font-s txt-alg">
                                                                            <b> {{vendor.vendor_name}}</b>
                                                                            <br>
-                                                                           <img *ngIf="!vendor.is_quickbooks"
-                                                                                [src]="quickbooksGreyIcon" alt=""
-                                                                                height="23" width="23" />
-                                                                           <img *ngIf="vendor.is_quickbooks"
-                                                                                [src]="quickbooksGreenIcon" alt=""
-                                                                                height="23" width="23" />
+                                                                           <div
+                                                                                *ngIf="is_quickbooks_online || is_quickbooks_desktop">
+                                                                                <img *ngIf="!vendor.is_quickbooks"
+                                                                                     [src]="quickbooksGreyIcon" alt=""
+                                                                                     height="23" width="23" />
+                                                                                <img *ngIf="vendor.is_quickbooks"
+                                                                                     [src]="quickbooksGreenIcon" alt=""
+                                                                                     height="23" width="23" />
+                                                                           </div>
                                                                       </div>
                                                                  </div>
                                                             </div>

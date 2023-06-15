@@ -50,6 +50,8 @@ export class VendorGridComponent
   isHideArchiveActionQBD = false;
   quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
   quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
+  is_quickbooks_online = false;
+  is_quickbooks_desktop = false;
 
   constructor(
     public httpClient: HttpClient,
@@ -97,6 +99,10 @@ export class VendorGridComponent
         } else {
           this.isHideArchiveActionQBD = false;
         }
+
+        this.is_quickbooks_online = data.data.is_quickbooks_online;
+        this.is_quickbooks_desktop = data.data.is_quickbooks_desktop;
+
       }
     }
   }
