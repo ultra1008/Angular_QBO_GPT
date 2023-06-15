@@ -139,7 +139,7 @@ export class UserFormComponent
   role_permission!: RolePermission;
 
 
-  constructor (
+  constructor(
     private location: Location,
     public uiSpinner: UiSpinnerService,
     public UserService: UserService,
@@ -928,7 +928,13 @@ export class UserFormComponent
   };
 
   back(): void {
-    this.router.navigate([WEB_ROUTES.USER]);
+    const userDisplay =
+      localStorage.getItem(localstorageconstants.USER_DISPLAY) ?? 'list';
+    if (userDisplay == 'list') {
+      this.router.navigate([WEB_ROUTES.USER]);
+    } else {
+      this.router.navigate([WEB_ROUTES.USER_GRID]);
+    }
   }
 
   onRegister() {
