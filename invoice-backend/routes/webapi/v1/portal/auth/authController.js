@@ -2463,7 +2463,16 @@ module.exports.getMyCompanyList = async function (req, res) {
             'invoice_user.is_delete': 0,
         };
         var get_company = await companyConnection.find(match);
-        res.send({ message: translator.getStr('CompanyListing'), status: true, data: get_company });
+        var data = [];
+        for (let i = 0; i < get_company.length; i++) {
+            let user = get_company[i].invoice_user.find(o => o.useremail === requestObject.useremail);
+            if (user) {
+                if (user.userstatus == 1 && user.is_delete == 0) {
+                    data.push(get_company[i]);
+                }
+            }
+        }
+        res.send({ message: translator.getStr('CompanyListing'), status: true, data });
     } catch (e) {
         console.log(e);
         res.send({ message: translator.getStr('SomethingWrong'), status: false });

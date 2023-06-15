@@ -93,6 +93,7 @@ export class SwitchCompanyComponent implements OnInit {
         if (data.data.UserData.useris_password_temp == true) {
           this.router.navigate([WEB_ROUTES.FORCEFULLY_CHANGE_PASSWORD]);
         } else {
+          console.log("sagar: ", window.location.pathname, "and", WEB_ROUTES.DASHBOARD, "====", window.location.pathname === WEB_ROUTES.DASHBOARD);
           if (window.location.pathname === WEB_ROUTES.DASHBOARD) {
             setTimeout(() => {
               location.reload();

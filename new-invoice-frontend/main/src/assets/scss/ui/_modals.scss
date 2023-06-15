@@ -8,6 +8,7 @@
   //padding: 100px 0 0;
   max-height: 100%;
   width: 100%;
+
   .modal-header {
     border: none;
     padding: 0px;
@@ -34,15 +35,18 @@
   .modal-footer {
     border: none;
     background-color: transparent;
+
     .btn {
       margin: 10px;
     }
   }
 }
+
 .addContainer {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+
   .form {
     display: flex;
     padding-top: 6px;
@@ -51,7 +55,7 @@
   .mat-form-field {
     flex-grow: 1;
   }
- 
+
 }
 
 .modalHeader {
@@ -60,12 +64,19 @@
   // justify-content: space-between;
   padding: 0px 10px 0px 10px;
   margin: 10px 10px 0px 10px;
+
   .modal-about {
     padding: 5px;
     font-weight: 500;
     font-size: 16px;
   }
+
+  .row>* {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+  }
 }
+
 .modal-close-button {
   background-color: transparent !important;
   box-shadow: none !important;
@@ -74,7 +85,8 @@
   position: absolute !important;
 }
 
-@each $key, $val in $colors {
+@each $key,
+$val in $colors {
   .modal-col-#{$key} {
     background-color: $val;
 
@@ -98,9 +110,11 @@
     }
   }
 }
+
 .cdk-overlay-connected-position-bounding-box {
   z-index: 1052 !important;
 }
+
 .mat-dialog-content {
   margin: 0px !important;
   padding: 0px !important;

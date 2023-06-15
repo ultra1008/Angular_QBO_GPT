@@ -1748,6 +1748,7 @@ module.exports.deleteTeamMember = async function (req, res) {
                             let company_data = await companyConnection.findOne({ companycode: decodedToken.companycode });
                             let companyUserObj = {
                                 'invoice_user.$.is_delete': 1,
+                                'invoice_user.$.userstatus': 2,
                             };
                             let update_invoice_user = await companyConnection.updateOne({ _id: ObjectID(company_data._id), 'invoice_user.user_id': ObjectID(requestObject._id) }, { $set: companyUserObj });
 
@@ -1802,7 +1803,8 @@ module.exports.deleteMultipleTeamMember = async function (req, res) {
             if (update_user) {
                 let company_data = await companyConnection.findOne({ companycode: decodedToken.companycode });
                 let companyUserObj = {
-                    'invoice_user.$.is_delete': requestObject.is_delete,
+                    'invoice_user.$.is_delete': 1,
+                    'invoice_user.$.userstatus': 2,
                 };
                 for (let i = 0; i < requestObject._id.length; i++) {
                     let one_user = await userConnection.findOne({ _id: ObjectID(requestObject._id[i]) });
@@ -4199,6 +4201,7 @@ module.exports.recoverteam = async function (req, res) {
                     let company_data = await companyConnection.findOne({ companycode: decodedToken.companycode });
                     let companyUserObj = {
                         'invoice_user.$.is_delete': 0,
+                        'invoice_user.$.userstatus': requestObject.userstatus,
                     };
                     let one_user = await userCollection.findOne({ _id: ObjectID(requestObject._id) });
                     if (one_user.is_first && one_user._id == decodedToken.UserData._id) {
