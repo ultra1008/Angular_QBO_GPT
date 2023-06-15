@@ -24,6 +24,7 @@ import { Observable, map, startWith } from 'rxjs';
 import { RolePermission } from 'src/consts/common.model';
 import { commonFileChangeEvent } from 'src/app/services/utils';
 import * as  moment from "moment";
+import { UploadInvoiceFormComponent } from '../upload-invoice-form/upload-invoice-form.component';
 
 @Component({
   selector: 'app-invoice-detail',
@@ -929,6 +930,21 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
         }
       } else {
         showNotification(this.snackBar, 'File type is not supported.', 'error');
+      }
+    });
+  }
+
+  uploadInvoice() {
+    const dialogRef = this.dialog.open(UploadInvoiceFormComponent, {
+      width: '80%',
+      data: {
+        supporting: true,
+        vendor: this.invoiceData.vendor
+      },
+    });
+    this.subs.sink = dialogRef.afterClosed().subscribe((result: any) => {
+      if (result.status) {
+        this.getOneInvoice();
       }
     });
   }
