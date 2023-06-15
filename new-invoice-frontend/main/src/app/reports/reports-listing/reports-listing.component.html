@@ -20,7 +20,7 @@
                               </div>
                               <div class="right">
                                    <ul class="tbl-export-btn">
-                                        <li class="tbl-header-btn">
+                                        <li class="tbl-header-btn dateRange">
                                              <mat-form-field class="example-full-width" appearance="outline">
                                                   <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
                                                        <input matStartDate formControlName="start_date"
@@ -29,10 +29,10 @@
                                                             placeholder="End Date" [disabled]="true" #dateRangeEnd
                                                             (dateChange)="dateRangeChange(dateRangeStart, dateRangeEnd)">
                                                   </mat-date-range-input>
-                                                  <mat-datepicker-toggle matSuffix
-                                                       [for]="picker"></mat-datepicker-toggle>
-                                                  <mat-date-range-picker #picker
-                                                       disabled="false"></mat-date-range-picker>
+                                                  <mat-datepicker-toggle matSuffix [for]="picker">
+                                                  </mat-datepicker-toggle>
+                                                  <mat-date-range-picker #picker disabled="false">
+                                                  </mat-date-range-picker>
                                              </mat-form-field>
                                         </li>
                                         <li class="tbl-header-btn">
@@ -64,7 +64,8 @@
                                                   class="tbl-col-width-per-max"
                                                   (contextmenu)="onContextMenu($event, row)">
                                                   <span class="mobile-label">Invoice
-                                                       Date:</span>{{row.invoice_date_epoch === 0 ? '' : (row.invoice_date_epoch * 1000) | date: 'MM/dd/yyyy'}}
+                                                       Date:</span>{{row.invoice_date_epoch === 0 ? '' :
+                                                  (row.invoice_date_epoch * 1000) | date: 'MM/dd/yyyy'}}
                                              </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="due_date">
@@ -76,7 +77,8 @@
                                                   class="tbl-col-width-per-max"
                                                   (contextmenu)="onContextMenu($event, row)">
                                                   <span class="mobile-label">Due
-                                                       Date:</span>{{row.due_date_epoch === 0 ? '' : (row.due_date_epoch * 1000) | date: 'MM/dd/yyyy'}}
+                                                       Date:</span>{{row.due_date_epoch === 0 ? '' : (row.due_date_epoch
+                                                  * 1000) | date: 'MM/dd/yyyy'}}
                                              </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="vendor">
