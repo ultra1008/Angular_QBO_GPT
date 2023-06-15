@@ -84,6 +84,11 @@
                     </mat-header-cell>
                     <mat-cell *matCellDef="let row" class="psl-1">{{row.OTHER}}</mat-cell>
                   </ng-container>
+                  <ng-container matColumnDef="duplicated">
+                    <mat-header-cell class="psl-1" *matHeaderCellDef mat-sort-header>Duplicated
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row" class="psl-1">{{row.DUPLICATED}}</mat-cell>
+                  </ng-container>
                   <!-- <ng-container matColumnDef="actions">
                     <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-action'"
                       *matHeaderCellDef>{{'VENDOR.TABLE.ACTIONS' |

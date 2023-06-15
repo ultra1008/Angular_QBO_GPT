@@ -42,7 +42,7 @@ import { WEB_ROUTES } from 'src/consts/routes';
   styleUrls: ['./usage.component.scss'],
 })
 export class UsageComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
-  displayedColumns = ['month_name', 'invoice', 'po', 'packing_slip', 'receiving_slip', 'quote', 'other'];
+  displayedColumns = ['month_name', 'invoice', 'po', 'packing_slip', 'receiving_slip', 'quote', 'other', 'duplicated'];
 
   AllUsage: any;
   usageinfo: FormGroup;

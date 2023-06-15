@@ -415,6 +415,7 @@ module.exports.getAPAPICount = async function (req, res) {
                         QUOTE: 1,
                         INVOICE: 1,
                         OTHER: 1,
+                        DUPLICATED: 1,
                     }
                 },
                 { $sort: { year: -1, month: -1 } },
