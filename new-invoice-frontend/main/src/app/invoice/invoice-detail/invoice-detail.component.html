@@ -598,7 +598,8 @@
                                                   (closed)="panelOpenState = false">
                                                   <mat-expansion-panel-header>
                                                        <mat-panel-title>
-                                                            {{'INVOICE.INVOICE_DETAILS.SUPPORTING_DOCUMENT.TITLE' | translate}}
+                                                            {{'INVOICE.INVOICE_DETAILS.SUPPORTING_DOCUMENT.TITLE' |
+                                                            translate}}
                                                        </mat-panel-title>
 
                                                   </mat-expansion-panel-header>
@@ -808,22 +809,28 @@
                                                             <thead>
                                                                  <tr>
                                                                       <th class="column-1">
-                                                                           {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.TOTAL_AMOUNT' | translate}}
+                                                                           {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.TOTAL_AMOUNT'
+                                                                           | translate}}
                                                                       </th>
                                                                       <th class="column-2">
-                                                                           {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.COST_CODE' | translate}}
+                                                                           {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.COST_CODE'
+                                                                           | translate}}
                                                                       </th>
                                                                       <th class="column-3">
-                                                                           {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.ASSIGN_TO' | translate}}
+                                                                           {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.ASSIGN_TO'
+                                                                           | translate}}
                                                                       </th>
                                                                       <th class="column-4">
-                                                                           {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.CLIENT_JOB_NAME' | translate}}
+                                                                           {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.CLIENT_JOB_NAME'
+                                                                           | translate}}
                                                                       </th>
                                                                       <th class="column-5">
-                                                                           {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.CLASS_NAME' | translate}}
+                                                                           {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.CLASS_NAME'
+                                                                           | translate}}
                                                                       </th>
                                                                       <th class="column-6">
-                                                                           {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.NOTES' | translate}}
+                                                                           {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.NOTES'
+                                                                           | translate}}
                                                                       </th>
                                                                       <th class="column-7">
                                                                            {{'COMMON.ACTIONS.ACTIONS' | translate}}
@@ -974,7 +981,7 @@
                                                                                      appearance="outline">
                                                                                      <mat-label>
                                                                                           {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.TOTAL_AMOUNT'
-                                                                                     | translate}}
+                                                                                          | translate}}
                                                                                      </mat-label>
                                                                                      <span class="dollar-align"
                                                                                           matPrefix>$</span>
@@ -998,7 +1005,7 @@
                                                                                      appearance="outline">
                                                                                      <mat-label>
                                                                                           {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.COST_CODE'
-                                                                                     | translate}}
+                                                                                          | translate}}
                                                                                      </mat-label>
                                                                                      <input matInput
                                                                                           class="input-capitalized-textfield"
@@ -1027,7 +1034,7 @@
                                                                                      appearance="outline">
                                                                                      <mat-label>
                                                                                           {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.ASSIGN_TO'
-                                                                                     | translate}}
+                                                                                          | translate}}
                                                                                      </mat-label>
                                                                                      <input matInput
                                                                                           class="input-capitalized-textfield"
@@ -1063,7 +1070,7 @@
                                                                                      appearance="outline">
                                                                                      <mat-label>
                                                                                           {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.CLIENT_JOB_NAME'
-                                                                                     | translate}}
+                                                                                          | translate}}
                                                                                      </mat-label>
                                                                                      <input matInput
                                                                                           class="input-capitalized-textfield"
@@ -1092,7 +1099,7 @@
                                                                                      appearance="outline">
                                                                                      <mat-label>
                                                                                           {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.CLASS_NAME'
-                                                                                     | translate}}
+                                                                                          | translate}}
                                                                                      </mat-label>
                                                                                      <input matInput
                                                                                           class="input-capitalized-textfield"
@@ -1121,7 +1128,7 @@
                                                                                      appearance="outline">
                                                                                      <mat-label>
                                                                                           {{'INVOICE.INVOICE_DETAILS.INFO.TABLE.NOTES'
-                                                                                | translate}}
+                                                                                          | translate}}
                                                                                      </mat-label>
                                                                                      <input matInput
                                                                                           class="input-capitalized-textfield"
@@ -1163,7 +1170,7 @@
                                                                  </tr>
                                                                  <!-- No Data -->
                                                                  <tr *ngIf="invoiceInfo.length === 0 && !showInfoForm">
-                                                                      <td colspan="6" class="text-center">
+                                                                      <td colspan="7" class="text-center">
                                                                            No data available
                                                                       </td>
                                                                  </tr>
@@ -1202,8 +1209,8 @@
                                                        {{'COMMON.ACTIONS.UPLOAD'| translate}}
                                                   </button>
                                              </div>
-                                             <app-custompdfviewer *ngIf="!pdfLoader"
-                                                  [pdf_url]="pdf_url"></app-custompdfviewer>
+                                             <app-custompdfviewer *ngIf="!pdfLoader" [pdf_url]="pdf_url">
+                                             </app-custompdfviewer>
                                         </div>
                                    </div>
                               </div>

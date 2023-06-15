@@ -25,6 +25,10 @@ import { WEB_ROUTES } from 'src/consts/routes';
 import { Router } from '@angular/router';
 import { Invoice } from 'src/app/invoice/invoice.model';
 import { numberWithCommas } from 'src/consts/utils';
+import * as pdfMake from "pdfmake/build/pdfmake";
+import * as pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake!.vfs = pdfFonts.pdfMake.vfs;
+
 export type ChartOptions = {
   series?: ApexAxisChartSeries;
   series2?: ApexNonAxisChartSeries;
@@ -58,6 +62,7 @@ export class MainComponent {
   showInvoiceChart = true;
   public invoiceChartOptions: Partial<ChartOptions> = {
     chart: {
+      id: 'line',
       height: 350,
       type: 'line',
       dropShadow: {
@@ -93,8 +98,6 @@ export class MainComponent {
           colors: ['#9aa0ac'],
         },
       },
-      // tickAmount: 1,
-      // min: 1,
     },
     stroke: {
       curve: 'smooth',
@@ -134,6 +137,7 @@ export class MainComponent {
   showHistoryChart = true;
   public historyChartOptions: Partial<ChartOptions> = {
     chart: {
+      id: 'bar',
       height: 350,
       type: 'bar',
       stacked: true,
@@ -291,24 +295,102 @@ export class MainComponent {
     this.router.navigate([WEB_ROUTES.DASHBOARD_MONTHLY_INVOICE]);
   }
 
-  downloadMonthlyInvoiceChart() {
-    //
+  async downloadMonthlyInvoiceChart() {
+    const docDefinition: any = {
+      content: [
+        {
+          text: 'Monthly Invoice',
+          fontSize: 14,
+        },
+        {
+          image: await this.getBase64Image(true),
+          width: 500
+        },
+      ],
+    };
+    pdfMake.createPdf(docDefinition).open();
   }
 
-  printMonthlyInvoiceChart() {
-    //
+  getBase64Image(isInvoice: boolean) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const svgElement =
+        document.querySelectorAll('.apexcharts-svg')!;
+      let str = ''
+      if (isInvoice) {
+        str = svgElement[0].outerHTML;
+      } else {
+        str = svgElement[1].outerHTML;
+      }
+      const imageBlobURL =
+        'data:image/svg+xml;charset=utf-8,' +
+        encodeURIComponent(str);
+      img.onload = () => {
+        var canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx!.drawImage(img, 0, 0);
+        const dataURL = canvas.toDataURL('image/png');
+        resolve(dataURL);
+      };
+      img.onerror = (error) => {
+        reject(error);
+      };
+      img.src = imageBlobURL;
+    });
+  }
+
+  async printMonthlyInvoiceChart() {
+    const docDefinition: any = {
+      content: [
+        {
+          text: 'Monthly Invoice',
+          fontSize: 14,
+        },
+        {
+          image: await this.getBase64Image(true),
+          width: 500
+        },
+      ],
+    };
+    pdfMake.createPdf(docDefinition).print();
   }
 
   viewHistoryChart() {
     this.router.navigate([WEB_ROUTES.DASHBOARD_MONTHLY_HISTORY]);
   }
 
-  downloadHistoryChart() {
-    //
+  async downloadHistoryChart() {
+    const docDefinition: any = {
+      content: [
+        {
+          text: 'Monthly History',
+          fontSize: 14,
+        },
+        {
+          image: await this.getBase64Image(false),
+          width: 500
+        },
+      ],
+    };
+    pdfMake.createPdf(docDefinition).open();
   }
 
-  printHistoryChart() {
-    //
+  async printHistoryChart() {
+    const docDefinition: any = {
+      content: [
+        {
+          text: 'Monthly History',
+          fontSize: 14,
+        },
+        {
+          image: await this.getBase64Image(false),
+          width: 500
+        },
+      ],
+    };
+    pdfMake.createPdf(docDefinition).print();
   }
 
   invoiceDetail(invoice: Invoice) {
