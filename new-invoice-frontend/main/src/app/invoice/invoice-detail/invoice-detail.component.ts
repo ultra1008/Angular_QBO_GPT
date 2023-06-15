@@ -121,7 +121,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   prevStep() {
     this.step--;
   }
-  constructor (private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog, private commonService: CommonService,
+  constructor(private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog, private commonService: CommonService,
     public route: ActivatedRoute, public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, public translate: TranslateService,) {
     super();
     this.id = this.route.snapshot.queryParamMap.get('_id');
@@ -385,7 +385,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
 
   async saveInformation() {
     if (this.invoiceForm.valid) {
-      this.uiSpinner.spin$.next(true);
+
       const formValues = this.invoiceForm.value;
       formValues.invoice_total_amount = formValues.invoice_total_amount.toString().replace(/,/g, '');
       formValues.tax_amount = formValues.tax_amount.toString().replace(/,/g, '');
@@ -401,6 +401,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
         formValues.due_date_epoch = Math.round(formValues.due_date_epoch.valueOf() / 1000);
       }
       if (formValues.status == 'Rejected') {
+
         const dialogRef = this.dialog.open(InvoiceRejectedReasonComponent, {
           width: '28%',
           data: {},
@@ -408,6 +409,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
         this.subs.sink = dialogRef.afterClosed().subscribe(async (result: any) => {
           if (result) {
             if (result.status) {
+              this.uiSpinner.spin$.next(true);
               formValues.reject_reason = result.reject_reason;
               const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_INVOICE, formValues);
               this.uiSpinner.spin$.next(false);
@@ -421,6 +423,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
           }
         });
       } else {
+        this.uiSpinner.spin$.next(true);
         const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_INVOICE, formValues);
         this.uiSpinner.spin$.next(false);
         if (data.status) {
@@ -434,7 +437,6 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
 
   async saveOtherDocument() {
     if (this.invoiceForm.valid) {
-      this.uiSpinner.spin$.next(true);
       const formValues = this.invoiceForm.value;
       formValues.invoice_total_amount = formValues.invoice_total_amount.toString().replace(/,/g, '');
       formValues.tax_amount = formValues.tax_amount.toString().replace(/,/g, '');
@@ -461,6 +463,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
         this.subs.sink = dialogRef.afterClosed().subscribe(async (result: any) => {
           if (result) {
             if (result.status) {
+              this.uiSpinner.spin$.next(true);
               formValues.reject_reason = result.reject_reason;
               const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_OTHER_DOCUMENT_INVOICE, formValues);
               this.uiSpinner.spin$.next(false);
@@ -475,6 +478,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
           }
         });
       } else {
+        this.uiSpinner.spin$.next(true);
         const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SAVE_OTHER_DOCUMENT_INVOICE, formValues);
         this.uiSpinner.spin$.next(false);
         if (data.status) {
