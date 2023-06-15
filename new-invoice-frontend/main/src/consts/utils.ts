@@ -348,6 +348,22 @@ export function notificationRoutes() {
       name: 'Invoice Note',
       url: WEB_ROUTES.INVOICE_DETAILS,
     },
+    {
+      name: 'Quote',
+      url: WEB_ROUTES.INVOICE_VIEW_DOCUMENT,
+    },
+    {
+      name: 'PO',
+      url: WEB_ROUTES.INVOICE_VIEW_DOCUMENT,
+    },
+    {
+      name: 'Packing Slip',
+      url: WEB_ROUTES.INVOICE_VIEW_DOCUMENT,
+    },
+    {
+      name: 'Receiving Slip',
+      url: WEB_ROUTES.INVOICE_VIEW_DOCUMENT,
+    },
   ];
 }
 

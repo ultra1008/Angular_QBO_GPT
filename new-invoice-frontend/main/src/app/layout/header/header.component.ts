@@ -130,27 +130,26 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
     }
     const found = notificationRoutes().find((element: any) => element.name == notification.module_name);
     this.uiSpinner.spin$.next(false);
+    // this.trigger.closeMenu();
     if (found) {
-      if (notification.tab_index) {
+      if (notification.module_name == 'PO') {
+        const routes = notification.module_route;
+        routes.document = configData.DOCUMENT_TYPES.po;
+        this.router.navigate([found.url], { queryParams: routes }).then();
+      } else if (notification.module_name == 'Quote' || notification.module_name == 'Packing Slip' || notification.module_name == 'Receiving Slip') {
+        const routes = notification.module_route;
+        routes.document = notification.module_name.toString().toUpperCase().replace(/ /g, "_");
+        this.router.navigate([found.url], { queryParams: routes }).then();
+      } else if (notification.tab_index) {
         if (notification.tab_index != -1) {
-          this.router
-            .navigate([found.url], {
-              queryParams: notification.module_route,
-              state: { value: notification.tab_index },
-            })
-            .then();
+          this.router.navigate([found.url], { queryParams: notification.module_route, state: { value: notification.tab_index }, }).then();
         } else {
-          this.router
-            .navigate([found.url], { queryParams: notification.module_route })
-            .then();
+          this.router.navigate([found.url], { queryParams: notification.module_route }).then();
         }
       } else {
-        this.router
-          .navigate([found.url], { queryParams: notification.module_route })
-          .then();
+        this.router.navigate([found.url], { queryParams: notification.module_route }).then();
       }
     }
-    this.trigger.closeMenu();
   }
 
   async getInvoiceMessageCount() {
