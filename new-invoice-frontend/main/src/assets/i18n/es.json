@@ -540,7 +540,8 @@
     },
     "DASHBOARD": {
         "CHART": {
-            "MONTHLY_TITLE": "Monthly History"
+            "MONTHLY_TITLE": "Monthly History",
+            "MONTHLY_INVOICE": "Monthly Invoice"
         }
     }
 }
