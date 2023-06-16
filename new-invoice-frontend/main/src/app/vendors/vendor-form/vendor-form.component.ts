@@ -188,7 +188,12 @@ export class VendorFormComponent {
     );
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
-      this.router.navigate([WEB_ROUTES.VENDOR]);
+      const vendorDisplay = localStorage.getItem(localstorageconstants.VENDOR_DISPLAY) ?? 'list';
+      if (vendorDisplay == 'list') {
+        this.router.navigate([WEB_ROUTES.VENDOR]);
+      } else {
+        this.router.navigate([WEB_ROUTES.VENDOR_GRID]);
+      }
     } else {
       showNotification(this.snackBar, data.message, 'error');
     }
@@ -257,7 +262,13 @@ export class VendorFormComponent {
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        this.router.navigate([WEB_ROUTES.VENDOR]);
+        const vendorDisplay = localStorage.getItem(localstorageconstants.VENDOR_DISPLAY) ?? 'list';
+        if (vendorDisplay == 'list') {
+          this.router.navigate([WEB_ROUTES.VENDOR]);
+        } else {
+          this.router.navigate([WEB_ROUTES.VENDOR_GRID]);
+        }
+
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');
@@ -267,7 +278,12 @@ export class VendorFormComponent {
 
   confirmExit() {
     if (this.isHideArchiveActionQBD) {
-      this.router.navigate([WEB_ROUTES.VENDOR]);
+      const vendorDisplay = localStorage.getItem(localstorageconstants.VENDOR_DISPLAY) ?? 'list';
+      if (vendorDisplay == 'list') {
+        this.router.navigate([WEB_ROUTES.VENDOR]);
+      } else {
+        this.router.navigate([WEB_ROUTES.VENDOR_GRID]);
+      }
     } else {
       swalWithBootstrapButtons
         .fire({
@@ -295,7 +311,12 @@ export class VendorFormComponent {
             // ;
           } else {
             setTimeout(() => {
-              this.router.navigate([WEB_ROUTES.VENDOR]);
+              const vendorDisplay = localStorage.getItem(localstorageconstants.VENDOR_DISPLAY) ?? 'list';
+              if (vendorDisplay == 'list') {
+                this.router.navigate([WEB_ROUTES.VENDOR]);
+              } else {
+                this.router.navigate([WEB_ROUTES.VENDOR_GRID]);
+              }
             }, 100);
           }
         });
