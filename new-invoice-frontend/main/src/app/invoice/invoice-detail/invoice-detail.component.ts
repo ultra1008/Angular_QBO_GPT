@@ -309,8 +309,8 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
         invoice_no: [this.invoiceData.invoice_no],
         invoice_date_epoch: [invoiceDate],
         due_date_epoch: [dueDate],
-        invoice_total_amount: [numberWithCommas(this.invoiceData.invoice_total_amount.toFixed(2))],
-        tax_amount: [numberWithCommas(this.invoiceData.tax_amount.toFixed(2))],
+        invoice_total_amount: [numberWithCommas(Number(this.invoiceData.invoice_total_amount).toFixed(2))],
+        tax_amount: [numberWithCommas(Number(this.invoiceData.tax_amount).toFixed(2))],
         assign_to: [this.invoiceData.assign_to],
         status: [this.invoiceData.status],
       });
@@ -338,8 +338,8 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
         terms: [this.invoiceData.terms],
 
         tax_id: [this.invoiceData.tax_id],
-        sub_total: [numberWithCommas(this.invoiceData.sub_total.toFixed(2))],
-        amount_due: [numberWithCommas(this.invoiceData.amount_due.toFixed(2))],
+        sub_total: [numberWithCommas(Number(this.invoiceData.sub_total).toFixed(2))],
+        amount_due: [numberWithCommas(Number(this.invoiceData.amount_due).toFixed(2))],
 
         gl_account: [this.invoiceData.gl_account],
         class_name: [this.invoiceData.class_name],
