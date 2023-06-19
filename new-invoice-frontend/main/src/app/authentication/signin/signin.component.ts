@@ -50,7 +50,7 @@ export class SigninComponent implements OnInit {
   showForm = false;
   companyList: Array<CompanyModel> = [];
 
-  constructor (private formBuilder: UntypedFormBuilder, private router: Router, private authService: AuthService,
+  constructor(private formBuilder: UntypedFormBuilder, private router: Router, private authService: AuthService,
     private AuthenticationService: AuthenticationService, private snackBar: MatSnackBar, public uiSpinner: UiSpinnerService,
     private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private commonService: CommonService,
   ) {
@@ -111,7 +111,7 @@ export class SigninComponent implements OnInit {
     this.authForm.reset();
   }
   langurl() {
-    window.open('https://www.rovuk.us/mobile-terms-of-service-2', '_blank');
+    window.open('https://smartaccupay.com/mobile-terms-of-service/', '_blank');
   }
   public onSaveUsernameChanged(value: boolean) {
     this.checked = value;
