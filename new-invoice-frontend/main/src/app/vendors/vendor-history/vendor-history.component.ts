@@ -5,6 +5,7 @@ import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroy
 import { WEB_ROUTES } from 'src/consts/routes';
 import { CommonService } from 'src/app/services/common.service';
 import { httpversion, httproutes } from 'src/consts/httproutes';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
 
 @Component({
   selector: 'app-vendor-history',
@@ -16,7 +17,7 @@ export class VendorHistoryComponent extends UnsubscribeOnDestroyAdapter implemen
   vendorHistory: any;
   historyLoading = true;
 
-  constructor (private router: Router, public vendorService: VendorsService, public commonService: CommonService) {
+  constructor(private router: Router, public vendorService: VendorsService, public commonService: CommonService) {
     super();
   }
 
@@ -42,7 +43,12 @@ export class VendorHistoryComponent extends UnsubscribeOnDestroyAdapter implemen
   }
 
   back() {
-    this.router.navigate([WEB_ROUTES.VENDOR]);
+    const vendorDisplay = localStorage.getItem(localstorageconstants.VENDOR_DISPLAY) ?? 'list';
+    if (vendorDisplay == 'list') {
+      this.router.navigate([WEB_ROUTES.VENDOR]);
+    } else {
+      this.router.navigate([WEB_ROUTES.VENDOR_GRID]);
+    }
   }
 
   setHeightStyles() {
