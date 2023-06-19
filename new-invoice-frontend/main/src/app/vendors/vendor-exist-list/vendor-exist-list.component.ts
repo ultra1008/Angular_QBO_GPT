@@ -28,12 +28,14 @@ export class VendorExistListComponent extends UnsubscribeOnDestroyAdapter
   exitData: any = [];
   button_show: boolean;
   roleList: any = this.variablesRoleList.slice();
-  titleMessage: string = '';
+  titleMessage = '';
   userList: any = [];
   isDelete = 0;
   invoice_logo = icon.INVOICE_LOGO;
   data_import: any = [];
-  constructor(
+  title = 'Vendor Imaport';
+
+  constructor (
     public dialogRef: MatDialogRef<UserExistListComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: VendorsService,

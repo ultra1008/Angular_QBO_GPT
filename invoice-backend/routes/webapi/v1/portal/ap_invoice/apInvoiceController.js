@@ -1103,7 +1103,12 @@ module.exports.getAPInvoiceHistory = async function (req, res) {
                         as: "history_created_by"
                     }
                 },
-                { $unwind: "$history_created_by" },
+                {
+                    $unwind: {
+                        path: "$history_created_by",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
                 { $sort: { history_created_at: -1 } },
                 { $limit: perpage + start },
                 { $skip: start }

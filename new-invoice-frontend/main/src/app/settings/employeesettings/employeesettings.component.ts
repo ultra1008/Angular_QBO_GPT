@@ -492,8 +492,7 @@ export class EmployeesettingsComponent {
             that.exitData = params;
             const dialogRef = that.dialog.open(ExistListingComponent, {
               width: '750px',
-              height: '500px',
-              // data: that.exitData,
+              // height: '500px', 
               data: { data: that.exitData, tab: that.currrent_tab },
               disableClose: true,
             });

@@ -16,7 +16,7 @@ import { DialogData } from 'src/app/vendors/vendor-report/vendor-report.componen
 export class InvoiceRejectedReasonComponent {
   form!: UntypedFormGroup;
   hide = true;
-  invoice_logo = icon.INVOICE_LOGO;
+  title = 'Reject Reason';
 
   constructor (public dialogRef: MatDialogRef<InvoiceRejectedReasonComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private commonService: CommonService, private snackBar: MatSnackBar, private router: Router, public uiSpinner: UiSpinnerService,

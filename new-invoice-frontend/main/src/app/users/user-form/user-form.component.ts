@@ -139,7 +139,7 @@ export class UserFormComponent
   role_permission!: RolePermission;
 
 
-  constructor(
+  constructor (
     private location: Location,
     public uiSpinner: UiSpinnerService,
     public UserService: UserService,
@@ -385,6 +385,7 @@ export class UserFormComponent
 
   addNew() {
     const dialogRef = this.dialog.open(UserRestoreFormComponent, {
+      width: '28%',
       data: this.id,
     });
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {

@@ -32,6 +32,7 @@ export class ExitsDataListComponent extends UnsubscribeOnDestroyAdapter {
   userList: Array<UserModel> = [];
   isDelete = 0;
   invoice_logo = icon.INVOICE_LOGO;
+  title = 'Import Cient/Job Name';
   constructor (
     public dialogRef: MatDialogRef<ImportClientComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,

@@ -1,16 +1,12 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Component, Inject } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SwitchCompanyComponent } from 'src/app/layout/header/switch-company/switch-company.component';
 import { CommonService } from 'src/app/services/common.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
-import { DialogData } from 'src/app/vendors/vendor-report/vendor-report.component';
 import { httpversion, httproutes } from 'src/consts/httproutes';
-import { icon } from 'src/consts/icon';
-import { localstorageconstants } from 'src/consts/localstorageconstants';
-import { WEB_ROUTES } from 'src/consts/routes';
 import { commonLocalThumbImage, showNotification } from 'src/consts/utils';
 import * as  moment from "moment";
 import { commonFileChangeEvent } from 'src/app/services/utils';
@@ -23,12 +19,12 @@ import { configData } from 'src/environments/configData';
   styleUrls: ['./upload-invoice-form.component.scss']
 })
 export class UploadInvoiceFormComponent {
-  invoice_logo = icon.INVOICE_LOGO;
   files: File[] = [];
   supporting = false;
   documentList: any = configData.DOCUMENT_TYPE_LIST;
   selectedDocument = '';
   id: any;
+  title = 'Upload Document';
 
   constructor (public dialogRef: MatDialogRef<SwitchCompanyComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
     private commonService: CommonService, private snackBar: MatSnackBar, public route: ActivatedRoute, public uiSpinner: UiSpinnerService,

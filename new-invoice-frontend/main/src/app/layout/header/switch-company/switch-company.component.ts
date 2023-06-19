@@ -26,7 +26,7 @@ export class SwitchCompanyComponent implements OnInit {
   showCompanyList = true;
   selectedCompany: any;
   removable = true;
-  invoice_logo = icon.INVOICE_LOGO;
+  title = 'Choose Organization';
 
   constructor (public dialogRef: MatDialogRef<SwitchCompanyComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private commonService: CommonService, private snackBar: MatSnackBar, private router: Router, public uiSpinner: UiSpinnerService,

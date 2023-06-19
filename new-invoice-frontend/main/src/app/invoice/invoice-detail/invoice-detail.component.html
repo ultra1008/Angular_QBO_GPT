@@ -67,8 +67,8 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>
-                                                                           {{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.DOCUMENT_TYPE'
-                                                                           | translate}}</mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.DOCUMENT_TYPE' | translate}}
+                                                                      </mat-label>
                                                                       <mat-select formControlName="document_type">
                                                                            <mat-option
                                                                                 *ngFor="let docType of documentList"
@@ -82,8 +82,8 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>
-                                                                           {{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.VENDOR_NAME'
-                                                                           | translate}}</mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.VENDOR_NAME' | translate}}
+                                                                      </mat-label>
                                                                       <mat-select formControlName="vendor"
                                                                            #vendorSelect>
                                                                            <mat-select-filter [placeholder]="'Filter'"
@@ -103,8 +103,8 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>
-                                                                           {{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.INVOICE#'
-                                                                           | translate}}</mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.INVOICE#' | translate}}
+                                                                      </mat-label>
                                                                       <input matInput
                                                                            class="input-capitalized-textfield"
                                                                            formControlName="invoice_no">
@@ -116,9 +116,10 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>
-                                                                           {{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.INVOICE_DATE'
-                                                                           | translate}}</mat-label>
-                                                                      <input matInput [max]="maxDate"
+                                                                           {{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.INVOICE_DATE' | translate}}
+                                                                      </mat-label>
+                                                                      <!-- [max]="maxDate" -->
+                                                                      <input matInput
                                                                            [matDatepicker]="invoiceDatePicker"
                                                                            formControlName="invoice_date_epoch">
                                                                       <mat-datepicker-toggle matSuffix
@@ -132,10 +133,10 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>
-                                                                           {{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.DUE_DATE'
-                                                                           | translate}}</mat-label>
-                                                                      <input matInput [max]="maxDate"
-                                                                           [matDatepicker]="dueDatePicker"
+                                                                           {{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.DUE_DATE' | translate}}
+                                                                      </mat-label>
+                                                                      <!-- [max]="maxDate" -->
+                                                                      <input matInput [matDatepicker]="dueDatePicker"
                                                                            formControlName="due_date_epoch">
                                                                       <mat-datepicker-toggle matSuffix
                                                                            [for]="dueDatePicker">
@@ -147,8 +148,8 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>
-                                                                           {{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.TOTAL_AMOUNT'
-                                                                           | translate}}</mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.TOTAL_AMOUNT' | translate}}
+                                                                      </mat-label>
                                                                       <span class="dollar-align" matPrefix>$</span>
                                                                       <input matInput
                                                                            class="input-capitalized-textfield"
@@ -164,8 +165,8 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>
-                                                                           {{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.TAX_AMOUNT'
-                                                                           | translate}}</mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.TAX_AMOUNT' | translate}}
+                                                                      </mat-label>
                                                                       <span class="dollar-align" matPrefix>$</span>
                                                                       <input matInput formControlName="tax_amount"
                                                                            onkeypress="return String.fromCharCode(event.charCode).match(/[^0-9]/g) === null"
@@ -178,8 +179,8 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>
-                                                                           {{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.ASSIGN_TO'
-                                                                           | translate}}</mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.ASSIGN_TO' | translate}}
+                                                                      </mat-label>
                                                                       <mat-select formControlName="assign_to"
                                                                            #userSelect>
                                                                            <mat-select-filter [placeholder]="'Filter'"
@@ -205,8 +206,8 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>
-                                                                           {{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.STATUS'
-                                                                           | translate}}</mat-label>
+                                                                           {{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.STATUS' | translate}}
+                                                                      </mat-label>
                                                                       <mat-select formControlName="status">
                                                                            <mat-option *ngFor="let status of statusList"
                                                                                 [value]="status.key">
@@ -327,8 +328,8 @@
                                                                            {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.ORDER_DATE'
                                                                            | translate}}
                                                                       </mat-label>
-                                                                      <input matInput [max]="maxDate"
-                                                                           [matDatepicker]="orderDatePicker"
+                                                                      <!-- [max]="maxDate" -->
+                                                                      <input matInput [matDatepicker]="orderDatePicker"
                                                                            formControlName="order_date_epoch">
                                                                       <mat-datepicker-toggle matSuffix
                                                                            [for]="orderDatePicker">
@@ -343,8 +344,8 @@
                                                                            {{'INVOICE.INVOICE_DETAILS.MORE_INFORMATION.FORM.SHIP_DATE'
                                                                            | translate}}
                                                                       </mat-label>
-                                                                      <input matInput [max]="maxDate"
-                                                                           [matDatepicker]="shipDatePicker"
+                                                                      <!-- [max]="maxDate" -->
+                                                                      <input matInput [matDatepicker]="shipDatePicker"
                                                                            formControlName="ship_date_epoch">
                                                                       <mat-datepicker-toggle matSuffix
                                                                            [for]="shipDatePicker">

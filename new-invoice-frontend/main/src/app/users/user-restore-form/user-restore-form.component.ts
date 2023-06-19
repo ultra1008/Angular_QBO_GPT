@@ -37,7 +37,7 @@ export class UserRestoreFormComponent {
   selection = new SelectionModel<UserModel>(true, []);
   variablesRoleList: any = [];
 
-  invoice_logo = icon.INVOICE_LOGO;
+  title = 'Restore User';
 
   roleList: any = this.variablesRoleList.slice();
   titleMessage = '';

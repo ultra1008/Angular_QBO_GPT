@@ -121,7 +121,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   prevStep() {
     this.step--;
   }
-  constructor(private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog, private commonService: CommonService,
+  constructor (private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog, private commonService: CommonService,
     public route: ActivatedRoute, public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, public translate: TranslateService,) {
     super();
     this.id = this.route.snapshot.queryParamMap.get('_id');
@@ -385,7 +385,6 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
 
   async saveInformation() {
     if (this.invoiceForm.valid) {
-
       const formValues = this.invoiceForm.value;
       formValues.invoice_total_amount = formValues.invoice_total_amount.toString().replace(/,/g, '');
       formValues.tax_amount = formValues.tax_amount.toString().replace(/,/g, '');

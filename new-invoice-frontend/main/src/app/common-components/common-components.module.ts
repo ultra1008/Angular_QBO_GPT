@@ -6,6 +6,9 @@ import { LoadingComponent } from './loading/loading.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { CustompdfviewerComponent } from './custompdfviewer/custompdfviewer.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { ModelHeaderComponent } from './model-header/model-header.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -13,17 +16,21 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
     PhoneFormatPipe,
     LoadingComponent,
     CustompdfviewerComponent,
+    ModelHeaderComponent,
   ],
   exports: [
     HistoryComponent,
     PhoneFormatPipe,
     LoadingComponent,
-    CustompdfviewerComponent
+    CustompdfviewerComponent,
+    ModelHeaderComponent,
   ],
   imports: [
     CommonModule,
     TranslateModule,
-    PdfViewerModule
+    PdfViewerModule,
+    MatIconModule,
+    MatButtonModule,
   ]
 })
 export class CommonComponentsModule { }

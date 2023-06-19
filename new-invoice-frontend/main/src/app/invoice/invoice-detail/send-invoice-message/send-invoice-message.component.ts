@@ -24,7 +24,8 @@ export class SendInvoiceMessageComponent implements OnInit {
   variablesUserList: any = [];
   userList: Array<UserModel> = this.variablesUserList.slice();
   id: any;
-  invoice_logo = icon.INVOICE_LOGO;
+  title = 'Send Message';
+
   constructor (public dialogRef: MatDialogRef<SwitchCompanyComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private commonService: CommonService, private snackBar: MatSnackBar, private router: Router, public uiSpinner: UiSpinnerService,
     private formBuilder: FormBuilder, public route: ActivatedRoute) {

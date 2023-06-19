@@ -18,6 +18,7 @@ import { showNotification } from 'src/consts/utils';
 import { SettingsService } from '../../../settings.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { icon } from 'src/consts/icon';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-document-type-form',
@@ -36,6 +37,7 @@ export class DocumentTypeFormComponent {
   userList: any = [];
   isDelete = 0;
   invoice_logo = icon.INVOICE_LOGO;
+  title = this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.DOCUMENT_TYPE');
   constructor (
     public dialogRef: MatDialogRef<DocumentTypeFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -44,7 +46,8 @@ export class DocumentTypeFormComponent {
     private snackBar: MatSnackBar,
     public SettingsServices: SettingsService,
     private router: Router,
-    public uiSpinner: UiSpinnerService
+    public uiSpinner: UiSpinnerService,
+    public translate: TranslateService,
   ) {
     this.DocumentInfo = new FormGroup({
       document_type_name: new FormControl('', [Validators.required]),

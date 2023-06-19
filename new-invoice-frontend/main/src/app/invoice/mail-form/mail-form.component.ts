@@ -31,7 +31,7 @@ export class MailFormComponent {
   dialogTitle: string;
   mailInfo!: any;
   advanceTable: AdvanceTable;
-  invoice_logo = icon.INVOICE_LOGO;
+  title = 'Mail';
 
 
   titleMessage = '';

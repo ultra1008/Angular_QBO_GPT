@@ -15,6 +15,7 @@ import { AdvanceTable } from 'src/app/users/user.model';
 import { showNotification } from 'src/consts/utils';
 import { SettingsService } from '../../../settings.service';
 import { icon } from 'src/consts/icon';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-department-form',
@@ -27,7 +28,7 @@ export class DepartmentFormComponent {
   DepartmentInfo!: UntypedFormGroup;
   advanceTable: AdvanceTable;
   variablesRoleList: any = [];
-  invoice_logo = icon.INVOICE_LOGO;
+  title = this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.DEPARTMENT');
 
   roleList: any = this.variablesRoleList.slice();
   titleMessage = '';
@@ -40,7 +41,7 @@ export class DepartmentFormComponent {
     private fb: UntypedFormBuilder,
     private snackBar: MatSnackBar,
     public SettingsServices: SettingsService,
-    private router: Router,
+    private router: Router, public translate: TranslateService,
     public uiSpinner: UiSpinnerService
   ) {
     this.DepartmentInfo = new FormGroup({

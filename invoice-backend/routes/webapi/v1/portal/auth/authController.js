@@ -2479,4 +2479,4 @@ module.exports.getMyCompanyList = async function (req, res) {
     } finally {
         // connection_db_api.close();
     }
-};;
+};

@@ -22,6 +22,7 @@ router.post('/mobile/v1/auth/submitemailotp', authValidation.submitEmailOTP, aut
 router.post('/mobile/v1/auth/loginwithemailotp', authValidation.loginWithEmailOTP, authController.loginWithEmailOTP);
 router.post('/mobile/v1/auth/emailforgotpassword', authValidation.emailForgotPassword, authController.emailForgotPassword);
 router.post('/mobile/v1/auth/sendemailforgotpassword', authValidation.sendEmailForgotPassword, authController.sendEmailForgotPassword);
+router.post('/mobile/v1/auth/getmycompanylist', authValidation.getMyCompanyList, authController.getMyCompanyList);
 router.get('/mobile/v1/auth/getuserlist', authController.getUserList);
 
 // Invoice
