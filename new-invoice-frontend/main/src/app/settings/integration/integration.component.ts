@@ -25,6 +25,10 @@ export class IntegrationComponent {
     }
   }
 
+  clickOnCalculator() {
+    this.router.navigate(["settings/calculator"]);
+  }
+
   back() {
     this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
