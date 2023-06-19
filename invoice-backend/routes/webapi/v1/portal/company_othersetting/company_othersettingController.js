@@ -245,6 +245,7 @@ module.exports.sendIframeCode = async function (req, res) {
                 ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                 THANKS: translator.getStr('EmailTemplateThanks'),
                 ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
                 TITLE: `${translator.getStr('iFrame_IntegrationWith')} ${company_data.companyname}`,
                 COPY_CODE: translator.getStr('Copy_Code'),
                 TEXT1: `${translator.getStr('EmailTemplateHello')} ${company_data.companyname},`,

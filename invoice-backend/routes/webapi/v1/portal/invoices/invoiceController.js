@@ -225,6 +225,7 @@ function sendInvoiceUpdateAlerts(decodedToken, id, module, translator) {
                                         ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
                                         ROVUK_TEAM_SEC: translator.getStr('EmailTemplateRovukTeamSec'),
                                         VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
+                                        COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                                         TITLE: `${title}`,
                                         TEXT: new handlebars.SafeString(`<h4>Hello,</h4><h4>${description}</h4>
@@ -334,6 +335,7 @@ function sendInvoiceAssignUpdateAlerts(decodedToken, id, module, translator) {
                                 ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
                                 ROVUK_TEAM_SEC: translator.getStr('EmailTemplateRovukTeamSec'),
                                 VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
+                                COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                                 TITLE: `${title}`,
                                 TEXT: new handlebars.SafeString(`<h4>Hello,</h4><h4>${description}</h4>
@@ -1806,6 +1808,7 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
                         THANKS: translator.getStr('EmailTemplateThanks'),
                         ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
                         VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
+                        COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                         EMAILTITLE: `${translator.getStr('EmailInvoiceReportTitle')}`,
                         TEXT1: translator.getStr('EmailInvoiceReportText1'),
@@ -3403,6 +3406,7 @@ module.exports.requestForInvoiceFile = async function (req, res) {
                 THANKS: translator.getStr('EmailTemplateThanks'),
                 ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
                 VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
+                COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                 TITLE: `Missing Document request!`,
                 TEXT: new handlebars.SafeString(`<p>Hi,</p>
@@ -3954,6 +3958,7 @@ module.exports.sendInvoiceEmail = async function (req, res) {
                 THANKS: translator.getStr('EmailTemplateThanks'),
                 ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
                 EMAILTITLE: translator.getStr('INVOICE_SEND_TITLE'),
+                COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                 ANY_QUESTION: translator.getStr('EmailLoginAnyQuestion'),
                 MESSAGE: new handlebars.SafeString(requestObject.message),

@@ -195,6 +195,7 @@ async function pendingInvoiceToAssignedToUserCronFunction(companycode) {
                         ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
                         ROVUK_TEAM_SEC: translator.getStr('EmailTemplateRovukTeamSec'),
                         VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
+                        COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                         TITLE: `${title}`,
                         TEXT: new handlebars.SafeString(`<h4>${translator.getStr('EmailTemplateHi')} ${get_data[i].assign_to.userfullname},</h4><h4>${description}</h4>
@@ -309,6 +310,7 @@ async function pendingInvoiceNotAssignedToUserCronFunction(companycode) {
                         ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
                         ROVUK_TEAM_SEC: translator.getStr('EmailTemplateRovukTeamSec'),
                         VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
+                        COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                         TITLE: `${title}`,
                         TEXT: new handlebars.SafeString(`<h4>${translator.getStr('EmailTemplateHi')},</h4><h4>${description}</h4>
@@ -431,6 +433,7 @@ async function dueDateLessThenToAdminCronFunction(companycode, days) {
                         ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
                         ROVUK_TEAM_SEC: translator.getStr('EmailTemplateRovukTeamSec'),
                         VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
+                        COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                         TITLE: `${title}`,
                         TEXT: new handlebars.SafeString(`<h4>${translator.getStr('EmailTemplateHi')},</h4><h4>${description}</h4>

@@ -468,6 +468,7 @@ module.exports.getAlertExcelReport = async function (req, res) {
                         ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
                         ROVUK_TEAM_SEC: translator.getStr('EmailTemplateRovukTeamSec'),
                         VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
+                        COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                         FILE_LINK: userqrcode,
 

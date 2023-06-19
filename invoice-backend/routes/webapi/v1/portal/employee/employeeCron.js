@@ -131,6 +131,7 @@ async function userDocumentExpiryAlertCronFunction() {
                             ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                             THANKS: translator.getStr('EmailTemplateThanks'),
                             ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                            COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
                             TITLE: translator.getStr('EmailSingleDocExpireTitle'),
                             TEXT1: `${translator.getStr('EmailAdminDocExpireWillExpireInNext_Your')} ${get_employee_document[aa].document_attachment[a].total_remain} ${translator.getStr('EmailAdminDocExpireMoreInfo')}`,
                             TEXT2: translator.getStr('EmailAdminDocExpireDocumentNeedToUpdate'),
@@ -154,6 +155,7 @@ async function userDocumentExpiryAlertCronFunction() {
                             ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                             THANKS: translator.getStr('EmailTemplateThanks'),
                             ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                            COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                             TITLE: translator.getStr('EmailSingleDocExpireTitle'),
                             TEXT1: `${translator.getStr('EmailAdminDocExpireWillExpireInNext')} ${get_employee_document[aa].document_attachment[a].total_remain} ${translator.getStr('EmailAdminDocExpireMoreInfo')}`,
@@ -220,6 +222,7 @@ async function userEmergencyContactAlertCronFunction() {
                 ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                 THANKS: translator.getStr('EmailTemplateThanks'),
                 ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                 TITLE: `Important message about contact information`,
                 TEXT: new handlebars.SafeString(`<h4>Your emergency contact information needs to be updated or revised.</h4>`),

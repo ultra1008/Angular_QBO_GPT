@@ -186,6 +186,7 @@ module.exports.sendEmergencyContactReminder = async function (req, res) {
                 LINE3: translator.getStr("Company_Maintains_Information"),
                 LINE4: translator.getStr("Following_Data_Text"),
                 View_Report: translator.getStr("View_Report"),
+                COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                 COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
                 COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,

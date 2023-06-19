@@ -196,6 +196,7 @@ async function sendLocationUpdateMail(locationData, decodedToken, translator) {
                 ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                 THANKS: translator.getStr('EmailTemplateThanks'),
                 ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                 TITLE: translator.getStr("Location_Alert_TITLE"),
                 LINE1: new handlebars.SafeString(`${translator.getStr("Location_Alert_Assigned_To_You")} <b>${locationData.old_location_name}</b> ${translator.getStr("Location_Alert_has_been_change")} <b>${locationData.location_name}</b> ${translator.getStr("Location_Alert_line1_last")}`),

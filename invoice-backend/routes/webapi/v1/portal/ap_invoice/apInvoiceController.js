@@ -765,6 +765,7 @@ function sendInvoiceAssignUpdateAlerts(decodedToken, id, translator) {
                         ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
                         ROVUK_TEAM_SEC: translator.getStr('EmailTemplateRovukTeamSec'),
                         VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
+                        COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                         TITLE: `${title}`,
                         TEXT: new handlebars.SafeString(`<h4>Hello ${get_users.userfullname},</h4><h4>${description}</h4>
@@ -1032,6 +1033,7 @@ async function sendAPInvoiceNoteAlert(id, decodedToken, subject, title, descript
                     ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
                     ROVUK_TEAM_SEC: translator.getStr('EmailTemplateRovukTeamSec'),
                     VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
+                    COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                     TITLE: `${title}`,
                     TEXT: new handlebars.SafeString(`<h4>Hello ${get_data.assign_to_data.userfullname},</h4><h4>${description}</h4>
@@ -1576,6 +1578,7 @@ function sendInvoiceUpdateAlerts(decodedToken, id, invoiceId, module, translator
                                         ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
                                         ROVUK_TEAM_SEC: translator.getStr('EmailTemplateRovukTeamSec'),
                                         VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
+                                        COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                                         TITLE: `${title}`,
                                         TEXT: new handlebars.SafeString(`<h4>Hello,</h4><h4>${description}</h4>
@@ -1766,15 +1769,24 @@ module.exports.getApprovedapInvoicesForQBD = async function (req, res) {
                                 },
                                 TxnDate: "$invoice_date_epoch",
                                 DueDate: "$due_date_epoch",
-                                RefNumber: "1234567",
+                                RefNumber: "$invoice_no",
                                 ExpenseLineAdd: {
                                     AccountRef: {
                                         FullName: "$job_client_data.client_name"
                                     },
-                                    Amount: "$invoice_info.amount"
+                                    Amount: {
+                                        $filter: {
+                                            input: '$invoice_info',
+                                            as: 'info',
+                                            cond: { $eq: ['$$info.is_delete', 0] }
+                                        }
+                                    }
+
+                                    //"$invoice_info.amount"
                                 }
+
                             }
-                        }
+                        },
                     }
                 },
                 { $sort: { created_at: -1 } },

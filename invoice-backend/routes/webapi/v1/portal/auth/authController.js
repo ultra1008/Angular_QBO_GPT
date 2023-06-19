@@ -465,6 +465,7 @@ module.exports.savelogindetails = async function (req, res) {
                     IF_NOT_YOU: translator.getStr('EmailLoginIfNotYou'),
                     CHANGE_PASSWORD: translator.getStr('EmailLoginChangePassword'),
                     ANY_QUESTION: translator.getStr('EmailLoginAnyQuestion'),
+                    COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                     COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
                     COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
@@ -561,6 +562,7 @@ module.exports.forgetpassword = async function (req, res) {
                                 ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                                 THANKS: translator.getStr('EmailTemplateThanks'),
                                 ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                                COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                                 TITLE: translator.getStr('MailForgotPassword_Title'),
                                 HI_USERNAME: translator.getStr('Hello_mail'),
@@ -634,6 +636,7 @@ module.exports.sendUserPassword = async function (req, res) {
                         ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')} `,
                         THANKS: translator.getStr('EmailTemplateThanks'),
                         ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                        COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                         TITLE: translator.getStr('EmailResetPasswordTitle'),
                         HI_USERNAME: `${translator.getStr('EmailTemplateHi')} ${one_user.username}, `,
@@ -723,6 +726,7 @@ module.exports.sendOTP = async function (req, res) {
                     ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')} `,
                     THANKS: translator.getStr('EmailTemplateThanks'),
                     ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                    COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                     TITLE: 'One Time Password (OTP) verification',
                     LINE1: new handlebars.SafeString(`Your One Time Password(OTP) is<b> ${sixdidgitnumber}</b>.`),
@@ -1594,6 +1598,7 @@ module.exports.sendEmailOTP = async function (req, res) {
                     ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')} `,
                     THANKS: translator.getStr('EmailTemplateThanks'),
                     ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                    COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                     TITLE: 'One Time Password (OTP) verification',
                     LINE1: new handlebars.SafeString(`Your One Time Password(OTP) is <b> ${sixdidgitnumber}</b>`),
@@ -2344,6 +2349,7 @@ module.exports.emailForgotPassword = async function (req, res) {
                     ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')} `,
                     THANKS: translator.getStr('EmailTemplateThanks'),
                     ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                    COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                     TITLE: translator.getStr('MailForgotPassword_Title'),
                     HI_USERNAME: translator.getStr('Hello_mail'),
@@ -2416,6 +2422,7 @@ module.exports.sendEmailForgotPassword = async function (req, res) {
                 ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')} `,
                 THANKS: translator.getStr('EmailTemplateThanks'),
                 ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                 TITLE: translator.getStr('MailForgotPassword_Title'),
                 HI_USERNAME: translator.getStr('Hello_mail'),

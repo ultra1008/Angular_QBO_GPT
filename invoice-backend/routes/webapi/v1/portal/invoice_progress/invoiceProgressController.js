@@ -1387,6 +1387,7 @@ function sendInvoiceInsertAlerts(companyCode, connection_db_api, id, translator)
                                 ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
                                 ROVUK_TEAM_SEC: translator.getStr('EmailTemplateRovukTeamSec'),
                                 VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
+                                COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                                 TITLE: `${title}`,
                                 TEXT: new handlebars.SafeString(`<h4>Hello,</h4><h4>${description}</h4>

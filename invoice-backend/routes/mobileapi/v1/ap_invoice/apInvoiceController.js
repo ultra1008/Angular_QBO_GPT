@@ -859,6 +859,7 @@ function sendInvoiceAssignUpdateAlerts(decodedToken, id, translator) {
                         ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                         THANKS: translator.getStr('EmailTemplateThanks'),
                         ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                        COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
                         ROVUK_TEAM_SEC: translator.getStr('EmailTemplateRovukTeamSec'),
                         VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
 

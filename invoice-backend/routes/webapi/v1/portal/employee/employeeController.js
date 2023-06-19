@@ -191,6 +191,7 @@ module.exports.saveEmployee = async function (req, res) {
                                 DOWNLOAD_APP: translator.getStr('EmailInvitationUserDownloadApp'),
                                 LOG_IN: translator.getStr('EmailInvitationLogIn'),
                                 LOGIN_LINK: config.SITE_URL + "/login",
+                                COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                                 COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
                                 COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
@@ -1859,6 +1860,7 @@ module.exports.sendappinvitation = async function (req, res) {
                 ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                 THANKS: translator.getStr('EmailTemplateThanks'),
                 ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                 TITLE: translator.getStr('EmailAppInvitationTitle'),
                 USER_FULL_NAME: `${requestObject.name},`,
@@ -2084,6 +2086,7 @@ module.exports.senddocumentexpiration = async function (req, res) {
                                 ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                                 THANKS: translator.getStr('EmailTemplateThanks'),
                                 ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                                COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                                 TITLE: translator.getStr('EmailSingleDocExpireTitle'),
                                 HELLO_USERNAME: `${translator.getStr('EmailTemplateHello')} ${decodedToken.UserData.userfullname}`,
@@ -3420,6 +3423,7 @@ module.exports.getAllEmployeeReport = async function (req, res) {
                         THANKS: translator.getStr('EmailTemplateThanks'),
                         ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
                         VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
+                        COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                         EMAILTITLE: `${translator.getStr('EmailTeamReportTitle')}`,
                         TEXT1: translator.getStr('EmailTeamReportText1'),
@@ -3567,6 +3571,7 @@ module.exports.checkAndInsertImportData = async function (req, res) {
                         DOWNLOAD_APP: translator.getStr('EmailInvitationUserDownloadApp'),
                         LOG_IN: translator.getStr('EmailInvitationLogIn'),
                         LOGIN_LINK: config.SITE_URL + "/login",
+                        COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                         COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
                         COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
@@ -4333,6 +4338,7 @@ module.exports.importManagementUser = async function (req, res) {
                         DOWNLOAD_APP: translator.getStr('EmailInvitationUserDownloadApp'),
                         LOG_IN: translator.getStr('EmailInvitationLogIn'),
                         LOGIN_LINK: config.SITE_URL + "/login",
+                        COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                         COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
                         COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,

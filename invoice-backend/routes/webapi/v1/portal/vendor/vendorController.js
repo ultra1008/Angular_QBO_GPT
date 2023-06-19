@@ -1289,6 +1289,7 @@ module.exports.getVendorExcelReport = async function (req, res) {
                         THANKS: translator.getStr('EmailTemplateThanks'),
                         ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
                         VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
+                        COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                         EMAILTITLE: `${translator.getStr('EmailVendorReportTitle')}`,
                         TEXT1: translator.getStr('EmailVendorReportText1'),
