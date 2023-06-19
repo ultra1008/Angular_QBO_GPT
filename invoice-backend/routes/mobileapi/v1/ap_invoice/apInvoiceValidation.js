@@ -59,8 +59,7 @@ const saveAPInvoiceNote = (req, res, next) => {
 const deleteAPInvoiceNote = (req, res, next) => {
     const validationRule = {
         "invoice_id": "required",
-        "_id": "required",
-        "notes": "required",
+        "_id": "required"
     };
     validator(req.body, validationRule, {}, (err, status) => {
         if (!status) {
