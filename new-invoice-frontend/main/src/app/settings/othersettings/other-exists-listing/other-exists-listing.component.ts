@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -8,7 +8,6 @@ import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { AdvanceTable } from 'src/app/users/user.model';
 import { httpversion, httproutes } from 'src/consts/httproutes';
-import { icon } from 'src/consts/icon';
 import { showNotification } from 'src/consts/utils';
 import { ExistListingComponent } from '../../employeesettings/exist-listing/exist-listing.component';
 import { SettingsService } from '../../settings.service';
@@ -18,8 +17,7 @@ import { SettingsService } from '../../settings.service';
   templateUrl: './other-exists-listing.component.html',
   styleUrls: ['./other-exists-listing.component.scss']
 })
-export class OtherExistsListingComponent extends UnsubscribeOnDestroyAdapter
-  implements OnInit {
+export class OtherExistsListingComponent extends UnsubscribeOnDestroyAdapter {
   action: string;
   dialogTitle: string;
   currrent_tab: any;
@@ -28,11 +26,12 @@ export class OtherExistsListingComponent extends UnsubscribeOnDestroyAdapter
   exitData: any = [];
   button_show: boolean;
   roleList: any = this.variablesRoleList.slice();
-  titleMessage: string = '';
+  titleMessage = '';
   userList: any = [];
   isDelete = 0;
-  invoice_logo = icon.INVOICE_LOGO;
   data_import: any = [];
+  title = '';
+
   constructor (
     public dialogRef: MatDialogRef<ExistListingComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -59,11 +58,6 @@ export class OtherExistsListingComponent extends UnsubscribeOnDestroyAdapter
       const blankObject = {} as AdvanceTable;
       this.advanceTable = new AdvanceTable(blankObject);
     }
-  }
-
-
-  ngOnInit(): void {
-
   }
 
   async import() {

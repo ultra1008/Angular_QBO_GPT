@@ -29,8 +29,9 @@ export class UserExistListComponent extends UnsubscribeOnDestroyAdapter {
   titleMessage = '';
   userList: any = [];
   isDelete = 0;
-  invoice_logo = icon.INVOICE_LOGO;
   data_import: any = [];
+  title = 'Import User';
+
   constructor (
     public dialogRef: MatDialogRef<UserExistListComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
