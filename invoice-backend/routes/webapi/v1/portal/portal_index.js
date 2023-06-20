@@ -448,7 +448,7 @@ router.post('/webapi/v1/portal/getmailboxmonitordatatable', common.checkTokenExi
 router.post('/webapi/v1/portal/getonemailboxmonitor', common.checkTokenExistOrNot, mailboxMonitorValidation.getOneMailboxMonitor, mailboxMonitorController.getOneMailboxMonitor);
 router.post('/webapi/v1/portal/savemailboxmonitor', common.checkTokenExistOrNot, mailboxMonitorValidation.saveMailboxMonitor, mailboxMonitorController.saveMailboxMonitor);
 router.post('/webapi/v1/portal/deletemailboxmonitor', common.checkTokenExistOrNot, mailboxMonitorValidation.deleteMailboxMonitor, mailboxMonitorController.deleteMailboxMonitor);
-// router.get('/webapi/v1/portal/mailboxMonitorCronAPI', mailBoxMonitorCron.mailboxMonitorCronAPI);
+router.get('/webapi/v1/portal/mailboxMonitorCronAPI', mailBoxMonitorCron.mailboxMonitorCronAPI);
 router.post('/webapi/v1/portal/getMailboxMonitorForTable', common.checkTokenExistOrNot, mailboxMonitorValidation.getMailboxMonitorForTableValidation, mailboxMonitorController.getMailboxMonitorForTable);
 
 

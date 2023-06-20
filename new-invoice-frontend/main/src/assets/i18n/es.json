@@ -474,7 +474,7 @@
             "TITLE": "Invoice History"
         },
         "UPLOAD": {
-            "WAIT_FOR_RESPONSE": "Wait for response"
+            "WAIT_FOR_RESPONSE": "The document(s) uploaded successfully. SmartAccuPay processing your uploaded document and in sometime this documents are reflected to portal."
         },
         "INVOICE_DETAILS": {
             "TITLE": "Invoice Detail",
