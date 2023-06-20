@@ -1393,6 +1393,7 @@ module.exports.getHeaderAPInvoiceSerach = async function (req, res) {
                             { 'vendor_data.vendor_name': new RegExp(requestObject.search, 'i') },
                             { 'status': new RegExp(requestObject.search, 'i') },
                             { 'invoice_no': new RegExp(requestObject.search, 'i') },
+                            { 'items.ITEM': new RegExp(requestObject.search, 'i') },
                         ]
                     }
                 },
