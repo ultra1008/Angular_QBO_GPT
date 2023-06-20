@@ -12,6 +12,7 @@ import * as  moment from "moment";
 import { commonFileChangeEvent } from 'src/app/services/utils';
 import { DomSanitizer } from '@angular/platform-browser';
 import { configData } from 'src/environments/configData';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-upload-invoice-form',
@@ -28,7 +29,7 @@ export class UploadInvoiceFormComponent {
 
   constructor (public dialogRef: MatDialogRef<SwitchCompanyComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
     private commonService: CommonService, private snackBar: MatSnackBar, public route: ActivatedRoute, public uiSpinner: UiSpinnerService,
-    private formBuilder: FormBuilder, private sanitiser: DomSanitizer) {
+    private formBuilder: FormBuilder, private sanitiser: DomSanitizer, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.supporting = data.supporting;
     const foundIndex = this.documentList.findIndex((x: any) => x.key === 'INVOICE');
@@ -117,14 +118,16 @@ export class UploadInvoiceFormComponent {
       if (apiUrl == '') {
         return;
       }
-      const data = await this.commonService.postRequestAPI(apiUrl, requestObject);
+      this.commonService.postRequestAPI(apiUrl, requestObject);
       this.uiSpinner.spin$.next(false);
-      if (data.status) {
+      this.dialogRef.close({ status: true });
+      showNotification(this.snackBar, this.translate.instant('INVOICE.UPLOAD.WAIT_FOR_RESPONSE'), 'success');
+      /* if (data.status) {
         this.dialogRef.close({ status: true });
         showNotification(this.snackBar, data.message, 'success');
       } else {
         showNotification(this.snackBar, data.message, 'error');
-      }
+      } */
     }
   }
 }
