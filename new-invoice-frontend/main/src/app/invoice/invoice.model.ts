@@ -17,7 +17,7 @@ export class Invoice {
       this._id = invoice._id;
       this.invoice_date_epoch = invoice.invoice_date_epoch || 0;
       this.due_date_epoch = invoice.due_date_epoch || 0;
-      this.vendor_data = invoice.vendor_data || null;
+      this.vendor_data = invoice.vendor_data || '';
       this.vendor = invoice.vendor || '';
       this.invoice_no = invoice.invoice_no || '';
       this.invoice_total_amount = invoice.invoice_total_amount || '';
