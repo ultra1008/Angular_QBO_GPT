@@ -68,6 +68,7 @@ export enum httproutes {
   USER_REPORT = 'getallemployeereport',
   TEAM_HISTORY = 'getuserhistory',
   GET_ALL_USER = 'getalluser',
+  GET_USER_PROFILE = 'getprofile',
   GET_ONE_USER = 'getoneuser',
   GET_LOCATION = 'getalllocation',
   GET_JOB_TITLE = 'getAlljobtitle',

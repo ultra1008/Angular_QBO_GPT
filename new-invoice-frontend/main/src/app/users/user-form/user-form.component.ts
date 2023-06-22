@@ -350,7 +350,6 @@ export class UserFormComponent
       // for delete we use splice in order to remove single object from DataService
       if (foundIndex != null && this.UserService) {
         this.UserService.dataChange.value.splice(foundIndex, 1);
-        location.reload();
         this.router.navigate([WEB_ROUTES.USER_GRID]);
       }
     } else {
@@ -598,11 +597,7 @@ export class UserFormComponent
   }
 
   async saveUser() {
-    if (
-      this.userpersonalinfo.valid &&
-      this.useremployeeinfo.valid &&
-      this.usercontactinfo.valid
-    ) {
+    if (this.userpersonalinfo.valid && this.useremployeeinfo.valid && this.usercontactinfo.valid) {
       this.uiSpinner.spin$.next(true);
       const usersDocument = this.userpersonalinfo.value.usersDocument || [];
       delete this.userpersonalinfo.value.usersDocument;
@@ -714,19 +709,12 @@ export class UserFormComponent
       const costcode_name = this.db_costcodes.find((dpt: any) => {
         return dpt._id == tmp_data_emp_info.usercostcode;
       });
-      if (
-        reqObject.password == '' ||
-        reqObject.password == null ||
-        reqObject.password == undefined
-      ) {
+      if (reqObject.password == '' || reqObject.password == null || reqObject.password == undefined) {
         delete reqObject.password;
       }
-      reqObject.department_name =
-        department_name != undefined ? department_name.department_name : ' ';
-      reqObject.jobtitle_name =
-        jobtitle_name != undefined ? jobtitle_name.job_title_name : ' ';
-      reqObject.costcode_name =
-        costcode_name != undefined ? costcode_name.cost_code : ' ';
+      reqObject.department_name = department_name != undefined ? department_name.department_name : ' ';
+      reqObject.jobtitle_name = jobtitle_name != undefined ? jobtitle_name.job_title_name : ' ';
+      reqObject.costcode_name = costcode_name != undefined ? costcode_name.cost_code : ' ';
       const fname =
         reqObject.username != undefined && reqObject.username != ''
           ? reqObject.username
@@ -781,6 +769,7 @@ export class UserFormComponent
           } else {
             showNotification(this.snackBar, data_new.message, 'success');
             this.uiSpinner.spin$.next(false);
+            this.back();
           }
         } else {
           showNotification(this.snackBar, data.message, 'success');
@@ -873,50 +862,6 @@ export class UserFormComponent
     }
   }
 
-  /*  async saveEmployeeInfo() {
-      console.log('saveEmployeeInfo');
-      let that = this;
-      this.useremployeeinfo.markAllAsTouched();
-      if (this.useremployeeinfo.valid) {
-        let id = this.user_id.toString();
-        // let reqObject = this.useremployeeinfo.value;
-        let reqObject = {
-  
-          ...this.useremployeeinfo.value,
-          usersalary: this.useremployeeinfo.value.usersalary.toString().replace(/,/g, ""),
-  
-        };
-  
-        reqObject._id = id;
-  
-        let department_name = this.db_Departmaents.find((dpt: any) => { return dpt._id == reqObject.userdepartment_id; });
-        let jobtitle_name = this.db_jobtitle.find((dpt: any) => { return dpt._id == reqObject.userjob_title_id; });
-        let costcode_name = this.db_costcodes.find((dpt: any) => { return dpt._id == reqObject.usercostcode; });
-  
-        reqObject.department_name = department_name != undefined ? department_name.department_name : "";
-        reqObject.jobtitle_name = jobtitle_name != undefined ? jobtitle_name.job_title_name : "";
-        reqObject.costcode_name = costcode_name != undefined ? costcode_name.cost_code : "";
-        let tmp_per_info = this.userpersonalinfo.value;
-        reqObject.userfullname = tmp_per_info.username + " " + tmp_per_info.usermiddlename + " " + tmp_per_info.userlastname;
-  
-        let role_name_tmp = this.db_roles.find((dpt: any) => { return dpt._id == reqObject.userroleId; });
-        reqObject.role_name = role_name_tmp != undefined ? role_name_tmp.role_name : "";
-  
-        reqObject.userqrcode = that.user_data.userqrcode;
-        this.uiSpinner.spin$.next(true);
-  
-        this.httpCall.httpPostCall(httproutes.EMPLOYEE_EMPLOYEE_INFO, reqObject).subscribe(function (params) {
-  
-          if (params.status) {
-            that.snackbarservice.openSnackBar(params.message, "success");
-            that.uiSpinner.spin$.next(false);
-          } else {
-            that.snackbarservice.openSnackBar(params.message, "error");
-            that.uiSpinner.spin$.next(false);
-          }
-        });
-      }
-    } */
   removeEmptyOrNull = (obj: any) => {
     Object.keys(obj).forEach(
       (k) =>
@@ -928,13 +873,28 @@ export class UserFormComponent
     return obj;
   };
 
-  back(): void {
-    const userDisplay =
-      localStorage.getItem(localstorageconstants.USER_DISPLAY) ?? 'list';
+  async back(): Promise<void> {
+    const userData = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    if (this.id == userData.UserData._id) {
+      const data = await this.commonService.getRequestAPI(httpversion.V1 + httproutes.GET_USER_PROFILE);
+      if (data.status) {
+        userData.UserData = data.data.UserData;
+        userData.companydata = data.data.CompanyData;
+        userData.role_permission = data.data.role_permission;
+        userData.settings = data.data.settings;
+        localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(userData));
+      }
+    }
+    const userDisplay = localStorage.getItem(localstorageconstants.USER_DISPLAY) ?? 'list';
     if (userDisplay == 'list') {
       this.router.navigate([WEB_ROUTES.USER]);
     } else {
       this.router.navigate([WEB_ROUTES.USER_GRID]);
+    }
+    if (this.id == userData.UserData._id) {
+      setTimeout(() => {
+        location.reload();
+      }, 100);
     }
   }
 

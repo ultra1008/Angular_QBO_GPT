@@ -5,6 +5,7 @@ var common = require("./../../../../controller/common/common");
 var authController = require('./auth/authController');
 var authValidation = require('./auth/authValidation');
 router.post('/webapi/v1/login', authValidation.login, authController.login);
+router.get('/webapi/v1/getprofile', authController.getProfile);
 router.post('/webapi/v1/changepassword', authValidation.changePasswordValidation, authController.changepassword);
 router.post('/webapi/v1/savelogindetails', common.checkTokenExistOrNot, authController.savelogindetails);
 router.post('/webapi/v1/userlogout', authController.userlogout);

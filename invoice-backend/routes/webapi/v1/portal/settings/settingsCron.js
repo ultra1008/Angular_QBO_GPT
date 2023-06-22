@@ -200,7 +200,7 @@ async function pendingInvoiceToAssignedToUserCronFunction(companycode) {
                         TITLE: `${title}`,
                         TEXT: new handlebars.SafeString(`<h4>${translator.getStr('EmailTemplateHi')} ${get_data[i].assign_to.userfullname},</h4><h4>${description}</h4>
                 <h4>The details for your invoice is below:</h4>
-                <h4>${translator.getStr('Invoice_History.invoice')}: ${get_data[i].invoice_no}</h4>
+                <h4>${translator.getStr('Invoice_History.invoice_no')}: ${get_data[i].invoice_no}</h4>
                 <h4>${translator.getStr('Invoice_History.vendor')}: ${get_data[i].vendor.vendor_name}</h4>
                 <div style="text-align: center;">
                     <a style="background-color: #023E8A;border: #0077bc solid;color: white;padding: 15px 32px;
@@ -315,7 +315,7 @@ async function pendingInvoiceNotAssignedToUserCronFunction(companycode) {
                         TITLE: `${title}`,
                         TEXT: new handlebars.SafeString(`<h4>${translator.getStr('EmailTemplateHi')},</h4><h4>${description}</h4>
                 <h4>The details for your invoice is below:</h4>
-                <h4>${translator.getStr('Invoice_History.invoice')}: ${get_data[i].invoice_no}</h4>
+                <h4>${translator.getStr('Invoice_History.invoice_no')}: ${get_data[i].invoice_no}</h4>
                 <h4>${translator.getStr('Invoice_History.vendor')}: ${get_data[i].vendor.vendor_name}</h4>
                 <div style="text-align: center;">
                     <a style="background-color: #023E8A;border: #0077bc solid;color: white;padding: 15px 32px;

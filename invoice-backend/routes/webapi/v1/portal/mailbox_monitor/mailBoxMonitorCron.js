@@ -27,83 +27,21 @@ async function mailboxMonitorCronFunction(query) {
                 let connection_db_api = await db_connection.connection_db_api(item);
                 let mailboxMonitorCollection = connection_db_api.model(collectionConstant.INVOICE_MAILBOX_MONITORS, mailboxMonitorSchema);
                 var get_mail_box = await mailboxMonitorCollection.find(query);
-                console.log("************************************", item_new.companycode, "********", get_mail_box.length);
+                console.log("Mail box ************************************", item_new.companycode, "********", get_mail_box.length);
                 for (let i = 0; i < get_mail_box.length; i++) {
                     const imapConfig = {
                         user: get_mail_box[i].email,
                         password: get_mail_box[i].password,
                         host: get_mail_box[i].imap,
-                        port: get_mail_box[i].port,
+                        port: Number(get_mail_box[i].port),
                         tls: true,
+                        tlsOptions: {
+                            rejectUnauthorized: false
+                        },
+                        connTimeout: 10000,
+                        authTimeout: 50000,
                     };
-                    let email = get_mail_box[i].email;
-                    const imap = new Imap(imapConfig);
-                    imap.once('ready', () => {
-                        imap.openBox('INBOX', false, () => {
-                            imap.search(['UNSEEN', ['SINCE', new Date()]], (err, results) => {
-                                console.log("mails: ", results.length);
-                                if (results.length != 0) {
-                                    const f = imap.fetch(results, { bodies: '' });
-                                    f.on('message', msg => {
-                                        msg.on('body', stream => {
-                                            simpleParser(stream, async (err, parsed) => {
-                                                // console.log(parsed);
-                                                const { from, subject, textAsHtml, text, attachments } = parsed;
-                                                for (let m = 0; m < attachments.length; m++) {
-                                                    let filenamesss = attachments[m].filename.split(".");
-                                                    var extension = filenamesss[filenamesss.length - 1];
-                                                    if (extension.toLocaleLowerCase() == 'pdf') {
-                                                        companycode = 'tempinvoice';
-                                                        let key_url = "email_file/" + moment().format('D_MMM_YYYY_hh_mm_ss_SSS_A') + "." + extension;
-                                                        let PARAMS = {
-                                                            Bucket: companycode,
-                                                            Key: key_url,
-                                                            Body: attachments[m].content,
-                                                            ACL: 'public-read-write'
-                                                        };
-
-                                                        bucketOpration.uploadFile(PARAMS, async function (err, resultUpload) {
-                                                            if (err) {
-                                                                res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
-                                                            } else {
-                                                                var fileUrl = config.wasabisys_url + "/" + companycode + "/" + key_url;
-                                                                console.log("fileUrl: ", fileUrl);
-                                                                apDocumentProcessController.mailBoxSaveAPDocumentProcess(connection_db_api, item_new.companycode, [fileUrl], email);
-                                                            }
-                                                        });
-                                                    }
-                                                }
-                                            });
-                                        });
-                                        msg.once('attributes', attrs => {
-                                            const { uid } = attrs;
-                                            imap.addFlags(uid, ['\\Seen'], () => {
-                                                // Mark the email as read after reading it
-                                                console.log('Marked as read!');
-                                            });
-                                        });
-                                    });
-                                    f.once('error', ex => {
-                                        return Promise.reject(ex);
-                                    });
-                                    f.once('end', () => {
-                                        console.log('Done fetching all messages!');
-                                        imap.end();
-                                    });
-                                }
-                            });
-                        });
-                    });
-
-                    imap.once('error', err => {
-                        console.log(err);
-                    });
-
-                    imap.once('end', () => {
-                        console.log('Connection ended');
-                    });
-
-                    imap.connect();
+                    await readMail(imapConfig, connection_db_api, item_new.companycode);
                 }
             }
         }
@@ -112,12 +50,99 @@ async function mailboxMonitorCronFunction(query) {
         console.log(e);
     }
 }
+function readMail(imapConfig, connection_db_api, companycode) {
+    return new Promise(function (resolve, reject) {
+        console.log("imapConfig: ", imapConfig);
+        let email = imapConfig.email;
+        const imap = new Imap(imapConfig);
+        imap.once('ready', function () {
+            imap.openBox('INBOX', true, function () {
+                imap.search(['UNSEEN', ['SINCE', new Date()]], function (err, results) {
+                    console.log("mails: ", results.length);
+                    if (results.length != 0) {
+                        const f = imap.fetch(results, { bodies: '' });
+                        f.on('message', msg => {
+                            msg.on('body', stream => {
+                                simpleParser(stream, async (err, parsed) => {
+                                    await checkAttachment(connection_db_api, companycode, parsed, email);
+                                });
+                            });
+                            msg.once('attributes', attrs => {
+                                const { uid } = attrs;
+                                imap.addFlags(uid, ['\\Seen'], () => {
+                                    // Mark the email as read after reading it
+                                    console.log('Marked as read!');
+                                });
+                            });
+                        });
+                        f.once('error', ex => {
+                            console.log("rejection error", ex);
+                            return Promise.reject(ex);
+                        });
+                        f.once('end', () => {
+                            console.log('Done fetching all messages!');
+                            imap.end();
+                            resolve();
+                        });
+                    }
+                });
+            });
+        });
+
+        imap.once('error', err => {
+            console.log("err: ", err);
+        });
+
+        imap.once('end', () => {
+            console.log('Connection ended');
+        });
+
+        imap.connect();
+    });
+}
+
+function checkAttachment(connection_db_api, companycode, parsed, email) {
+    return new Promise(function (resolve, reject) {
+        // console.log(parsed);
+        const { from, subject, textAsHtml, text, attachments } = parsed;
+        console.log("attachments: ", attachments.length);
+        if (attachments.length == 0) {
+            resolve();
+        } else {
+            for (let m = 0; m < attachments.length; m++) {
+                let filenamesss = attachments[m].filename.split(".");
+                var extension = filenamesss[filenamesss.length - 1];
+                if (extension.toLocaleLowerCase() == 'pdf') {
+                    // companycode = 'tempinvoice';
+                    let key_url = "email_file/" + moment().format('D_MMM_YYYY_hh_mm_ss_SSS_A') + "." + extension;
+                    let PARAMS = {
+                        Bucket: companycode.toLowerCase(),
+                        Key: key_url,
+                        Body: attachments[m].content,
+                        ACL: 'public-read-write'
+                    };
+                    console.log("PARAMS: ", PARAMS);
+                    bucketOpration.uploadFile(PARAMS, async function (err, resultUpload) {
+                        if (err) {
+                            resolve();
+                            console.log("upload err", err);
+                        } else {
+                            var fileUrl = config.wasabisys_url + "/" + companycode + "/" + key_url;
+                            console.log("fileUrl: ", fileUrl);
+                            apDocumentProcessController.mailBoxSaveAPDocumentProcess(connection_db_api, companycode, [fileUrl], email);
+                            resolve();
+                        }
+                    });
+                }
+            }
+        }
+    });
+}
 
 var mainboxMonitorCron = new CronJob(config.CRON_JOB.MAILBOX_MONITOR, async function () {
     let cronTimes = await setCRONTimes();
-    console.log(" cronTimes: ", cronTimes);
     if (cronTimes.length > 0) {
-        mailboxMonitorCronFunction({ cron_time: { $in: cronTimes } });
+        mailboxMonitorCronFunction({ cron_time: { $in: cronTimes }, is_delete: 0 });
     }
 });
 mainboxMonitorCron.start();
@@ -217,6 +242,8 @@ function setCRONTimes() {
 }
 
 function checkInArray(minute, object) {
+    console.log("minute: ", minute);
+    console.log("object: ", object);
     return new Promise(async function (resolve, reject) {
         var check = object.time.find(function (element) {
             return element == minute;

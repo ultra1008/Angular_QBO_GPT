@@ -1659,7 +1659,7 @@ module.exports.getInvoiceExcelReport = async function (req, res) {
                 translator.getStr('Invoice_History.vendor'),
                 translator.getStr('Invoice_History.vendor_id'),
                 translator.getStr('Invoice_History.customer_id'),
-                translator.getStr('Invoice_History.invoice'),
+                translator.getStr('Invoice_History.invoice_no'),
                 translator.getStr('Invoice_History.p_o'),
                 translator.getStr('Invoice_History.job_number'),
                 translator.getStr('Invoice_History.invoice_date_epoch'),
