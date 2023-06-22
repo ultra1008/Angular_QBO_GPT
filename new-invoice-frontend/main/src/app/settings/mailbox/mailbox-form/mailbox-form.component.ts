@@ -27,7 +27,7 @@ export class MailboxFormComponent {
   frequency = configData.MAILBOX_MONITOR_TIME;
   cronTime: any;
 
-  constructor (
+  constructor(
     private fb: UntypedFormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
@@ -46,10 +46,7 @@ export class MailboxFormComponent {
 
     this.companyinfoForm = this.fb.group({
       password: ['', [Validators.required]],
-      email: [
-        '',
-        [Validators.required, Validators.email, Validators.minLength(5)],
-      ],
+      email: ['', [Validators.required, Validators.email, Validators.minLength(5)],],
       imap: ['', [Validators.required]],
       port: [''],
       time: [''],

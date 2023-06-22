@@ -37,7 +37,7 @@ export class MailboxComponent
     'imap',
     'port',
     'time',
-    'actions',
+    // 'actions',
   ];
   mailboxService?: SettingsService;
   dataSource!: MailboxDataSource;
@@ -48,7 +48,7 @@ export class MailboxComponent
   titleMessage = '';
 
 
-  constructor (
+  constructor(
     public dialog: MatDialog,
     public SettingsService: SettingsService,
     private snackBar: MatSnackBar,
@@ -207,7 +207,7 @@ export class MailboxDataSource extends DataSource<MailboxModel> {
   }
   filteredData: MailboxModel[] = [];
   renderedData: MailboxModel[] = [];
-  constructor (
+  constructor(
     public mailboxService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
