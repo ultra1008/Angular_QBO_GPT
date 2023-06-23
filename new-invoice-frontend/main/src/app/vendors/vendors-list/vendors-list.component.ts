@@ -520,11 +520,11 @@ export class VendorsListComponent
       }
     } else {
       if (this.is_quickbooks_online) {
-        this.displayedColumns = ['select', 'vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'amount_paid', 'amount_open', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks', 'actions'];
+        this.displayedColumns = ['vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'amount_paid', 'amount_open', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks', 'actions'];
       } else if (this.is_quickbooks_desktop) {
         this.displayedColumns = ['vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'amount_paid', 'amount_open', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks'];
       } else {
-        this.displayedColumns = ['select', 'vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'amount_paid', 'amount_open', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions'];
+        this.displayedColumns = ['vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'amount_paid', 'amount_open', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions'];
       }
     }
     this.refresh();

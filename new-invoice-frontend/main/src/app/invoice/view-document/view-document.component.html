@@ -222,12 +222,15 @@
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">
                                                 <mat-label>Date</mat-label>
-                                                <input matInput [max]="maxDate" [matDatepicker]="quoteDatePicker"
+                                                <input matInput [matDatepicker]="quoteDatePicker"
                                                     formControlName="date">
                                                 <mat-datepicker-toggle matSuffix
                                                     [for]="quoteDatePicker"></mat-datepicker-toggle>
                                                 <mat-datepicker #quoteDatePicker></mat-datepicker>
                                             </mat-form-field>
+
+
+
                                         </div>
                                         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
                                             <mat-form-field class="example-full-width" appearance="outline">

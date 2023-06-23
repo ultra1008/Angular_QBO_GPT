@@ -26,6 +26,7 @@ import { CommonService } from 'src/app/services/common.service';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { RolePermission } from 'src/consts/common.model';
+import { CostcodeExistListComponent } from './costcode-exist-list/costcode-exist-list.component';
 
 @Component({
   selector: 'app-costcode',
@@ -54,16 +55,17 @@ export class CostcodeComponent
   is_quickbooks_online = false;
   is_quickbooks_desktop = false;
   role_permission!: RolePermission;
+  exitData!: any[];
 
   constructor(
     public dialog: MatDialog,
-    public SettingsService: SettingsService,
     private snackBar: MatSnackBar,
     public router: Router,
     private httpCall: HttpCall,
     public translate: TranslateService,
     public uiSpinner: UiSpinnerService,
     private commonService: CommonService,
+    public SettingsService: SettingsService,
   ) {
     super();
   }
@@ -229,6 +231,7 @@ export class CostcodeComponent
     el.click();
   }
 
+
   onFileChange(ev: any) {
     let that = this;
     let workBook: any;
@@ -257,17 +260,27 @@ export class CostcodeComponent
       formData_profle.append('file', file);
       let apiurl = '';
 
-      apiurl = httpversion.PORTAL_V1 + httproutes.SETTINGS_IMPORT_COSTCODE_DATA;
-
+      apiurl = httpversion.PORTAL_V1 + httproutes.SETTINGS_CHECk_IMPORT_COSTCODE_DATA;
       that.uiSpinner.spin$.next(true);
       that.httpCall
         .httpPostCall(apiurl, formData_profle)
         .subscribe(function (params) {
           if (params.status) {
-            // that.openErrorDataDialog(params); 
-            showNotification(that.snackBar, params.message, 'success');
             that.uiSpinner.spin$.next(false);
-            // location.reload();
+            that.exitData = params;
+            const dialogRef = that.dialog.open(CostcodeExistListComponent, {
+              width: '750px',
+              height: '500px',
+              // data: that.exitData,
+              data: { data: that.exitData },
+              disableClose: true,
+            });
+
+            dialogRef.afterClosed().subscribe((result: any) => {
+              this.loadData();
+            });
+            // that.openErrorDataDialog(params);
+
           } else {
             showNotification(that.snackBar, params.message, 'error');
             that.uiSpinner.spin$.next(false);

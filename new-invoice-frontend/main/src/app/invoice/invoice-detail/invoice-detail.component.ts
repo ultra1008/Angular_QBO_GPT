@@ -121,7 +121,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   prevStep() {
     this.step--;
   }
-  constructor (private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog, private commonService: CommonService,
+  constructor(private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog, private commonService: CommonService,
     public route: ActivatedRoute, public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, public translate: TranslateService,) {
     super();
     this.id = this.route.snapshot.queryParamMap.get('_id');
@@ -491,9 +491,22 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   }
 
   async updateStatus(status: string) {
+    console.log("status", status);
+    let message: any;
+    if (status == 'Rejected') {
+      console.log("status1", status);
+      message = `Are you sure you want to reject this invoice?`;
+    } else if (status == 'On Hold') {
+      console.log("status2", status);
+      message = `Are you sure you want to put this invoice on hold?`;
+    } else if (status == 'Approved') {
+      console.log("status3", status);
+      message = `Are you sure you want to approve this invoice?`;
+    }
+
     swalWithBootstrapTwoButtons
       .fire({
-        title: `Are you sure you want to ${status} this invoice?`,
+        title: message,
         showDenyButton: true,
         confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
         denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),

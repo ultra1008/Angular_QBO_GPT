@@ -84,6 +84,7 @@ import { JobTypeFormComponent } from './employeesettings/job-type-list/job-type-
 import { VendorsService } from '../vendors/vendors.service';
 import { OtherExistsListingComponent } from './othersettings/other-exists-listing/other-exists-listing.component';
 import { CalculatorComponent } from './integration/calculator/calculator.component';
+import { CostcodeExistListComponent } from './costcode/costcode-exist-list/costcode-exist-list.component';
 
 @NgModule({
   declarations: [
@@ -136,6 +137,7 @@ import { CalculatorComponent } from './integration/calculator/calculator.compone
     OtherExistListingComponent,
     OtherExistsListingComponent,
     CalculatorComponent,
+    CostcodeExistListComponent,
   ],
   providers: [SettingsService, VendorsService],
   imports: [
