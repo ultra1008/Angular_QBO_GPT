@@ -182,11 +182,11 @@ export class PortalLoginFormComponent implements OnInit {
   langurl() {
     let portal_language = localStorage.getItem(localstorageconstants.LANGUAGE);
     if (portal_language == 'en') {
-      window.open('https://www.rovuk.us/mobile-terms-of-service-2', '_blank');
+      window.open('https://smartaccupay.com/mobile-terms-of-service/', '_blank');
     } else if (portal_language == 'es') {
-      window.open('https://www.rovuk.us/mobile-terms-of-service-es', '_blank');
+      window.open('https://smartaccupay.com/mobile-terms-of-service/', '_blank');
     } else {
-      window.open('https://www.rovuk.us/mobile-terms-of-service-2', '_blank');
+      window.open('https://smartaccupay.com/mobile-terms-of-service/', '_blank');
     }
   }
 

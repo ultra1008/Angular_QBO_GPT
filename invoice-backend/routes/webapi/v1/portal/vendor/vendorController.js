@@ -1,4 +1,5 @@
 var vendorSchema = require('../../../../../model/vendor');
+var vendorTypeSchema = require('../../../../../model/vendor_type');
 var termSchema = require('../../../../../model/invoice_term');
 var vendor_history_Schema = require('../../../../../model/history/vendor_history');
 let db_connection = require('../../../../../controller/common/connectiondb');
@@ -31,155 +32,187 @@ var qbo; //QuickBooks Info
 module.exports.saveVendor = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
-
     if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
             requestObject.vendor_email = requestObject.vendor_email.toLowerCase();
             var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
+            var vendorTypeConnection = connection_db_api.model(collectionConstant.VENDOR_TYPE, vendorTypeSchema);
             var termConnection = connection_db_api.model(collectionConstant.INVOICE_TERM, termSchema);
             var id = requestObject._id;
             delete requestObject._id;
             if (id) {
+                let get_vendor = await vendorConnection.findOne({ vendor_name: requestObject.vendor_name });
                 requestObject.vendor_updated_by = decodedToken.UserData._id;
                 requestObject.vendor_updated_at = Math.round(new Date().getTime() / 1000);
                 let one_vendor = await vendorConnection.findOne({ _id: ObjectID(id) }, { _id: 0, image: 0, attachment: 0, is_delete: 0, created_at: 0, created_by: 0, updated_at: 0, updated_by: 0, __v: 0 });
-                var update_vendor = await vendorConnection.updateOne({ _id: ObjectID(id) }, requestObject);
-                if (update_vendor) {
-                    delete requestObject.vendor_created_at;
-                    delete requestObject.vendor_created_by;
-                    delete requestObject.vendor_updated_at;
-                    delete requestObject.vendor_updated_by;
-                    delete requestObject.vendor_is_delete;
-                    delete requestObject.vendor_image;
-                    delete requestObject.vendor_attachment;
-
-                    if (requestObject.vendor_terms) {
-                        requestObject.vendor_terms = ObjectID(requestObject.vendor_terms);
-                    }
-
-                    // find difference of object 
-                    let updatedData = await common.findUpdatedFieldHistory(requestObject, one_vendor._doc);
-                    // Check for object id fields and if it changed then replace id with specific value
-                    let found_term = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'vendor_terms'; });
-                    if (found_term != -1) {
-                        let one_term = await termConnection.findOne({ _id: ObjectID(updatedData[found_term].value) });
-                        updatedData[found_term].value = one_term.name;
-                    }
-
-                    let found_status = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'vendor_status'; });
-                    if (found_status != -1) {
-                        if (updatedData[found_status].value == 1) {
-                            updatedData[found_status].value = 'Active';
-                        } else {
-                            updatedData[found_status].value = 'Inactive';
-                        }
-                    }
-
-                    for (let i = 0; i < updatedData.length; i++) {
-                        updatedData[i]['key'] = translator.getStr(`Vendor_History.${updatedData[i]['key']}`);
-                    }
-                    let histioryObject = {
-                        data: updatedData,
-                        vendor_id: id,
-                    };
-                    addVendorHistory("Update", histioryObject, decodedToken);
-                    recentActivity.saveRecentActivity({
-                        user_id: decodedToken.UserData._id,
-                        username: decodedToken.UserData.userfullname,
-                        userpicture: decodedToken.UserData.userpicture,
-                        data_id: id,
-                        title: requestObject.vendor_name,
-                        module: 'Vendor',
-                        action: 'Update',
-                        action_from: 'Web',
-                    }, decodedToken);
-                    res.send({ status: true, message: "Vendor updated successfully.", data: update_vendor });
+                if (requestObject.vendor_name == get_vendor.vendor_name && id != get_vendor._id) {
+                    res.send({ status: false, message: "Vendor already exist." });
                 } else {
-                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    var update_vendor = await vendorConnection.updateOne({ _id: ObjectID(id) }, requestObject);
+                    if (update_vendor) {
+                        delete requestObject.vendor_created_at;
+                        delete requestObject.vendor_created_by;
+                        delete requestObject.vendor_updated_at;
+                        delete requestObject.vendor_updated_by;
+                        delete requestObject.vendor_is_delete;
+                        delete requestObject.vendor_image;
+                        delete requestObject.vendor_attachment;
+
+                        if (requestObject.vendor_terms) {
+                            requestObject.vendor_terms = ObjectID(requestObject.vendor_terms);
+                        }
+                        if (requestObject.vendor_type_id) {
+                            requestObject.vendor_type_id = ObjectID(requestObject.vendor_type_id);
+                        }
+
+                        // find difference of object 
+                        let updatedData = await common.findUpdatedFieldHistory(requestObject, one_vendor._doc);
+                        // Check for object id fields and if it changed then replace id with specific value
+                        let found_term = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'vendor_terms'; });
+                        if (found_term != -1) {
+                            let one_term = await termConnection.findOne({ _id: ObjectID(updatedData[found_term].value) });
+                            updatedData[found_term].value = one_term.name;
+                        }
+
+                        let found_vendor_type = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'vendor_type_id'; });
+                        if (found_vendor_type != -1) {
+                            if (requestObject.vendor_type_id != '') {
+                                let one_vendor_type = await vendorTypeConnection.findOne({ _id: ObjectID(updatedData[found_vendor_type].value) });
+                                updatedData[found_vendor_type].value = one_vendor_type.name;
+                            } else {
+                                updatedData[found_vendor_type].value = '';
+                            }
+                        }
+
+                        let found_status = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'vendor_status'; });
+                        if (found_status != -1) {
+                            if (updatedData[found_status].value == 1) {
+                                updatedData[found_status].value = 'Active';
+                            } else {
+                                updatedData[found_status].value = 'Inactive';
+                            }
+                        }
+
+                        for (let i = 0; i < updatedData.length; i++) {
+                            updatedData[i]['key'] = translator.getStr(`Vendor_History.${updatedData[i]['key']}`);
+                        }
+                        let histioryObject = {
+                            data: updatedData,
+                            vendor_id: id,
+                        };
+                        addVendorHistory("Update", histioryObject, decodedToken);
+                        recentActivity.saveRecentActivity({
+                            user_id: decodedToken.UserData._id,
+                            username: decodedToken.UserData.userfullname,
+                            userpicture: decodedToken.UserData.userpicture,
+                            data_id: id,
+                            title: requestObject.vendor_name,
+                            module: 'Vendor',
+                            action: 'Update',
+                            action_from: 'Web',
+                        }, decodedToken);
+                        res.send({ status: true, message: "Vendor updated successfully.", data: update_vendor });
+                    } else {
+                        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    }
                 }
             } else {
-                // insert vendor
-                requestObject.vendor_created_by = decodedToken.UserData._id;
-                requestObject.vendor_created_at = Math.round(new Date().getTime() / 1000);
-                requestObject.vendor_updated_by = decodedToken.UserData._id;
-                requestObject.vendor_updated_at = Math.round(new Date().getTime() / 1000);
-                if (requestObject.isVendorfromQBO) { // if login QBO in integration tab of settings, the values are saved to QBO vendor.
-                    qbo.createVendor({
-                        DisplayName: requestObject.vendor_name,
-                        CompanyName: requestObject.vendor_name,
-                        Active: requestObject.status === 1 ? true : false,
-                        PrimaryPhone: { FreeFormNumber: requestObject.vendor_phone },
-                        PrimaryEmailAddr: { Address: requestObject.vendor_email },
-                        BillAddr: {
-                            Line1: requestObject.vendor_address,
-                            Line2: requestObject.hasOwnProperty("address2") ? requestObject.vendor_address2 : '',
-                            City: requestObject.vendor_city,
-                            Country: requestObject.hasOwnProperty("country") ? requestObject.vendor_country : '',
-                            CountrySubDivisionCode: requestObject.vendor_state,
-                            PostalCode: requestObject.vendor_zipcode
-                        },
-                        AcctNum: requestObject.gl_account,
-                        MetaData: {
-                            CreateTime: new Date(),
-                            LastUpdatedTime: new Date()
-                        }
-                    }, async function (err, result) {
-                        if (err) return;
-                    });
-                }
-                var add_vendor = new vendorConnection(requestObject);
-                var save_vendor = await add_vendor.save();
-                if (save_vendor) {
-                    delete requestObject.vendor_created_at;
-                    delete requestObject.vendor_created_by;
-                    delete requestObject.vendor_updated_at;
-                    delete requestObject.vendor_updated_by;
-                    delete requestObject.is_delete;
-                    delete requestObject.vendor_image;
-                    delete requestObject.vendor_attachment;
-
-                    // find difference of object 
-                    let insertedData = await common.setInsertedFieldHistory(requestObject);
-                    // Check for object id fields and if it changed then replace id with specific value
-                    let found_term = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'vendor_terms'; });
-
-                    if (found_term != -1) {
-                        let one_term = await termConnection.findOne({ _id: ObjectID(insertedData[found_term].value) });
-                        insertedData[found_term].value = one_term.name;
-                    }
-
-                    let found_status = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'vendor_status'; });
-                    if (found_status != -1) {
-                        if (insertedData[found_status].value == 1) {
-                            insertedData[found_status].value = 'Active';
-                        } else {
-                            insertedData[found_status].value = 'Inactive';
-                        }
-                    }
-
-                    for (let i = 0; i < insertedData.length; i++) {
-                        insertedData[i]['key'] = translator.getStr(`Vendor_History.${insertedData[i]['key']}`);
-                    }
-                    let histioryObject = {
-                        data: insertedData,
-                        vendor_id: save_vendor._id,
-                    };
-                    addVendorHistory("Insert", histioryObject, decodedToken);
-                    recentActivity.saveRecentActivity({
-                        user_id: decodedToken.UserData._id,
-                        username: decodedToken.UserData.userfullname,
-                        userpicture: decodedToken.UserData.userpicture,
-                        data_id: save_vendor._id,
-                        title: save_vendor.vendor_name,
-                        module: 'Vendor',
-                        action: 'Insert',
-                        action_from: 'Web',
-                    }, decodedToken);
-                    res.send({ status: true, message: "Vendor saved successfully.", data: save_vendor });
+                let one_vendor = await vendorConnection.findOne({ vendor_name: requestObject.vendor_name });
+                if (one_vendor) {
+                    res.send({ status: false, message: "Vendor already exist." });
                 } else {
-                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    // insert vendor
+                    requestObject.vendor_created_by = decodedToken.UserData._id;
+                    requestObject.vendor_created_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.vendor_updated_by = decodedToken.UserData._id;
+                    requestObject.vendor_updated_at = Math.round(new Date().getTime() / 1000);
+                    if (requestObject.isVendorfromQBO) { // if login QBO in integration tab of settings, the values are saved to QBO vendor.
+                        qbo.createVendor({
+                            DisplayName: requestObject.vendor_name,
+                            CompanyName: requestObject.vendor_name,
+                            Active: requestObject.status === 1 ? true : false,
+                            PrimaryPhone: { FreeFormNumber: requestObject.vendor_phone },
+                            PrimaryEmailAddr: { Address: requestObject.vendor_email },
+                            BillAddr: {
+                                Line1: requestObject.vendor_address,
+                                Line2: requestObject.hasOwnProperty("address2") ? requestObject.vendor_address2 : '',
+                                City: requestObject.vendor_city,
+                                Country: requestObject.hasOwnProperty("country") ? requestObject.vendor_country : '',
+                                CountrySubDivisionCode: requestObject.vendor_state,
+                                PostalCode: requestObject.vendor_zipcode
+                            },
+                            AcctNum: requestObject.gl_account,
+                            MetaData: {
+                                CreateTime: new Date(),
+                                LastUpdatedTime: new Date()
+                            }
+                        }, async function (err, result) {
+                            if (err) return;
+                        });
+                    }
+                    var add_vendor = new vendorConnection(requestObject);
+                    var save_vendor = await add_vendor.save();
+                    if (save_vendor) {
+                        delete requestObject.vendor_created_at;
+                        delete requestObject.vendor_created_by;
+                        delete requestObject.vendor_updated_at;
+                        delete requestObject.vendor_updated_by;
+                        delete requestObject.is_delete;
+                        delete requestObject.vendor_image;
+                        delete requestObject.vendor_attachment;
+
+                        // find difference of object 
+                        let insertedData = await common.setInsertedFieldHistory(requestObject);
+                        // Check for object id fields and if it changed then replace id with specific value
+                        let found_term = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'vendor_terms'; });
+                        if (found_term != -1) {
+                            let one_term = await termConnection.findOne({ _id: ObjectID(insertedData[found_term].value) });
+                            insertedData[found_term].value = one_term.name;
+                        }
+
+                        let found_vendor_type = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'vendor_type_id'; });
+                        if (found_vendor_type != -1) {
+                            if (requestObject.vendor_type_id != '') {
+                                let one_vendor_type = await vendorTypeConnection.findOne({ _id: ObjectID(insertedData[found_vendor_type].value) });
+                                insertedData[found_vendor_type].value = one_vendor_type.name;
+                            } else {
+                                insertedData[found_vendor_type].value = '';
+                            }
+                        }
+
+                        let found_status = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'vendor_status'; });
+                        if (found_status != -1) {
+                            if (insertedData[found_status].value == 1) {
+                                insertedData[found_status].value = 'Active';
+                            } else {
+                                insertedData[found_status].value = 'Inactive';
+                            }
+                        }
+
+                        for (let i = 0; i < insertedData.length; i++) {
+                            insertedData[i]['key'] = translator.getStr(`Vendor_History.${insertedData[i]['key']}`);
+                        }
+                        let histioryObject = {
+                            data: insertedData,
+                            vendor_id: save_vendor._id,
+                        };
+                        addVendorHistory("Insert", histioryObject, decodedToken);
+                        recentActivity.saveRecentActivity({
+                            user_id: decodedToken.UserData._id,
+                            username: decodedToken.UserData.userfullname,
+                            userpicture: decodedToken.UserData.userpicture,
+                            data_id: save_vendor._id,
+                            title: save_vendor.vendor_name,
+                            module: 'Vendor',
+                            action: 'Insert',
+                            action_from: 'Web',
+                        }, decodedToken);
+                        res.send({ status: true, message: "Vendor saved successfully.", data: save_vendor });
+                    } else {
+                        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    }
                 }
             }
         } catch (e) {
@@ -1256,6 +1289,7 @@ module.exports.getVendorExcelReport = async function (req, res) {
                         THANKS: translator.getStr('EmailTemplateThanks'),
                         ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
                         VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
+                        COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                         EMAILTITLE: `${translator.getStr('EmailVendorReportTitle')}`,
                         TEXT1: translator.getStr('EmailVendorReportText1'),
@@ -1270,9 +1304,9 @@ module.exports.getVendorExcelReport = async function (req, res) {
                     };
                     var template = handlebars.compile(file_data);
                     var HtmlData = await template(emailTmp);
-                    sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, email_list, translator.getStr('EmailVendorSubject'), HtmlData,
-                        talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                        talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                    sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, email_list, translator.getStr('EmailVendorSubject'), HtmlData,
+                        talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                        talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
 
                     res.send({ message: translator.getStr('Report_Sent_Successfully'), status: true });
                 }
@@ -1386,6 +1420,136 @@ module.exports.importVendor = async function (req, res) {
         }
     }
     else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+module.exports.checkQBDImportVendor = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
+
+            for (let m = 0; m < requestObject.length; m++) {
+                var nameexist = await vendorConnection.findOne({ "vendor_name": requestObject[m].Name });
+                if (nameexist == null) {
+                    requestObject.created_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.is_quickbooks = true;
+                    requestObject.vendor_name = requestObject[m].Name;
+                    requestObject.vendor_phone = requestObject[m].Phone;
+                    requestObject.vendor_email = requestObject[m].Email;
+                    if (requestObject[m].VendorAddress != undefined) {
+                        requestObject.vendor_address = requestObject[m].VendorAddress.Addr1;
+                        requestObject.vendor_city = requestObject[m].VendorAddress.City;
+                        requestObject.vendor_state = requestObject[m].VendorAddress.State;
+                        requestObject.vendor_zipcode = requestObject[m].VendorAddress.PostalCode;
+                        requestObject.vendor_country = requestObject[m].VendorAddress.Country;
+                    }
+
+                    if (requestObject[m].IsActive == true) {
+                        requestObject.vendor_status = 1;
+                    }
+                    else if (requestObject[m].IsActive == false) {
+                        requestObject.vendor_status = 2;
+                    }
+                    var add_vendor = new vendorConnection(requestObject);
+                    var save_vendor = await add_vendor.save();
+
+                    var historyObjectdata = {};
+                    historyObjectdata.vendor_name = requestObject[m].Name;
+                    if (requestObject[m].Phone != undefined) {
+
+                        historyObjectdata.vendor_phone = requestObject[m].Phone;
+                    }
+                    if (requestObject[m].Email != undefined) {
+
+                        historyObjectdata.vendor_email = requestObject[m].Email;
+                    }
+                    if (requestObject[m].VendorAddress != undefined) {
+                        historyObjectdata.vendor_address = requestObject[m].VendorAddress.Addr1;
+                        historyObjectdata.vendor_city = requestObject[m].VendorAddress.City;
+                        historyObjectdata.vendor_state = requestObject[m].VendorAddress.State;
+                        historyObjectdata.vendor_zipcode = requestObject[m].VendorAddress.PostalCode;
+                        historyObjectdata.vendor_country = requestObject[m].VendorAddress.Country;
+                    }
+                    if (requestObject[m].IsActive == true) {
+                        historyObjectdata.vendor_status = 1;
+                    }
+                    else if (requestObject[m].IsActive == false) {
+                        historyObjectdata.vendor_status = 2;
+                    }
+
+
+                    // find difference of object 
+                    let insertedData = await common.setInsertedFieldHistory(historyObjectdata);
+
+                    for (let i = 0; i < insertedData.length; i++) {
+                        insertedData[i]['key'] = translator.getStr(`Vendor_History.${insertedData[i]['key']}`);
+                    }
+                    let histioryObject = {
+                        data: insertedData,
+                        vendor_id: save_vendor._id,
+                    };
+                    addVendorHistory("Insert", histioryObject, decodedToken);
+                }
+                else {
+
+                    let one_vendor = await vendorConnection.findOne({ vendor_name: requestObject[m].Name });
+                    // requestObject.vendor_name = requestObject[m].Name;
+                    var reqdata = {};
+
+                    if (requestObject[m].Phone != undefined) {
+                        reqdata.vendor_phone = requestObject[m].Phone;
+                    }
+                    if (requestObject[m].Email != undefined) {
+                        reqdata.vendor_email = requestObject[m].Email;
+                    }
+                    if (requestObject[m].VendorAddress != undefined) {
+                        reqdata.vendor_address = requestObject[m].VendorAddress.Addr1;
+                        reqdata.vendor_city = requestObject[m].VendorAddress.City;
+                        reqdata.vendor_state = requestObject[m].VendorAddress.State;
+                        reqdata.vendor_zipcode = requestObject[m].VendorAddress.PostalCode;
+                        reqdata.vendor_country = requestObject[m].VendorAddress.Country;
+                    }
+                    if (requestObject[m].IsActive == true) {
+                        reqdata.vendor_status = 1;
+                    }
+                    else if (requestObject[m].IsActive == false) {
+                        reqdata.vendor_status = 2;
+                    }
+                    let updatecost_code = await vendorConnection.update({ vendor_name: requestObject[m].Name }, reqdata);
+                    if (updatecost_code.nModified > 0) {
+                        // find difference of object 
+                        let updatedData = await common.findUpdatedFieldHistory(reqdata, one_vendor._doc);
+
+                        let found_status = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'client_status'; });
+                        if (found_status != -1) {
+                            updatedData[found_status].value = updatedData[found_status].value == 1 ? 'Active' : updatedData[found_status].value == 2 ? 'Inactive' : '';
+                        }
+                        for (let i = 0; i < updatedData.length; i++) {
+                            updatedData[i]['key'] = translator.getStr(`Vendor_History.${updatedData[i]['key']}`);
+                        }
+                        let histioryObject = {
+                            data: updatedData,
+                            vendor_id: nameexist._id,
+                        };
+                        addVendorHistory("Update", histioryObject, decodedToken);
+                    }
+
+                }
+
+            }
+            res.send({ status: true, message: "Vendor insert successfully..!" });
+
+        } catch (error) {
+            console.log(error);
+            res.send({ status: false, message: translator.getStr('SomethingWrong'), error: error });
+        }
+    } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };

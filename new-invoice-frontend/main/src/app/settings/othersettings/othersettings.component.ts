@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { SettingsService } from '../settings.service';
 import { showNotification, swalWithBootstrapButtons } from 'src/consts/utils';
@@ -8,11 +8,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { TermsFormComponent } from './terms-listing/terms-form/terms-form.component';
 import { TaxRateFormComponent } from './tax-rate-listing/tax-rate-form/tax-rate-form.component';
 import { DocumentFormComponent } from './documents-listing/document-form/document-form.component';
-import { VendorFormComponent } from 'src/app/vendors/vendor-form/vendor-form.component';
 import { VendorTypeFormComponent } from './vendor-type-listing/vendor-type-form/vendor-type-form.component';
 import { JobNameFormComponent } from './job-name-listing/job-name-form/job-name-form.component';
-import { saveAs } from 'file-saver';
-import * as fs from 'file-saver';
 import * as XLSX from 'xlsx';
 import { ImportOtherSettingsComponent } from './import-other-settings/import-other-settings.component';
 import { httproutes, httpversion } from 'src/consts/httproutes';
@@ -20,14 +17,16 @@ import { HttpCall } from 'src/app/services/httpcall.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { ClassNameFormComponent } from './class-name-listing/class-name-form/class-name-form.component';
 import { OtherExistsListingComponent } from './other-exists-listing/other-exists-listing.component';
+import { WEB_ROUTES } from 'src/consts/routes';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-othersettings',
   templateUrl: './othersettings.component.html',
   styleUrls: ['./othersettings.component.scss'],
 })
-export class OthersettingsComponent {
-  exitData!: any[];
+export class OthersettingsComponent implements OnInit {
+  @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
   AllTerms: any;
   AllTaxrate: any;
   AllDocument: any;
@@ -36,12 +35,11 @@ export class OthersettingsComponent {
   currrent_tab: any = 'Terms';
   tab_Array: any = [
     'Terms',
-    'Tax rate',
-    'Documents',
+    // 'Tax rate',
+    // 'Documents',
     'Vendor type',
     'Class name',
   ];
-  @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
 
   showTerms = true;
   showTaxRate = true;
@@ -49,17 +47,22 @@ export class OthersettingsComponent {
   showVendorType = true;
   showClassName = true;
 
-  constructor (
+  isHideAddActionQBD = false;
+  isHideArchiveActionQBD = false;
+
+  constructor(
     private router: Router,
     public SettingsServices: SettingsService,
     private snackBar: MatSnackBar,
     public translate: TranslateService,
     public dialog: MatDialog,
     public httpCall: HttpCall,
+    public commonService: CommonService,
     public uiSpinner: UiSpinnerService
   ) { }
 
   ngOnInit() {
+    this.getCompanyTenants();
     this.getDataTerms();
     this.getDataTaxRate();
     this.getDataDocuments();
@@ -69,6 +72,20 @@ export class OthersettingsComponent {
 
   onTabChanged($event: { index: string | number; }) {
     this.currrent_tab = this.tab_Array[$event.index];
+  }
+
+  async getCompanyTenants() {
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP);
+
+    if (data.status) {
+      if (data.data.is_quickbooks_desktop) {
+        this.isHideAddActionQBD = true;
+        this.isHideArchiveActionQBD = true;
+      } else {
+        this.isHideAddActionQBD = false;
+        this.isHideArchiveActionQBD = false;
+      }
+    }
   }
 
   async getDataTerms() {
@@ -103,7 +120,6 @@ export class OthersettingsComponent {
     const data = await this.SettingsServices.getJobName();
     if (data.status) {
       this.AllJobName = data.data;
-      console.log('AllJobName', this.AllJobName);
     }
   }
 
@@ -153,16 +169,21 @@ export class OthersettingsComponent {
         }, 100);
       });
     } else if (this.currrent_tab == 'Class name') {
-      const dialogRef = this.dialog.open(ClassNameFormComponent, {
-        width: '350px',
-        data: {},
-      });
-      dialogRef.afterClosed().subscribe((result) => {
-        this.showClassName = false;
-        setTimeout(() => {
-          this.showClassName = true;
-        }, 100);
-      });
+      if (this.isHideAddActionQBD) {
+        showNotification(this.snackBar, 'Your organization is enabled Quick books desktop so this action is not allowed.', 'error');
+      } else {
+        const dialogRef = this.dialog.open(ClassNameFormComponent, {
+          width: '350px',
+          data: {},
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+          this.showClassName = false;
+          setTimeout(() => {
+            this.showClassName = true;
+          }, 100);
+        });
+      }
+
     }
   }
 
@@ -411,8 +432,12 @@ export class OthersettingsComponent {
   }
 
   importFileAction() {
-    let el: HTMLElement = this.OpenFilebox.nativeElement;
-    el.click();
+    if (this.currrent_tab == 'Class name' && this.isHideAddActionQBD) {
+      showNotification(this.snackBar, 'Your organization is enabled Quick books desktop so this action is not allowed.', 'error');
+    } else {
+      let el: HTMLElement = this.OpenFilebox.nativeElement;
+      el.click();
+    }
   }
 
   onFileChange(ev: any) {
@@ -422,6 +447,9 @@ export class OthersettingsComponent {
     let header_;
     const reader = new FileReader();
     const file = ev.target.files[0];
+    setTimeout(() => {
+      ev.target.value = null;
+    }, 200);
     reader.onload = (event) => {
       const data = reader.result;
       workBook = XLSX.read(data, { type: 'binary' }) || '';
@@ -466,17 +494,14 @@ export class OthersettingsComponent {
         .subscribe(function (params) {
           if (params.status) {
             that.uiSpinner.spin$.next(false);
-            that.exitData = params;
             const dialogRef = that.dialog.open(OtherExistsListingComponent, {
               width: '750px',
               height: '500px',
-              // data: that.exitData,
-              data: { data: that.exitData, tab: that.currrent_tab },
+              data: { data: params, tab: that.currrent_tab },
               disableClose: true,
             });
 
             dialogRef.afterClosed().subscribe((result: any) => {
-              console.log("result", result);
               if (result.module) {
                 if (result.module == 'Terms') {
                   that.showTerms = false;
@@ -600,19 +625,23 @@ export class OthersettingsComponent {
         this.getDataJobName();
       });
     } else if (this.currrent_tab == 'Class name') {
-      const dialogRef = this.dialog.open(ImportOtherSettingsComponent, {
-        width: '500px',
-        data: this.currrent_tab,
-        disableClose: true,
-      });
+      if (this.isHideAddActionQBD) {
+        showNotification(this.snackBar, 'Your organization is enabled Quick books desktop so this action is not allowed.', 'error');
+      } else {
+        const dialogRef = this.dialog.open(ImportOtherSettingsComponent, {
+          width: '500px',
+          data: this.currrent_tab,
+          disableClose: true,
+        });
 
-      dialogRef.afterClosed().subscribe((result) => {
-        this.getDataJobName();
-      });
+        dialogRef.afterClosed().subscribe((result) => {
+          this.getDataJobName();
+        });
+      }
     }
   }
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 }

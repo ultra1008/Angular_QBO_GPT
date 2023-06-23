@@ -4,7 +4,6 @@ var gifLoaderSchema = require('./../../../../../model/gif_loader');
 let config = require('../../../../../config/config');
 let db_rest_api = require('../../../../../config/db_rest_api');
 let collectionConstant = require('../../../../../config/collectionConstant');
-let superadminCollection = require('../../../../../config/superadminCollection');
 var ObjectID = require('mongodb').ObjectID;
 let db_connection = require('./../../../../../controller/common/connectiondb');
 var bucketOpration = require('../../../../../controller/common/s3-wasabi');

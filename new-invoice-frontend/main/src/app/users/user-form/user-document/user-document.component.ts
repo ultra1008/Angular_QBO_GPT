@@ -21,6 +21,8 @@ import { UserDocument } from '../../user.model';
 import { TableElement } from 'src/app/shared/TableElement';
 import { formatDate } from '@angular/common';
 import { TableExportUtil } from 'src/app/shared/tableExportUtil';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { RolePermission } from 'src/consts/common.model';
 
 @Component({
   selector: 'app-user-document',
@@ -38,6 +40,7 @@ export class UserDocumentComponent extends UnsubscribeOnDestroyAdapter implement
   selection = new SelectionModel<UserDocument>(true, []);
   advanceTable?: UserDocument;
   id: any;
+  role_permission!: RolePermission;
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -52,6 +55,7 @@ export class UserDocumentComponent extends UnsubscribeOnDestroyAdapter implement
     private fb: UntypedFormBuilder, public route: ActivatedRoute, private commonService: CommonService,) {
     super();
     this.id = this.route.snapshot.queryParamMap.get("_id");
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
   }
 
   ngOnInit() {

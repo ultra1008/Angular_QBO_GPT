@@ -17,11 +17,10 @@ import { WEB_ROUTES } from 'src/consts/routes';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { Observable, map, startWith } from 'rxjs';
 import { Invoice } from 'src/app/invoice/invoice.model';
-import { notificationRoutes } from 'src/consts/utils';
+import { notificationRoutes, numberWithCommas } from 'src/consts/utils';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
-
+import { AuthenticationService } from '../../authentication/authentication.service';
 interface Notifications {
   _id: string;
   notification_title: string;
@@ -58,6 +57,7 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
   isLoading = true;
   constructor (@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, public elementRef: ElementRef,
     public uiSpinner: UiSpinnerService, private configService: ConfigService, private authService: AuthService,
+    private AuthenticationService: AuthenticationService,
     private router: Router, public translate: TranslateService, public dialog: MatDialog, private commonService: CommonService,) {
     super();
   }
@@ -65,9 +65,10 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
   notificationCount = 0;
   notificationLoading = true;
   start = 0;
-  myControl = new UntypedFormControl();
+  searchControl = new UntypedFormControl();
   invoiceList: Array<Invoice> = [];
   invoiceLoader = true;
+  openSearchDialog = false;
 
   async ngOnInit() {
     this.config = this.configService.configData;
@@ -129,27 +130,26 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
     }
     const found = notificationRoutes().find((element: any) => element.name == notification.module_name);
     this.uiSpinner.spin$.next(false);
+    // this.trigger.closeMenu();
     if (found) {
-      if (notification.tab_index) {
+      if (notification.module_name == 'PO') {
+        const routes = notification.module_route;
+        routes.document = configData.DOCUMENT_TYPES.po;
+        this.router.navigate([found.url], { queryParams: routes }).then();
+      } else if (notification.module_name == 'Quote' || notification.module_name == 'Packing Slip' || notification.module_name == 'Receiving Slip') {
+        const routes = notification.module_route;
+        routes.document = notification.module_name.toString().toUpperCase().replace(/ /g, "_");
+        this.router.navigate([found.url], { queryParams: routes }).then();
+      } else if (notification.tab_index) {
         if (notification.tab_index != -1) {
-          this.router
-            .navigate([found.url], {
-              queryParams: notification.module_route,
-              state: { value: notification.tab_index },
-            })
-            .then();
+          this.router.navigate([found.url], { queryParams: notification.module_route, state: { value: notification.tab_index }, }).then();
         } else {
-          this.router
-            .navigate([found.url], { queryParams: notification.module_route })
-            .then();
+          this.router.navigate([found.url], { queryParams: notification.module_route }).then();
         }
       } else {
-        this.router
-          .navigate([found.url], { queryParams: notification.module_route })
-          .then();
+        this.router.navigate([found.url], { queryParams: notification.module_route }).then();
       }
     }
-    this.trigger.closeMenu();
   }
 
   async getInvoiceMessageCount() {
@@ -170,20 +170,38 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
   }
 
   ngAfterViewInit() {
+
+
+
+    // if (
+    //   window.matchMedia &&
+    //   window.matchMedia('(prefers-color-scheme: dark)').matches
+    // ) {
+    //   // dark mode
+    //   this.darkThemeBtnClick();
+    // } else {
+    //   //Light mode
+    //   this.lightThemeBtnClick();
+    // }
+
     // set theme on startup
     if (localStorage.getItem(localstorageconstants.DARKMODE)) {
       if (localStorage.getItem(localstorageconstants.DARKMODE) === 'dark') {
         this.isDarTheme = true;
         this.darkIcon = 'moon';
+        this.darkThemeBtnClick();
       } else if (localStorage.getItem(localstorageconstants.DARKMODE) === 'light') {
         this.isDarTheme = false;
         this.darkIcon = 'sun';
+        this.lightThemeBtnClick();
       } else {
         this.isDarTheme = this.config.layout.variant === 'dark' ? true : false;
         if (this.isDarTheme) {
           this.darkIcon = 'moon';
+          this.darkThemeBtnClick();
         } else {
           this.darkIcon = 'sun';
+          this.lightThemeBtnClick();
         }
       }
     } else {
@@ -253,7 +271,7 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
         this.renderer.removeClass(this.document.body, 'submenu-closed');
       }
     } else {
-      if (this.config.layout.sidebar.collapsed === true) {
+      if (this.config.layout.sidebar.collapsed === false) {
         this.renderer.addClass(this.document.body, 'side-closed');
         this.renderer.addClass(this.document.body, 'submenu-closed');
       }
@@ -272,11 +290,11 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
   }
 
   goChangePassword() {
-    this.router.navigate(['/authentication/change-password']);
+    this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);
   }
 
   gotoSettings() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 
   languageSwitcher() {
@@ -312,22 +330,23 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
     }
   }
   logout() {
-    this.authService.logout().subscribe((res) => {
-      if (!res.success) {
-        localStorage.removeItem(localstorageconstants.DARKMODE);
-        localStorage.removeItem(localstorageconstants.USERDATA);
-        localStorage.removeItem(localstorageconstants.COMPANYDATA);
-        localStorage.removeItem(localstorageconstants.COMPANYID);
-        localStorage.removeItem(localstorageconstants.INVOICE_GIF);
-        localStorage.removeItem(localstorageconstants.INVOICE_TOKEN);
-        localStorage.setItem(localstorageconstants.LOGOUT, 'true');
-        localStorage.removeItem('choose_logoheader');
-        localStorage.removeItem('choose_skin');
-        localStorage.removeItem('menuOption');
-        localStorage.removeItem('thinvoicetheme');
-        this.router.navigate(['/authentication/signin']);
-      }
-    });
+    // this.authService.logout().subscribe((res) => {
+    //   if (!res.success) {
+    this.AuthenticationService.changeLoginValue(true);
+    localStorage.removeItem(localstorageconstants.DARKMODE);
+    localStorage.removeItem(localstorageconstants.USERDATA);
+    localStorage.removeItem(localstorageconstants.COMPANYDATA);
+    localStorage.removeItem(localstorageconstants.COMPANYID);
+    localStorage.removeItem(localstorageconstants.INVOICE_GIF);
+    localStorage.removeItem(localstorageconstants.INVOICE_TOKEN);
+    localStorage.setItem(localstorageconstants.LOGOUT, 'true');
+    localStorage.removeItem('choose_logoheader');
+    localStorage.removeItem('choose_skin');
+    localStorage.removeItem('menuOption');
+    localStorage.removeItem('thinvoicetheme');
+    this.router.navigate([WEB_ROUTES.LOGIN]);
+    //   }
+    // });
   }
 
   lightThemeBtnClick() {
@@ -423,14 +442,31 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
     this.router.navigate([WEB_ROUTES.INVOICE_MESSAGES]);
   }
 
+  onSearchChange(event: any) {
+    if (this.openSearchDialog) {
+      document.getElementById('global-search')?.click();
+    }
+    this.openSearchDialog = false;
+    if (event.target.value == '') {
+      this.invoiceList = [];
+      this.invoiceLoader = false;
+    } else {
+      this.onSearch();
+      document.getElementById('global-search')?.click();
+      this.openSearchDialog = true;
+    }
+  }
+
   async onSearch() {
-    if (this.myControl.value) {
+    if (this.searchControl.value) {
       this.invoiceLoader = true;
-      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_HEADER_INVOICE_SERACH, { search: this.myControl.value });
+      const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_HEADER_INVOICE_SERACH, { search: this.searchControl.value });
       if (data.status) {
         this.invoiceList = data.data;
         this.invoiceLoader = false;
       }
+      // document.getElementById('search')?.blur();
+      // this.searchControl.setValue('');
     } else {
       this.invoiceLoader = false;
     }
@@ -438,5 +474,14 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
 
   openInvoiceDetail(invoice: Invoice) {
     this.router.navigate([WEB_ROUTES.INVOICE_DETAILS], { queryParams: { _id: invoice._id } });
+  }
+
+  numberWithCommas(amount: any) {
+    amount = Number(amount.toString());
+    return numberWithCommas(amount.toFixed(2));
+  }
+
+  openDashboard() {
+    this.router.navigate([WEB_ROUTES.DASHBOARD]);
   }
 }

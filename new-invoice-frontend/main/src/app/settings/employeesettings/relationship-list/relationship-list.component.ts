@@ -11,11 +11,12 @@ import { fromEvent, BehaviorSubject, Observable, merge, map } from 'rxjs';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
-import { RelationshipTable } from '../../settings.model';
+import { RelationshipModel } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
 import { RelationshipFormComponent } from './relationship-form/relationship-form.component';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-relationship-list',
@@ -28,9 +29,9 @@ export class RelationshipListComponent
   displayedColumns = ['relationship_name', 'actions'];
   relationshipService?: SettingsService;
   dataSource!: RelationshipDataSource;
-  selection = new SelectionModel<RelationshipTable>(true, []);
+  selection = new SelectionModel<RelationshipModel>(true, []);
   id?: number;
-  // advanceTable?: RelationshipTable;
+  // advanceTable?: RelationshipModel;
   isDelete = 0;
   titleMessage = '';
 
@@ -50,19 +51,9 @@ export class RelationshipListComponent
   refresh() {
     this.loadData();
   }
-  addNew() {
-    this.router.navigate(['/settings/mailbox-form']);
-  }
-
-  editMailbox(mailbox: RelationshipTable) {
-    this.router.navigate(['/settings/mailbox-form'], {
-      queryParams: { _id: mailbox._id },
-    });
-  }
 
   edit(relationship: any) {
     let that = this;
-    console.log('document');
     const dialogRef = this.dialog.open(RelationshipFormComponent, {
       width: '350px',
       data: relationship,
@@ -142,7 +133,7 @@ export class RelationshipListComponent
     //     // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
     //     this.relationshipService?.dataChange.value.splice(index, 1);
     //     this.refreshTable();
-    //     this.selection = new SelectionModel<RelationshipTable>(true, []);
+    //     this.selection = new SelectionModel<RelationshipModel>(true, []);
     //   });
     //  showNotification(
     //     'snackbar-danger',
@@ -170,11 +161,11 @@ export class RelationshipListComponent
   }
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: RelationshipTable) {
+  onContextMenu(event: MouseEvent, item: RelationshipModel) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -185,7 +176,7 @@ export class RelationshipListComponent
     }
   }
 }
-export class RelationshipDataSource extends DataSource<RelationshipTable> {
+export class RelationshipDataSource extends DataSource<RelationshipModel> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -193,8 +184,8 @@ export class RelationshipDataSource extends DataSource<RelationshipTable> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: RelationshipTable[] = [];
-  renderedData: RelationshipTable[] = [];
+  filteredData: RelationshipModel[] = [];
+  renderedData: RelationshipModel[] = [];
   constructor (
     public relationshipService: SettingsService,
     public paginator: MatPaginator,
@@ -206,7 +197,7 @@ export class RelationshipDataSource extends DataSource<RelationshipTable> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<RelationshipTable[]> {
+  connect(): Observable<RelationshipModel[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this.relationshipService.relationshipDataChange,
@@ -220,8 +211,8 @@ export class RelationshipDataSource extends DataSource<RelationshipTable> {
         // Filter data
         this.filteredData = this.relationshipService.relationshipData
           .slice()
-          .filter((RelationshipTable: RelationshipTable) => {
-            const searchStr = RelationshipTable.relationship_name.toLowerCase();
+          .filter((RelationshipModel: RelationshipModel) => {
+            const searchStr = RelationshipModel.relationship_name.toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
         // Sort filtered data
@@ -240,7 +231,7 @@ export class RelationshipDataSource extends DataSource<RelationshipTable> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: RelationshipTable[]): RelationshipTable[] {
+  sortData(data: RelationshipModel[]): RelationshipModel[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }

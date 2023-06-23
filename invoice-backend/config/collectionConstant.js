@@ -97,6 +97,7 @@ module.exports = {
     INVOICE_ALERTS: "invoice_alerts",
     INVOICE_MAILBOX_MONITORS: "invoice_mailbox_monitors",
     INVOICE_MESSAGE: "invoice_messages",
+    INVOICE_MESSAGE_SEEN: "invoice_message_seens",
 
     MANAGEMENT_INVOICE: "invoices",
     MANAGEMENT_PO: "project_po",
@@ -115,4 +116,5 @@ module.exports = {
     AP_PACKING_SLIP: 'ap_packing_slips',
     AP_RECEIVING_SLIP: 'ap_receiving_slips',
     AP_ALERTS: "ap_alerts",
+    API_COUNT: "api_count",
 };

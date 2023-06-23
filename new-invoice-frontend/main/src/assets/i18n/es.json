@@ -25,9 +25,16 @@
             "HIDE": "Hide",
             "PRINT": "IMPRIMIR",
             "INVOICEMSG": "Invoice Message",
-            "INVOICELINK": "Invoice Link"
+            "INVOICELINK": "Invoice Link",
+            "EDIT": "Edit",
+            "DASHBOARD": "Dashboard",
+            "DELETE": "Delete",
+            "REMOVE": "Remove",
+            "SAVE": "Save",
+            "CANCEL": "Cancel"
         },
         "ACTIONS": {
+            "ACTIONS": "Actions",
             "EDIT": "Editar",
             "ARCHIVE": "Archivo",
             "RESTORE": "Restaurar",
@@ -40,7 +47,9 @@
             "NO": "No",
             "BACK": "Atrás",
             "NEXT": "Próxima",
-            "DELETE": "Eliminar"
+            "DELETE": "Eliminar",
+            "Access_denied_all": "Access denied",
+            "UPLOAD": "Upload"
         },
         "HISTORY": {
             "KEY": "Llave",
@@ -57,6 +66,9 @@
         "IMPORT": {
             "STATUS": "Estado",
             "NAME": "Nombre"
+        },
+        "LISTING": {
+            "EPMTY": "No matching records found"
         }
     },
     "VENDOR": {
@@ -126,7 +138,9 @@
             "ADD_USER": "Agregar usuario",
             "EDIT_USER": "Edit User",
             "TITLE": "Usuario",
-            "ARCHIVED_TITLE": "Usuario archivado"
+            "ARCHIVED_TITLE": "Usuario archivado",
+            "ACTIVE_STATUS_MASSAGE": "No active user data is available",
+            "INACTIVE_STATUS_MASSAGE": "No inactive user data is available"
         },
         "TABLE": {
             "IMAGE": "Imagen",
@@ -310,6 +324,7 @@
                 "INVOICE": "Factura",
                 "REPORT": "Informe",
                 "TEMPLATES": "Plantillas",
+                "Client_Job": "Client/Job Name",
                 "USERS": "Usuarios",
                 "SETTING": "Configuración",
                 "All": "Todo",
@@ -458,6 +473,9 @@
         "HISTORY": {
             "TITLE": "Invoice History"
         },
+        "UPLOAD": {
+            "WAIT_FOR_RESPONSE": "The document(s) uploaded successfully. SmartAccuPay processing your uploaded document and in sometime this documents are reflected to portal."
+        },
         "INVOICE_DETAILS": {
             "TITLE": "Invoice Detail",
             "INFORMATION": {
@@ -500,7 +518,6 @@
                     "SUB_TOTAL": "Sub Total",
                     "AMOUNT_DUE": "Amount Due",
                     "COST_CODE": "Cost Code",
-                    "GL_ACCOUNT": "GL Account",
                     "CLASS_NAME": "Class Name",
                     "NOTES": "Notes"
                 }
@@ -515,12 +532,19 @@
                 "TITLE": "Info",
                 "TABLE": {
                     "TOTAL_AMOUNT": "Total Amount",
-                    "COST_CODE": "Cost Code",
+                    "COST_CODE": "Cost Code/GL Account",
                     "ASSIGN_TO": "Approver",
-                    "GL_ACCOUNT": "GL Account",
+                    "CLIENT_JOB_NAME": "Client/Job Name",
+                    "CLASS_NAME": "Class Name",
                     "NOTES": "Notes"
                 }
             }
+        }
+    },
+    "DASHBOARD": {
+        "CHART": {
+            "MONTHLY_TITLE": "Monthly History",
+            "MONTHLY_INVOICE": "Monthly Invoice"
         }
     }
 }

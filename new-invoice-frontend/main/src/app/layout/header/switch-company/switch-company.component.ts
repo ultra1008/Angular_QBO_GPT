@@ -7,6 +7,7 @@ import { CommonService } from 'src/app/services/common.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { DialogData } from 'src/app/vendors/vendor-report/vendor-report.component';
 import { httproutes, httpversion } from 'src/consts/httproutes';
+import { icon } from 'src/consts/icon';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { showNotification } from 'src/consts/utils';
@@ -25,6 +26,7 @@ export class SwitchCompanyComponent implements OnInit {
   showCompanyList = true;
   selectedCompany: any;
   removable = true;
+  title = 'Choose Organization';
 
   constructor (public dialogRef: MatDialogRef<SwitchCompanyComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private commonService: CommonService, private snackBar: MatSnackBar, private router: Router, public uiSpinner: UiSpinnerService,
@@ -89,8 +91,9 @@ export class SwitchCompanyComponent implements OnInit {
         localStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
 
         if (data.data.UserData.useris_password_temp == true) {
-          this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);
+          this.router.navigate([WEB_ROUTES.FORCEFULLY_CHANGE_PASSWORD]);
         } else {
+          console.log("sagar: ", window.location.pathname, "and", WEB_ROUTES.DASHBOARD, "====", window.location.pathname === WEB_ROUTES.DASHBOARD);
           if (window.location.pathname === WEB_ROUTES.DASHBOARD) {
             setTimeout(() => {
               location.reload();

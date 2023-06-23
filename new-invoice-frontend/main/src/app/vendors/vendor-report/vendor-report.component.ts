@@ -2,7 +2,6 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { VendorsService } from '../vendors.service';
-import { TermModel } from '../vendor.model';
 import { configData } from 'src/environments/configData';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { isValidMailFormat, showNotification } from 'src/consts/utils';
@@ -13,9 +12,10 @@ import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { CommonService } from 'src/app/services/common.service';
 import { httpversion, httproutes } from 'src/consts/httproutes';
 import { icon } from 'src/consts/icon';
+import { TermModel } from 'src/app/settings/settings.model';
 
 export interface DialogData {
-  termsList: Array<any>;
+  termsList: Array<TermModel>;
   invoiceStatus: Array<any>;
 }
 
@@ -36,7 +36,7 @@ export class VendorReportComponent implements OnInit {
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   invoice_logo = icon.INVOICE_LOGO;
 
-  constructor(public uiSpinner: UiSpinnerService, public dialogRef: MatDialogRef<VendorReportComponent>, private snackBar: MatSnackBar,
+  constructor (public uiSpinner: UiSpinnerService, public dialogRef: MatDialogRef<VendorReportComponent>, private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: DialogData, public vendorService: VendorsService, private fb: UntypedFormBuilder, public commonService: CommonService,
   ) {
     this.termsList = data.termsList;

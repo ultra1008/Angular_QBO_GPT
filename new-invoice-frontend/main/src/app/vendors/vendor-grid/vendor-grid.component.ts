@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { WEB_ROUTES } from 'src/consts/routes';
-import { TermModel, Vendor } from '../vendor.model';
+import { VendorModel } from '../vendor.model';
 import { HttpClient } from '@angular/common/http';
 import { UntypedFormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { VendorsService } from '../vendors.service';
-import { formateAmount, showNotification, timeDateToepoch } from 'src/consts/utils';
+import { formatPhoneNumber, formateAmount, showNotification, timeDateToepoch } from 'src/consts/utils';
 import { VendorReportComponent } from '../vendor-report/vendor-report.component';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { FormateDateStringPipe } from 'src/app/users/users-filter.pipe';
@@ -20,6 +20,9 @@ import * as XLSX from 'xlsx';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { ImportVendorComponent } from '../import-vendor/import-vendor.component';
 import { VendorExistListComponent } from '../vendor-exist-list/vendor-exist-list.component';
+import { RolePermission } from 'src/consts/common.model';
+import { TermModel } from 'src/app/settings/settings.model';
+import { icon } from 'src/consts/icon';
 
 @Component({
   selector: 'app-vendor-grid',
@@ -30,19 +33,25 @@ import { VendorExistListComponent } from '../vendor-exist-list/vendor-exist-list
 export class VendorGridComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
-  vendorList: any = [];
-  vendorActiveList: any = [];
-  vendorInactiveList: any = [];
+  vendorList: Array<VendorModel> = [];
+  vendorActiveList: Array<VendorModel> = [];
+  vendorInactiveList: Array<VendorModel> = [];
   cardLoading = true;
   isDelete = 0;
   active_word = 'Active';
   inactive_word = 'Inactive';
-  vendorname_search: any;
-  vendor_status: any;
+  vendorname_search = '';
+  vendor_status = '';
   termsList: Array<TermModel> = [];
-  role_permission: any;
-  exitData!: any[];
+  role_permission!: RolePermission;
   @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
+  isHideAddActionQBD = false;
+  isHideEditActionQBD = false;
+  isHideArchiveActionQBD = false;
+  quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
+  quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
+  is_quickbooks_online = false;
+  is_quickbooks_desktop = false;
 
   constructor(
     public httpClient: HttpClient,
@@ -57,15 +66,45 @@ export class VendorGridComponent
     public uiSpinner: UiSpinnerService
   ) {
     super();
-    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
   }
   ngOnInit() {
+    this.getCompanyTenants();
     this.getVendor();
   }
 
   gotolist() {
     localStorage.setItem(localstorageconstants.VENDOR_DISPLAY, 'list');
     this.router.navigate([WEB_ROUTES.VENDOR]);
+  }
+
+  async getCompanyTenants() {
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP);
+    if (data.status) {
+      if (data.data.is_quickbooks_desktop) {
+        if (this.role_permission.vendor.Add) {
+          this.isHideAddActionQBD = true;
+        } else {
+          this.isHideAddActionQBD = false;
+        }
+
+        if (this.role_permission.vendor.Edit) {
+          this.isHideEditActionQBD = true;
+        } else {
+          this.isHideEditActionQBD = false;
+        }
+
+        if (this.role_permission.vendor.Delete) {
+          this.isHideArchiveActionQBD = true;
+        } else {
+          this.isHideArchiveActionQBD = false;
+        }
+
+        this.is_quickbooks_online = data.data.is_quickbooks_online;
+        this.is_quickbooks_desktop = data.data.is_quickbooks_desktop;
+
+      }
+    }
   }
 
   async getVendor() {
@@ -124,7 +163,7 @@ export class VendorGridComponent
     });
   }
 
-  editVendor(vendor: Vendor) {
+  editVendor(vendor: VendorModel) {
 
     this.router.navigate([WEB_ROUTES.VENDOR_FORM], {
       queryParams: { _id: vendor._id },
@@ -158,9 +197,8 @@ export class VendorGridComponent
       jsonData = workBook.SheetNames.reduce((initial: any, name: any) => {
         const sheet = workBook.Sheets[name];
         initial[name] = XLSX.utils.sheet_to_json(sheet);
-        let data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
         header_ = data.shift();
-
         return initial;
       }, {});
       // const dataString = JSON.stringify(jsonData);
@@ -183,12 +221,10 @@ export class VendorGridComponent
         .subscribe(function (params) {
           if (params.status) {
             that.uiSpinner.spin$.next(false);
-            that.exitData = params;
             const dialogRef = that.dialog.open(VendorExistListComponent, {
               width: '750px',
               height: '500px',
-              // data: that.exitData,
-              data: { data: that.exitData },
+              data: { data: params },
               disableClose: true,
             });
 
@@ -207,8 +243,6 @@ export class VendorGridComponent
     reader.readAsBinaryString(file);
   }
 
-
-
   downloadImport() {
     let that = this;
     const dialogRef = that.dialog.open(ImportVendorComponent, {
@@ -220,6 +254,9 @@ export class VendorGridComponent
     dialogRef.afterClosed().subscribe((result) => {
       that.refresh();
     });
+  }
 
+  formatPhoneNumber(phone: any) {
+    return formatPhoneNumber(phone);
   }
 }

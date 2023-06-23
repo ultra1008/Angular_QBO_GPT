@@ -16,7 +16,8 @@ import { TermsFormComponent } from './terms-form/terms-form.component';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { icon } from 'src/consts/icon';
-import { TermModel } from 'src/app/vendors/vendor.model';
+import { TermModel } from '../../settings.model';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-terms-listing',
@@ -62,19 +63,16 @@ export class TermsListingComponent
   async getCompanyTenants() {
     const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP);
     if (data.status) {
-      if (data.data.is_quickbooks_online || data.data.is_quickbooks_desktop) {
-        this.displayedColumns = ['name', 'due_days', 'discount', 'is_quickbooks', 'actions'];
-      } else {
-        this.displayedColumns = ['name', 'due_days', 'discount', 'actions'];
-      }
+      // if (data.data.is_quickbooks_online || data.data.is_quickbooks_desktop) {
+      //   this.displayedColumns = ['name', 'due_days', 'discount', 'is_quickbooks', 'actions'];
+      // } else {
+      this.displayedColumns = ['name', 'due_days', 'discount', 'actions'];
+      // }
     }
     // this.loadData();
   }
   refresh() {
     this.loadData();
-  }
-  addNew() {
-    this.router.navigate(['/settings/mailbox-form']);
   }
 
   edit(term: TermModel) {
@@ -173,7 +171,7 @@ export class TermsListingComponent
   }
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 
   // context menu
@@ -223,11 +221,11 @@ export class TermsDataSource extends DataSource<TermModel> {
         // Filter data
         this.filteredData = this.termsService.termData
           .slice()
-          .filter((TermsTable: TermModel) => {
+          .filter((response: TermModel) => {
             const searchStr = (
-              TermsTable.name +
-              TermsTable.due_days +
-              TermsTable.discount
+              response.name +
+              response.due_days +
+              response.discount
             ).toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });

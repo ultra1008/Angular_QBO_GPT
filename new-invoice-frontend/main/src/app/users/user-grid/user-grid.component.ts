@@ -15,7 +15,7 @@ import {
   timeDateToepoch,
 } from 'src/consts/utils';
 import { SelectionModel } from '@angular/cdk/collections';
-import { AdvanceTable, RoleModel, User } from '../user.model';
+import { AdvanceTable, RoleModel, UserModel } from '../user.model';
 import { UserRestoreFormComponent } from '../user-restore-form/user-restore-form.component';
 import { UserReportComponent } from '../user-report/user-report.component';
 import {
@@ -28,6 +28,7 @@ import { ImportUserComponent } from '../import-user/import-user.component';
 import { UserExistListComponent } from '../user-exist-list/user-exist-list.component';
 import * as XLSX from 'xlsx';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
+import { RolePermission } from 'src/consts/common.model';
 
 @Component({
   selector: 'app-user-grid',
@@ -39,13 +40,15 @@ export class UserGridComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   isDelete = 0;
-  userList: any = [];
+  userList: Array<UserModel> = [];
+  activeUserList: Array<UserModel> = [];
+  inactiveUserList: Array<UserModel> = [];
   dataSource!: UserDataSource;
   @ViewChild('filter', { static: true }) filter!: ElementRef;
   active_word = 'Active';
   inactive_word = 'Inactive';
   titleMessage = '';
-  selection = new SelectionModel<User>(true, []);
+  selection = new SelectionModel<UserModel>(true, []);
   advanceTable?: AdvanceTable;
   roleLists: Array<RoleModel> = [];
   username_search: any;
@@ -53,9 +56,9 @@ export class UserGridComponent
   tweet_epochs: any = [];
   cardLoading = true;
   exitData!: any[];
-  role_permission: any;
+  role_permission!: RolePermission;
   @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
-  constructor(
+  constructor (
     public httpClient: HttpClient,
     private httpCall: HttpCall,
     public dialog: MatDialog,
@@ -66,7 +69,7 @@ export class UserGridComponent
     public uiSpinner: UiSpinnerService
   ) {
     super();
-    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
   }
 
   ngOnInit() {
@@ -82,6 +85,12 @@ export class UserGridComponent
       { is_delete: this.isDelete }
     );
     this.userList = data;
+    this.activeUserList = this.userList.filter((obj: any) => {
+      return obj.userstatus == 1;
+    });
+    this.inactiveUserList = this.userList.filter((obj: any) => {
+      return obj.userstatus == 2;
+    });
     this.cardLoading = false;
   }
 
@@ -89,8 +98,7 @@ export class UserGridComponent
     return timeDateToepoch(date);
   }
 
-  editUser(user: User) {
-
+  editUser(user: UserModel) {
     this.router.navigate([WEB_ROUTES.USER_FORM], {
       queryParams: { _id: user._id },
     });
@@ -138,7 +146,7 @@ export class UserGridComponent
     this.getUser();
   }
 
-  async archiveRecover(user: User, is_delete: number) {
+  async archiveRecover(user: UserModel, is_delete: number) {
     const data = await this.commonService.postRequestAPI(
       httpversion.PORTAL_V1 + httproutes.USER_DELETE,
       { _id: user._id, is_delete: is_delete }
@@ -151,7 +159,7 @@ export class UserGridComponent
     }
   }
 
-  async deleteUser(user: User, is_delete: number) {
+  async deleteUser(user: UserModel, is_delete: number) {
     if (is_delete == 1) {
       this.titleMessage = 'Are you sure you want to archive this user?';
     } else {
@@ -172,7 +180,7 @@ export class UserGridComponent
       });
   }
 
-  addNew(user: User) {
+  addNew(user: UserModel) {
     this.titleMessage = 'Are you sure you want to restore this user?';
     swalWithBootstrapTwoButtons
       .fire({

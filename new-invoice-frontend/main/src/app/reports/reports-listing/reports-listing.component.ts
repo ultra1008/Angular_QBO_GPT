@@ -3,7 +3,6 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { BehaviorSubject, Observable, fromEvent, map, merge } from 'rxjs';
 import { ReportService } from '../report.service';
-import { httproutes, httpversion } from 'src/consts/httproutes';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -17,11 +16,10 @@ import { MatSort } from '@angular/material/sort';
 import { DataSource, SelectionModel } from '@angular/cdk/collections';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { WEB_ROUTES } from 'src/consts/routes';
-import { Vendor } from 'src/app/vendors/vendor.model';
 import { configData } from 'src/environments/configData';
 import { TableElement } from 'src/app/shared/TableElement';
 import { formatDate } from '@angular/common';
-import { timeDateToepoch } from 'src/consts/utils';
+import { numberWithCommas, timeDateToepoch } from 'src/consts/utils';
 
 @Component({
   selector: 'app-reports-listing',
@@ -30,7 +28,7 @@ import { timeDateToepoch } from 'src/consts/utils';
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
 })
 export class ReportsListingComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
-  displayedColumns = ['invoice_date', 'due_date', 'vendor', 'invoice_number', 'total_amount', 'sub_total', 'approver', 'status', 'actions'];
+  displayedColumns = ['invoice_date', 'due_date', 'vendor', 'invoice_no', 'total_amount', 'sub_total', 'approver', 'status', 'actions'];
   reportService?: ReportService;
   dataSource!: ExampleDataSource;
   selection = new SelectionModel<Report>(true, []);
@@ -50,6 +48,7 @@ export class ReportsListingComponent extends UnsubscribeOnDestroyAdapter impleme
     start_date: new FormControl(),
     end_date: new FormControl()
   });
+  dateRange: Array<number> = [0, 0];
 
   constructor (public ReportServices: ReportService, public httpCall: HttpCall, public uiSpinner: UiSpinnerService,
     public route: ActivatedRoute, private router: Router, public translate: TranslateService,) {
@@ -77,11 +76,11 @@ export class ReportsListingComponent extends UnsubscribeOnDestroyAdapter impleme
     this.loadData();
   }
 
-  getVendorNameTooltip(row: any) {
-    return row.vendor_data.vendor_name;
+  getVendorNameTooltip(row: Report) {
+    return row.vendor_data?.vendor_name;
   }
-  getApproverTooltip(row: any) {
-    return row.approver;
+  getApproverTooltip(row: Report) {
+    return row.assign_to_data?.userfullname;
   }
 
   editInvoice(row: Report) {
@@ -100,6 +99,7 @@ export class ReportsListingComponent extends UnsubscribeOnDestroyAdapter impleme
       this.sort,
       this.reportType,
       this.ids,
+      this.dateRange,
     );
     this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
       () => {
@@ -128,17 +128,20 @@ export class ReportsListingComponent extends UnsubscribeOnDestroyAdapter impleme
   exportExcel() {
     const exportData: Partial<TableElement>[] =
       this.dataSource.filteredData.map((x) => ({
-        'Invoice Date': formatDate(new Date(Number(x.invoice_date_epoch.toString()) * 1000), 'MM/dd/yyyy', 'en'),
-        'Due Date': formatDate(new Date(Number(x.due_date_epoch.toString()) * 1000), 'MM/dd/yyyy', 'en'),
-        'Vendor': x.vendor_data.vendor_name,
+        'Invoice Date': x.invoice_date_epoch === 0 ? '' : formatDate(new Date(Number(x.invoice_date_epoch.toString()) * 1000), 'MM/dd/yyyy', 'en'),
+        'Due Date': x.due_date_epoch === 0 ? '' : formatDate(new Date(Number(x.due_date_epoch.toString()) * 1000), 'MM/dd/yyyy', 'en'),
+        'Vendor': x.vendor_data?.vendor_name,
         'Invoice Number': x.invoice_no,
         'Total Amount': x.invoice_total_amount,
         'Sub Total': x.sub_total,
         'Approver': x.assign_to_data?.userfullname,
         'Status': x.status,
       }));
-
     TableExportUtil.exportToExcel(exportData, 'excel');
+  }
+
+  numberWithCommas(amount: number) {
+    return numberWithCommas(amount.toFixed(2));
   }
 
   back() {
@@ -146,11 +149,10 @@ export class ReportsListingComponent extends UnsubscribeOnDestroyAdapter impleme
   }
 
   dateRangeChange(dateRangeStart: HTMLInputElement, dateRangeEnd: HTMLInputElement) {
-    console.log("start: ", dateRangeStart.value, timeDateToepoch(new Date(dateRangeStart.value)));
-    console.log("end: ", dateRangeEnd.value, timeDateToepoch(new Date(dateRangeEnd.value)));
-
-    // this.dateRange = [dateRangeStart.value, dateRangeEnd.value];
-    // this.dateRange = [timeDateToepoch(dateRangeStart.value), timeDateToepoch(dateRangeEnd.value)];
+    if (dateRangeStart.value != null && dateRangeStart.value != undefined && dateRangeEnd.value != null && dateRangeEnd.value != undefined) {
+      this.dateRange = [timeDateToepoch(dateRangeStart.value), timeDateToepoch(dateRangeEnd.value)];
+      this.loadData();
+    }
   }
 }
 
@@ -165,7 +167,7 @@ export class ExampleDataSource extends DataSource<Report> {
   filteredData: Report[] = [];
   renderedData: Report[] = [];
   constructor (public exampleDatabase: ReportService, public paginator: MatPaginator, public _sort: MatSort,
-    public reportType: string, public ids: Array<string>,) {
+    public reportType: string, public ids: Array<string>, public dateRange: Array<number>) {
     super();
     // Reset to the first page when the user changes the filter.
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
@@ -181,15 +183,15 @@ export class ExampleDataSource extends DataSource<Report> {
     ];
     let requestObject;
     if (this.reportType == configData.REPORT_TYPE.reportVendor) {
-      requestObject = { vendor_ids: this.ids };
+      requestObject = { vendor_ids: this.ids, start_date: this.dateRange[0], end_date: this.dateRange[1] };
     } else if (this.reportType == configData.REPORT_TYPE.openApprover) {
-      requestObject = { assign_to_ids: this.ids };
+      requestObject = { assign_to_ids: this.ids, start_date: this.dateRange[0], end_date: this.dateRange[1] };
     } else if (this.reportType == configData.REPORT_TYPE.openClass) {
-      requestObject = { class_name_ids: this.ids };
+      requestObject = { class_name_ids: this.ids, start_date: this.dateRange[0], end_date: this.dateRange[1] };
     } else if (this.reportType == configData.REPORT_TYPE.openClientJob) {
-      requestObject = { job_client_name_ids: this.ids };
+      requestObject = { job_client_name_ids: this.ids, start_date: this.dateRange[0], end_date: this.dateRange[1] };
     } else if (this.reportType == configData.REPORT_TYPE.openVendor) {
-      requestObject = { open_invoice: true, vendor_ids: this.ids };
+      requestObject = { open_invoice: true, vendor_ids: this.ids, start_date: this.dateRange[0], end_date: this.dateRange[1] };
     }
 
     this.exampleDatabase.getInvoiceReportTable(requestObject);
@@ -202,7 +204,7 @@ export class ExampleDataSource extends DataSource<Report> {
             const searchStr = (
               invoice.invoice_date_epoch +
               invoice.due_date_epoch +
-              invoice.vendor_data.vendor_name +
+              invoice.vendor_data?.vendor_name +
               invoice.invoice_no +
               invoice.invoice_total_amount +
               invoice.sub_total +
@@ -242,7 +244,7 @@ export class ExampleDataSource extends DataSource<Report> {
           [propertyA, propertyB] = [a.due_date_epoch, b.due_date_epoch];
           break;
         case 'vendor':
-          [propertyA, propertyB] = [a.vendor_data.vendor_name, b.vendor_data.vendor_name];
+          [propertyA, propertyB] = [a.vendor_data?.vendor_name, b.vendor_data?.vendor_name];
           break;
         case 'invoice_no':
           [propertyA, propertyB] = [a.invoice_no, b.invoice_no];

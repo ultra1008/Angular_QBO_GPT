@@ -22,6 +22,8 @@ router.post('/mobile/v1/auth/submitemailotp', authValidation.submitEmailOTP, aut
 router.post('/mobile/v1/auth/loginwithemailotp', authValidation.loginWithEmailOTP, authController.loginWithEmailOTP);
 router.post('/mobile/v1/auth/emailforgotpassword', authValidation.emailForgotPassword, authController.emailForgotPassword);
 router.post('/mobile/v1/auth/sendemailforgotpassword', authValidation.sendEmailForgotPassword, authController.sendEmailForgotPassword);
+router.post('/mobile/v1/auth/getmycompanylist', authValidation.getMyCompanyList, authController.getMyCompanyList);
+router.get('/mobile/v1/auth/getuserlist', authController.getUserList);
 
 // Invoice
 var invoiceController = require('./invoices/invoiceController');
@@ -67,11 +69,21 @@ router.post('/mobile/v1/alert/updateall', common.checkTokenExistOrNot, alertCont
 let apInvoiceController = require('./ap_invoice/apInvoiceController');
 let apInvoiceValidation = require('./ap_invoice/apInvoiceValidation');
 router.get('/mobile/v1/apinvoice/get', common.checkTokenExistOrNot, apInvoiceController.getAPInvoice);
+router.post('/mobile/v1/apinvoice/getstatuswise', common.checkTokenExistOrNot, apInvoiceValidation.getStatusWiseAPInvoice, apInvoiceController.getStatusWiseAPInvoice);
 router.post('/mobile/v1/apinvoice/getone', common.checkTokenExistOrNot, apInvoiceValidation.getOneAPInvoice, apInvoiceController.getOneAPInvoice);
 router.post('/mobile/v1/apinvoice/save', common.checkTokenExistOrNot, apInvoiceController.saveAPInvoice);
 router.post('/mobile/v1/apinvoice/delete', common.checkTokenExistOrNot, apInvoiceValidation.deleteAPInvoice, apInvoiceController.deleteAPInvoice);
 router.post('/mobile/v1/apinvoice/savenote', common.checkTokenExistOrNot, apInvoiceValidation.saveAPInvoiceNote, apInvoiceController.saveAPInvoiceNote);
 router.post('/mobile/v1/apinvoice/deletenote', common.checkTokenExistOrNot, apInvoiceValidation.deleteAPInvoiceNote, apInvoiceController.deleteAPInvoiceNote);
 router.post('/mobile/v1/apinvoice/gethistory', common.checkTokenExistOrNot, apInvoiceController.getAPInvoiceHistory);
+
+let invoiceMessageController = require('./invoice_message/invoiceMessageController');
+let invoiceMessageValidation = require('./invoice_message/invoiceMessageValidation');
+router.get('/mobile/v1/invoicemessage/getcount', common.checkTokenExistOrNot, invoiceMessageController.getInvoiceMessageCount);
+router.get('/mobile/v1/invoicemessage/get', common.checkTokenExistOrNot, invoiceMessageController.getInvoiceMessageForTable);
+router.post('/mobile/v1/invoicemessage/getone', common.checkTokenExistOrNot, invoiceMessageValidation.getOneInvoiceMessage, invoiceMessageController.getOneInvoiceMessage);
+router.get('/mobile/v1/invoicemessage/updateseenflag', common.checkTokenExistOrNot, invoiceMessageController.updateInvoiceMessageSeenFlag);
+router.post('/mobile/v1/invoicemessage/sendemessage', common.checkTokenExistOrNot, invoiceMessageValidation.sendInvoiceMessage, invoiceMessageController.sendInvoiceMessage);
+router.post('/mobile/v1/invoicemessage/delete', common.checkTokenExistOrNot, invoiceMessageValidation.deleteInvoiceMessage, invoiceMessageController.deleteInvoiceMessage);
 
 module.exports = router;

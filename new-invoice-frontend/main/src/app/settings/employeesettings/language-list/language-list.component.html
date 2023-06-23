@@ -16,7 +16,7 @@
         <div class="table-responsive">
           <table mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
             <ng-container matColumnDef="name">
-              <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'"
+              <mat-header-cell *matHeaderCellDef
                 mat-sort-header>{{'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.LANGUAGE' |
                             translate}}</mat-header-cell>
               <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
@@ -26,7 +26,7 @@
             <!-- actions -->
 
             <ng-container matColumnDef="actions">
-              <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-action max-h'"
+              <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-action'"
                 *matHeaderCellDef>{{'VENDOR.TABLE.ACTIONS' |
                                 translate}}</mat-header-cell>
               <mat-cell *matCellDef="let row; let i=index;" class="pr-0 tbl-col-width-per-action">
@@ -59,7 +59,7 @@
         </div>
         <div *ngIf="!languageService?.isLangTblLoading" class="no-results"
           [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-          No matching records found
+          {{'COMMON.LISTING.EPMTY' | translate}}
         </div>
         <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="10"
           [pageSizeOptions]="[5, 10, 25, 100]">

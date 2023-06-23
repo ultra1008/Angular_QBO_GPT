@@ -39,8 +39,7 @@
                                         </button>
                                     </div>
                                 </li>
-                                <li class="tbl-header-btn"
-                                    *ngIf="isDelete === 0 && role_permission.role_permission.users.Add">
+                                <li class="tbl-header-btn" *ngIf="isDelete === 0 && role_permission.users.Add">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.IMPORT_TEMPLATE' |
                                     translate}}">
                                         <button mat-mini-fab color="primary" (click)="downloadImport()">
@@ -48,8 +47,7 @@
                                         </button>
                                     </div>
                                 </li>
-                                <li class="tbl-header-btn"
-                                    *ngIf="isDelete === 0 && role_permission.role_permission.users.Add">
+                                <li class="tbl-header-btn" *ngIf="isDelete === 0 && role_permission.users.Add">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.IMPORT' |
                                     translate}}">
                                         <input id="file-upload" class="mr-2" type="file" style="display: none"
@@ -59,14 +57,14 @@
                                         </button>
                                     </div>
                                 </li>
-                                <li class="tbl-header-btn" *ngIf="isDelete === 0 ">
+                                <!-- <li class="tbl-header-btn" *ngIf="isDelete === 0 ">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.REPORT' |
                                     translate}}" (click)="userReport()">
                                         <button mat-mini-fab color="primary">
                                             <mat-icon class="col-white">insert_drive_file</mat-icon>
                                         </button>
                                     </div>
-                                </li>
+                                </li> -->
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.HISTORY' |
                                     translate}}">
@@ -83,8 +81,7 @@
                                         </button>
                                     </div>
                                 </li>
-                                <li class="tbl-header-btn"
-                                    *ngIf="isDelete === 0 && role_permission.role_permission.users.Delete">
+                                <li class="tbl-header-btn" *ngIf="isDelete === 0 && role_permission.users.Delete">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ARCHIVE' |
                                     translate}}">
                                         <button mat-mini-fab color="warn" (click)="gotoArchiveUnarchive()">
@@ -100,8 +97,7 @@
                                         </button>
                                     </div>
                                 </li>
-                                <li class="tbl-header-btn"
-                                    *ngIf="isDelete === 0 && role_permission.role_permission.users.Add">
+                                <li class="tbl-header-btn" *ngIf="isDelete === 0 && role_permission.users.Add">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ADD' |
                                     translate}}">
                                         <button mat-mini-fab color="primary" (click)="addNewUser()">
@@ -147,17 +143,18 @@
                                                     <span class="font-sp font-white"> {{user.useremail}}</span>
                                                 </div>
                                             </div>
-                                            <div class="m-1 text-a" *ngIf="user.userphone!=0">
+                                            <div class="m-1 text-a" *ngIf="user.userphone !== 0">
                                                 <div class="d-flex font-s font-white">
                                                     <i class="material-icons my-auto font-s">phone</i>
                                                     <span class="font-sp"> {{user.userphone}}</span>
                                                 </div>
                                             </div>
-                                            <div class="m-1 text-a" *ngIf="user.userstartdate!=0">
+                                            <div class="m-1 text-a" *ngIf="user.userstartdate !== 0">
                                                 <div class="d-flex font-s font-white">
                                                     <i class="material-icons my-auto font-s">insert_invitation</i>
-                                                    <span
-                                                        class="font-sp">{{convertDate(user.userstartdate) | dateString }}</span>
+                                                    <span class="font-sp">
+                                                        {{ convertDate(user.userstartdate) | dateString }}
+                                                    </span>
                                                 </div>
                                             </div>
                                             <div class="col-12 m-1 d-flex">
@@ -170,8 +167,8 @@
                                                     <P class="truncate-text"> {{user.supervisor_name}}</P>
                                                 </div>
                                             </div>
-                                            <div class="chip" [ngClass]="user.userstatus == 1 ? 'active' :'inactive'">
-                                                {{user.userstatus == 1 ? active_word :inactive_word }}
+                                            <div class="chip" [ngClass]="user.userstatus === 1 ? 'active' :'inactive'">
+                                                {{user.userstatus === 1 ? active_word :inactive_word }}
                                             </div>
 
                                         </div>
@@ -183,7 +180,20 @@
                     <div *ngIf="cardLoading" class="tbl-spinner">
                         <app-loading></app-loading>
                     </div>
-
+                    <div *ngIf="username_status === '2' && inactiveUserList?.length === 0">
+                        <div>
+                            <h5 class="font-white text-center">
+                                {{'USERS.VIEW.ACTIVE_STATUS_MASSAGE' | translate}}
+                            </h5>
+                        </div>
+                    </div>
+                    <div *ngIf="username_status === '1' && activeUserList?.length === 0">
+                        <div>
+                            <h5 class="font-white text-center">
+                                {{'USERS.VIEW.INACTIVE_STATUS_MASSAGE' | translate}}
+                            </h5>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -10,28 +9,19 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './layout/header/header.component';
 import { PageLoaderComponent } from './layout/page-loader/page-loader.component';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
-import { RightSidebarComponent } from './layout/right-sidebar/right-sidebar.component';
 import { AuthLayoutComponent } from './layout/app-layout/auth-layout/auth-layout.component';
 import { MainLayoutComponent } from './layout/app-layout/main-layout/main-layout.component';
 // import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { fakeBackendProvider } from './core/interceptor/fake-backend';
 import { ErrorInterceptor } from './core/interceptor/error.interceptor';
 import { JwtInterceptor } from './core/interceptor/jwt.interceptor';
-
-import {
-  HttpClient,
-  HttpClientModule,
-  HTTP_INTERCEPTORS,
-} from '@angular/common/http';
-
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
 import { NgScrollbarModule } from 'ngx-scrollbar';
-
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive'; // this includes the core NgIdleModule but includes keepalive providers for easy wireup
 import { MomentModule } from 'angular2-moment';
 import { CommonComponentsModule } from './common-components/common-components.module';
 import { MatChipsModule } from '@angular/material/chips';
-
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LanguageComponent } from './layout/language/language.component';
@@ -43,6 +33,7 @@ import { NgxEmojiPickerModule } from 'ngx-emoji-picker';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBadgeModule } from '@angular/material/badge';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { MentionModule } from 'angular-mentions';
 
 @NgModule({
   declarations: [
@@ -50,7 +41,6 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     HeaderComponent,
     PageLoaderComponent,
     SidebarComponent,
-    RightSidebarComponent,
     AuthLayoutComponent,
     MainLayoutComponent,
     LanguageComponent,
@@ -85,6 +75,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     NgxEmojiPickerModule.forRoot(),
     MatAutocompleteModule,
     InfiniteScrollModule,
+    MentionModule,
   ],
   providers: [
     // { provide: LocationStrategy, useClass: HashLocationStrategy },

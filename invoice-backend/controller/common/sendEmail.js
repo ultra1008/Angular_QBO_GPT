@@ -2,11 +2,11 @@ const nodemailer = require('nodemailer');
 let config = require("./../../config/config");
 async function sendEmail(from, to, subject, html) {
     let smtpOptions = {
-        host: config.tenants.tenant_smtp_server,
-        port: config.tenants.tenant_smtp_port,
+        host: config.smartaccupay_tenants.tenant_smtp_server,
+        port: config.smartaccupay_tenants.tenant_smtp_port,
         auth: {
-            user: config.tenants.tenant_smtp_username,
-            pass: config.tenants.tenant_smtp_password
+            user: config.smartaccupay_tenants.tenant_smtp_username,
+            pass: config.smartaccupay_tenants.tenant_smtp_password
         }
     };
     const transporter = nodemailer.createTransport(smtpOptions);

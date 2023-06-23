@@ -9,11 +9,14 @@ import {
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../authentication.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { showNotification } from 'src/consts/utils';
+import { checkPermissionAfterLogin, showNotification } from 'src/consts/utils';
 import { Location } from '@angular/common';
 import { icon } from 'src/consts/icon';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { httproutes, httpversion } from 'src/consts/httproutes';
+import { CommonService } from 'src/app/services/common.service';
+import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 
 @Component({
   selector: 'app-forcefull-change-password',
@@ -21,11 +24,11 @@ import { localstorageconstants } from 'src/consts/localstorageconstants';
   styleUrls: ['./forcefull-change-password.component.scss'],
 })
 export class ForcefullChangePasswordComponent {
-  forcefullyPasswordInfo?: any;
+  forcefullyPasswordInfo!: UntypedFormGroup;
   hide = true;
-  hideOld: boolean = true;
-  hideNew: boolean = true;
-  hideConfirm: boolean = true;
+  hideOld = true;
+  hideNew = true;
+  hideConfirm = true;
   eyeButtonForOldPassword() {
     this.hideOld = !this.hideOld;
   }
@@ -43,14 +46,14 @@ export class ForcefullChangePasswordComponent {
     private router: Router,
     private authenticationService: AuthenticationService,
     private snackBar: MatSnackBar,
-    private location: Location,
+    public uiSpinner: UiSpinnerService,
+    private commonService: CommonService,
   ) {
     this.initForm();
   }
 
   back() {
     const logout = localStorage.getItem(localstorageconstants.LOGOUT) ?? 'true';
-    console.log("logoutlogout", logout);
     if (logout == 'true') {
       this.router.navigate([WEB_ROUTES.LOGIN]);
     } else {
@@ -92,37 +95,18 @@ export class ForcefullChangePasswordComponent {
     console.log('cantrol', control.value);
     console.log(
       'forcefully',
-      this.forcefullyPasswordInfo?.controls.password.value
+      this.forcefullyPasswordInfo?.controls['password'].value
     );
     if (
       this.forcefullyPasswordInfo &&
-      control.value !== this.forcefullyPasswordInfo?.controls.password.value
+      control.value !== this.forcefullyPasswordInfo?.controls['password'].value
     ) {
       return { passwordNotMatch: true };
     } else {
       return { passwordNotMatch: false };
     }
   }
-  // confirm new password validator
-  // private passwordMatcher(control: FormControl): { [s: string]: boolean } {
-  //   const reqObject = this.forcefullyPasswordInfo?.value;
-  //   console.log('reqobject 1', reqObject);
-  //   if (reqObject) {
-  //     console.log(
-  //       'sagar: ',
-  //       control.value,
-  //       reqObject.password,
-  //       '-----',
-  //       control.value == reqObject.password
-  //     );
-  //     if (this.forcefullyPasswordInfo && control.value !== reqObject.password) {
-  //       console.log('true');
-  //       return { passwordNotMatch: true };
-  //     }
-  //   }
-  //   console.log('false');
-  //   return { passwordNotMatch: false };
-  // }
+
 
   async changePassword() {
     this.forcefullyPasswordInfo?.markAllAsTouched();
@@ -136,14 +120,19 @@ export class ForcefullChangePasswordComponent {
       );
       return;
     }
-    // console.log("call change passwoed", that.forcefullyPasswordInfo?.valid, that.forcefullyPasswordInfo?.value);
     if (that.forcefullyPasswordInfo?.valid) {
-      const data = await this.authenticationService.changePassword(reqObject);
+      this.uiSpinner.spin$.next(true);
+      const data = await this.commonService.postRequestAPI(httpversion.V1 + httproutes.CHANGEPASSWORD, reqObject);
+      this.uiSpinner.spin$.next(false);
       if (data.status) {
+        this.authenticationService.changeLoginValue(false);
         localStorage.setItem(localstorageconstants.LOGOUT, 'false');
         showNotification(this.snackBar, data.message, 'success');
-        this.router.navigate([WEB_ROUTES.DASHBOARD]);
-        // for delete we use splice in order to remove single object from DataService
+        const role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
+        setTimeout(() => {
+          this.router.navigate([checkPermissionAfterLogin(role_permission)]);
+          location.reload();
+        }, 500);
       } else {
         showNotification(this.snackBar, data.message, 'error');
       }

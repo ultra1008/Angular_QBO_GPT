@@ -15,7 +15,6 @@ import {
 import { CommonService } from 'src/app/services/common.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { commonFileChangeEvent } from 'src/app/services/utils';
-import { TermModel, CountryModel } from 'src/app/vendors/vendor.model';
 import { VendorsService } from 'src/app/vendors/vendors.service';
 import { WEB_ROUTES } from 'src/consts/routes';
 import {
@@ -33,6 +32,8 @@ import { httproutes } from 'src/consts/httproutes';
 import { configData } from 'src/environments/configData';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { TranslateService } from '@ngx-translate/core';
+import { CountryModel, TermModel } from '../settings.model';
 
 @Component({
   selector: 'app-company-info-form',
@@ -52,7 +53,7 @@ export class CompanyInfoFormComponent {
   company_logo: any;
   imageError: any;
   isImageSaved: any;
-  defalut_image: string = '../assets/images/placeholder_logo.png';
+  defalut_image = '../assets/images/placeholder_logo.png';
   cardImageBase64: any;
   files_old: string[] = [];
   last_files_array: string[] = [];
@@ -88,7 +89,8 @@ export class CompanyInfoFormComponent {
     private sanitiser: DomSanitizer,
     public httpCall: HttpCall,
     // public commonService: CommonService,
-    public SettingsServices: SettingsService
+    public SettingsServices: SettingsService,
+    public translate: TranslateService
   ) {
     this.getCompanyType();
     this.getCompanyNigp();
@@ -115,7 +117,7 @@ export class CompanyInfoFormComponent {
       companyactivesince: ['', [Validators.required]],
       companytype: [''],
     });
-    for (var i = 0; i < 100; i++) {
+    for (let i = 0; i < 100; i++) {
       this.range.push(this.year - i);
     }
     this.tmp_gallery = gallery_options();
@@ -145,7 +147,6 @@ export class CompanyInfoFormComponent {
   async getOneVendor() {
     let that = this;
     const data = await this.SettingsServices.getCompanyInfo();
-    console.log('data', data);
     if (data.status) {
       const CompanyInfoData = data.data;
       that.compnay_code = CompanyInfoData.companycode;
@@ -180,7 +181,7 @@ export class CompanyInfoFormComponent {
         companyaddressstate: [CompanyInfoData.companyaddressstate],
         companyaddresszip: [CompanyInfoData.companyaddresszip],
       });
-      let found = that.CompnayTypes_data.find(
+      const found = that.CompnayTypes_data.find(
         (element: any) => element._id == CompanyInfoData.companytype
       );
       that.selectedVendorType = found.name
@@ -203,9 +204,6 @@ export class CompanyInfoFormComponent {
     let that = this;
     if (this.companyinfoForm.valid) {
       let requestObject = this.companyinfoForm.value;
-      let userData = JSON.parse(
-        localStorage.getItem(localstorageconstants.USERDATA)!
-      );
       const formData = new FormData();
       formData.append('file', this.filepath);
       formData.append('reqObject', JSON.stringify(requestObject));
@@ -217,45 +215,12 @@ export class CompanyInfoFormComponent {
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        this.router.navigate(['/settings']);
+        this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');
       }
-
-      // this.httpCall
-      //   .httpPostCall(httproutes.COMPNAY_INFO_OTHER_SETTING_UPDATE, formData)
-      //   .subscribe(function (params) {
-      //     that.uiSpinner.spin$.next(false);
-      //     if (params.status) {
-      //       that.snackbarservice.openSnackBar(params.message, "success");
-      //       that.httpCall
-      //         .httpGetCall(httproutes.COMPNAY_INFO_OTHER_SETTING_GET)
-      //         .subscribe(function (compnayData: any) {
-      //           if (compnayData.status) {
-      //             userData.companydata = compnayData.data;
-      //             localStorage.setItem(
-      //               localstorageconstants.USERDATA,
-      //               JSON.stringify(userData)
-      //             );
-      //             that.mostusedservice.userupdatecompnayEmit();
-      //           }
-      //         });
-      //     } else {
-      //       that.snackbarservice.openSnackBar(params.message, "error");
-      //     }
-      //   });
     }
-
-    // const data = await this.vendorService.saveVendor(requestObject);
-    // if (data.status) {
-    //   this.uiSpinner.spin$.next(false);
-    //   showNotification(this.snackBar, data.message, 'success');
-    //   this.router.navigate([WEB_ROUTES.VENDOR]);
-    // } else {
-    //   this.uiSpinner.spin$.next(false);
-    //   showNotification(this.snackBar, data.message, 'error');
-    // }
   }
 
   async getCompanyType() {
@@ -302,7 +267,7 @@ export class CompanyInfoFormComponent {
     } else {
       url = httproutes.PORTAL_ROVUK_SPONSOR_GET_CSIDIVISION_WORK_PERFORMED;
     }
-    let data = await this.httpCall.httpGetCall(url).toPromise();
+    const data = await this.httpCall.httpGetCall(url).toPromise();
     if (data.status) {
       this.variablesCSIDivisions = data.data;
       this.csiDivisions = this.variablesCSIDivisions.slice();
@@ -313,12 +278,12 @@ export class CompanyInfoFormComponent {
     swalWithBootstrapButtons
       .fire({
         title:
-          'Are you sure you want to close this window without saving changes?',
+          this.translate.instant('DOCUMENT.CONFIRMATION_DIALOG.SAVING'),
         showDenyButton: true,
         showCancelButton: true,
-        confirmButtonText: 'Save And Exit',
-        cancelButtonText: 'Dont Save',
-        denyButtonText: 'Cancel',
+        confirmButtonText: this.translate.instant('COMMON.ACTIONS.SAVE_EXIT'),
+        cancelButtonText: this.translate.instant('COMMON.ACTIONS.DONT_SAVE'),
+        denyButtonText: this.translate.instant('COMMON.ACTIONS.CANCEL'),
         allowOutsideClick: false,
       })
       .then((result) => {
@@ -338,7 +303,7 @@ export class CompanyInfoFormComponent {
           // ;
         } else {
           setTimeout(() => {
-            this.router.navigate(['/settings']);
+            this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
           }, 100);
         }
       });
@@ -362,7 +327,6 @@ export class CompanyInfoFormComponent {
     this.prepareFilesList($event);
   }
   fileChange(event: Event) {
-    // console.log("event:' ", event);
     const element = event.currentTarget as HTMLInputElement;
     const fileList = element.files;
     if (fileList) {

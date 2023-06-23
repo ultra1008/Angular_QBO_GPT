@@ -6,7 +6,7 @@ import {
   UntypedFormGroup,
   UntypedFormBuilder,
 } from '@angular/forms';
-import { AdvanceTable, User } from '../user.model';
+import { AdvanceTable, UserModel } from '../user.model';
 import { UserService } from '../user.service';
 import { showNotification } from 'src/consts/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -34,16 +34,16 @@ export class UserRestoreFormComponent {
   dialogTitle: string;
   userRoleInfo: UntypedFormGroup;
   advanceTable: AdvanceTable;
-  selection = new SelectionModel<User>(true, []);
+  selection = new SelectionModel<UserModel>(true, []);
   variablesRoleList: any = [];
 
-  invoice_logo = icon.INVOICE_LOGO;
+  title = 'Restore User';
 
   roleList: any = this.variablesRoleList.slice();
   titleMessage = '';
   userList: any = [];
   isDelete = 0;
-  constructor(
+  constructor (
     public dialogRef: MatDialogRef<UserRestoreFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     public UserService: UserService,
@@ -75,8 +75,8 @@ export class UserRestoreFormComponent {
     return this.formControl.hasError('required')
       ? 'Required field'
       : this.formControl.hasError('email')
-      ? 'Not a valid email'
-      : '';
+        ? 'Not a valid email'
+        : '';
   }
   createContactForm(): UntypedFormGroup {
     return this.fb.group({

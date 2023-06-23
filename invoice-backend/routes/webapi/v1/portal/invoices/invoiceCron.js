@@ -15,7 +15,7 @@ module.exports.deleteOrphanDocumentCronAPI = async function (req, res) {
 async function deleteOrphanDocumentCronFunction() {
     try {
         let connection_MDM_main = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
-        let All_Compnay = await rest_Api.find(connection_MDM_main, collectionConstant.SUPER_ADMIN_COMPANY, { companystatus: 1 });
+        let All_Compnay = await rest_Api.find(connection_MDM_main, collectionConstant.SUPER_ADMIN_COMPANY, { companystatus: 1, companycode: { $ne: '' } });
         for (const item_new of All_Compnay) {
             let item = await rest_Api.findOne(connection_MDM_main, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: item_new.companycode });
             let connection_db_api = await db_connection.connection_db_api(item);
@@ -45,4 +45,4 @@ async function deleteOrphanDocumentCronFunction() {
 var invoiceDueCron = new CronJob(config.CRON_JOB.ARCHIVE_ORPHAN_DOCUMENT, async function () {
     deleteOrphanDocumentCronFunction();
 });
-invoiceDueCron.start();
+// invoiceDueCron.start();

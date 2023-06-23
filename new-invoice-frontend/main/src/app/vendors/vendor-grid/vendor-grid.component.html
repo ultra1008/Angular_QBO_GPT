@@ -40,32 +40,32 @@
                                                   </button>
                                              </div>
                                         </li>
-                                        <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                                        <li class="tbl-header-btn" *ngIf="!isHideAddActionQBD && isDelete === 0">
                                              <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.IMPORT_TEMPLATE' |
                                              translate}}">
-                                                 <button mat-mini-fab color="primary" (click)="downloadImport()">
-                                                     <mat-icon class="col-white">file_download</mat-icon>
-                                                 </button>
+                                                  <button mat-mini-fab color="primary" (click)="downloadImport()">
+                                                       <mat-icon class="col-white">file_download</mat-icon>
+                                                  </button>
                                              </div>
-                                         </li>
-                                         <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                                        </li>
+                                        <li class="tbl-header-btn" *ngIf="!isHideAddActionQBD && isDelete === 0">
                                              <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.IMPORT' |
                                              translate}}">
-                                                 <input id="file-upload" class="mr-2" type="file" style="display: none"
-                                                     (change)="onFileChange($event)" #OpenFilebox />
-                                                 <button mat-mini-fab color="primary" (click)="importFileAction()">
-                                                     <mat-icon class="col-white">file_upload</mat-icon>
-                                                 </button>
+                                                  <input id="file-upload" class="mr-2" type="file" style="display: none"
+                                                       (change)="onFileChange($event)" #OpenFilebox />
+                                                  <button mat-mini-fab color="primary" (click)="importFileAction()">
+                                                       <mat-icon class="col-white">file_upload</mat-icon>
+                                                  </button>
                                              </div>
-                                         </li>
-                                        <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                                        </li>
+                                        <!-- <li class="tbl-header-btn" *ngIf="isDelete === 0">
                                              <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.REPORT' |
                                              translate}}" (click)="vendorReport()">
                                                   <button mat-mini-fab color="primary">
                                                        <mat-icon class="col-white">insert_drive_file</mat-icon>
                                                   </button>
                                              </div>
-                                        </li>
+                                        </li> -->
                                         <li class="tbl-header-btn" *ngIf="isDelete === 0">
                                              <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.HISTORY' |
                                              translate}}">
@@ -82,8 +82,7 @@
                                                   </button>
                                              </div>
                                         </li>
-                                        <li class="tbl-header-btn"
-                                             *ngIf="isDelete === 0 && role_permission.role_permission.vendor.Delete">
+                                        <li class="tbl-header-btn" *ngIf="isDelete === 0 && !isHideAddActionQBD">
                                              <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ARCHIVE' |
                                              translate}}">
                                                   <button mat-mini-fab color="warn" (click)="gotoArchiveUnarchive()">
@@ -99,8 +98,7 @@
                                                   </button>
                                              </div>
                                         </li>
-                                        <li class="tbl-header-btn"
-                                             *ngIf="isDelete === 0  && role_permission.role_permission.vendor.Add">
+                                        <li class="tbl-header-btn" *ngIf="isDelete === 0  && !isHideAddActionQBD">
                                              <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ADD' |
                                              translate}}">
                                                   <button mat-mini-fab color="primary" (click)="addNew()">
@@ -128,9 +126,18 @@
                                                                            height="80px " alt="">
                                                                  </div>
                                                                  <div class="mt-4 m-1 col-8">
-
                                                                       <div class="m-1 font-white font-s txt-alg">
                                                                            <b> {{vendor.vendor_name}}</b>
+                                                                           <br>
+                                                                           <div
+                                                                                *ngIf="is_quickbooks_online || is_quickbooks_desktop">
+                                                                                <img *ngIf="!vendor.is_quickbooks"
+                                                                                     [src]="quickbooksGreyIcon" alt=""
+                                                                                     height="23" width="23" />
+                                                                                <img *ngIf="vendor.is_quickbooks"
+                                                                                     [src]="quickbooksGreenIcon" alt=""
+                                                                                     height="23" width="23" />
+                                                                           </div>
                                                                       </div>
                                                                  </div>
                                                             </div>
@@ -146,7 +153,7 @@
                                                             <div class="d-flex font-s">
                                                                  <i class="material-icons my-auto font-s">phone</i>
                                                                  <span class="font-sp">
-                                                                      {{vendor.vendor_phone}}</span>
+                                                                      {{formatPhoneNumber(vendor.vendor_phone)}}</span>
                                                             </div>
                                                        </div>
                                                        <div class="col-12 d-flex">
@@ -192,16 +199,16 @@
 
                          <div *ngIf="vendor_status === '2' && vendorInactiveList?.length === 0">
                               <div>
-                                   <h1 class="font-white massge-sttus">
+                                   <h5 class="font-white massge-status">
                                         {{'VENDOR.VIEW.ACTIVE_STATUS_MASSAGE' | translate}}
-                                   </h1>
+                                   </h5>
                               </div>
                          </div>
                          <div *ngIf="vendor_status === '1' && vendorActiveList?.length === 0">
                               <div>
-                                   <h1 class="font-white massge-sttus">
+                                   <h5 class="font-white massge-status">
                                         {{'VENDOR.VIEW.INACTIVE_STATUS_MASSAGE' | translate}}
-                                   </h1>
+                                   </h5>
                               </div>
                          </div>
                     </div>

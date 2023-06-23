@@ -7,7 +7,9 @@ import { CommonService } from 'src/app/services/common.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { commonFileChangeEvent } from 'src/app/services/utils';
 import { UserService } from 'src/app/users/user.service';
+import { RolePermission } from 'src/consts/common.model';
 import { httproutes, httpversion } from 'src/consts/httproutes';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { showNotification, swalWithBootstrapButtons, timeDateToepoch } from 'src/consts/utils';
 
@@ -24,7 +26,7 @@ export class UserDocumentFormComponent implements OnInit {
 
   variablesDocumentTypeList: any = [];
   documentTypeList: any = this.variablesDocumentTypeList.slice();
-
+  role_permission!: RolePermission;
   isImageSaved = false;
   cardImageBase64: any;
   filepath: any;
@@ -34,6 +36,7 @@ export class UserDocumentFormComponent implements OnInit {
     public translate: TranslateService, private commonService: CommonService) {
     this.id = this.route.snapshot.queryParamMap.get("_id");
     this.userId = this.route.snapshot.queryParamMap.get("user_id");
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
 
     this.form = this.formBuilder.group({
       userdocument_type_id: ["", Validators.required],

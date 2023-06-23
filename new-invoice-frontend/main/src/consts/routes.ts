@@ -2,13 +2,13 @@ export enum WEB_ROUTES {
   SIDEMENU_DASHBOARD = 'dashboard',
   SIDEMENU_VENDOR = 'vendor',
   SIDEMENU_CLIENT = 'client',
-  SIDEMENU_INVOICES = 'invoice',
+  SIDEMENU_INVOICE = 'invoice',
   SIDEMENU_DOCUMENTS = 'documents',
   SIDEMENU_REPORTS = 'reports',
   SIDEMENU_USER = 'user',
   SIDEMENU_SETTINGS = 'settings',
 
-  LOGIN = '/authentication/signin',
+  LOGIN = '/authentication',
 
   FORM = 'form',
   VIEW = 'view',
@@ -18,6 +18,8 @@ export enum WEB_ROUTES {
   VENDOR = '/vendor',
   USER = '/user',
   INVOICE = '/invoice',
+  DOCUMENTS = '/documents',
+  REPORTS = '/reports',
   DETAILS = 'details',
   MESSAGES = 'messages',
   MESSAGE_VIEW = 'message-view',
@@ -25,13 +27,21 @@ export enum WEB_ROUTES {
   USER_EMERGENCY_CONTACT = 'emergency-contact',
   USER_DOCUMENT = 'document',
 
-  DASHBOARD = '/dashboard/main',
+  DOCUMENT_UNKNOWN_TYPE = '/documents/unknown-document',
+
+  DASHBOARD = '/dashboard',
   MONTHLY_HISTORY = 'monthly-history',
   MONTHLY_INVOICE = 'monthly-invoice',
+  DUPLICATE_DOCUMENTS = 'duplicate-documents',
   DASHBOARD_MONTHLY_HISTORY = '/dashboard/monthly-history',
   DASHBOARD_MONTHLY_INVOICE = '/dashboard/monthly-invoice',
+  DASHBOARD_DUPLICATE_DOCUMENTS = '/dashboard/duplicate-documents',
 
+  FORCEFULLY_CHANGE_PASSWORD = '/authentication/forcefully-change-password',
   CHANGE_PASSWORD = '/authentication/change-password',
+  FORGOT_PASSWORD = '/authentication/forgot-password',
+
+  SEND_OTP = '/authentication/send-otp',
 
   CLIENT_FORM = '/client/form',
   CLIENT_HISTORY = '/client/history',
@@ -55,4 +65,20 @@ export enum WEB_ROUTES {
   INVOICE_HISTORY = '/invoice/history',
 
   VIEW_REPORT = 'reports/view',
+
+  MAILBOX_SETTING = '/settings/mailbox',
+  MAILBOX_FOR_SETTING = '/settings/mailbox-form',
+  EMPLOYEE_SETTING = '/settings/employeesettings',
+  ROLE_SETTING = '/settings/rolesettings',
+  ALERT_SETTING = '/settings/alerts',
+  SMTP_SETTING = '/settings/smtp',
+  INTEGRATION_SETTING = '/settings/integration',
+  QBO_INTEGRATION_SETTING = '/settings/qbo-integration',
+  QBD_INTEGRATION_SETTING = '/settings/qbd-integration',
+  USAGE_SETTING = '/settings/usage',
+  OTHER_SETTING = '/settings/othersettings',
+  SECURITY_SETTING = '/settings/security',
+  COSTCODE_SETTING = '/settings/costcode',
+  DOCUMENT_VIEW_SETTING = '/settings/documentview',
+  COMPANY_INFO_FORM_SETTING = '/settings/company-info-form',
 }

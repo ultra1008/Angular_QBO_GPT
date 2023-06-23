@@ -93,6 +93,7 @@
     border: 1px solid #D1D1D1;
     border-radius: 5px;
     padding: 10px;
+    margin-top: 5px;
     cursor: pointer;
 
     .last-updated {
@@ -112,4 +113,17 @@
 
 .profile-header .col-lg-6 {
     margin-bottom: 0px !important;
+}
+
+.job-cost-table {
+    display: block;
+    height: 390px;
+
+    tbody {
+        height: 330px;
+    }
+
+    .amount {
+        width: 100px;
+    }
 }

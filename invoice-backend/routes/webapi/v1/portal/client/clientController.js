@@ -33,6 +33,13 @@ module.exports.saveclient = async function (req, res) {
                 requestObject.updated_by = decodedToken.UserData._id;
                 let updateclient = await clientConnection.updateOne({ _id: id }, requestObject);
                 if (updateclient) {
+                    delete requestObject.created_at;
+                    delete requestObject.created_by;
+                    delete requestObject.updated_at;
+                    delete requestObject.updated_by;
+                    delete requestObject.is_delete;
+                    delete requestObject.is_quickbooks;
+
                     // find difference of object 
                     let updatedData = await common.findUpdatedFieldHistory(requestObject, one_client._doc);
 
@@ -83,39 +90,48 @@ module.exports.saveclient = async function (req, res) {
                     requestObject.updated_by = decodedToken.UserData._id;
                     var add_client = new clientConnection(requestObject);
                     var save_client = await add_client.save();
-                    // find difference of object 
-                    let insertedData = await common.setInsertedFieldHistory(requestObject);
+                    if (save_client) {
+                        delete requestObject.created_at;
+                        delete requestObject.updated_at;
+                        delete requestObject.created_by;
+                        delete requestObject.updated_by;
 
-                    if (requestObject.approver_id !== '') {
-                        let found_approver = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'approver_id'; });
-                        if (found_approver != -1) {
-                            let one_term = await userConnection.findOne({ _id: ObjectID(insertedData[found_approver].value) });
-                            insertedData[found_approver].value = one_term.userfullname;
+                        // find difference of object 
+                        let insertedData = await common.setInsertedFieldHistory(requestObject);
+
+                        if (requestObject.approver_id !== '') {
+                            let found_approver = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'approver_id'; });
+                            if (found_approver != -1) {
+                                let one_term = await userConnection.findOne({ _id: ObjectID(insertedData[found_approver].value) });
+                                insertedData[found_approver].value = one_term.userfullname;
+                            }
                         }
-                    }
 
-                    if (requestObject.client_cost_cost_id !== '') {
-                        let found_costcode = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'client_cost_cost_id'; });
-                        if (found_costcode != -1) {
-                            let one_term = await costCodeConnection.findOne({ _id: ObjectID(insertedData[found_costcode].value) });
-                            insertedData[found_costcode].value = one_term.value;
+                        if (requestObject.client_cost_cost_id !== '') {
+                            let found_costcode = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'client_cost_cost_id'; });
+                            if (found_costcode != -1) {
+                                let one_term = await costCodeConnection.findOne({ _id: ObjectID(insertedData[found_costcode].value) });
+                                insertedData[found_costcode].value = one_term.value;
+                            }
                         }
-                    }
 
-                    let found_status = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'client_status'; });
-                    if (found_status != -1) {
-                        insertedData[found_status].value = insertedData[found_status].value == 1 ? 'Active' : insertedData[found_status].value == 2 ? 'Inactive' : '';
-                    }
+                        let found_status = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'client_status'; });
+                        if (found_status != -1) {
+                            insertedData[found_status].value = insertedData[found_status].value == 1 ? 'Active' : insertedData[found_status].value == 2 ? 'Inactive' : '';
+                        }
 
-                    for (let i = 0; i < insertedData.length; i++) {
-                        insertedData[i]['key'] = translator.getStr(`Client_History.${insertedData[i]['key']}`);
+                        for (let i = 0; i < insertedData.length; i++) {
+                            insertedData[i]['key'] = translator.getStr(`Client_History.${insertedData[i]['key']}`);
+                        }
+                        let histioryObject = {
+                            data: insertedData,
+                            client_id: save_client.id,
+                        };
+                        addClientHistory("Insert", histioryObject, decodedToken);
+                        res.send({ status: true, message: "client insert successfully..!", data: add_client });
+                    } else {
+                        res.send({ message: translator.getStr('SomethingWrong'), status: false });
                     }
-                    let histioryObject = {
-                        data: insertedData,
-                        client_id: save_client.id,
-                    };
-                    addClientHistory("Insert", histioryObject, decodedToken);
-                    res.send({ status: true, message: "client insert successfully..!", data: add_client });
                 }
             }
         } catch (e) {
@@ -291,8 +307,7 @@ module.exports.updateClientStatus = async function (req, res) {
 
             var one_client = await clientConnection.findOne({ _id: ObjectID(id) });
             if (one_client) {
-                var updateStatus = await clientConnection.updateMany({ _id: requestObject.id }, { client_status: requestObject.client_status });
-
+                var updateStatus = await clientConnection.updateOne({ _id: ObjectID(id) }, { client_status: requestObject.client_status });
                 if (updateStatus) {
                     let action = '';
                     let message = '';
@@ -477,21 +492,6 @@ module.exports.getClientForTable = async function (req, res) {
                         path: "$costcode"
                     }
                 },
-                {
-                    $project: {
-                        client_name: 1,
-                        client_number: 1,
-                        client_email: 1,
-                        client_status: 1,
-                        client_notes: 1,
-                        gl_account: 1,
-                        is_delete: 1,
-                        approver_id: 1,
-                        client_cost_cost_id: 1,
-                        approver: "$invoice_user",
-                        client_cost_cost: "$costcode",
-                    }
-                },
                 { $sort: { created_at: -1 } }
             ]);
             // var getdata = await clientConnection.find({ is_delete: requestObject.is_delete });
@@ -652,6 +652,148 @@ module.exports.importClient = async function (req, res) {
         }
     }
     else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
+
+module.exports.checkQBDImportClient = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var clientConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientSchema);
+            var userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+            var costCodeConnection = connection_db_api.model(collectionConstant.COSTCODES, costCodeSchema);
+
+            for (let m = 0; m < requestObject.length; m++) {
+
+                var nameexist = await clientConnection.findOne({ "client_name": requestObject[m].Name });
+                if (nameexist == null) {
+                    requestObject.created_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+                    requestObject.is_quickbooks = true;
+                    requestObject.client_name = requestObject[m].Name;
+                    requestObject.name = requestObject[m].Name;
+                    if (requestObject[m].IsActive == true) {
+                        requestObject.client_status = 1;
+                    }
+                    else if (requestObject[m].IsActive == false) {
+                        requestObject.client_status = 2;
+                    }
+                    if (requestObject[m].Email != undefined) {
+                        requestObject.client_email = requestObject[m].Email;
+                    }
+                    var add_client = new clientConnection(requestObject);
+                    var save_client = await add_client.save();
+
+                    var historyobj = {
+                        client_status: requestObject[m].IsActive,
+                        client_name: requestObject[m].Name,
+
+                    };
+                    // find difference of object 
+                    let insertedData = await common.setInsertedFieldHistory(historyobj);
+
+                    if (requestObject[m].approver_id !== '') {
+                        let found_approver = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'approver_id'; });
+                        if (found_approver != -1) {
+                            let one_term = await userConnection.findOne({ _id: ObjectID(insertedData[found_approver].value) });
+                            insertedData[found_approver].value = one_term.userfullname;
+                        }
+                    }
+
+                    if (requestObject[m].client_cost_cost_id !== '') {
+                        let found_costcode = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'client_cost_cost_id'; });
+                        if (found_costcode != -1) {
+                            let one_term = await costCodeConnection.findOne({ _id: ObjectID(insertedData[found_costcode].value) });
+                            insertedData[found_costcode].value = one_term.value;
+                        }
+                    }
+
+                    let found_status = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'client_status'; });
+                    if (found_status != -1) {
+                        insertedData[found_status].value = insertedData[found_status].value == 1 ? 'Active' : insertedData[found_status].value == 2 ? 'Inactive' : '';
+                    }
+                    for (let i = 0; i < insertedData.length; i++) {
+                        insertedData[i]['key'] = translator.getStr(`Client_History.${insertedData[i]['key']}`);
+                    }
+
+                    let histioryObject = {
+                        data: insertedData,
+                        client_id: save_client.id,
+                    };
+                    addClientHistory("Insert", histioryObject, decodedToken);
+                }
+                else {
+                    let one_client = await clientConnection.findOne({ client_name: requestObject[m].Name });
+                    var reqdata = {};
+                    if (requestObject[m].Email != undefined) {
+                        reqdata.client_email = requestObject[m].Email;
+                    }
+                    if (requestObject[m].IsActive == true) {
+                        reqdata.client_status = 1;
+                    }
+                    else if (requestObject[m].IsActive == false) {
+                        reqdata.client_status = 2;
+                    }
+
+                    let updateclass_name = await clientConnection.updateOne({ client_name: requestObject[m].Name }, reqdata);
+
+
+                    if (updateclass_name.nModified > 0) {
+                        var historyobj = {
+                            client_status: reqdata.client_status,
+                            client_email: requestObject[m].Email,
+                        };
+                        console.log("historyobj", historyobj);
+                        console.log("one_client", one_client._doc);
+
+                        // find difference of object 
+                        let updatedData = await common.findUpdatedFieldHistory(historyobj, one_client._doc);
+
+                        // if (requestObject[m].approver_id !== '') {
+                        //     let found_approver = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'approver_id'; });
+                        //     if (found_approver != -1) {
+                        //         let one_term = await userConnection.findOne({ _id: ObjectID(updatedData[found_approver].value) });
+                        //         updatedData[found_approver].value = one_term.userfullname;
+                        //     }
+                        // }
+
+                        // if (requestObject[m].client_cost_cost_id !== '') {
+                        //     let found_costcode = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'client_cost_cost_id'; });
+                        //     if (found_costcode != -1) {
+                        //         let one_term = await costCodeConnection.findOne({ _id: ObjectID(updatedData[found_costcode].value) });
+                        //         updatedData[found_costcode].value = one_term.value;
+                        //     }
+                        // }
+
+                        let found_status = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'client_status'; });
+                        if (found_status != -1) {
+                            updatedData[found_status].value = updatedData[found_status].value == 1 ? 'Active' : updatedData[found_status].value == 2 ? 'Inactive' : '';
+                        }
+                        for (let i = 0; i < updatedData.length; i++) {
+                            updatedData[i]['key'] = translator.getStr(`Client_History.${updatedData[i]['key']}`);
+                        }
+                        let histioryObject = {
+                            data: updatedData,
+                            client_id: one_client.id,
+                        };
+                        addClientHistory("Update", histioryObject, decodedToken);
+                    }
+
+
+                }
+            }
+            res.send({ status: true, message: "Client insert successfully..!" });
+
+        } catch (error) {
+            console.log(error);
+            res.send({ status: false, message: translator.getStr('SomethingWrong'), error: error });
+        }
+    } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };

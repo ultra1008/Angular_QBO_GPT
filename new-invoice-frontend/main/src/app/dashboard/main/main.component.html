@@ -22,25 +22,25 @@
                   <div class="body">
                     <h6 class="card-title"><b>In-Progress</b></h6>
                     <div class="row ">
-                      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                        <div class="dashboard-count pending-document-bg" (click)="viewInvoice('Pending_Document')">
-                          <div class="icon pending-document-icon-bg">
-                            <img src='assets/images/icons/pending.svg' alt="" height="25" width="25" />
-                          </div>
-                          <div class="details">
-                            <div class="count">314</div>
-                            <div class="description">Pending Document</div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-2">
                         <div class="dashboard-count pending-invoice-bg" (click)="viewInvoice('Pending')">
                           <div class="icon pending-invoice-icon-bg">
                             <img src='assets/images/icons/pending_invoice.svg' alt="" height="25" width="25" />
                           </div>
                           <div class="details">
-                            <div class="count">{{countList.pending_invoices}}</div>
+                            <div class="count">{{countData.pending_invoices}}</div>
                             <div class="description">Pending Invoice</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-2">
+                        <div class="dashboard-count pending-document-bg" (click)="viewUnknwon()">
+                          <div class="icon pending-document-icon-bg">
+                            <img src='assets/images/icons/pending.svg' alt="" height="25" width="25" />
+                          </div>
+                          <div class="details">
+                            <div class="count">0</div>
+                            <div class="description">Unknown Document</div>
                           </div>
                         </div>
                       </div>
@@ -53,24 +53,24 @@
                   <div class="body">
                     <h6 class="card-title"><b>Waiting For Approval</b></h6>
                     <div class="row">
-                      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-2">
                         <div class="dashboard-count sent-for-approval-bg" (click)="viewInvoice('Approved')">
                           <div class="icon sent-for-approval-icon-bg">
                             <img src='assets/images/icons/approval.svg' alt="" height="25" width="25" />
                           </div>
                           <div class="details">
-                            <div class="count">{{countList.approved_invoices}}</div>
+                            <div class="count">{{countData.approved_invoices}}</div>
                             <div class="description">Sent For Approval</div>
                           </div>
                         </div>
                       </div>
-                      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-2">
                         <div class="dashboard-count rejected-invoice-bg" (click)="viewInvoice('Rejected')">
                           <div class="icon rejected-invoice-icon-bg">
                             <img src='assets/images/icons/reject.svg' alt="" height="25" width="25" />
                           </div>
                           <div class="details">
-                            <div class="count">{{countList.rejected_invoices}}</div>
+                            <div class="count">{{countData.rejected_invoices}}</div>
                             <div class="description">Rejected Invoice</div>
                           </div>
                         </div>
@@ -84,24 +84,24 @@
                   <div class="body">
                     <h6 class="card-title"><b>Need Attention</b></h6>
                     <div class="row">
-                      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-2">
                         <div class="dashboard-count close-to-due-date-bg" (click)="viewInvoice('Overdue')">
                           <div class="icon close-to-due-date-icon-bg">
                             <img src='assets/images/icons/due_date.svg' alt="" height="25" width="25" />
                           </div>
                           <div class="details">
-                            <div class="count">{{countList.overdue}}</div>
+                            <div class="count">{{countData.overdue}}</div>
                             <div class="description">Close To Due Date</div>
                           </div>
                         </div>
                       </div>
-                      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-2">
                         <div class="dashboard-count on-hold-bg" (click)="viewInvoice('On_Hold')">
                           <div class="icon on-hold-icon-bg">
                             <img src='assets/images/icons/hold.svg' alt="" height="25" width="25" />
                           </div>
                           <div class="details">
-                            <div class="count">{{countList.on_hold}}</div>
+                            <div class="count">{{countData.on_hold}}</div>
                             <div class="description">On Hold</div>
                           </div>
                         </div>
@@ -113,15 +113,15 @@
               <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                 <div class="card profile-header">
                   <div class="body">
-                    <h6 class="card-title"><b>Duplicate Invoice</b></h6>
+                    <h6 class="card-title"><b>Duplicate Document</b></h6>
                     <div class="row">
-                      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-2">
                         <div class="dashboard-count duplicate-bg" (click)="viewInvoice('Duplicate')">
                           <div class="icon duplicate-icon-bg">
                             <img src='assets/images/icons/duplicate.svg' alt="" height="25" width="25" />
                           </div>
                           <div class="details">
-                            <div class="count">314</div>
+                            <div class="count">{{countData.duplicates}}</div>
                             <div class="description">Duplicates</div>
                           </div>
                         </div>
@@ -137,7 +137,7 @@
                 <div class="right ">
                   <ul class="tbl-export-btn d-flex">
                     <li class="tbl-header-btn">
-                      <div class="m-l-10" matTooltip="VIEW" matTooltip="{{'COMMON.TOOL_TIP.VIEW' |
+                      <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.VIEW' |
                       translate}}">
                         <button mat-mini-fab color="primary" (click)="viewMonthlyInvoiceChart()">
                           <img src='assets/images/icons/view.svg' alt="" height="17" width="17" />
@@ -164,10 +164,11 @@
                 </div>
               </div>
               <div class="body">
-                <div style="text-align:center">
+                <div style="text-align:center" *ngIf="showInvoiceChart">
                   <apx-chart [series]="invoiceChartOptions.series!" [chart]="invoiceChartOptions.chart!"
-                    [xaxis]="invoiceChartOptions.xaxis!" [title]="invoiceChartOptions.title!"
-                    [stroke]="invoiceChartOptions.stroke"></apx-chart>
+                    [tooltip]="invoiceChartOptions.tooltip!" [xaxis]="invoiceChartOptions.xaxis!"
+                    [yaxis]="invoiceChartOptions.yaxis!" [title]="invoiceChartOptions.title!"
+                    [stroke]="invoiceChartOptions.stroke!" [legend]="invoiceChartOptions.legend!"></apx-chart>
                 </div>
               </div>
             </div>
@@ -179,21 +180,24 @@
                     <div class="right">
                       <ul class="tbl-export-btn d-flex">
                         <li class="tbl-header-btn">
-                          <div class="m-l-10" matTooltip="VIEW">
+                          <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.VIEW' |
+                      translate}}">
                             <button mat-mini-fab color="primary" (click)="viewHistoryChart()">
                               <img src='assets/images/icons/view.svg' alt="" height="17" width="17" />
                             </button>
                           </div>
                         </li>
                         <li class="tbl-header-btn">
-                          <div class="m-l-10" matTooltip="DOWNLOAD">
+                          <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.DOWNLOAD' |
+                      translate}}">
                             <button mat-mini-fab color="primary" (click)="downloadHistoryChart()">
                               <img src='assets/images/icons/download.svg' alt="" height="17" width="17" />
                             </button>
                           </div>
                         </li>
                         <li class="tbl-header-btn">
-                          <div class="m-l-10" matTooltip="PRINT">
+                          <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.PRINT' |
+                      translate}}">
                             <button mat-mini-fab color="primary" (click)="printHistoryChart()">
                               <img src='assets/images/icons/print.svg' alt="" height="17" width="17" />
                             </button>
@@ -203,10 +207,10 @@
                     </div>
                   </div>
                   <div class="body">
-                    <div style="text-align:center">
-                      <apx-chart [series]="columnChartOptions.series!" [chart]="columnChartOptions.chart!"
-                        [title]="columnChartOptions.title!" [dataLabels]="columnChartOptions.dataLabels"
-                        [xaxis]="columnChartOptions.xaxis"></apx-chart>
+                    <div style="text-align:center" *ngIf="showHistoryChart">
+                      <apx-chart [series]="historyChartOptions.series!" [chart]="historyChartOptions.chart!"
+                        [title]="historyChartOptions.title!" [dataLabels]="historyChartOptions.dataLabels!"
+                        [xaxis]="historyChartOptions.xaxis!" [yaxis]="historyChartOptions.yaxis!"></apx-chart>
                     </div>
                   </div>
                 </div>
@@ -219,7 +223,7 @@
                   <div class="card-body">
                     <div class="media-list position-relative">
                       <div class="table-responsive" id="project-team-scroll">
-                        <table class="table table-hover table-xl mb-0">
+                        <table class="table table-bordered table-hover table-xl mb-0 job-cost-table">
                           <thead>
                             <tr>
                               <th>Job Name</th>
@@ -227,29 +231,9 @@
                             </tr>
                           </thead>
                           <tbody>
-                            <tr>
-                              <td class="text-truncate">Project X</td>
-                              <td class="text-truncate">$8999</td>
-                            </tr>
-                            <tr>
-                              <td class="text-truncate">Project AB2</td>
-                              <td class="text-truncate">$5550</td>
-                            </tr>
-                            <tr>
-                              <td class="text-truncate">Project DS3</td>
-                              <td class="text-truncate">$9000</td>
-                            </tr>
-                            <tr>
-                              <td class="text-truncate">Project XCD</td>
-                              <td class="text-truncate">$7500</td>
-                            </tr>
-                            <tr>
-                              <td class="text-truncate">Project Z2</td>
-                              <td class="text-truncate">$8500</td>
-                            </tr>
-                            <tr>
-                              <td class="text-truncate">Project GTe</td>
-                              <td class="text-truncate">$8500</td>
+                            <tr *ngFor="let jobCost of jobCostList">
+                              <td>{{jobCost.client_name}}</td>
+                              <td class="amount">$ {{numberWithCommas(jobCost.total)}}</td>
                             </tr>
                           </tbody>
                         </table>
@@ -324,13 +308,17 @@
     <div class="list-unstyled">
       <div class="m-1">
         <div class="d-flex justify-content-between">
-          <h5 class="font-16">White Cap</h5>
+          <h5 class="font-16">{{invoice.vendor_data.vendor_name}}</h5>
           <h5 class="font-16">#{{invoice.invoice_no}}</h5>
         </div>
         <div class="d-flex justify-content-between">
           <div>
-            <h5 class="font-14"><span><b>Invoice Date </b></span> <span>{{(invoice.invoice_date_epoch * 1000 | date: 'MM/dd/yyyy')}}</span></h5>
-            <h5 class="font-14 last-updated"><span><b>Last updated </b></span> <span>{{(invoice.updated_at * 1000 | date: 'MM/dd/yyyy')}}</span></h5>
+            <h5 class="font-14"><span><b>Invoice Date </b></span>
+              <span>{{(invoice.invoice_date_epoch * 1000 | date: 'MM/dd/yyyy')}}</span>
+            </h5>
+            <h5 class="font-14 last-updated"><span><b>Last updated </b></span>
+              <span>{{(invoice.updated_at * 1000 | date: 'MM/dd/yyyy')}}</span>
+            </h5>
           </div>
           <h5 class="font-20 my-auto amount">${{invoice.invoice_total_amount}}</h5>
         </div>

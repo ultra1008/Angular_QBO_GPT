@@ -34,7 +34,6 @@ var payrollgroupSchema = require('../../../../../model/payroll_group');
 var creditcardsettingsSchema = require('../../../../../model/creditcardsettings');
 const reader = require('xlsx');
 var _ = require('lodash');
-let superadminCollection = require('../../../../../config/superadminCollection');
 let billingPlan = require('./../../../../../config/billing_plan');
 let attachmentLocations = require('./../../../../../config/attachmentLocations');
 var recentActivity = require('./../recent_activity/recentActivityController');
@@ -152,7 +151,7 @@ module.exports.saveEmployee = async function (req, res) {
                         // let get_user_roles = connection_db_api.model(collectionConstant.INVOICE_ROLES, invoiceRoleSchema);
                         // let onerole = await get_user_roles.findOne({ role_id: ObjectID(body.userroleId) });
                         // let allowed_count = billingPlan.BILLING_PLAN[selectedPlan]['ADMIN_ALL'];
-                        // let current_count = await userConnection.find({}).count();
+                        // let current_count = await userConnection.find({}).countDocuments();
                         // console.log("count: ", current_count, allowed_count, ">=", current_count >= allowed_count);
                         // if (current_count >= allowed_count) {
                         //     res.send({ message: translator.getStr('UserLimitExceed'), status: false });
@@ -192,6 +191,7 @@ module.exports.saveEmployee = async function (req, res) {
                                 DOWNLOAD_APP: translator.getStr('EmailInvitationUserDownloadApp'),
                                 LOG_IN: translator.getStr('EmailInvitationLogIn'),
                                 LOGIN_LINK: config.SITE_URL + "/login",
+                                COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                                 COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
                                 COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
@@ -222,9 +222,9 @@ module.exports.saveEmployee = async function (req, res) {
                             history_object.usercostcode = usercostcode;
                             let updateuser = await userConnection.updateOne({ _id: ObjectID(add._id) }, { usercostcode: usercostcode });
                             if (updateuser) {
-                                sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, body.useremail, "Rovuk Registration", HtmlData,
-                                    talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                                    talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                                sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, body.useremail, "SmartAccuPay Registration", HtmlData,
+                                    talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                                    talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
 
                                 recentActivity.saveRecentActivity({
                                     user_id: decodedToken.UserData._id,
@@ -1749,6 +1749,7 @@ module.exports.deleteTeamMember = async function (req, res) {
                             let company_data = await companyConnection.findOne({ companycode: decodedToken.companycode });
                             let companyUserObj = {
                                 'invoice_user.$.is_delete': 1,
+                                'invoice_user.$.userstatus': 2,
                             };
                             let update_invoice_user = await companyConnection.updateOne({ _id: ObjectID(company_data._id), 'invoice_user.user_id': ObjectID(requestObject._id) }, { $set: companyUserObj });
 
@@ -1803,7 +1804,8 @@ module.exports.deleteMultipleTeamMember = async function (req, res) {
             if (update_user) {
                 let company_data = await companyConnection.findOne({ companycode: decodedToken.companycode });
                 let companyUserObj = {
-                    'invoice_user.$.is_delete': requestObject.is_delete,
+                    'invoice_user.$.is_delete': 1,
+                    'invoice_user.$.userstatus': 2,
                 };
                 for (let i = 0; i < requestObject._id.length; i++) {
                     let one_user = await userConnection.findOne({ _id: ObjectID(requestObject._id[i]) });
@@ -1858,6 +1860,7 @@ module.exports.sendappinvitation = async function (req, res) {
                 ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                 THANKS: translator.getStr('EmailTemplateThanks'),
                 ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                 TITLE: translator.getStr('EmailAppInvitationTitle'),
                 USER_FULL_NAME: `${requestObject.name},`,
@@ -1870,9 +1873,9 @@ module.exports.sendappinvitation = async function (req, res) {
             const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/appinvitation.html', 'utf8');
             var template = handlebars.compile(file_data);
             var HtmlData = await template(emailTmp);
-            sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [requestObject.recipient], "App Download Invitation", HtmlData,
-                talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+            sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, [requestObject.recipient], "App Download Invitation", HtmlData,
+                talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
             res.send({ message: translator.getStr('AppInvitationSent'), status: true });
         }
         catch (e) {
@@ -2083,6 +2086,7 @@ module.exports.senddocumentexpiration = async function (req, res) {
                                 ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                                 THANKS: translator.getStr('EmailTemplateThanks'),
                                 ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                                COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                                 TITLE: translator.getStr('EmailSingleDocExpireTitle'),
                                 HELLO_USERNAME: `${translator.getStr('EmailTemplateHello')} ${decodedToken.UserData.userfullname}`,
@@ -2108,9 +2112,9 @@ module.exports.senddocumentexpiration = async function (req, res) {
                 } else if (sendResponse == 2) {
                     subject = "Documents about to expire";
                 }
-                sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, recipients, subject, HtmlData,
-                    talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                    talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, recipients, subject, HtmlData,
+                    talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                    talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
                 res.send({ message: translator.getStr('DocumentExpirationWarningSent'), status: true });
             }
         }
@@ -3419,6 +3423,7 @@ module.exports.getAllEmployeeReport = async function (req, res) {
                         THANKS: translator.getStr('EmailTemplateThanks'),
                         ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
                         VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
+                        COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                         EMAILTITLE: `${translator.getStr('EmailTeamReportTitle')}`,
                         TEXT1: translator.getStr('EmailTeamReportText1'),
@@ -3433,9 +3438,9 @@ module.exports.getAllEmployeeReport = async function (req, res) {
                     };
                     var template = handlebars.compile(file_data);
                     var HtmlData = await template(emailTmp);
-                    let send_Email = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, email_list, translator.getStr('EmailUserReportSubject'), HtmlData,
-                        talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                        talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                    sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, email_list, translator.getStr('EmailUserReportSubject'), HtmlData,
+                        talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                        talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
                     res.send({ message: translator.getStr('Report_Sent_Successfully'), status: true });
                 }
             });
@@ -3566,6 +3571,7 @@ module.exports.checkAndInsertImportData = async function (req, res) {
                         DOWNLOAD_APP: translator.getStr('EmailInvitationUserDownloadApp'),
                         LOG_IN: translator.getStr('EmailInvitationLogIn'),
                         LOGIN_LINK: config.SITE_URL + "/login",
+                        COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                         COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
                         COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
@@ -3573,12 +3579,10 @@ module.exports.checkAndInsertImportData = async function (req, res) {
                     var template = handlebars.compile(file_data);
                     var HtmlData = await template(emailTmp);
 
-                    var mail = await sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, requestObject.data[m].useremail, "Rovuk Registration", HtmlData,
-                        talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                        talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
-                    console.log("mail: ", mail);
+                    sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, requestObject.data[m].useremail, "SmartAccuPay Registration", HtmlData,
+                        talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                        talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
                 }
-
             }
             res.send({ status: true, message: translator.getStr('Data_Insert_message') });
         } catch (e) {
@@ -4202,6 +4206,7 @@ module.exports.recoverteam = async function (req, res) {
                     let company_data = await companyConnection.findOne({ companycode: decodedToken.companycode });
                     let companyUserObj = {
                         'invoice_user.$.is_delete': 0,
+                        'invoice_user.$.userstatus': requestObject.userstatus,
                     };
                     let one_user = await userCollection.findOne({ _id: ObjectID(requestObject._id) });
                     if (one_user.is_first && one_user._id == decodedToken.UserData._id) {
@@ -4333,6 +4338,7 @@ module.exports.importManagementUser = async function (req, res) {
                         DOWNLOAD_APP: translator.getStr('EmailInvitationUserDownloadApp'),
                         LOG_IN: translator.getStr('EmailInvitationLogIn'),
                         LOGIN_LINK: config.SITE_URL + "/login",
+                        COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                         COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
                         COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
@@ -4343,9 +4349,9 @@ module.exports.importManagementUser = async function (req, res) {
                     let LowerCase_bucket = decodedToken.companycode.toLowerCase();
                     var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
                     let talnate_data = await rest_Api.findOne(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { companycode: decodedToken.companycode });
-                    sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, management_user.useremail, "Rovuk Registration", HtmlData,
-                        talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                        talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                    sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, management_user.useremail, "SmartAccuPay Registration", HtmlData,
+                        talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                        talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
                 }
                 if (i == requestObject.users.length - 1) {
                     res.send({ message: translator.getStr('ManagementUserImported'), status: true });

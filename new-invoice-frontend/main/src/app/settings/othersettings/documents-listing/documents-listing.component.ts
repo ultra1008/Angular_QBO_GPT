@@ -11,12 +11,13 @@ import { fromEvent, BehaviorSubject, Observable, merge, map } from 'rxjs';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
-import { DocumentsTable } from '../../settings.model';
+import { DocumentsModel } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
 import { TaxRateFormComponent } from '../tax-rate-listing/tax-rate-form/tax-rate-form.component';
 import { DocumentFormComponent } from './document-form/document-form.component';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-documents-listing',
@@ -27,7 +28,7 @@ export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter imple
   displayedColumns = ['name', 'actions'];
   documentsService?: SettingsService;
   dataSource!: DocumentsDataSource;
-  selection = new SelectionModel<DocumentsTable>(true, []);
+  selection = new SelectionModel<DocumentsModel>(true, []);
   id?: number;
   isDelete = 0;
   titleMessage = '';
@@ -48,13 +49,9 @@ export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter imple
   refresh() {
     this.loadData();
   }
-  addNew() {
-    this.router.navigate(['/settings/mailbox-form']);
-  }
 
   edit(document: any) {
     let that = this;
-    console.log('document');
     const dialogRef = this.dialog.open(DocumentFormComponent, {
       width: '350px',
       data: document,
@@ -132,7 +129,7 @@ export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter imple
     //     // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
     //     this.documentsService?.dataChange.value.splice(index, 1);
     //     this.refreshTable();
-    //     this.selection = new SelectionModel<DocumentsTable>(true, []);
+    //     this.selection = new SelectionModel<DocumentsModel>(true, []);
     //   });
     //  showNotification(
     //     'snackbar-danger',
@@ -160,11 +157,11 @@ export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter imple
   }
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: DocumentsTable) {
+  onContextMenu(event: MouseEvent, item: DocumentsModel) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -175,7 +172,7 @@ export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter imple
     }
   }
 }
-export class DocumentsDataSource extends DataSource<DocumentsTable> {
+export class DocumentsDataSource extends DataSource<DocumentsModel> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -183,8 +180,8 @@ export class DocumentsDataSource extends DataSource<DocumentsTable> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: DocumentsTable[] = [];
-  renderedData: DocumentsTable[] = [];
+  filteredData: DocumentsModel[] = [];
+  renderedData: DocumentsModel[] = [];
   constructor (
     public documentsService: SettingsService,
     public paginator: MatPaginator,
@@ -196,7 +193,7 @@ export class DocumentsDataSource extends DataSource<DocumentsTable> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<DocumentsTable[]> {
+  connect(): Observable<DocumentsModel[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this.documentsService.documentDataChange,
@@ -210,8 +207,8 @@ export class DocumentsDataSource extends DataSource<DocumentsTable> {
         // Filter data
         this.filteredData = this.documentsService.documentData
           .slice()
-          .filter((DocumentsTable: DocumentsTable) => {
-            const searchStr = DocumentsTable.name.toLowerCase();
+          .filter((DocumentsModel: DocumentsModel) => {
+            const searchStr = DocumentsModel.name.toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
         // Sort filtered data
@@ -230,7 +227,7 @@ export class DocumentsDataSource extends DataSource<DocumentsTable> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: DocumentsTable[]): DocumentsTable[] {
+  sortData(data: DocumentsModel[]): DocumentsModel[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }

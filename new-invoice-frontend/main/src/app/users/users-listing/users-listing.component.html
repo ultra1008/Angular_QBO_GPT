@@ -56,8 +56,7 @@
                                         </button>
                                     </div>
                                 </li>
-                                <li class="tbl-header-btn"
-                                    *ngIf="isDelete === 0 && role_permission.role_permission.users.Add">
+                                <li class="tbl-header-btn" *ngIf="isDelete === 0 && role_permission.users.Add">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.IMPORT_TEMPLATE' |
                                     translate}}">
                                         <button mat-mini-fab color="primary" (click)="downloadImport()">
@@ -65,8 +64,7 @@
                                         </button>
                                     </div>
                                 </li>
-                                <li class="tbl-header-btn"
-                                    *ngIf="isDelete === 0 && role_permission.role_permission.users.Add">
+                                <li class="tbl-header-btn" *ngIf="isDelete === 0 && role_permission.users.Add">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.IMPORT' |
                                     translate}}">
                                         <input id="file-upload" class="mr-2" type="file" style="display: none"
@@ -76,14 +74,14 @@
                                         </button>
                                     </div>
                                 </li>
-                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                                <!-- <li class="tbl-header-btn" *ngIf="isDelete === 0">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.REPORT' |
                                     translate}}" (click)="userReport()">
                                         <button mat-mini-fab color="primary">
                                             <mat-icon class="col-white">insert_drive_file</mat-icon>
                                         </button>
                                     </div>
-                                </li>
+                                </li> -->
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.HISTORY' |
                                     translate}}">
@@ -101,8 +99,7 @@
                                         </button>
                                     </div>
                                 </li>
-                                <li class="tbl-header-btn"
-                                    *ngIf="isDelete === 0 && role_permission.role_permission.users.Delete">
+                                <li class="tbl-header-btn" *ngIf="isDelete === 0 && role_permission.users.Delete">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ARCHIVE' |
                                     translate}}">
                                         <button mat-mini-fab color="warn" (click)="gotoArchiveUnarchive()">
@@ -118,8 +115,7 @@
                                         </button>
                                     </div>
                                 </li>
-                                <li class="tbl-header-btn"
-                                    *ngIf="isDelete === 0 && role_permission.role_permission.users.Add">
+                                <li class="tbl-header-btn" *ngIf="isDelete === 0 && role_permission.users.Add">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ADD' |
                                     translate}}">
                                         <button mat-mini-fab color="primary" (click)="addNewUser()">
@@ -157,16 +153,13 @@
                                         </mat-checkbox>
                                     </mat-cell>
                                 </ng-container>
-                                <!-- ID Column -->
-                                <ng-container matColumnDef="id">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
-                                    <mat-cell *matCellDef="let row">{{row.id}}</mat-cell>
-                                </ng-container>
                                 <ng-container matColumnDef="img">
-                                    <mat-header-cell mat-header-cell *matHeaderCellDef> {{'USERS.TABLE.IMAGE' |
+                                    <mat-header-cell mat-header-cell *matHeaderCellDef
+                                        [ngClass]="'tbl-col-width-per-image'"> {{'USERS.TABLE.IMAGE' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell mat-cell *matCellDef="let row" class="table-img "><span
+                                    <mat-cell mat-cell *matCellDef="let row"
+                                        class="table-img tbl-col-width-per-image"><span
                                             class="mobile-label">Image:</span>
                                         <img [src]="row.userpicture" />
                                     </mat-cell>
@@ -336,7 +329,7 @@
                         <!-- context menu end -->
                         <div *ngIf="!userService?.isTblLoading" class="no-results"
                             [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-                            No results
+                            {{'COMMON.LISTING.EPMTY' | translate}}
                         </div>
                         <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0"
                             [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">

@@ -3,7 +3,6 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators, } from '@angular/form
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { VendorsService } from '../vendors.service';
-import { CountryModel, TermModel } from '../vendor.model';
 import { commonLocalThumbImage, commonNetworkThumbImage, commonNewtworkAttachmentViewer, gallery_options, showNotification, swalWithBootstrapButtons, swalWithBootstrapTwoButtons, } from 'src/consts/utils';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NgxGalleryComponent, NgxGalleryImage, NgxGalleryOptions, } from 'ngx-gallery-9';
@@ -15,6 +14,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { commonFileChangeEvent } from 'src/app/services/utils';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { RolePermission } from 'src/consts/common.model';
+import { CountryModel, TermModel } from 'src/app/settings/settings.model';
 
 @Component({
   selector: 'app-vendor-form',
@@ -51,7 +52,9 @@ export class VendorFormComponent {
   titleMessage = "";
   show = false;
   is_delete: any;
-  role_permission: any;
+  role_permission!: RolePermission;
+  isHideEditActionQBD = false;
+  isHideArchiveActionQBD = false;
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -65,7 +68,7 @@ export class VendorFormComponent {
     public commonService: CommonService,
   ) {
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
-    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
 
     this.vendorForm = this.fb.group({
       vendor_name: ['', [Validators.required]],
@@ -95,6 +98,7 @@ export class VendorFormComponent {
     ];
     this.galleryOptions = [this.tmp_gallery];
     this.getVendorType();
+    this.getCompanyTenants();
     this.getTerms();
     if (this.id) {
       this.getOneVendor();
@@ -104,8 +108,8 @@ export class VendorFormComponent {
   async getOneVendor() {
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_GET_ONE, { _id: this.id });
     if (data.status) {
-      this.is_delete = data.data.is_delete;
       const vendorData = data.data;
+      this.is_delete = vendorData.is_delete;
       this.vendorForm = this.fb.group({
         vendor_name: [vendorData.vendor_name, [Validators.required]],
         vendor_phone: [vendorData.vendor_phone, [Validators.required]],
@@ -137,6 +141,29 @@ export class VendorFormComponent {
     }
   }
 
+  async getCompanyTenants() {
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP);
+    if (data.status) {
+      if (data.data.is_quickbooks_desktop) {
+
+        if (this.role_permission.vendor.Edit) {
+          this.isHideEditActionQBD = true;
+        } else {
+          this.isHideEditActionQBD = false;
+        }
+
+        if (this.role_permission.vendor.Delete) {
+          this.isHideArchiveActionQBD = true;
+        } else {
+          this.isHideArchiveActionQBD = false;
+        }
+
+        console.log(this.isHideEditActionQBD);
+        console.log(this.role_permission.vendor.Edit);
+      }
+    }
+  }
+
   async getTerms() {
     const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_TERM_GET);
     if (data.status) {
@@ -155,35 +182,16 @@ export class VendorFormComponent {
 
   async archiveRecover() {
 
-    // this.titleMessage = this.translate.instant('VENDOR.CONFIRMATION_DIALOG.ARCHIVE');
-
-    // swalWithBootstrapTwoButtons
-    //   .fire({
-    //     title: this.titleMessage,
-    //     showDenyButton: true,
-    //     confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
-    //     denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
-    //     allowOutsideClick: false,
-    //   })
-    //   .then((result) => {
-    //     if (result.isConfirmed) {
-    //       this.deletvendor();
-    //       this.show = false;
-    //     }
-    //   });
-
     const data = await this.commonService.postRequestAPI(
       httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_DELETE,
       { _id: this.id, is_delete: this.is_delete == 1 ? 0 : 1 }
     );
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
-      const foundIndex = this.vendorService?.dataChange.value.findIndex(
-        (x) => x._id === this.id
-      );
-      // for delete we use splice in order to remove single object from DataService
-      if (foundIndex != null && this.vendorService) {
-        this.vendorService.dataChange.value.splice(foundIndex, 1);
+      const vendorDisplay = localStorage.getItem(localstorageconstants.VENDOR_DISPLAY) ?? 'list';
+      if (vendorDisplay == 'list') {
+        this.router.navigate([WEB_ROUTES.VENDOR]);
+      } else {
         this.router.navigate([WEB_ROUTES.VENDOR_GRID]);
       }
     } else {
@@ -192,14 +200,6 @@ export class VendorFormComponent {
 
   }
   async deletvendor() {
-    // const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_DELETE, { _id: this.id, is_delete: 1 });
-    // if (data.status) {
-    //   showNotification(this.snackBar, data.message, 'success');
-
-    //   this.router.navigate([WEB_ROUTES.VENDOR], { queryParams: { is_delete: 1 }, });
-    // } else {
-    //   showNotification(this.snackBar, data.message, 'error');
-    // }
 
     if (this.is_delete == 0) {
       this.titleMessage = this.translate.instant('VENDOR.CONFIRMATION_DIALOG.ARCHIVE');
@@ -218,7 +218,6 @@ export class VendorFormComponent {
         if (result.isConfirmed) {
           if (this.is_delete == 0) {
             this.archiveRecover();
-            this.router.navigate([WEB_ROUTES.VENDOR_GRID]);
           } else {
             this.archiveRecover();
           }
@@ -263,7 +262,13 @@ export class VendorFormComponent {
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        this.router.navigate([WEB_ROUTES.VENDOR]);
+        const vendorDisplay = localStorage.getItem(localstorageconstants.VENDOR_DISPLAY) ?? 'list';
+        if (vendorDisplay == 'list') {
+          this.router.navigate([WEB_ROUTES.VENDOR]);
+        } else {
+          this.router.navigate([WEB_ROUTES.VENDOR_GRID]);
+        }
+
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');
@@ -272,36 +277,50 @@ export class VendorFormComponent {
   }
 
   confirmExit() {
-    swalWithBootstrapButtons
-      .fire({
-        title: this.translate.instant('VENDOR.CONFIRMATION_DIALOG.SAVING'),
-        showDenyButton: true,
-        showCancelButton: true,
-        confirmButtonText: this.translate.instant('COMMON.ACTIONS.SAVE_EXIT'),
-        cancelButtonText: this.translate.instant('COMMON.ACTIONS.DONT_SAVE'),
-        denyButtonText: this.translate.instant('COMMON.ACTIONS.CANCEL'),
-        allowOutsideClick: false,
-      })
-      .then((result) => {
-        if (result.isConfirmed) {
-          this.submitting_text = this.translate.instant(
-            'VENDOR.CONFIRMATION_DIALOG.SUBMIT'
-          );
-          // Move to the vendor listing
-          if (this.vendorForm.valid) {
-            this.saveVendor();
+    if (this.isHideArchiveActionQBD) {
+      const vendorDisplay = localStorage.getItem(localstorageconstants.VENDOR_DISPLAY) ?? 'list';
+      if (vendorDisplay == 'list') {
+        this.router.navigate([WEB_ROUTES.VENDOR]);
+      } else {
+        this.router.navigate([WEB_ROUTES.VENDOR_GRID]);
+      }
+    } else {
+      swalWithBootstrapButtons
+        .fire({
+          title: this.translate.instant('VENDOR.CONFIRMATION_DIALOG.SAVING'),
+          showDenyButton: true,
+          showCancelButton: true,
+          confirmButtonText: this.translate.instant('COMMON.ACTIONS.SAVE_EXIT'),
+          cancelButtonText: this.translate.instant('COMMON.ACTIONS.DONT_SAVE'),
+          denyButtonText: this.translate.instant('COMMON.ACTIONS.CANCEL'),
+          allowOutsideClick: false,
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.submitting_text = this.translate.instant(
+              'VENDOR.CONFIRMATION_DIALOG.SUBMIT'
+            );
+            // Move to the vendor listing
+            if (this.vendorForm.valid) {
+              this.saveVendor();
+            } else {
+              // alert form invalidation
+              showNotification(this.snackBar, this.submitting_text, 'error');
+            }
+          } else if (result.isDenied) {
+            // ;
           } else {
-            // alert form invalidation
-            showNotification(this.snackBar, this.submitting_text, 'error');
+            setTimeout(() => {
+              const vendorDisplay = localStorage.getItem(localstorageconstants.VENDOR_DISPLAY) ?? 'list';
+              if (vendorDisplay == 'list') {
+                this.router.navigate([WEB_ROUTES.VENDOR]);
+              } else {
+                this.router.navigate([WEB_ROUTES.VENDOR_GRID]);
+              }
+            }, 100);
           }
-        } else if (result.isDenied) {
-          // ;
-        } else {
-          setTimeout(() => {
-            this.router.navigate([WEB_ROUTES.VENDOR]);
-          }, 100);
-        }
-      });
+        });
+    }
   }
 
   onFileDropped($event: any) {

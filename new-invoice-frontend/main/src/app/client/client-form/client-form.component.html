@@ -8,16 +8,31 @@
                         <div class="left">
                             <ul class="header-buttons-left ms-0">
                                 <li class="tbl-title">
-                                    <h2 *ngIf="id.length == 0">{{'CLIENT.ADD_EDIT.ADD_TITLE' | translate}}</h2>
+                                    <h2 *ngIf="id.length === 0">{{'CLIENT.ADD_EDIT.ADD_TITLE' | translate}}</h2>
                                     <h2 *ngIf="id.length > 0">{{'CLIENT.ADD_EDIT.EDIT_TITLE' | translate}}</h2>
                                 </li>
                             </ul>
                         </div>
                         <div class="right">
                             <ul class="tbl-export-btn">
+                                <li class="tbl-header-btn" *ngIf="id">
+                                    <div class="m-l-10" *ngIf="is_delete === 0 && !isHideArchiveActionQBD"
+                                        matTooltip="{{'COMMON.TOOL_TIP.ARCHIVE' | translate}}">
+                                        <button mat-mini-fab color="warn" (click)="deleteClient()">
+                                            <mat-icon class="col-white">archive</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="tbl-header-btn" *ngIf="id">
+                                    <div class="m-l-10" *ngIf="is_delete === 1 && !isHideArchiveActionQBD"
+                                        matTooltip="{{'COMMON.ACTIONS.RESTORE' | translate}}">
+                                        <button mat-mini-fab color="warn" (click)="deleteClient()">
+                                            <mat-icon class="col-white">archive</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
                                 <li class="tbl-header-btn">
-                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' |
-                                        translate}}">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' | translate}}">
                                         <button mat-mini-fab color="warn" (click)="confirmExit()">
                                             <mat-icon class="col-white">close</mat-icon>
                                         </button>
@@ -27,8 +42,8 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="body">
-                        <form class="register-form m-4" [formGroup]="vendorForm">
+                    <div [ngClass]="{'disableDiv': isHideEditActionQBD}">
+                        <form class="register-form m-4" [formGroup]="clientForm">
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2" style="font-size: 12px;">
                                     <mat-form-field class="example-full-width" appearance="outline">
@@ -56,13 +71,14 @@
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>{{'CLIENT.ADD_EDIT.COST_GL' | translate}}</mat-label>
-                                        <mat-select formControlName="client_cost_cost_id" style="font-size: 12px;">
-                                            <mat-select-filter #costcodeListSelect [placeholder]="'Filter'"
-                                                [displayMember]="'value'" [array]="variablecostcodeList"
-                                                (filteredReturn)="costcodeList =$event">
+                                        <mat-select formControlName="client_cost_cost_id" #costCodeSelect
+                                            style="font-size: 12px;">
+                                            <mat-select-filter [placeholder]="'Filter'" [displayMember]="'value'"
+                                                [array]="variablecostcodeList" (filteredReturn)="costcodeList =$event"
+                                                *ngIf="costCodeSelect.focused">
                                             </mat-select-filter>
                                             <mat-option *ngFor="let costcode of costcodeList" [value]="costcode._id">
-                                                {{costcode.value}}
+                                                {{costcode.cost_code}}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
@@ -72,10 +88,10 @@
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>{{'CLIENT.TABLE.APPROVER' | translate}}</mat-label>
-                                        <mat-select formControlName="approver_id" style="font-size: 12px;">
-                                            <mat-select-filter #termListSelect [placeholder]="'Filter'"
-                                                [displayMember]="'userfullname'" [array]="variableapproverList"
-                                                (filteredReturn)="approverList =$event">
+                                        <mat-select formControlName="approver_id" style="font-size: 12px;" #userSelect>
+                                            <mat-select-filter [placeholder]="'Filter'" [displayMember]="'userfullname'"
+                                                [array]="variableapproverList" (filteredReturn)="approverList =$event"
+                                                *ngIf="userSelect.focused">
                                             </mat-select-filter>
                                             <mat-option *ngFor="let approve of approverList" [value]="approve._id">
                                                 <span><img class="img-b" [src]="approve.userpicture" height="35px"
@@ -104,8 +120,8 @@
                                 <div class="col-xl-12 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline"
                                         style="height: auto !important;">
-                                        <mat-label
-                                            style="height: auto !important;">{{'CLIENT.ADD_EDIT.NOTES' | translate}}</mat-label>
+                                        <mat-label style="height: auto !important;">{{'CLIENT.ADD_EDIT.NOTES' |
+                                            translate}}</mat-label>
                                         <textarea matInput style="height: auto !important;"
                                             formControlName="client_notes"></textarea>
                                     </mat-form-field>
@@ -115,11 +131,11 @@
 
                             <div class="row">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                                    <button *ngIf="isDelete === 0 && role_permission.role_permission.clientJob.Edit"
+                                    <button *ngIf="role_permission.clientJob.Edit && !isHideEditActionQBD"
                                         class="btn-space" mat-raised-button color="primary"
-                                        [disabled]="!vendorForm.valid" (click)="saveVendor()">{{'COMMON.ACTIONS.SAVE'|
+                                        [disabled]="!clientForm.valid" (click)="saveClient()">{{'COMMON.ACTIONS.SAVE'|
                                         translate}}</button>
-                                    <button type="button" mat-raised-button color="warn"
+                                    <button *ngIf="!isHideEditActionQBD" type="button" mat-raised-button color="warn"
                                         (click)="confirmExit()">{{'COMMON.ACTIONS.CANCEL'| translate}}</button>
                                 </div>
                             </div>

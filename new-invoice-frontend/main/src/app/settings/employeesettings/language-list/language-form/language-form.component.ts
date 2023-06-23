@@ -16,6 +16,7 @@ import { showNotification } from 'src/consts/utils';
 import { SettingsService } from '../../../settings.service';
 import { JobTitleFormComponent } from '../../job-title-list/job-title-form/job-title-form.component';
 import { icon } from 'src/consts/icon';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-language-form',
@@ -33,7 +34,8 @@ export class LanguageFormComponent {
   titleMessage = '';
   userList: any = [];
   isDelete = 0;
-  invoice_logo = icon.INVOICE_LOGO;
+  title = this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.LANGUAGE');
+
   constructor (
     public dialogRef: MatDialogRef<JobTitleFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -42,7 +44,8 @@ export class LanguageFormComponent {
     private snackBar: MatSnackBar,
     public SettingsServices: SettingsService,
     private router: Router,
-    public uiSpinner: UiSpinnerService
+    public uiSpinner: UiSpinnerService,
+    public translate: TranslateService,
   ) {
     this.languageInfo = new FormGroup({
       name: new FormControl('', [Validators.required]),

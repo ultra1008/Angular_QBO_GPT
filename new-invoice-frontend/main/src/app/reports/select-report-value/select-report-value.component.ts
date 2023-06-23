@@ -2,11 +2,11 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { ClientList } from 'src/app/client/client.model';
+import { ClientJobModel } from 'src/app/client/client.model';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
-import { ClassNameTable } from 'src/app/settings/settings.model';
-import { User } from 'src/app/users/user.model';
-import { Vendor } from 'src/app/vendors/vendor.model';
+import { ClassNameModel } from 'src/app/settings/settings.model';
+import { UserModel } from 'src/app/users/user.model';
+import { VendorModel } from 'src/app/vendors/vendor.model';
 import { icon } from 'src/consts/icon';
 import { configData } from 'src/environments/configData';
 
@@ -18,17 +18,17 @@ import { configData } from 'src/environments/configData';
 export class SelectReportValueComponent implements OnInit {
   form!: UntypedFormGroup;
   hide = true;
-  variablesVendorList: Array<Vendor> = [];
-  vendorList: Array<Vendor> = this.variablesVendorList.slice();
+  variablesVendorList: Array<VendorModel> = [];
+  vendorList: Array<VendorModel> = this.variablesVendorList.slice();
 
-  variablesUserList: Array<User> = [];
-  userList: Array<User> = this.variablesUserList.slice();
+  variablesUserList: Array<UserModel> = [];
+  userList: Array<UserModel> = this.variablesUserList.slice();
 
-  variablesClassNameList: Array<ClassNameTable> = [];
-  classNameList: Array<ClassNameTable> = this.variablesClassNameList.slice();
+  variablesClassNameList: Array<ClassNameModel> = [];
+  classNameList: Array<ClassNameModel> = this.variablesClassNameList.slice();
 
-  variablesClientList: Array<ClientList> = [];
-  clientList: Array<ClientList> = this.variablesClientList.slice();
+  variablesClientJob: Array<ClientJobModel> = [];
+  clientList: Array<ClientJobModel> = this.variablesClientJob.slice();
 
   id: any;
   invoice_logo = icon.INVOICE_LOGO;
@@ -68,8 +68,8 @@ export class SelectReportValueComponent implements OnInit {
       this.form.get("class_name_ids")?.updateValueAndValidity();
       this.form.get("class_name_ids")?.setValue(this.classNameList.map((el) => el._id));
     } else if (data.title == this.reportType.openClientJob) {
-      this.variablesClientList = data.clientList;
-      this.clientList = this.variablesClientList.slice();
+      this.variablesClientJob = data.clientList;
+      this.clientList = this.variablesClientJob.slice();
 
       this.form.get("job_client_name_ids")?.setValidators([Validators.required]);
       this.form.get("job_client_name_ids")?.updateValueAndValidity();

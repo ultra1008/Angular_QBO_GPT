@@ -33,7 +33,6 @@ export class HttpCall {
     headers = headers.set('local_offset', '' + moment().utcOffset() * 60);
     headers = headers.set('language', language);
 
-    // var url = configdata.apiurl;
     return this.http.get(apiRoute, { headers: headers }).pipe(
       map((res) => {
         return res;
@@ -52,15 +51,9 @@ export class HttpCall {
     headers = headers.set('local_offset', '' + moment().utcOffset() * 60);
     headers = headers.set('language', language);
 
-    // var url = configdata.apiurl;
-    // console.log("apiRoute", apiRoute);
-    // console.log("userdata", userdata);
-
     return this.http.post(apiRoute, userdata, { headers: headers }).pipe(
       map((res) => {
-        // console.log("res", res);
         return res;
-
       }),
       catchError(this.handleError)
     );

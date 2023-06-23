@@ -220,6 +220,174 @@ module.exports.getAPInvoice = async function (req, res) {
     }
 };
 
+module.exports.getStatusWiseAPInvoice = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        var connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var apInvoiceConnection = connection_db_api.model(collectionConstant.AP_INVOICE, apInvoiceSchema);
+            let match = { status: requestObject.status, is_delete: 0 };
+            var get_data = await apInvoiceConnection.aggregate([
+                { $match: match },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "assign_to",
+                        foreignField: "_id",
+                        as: "assign_to_data"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$assign_to_data",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_VENDOR,
+                        localField: "vendor",
+                        foreignField: "_id",
+                        as: "vendor_data"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$vendor_data",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_TERM,
+                        localField: "terms",
+                        foreignField: "_id",
+                        as: "terms_data"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$terms_data",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.COSTCODES,
+                        localField: "gl_account",
+                        foreignField: "_id",
+                        as: "gl_account_data"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$gl_account_data",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_CLIENT,
+                        localField: "job_client_name",
+                        foreignField: "_id",
+                        as: "job_client_data"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$job_client_data",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_CLASS_NAME,
+                        localField: "class_name",
+                        foreignField: "_id",
+                        as: "class_name_data"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$class_name_data",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                { $sort: { created_at: -1 } },
+                {
+                    $project: {
+                        _id: "$_id",
+                        assign_to: "$assign_to",
+                        vendor: "$vendor",
+                        is_quickbooks: "$is_quickbooks",
+                        vendor_id: "$vendor_id",
+                        customer_id: "$customer_id",
+                        invoice_no: "$invoice_no",
+                        po_no: "$po_no",
+                        packing_slip_no: "$packing_slip_no",
+                        receiving_slip_no: "$receiving_slip_no",
+                        invoice_date_epoch: "$invoice_date_epoch",
+                        due_date_epoch: "$due_date_epoch",
+                        order_date_epoch: "$order_date_epoch",
+                        ship_date_epoch: "$ship_date_epoch",
+                        terms: "$terms",
+                        invoice_total_amount: "$invoice_total_amount",
+                        tax_amount: "$tax_amount",
+                        tax_id: "$tax_id",
+                        sub_total: "$sub_total",
+                        amount_due: "$amount_due",
+                        gl_account: "$gl_account",
+                        receiving_date_epoch: "$receiving_date_epoch",
+                        status: "$status",
+                        reject_reason: "$reject_reason",
+                        job_client_name: "$job_client_name",
+                        class_name: "$class_name",
+                        delivery_address: "$delivery_address",
+                        contract_number: "$contract_number",
+                        account_number: "$account_number",
+                        discount: "$discount",
+                        pdf_url: "$pdf_url",
+                        items: "$items",
+                        notes: "$notes",
+
+                        invoice_notes: {
+                            $filter: {
+                                input: '$invoice_notes',
+                                as: 'note',
+                                cond: { $eq: ['$$note.is_delete', 0] }
+                            }
+                        },
+
+                        document_type: "$document_type",
+                        created_by: "$created_by",
+                        created_at: "$created_at",
+                        updated_by: "$updated_by",
+                        updated_at: "$updated_at",
+                        is_delete: "$is_delete",
+
+                        assign_to_data: "$assign_to_data",
+                        vendor_data: "$vendor_data",
+                        terms_data: "$terms_data",
+                        gl_account_data: "$gl_account_data",
+                        job_client_data: "$job_client_data",
+                        class_name_data: "$class_name_data",
+                    }
+                },
+            ]);
+            res.send({ status: true, message: "Invoice data", data: get_data });
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
+
 module.exports.getOneAPInvoice = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.Language);
@@ -691,6 +859,7 @@ function sendInvoiceAssignUpdateAlerts(decodedToken, id, translator) {
                         ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                         THANKS: translator.getStr('EmailTemplateThanks'),
                         ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                        COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
                         ROVUK_TEAM_SEC: translator.getStr('EmailTemplateRovukTeamSec'),
                         VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
 
@@ -707,9 +876,9 @@ function sendInvoiceAssignUpdateAlerts(decodedToken, id, translator) {
                     };
                     var template = handlebars.compile(file_data);
                     var HtmlData = await template(emailTmp);
-                    sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, [get_users.useremail], title, HtmlData,
-                        talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                        talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                    sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, [get_users.useremail], title, HtmlData,
+                        talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                        talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
                 }
                 resolve();
             } else {

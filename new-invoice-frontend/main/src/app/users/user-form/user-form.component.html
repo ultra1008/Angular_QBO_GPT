@@ -20,7 +20,7 @@
                               <div class="right">
                                    <ul class="tbl-export-btn">
                                         <li class="tbl-header-btn" *ngIf="id">
-                                             <div class="m-l-10" *ngIf="is_delete == 0"
+                                             <div class="m-l-10" *ngIf="is_delete === 0"
                                                   matTooltip="{{'COMMON.TOOL_TIP.ARCHIVE' | translate}}">
                                                   <button mat-mini-fab color="warn" (click)="deleteuser()">
                                                        <mat-icon class="col-white">archive</mat-icon>
@@ -28,7 +28,7 @@
                                              </div>
                                         </li>
                                         <li class="tbl-header-btn" *ngIf="id">
-                                             <div class="m-l-10" *ngIf="is_delete == 1"
+                                             <div class="m-l-10" *ngIf="is_delete === 1"
                                                   matTooltip="{{'COMMON.ACTIONS.RESTORE' | translate}}">
                                                   <button mat-mini-fab color="warn" (click)="deleteuser()">
                                                        <mat-icon class="col-white">archive</mat-icon>
@@ -56,7 +56,7 @@
                                              <div class="header">
                                                   <h2>{{'USERS.TABS.PERSONAL_INFORMATION' | translate}}</h2>
                                              </div>
-                                             <div class="body">
+                                             <div class="body" *ngIf="role_permission.users.personalInformation.View">
                                                   <form [formGroup]="userpersonalinfo!">
                                                        <div class="main-cust-emp-from">
                                                             <div class="main-cust-emp-profile">
@@ -242,70 +242,6 @@
                                                                            </mat-form-field>
                                                                       </div>
                                                                  </div>
-                                                                 <!-- <div *ngIf="id === null">
-                                                                      {{'Employee-form-Document' | translate }}
-                                                                      <hr />
-                                                                      <mat-chip (click)="addDoc()" color="accent">+
-                                                                           {{'Employee-form-Doc' | translate }}
-                                                                      </mat-chip>
-                                                                      <div
-                                                                           *ngFor="let usersDocument of U_D.controls; let i = index">
-                                                                           <div [formGroup]="getFormGroup(usersDocument)"
-                                                                                class="main-cust-doc">
-                                                                                <div class="inner-cust-doc">
-                                                                                     <mat-form-field
-                                                                                          class="main-one-input-field"
-                                                                                          appearance="outline">
-                                                                                          <mat-label>{{'Employee-form-Document-Type' | translate }}</mat-label>
-                                                                                          <mat-select
-                                                                                               formControlName="userdocument_type_id"
-                                                                                               #db_Doc_typesSelect
-                                                                                               (ngModelChange)="showHideExpirationDate($event,i)"
-                                                                                               class="dark-cust-color">
-                                                                                               <mat-select-filter
-                                                                                                    [placeholder]="'Filter'"
-                                                                                                    [displayMember]="'document_type_name'"
-                                                                                                    *ngIf="db_Doc_typesSelect.focused"
-                                                                                                    [array]="variablesdb_Doc_types"
-                                                                                                    (filteredReturn)="db_Doc_types =$event">
-                                                                                               </mat-select-filter>
-                                                                                               <mat-option
-                                                                                                    *ngFor="let Doc_type of db_Doc_types"
-                                                                                                    [value]="Doc_type._id">
-                                                                                                    {{Doc_type.document_type_name}}
-                                                                                               </mat-option>
-                                                                                          </mat-select>
-                                                                                     </mat-form-field>
-                                                                                </div>
-                                                                                <div
-                                                                                     class="inner-cust-doc padding-left-cust">
-                                                                                     <div class="doc-upload-cust">
-                                                                                          <input class="schedule-input"
-                                                                                               type="file"
-                                                                                               (change)="documentChangeEvent($event,i)">
-                                                                                     </div>
-                                                                                </div>
-                                                                                <div class="inner-cust-doc padding-left-cust"
-                                                                                     *ngIf="showHideExpiration[i]">
-                                                                                     <mat-form-field
-                                                                                          appearance="outline"
-                                                                                          class="main-one-input-field">
-                                                                                          <mat-label>{{'Employee-form-Document-Expiration' | translate }}</mat-label>
-                                                                                          <input
-                                                                                               formControlName="userdocument_expire_date"
-                                                                                               matInput readonly
-                                                                                               [matDatepicker]="picker">
-                                                                                          <mat-datepicker-toggle
-                                                                                               matSuffix
-                                                                                               [for]="picker"></mat-datepicker-toggle>
-                                                                                          <mat-datepicker
-                                                                                               disabled="false"
-                                                                                               #picker></mat-datepicker>
-                                                                                     </mat-form-field>
-                                                                                </div>
-                                                                           </div>
-                                                                      </div>
-                                                                 </div> -->
                                                             </div>
                                                        </div>
                                                   </form>
@@ -317,11 +253,17 @@
                                                                  mat-raised-button
                                                                  color="warn">{{'COMMON.ACTIONS.NEXT'| translate}}</button>
                                                             <button
-                                                                 *ngIf="id !== null && role_permission.role_permission.users.Edit"
+                                                                 *ngIf="role_permission.users.personalInformation.Edit && id !== null"
                                                                  mat-raised-button color="primary"
                                                                  (click)="savePersonalInfo()">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                        </div>
                                                   </div>
+                                             </div>
+                                             <div *ngIf="!role_permission.users.personalInformation.View"
+                                                  class="d-flex align-items-center justify-content-center">
+                                                  <h1 class="font-28 font-white">
+                                                       {{'COMMON.ACTIONS.Access_denied_all' | translate}}
+                                                  </h1>
                                              </div>
                                         </div>
                                    </div>
@@ -334,7 +276,7 @@
                                                   <h2>{{'USERS.TABS.CONTACT_INFORMATION' | translate}}</h2>
 
                                              </div>
-                                             <div class="body">
+                                             <div class="body" *ngIf="role_permission.users.contactInformation.View">
                                                   <form class="register-form m-4" [formGroup]="usercontactinfo!"
                                                        (ngSubmit)="onRegister()">
 
@@ -399,7 +341,9 @@
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
                                                                       <mat-label>{{'USERS.ADD_EDIT.USER_ZIPCODE' | translate}}</mat-label>
-                                                                      <input matInput formControlName="userzipcode">
+                                                                      <input matInput formControlName="userzipcode"
+                                                                           maxlength="5"
+                                                                           onkeypress="return String.fromCharCode(event.charCode).match(/[^0-9]/g) === null">
                                                                  </mat-form-field>
                                                             </div>
                                                             <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-2">
@@ -418,12 +362,18 @@
                                                                       mat-raised-button
                                                                       color="warn">{{'COMMON.ACTIONS.NEXT'| translate}}</button>
                                                                  <button
-                                                                      *ngIf="id !== null && role_permission.role_permission.users.Edit "
+                                                                      *ngIf="role_permission.users.contactInformation.Edit && id !== null"
                                                                       mat-raised-button color="primary"
                                                                       (click)="saveContactInfo()">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                             </div>
                                                        </div>
                                                   </form>
+                                             </div>
+                                             <div *ngIf="!role_permission.users.contactInformation.View"
+                                                  class="d-flex align-items-center justify-content-center">
+                                                  <h1 class="font-28 font-white">
+                                                       {{'COMMON.ACTIONS.Access_denied_all' | translate}}
+                                                  </h1>
                                              </div>
                                         </div>
                                    </div>
@@ -436,7 +386,7 @@
                                                   <h2>{{'USERS.TABS.EMPLOYEE_INFORMATION' | translate}}</h2>
 
                                              </div>
-                                             <div class="body">
+                                             <div class="body" *ngIf="role_permission.users.employeeInformation.View">
                                                   <form class="useremployeeinfo-form m-4"
                                                        [formGroup]="useremployeeinfo!">
                                                        <div class="row">
@@ -526,25 +476,25 @@
                                                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
-                                                                      <mat-label>{{'USERS.ADD_EDIT.LOCATION' | translate}}</mat-label>
-                                                                      <mat-select formControlName="userlocation_id"
-                                                                           #db_locationsSelect class="dark-cust-color">
+                                                                      <mat-label>{{'USERS.ADD_EDIT.LANGUAGE_SPOKEN' | translate}}</mat-label>
+                                                                      <mat-select formControlName="user_languages"
+                                                                           #languageListSelect
+                                                                           (selectionChange)="language_change($event)"
+                                                                           required multiple>
                                                                            <mat-select-filter [placeholder]="'Filter'"
-                                                                                [displayMember]="'location_name'"
-                                                                                *ngIf="db_locationsSelect.focused"
-                                                                                [array]="variablesdb_locations"
-                                                                                (filteredReturn)="db_locations =$event">
+                                                                                [displayMember]="'name'"
+                                                                                *ngIf="languageListSelect.focused"
+                                                                                [array]="variableslanguageList"
+                                                                                (filteredReturn)="languageList =$event">
                                                                            </mat-select-filter>
-                                                                           <mat-option
-                                                                                *ngFor="let db_location of db_locations"
-                                                                                [value]="db_location._id">
-                                                                                {{db_location.location_name}}
+                                                                           <mat-option *ngFor="let item of languageList"
+                                                                                [value]="item._id">
+                                                                                {{item.name}}
                                                                            </mat-option>
                                                                       </mat-select>
-
-
                                                                  </mat-form-field>
                                                             </div>
+
                                                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                                                  <mat-form-field class="example-full-width"
                                                                       appearance="outline">
@@ -613,27 +563,7 @@
                                                             </div>
                                                        </div>
                                                        <div class="row">
-                                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                                                                 <mat-form-field class="example-full-width"
-                                                                      appearance="outline">
-                                                                      <mat-label>{{'USERS.ADD_EDIT.LANGUAGE_SPOKEN' | translate}}</mat-label>
-                                                                      <mat-select formControlName="user_languages"
-                                                                           #languageListSelect
-                                                                           (selectionChange)="language_change($event)"
-                                                                           required multiple>
-                                                                           <mat-select-filter [placeholder]="'Filter'"
-                                                                                [displayMember]="'name'"
-                                                                                *ngIf="languageListSelect.focused"
-                                                                                [array]="variableslanguageList"
-                                                                                (filteredReturn)="languageList =$event">
-                                                                           </mat-select-filter>
-                                                                           <mat-option *ngFor="let item of languageList"
-                                                                                [value]="item._id">
-                                                                                {{item.name}}
-                                                                           </mat-option>
-                                                                      </mat-select>
-                                                                 </mat-form-field>
-                                                            </div>
+
                                                        </div>
                                                        <div class="row">
                                                             <div class=" col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2 ">
@@ -643,17 +573,23 @@
                                                                       mat-raised-button color="warn"
                                                                       *ngIf="id !== null">{{'COMMON.ACTIONS.NEXT'| translate}}</button>
                                                                  <button
-                                                                      *ngIf="id === null && role_permission.role_permission.users.Edit"
+                                                                      *ngIf="id === null && role_permission.users.employeeInformation.Edit"
                                                                       class="btn-space" mat-raised-button
                                                                       (click)="savedata()"
                                                                       color="primary">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                                  <button
-                                                                      *ngIf="id !== null && role_permission.role_permission.users.Edit"
+                                                                      *ngIf="id !== null && role_permission.users.employeeInformation.Edit"
                                                                       mat-raised-button color="primary"
                                                                       (click)="saveEmployeeInfo()">{{'COMMON.ACTIONS.SAVE'| translate}}</button>
                                                             </div>
                                                        </div>
                                                   </form>
+                                             </div>
+                                             <div *ngIf="!role_permission.users.employeeInformation.View"
+                                                  class="d-flex align-items-center justify-content-center">
+                                                  <h1 class="font-28 font-white">
+                                                       {{'COMMON.ACTIONS.Access_denied_all' | translate}}
+                                                  </h1>
                                              </div>
                                         </div>
                                    </div>
@@ -666,11 +602,19 @@
                                              <div class="header">
                                                   <h2>{{'USERS.TABS.EMERGENCY_CONTACT' | translate}}</h2>
                                              </div>
-                                             <div class="body">
+                                             <div class="body" *ngIf="role_permission.users.emergencyContact.View">
                                                   <app-user-emergency-contact></app-user-emergency-contact>
+                                             </div>
+                                             <div *ngIf="!role_permission.users.emergencyContact.View"
+                                                  class="d-flex align-items-center justify-content-center">
+                                                  <h1 class="font-28 font-white">
+                                                       {{'COMMON.ACTIONS.Access_denied_all' | translate}}
+                                                  </h1>
                                              </div>
                                         </div>
                                    </div>
+
+
                               </mat-step>
                               <mat-step state="document" [completed]="false" [stepControl]="HFormGroup5!"
                                    *ngIf="id !== null">
@@ -679,8 +623,14 @@
                                              <div class="header">
                                                   <h2>{{'USERS.TABS.DOCUMENT' | translate}}</h2>
                                              </div>
-                                             <div class="body">
+                                             <div class="body" *ngIf="role_permission.users.employeeDocument.View">
                                                   <app-user-document></app-user-document>
+                                             </div>
+                                             <div *ngIf="!role_permission.users.employeeDocument.View"
+                                                  class="d-flex align-items-center justify-content-center">
+                                                  <h1 class="font-28 font-white">
+                                                       {{'COMMON.ACTIONS.Access_denied_all' | translate}}
+                                                  </h1>
                                              </div>
                                         </div>
                                    </div>

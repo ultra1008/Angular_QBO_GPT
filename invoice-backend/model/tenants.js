@@ -30,7 +30,21 @@ var tenantsSchema = new Schema({
     googledrive_scope: { type: String, default: "" },
     googledrive_token_type: { type: String, default: "" },
     googledrive_rovuk_folder_id: { type: String, default: "" },
-
+    smartaccupay_tenants: {
+        DB_HOST: { type: String, default: "" },
+        DB_NAME: { type: String, default: "" },
+        DB_PORT: { type: Number, default: 0 },
+        DB_USERNAME: { type: String, default: "" },
+        DB_PASSWORD: { type: String, default: "" },
+        tenant_smtp_custom: { type: String, default: "" },
+        tenant_smtp_server: { type: String, default: "" },
+        tenant_smtp_username: { type: String, default: "" },
+        tenant_smtp_password: { type: String, default: "" },
+        tenant_smtp_port: { type: Number, default: 0 },
+        tenant_smtp_security: { type: String, default: "" },
+        tenant_smtp_timeout: { type: Number, default: 0 },
+        tenant_smtp_reply_to_mail: { type: String, default: "" }
+    },
     is_delete: { type: Number, default: 0 },
 }, { timestamps: true });
 

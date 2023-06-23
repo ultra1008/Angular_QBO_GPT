@@ -6,12 +6,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SwitchCompanyComponent } from 'src/app/layout/header/switch-company/switch-company.component';
 import { CommonService } from 'src/app/services/common.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
-import { User } from 'src/app/users/user.model';
+import { UserModel } from 'src/app/users/user.model';
 import { DialogData } from 'src/app/vendors/vendor-report/vendor-report.component';
 import { httpversion, httproutes } from 'src/consts/httproutes';
 import { icon } from 'src/consts/icon';
-import { localstorageconstants } from 'src/consts/localstorageconstants';
-import { WEB_ROUTES } from 'src/consts/routes';
 import { showNotification } from 'src/consts/utils';
 
 @Component({
@@ -24,15 +22,16 @@ export class SendInvoiceMessageComponent implements OnInit {
   form!: UntypedFormGroup;
   hide = true;
   variablesUserList: any = [];
-  userList: Array<User> = this.variablesUserList.slice();
+  userList: Array<UserModel> = this.variablesUserList.slice();
   id: any;
-  invoice_logo = icon.INVOICE_LOGO;
-  constructor(public dialogRef: MatDialogRef<SwitchCompanyComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData,
+  title = 'Send Message';
+
+  constructor (public dialogRef: MatDialogRef<SwitchCompanyComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private commonService: CommonService, private snackBar: MatSnackBar, private router: Router, public uiSpinner: UiSpinnerService,
     private formBuilder: FormBuilder, public route: ActivatedRoute) {
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
     this.form = this.formBuilder.group({
-      users: [[], Validators.required],
+      users: ["", Validators.required],
       message: ["", Validators.required],
     });
   }
@@ -54,6 +53,7 @@ export class SendInvoiceMessageComponent implements OnInit {
       const formValues = this.form.value;
       formValues.invoice_id = this.id;
       formValues.is_first = true;
+      formValues.users = [formValues.users];
 
       const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SEND_INVOICE_MESSAGE, formValues);
       this.uiSpinner.spin$.next(false);

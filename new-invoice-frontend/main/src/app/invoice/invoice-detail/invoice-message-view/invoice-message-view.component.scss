@@ -30,7 +30,12 @@
     margin-right: 10px;
 }
 
+.message-data {
+    margin-top: 5px;
+}
+
 .message {
+    margin-bottom: 0px !important;
     padding: 0.5rem 0.75rem !important;
     width: 30% !important;
 }
@@ -38,6 +43,10 @@
 .attachment-message {
     color: blue !important;
     line-height: 15px !important;
+    cursor: pointer;
+}
+
+.delete-message {
     cursor: pointer;
 }
 
@@ -58,7 +67,7 @@
 .hide-pdf-button {
     margin-right: 1.5rem;
     position: absolute;
-    z-index: 1000000;
+    z-index: 1;
     left: -13px;
 
     .mdc-fab--mini {
@@ -105,3 +114,15 @@
 // ::ng-deep .mat-form-field-placeholder {
 //     color:red;
 //   }
+
+.mention-list {
+    text-decoration: none;
+}
+
+.mention-item {
+    height: 50px;
+}
+
+.img-b {
+    border-radius: 50%;
+}

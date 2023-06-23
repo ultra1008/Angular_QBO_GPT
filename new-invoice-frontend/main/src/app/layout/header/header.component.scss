@@ -1,6 +1,13 @@
-.navbar.active {
-     background: -webkit-linear-gradient(to right, #ffffff, #ffffff) !important;
-}
+// .navbar.active {
+//      background: linear-gradient(to right, #ffffff, #ffffff) !important;
+// }
+
+// .dark{
+//      .navbar.active{
+//      background: linear-gradient(to right, #1c212d, #1a202e) !important;
+// }
+// }
+
 
 ::ng-deep .mat-mdc-text-field-wrapper {
      height: 40px !important;
@@ -63,7 +70,8 @@
      }
 } */
 ::ng-deep .search-div {
-     width: 500px;
+     width: 500px !important;
+     top: 55px !important;
 }
 
 .search-button {
@@ -111,4 +119,25 @@
 
 .unseen-msg {
      background-color: #dfecff;
+}
+
+.field-h {
+     ::ng-deep .mat-mdc-form-field {
+
+          height: 40px !important;
+     }
+}
+
+.button-set {
+     ::ng-deep .mdc-fab--mini {
+          width: 30px;
+          height: 30px;
+          margin-top: 14px;
+     }
+
+     .material-icons {
+          line-height: 1;
+          height: 19px;
+          font-size: 20px;
+     }
 }

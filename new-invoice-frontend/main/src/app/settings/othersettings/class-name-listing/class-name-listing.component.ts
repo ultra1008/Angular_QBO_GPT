@@ -11,13 +11,14 @@ import { fromEvent, BehaviorSubject, Observable, merge, map } from 'rxjs';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
-import { ClassNameTable } from '../../settings.model';
+import { ClassNameModel } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
 import { JobNameFormComponent } from '../job-name-listing/job-name-form/job-name-form.component';
 import { ClassNameFormComponent } from './class-name-form/class-name-form.component';
 import { icon } from 'src/consts/icon';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-class-name-listing',
@@ -30,14 +31,21 @@ export class ClassNameListingComponent
   displayedColumns = ['name', 'number', 'description', 'status', 'actions'];
   classnameService?: SettingsService;
   dataSource!: ClassNameDataSource;
-  selection = new SelectionModel<ClassNameTable>(true, []);
+  selection = new SelectionModel<ClassNameModel>(true, []);
   id?: number;
   isDelete = 0;
   titleMessage = '';
   quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
   quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
 
-  constructor (
+  isHideAddActionQBD = false;
+  isHideEditActionQBD = false;
+  isHideArchiveActionQBD = false;
+
+  is_quickbooks_online = false;
+  is_quickbooks_desktop = false;
+
+  constructor(
     public dialog: MatDialog,
     public SettingsService: SettingsService,
     private snackBar: MatSnackBar,
@@ -61,46 +69,59 @@ export class ClassNameListingComponent
 
   async getCompanyTenants() {
     const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP);
+
     if (data.status) {
-      if (data.data.is_quickbooks_online || data.data.is_quickbooks_desktop) {
+      if (data.data.is_quickbooks_desktop) {
+        this.isHideAddActionQBD = true;
+        this.isHideEditActionQBD = true;
+        this.isHideArchiveActionQBD = true;
+      } else {
+        this.isHideAddActionQBD = false;
+        this.isHideEditActionQBD = false;
+        this.isHideArchiveActionQBD = false;
+      }
+
+      this.is_quickbooks_online = data.data.is_quickbooks_online;
+      this.is_quickbooks_desktop = data.data.is_quickbooks_desktop;
+
+      if (data.data.is_quickbooks_online) {
         this.displayedColumns = ['name', 'number', 'description', 'status', 'is_quickbooks', 'actions'];
+      } else if (data.data.is_quickbooks_desktop) {
+        this.displayedColumns = ['name', 'number', 'description', 'status', 'is_quickbooks'];
       } else {
         this.displayedColumns = ['name', 'number', 'description', 'status', 'actions'];
       }
     }
-    // this.loadData();
   }
 
   refresh() {
     this.loadData();
   }
-  addNew() {
-    this.router.navigate(['/settings/mailbox-form']);
-  }
 
   edit(className: any) {
-    let that = this;
-    console.log('vednor');
-    const dialogRef = this.dialog.open(ClassNameFormComponent, {
-      width: '350px',
-      data: className,
-      disableClose: true,
-    });
+    if (!this.isHideEditActionQBD) {
+      let that = this;
+      const dialogRef = this.dialog.open(ClassNameFormComponent, {
+        width: '350px',
+        data: className,
+        disableClose: true,
+      });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        if (result.status) {
-          const foundIndex = this.classnameService?.classNameDataChange.value.findIndex((x) => x._id === className._id);
-          if (foundIndex != null && this.classnameService) {
-            this.classnameService.classNameDataChange.value[foundIndex].name = result.data.name;
-            this.classnameService.classNameDataChange.value[foundIndex].number = result.data.number;
-            this.classnameService.classNameDataChange.value[foundIndex].description = result.data.description;
-            this.classnameService.classNameDataChange.value[foundIndex].status = result.data.status;
-            this.refreshTable();
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          if (result.status) {
+            const foundIndex = this.classnameService?.classNameDataChange.value.findIndex((x) => x._id === className._id);
+            if (foundIndex != null && this.classnameService) {
+              this.classnameService.classNameDataChange.value[foundIndex].name = result.data.name;
+              this.classnameService.classNameDataChange.value[foundIndex].number = result.data.number;
+              this.classnameService.classNameDataChange.value[foundIndex].description = result.data.description;
+              this.classnameService.classNameDataChange.value[foundIndex].status = result.data.status;
+              this.refreshTable();
+            }
           }
         }
-      }
-    });
+      });
+    }
   }
 
   async delete(className: any) {
@@ -159,7 +180,7 @@ export class ClassNameListingComponent
     //     // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
     //     this.classnameService?.dataChange.value.splice(index, 1);
     //     this.refreshTable();
-    //     this.selection = new SelectionModel<ClassNameTable>(true, []);
+    //     this.selection = new SelectionModel<ClassNameModel>(true, []);
     //   });
     //  showNotification(
     //     'snackbar-danger',
@@ -188,11 +209,11 @@ export class ClassNameListingComponent
   }
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: ClassNameTable) {
+  onContextMenu(event: MouseEvent, item: ClassNameModel) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -203,7 +224,7 @@ export class ClassNameListingComponent
     }
   }
 }
-export class ClassNameDataSource extends DataSource<ClassNameTable> {
+export class ClassNameDataSource extends DataSource<ClassNameModel> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -211,9 +232,9 @@ export class ClassNameDataSource extends DataSource<ClassNameTable> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: ClassNameTable[] = [];
-  renderedData: ClassNameTable[] = [];
-  constructor (
+  filteredData: ClassNameModel[] = [];
+  renderedData: ClassNameModel[] = [];
+  constructor(
     public classnameService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
@@ -224,7 +245,7 @@ export class ClassNameDataSource extends DataSource<ClassNameTable> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<ClassNameTable[]> {
+  connect(): Observable<ClassNameModel[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this.classnameService.classNameDataChange,
@@ -239,11 +260,11 @@ export class ClassNameDataSource extends DataSource<ClassNameTable> {
         // Filter data
         this.filteredData = this.classnameService.classNameData
           .slice()
-          .filter((ClassNameTable: ClassNameTable) => {
+          .filter((ClassNameModel: ClassNameModel) => {
             const searchStr =
-              ClassNameTable.name +
-              ClassNameTable.number +
-              ClassNameTable.description.toLowerCase();
+              ClassNameModel.name +
+              ClassNameModel.number +
+              ClassNameModel.description.toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
         // Sort filtered data
@@ -262,7 +283,7 @@ export class ClassNameDataSource extends DataSource<ClassNameTable> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: ClassNameTable[]): ClassNameTable[] {
+  sortData(data: ClassNameModel[]): ClassNameModel[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }

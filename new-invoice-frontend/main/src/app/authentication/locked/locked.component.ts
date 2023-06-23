@@ -12,6 +12,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthenticationService } from '../../authentication/authentication.service';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { AuthService } from 'src/app/core/service/auth.service';
+import { CommonService } from 'src/app/services/common.service';
+import { httproutes, httpversion } from 'src/consts/httproutes';
+import { UserDataModel } from 'src/consts/common.model';
+import { BehaviorSubject } from 'rxjs';
 @Component({
   selector: 'app-locked',
   templateUrl: './locked.component.html',
@@ -22,12 +26,12 @@ export class LockedComponent implements OnInit {
   submitted = false;
   returnUrl!: string;
   hide = true;
-  userData: any;
+  userData!: UserDataModel;
   userName = '';
-  userPicture = icon.MALE_PLACEHOLDER;
+  userPicture: string = icon.MALE_PLACEHOLDER;
 
   constructor (private formBuilder: UntypedFormBuilder, private router: Router, private snackBar: MatSnackBar,
-    private AuthenticationService: AuthenticationService, private authService: AuthService,) {
+    private authenticationService: AuthenticationService, private authService: AuthService, private commonService: CommonService,) {
     const user_data = localStorage.getItem(localstorageconstants.USERDATA) ?? '';
     if (user_data !== '') {
       this.userData = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA) ?? '{}');
@@ -58,11 +62,11 @@ export class LockedComponent implements OnInit {
         password: formValues.password,
         companycode: this.userData.companydata.companycode,
       };
-      const data = await this.AuthenticationService.userLogin(requestObject);
+      const data = await this.commonService.postRequestAPI(httpversion.V1 + httproutes.USER_LOGIN, requestObject);
       if (data.status) {
         showNotification(this.snackBar, data.message, 'success');
         if (data.data.UserData.useris_password_temp == true) {
-          this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);
+          this.router.navigate([WEB_ROUTES.FORCEFULLY_CHANGE_PASSWORD]);
         } else {
           setTimeout(() => {
             this.router.navigate([WEB_ROUTES.DASHBOARD]);
@@ -75,20 +79,21 @@ export class LockedComponent implements OnInit {
   }
 
   backToLogin() {
-    this.authService.logout().subscribe((res) => {
-      if (!res.success) {
-        localStorage.removeItem(localstorageconstants.DARKMODE);
-        localStorage.removeItem(localstorageconstants.USERDATA);
-        localStorage.removeItem(localstorageconstants.COMPANYDATA);
-        localStorage.removeItem(localstorageconstants.COMPANYID);
-        localStorage.removeItem(localstorageconstants.INVOICE_GIF);
-        localStorage.removeItem(localstorageconstants.INVOICE_TOKEN);
-        localStorage.removeItem('choose_logoheader');
-        localStorage.removeItem('choose_skin');
-        localStorage.removeItem('menuOption');
-        localStorage.removeItem('thinvoicetheme');
-        this.router.navigate(['/authentication/signin']);
-      }
-    });
+    this.authenticationService.changeLoginValue(true);
+    localStorage.removeItem(localstorageconstants.DARKMODE);
+    localStorage.removeItem(localstorageconstants.USERDATA);
+    localStorage.removeItem(localstorageconstants.COMPANYDATA);
+    localStorage.removeItem(localstorageconstants.COMPANYID);
+    localStorage.removeItem(localstorageconstants.INVOICE_GIF);
+    localStorage.removeItem(localstorageconstants.INVOICE_TOKEN);
+    localStorage.setItem(localstorageconstants.LOGOUT, 'true');
+    localStorage.removeItem('choose_logoheader');
+    localStorage.removeItem('choose_skin');
+    localStorage.removeItem('menuOption');
+    localStorage.removeItem('thinvoicetheme');
+    setTimeout(() => {
+      this.router.navigate([WEB_ROUTES.LOGIN]);
+      location.reload();
+    }, 500);
   }
 }

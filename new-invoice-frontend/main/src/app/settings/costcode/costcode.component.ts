@@ -15,7 +15,7 @@ import {
 } from 'src/consts/utils';
 import { SettingsService } from '../settings.service';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
-import { CostCodeTable } from '../settings.model';
+import { CostCodeModel } from '../settings.model';
 import { CostCodeFormComponent } from './cost-code-form/cost-code-form.component';
 import { ImportCostcodeSettingsComponent } from './import-costcode-settings/import-costcode-settings.component';
 import { httproutes, httpversion } from 'src/consts/httproutes';
@@ -23,6 +23,10 @@ import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import * as XLSX from 'xlsx';
 import { icon } from 'src/consts/icon';
 import { CommonService } from 'src/app/services/common.service';
+import { WEB_ROUTES } from 'src/consts/routes';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { RolePermission } from 'src/consts/common.model';
+import { CostcodeExistListComponent } from './costcode-exist-list/costcode-exist-list.component';
 
 @Component({
   selector: 'app-costcode',
@@ -35,7 +39,7 @@ export class CostcodeComponent
   displayedColumns = ['division', 'value', 'description', 'actions'];
   costcodeService?: SettingsService;
   dataSource!: CostCodeDataSource;
-  selection = new SelectionModel<CostCodeTable>(true, []);
+  selection = new SelectionModel<CostCodeModel>(true, []);
   id?: number;
   isDelete = 0;
   titleMessage = '';
@@ -44,15 +48,24 @@ export class CostcodeComponent
   quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
   quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
 
-  constructor (
+  isHideAddActionQBD = false;
+  isHideEditActionQBD = false;
+  isHideArchiveActionQBD = false;
+
+  is_quickbooks_online = false;
+  is_quickbooks_desktop = false;
+  role_permission!: RolePermission;
+  exitData!: any[];
+
+  constructor(
     public dialog: MatDialog,
-    public SettingsService: SettingsService,
     private snackBar: MatSnackBar,
     public router: Router,
     private httpCall: HttpCall,
     public translate: TranslateService,
     public uiSpinner: UiSpinnerService,
     private commonService: CommonService,
+    public SettingsService: SettingsService,
   ) {
     super();
   }
@@ -65,28 +78,40 @@ export class CostcodeComponent
   ngOnInit() {
     this.loadData();
     this.getCompanyTenants();
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
   }
 
   async getCompanyTenants() {
     const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP);
     if (data.status) {
-      if (data.data.is_quickbooks_online || data.data.is_quickbooks_desktop) {
+      if (data.data.is_quickbooks_desktop) {
+        this.isHideAddActionQBD = true;
+        this.isHideEditActionQBD = true;
+        this.isHideArchiveActionQBD = true;
+      } else {
+        this.isHideAddActionQBD = false;
+        this.isHideEditActionQBD = false;
+        this.isHideArchiveActionQBD = false;
+      }
+
+      this.is_quickbooks_online = data.data.is_quickbooks_online;
+      this.is_quickbooks_desktop = data.data.is_quickbooks_desktop;
+
+      if (this.is_quickbooks_online) {
         this.displayedColumns = ['division', 'value', 'description', 'is_quickbooks', 'actions'];
+      } else if (this.is_quickbooks_desktop) {
+        this.displayedColumns = ['division', 'value', 'description', 'is_quickbooks'];
       } else {
         this.displayedColumns = ['division', 'value', 'description', 'actions'];
       }
     }
-    // this.loadData();
   }
 
   refresh() {
     this.loadData();
   }
-  addNew() {
-    this.router.navigate(['/settings/mailbox-form']);
-  }
 
-  async deleteCostCode(costcodeTable: CostCodeTable, is_delete: number) {
+  async deleteCostCode(costcodeTable: CostCodeModel, is_delete: number) {
     if (is_delete == 1) {
       this.titleMessage = this.translate.instant(
         'SETTINGS.SETTINGS_OTHER_OPTION.COST_CODE_MODULE.CONFIRMATION_DIALOG.ARCHIVE'
@@ -111,7 +136,7 @@ export class CostcodeComponent
       });
   }
 
-  async archiveRecover(costcodeTable: CostCodeTable, is_delete: number) {
+  async archiveRecover(costcodeTable: CostCodeModel, is_delete: number) {
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.DELETE_COST_CODE, { _id: costcodeTable._id, is_delete: is_delete });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
@@ -159,25 +184,27 @@ export class CostcodeComponent
   }
 
   edit(costcode: any) {
-    if (this.isDelete == 0) {
-      const dialogRef = this.dialog.open(CostCodeFormComponent, {
-        width: '350px',
-        data: costcode,
-      });
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          if (result.status) {
-            const foundIndex = this.costcodeService?.costCodeDataChange.value.findIndex((x) => x._id === costcode._id);
-            if (foundIndex != null && this.costcodeService) {
-              this.costcodeService.costCodeDataChange.value[foundIndex].cost_code = result.data.cost_code;
-              this.costcodeService.costCodeDataChange.value[foundIndex].division = result.data.division;
-              this.costcodeService.costCodeDataChange.value[foundIndex].value = `Invoice-${result.data.division}-${result.data.cost_code}`;
-              this.costcodeService.costCodeDataChange.value[foundIndex].description = result.data.description;
-              this.refreshTable();
+    if (!this.isHideEditActionQBD) {
+      if (this.isDelete == 0) {
+        const dialogRef = this.dialog.open(CostCodeFormComponent, {
+          width: '350px',
+          data: costcode,
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+          if (result) {
+            if (result.status) {
+              const foundIndex = this.costcodeService?.costCodeDataChange.value.findIndex((x) => x._id === costcode._id);
+              if (foundIndex != null && this.costcodeService) {
+                this.costcodeService.costCodeDataChange.value[foundIndex].cost_code = result.data.cost_code;
+                this.costcodeService.costCodeDataChange.value[foundIndex].division = result.data.division;
+                this.costcodeService.costCodeDataChange.value[foundIndex].value = `Invoice-${result.data.division}-${result.data.cost_code}`;
+                this.costcodeService.costCodeDataChange.value[foundIndex].description = result.data.description;
+                this.refreshTable();
+              }
             }
           }
-        }
-      });
+        });
+      }
     }
   }
 
@@ -203,6 +230,7 @@ export class CostcodeComponent
     let el: HTMLElement = this.OpenFilebox.nativeElement;
     el.click();
   }
+
 
   onFileChange(ev: any) {
     let that = this;
@@ -232,17 +260,27 @@ export class CostcodeComponent
       formData_profle.append('file', file);
       let apiurl = '';
 
-      apiurl = httpversion.PORTAL_V1 + httproutes.SETTINGS_IMPORT_COSTCODE_DATA;
-
+      apiurl = httpversion.PORTAL_V1 + httproutes.SETTINGS_CHECk_IMPORT_COSTCODE_DATA;
       that.uiSpinner.spin$.next(true);
       that.httpCall
         .httpPostCall(apiurl, formData_profle)
         .subscribe(function (params) {
           if (params.status) {
-            // that.openErrorDataDialog(params); 
-            showNotification(that.snackBar, params.message, 'success');
             that.uiSpinner.spin$.next(false);
-            // location.reload();
+            that.exitData = params;
+            const dialogRef = that.dialog.open(CostcodeExistListComponent, {
+              width: '750px',
+              height: '500px',
+              // data: that.exitData,
+              data: { data: that.exitData },
+              disableClose: true,
+            });
+
+            dialogRef.afterClosed().subscribe((result: any) => {
+              this.loadData();
+            });
+            // that.openErrorDataDialog(params);
+
           } else {
             showNotification(that.snackBar, params.message, 'error');
             that.uiSpinner.spin$.next(false);
@@ -264,11 +302,11 @@ export class CostcodeComponent
   }
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: CostCodeTable) {
+  onContextMenu(event: MouseEvent, item: CostCodeModel) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -279,7 +317,7 @@ export class CostcodeComponent
     }
   }
 }
-export class CostCodeDataSource extends DataSource<CostCodeTable> {
+export class CostCodeDataSource extends DataSource<CostCodeModel> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -287,9 +325,9 @@ export class CostCodeDataSource extends DataSource<CostCodeTable> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData1: CostCodeTable[] = [];
-  renderedData: CostCodeTable[] = [];
-  constructor (
+  filteredData1: CostCodeModel[] = [];
+  renderedData: CostCodeModel[] = [];
+  constructor(
     public costcodeTableService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
@@ -300,7 +338,7 @@ export class CostCodeDataSource extends DataSource<CostCodeTable> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<CostCodeTable[]> {
+  connect(): Observable<CostCodeModel[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this.costcodeTableService.costCodeDataChange,
@@ -316,7 +354,7 @@ export class CostCodeDataSource extends DataSource<CostCodeTable> {
 
         this.filteredData1 = this.costcodeTableService.costCodeData
           .slice()
-          .filter((costcodeTable: CostCodeTable) => {
+          .filter((costcodeTable: CostCodeModel) => {
             const searchStr = (
               costcodeTable.division +
               costcodeTable.value +
@@ -340,7 +378,7 @@ export class CostCodeDataSource extends DataSource<CostCodeTable> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: CostCodeTable[]): CostCodeTable[] {
+  sortData(data: CostCodeModel[]): CostCodeModel[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }

@@ -8,7 +8,7 @@
                         <div class="left">
                             <ul class="header-buttons-left ms-0">
                                 <li class="tbl-title">
-                                    <h2>Invoice <span *ngIf="type !== ''"> - {{type}}</span></h2>
+                                    <h2>Invoices <span *ngIf="type !== ''"> - {{type}}</span></h2>
                                 </li>
                                 <li class="tbl-search-box">
                                     <label for="search-input"><i class="material-icons search-icon">search</i></label>
@@ -19,8 +19,7 @@
                         </div>
                         <div class="right">
                             <ul class="tbl-export-btn">
-                                <li *ngIf="role_permission.role_permission.invoice.Delete && isDelete === 0"
-                                    class="tbl-header-btn">
+                                <li *ngIf="role_permission.invoice.Delete && isDelete === 0" class="tbl-header-btn">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ARCHIVE' | translate}}">
                                         <button mat-mini-fab color="warn" (click)="gotoArchiveUnarchive()">
                                             <mat-icon class="col-white">archive</mat-icon>
@@ -34,8 +33,7 @@
                                         </button>
                                     </div>
                                 </li>
-                                <li *ngIf="role_permission.role_permission.invoice.Add && isDelete === 0"
-                                    class="tbl-header-btn">
+                                <li *ngIf="role_permission.invoice.Add && isDelete === 0" class="tbl-header-btn">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ADD' | translate}}">
                                         <button mat-mini-fab color="primary" (click)="uploadInvoice()">
                                             <mat-icon class="col-white">add</mat-icon>
@@ -55,62 +53,95 @@
                         <div class="table-responsive">
                             <table mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
                                 <ng-container matColumnDef="invoice_date">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Invoice Date
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="tbl-col-width-per-max">
+                                        Invoice Date
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (click)="editInvoice(row)"
-                                        (contextmenu)="onContextMenu($event, row)">
+                                        class="tbl-col-width-per-max" (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Invoice
-                                            Date:</span>{{(row.invoice_date_epoch * 1000) | date: 'MM/dd/yyyy'}}</mat-cell>
+                                            Date:</span>{{row.invoice_date_epoch === 0 ? '' : (row.invoice_date_epoch *
+                                        1000) | date: 'MM/dd/yyyy'}}
+                                    </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="due_date">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Due Date
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="tbl-col-width-per-max">Due
+                                        Date
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (click)="editInvoice(row)"
-                                        (contextmenu)="onContextMenu($event, row)">
+                                        class="tbl-col-width-per-max" (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Due
-                                            Date:</span>{{(row.due_date_epoch * 1000) | date: 'MM/dd/yyyy'}}</mat-cell>
+                                            Date:</span>{{row.due_date_epoch === 0 ? '' : (row.due_date_epoch * 1000) |
+                                        date: 'MM/dd/yyyy'}}
+                                    </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Vendor</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="tbl-col-width-per-15-per">
+                                        Vendor</mat-header-cell>
                                     <mat-cell *matCellDef="let row" (click)="editInvoice(row)"
-                                        [matTooltip]="getVendorNameTooltip(row)"
+                                        class="tbl-col-width-per-15-per" [matTooltip]="getVendorNameTooltip(row)"
                                         (contextmenu)="onContextMenu($event, row)">
                                         <span class="truncate-text"> <span class="mobile-label">Vendor:</span>
-                                            {{row.vendor_data.vendor_name}}</span></mat-cell>
+                                            {{row.vendor_data?.vendor_name}}</span>
+                                    </mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="invoice_number">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Invoice Number</mat-header-cell>
+                                <ng-container matColumnDef="invoice_no">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="tbl-col-width-per-max">
+                                        Invoice Number</mat-header-cell>
                                     <mat-cell *matCellDef="let row" (click)="editInvoice(row)"
-                                        (contextmenu)="onContextMenu($event, row)">
+                                        class="tbl-col-width-per-max" (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Invoice Number:</span>
-                                        {{row.invoice_no}}</mat-cell>
+                                        {{row.invoice_no}}
+                                    </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="total_amount">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Total Amount</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="tbl-col-width-per-xmax">
+                                        Total Amount</mat-header-cell>
                                     <mat-cell *matCellDef="let row" (click)="editInvoice(row)"
-                                        (contextmenu)="onContextMenu($event, row)">
+                                        class="tbl-col-width-per-xmax" (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Total Amount:</span>
-                                        {{row.invoice_total_amount}}</mat-cell>
+                                        $ {{numberWithCommas(row.invoice_total_amount)}}
+                                    </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="sub_total">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Sub Total</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="tbl-col-width-per-xmax">
+                                        Sub
+                                        Total</mat-header-cell>
                                     <mat-cell *matCellDef="let row" (click)="editInvoice(row)"
-                                        (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Sub Total:</span> {{row.sub_total}}</mat-cell>
+                                        class="tbl-col-width-per-xmax" (contextmenu)="onContextMenu($event, row)">
+                                        <span class="mobile-label">Sub Total:</span>
+                                        $ {{numberWithCommas(row.sub_total)}}
+                                    </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="approver">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Approver</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="tbl-col-width-per-15-per">
+                                        Approver</mat-header-cell>
                                     <mat-cell *matCellDef="let row" (click)="editInvoice(row)"
-                                        [matTooltip]="getApproverTooltip(row)"
+                                        class="tbl-col-width-per-15-per" [matTooltip]="getApproverTooltip(row)"
                                         (contextmenu)="onContextMenu($event, row)">
                                         <span class="truncate-text"> <span class="mobile-label">Approver:</span></span>
-                                        {{row.assign_to_data?.userfullname}}</mat-cell>
+                                        {{row.assign_to_data?.userfullname}}
+                                    </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="status">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header class="tbl-col-width-per-action">
+                                        Status</mat-header-cell>
                                     <mat-cell *matCellDef="let row" (click)="editInvoice(row)"
-                                        (contextmenu)="onContextMenu($event, row)">
-                                        <span class="mobile-label">Status:</span> {{row.status}}</mat-cell>
+                                        class="tbl-col-width-per-action" (contextmenu)="onContextMenu($event, row)">
+                                        <span class="mobile-label">Status:</span> {{row.status}}
+                                    </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="is_quickbooks">
+                                    <mat-header-cell *matHeaderCellDef class="tbl-col-width-per-quickbooks">
+                                        <img [src]="quickbooksGreenIcon" alt="" height="23" width="23" />
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row" (click)="editInvoice(row)"
+                                        class="tbl-col-width-per-quickbooks" (contextmenu)="onContextMenu($event, row)">
+                                        <span class="mobile-label">Quickbooks:</span>
+                                        <img *ngIf="!row.is_quickbooks" [src]="quickbooksGreyIcon" alt="" height="23"
+                                            width="23" />
+                                        <img *ngIf="row.is_quickbooks" [src]="quickbooksGreenIcon" alt="" height="23"
+                                            width="23" />
+                                    </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="actions">
                                     <mat-header-cell class="pr-0" *matHeaderCellDef
@@ -118,8 +149,8 @@
                                     <mat-cell *matCellDef="let row; let i=index;" class="pr-0 tbl-col-width-per-action">
                                         <button mat-icon-button color="accent" (click)="$event.stopPropagation()"
                                             (click)="editInvoice(row)" *ngIf="isDelete === 0" class="tbl-action-btn">
-                                            <app-feather-icons [icon]="'edit'"
-                                                [class]="'tbl-fav-edit'"></app-feather-icons>
+                                            <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'">
+                                            </app-feather-icons>
                                         </button>
                                         <button mat-icon-button matTooltip="{{'COMMON.ACTIONS.ARCHIVE' |
                                                     translate}}" color="accent" (click)="$event.stopPropagation()"
@@ -141,12 +172,11 @@
                         </div>
                         <!-- Loading spinner -->
                         <div *ngIf="invoiceService?.isTblLoading" class="tbl-spinner">
-                            <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
-                            </mat-progress-spinner>
+                            <app-loading></app-loading>
                         </div>
                         <div *ngIf="!invoiceService?.isTblLoading" class="no-results"
                             [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-                            No results
+                            {{'COMMON.LISTING.EPMTY' | translate}}
                         </div>
                         <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0"
                             [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">

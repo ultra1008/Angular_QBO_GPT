@@ -1,28 +1,5 @@
 <div class="addContainer">
-    <div class="mr-set">
-        <div class="row">
-            <div class="col-2">
-                <img src="{{ invoice_logo }}" height="45px" width="45px" />
-            </div>
-            <div class="col-8 align-div">
-                <div class="editRowModal">
-                    <div class="modalHeader clearfix">
-
-                        <div class="modal-about">
-                            <div class="fw-bold font-17">
-                                Send Message
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-2">
-                <button mat-mini-fab (click)="dialogRef.close()" color="warn" aria-label="Close dialog">
-                    <mat-icon class="col-white">close </mat-icon>
-                </button>
-            </div>
-        </div>
-    </div>
+    <app-model-header [title]="title" (dialogClose)="dialogRef.close()"></app-model-header>
     <div mat-dialog-content>
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
             <div class="card-body">
@@ -34,10 +11,10 @@
                                 <div class="col-xl-12col-lg-12 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>User</mat-label>
-                                        <mat-select formControlName="users" multiple>
-                                            <mat-select-filter #userListSelect [placeholder]="'Filter'"
-                                                [displayMember]="'userfullname'" [array]="variablesUserList"
-                                                (filteredReturn)="userList =$event">
+                                        <mat-select formControlName="users" #userSelect>
+                                            <mat-select-filter [placeholder]="'Filter'" [displayMember]="'userfullname'"
+                                                [array]="variablesUserList" (filteredReturn)="userList =$event"
+                                                *ngIf="userSelect.focused">
                                             </mat-select-filter>
                                             <mat-option *ngFor="let user of userList" [value]="user._id">
                                                 <span><img class="img-b" [src]="user.userpicture" height="35px"
@@ -51,11 +28,11 @@
                             </div>
                             <div class="row textarea-max form-old">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                                    <mat-form-field class="example-full-width font-white-placeholder"  appearance="outline">
+                                    <mat-form-field class="example-full-width font-white-placeholder"
+                                        appearance="outline">
                                         <mat-label>Message</mat-label>
                                         <textarea matInput appTextareaAutoresizeproject
-                                            class="input-capitalized-textArea" placeholder="Type message here"
-                                            formControlName="message"></textarea>
+                                            class="input-capitalized-textArea" formControlName="message"></textarea>
                                     </mat-form-field>
                                 </div>
                             </div>

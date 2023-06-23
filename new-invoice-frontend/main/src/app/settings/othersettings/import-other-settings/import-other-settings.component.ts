@@ -34,7 +34,7 @@ export class ImportOtherSettingsComponent {
   userList: any = [];
   isDelete = 0;
   invoice_logo = icon.INVOICE_LOGO;
-  constructor(
+  constructor (
     public dialogRef: MatDialogRef<ImportOtherSettingsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: SettingsService,
@@ -44,7 +44,6 @@ export class ImportOtherSettingsComponent {
     private router: Router,
     public uiSpinner: UiSpinnerService
   ) {
-    console.log('data', data);
     this.currrent_tab = data;
     // Set the defaults
     this.action = data.action;

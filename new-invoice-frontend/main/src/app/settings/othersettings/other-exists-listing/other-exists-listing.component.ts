@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -8,7 +8,6 @@ import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { AdvanceTable } from 'src/app/users/user.model';
 import { httpversion, httproutes } from 'src/consts/httproutes';
-import { icon } from 'src/consts/icon';
 import { showNotification } from 'src/consts/utils';
 import { ExistListingComponent } from '../../employeesettings/exist-listing/exist-listing.component';
 import { SettingsService } from '../../settings.service';
@@ -18,8 +17,7 @@ import { SettingsService } from '../../settings.service';
   templateUrl: './other-exists-listing.component.html',
   styleUrls: ['./other-exists-listing.component.scss']
 })
-export class OtherExistsListingComponent extends UnsubscribeOnDestroyAdapter
-  implements OnInit {
+export class OtherExistsListingComponent extends UnsubscribeOnDestroyAdapter {
   action: string;
   dialogTitle: string;
   currrent_tab: any;
@@ -28,12 +26,13 @@ export class OtherExistsListingComponent extends UnsubscribeOnDestroyAdapter
   exitData: any = [];
   button_show: boolean;
   roleList: any = this.variablesRoleList.slice();
-  titleMessage: string = '';
+  titleMessage = '';
   userList: any = [];
   isDelete = 0;
-  invoice_logo = icon.INVOICE_LOGO;
   data_import: any = [];
-  constructor(
+  title = '';
+
+  constructor (
     public dialogRef: MatDialogRef<ExistListingComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: SettingsService,
@@ -45,12 +44,9 @@ export class OtherExistsListingComponent extends UnsubscribeOnDestroyAdapter
     public uiSpinner: UiSpinnerService
   ) {
     super();
-    console.log('data', data);
     this.exitData = data.data.data;
     this.button_show = data.data.allow_import;
-    console.log("exitData", this.exitData);
     this.currrent_tab = data.tab;
-    console.log("tab", this.currrent_tab);
     // Set the defaults
     this.action = data.action;
     if (this.action === 'edit') {
@@ -62,11 +58,6 @@ export class OtherExistsListingComponent extends UnsubscribeOnDestroyAdapter
       const blankObject = {} as AdvanceTable;
       this.advanceTable = new AdvanceTable(blankObject);
     }
-  }
-
-
-  ngOnInit(): void {
-
   }
 
   async import() {
@@ -86,7 +77,6 @@ export class OtherExistsListingComponent extends UnsubscribeOnDestroyAdapter
       this.data_import =
         await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_IMPORT_CLASS, this.exitData);
     }
-    console.log("this.data_import", this.data_import);
     this.uiSpinner.spin$.next(false);
     if (this.data_import.status) {
       this.dialogRef.close({ module: this.currrent_tab });

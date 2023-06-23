@@ -19,7 +19,7 @@ module.exports = {
     Regitration_Link: "Registration Link",
     INVOICE_SEND: "Invoice Send",
     INVOICE_NOT_SEND: "Invoice Not Send",
-    INVOICE_SEND_TITLE: "This message was sent from ROVUK A/P invoice automation.",
+    INVOICE_SEND_TITLE: "This message was sent from SmartAccuPay invoice automation.",
     INVOICE_NUMBER: "Invoice Number: ",
     TOTAL_AMOUNT: "Total Amount: ",
     VENDOR_NAME: "Vendor Name: ",
@@ -29,7 +29,7 @@ module.exports = {
     EmailTemplateHi: 'Hi',
     EmailTemplateHello: 'Hello',
     EmailTemplateThanks: 'Thanks,',
-    EmailTemplateRovukTeam: 'Rovuk A/P Team',
+    EmailTemplateRovukTeam: 'SmartAccuPay Team',
     EmailTemplateHelpEmailAt: 'For help, email us at',
     EmailTemplateCallSupportAt: 'or call our support team at',
     EmailTemplateAllRightsReserved: 'All rights reserved',
@@ -71,8 +71,8 @@ module.exports = {
     vendor_mail_line1_1: "just registered in the Supplier construction portal.",
     vendor_mail_line2_1: "Please complete the vendor registration process and authorize if necessary.",
 
-    MailForgotPassword_Subject: 'Rovuk A/P reset password',
-    MailForgotPassword_Title: 'Reset your Rovuk A/P password',
+    MailForgotPassword_Subject: 'SmartAccuPay reset password',
+    MailForgotPassword_Title: 'Reset your SmartAccuPay password',
     vendor_mail_forgotpass_title1: "Reset your",
     vendor_mail_forgotpass_title2: "Login Password",
     vendor_mail_forgotpass_subject: "Login Password Reset",
@@ -879,6 +879,7 @@ module.exports = {
         Approved: 'Approved Invoices',
         Rejected: 'Rejected Invoices',
         Late: 'Late Invoices',
+        vendor_type_id: "Vendor Type",
     },
 
     // Vendor Report
@@ -955,4 +956,21 @@ module.exports = {
     INVOICE_MESSAGE_SEND: 'Message sent successfully.',
     INVOICE_MESSAGE_DELETED: 'Message deleted successfully.',
 
+    //ClassName
+    ClassNameListing: "ClassName listing",
+    ClassNameUpdated: "ClassName updated successfully.",
+    ClassNameAdded: "ClassName added successfully.",
+    ClassNameDeleted: "ClassName deleted successfully.",
+    ClassNameHasData: 'You can not delete this Class Name. There is data related to this Class Name.',
+
+    TermHasData: 'You can not delete this Term. There is data related to this Term.',
+    VendorTypeHasData: 'You can not delete this Vendor Type. There is data related to this Vendor Type.',
+
+    InvoiceNote_Added_Subject: 'Invoice Note Added',
+    InvoiceNote_Added_Title: 'Note is added for your invoice document.',
+    InvoiceNote_Added_Description: '#user has just added note for invoice document.',
+
+    InvoiceNote_Deleted_Subject: 'Invoice Note Deleted',
+    InvoiceNote_Deleted_Title: 'Note is deleted for your invoice document.',
+    InvoiceNote_Deleted_Description: '#user has just deleted note for invoice document.',
 };

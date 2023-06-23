@@ -1,12 +1,10 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { CommonService } from 'src/app/services/common.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
-import { ExistListingComponent } from 'src/app/settings/employeesettings/exist-listing/exist-listing.component';
-import { SettingsService } from 'src/app/settings/settings.service';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { httpversion, httproutes } from 'src/consts/httproutes';
 import { icon } from 'src/consts/icon';
@@ -19,8 +17,7 @@ import { UserService } from '../user.service';
   templateUrl: './user-exist-list.component.html',
   styleUrls: ['./user-exist-list.component.scss']
 })
-export class UserExistListComponent extends UnsubscribeOnDestroyAdapter
-  implements OnInit {
+export class UserExistListComponent extends UnsubscribeOnDestroyAdapter {
   action: string;
   dialogTitle: string;
   currrent_tab: any;
@@ -29,12 +26,13 @@ export class UserExistListComponent extends UnsubscribeOnDestroyAdapter
   exitData: any = [];
   button_show: boolean;
   roleList: any = this.variablesRoleList.slice();
-  titleMessage: string = '';
+  titleMessage = '';
   userList: any = [];
   isDelete = 0;
-  invoice_logo = icon.INVOICE_LOGO;
   data_import: any = [];
-  constructor(
+  title = 'Import User';
+
+  constructor (
     public dialogRef: MatDialogRef<UserExistListComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: UserService,
@@ -62,19 +60,13 @@ export class UserExistListComponent extends UnsubscribeOnDestroyAdapter
     }
   }
 
-
-  ngOnInit(): void {
-
-  }
-
   async import() {
     this.uiSpinner.spin$.next(true);
-    var userData = [];
+    const userData = [];
     for (let i = 0; i < this.exitData.length; i++) {
       userData.push(this.exitData[i].data);
     }
     this.data_import = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.IMPORT_USER, { data: userData });
-
     this.uiSpinner.spin$.next(false);
     if (this.data_import.status) {
       this.dialogRef.close({ module: this.currrent_tab });

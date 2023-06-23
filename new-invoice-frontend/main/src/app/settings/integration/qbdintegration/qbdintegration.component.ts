@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { icon } from 'src/consts/icon';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-qbdintegration',
@@ -13,23 +14,19 @@ export class QbdintegrationComponent {
   qboIntegrated: any;
   showConnectionButton: any;
 
-  constructor(private router: Router) {
-
-  }
-
-  ngOnInit() {
+  constructor (private router: Router) {
 
   }
 
   back() {
-    this.router.navigate(['/settings/integration']);
+    this.router.navigate([WEB_ROUTES.INTEGRATION_SETTING]);
   }
 
   download() {
-
+    // 
   }
 
   connect() {
-
+    // 
   }
 }

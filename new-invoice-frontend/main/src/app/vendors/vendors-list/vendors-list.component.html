@@ -60,7 +60,7 @@
                                         </button>
                                     </div>
                                 </li>
-                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                                <li class="tbl-header-btn" *ngIf="!isHideAddActionQBD && isDelete === 0">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.IMPORT_TEMPLATE' |
                                     translate}}">
                                         <button mat-mini-fab color="primary" (click)="downloadImport()">
@@ -68,7 +68,7 @@
                                         </button>
                                     </div>
                                 </li>
-                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                                <li class="tbl-header-btn" *ngIf="!isHideAddActionQBD && isDelete === 0">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.IMPORT' |
                                     translate}}">
                                         <input id="file-upload" class="mr-2" type="file" style="display: none"
@@ -86,14 +86,14 @@
                                         </button>
                                     </div>
                                 </li>
-                                <li class="tbl-header-btn" *ngIf="isDelete === 0">
+                                <!-- <li class="tbl-header-btn" *ngIf="isDelete === 0">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.REPORT' |
                                         translate}}" (click)="vendorReport()">
                                         <button mat-mini-fab color="primary">
                                             <mat-icon class="col-white">insert_drive_file</mat-icon>
                                         </button>
                                     </div>
-                                </li>
+                                </li> -->
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.LIST_TO_GRID' |
                                     translate}}">
@@ -102,8 +102,7 @@
                                         </button>
                                     </div>
                                 </li>
-                                <li class="tbl-header-btn"
-                                    *ngIf="role_permission.role_permission.vendor.Delete && isDelete === 0">
+                                <li class="tbl-header-btn" *ngIf="!isHideArchiveActionQBD && isDelete === 0">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ARCHIVE' |
                                         translate}}">
                                         <button mat-mini-fab color="warn" (click)="gotoArchiveUnarchive()">
@@ -120,8 +119,7 @@
                                         </button>
                                     </div>
                                 </li>
-                                <li class="tbl-header-btn"
-                                    *ngIf="role_permission.role_permission.vendor.Add && isDelete === 0">
+                                <li class="tbl-header-btn" *ngIf="!isHideAddActionQBD && isDelete === 0">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ADD' |
                                         translate}}">
                                         <button mat-mini-fab color="primary" (click)="addNew()">
@@ -165,18 +163,19 @@
                                     <mat-cell *matCellDef="let row" class="psl-1">{{row.id}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_image">
-                                    <mat-header-cell mat-header-cell *matHeaderCellDef> {{'VENDOR.TABLE.VENDOR_IMAGE' |
+                                    <mat-header-cell mat-header-cell *matHeaderCellDef
+                                        [ngClass]="'tbl-col-width-per-image'">
+                                        {{'VENDOR.TABLE.VENDOR_IMAGE' |
                                         translate}}
                                     </mat-header-cell>
-                                    <mat-cell mat-cell *matCellDef="let row" class="table-img "><span
-                                            class="mobile-label">Image:</span>
+                                    <mat-cell mat-cell *matCellDef="let row" class="table-img tbl-col-width-per-image">
+                                        <span class="mobile-label">Image:</span>
                                         <img [src]="row.vendor_image || 'assets/images/vendor.png'" />
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_name">
                                     <mat-header-cell [ngClass]="'tbl-col-width-per-max'" *matHeaderCellDef
-                                        mat-sort-header>{{'VENDOR.TABLE.VENDOR_NAME' |
-                                        translate}}
+                                        mat-sort-header>{{'VENDOR.TABLE.VENDOR_NAME' | translate}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" [matTooltip]="getNameTooltip(row)"
                                         (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-max"
@@ -185,71 +184,45 @@
                                                 Name:</span>{{row.vendor_name}}</span>
                                     </mat-cell>
                                 </ng-container>
-                                <!-- <ng-container matColumnDef="vendor_id">
-                                    <mat-header-cell [ngClass]="'tbl-col-width-per-max'" *matHeaderCellDef
-                                        mat-sort-header>{{'VENDOR.TABLE.VENDOR_ID' |
-                                        translate}}
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" [matTooltip]="getNameTooltip(row)"
-                                        (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-max"
-                                        (click)="editVendor(row)">
-                                        <span class="truncate-text"> <span class="mobile-label">Vendor
-                                                Id:</span>{{row.vendor_id}}</span>
-                                    </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="customer_id">
-                                    <mat-header-cell [ngClass]="'tbl-col-width-per-max'" *matHeaderCellDef
-                                        mat-sort-header>{{'VENDOR.TABLE.CUSTOMER_ID' |
-                                        translate}}
-                                    </mat-header-cell>
-                                    <mat-cell *matCellDef="let row" [matTooltip]="getNameTooltip(row)"
-                                        (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-max"
-                                        (click)="editVendor(row)">
-                                        <span class="truncate-text"> <span class="mobile-label">Vendor
-                                                Id:</span>{{row.customer_id}}</span>
-                                    </mat-cell>
-                                </ng-container> -->
-
                                 <ng-container matColumnDef="invoice">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.INVOICE' |
-                                        translate}}
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                                        [ngClass]="'tbl-col-width-per-mid'">{{'VENDOR.TABLE.INVOICE' | translate}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
-                                        (click)="editVendor(row)">
+                                        class="tbl-col-width-per-mid" (click)="editVendor(row)">
                                         <span class="truncate-text"> <span class="mobile-label">Invoice:</span>
                                             {{row.invoices}}</span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="open_invoice">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.OPEN_INVOICE' |
-                                        translate}}
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                                        [ngClass]="'tbl-col-width-per-mid'">{{'VENDOR.TABLE.OPEN_INVOICE' | translate}}
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
-                                        (click)="editVendor(row)">
+                                        class="tbl-col-width-per-mid" (click)="editVendor(row)">
                                         <span class="truncate-text"> <span class="mobile-label">Open
                                                 Invoice:</span>
                                             {{row.open_invoices}}</span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="amount_paid">
-                                    <mat-header-cell [ngClass]="'tbl-col-width-per-max'" *matHeaderCellDef
-                                        mat-sort-header>{{'VENDOR.TABLE.AMOUNT_PAID' |
-                                        translate}}
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                                        [ngClass]="'tbl-col-width-per-xmax'">{{'VENDOR.TABLE.AMOUNT_PAID' | translate}}
                                     </mat-header-cell>
-                                    <mat-cell class="tbl-col-width-per-max" *matCellDef="let row"
-                                        (contextmenu)="onContextMenu($event, row)" (click)="editVendor(row)">
+                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
+                                        (click)="editVendor(row)" class="tbl-col-width-per-xmax">
                                         <span class="truncate-text"> <span class="mobile-label">Amount
                                                 Paid:</span>
                                             {{formateAmount(row.invoices_total)}}</span>
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="amount_open">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{'VENDOR.TABLE.AMOUNT_OPEN' |
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                                        [ngClass]="'tbl-col-width-per-mid'">{{'VENDOR.TABLE.AMOUNT_OPEN' |
                                         translate}}
                                     </mat-header-cell>
-
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"
-                                        (click)="editVendor(row)">
+                                        (click)="editVendor(row)" class="tbl-col-width-per-mid">
                                         <span class="truncate-text"> <span class="mobile-label">Amount
                                                 Open:</span>
                                             {{formateAmount(row.open_invoices_total)}}</span>
@@ -319,12 +292,11 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="is_quickbooks">
-                                    <mat-header-cell *matHeaderCellDef [ngClass]="'max-h'"
-                                        class="tbl-col-width-per-action" mat-sort-header>
+                                    <mat-header-cell *matHeaderCellDef class="tbl-col-width-per-quickbooks">
                                         <img [src]="quickbooksGreenIcon" alt="" height="23" width="23" />
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" (click)="editVendor(row)"
-                                        (contextmenu)="onContextMenu($event, row)" class="tbl-col-width-per-action">
+                                        class="tbl-col-width-per-quickbooks" (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Quickbooks:</span>
                                         <img *ngIf="!row.is_quickbooks" [src]="quickbooksGreyIcon" alt="" height="23"
                                             width="23" />
@@ -332,27 +304,6 @@
                                             width="23" />
                                     </mat-cell>
                                 </ng-container>
-                                <!-- <ng-container matColumnDef="vendor_from" *ngIf="isQBSyncedCompany">
-                                    <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-7'" *matHeaderCellDef
-                                        mat-sort-header>
-                                        <img src='assets/images/icons/quickbooks.svg' alt="" height="25" width="25" />
-                                    </mat-header-cell>
-                                    <mat-cell class=" psl-3 tbl-col-width-per-7" *matCellDef="let row"
-                                        (contextmenu)="onContextMenu($event, row)" matTooltip="{{row.isVendorfromQBO}}">
-                                        <span class="truncate-text"><span class="mobile-label">
-                                                <img src='assets/images/icons/quickbooks.svg' alt="" height="25"
-                                                    width="25" />:</span>
-                                            <div *ngIf="row.isVendorfromQBO">
-                                                <img src='assets/images/icons/quickbooks.svg' alt="" height="25"
-                                                    width="25" />
-                                            </div>
-                                            <div *ngIf="!row.isVendorfromQBO">
-                                                <img src='assets/images/icons/grey-quickbooks.svg' alt="" height="25"
-                                                    width="25" />
-                                            </div>
-                                        </span>
-                                    </mat-cell>
-                                </ng-container> -->
                                 <ng-container matColumnDef="actions">
                                     <mat-header-cell class="psl-3" [ngClass]="'tbl-col-width-per-action'"
                                         *matHeaderCellDef>{{'VENDOR.TABLE.ACTIONS' |
@@ -389,7 +340,7 @@
                         </div>
                         <div *ngIf="!vendorService?.isTblLoading" class="no-results"
                             [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-                            No matching records found
+                            {{'COMMON.LISTING.EPMTY' | translate}}
                         </div>
                         <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0"
                             [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">

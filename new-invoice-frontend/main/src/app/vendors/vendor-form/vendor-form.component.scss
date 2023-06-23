@@ -62,8 +62,23 @@
     font-size: 12px !important;
 }
 
+::ng-deep .mat-mdc-option .mdc-list-item__primary-text {
+    font-size: 12px !important;
+}
 
-// }
+::ng-deep.mdc-menu-surface.mat-mdc-select-panel {
+    padding: 0px !important;
+}
+
+::ng-deep .dark {
+    .mat-filter {
+        background-color: black !important;
+    }
+
+    .noResultsMessage {
+        color: white !important;
+    }
+}
 
 .form-old {
     ::ng-deep .mat-mdc-text-field-wrapper {
@@ -93,9 +108,9 @@
         font-size: 14px !important;
     }
 
-     ::ng-deep textarea{
-    resize: none !important; 
-     } 
+    ::ng-deep textarea {
+        resize: none !important;
+    }
 }
 
 
@@ -122,4 +137,12 @@
 .fileInputProfile[disabled]+.img-space {
     pointer-events: none;
     cursor: not-allowed !important;
+}
+
+.bodydisable {
+    cursor: not-allowed;
+}
+
+.disableDiv {
+    pointer-events: none;
 }

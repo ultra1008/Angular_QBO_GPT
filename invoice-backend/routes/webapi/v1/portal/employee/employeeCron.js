@@ -24,7 +24,7 @@ module.exports.userDocumentExpiryAlert = async function (req, res) {
 async function userDocumentExpiryAlertCronFunction() {
     try {
         let connection_MDM_main = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
-        let All_Compnay = await rest_Api.find(connection_MDM_main, companyCollection, { companystatus: 1 });
+        let All_Compnay = await rest_Api.find(connection_MDM_main, companyCollection, { companystatus: 1, companycode: { $ne: '' } });
         let final_object = [];
         for (const item_new of All_Compnay) {
             //employee 
@@ -131,6 +131,7 @@ async function userDocumentExpiryAlertCronFunction() {
                             ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                             THANKS: translator.getStr('EmailTemplateThanks'),
                             ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                            COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
                             TITLE: translator.getStr('EmailSingleDocExpireTitle'),
                             TEXT1: `${translator.getStr('EmailAdminDocExpireWillExpireInNext_Your')} ${get_employee_document[aa].document_attachment[a].total_remain} ${translator.getStr('EmailAdminDocExpireMoreInfo')}`,
                             TEXT2: translator.getStr('EmailAdminDocExpireDocumentNeedToUpdate'),
@@ -154,6 +155,7 @@ async function userDocumentExpiryAlertCronFunction() {
                             ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                             THANKS: translator.getStr('EmailTemplateThanks'),
                             ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                            COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                             TITLE: translator.getStr('EmailSingleDocExpireTitle'),
                             TEXT1: `${translator.getStr('EmailAdminDocExpireWillExpireInNext')} ${get_employee_document[aa].document_attachment[a].total_remain} ${translator.getStr('EmailAdminDocExpireMoreInfo')}`,
@@ -167,12 +169,12 @@ async function userDocumentExpiryAlertCronFunction() {
                         var HtmlData_user = await template(emailTmp_user);
                         var HTML_ADMIN = await templateAdmin(emailTmp_Admin);
 
-                        sendEmail.sendEmail_client(item.tenant_smtp_username, [get_employee_document[aa].useremail], "Contact admin: Documents about to expire ", HtmlData_user,
-                            item.tenant_smtp_server, item.tenant_smtp_port, item.tenant_smtp_reply_to_mail,
-                            item.tenant_smtp_password, item.tenant_smtp_timeout, item.tenant_smtp_security);
-                        sendEmail.sendEmail_client(item.tenant_smtp_username, employee_list, "Documents are about to expire for one of your employee", HTML_ADMIN,
-                            item.tenant_smtp_server, item.tenant_smtp_port, item.tenant_smtp_reply_to_mail,
-                            item.tenant_smtp_password, item.tenant_smtp_timeout, item.tenant_smtp_security);
+                        sendEmail.sendEmail_client(item.smartaccupay_tenants.tenant_smtp_username, [get_employee_document[aa].useremail], "Contact admin: Documents about to expire ", HtmlData_user,
+                            item.smartaccupay_tenants.tenant_smtp_server, item.smartaccupay_tenants.tenant_smtp_port, item.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                            item.smartaccupay_tenants.tenant_smtp_password, item.smartaccupay_tenants.tenant_smtp_timeout, item.smartaccupay_tenants.tenant_smtp_security);
+                        sendEmail.sendEmail_client(item.smartaccupay_tenants.tenant_smtp_username, employee_list, "Documents are about to expire for one of your employee", HTML_ADMIN,
+                            item.smartaccupay_tenants.tenant_smtp_server, item.smartaccupay_tenants.tenant_smtp_port, item.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                            item.smartaccupay_tenants.tenant_smtp_password, item.smartaccupay_tenants.tenant_smtp_timeout, item.smartaccupay_tenants.tenant_smtp_security);
 
                         let alertObject = {
                             user_id: get_employee_document[aa]._id,
@@ -205,7 +207,7 @@ module.exports.userEmergencyContactAlertCron = async function (req, res) {
 async function userEmergencyContactAlertCronFunction() {
     try {
         let connection_MDM_main = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
-        let All_Compnay = await rest_Api.find(connection_MDM_main, companyCollection, { companystatus: 1 });
+        let All_Compnay = await rest_Api.find(connection_MDM_main, companyCollection, { companystatus: 1, companycode: { $ne: '' } });
         let final_object = [];
         for (const item_new of All_Compnay) {
             var translator = new common.Language(item_new.companylanguage);
@@ -220,6 +222,7 @@ async function userEmergencyContactAlertCronFunction() {
                 ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                 THANKS: translator.getStr('EmailTemplateThanks'),
                 ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                 TITLE: `Important message about contact information`,
                 TEXT: new handlebars.SafeString(`<h4>Your emergency contact information needs to be updated or revised.</h4>`),
@@ -242,9 +245,9 @@ async function userEmergencyContactAlertCronFunction() {
                 };
                 // supplierAlertController.saveSupplierAlert(alertObject, connection_db_api);
 
-                sendEmail.sendEmail_client(item.tenant_smtp_username, [all_user[i]['useremail']], `Important message about contact information`, HtmlData,
-                    item.tenant_smtp_server, item.tenant_smtp_port, item.tenant_smtp_reply_to_mail,
-                    item.tenant_smtp_password, item.tenant_smtp_timeout, item.tenant_smtp_security);
+                sendEmail.sendEmail_client(item.smartaccupay_tenants.tenant_smtp_username, [all_user[i]['useremail']], `Important message about contact information`, HtmlData,
+                    item.smartaccupay_tenants.tenant_smtp_server, item.smartaccupay_tenants.tenant_smtp_port, item.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                    item.smartaccupay_tenants.tenant_smtp_password, item.smartaccupay_tenants.tenant_smtp_timeout, item.smartaccupay_tenants.tenant_smtp_security);
 
             }
         }

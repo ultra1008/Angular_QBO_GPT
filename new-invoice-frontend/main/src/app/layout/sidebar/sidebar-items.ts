@@ -80,7 +80,7 @@
 //   },
 //   {
 //     path: WEB_ROUTES.SIDEMENU_SETTINGS,
-//     title: 'Settings',
+//     title: 'SettingsModel',
 //     iconType: 'material-icons-two-tone',
 //     icon: 'settings',
 //     class: '',

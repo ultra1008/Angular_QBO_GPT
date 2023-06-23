@@ -5,7 +5,6 @@ let common = require('./../../../../../controller/common/common');
 var ObjectID = require('mongodb').ObjectID;
 var handlebars = require('handlebars');
 let sendEmail = require('./../../../../../controller/common/sendEmail');
-let superadminCollection = require('./../../../../../config/superadminCollection');
 let rest_Api = require('../../../../../config/db_rest_api');
 var formidable = require('formidable');
 var fs = require('fs');
@@ -17,6 +16,7 @@ var invoiceRoleSchema = require('./../../../../../model/invoice_roles');
 var bucketOpration = require('./../../../../../controller/common/s3-wasabi');
 const nodemailer = require('nodemailer');
 var customerStateSchema = require('./../../../../../model/customer_monthly_states');
+var apiCountSchema = require('./../../../../../model/api_count');
 var tenantsSchema = require('../../../../../model/tenants');
 
 module.exports.compnayinformation = async function (req, res) {
@@ -200,10 +200,19 @@ module.exports.compnayupdatesmtp = async function (req, res) {
     var translator = new common.Language(req.headers.language);
     if (decodedToken) {
         try {
-            let reqObject = req.body;
-            let id = reqObject._id;
-            delete reqObject["_id"];
+            let requestObject = req.body;
+            let id = requestObject._id;
+            delete requestObject["_id"];
             var connection_MDM = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+            let reqObject = {
+                'smartaccupay_tenants.tenant_smtp_server': requestObject.tenant_smtp_server,
+                'smartaccupay_tenants.tenant_smtp_username': requestObject.tenant_smtp_username,
+                'smartaccupay_tenants.tenant_smtp_port': requestObject.tenant_smtp_port,
+                'smartaccupay_tenants.tenant_smtp_timeout': requestObject.tenant_smtp_timeout,
+                'smartaccupay_tenants.tenant_smtp_password': requestObject.tenant_smtp_password,
+                'smartaccupay_tenants.tenant_smtp_security': requestObject.tenant_smtp_security,
+                'smartaccupay_tenants.tenant_smtp_reply_to_mail': requestObject.tenant_smtp_reply_to_mail,
+            };
             let company_data = await rest_Api.update(connection_MDM, collectionConstant.SUPER_ADMIN_TENANTS, { company_id: ObjectID(id) }, reqObject);
             if (company_data.result.nModified == 1) {
                 res.send({ message: translator.getStr('CompanySMPTUpdated'), data: company_data.result, status: true });
@@ -235,7 +244,8 @@ module.exports.sendIframeCode = async function (req, res) {
                 SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
                 ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                 THANKS: translator.getStr('EmailTemplateThanks'),
-                ROVUK_TEAM: `${company_data.companyname} team`,
+                ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
                 TITLE: `${translator.getStr('iFrame_IntegrationWith')} ${company_data.companyname}`,
                 COPY_CODE: translator.getStr('Copy_Code'),
                 TEXT1: `${translator.getStr('EmailTemplateHello')} ${company_data.companyname},`,
@@ -249,9 +259,9 @@ module.exports.sendIframeCode = async function (req, res) {
             const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/sendIfameCode.html', 'utf8');
             var template = handlebars.compile(file_data);
             var HtmlData = await template(emailTmp);
-            sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, requestObject.emailsList, "Iframe Code", HtmlData,
-                talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+            sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, requestObject.emailsList, "Iframe Code", HtmlData,
+                talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
 
             res.send({ message: translator.getStr('SEND_MAIL_TEAMPLETE'), status: true });
 
@@ -320,11 +330,7 @@ module.exports.getCustomerStatesDatatable = async function (req, res) {
             var columnData = (requestObject.order != undefined && requestObject.order != '') ? requestObject.order[0].column : '';
             var columntype = (requestObject.order != undefined && requestObject.order != '') ? requestObject.order[0].dir : '';
             var sort = {};
-            /*  if (requestObject.draw == 1) {
-                 sort = { "month_name": 1 };
-             } else { */
             sort[col[columnData]] = (columntype == 'asc') ? 1 : -1;
-            // }
             let query = {};
             if (requestObject.search.value) {
                 query = {
@@ -380,22 +386,42 @@ module.exports.getCustomerStatesDatatable = async function (req, res) {
     }
 };
 
-// Customer Monthly States
-module.exports.getCustomerStatesDatatableForTable = async function (req, res) {
+module.exports.getAPAPICount = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
     var translator = new common.Language(req.headers.language);
     if (decodedToken) {
         var connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-            let customerStateCollection = connection_db_api.model(collectionConstant.INVOICE_CUSTOMER_STATES, customerStateSchema);
-            var match_query = { is_delete: requestObject.is_delete };
-            var aggregateQuery = [
-                { $match: match_query },
-                // { $match: query },
-            ];
-            let get_data = await customerStateCollection.aggregate(aggregateQuery).collation({ locale: "en_US" });
-            res.send(get_data);
+            let apiCountCollection = connection_db_api.model(collectionConstant.API_COUNT, apiCountSchema);
+            let get_data = await apiCountCollection.aggregate([
+                { $match: { is_delete: 0 } },
+                {
+                    $project: {
+                        year: 1,
+                        month: 1,
+                        month_name: {
+                            $concat: [
+                                {
+                                    $arrayElemAt: [
+                                        ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                                        "$month"
+                                    ]
+                                }, ", ", { $toString: "$year" }
+                            ]
+                        },
+                        PURCHASE_ORDER: 1,
+                        PACKING_SLIP: 1,
+                        RECEIVING_SLIP: 1,
+                        QUOTE: 1,
+                        INVOICE: 1,
+                        OTHER: 1,
+                        DUPLICATED: 1,
+                    }
+                },
+                { $sort: { year: -1, month: -1 } },
+            ]).collation({ locale: "en_US" });
+            res.json(get_data);
         } catch (e) {
             console.log(e);
             res.send([]);
@@ -403,7 +429,7 @@ module.exports.getCustomerStatesDatatableForTable = async function (req, res) {
             connection_db_api.close();
         }
     } else {
-        res.send({ status: false, message: translator.getStr('InvalidUser') });
+        res.send([]);
     }
 };
 

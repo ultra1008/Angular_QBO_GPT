@@ -211,6 +211,22 @@ const sendEmailForgotPassword = (req, res, next) => {
     });
 };
 
+const getMyCompanyList = (req, res, next) => {
+    const validationRule = {
+        "useremail": "required",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({
+                status: false,
+                message: err
+            });
+        } else {
+            next();
+        }
+    });
+};
+
 module.exports = {
     login,
     sendOTPforLoginValidation,
@@ -224,4 +240,5 @@ module.exports = {
     loginWithEmailOTP,
     emailForgotPassword,
     sendEmailForgotPassword,
+    getMyCompanyList,
 };

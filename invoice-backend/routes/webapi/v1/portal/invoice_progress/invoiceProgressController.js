@@ -1387,6 +1387,7 @@ function sendInvoiceInsertAlerts(companyCode, connection_db_api, id, translator)
                                 ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
                                 ROVUK_TEAM_SEC: translator.getStr('EmailTemplateRovukTeamSec'),
                                 VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
+                                COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                                 TITLE: `${title}`,
                                 TEXT: new handlebars.SafeString(`<h4>Hello,</h4><h4>${description}</h4>
@@ -1401,9 +1402,9 @@ function sendInvoiceInsertAlerts(companyCode, connection_db_api, id, translator)
                             };
                             var template = handlebars.compile(file_data);
                             var HtmlData = await template(emailTmp);
-                            sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, emailList, title, HtmlData,
-                                talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                                talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                            sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, emailList, title, HtmlData,
+                                talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                                talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
                             resolve();
                         }
                     }

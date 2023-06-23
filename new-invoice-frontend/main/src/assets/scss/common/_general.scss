@@ -434,3 +434,18 @@ textarea:-ms-input-placeholder {
     max-width: 100%;
   }
 }
+
+.dollar-align {
+  padding-left: 10px;
+  font-size: 14px;
+}
+
+.model-header {
+  width: 100%;
+  margin-left: unset;
+  margin-right: unset;
+
+  .modal-about {
+    width: 100%;
+  }
+}

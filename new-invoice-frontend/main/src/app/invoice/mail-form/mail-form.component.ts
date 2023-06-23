@@ -14,11 +14,12 @@ import { Router } from '@angular/router';
 import { CommonService } from 'src/app/services/common.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { DepartmentFormComponent } from 'src/app/settings/employeesettings/department-list/department-form/department-form.component';
-import { AdvanceTable, User } from 'src/app/users/user.model';
+import { AdvanceTable, UserModel } from 'src/app/users/user.model';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { icon } from 'src/consts/icon';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
-import { showNotification } from 'src/consts/utils';
+import { numberWithCommas, showNotification } from 'src/consts/utils';
+import { configData } from 'src/environments/configData';
 
 @Component({
   selector: 'app-mail-form',
@@ -30,14 +31,14 @@ export class MailFormComponent {
   dialogTitle: string;
   mailInfo!: any;
   advanceTable: AdvanceTable;
-  invoice_logo = icon.INVOICE_LOGO;
+  title = 'Mail';
 
 
-  titleMessage: string = '';
-  variablesUserList: any = [];
-  userList: Array<User> = this.variablesUserList.slice();
-  variablesUserToList: any = [];
-  usertoList: Array<User> = this.variablesUserToList.slice();
+  titleMessage = '';
+  variablesUserList: Array<UserModel> = [];
+  userList: Array<UserModel> = this.variablesUserList.slice();
+  variablesUserToList: Array<UserModel> = [];
+  usertoList: Array<UserModel> = this.variablesUserToList.slice();
   isDelete = 0;
   SmtpEmail: any;
   removable = true;
@@ -61,14 +62,13 @@ export class MailFormComponent {
       message: ['', [Validators.required]],
       cc: [[], [Validators.required]],
     });
+    const userData = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
     this.mailInfo.get("message")!.setValue(`
-    
 -----------------------------------------------------------------------------\n
-Please Note: Reply To Mailto:Info@Rovuk.Us\n
-Company Name\n
-Vendor:Vendor Name\n
-Invoice Number: 7846002546556552\n
-Total Amount: $12,000`);
+${userData.companydata.companyname}\n
+Vendor: ${data.vendor_data.vendor_name}\n
+Invoice Number: ${data.invoice_no}\n
+Total Amount: $${numberWithCommas(data.invoice_total_amount.toFixed(2))}`);
 
     this.getUser();
     this.getSmtpEmail();
@@ -124,16 +124,22 @@ Total Amount: $12,000`);
     this.selectedUsers = event.value;
   }
   removeUseremail(user: string) {
-    var index = this.selectedUsers.indexOf(user);
+    const index = this.selectedUsers.indexOf(user);
     if (index !== -1) {
       this.selectedUsers.splice(index, 1);
+      const tempUser = this.mailInfo.get('cc').value;
+      tempUser.slice(index, 1);
+      this.mailInfo.get('cc').setValue(tempUser);
     }
   }
 
   removeUserTOemail(user: string) {
-    var index = this.selectedToUsers.indexOf(user);
+    const index = this.selectedToUsers.indexOf(user);
     if (index !== -1) {
       this.selectedToUsers.splice(index, 1);
+      const tempUser = this.mailInfo.get('to').value;
+      tempUser.slice(index, 1);
+      this.mailInfo.get('to').setValue(tempUser);
     }
   }
 
@@ -149,7 +155,7 @@ Total Amount: $12,000`);
 
   async submit() {
     if (this.mailInfo.valid) {
-      let requestObject = this.mailInfo.value;
+      const requestObject = this.mailInfo.value;
       requestObject.pdf_url = 'https://www.orimi.com/pdf-test.pdf';
       if (this.data) {
         requestObject._id = this.data._id;

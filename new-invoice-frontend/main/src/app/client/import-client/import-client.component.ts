@@ -5,9 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import * as saveAs from 'file-saver';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
-import { ImportOtherSettingsComponent } from 'src/app/settings/othersettings/import-other-settings/import-other-settings.component';
-import { SettingsService } from 'src/app/settings/settings.service';
-import { AdvanceTable } from 'src/app/users/user.model';
+import { AdvanceTable, RoleModel, UserModel } from 'src/app/users/user.model';
 import { icon } from 'src/consts/icon';
 import { ClientService } from '../client.service';
 
@@ -19,16 +17,15 @@ import { ClientService } from '../client.service';
 export class ImportClientComponent {
   action: string;
   dialogTitle: string;
-  currrent_tab: any;
+  currrent_tab = 0;
   advanceTable: AdvanceTable;
-  variablesRoleList: any = [];
-
-  roleList: any = this.variablesRoleList.slice();
-  titleMessage: string = '';
-  userList: any = [];
+  variablesRoleList: Array<RoleModel> = [];
+  roleList: Array<RoleModel> = this.variablesRoleList.slice();
+  titleMessage = '';
+  userList: Array<UserModel> = [];
   isDelete = 0;
   invoice_logo = icon.INVOICE_LOGO;
-  constructor(
+  constructor (
     public dialogRef: MatDialogRef<ImportClientComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: ClientService,

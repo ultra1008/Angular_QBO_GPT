@@ -15,11 +15,12 @@ import {
   swalWithBootstrapButtons,
   swalWithBootstrapTwoButtons,
 } from 'src/consts/utils';
-import { DocumentTypeTable } from '../../settings.model';
+import { DocumentTypeModel } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
 import { DocumentTypeFormComponent } from './document-type-form/document-type-form.component';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-document-type-list',
@@ -32,9 +33,9 @@ export class DocumentTypeListComponent
   displayedColumns = ['document_type_name', 'is_expiration', 'actions'];
   documentService?: SettingsService;
   dataSource!: DocumentTypeDataSource;
-  selection = new SelectionModel<DocumentTypeTable>(true, []);
+  selection = new SelectionModel<DocumentTypeModel>(true, []);
   id?: number;
-  // advanceTable?: DocumentTypeTable;
+  // advanceTable?: DocumentTypeModel;
   isDelete = 0;
   titleMessage = '';
 
@@ -57,7 +58,6 @@ export class DocumentTypeListComponent
 
   edit(document: any) {
     let that = this;
-    console.log('document');
     const dialogRef = this.dialog.open(DocumentTypeFormComponent, {
       width: '350px',
       data: document,
@@ -65,7 +65,6 @@ export class DocumentTypeListComponent
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log("result", result);
       if (result) {
         if (result.status) {
           const foundIndex = this.documentService?.documentTypeDataChange.value.findIndex((x) => x._id === document._id);
@@ -134,19 +133,14 @@ export class DocumentTypeListComponent
       }
     );
     this.selection.clear();
-    setTimeout(() => {
-      console.log("this.dataSource: ", this.dataSource);
-      console.log("this.documentService?.documentTypeDataChange.value: ", this.documentService?.documentTypeDataChange.value);
-    }, 2000);
-
   }
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: DocumentTypeTable) {
+  onContextMenu(event: MouseEvent, item: DocumentTypeModel) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -157,7 +151,7 @@ export class DocumentTypeListComponent
     }
   }
 }
-export class DocumentTypeDataSource extends DataSource<DocumentTypeTable> {
+export class DocumentTypeDataSource extends DataSource<DocumentTypeModel> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -165,8 +159,8 @@ export class DocumentTypeDataSource extends DataSource<DocumentTypeTable> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: DocumentTypeTable[] = [];
-  renderedData: DocumentTypeTable[] = [];
+  filteredData: DocumentTypeModel[] = [];
+  renderedData: DocumentTypeModel[] = [];
   constructor (
     public documentService: SettingsService,
     public paginator: MatPaginator,
@@ -178,7 +172,7 @@ export class DocumentTypeDataSource extends DataSource<DocumentTypeTable> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<DocumentTypeTable[]> {
+  connect(): Observable<DocumentTypeModel[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this.documentService.documentTypeDataChange,
@@ -192,7 +186,7 @@ export class DocumentTypeDataSource extends DataSource<DocumentTypeTable> {
         // Filter data
         this.filteredData = this.documentService.documentTypeData
           .slice()
-          .filter((documentTable: DocumentTypeTable) => {
+          .filter((documentTable: DocumentTypeModel) => {
             const searchStr = (
               documentTable.document_type_name +
               documentTable.is_expiration
@@ -215,7 +209,7 @@ export class DocumentTypeDataSource extends DataSource<DocumentTypeTable> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: DocumentTypeTable[]): DocumentTypeTable[] {
+  sortData(data: DocumentTypeModel[]): DocumentTypeModel[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }

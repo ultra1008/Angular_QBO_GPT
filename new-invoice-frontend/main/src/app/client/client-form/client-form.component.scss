@@ -84,7 +84,23 @@
     font-size: 12px !important;
 }
 
+::ng-deep .mat-mdc-option .mdc-list-item__primary-text {
+    font-size: 12px !important;
+}
 
+::ng-deep.mdc-menu-surface.mat-mdc-select-panel {
+    padding: 0px !important;
+}
+
+::ng-deep .dark {
+    .mat-filter {
+        background-color: black !important;
+    }
+
+    .noResultsMessage {
+        color: white !important;
+    }
+}
 
 // }
 
@@ -116,4 +132,8 @@
         font-size: 14px !important;
     }
 
+}
+
+.disableDiv {
+    pointer-events: none;
 }

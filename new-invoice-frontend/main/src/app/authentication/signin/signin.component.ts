@@ -8,12 +8,16 @@ import {
 } from '@angular/forms';
 import { AuthenticationService } from '../authentication.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { showNotification } from 'src/consts/utils';
+import { checkPermissionAfterLogin, showNotification } from 'src/consts/utils';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { Theme } from '@fullcalendar/core/internal';
 import { DOCUMENT } from '@angular/common';
 import { InConfiguration } from 'src/app/core/models/config.interface';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { CommonService } from 'src/app/services/common.service';
+import { httproutes, httpversion } from 'src/consts/httproutes';
+import { CompanyModel } from 'src/consts/common.model';
+import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 export interface ChipColor {
   name: string;
   color: string;
@@ -44,16 +48,11 @@ export class SigninComponent implements OnInit {
     { name: 'Warn', color: 'warn' },
   ];
   showForm = false;
-  companyList: any = [];
+  companyList: Array<CompanyModel> = [];
 
-  constructor (
-    private formBuilder: UntypedFormBuilder,
-    private router: Router,
-    private authService: AuthService,
-    private AuthenticationService: AuthenticationService,
-    private snackBar: MatSnackBar,
-    private renderer: Renderer2,
-    @Inject(DOCUMENT) private document: Document
+  constructor(private formBuilder: UntypedFormBuilder, private router: Router, private authService: AuthService,
+    private AuthenticationService: AuthenticationService, private snackBar: MatSnackBar, public uiSpinner: UiSpinnerService,
+    private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private commonService: CommonService,
   ) {
     //localStorage.setItem(localstorageconstants.DARKMODE, 'dark');
     setTimeout(() => {
@@ -100,10 +99,10 @@ export class SigninComponent implements OnInit {
     this.getCompanySettings();
   }
   goResetPasswordForm() {
-    this.router.navigate(['/authentication/forgot-password']);
+    this.router.navigate([WEB_ROUTES.FORGOT_PASSWORD]);
   }
   goSendOtpForm() {
-    this.router.navigate(['/authentication/send-otp']);
+    this.router.navigate([WEB_ROUTES.SEND_OTP]);
   }
   public removeCompanyCode() {
     this.companyCode = '';
@@ -112,7 +111,7 @@ export class SigninComponent implements OnInit {
     this.authForm.reset();
   }
   langurl() {
-    window.open('https://www.rovuk.us/mobile-terms-of-service-2', '_blank');
+    window.open('https://smartaccupay.com/mobile-terms-of-service/', '_blank');
   }
   public onSaveUsernameChanged(value: boolean) {
     this.checked = value;
@@ -121,9 +120,7 @@ export class SigninComponent implements OnInit {
   async getCompanySettings() {
     const formValues = this.authForm.value;
     // this.companyCode = 'R-' + formValues.companycode;
-    const data = await this.AuthenticationService.getCompanySettings(
-      this.companyCode
-    );
+    const data = await this.commonService.postRequestAPI(httpversion.V1 + httproutes.GET_COMPANY_SETTINGS, { companycode: this.companyCode });
     if (data.status) {
       this.showLogin = true;
       localStorage.setItem(localstorageconstants.COMPANYCODE, this.companyCode);
@@ -135,23 +132,27 @@ export class SigninComponent implements OnInit {
       return;
     }
     const formValues = this.authForm.value;
+    this.uiSpinner.spin$.next(true);
     // formValues.companycode = 'R-' + formValues.companycode;
-
-    const data = await this.AuthenticationService.checkUserCompany(formValues);
+    const data = await this.commonService.postRequestAPI(httpversion.V1 + httproutes.GET_USER_COMPANY, formValues);
     if (data.status) {
+      this.uiSpinner.spin$.next(false);
       if (data.data.length === 0) {
         showNotification(this.snackBar, 'Invalid email or password!', 'error');
       } else if (data.data.length === 1) {
         // only one compant so direct login
         showNotification(this.snackBar, data.message, 'success');
         if (data.user_data.UserData.useris_password_temp == true) {
-          this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);
+          this.router.navigate([WEB_ROUTES.FORCEFULLY_CHANGE_PASSWORD]);
         } else {
+          this.AuthenticationService.changeLoginValue(false);
+          localStorage.setItem(localstorageconstants.LOGOUT, 'false');
           setTimeout(() => {
-            localStorage.setItem(localstorageconstants.LOGOUT, 'false');
-            this.router.navigate([WEB_ROUTES.DASHBOARD]);
-          }, 300);
+            this.router.navigate([checkPermissionAfterLogin(data.user_data.role_permission)]);
+            location.reload();
+          }, 500);
         }
+        this.AuthenticationService.changeTokenValue(data.user_data.token);
         localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.user_data.token);
         localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.user_data));
         localStorage.setItem(localstorageconstants.COMPANYID, data.user_data.companydata._id);
@@ -219,65 +220,34 @@ export class SigninComponent implements OnInit {
     localStorage.setItem('menuOption', menuOption);
   }
 
-  onSubmit() {
-    this.submitted = true;
-    this.error = '';
-    if (this.authForm.invalid) {
-      this.error = 'Username and Password not valid !';
-      return;
-    } else {
-      this.authService
-        .login(this.f['username'].value, this.f['password'].value)
-        .subscribe({
-          next: (res) => {
-            if (res) {
-              if (res) {
-                const token = this.authService.currentUserValue.token;
-                if (token) {
-                  this.router.navigate([WEB_ROUTES.DASHBOARD]);
-                }
-              } else {
-                this.error = 'Invalid Login';
-              }
-            } else {
-              this.error = 'Invalid Login';
-            }
-          },
-          error: (error) => {
-            this.error = error;
-            this.submitted = false;
-            this.loading = false;
-          },
-        });
-    }
-  }
-
   removeUseremail() {
     this.useremail = '';
     this.showLogin = true;
     this.authForm.reset();
   }
 
-  async selectCompany(company: any) {
+  async selectCompany(company: CompanyModel) {
     const formValues = this.authForm.value;
     formValues.companycode = company.companycode;
-
-    const data = await this.AuthenticationService.userLogin(formValues);
+    this.uiSpinner.spin$.next(true);
+    const data = await this.commonService.postRequestAPI(httpversion.V1 + httproutes.USER_LOGIN, formValues);
+    this.uiSpinner.spin$.next(false);
     if (data.status) {
-
       showNotification(this.snackBar, data.message, 'success');
       if (data.data.UserData.useris_password_temp == true) {
-        this.router.navigate([WEB_ROUTES.CHANGE_PASSWORD]);
+        this.router.navigate([WEB_ROUTES.FORCEFULLY_CHANGE_PASSWORD]);
       } else {
+        this.AuthenticationService.changeLoginValue(false);
         localStorage.setItem(localstorageconstants.LOGOUT, 'false');
         setTimeout(() => {
-          this.router.navigate([WEB_ROUTES.DASHBOARD]);
-        }, 300);
+          this.router.navigate([checkPermissionAfterLogin(data.data.role_permission)]);
+          location.reload();
+        }, 500);
       }
+      this.AuthenticationService.changeTokenValue(data.data.token);
       localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.data.token);
       localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.data));
       localStorage.setItem(localstorageconstants.COMPANYID, data.data.companydata._id);
-
 
       sessionStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
       localStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');

@@ -15,6 +15,7 @@ import { AdvanceTable } from 'src/app/users/user.model';
 import { showNotification } from 'src/consts/utils';
 import { SettingsService } from '../../../settings.service';
 import { icon } from 'src/consts/icon';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-job-title-form',
@@ -32,7 +33,8 @@ export class JobTitleFormComponent {
   titleMessage = '';
   userList: any = [];
   isDelete = 0;
-  invoice_logo = icon.INVOICE_LOGO;
+  title = this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.JOBTITLE');
+
   constructor (
     public dialogRef: MatDialogRef<JobTitleFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -41,16 +43,13 @@ export class JobTitleFormComponent {
     private snackBar: MatSnackBar,
     public SettingsServices: SettingsService,
     private router: Router,
-    public uiSpinner: UiSpinnerService
+    public uiSpinner: UiSpinnerService,
+    public translate: TranslateService,
   ) {
     this.jobtitleInfo = new FormGroup({
       job_title_name: new FormControl('', [Validators.required]),
     });
-    console.log('data', data);
-    const document_data = data.data;
-
     if (this.data) {
-      console.log('call');
       this.jobtitleInfo = new FormGroup({
         job_title_name: new FormControl(this.data.job_title_name, [
           Validators.required,

@@ -10,106 +10,22 @@
                                 <li class="tbl-title">
                                     <h2>{{'DOCUMENTS.VIEW.TITLE' |translate}}</h2>
                                 </li>
+                                <li class="tbl-search-box">
+                                    <label for="search-input"><i class="material-icons search-icon">search</i></label>
+                                    <input placeholder="{{'COMMON.TOOL_TIP.SEARCH' | translate}}" type="text" #filter
+                                        class="browser-default search-field" aria-label="Search box">
+                                </li>
                             </ul>
                         </div>
                     </div>
-
                     <div class="body overflow-auto">
                         <div class="main-cust-setting-div">
                             <mat-tab-group [selectedIndex]="step_index" (selectedTabChange)="onTabChanged($event)"
                                 [(selectedIndex)]="step_index">
-                                <!-- <mat-tab label="Invoice">
-                                    <div class="body overflow-auto">
-                                        <div class="table-responsive">
-                                            <table mat-table #table [dataSource]="dataSource" matSort
-                                                class="mat-cell">
-                                                <ng-container matColumnDef="document_type">
-                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'DOCUMENTS.TABLE.DOCUMENT_TYPE' |translate}}
-                                                    </mat-header-cell>
-                                                    <mat-cell *matCellDef="let row"
-                                                        (contextmenu)="onContextMenu($event, row)">
-                                                        <span class="mobile-label">Document Type:</span>
-                                                        <div *ngIf="row.document_type == ''">
-                                                            No Identifying Information
-                                                        </div>
-                                                        {{row.document_type}}
-                                                    </mat-cell>
-                                                </ng-container>
-                                                <ng-container matColumnDef="po_no">
-                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'DOCUMENTS.TABLE.PO_NO' |translate}}</mat-header-cell>
-                                                    <mat-cell *matCellDef="let row"
-                                                        (contextmenu)="onContextMenu($event, row)">
-                                                        <span class="mobile-label">PO NO:</span> {{row.po_no }}
-                                                    </mat-cell>
-                                                </ng-container>
-                                                <ng-container matColumnDef="invoice_no">
-                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'DOCUMENTS.TABLE.INVOICE_NO' |translate}}</mat-header-cell>
-                                                    <mat-cell *matCellDef="let row"
-                                                        (contextmenu)="onContextMenu($event, row)">
-                                                        <span class="mobile-label">Invoice No:</span> {{row.invoice_no}}
-                                                    </mat-cell>
-                                                </ng-container>
-                                                <ng-container matColumnDef="vendor_name">
-                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'DOCUMENTS.TABLE.VENDOR_NAME' |translate}}
-                                                    </mat-header-cell>
-                                                    <mat-cell *matCellDef="let row"
-                                                        (contextmenu)="onContextMenu($event, row)">
-                                                        <span class="truncate-text"><span class="mobile-label">Vendor
-                                                                Name:</span> {{row.vendor_name}}</span>
-                                                    </mat-cell>
-                                                </ng-container>
-                                                <ng-container matColumnDef="updated_by">
-                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'DOCUMENTS.TABLE.UPDATED_BY' |translate}}
-                                                    </mat-header-cell>
-                                                    <mat-cell *matCellDef="let row"
-                                                        (contextmenu)="onContextMenu($event, row)">
-                                                        <span class="truncate-text"><span
-                                                                class="mobile-label">updated_by:</span>
-                                                            {{row.updated_by}}</span>
-                                                    </mat-cell>
-                                                </ng-container>
-                                                <ng-container matColumnDef="updated_at">
-                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'DOCUMENTS.TABLE.UPDATED_AT' |translate}}
-                                                    </mat-header-cell>
-                                                    <mat-cell *matCellDef="let row"
-                                                        (contextmenu)="onContextMenu($event, row)">
-                                                        <span class="truncate-text"><span
-                                                                class="mobile-label">updated_at:</span>
-                                                            {{tmp_date(row.updated_at)}}</span>
-                                                    </mat-cell>
-                                                </ng-container>
-
-
-                                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                                                <mat-row *matRowDef="let row; columns: displayedColumns;"
-                                                    [style.cursor]="'pointer'" matRipple>
-                                                </mat-row>
-                                            </table>
-                                        </div>
-                                        <div *ngIf="DocumentsServices?.isTblLoading" class="tbl-spinner">
-                                            <app-loading></app-loading>
-                                        </div>
-                                        <div *ngIf="!DocumentsServices?.isTblLoading" class="no-results"
-                                            [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-                                            No matching records found
-                                        </div>
-                                        <mat-paginator #paginator [length]="dataSource.filteredData.length"
-                                            [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
-                                        </mat-paginator>
-                                    </div>
-
-                                </mat-tab> -->
                                 <mat-tab label="P.O.">
                                     <div class="body overflow-auto">
                                         <div class="table-responsive">
-                                            <table mat-table #table [dataSource]="dataSource" matSort
-                                                class="mat-cell">
+                                            <table mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
                                                 <ng-container matColumnDef="document_type">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
                                                         {{'DOCUMENTS.TABLE.DOCUMENT_TYPE' |translate}}
@@ -117,10 +33,7 @@
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="mobile-label">Document Type:</span>
-                                                        <div *ngIf="row.document_type === ''">
-                                                            No Identifying Information
-                                                        </div>
-                                                        {{row.document_type}}
+                                                        {{setDocumentType(row.document_type)}}
                                                     </mat-cell>
                                                 </ng-container>
                                                 <ng-container matColumnDef="po_no">
@@ -146,7 +59,7 @@
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="truncate-text"><span class="mobile-label">Vendor
-                                                                Name:</span> {{row.vendor_name}}</span>
+                                                                Name:</span> {{row.vendor_data?.vendor_name}}</span>
                                                     </mat-cell>
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_by">
@@ -157,7 +70,7 @@
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="truncate-text"><span
                                                                 class="mobile-label">updated_by:</span>
-                                                            {{row.updated_by}}</span>
+                                                            {{row.updated_by.userfullname}}</span>
                                                     </mat-cell>
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_at">
@@ -168,10 +81,23 @@
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="truncate-text"><span
                                                                 class="mobile-label">updated_at:</span>
-                                                            {{tmp_date(row.updated_at)}}</span>
+                                                            {{(row.updated_at * 1000) | date: 'MM/dd/yyyy'}}</span>
                                                     </mat-cell>
                                                 </ng-container>
 
+                                                <ng-container matColumnDef="actions">
+                                                    <mat-header-cell class="pr-0" *matHeaderCellDef
+                                                        [ngClass]="'tbl-col-width-per-action'">Actions</mat-header-cell>
+                                                    <mat-cell *matCellDef="let row; let i=index;"
+                                                        class="pr-0 tbl-col-width-per-action">
+                                                        <button mat-icon-button color="accent"
+                                                            (click)="$event.stopPropagation()"
+                                                            (click)="openEditDocument(row)" class="tbl-action-btn">
+                                                            <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'">
+                                                            </app-feather-icons>
+                                                        </button>
+                                                    </mat-cell>
+                                                </ng-container>
 
                                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                                                 <mat-row *matRowDef="let row; columns: displayedColumns;"
@@ -180,36 +106,30 @@
                                             </table>
                                         </div>
                                         <!-- Loading spinner -->
-                                        <div *ngIf="DocumentsServices?.isTblLoading" class="tbl-spinner">
+                                        <div *ngIf="documentsServices?.isTblLoading" class="tbl-spinner">
                                             <app-loading></app-loading>
                                         </div>
-                                        <div *ngIf="!DocumentsServices?.isTblLoading" class="no-results"
+                                        <div *ngIf="!documentsServices?.isTblLoading" class="no-results"
                                             [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-                                            No matching records found
+                                            {{'COMMON.LISTING.EPMTY' | translate}}
                                         </div>
                                         <mat-paginator #paginator [length]="dataSource.filteredData.length"
                                             [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
                                         </mat-paginator>
                                     </div>
-
                                 </mat-tab>
                                 <mat-tab label="Packing Slip">
                                     <div class="body overflow-auto">
                                         <div class="table-responsive">
-                                            <table mat-table #table [dataSource]="dataSource" matSort
-                                                class="mat-cell">
+                                            <table mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
                                                 <ng-container matColumnDef="document_type">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-
                                                         {{'DOCUMENTS.TABLE.DOCUMENT_TYPE' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="mobile-label">Document Type:</span>
-                                                        <div *ngIf="row.document_type === ''">
-                                                            No Identifying Information
-                                                        </div>
-                                                        {{row.document_type}}
+                                                        {{setDocumentType(row.document_type)}}
                                                     </mat-cell>
                                                 </ng-container>
                                                 <ng-container matColumnDef="po_no">
@@ -235,7 +155,7 @@
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="truncate-text"><span class="mobile-label">Vendor
-                                                                Name:</span> {{row.vendor_name}}</span>
+                                                                Name:</span> {{row.vendor_data?.vendor_name}}</span>
                                                     </mat-cell>
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_by">
@@ -246,7 +166,7 @@
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="truncate-text"><span
                                                                 class="mobile-label">updated_by:</span>
-                                                            {{row.updated_by}}</span>
+                                                            {{row.updated_by.userfullname}}</span>
                                                     </mat-cell>
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_at">
@@ -257,10 +177,22 @@
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="truncate-text"><span
                                                                 class="mobile-label">updated_at:</span>
-                                                            {{tmp_date(row.updated_at)}}</span>
+                                                            {{(row.updated_at * 1000) | date: 'MM/dd/yyyy'}}</span>
                                                     </mat-cell>
                                                 </ng-container>
-
+                                                <ng-container matColumnDef="actions">
+                                                    <mat-header-cell class="pr-0" *matHeaderCellDef
+                                                        [ngClass]="'tbl-col-width-per-action'">Actions</mat-header-cell>
+                                                    <mat-cell *matCellDef="let row; let i=index;"
+                                                        class="pr-0 tbl-col-width-per-action">
+                                                        <button mat-icon-button color="accent"
+                                                            (click)="$event.stopPropagation()"
+                                                            (click)="openEditDocument(row)" class="tbl-action-btn">
+                                                            <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'">
+                                                            </app-feather-icons>
+                                                        </button>
+                                                    </mat-cell>
+                                                </ng-container>
 
                                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                                                 <mat-row *matRowDef="let row; columns: displayedColumns;"
@@ -269,12 +201,12 @@
                                             </table>
                                         </div>
                                         <!-- Loading spinner -->
-                                        <div *ngIf="DocumentsServices?.isTblLoading" class="tbl-spinner">
+                                        <div *ngIf="documentsServices?.isTblLoading" class="tbl-spinner">
                                             <app-loading></app-loading>
                                         </div>
-                                        <div *ngIf="!DocumentsServices?.isTblLoading" class="no-results"
+                                        <div *ngIf="!documentsServices?.isTblLoading" class="no-results"
                                             [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-                                            No matching records found
+                                            {{'COMMON.LISTING.EPMTY' | translate}}
                                         </div>
                                         <mat-paginator #paginator [length]="dataSource.filteredData.length"
                                             [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
@@ -285,20 +217,15 @@
                                 <mat-tab label="Receiving Slip">
                                     <div class="body overflow-auto">
                                         <div class="table-responsive">
-                                            <table mat-table #table [dataSource]="dataSource" matSort
-                                                class="mat-cell">
+                                            <table mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
                                                 <ng-container matColumnDef="document_type">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-
                                                         {{'DOCUMENTS.TABLE.DOCUMENT_TYPE' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="mobile-label">Document Type:</span>
-                                                        <div *ngIf="row.document_type === ''">
-                                                            No Identifying Information
-                                                        </div>
-                                                        {{row.document_type}}
+                                                        {{setDocumentType(row.document_type)}}
                                                     </mat-cell>
                                                 </ng-container>
                                                 <ng-container matColumnDef="po_no">
@@ -324,7 +251,7 @@
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="truncate-text"><span class="mobile-label">Vendor
-                                                                Name:</span> {{row.vendor_name}}</span>
+                                                                Name:</span> {{row.vendor_data?.vendor_name}}</span>
                                                     </mat-cell>
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_by">
@@ -335,7 +262,7 @@
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="truncate-text"><span
                                                                 class="mobile-label">updated_by:</span>
-                                                            {{row.updated_by}}</span>
+                                                            {{row.updated_by.userfullname}}</span>
                                                     </mat-cell>
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_at">
@@ -346,10 +273,22 @@
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="truncate-text"><span
                                                                 class="mobile-label">updated_at:</span>
-                                                            {{tmp_date(row.updated_at)}}</span>
+                                                            {{(row.updated_at * 1000) | date: 'MM/dd/yyyy'}}</span>
                                                     </mat-cell>
                                                 </ng-container>
-
+                                                <ng-container matColumnDef="actions">
+                                                    <mat-header-cell class="pr-0" *matHeaderCellDef
+                                                        [ngClass]="'tbl-col-width-per-action'">Actions</mat-header-cell>
+                                                    <mat-cell *matCellDef="let row; let i=index;"
+                                                        class="pr-0 tbl-col-width-per-action">
+                                                        <button mat-icon-button color="accent"
+                                                            (click)="$event.stopPropagation()"
+                                                            (click)="openEditDocument(row)" class="tbl-action-btn">
+                                                            <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'">
+                                                            </app-feather-icons>
+                                                        </button>
+                                                    </mat-cell>
+                                                </ng-container>
 
                                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                                                 <mat-row *matRowDef="let row; columns: displayedColumns;"
@@ -358,12 +297,12 @@
                                             </table>
                                         </div>
                                         <!-- Loading spinner -->
-                                        <div *ngIf="DocumentsServices?.isTblLoading" class="tbl-spinner">
+                                        <div *ngIf="documentsServices?.isTblLoading" class="tbl-spinner">
                                             <app-loading></app-loading>
                                         </div>
-                                        <div *ngIf="!DocumentsServices?.isTblLoading" class="no-results"
+                                        <div *ngIf="!documentsServices?.isTblLoading" class="no-results"
                                             [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-                                            No matching records found
+                                            {{'COMMON.LISTING.EPMTY' | translate}}
                                         </div>
                                         <mat-paginator #paginator [length]="dataSource.filteredData.length"
                                             [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
@@ -373,20 +312,15 @@
                                 <mat-tab label="Quote">
                                     <div class="body overflow-auto">
                                         <div class="table-responsive">
-                                            <table mat-table #table [dataSource]="dataSource" matSort
-                                                class="mat-cell">
+                                            <table mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
                                                 <ng-container matColumnDef="document_type">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-
                                                         {{'DOCUMENTS.TABLE.DOCUMENT_TYPE' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="mobile-label">Document Type:</span>
-                                                        <div *ngIf="row.document_type === ''">
-                                                            No Identifying Information
-                                                        </div>
-                                                        {{row.document_type}}
+                                                        {{setDocumentType(row.document_type)}}
                                                     </mat-cell>
                                                 </ng-container>
                                                 <ng-container matColumnDef="po_no">
@@ -412,7 +346,7 @@
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="truncate-text"><span class="mobile-label">Vendor
-                                                                Name:</span> {{row.vendor_name}}</span>
+                                                                Name:</span> {{row.vendor_data?.vendor_name}}</span>
                                                     </mat-cell>
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_by">
@@ -423,7 +357,7 @@
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="truncate-text"><span
                                                                 class="mobile-label">updated_by:</span>
-                                                            {{row.updated_by}}</span>
+                                                            {{row.updated_by.userfullname}}</span>
                                                     </mat-cell>
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_at">
@@ -434,10 +368,22 @@
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="truncate-text"><span
                                                                 class="mobile-label">updated_at:</span>
-                                                            {{tmp_date(row.updated_at)}}</span>
+                                                            {{(row.updated_at * 1000) | date: 'MM/dd/yyyy'}}</span>
                                                     </mat-cell>
                                                 </ng-container>
-
+                                                <ng-container matColumnDef="actions">
+                                                    <mat-header-cell class="pr-0" *matHeaderCellDef
+                                                        [ngClass]="'tbl-col-width-per-action'">Actions</mat-header-cell>
+                                                    <mat-cell *matCellDef="let row; let i=index;"
+                                                        class="pr-0 tbl-col-width-per-action">
+                                                        <button mat-icon-button color="accent"
+                                                            (click)="$event.stopPropagation()"
+                                                            (click)="openEditDocument(row)" class="tbl-action-btn">
+                                                            <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'">
+                                                            </app-feather-icons>
+                                                        </button>
+                                                    </mat-cell>
+                                                </ng-container>
 
                                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                                                 <mat-row *matRowDef="let row; columns: displayedColumns;"
@@ -446,35 +392,30 @@
                                             </table>
                                         </div>
                                         <!-- Loading spinner -->
-                                        <div *ngIf="DocumentsServices?.isTblLoading" class="tbl-spinner">
+                                        <div *ngIf="documentsServices?.isTblLoading" class="tbl-spinner">
                                             <app-loading></app-loading>
                                         </div>
-                                        <div *ngIf="!DocumentsServices?.isTblLoading" class="no-results"
+                                        <div *ngIf="!documentsServices?.isTblLoading" class="no-results"
                                             [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-                                            No matching records found
+                                            {{'COMMON.LISTING.EPMTY' | translate}}
                                         </div>
                                         <mat-paginator #paginator [length]="dataSource.filteredData.length"
                                             [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
                                         </mat-paginator>
                                     </div>
                                 </mat-tab>
-                                <mat-tab label="Other Documents">
+                                <mat-tab label="Unknown Documents">
                                     <div class="body overflow-auto">
                                         <div class="table-responsive">
-                                            <table mat-table #table [dataSource]="dataSource" matSort
-                                                class="mat-cell">
+                                            <table mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
                                                 <ng-container matColumnDef="document_type">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
-
                                                         {{'DOCUMENTS.TABLE.DOCUMENT_TYPE' |translate}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="mobile-label">Document Type:</span>
-                                                        <div *ngIf="row.document_type === ''">
-                                                            No Identifying Information
-                                                        </div>
-                                                        {{row.document_type}}
+                                                        {{setDocumentType(row.document_type)}}
                                                     </mat-cell>
                                                 </ng-container>
                                                 <ng-container matColumnDef="po_no">
@@ -500,7 +441,7 @@
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="truncate-text"><span class="mobile-label">Vendor
-                                                                Name:</span> {{row.vendor_name}}</span>
+                                                                Name:</span> {{row.vendor_data?.vendor_name}}</span>
                                                     </mat-cell>
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_by">
@@ -511,7 +452,7 @@
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="truncate-text"><span
                                                                 class="mobile-label">updated_by:</span>
-                                                            {{row.updated_by}}</span>
+                                                            {{row.updated_by.userfullname}}</span>
                                                     </mat-cell>
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_at">
@@ -522,10 +463,22 @@
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="truncate-text"><span
                                                                 class="mobile-label">updated_at:</span>
-                                                            {{tmp_date(row.updated_at)}}</span>
+                                                            {{(row.updated_at * 1000) | date: 'MM/dd/yyyy'}}</span>
                                                     </mat-cell>
                                                 </ng-container>
-
+                                                <ng-container matColumnDef="actions">
+                                                    <mat-header-cell class="pr-0" *matHeaderCellDef
+                                                        [ngClass]="'tbl-col-width-per-action'">Actions</mat-header-cell>
+                                                    <mat-cell *matCellDef="let row; let i=index;"
+                                                        class="pr-0 tbl-col-width-per-action">
+                                                        <button mat-icon-button color="accent"
+                                                            (click)="$event.stopPropagation()"
+                                                            (click)="openEditDocument(row)" class="tbl-action-btn">
+                                                            <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'">
+                                                            </app-feather-icons>
+                                                        </button>
+                                                    </mat-cell>
+                                                </ng-container>
 
                                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                                                 <mat-row *matRowDef="let row; columns: displayedColumns;"
@@ -534,110 +487,22 @@
                                             </table>
                                         </div>
                                         <!-- Loading spinner -->
-                                        <div *ngIf="DocumentsServices?.isTblLoading" class="tbl-spinner">
+                                        <div *ngIf="documentsServices?.isTblLoading" class="tbl-spinner">
                                             <app-loading></app-loading>
                                         </div>
-                                        <div *ngIf="!DocumentsServices?.isTblLoading" class="no-results"
+                                        <div *ngIf="!documentsServices?.isTblLoading" class="no-results"
                                             [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-                                            No matching records found
+                                            {{'COMMON.LISTING.EPMTY' | translate}}
                                         </div>
                                         <mat-paginator #paginator [length]="dataSource.filteredData.length"
                                             [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
                                         </mat-paginator>
                                     </div>
                                 </mat-tab>
-                                <!--  <mat-tab label="Archive Orphan Documents">
-                                    <div class="body overflow-auto">
-                                        <div class="table-responsive">
-                                            <table mat-table #table [dataSource]="dataSource" matSort
-                                                class="mat-cell">
-                                                <ng-container matColumnDef="document_type">
-                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>
-
-                                                        {{'DOCUMENTS.TABLE.DOCUMENT_TYPE' |translate}}
-                                                    </mat-header-cell>
-                                                    <mat-cell *matCellDef="let row"
-                                                        (contextmenu)="onContextMenu($event, row)">
-                                                        <span class="mobile-label">Document Type:</span>
-                                                        <div *ngIf="row.document_type == ''">
-                                                            No Identifying Information
-                                                        </div>
-                                                        {{row.document_type}}
-                                                    </mat-cell>
-                                                </ng-container>
-                                                <ng-container matColumnDef="po_no">
-                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'DOCUMENTS.TABLE.PO_NO' |translate}}</mat-header-cell>
-                                                    <mat-cell *matCellDef="let row"
-                                                        (contextmenu)="onContextMenu($event, row)">
-                                                        <span class="mobile-label">PO NO:</span> {{row.po_no }}
-                                                    </mat-cell>
-                                                </ng-container>
-                                                <ng-container matColumnDef="invoice_no">
-                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'DOCUMENTS.TABLE.INVOICE_NO' |translate}}</mat-header-cell>
-                                                    <mat-cell *matCellDef="let row"
-                                                        (contextmenu)="onContextMenu($event, row)">
-                                                        <span class="mobile-label">Invoice No:</span> {{row.invoice_no}}
-                                                    </mat-cell>
-                                                </ng-container>
-                                                <ng-container matColumnDef="vendor_name">
-                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'DOCUMENTS.TABLE.VENDOR_NAME' |translate}}
-                                                    </mat-header-cell>
-                                                    <mat-cell *matCellDef="let row"
-                                                        (contextmenu)="onContextMenu($event, row)">
-                                                        <span class="truncate-text"><span class="mobile-label">Vendor
-                                                                Name:</span> {{row.vendor_name}}</span>
-                                                    </mat-cell>
-                                                </ng-container>
-                                                <ng-container matColumnDef="updated_by">
-                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'DOCUMENTS.TABLE.ARCHIVE_BY' |translate}}
-                                                    </mat-header-cell>
-                                                    <mat-cell *matCellDef="let row"
-                                                        (contextmenu)="onContextMenu($event, row)">
-                                                        <span class="truncate-text"><span
-                                                                class="mobile-label">updated_by:</span>
-                                                            {{row.updated_by}}</span>
-                                                    </mat-cell>
-                                                </ng-container>
-                                                <ng-container matColumnDef="updated_at">
-                                                    <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                        {{'DOCUMENTS.TABLE.ARCHIVE_AT' |translate}}
-                                                    </mat-header-cell>
-                                                    <mat-cell *matCellDef="let row"
-                                                        (contextmenu)="onContextMenu($event, row)">
-                                                        <span class="truncate-text"><span
-                                                                class="mobile-label">updated_at:</span>
-                                                            {{tmp_date(row.updated_at)}}</span>
-                                                    </mat-cell>
-                                                </ng-container>
-
-
-                                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                                                <mat-row *matRowDef="let row; columns: displayedColumns;"
-                                                    [style.cursor]="'pointer'" matRipple>
-                                                </mat-row>
-                                            </table>
-                                        </div> 
-                                        <div *ngIf="DocumentsServices?.isTblLoading" class="tbl-spinner">
-                                            <app-loading></app-loading>
-                                        </div>
-                                        <div *ngIf="!DocumentsServices?.isTblLoading" class="no-results"
-                                            [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-                                            No matching records found
-                                        </div>
-                                        <mat-paginator #paginator [length]="dataSource.filteredData.length"
-                                            [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
-                                        </mat-paginator>
-                                    </div>
-                                </mat-tab> -->
                             </mat-tab-group>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

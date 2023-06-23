@@ -1,4 +1,4 @@
-export class Vendor {
+export class VendorModel {
     _id: string;
     vendor_image: string;
     vendor_name: string;
@@ -14,7 +14,7 @@ export class Vendor {
     invoices_total: number;
     open_invoices: number;
     open_invoices_total: number;
-    constructor (response: Vendor) {
+    constructor (response: VendorModel) {
         {
             this._id = response._id;
             this.vendor_image = response.vendor_image;
@@ -35,30 +35,4 @@ export class Vendor {
     }
 }
 
-export class TermModel {
-    _id: string;
-    name: string;
-    is_dicount: boolean;
-    discount: number;
-    due_days: string;
-    constructor (response: TermModel) {
-        {
-            this._id = response._id;
-            this.name = response.name;
-            this.is_dicount = response.is_dicount;
-            this.discount = response.discount;
-            this.due_days = response.due_days;
-        }
-    }
-}
 
-export class CountryModel {
-    _id: string;
-    name: string;
-    constructor (response: TermModel) {
-        {
-            this._id = response._id;
-            this.name = response.name;
-        }
-    }
-}

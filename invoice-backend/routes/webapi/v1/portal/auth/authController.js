@@ -1,5 +1,6 @@
 var settingSchema = require('./../../../../../model/settings');
 var userSchema = require('./../../../../../model/user');
+var languageSchema = require('./../../../../../model/language');
 var invoiceRoleSchema = require('./../../../../../model/invoice_roles');
 let db_connection = require('./../../../../../controller/common/connectiondb');
 let config = require('./../../../../../config/config');
@@ -370,6 +371,354 @@ module.exports.login = async function (req, res) {
     });
 };
 
+module.exports.getProfile = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            let requestObject = req.body;
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+            let connection_MDM_main = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
+            let one_Compnay = await rest_Api.findOne(connection_MDM_main, collectionConstant.SUPER_ADMIN_COMPANY, { companycode: decodedToken.companycode });
+            let one_user = await userConnection.aggregate([
+                {
+                    $match:
+                    {
+                        _id: ObjectID(decodedToken.UserData._id),
+                    },
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_ROLES,
+                        localField: "userroleId",
+                        foreignField: "role_id",
+                        as: "role"
+                    }
+                },
+                /* {
+                    $unwind: {
+                        path: "$role",
+                        preserveNullAndEmptyArrays: true
+                    },
+                }, */
+                {
+                    $lookup: {
+                        from: collectionConstant.JOB_TITLE,
+                        localField: "userjob_title_id",
+                        foreignField: "_id",
+                        as: "jobtitle"
+                    }
+                },
+                /*  {
+                     $unwind: {
+                         path: "$jobtitle",
+                         preserveNullAndEmptyArrays: true
+                     },
+                 }, */
+                {
+                    $lookup: {
+                        from: collectionConstant.DEPARTMENTS,
+                        localField: "userdepartment_id",
+                        foreignField: "_id",
+                        as: "department"
+                    }
+                },
+                /* {
+                    $unwind: {
+                        path: "$department",
+                        preserveNullAndEmptyArrays: true
+                    },
+                }, */
+                {
+                    $lookup: {
+                        from: collectionConstant.PAYROLL_GROUP,
+                        localField: "user_id_payroll_group",
+                        foreignField: "_id",
+                        as: "payrollgroup"
+                    }
+                },
+                //  {
+                //      $unwind: {
+                //         path:"$payrollgroup",
+                //         preserveNullAndEmptyArrays: true
+                //     },
+                //  }, 
+                {
+                    $lookup: {
+                        from: collectionConstant.JOB_TYPE,
+                        localField: "userjob_type_id",
+                        foreignField: "_id",
+                        as: "jobtype"
+                    }
+                },
+                // {
+                //     $unwind: {
+                //         path:"$jobtype",
+                //         preserveNullAndEmptyArrays: true
+                //     },
+                // },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "usersupervisor_id",
+                        foreignField: "_id",
+                        as: "supervisor"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.LOCATIONS,
+                        localField: "userlocation_id",
+                        foreignField: "_id",
+                        as: "location"
+                    }
+                },
+                // {
+                //     $unwind: {
+                //         path:"$location",
+                //         preserveNullAndEmptyArrays: true
+                //     },
+                // },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "usermanager_id",
+                        foreignField: "_id",
+                        as: "manager"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.CREDITCARD,
+                        localField: "card_type",
+                        foreignField: "_id",
+                        as: "card"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$card",
+                        preserveNullAndEmptyArrays: true
+                    },
+                },
+                {
+                    $project: {
+                        role_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$role.role_name" },
+                                        {
+                                            $arrayElemAt: ["$role.role_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        supervisor_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$supervisor.userfullname" },
+                                        {
+                                            $arrayElemAt: ["$supervisor.userfullname", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        manager_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$manager.userfullname" },
+                                        {
+                                            $arrayElemAt: ["$manager.userfullname", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        location_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$location.location_name" },
+                                        {
+                                            $arrayElemAt: ["$location.location_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        userjob_type_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$jobtype.job_type_name" },
+                                        {
+                                            $arrayElemAt: ["$jobtype.job_type_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        userjob_title_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$jobtitle.job_title_name" },
+                                        {
+                                            $arrayElemAt: ["$jobtitle.job_title_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        department_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$department.department_name" },
+                                        {
+                                            $arrayElemAt: ["$department.department_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        user_payroll_group_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$payrollgroup.payroll_group_name" },
+                                        {
+                                            $arrayElemAt: ["$payrollgroup.payroll_group_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        userroleId: 1,
+                        password: 1,
+                        useremail: 1,
+                        username: 1,
+                        usermiddlename: 1,
+                        userlastname: 1,
+                        userfullname: 1,
+                        userssn: 1,
+                        userdevice_pin: 1,
+                        userphone: 1,
+                        usersecondary_email: 1,
+                        usergender: 1,
+                        userdob: 1,
+                        userstatus: 1,
+                        userpicture: 1,
+                        usermobile_picture: 1,
+                        userfulladdress: 1,
+                        userstreet1: 1,
+                        userstreet2: 1,
+                        usercity: 1,
+                        user_state: 1,
+                        userzipcode: 1,
+                        usercountry: 1,
+                        userstartdate: 1,
+                        usersalary: 1,
+                        usermanager_id: 1,
+                        usersupervisor_id: 1,
+                        userlocation_id: 1,
+                        userjob_title_id: 1,
+                        userdepartment_id: 1,
+                        userjob_type_id: 1,
+                        usernon_exempt: 1,
+                        usermedicalBenifits: 1,
+                        useradditionalBenifits: 1,
+                        useris_password_temp: 1,
+                        userterm_conditions: 1,
+                        userweb_security_code: 1,
+                        user_payroll_rules: 1,
+                        user_id_payroll_group: 1,
+                        usercostcode: 1,
+                        userqrcode: 1,
+                        userfirebase_id: 1,
+                        login_from: 1,
+                        card_type_name: { $ifNull: ["$card.name", ""] },
+                        card_type: 1,
+                        api_setting: 1,
+                        signature: 1,
+                        allow_for_projects: 1,
+                        user_languages: 1,
+                        show_id_card_on_qrcode_scan: 1,
+                        compliance_officer: 1,
+                    }
+                }
+            ]);
+            if (one_user) {
+                if (one_user.length > 0) {
+                    one_user = one_user[0];
+                    let temp_languages = [];
+                    let lanaguageCollection = connection_db_api.model(collectionConstant.LANGUAGE, languageSchema);
+                    if (one_user['user_languages']) {
+                        for (let i = 0; i < one_user['user_languages'].length; i++) {
+                            let language = await lanaguageCollection.findOne({ _id: ObjectID(one_user['user_languages'][i]) }, { name: 1, _id: 1 });
+                            temp_languages.push(language.name);
+                        }
+                    }
+                    one_user['user_languages_name'] = temp_languages;
+                    let obj = config.PAYROLL_CYCLE.find(o => o.value === Number(one_user['user_payroll_rules']));
+                    if (obj == null || obj == undefined || obj == "") {
+                        one_user['payroll_cycle_name'] = "";
+                    } else {
+                        one_user['payroll_cycle_name'] = obj['viewValue'];
+                    }
+                    var settingConnection = await connection_db_api.model(collectionConstant.INVOICE_SETTING, settingSchema);
+                    let roleConnection = await connection_db_api.model(collectionConstant.INVOICE_ROLES, invoiceRoleSchema);
+                    let roles_tmp = await roleConnection.findOne({ role_id: ObjectID(one_user.userroleId) });
+                    var settings_tmp = await settingConnection.findOne({});
+                    var resLast = {
+                        UserData: one_user,
+                        CompanyData: {
+                            company_id: one_Compnay._id,
+                            company_code: one_Compnay.companycode,
+                            company_logo: one_Compnay.companylogo,
+                            company_name: one_Compnay.companyname,
+                            company_email: one_Compnay.companyemail,
+                            company_phone: one_Compnay.companyphone,
+                            company_address: one_Compnay.companyaddress,
+                            company_address_city: one_Compnay.companyaddresscity,
+                            company_address_state: one_Compnay.companyaddressstate,
+                            company_address_zip: one_Compnay.companyaddresszip,
+                            conatact_person_name: one_Compnay.conatactpersonname,
+                            conatact_person_title: one_Compnay.conatactpersontitle,
+                            conatact_person_email: one_Compnay.conatactpersonemail,
+                            conatact_person_phone1: one_Compnay.conatactpersonphone1,
+                        },
+                        settings: {},
+                        role_permission: [],
+                        questions: []
+                    };
+                    resLast.role_permission = roles_tmp.role_permission;
+                    resLast.settings = settings_tmp.settings;
+                    res.send({ message: translator.getStr('UserListing'), data: resLast, status: true });
+                } else {
+                    res.send({ message: translator.getStr('UserNotFound'), status: false });
+                }
+            } else {
+                res.send({ message: translator.getStr('UserNotFound'), status: false });
+            }
+        } catch (e) {
+            console.log("e:", e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            console.log("db close check: mobile get profile");
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
+    }
+};
+
 module.exports.changepassword = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
 
@@ -455,7 +804,7 @@ module.exports.savelogindetails = async function (req, res) {
                     SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
                     ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                     THANKS: translator.getStr('EmailTemplateThanks'),
-                    ROVUK_TEAM: `${company_data.companyname} team`,
+                    ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
                     EMAILTITLE: translator.getStr('EmailLoginTitle'),
                     USERNAME: `${translator.getStr('EmailLoginHello')} ${decodedToken.UserData.userfullname}`,
                     LOGINLOCATION: `${translator.getStr('EmailLoginLoginFromNewDevice')} ${requestObject.location}`,
@@ -465,6 +814,7 @@ module.exports.savelogindetails = async function (req, res) {
                     IF_NOT_YOU: translator.getStr('EmailLoginIfNotYou'),
                     CHANGE_PASSWORD: translator.getStr('EmailLoginChangePassword'),
                     ANY_QUESTION: translator.getStr('EmailLoginAnyQuestion'),
+                    COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                     COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
                     COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
@@ -545,7 +895,6 @@ module.exports.forgetpassword = async function (req, res) {
                     } else {
                         let temp_password = common.rendomPassword(8);
                         let passwordHash = common.generateHash(temp_password);
-
                         let update_user = await userConnection.updateOne({ useremail: req.body.useremail }, { password: passwordHash, useris_password_temp: true });
                         if (update_user) {
                             let company_data = await companyConnection.findOne({ companycode: requestObject.companycode });
@@ -561,7 +910,8 @@ module.exports.forgetpassword = async function (req, res) {
                                 SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
                                 ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                                 THANKS: translator.getStr('EmailTemplateThanks'),
-                                ROVUK_TEAM: ` Rovuk A/P ${translator.getStr('team_mail_all')}`,
+                                ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                                COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                                 TITLE: translator.getStr('MailForgotPassword_Title'),
                                 HI_USERNAME: translator.getStr('Hello_mail'),
@@ -578,9 +928,9 @@ module.exports.forgetpassword = async function (req, res) {
                             let tmp_subject = translator.getStr('MailForgotPassword_Subject');
                             var template = handlebars.compile(data);
                             var HtmlData = await template(emailTmp);
-                            let tenant_smtp_security = config.tenants.tenant_smtp_security == "Yes" || config.tenants.tenant_smtp_security == "YES" || config.tenants.tenant_smtp_security == "yes" ? true : false;
-                            let mailsend = await sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, find_one_vendor.useremail, tmp_subject, HtmlData,
-                                config.tenants.tenant_smtp_server, config.tenants.tenant_smtp_port, config.tenants.tenant_smtp_reply_to_mail, config.tenants.tenant_smtp_password, config.tenants.tenant_smtp_timeout,
+                            let tenant_smtp_security = config.smartaccupay_tenants.tenant_smtp_security == "Yes" || config.smartaccupay_tenants.tenant_smtp_security == "YES" || config.smartaccupay_tenants.tenant_smtp_security == "yes" ? true : false;
+                            let mailsend = await sendEmail.sendEmail_client(config.smartaccupay_tenants.tenant_smtp_username, find_one_vendor.useremail, tmp_subject, HtmlData,
+                                config.smartaccupay_tenants.tenant_smtp_server, config.smartaccupay_tenants.tenant_smtp_port, config.smartaccupay_tenants.tenant_smtp_reply_to_mail, config.smartaccupay_tenants.tenant_smtp_password, config.smartaccupay_tenants.tenant_smtp_timeout,
                                 tenant_smtp_security);
                             if (mailsend) {
                                 res.send({ message: translator.getStr('CheckMailForgotPassword'), status: true, update_user: update_user });
@@ -591,7 +941,7 @@ module.exports.forgetpassword = async function (req, res) {
                     }
                 } catch (e) {
                     console.log("e", e);
-                    res.send({ message: translator.getStr('SomethingWrong'), status: false });
+                    res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
                 } finally {
                     connection_db_api.close();
                 }
@@ -635,6 +985,7 @@ module.exports.sendUserPassword = async function (req, res) {
                         ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')} `,
                         THANKS: translator.getStr('EmailTemplateThanks'),
                         ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                        COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                         TITLE: translator.getStr('EmailResetPasswordTitle'),
                         HI_USERNAME: `${translator.getStr('EmailTemplateHi')} ${one_user.username}, `,
@@ -643,12 +994,12 @@ module.exports.sendUserPassword = async function (req, res) {
                         TEXT3: translator.getStr('EmailResetPasswordText3'),
                         TEMP_PASSWORD: `${translator.getStr('EmailResetPasswordTempPassword')} ${requestObject.password} `,
 
-                        // COMPANYNAME: `${ translator.getStr('EmailAppInvitationCompanyName'); } ${ company_data.companyname; } `,
-                        // COMPANYCODE: `${ translator.getStr('EmailAppInvitationCompanyCode'); } ${ company_data.companycode; } `,
+                        // COMPANYNAME: `${ translator.getStr('EmailAppInvitationCompanyName') } ${ company_data.companyname } `,
+                        // COMPANYCODE: `${ translator.getStr('EmailAppInvitationCompanyCode') } ${ company_data.companycode } `,
                     };
                     var template = handlebars.compile(data);
                     var HtmlData = await template(emailTmp);
-                    sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [requestObject.useremail], "Rovuk Forgot Password", HtmlData,
+                    sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [requestObject.useremail], "SmartAccuPay Forgot Password", HtmlData,
                         talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail, talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout,
                         talnate_data.tenant_smtp_security);
                     res.send({ message: translator.getStr('CheckMailNewPassword'), status: true, update_user: update_user });
@@ -723,10 +1074,11 @@ module.exports.sendOTP = async function (req, res) {
                     SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2} `,
                     ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')} `,
                     THANKS: translator.getStr('EmailTemplateThanks'),
-                    ROVUK_TEAM: `${company_data.companyname} team`,
+                    ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                    COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                     TITLE: 'One Time Password (OTP) verification',
-                    LINE1: new handlebars.SafeString(`Your One Time Password(OTP) is <b> ${sixdidgitnumber}</b>.`),
+                    LINE1: new handlebars.SafeString(`Your One Time Password(OTP) is<b> ${sixdidgitnumber}</b>.`),
                     LINE2: 'Make sure to enter it in the web browser, since your account can’t be accessed without it.',
 
                     COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname} `,
@@ -1243,7 +1595,7 @@ module.exports.getLoginCompanyList = async function (req, res) {
             let user = get_company[i].invoice_user.find(o => o.useremail === requestObject.useremail);
             if (user) {
                 var psss_tnp = await common.validPassword(requestObject.password, user.password);
-                if (psss_tnp) {
+                if (psss_tnp && user.userstatus == 1 && user.is_delete == 0) {
                     data.push(get_company[i]);
                 }
             }
@@ -1594,10 +1946,11 @@ module.exports.sendEmailOTP = async function (req, res) {
                     SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2} `,
                     ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')} `,
                     THANKS: translator.getStr('EmailTemplateThanks'),
-                    ROVUK_TEAM: `Rovuk A/P ${translator.getStr('team_mail_all')}`,
+                    ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                    COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                     TITLE: 'One Time Password (OTP) verification',
-                    LINE1: new handlebars.SafeString(`Your One Time Password(OTP) is <b> ${sixdidgitnumber}</b>.`),
+                    LINE1: new handlebars.SafeString(`Your One Time Password(OTP) is <b> ${sixdidgitnumber}</b>`),
                     LINE2: 'Make sure to enter it in the web browser, since your account can’t be accessed without it.',
 
                     COMPANYNAME: ``,
@@ -1606,9 +1959,9 @@ module.exports.sendEmailOTP = async function (req, res) {
                 const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/emailOTP.html', 'utf8');
                 var template = handlebars.compile(file_data);
                 var HtmlData = await template(emailTmp);
-                sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, [requestObject.useremail], "OTP Verification", HtmlData,
-                    config.tenants.tenant_smtp_server, config.tenants.tenant_smtp_port, config.tenants.tenant_smtp_reply_to_mail,
-                    config.tenants.tenant_smtp_password, config.tenants.tenant_smtp_timeout, config.tenants.tenant_smtp_security);
+                sendEmail.sendEmail_client(config.smartaccupay_tenants.tenant_smtp_username, [requestObject.useremail], "OTP Verification", HtmlData,
+                    config.smartaccupay_tenants.tenant_smtp_server, config.smartaccupay_tenants.tenant_smtp_port, config.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                    config.smartaccupay_tenants.tenant_smtp_password, config.smartaccupay_tenants.tenant_smtp_timeout, config.smartaccupay_tenants.tenant_smtp_security);
                 res.send({ message: 'One Time Password (OTP) sent successfully.', status: true });
             } else {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
@@ -2309,8 +2662,21 @@ module.exports.emailForgotPassword = async function (req, res) {
             'invoice_user.is_delete': 0,
         };
         var get_company = await companyConnection.find(match);
-        if (get_company.length == 1) {
-            var get_tenants = await tenantsConnection.findOne({ company_id: get_company[0]._id });
+        var data = [];
+        for (let i = 0; i < get_company.length; i++) {
+            let user = get_company[i].invoice_user.find(o => o.useremail === requestObject.useremail);
+            if (user) {
+                data.push(get_company[i]);
+                /* var psss_tnp = await common.validPassword(requestObject.password, user.password);
+                console.log("psss_tnp", psss_tnp);
+                console.log("user", user);
+                if (psss_tnp && user.userstatus == 1 && user.is_delete == 0) {
+                    data.push(get_company[i]);
+                } */
+            }
+        }
+        if (data.length == 1) {
+            var get_tenants = await tenantsConnection.findOne({ company_id: data[0]._id });
             let connection_db_api = await db_connection.connection_db_api(get_tenants);
             let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
 
@@ -2323,45 +2689,46 @@ module.exports.emailForgotPassword = async function (req, res) {
                 let companyUserObj = {
                     'invoice_user.$.password': passwordHash,
                 };
-                let update_invoice_user = await companyConnection.updateOne({ _id: ObjectID(get_company[0]._id), 'invoice_user.user_id': ObjectID(one_user._id) }, { $set: companyUserObj });
+                let update_invoice_user = await companyConnection.updateOne({ _id: ObjectID(data[0]._id), 'invoice_user.user_id': ObjectID(one_user._id) }, { $set: companyUserObj });
 
                 const data = await fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/resetPassword.html', 'utf8');
                 let emailTmp = {
-                    HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
-                    SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
-                    ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                    HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE} `,
+                    SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2} `,
+                    ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')} `,
                     THANKS: translator.getStr('EmailTemplateThanks'),
-                    ROVUK_TEAM: ` Rovuk A/P ${translator.getStr('team_mail_all')}`,
+                    ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                    COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                     TITLE: translator.getStr('MailForgotPassword_Title'),
                     HI_USERNAME: translator.getStr('Hello_mail'),
                     TEXT1: translator.getStr('vendor_mail_forgotpass_line1_1'),
                     TEXT2: translator.getStr('vendor_mail_forgotpass_line3_1'),
-                    TEMP_PASSWORD: `${translator.getStr('vendor_mail_forgotpass_line2_1')} ${temp_password}`,
+                    TEMP_PASSWORD: `${translator.getStr('vendor_mail_forgotpass_line2_1')} ${temp_password} `,
 
                     BUTTON_TEXT: translator.getStr('EmailInvitationLogIn'),
                     LINK: config.SITE_URL + "/login",
 
-                    COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${get_company[0].companyname}`,
-                    COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${get_company[0].companycode}`,
+                    COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${data[0].companyname} `,
+                    COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${data[0].companycode} `,
                 };
                 let tmp_subject = translator.getStr('MailForgotPassword_Subject');
                 var template = handlebars.compile(data);
                 var HtmlData = await template(emailTmp);
-                let tenant_smtp_security = config.tenants.tenant_smtp_security == "Yes" || config.tenants.tenant_smtp_security == "YES" || config.tenants.tenant_smtp_security == "yes" ? true : false;
-                sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, one_user.useremail, tmp_subject, HtmlData,
-                    config.tenants.tenant_smtp_server, config.tenants.tenant_smtp_port, config.tenants.tenant_smtp_reply_to_mail, config.tenants.tenant_smtp_password, config.tenants.tenant_smtp_timeout,
+                let tenant_smtp_security = config.smartaccupay_tenants.tenant_smtp_security == "Yes" || config.smartaccupay_tenants.tenant_smtp_security == "YES" || config.smartaccupay_tenants.tenant_smtp_security == "yes" ? true : false;
+                sendEmail.sendEmail_client(config.smartaccupay_tenants.tenant_smtp_username, one_user.useremail, tmp_subject, HtmlData,
+                    config.smartaccupay_tenants.tenant_smtp_server, config.smartaccupay_tenants.tenant_smtp_port, config.smartaccupay_tenants.tenant_smtp_reply_to_mail, config.smartaccupay_tenants.tenant_smtp_password, config.smartaccupay_tenants.tenant_smtp_timeout,
                     tenant_smtp_security);
-                res.send({ message: translator.getStr('CheckMailForgotPassword'), status: true, data: get_company });
+                res.send({ message: translator.getStr('CheckMailForgotPassword'), status: true, data: data });
             } else {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
             }
         } else {
-            res.send({ message: translator.getStr('CompanyListing'), status: true, data: get_company });
+            res.send({ message: translator.getStr('CompanyListing'), status: true, data: data });
         }
     } catch (e) {
         console.log(e);
-        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
     } finally {
         // connection_db_api.close();
     }
@@ -2399,30 +2766,31 @@ module.exports.sendEmailForgotPassword = async function (req, res) {
 
             const data = await fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/resetPassword.html', 'utf8');
             let emailTmp = {
-                HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE}`,
-                SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
-                ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
+                HELP: `${translator.getStr('EmailTemplateHelpEmailAt')} ${config.HELPEMAIL} ${translator.getStr('EmailTemplateCallSupportAt')} ${config.NUMBERPHONE} `,
+                SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2} `,
+                ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')} `,
                 THANKS: translator.getStr('EmailTemplateThanks'),
-                ROVUK_TEAM: ` Rovuk A/P ${translator.getStr('team_mail_all')}`,
+                ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                 TITLE: translator.getStr('MailForgotPassword_Title'),
                 HI_USERNAME: translator.getStr('Hello_mail'),
                 TEXT1: translator.getStr('vendor_mail_forgotpass_line1_1'),
                 TEXT2: translator.getStr('vendor_mail_forgotpass_line3_1'),
-                TEMP_PASSWORD: `${translator.getStr('vendor_mail_forgotpass_line2_1')} ${temp_password}`,
+                TEMP_PASSWORD: `${translator.getStr('vendor_mail_forgotpass_line2_1')} ${temp_password} `,
 
                 BUTTON_TEXT: translator.getStr('EmailInvitationLogIn'),
                 LINK: config.SITE_URL + "/login",
 
-                COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${get_company.companyname}`,
-                COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${get_company.companycode}`,
+                COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${get_company.companyname} `,
+                COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${get_company.companycode} `,
             };
             let tmp_subject = translator.getStr('MailForgotPassword_Subject');
             var template = handlebars.compile(data);
             var HtmlData = await template(emailTmp);
-            let tenant_smtp_security = config.tenants.tenant_smtp_security == "Yes" || config.tenants.tenant_smtp_security == "YES" || config.tenants.tenant_smtp_security == "yes" ? true : false;
-            sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, one_user.useremail, tmp_subject, HtmlData,
-                config.tenants.tenant_smtp_server, config.tenants.tenant_smtp_port, config.tenants.tenant_smtp_reply_to_mail, config.tenants.tenant_smtp_password, config.tenants.tenant_smtp_timeout,
+            let tenant_smtp_security = config.smartaccupay_tenants.tenant_smtp_security == "Yes" || config.smartaccupay_tenants.tenant_smtp_security == "YES" || config.smartaccupay_tenants.tenant_smtp_security == "yes" ? true : false;
+            sendEmail.sendEmail_client(config.smartaccupay_tenants.tenant_smtp_username, one_user.useremail, tmp_subject, HtmlData,
+                config.smartaccupay_tenants.tenant_smtp_server, config.smartaccupay_tenants.tenant_smtp_port, config.smartaccupay_tenants.tenant_smtp_reply_to_mail, config.smartaccupay_tenants.tenant_smtp_password, config.smartaccupay_tenants.tenant_smtp_timeout,
                 tenant_smtp_security);
             res.send({ message: translator.getStr('CheckMailForgotPassword'), status: true, data: get_company });
         } else {
@@ -2451,11 +2819,20 @@ module.exports.getMyCompanyList = async function (req, res) {
             'invoice_user.is_delete': 0,
         };
         var get_company = await companyConnection.find(match);
-        res.send({ message: translator.getStr('CompanyListing'), status: true, data: get_company });
+        var data = [];
+        for (let i = 0; i < get_company.length; i++) {
+            let user = get_company[i].invoice_user.find(o => o.useremail === requestObject.useremail);
+            if (user) {
+                if (user.userstatus == 1 && user.is_delete == 0) {
+                    data.push(get_company[i]);
+                }
+            }
+        }
+        res.send({ message: translator.getStr('CompanyListing'), status: true, data });
     } catch (e) {
         console.log(e);
         res.send({ message: translator.getStr('SomethingWrong'), status: false });
     } finally {
         // connection_db_api.close();
     }
-}; 
+};

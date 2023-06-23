@@ -2,25 +2,7 @@ var validator = require("../../../../../controller/common/validationforrequest")
 
 const getOneInvoiceMessage = (req, res, next) => {
     const validationRule = {
-        "_id": "required",
-    };
-    validator(req.body, validationRule, {}, (err, status) => {
-        if (!status) {
-            res.send({
-                status: false,
-                message: 'Validation failed',
-                data: err
-            });
-        } else {
-            next();
-        }
-    });
-};
-
-const updateInvoiceMessageSeenFlag = (req, res, next) => {
-    const validationRule = {
-        "_id": "required",
-        "receiver_id": "required",
+        "invoice_id": "required",
     };
     validator(req.body, validationRule, {}, (err, status) => {
         if (!status) {
@@ -74,7 +56,6 @@ const deleteInvoiceMessage = (req, res, next) => {
 
 module.exports = {
     getOneInvoiceMessage,
-    updateInvoiceMessageSeenFlag,
     sendInvoiceMessage,
     deleteInvoiceMessage,
 };

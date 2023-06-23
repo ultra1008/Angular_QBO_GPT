@@ -9,6 +9,7 @@ import { showNotification, swalWithBootstrapButtons } from 'src/consts/utils';
 import { SettingsService } from '../../settings.service';
 import { configData } from 'src/environments/configData';
 import { TranslateService } from '@ngx-translate/core';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-mailbox-form',
@@ -45,10 +46,7 @@ export class MailboxFormComponent {
 
     this.companyinfoForm = this.fb.group({
       password: ['', [Validators.required]],
-      email: [
-        '',
-        [Validators.required, Validators.email, Validators.minLength(5)],
-      ],
+      email: ['', [Validators.required, Validators.email, Validators.minLength(5)],],
       imap: ['', [Validators.required]],
       port: [''],
       time: [''],
@@ -56,18 +54,14 @@ export class MailboxFormComponent {
   }
 
   onSelectTime(event: any) {
-    console.log('element', this.frequency, event);
     let found = this.frequency.find((element) => element.time == event);
-    console.log('found', found);
     this.cronTime = found?.cron_time;
-    console.log('crontime', this.cronTime);
   }
 
   async getOneMailbox() {
     const data = await this.SettingsServices.getOneMailBox(this.id);
     if (data.status) {
       let mailBox = data.data;
-      console.log('data', mailBox);
       this.companyinfoForm = this.fb.group({
         email: [mailBox.email, [Validators.required, Validators.email]],
         password: ['', Validators.required],
@@ -107,7 +101,7 @@ export class MailboxFormComponent {
           // ;
         } else {
           setTimeout(() => {
-            this.router.navigate(['/settings/mailbox']);
+            this.back();
           }, 100);
         }
       });
@@ -126,14 +120,15 @@ export class MailboxFormComponent {
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        this.router.navigate(['/settings/mailbox']);
+        this.back();
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');
       }
-
     }
+  }
 
+  back() {
+    this.router.navigate([WEB_ROUTES.MAILBOX_SETTING]);
   }
 }
-

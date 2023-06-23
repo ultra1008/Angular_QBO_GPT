@@ -1,6 +1,6 @@
 import { formatDate } from "@angular/common";
 
-export class User {
+export class UserModel {
     _id: string;
     userfullname: string;
     useremail: string;
@@ -11,7 +11,7 @@ export class User {
     department_name: string;
     userstatus: number;
     static _id: string;
-    constructor(response: User) {
+    constructor (response: UserModel) {
         {
             this._id = response._id;
             this.userfullname = response.userfullname;
@@ -36,7 +36,7 @@ export class AdvanceTable {
     mobile: string;
     address: string;
     country: string;
-    constructor(advanceTable: AdvanceTable) {
+    constructor (advanceTable: AdvanceTable) {
         {
             this.id = advanceTable.id || this.getRandomID();
             this.img = advanceTable.img || 'assets/images/user/user1.jpg';
@@ -63,7 +63,7 @@ export class RoleModel {
     is_delete: boolean;
     role_id: string;
 
-    constructor(response: RoleModel) {
+    constructor (response: RoleModel) {
         {
             this._id = response._id;
             this.role_name = response.role_name;
@@ -86,7 +86,7 @@ export class EmergencyContact {
     emergency_contact_state: string;
     is_validated: boolean;
     validated_at: string;
-    constructor(response: EmergencyContact) {
+    constructor (response: EmergencyContact) {
         {
             this._id = response._id;
             this.emergency_contact_name = response.emergency_contact_name;
@@ -110,7 +110,7 @@ export class UserDocument {
     userdocument_type_id: string;
     userdocument_url: string;
 
-    constructor(response: UserDocument) {
+    constructor (response: UserDocument) {
         {
             this._id = response._id;
             this.document_name = response.document_name;

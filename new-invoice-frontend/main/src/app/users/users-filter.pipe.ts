@@ -36,9 +36,8 @@ export class EmpListFilterStatusPipe implements PipeTransform {
 export class FormateDateDDMMYYPipe implements PipeTransform {
      transform(value: number) {
           if (value == 0 || value == undefined || value == null) return '';
-          var dateObj = value * 1000;
-          var datePipe = new DatePipe('en-US');
-          let date = new Date(dateObj);
+          const dateObj = value * 1000;
+          const datePipe = new DatePipe('en-US');
           return datePipe.transform(new Date(dateObj), 'short');
      }
 }
@@ -47,13 +46,15 @@ export class FormateDateDDMMYYPipe implements PipeTransform {
 })
 export class FormateDateStringPipe implements PipeTransform {
      transform(epoch: number) {
-          var age;
-          var date = new Date(epoch * 1000);
-          var year = date.getFullYear();
-          var month = date.getMonth() + 1;
-          var day = date.getDay();
-
-          age = moment([year, month, day]).fromNow();
-          return age;
+          if (epoch) {
+               const date = new Date(epoch * 1000);
+               const year = date.getFullYear();
+               const month = date.getMonth();
+               const day = date.getDay();
+               const age = moment([year, month, day]).fromNow();
+               return age;
+          } else {
+               return '';
+          }
      }
 }

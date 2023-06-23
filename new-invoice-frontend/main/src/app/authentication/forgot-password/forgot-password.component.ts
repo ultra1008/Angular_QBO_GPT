@@ -6,6 +6,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { AuthService } from 'src/app/core/service/auth.service';
 import { AuthenticationService } from '../authentication.service';
+import { WEB_ROUTES } from 'src/consts/routes';
+import { CommonService } from 'src/app/services/common.service';
+import { httproutes, httpversion } from 'src/consts/httproutes';
+import { CompanyModel } from 'src/consts/common.model';
 @Component({
   selector: 'app-forgot-password',
   templateUrl: './forgot-password.component.html',
@@ -18,7 +22,7 @@ export class ForgotPasswordComponent implements OnInit {
   companyCode = '';
   useremail = '';
   showForm = true;
-  companyList: any = [];
+  companyList: Array<CompanyModel> = [];
   removable = true;
 
   constructor (
@@ -26,7 +30,8 @@ export class ForgotPasswordComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private authenticationService: AuthenticationService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private commonService: CommonService,
   ) { }
   ngOnInit() {
     this.companyCode = localStorage.getItem(localstorageconstants.COMPANYCODE) ?? '';
@@ -42,11 +47,11 @@ export class ForgotPasswordComponent implements OnInit {
     let that = this;
     if (that.authForm.valid) {
       const formValues = this.authForm.value;
-      const data = await this.authenticationService.emailForgotPassword(formValues);
+      const data = await this.commonService.postRequestAPI(httpversion.V1 + httproutes.EMAIL_FORGET_PASSWORD, formValues);
       if (data.status) {
         if (data.data.length == 1) {
           showNotification(this.snackBar, data.message, 'success');
-          this.router.navigate(['/authentication/signin']);
+          this.router.navigate([WEB_ROUTES.LOGIN]);
         } else {
           this.useremail = formValues.useremail;
           this.companyList = data.data;
@@ -58,13 +63,13 @@ export class ForgotPasswordComponent implements OnInit {
     }
   }
 
-  async selectCompany(company: any) {
+  async selectCompany(company: CompanyModel) {
     const formValues = this.authForm.value;
     formValues._id = company._id;
-    const data = await this.authenticationService.sendEmailForgotPassword(formValues);
+    const data = await this.commonService.postRequestAPI(httpversion.V1 + httproutes.SEND_EMAIL_FORGET_PASSWORD, formValues);
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
-      this.router.navigate(['/authentication/signin']);
+      this.router.navigate([WEB_ROUTES.LOGIN]);
     } else {
       showNotification(this.snackBar, data.message, 'error');
     }
@@ -74,5 +79,9 @@ export class ForgotPasswordComponent implements OnInit {
     this.useremail = '';
     this.showForm = true;
     this.authForm.reset();
+  }
+
+  openLogin() {
+    this.router.navigate([WEB_ROUTES.LOGIN]);
   }
 }

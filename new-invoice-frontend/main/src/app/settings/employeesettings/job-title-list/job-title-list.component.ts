@@ -11,9 +11,10 @@ import { fromEvent, BehaviorSubject, Observable, merge, map } from 'rxjs';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
-import { JobTitleTable } from '../../settings.model';
+import { JobTitleModel } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
 import { JobTitleFormComponent } from './job-title-form/job-title-form.component';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-job-title-list',
@@ -26,9 +27,9 @@ export class JobTitleListComponent
   displayedColumns = ['job_title_name', 'actions'];
   jobtitleService?: SettingsService;
   dataSource!: JobTitleDataSource;
-  selection = new SelectionModel<JobTitleTable>(true, []);
+  selection = new SelectionModel<JobTitleModel>(true, []);
   id?: number;
-  // advanceTable?: JobTitleTable;
+  // advanceTable?: JobTitleModel;
   isDelete = 0;
   titleMessage = '';
 
@@ -54,19 +55,9 @@ export class JobTitleListComponent
   refresh() {
     this.loadData();
   }
-  addNew() {
-    this.router.navigate(['/settings/mailbox-form']);
-  }
-
-  editMailbox(mailbox: JobTitleTable) {
-    this.router.navigate(['/settings/mailbox-form'], {
-      queryParams: { _id: mailbox._id },
-    });
-  }
 
   edit(jobtitle: any) {
     let that = this;
-    console.log('document');
     const dialogRef = this.dialog.open(JobTitleFormComponent, {
       width: '350px',
       data: jobtitle,
@@ -146,7 +137,7 @@ export class JobTitleListComponent
     //     // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
     //     this.jobtitleService?.dataChange.value.splice(index, 1);
     //     this.refreshTable();
-    //     this.selection = new SelectionModel<JobTitleTable>(true, []);
+    //     this.selection = new SelectionModel<JobTitleModel>(true, []);
     //   });
     //  showNotification(
     //     'snackbar-danger',
@@ -174,11 +165,11 @@ export class JobTitleListComponent
   }
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: JobTitleTable) {
+  onContextMenu(event: MouseEvent, item: JobTitleModel) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -189,7 +180,7 @@ export class JobTitleListComponent
     }
   }
 }
-export class JobTitleDataSource extends DataSource<JobTitleTable> {
+export class JobTitleDataSource extends DataSource<JobTitleModel> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -197,8 +188,8 @@ export class JobTitleDataSource extends DataSource<JobTitleTable> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: JobTitleTable[] = [];
-  renderedData: JobTitleTable[] = [];
+  filteredData: JobTitleModel[] = [];
+  renderedData: JobTitleModel[] = [];
   constructor (
     public jobtitleService: SettingsService,
     public paginator: MatPaginator,
@@ -210,7 +201,7 @@ export class JobTitleDataSource extends DataSource<JobTitleTable> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<JobTitleTable[]> {
+  connect(): Observable<JobTitleModel[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this.jobtitleService.jobTitleDataChange,
@@ -224,8 +215,8 @@ export class JobTitleDataSource extends DataSource<JobTitleTable> {
         // Filter data
         this.filteredData = this.jobtitleService.jobTitleData
           .slice()
-          .filter((JobTitleTable: JobTitleTable) => {
-            const searchStr = JobTitleTable.job_title_name.toLowerCase();
+          .filter((JobTitleModel: JobTitleModel) => {
+            const searchStr = JobTitleModel.job_title_name.toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
         // Sort filtered data
@@ -244,7 +235,7 @@ export class JobTitleDataSource extends DataSource<JobTitleTable> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: JobTitleTable[]): JobTitleTable[] {
+  sortData(data: JobTitleModel[]): JobTitleModel[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }

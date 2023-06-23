@@ -25,7 +25,7 @@ import {
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { DataSource, SelectionModel } from '@angular/cdk/collections';
-import { UsageTable } from '../settings.model';
+import { UsageModel } from '../settings.model';
 import { MailboxDataSource } from '../mailbox/mailbox.component';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
@@ -34,61 +34,27 @@ import {
   swalWithBootstrapTwoButtons,
 } from 'src/consts/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-usage',
   templateUrl: './usage.component.html',
   styleUrls: ['./usage.component.scss'],
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({ height: '0px', minHeight: '0' })),
-      state('expanded', style({ height: '*' })),
-      transition(
-        'expanded <=> collapsed',
-        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
-      ),
-    ]),
-  ],
 })
-export class UsageComponent
-  extends UnsubscribeOnDestroyAdapter
-  implements OnInit
-{
-  // displayedColumns = ['_id'];
+export class UsageComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
+  displayedColumns = ['month_name', 'invoice', 'po', 'packing_slip', 'receiving_slip', 'quote', 'other', 'duplicated'];
 
   AllUsage: any;
   usageinfo: FormGroup;
 
-  displayedColumns = ['_id'];
   usageService?: SettingsService;
   dataSource!: UsageDataSource;
-  selection = new SelectionModel<UsageTable>(true, []);
+  selection = new SelectionModel<UsageModel>(true, []);
   id?: number;
-  // advanceTable?: UsageTable;
   isDelete = 0;
-  titleMessage: string = '';
+  titleMessage = '';
 
-  // columnsToDisplay = ['year'];
-  // expandedElement!: Element;
-
-  // tmp_arr: any = [
-  //   {
-  //     name: 'Parth',
-  //     facility_no: 'TC1234',
-  //     Amount: '124.45',
-  //   },
-  //   {
-  //     name: 'Parth1',
-  //     facility_no: 'TC123',
-  //     Amount: '123.45',
-  //   },
-  // ];
-
-  isExpansionDetailRow = (i: number, row: Object) =>
-    row.hasOwnProperty('detailRow');
-  // expandedElement!: Element;
-
-  constructor(
+  constructor (
     public SettingsService: SettingsService,
     public router: Router,
     public translate: TranslateService,
@@ -103,9 +69,7 @@ export class UsageComponent
       totalSuervisor: [''],
       bucket_size: [''],
     });
-    let that = this;
-    // that.getusagedata();
-    that.getcompanyusage();
+    this.getcompanyusage();
   }
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
@@ -115,20 +79,13 @@ export class UsageComponent
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
-  myFunc = (i: number, row: Object) => {
-    console.log(row.hasOwnProperty('position'));
-    row.hasOwnProperty('position');
-  };
+
   ngOnInit() {
     let that = this;
     this.loadData();
     that.getcompanyusage();
-    // that.getusagedata();
-    // that.dataSource.sort = that.sort;
-    // that.dataSource.paginator = that.paginator;
-    // that.dataSource = new MatTableDataSource(that.AllUsage.slice());
   }
 
   async getcompanyusage() {
@@ -146,39 +103,11 @@ export class UsageComponent
         }
       });
   }
-
-  // async getusagedata() {
-  //   let that = this;
-  //   that.httpCall
-  //     .httpGetCall(httpversion.PORTAL_V1 + httproutes.USAGE_DATA_TABLE)
-  //     .subscribe(function (params) {
-  //       if (params.length > 0) {
-  //         that.AllUsage = [];
-  //         for (let i = 0; i < params.length; i++) {
-  //           that.AllUsage.push({
-  //             year: params[i].year,
-  //           });
-  //           console.log('daafsAFSAJsd', that.AllUsage);
-  //         }
-
-  //       }
-  //     });
-  // }
-
   refresh() {
     this.loadData();
   }
-  addNew() {
-    this.router.navigate(['/settings/mailbox-form']);
-  }
 
-  editMailbox(mailbox: UsageTable) {
-    this.router.navigate(['/settings/mailbox-form'], {
-      queryParams: { _id: mailbox._id },
-    });
-  }
-
-  async archiveRecover(mailbox: UsageTable, is_delete: number) {
+  async archiveRecover(mailbox: UsageModel, is_delete: number) {
     const data = await this.SettingsService.deleteMailbox({
       _id: mailbox._id,
       is_delete: is_delete,
@@ -200,7 +129,7 @@ export class UsageComponent
     }
   }
 
-  async deleteMailbox(mailbox: UsageTable, is_delete: number) {
+  async deleteMailbox(mailbox: UsageModel, is_delete: number) {
     if (is_delete == 1) {
       this.titleMessage = this.translate.instant(
         'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOX.CONFIRMATION_DIALOG.ARCHIVE'
@@ -246,8 +175,8 @@ export class UsageComponent
     this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.renderedData.forEach((row) =>
-          this.selection.select(row)
-        );
+        this.selection.select(row)
+      );
   }
   removeSelectedRows() {
     //   const totalSelect = this.selection.selected.length;
@@ -258,7 +187,7 @@ export class UsageComponent
     //     // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
     //     this.usageService?.dataChange.value.splice(index, 1);
     //     this.refreshTable();
-    //     this.selection = new SelectionModel<UsageTable>(true, []);
+    //     this.selection = new SelectionModel<UsageModel>(true, []);
     //   });
     //  showNotification(
     //     'snackbar-danger',
@@ -275,18 +204,18 @@ export class UsageComponent
       this.sort,
       this.isDelete
     );
-    this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
+    /* this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
       () => {
         if (!this.dataSource) {
           return;
         }
         this.dataSource.filter = this.filter.nativeElement.value;
       }
-    );
+    ); */
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: UsageTable) {
+  onContextMenu(event: MouseEvent, item: UsageModel) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -298,7 +227,7 @@ export class UsageComponent
   }
 }
 
-export class UsageDataSource extends DataSource<UsageTable> {
+export class UsageDataSource extends DataSource<UsageModel> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -306,9 +235,9 @@ export class UsageDataSource extends DataSource<UsageTable> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: UsageTable[] = [];
-  renderedData: UsageTable[] = [];
-  constructor(
+  filteredData: UsageModel[] = [];
+  renderedData: UsageModel[] = [];
+  constructor (
     public usageService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
@@ -319,22 +248,22 @@ export class UsageDataSource extends DataSource<UsageTable> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<UsageTable[]> {
+  connect(): Observable<UsageModel[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this.usageService.dataUsageChange,
+      this.usageService.aPCountDataChange,
       this._sort.sortChange,
       this.filterChange,
       this.paginator.page,
     ];
-    this.usageService.getAllUsageTable();
+    this.usageService.getAPCount();
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
-        this.filteredData = this.usageService.datausage
+        this.filteredData = this.usageService.aPCountData
           .slice()
-          .filter((UsageTable: UsageTable) => {
-            const searchStr = UsageTable._id.toLowerCase();
+          .filter((response: UsageModel) => {
+            const searchStr = response._id.toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
 
@@ -358,7 +287,7 @@ export class UsageDataSource extends DataSource<UsageTable> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: UsageTable[]): UsageTable[] {
+  sortData(data: UsageModel[]): UsageModel[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }
@@ -377,10 +306,4 @@ export class UsageDataSource extends DataSource<UsageTable> {
       );
     });
   }
-}
-// export interface Element {
-//   name: string;
-//   position: number;
-//   weight: number;
-//   symbol: string;
-// }
+} 

@@ -1,6 +1,5 @@
 var ObjectID = require('mongodb').ObjectID;
 let collectionConstant = require('./../../../../../config/collectionConstant');
-let superadminCollection = require('./../../../../../config/superadminCollection');
 var supplier_compnay_codesSchema = require('./../../../../../model/supplier_compnay_codes');
 let common = require('./../../../../../controller/common/common');
 let db_connection = require('./../../../../../controller/common/connectiondb');
@@ -10,12 +9,12 @@ const reader = require('xlsx');
 module.exports.getCompanyCodeOcpr = async function (req, res) {
     var requestObject = req.body;
     var translator = new common.Language('en');
-    DB.findOne(superadminCollection.COMPANY, { _id: ObjectID(requestObject.sponsor_id) }, function (err, resultfind) {
+    DB.findOne(collectionConstant.SUPER_ADMIN_COMPANY, { _id: ObjectID(requestObject.sponsor_id) }, function (err, resultfind) {
         if (err) {
             res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
         } else {
             if (resultfind != null) {
-                DB.findOne(superadminCollection.TENANTS, { companycode: resultfind.companycode }, async function (err, resulttanent) {
+                DB.findOne(collectionConstant.SUPER_ADMIN_TENANTS, { companycode: resultfind.companycode }, async function (err, resulttanent) {
                     if (err) {
                         res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
                     } else {

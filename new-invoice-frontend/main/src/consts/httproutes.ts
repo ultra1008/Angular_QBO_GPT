@@ -20,8 +20,12 @@ export enum httproutes {
 
   // Dashboard
   GET_DASHBOARD_INVOICE = 'getdashboardinvoice',
-  GET_DASHBOARD_INVOICE_COUNTS = 'countInvoiceStatus',
+  GET_DASHBOARD_INVOICE_COUNTS = 'getdashboardcount',
   DASHBOARD_INVOICE_FOR_TABLE = 'dashboardInvoiceListForTable',
+  DASHBOARD_MONTHLY_INVOICE_CHART = 'getdashboardmonthlyinvoicechart',
+  DASHBOARD_MONTHLY_HISTORY_CHART = 'getdashboardmonthlyhistorychart',
+  GET_DUPLICATE_DOCUMENT_FOR_TABLE = 'getduplicatedocumentsfortable',
+  GET_DASHBOARD_JOB_COST = 'getdashboardjobcost',
 
   // Vendor
   PORTAL_VENDOR_GET_FOR_TABLE = 'getvendorfortable',
@@ -64,6 +68,7 @@ export enum httproutes {
   USER_REPORT = 'getallemployeereport',
   TEAM_HISTORY = 'getuserhistory',
   GET_ALL_USER = 'getalluser',
+  GET_USER_PROFILE = 'getprofile',
   GET_ONE_USER = 'getoneuser',
   GET_LOCATION = 'getalllocation',
   GET_JOB_TITLE = 'getAlljobtitle',
@@ -201,6 +206,7 @@ export enum httproutes {
   DOCUMENTS_DATATABLE = 'getViewDocumentsDatatableForTable',
 
   //costcode
+  SETTINGS_CHECk_IMPORT_COSTCODE_DATA = 'checkimportcostcode',
   SETTINGS_IMPORT_COSTCODE_DATA = 'importCostCode',
   COSTCODE_DATA_TABLE = 'getCostCodeForTable',
   DELETE_COST_CODE = 'deletecostcode',
@@ -210,6 +216,8 @@ export enum httproutes {
   //usage
   USAGE_DATA_TABLE = 'getCustomerStates',
   PORTAL_SETTING_USEAGE = 'compnayusage',
+  GET_AP_API_COUNT = 'getapapicount',
+
 
   //role
   SETTING_ROLES_ALL = 'getallrolespermission',
@@ -245,10 +253,32 @@ export enum httproutes {
   GET_INVOICE_FOR_TABLE = 'getapinvoicefortable',
   GET_ONE_INVOICE = 'getoneapinvoice',
   SAVE_INVOICE = 'saveapinvoice',
+  SAVE_OTHER_DOCUMENT_INVOICE = 'saveapotherdocumentinvoice',
   DELETE_INVOICE = 'deleteapinvoice',
   SAVE_INVOICE_NOTE = 'saveapinvoicenote',
   DELETE_INVOICE_NOTE = 'deleteapinvoicenote',
   GET_INVOICE_HISTORY = 'getapinvoicehistory',
+  SAVE_INVOICE_INFO = 'saveapinvoiceinfo',
+  DELETE_INVOICE_INFO = 'deleteapinvoiceinfo',
+
+  GET_ORPHAN_AP_PO = 'getorphanappo',
+  GET_ONE_AP_PO = 'getoneappo',
+  SAVE_AP_PO = 'saveappo',
+  SAVE_AP_OTHER_DOCUMENT_PO = 'saveapotherdocumentpo',
+  GET_ORPHAN_AP_QUOTE = 'getorphanapquote',
+  GET_ONE_AP_QUOTE = 'getoneapquote',
+  SAVE_AP_QUOTE = 'saveapquote',
+  SAVE_AP_OTHER_DOCUMENT_QUOTE = 'saveapotherdocumentquote',
+  GET_ORPHAN_AP_PACKLING_SLIP = 'getorphanappackingslip',
+  GET_ONE_AP_PACKLING_SLIP = 'getoneappackingslip',
+  SAVE_AP_PACKLING_SLIP = 'saveappackingslip',
+  SAVE_AP_OTHER_DOCUMENT_PACKLING_SLIP = 'saveapotherdocumentpackingslip',
+  GET_ORPHAN_AP_RECEVING_SLIP = 'getorphanapreceivingslip',
+  GET_ONE_AP_RECEVING_SLIP = 'getoneapreceivingslip',
+  SAVE_AP_RECEVING_SLIP = 'saveapreceivingslip',
+  SAVE_AP_OTHER_DOCUMENT_RECEVING_SLIP = 'saveapotherdocumentreceivingslip',
+  GET_AP_OTHER_DOCUMENT = 'getapotherdocument',
+  GET_ONE_AP_OTHER_DOCUMENT = 'getoneapotherdocument',
 
   //QuickBook Module
   QUICKBOOK_SAVE_INFO = "savequickbookinfo",

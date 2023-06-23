@@ -11,10 +11,11 @@ import { fromEvent, BehaviorSubject, Observable, merge, map } from 'rxjs';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
-import { DepartmentTable } from '../../settings.model';
+import { DeartmentModel } from '../../settings.model';
 import { SettingsService } from '../../settings.service';
 import { DocumentTypeFormComponent } from '../document-type-list/document-type-form/document-type-form.component';
 import { DepartmentFormComponent } from './department-form/department-form.component';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-department-list',
@@ -27,9 +28,9 @@ export class DepartmentListComponent
   displayedColumns = ['department_name', 'actions'];
   departmentService?: SettingsService;
   dataSource!: DepartmentDataSource;
-  selection = new SelectionModel<DepartmentTable>(true, []);
+  selection = new SelectionModel<DeartmentModel>(true, []);
   id?: number;
-  // advanceTable?: DepartmentTable;
+  // advanceTable?: DeartmentModel;
   isDelete = 0;
   titleMessage: string = '';
 
@@ -54,15 +55,6 @@ export class DepartmentListComponent
   }
   refresh() {
     this.loadData();
-  }
-  addNew() {
-    this.router.navigate(['/settings/mailbox-form']);
-  }
-
-  editMailbox(mailbox: DepartmentTable) {
-    this.router.navigate(['/settings/mailbox-form'], {
-      queryParams: { _id: mailbox._id },
-    });
   }
 
   edit(Department: any) {
@@ -150,7 +142,7 @@ export class DepartmentListComponent
     //     // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
     //     this.departmentService?.dataChange.value.splice(index, 1);
     //     this.refreshTable();
-    //     this.selection = new SelectionModel<DepartmentTable>(true, []);
+    //     this.selection = new SelectionModel<DeartmentModel>(true, []);
     //   });
     //  showNotification(
     //     'snackbar-danger',
@@ -178,11 +170,11 @@ export class DepartmentListComponent
   }
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: DepartmentTable) {
+  onContextMenu(event: MouseEvent, item: DeartmentModel) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -193,7 +185,7 @@ export class DepartmentListComponent
     }
   }
 }
-export class DepartmentDataSource extends DataSource<DepartmentTable> {
+export class DepartmentDataSource extends DataSource<DeartmentModel> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -201,8 +193,8 @@ export class DepartmentDataSource extends DataSource<DepartmentTable> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: DepartmentTable[] = [];
-  renderedData: DepartmentTable[] = [];
+  filteredData: DeartmentModel[] = [];
+  renderedData: DeartmentModel[] = [];
   constructor (
     public departmentService: SettingsService,
     public paginator: MatPaginator,
@@ -214,7 +206,7 @@ export class DepartmentDataSource extends DataSource<DepartmentTable> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<DepartmentTable[]> {
+  connect(): Observable<DeartmentModel[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this.departmentService.departmentDataChange,
@@ -228,8 +220,8 @@ export class DepartmentDataSource extends DataSource<DepartmentTable> {
         // Filter data
         this.filteredData = this.departmentService.departmentData
           .slice()
-          .filter((DepartmentTable: DepartmentTable) => {
-            const searchStr = DepartmentTable.department_name.toLowerCase();
+          .filter((DeartmentModel: DeartmentModel) => {
+            const searchStr = DeartmentModel.department_name.toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
         // Sort filtered data
@@ -248,7 +240,7 @@ export class DepartmentDataSource extends DataSource<DepartmentTable> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: DepartmentTable[]): DepartmentTable[] {
+  sortData(data: DeartmentModel[]): DeartmentModel[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }

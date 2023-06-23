@@ -23,11 +23,12 @@ export class ImportEmployeeSettingsComponent {
   variablesRoleList: any = [];
 
   roleList: any = this.variablesRoleList.slice();
-  titleMessage: string = '';
+  titleMessage = '';
   userList: any = [];
   isDelete = 0;
   invoice_logo = icon.INVOICE_LOGO;
-  constructor(
+  title = this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.FILE_DOWNLOAD_INSTRUCTION');
+  constructor (
     public dialogRef: MatDialogRef<ImportEmployeeSettingsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: SettingsService,
@@ -38,7 +39,6 @@ export class ImportEmployeeSettingsComponent {
     public uiSpinner: UiSpinnerService,
     public translate: TranslateService
   ) {
-    console.log('data', data);
     this.currrent_tab = data;
     // Set the defaults
     this.action = data.action;

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,13 +7,14 @@ import { CommonService } from 'src/app/services/common.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { SelectReportValueComponent } from '../select-report-value/select-report-value.component';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
-import { Vendor } from 'src/app/vendors/vendor.model';
+import { VendorModel } from 'src/app/vendors/vendor.model';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { configData } from 'src/environments/configData';
 import { WEB_ROUTES } from 'src/consts/routes';
-import { User } from 'src/app/users/user.model';
-import { ClassNameTable } from 'src/app/settings/settings.model';
-import { ClientList } from 'src/app/client/client.model';
+import { UserModel } from 'src/app/users/user.model';
+import { ClassNameModel } from 'src/app/settings/settings.model';
+import { ClientJobModel } from 'src/app/client/client.model';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
 
 @Component({
   selector: 'app-reports',
@@ -48,11 +49,12 @@ export class ReportsComponent extends UnsubscribeOnDestroyAdapter {
       click: this.itemByVendor,
     },
   ];
-  vendorList: Array<Vendor> = [];
-  userList: Array<User> = [];
-  classNameList: Array<ClassNameTable> = [];
-  clientList: Array<ClientList> = [];
+  vendorList: Array<VendorModel> = [];
+  userList: Array<UserModel> = [];
+  classNameList: Array<ClassNameModel> = [];
+  clientList: Array<ClientJobModel> = [];
   reportType = configData.REPORT_TYPE;
+  dark = false;
 
   constructor (public dialog: MatDialog, private commonService: CommonService, public route: ActivatedRoute,
     public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, public translate: TranslateService, private router: Router,) {

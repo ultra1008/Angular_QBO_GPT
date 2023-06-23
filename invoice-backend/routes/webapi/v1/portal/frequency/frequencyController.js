@@ -1,6 +1,5 @@
 var ObjectID = require('mongodb').ObjectID;
 let collectionConstant = require('../../../../../config/collectionConstant');
-let superadminCollection = require('../../../../../config/superadminCollection');
 var ObjectID = require('mongodb').ObjectID;
 let common = require('../../../../../controller/common/common');
 let db_connection = require('../../../../../controller/common/connectiondb');
@@ -11,12 +10,12 @@ const reader = require('xlsx');
 module.exports.getFrequencyOcpr = async function (req, res) {
     var requestObject = req.body;
     var translator = new common.Language('en');
-    DB.findOne(superadminCollection.COMPANY, { _id: ObjectID(requestObject.sponsor_id) }, function (err, resultfind) {
+    DB.findOne(collectionConstant.SUPER_ADMIN_COMPANY, { _id: ObjectID(requestObject.sponsor_id) }, function (err, resultfind) {
         if (err) {
             res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
         } else {
             if (resultfind != null) {
-                DB.findOne(superadminCollection.TENANTS, { companycode: resultfind.companycode }, async function (err, resulttanent) {
+                DB.findOne(collectionConstant.SUPER_ADMIN_TENANTS, { companycode: resultfind.companycode }, async function (err, resulttanent) {
                     if (err) {
                         res.send({ message: translator.getStr('SomethingWrong'), error: err, status: false });
                     } else {
@@ -27,19 +26,19 @@ module.exports.getFrequencyOcpr = async function (req, res) {
                             let getData = await frequencyConnection.find({ is_delete: 0 });
                             res.send({ data: getData, status: true });
                         } catch (e) {
-                            console.log("e", e)
+                            console.log("e", e);
                             res.send({ message: translator.getStr('SomethingWrong'), status: false });
                         } finally {
-                            connection_db_api.close()
+                            connection_db_api.close();
                         }
                     }
-                })
+                });
             } else {
                 res.send({ message: translator.getStr('SponsorNotExist'), error: err, status: false });
             }
         }
-    })
-}
+    });
+};
 
 module.exports.getFrequency = async function (req, res) {
     var translator = new common.Language('en');
@@ -51,15 +50,15 @@ module.exports.getFrequency = async function (req, res) {
             let getData = await frequencyConnection.find({ is_delete: 0 });
             res.send({ data: getData, status: true });
         } catch (e) {
-            console.log("e", e)
+            console.log("e", e);
             res.send({ message: translator.getStr('SomethingWrong'), status: false });
         } finally {
-            connection_db_api.close()
+            connection_db_api.close();
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
-}
+};
 
 module.exports.saveFrequency = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -68,8 +67,8 @@ module.exports.saveFrequency = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
-            let _id = requestObject._id
-            delete requestObject._id
+            let _id = requestObject._id;
+            delete requestObject._id;
             let frequencyConnection = connection_db_api.model(collectionConstant.SUPPLIER_FREQUENCY, supplier_frequencySchema);
             let get_one = await frequencyConnection.findOne({ name: requestObject.name, is_delete: 0 });
             if (_id) {
@@ -109,7 +108,7 @@ module.exports.saveFrequency = async function (req, res) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         } finally {
-            connection_db_api.close()
+            connection_db_api.close();
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
@@ -139,7 +138,7 @@ module.exports.deleteFrequency = async function (req, res) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         } finally {
-            connection_db_api.close()
+            connection_db_api.close();
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
@@ -182,12 +181,12 @@ module.exports.importFrequency = async function (req, res) {
                             });
                         }
                         for (let m = 0; m < data.length; m++) {
-                            requestObject = {}
+                            requestObject = {};
                             let onecategory_main = await frequencyConnection.findOne({ name: data[m].name, is_delete: 0 });
 
                             if (onecategory_main == null) {
                                 requestObject.name = data[m].name;
-                                requestObject.is_delete = 0
+                                requestObject.is_delete = 0;
                                 let add_frequency = new frequencyConnection(requestObject);
                                 let save_frequency = await add_frequency.save();
                             } else {
@@ -197,7 +196,7 @@ module.exports.importFrequency = async function (req, res) {
                             status: true, message: translator.getStr('FrequencyAdd')
                         });
                     }
-                })
+                });
         } catch (e) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
@@ -207,7 +206,7 @@ module.exports.importFrequency = async function (req, res) {
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
-}
+};
 
 
 module.exports.exportFrequency = async function (req, res) {
@@ -224,9 +223,9 @@ module.exports.exportFrequency = async function (req, res) {
             console.log(e);
             res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         } finally {
-            connection_db_api.close()
+            connection_db_api.close();
         }
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
-}
+};

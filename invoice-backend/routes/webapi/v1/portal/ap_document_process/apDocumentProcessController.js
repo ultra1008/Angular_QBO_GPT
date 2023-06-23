@@ -75,15 +75,16 @@ module.exports.saveAPDocumentProcess = async function (req, res) {
                 }
                 let insert_data = await apDocumentProcessCollection.insertMany(saveObj);
                 if (insert_data) {
-                    /* let apiObj = [];
+                    let documentIds = [];
                     for (let i = 0; i < insert_data.length; i++) {
-                        apiObj.push({
-                            document_id: insert_data[i]._id,
-                            document_url: insert_data[i].pdf_url,
-                        });
+                        documentIds.push(insert_data[i]._id);
                     }
-                    let data = await common.sendInvoiceForProcess(apiObj);
-                    let json = JSON.parse(data.body);
+                    var data = await common.sendInvoiceForProcess({
+                        pdf_urls: documentIds,
+                        company: decodedToken.companycode,
+                    });
+                    console.log("process document response: ", data);
+                    /*let json = JSON.parse(data.body);
                     invoiceProgressController.saveInvoiceProgress({ process_id: json.process_id }, decodedToken);  */
                     res.send({ message: 'Document sent for process added successfully.', data: insert_data, status: true });
                 } else {
@@ -99,4 +100,36 @@ module.exports.saveAPDocumentProcess = async function (req, res) {
     } else {
         res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
-}; 
+};
+
+module.exports.mailBoxSaveAPDocumentProcess = async function (connection_db_api, companycode, pdf_urls, email) {
+    try {
+        let apDocumentProcessCollection = connection_db_api.model(collectionConstant.AP_DOCUMENT_PROCESS, apDocumentProcessSchema);
+
+        let saveObj = [];
+        for (let i = 0; i < pdf_urls.length; i++) {
+            saveObj.push({
+                pdf_url: pdf_urls[i],
+                created_by_mail: `Email - ${email}`,
+                created_at: Math.round(new Date().getTime() / 1000),
+                updated_by_mail: `Email - ${email}`,
+                updated_at: Math.round(new Date().getTime() / 1000),
+            });
+        }
+        let insert_data = await apDocumentProcessCollection.insertMany(saveObj);
+        if (insert_data) {
+            let documentIds = [];
+            for (let i = 0; i < insert_data.length; i++) {
+                documentIds.push(insert_data[i]._id);
+            }
+            var data = await common.sendInvoiceForProcess({
+                pdf_urls: documentIds,
+                company: companycode,
+            });
+            console.log("process document response: ", data);
+        }
+    } catch (e) {
+        console.log(e);
+    } finally {
+    }
+};

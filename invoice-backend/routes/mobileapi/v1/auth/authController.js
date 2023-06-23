@@ -781,7 +781,7 @@ module.exports.saveLoginDetails = async function (req, res) {
                     SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
                     ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                     THANKS: translator.getStr('EmailTemplateThanks'),
-                    ROVUK_TEAM: `${company_data.companyname} team`,
+                    ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
                     EMAILTITLE: translator.getStr('EmailLoginTitle'),
                     USERNAME: `${translator.getStr('EmailLoginHello')} ${decodedToken.UserData.userfullname}`,
                     LOGINLOCATION: `${translator.getStr('EmailLoginLoginFromNewDevice')} ${requestObject.location}`,
@@ -791,6 +791,7 @@ module.exports.saveLoginDetails = async function (req, res) {
                     IF_NOT_YOU: translator.getStr('EmailLoginIfNotYou'),
                     CHANGE_PASSWORD: translator.getStr('EmailLoginChangePassword'),
                     ANY_QUESTION: translator.getStr('EmailLoginAnyQuestion'),
+                    COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                     COMPANYNAME: `${translator.getStr('EmailCompanyName')} ${company_data.companyname}`,
                     COMPANYCODE: `${translator.getStr('EmailCompanyCode')} ${company_data.companycode}`,
@@ -798,9 +799,9 @@ module.exports.saveLoginDetails = async function (req, res) {
                 const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/loginFromNewDevice.html', 'utf8');
                 var template = handlebars.compile(file_data);
                 var HtmlData = await template(emailTmp);
-                sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [decodedToken.UserData.useremail], "Login from a new device", HtmlData,
-                    talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                    talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, [decodedToken.UserData.useremail], "Login from a new device", HtmlData,
+                    talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                    talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
                 res.send({ message: translator.getStr('LoginDetails'), status: true });
             } else {
                 console.log("Something went wrong.!", e);
@@ -878,7 +879,8 @@ module.exports.sendOTPforLogin = async function (req, res) {
                         SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
                         ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                         THANKS: translator.getStr('EmailTemplateThanks'),
-                        ROVUK_TEAM: `${company_data.companyname} team`,
+                        ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                        COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                         TITLE: 'One Time Password (OTP) verification',
                         LINE1: new handlebars.SafeString(`Your One Time Password (OTP) is <b>${sixdidgitnumber}</b>.`),
@@ -890,9 +892,9 @@ module.exports.sendOTPforLogin = async function (req, res) {
                     const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/emailOTP.html', 'utf8');
                     var template = handlebars.compile(file_data);
                     var HtmlData = await template(emailTmp);
-                    sendEmail.sendEmail_client(talnate_data.tenant_smtp_username, [requestObject.useremail], "OTP Verification", HtmlData,
-                        talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                        talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                    sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, [requestObject.useremail], "OTP Verification", HtmlData,
+                        talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                        talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
                     res.send({ message: 'One Time Password (OTP) sent successfully.', status: true });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
@@ -1259,12 +1261,12 @@ module.exports.submitEmailOTPforLogin = async function (req, res) {
                         var settings_tmp = await settingConnection.findOne({});
                         // var questions_tmp = await questionscollection.find({ question_status: true });
                         var resObject_db = {
-                            "DB_HOST": talnate_data.DB_HOST,
-                            "DB_NAME": talnate_data.DB_NAME,
-                            "DB_PORT": talnate_data.DB_PORT,
-                            "DB_USERNAME": talnate_data.DB_USERNAME,
-                            "DB_PASSWORD": talnate_data.DB_PASSWORD,
-                            "companycode": talnate_data.companycode,
+                            "DB_HOST": talnate_data.smartaccupay_tenants.DB_HOST,
+                            "DB_NAME": talnate_data.smartaccupay_tenants.DB_NAME,
+                            "DB_PORT": talnate_data.smartaccupay_tenants.DB_PORT,
+                            "DB_USERNAME": talnate_data.smartaccupay_tenants.DB_USERNAME,
+                            "DB_PASSWORD": talnate_data.smartaccupay_tenants.DB_PASSWORD,
+                            "companycode": talnate_data.smartaccupay_tenants.companycode,
                             "companylanguage": compnay_data.companylanguage,
                             "token": ""
                         };
@@ -1364,6 +1366,7 @@ module.exports.forgetPassword = async function (req, res) {
                                     ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                                     THANKS: translator.getStr('EmailTemplateThanks'),
                                     ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                                    COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                                     TITLE: translator.getStr('EmailResetPasswordTitle'),
                                     HI_USERNAME: `${translator.getStr('EmailTemplateHi')} ${UserData.username},`,
@@ -1378,7 +1381,7 @@ module.exports.forgetPassword = async function (req, res) {
                                 var template = handlebars.compile(data);
                                 var HtmlData = await template(emailTmp);
                                 let tenant_smtp_security = result.tenant_smtp_security == "Yes" || result.tenant_smtp_security == "YES" || result.tenant_smtp_security == "yes" ? true : false;
-                                let mailsend = await sendEmail.sendEmail_client(result.tenant_smtp_username, req.body.useremail, "Rovuk Forgot Password", HtmlData,
+                                let mailsend = await sendEmail.sendEmail_client(result.tenant_smtp_username, req.body.useremail, "SmartAccuPay Forgot Password", HtmlData,
                                     result.tenant_smtp_server, result.tenant_smtp_port, result.tenant_smtp_reply_to_mail, result.tenant_smtp_password, result.tenant_smtp_timeout,
                                     tenant_smtp_security);
                                 if (mailsend) {
@@ -1415,8 +1418,8 @@ module.exports.helpMail = async function (req, res) {
         let help_phone = requestObject.help_phone;
         let help_message = requestObject.help_message;
         let help_body = 'Email : ' + help_email + '<br>Phone : ' + help_phone + '<br>' + help_message;
-        let mailsend = await sendEmail.sendEmail(config.tenants.tenant_smtp_username, config.NEWHELPDESKEMAIL, subject, help_body);
-        res.send({ message: translator.getStr('RequestSent'), data: mailsend, status: true });
+        sendEmail.sendEmail(config.smartaccupay_tenants.tenant_smtp_username, config.NEWHELPDESKEMAIL, subject, help_body);
+        res.send({ message: translator.getStr('RequestSent'), status: true });
     } catch (e) {
         console.log(e);
         res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
@@ -1796,7 +1799,8 @@ module.exports.sendEmailOTP = async function (req, res) {
                     SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2} `,
                     ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')} `,
                     THANKS: translator.getStr('EmailTemplateThanks'),
-                    ROVUK_TEAM: `Rovuk A/P ${translator.getStr('team_mail_all')}`,
+                    ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                    COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                     TITLE: 'One Time Password (OTP) verification',
                     LINE1: new handlebars.SafeString(`Your One Time Password(OTP) is <b> ${sixdidgitnumber}</b>.`),
@@ -1808,9 +1812,9 @@ module.exports.sendEmailOTP = async function (req, res) {
                 const file_data = fs.readFileSync(config.EMAIL_TEMPLATE_PATH + '/controller/emailtemplates/emailOTP.html', 'utf8');
                 var template = handlebars.compile(file_data);
                 var HtmlData = await template(emailTmp);
-                sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, [requestObject.useremail], "OTP Verification", HtmlData,
-                    config.tenants.tenant_smtp_server, config.tenants.tenant_smtp_port, config.tenants.tenant_smtp_reply_to_mail,
-                    config.tenants.tenant_smtp_password, config.tenants.tenant_smtp_timeout, config.tenants.tenant_smtp_security);
+                sendEmail.sendEmail_client(config.smartaccupay_tenants.tenant_smtp_username, [requestObject.useremail], "OTP Verification", HtmlData,
+                    config.smartaccupay_tenants.tenant_smtp_server, config.smartaccupay_tenants.tenant_smtp_port, config.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                    config.smartaccupay_tenants.tenant_smtp_password, config.smartaccupay_tenants.tenant_smtp_timeout, config.smartaccupay_tenants.tenant_smtp_security);
                 res.send({ message: 'One Time Password (OTP) sent successfully.', status: true });
             } else {
                 res.send({ message: translator.getStr('SomethingWrong'), status: false });
@@ -2535,7 +2539,8 @@ module.exports.emailForgotPassword = async function (req, res) {
                     SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
                     ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                     THANKS: translator.getStr('EmailTemplateThanks'),
-                    ROVUK_TEAM: ` Rovuk A/P ${translator.getStr('team_mail_all')}`,
+                    ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                    COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                     TITLE: translator.getStr('MailForgotPassword_Title'),
                     HI_USERNAME: translator.getStr('Hello_mail'),
@@ -2552,9 +2557,9 @@ module.exports.emailForgotPassword = async function (req, res) {
                 let tmp_subject = translator.getStr('MailForgotPassword_Subject');
                 var template = handlebars.compile(data);
                 var HtmlData = await template(emailTmp);
-                let tenant_smtp_security = config.tenants.tenant_smtp_security == "Yes" || config.tenants.tenant_smtp_security == "YES" || config.tenants.tenant_smtp_security == "yes" ? true : false;
-                sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, one_user.useremail, tmp_subject, HtmlData,
-                    config.tenants.tenant_smtp_server, config.tenants.tenant_smtp_port, config.tenants.tenant_smtp_reply_to_mail, config.tenants.tenant_smtp_password, config.tenants.tenant_smtp_timeout,
+                let tenant_smtp_security = config.smartaccupay_tenants.tenant_smtp_security == "Yes" || config.smartaccupay_tenants.tenant_smtp_security == "YES" || config.smartaccupay_tenants.tenant_smtp_security == "yes" ? true : false;
+                sendEmail.sendEmail_client(config.smartaccupay_tenants.tenant_smtp_username, one_user.useremail, tmp_subject, HtmlData,
+                    config.smartaccupay_tenants.tenant_smtp_server, config.smartaccupay_tenants.tenant_smtp_port, config.smartaccupay_tenants.tenant_smtp_reply_to_mail, config.smartaccupay_tenants.tenant_smtp_password, config.smartaccupay_tenants.tenant_smtp_timeout,
                     tenant_smtp_security);
                 res.send({ message: translator.getStr('CheckMailForgotPassword'), status: true, data: get_company });
             } else {
@@ -2607,7 +2612,8 @@ module.exports.sendEmailForgotPassword = async function (req, res) {
                 SUPPORT: `${translator.getStr('EmailTemplateEmail')} ${config.SUPPORTEMAIL} l ${translator.getStr('EmailTemplatePhone')} ${config.NUMBERPHONE2}`,
                 ALL_RIGHTS_RESERVED: `${translator.getStr('EmailTemplateAllRightsReserved')}`,
                 THANKS: translator.getStr('EmailTemplateThanks'),
-                ROVUK_TEAM: ` Rovuk A/P ${translator.getStr('team_mail_all')}`,
+                ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
+                COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                 TITLE: translator.getStr('MailForgotPassword_Title'),
                 HI_USERNAME: translator.getStr('Hello_mail'),
@@ -2624,9 +2630,9 @@ module.exports.sendEmailForgotPassword = async function (req, res) {
             let tmp_subject = translator.getStr('MailForgotPassword_Subject');
             var template = handlebars.compile(data);
             var HtmlData = await template(emailTmp);
-            let tenant_smtp_security = config.tenants.tenant_smtp_security == "Yes" || config.tenants.tenant_smtp_security == "YES" || config.tenants.tenant_smtp_security == "yes" ? true : false;
-            sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, one_user.useremail, tmp_subject, HtmlData,
-                config.tenants.tenant_smtp_server, config.tenants.tenant_smtp_port, config.tenants.tenant_smtp_reply_to_mail, config.tenants.tenant_smtp_password, config.tenants.tenant_smtp_timeout,
+            let tenant_smtp_security = config.smartaccupay_tenants.tenant_smtp_security == "Yes" || config.smartaccupay_tenants.tenant_smtp_security == "YES" || config.smartaccupay_tenants.tenant_smtp_security == "yes" ? true : false;
+            sendEmail.sendEmail_client(config.smartaccupay_tenants.tenant_smtp_username, one_user.useremail, tmp_subject, HtmlData,
+                config.smartaccupay_tenants.tenant_smtp_server, config.smartaccupay_tenants.tenant_smtp_port, config.smartaccupay_tenants.tenant_smtp_reply_to_mail, config.smartaccupay_tenants.tenant_smtp_password, config.smartaccupay_tenants.tenant_smtp_timeout,
                 tenant_smtp_security);
             res.send({ message: translator.getStr('CheckMailForgotPassword'), status: true, data: get_company });
         } else {
@@ -2637,5 +2643,66 @@ module.exports.sendEmailForgotPassword = async function (req, res) {
         res.send({ message: translator.getStr('SomethingWrong'), status: false });
     } finally {
         // connection_db_api.close();
+    }
+};
+
+module.exports.getMyCompanyList = async function (req, res) {
+    var translator = new common.Language('en');
+    let admin_connection_db_api = await db_connection.connection_db_api(config.ADMIN_CONFIG);
+    try {
+        var requestObject = req.body;
+        requestObject.useremail = requestObject.useremail.toLowerCase();
+
+        let companyConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_COMPANY, companySchema);
+        let tenantsConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_TENANTS, tenantSchema);
+        let match = {
+            'invoice_user.useremail': requestObject.useremail,
+            'invoice_user.userstatus': 1,
+            'invoice_user.is_delete': 0,
+        };
+        var get_company = await companyConnection.find(match);
+        var data = [];
+        for (let i = 0; i < get_company.length; i++) {
+            let user = get_company[i].invoice_user.find(o => o.useremail === requestObject.useremail);
+            if (user) {
+                if (user.userstatus == 1 && user.is_delete == 0) {
+                    data.push(get_company[i]);
+                }
+            }
+        }
+        res.send({ message: translator.getStr('CompanyListing'), status: true, data });
+    } catch (e) {
+        console.log(e);
+        res.send({ message: translator.getStr('SomethingWrong'), status: false });
+    } finally {
+        // connection_db_api.close();
+    }
+};
+
+module.exports.getUserList = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            let requestObject = req.body;
+            let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
+            let get_data = await userConnection.find({ is_delete: 0, userstatus: 1 });
+            if (get_data) {
+                res.send({ message: translator.getStr('UserListing'), status: true, data: get_data });
+            }
+            else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+
+        } catch (e) {
+            console.log("e:", e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            console.log("db close check: mobile get User");
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };

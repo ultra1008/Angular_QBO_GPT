@@ -1,13 +1,3 @@
-.model-header {
-    width: 100%;
-    margin-left: unset;
-    margin-right: unset;
-
-    .modal-about {
-        width: 100%;
-    }
-}
-
 .auth-form-btn {
     height: 40px !important;
 }
@@ -78,6 +68,23 @@
     font-size: 12px !important;
 }
 
+::ng-deep .mat-mdc-option .mdc-list-item__primary-text {
+    font-size: 12px !important;
+}
+
+::ng-deep.mdc-menu-surface.mat-mdc-select-panel {
+    padding: 0px !important;
+}
+
+::ng-deep .dark {
+    .mat-filter {
+        background-color: black !important;
+    }
+
+    .noResultsMessage {
+        color: white !important;
+    }
+}
 
 .form-old {
     ::ng-deep .mat-mdc-text-field-wrapper {

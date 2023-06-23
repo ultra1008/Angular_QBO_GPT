@@ -13,7 +13,7 @@ import { WEB_ROUTES } from 'src/consts/routes';
 import { InvoiceService } from '../../invoice.service';
 import { InvoiceMessage } from '../../invoice.model';
 import { HttpCall } from 'src/app/services/httpcall.service';
-import { showNotification, swalWithBootstrapTwoButtons, MMDDYYYY_HH_MM_A } from 'src/consts/utils';
+import { showNotification, swalWithBootstrapTwoButtons, MMDDYYYY_HH_MM_A, numberWithCommas, formateAmount } from 'src/consts/utils';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { TableElement } from 'src/app/shared/TableElement';
@@ -28,9 +28,8 @@ export class InvoiceMessagesComponent extends UnsubscribeOnDestroyAdapter implem
   displayedColumns = [
     'created_at',
     'sender',
-    'receiver',
-    'seen',
-    'invoice_number',
+    'last_message',
+    'invoice_no',
     'due_date',
     'vendor',
     'total_amount',
@@ -44,7 +43,7 @@ export class InvoiceMessagesComponent extends UnsubscribeOnDestroyAdapter implem
 
   type = '';
 
-  constructor (public httpClient: HttpClient, public dialog: MatDialog, public invoiceService: InvoiceService,
+  constructor(public httpClient: HttpClient, public dialog: MatDialog, public invoiceService: InvoiceService,
     private snackBar: MatSnackBar, public route: ActivatedRoute, private router: Router, private httpCall: HttpCall,
     private commonService: CommonService) {
     super();
@@ -67,7 +66,7 @@ export class InvoiceMessagesComponent extends UnsubscribeOnDestroyAdapter implem
   }
 
   viewMessage(row: InvoiceMessage) {
-    this.router.navigate([WEB_ROUTES.INVOICE_MESSAGE_VIEW], { queryParams: { _id: row._id } });
+    this.router.navigate([WEB_ROUTES.INVOICE_MESSAGE_VIEW], { queryParams: { invoice_id: row.invoice_id, from: 'message' } });
   }
 
   private refreshTable() {
@@ -152,18 +151,23 @@ export class InvoiceMessagesComponent extends UnsubscribeOnDestroyAdapter implem
 
   exportExcel() {
     const exportData: Partial<TableElement>[] =
-      this.dataSource.filteredData.map((x) => ({
+      this.dataSource.filteredData.map((x: any) =>
+      ({
         'Date & Time': MMDDYYYY_HH_MM_A(x.created_at),
-        'Sender': x.sender.userfullname,
-        'Receiver': x.receiver.userfullname,
-        'Ready by Receiver': x.seen_last_message ? 'Yes' : 'No',
+        'Sender': x.last_message_sender.userfullname,
+        'Last Message': x.message,
         'Invoice Number': x.invoice.invoice_no,
-        'Due Date': x.invoice.due_date_epoch,
-        'Vendor': x.invoice.vendor_data.vendor_name,
-        'Total Amount': x.invoice.invoice_total_amount,
-      }));
+        'Due Date': MMDDYYYY_HH_MM_A(x.invoice.due_date_epoch),
+        'Vendor': x.invoice.vendor.vendor_name,
+        'Total Amount': formateAmount(x.invoice.invoice_total_amount),
+      })
+      );
 
     TableExportUtil.exportToExcel(exportData, 'excel');
+  }
+
+  numberWithCommas(amount: number) {
+    return numberWithCommas(amount.toFixed(2));
   }
 }
 export class ExampleDataSource extends DataSource<InvoiceMessage> {
@@ -176,7 +180,7 @@ export class ExampleDataSource extends DataSource<InvoiceMessage> {
   }
   filteredData: InvoiceMessage[] = [];
   renderedData: InvoiceMessage[] = [];
-  constructor (
+  constructor(
     public exampleDatabase: InvoiceService,
     public paginator: MatPaginator,
     public _sort: MatSort
@@ -236,6 +240,24 @@ export class ExampleDataSource extends DataSource<InvoiceMessage> {
           break;
         case 'created_at':
           [propertyA, propertyB] = [a.created_at, b.created_at];
+          break;
+        case 'sender':
+          [propertyA, propertyB] = [a.last_message_sender.userfullname, b.last_message_sender.userfullname];
+          break;
+        case 'last_message':
+          [propertyA, propertyB] = [a.last_message.message, b.last_message.message];
+          break;
+        case 'invoice_no':
+          [propertyA, propertyB] = [a.invoice.invoice_no, b.invoice.invoice_no];
+          break;
+        case 'due_date':
+          [propertyA, propertyB] = [a.invoice.due_date_epoch, b.invoice.due_date_epoch];
+          break;
+        case 'vendor':
+          [propertyA, propertyB] = [a.invoice.vendor.vendor_name, b.invoice.vendor.vendor_name];
+          break;
+        case 'total_amount':
+          [propertyA, propertyB] = [a.invoice.invoice_total_amount, b.invoice.invoice_total_amount];
           break;
       }
       const valueA = isNaN(+propertyA) ? propertyA : +propertyA;

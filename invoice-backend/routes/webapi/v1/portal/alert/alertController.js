@@ -1,6 +1,5 @@
 var ObjectID = require('mongodb').ObjectID;
 let collectionConstant = require('../../../../../config/collectionConstant');
-let superadminCollection = require('../../../../../config/superadminCollection');
 var alertSchema = require('../../../../../model/alerts');
 var apInvoiceSchema = require('../../../../../model/ap_invoices');
 var tenantSchema = require('../../../../../model/tenants');
@@ -469,6 +468,7 @@ module.exports.getAlertExcelReport = async function (req, res) {
                         ROVUK_TEAM: translator.getStr('EmailTemplateRovukTeam'),
                         ROVUK_TEAM_SEC: translator.getStr('EmailTemplateRovukTeamSec'),
                         VIEW_EXCEL: translator.getStr('EmailTemplateViewExcelReport'),
+                        COPYRIGHTNAME: `${config.COPYRIGHTNAME}`,
 
                         FILE_LINK: userqrcode,
 
@@ -485,9 +485,9 @@ module.exports.getAlertExcelReport = async function (req, res) {
                     };
                     var template = handlebars.compile(file_data);
                     var HtmlData = await template(emailTmp);
-                    sendEmail.sendEmail_client(config.tenants.tenant_smtp_username, email_list, 'Supplier Diversity Alert Report', HtmlData,
-                        talnate_data.tenant_smtp_server, talnate_data.tenant_smtp_port, talnate_data.tenant_smtp_reply_to_mail,
-                        talnate_data.tenant_smtp_password, talnate_data.tenant_smtp_timeout, talnate_data.tenant_smtp_security);
+                    sendEmail.sendEmail_client(talnate_data.smartaccupay_tenants.tenant_smtp_username, email_list, 'Supplier Diversity Alert Report', HtmlData,
+                        talnate_data.smartaccupay_tenants.tenant_smtp_server, talnate_data.smartaccupay_tenants.tenant_smtp_port, talnate_data.smartaccupay_tenants.tenant_smtp_reply_to_mail,
+                        talnate_data.smartaccupay_tenants.tenant_smtp_password, talnate_data.smartaccupay_tenants.tenant_smtp_timeout, talnate_data.smartaccupay_tenants.tenant_smtp_security);
                     res.send({ message: translator.getStr('Report_Sent_Successfully'), status: true });
                 }
             });

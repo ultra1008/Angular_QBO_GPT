@@ -1,8 +1,8 @@
 var validator = require('./../../../../controller/common/validationforrequest');
 
-const getAPInvoiceForTable = (req, res, next) => {
+const getStatusWiseAPInvoice = (req, res, next) => {
     const validationRule = {
-        "is_delete": "required|integer",
+        "status": "required",
     };
     validator(req.body, validationRule, {}, (err, status) => {
         if (!status) {
@@ -59,8 +59,7 @@ const saveAPInvoiceNote = (req, res, next) => {
 const deleteAPInvoiceNote = (req, res, next) => {
     const validationRule = {
         "invoice_id": "required",
-        "_id": "required",
-        "notes": "required",
+        "_id": "required"
     };
     validator(req.body, validationRule, {}, (err, status) => {
         if (!status) {
@@ -87,7 +86,7 @@ const getHeaderAPInvoiceSerach = (req, res, next) => {
 };
 
 module.exports = {
-    getAPInvoiceForTable,
+    getStatusWiseAPInvoice,
     getOneAPInvoice,
     deleteAPInvoice,
     saveAPInvoiceNote,

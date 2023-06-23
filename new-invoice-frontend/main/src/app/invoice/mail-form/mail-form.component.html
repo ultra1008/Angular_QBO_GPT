@@ -1,27 +1,5 @@
 <div class="addContainer">
-    <div class="mr-set">
-        <div class="row">
-            <div class="col-2">
-                <img src="{{invoice_logo}}" height="45px" width="45px">
-            </div>
-            <div class="col-8 align-div">
-                <div class="editRowModal">
-                    <div class="modalHeader clearfix">
-                        <div class="modal-about">
-                            <div class="fw-bold  font-17">
-                                Mail
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-2">
-                <button mat-mini-fab (click)="dialogRef.close()" color="warn" aria-label="Close dialog">
-                    <mat-icon class="col-white">close </mat-icon>
-                </button>
-            </div>
-        </div>
-    </div>
+    <app-model-header [title]="title" (dialogClose)="dialogRef.close()"></app-model-header>
     <div mat-dialog-content>
         <form class="register-form m-4" [formGroup]="mailInfo" (ngSubmit)="submit">
             <div>
@@ -37,9 +15,10 @@
             <div class="Row mt-2">
                 <mat-form-field class="example-full-width" appearance="outline">
                     <mat-label>TO</mat-label>
-                    <mat-select formControlName="to" multiple (selectionChange)="onUsertoChange($event)">
-                        <mat-select-filter #termListtoSelect [placeholder]="'Filter'" [displayMember]="'userfullname'"
-                            [array]="variablesUserToList" (filteredReturn)="usertoList =$event">
+                    <mat-select formControlName="to" multiple (selectionChange)="onUsertoChange($event)" #toUserSelect>
+                        <mat-select-filter [placeholder]="'Filter'" [displayMember]="'userfullname'"
+                            [array]="variablesUserToList" (filteredReturn)="usertoList =$event"
+                            *ngIf="toUserSelect.focused">
                         </mat-select-filter>
                         <mat-option *ngFor="let user of usertoList" [value]="user.useremail"><span><img class="img-b"
                                     [src]="user.userpicture" height="35px" width="35px" alt="">
@@ -58,9 +37,11 @@
             <div class="Row mt-2">
                 <mat-form-field class="example-full-width" appearance="outline">
                     <mat-label>Copy</mat-label>
-                    <mat-select formControlName="cc" multiple (selectionChange)="onUserCopyChange($event)">
-                        <mat-select-filter #termListSelect [placeholder]="'Filter'" [displayMember]="'userfullname'"
-                            [array]="variablesUserList" (filteredReturn)="userList =$event">
+                    <mat-select formControlName="cc" multiple (selectionChange)="onUserCopyChange($event)"
+                        #ccUserSelect>
+                        <mat-select-filter [placeholder]="'Filter'" [displayMember]="'userfullname'"
+                            [array]="variablesUserList" (filteredReturn)="userList =$event"
+                            *ngIf="ccUserSelect.focused">
                         </mat-select-filter>
                         <mat-option *ngFor="let user of userList" [value]="user.useremail"> <span><img class="img-b"
                                     [src]="user.userpicture" height="35px" width="35px" alt="">

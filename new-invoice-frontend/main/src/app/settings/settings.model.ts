@@ -1,6 +1,4 @@
-import { formatDate } from '@angular/common';
-
-export class Settings {
+export class SettingsModel {
   _id: string;
   userfullname: string;
   useremail: string;
@@ -9,7 +7,7 @@ export class Settings {
   userjob_title_name: string;
   department_name: string;
   userstatus: number;
-  constructor (response: Settings) {
+  constructor (response: SettingsModel) {
     {
       this._id = response._id;
       this.userfullname = response.userfullname;
@@ -22,14 +20,14 @@ export class Settings {
     }
   }
 }
-export class CostCodeTable {
+export class CostCodeModel {
   _id: string;
   description: string;
   value: string;
   division: string;
   cost_code: string;
 
-  constructor (costcodeTable: CostCodeTable) {
+  constructor (costcodeTable: CostCodeModel) {
     {
       this._id = costcodeTable._id;
       this.description = costcodeTable.description;
@@ -40,14 +38,14 @@ export class CostCodeTable {
   }
 }
 
-export class MailboxTable {
+export class MailboxModel {
   _id: string;
   email: string;
   imap: string;
   port: number;
   time: string;
 
-  constructor (mailboxTable: MailboxTable) {
+  constructor (mailboxTable: MailboxModel) {
     {
       this._id = mailboxTable._id;
       this.email = mailboxTable.email;
@@ -58,47 +56,35 @@ export class MailboxTable {
   }
 }
 
-export class UsageTable {
+export class UsageModel {
   _id: string;
-  year!: number;
-  month!: number;
-  month_name!: string;
-  po_expense!: number;
-  po_forms!: number;
-  packing_slip_expense!: number;
-  packing_slip_forms!: number;
-  receiving_slip_expense!: number;
-  receiving_slip_forms!: number;
-  quote_expense!: number;
-  quote_forms!: number;
-  invoice_expense!: number;
-  invoice_forms!: number;
-  unknown_expense!: number;
-  unknown_forms!: number;
+  year: number;
+  month: number;
+  month_name: string;
+  INVOICE: number;
+  PURCHASE_ORDER: number;
+  PACKING_SLIP: number;
+  RECEIVING_SLIP: number;
+  QUOTE: number;
+  OTHER: number;
 
-  constructor (usageTable: UsageTable) {
+  constructor (usageTable: UsageModel) {
     {
       this._id = usageTable._id;
       this.year = usageTable.year;
       this.month = usageTable.month;
       this.month_name = usageTable.month_name;
-      this.po_expense = usageTable.po_expense;
-      this.po_forms = usageTable.po_forms;
-      this.packing_slip_expense = usageTable.packing_slip_expense;
-      this.packing_slip_forms = usageTable.packing_slip_forms;
-      this.receiving_slip_expense = usageTable.receiving_slip_expense;
-      this.receiving_slip_forms = usageTable.receiving_slip_forms;
-      this.quote_expense = usageTable.quote_expense;
-      this.quote_forms = usageTable.quote_forms;
-      this.invoice_expense = usageTable.invoice_expense;
-      this.invoice_forms = usageTable.invoice_forms;
-      this.unknown_expense = usageTable.unknown_expense;
-      this.unknown_forms = usageTable.unknown_forms;
+      this.INVOICE = usageTable.INVOICE;
+      this.PURCHASE_ORDER = usageTable.PURCHASE_ORDER;
+      this.PACKING_SLIP = usageTable.PACKING_SLIP;
+      this.RECEIVING_SLIP = usageTable.RECEIVING_SLIP;
+      this.QUOTE = usageTable.QUOTE;
+      this.OTHER = usageTable.OTHER;
     }
   }
 }
 
-export class usageTable {
+/* export class usageTable {
   _id: string;
   email: string;
   imap: string;
@@ -114,7 +100,7 @@ export class usageTable {
       this.time = usageTable.time;
     }
   }
-}
+} */
 
 export class Element {
   name!: string;
@@ -131,153 +117,153 @@ export class Element {
   }
 }
 
-export class DocumentTypeTable {
+export class DocumentTypeModel {
   _id: string;
   is_expiration!: string;
   document_type_name!: string;
 
-  constructor (DocumentTable: DocumentTypeTable) {
+  constructor (response: DocumentTypeModel) {
     {
-      this._id = DocumentTable._id;
-      this.is_expiration = DocumentTable.is_expiration;
-      this.document_type_name = DocumentTable.document_type_name;
+      this._id = response._id;
+      this.is_expiration = response.is_expiration;
+      this.document_type_name = response.document_type_name;
     }
   }
 }
 
-export class DepartmentTable {
+export class DeartmentModel {
   _id: string;
   department_name!: string;
 
-  constructor (DepartmentTable: DepartmentTable) {
+  constructor (response: DeartmentModel) {
     {
-      this._id = DepartmentTable._id;
-      this.department_name = DepartmentTable.department_name;
+      this._id = response._id;
+      this.department_name = response.department_name;
     }
   }
 }
 
-export class JobTitleTable {
+export class JobTitleModel {
   _id: string;
   job_title_name!: string;
 
-  constructor (JobTitleTable: JobTitleTable) {
+  constructor (response: JobTitleModel) {
     {
-      this._id = JobTitleTable._id;
-      this.job_title_name = JobTitleTable.job_title_name;
+      this._id = response._id;
+      this.job_title_name = response.job_title_name;
     }
   }
 }
 
-export class JobTypeTable {
+export class JobTypeModel {
   _id: string;
   job_type_name!: string;
 
-  constructor (JobTypeTable: JobTypeTable) {
+  constructor (response: JobTypeModel) {
     {
-      this._id = JobTypeTable._id;
-      this.job_type_name = JobTypeTable.job_type_name;
+      this._id = response._id;
+      this.job_type_name = response.job_type_name;
     }
   }
 }
 
-export class RelationshipTable {
+export class RelationshipModel {
   _id: string;
   relationship_name!: string;
 
-  constructor (RelationshipTable: RelationshipTable) {
+  constructor (response: RelationshipModel) {
     {
-      this._id = RelationshipTable._id;
-      this.relationship_name = RelationshipTable.relationship_name;
+      this._id = response._id;
+      this.relationship_name = response.relationship_name;
     }
   }
 }
 
-export class LanguageTable {
+export class LanguageModel {
   _id: string;
   name!: string;
 
-  constructor (LanguageTable: LanguageTable) {
+  constructor (response: LanguageModel) {
     {
-      this._id = LanguageTable._id;
-      this.name = LanguageTable.name;
+      this._id = response._id;
+      this.name = response.name;
     }
   }
 }
 
-export class TermsTable {
+export class TermModel {
   _id: string;
-  name!: string;
-  due_days!: number;
-  is_discount!: boolean;
-  discount!: number;
+  name: string;
+  is_dicount: boolean;
+  discount: number;
+  due_days: string;
   is_quickbooks: string;
 
-  constructor (TermsTable: TermsTable) {
+  constructor (response: TermModel) {
     {
-      this._id = TermsTable._id;
-      this.name = TermsTable.name;
-      this.due_days = TermsTable.due_days;
-      this.is_discount = TermsTable.is_discount;
-      this.discount = TermsTable.discount;
-      this.is_quickbooks = TermsTable.is_quickbooks;
+      this._id = response._id;
+      this.name = response.name;
+      this.is_dicount = response.is_dicount;
+      this.discount = response.discount;
+      this.due_days = response.due_days;
+      this.is_quickbooks = response.is_quickbooks;
     }
   }
 }
 
-export class TaxrateTable {
+export class TaxRateModel {
   _id: string;
   name!: string;
 
-  constructor (TaxrateTable: TaxrateTable) {
+  constructor (response: TaxRateModel) {
     {
-      this._id = TaxrateTable._id;
-      this.name = TaxrateTable.name;
+      this._id = response._id;
+      this.name = response.name;
     }
   }
 }
 
-export class DocumentsTable {
+export class DocumentsModel {
   _id: string;
   is_expiration!: boolean;
   name!: string;
 
-  constructor (DocumentsTable: DocumentsTable) {
+  constructor (response: DocumentsModel) {
     {
-      this._id = DocumentsTable._id;
-      this.name = DocumentsTable.name;
-      this.is_expiration = DocumentsTable.is_expiration;
+      this._id = response._id;
+      this.name = response.name;
+      this.is_expiration = response.is_expiration;
     }
   }
 }
 
-export class VendorTypeTable {
+export class VendorTypeModel {
   _id: string;
   name!: string;
 
-  constructor (VendorTypeTable: VendorTypeTable) {
+  constructor (response: VendorTypeModel) {
     {
-      this._id = VendorTypeTable._id;
-      this.name = VendorTypeTable.name;
+      this._id = response._id;
+      this.name = response.name;
     }
   }
 }
 
-export class JobNameTable {
+export class JobNameModel {
   _id: string;
   name!: string;
   email_contact!: string;
 
-  constructor (JobNameTable: JobNameTable) {
+  constructor (response: JobNameModel) {
     {
-      this._id = JobNameTable._id;
-      this.name = JobNameTable.name;
-      this.email_contact = JobNameTable.email_contact;
+      this._id = response._id;
+      this.name = response.name;
+      this.email_contact = response.email_contact;
     }
   }
 }
 
-export class ClassNameTable {
+export class ClassNameModel {
   _id: string;
   name!: string;
   number!: string;
@@ -285,14 +271,25 @@ export class ClassNameTable {
   is_quickbooks!: string;
   status!: number;
 
-  constructor (ClassNameTable: ClassNameTable) {
+  constructor (response: ClassNameModel) {
     {
-      this._id = ClassNameTable._id;
-      this.name = ClassNameTable.name;
-      this.number = ClassNameTable.number;
-      this.description = ClassNameTable.description;
-      this.is_quickbooks = ClassNameTable.is_quickbooks;
-      this.status = ClassNameTable.status;
+      this._id = response._id;
+      this.name = response.name;
+      this.number = response.number;
+      this.description = response.description;
+      this.is_quickbooks = response.is_quickbooks;
+      this.status = response.status;
+    }
+  }
+}
+
+export class CountryModel {
+  _id: string;
+  name: string;
+  constructor (response: CountryModel) {
+    {
+      this._id = response._id;
+      this.name = response.name;
     }
   }
 }

@@ -5,7 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import * as saveAs from 'file-saver';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
-import { AdvanceTable } from 'src/app/users/user.model';
+import { AdvanceTable, RoleModel, UserModel } from 'src/app/users/user.model';
 import { icon } from 'src/consts/icon';
 import { ClientService } from '../client.service';
 import { ImportClientComponent } from '../import-client/import-client.component';
@@ -19,21 +19,21 @@ import { CommonService } from 'src/app/services/common.service';
   templateUrl: './exits-data-list.component.html',
   styleUrls: ['./exits-data-list.component.scss']
 })
-export class ExitsDataListComponent extends UnsubscribeOnDestroyAdapter
-  implements OnInit {
+export class ExitsDataListComponent extends UnsubscribeOnDestroyAdapter {
   action: string;
   dialogTitle: string;
-  currrent_tab: any;
+  currrent_tab = 0;
   advanceTable: AdvanceTable;
-  variablesRoleList: any = [];
   exitData: any = [];
   button_show: boolean;
-  roleList: any = this.variablesRoleList.slice();
-  titleMessage: string = '';
-  userList: any = [];
+  variablesRoleList: Array<RoleModel> = [];
+  roleList: Array<RoleModel> = this.variablesRoleList.slice();
+  titleMessage = '';
+  userList: Array<UserModel> = [];
   isDelete = 0;
   invoice_logo = icon.INVOICE_LOGO;
-  constructor(
+  title = 'Import Cient/Job Name';
+  constructor (
     public dialogRef: MatDialogRef<ImportClientComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public advanceTableService: ClientService,
@@ -48,7 +48,6 @@ export class ExitsDataListComponent extends UnsubscribeOnDestroyAdapter
     console.log('data', data);
     this.exitData = data.data;
     this.button_show = data.allow_import;
-    console.log("exitData", this.exitData);
     this.currrent_tab = data;
     // Set the defaults
     this.action = data.action;
@@ -61,11 +60,6 @@ export class ExitsDataListComponent extends UnsubscribeOnDestroyAdapter
       const blankObject = {} as AdvanceTable;
       this.advanceTable = new AdvanceTable(blankObject);
     }
-  }
-
-
-  ngOnInit(): void {
-
   }
 
   async import() {

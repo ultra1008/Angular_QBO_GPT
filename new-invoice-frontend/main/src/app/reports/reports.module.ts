@@ -25,6 +25,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSortModule } from '@angular/material/sort';
 import { SharedModule } from '../shared/shared.module';
+import { CommonComponentsModule } from '../common-components/common-components.module';
 
 
 @NgModule({
@@ -57,6 +58,7 @@ import { SharedModule } from '../shared/shared.module';
     MatProgressBarModule,
     MatProgressSpinnerModule,
     SharedModule,
+    CommonComponentsModule,
   ]
 })
 export class ReportsModule { }

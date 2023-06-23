@@ -1957,15 +1957,15 @@ module.exports.findUpdatedFieldHistory = async function (requestObject, dbData) 
 module.exports.sendInvoiceForProcess = function (requestObject) {
     return new Promise(function (resolve, reject) {
         var request = require('request');
+        // 'url': 'http://db-invoice.rovuk.us:8000/process', 
         const options = {
             'method': 'POST',
-            'url': 'http://db-invoice.rovuk.us:8000/process',
+            'url': 'http://74.208.214.203:5000/process_invoice',
             'headers': {
-                'Content-Type': 'application/json',
-                'X-API-KEY': '4194168a-4a32-45d9-9d7c-0a730f887e7f'
+                'Content-Type': 'application/json'
             },
-            rejectUnauthorized: false,
-            body: JSON.stringify({ documents: requestObject })
+            // rejectUnauthorized: false,
+            body: JSON.stringify(requestObject)
         };
         request(options, function (err, resp, body) {
             if (err) {

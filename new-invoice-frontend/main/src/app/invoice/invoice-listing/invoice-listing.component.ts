@@ -14,7 +14,7 @@ import { InvoiceService } from '../invoice.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { HttpCall } from 'src/app/services/httpcall.service';
-import { showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
+import { numberWithCommas, showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { UploadInvoiceFormComponent } from '../upload-invoice-form/upload-invoice-form.component';
@@ -23,6 +23,8 @@ import { TableElement } from 'src/app/shared/TableElement';
 import { formatDate } from '@angular/common';
 import { TableExportUtil } from 'src/app/shared/tableExportUtil';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { RolePermission } from 'src/consts/common.model';
+import { icon } from 'src/consts/icon';
 
 @Component({
   selector: 'app-invoice-listing',
@@ -31,7 +33,7 @@ import { localstorageconstants } from 'src/consts/localstorageconstants';
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
 })
 export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
-  displayedColumns = ['invoice_date', 'due_date', 'vendor', 'invoice_number', 'total_amount', 'sub_total', 'approver', 'status', 'actions'];
+  displayedColumns = ['invoice_date', 'due_date', 'vendor', 'invoice_no', 'total_amount', 'sub_total', 'approver', 'status', 'is_quickbooks', 'actions'];
   invoiceService?: InvoiceService;
   dataSource!: ExampleDataSource;
   selection = new SelectionModel<Invoice>(true, []);
@@ -39,7 +41,10 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
   invoiceTable?: Invoice;
   isDelete = 0;
   type = '';
-  role_permission: any;
+  role_permission!: RolePermission;
+  is_quickbooks = false;
+  quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
+  quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
 
   constructor(public httpClient: HttpClient, public dialog: MatDialog, public settingService: InvoiceService,
     private snackBar: MatSnackBar, public route: ActivatedRoute, private router: Router, private httpCall: HttpCall,
@@ -49,7 +54,7 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
       this.type = queryParams['type'] ?? '';
       this.type = this.type.replace(/_/g, ' ');
     });
-    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
   }
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -58,18 +63,32 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
   ngOnInit() {
+    this.getCompanyTenants();
     this.loadData();
   }
   refresh() {
     this.loadData();
   }
 
-  // TOOLTIPS
-  getVendorNameTooltip(row: any) {
-    return row.vendor_data.vendor_name;
+  async getCompanyTenants() {
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP);
+    if (data.status) {
+      this.is_quickbooks = data.data.is_quickbooks_online || data.data.is_quickbooks_desktop;
+      if (this.is_quickbooks) {
+        this.displayedColumns = ['invoice_date', 'due_date', 'vendor', 'invoice_no', 'total_amount', 'sub_total', 'approver', 'status', 'is_quickbooks', 'actions'];
+      } else {
+        this.displayedColumns = ['invoice_date', 'due_date', 'vendor', 'invoice_no', 'total_amount', 'sub_total', 'approver', 'status', 'actions'];
+      }
+    }
+    // this.loadData();
   }
-  getApproverTooltip(row: any) {
-    return row.approver;
+
+  // TOOLTIPS
+  getVendorNameTooltip(row: Invoice) {
+    return row.vendor_data?.vendor_name;
+  }
+  getApproverTooltip(row: Invoice) {
+    return row.assign_to_data?.userfullname;
   }
 
   editInvoice(row: Invoice) {
@@ -167,7 +186,7 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
 
   uploadInvoice() {
     const dialogRef = this.dialog.open(UploadInvoiceFormComponent, {
-      width: '40%',
+      width: '80%',
       data: {
       },
     });
@@ -179,9 +198,9 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
   exportExcel() {
     const exportData: Partial<TableElement>[] =
       this.dataSource.filteredData.map((x) => ({
-        'Invoice Date': formatDate(new Date(Number(x.invoice_date_epoch.toString()) * 1000), 'MM/dd/yyyy', 'en'),
-        'Due Date': formatDate(new Date(Number(x.due_date_epoch.toString()) * 1000), 'MM/dd/yyyy', 'en'),
-        'Vendor': x.vendor_data.vendor_name,
+        'Invoice Date': x.invoice_date_epoch === 0 ? '' : formatDate(new Date(Number(x.invoice_date_epoch.toString()) * 1000), 'MM/dd/yyyy', 'en'),
+        'Due Date': x.due_date_epoch === 0 ? '' : formatDate(new Date(Number(x.due_date_epoch.toString()) * 1000), 'MM/dd/yyyy', 'en'),
+        'Vendor': x.vendor_data?.vendor_name,
         'Invoice Number': x.invoice_no,
         'Total Amount': x.invoice_total_amount,
         'Sub Total': x.sub_total,
@@ -190,6 +209,10 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
       }));
 
     TableExportUtil.exportToExcel(exportData, 'excel');
+  }
+
+  numberWithCommas(amount: number) {
+    return numberWithCommas(amount.toFixed(2));
   }
 }
 export class ExampleDataSource extends DataSource<Invoice> {
@@ -232,7 +255,7 @@ export class ExampleDataSource extends DataSource<Invoice> {
             const searchStr = (
               invoice.invoice_date_epoch +
               invoice.due_date_epoch +
-              invoice.vendor_data.vendor_name +
+              invoice.vendor_data?.vendor_name +
               invoice.invoice_no +
               invoice.invoice_total_amount +
               invoice.sub_total +
@@ -272,7 +295,7 @@ export class ExampleDataSource extends DataSource<Invoice> {
           [propertyA, propertyB] = [a.due_date_epoch, b.due_date_epoch];
           break;
         case 'vendor':
-          [propertyA, propertyB] = [a.vendor_data.vendor_name, b.vendor_data.vendor_name];
+          [propertyA, propertyB] = [a.vendor_data?.vendor_name, b.vendor_data?.vendor_name];
           break;
         case 'invoice_no':
           [propertyA, propertyB] = [a.invoice_no, b.invoice_no];

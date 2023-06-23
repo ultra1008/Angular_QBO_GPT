@@ -49,11 +49,8 @@ export class CostCodeFormComponent {
       division: new FormControl('', [Validators.required]),
       description: new FormControl(''),
     });
-    console.log('data', data);
-    const document_data = data.data;
 
     if (this.data) {
-      console.log('call');
       this.costcodesave = new FormGroup({
         cost_code: new FormControl(this.data.cost_code),
         division: new FormControl(this.data.division),

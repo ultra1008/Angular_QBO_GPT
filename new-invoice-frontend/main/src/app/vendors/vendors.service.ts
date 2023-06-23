@@ -1,21 +1,20 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '../shared/UnsubscribeOnDestroyAdapter';
-import { Vendor } from './vendor.model';
+import { VendorModel } from './vendor.model';
 import { HttpCall } from '../services/httpcall.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 @Injectable()
 
 export class VendorsService extends UnsubscribeOnDestroyAdapter {
   isTblLoading = true;
-  dataChange: BehaviorSubject<Vendor[]> = new BehaviorSubject<Vendor[]>([]);
+  dataChange: BehaviorSubject<VendorModel[]> = new BehaviorSubject<VendorModel[]>([]);
   // Temporarily stores data from dialogs
-  dialogData!: Vendor;
+  dialogData!: VendorModel;
   constructor (private httpCall: HttpCall) {
     super();
   }
-  get data(): Vendor[] {
+  get data(): VendorModel[] {
     return this.dataChange.value;
   }
 

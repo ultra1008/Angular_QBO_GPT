@@ -15,9 +15,9 @@
                             </ul>
                         </div>
                         <div class="right">
-                            <ul class="tbl-export-btn" *ngIf="role_permission.role_permission.vendor.Delete">
+                            <ul class="tbl-export-btn" *ngIf="role_permission.vendor.Delete">
                                 <li class="tbl-header-btn" *ngIf="id">
-                                    <div class="m-l-10" *ngIf="is_delete == 0"
+                                    <div class="m-l-10" *ngIf="!isHideArchiveActionQBD && is_delete === 0"
                                         matTooltip="{{'COMMON.TOOL_TIP.ARCHIVE' | translate}}">
                                         <button mat-mini-fab color="warn" (click)="deletvendor()">
                                             <mat-icon class="col-white">archive</mat-icon>
@@ -25,7 +25,7 @@
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="id">
-                                    <div class="m-l-10" *ngIf="is_delete == 1"
+                                    <div class="m-l-10" *ngIf="!isHideArchiveActionQBD && is_delete === 1"
                                         matTooltip="{{'COMMON.ACTIONS.RESTORE' | translate}}">
                                         <button mat-mini-fab color="warn" (click)="deletvendor()">
                                             <mat-icon class="col-white">archive</mat-icon>
@@ -44,7 +44,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="body">
+                    <div [ngClass]="{'disableDiv': isHideEditActionQBD}">
                         <form class="register-form m-4" [formGroup]="vendorForm">
                             <div class="vendor-image text-center mb-4">
                                 <div class="custom-file fileInputProfileWrap">
@@ -59,7 +59,6 @@
                                         </ng-template>
                                     </div>
                                 </div>
-                                <!-- <img src="assets/images/vendor.png" /> -->
                             </div>
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
@@ -141,7 +140,8 @@
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>{{'VENDOR.ADD_EDIT.ZIP_CODE' | translate}}</mat-label>
-                                        <input matInput formControlName="vendor_zipcode" required>
+                                        <input matInput formControlName="vendor_zipcode" required maxlength="5"
+                                            onkeypress="return String.fromCharCode(event.charCode).match(/[^0-9]/g) === null">
                                     </mat-form-field>
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
@@ -159,10 +159,10 @@
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>{{'VENDOR.ADD_EDIT.TERMS' | translate}}</mat-label>
-                                        <mat-select formControlName="vendor_terms">
-                                            <mat-select-filter #termListSelect [placeholder]="'Filter'"
-                                                [displayMember]="'name'" [array]="variablestermList"
-                                                (filteredReturn)="termsList =$event">
+                                        <mat-select formControlName="vendor_terms" #termSelect>
+                                            <mat-select-filter [placeholder]="'Filter'" [displayMember]="'name'"
+                                                [array]="variablestermList" (filteredReturn)="termsList =$event"
+                                                *ngIf="termSelect.focused">
                                             </mat-select-filter>
                                             <mat-option *ngFor="let term of termsList" [value]="term._id">
                                                 {{term.name}}
@@ -187,10 +187,10 @@
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>{{'VendorType' | translate}}</mat-label>
-                                    <mat-select formControlName="vendor_type_id">
-                                        <mat-select-filter #vendortypeSelect [placeholder]="'Filter'"
-                                            [displayMember]="'name'" [array]="variablesVendorTypeList"
-                                            (filteredReturn)="vendorTypeList=$event">
+                                    <mat-select formControlName="vendor_type_id" #vendorTypeSelect>
+                                        <mat-select-filter [placeholder]="'Filter'" [displayMember]="'name'"
+                                            [array]="variablesVendorTypeList" (filteredReturn)="vendorTypeList=$event"
+                                            *ngIf="vendorTypeSelect.focused">
                                         </mat-select-filter>
                                         <mat-option *ngFor="let vendor_type of vendorTypeList"
                                             [value]="vendor_type._id">
@@ -262,11 +262,11 @@
 
                             <div class="row">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                                    <button *ngIf="role_permission.role_permission.vendor.Edit " class="btn-space"
-                                        mat-raised-button color="primary" [disabled]="!vendorForm.valid"
-                                        (click)="saveVendor()">{{'COMMON.ACTIONS.SAVE'|
+                                    <button *ngIf="role_permission.vendor.Edit && !isHideEditActionQBD"
+                                        class="btn-space" mat-raised-button color="primary"
+                                        [disabled]="!vendorForm.valid" (click)="saveVendor()">{{'COMMON.ACTIONS.SAVE'|
                                         translate}}</button>
-                                    <button type="button" mat-raised-button color="warn"
+                                    <button *ngIf="!isHideEditActionQBD" type="button" mat-raised-button color="warn"
                                         (click)="confirmExit()">{{'COMMON.ACTIONS.CANCEL'| translate}}</button>
                                 </div>
                             </div>

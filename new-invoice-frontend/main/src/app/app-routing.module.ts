@@ -1,17 +1,17 @@
-import { Page404Component } from './authentication/page404/page404.component';
 import { AuthLayoutComponent } from './layout/app-layout/auth-layout/auth-layout.component';
 import { MainLayoutComponent } from './layout/app-layout/main-layout/main-layout.component';
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 import { AuthGuard } from './core/guard/auth.guard';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { Page404Component } from './authentication/page404/page404.component';
 const routes: Routes = [
   {
     path: '',
     component: MainLayoutComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: '', redirectTo: '/authentication/signin', pathMatch: 'full' },
+      { path: '', redirectTo: WEB_ROUTES.LOGIN, pathMatch: 'full' },
       {
         path: WEB_ROUTES.SIDEMENU_DASHBOARD,
         loadChildren: () =>
@@ -28,7 +28,7 @@ const routes: Routes = [
           import('./client/client.module').then((m) => m.ClientModule),
       },
       {
-        path: WEB_ROUTES.SIDEMENU_INVOICES,
+        path: WEB_ROUTES.SIDEMENU_INVOICE,
         loadChildren: () =>
           import('./invoice/invoice.module').then((m) => m.InvoiceModule),
       },
@@ -56,6 +56,11 @@ const routes: Routes = [
     ],
   },
   {
+    path: 'common',
+    loadChildren: () =>
+      import('./common-components/common-components.module').then((m) => m.CommonComponentsModule),
+  },
+  {
     path: 'authentication',
     component: AuthLayoutComponent,
     loadChildren: () =>
@@ -66,7 +71,7 @@ const routes: Routes = [
   { path: '**', component: Page404Component },
 ];
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: false })],
+  imports: [RouterModule.forRoot(routes, { useHash: false, preloadingStrategy: PreloadAllModules })],
   exports: [RouterModule],
 })
 export class AppRoutingModule { }

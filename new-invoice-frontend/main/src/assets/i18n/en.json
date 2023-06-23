@@ -25,9 +25,16 @@
             "HIDE": "Hide",
             "PRINT": "Print",
             "INVOICEMSG": "Invoice Message",
-            "INVOICELINK": "Invoice Link"
+            "INVOICELINK": "Invoice Link",
+            "EDIT": "Edit",
+            "DASHBOARD": "Dashboard",
+            "DELETE": "Delete",
+            "REMOVE": "Remove",
+            "SAVE": "Save",
+            "CANCEL": "Cancel"
         },
         "ACTIONS": {
+            "ACTIONS": "Actions",
             "EDIT": "Edit",
             "ARCHIVE": "Archive",
             "RESTORE": "Restore",
@@ -40,7 +47,9 @@
             "NO": "No",
             "BACK": "Back",
             "NEXT": "Next",
-            "DELETE": "Delete"
+            "DELETE": "Delete",
+            "Access_denied_all": "Access denied",
+            "UPLOAD": "Upload"
         },
         "HISTORY": {
             "KEY": "Key",
@@ -57,12 +66,15 @@
         "IMPORT": {
             "STATUS": "Status",
             "NAME": "Name"
+        },
+        "LISTING": {
+            "EPMTY": "No matching records found"
         }
     },
     "VENDOR": {
         "VIEW": {
-            "TITLE": "Vendor",
-            "ARCHIVED_TITLE": "Archived Vendor",
+            "TITLE": "Vendors",
+            "ARCHIVED_TITLE": "Archived Vendors",
             "ACTIVE_STATUS_MASSAGE": "No active vendor data is available",
             "INACTIVE_STATUS_MASSAGE": "No inactive vendor data is available"
         },
@@ -126,7 +138,9 @@
             "ADD_USER": "Add User",
             "EDIT_USER": "Edit User",
             "TITLE": "Users",
-            "ARCHIVED_TITLE": "Archived Users"
+            "ARCHIVED_TITLE": "Archived Users",
+            "ACTIVE_STATUS_MASSAGE": "No active user data is available",
+            "INACTIVE_STATUS_MASSAGE": "No inactive user data is available"
         },
         "TABLE": {
             "IMAGE": "Image",
@@ -207,7 +221,7 @@
             "COST_CODE": "Cost Code/GL Account",
             "DOCUMENT_VIEW": "Document View",
             "SECURITY_MODULE": {
-                "ALERT_SURE_WANT_CHANGE": "This is a global setting that will affect all projects. Are you sure you want to make the change?",
+                "ALERT_SURE_WANT_CHANGE": "This is a global setting that will affect all users. Are you sure you want to make the change?",
                 "AMOUNT_MINUTES": "Amount of minutes before auto log off",
                 "ENABLE_OTP": "Enable OTP",
                 "TIMEROPTIONS": "min"
@@ -229,11 +243,11 @@
                 "NEEDS_APPROVE": "needs to approve",
                 "NOTIFY": "Notify by",
                 "ALL_DOCUMENT": "This is a global setting that will affect all document. Are you sure you want to make the change?",
-                "ALL_PROJECT": "This is a global setting that will affect all projects. Are you sure you want to make the change?"
+                "ALL_PROJECT": "This is a global setting that will affect all users. Are you sure you want to make the change?"
             },
             "MAIL_BOX": {
                 "HEADER": "Mailboxes to Monitor",
-                "HEADER_ARCHIVE": "Archive Mailboxes to Monitor",
+                "HEADER_ARCHIVE": "Archived Mailboxes to Monitor",
                 "EMAIL": "Email",
                 "IMAP": "IMAP",
                 "PORT": "Port",
@@ -309,6 +323,7 @@
                 "VENDORS": "Vendors",
                 "INVOICE": "Invoice",
                 "REPORT": "Report",
+                "Client_Job": "Client/Job Name",
                 "TEMPLATES": "Templates",
                 "USERS": "Users",
                 "SETTING": "Setting",
@@ -347,7 +362,7 @@
     },
     "REPORT": {
         "VIEW": {
-            "TITLE": "Report",
+            "TITLE": "Reports",
             "START_DATE": "Start Date",
             "END_DATE": "End Date"
         },
@@ -406,8 +421,8 @@
     },
     "CLIENT": {
         "VIEW": {
-            "TITLE": "Client/Job Name",
-            "ARCHIVED_TITLE": "Archived Client/Job Name"
+            "TITLE": "Client/Job Names",
+            "ARCHIVED_TITLE": "Archived Client/Job Names"
         },
         "TABLE": {
             "CLIENT_NAME": "Client/Job Name",
@@ -457,6 +472,9 @@
         "TITLE": "INVOICE",
         "HISTORY": {
             "TITLE": "Invoice History"
+        },
+        "UPLOAD": {
+            "WAIT_FOR_RESPONSE": "The document(s) uploaded successfully. SmartAccuPay processing your uploaded document and in sometime this documents are reflected to portal."
         },
         "INVOICE_DETAILS": {
             "TITLE": "Invoice Detail",
@@ -516,10 +534,17 @@
                     "TOTAL_AMOUNT": "Total Amount",
                     "COST_CODE": "Cost Code/GL Account",
                     "ASSIGN_TO": "Approver",
-                    "GL_ACCOUNT": "GL Account",
+                    "CLIENT_JOB_NAME": "Client/Job Name",
+                    "CLASS_NAME": "Class Name",
                     "NOTES": "Notes"
                 }
             }
+        }
+    },
+    "DASHBOARD": {
+        "CHART": {
+            "MONTHLY_TITLE": "Monthly History",
+            "MONTHLY_INVOICE": "Monthly Invoice"
         }
     }
 }

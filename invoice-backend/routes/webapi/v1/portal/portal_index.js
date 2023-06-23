@@ -5,6 +5,7 @@ var common = require("./../../../../controller/common/common");
 var authController = require('./auth/authController');
 var authValidation = require('./auth/authValidation');
 router.post('/webapi/v1/login', authValidation.login, authController.login);
+router.get('/webapi/v1/getprofile', authController.getProfile);
 router.post('/webapi/v1/changepassword', authValidation.changePasswordValidation, authController.changepassword);
 router.post('/webapi/v1/savelogindetails', common.checkTokenExistOrNot, authController.savelogindetails);
 router.post('/webapi/v1/userlogout', authController.userlogout);
@@ -111,8 +112,8 @@ router.post('/webapi/v1/compnayverifysmtp', common.checkTokenExistOrNot, company
 router.post('/webapi/v1/sendiframecode', common.checkTokenExistOrNot, company_othersettingValidation.sendIframeCode, company_othersettingController.sendIframeCode);
 router.get('/webapi/v1/portal/compnayusage', common.checkTokenExistOrNot, company_othersettingController.compnayUsage);
 router.post('/webapi/v1/portal/getcustomerstatesdatatable', common.checkTokenExistOrNot, company_othersettingController.getCustomerStatesDatatable);
+router.get('/webapi/v1/portal/getapapicount', common.checkTokenExistOrNot, company_othersettingController.getAPAPICount);
 router.get('/webapi/v1/portal/customerMonthlyState', common.checkTokenExistOrNot, otherSettingCron.customerMonthlyState);
-router.post('/webapi/v1/portal/getCustomerStatesDatatableForTable', common.checkTokenExistOrNot, company_othersettingController.getCustomerStatesDatatableForTable);
 router.get('/webapi/v1/portal/getCustomerStates', common.checkTokenExistOrNot, company_othersettingController.getCustomerStates);
 
 
@@ -254,7 +255,7 @@ router.post('/webapi/v1/portal/getCostCodeForTable', common.checkTokenExistOrNot
 router.post('/webapi/v1/portal/checkimportcostcode', common.checkTokenExistOrNot, costCodeController.checkImportCostCode);
 router.post('/webapi/v1/portal/importcostcode', common.checkTokenExistOrNot, costCodeController.importCostCode);
 router.get('/webapi/v1/portal/getCostCode', common.checkTokenExistOrNot, costCodeController.getCostCode);
-
+router.post('/webapi/v1/portal/checkQBDImportCostcode', common.checkTokenExistOrNot, costCodeController.checkQBDImportCostcode);
 
 let creditcardsettingsController = require("./creditcardsettings/creditcardsettingsController");
 let creditcardsettingsValidation = require('./creditcardsettings/creditcardsettingsValidation');
@@ -371,15 +372,13 @@ router.post('/webapi/v1/portal/getOrphanDocumentsDatatableForTable', common.chec
 router.post('/webapi/v1/portal/getDuplicateDocumentsDatatableForTable', common.checkTokenExistOrNot, invoiceController.getDuplicateDocumentsDatatableForTable);
 router.post('/webapi/v1/portal/sendInvoiceEmail', common.checkTokenExistOrNot, invoiceController.sendInvoiceEmail);
 
-
-
 let invoiceDashboard = require('./dashboard/dashboardController');
 router.get('/webapi/v1/portal/getdashboardcount', common.checkTokenExistOrNot, invoiceDashboard.getDashboardCount);
 router.get('/webapi/v1/portal/getdashboardinvoice', common.checkTokenExistOrNot, invoiceDashboard.dashboardInvoiceList);
-router.post('/webapi/v1/portal/getdashboardchart', common.checkTokenExistOrNot, invoiceDashboard.getDashboardChart);
-router.get('/webapi/v1/portal/dashboardInvoiceList', common.checkTokenExistOrNot, invoiceDashboard.dashboardInvoiceList);
-router.get('/webapi/v1/portal/countInvoiceStatus', common.checkTokenExistOrNot, invoiceDashboard.countInvoiceStatus);
-router.post('/webapi/v1/portal/dashboardInvoiceListForTable', common.checkTokenExistOrNot, invoiceDashboard.dashboardInvoiceListForTable);
+router.post('/webapi/v1/portal/getdashboardmonthlyinvoicechart', common.checkTokenExistOrNot, invoiceDashboard.getDashboardMonthlyInvoiceChart);
+router.post('/webapi/v1/portal/getdashboardmonthlyhistorychart', common.checkTokenExistOrNot, invoiceDashboard.getDashboardMonthlyHistoryChart);
+router.get('/webapi/v1/portal/getduplicatedocumentsfortable', common.checkTokenExistOrNot, invoiceDashboard.getDuplicateDocumentsForTable);
+router.get('/webapi/v1/portal/getdashboardjobcost', common.checkTokenExistOrNot, invoiceDashboard.getDashboardJobCost);
 
 
 let invoice_vendorController = require('./vendor/vendorController');
@@ -399,7 +398,7 @@ router.post('/webapi/v1/portal/updateMultipleVendorStatus', common.checkTokenExi
 router.post('/webapi/v1/portal/deleteMultipleVendor', common.checkTokenExistOrNot, invoice_vendorValidation.deleteMultipleVendor, invoice_vendorController.deleteMultipleVendor);
 router.post('/webapi/v1/portal/importVendor', common.checkTokenExistOrNot, invoice_vendorController.importVendor);
 router.post('/webapi/v1/portal/checkImportVendor', common.checkTokenExistOrNot, invoice_vendorController.checkImportVendor);
-
+router.post('/webapi/v1/portal/checkQBDImportVendor', common.checkTokenExistOrNot, invoice_vendorController.checkQBDImportVendor);
 
 
 let invoice_templateController = require('./template/templateController');
@@ -450,7 +449,7 @@ router.post('/webapi/v1/portal/getmailboxmonitordatatable', common.checkTokenExi
 router.post('/webapi/v1/portal/getonemailboxmonitor', common.checkTokenExistOrNot, mailboxMonitorValidation.getOneMailboxMonitor, mailboxMonitorController.getOneMailboxMonitor);
 router.post('/webapi/v1/portal/savemailboxmonitor', common.checkTokenExistOrNot, mailboxMonitorValidation.saveMailboxMonitor, mailboxMonitorController.saveMailboxMonitor);
 router.post('/webapi/v1/portal/deletemailboxmonitor', common.checkTokenExistOrNot, mailboxMonitorValidation.deleteMailboxMonitor, mailboxMonitorController.deleteMailboxMonitor);
-// router.get('/webapi/v1/portal/mailboxMonitorCronAPI', mailBoxMonitorCron.mailboxMonitorCronAPI);
+router.get('/webapi/v1/portal/mailboxMonitorCronAPI', mailBoxMonitorCron.mailboxMonitorCronAPI);
 router.post('/webapi/v1/portal/getMailboxMonitorForTable', common.checkTokenExistOrNot, mailboxMonitorValidation.getMailboxMonitorForTableValidation, mailboxMonitorController.getMailboxMonitorForTable);
 
 
@@ -494,6 +493,7 @@ router.post('/webapi/v1/portal/getClientForTable', common.checkTokenExistOrNot, 
 router.post('/webapi/v1/portal/getOneClient', common.checkTokenExistOrNot, clientController.getOneClient);
 router.post('/webapi/v1/portal/checkimportclient', common.checkTokenExistOrNot, clientController.checkImportClient);
 router.post('/webapi/v1/portal/importclient', common.checkTokenExistOrNot, clientController.importClient);
+router.post('/webapi/v1/portal/checkQBDImportClient', common.checkTokenExistOrNot, clientController.checkQBDImportClient);
 
 
 var classNameController = require('./class_name/class_nameController');
@@ -504,13 +504,15 @@ router.get('/webapi/v1/portal/getclassname', common.checkTokenExistOrNot, classN
 router.post('/webapi/v1/portal/getclassnameForTable', common.checkTokenExistOrNot, classNameController.getclassnameForTable);
 router.post('/webapi/v1/portal/checkimportclassname', common.checkTokenExistOrNot, classNameController.checkImportClassName);
 router.post('/webapi/v1/portal/importclassname', common.checkTokenExistOrNot, classNameController.importClassName);
+router.post('/webapi/v1/portal/checkQBDImportClassName', common.checkTokenExistOrNot, classNameController.checkQBDImportClassName);
+
 
 let invoiceMessageController = require('./invoice_message/invoiceMessageController');
 let invoiceMessageValidation = require('./invoice_message/invoiceMessageValidation');
 router.get('/webapi/v1/portal/getinvoicemessagecount', common.checkTokenExistOrNot, invoiceMessageController.getInvoiceMessageCount);
 router.get('/webapi/v1/portal/getinvoicemessagefortable', common.checkTokenExistOrNot, invoiceMessageController.getInvoiceMessageForTable);
 router.post('/webapi/v1/portal/getoneinvoicemessage', common.checkTokenExistOrNot, invoiceMessageValidation.getOneInvoiceMessage, invoiceMessageController.getOneInvoiceMessage);
-router.post('/webapi/v1/portal/updateinvoicemessageseenflag', common.checkTokenExistOrNot, invoiceMessageValidation.updateInvoiceMessageSeenFlag, invoiceMessageController.updateInvoiceMessageSeenFlag);
+router.get('/webapi/v1/portal/updateinvoicemessageseenflag', common.checkTokenExistOrNot, invoiceMessageController.updateInvoiceMessageSeenFlag);
 router.post('/webapi/v1/portal/sendinvoicemessage', common.checkTokenExistOrNot, invoiceMessageValidation.sendInvoiceMessage, invoiceMessageController.sendInvoiceMessage);
 router.post('/webapi/v1/portal/deleteinvoicemessage', common.checkTokenExistOrNot, invoiceMessageValidation.deleteInvoiceMessage, invoiceMessageController.deleteInvoiceMessage);
 
@@ -519,18 +521,59 @@ let apInvoiceValidation = require('./ap_invoice/apInvoiceValidation');
 router.post('/webapi/v1/portal/getapinvoicefortable', common.checkTokenExistOrNot, apInvoiceValidation.getAPInvoiceForTable, apInvoiceController.getAPInvoiceForTable);
 router.post('/webapi/v1/portal/getoneapinvoice', common.checkTokenExistOrNot, apInvoiceValidation.getOneAPInvoice, apInvoiceController.getOneAPInvoice);
 router.post('/webapi/v1/portal/saveapinvoice', common.checkTokenExistOrNot, apInvoiceController.saveAPInvoice);
+router.post('/webapi/v1/portal/saveapotherdocumentinvoice', common.checkTokenExistOrNot, apInvoiceController.saveAPOtherDocumentInvoice);
 router.post('/webapi/v1/portal/deleteapinvoice', common.checkTokenExistOrNot, apInvoiceValidation.deleteAPInvoice, apInvoiceController.deleteAPInvoice);
 router.post('/webapi/v1/portal/saveapinvoicenote', common.checkTokenExistOrNot, apInvoiceValidation.saveAPInvoiceNote, apInvoiceController.saveAPInvoiceNote);
 router.post('/webapi/v1/portal/deleteapinvoicenote', common.checkTokenExistOrNot, apInvoiceValidation.deleteAPInvoiceNote, apInvoiceController.deleteAPInvoiceNote);
 router.post('/webapi/v1/portal/getapinvoicehistory', common.checkTokenExistOrNot, apInvoiceController.getAPInvoiceHistory);
 router.post('/webapi/v1/portal/getapinvoiceforreports', common.checkTokenExistOrNot, apInvoiceController.getAPInvoiceForReports);
 router.post('/webapi/v1/portal/getheaderapinvoicesearch', common.checkTokenExistOrNot, apInvoiceValidation.getHeaderAPInvoiceSerach, apInvoiceController.getHeaderAPInvoiceSerach);
-
+router.post('/webapi/v1/portal/saveapinvoiceinfo', common.checkTokenExistOrNot, apInvoiceValidation.saveAPInvoiceInfo, apInvoiceController.saveAPInvoiceInfo);
+router.post('/webapi/v1/portal/deleteapinvoiceinfo', common.checkTokenExistOrNot, apInvoiceValidation.deleteAPInvoiceInfo, apInvoiceController.deleteAPInvoiceInfo);
+router.post('/webapi/v1/portal/checkqbdimportapinvoices', common.checkTokenExistOrNot, apInvoiceController.checkQBDImportapInvoices);
+router.get('/webapi/v1/portal/getapprovedapinvoicesforqbd', common.checkTokenExistOrNot, apInvoiceController.getApprovedapInvoicesForQBD);
 
 let apDocumentProcessController = require('./ap_document_process/apDocumentProcessController');
 let apDocumentProcessValidation = require('./ap_document_process/apDocumentProcessValidation');
 router.get('/webapi/v1/portal/getapdocumentprocess', common.checkTokenExistOrNot, apDocumentProcessController.getAPDocumentProcess);
 router.post('/webapi/v1/portal/getoneapdocumentprocess', common.checkTokenExistOrNot, apDocumentProcessValidation.getOneAPDocumentProcess, apDocumentProcessController.getOneAPDocumentProcess);
 router.post('/webapi/v1/portal/saveapdocumentprocess', common.checkTokenExistOrNot, apDocumentProcessValidation.saveAPDocumentProcess, apDocumentProcessController.saveAPDocumentProcess);
+
+let apPOController = require('./ap_po/apPOController');
+let apPOValidation = require('./ap_po/apPOValidation');
+router.get('/webapi/v1/portal/getappo', common.checkTokenExistOrNot, apPOController.getAPPO);
+router.get('/webapi/v1/portal/getorphanappo', common.checkTokenExistOrNot, apPOController.getOrphanAPPO);
+router.post('/webapi/v1/portal/getoneappo', common.checkTokenExistOrNot, apPOValidation.getOneAPPO, apPOController.getOneAPPO);
+router.post('/webapi/v1/portal/saveappo', common.checkTokenExistOrNot, apPOController.saveAPPO);
+router.post('/webapi/v1/portal/saveapotherdocumentpo', common.checkTokenExistOrNot, apPOController.saveAPOtherDocumentPO);
+
+let apQuoteController = require('./ap_quote/apQuoteController');
+let apQuoteValidation = require('./ap_quote/apQuoteValidation');
+router.get('/webapi/v1/portal/getapquote', common.checkTokenExistOrNot, apQuoteController.getAPQuote);
+router.get('/webapi/v1/portal/getorphanapquote', common.checkTokenExistOrNot, apQuoteController.getOrphanAPQuote);
+router.post('/webapi/v1/portal/getoneapquote', common.checkTokenExistOrNot, apQuoteValidation.getOneAPQuote, apQuoteController.getOneAPQuote);
+router.post('/webapi/v1/portal/saveapquote', common.checkTokenExistOrNot, apQuoteController.saveAPQuote);
+router.post('/webapi/v1/portal/saveapotherdocumentquote', common.checkTokenExistOrNot, apQuoteController.saveAPOtherDocumentQuote);
+
+let apPackingSlipController = require('./ap_packing_slip/apPackingSlipController');
+let apPackingSlipValidation = require('./ap_packing_slip/apPackingSlipValidation');
+router.get('/webapi/v1/portal/getappackingslip', common.checkTokenExistOrNot, apPackingSlipController.getAPPackingSlip);
+router.get('/webapi/v1/portal/getorphanappackingslip', common.checkTokenExistOrNot, apPackingSlipController.getOrphanAPPackingSlip);
+router.post('/webapi/v1/portal/getoneappackingslip', common.checkTokenExistOrNot, apPackingSlipValidation.getOneAPPackingSlip, apPackingSlipController.getOneAPPackingSlip);
+router.post('/webapi/v1/portal/saveappackingslip', common.checkTokenExistOrNot, apPackingSlipController.saveAPPackingSlip);
+router.post('/webapi/v1/portal/saveapotherdocumentpackingslip', common.checkTokenExistOrNot, apPackingSlipController.saveAPOtherDocumentPackingSlip);
+
+let apReceivingSlipController = require('./ap_receiving_slip/apReceivingSlipController');
+let apReceivingSlipValidation = require('./ap_receiving_slip/apReceivingSlipValidation');
+router.get('/webapi/v1/portal/getapreceivingslip', common.checkTokenExistOrNot, apReceivingSlipController.getAPReceivingSlip);
+router.get('/webapi/v1/portal/getorphanapreceivingslip', common.checkTokenExistOrNot, apReceivingSlipController.getOrphanAPReceivingSlip);
+router.post('/webapi/v1/portal/getoneapreceivingslip', common.checkTokenExistOrNot, apReceivingSlipValidation.getOneAPReceivingSlip, apReceivingSlipController.getOneAPReceivingSlip);
+router.post('/webapi/v1/portal/saveapreceivingslip', common.checkTokenExistOrNot, apReceivingSlipController.saveAPReceivingSlip);
+router.post('/webapi/v1/portal/saveapotherdocumentreceivingslip', common.checkTokenExistOrNot, apReceivingSlipController.saveAPOtherDocumentReceivingSlip);
+
+let apOtherDocumentController = require('./ap_other_document/apOtherDocumentController');
+let apOtherDocumentValidation = require('./ap_other_document/apOtherDocumentValidation');
+router.get('/webapi/v1/portal/getapotherdocument', common.checkTokenExistOrNot, apOtherDocumentController.getAPOtherDocument);
+router.post('/webapi/v1/portal/getoneapotherdocument', common.checkTokenExistOrNot, apOtherDocumentValidation.getOneAPOtherDocument, apOtherDocumentController.getOneAPOtherDocument);
 
 module.exports = router;

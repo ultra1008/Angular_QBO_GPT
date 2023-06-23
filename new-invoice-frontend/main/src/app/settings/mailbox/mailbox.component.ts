@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { MailboxTable } from '../settings.model';
+import { MailboxModel } from '../settings.model';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { BehaviorSubject, Observable, fromEvent, map, merge } from 'rxjs';
@@ -22,6 +22,7 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
+import { WEB_ROUTES } from 'src/consts/routes';
 
 @Component({
   selector: 'app-mailbox',
@@ -36,13 +37,13 @@ export class MailboxComponent
     'imap',
     'port',
     'time',
-    'actions',
+    // 'actions',
   ];
   mailboxService?: SettingsService;
   dataSource!: MailboxDataSource;
-  selection = new SelectionModel<MailboxTable>(true, []);
+  selection = new SelectionModel<MailboxModel>(true, []);
   id?: number;
-  // advanceTable?: MailboxTable;
+  // advanceTable?: MailboxModel;
   isDelete = 0;
   titleMessage = '';
 
@@ -71,18 +72,16 @@ export class MailboxComponent
     this.loadData();
   }
   addNew() {
-    this.router.navigate(['/settings/mailbox-form']);
+    this.router.navigate([WEB_ROUTES.MAILBOX_FOR_SETTING]);
   }
 
-  editMailbox(mailbox: MailboxTable) {
+  editMailbox(mailbox: MailboxModel) {
     if (this.isDelete == 0) {
-      this.router.navigate(['/settings/mailbox-form'], {
-        queryParams: { _id: mailbox._id },
-      });
+      this.router.navigate([WEB_ROUTES.MAILBOX_FOR_SETTING], { queryParams: { _id: mailbox._id } });
     }
   }
 
-  async archiveRecover(mailbox: MailboxTable, is_delete: number) {
+  async archiveRecover(mailbox: MailboxModel, is_delete: number) {
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.DELETE_MAILBOX, { _id: mailbox._id, is_delete: is_delete });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
@@ -96,7 +95,7 @@ export class MailboxComponent
     }
   }
 
-  async deleteMailbox(mailbox: MailboxTable, is_delete: number) {
+  async deleteMailbox(mailbox: MailboxModel, is_delete: number) {
     if (is_delete == 1) {
       this.titleMessage = this.translate.instant(
         'SETTINGS.SETTINGS_OTHER_OPTION.MAIL_BOX.CONFIRMATION_DIALOG.ARCHIVE'
@@ -154,7 +153,7 @@ export class MailboxComponent
     //     // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
     //     this.mailboxService?.mailBoxDataChange.value.splice(index, 1);
     //     this.refreshTable();
-    //     this.selection = new SelectionModel<MailboxTable>(true, []);
+    //     this.selection = new SelectionModel<MailboxModel>(true, []);
     //   });
     //  showNotification(
     //     'snackbar-danger',
@@ -183,11 +182,11 @@ export class MailboxComponent
 
 
   back() {
-    this.router.navigate(['/settings']);
+    this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: MailboxTable) {
+  onContextMenu(event: MouseEvent, item: MailboxModel) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -198,7 +197,7 @@ export class MailboxComponent
     }
   }
 }
-export class MailboxDataSource extends DataSource<MailboxTable> {
+export class MailboxDataSource extends DataSource<MailboxModel> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -206,8 +205,8 @@ export class MailboxDataSource extends DataSource<MailboxTable> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: MailboxTable[] = [];
-  renderedData: MailboxTable[] = [];
+  filteredData: MailboxModel[] = [];
+  renderedData: MailboxModel[] = [];
   constructor(
     public mailboxService: SettingsService,
     public paginator: MatPaginator,
@@ -219,7 +218,7 @@ export class MailboxDataSource extends DataSource<MailboxTable> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<MailboxTable[]> {
+  connect(): Observable<MailboxModel[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this.mailboxService.mailBoxDataChange,
@@ -233,7 +232,7 @@ export class MailboxDataSource extends DataSource<MailboxTable> {
         // Filter data
         this.filteredData = this.mailboxService.mailBoxData
           .slice()
-          .filter((mailboxTable: MailboxTable) => {
+          .filter((mailboxTable: MailboxModel) => {
             const searchStr = (
               mailboxTable.email +
               mailboxTable.imap +
@@ -258,7 +257,7 @@ export class MailboxDataSource extends DataSource<MailboxTable> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: MailboxTable[]): MailboxTable[] {
+  sortData(data: MailboxModel[]): MailboxModel[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }

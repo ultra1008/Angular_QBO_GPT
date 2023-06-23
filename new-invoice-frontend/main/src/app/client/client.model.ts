@@ -1,7 +1,7 @@
-import { CostCodeTable } from '../settings/settings.model';
-import { User } from './../users/user.model';
+import { CostCodeModel } from '../settings/settings.model';
+import { UserModel } from './../users/user.model';
 
-export class ClientList {
+export class ClientJobModel {
   _id: string;
   client_name: string;
   client_number: string;
@@ -12,9 +12,9 @@ export class ClientList {
   gl_account: number;
   client_cost_cost_id: string;
   client_phone: string;
-  approver: User;
-  client_cost_cost: CostCodeTable;
-  constructor (response: ClientList) {
+  approver: UserModel;
+  client_cost_cost: CostCodeModel;
+  constructor (response: ClientJobModel) {
     {
       this._id = response._id;
       this.client_name = response.client_name;

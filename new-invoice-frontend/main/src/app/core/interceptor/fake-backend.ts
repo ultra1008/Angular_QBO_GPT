@@ -1,26 +1,10 @@
 ﻿import { Injectable } from '@angular/core';
-import {
-  HttpRequest,
-  HttpResponse,
-  HttpHandler,
-  HttpEvent,
-  HttpInterceptor,
-  HTTP_INTERCEPTORS,
-} from '@angular/common/http';
+import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
-import { User } from '../models/user';
+import { UserModel } from 'src/app/users/user.model';
 
-const users: User[] = [
-  {
-    id: 1,
-    username: 'admin',
-    password: 'admin',
-    firstName: 'Sarah',
-    lastName: 'Smith',
-    token: 'admin-token',
-  },
-];
+const users: UserModel[] = [];
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
@@ -47,28 +31,22 @@ export class FakeBackendInterceptor implements HttpInterceptor {
     function authenticate() {
       const { username, password } = body;
       const user = users.find(
-        (x) => x.username === username && x.password === password
+        (x) => x.userfullname === username
       );
       if (!user) {
         return error('Username or password is incorrect');
       }
       return ok({
-        id: user.id,
-        username: user.username,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        token: user.token,
+        _id: user._id,
+        userfullname: user.userfullname,
       });
     }
 
     // helper functions
 
     function ok(body?: {
-      id: number;
-      username: string;
-      firstName: string;
-      lastName: string;
-      token: string;
+      _id: string;
+      userfullname: string;
     }) {
       return of(new HttpResponse({ status: 200, body }));
     }

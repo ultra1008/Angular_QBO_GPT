@@ -30,7 +30,7 @@
                         <form class="register-form m-4" [formGroup]="companyinfoForm">
                             <div class="row">
                                 <div class="col">
-                                    <div class="logo-div">
+                                    <div class="logo-div pointer">
                                         <div>
                                             <input type="file" #OpenFilebox id="OpenFilebox" multiple
                                                 (change)="filechangeEvent($event)" class="fileInputProfile">
@@ -41,10 +41,11 @@
                                                 <ng-container *ngIf="isImageSaved">
                                                     <img class="flux-brand-logo" [src]="cardImageBase64" alt="logo" />
                                                 </ng-container>
-    
-                                                <div class="middle">
-                                                    <i class="fa fa-pencil-alt cust-fontsize-tmp" aria-hidden="true"></i>
-                                                </div>
+
+                                                <!-- <div class="middle">
+                                                    <i class="fa fa-pencil-alt cust-fontsize-tmp"
+                                                        aria-hidden="true"></i>
+                                                </div> -->
                                             </div>
                                         </div>
                                     </div>
@@ -99,13 +100,14 @@
                                         <mat-label>{{'SETTINGS.VIEW.TYPE_OF_COMPANY' | translate}}</mat-label>
                                         <mat-select formControlName="companytype" #CompnayTypes_dataSelect required>
                                             <mat-select-filter [placeholder]="'Filter'" [displayMember]="'name'"
-                                                *ngIf="CompnayTypes_dataSelect.focused" [array]="variablesCompnayTypes_data"
+                                                *ngIf="CompnayTypes_dataSelect.focused"
+                                                [array]="variablesCompnayTypes_data"
                                                 (filteredReturn)="CompnayTypes_data =$event">
                                             </mat-select-filter>
                                             <mat-option *ngFor="let companyType of CompnayTypes_data"
-                                            [value]="companyType._id">
-                                            {{companyType.name}}
-                                        </mat-option>
+                                                [value]="companyType._id">
+                                                {{companyType.name}}
+                                            </mat-option>
                                         </mat-select>
                                     </mat-form-field>
 
@@ -113,16 +115,16 @@
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>{{'SETTINGS.VIEW.NIGP_CODE' | translate}}</mat-label>
-                                        <mat-select formControlName="companydivision" #csiDivisionsSelect multiple required
-                                        placeholder="{{'SETTINGS.VIEW.NIGP_CODE' | translate}}">
-                                        <mat-select-filter [placeholder]="'Filter'" [displayMember]="'name'"
-                                            *ngIf="csiDivisionsSelect.focused" [array]="variablesCSIDivisions"
-                                            (filteredReturn)="csiDivisions =$event">
-                                        </mat-select-filter>
-                                        <mat-option *ngFor="let division of csiDivisions" [value]="division._id">
-                                            {{division.name}}
-                                        </mat-option>
-                                    </mat-select>
+                                        <mat-select formControlName="companydivision" #csiDivisionsSelect multiple
+                                            required placeholder="{{'SETTINGS.VIEW.NIGP_CODE' | translate}}">
+                                            <mat-select-filter [placeholder]="'Filter'" [displayMember]="'name'"
+                                                *ngIf="csiDivisionsSelect.focused" [array]="variablesCSIDivisions"
+                                                (filteredReturn)="csiDivisions =$event">
+                                            </mat-select-filter>
+                                            <mat-option *ngFor="let division of csiDivisions" [value]="division._id">
+                                                {{division.name}}
+                                            </mat-option>
+                                        </mat-select>
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -131,27 +133,28 @@
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>{{'SETTINGS.VIEW.COMPANY_SIZE' | translate}}</mat-label>
                                         <mat-select class="dark-cust-color" formControlName="companysize"
-                                        #CompnaySizes_dataSelect  required>
-                                        <mat-select-filter [placeholder]="'Filter'" [displayMember]="'name'"
-                                            *ngIf="CompnaySizes_dataSelect.focused" [array]="variablesCompnaySizes_data"
-                                            (filteredReturn)="CompnaySizes_data =$event">
-                                        </mat-select-filter>
-                                        <mat-option *ngFor="let compnaysize of CompnaySizes_data"
-                                            [value]="compnaysize._id">
-                                            {{compnaysize.name}}
-                                        </mat-option>
-                                    </mat-select>
+                                            #CompnaySizes_dataSelect required>
+                                            <mat-select-filter [placeholder]="'Filter'" [displayMember]="'name'"
+                                                *ngIf="CompnaySizes_dataSelect.focused"
+                                                [array]="variablesCompnaySizes_data"
+                                                (filteredReturn)="CompnaySizes_data =$event">
+                                            </mat-select-filter>
+                                            <mat-option *ngFor="let compnaysize of CompnaySizes_data"
+                                                [value]="compnaysize._id">
+                                                {{compnaysize.name}}
+                                            </mat-option>
+                                        </mat-select>
                                     </mat-form-field>
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                                     <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>{{'SETTINGS.VIEW.COMPANY_ACTIVE_SINCE' | translate}}</mat-label>
-                                        <mat-select class="dark-cust-color" formControlName="companyactivesince" 
-                                         readonly required>
-                                        <mat-option *ngFor="let value of range" [value]="value">
-                                            {{value}}
-                                        </mat-option>
-                                    </mat-select>
+                                        <mat-select class="dark-cust-color" formControlName="companyactivesince"
+                                            readonly required>
+                                            <mat-option *ngFor="let value of range" [value]="value">
+                                                {{value}}
+                                            </mat-option>
+                                        </mat-select>
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -189,7 +192,8 @@
                             <div class="row">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                     <button class="btn-space" mat-raised-button color="primary"
-                                        [disabled]="!companyinfoForm.valid" (click)="saveVendor()">{{'COMMON.ACTIONS.SAVE'|
+                                        [disabled]="!companyinfoForm.valid"
+                                        (click)="saveVendor()">{{'COMMON.ACTIONS.SAVE'|
                                         translate}}</button>
                                     <button type="button" mat-raised-button color="warn"
                                         (click)="confirmExit()">{{'COMMON.ACTIONS.CANCEL'| translate}}</button>

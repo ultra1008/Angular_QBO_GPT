@@ -9,28 +9,17 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import {
-  NgxGalleryComponent,
-  NgxGalleryOptions,
-  NgxGalleryImage,
-} from 'ngx-gallery-9';
 import { fromEvent, BehaviorSubject, Observable, merge, map } from 'rxjs';
 import { WEB_ROUTES } from 'src/consts/routes';
-import {
-  gallery_options,
-  swalWithBootstrapTwoButtons,
-  showNotification,
-  commonNewtworkAttachmentViewer,
-} from 'src/consts/utils';
+import { swalWithBootstrapTwoButtons, showNotification } from 'src/consts/utils';
 import { HttpCall } from '../services/httpcall.service';
 import { TableElement } from '../shared/TableElement';
 import { UnsubscribeOnDestroyAdapter } from '../shared/UnsubscribeOnDestroyAdapter';
 import { TableExportUtil } from '../shared/tableExportUtil';
 import { VendorReportComponent } from '../vendors/vendor-report/vendor-report.component';
-import { TermModel } from '../vendors/vendor.model';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { ClientService } from './client.service';
-import { ClientList } from './client.model';
+import { ClientJobModel } from './client.model';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { UiSpinnerService } from '../services/ui-spinner.service';
 import * as XLSX from 'xlsx';
@@ -39,6 +28,8 @@ import { ExitsDataListComponent } from './exits-data-list/exits-data-list.compon
 import { icon } from 'src/consts/icon';
 import { CommonService } from '../services/common.service';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { RolePermission } from 'src/consts/common.model';
+import { TermModel } from '../settings/settings.model';
 
 
 @Component({
@@ -53,21 +44,25 @@ export class ClientComponent
   displayedColumns = ['select', 'client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'actions'];
   clientService?: ClientService;
   dataSource!: ClientDataSource;
-  selection = new SelectionModel<ClientList>(true, []);
+  selection = new SelectionModel<ClientJobModel>(true, []);
   id?: number;
   isDelete = 0;
   termsList: Array<TermModel> = [];
   titleMessage = '';
   isQBSyncedCompany = false;
   rform?: any;
-  exitData!: any[];
   selectedValue!: string;
   @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
-  role_permission: any;
+  role_permission!: RolePermission;
 
   quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
   quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
-  is_quickbooks = true;
+  is_quickbooks_online = false;
+  is_quickbooks_desktop = false;
+
+  isHideAddActionQBD = false;
+  isHideEditActionQBD = false;
+  isHideArchiveActionQBD = false;
 
   constructor(
     public httpClient: HttpClient,
@@ -82,7 +77,7 @@ export class ClientComponent
     private commonService: CommonService
   ) {
     super();
-    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
   }
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -104,36 +99,59 @@ export class ClientComponent
   async getCompanyTenants() {
     const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP);
     if (data.status) {
-      this.is_quickbooks = data.data.is_quickbooks_online || data.data.is_quickbooks_desktop;
-      if (this.is_quickbooks) {
+
+      if (data.data.is_quickbooks_desktop) {
+        if (this.role_permission.clientJob.Add) {
+          this.isHideAddActionQBD = true;
+        } else {
+          this.isHideAddActionQBD = false;
+        }
+
+        if (this.role_permission.clientJob.Edit) {
+          this.isHideEditActionQBD = true;
+        } else {
+          this.isHideEditActionQBD = false;
+        }
+
+        if (this.role_permission.clientJob.Delete) {
+          this.isHideArchiveActionQBD = true;
+        } else {
+          this.isHideArchiveActionQBD = false;
+        }
+      }
+      this.is_quickbooks_online = data.data.is_quickbooks_online;
+      this.is_quickbooks_desktop = data.data.is_quickbooks_desktop;
+      if (this.is_quickbooks_online) {
         this.displayedColumns = ['select', 'client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'is_quickbooks', 'actions'];
+      } else if (this.is_quickbooks_desktop) {
+        this.displayedColumns = ['client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'is_quickbooks'];
       } else {
         this.displayedColumns = ['select', 'client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'actions'];
       }
     }
-    // this.loadData();
   }
 
   // TOOLTIPS
-  getTooltip(row: any) {
+  getTooltip(row: ClientJobModel) {
     return row.client_email;
   }
-  getNameTooltip(row: any) {
+  getNameTooltip(row: ClientJobModel) {
     return row.client_name;
   }
-  getCostCodeTooltip(row: any) {
+  getCostCodeTooltip(row: ClientJobModel) {
     return row.client_cost_cost?.cost_code;
   }
-  getNumberTooltip(row: any) {
+  getNumberTooltip(row: ClientJobModel) {
     return row.client_number;
   }
-  getApproverTooltip(row: any) {
+  getApproverTooltip(row: ClientJobModel) {
     return row.approver?.userfullname;
   }
 
   refresh() {
     this.loadData();
   }
+
   onBookChange(ob: any) {
     const selectedBook = ob.value;
     console.log(selectedBook);
@@ -244,12 +262,8 @@ export class ClientComponent
     this.router.navigate([WEB_ROUTES.CLIENT_FORM]);
   }
 
-  editClient(client: ClientList) {
-    if (this.isDelete == 0) {
-      this.router.navigate([WEB_ROUTES.CLIENT_FORM], {
-        queryParams: { _id: client._id },
-      });
-    }
+  editClient(client: ClientJobModel) {
+    this.router.navigate([WEB_ROUTES.CLIENT_FORM], { queryParams: { _id: client._id } });
   }
 
   openHistory() {
@@ -316,7 +330,7 @@ export class ClientComponent
   }
 
   // context menu
-  onContextMenu(event: MouseEvent, item: ClientList) {
+  onContextMenu(event: MouseEvent, item: ClientJobModel) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
@@ -326,7 +340,7 @@ export class ClientComponent
       this.contextMenu.openMenu();
     }
   }
-  async updateStatus(client: ClientList) {
+  async updateStatus(client: ClientJobModel) {
     let status = 1;
     if (client.client_status == 1) {
       status = 2;
@@ -350,7 +364,7 @@ export class ClientComponent
     }
   }
 
-  async archiveRecover(client: ClientList, is_delete: number) {
+  async archiveRecover(client: ClientJobModel, is_delete: number) {
     const data = await this.clientTableService.deleteClient({
       _id: client._id,
       is_delete: is_delete,
@@ -370,7 +384,7 @@ export class ClientComponent
     }
   }
 
-  async deleteClient(client: ClientList, is_delete: number) {
+  async deleteClient(client: ClientJobModel, is_delete: number) {
     if (is_delete == 1) {
       this.titleMessage = this.translate.instant(
         'CLIENT.CONFIRMATION_DIALOG.ARCHIVE'
@@ -398,14 +412,18 @@ export class ClientComponent
   gotoArchiveUnarchive() {
     this.isDelete = this.isDelete == 1 ? 0 : 1;
     if (this.isDelete === 0) {
-      if (this.is_quickbooks) {
+      if (this.is_quickbooks_online) {
         this.displayedColumns = ['select', 'client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'is_quickbooks', 'actions'];
+      } else if (this.is_quickbooks_desktop) {
+        this.displayedColumns = ['client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'is_quickbooks'];
       } else {
         this.displayedColumns = ['select', 'client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'actions'];
       }
     } else {
-      if (this.is_quickbooks) {
+      if (this.is_quickbooks_online) {
         this.displayedColumns = ['client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'is_quickbooks', 'actions'];
+      } else if (this.is_quickbooks_desktop) {
+        this.displayedColumns = ['client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'is_quickbooks'];
       } else {
         this.displayedColumns = ['client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'actions'];
       }
@@ -431,9 +449,8 @@ export class ClientComponent
       jsonData = workBook.SheetNames.reduce((initial: any, name: any) => {
         const sheet = workBook.Sheets[name];
         initial[name] = XLSX.utils.sheet_to_json(sheet);
-        let data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
         header_ = data.shift();
-
         return initial;
       }, {});
       // const dataString = JSON.stringify(jsonData);
@@ -456,14 +473,11 @@ export class ClientComponent
         .subscribe(function (params) {
           that.uiSpinner.spin$.next(false);
           if (params.status) {
-            that.exitData = params;
-
-
 
             const dialogRef = that.dialog.open(ExitsDataListComponent, {
               width: '750px',
               height: '500px',
-              data: that.exitData,
+              data: params,
               disableClose: true,
             });
 
@@ -516,7 +530,7 @@ export class ClientComponent
 }
 
 // This class is used for datatable sorting and searching
-export class ClientDataSource extends DataSource<ClientList> {
+export class ClientDataSource extends DataSource<ClientJobModel> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -524,8 +538,8 @@ export class ClientDataSource extends DataSource<ClientList> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: ClientList[] = [];
-  renderedData: ClientList[] = [];
+  filteredData: ClientJobModel[] = [];
+  renderedData: ClientJobModel[] = [];
   constructor(
     public clientService: ClientService,
     public paginator: MatPaginator,
@@ -537,7 +551,7 @@ export class ClientDataSource extends DataSource<ClientList> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<ClientList[]> {
+  connect(): Observable<ClientJobModel[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this.clientService.dataClientChange,
@@ -551,13 +565,13 @@ export class ClientDataSource extends DataSource<ClientList> {
         // Filter data
         this.filteredData = this.clientService.dataClient
           .slice()
-          .filter((ClientList: ClientList) => {
+          .filter((client: ClientJobModel) => {
             const searchStr = (
-              ClientList.client_name +
-              ClientList.client_email +
-              ClientList.client_status +
-              ClientList.approver_id +
-              ClientList.client_cost_cost_id
+              client.client_name +
+              client.client_email +
+              client.client_status +
+              client.approver_id +
+              client.client_cost_cost_id
             ).toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
@@ -577,7 +591,7 @@ export class ClientDataSource extends DataSource<ClientList> {
     //disconnect
   }
   /** Returns a sorted copy of the database data. */
-  sortData(data: ClientList[]): ClientList[] {
+  sortData(data: ClientJobModel[]): ClientJobModel[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }

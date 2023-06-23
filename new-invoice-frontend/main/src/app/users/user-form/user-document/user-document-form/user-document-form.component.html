@@ -95,7 +95,8 @@
                                       </div> -->
                                     <div class="row">
                                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                                            <button class="btn-space" mat-raised-button color="primary"
+                                            <button *ngIf="role_permission.users.emergencyContact.Edit"
+                                                class="btn-space" mat-raised-button color="primary"
                                                 [disabled]="!form.valid"
                                                 (click)="saveUserDocument()">{{'COMMON.ACTIONS.SAVE'|
                                                 translate}}</button>

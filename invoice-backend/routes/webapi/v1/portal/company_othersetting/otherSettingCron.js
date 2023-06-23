@@ -19,7 +19,7 @@ module.exports.customerMonthlyState = async function (req, res) {
 async function customerMonthlyStateCronFunction() {
     try {
         let connection_MDM_main = await rest_Api.connectionMongoDB(config.DB_HOST, config.DB_PORT, config.DB_USERNAME, config.DB_PASSWORD, config.DB_NAME);
-        let All_Compnay = await rest_Api.find(connection_MDM_main, companyCollection, { companystatus: 1 });
+        let All_Compnay = await rest_Api.find(connection_MDM_main, companyCollection, { companystatus: 1, companycode: { $ne: '' } });
         let final_object = [];
         for (const item_new of All_Compnay) {
             let get_data = await common.getCustomerStates(item_new.companycode.toLowerCase());
