@@ -410,18 +410,20 @@ module.exports.importCostCode = async function (req, res) {
 
             let reqObject = [];
             for (let i = 0; i < requestObject.length; i++) {
-                let one_data = await costcodeCollection.findOne({ name: requestObject[i].data.name });
+                let one_data = await costcodeCollection.findOne({ cost_code: requestObject[i].data.cost_code });
+                console.log("one_data", one_data);
                 if (one_data) { } else {
                     reqObject.push({
                         cost_code: requestObject[i].data.cost_code,
                         division: requestObject[i].data.division,
                         //module: requestObject[i].data.module,
                         description: requestObject[i].data.description,
-                        value: requestObject[i].data.module + "-" + requestObject[i].data.division + "-" + requestObject[i].data.cost_code,
+                        // value: requestObject[i].data.module + "-" + requestObject[i].data.division + "-" + requestObject[i].data.cost_code,
                     });
                 }
             }
             let insert_data = await costcodeCollection.insertMany(reqObject);
+            console.log("reqObject", reqObject);
             if (insert_data) {
                 res.send({ status: true, message: translator.getStr('CostCodeAdded'), data: insert_data });
             } else {
