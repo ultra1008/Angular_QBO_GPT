@@ -28,7 +28,7 @@ export class SwitchCompanyComponent implements OnInit {
   removable = true;
   title = 'Choose Organization';
 
-  constructor (public dialogRef: MatDialogRef<SwitchCompanyComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData,
+  constructor(public dialogRef: MatDialogRef<SwitchCompanyComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private commonService: CommonService, private snackBar: MatSnackBar, private router: Router, public uiSpinner: UiSpinnerService,
     private formBuilder: FormBuilder) {
     this.form = this.formBuilder.group({
@@ -95,13 +95,13 @@ export class SwitchCompanyComponent implements OnInit {
         } else {
           console.log("sagar: ", window.location.pathname, "and", WEB_ROUTES.DASHBOARD, "====", window.location.pathname === WEB_ROUTES.DASHBOARD);
           if (window.location.pathname === WEB_ROUTES.DASHBOARD) {
-            setTimeout(() => {
-              location.reload();
-            }, 300);
+
+            location.reload();
+
           } else {
-            setTimeout(() => {
-              this.router.navigate([WEB_ROUTES.DASHBOARD]);
-            }, 300);
+
+            this.router.navigate([WEB_ROUTES.DASHBOARD]);
+
           }
         }
       } else {

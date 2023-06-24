@@ -27,7 +27,7 @@ export class UploadInvoiceFormComponent {
   id: any;
   title = 'Upload Document';
 
-  constructor (public dialogRef: MatDialogRef<SwitchCompanyComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
+  constructor(public dialogRef: MatDialogRef<SwitchCompanyComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
     private commonService: CommonService, private snackBar: MatSnackBar, public route: ActivatedRoute, public uiSpinner: UiSpinnerService,
     private formBuilder: FormBuilder, private sanitiser: DomSanitizer, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
