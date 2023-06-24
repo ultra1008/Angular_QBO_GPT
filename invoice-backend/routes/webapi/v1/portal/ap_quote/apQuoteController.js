@@ -207,7 +207,9 @@ module.exports.saveAPQuote = async function (req, res) {
                             await apReceivingSlipConnection.updateOne({ _id: ObjectID(requestObject.old_id) }, { is_delete: 1 });
                         }
                     }
-                    apInvoiceController.sendInvoiceUpdateAlerts(decodedToken, save_ap_quote._id, save_ap_quote.invoice_id, config.DOCUMENT_TYPES.quote.name, translator);
+                    if (save_ap_quote.invoice_id != null && save_ap_quote.invoice_id != undefined && save_ap_quote.invoice_id != '') {
+                        apInvoiceController.sendInvoiceUpdateAlerts(decodedToken, save_ap_quote._id, save_ap_quote.invoice_id, config.DOCUMENT_TYPES.quote.name, translator);
+                    }
                     res.send({ status: true, message: "Quote added successfully.", data: save_ap_quote });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });

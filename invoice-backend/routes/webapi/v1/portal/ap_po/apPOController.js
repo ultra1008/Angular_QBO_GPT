@@ -207,7 +207,9 @@ module.exports.saveAPPO = async function (req, res) {
                             await apReceivingSlipConnection.updateOne({ _id: ObjectID(requestObject.old_id) }, { is_delete: 1 });
                         }
                     }
-                    apInvoiceController.sendInvoiceUpdateAlerts(decodedToken, save_ap_po._id, save_ap_po.invoice_id, config.DOCUMENT_TYPES.po.name, translator);
+                    if (save_ap_po.invoice_id != null && save_ap_po.invoice_id != undefined && save_ap_po.invoice_id != '') {
+                        apInvoiceController.sendInvoiceUpdateAlerts(decodedToken, save_ap_po._id, save_ap_po.invoice_id, config.DOCUMENT_TYPES.po.name, translator);
+                    }
                     res.send({ status: true, message: "PO added successfully.", data: save_ap_po });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });

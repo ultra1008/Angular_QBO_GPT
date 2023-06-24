@@ -255,9 +255,18 @@ export class ViewDocumentComponent {
       if (this.document === this.selectedDocumentType) {
         this.savePOData();
       } else {
+        let oldType = '', newType = '';
+        const foundOldIndex = this.documentTypesList.findIndex((x: any) => x.key === this.document);
+        if (foundOldIndex != null) {
+          oldType = this.documentTypesList[foundOldIndex].name;
+        }
+        const foundNewIndex = this.documentTypesList.findIndex((x: any) => x.key === this.selectedDocumentType);
+        if (foundNewIndex != null) {
+          newType = this.documentTypesList[foundNewIndex].name;
+        }
         swalWithBootstrapTwoButtons
           .fire({
-            title: 'sure message',
+            title: this.translate.instant('DOCUMENT.CHANGE_TYPE.CONFIRM_2').toString().replace(/#old/g, oldType).replace(/#new/g, newType),
             showDenyButton: true,
             confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
             denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
@@ -369,9 +378,18 @@ export class ViewDocumentComponent {
       if (this.document === this.selectedDocumentType) {
         this.saveQuoteData();
       } else {
+        let oldType = '', newType = '';
+        const foundOldIndex = this.documentTypesList.findIndex((x: any) => x.key === this.document);
+        if (foundOldIndex != null) {
+          oldType = this.documentTypesList[foundOldIndex].name;
+        }
+        const foundNewIndex = this.documentTypesList.findIndex((x: any) => x.key === this.selectedDocumentType);
+        if (foundNewIndex != null) {
+          newType = this.documentTypesList[foundNewIndex].name;
+        }
         swalWithBootstrapTwoButtons
           .fire({
-            title: 'sure message',
+            title: this.translate.instant('DOCUMENT.CHANGE_TYPE.CONFIRM_2').toString().replace(/#old/g, oldType).replace(/#new/g, newType),
             showDenyButton: true,
             confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
             denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
@@ -426,9 +444,7 @@ export class ViewDocumentComponent {
     this.uiSpinner.spin$.next(false);
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
-      if (this.documentId) {
-        this.back();
-      }
+      this.back();
     } else {
       showNotification(this.snackBar, data.message, 'error');
     }
@@ -477,9 +493,18 @@ export class ViewDocumentComponent {
       if (this.document === this.selectedDocumentType) {
         this.savePackingSlipDate();
       } else {
+        let oldType = '', newType = '';
+        const foundOldIndex = this.documentTypesList.findIndex((x: any) => x.key === this.document);
+        if (foundOldIndex != null) {
+          oldType = this.documentTypesList[foundOldIndex].name;
+        }
+        const foundNewIndex = this.documentTypesList.findIndex((x: any) => x.key === this.selectedDocumentType);
+        if (foundNewIndex != null) {
+          newType = this.documentTypesList[foundNewIndex].name;
+        }
         swalWithBootstrapTwoButtons
           .fire({
-            title: 'sure message',
+            title: this.translate.instant('DOCUMENT.CHANGE_TYPE.CONFIRM_2').toString().replace(/#old/g, oldType).replace(/#new/g, newType),
             showDenyButton: true,
             confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
             denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
@@ -528,9 +553,7 @@ export class ViewDocumentComponent {
     this.uiSpinner.spin$.next(false);
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
-      if (this.documentId) {
-        this.back();
-      }
+      this.back();
     } else {
       showNotification(this.snackBar, data.message, 'error');
     }
@@ -579,9 +602,18 @@ export class ViewDocumentComponent {
       if (this.document === this.selectedDocumentType) {
         this.saveReceivingSlipData();
       } else {
+        let oldType = '', newType = '';
+        const foundOldIndex = this.documentTypesList.findIndex((x: any) => x.key === this.document);
+        if (foundOldIndex != null) {
+          oldType = this.documentTypesList[foundOldIndex].name;
+        }
+        const foundNewIndex = this.documentTypesList.findIndex((x: any) => x.key === this.selectedDocumentType);
+        if (foundNewIndex != null) {
+          newType = this.documentTypesList[foundNewIndex].name;
+        }
         swalWithBootstrapTwoButtons
           .fire({
-            title: 'sure message',
+            title: this.translate.instant('DOCUMENT.CHANGE_TYPE.CONFIRM_2').toString().replace(/#old/g, oldType).replace(/#new/g, newType),
             showDenyButton: true,
             confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
             denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
@@ -630,9 +662,7 @@ export class ViewDocumentComponent {
     this.uiSpinner.spin$.next(false);
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
-      if (this.documentId) {
-        this.back();
-      }
+      this.back();
     } else {
       showNotification(this.snackBar, data.message, 'error');
     }
@@ -787,9 +817,19 @@ export class ViewDocumentComponent {
   }
 
   onDocumentTypeChange(event: any) {
+    let oldType = '', newType = '';
+    const foundOldIndex = this.documentTypesList.findIndex((x: any) => x.key === this.document);
+    if (foundOldIndex != null) {
+      oldType = this.documentTypesList[foundOldIndex].name;
+    }
+    const foundNewIndex = this.documentTypesList.findIndex((x: any) => x.key === event.value);
+    if (foundNewIndex != null) {
+      newType = this.documentTypesList[foundNewIndex].name;
+    }
+
     swalWithBootstrapTwoButtons
       .fire({
-        title: 'message',
+        title: this.translate.instant('DOCUMENT.CHANGE_TYPE.CONFIRM_1').toString().replace(/#old/g, oldType).replace(/#new/g, newType),
         showDenyButton: true,
         confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
         denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),

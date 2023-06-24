@@ -207,7 +207,9 @@ module.exports.saveAPPackingSlip = async function (req, res) {
                             await apReceivingSlipConnection.updateOne({ _id: ObjectID(requestObject.old_id) }, { is_delete: 1 });
                         }
                     }
-                    apInvoiceController.sendInvoiceUpdateAlerts(decodedToken, save_ap_packing_slip._id, save_ap_packing_slip.invoice_id, config.DOCUMENT_TYPES.packingSlip.name, translator);
+                    if (save_ap_packing_slip.invoice_id != null && save_ap_packing_slip.invoice_id != undefined && save_ap_packing_slip.invoice_id != '') {
+                        apInvoiceController.sendInvoiceUpdateAlerts(decodedToken, save_ap_packing_slip._id, save_ap_packing_slip.invoice_id, config.DOCUMENT_TYPES.packingSlip.name, translator);
+                    }
                     res.send({ status: true, message: "Packing Slip added successfully.", data: save_ap_packing_slip });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });
