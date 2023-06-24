@@ -484,13 +484,13 @@ module.exports.getClientForTable = async function (req, res) {
                         from: collectionConstant.INVOICE_USER,
                         localField: "approver_id",
                         foreignField: "_id",
-                        as: "invoice_user"
+                        as: "approver"
                     }
                 },
                 {
                     $unwind: {
                         preserveNullAndEmptyArrays: true,
-                        path: "$invoice_user"
+                        path: "$approver"
                     }
                 },
                 {
@@ -498,13 +498,13 @@ module.exports.getClientForTable = async function (req, res) {
                         from: collectionConstant.COSTCODES,
                         localField: "client_cost_cost_id",
                         foreignField: "_id",
-                        as: "costcode"
+                        as: "client_cost_cost"
                     }
                 },
                 {
                     $unwind: {
                         preserveNullAndEmptyArrays: true,
-                        path: "$costcode"
+                        path: "$client_cost_cost"
                     }
                 },
                 { $sort: sort },

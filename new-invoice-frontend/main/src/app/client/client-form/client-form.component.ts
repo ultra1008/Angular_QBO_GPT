@@ -137,7 +137,7 @@ export class ClientFormComponent {
       if (data.status) {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'success');
-        this.router.navigate([WEB_ROUTES.CLIENT]);
+        this.back();
       } else {
         this.uiSpinner.spin$.next(false);
         showNotification(this.snackBar, data.message, 'error');
@@ -147,7 +147,7 @@ export class ClientFormComponent {
 
   confirmExit() {
     if (this.isHideArchiveActionQBD) {
-      this.router.navigate([WEB_ROUTES.VENDOR]);
+      this.back();
     } else {
       swalWithBootstrapButtons
         .fire({
@@ -172,9 +172,7 @@ export class ClientFormComponent {
           } else if (result.isDenied) {
             // ;
           } else {
-            setTimeout(() => {
-              this.router.navigate([WEB_ROUTES.CLIENT]);
-            }, 100);
+            this.back();
           }
         });
     }
@@ -203,11 +201,15 @@ export class ClientFormComponent {
           const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.CLIENT_DELETE, requestObject);
           if (data.status) {
             showNotification(this.snackBar, data.message, 'success');
-            this.router.navigate([WEB_ROUTES.CLIENT]);
+            this.back();
           } else {
             showNotification(this.snackBar, data.message, 'error');
           }
         }
       });
+  }
+
+  back() {
+    this.router.navigate([WEB_ROUTES.CLIENT]);
   }
 }
