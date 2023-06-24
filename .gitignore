@@ -73,3 +73,8 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# Python Project
+/invoice-python/venv
+/invoice-python/__pycache__
+/invoice-python/.env
