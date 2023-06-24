@@ -4,6 +4,19 @@ import { UnsubscribeOnDestroyAdapter } from '../shared/UnsubscribeOnDestroyAdapt
 import { BehaviorSubject } from 'rxjs';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { HttpCall } from '../services/httpcall.service';
+import { Pager } from 'src/consts/common.model';
+
+export interface DataTableRequest {
+  is_delete: number;
+  start: number;
+  length: number;
+  search: string;
+  type: string;
+  sort: {
+    field: string,
+    order: string;
+  };
+}
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +26,7 @@ export class InvoiceService extends UnsubscribeOnDestroyAdapter {
   isTblLoading = true;
   isMessageTblLoading = true;
   dataChange: BehaviorSubject<Invoice[]> = new BehaviorSubject<Invoice[]>([]);
+  invoicePager: BehaviorSubject<Pager> = new BehaviorSubject<Pager>({ first: 0, last: 0, total: 0 });
   messageDataChange: BehaviorSubject<InvoiceMessage[]> = new BehaviorSubject<
     InvoiceMessage[]
   >([]);
@@ -25,6 +39,10 @@ export class InvoiceService extends UnsubscribeOnDestroyAdapter {
     return this.dataChange.value;
   }
 
+  get pagerData(): Pager {
+    return this.invoicePager.value;
+  }
+
   get messageData(): InvoiceMessage[] {
     return this.messageDataChange.value;
   }
@@ -34,10 +52,11 @@ export class InvoiceService extends UnsubscribeOnDestroyAdapter {
   }
 
   /** CRUD METHODS */
-  async getInvoiceTable(is_delete: number, type: string): Promise<void> {
-    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.GET_INVOICE_FOR_TABLE, { is_delete: is_delete, type: type }).toPromise();
+  async getInvoiceTable(requestObject: DataTableRequest): Promise<void> {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.GET_INVOICE_FOR_TABLE, requestObject).toPromise();
+    this.dataChange.next(data.data);
+    this.invoicePager.next(data.pager);
     this.isTblLoading = false;
-    this.dataChange.next(data);
   }
 
   // Message Datatable API

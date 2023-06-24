@@ -1,6 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material/table';
 import { BehaviorSubject, Observable, fromEvent, map, merge } from 'rxjs';
 import { ReportService } from '../report.service';
 import { HttpCall } from 'src/app/services/httpcall.service';
@@ -20,6 +19,7 @@ import { configData } from 'src/environments/configData';
 import { TableElement } from 'src/app/shared/TableElement';
 import { formatDate } from '@angular/common';
 import { numberWithCommas, timeDateToepoch } from 'src/consts/utils';
+import { Invoice } from 'src/app/invoice/invoice.model';
 
 @Component({
   selector: 'app-reports-listing',
@@ -30,7 +30,7 @@ import { numberWithCommas, timeDateToepoch } from 'src/consts/utils';
 export class ReportsListingComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
   displayedColumns = ['invoice_date', 'due_date', 'vendor', 'invoice_no', 'total_amount', 'sub_total', 'approver', 'status', 'actions'];
   reportService?: ReportService;
-  dataSource!: ExampleDataSource;
+  dataSource!: any;
   selection = new SelectionModel<Report>(true, []);
   id?: number;
   isDelete = 0;
@@ -49,6 +49,22 @@ export class ReportsListingComponent extends UnsubscribeOnDestroyAdapter impleme
     end_date: new FormControl()
   });
   dateRange: Array<number> = [0, 0];
+
+  tableRequest = {
+    pageIndex: 0,
+    pageSize: 10,
+    search: '',
+    sort: {
+      field: 'created_at',
+      order: 'desc'
+    }
+  };
+  pager: any = {
+    first: 0,
+    last: 0,
+    total: 10,
+  };
+  invoiceList!: Report[] | undefined;
 
   constructor (public ReportServices: ReportService, public httpCall: HttpCall, public uiSpinner: UiSpinnerService,
     public route: ActivatedRoute, private router: Router, public translate: TranslateService,) {
@@ -91,27 +107,59 @@ export class ReportsListingComponent extends UnsubscribeOnDestroyAdapter impleme
     this.paginator._changePageSize(this.paginator.pageSize);
   }
 
+  public changePage(e: any) {
+    this.tableRequest.pageIndex = e.pageIndex;
+    this.tableRequest.pageSize = e.pageSize;
+    this.loadData();
+  }
+
+  onSearchChange(event: any) {
+    this.tableRequest.search = event.target.value;
+    this.tableRequest.pageIndex = 0;
+    this.loadData();
+  }
+
+  sortData(event: any) {
+    if (event.direction == '') {
+      this.tableRequest.sort.field = 'created_at';
+      this.tableRequest.sort.order = 'desc';
+    } else {
+      this.tableRequest.sort.field = event.active;
+      this.tableRequest.sort.order = event.direction;
+    }
+    this.loadData();
+  }
+
   public loadData() {
     this.reportService = new ReportService(this.httpCall);
-    this.dataSource = new ExampleDataSource(
-      this.reportService,
-      this.paginator,
-      this.sort,
-      this.reportType,
-      this.ids,
-      this.dateRange,
+    const displayDataChanges = [
+      this.reportService.reportDataChange,
+      this.reportService.reportPager,
+      this.sort.sortChange,
+      // this.filterChange,
+      this.paginator.page,
+    ];
+    let requestObject = {};
+    if (this.reportType == configData.REPORT_TYPE.reportVendor) {
+      requestObject = { vendor_ids: this.ids, start_date: this.dateRange[0], end_date: this.dateRange[1], start: this.tableRequest.pageIndex * 10, length: this.tableRequest.pageSize, search: this.tableRequest.search, sort: this.tableRequest.sort };
+    } else if (this.reportType == configData.REPORT_TYPE.openApprover) {
+      requestObject = { assign_to_ids: this.ids, start_date: this.dateRange[0], end_date: this.dateRange[1], start: this.tableRequest.pageIndex * 10, length: this.tableRequest.pageSize, search: this.tableRequest.search, sort: this.tableRequest.sort };
+    } else if (this.reportType == configData.REPORT_TYPE.openClass) {
+      requestObject = { class_name_ids: this.ids, start_date: this.dateRange[0], end_date: this.dateRange[1], start: this.tableRequest.pageIndex * 10, length: this.tableRequest.pageSize, search: this.tableRequest.search, sort: this.tableRequest.sort };
+    } else if (this.reportType == configData.REPORT_TYPE.openClientJob) {
+      requestObject = { job_client_name_ids: this.ids, start_date: this.dateRange[0], end_date: this.dateRange[1], start: this.tableRequest.pageIndex * 10, length: this.tableRequest.pageSize, search: this.tableRequest.search, sort: this.tableRequest.sort };
+    } else if (this.reportType == configData.REPORT_TYPE.openVendor) {
+      requestObject = { open_invoice: true, vendor_ids: this.ids, start_date: this.dateRange[0], end_date: this.dateRange[1], start: this.tableRequest.pageIndex * 10, length: this.tableRequest.pageSize, search: this.tableRequest.search, sort: this.tableRequest.sort };
+    }
+    this.reportService.getInvoiceReportTable(requestObject);
+
+    this.dataSource = merge(...displayDataChanges).pipe(
+      map(() => {
+        this.invoiceList = this.reportService?.reportData;
+        this.pager = this.reportService?.pagerData;
+        return this.reportService?.reportData.slice();
+      })
     );
-    this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
-      () => {
-        if (!this.dataSource) {
-          return;
-        }
-        this.dataSource.filter = this.filter.nativeElement.value;
-      }
-    );
-    setTimeout(() => {
-      this.router.navigate([WEB_ROUTES.VIEW_REPORT]).then();
-    }, 1000);
   }
 
   onContextMenu(event: MouseEvent, item: Report) {
@@ -127,7 +175,7 @@ export class ReportsListingComponent extends UnsubscribeOnDestroyAdapter impleme
 
   exportExcel() {
     const exportData: Partial<TableElement>[] =
-      this.dataSource.filteredData.map((x) => ({
+      this.dataSource.filteredData.map((x: Report) => ({
         'Invoice Date': x.invoice_date_epoch === 0 ? '' : formatDate(new Date(Number(x.invoice_date_epoch.toString()) * 1000), 'MM/dd/yyyy', 'en'),
         'Due Date': x.due_date_epoch === 0 ? '' : formatDate(new Date(Number(x.due_date_epoch.toString()) * 1000), 'MM/dd/yyyy', 'en'),
         'Vendor': x.vendor_data?.vendor_name,
@@ -156,7 +204,7 @@ export class ReportsListingComponent extends UnsubscribeOnDestroyAdapter impleme
   }
 }
 
-export class ExampleDataSource extends DataSource<Report> {
+/* export class ExampleDataSource extends DataSource<Report> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -172,7 +220,7 @@ export class ExampleDataSource extends DataSource<Report> {
     // Reset to the first page when the user changes the filter.
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
-  /** Connect function called by the table to retrieve one stream containing the data to render. */
+   
   connect(): Observable<Report[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
@@ -228,7 +276,7 @@ export class ExampleDataSource extends DataSource<Report> {
   disconnect() {
     //disconnect
   }
-  /** Returns a sorted copy of the database data. */
+   
   sortData(data: Report[]): Report[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
@@ -269,4 +317,4 @@ export class ExampleDataSource extends DataSource<Report> {
       );
     });
   }
-}
+} */

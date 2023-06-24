@@ -130,7 +130,8 @@
                     </div>
                     <div class="body overflow-auto">
                         <div class="table-responsive">
-                            <table mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
+                            <table mat-table #table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)"
+                                class="mat-cell">
                                 <ng-container matColumnDef="select">
                                     <mat-header-cell *matHeaderCellDef class="psl-1"
                                         [ngClass]="'tbl-col-width-per-selected'">

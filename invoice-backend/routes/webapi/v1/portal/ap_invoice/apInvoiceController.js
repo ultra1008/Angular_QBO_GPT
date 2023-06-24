@@ -36,6 +36,14 @@ module.exports.getAPInvoiceForTable = async function (req, res) {
         try {
             var requestObject = req.body;
             var apInvoiceConnection = connection_db_api.model(collectionConstant.AP_INVOICE, apInvoiceSchema);
+            let start = parseInt(requestObject.start);
+            var perpage = parseInt(requestObject.length);
+
+            var columnName = (requestObject.sort != undefined && requestObject.sort != '') ? requestObject.sort.field : '';
+            var columnOrder = (requestObject.sort != undefined && requestObject.sort != '') ? requestObject.sort.order : '';
+            var sort = {};
+            sort[columnName] = (columnOrder == 'asc') ? 1 : -1;
+
             let match = { is_delete: requestObject.is_delete };
             if (requestObject.type != '' && requestObject.type != undefined && requestObject.type != null) {
                 match = {
@@ -43,6 +51,17 @@ module.exports.getAPInvoiceForTable = async function (req, res) {
                     status: requestObject.type,
                 };
             }
+            var query = {
+                $or: [
+                    { "vendor_data.vendor_name": new RegExp(requestObject.search, 'i') },
+                    { "invoice_no": new RegExp(requestObject.search, 'i') },
+                    { "invoice_total_amount": new RegExp(requestObject.search, 'i') },
+                    { "sub_total": new RegExp(requestObject.search, 'i') },
+                    { "assign_to_data.userfullname": new RegExp(requestObject.search, 'i') },
+                    { "status": new RegExp(requestObject.search, 'i') },
+                ]
+            };
+
             var get_data = await apInvoiceConnection.aggregate([
                 { $match: match },
                 {
@@ -129,16 +148,21 @@ module.exports.getAPInvoiceForTable = async function (req, res) {
                         preserveNullAndEmptyArrays: true
                     },
                 },
-                { $sort: { created_at: -1 } },
+                { $sort: sort },
+                { $match: query },
+                { $limit: perpage + start },
+                { $skip: start },
             ]);
-            if (get_data) {
-                res.send(get_data);
-            } else {
-                res.send([]);
-            }
+            let total_count = await apInvoiceConnection.find(match).countDocuments();
+            let pager = {
+                start: start,
+                length: perpage,
+                total: total_count
+            };
+            res.send({ status: true, data: get_data, pager });
         } catch (e) {
             console.log(e);
-            res.send([]);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false, error: e });
         } finally {
             connection_db_api.close();
         }
@@ -1135,6 +1159,14 @@ module.exports.getAPInvoiceForReports = async function (req, res) {
         try {
             var requestObject = req.body;
             var apInvoiceConnection = connection_db_api.model(collectionConstant.AP_INVOICE, apInvoiceSchema);
+            let start = parseInt(requestObject.start);
+            var perpage = parseInt(requestObject.length);
+
+            var columnName = (requestObject.sort != undefined && requestObject.sort != '') ? requestObject.sort.field : '';
+            var columnOrder = (requestObject.sort != undefined && requestObject.sort != '') ? requestObject.sort.order : '';
+            var sort = {};
+            sort[columnName] = (columnOrder == 'asc') ? 1 : -1;
+
             let match = { is_delete: 0 };
             if (requestObject.vendor_ids != undefined && requestObject.vendor_ids != null) {
                 let data_Query = [];
@@ -1184,6 +1216,18 @@ module.exports.getAPInvoiceForReports = async function (req, res) {
                     status: { $ne: 'Paid' },
                 };
             }
+
+            var query = {
+                $or: [
+                    { "vendor_data.vendor_name": new RegExp(requestObject.search, 'i') },
+                    { "invoice_no": new RegExp(requestObject.search, 'i') },
+                    { "invoice_total_amount": new RegExp(requestObject.search, 'i') },
+                    { "sub_total": new RegExp(requestObject.search, 'i') },
+                    { "assign_to_data.userfullname": new RegExp(requestObject.search, 'i') },
+                    { "status": new RegExp(requestObject.search, 'i') },
+                ]
+            };
+
             let date_query = {};
             if (requestObject.start_date != 0 && requestObject.end_date != 0) {
                 date_query = { invoice_date_epoch: { $gte: requestObject.start_date, $lt: requestObject.end_date } };
@@ -1275,16 +1319,21 @@ module.exports.getAPInvoiceForReports = async function (req, res) {
                         preserveNullAndEmptyArrays: true
                     },
                 },
-                { $sort: { created_at: -1 } },
+                { $sort: sort },
+                { $match: query },
+                { $limit: perpage + start },
+                { $skip: start },
             ]);
-            if (get_data) {
-                res.send(get_data);
-            } else {
-                res.send([]);
-            }
+            let total_count = await apInvoiceConnection.find(match).countDocuments();
+            let pager = {
+                start: start,
+                length: perpage,
+                total: total_count
+            };
+            res.send({ status: true, data: get_data, pager });
         } catch (e) {
             console.log(e);
-            res.send([]);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         } finally {
             connection_db_api.close();
         }
