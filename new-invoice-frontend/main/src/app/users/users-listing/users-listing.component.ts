@@ -73,7 +73,7 @@ export class UsersListingComponent
     last: 0,
     total: 10,
   };
-  userList!: UserModel[] | undefined;
+  userList!: UserModel[];
 
   constructor (
     public httpClient: HttpClient,
@@ -307,7 +307,7 @@ export class UsersListingComponent
 
     this.dataSource = merge(...displayDataChanges).pipe(
       map(() => {
-        this.userList = this.userService?.data;
+        this.userList = this.userService?.data || [];
         this.pager = this.userService?.pagerData;
         return this.userService?.data.slice();
       })

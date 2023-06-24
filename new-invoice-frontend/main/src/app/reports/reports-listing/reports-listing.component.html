@@ -171,7 +171,7 @@
                                    </mat-progress-spinner>
                               </div>
                               <div *ngIf="!reportService?.isReportTblLoading" class="no-results"
-                                   [style.display]="dataSource.length === 0 ? '' : 'none'">
+                                   [style.display]="invoiceList.length === 0 ? '' : 'none'">
                                    {{'COMMON.LISTING.EMPTY' | translate}}
                               </div>
                               <mat-paginator #paginator [length]="pager!.total" [pageIndex]="tableRequest.pageIndex"

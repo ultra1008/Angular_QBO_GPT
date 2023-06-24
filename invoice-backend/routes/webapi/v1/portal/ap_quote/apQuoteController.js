@@ -33,10 +33,30 @@ module.exports.getOrphanAPQuote = async function (req, res) {
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
+            var requestObject = req.body;
             var apQuoteConnection = connection_db_api.model(collectionConstant.AP_QUOUTE, apQuoteSchema);
-            // var get_data = await apQuoteConnection.find({ is_delete: 0, is_orphan: true });
+
+            let start = parseInt(requestObject.start);
+            var perpage = parseInt(requestObject.length);
+
+            var columnName = (requestObject.sort != undefined && requestObject.sort != '') ? requestObject.sort.field : '';
+            var columnOrder = (requestObject.sort != undefined && requestObject.sort != '') ? requestObject.sort.order : '';
+            var sort = {};
+            sort[columnName] = (columnOrder == 'asc') ? 1 : -1;
+
+            let match = { is_delete: 0, is_orphan: true };
+            var query = {
+                $or: [
+                    { "document_type": new RegExp(requestObject.search, 'i') },
+                    { "po_no": new RegExp(requestObject.search, 'i') },
+                    { "invoice_no": new RegExp(requestObject.search, 'i') },
+                    { "vendor_data.vendor_name": new RegExp(requestObject.search, 'i') },
+                    { "updated_by.userfullname": new RegExp(requestObject.search, 'i') },
+                ]
+            };
+
             var get_data = await apQuoteConnection.aggregate([
-                { $match: { is_delete: 0, is_orphan: true } },
+                { $match: match },
                 {
                     $lookup: {
                         from: collectionConstant.INVOICE_USER,
@@ -60,16 +80,26 @@ module.exports.getOrphanAPQuote = async function (req, res) {
                         preserveNullAndEmptyArrays: true
                     },
                 },
-            ]);
-            res.send(get_data);
+                { $sort: sort },
+                { $match: query },
+                { $limit: perpage + start },
+                { $skip: start },
+            ]).collation({ locale: "en_US" });
+            let total_count = await apQuoteConnection.find(match).countDocuments();
+            let pager = {
+                start: start,
+                length: perpage,
+                total: total_count
+            };
+            res.send({ status: true, data: get_data, pager });
         } catch (e) {
             console.log(e);
-            res.send([]);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false, error: e });
         } finally {
             connection_db_api.close();
         }
     } else {
-        res.send([]);
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
 

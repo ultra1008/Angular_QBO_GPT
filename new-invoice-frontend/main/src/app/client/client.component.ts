@@ -78,7 +78,7 @@ export class ClientComponent
     last: 0,
     total: 10,
   };
-  clientJobList!: ClientJobModel[] | undefined;
+  clientJobList!: ClientJobModel[];
 
   constructor (
     public httpClient: HttpClient,
@@ -311,7 +311,7 @@ export class ClientComponent
 
     this.dataSource = merge(...displayDataChanges).pipe(
       map(() => {
-        this.clientJobList = this.clientService?.data;
+        this.clientJobList = this.clientService?.data || [];
         this.pager = this.clientService?.pagerData;
         return this.clientService?.data.slice();
       })

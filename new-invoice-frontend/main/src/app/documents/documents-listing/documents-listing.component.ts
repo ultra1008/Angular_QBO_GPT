@@ -27,7 +27,7 @@ import { WEB_ROUTES } from 'src/consts/routes';
 export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
   displayedColumns = ['document_type', 'po_no', 'invoice_no', 'vendor_name', 'updated_by', 'updated_at', 'actions'];
   documentsServices?: DocumentsService;
-  dataSource!: DocumentDataSource;
+  dataSource!: any;
   selection = new SelectionModel<DocumentTable>(true, []);
   id?: number;
   isDelete = 0;
@@ -40,6 +40,22 @@ export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter imple
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
   documentTypes = configData.DOCUMENT_TYPES;
+
+  tableRequest = {
+    pageIndex: 0,
+    pageSize: 10,
+    search: '',
+    sort: {
+      field: 'created_at',
+      order: 'desc'
+    }
+  };
+  pager: any = {
+    first: 0,
+    last: 0,
+    total: 10,
+  };
+  documentList!: DocumentTable[];
 
   constructor (
     public dialog: MatDialog,
@@ -66,25 +82,27 @@ export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter imple
       this.loadData(httpversion.PORTAL_V1 + httproutes.GET_AP_OTHER_DOCUMENT);
     }
   }
+
   refresh() {
     this.ngOnInit();
   }
 
   public loadData(url: string) {
     this.documentsServices = new DocumentsService(this.httpCall);
-    this.dataSource = new DocumentDataSource(
-      this.documentsServices,
-      this.paginator,
-      this.sort,
-      url,
-    );
-    this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
-      () => {
-        if (!this.dataSource) {
-          return;
-        }
-        this.dataSource.filter = this.filter.nativeElement.value;
-      }
+    const displayDataChanges = [
+      this.documentsServices.dataChange,
+      this.documentsServices.documentPager,
+      this.sort.sortChange,
+      this.paginator.page,
+    ];
+    this.documentsServices.getDocumentTable(url, { is_delete: 0, start: this.tableRequest.pageIndex * 10, length: this.tableRequest.pageSize, search: this.tableRequest.search, sort: this.tableRequest.sort });
+
+    this.dataSource = merge(...displayDataChanges).pipe(
+      map(() => {
+        this.documentList = this.documentsServices?.data || [];
+        this.pager = this.documentsServices?.documentPager;
+        return this.documentsServices?.data.slice();
+      })
     );
   }
 
@@ -123,7 +141,30 @@ export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter imple
     }
     return document_type;
   }
-}
+
+  public changePage(e: any) {
+    this.tableRequest.pageIndex = e.pageIndex;
+    this.tableRequest.pageSize = e.pageSize;
+    this.ngOnInit();
+  }
+
+  onSearchChange(event: any) {
+    this.tableRequest.search = event.target.value;
+    this.tableRequest.pageIndex = 0;
+    this.ngOnInit();
+  }
+
+  sortData(event: any) {
+    if (event.direction == '') {
+      this.tableRequest.sort.field = 'created_at';
+      this.tableRequest.sort.order = 'desc';
+    } else {
+      this.tableRequest.sort.field = event.active;
+      this.tableRequest.sort.order = event.direction;
+    }
+    this.ngOnInit();
+  }
+}/* 
 
 export class DocumentDataSource extends DataSource<DocumentTable> {
   filterChange = new BehaviorSubject('');
@@ -145,7 +186,7 @@ export class DocumentDataSource extends DataSource<DocumentTable> {
     // Reset to the first page when the user changes the filter.
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
-  /** Connect function called by the table to retrieve one stream containing the data to render. */
+   
   connect(): Observable<DocumentTable[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
@@ -186,7 +227,7 @@ export class DocumentDataSource extends DataSource<DocumentTable> {
   disconnect() {
     //disconnect
   }
-  /** Returns a sorted copy of the database data. */
+   
   sortData(data: DocumentTable[]): DocumentTable[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
@@ -221,4 +262,4 @@ export class DocumentDataSource extends DataSource<DocumentTable> {
       );
     });
   }
-}
+} */

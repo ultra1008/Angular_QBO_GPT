@@ -64,7 +64,7 @@ export class ReportsListingComponent extends UnsubscribeOnDestroyAdapter impleme
     last: 0,
     total: 10,
   };
-  invoiceList!: Report[] | undefined;
+  invoiceList!: Report[];
 
   constructor (public ReportServices: ReportService, public httpCall: HttpCall, public uiSpinner: UiSpinnerService,
     public route: ActivatedRoute, private router: Router, public translate: TranslateService,) {
@@ -155,7 +155,7 @@ export class ReportsListingComponent extends UnsubscribeOnDestroyAdapter impleme
 
     this.dataSource = merge(...displayDataChanges).pipe(
       map(() => {
-        this.invoiceList = this.reportService?.reportData;
+        this.invoiceList = this.reportService?.reportData || [];
         this.pager = this.reportService?.pagerData;
         return this.reportService?.reportData.slice();
       })

@@ -279,7 +279,7 @@
                         </div>
                         <!-- context menu end -->
                         <div *ngIf="!userService?.isTblLoading" class="no-results"
-                            [style.display]="dataSource.length === 0 ? '' : 'none'">
+                            [style.display]="userList.length === 0 ? '' : 'none'">
                             {{'COMMON.LISTING.EMPTY' | translate}}
                         </div>
                         <mat-paginator #paginator [length]="pager!.total" [pageIndex]="tableRequest.pageIndex"

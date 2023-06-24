@@ -58,7 +58,7 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
     last: 0,
     total: 10,
   };
-  invoiceList!: Invoice[] | undefined;
+  invoiceList!: Invoice[];
 
   constructor (public httpClient: HttpClient, public dialog: MatDialog, public settingService: InvoiceService,
     private snackBar: MatSnackBar, public route: ActivatedRoute, private router: Router, private httpCall: HttpCall,
@@ -186,7 +186,7 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
 
     this.dataSource = merge(...displayDataChanges).pipe(
       map(() => {
-        this.invoiceList = this.invoiceService?.data;
+        this.invoiceList = this.invoiceService?.data || [];
         this.pager = this.invoiceService?.pagerData;
         return this.invoiceService?.data.slice();
       })

@@ -74,7 +74,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     last: 0,
     total: 10,
   };
-  vendorList!: VendorModel[] | undefined;
+  vendorList!: VendorModel[];
 
   constructor (
     public httpClient: HttpClient,
@@ -339,7 +339,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
 
     this.dataSource = merge(...displayDataChanges).pipe(
       map(() => {
-        this.vendorList = this.vendorService?.data;
+        this.vendorList = this.vendorService?.data || [];
         this.pager = this.vendorService?.pagerData;
         return this.vendorService?.data.slice();
       })
