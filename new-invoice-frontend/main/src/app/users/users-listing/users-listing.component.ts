@@ -312,6 +312,7 @@ export class UsersListingComponent
         return this.userService?.data.slice();
       })
     );
+    this.selection.clear();
     /* this.dataSource = new UserDataSource(
       this.userService,
       this.paginator,

@@ -4643,11 +4643,11 @@ module.exports.getUserForTable = async function (req, res) {
                 { $limit: perpage + start },
                 { $skip: start },
             ]).collation({ locale: "en_US" });
-            let user_count = await userConnection.find(match).countDocuments();
+            let total_count = await userConnection.find(match).countDocuments();
             let pager = {
                 start: start,
                 length: perpage,
-                total: user_count
+                total: total_count
             };
             res.send({ status: true, data: get_user, pager });
         } catch (e) {

@@ -1,4 +1,4 @@
-import { SelectionModel, DataSource } from '@angular/cdk/collections';
+import { SelectionModel } from '@angular/cdk/collections';
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
@@ -9,7 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { fromEvent, BehaviorSubject, Observable, merge, map } from 'rxjs';
+import { merge, map } from 'rxjs';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { swalWithBootstrapTwoButtons, showNotification } from 'src/consts/utils';
 import { HttpCall } from '../services/httpcall.service';
@@ -43,7 +43,7 @@ export class ClientComponent
   implements OnInit {
   displayedColumns = ['select', 'client_name', 'client_number', 'client_email', 'approver_id', 'client_cost_cost_id', 'client_status', 'actions'];
   clientService?: ClientService;
-  dataSource!: ClientDataSource;
+  dataSource!: any;
   selection = new SelectionModel<ClientJobModel>(true, []);
   id?: number;
   isDelete = 0;
@@ -64,7 +64,23 @@ export class ClientComponent
   isHideEditActionQBD = false;
   isHideArchiveActionQBD = false;
 
-  constructor(
+  tableRequest = {
+    pageIndex: 0,
+    pageSize: 10,
+    search: '',
+    sort: {
+      field: 'created_at',
+      order: 'desc'
+    }
+  };
+  pager: any = {
+    first: 0,
+    last: 0,
+    total: 10,
+  };
+  clientJobList!: ClientJobModel[] | undefined;
+
+  constructor (
     public httpClient: HttpClient,
     private httpCall: HttpCall,
     public dialog: MatDialog,
@@ -158,9 +174,7 @@ export class ClientComponent
     if (selectedBook == 1) {
       swalWithBootstrapTwoButtons
         .fire({
-          title: this.translate.instant(
-            'CLIENT.CONFIRMATION_DIALOG.ALL_ACTIVE'
-          ),
+          title: this.translate.instant('CLIENT.CONFIRMATION_DIALOG.ALL_ACTIVE'),
           showDenyButton: true,
           confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
           denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
@@ -168,15 +182,13 @@ export class ClientComponent
         })
         .then((result) => {
           if (result.isConfirmed) {
-            this.allActive();
+            this.allActiveInactive(1);
           }
         });
     } else if (selectedBook == 2) {
       swalWithBootstrapTwoButtons
         .fire({
-          title: this.translate.instant(
-            'CLIENT.CONFIRMATION_DIALOG.ALL_INACTIVE'
-          ),
+          title: this.translate.instant('CLIENT.CONFIRMATION_DIALOG.ALL_INACTIVE'),
           showDenyButton: true,
           confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
           denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
@@ -184,15 +196,13 @@ export class ClientComponent
         })
         .then((result) => {
           if (result.isConfirmed) {
-            this.allInactive();
+            this.allActiveInactive(2);
           }
         });
     } else if (selectedBook == 3) {
       swalWithBootstrapTwoButtons
         .fire({
-          title: this.translate.instant(
-            'CLIENT.CONFIRMATION_DIALOG.ALL_ARCHIVE'
-          ),
+          title: this.translate.instant('CLIENT.CONFIRMATION_DIALOG.ALL_ARCHIVE'),
           showDenyButton: true,
           confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
           denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
@@ -211,10 +221,7 @@ export class ClientComponent
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
     }
-    const data = await this.clientTableService.allDeleteClient({
-      _id: tmp_ids,
-      is_delete: 1,
-    });
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.CLIENT_DELETE, { _id: tmp_ids, is_delete: 1 });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
       this.refresh();
@@ -224,34 +231,16 @@ export class ClientComponent
     }
   }
 
-  async allActive() {
+  async allActiveInactive(status: number) {
     const tmp_ids = [];
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
     }
-    const data = await this.clientTableService.updateAllclientStatus({
-      _id: tmp_ids,
-      client_status: 1,
-    });
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.CLIENT_UPDATE_ALL_STATUS, { _id: tmp_ids, client_status: status });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
-      this.refresh();
-    } else {
-      showNotification(this.snackBar, data.message, 'error');
-    }
-  }
-
-  async allInactive() {
-    const tmp_ids = [];
-    for (let i = 0; i < this.selection.selected.length; i++) {
-      tmp_ids.push(this.selection.selected[i]._id);
-    }
-    const data = await this.clientTableService.updateAllclientStatus({
-      _id: tmp_ids,
-      client_status: 2,
-    });
-    if (data.status) {
-      showNotification(this.snackBar, data.message, 'success');
+      this.selection.clear();
+      this.selectedValue = '';
       this.refresh();
     } else {
       showNotification(this.snackBar, data.message, 'error');
@@ -276,7 +265,7 @@ export class ClientComponent
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.renderedData.length;
+    const numRows = this.clientJobList?.length;
     return numSelected === numRows;
   }
 
@@ -284,30 +273,48 @@ export class ClientComponent
   masterToggle() {
     this.isAllSelected()
       ? this.selection.clear()
-      : this.dataSource.renderedData.forEach((row) =>
-        this.selection.select(row)
-      );
-    console.log('numRows', this.selection.selected);
+      : this.clientJobList?.forEach((row) => this.selection.select(row));
   }
-  removeSelectedRows() {
-    console.log('All Selected removed option selected');
+
+  public changePage(e: any) {
+    this.tableRequest.pageIndex = e.pageIndex;
+    this.tableRequest.pageSize = e.pageSize;
+    this.loadData();
   }
+
+  onSearchChange(event: any) {
+    this.tableRequest.search = event.target.value;
+    this.tableRequest.pageIndex = 0;
+    this.loadData();
+  }
+
+  sortData(event: any) {
+    if (event.direction == '') {
+      this.tableRequest.sort.field = 'userstartdate';
+      this.tableRequest.sort.order = 'desc';
+    } else {
+      this.tableRequest.sort.field = event.active;
+      this.tableRequest.sort.order = event.direction;
+    }
+    this.loadData();
+  }
+
   public loadData() {
-    console.log('Vendor loadData call');
     this.clientService = new ClientService(this.httpCall);
-    this.dataSource = new ClientDataSource(
-      this.clientService,
-      this.paginator,
-      this.sort,
-      this.isDelete
-    );
-    this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
-      () => {
-        if (!this.dataSource) {
-          return;
-        }
-        this.dataSource.filter = this.filter.nativeElement.value;
-      }
+    const displayDataChanges = [
+      this.clientService.dataChange,
+      this.clientService.clientJobPager,
+      this.sort.sortChange,
+      this.paginator.page,
+    ];
+    this.clientService.getClientTable({ is_delete: this.isDelete, start: this.tableRequest.pageIndex * 10, length: this.tableRequest.pageSize, search: this.tableRequest.search, sort: this.tableRequest.sort });
+
+    this.dataSource = merge(...displayDataChanges).pipe(
+      map(() => {
+        this.clientJobList = this.clientService?.data;
+        this.pager = this.clientService?.pagerData;
+        return this.clientService?.data.slice();
+      })
     );
     this.selection.clear();
     // this.show = true;
@@ -317,7 +324,7 @@ export class ClientComponent
   exportExcel() {
     // key name with space add in brackets
     const exportData: Partial<TableElement>[] =
-      this.dataSource.filteredData.map((x) => ({
+      this.dataSource.filteredData.map((x: ClientJobModel) => ({
         'Client/Job Name': x.client_name || '',
         'Client Number': x.client_number || '',
         'Job Contact Email': x.client_email || '',
@@ -345,17 +352,14 @@ export class ClientComponent
     if (client.client_status == 1) {
       status = 2;
     }
-    const data = await this.clientTableService.updateClientStatus({
-      _id: client._id,
-      client_status: status,
-    });
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.CLIENT_UPDATE_STATUS, { _id: client._id, client_status: status });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
-      const foundIndex = this.clientService?.dataClientChange.value.findIndex(
+      const foundIndex = this.clientService?.dataChange.value.findIndex(
         (x) => x._id === client._id
       );
       if (foundIndex != null && this.clientService) {
-        this.clientService.dataClientChange.value[foundIndex].client_status =
+        this.clientService.dataChange.value[foundIndex].client_status =
           status;
         this.refreshTable();
       }
@@ -365,18 +369,15 @@ export class ClientComponent
   }
 
   async archiveRecover(client: ClientJobModel, is_delete: number) {
-    const data = await this.clientTableService.deleteClient({
-      _id: client._id,
-      is_delete: is_delete,
-    });
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.CLIENT_DELETE, { _id: client._id, is_delete: is_delete });
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
-      const foundIndex = this.clientService?.dataClientChange.value.findIndex(
+      const foundIndex = this.clientService?.dataChange.value.findIndex(
         (x) => x._id === client._id
       );
       // for delete we use splice in order to remove single object from DataService
       if (foundIndex != null && this.clientService) {
-        this.clientService.dataClientChange.value.splice(foundIndex, 1);
+        this.clientService.dataChange.value.splice(foundIndex, 1);
         this.refreshTable();
       }
     } else {
@@ -386,13 +387,9 @@ export class ClientComponent
 
   async deleteClient(client: ClientJobModel, is_delete: number) {
     if (is_delete == 1) {
-      this.titleMessage = this.translate.instant(
-        'CLIENT.CONFIRMATION_DIALOG.ARCHIVE'
-      );
+      this.titleMessage = this.translate.instant('CLIENT.CONFIRMATION_DIALOG.ARCHIVE');
     } else {
-      this.titleMessage = this.translate.instant(
-        'CLIENT.CONFIRMATION_DIALOG.RESTORE'
-      );
+      this.titleMessage = this.translate.instant('CLIENT.CONFIRMATION_DIALOG.RESTORE');
     }
     swalWithBootstrapTwoButtons
       .fire({
@@ -437,7 +434,6 @@ export class ClientComponent
   }
 
   onFileChange(ev: any) {
-    let that = this;
     let workBook: any;
     let jsonData = null;
     let header_;
@@ -509,7 +505,7 @@ export class ClientComponent
 
 
   async getTerms() {
-    const data = await this.clientService?.getTerms();
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_TERM_GET);
     if (data.status) {
       this.termsList = data.data;
     }
@@ -527,105 +523,4 @@ export class ClientComponent
       //
     });
   }
-}
-
-// This class is used for datatable sorting and searching
-export class ClientDataSource extends DataSource<ClientJobModel> {
-  filterChange = new BehaviorSubject('');
-  get filter(): string {
-    return this.filterChange.value;
-  }
-  set filter(filter: string) {
-    this.filterChange.next(filter);
-  }
-  filteredData: ClientJobModel[] = [];
-  renderedData: ClientJobModel[] = [];
-  constructor(
-    public clientService: ClientService,
-    public paginator: MatPaginator,
-    public _sort: MatSort,
-    public isDelete: number
-  ) {
-    super();
-    // Reset to the first page when the user changes the filter.
-    this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
-  }
-  /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<ClientJobModel[]> {
-    // Listen for any changes in the base data, sorting, filtering, or pagination
-    const displayDataChanges = [
-      this.clientService.dataClientChange,
-      this._sort.sortChange,
-      this.filterChange,
-      this.paginator.page,
-    ];
-    this.clientService.getAllClientTable(this.isDelete);
-    return merge(...displayDataChanges).pipe(
-      map(() => {
-        // Filter data
-        this.filteredData = this.clientService.dataClient
-          .slice()
-          .filter((client: ClientJobModel) => {
-            const searchStr = (
-              client.client_name +
-              client.client_email +
-              client.client_status +
-              client.approver_id +
-              client.client_cost_cost_id
-            ).toLowerCase();
-            return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
-          });
-        // Sort filtered data
-        const sortedData = this.sortData(this.filteredData.slice());
-        // Grab the page's slice of the filtered sorted data.
-        const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
-        this.renderedData = sortedData.splice(
-          startIndex,
-          this.paginator.pageSize
-        );
-        return this.renderedData;
-      })
-    );
-  }
-  disconnect() {
-    //disconnect
-  }
-  /** Returns a sorted copy of the database data. */
-  sortData(data: ClientJobModel[]): ClientJobModel[] {
-    if (!this._sort.active || this._sort.direction === '') {
-      return data;
-    }
-    return data.sort((a, b) => {
-      let propertyA: number | string = '';
-      let propertyB: number | string = '';
-      switch (this._sort.active) {
-        case '_id':
-          [propertyA, propertyB] = [a._id, b._id];
-          break;
-        case 'vendor_name':
-          [propertyA, propertyB] = [a.client_name, b.client_name];
-          break;
-        case 'client_number':
-          [propertyA, propertyB] = [a.client_number, b.client_number];
-          break;
-        case 'client_email':
-          [propertyA, propertyB] = [a.client_email, b.client_email];
-          break;
-        case 'approver_id':
-          [propertyA, propertyB] = [a.approver?.userfullname, b.approver?.userfullname];
-          break;
-        case 'client_cost_cost_id':
-          [propertyA, propertyB] = [a.client_cost_cost?.value, b.client_cost_cost?.value];
-          break;
-        case 'client_status':
-          [propertyA, propertyB] = [a.client_status, b.client_status,];
-          break;
-      }
-      const valueA = isNaN(+propertyA) ? propertyA : +propertyA;
-      const valueB = isNaN(+propertyB) ? propertyB : +propertyB;
-      return (
-        (valueA < valueB ? -1 : 1) * (this._sort.direction === 'asc' ? 1 : -1)
-      );
-    });
-  }
-}
+} 

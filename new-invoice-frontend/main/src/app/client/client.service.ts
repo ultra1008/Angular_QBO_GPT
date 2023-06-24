@@ -3,8 +3,8 @@ import { UnsubscribeOnDestroyAdapter } from '../shared/UnsubscribeOnDestroyAdapt
 import { BehaviorSubject } from 'rxjs';
 import { httpversion, httproutes } from 'src/consts/httproutes';
 import { HttpCall } from '../services/httpcall.service';
-import { VendorModel } from '../vendors/vendor.model';
 import { ClientJobModel } from './client.model';
+import { DataTableRequest, Pager } from 'src/consts/common.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,159 +12,25 @@ import { ClientJobModel } from './client.model';
 export class ClientService extends UnsubscribeOnDestroyAdapter {
   private readonly API_URL = 'assets/data/advanceTable.json';
   isTblLoading = true;
-  dataChange: BehaviorSubject<VendorModel[]> = new BehaviorSubject<VendorModel[]>([]);
 
-  dataClientChange: BehaviorSubject<ClientJobModel[]> = new BehaviorSubject<
-    ClientJobModel[]
-  >([]);
-  // Temporarily stores data from dialogs
-  dialogData!: VendorModel;
+  dataChange: BehaviorSubject<ClientJobModel[]> = new BehaviorSubject<ClientJobModel[]>([]);
+  clientJobPager: BehaviorSubject<Pager> = new BehaviorSubject<Pager>({ first: 0, last: 0, total: 0 });
+  // Temporarily stores data from dialogs 
   constructor (private httpCall: HttpCall) {
     super();
   }
-  get data(): VendorModel[] {
+  get data(): ClientJobModel[] {
     return this.dataChange.value;
   }
 
-  get dataClient(): ClientJobModel[] {
-    return this.dataClientChange.value;
+  get pagerData(): Pager {
+    return this.clientJobPager.value;
   }
 
-  getDialogData() {
-    return this.dialogData;
-  }
-
-  // Datatable API
-  async getAllVendorTable(is_delete: number): Promise<void> {
-    const data = await this.httpCall
-      .httpPostCall(
-        httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_GET_FOR_TABLE,
-        { is_delete: is_delete }
-      )
-      .toPromise();
-    // Only write this for datatable api otherwise return data
-
-    this.dataChange.next(data);
+  async getClientTable(requestObject: DataTableRequest): Promise<void> {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.CLIENT_DATA_TABLE, requestObject).toPromise();
     this.isTblLoading = false;
+    this.dataChange.next(data.data);
+    this.clientJobPager.next(data.pager);
   }
-
-  async getAllClientTable(is_delete: number): Promise<void> {
-    const data = await this.httpCall
-      .httpPostCall(httpversion.PORTAL_V1 + httproutes.CLIENT_DATA_TABLE, {
-        is_delete: is_delete,
-      })
-      .toPromise();
-    // Only write this for datatable api otherwise return data
-
-    this.dataClientChange.next(data);
-    this.isTblLoading = false;
-  }
-
-  async getOneClient(id: string) {
-    const data = await this.httpCall
-      .httpPostCall(httpversion.PORTAL_V1 + httproutes.CLIENT_GET_ONE, {
-        _id: id,
-      })
-      .toPromise();
-    return data;
-  }
-
-  async saveVendor(requestObject: any) {
-    const data = await this.httpCall
-      .httpPostCall(
-        httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_SAVE,
-        requestObject
-      )
-      .toPromise();
-    return data;
-  }
-
-  async updateClientStatus(requestObject: any) {
-    const data = await this.httpCall
-      .httpPostCall(
-        httpversion.PORTAL_V1 + httproutes.CLIENT_UPDATE_STATUS,
-        requestObject
-      )
-      .toPromise();
-    return data;
-  }
-  async updateAllclientStatus(requestObject: any) {
-    const data = await this.httpCall
-      .httpPostCall(
-        httpversion.PORTAL_V1 + httproutes.CLIENT_UPDATE_ALL_STATUS,
-        requestObject
-      )
-      .toPromise();
-    return data;
-  }
-
-  async deleteClient(requestObject: any) {
-    const data = await this.httpCall
-      .httpPostCall(
-        httpversion.PORTAL_V1 + httproutes.CLIENT_DELETE,
-        requestObject
-      )
-      .toPromise();
-    return data;
-  }
-
-  async allDeleteClient(requestObject: any) {
-    const data = await this.httpCall
-      .httpPostCall(
-        httpversion.PORTAL_V1 + httproutes.CLIENT_ALL_DELETE,
-        requestObject
-      )
-      .toPromise();
-    return data;
-  }
-  async getTerms() {
-    const data = await this.httpCall
-      .httpGetCall(httpversion.PORTAL_V1 + httproutes.PORTAL_TERM_GET)
-      .toPromise();
-    return data;
-  }
-
-  async getcostcode() {
-    const data = await this.httpCall
-      .httpGetCall(httpversion.PORTAL_V1 + httproutes.GET_ALL_COSTCODE)
-      .toPromise();
-    return data;
-  }
-
-  async getApprover() {
-    const data = await this.httpCall
-      .httpGetCall(httpversion.PORTAL_V1 + httproutes.GET_ALL_USER)
-      .toPromise();
-    return data;
-  }
-
-  async getVendorHistory(requestObject: any) {
-    const data = await this.httpCall
-      .httpPostCall(
-        httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_GET_HISTORY,
-        requestObject
-      )
-      .toPromise();
-    return data;
-  }
-
-  async sendVendorReport(requestObject: any) {
-    const data = await this.httpCall
-      .httpPostCall(
-        httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_REPORT,
-        requestObject
-      )
-      .toPromise();
-    return data;
-  }
-
-  /* async saveClient(requestObject: any) {
-    const data = await this.httpCall
-      .httpPostCall(
-        httpversion.PORTAL_V1 + httproutes.SAVE_CLIENT,
-        requestObject
-      )
-      .toPromise();
-    return data;
-  } */
 }

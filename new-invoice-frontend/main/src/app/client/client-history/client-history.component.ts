@@ -18,7 +18,7 @@ export class ClientHistoryComponent
   clientHistory: any;
   historyLoading = true;
 
-  constructor(
+  constructor (
     private router: Router,
     public commonService: CommonService
   ) {
@@ -30,10 +30,7 @@ export class ClientHistoryComponent
   }
 
   async getClientHistory() {
-    const data = await this.commonService.postRequestAPI(
-      httpversion.PORTAL_V1 + httproutes.CLIENT_GET_HISTORY,
-      { start: this.start }
-    );
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.CLIENT_GET_HISTORY, { start: this.start });
     if (data.status) {
       if (this.start == 0) {
         this.clientHistory = data.data;
