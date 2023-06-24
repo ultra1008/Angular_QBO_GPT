@@ -121,7 +121,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
   prevStep() {
     this.step--;
   }
-  constructor(private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog, private commonService: CommonService,
+  constructor (private fb: UntypedFormBuilder, private router: Router, public dialog: MatDialog, private commonService: CommonService,
     public route: ActivatedRoute, public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, public translate: TranslateService,) {
     super();
     this.id = this.route.snapshot.queryParamMap.get('_id');
@@ -130,6 +130,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
     this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
     this.uiSpinner.spin$.next(true);
     this.invoiceForm = this.fb.group({
+      document: [''],
       document_type: [''],
       vendor: [''],
       invoice_no: [''],
@@ -302,8 +303,14 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
       if (this.invoiceData.due_date_epoch != undefined && this.invoiceData.due_date_epoch != null && this.invoiceData.due_date_epoch != 0) {
         dueDate = epochToDateTime(this.invoiceData.due_date_epoch);
       }
+      let document_type = '';
+      const foundIndex = configData.DOCUMENT_TYPE_LIST.findIndex((x: any) => x.key === this.invoiceData.document_type);
+      if (foundIndex != null) {
+        document_type = configData.DOCUMENT_TYPE_LIST[foundIndex].name;
+      }
 
       this.invoiceForm = this.fb.group({
+        document: [document_type],
         document_type: [this.invoiceData.document_type],
         vendor: [this.invoiceData.vendor],
         invoice_no: [this.invoiceData.invoice_no],
@@ -494,13 +501,10 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
     console.log("status", status);
     let message: any;
     if (status == 'Rejected') {
-      console.log("status1", status);
       message = `Are you sure you want to reject this invoice?`;
     } else if (status == 'On Hold') {
-      console.log("status2", status);
       message = `Are you sure you want to put this invoice on hold?`;
     } else if (status == 'Approved') {
-      console.log("status3", status);
       message = `Are you sure you want to approve this invoice?`;
     }
 

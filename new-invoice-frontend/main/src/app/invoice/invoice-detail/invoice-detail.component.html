@@ -69,13 +69,16 @@
                                                                       <mat-label>
                                                                            {{'INVOICE.INVOICE_DETAILS.INFORMATION.FORM.DOCUMENT_TYPE' | translate}}
                                                                       </mat-label>
-                                                                      <mat-select formControlName="document_type">
+                                                                      <input matInput
+                                                                           class="input-capitalized-textfield"
+                                                                           formControlName="document" readonly>
+                                                                      <!-- <mat-select formControlName="document_type">
                                                                            <mat-option
                                                                                 *ngFor="let docType of documentList"
                                                                                 [value]="docType.key">
                                                                                 {{docType.name}}
                                                                            </mat-option>
-                                                                      </mat-select>
+                                                                      </mat-select> -->
                                                                  </mat-form-field>
                                                             </div>
                                                             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">

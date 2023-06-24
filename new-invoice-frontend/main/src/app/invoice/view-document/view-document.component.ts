@@ -8,9 +8,10 @@ import { commonFileChangeEvent } from 'src/app/services/utils';
 import { TermModel } from 'src/app/settings/settings.model';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { WEB_ROUTES } from 'src/consts/routes';
-import { amountChange, epochToDateTime, numberWithCommas, showNotification } from 'src/consts/utils';
+import { amountChange, epochToDateTime, numberWithCommas, showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
 import { configData } from 'src/environments/configData';
 import * as  moment from "moment";
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-view-document',
@@ -24,7 +25,7 @@ export class ViewDocumentComponent {
   quoteForm: UntypedFormGroup;
   packingSlipForm: UntypedFormGroup;
   receivingSlipForm: UntypedFormGroup;
-  showPoEdit = false;
+  showEditForm = false;
 
   pdf_url = '';
   invoicePDF = '';
@@ -35,20 +36,20 @@ export class ViewDocumentComponent {
   documentTypesList: any = configData.DOCUMENT_TYPE_LIST;
 
   document: any;
+  selectedDocumentType = '';
   documentTypes = configData.DOCUMENT_TYPES;
-  poData: any = [];
-  quoteData: any = [];
-  packingSlipData: any = [];
-  receivingSlipData: any = [];
+  documentData: any;
   id: any;
   documentId: any;
-  documentData: any;
+  otherDocumentData: any;
   maxDate = new Date();
   invoice_id: any;
   pdfLoader = true;
 
-  constructor (public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, private fb: UntypedFormBuilder, public commonService: CommonService, public route: ActivatedRoute, private router: Router,) {
+  constructor (public uiSpinner: UiSpinnerService, private snackBar: MatSnackBar, private fb: UntypedFormBuilder,
+    public commonService: CommonService, public route: ActivatedRoute, private router: Router, public translate: TranslateService,) {
     this.document = this.route.snapshot.queryParamMap.get('document') ?? '';
+    this.selectedDocumentType = this.document;
     this.id = this.route.snapshot.queryParamMap.get('_id') ?? '';
     this.documentId = this.route.snapshot.queryParamMap.get('document_id') ?? '';
 
@@ -56,7 +57,7 @@ export class ViewDocumentComponent {
       document_type: ['', [Validators.required]],
       vendor_name: [''],
       quote_no: ['',],
-      date: [''],
+      date_epoch: [''],
       shipping_method: [''],
       sub_total: [''],
       tax: [''],
@@ -70,7 +71,7 @@ export class ViewDocumentComponent {
       document_type: ['', [Validators.required]],
       vendor_name: [''],
       quote_no: ['',],
-      date: [''],
+      date_epoch: [''],
       shipping_method: [''],
       sub_total: [''],
       tax: [''],
@@ -84,7 +85,7 @@ export class ViewDocumentComponent {
       document_type: ['', [Validators.required]],
       vendor_name: [''],
       invoice: ['',],
-      date: [''],
+      date_epoch: [''],
       po: [''],
       address: [''],
       received_by: [''],
@@ -94,7 +95,7 @@ export class ViewDocumentComponent {
       document_type: ['', [Validators.required]],
       vendor_name: [''],
       invoice: ['',],
-      date: [''],
+      date_epoch: [''],
       po: [''],
       address: [''],
       received_by: [''],
@@ -119,72 +120,76 @@ export class ViewDocumentComponent {
   async getOneOtherDocument() {
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ONE_AP_OTHER_DOCUMENT, { _id: this.documentId });
     if (data.status) {
-      this.documentData = data.data;
-      let date;
-      if (this.documentData.date_epoch != undefined && this.documentData.date_epoch != null && this.documentData.date_epoch != 0) {
-        date = epochToDateTime(this.documentData.date_epoch);
-      }
-      let document_type = '';
-      const foundIndex = this.documentTypesList.findIndex((x: any) => x.key === this.document);
-      if (foundIndex != null) {
-        document_type = this.documentTypesList[foundIndex].name;
-      }
-      if (this.document == this.documentTypes.po) {
-        this.poForm = this.fb.group({
-          document_type: [document_type],
-          vendor_name: [this.documentData.vendor_data.vendor_name],
-          quote_no: [''],
-          date: [date],
-          shipping_method: [''],
-          sub_total: ['0.00'],
-          tax: ['0.00'],
-          po_total: ['0.00'],
-          receiver_phone: [''],
-          terms: [''],
-          address: [''],
-        });
-      } else if (this.document == this.documentTypes.quote) {
-        this.quoteForm = this.fb.group({
-          document_type: [document_type],
-          vendor_name: [this.documentData.vendor_data.vendor_name],
-          quote_no: [''],
-          date: [date],
-          shipping_method: [''],
-          sub_total: ['0.00'],
-          tax: ['0.00'],
-          quote_total: ['0.00'],
-          receiver_phone: [''],
-          terms: [''],
-          address: [''],
-        });
-      } else if (this.document == this.documentTypes.packingSlip) {
-        this.packingSlipForm = this.fb.group({
-          document_type: [document_type],
-          vendor_name: [this.documentData.vendor_data.vendor_name],
-          invoice_no: [this.documentData.invoice_no],
-          date: [date],
-          po_no: [this.documentData.po_no],
-          address: [''],
-          received_by: [''],
-        });
-      } else if (this.document == this.documentTypes.receivingSlip) {
-        this.receivingSlipForm = this.fb.group({
-          document_type: [document_type],
-          vendor_name: [this.documentData.vendor_data.vendor_name],
-          invoice_no: [this.documentData.invoice_no],
-          date: [date],
-          po_no: [this.documentData.po_no],
-          address: [''],
-          received_by: [''],
-        });
-      }
-      this.pdf_url = this.documentData.pdf_url;
-      this.showPoEdit = true;
-      this.loadPDF = false;
-      setTimeout(() => {
-        this.loadPDF = true;
-      }, 100);
+      this.otherDocumentData = data.data;
+      this.setOtherDocumentForm();
     }
+  }
+
+  setOtherDocumentForm() {
+    let date;
+    if (this.otherDocumentData.date_epoch != undefined && this.otherDocumentData.date_epoch != null && this.otherDocumentData.date_epoch != 0) {
+      date = epochToDateTime(this.otherDocumentData.date_epoch);
+    }
+    /*  let document_type = '';
+     const foundIndex = this.documentTypesList.findIndex((x: any) => x.key === this.document);
+     if (foundIndex != null) {
+       document_type = this.documentTypesList[foundIndex].name;
+     } */
+    if (this.selectedDocumentType == this.documentTypes.po) {
+      this.poForm = this.fb.group({
+        document_type: [this.selectedDocumentType],
+        vendor_name: [this.otherDocumentData.vendor_data?.vendor_name],
+        quote_no: [''],
+        date_epoch: [date],
+        shipping_method: [''],
+        sub_total: ['0.00'],
+        tax: ['0.00'],
+        po_total: ['0.00'],
+        receiver_phone: [''],
+        terms: [''],
+        address: [''],
+      });
+    } else if (this.selectedDocumentType == this.documentTypes.quote) {
+      this.quoteForm = this.fb.group({
+        document_type: [this.selectedDocumentType],
+        vendor_name: [this.otherDocumentData.vendor_data?.vendor_name],
+        quote_no: [''],
+        date_epoch: [date],
+        shipping_method: [''],
+        sub_total: ['0.00'],
+        tax: ['0.00'],
+        quote_total: ['0.00'],
+        receiver_phone: [''],
+        terms: [''],
+        address: [''],
+      });
+    } else if (this.selectedDocumentType == this.documentTypes.packingSlip) {
+      this.packingSlipForm = this.fb.group({
+        document_type: [this.selectedDocumentType],
+        vendor_name: [this.otherDocumentData.vendor_data?.vendor_name],
+        invoice_no: [this.otherDocumentData.invoice_no],
+        date_epoch: [date],
+        po_no: [this.otherDocumentData.po_no],
+        address: [''],
+        received_by: [''],
+      });
+    } else if (this.selectedDocumentType == this.documentTypes.receivingSlip) {
+      this.receivingSlipForm = this.fb.group({
+        document_type: [this.selectedDocumentType],
+        vendor_name: [this.otherDocumentData.vendor_data?.vendor_name],
+        invoice_no: [this.otherDocumentData.invoice_no],
+        date_epoch: [date],
+        po_no: [this.otherDocumentData.po_no],
+        address: [''],
+        received_by: [''],
+      });
+    }
+    this.pdf_url = this.otherDocumentData.pdf_url;
+    this.showEditForm = true;
+    this.loadPDF = false;
+    setTimeout(() => {
+      this.loadPDF = true;
+    }, 100);
   }
 
   async getTerms() {
@@ -196,41 +201,41 @@ export class ViewDocumentComponent {
   }
 
   goDocumentForm() {
-    this.showPoEdit = true;
+    this.showEditForm = true;
   }
 
   async getOnePo() {
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ONE_AP_PO, { _id: this.id });
     if (data.status) {
-      this.poData = data.data;
+      this.documentData = data.data;
       let poDate;
-      if (this.poData.date_epoch != undefined && this.poData.date_epoch != null && this.poData.date_epoch != 0) {
-        poDate = epochToDateTime(this.poData.date_epoch);
+      if (this.documentData.date_epoch != undefined && this.documentData.date_epoch != null && this.documentData.date_epoch != 0) {
+        poDate = epochToDateTime(this.documentData.date_epoch);
       }
-      this.invoice_id = this.poData.invoice_id;
-      let document_type = '';
-      const foundIndex = this.documentTypesList.findIndex((x: any) => x.key === this.poData.document_type);
+      this.invoice_id = this.documentData.invoice_id;
+      /* let document_type = '';
+      const foundIndex = this.documentTypesList.findIndex((x: any) => x.key === this.documentData.document_type);
       if (foundIndex != null) {
         document_type = this.documentTypesList[foundIndex].name;
-      }
+      } */
       this.poForm = this.fb.group({
-        document_type: [document_type],
-        vendor_name: [this.poData.vendor_data.vendor_name],
-        quote_no: [this.poData.quote_no],
-        date: [poDate],
-        shipping_method: [this.poData.shipping_method],
-        sub_total: [numberWithCommas(this.poData.sub_total.toFixed(2))],
-        tax: [numberWithCommas(this.poData.tax.toFixed(2))],
-        po_total: [numberWithCommas(this.poData.po_total.toFixed(2))],
-        receiver_phone: [this.poData.receiver_phone],
-        terms: [this.poData.terms],
-        address: [this.poData.address],
+        document_type: [this.selectedDocumentType],
+        vendor_name: [this.documentData.vendor_data?.vendor_name],
+        quote_no: [this.documentData.quote_no],
+        date_epoch: [poDate],
+        shipping_method: [this.documentData.shipping_method],
+        sub_total: [numberWithCommas(this.documentData.sub_total.toFixed(2))],
+        tax: [numberWithCommas(this.documentData.tax.toFixed(2))],
+        po_total: [numberWithCommas(this.documentData.po_total.toFixed(2))],
+        receiver_phone: [this.documentData.receiver_phone],
+        terms: [this.documentData.terms],
+        address: [this.documentData.address],
       });
-      this.pdf_url = this.poData.pdf_url;
-      if (this.poData.invoice) {
-        this.invoicePDF = this.poData.invoice.pdf_url;
+      this.pdf_url = this.documentData.pdf_url;
+      if (this.documentData.invoice) {
+        this.invoicePDF = this.documentData.invoice.pdf_url;
       } else {
-        this.showPoEdit = true;
+        this.showEditForm = true;
       }
       this.loadPDF = false;
       this.pdfLoader = true;
@@ -247,80 +252,104 @@ export class ViewDocumentComponent {
 
   async savePO() {
     if (this.poForm.valid) {
-      this.uiSpinner.spin$.next(true);
-      const formValues = this.poForm.value;
+      if (this.document === this.selectedDocumentType) {
+        this.savePOData();
+      } else {
+        swalWithBootstrapTwoButtons
+          .fire({
+            title: 'sure message',
+            showDenyButton: true,
+            confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+            denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+            allowOutsideClick: false,
+          })
+          .then(async (result) => {
+            if (result.isConfirmed) {
+              this.savePOData();
+            }
+          });
+      }
+    }
+  }
 
-      delete formValues.document_type;
-      delete formValues.vendor_name;
-      let apiUrl = '';
-      if (this.id) {
+  async savePOData() {
+    this.uiSpinner.spin$.next(true);
+    const formValues = this.poForm.value;
+
+    delete formValues.document_type;
+    delete formValues.vendor_name;
+    let apiUrl = '';
+    formValues.document_type = this.documentTypes.po;
+    if (this.id) {
+      apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_PO;
+      if (this.document !== this.selectedDocumentType) {
+        formValues.old_id = this.id;
+        formValues.old_type = this.document;
+        formValues.is_orphan = true;
+      } else {
         formValues._id = this.id;
-        apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_PO;
-      } else if (this.documentId) {
-        formValues.document_type = this.documentTypes.po;
-        formValues.pdf_url = this.documentData.pdf_url;
-        formValues.document_id = this.documentId;
-        formValues.vendor = this.documentData.vendor;
-        formValues.invoice_no = this.documentData.invoice_no;
-        formValues.po_no = this.documentData.po_no;
-        apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_OTHER_DOCUMENT_PO;
       }
+    } else if (this.documentId) {
+      formValues.pdf_url = this.otherDocumentData.pdf_url;
+      formValues.document_id = this.documentId;
+      formValues.vendor = this.otherDocumentData.vendor;
+      formValues.invoice_no = this.otherDocumentData.invoice_no;
+      formValues.po_no = this.otherDocumentData.po_no;
+      apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_OTHER_DOCUMENT_PO;
+    }
 
-      if (formValues.date == null) {
-        formValues.date = 0;
-      } else {
-        formValues.date = Math.round(formValues.date.valueOf() / 1000);
-      }
+    if (formValues.date_epoch == null) {
+      formValues.date_epoch = 0;
+    } else {
+      formValues.date_epoch = Math.round(formValues.date_epoch.valueOf() / 1000);
+    }
 
-      formValues.sub_total = formValues.sub_total.toString().replace(/,/g, "");
-      formValues.tax = formValues.tax.toString().replace(/,/g, "");
-      formValues.po_total = formValues.po_total.toString().replace(/,/g, "");
+    formValues.sub_total = formValues.sub_total.toString().replace(/,/g, "");
+    formValues.tax = formValues.tax.toString().replace(/,/g, "");
+    formValues.po_total = formValues.po_total.toString().replace(/,/g, "");
 
-      const data = await this.commonService.postRequestAPI(apiUrl, formValues);
-      this.uiSpinner.spin$.next(false);
-      if (data.status) {
-        showNotification(this.snackBar, data.message, 'success');
-        if (this.documentId) {
-          this.router.navigate([WEB_ROUTES.DOCUMENTS], { state: { value: 0 } });
-        }
-      } else {
-        showNotification(this.snackBar, data.message, 'error');
-      }
+    const data = await this.commonService.postRequestAPI(apiUrl, formValues);
+    this.uiSpinner.spin$.next(false);
+    if (data.status) {
+      showNotification(this.snackBar, data.message, 'success');
+      this.back();
+    } else {
+      showNotification(this.snackBar, data.message, 'error');
     }
   }
 
   async getOneQuote() {
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ONE_AP_QUOTE, { _id: this.id });
     if (data.status) {
-      this.quoteData = data.data;
+      this.documentData = data.data;
       let quoteDate;
-      if (this.quoteData.date_epoch != undefined && this.quoteData.date_epoch != null && this.quoteData.date_epoch != 0) {
-        quoteDate = epochToDateTime(this.quoteData.date_epoch);
+      if (this.documentData.date_epoch != undefined && this.documentData.date_epoch != null && this.documentData.date_epoch != 0) {
+        quoteDate = epochToDateTime(this.documentData.date_epoch);
       }
-      let document_type = '';
-      const foundIndex = this.documentTypesList.findIndex((x: any) => x.key === this.quoteData.document_type);
+      /* let document_type = '';
+      const foundIndex = this.documentTypesList.findIndex((x: any) => x.key === this.documentData.document_type);
       if (foundIndex != null) {
         document_type = this.documentTypesList[foundIndex].name;
-      }
-      this.invoice_id = this.quoteData.invoice_id;
+      } */
+      this.invoice_id = this.documentData.invoice_id;
       this.quoteForm = this.fb.group({
-        document_type: [document_type],
-        vendor_name: [this.quoteData.vendor_data.vendor_name],
-        quote_no: [this.quoteData.quote_no],
-        date: [quoteDate],
-        shipping_method: [this.quoteData.shipping_method],
-        sub_total: [numberWithCommas(this.quoteData.sub_total.toFixed(2))],
-        tax: [numberWithCommas(this.quoteData.tax.toFixed(2))],
-        quote_total: [numberWithCommas(this.quoteData.quote_total.toFixed(2))],
-        receiver_phone: [this.quoteData.receiver_phone],
-        terms: [this.quoteData.terms],
-        address: [this.quoteData.address],
+        document_type: [this.selectedDocumentType],
+        vendor_name: [this.documentData.vendor_data?.vendor_name],
+        quote_no: [this.documentData.quote_no],
+        date_epoch: [quoteDate],
+        shipping_method: [this.documentData.shipping_method],
+        sub_total: [numberWithCommas(this.documentData.sub_total.toFixed(2))],
+        tax: [numberWithCommas(this.documentData.tax.toFixed(2))],
+        quote_total: [numberWithCommas(this.documentData.quote_total.toFixed(2))],
+        receiver_phone: [this.documentData.receiver_phone],
+        terms: [this.documentData.terms],
+        address: [this.documentData.address],
       });
-      this.pdf_url = this.quoteData.pdf_url;
-      if (this.quoteData.invoice) {
-        this.invoicePDF = this.quoteData.invoice.pdf_url;
+      this.pdf_url = this.documentData.pdf_url;
+      if (this.documentData.invoice) {
+        this.invoicePDF = this.documentData.invoice.pdf_url;
       } else {
-        this.showPoEdit = true;
+        this.showEditForm = true;
       }
       this.loadPDF = false;
       this.pdfLoader = true;
@@ -337,76 +366,102 @@ export class ViewDocumentComponent {
 
   async saveQuote() {
     if (this.quoteForm.valid) {
-      this.uiSpinner.spin$.next(true);
-      const formValues = this.quoteForm.value;
+      if (this.document === this.selectedDocumentType) {
+        this.saveQuoteData();
+      } else {
+        swalWithBootstrapTwoButtons
+          .fire({
+            title: 'sure message',
+            showDenyButton: true,
+            confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+            denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+            allowOutsideClick: false,
+          })
+          .then(async (result) => {
+            if (result.isConfirmed) {
+              this.saveQuoteData();
+            }
+          });
+      }
+    }
+  }
 
-      delete formValues.document_type;
-      delete formValues.vendor_name;
-      let apiUrl = '';
-      if (this.id) {
+  async saveQuoteData() {
+    this.uiSpinner.spin$.next(true);
+    const formValues = this.quoteForm.value;
+
+    delete formValues.document_type;
+    delete formValues.vendor_name;
+    let apiUrl = '';
+    formValues.document_type = this.documentTypes.quote;
+    if (this.id) {
+      apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_QUOTE;
+      if (this.document !== this.selectedDocumentType) {
+        formValues.old_id = this.id;
+        formValues.old_type = this.document;
+        formValues.is_orphan = true;
+      } else {
         formValues._id = this.id;
-        apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_QUOTE;
-      } else if (this.documentId) {
-        formValues.document_type = this.documentTypes.quote;
-        formValues.pdf_url = this.documentData.pdf_url;
-        formValues.document_id = this.documentId;
-        formValues.vendor = this.documentData.vendor;
-        formValues.invoice_no = this.documentData.invoice_no;
-        formValues.po_no = this.documentData.po_no;
-        apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_OTHER_DOCUMENT_QUOTE;
       }
+    } else if (this.documentId) {
+      formValues.pdf_url = this.otherDocumentData.pdf_url;
+      formValues.document_id = this.documentId;
+      formValues.vendor = this.otherDocumentData.vendor;
+      formValues.invoice_no = this.otherDocumentData.invoice_no;
+      formValues.po_no = this.otherDocumentData.po_no;
+      apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_OTHER_DOCUMENT_QUOTE;
+    }
 
-      if (formValues.date == null) {
-        formValues.date = 0;
-      } else {
-        formValues.date = Math.round(formValues.date.valueOf() / 1000);
+    if (formValues.date_epoch == null) {
+      formValues.date_epoch = 0;
+    } else {
+      formValues.date_epoch = Math.round(formValues.date_epoch.valueOf() / 1000);
+    }
+
+    formValues.sub_total = formValues.sub_total.toString().replace(/,/g, "");
+    formValues.tax = formValues.tax.toString().replace(/,/g, "");
+    formValues.quote_total = formValues.quote_total.toString().replace(/,/g, "");
+
+    const data = await this.commonService.postRequestAPI(apiUrl, formValues);
+    this.uiSpinner.spin$.next(false);
+    if (data.status) {
+      showNotification(this.snackBar, data.message, 'success');
+      if (this.documentId) {
+        this.back();
       }
-
-      formValues.sub_total = formValues.sub_total.toString().replace(/,/g, "");
-      formValues.tax = formValues.tax.toString().replace(/,/g, "");
-      formValues.quote_total = formValues.quote_total.toString().replace(/,/g, "");
-
-      const data = await this.commonService.postRequestAPI(apiUrl, formValues);
-      this.uiSpinner.spin$.next(false);
-      if (data.status) {
-        showNotification(this.snackBar, data.message, 'success');
-        if (this.documentId) {
-          this.router.navigate([WEB_ROUTES.DOCUMENTS], { state: { value: 3 } });
-        }
-      } else {
-        showNotification(this.snackBar, data.message, 'error');
-      }
+    } else {
+      showNotification(this.snackBar, data.message, 'error');
     }
   }
 
   async getOnePackingSlipList() {
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ONE_AP_PACKLING_SLIP, { _id: this.id });
     if (data.status) {
-      this.packingSlipData = data.data;
+      this.documentData = data.data;
       let packingSlipDate;
-      if (this.packingSlipData.date_epoch != undefined && this.packingSlipData.date_epoch != null && this.packingSlipData.date_epoch != 0) {
-        packingSlipDate = epochToDateTime(this.packingSlipData.date_epoch);
+      if (this.documentData.date_epoch != undefined && this.documentData.date_epoch != null && this.documentData.date_epoch != 0) {
+        packingSlipDate = epochToDateTime(this.documentData.date_epoch);
       }
-      let document_type = '';
-      const foundIndex = this.documentTypesList.findIndex((x: any) => x.key === this.packingSlipData.document_type);
+      /* let document_type = '';
+      const foundIndex = this.documentTypesList.findIndex((x: any) => x.key === this.documentData.document_type);
       if (foundIndex != null) {
         document_type = this.documentTypesList[foundIndex].name;
-      }
-      this.invoice_id = this.packingSlipData.invoice_id;
+      } */
+      this.invoice_id = this.documentData.invoice_id;
       this.packingSlipForm = this.fb.group({
-        document_type: [document_type],
-        vendor_name: [this.packingSlipData.vendor_data.vendor_name],
-        invoice_no: [this.packingSlipData.invoice_no],
-        date: [packingSlipDate],
-        po_no: [this.packingSlipData.po_no],
-        address: [this.packingSlipData.address],
-        received_by: [this.packingSlipData.received_by],
+        document_type: [this.selectedDocumentType],
+        vendor_name: [this.documentData.vendor_data?.vendor_name],
+        invoice_no: [this.documentData.invoice_no],
+        date_epoch: [packingSlipDate],
+        po_no: [this.documentData.po_no],
+        address: [this.documentData.address],
+        received_by: [this.documentData.received_by],
       });
-      this.pdf_url = this.packingSlipData.pdf_url;
-      if (this.packingSlipData.invoice) {
-        this.invoicePDF = this.packingSlipData.invoice.pdf_url;
+      this.pdf_url = this.documentData.pdf_url;
+      if (this.documentData.invoice) {
+        this.invoicePDF = this.documentData.invoice.pdf_url;
       } else {
-        this.showPoEdit = true;
+        this.showEditForm = true;
       }
       this.loadPDF = false;
       this.pdfLoader = true;
@@ -419,70 +474,96 @@ export class ViewDocumentComponent {
 
   async savePackingSlip() {
     if (this.packingSlipForm.valid) {
-      this.uiSpinner.spin$.next(true);
-      const formValues = this.packingSlipForm.value;
+      if (this.document === this.selectedDocumentType) {
+        this.savePackingSlipDate();
+      } else {
+        swalWithBootstrapTwoButtons
+          .fire({
+            title: 'sure message',
+            showDenyButton: true,
+            confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+            denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+            allowOutsideClick: false,
+          })
+          .then(async (result) => {
+            if (result.isConfirmed) {
+              this.savePackingSlipDate();
+            }
+          });
+      }
+    }
+  }
 
-      delete formValues.document_type;
-      delete formValues.vendor_name;
-      let apiUrl = '';
-      if (this.id) {
+  async savePackingSlipDate() {
+    this.uiSpinner.spin$.next(true);
+    const formValues = this.packingSlipForm.value;
+
+    delete formValues.document_type;
+    delete formValues.vendor_name;
+    formValues.document_type = this.documentTypes.packingSlip;
+    let apiUrl = '';
+    if (this.id) {
+      apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_PACKLING_SLIP;
+      if (this.document !== this.selectedDocumentType) {
+        formValues.old_id = this.id;
+        formValues.old_type = this.document;
+        formValues.is_orphan = true;
+      } else {
         formValues._id = this.id;
-        apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_PACKLING_SLIP;
-      } else if (this.documentId) {
-        formValues.document_type = this.documentTypes.packingSlip;
-        formValues.pdf_url = this.documentData.pdf_url;
-        formValues.document_id = this.documentId;
-        formValues.vendor = this.documentData.vendor;
-        apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_OTHER_DOCUMENT_PACKLING_SLIP;
       }
+    } else if (this.documentId) {
+      formValues.pdf_url = this.otherDocumentData.pdf_url;
+      formValues.document_id = this.documentId;
+      formValues.vendor = this.otherDocumentData.vendor;
+      apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_OTHER_DOCUMENT_PACKLING_SLIP;
+    }
 
-      if (formValues.date == null) {
-        formValues.date = 0;
-      } else {
-        formValues.date = Math.round(formValues.date.valueOf() / 1000);
-      }
+    if (formValues.date_epoch == null) {
+      formValues.date_epoch = 0;
+    } else {
+      formValues.date_epoch = Math.round(formValues.date_epoch.valueOf() / 1000);
+    }
 
-      const data = await this.commonService.postRequestAPI(apiUrl, formValues);
-      this.uiSpinner.spin$.next(false);
-      if (data.status) {
-        showNotification(this.snackBar, data.message, 'success');
-        if (this.documentId) {
-          this.router.navigate([WEB_ROUTES.DOCUMENTS], { state: { value: 1 } });
-        }
-      } else {
-        showNotification(this.snackBar, data.message, 'error');
+    const data = await this.commonService.postRequestAPI(apiUrl, formValues);
+    this.uiSpinner.spin$.next(false);
+    if (data.status) {
+      showNotification(this.snackBar, data.message, 'success');
+      if (this.documentId) {
+        this.back();
       }
+    } else {
+      showNotification(this.snackBar, data.message, 'error');
     }
   }
 
   async getOneRecevingSlipList() {
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ONE_AP_RECEVING_SLIP, { _id: this.id });
     if (data.status) {
-      this.receivingSlipData = data.data;
+      this.documentData = data.data;
       let receivingSliDate;
-      if (this.receivingSlipData.date_epoch != undefined && this.receivingSlipData.date_epoch != null && this.receivingSlipData.date_epoch != 0) {
-        receivingSliDate = epochToDateTime(this.receivingSlipData.date_epoch);
+      if (this.documentData.date_epoch != undefined && this.documentData.date_epoch != null && this.documentData.date_epoch != 0) {
+        receivingSliDate = epochToDateTime(this.documentData.date_epoch);
       }
-      let document_type = '';
-      const foundIndex = this.documentTypesList.findIndex((x: any) => x.key === this.receivingSlipData.document_type);
+      /* let document_type = '';
+      const foundIndex = this.documentTypesList.findIndex((x: any) => x.key === this.documentData.document_type);
       if (foundIndex != null) {
         document_type = this.documentTypesList[foundIndex].name;
-      }
-      this.invoice_id = this.receivingSlipData.invoice_id;
+      } */
+      this.invoice_id = this.documentData.invoice_id;
       this.receivingSlipForm = this.fb.group({
-        document_type: [document_type],
-        vendor_name: [this.receivingSlipData.vendor_data.vendor_name],
-        invoice_no: [this.receivingSlipData.invoice_no],
-        date: [receivingSliDate],
-        po_no: [this.receivingSlipData.po_no],
-        address: [this.receivingSlipData.address],
-        received_by: [this.receivingSlipData.received_by],
+        document_type: [this.selectedDocumentType],
+        vendor_name: [this.documentData.vendor_data?.vendor_name],
+        invoice_no: [this.documentData.invoice_no],
+        date_epoch: [receivingSliDate],
+        po_no: [this.documentData.po_no],
+        address: [this.documentData.address],
+        received_by: [this.documentData.received_by],
       });
-      this.pdf_url = this.receivingSlipData.pdf_url;
-      if (this.receivingSlipData.invoice) {
-        this.invoicePDF = this.receivingSlipData.invoice.pdf_url;
+      this.pdf_url = this.documentData.pdf_url;
+      if (this.documentData.invoice) {
+        this.invoicePDF = this.documentData.invoice.pdf_url;
       } else {
-        this.showPoEdit = true;
+        this.showEditForm = true;
       }
       this.loadPDF = false;
       this.pdfLoader = true;
@@ -495,39 +576,65 @@ export class ViewDocumentComponent {
 
   async saveReceivingSlip() {
     if (this.receivingSlipForm.valid) {
-      this.uiSpinner.spin$.next(true);
-      const formValues = this.receivingSlipForm.value;
+      if (this.document === this.selectedDocumentType) {
+        this.saveReceivingSlipData();
+      } else {
+        swalWithBootstrapTwoButtons
+          .fire({
+            title: 'sure message',
+            showDenyButton: true,
+            confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+            denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+            allowOutsideClick: false,
+          })
+          .then(async (result) => {
+            if (result.isConfirmed) {
+              this.saveReceivingSlipData();
+            }
+          });
+      }
+    }
+  }
 
-      delete formValues.document_type;
-      delete formValues.vendor_name;
-      let apiUrl = '';
-      if (this.id) {
+  async saveReceivingSlipData() {
+    this.uiSpinner.spin$.next(true);
+    const formValues = this.receivingSlipForm.value;
+
+    delete formValues.document_type;
+    delete formValues.vendor_name;
+    formValues.document_type = this.documentTypes.receivingSlip;
+    let apiUrl = '';
+    if (this.id) {
+      apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_RECEVING_SLIP;
+      if (this.document !== this.selectedDocumentType) {
+        formValues.old_id = this.id;
+        formValues.old_type = this.document;
+        formValues.is_orphan = true;
+      } else {
         formValues._id = this.id;
-        apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_RECEVING_SLIP;
-      } else if (this.documentId) {
-        formValues.document_type = this.documentTypes.receivingSlip;
-        formValues.pdf_url = this.documentData.pdf_url;
-        formValues.document_id = this.documentId;
-        formValues.vendor = this.documentData.vendor;
-        apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_OTHER_DOCUMENT_RECEVING_SLIP;
       }
+    } else if (this.documentId) {
+      formValues.pdf_url = this.otherDocumentData.pdf_url;
+      formValues.document_id = this.documentId;
+      formValues.vendor = this.otherDocumentData.vendor;
+      apiUrl = httpversion.PORTAL_V1 + httproutes.SAVE_AP_OTHER_DOCUMENT_RECEVING_SLIP;
+    }
 
-      if (formValues.date == null) {
-        formValues.date = 0;
-      } else {
-        formValues.date = Math.round(formValues.date.valueOf() / 1000);
-      }
+    if (formValues.date_epoch == null) {
+      formValues.date_epoch = 0;
+    } else {
+      formValues.date_epoch = Math.round(formValues.date_epoch.valueOf() / 1000);
+    }
 
-      const data = await this.commonService.postRequestAPI(apiUrl, formValues);
-      this.uiSpinner.spin$.next(false);
-      if (data.status) {
-        showNotification(this.snackBar, data.message, 'success');
-        if (this.documentId) {
-          this.router.navigate([WEB_ROUTES.DOCUMENTS], { state: { value: 2 } });
-        }
-      } else {
-        showNotification(this.snackBar, data.message, 'error');
+    const data = await this.commonService.postRequestAPI(apiUrl, formValues);
+    this.uiSpinner.spin$.next(false);
+    if (data.status) {
+      showNotification(this.snackBar, data.message, 'success');
+      if (this.documentId) {
+        this.back();
       }
+    } else {
+      showNotification(this.snackBar, data.message, 'error');
     }
   }
 
@@ -542,13 +649,13 @@ export class ViewDocumentComponent {
         this.router.navigate([WEB_ROUTES.DASHBOARD]);
       } else if (from == 'document') {
         let value;
-        if (this.document == 'PURCHASE_ORDER') {
+        if (this.selectedDocumentType == 'PURCHASE_ORDER') {
           value = 0;
-        } else if (this.document == 'PACKING_SLIP') {
+        } else if (this.selectedDocumentType == 'PACKING_SLIP') {
           value = 1;
-        } else if (this.document == 'RECEIVING_SLIP') {
+        } else if (this.selectedDocumentType == 'RECEIVING_SLIP') {
           value = 2;
-        } else if (this.document == 'QUOTE') {
+        } else if (this.selectedDocumentType == 'QUOTE') {
           value = 3;
         }
         this.router.navigate([WEB_ROUTES.DOCUMENTS], { state: { value: value } });
@@ -677,5 +784,95 @@ export class ViewDocumentComponent {
         showNotification(this.snackBar, 'File type is not supported.', 'error');
       }
     });
+  }
+
+  onDocumentTypeChange(event: any) {
+    swalWithBootstrapTwoButtons
+      .fire({
+        title: 'message',
+        showDenyButton: true,
+        confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
+        denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
+        allowOutsideClick: false,
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          this.selectedDocumentType = event.value;
+          if (this.id) {
+            this.setDocumentForm();
+          } else if (this.documentId) {
+            this.setOtherDocumentForm();
+          }
+        } else {
+          if (this.document == 'PURCHASE_ORDER') {
+            this.poForm.get('document_type')?.setValue(this.document);
+          } else if (this.document == 'QUOTE') {
+            this.quoteForm.get('document_type')?.setValue(this.document);
+          } else if (this.document == 'PACKING_SLIP') {
+            this.packingSlipForm.get('document_type')?.setValue(this.document);
+          } else if (this.document == 'RECEIVING_SLIP') {
+            this.receivingSlipForm.get('document_type')?.setValue(this.document);
+          }
+        }
+      });
+  }
+
+  setDocumentForm() {
+    let date;
+    if (this.documentData.date_epoch != undefined && this.documentData.date_epoch != null && this.documentData.date_epoch != 0) {
+      date = epochToDateTime(this.documentData.date_epoch);
+    }
+    if (this.selectedDocumentType == 'PURCHASE_ORDER') {
+      // this.poForm.get('document_type')?.setValue(this.document);
+      this.poForm = this.fb.group({
+        document_type: [this.selectedDocumentType],
+        vendor_name: [this.documentData.vendor_data?.vendor_name],
+        quote_no: [this.documentData.quote_no],
+        date_epoch: [date],
+        shipping_method: [this.documentData.shipping_method],
+        sub_total: [this.documentData.sub_total == null ? '0.00' : numberWithCommas(this.documentData.sub_total.toFixed(2))],
+        tax: [this.documentData.tax == null ? '0.00' : numberWithCommas(this.documentData.tax.toFixed(2))],
+        po_total: [this.documentData.po_total == null ? '0.00' : numberWithCommas(this.documentData.po_total.toFixed(2))],
+        receiver_phone: [this.documentData.receiver_phone],
+        terms: [this.documentData.terms],
+        address: [this.documentData.address],
+      });
+    } else if (this.selectedDocumentType == 'QUOTE') {
+      // this.quoteForm.get('document_type')?.setValue(this.document);
+      this.quoteForm = this.fb.group({
+        document_type: [this.selectedDocumentType],
+        vendor_name: [this.documentData.vendor_data?.vendor_name],
+        quote_no: [this.documentData.quote_no],
+        date_epoch: [date],
+        shipping_method: [this.documentData.shipping_method],
+        sub_total: [this.documentData.sub_total == null ? '0.00' : numberWithCommas(this.documentData.sub_total.toFixed(2))],
+        tax: [this.documentData.tax == null ? '0.00' : numberWithCommas(this.documentData.tax.toFixed(2))],
+        quote_total: [this.documentData.quote_total == null ? '0.00' : numberWithCommas(this.documentData.quote_total.toFixed(2))],
+        receiver_phone: [this.documentData.receiver_phone],
+        terms: [this.documentData.terms],
+        address: [this.documentData.address],
+      });
+    } else if (this.selectedDocumentType == 'PACKING_SLIP') {
+      // this.packingSlipForm.get('document_type')?.setValue(this.document);
+      this.packingSlipForm = this.fb.group({
+        document_type: [this.selectedDocumentType],
+        vendor_name: [this.documentData.vendor_data?.vendor_name],
+        invoice_no: [this.documentData.invoice_no],
+        date_epoch: [date],
+        po_no: [this.documentData.po_no],
+        address: [this.documentData.address],
+        received_by: [this.documentData.received_by],
+      });
+    } else if (this.selectedDocumentType == 'RECEIVING_SLIP') {
+      // this.receivingSlipForm.get('document_type')?.setValue(this.document);
+      this.receivingSlipForm = this.fb.group({
+        document_type: [this.selectedDocumentType],
+        vendor_name: [this.documentData.vendor_data?.vendor_name],
+        invoice_no: [this.documentData.invoice_no],
+        date_epoch: [date],
+        address: [this.documentData.address],
+        received_by: [this.documentData.received_by],
+      });
+    }
   }
 }

@@ -1,4 +1,7 @@
 var apPOSchema = require('./../../../../../model/ap_pos');
+var apQuoteSchema = require('./../../../../../model/ap_quotes');
+var apPackingSlipSchema = require('./../../../../../model/ap_packagingslips');
+var apReceivingSlipSchema = require('./../../../../../model/ap_receivingslips');
 var apOtherDocumentSchema = require('./../../../../../model/ap_other_documents');
 let db_connection = require('./../../../../../controller/common/connectiondb');
 let collectionConstant = require('./../../../../../config/collectionConstant');
@@ -170,6 +173,10 @@ module.exports.saveAPPO = async function (req, res) {
         try {
             var requestObject = req.body;
             var apPOConnection = connection_db_api.model(collectionConstant.AP_PO, apPOSchema);
+            var apQuoteConnection = connection_db_api.model(collectionConstant.AP_QUOUTE, apQuoteSchema);
+            var apPackingSlipConnection = connection_db_api.model(collectionConstant.AP_PACKING_SLIP, apPackingSlipSchema);
+            var apReceivingSlipConnection = connection_db_api.model(collectionConstant.AP_RECEIVING_SLIP, apReceivingSlipSchema);
+
             var id = requestObject._id;
             delete requestObject._id;
             if (id) {
@@ -191,6 +198,15 @@ module.exports.saveAPPO = async function (req, res) {
                 let add_ap_po = new apPOConnection(requestObject);
                 let save_ap_po = await add_ap_po.save();
                 if (save_ap_po) {
+                    if (requestObject.old_id) {
+                        if (requestObject.old_type == config.DOCUMENT_TYPES.quote.key) {
+                            await apQuoteConnection.updateOne({ _id: ObjectID(requestObject.old_id) }, { is_delete: 1 });
+                        } else if (requestObject.old_type == config.DOCUMENT_TYPES.packingSlip.key) {
+                            await apPackingSlipConnection.updateOne({ _id: ObjectID(requestObject.old_id) }, { is_delete: 1 });
+                        } else if (requestObject.old_type == config.DOCUMENT_TYPES.receivingSlip.key) {
+                            await apReceivingSlipConnection.updateOne({ _id: ObjectID(requestObject.old_id) }, { is_delete: 1 });
+                        }
+                    }
                     apInvoiceController.sendInvoiceUpdateAlerts(decodedToken, save_ap_po._id, save_ap_po.invoice_id, config.DOCUMENT_TYPES.po.name, translator);
                     res.send({ status: true, message: "PO added successfully.", data: save_ap_po });
                 } else {
