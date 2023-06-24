@@ -50,9 +50,9 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
       )
       .toPromise();
     // Only write this for datatable api otherwise return data
-    this.isTblLoading = false;
     this.dataChange.next(data.data);
     this.userPager.next(data.pager);
+    this.isTblLoading = false;
   }
 
   // Emergency Contact Datatable API

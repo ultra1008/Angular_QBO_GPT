@@ -290,7 +290,7 @@ export class ClientComponent
 
   sortData(event: any) {
     if (event.direction == '') {
-      this.tableRequest.sort.field = 'userstartdate';
+      this.tableRequest.sort.field = 'created_at';
       this.tableRequest.sort.order = 'desc';
     } else {
       this.tableRequest.sort.field = event.active;

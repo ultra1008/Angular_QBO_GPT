@@ -313,13 +313,6 @@ export class UsersListingComponent
       })
     );
     this.selection.clear();
-    /* this.dataSource = new UserDataSource(
-      this.userService,
-      this.paginator,
-      this.sort,
-      this.tableRequest,
-      this.isDelete
-    ); */
   }
 
   // context menu

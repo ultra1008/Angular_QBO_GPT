@@ -4,13 +4,13 @@ import { UnsubscribeOnDestroyAdapter } from '../shared/UnsubscribeOnDestroyAdapt
 import { VendorModel } from './vendor.model';
 import { HttpCall } from '../services/httpcall.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
+import { DataTableRequest, Pager } from 'src/consts/common.model';
 @Injectable()
 
 export class VendorsService extends UnsubscribeOnDestroyAdapter {
   isTblLoading = true;
   dataChange: BehaviorSubject<VendorModel[]> = new BehaviorSubject<VendorModel[]>([]);
-  // Temporarily stores data from dialogs
-  dialogData!: VendorModel;
+  vendorPager: BehaviorSubject<Pager> = new BehaviorSubject<Pager>({ first: 0, last: 0, total: 0 });
   constructor (private httpCall: HttpCall) {
     super();
   }
@@ -18,15 +18,15 @@ export class VendorsService extends UnsubscribeOnDestroyAdapter {
     return this.dataChange.value;
   }
 
-  getDialogData() {
-    return this.dialogData;
+  get pagerData(): Pager {
+    return this.vendorPager.value;
   }
 
   // Datatable API
-  async getAllVendorTable(is_delete: number): Promise<void> {
-    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_GET_FOR_TABLE, { is_delete: is_delete }).toPromise();
-    // Only write this for datatable api otherwise return data
-    this.dataChange.next(data);
+  async getVendorTable(requestObject: DataTableRequest): Promise<void> {
+    const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.PORTAL_VENDOR_GET_FOR_TABLE, requestObject).toPromise();
+    this.dataChange.next(data.data);
+    this.vendorPager.next(data.pager);
     this.isTblLoading = false;
   }
 }

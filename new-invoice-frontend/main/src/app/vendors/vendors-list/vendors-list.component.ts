@@ -39,9 +39,7 @@ import { TermModel } from 'src/app/settings/settings.model';
   styleUrls: ['./vendors-list.component.scss'],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
 })
-export class VendorsListComponent
-  extends UnsubscribeOnDestroyAdapter
-  implements OnInit {
+export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
   @ViewChild('gallery') gallery!: NgxGalleryComponent;
   galleryOptions!: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[] = [];
@@ -49,7 +47,7 @@ export class VendorsListComponent
   tmp_gallery: any;
   displayedColumns = ['select', 'vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'amount_paid', 'amount_open', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions',];
   vendorService?: VendorsService;
-  dataSource!: VendorDataSource;
+  dataSource!: any;
   selection = new SelectionModel<VendorModel>(true, []);
   id?: number;
   isDelete = 0;
@@ -62,8 +60,23 @@ export class VendorsListComponent
   @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
   quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
   quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
+  tableRequest = {
+    pageIndex: 0,
+    pageSize: 10,
+    search: '',
+    sort: {
+      field: 'vendor_created_at',
+      order: 'desc'
+    }
+  };
+  pager: any = {
+    first: 0,
+    last: 0,
+    total: 10,
+  };
+  vendorList!: VendorModel[] | undefined;
 
-  constructor(
+  constructor (
     public httpClient: HttpClient,
     private httpCall: HttpCall,
     public dialog: MatDialog,
@@ -155,7 +168,6 @@ export class VendorsListComponent
     // this.loadData();
   }
 
-
   listToGrid() {
     localStorage.setItem(localstorageconstants.VENDOR_DISPLAY, 'grid');
     this.router.navigate([WEB_ROUTES.VENDOR_GRID]);
@@ -174,6 +186,7 @@ export class VendorsListComponent
   refresh() {
     this.loadData();
   }
+
   onBookChange(ob: any) {
     const selectedBook = ob.value;
     if (selectedBook == 1) {
@@ -187,7 +200,7 @@ export class VendorsListComponent
         })
         .then((result) => {
           if (result.isConfirmed) {
-            this.allActive();
+            this.allActiveInactive(1);
           }
         });
     } else if (selectedBook == 2) {
@@ -201,7 +214,7 @@ export class VendorsListComponent
         })
         .then((result) => {
           if (result.isConfirmed) {
-            this.allInactive();
+            this.allActiveInactive(2);
           }
         });
     } else if (selectedBook == 3) {
@@ -238,34 +251,19 @@ export class VendorsListComponent
     }
   }
 
-  async allActive() {
+  async allActiveInactive(status: number) {
     const tmp_ids = [];
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
     }
     const data = await this.commonService.postRequestAPI(
       httpversion.PORTAL_V1 + httproutes.PORTAL_ALL_VENDOR_STATUS_UPDATE,
-      { _id: tmp_ids, vendor_status: 1 }
+      { _id: tmp_ids, vendor_status: status }
     );
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
-      this.refresh();
-    } else {
-      showNotification(this.snackBar, data.message, 'error');
-    }
-  }
-
-  async allInactive() {
-    const tmp_ids = [];
-    for (let i = 0; i < this.selection.selected.length; i++) {
-      tmp_ids.push(this.selection.selected[i]._id);
-    }
-    const data = await this.commonService.postRequestAPI(
-      httpversion.PORTAL_V1 + httproutes.PORTAL_ALL_VENDOR_STATUS_UPDATE,
-      { _id: tmp_ids, vendor_status: 2 }
-    );
-    if (data.status) {
-      showNotification(this.snackBar, data.message, 'success');
+      this.selection.clear();
+      this.selectedValue = '';
       this.refresh();
     } else {
       showNotification(this.snackBar, data.message, 'error');
@@ -280,7 +278,6 @@ export class VendorsListComponent
     this.router.navigate([WEB_ROUTES.VENDOR_FORM], {
       queryParams: { _id: vendor._id },
     });
-
   }
 
   openHistory() {
@@ -294,7 +291,7 @@ export class VendorsListComponent
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.renderedData.length;
+    const numRows = this.vendorList?.length;
     return numSelected === numRows;
   }
 
@@ -302,26 +299,50 @@ export class VendorsListComponent
   masterToggle() {
     this.isAllSelected()
       ? this.selection.clear()
-      : this.dataSource.renderedData.forEach((row) =>
-        this.selection.select(row)
-      );
+      : this.vendorList?.forEach((row) => this.selection.select(row));
   }
   removeSelectedRows() { }
+
+  public changePage(e: any) {
+    this.tableRequest.pageIndex = e.pageIndex;
+    this.tableRequest.pageSize = e.pageSize;
+    this.loadData();
+  }
+
+  onSearchChange(event: any) {
+    this.tableRequest.search = event.target.value;
+    this.tableRequest.pageIndex = 0;
+    this.loadData();
+  }
+
+  sortData(event: any) {
+    if (event.direction == '') {
+      this.tableRequest.sort.field = 'vendor_created_at';
+      this.tableRequest.sort.order = 'desc';
+    } else {
+      this.tableRequest.sort.field = event.active;
+      this.tableRequest.sort.order = event.direction;
+    }
+    this.loadData();
+  }
+
   public loadData() {
     this.vendorService = new VendorsService(this.httpCall);
-    this.dataSource = new VendorDataSource(
-      this.vendorService,
-      this.paginator,
-      this.sort,
-      this.isDelete
-    );
-    this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
-      () => {
-        if (!this.dataSource) {
-          return;
-        }
-        this.dataSource.filter = this.filter.nativeElement.value;
-      }
+    const displayDataChanges = [
+      this.vendorService?.dataChange,
+      this.vendorService?.vendorPager,
+      this.sort.sortChange,
+      // this.filterChange,
+      this.paginator.page,
+    ];
+    this.vendorService.getVendorTable({ is_delete: this.isDelete, start: this.tableRequest.pageIndex * 10, length: this.tableRequest.pageSize, search: this.tableRequest.search, sort: this.tableRequest.sort });
+
+    this.dataSource = merge(...displayDataChanges).pipe(
+      map(() => {
+        this.vendorList = this.vendorService?.data;
+        this.pager = this.vendorService?.pagerData;
+        return this.vendorService?.data.slice();
+      })
     );
     this.selection.clear();
   }
@@ -352,12 +373,6 @@ export class VendorsListComponent
 
         return initial;
       }, {});
-      // const dataString = JSON.stringify(jsonData);
-      // const keys_OLD = ["item_type_name", "packaging_name", "terms_name"];
-      // if (JSON.stringify(keys_OLD.sort()) != JSON.stringify(header_.sort())) {
-      //   that.sb.openSnackBar(that.Company_Equipment_File_Not_Match, "error");
-      //   return;
-      // } else {
       const formData_profle = new FormData();
       formData_profle.append('file', file);
       let apiurl = '';
@@ -416,7 +431,7 @@ export class VendorsListComponent
   exportExcel() {
     // key name with space add in brackets
     const exportData: Partial<TableElement>[] =
-      this.dataSource.filteredData.map((x) => ({
+      this.dataSource.filteredData.map((x: VendorModel) => ({
         'Vendor Name': x.vendor_name || '',
         'Vendor ID': x.vendor_id || '',
         'Customer ID': x.customer_id || '',
@@ -440,6 +455,7 @@ export class VendorsListComponent
       this.contextMenu.openMenu();
     }
   }
+
   async updateStatus(vendor: VendorModel) {
     let status = 1;
     if (vendor.vendor_status == 1) {
@@ -485,13 +501,9 @@ export class VendorsListComponent
 
   async deleteVendor(vendor: VendorModel, is_delete: number) {
     if (is_delete == 1) {
-      this.titleMessage = this.translate.instant(
-        'VENDOR.CONFIRMATION_DIALOG.ARCHIVE'
-      );
+      this.titleMessage = this.translate.instant('VENDOR.CONFIRMATION_DIALOG.ARCHIVE');
     } else {
-      this.titleMessage = this.translate.instant(
-        'VENDOR.CONFIRMATION_DIALOG.RESTORE'
-      );
+      this.titleMessage = this.translate.instant('VENDOR.CONFIRMATION_DIALOG.RESTORE');
     }
     swalWithBootstrapTwoButtons
       .fire({
@@ -572,7 +584,7 @@ export class VendorsListComponent
 }
 
 // This class is used for datatable sorting and searching
-export class VendorDataSource extends DataSource<VendorModel> {
+/* export class VendorDataSource extends DataSource<VendorModel> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -582,7 +594,7 @@ export class VendorDataSource extends DataSource<VendorModel> {
   }
   filteredData: VendorModel[] = [];
   renderedData: VendorModel[] = [];
-  constructor(
+  constructor (
     public vendorService: VendorsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
@@ -592,7 +604,7 @@ export class VendorDataSource extends DataSource<VendorModel> {
     // Reset to the first page when the user changes the filter.
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
-  /** Connect function called by the table to retrieve one stream containing the data to render. */
+
   connect(): Observable<VendorModel[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
@@ -635,8 +647,7 @@ export class VendorDataSource extends DataSource<VendorModel> {
   }
   disconnect() {
     //disconnect
-  }
-  /** Returns a sorted copy of the database data. */
+  }  
   sortData(data: VendorModel[]): VendorModel[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
@@ -683,4 +694,4 @@ export class VendorDataSource extends DataSource<VendorModel> {
       );
     });
   }
-}
+} */
