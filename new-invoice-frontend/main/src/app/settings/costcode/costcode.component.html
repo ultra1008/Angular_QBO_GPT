@@ -163,7 +163,7 @@
             </div>
             <div *ngIf="!SettingsService?.isCostCodeTblLoading" class="no-results"
               [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-              {{'COMMON.LISTING.EPMTY' | translate}}
+              {{'COMMON.LISTING.EMPTY' | translate}}
             </div>
             <mat-paginator #paginator [length]="dataSource.filteredData1.length" [pageIndex]="0" [pageSize]="10"
               [pageSizeOptions]="[5, 10, 25, 100]">

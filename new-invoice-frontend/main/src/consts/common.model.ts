@@ -1,6 +1,23 @@
 import { UserModel } from "src/app/users/user.model";
 import { VendorModel } from "src/app/vendors/vendor.model";
 
+export interface Pager {
+    first: number;
+    last: number;
+    total: number;
+}
+
+export interface DataTableRequest {
+    is_delete: number;
+    start: number;
+    length: number;
+    search: string;
+    sort: {
+        field: string,
+        order: string;
+    };
+}
+
 export interface Permission {
     Add: boolean;
     Delete: boolean;

@@ -4,6 +4,7 @@ import { HttpCall } from '../services/httpcall.service';
 import { UnsubscribeOnDestroyAdapter } from '../shared/UnsubscribeOnDestroyAdapter';
 import { EmergencyContact, UserModel, UserDocument } from './user.model';
 import { BehaviorSubject } from 'rxjs';
+import { DataTableRequest, Pager } from 'src/consts/common.model';
 
 @Injectable()
 export class UserService extends UnsubscribeOnDestroyAdapter {
@@ -11,6 +12,7 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
   isEmergencyTblLoading = true;
   documentTblLoading = true;
   dataChange: BehaviorSubject<UserModel[]> = new BehaviorSubject<UserModel[]>([]);
+  userPager: BehaviorSubject<Pager> = new BehaviorSubject<Pager>({ first: 0, last: 0, total: 0 });
   emergencyDataChange: BehaviorSubject<EmergencyContact[]> = new BehaviorSubject<EmergencyContact[]>([]);
   documentDataChange: BehaviorSubject<UserDocument[]> = new BehaviorSubject<UserDocument[]>([]);
   // Temporarily stores data from dialogs
@@ -21,6 +23,10 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
   }
   get data(): UserModel[] {
     return this.dataChange.value;
+  }
+
+  get pagerData(): Pager {
+    return this.userPager.value;
   }
 
   get emergencyData(): EmergencyContact[] {
@@ -36,16 +42,17 @@ export class UserService extends UnsubscribeOnDestroyAdapter {
   }
 
   // Datatable API
-  async getUserForTable(is_delete: number): Promise<void> {
+  async getUserForTable(requestObject: DataTableRequest): Promise<void> {
     const data = await this.httpCall
       .httpPostCall(
         httpversion.PORTAL_V1 + httproutes.PORTAL_USER_GET_FOR_TABLE,
-        { is_delete: is_delete }
+        requestObject
       )
       .toPromise();
     // Only write this for datatable api otherwise return data
     this.isTblLoading = false;
-    this.dataChange.next(data);
+    this.dataChange.next(data.data);
+    this.userPager.next(data.pager);
   }
 
   // Emergency Contact Datatable API

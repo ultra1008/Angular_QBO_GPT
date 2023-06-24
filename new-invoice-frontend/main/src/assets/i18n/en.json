@@ -68,7 +68,7 @@
             "NAME": "Name"
         },
         "LISTING": {
-            "EPMTY": "No matching records found"
+            "EMPTY": "No matching records found"
         }
     },
     "VENDOR": {

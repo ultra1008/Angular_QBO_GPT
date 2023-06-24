@@ -4377,8 +4377,15 @@ module.exports.getUserForTable = async function (req, res) {
         try {
             var requestObject = req.body;
             let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
-            let match = {};
+            let start = parseInt(requestObject.start);
+            var perpage = parseInt(requestObject.length);
 
+            var columnName = (requestObject.sort != undefined && requestObject.sort != '') ? requestObject.sort.field : '';
+            var columnOrder = (requestObject.sort != undefined && requestObject.sort != '') ? requestObject.sort.order : '';
+            var sort = {};
+            sort[columnName] = (columnOrder == 'asc') ? 1 : -1;
+
+            let match = {};
             if (decodedToken.UserData.role_name == "Employee") {
                 match = {
                     is_delete: requestObject.is_delete,
@@ -4389,7 +4396,17 @@ module.exports.getUserForTable = async function (req, res) {
                     is_delete: requestObject.is_delete
                 };
             }
-            let user_by_id = await userConnection.aggregate([
+            var query = {
+                $or: [
+                    { "userfullname": new RegExp(requestObject.search, 'i') },
+                    { "useremail": new RegExp(requestObject.search, 'i') },
+                    { "userphone": new RegExp(requestObject.search, 'i') },
+                    { "role_name": new RegExp(requestObject.search, 'i') },
+                    { "userjob_title_name": new RegExp(requestObject.search, 'i') },
+                    { "department_name": new RegExp(requestObject.search, 'i') },
+                ]
+            };
+            let get_user = await userConnection.aggregate([
                 {
                     $match: match,
                 },
@@ -4401,12 +4418,6 @@ module.exports.getUserForTable = async function (req, res) {
                         as: "role"
                     }
                 },
-                /*  {
-                     $unwind: {
-                         path: "$role",
-                         preserveNullAndEmptyArrays: true
-                     },
-                 }, */
                 {
                     $lookup: {
                         from: collectionConstant.JOB_TITLE,
@@ -4415,12 +4426,6 @@ module.exports.getUserForTable = async function (req, res) {
                         as: "jobtitle"
                     }
                 },
-                /*   {
-                      $unwind: {
-                          path: "$jobtitle",
-                          preserveNullAndEmptyArrays: true
-                      },
-                  }, */
                 {
                     $lookup: {
                         from: collectionConstant.DEPARTMENTS,
@@ -4429,12 +4434,6 @@ module.exports.getUserForTable = async function (req, res) {
                         as: "department"
                     }
                 },
-                /*  {
-                     $unwind: {
-                         path: "$department",
-                         preserveNullAndEmptyArrays: true
-                     },
-                 }, */
                 {
                     $lookup: {
                         from: collectionConstant.PAYROLL_GROUP,
@@ -4443,12 +4442,6 @@ module.exports.getUserForTable = async function (req, res) {
                         as: "payrollgroup"
                     }
                 },
-                /*  {
-                     $unwind: {
-                         path: "$payrollgroup",
-                         preserveNullAndEmptyArrays: true
-                     },
-                 }, */
                 {
                     $lookup: {
                         from: collectionConstant.JOB_TYPE,
@@ -4457,12 +4450,6 @@ module.exports.getUserForTable = async function (req, res) {
                         as: "jobtype"
                     }
                 },
-                // {
-                //     $unwind: {
-                //         path:"$jobtype",
-                //         preserveNullAndEmptyArrays: true
-                //     },
-                // },
                 {
                     $lookup: {
                         from: collectionConstant.INVOICE_USER,
@@ -4479,12 +4466,6 @@ module.exports.getUserForTable = async function (req, res) {
                         as: "location"
                     }
                 },
-                // {
-                //     $unwind: {
-                //         path:"$location",
-                //         preserveNullAndEmptyArrays: true
-                //     },
-                // },
                 {
                     $lookup: {
                         from: collectionConstant.INVOICE_USER,
@@ -4657,14 +4638,21 @@ module.exports.getUserForTable = async function (req, res) {
                         compliance_officer: 1,
                     }
                 },
-                {
-                    $sort: { 'userstartdate': -1 }
-                }
-            ]);
-            res.send(user_by_id);
+                { $sort: sort },
+                { $match: query },
+                { $limit: perpage + start },
+                { $skip: start },
+            ]).collation({ locale: "en_US" });
+            let user_count = await userConnection.find(match).countDocuments();
+            let pager = {
+                start: start,
+                length: perpage,
+                total: user_count
+            };
+            res.send({ status: true, data: get_user, pager });
         } catch (e) {
             console.log(e);
-            res.send([]);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false, error: e });
         } finally {
             connection_db_api.close();
         }

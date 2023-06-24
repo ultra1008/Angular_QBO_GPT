@@ -33,7 +33,7 @@ export class UploadInvoiceFormComponent {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.supporting = data.supporting;
     const foundIndex = this.documentList.findIndex((x: any) => x.key === 'INVOICE');
-    if (foundIndex != null) {
+    if (foundIndex != null && foundIndex != -1) {
       this.documentList.splice(foundIndex, 1);
     }
   }
