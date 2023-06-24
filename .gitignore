@@ -21,8 +21,14 @@
 /new-invoice-frontend/main/node_modules
 /new-invoice-frontend/main/dist
 /new-invoice-frontend/main/src/environments
-/new-invoice-frontend/main/config/.angular
+/new-invoice-frontend/main/.angular
 /new-invoice-frontend/main/package-lock.json
+
+/new-invoice-frontend/node_modules
+/new-invoice-frontend/dist
+/new-invoice-frontend/src/environments 
+/new-invoice-frontend/.angular
+/new-invoice-frontend/package-lock.json
 
 
 /invoice-frontend/node_modules
