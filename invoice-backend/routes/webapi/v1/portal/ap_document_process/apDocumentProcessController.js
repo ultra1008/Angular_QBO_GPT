@@ -82,6 +82,8 @@ module.exports.saveAPDocumentProcess = async function (req, res) {
                     var data = await common.sendInvoiceForProcess({
                         pdf_urls: documentIds,
                         company: decodedToken.companycode,
+                        authorization: req.headers.authorization,
+                        api_base_url: config.API_URL,
                     });
                     console.log("process document response: ", data);
                     /*let json = JSON.parse(data.body);

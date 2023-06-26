@@ -8,6 +8,7 @@ var ObjectID = require('mongodb').ObjectID;
 let db_connection = require('./../../../../../controller/common/connectiondb');
 let common = require('./../../../../../controller/common/common');
 let collectionConstant = require('./../../../../../config/collectionConstant');
+var alertController = require('./../alert/alertController');
 
 module.exports.makeAPDocumentRelationship = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -23,7 +24,6 @@ module.exports.makeAPDocumentRelationship = async function (req, res) {
             var apPackingSlipConnection = connection_db_api.model(collectionConstant.AP_PACKING_SLIP, apPackingSlipSchema);
             var apReceivingSlipConnection = connection_db_api.model(collectionConstant.AP_RECEIVING_SLIP, apReceivingSlipSchema);
 
-            console.log("requestObject.length", requestObject.length);
             for (let m = 0; m < requestObject.length; m++) {
                 console.log("DOCUMENT TYPE *********************************** ", requestObject[m].document_type);
                 if (requestObject[m].document_type == 'INVOICE') {
@@ -156,7 +156,16 @@ module.exports.makeAPDocumentRelationship = async function (req, res) {
                 }
             }
 
-            // let get_data = await apDocumentRelationshipCollection.findOne({ _id: ObjectID(requestObject._id) });
+            // Alert  
+            let alertObject = {
+                user_id: decodedToken.UserData._id,
+                module_name: '',
+                module_route: {},
+                notification_title: translator.getStr('Document_Process_Success_Alert_Title'),
+                notification_description: translator.getStr('Document_Process_Success_Alert_Description'),
+            };
+            alertController.saveAlert(alertObject, connection_db_api);
+
             res.send({ message: 'Relationship established successfully.', status: true });
         } catch (e) {
             console.log(e);

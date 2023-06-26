@@ -973,4 +973,7 @@ module.exports = {
     InvoiceNote_Deleted_Subject: 'Invoice Note Deleted',
     InvoiceNote_Deleted_Title: 'Note is deleted for your invoice document.',
     InvoiceNote_Deleted_Description: '#user has just deleted note for invoice document.',
+
+    Document_Process_Success_Alert_Title: "Processing Document Success",
+    Document_Process_Success_Alert_Description: "Your uploaded document succesfully processed and data is now saved successfully.",
 };
