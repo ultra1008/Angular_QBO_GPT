@@ -45,7 +45,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   galleryImages: NgxGalleryImage[] = [];
   imageObject = [];
   tmp_gallery: any;
-  displayedColumns = ['select', 'vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'amount_paid', 'amount_open', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions',];
+  displayedColumns = ['select', 'vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'invoices_total', 'open_invoices_total', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions',];
   vendorService?: VendorsService;
   dataSource!: any;
   selection = new SelectionModel<VendorModel>(true, []);
@@ -158,11 +158,11 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
       this.is_quickbooks_online = data.data.is_quickbooks_online;
       this.is_quickbooks_desktop = data.data.is_quickbooks_desktop;
       if (this.is_quickbooks_online) {
-        this.displayedColumns = ['select', 'vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'amount_paid', 'amount_open', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks', 'actions'];
+        this.displayedColumns = ['select', 'vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'invoices_total', 'open_invoices_total', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks', 'actions'];
       } else if (this.is_quickbooks_desktop) {
-        this.displayedColumns = ['vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'amount_paid', 'amount_open', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks'];
+        this.displayedColumns = ['vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'invoices_total', 'open_invoices_total', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks'];
       } else {
-        this.displayedColumns = ['select', 'vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'amount_paid', 'amount_open', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions'];
+        this.displayedColumns = ['select', 'vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'invoices_total', 'open_invoices_total', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions'];
       }
     }
     // this.loadData();
@@ -524,19 +524,19 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     this.isDelete = this.isDelete == 1 ? 0 : 1;
     if (this.isDelete === 0) {
       if (this.is_quickbooks_online) {
-        this.displayedColumns = ['select', 'vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'amount_paid', 'amount_open', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks', 'actions'];
+        this.displayedColumns = ['select', 'vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'invoices_total', 'open_invoices_total', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks', 'actions'];
       } else if (this.is_quickbooks_desktop) {
-        this.displayedColumns = ['vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'amount_paid', 'amount_open', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks'];
+        this.displayedColumns = ['vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'invoices_total', 'open_invoices_total', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks'];
       } else {
-        this.displayedColumns = ['select', 'vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'amount_paid', 'amount_open', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions'];
+        this.displayedColumns = ['select', 'vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'invoices_total', 'open_invoices_total', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions'];
       }
     } else {
       if (this.is_quickbooks_online) {
-        this.displayedColumns = ['vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'amount_paid', 'amount_open', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks', 'actions'];
+        this.displayedColumns = ['vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'invoices_total', 'open_invoices_total', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks', 'actions'];
       } else if (this.is_quickbooks_desktop) {
-        this.displayedColumns = ['vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'amount_paid', 'amount_open', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks'];
+        this.displayedColumns = ['vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'invoices_total', 'open_invoices_total', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'is_quickbooks'];
       } else {
-        this.displayedColumns = ['vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'amount_paid', 'amount_open', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions'];
+        this.displayedColumns = ['vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'invoices_total', 'open_invoices_total', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions'];
       }
     }
     this.refresh();

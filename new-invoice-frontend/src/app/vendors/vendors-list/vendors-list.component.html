@@ -198,7 +198,7 @@
                                             {{row.open_invoices}}</span>
                                     </mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="amount_paid">
+                                <ng-container matColumnDef="invoices_total">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
                                         [ngClass]="'tbl-col-width-per-xmax'">{{'VENDOR.TABLE.AMOUNT_PAID' | translate}}
                                     </mat-header-cell>
@@ -209,7 +209,7 @@
                                             {{formateAmount(row.invoices_total)}}</span>
                                     </mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="amount_open">
+                                <ng-container matColumnDef="open_invoices_total">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header
                                         [ngClass]="'tbl-col-width-per-mid'">{{'VENDOR.TABLE.AMOUNT_OPEN' |
                                         translate}}
