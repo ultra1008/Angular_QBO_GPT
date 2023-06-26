@@ -25,7 +25,7 @@ import { WEB_ROUTES } from 'src/consts/routes';
   styleUrls: ['./documents-listing.component.scss']
 })
 export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
-  displayedColumns = ['document_type', 'po_no', 'invoice_no', 'vendor_name', 'updated_by', 'updated_at', 'actions'];
+  displayedColumns = ['document_type', 'po_no', 'invoice_no', 'vendor_name', 'userfullname', 'updated_at', 'actions'];
   documentsServices?: DocumentsService;
   dataSource!: any;
   selection = new SelectionModel<DocumentTable>(true, []);
@@ -164,102 +164,4 @@ export class DocumentsListingComponent extends UnsubscribeOnDestroyAdapter imple
     }
     this.ngOnInit();
   }
-}/* 
-
-export class DocumentDataSource extends DataSource<DocumentTable> {
-  filterChange = new BehaviorSubject('');
-  get filter(): string {
-    return this.filterChange.value;
-  }
-  set filter(filter: string) {
-    this.filterChange.next(filter);
-  }
-  filteredData: DocumentTable[] = [];
-  renderedData: DocumentTable[] = [];
-  constructor (
-    public documentsService: DocumentsService,
-    public paginator: MatPaginator,
-    public _sort: MatSort,
-    public apiUrl: string,
-  ) {
-    super();
-    // Reset to the first page when the user changes the filter.
-    this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
-  }
-   
-  connect(): Observable<DocumentTable[]> {
-    // Listen for any changes in the base data, sorting, filtering, or pagination
-    const displayDataChanges = [
-      this.documentsService.dataChange,
-      this._sort.sortChange,
-      this.filterChange,
-      this.paginator.page,
-    ];
-    this.documentsService.getDocumentTable(this.apiUrl);
-    return merge(...displayDataChanges).pipe(
-      map(() => {
-        // Filter data
-        this.filteredData = this.documentsService.data
-          .slice()
-          .filter((response: DocumentTable) => {
-            const searchStr = (
-              response.document_type +
-              response.po_no +
-              response.invoice_no +
-              response.vendor_data?.vendor_name +
-              response.updated_by +
-              response.updated_at
-            ).toLowerCase();
-            return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
-          });
-        // Sort filtered data
-        const sortedData = this.sortData(this.filteredData.slice());
-        // Grab the page's slice of the filtered sorted data.
-        const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
-        this.renderedData = sortedData.splice(
-          startIndex,
-          this.paginator.pageSize
-        );
-        return this.renderedData;
-      })
-    );
-  }
-  disconnect() {
-    //disconnect
-  }
-   
-  sortData(data: DocumentTable[]): DocumentTable[] {
-    if (!this._sort.active || this._sort.direction === '') {
-      return data;
-    }
-    return data.sort((a, b) => {
-      let propertyA: number | string = '';
-      let propertyB: number | string = '';
-      switch (this._sort.active) {
-        case 'document_type':
-          [propertyA, propertyB] = [a.document_type, b.document_type];
-          break;
-        case 'po_no':
-          [propertyA, propertyB] = [a.po_no, b.po_no];
-          break;
-        case 'invoice_no':
-          [propertyA, propertyB] = [a.invoice_no, b.invoice_no];
-          break;
-        case 'vendor_name':
-          [propertyA, propertyB] = [a.vendor_data?.vendor_name, b.vendor_data?.vendor_name];
-          break;
-        case 'updated_by':
-          [propertyA, propertyB] = [a.updated_by.userfullname, b.updated_by.userfullname];
-          break;
-        case 'updated_at':
-          [propertyA, propertyB] = [a.updated_at, b.updated_at];
-          break;
-      }
-      const valueA = isNaN(+propertyA) ? propertyA : +propertyA;
-      const valueB = isNaN(+propertyB) ? propertyB : +propertyB;
-      return (
-        (valueA < valueB ? -1 : 1) * (this._sort.direction === 'asc' ? 1 : -1)
-      );
-    });
-  }
-} */
+} 

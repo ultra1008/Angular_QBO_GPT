@@ -29,8 +29,8 @@ module.exports.getAPOtherDocument = async function (req, res) {
                     { "document_type": new RegExp(requestObject.search, 'i') },
                     { "po_no": new RegExp(requestObject.search, 'i') },
                     { "invoice_no": new RegExp(requestObject.search, 'i') },
-                    { "vendor_data.vendor_name": new RegExp(requestObject.search, 'i') },
-                    { "updated_by.userfullname": new RegExp(requestObject.search, 'i') },
+                    { "vendor_name": new RegExp(requestObject.search, 'i') },
+                    { "userfullname": new RegExp(requestObject.search, 'i') },
                 ]
             };
 
@@ -58,6 +58,25 @@ module.exports.getAPOtherDocument = async function (req, res) {
                         path: "$vendor_data",
                         preserveNullAndEmptyArrays: true
                     },
+                },
+                {
+                    $project: {
+                        pdf_url: 1,
+                        document_id: 1,
+                        document_type: 1,
+                        date_epoch: 1,
+                        invoice_no: 1,
+                        po_no: 1,
+                        vendor: 1,
+                        is_delete: 1,
+                        created_by: 1,
+                        created_at: 1,
+                        updated_by: 1,
+                        updated_at: 1,
+
+                        vendor_name: "$vendor_data.vendor_name",
+                        userfullname: "$updated_by.userfullname",
+                    }
                 },
                 { $sort: sort },
                 { $match: query },

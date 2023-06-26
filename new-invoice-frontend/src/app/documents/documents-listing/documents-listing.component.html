@@ -25,7 +25,8 @@
                                 <mat-tab label="P.O.">
                                     <div class="body overflow-auto">
                                         <div class="table-responsive">
-                                            <table mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
+                                            <table mat-table #table [dataSource]="dataSource" matSort
+                                                (matSortChange)="sortData($event)" class="mat-cell">
                                                 <ng-container matColumnDef="document_type">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
                                                         {{'DOCUMENTS.TABLE.DOCUMENT_TYPE' |translate}}
@@ -59,10 +60,10 @@
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="truncate-text"><span class="mobile-label">Vendor
-                                                                Name:</span> {{row.vendor_data?.vendor_name}}</span>
+                                                                Name:</span> {{row.vendor_name}}</span>
                                                     </mat-cell>
                                                 </ng-container>
-                                                <ng-container matColumnDef="updated_by">
+                                                <ng-container matColumnDef="userfullname">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
                                                         {{'DOCUMENTS.TABLE.UPDATED_BY' |translate}}
                                                     </mat-header-cell>
@@ -70,7 +71,7 @@
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="truncate-text"><span
                                                                 class="mobile-label">updated_by:</span>
-                                                            {{row.updated_by.userfullname}}</span>
+                                                            {{row.userfullname}}</span>
                                                     </mat-cell>
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_at">
@@ -122,7 +123,8 @@
                                 <mat-tab label="Packing Slip">
                                     <div class="body overflow-auto">
                                         <div class="table-responsive">
-                                            <table mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
+                                            <table mat-table #table [dataSource]="dataSource" matSort
+                                                (matSortChange)="sortData($event)" class="mat-cell">
                                                 <ng-container matColumnDef="document_type">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
                                                         {{'DOCUMENTS.TABLE.DOCUMENT_TYPE' |translate}}
@@ -156,10 +158,10 @@
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="truncate-text"><span class="mobile-label">Vendor
-                                                                Name:</span> {{row.vendor_data?.vendor_name}}</span>
+                                                                Name:</span> {{row.vendor_name}}</span>
                                                     </mat-cell>
                                                 </ng-container>
-                                                <ng-container matColumnDef="updated_by">
+                                                <ng-container matColumnDef="userfullname">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
                                                         {{'DOCUMENTS.TABLE.UPDATED_BY' |translate}}
                                                     </mat-header-cell>
@@ -167,7 +169,7 @@
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="truncate-text"><span
                                                                 class="mobile-label">updated_by:</span>
-                                                            {{row.updated_by.userfullname}}</span>
+                                                            {{row.userfullname}}</span>
                                                     </mat-cell>
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_at">
@@ -219,7 +221,8 @@
                                 <mat-tab label="Receiving Slip">
                                     <div class="body overflow-auto">
                                         <div class="table-responsive">
-                                            <table mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
+                                            <table mat-table #table [dataSource]="dataSource" matSort
+                                                (matSortChange)="sortData($event)" class="mat-cell">
                                                 <ng-container matColumnDef="document_type">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
                                                         {{'DOCUMENTS.TABLE.DOCUMENT_TYPE' |translate}}
@@ -253,10 +256,10 @@
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="truncate-text"><span class="mobile-label">Vendor
-                                                                Name:</span> {{row.vendor_data?.vendor_name}}</span>
+                                                                Name:</span> {{row.vendor_name}}</span>
                                                     </mat-cell>
                                                 </ng-container>
-                                                <ng-container matColumnDef="updated_by">
+                                                <ng-container matColumnDef="userfullname">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
                                                         {{'DOCUMENTS.TABLE.UPDATED_BY' |translate}}
                                                     </mat-header-cell>
@@ -264,7 +267,7 @@
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="truncate-text"><span
                                                                 class="mobile-label">updated_by:</span>
-                                                            {{row.updated_by.userfullname}}</span>
+                                                            {{row.userfullname}}</span>
                                                     </mat-cell>
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_at">
@@ -315,7 +318,8 @@
                                 <mat-tab label="Quote">
                                     <div class="body overflow-auto">
                                         <div class="table-responsive">
-                                            <table mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
+                                            <table mat-table #table [dataSource]="dataSource" matSort
+                                                (matSortChange)="sortData($event)" class="mat-cell">
                                                 <ng-container matColumnDef="document_type">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
                                                         {{'DOCUMENTS.TABLE.DOCUMENT_TYPE' |translate}}
@@ -349,10 +353,10 @@
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="truncate-text"><span class="mobile-label">Vendor
-                                                                Name:</span> {{row.vendor_data?.vendor_name}}</span>
+                                                                Name:</span> {{row.vendor_name}}</span>
                                                     </mat-cell>
                                                 </ng-container>
-                                                <ng-container matColumnDef="updated_by">
+                                                <ng-container matColumnDef="userfullname">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
                                                         {{'DOCUMENTS.TABLE.UPDATED_BY' |translate}}
                                                     </mat-header-cell>
@@ -360,7 +364,7 @@
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="truncate-text"><span
                                                                 class="mobile-label">updated_by:</span>
-                                                            {{row.updated_by.userfullname}}</span>
+                                                            {{row.userfullname}}</span>
                                                     </mat-cell>
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_at">
@@ -411,7 +415,8 @@
                                 <mat-tab label="Unknown Documents">
                                     <div class="body overflow-auto">
                                         <div class="table-responsive">
-                                            <table mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
+                                            <table mat-table #table [dataSource]="dataSource" matSort
+                                                (matSortChange)="sortData($event)" class="mat-cell">
                                                 <ng-container matColumnDef="document_type">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
                                                         {{'DOCUMENTS.TABLE.DOCUMENT_TYPE' |translate}}
@@ -445,10 +450,10 @@
                                                     <mat-cell *matCellDef="let row"
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="truncate-text"><span class="mobile-label">Vendor
-                                                                Name:</span> {{row.vendor_data?.vendor_name}}</span>
+                                                                Name:</span> {{row.vendor_name}}</span>
                                                     </mat-cell>
                                                 </ng-container>
-                                                <ng-container matColumnDef="updated_by">
+                                                <ng-container matColumnDef="userfullname">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header>
                                                         {{'DOCUMENTS.TABLE.UPDATED_BY' |translate}}
                                                     </mat-header-cell>
@@ -456,7 +461,7 @@
                                                         (contextmenu)="onContextMenu($event, row)">
                                                         <span class="truncate-text"><span
                                                                 class="mobile-label">updated_by:</span>
-                                                            {{row.updated_by.userfullname}}</span>
+                                                            {{row.userfullname}}</span>
                                                     </mat-cell>
                                                 </ng-container>
                                                 <ng-container matColumnDef="updated_at">
