@@ -33,7 +33,7 @@ import { icon } from 'src/consts/icon';
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
 })
 export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
-  displayedColumns = ['invoice_date', 'due_date', 'vendor', 'invoice_no', 'total_amount', 'sub_total', 'approver', 'status', 'is_quickbooks', 'actions'];
+  displayedColumns = ['invoice_date_epoch', 'due_date_epoch', 'vendor_name', 'invoice_no', 'invoice_total_amount', 'sub_total', 'userfullname', 'status', 'is_quickbooks', 'actions'];
   invoiceService?: InvoiceService;
   dataSource!: any;
   id?: number;
@@ -89,9 +89,9 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
     if (data.status) {
       this.is_quickbooks = data.data.is_quickbooks_online || data.data.is_quickbooks_desktop;
       if (this.is_quickbooks) {
-        this.displayedColumns = ['invoice_date', 'due_date', 'vendor', 'invoice_no', 'total_amount', 'sub_total', 'approver', 'status', 'is_quickbooks', 'actions'];
+        this.displayedColumns = ['invoice_date_epoch', 'due_date_epoch', 'vendor_name', 'invoice_no', 'invoice_total_amount', 'sub_total', 'userfullname', 'status', 'is_quickbooks', 'actions'];
       } else {
-        this.displayedColumns = ['invoice_date', 'due_date', 'vendor', 'invoice_no', 'total_amount', 'sub_total', 'approver', 'status', 'actions'];
+        this.displayedColumns = ['invoice_date_epoch', 'due_date_epoch', 'vendor_name', 'invoice_no', 'invoice_total_amount', 'sub_total', 'userfullname', 'status', 'actions'];
       }
     }
     // this.loadData();
@@ -99,10 +99,10 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
 
   // TOOLTIPS
   getVendorNameTooltip(row: Invoice) {
-    return row.vendor_data?.vendor_name;
+    return row.vendor_name;
   }
   getApproverTooltip(row: Invoice) {
-    return row.assign_to_data?.userfullname;
+    return row.userfullname;
   }
 
   editInvoice(row: Invoice) {
@@ -221,11 +221,11 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
       this.dataSource.filteredData.map((x: Invoice) => ({
         'Invoice Date': x.invoice_date_epoch === 0 ? '' : formatDate(new Date(Number(x.invoice_date_epoch.toString()) * 1000), 'MM/dd/yyyy', 'en'),
         'Due Date': x.due_date_epoch === 0 ? '' : formatDate(new Date(Number(x.due_date_epoch.toString()) * 1000), 'MM/dd/yyyy', 'en'),
-        'Vendor': x.vendor_data?.vendor_name,
+        'Vendor': x.vendor_name,
         'Invoice Number': x.invoice_no,
         'Total Amount': x.invoice_total_amount,
         'Sub Total': x.sub_total,
-        'Approver': x.assign_to_data?.userfullname,
+        'Approver': x.userfullname,
         'Status': x.status,
       }));
 

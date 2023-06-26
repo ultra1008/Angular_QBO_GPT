@@ -58,7 +58,7 @@
                               <div class="table-responsive">
                                    <table mat-table #table [dataSource]="dataSource" matSort
                                         (matSortChange)="sortData($event)" class="mat-cell">
-                                        <ng-container matColumnDef="invoice_date">
+                                        <ng-container matColumnDef="invoice_date_epoch">
                                              <mat-header-cell *matHeaderCellDef mat-sort-header
                                                   class="tbl-col-width-per-max">Invoice Date
                                              </mat-header-cell>
@@ -70,7 +70,7 @@
                                                   (row.invoice_date_epoch * 1000) | date: 'MM/dd/yyyy'}}
                                              </mat-cell>
                                         </ng-container>
-                                        <ng-container matColumnDef="due_date">
+                                        <ng-container matColumnDef="due_date_epoch">
                                              <mat-header-cell *matHeaderCellDef mat-sort-header
                                                   class="tbl-col-width-per-max">Due
                                                   Date
@@ -83,7 +83,7 @@
                                                   * 1000) | date: 'MM/dd/yyyy'}}
                                              </mat-cell>
                                         </ng-container>
-                                        <ng-container matColumnDef="vendor">
+                                        <ng-container matColumnDef="vendor_name">
                                              <mat-header-cell *matHeaderCellDef mat-sort-header
                                                   class="tbl-col-width-per-15-per">Vendor</mat-header-cell>
                                              <mat-cell *matCellDef="let row" (click)="editInvoice(row)"
@@ -91,7 +91,7 @@
                                                   [matTooltip]="getVendorNameTooltip(row)"
                                                   (contextmenu)="onContextMenu($event, row)">
                                                   <span class="truncate-text"> <span class="mobile-label">Vendor:</span>
-                                                       {{row.vendor_data?.vendor_name}}</span>
+                                                       {{row.vendor_name}}</span>
                                              </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="invoice_no">
@@ -104,7 +104,7 @@
                                                   {{row.invoice_no}}
                                              </mat-cell>
                                         </ng-container>
-                                        <ng-container matColumnDef="total_amount">
+                                        <ng-container matColumnDef="invoice_total_amount">
                                              <mat-header-cell *matHeaderCellDef mat-sort-header
                                                   class="tbl-col-width-per-xmax">Total Amount</mat-header-cell>
                                              <mat-cell *matCellDef="let row" (click)="editInvoice(row)"
@@ -125,7 +125,7 @@
                                                   $ {{numberWithCommas(row.sub_total)}}
                                              </mat-cell>
                                         </ng-container>
-                                        <ng-container matColumnDef="approver">
+                                        <ng-container matColumnDef="userfullname">
                                              <mat-header-cell *matHeaderCellDef mat-sort-header
                                                   class="tbl-col-width-per-15-per">Approver</mat-header-cell>
                                              <mat-cell *matCellDef="let row" (click)="editInvoice(row)"
@@ -134,7 +134,7 @@
                                                   (contextmenu)="onContextMenu($event, row)">
                                                   <span class="truncate-text"> <span
                                                             class="mobile-label">Approver:</span></span>
-                                                  {{row.assign_to_data?.userfullname}}
+                                                  {{row.userfullname}}
                                              </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="status">
