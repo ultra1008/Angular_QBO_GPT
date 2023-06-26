@@ -108,6 +108,7 @@ module.exports = {
     INVOICE_CLASS_NAME: "invoice_class_names",
 
     AP_DOCUMENT_PROCESS: 'ap_document_processes',
+    AP_DOCUMENT_RELATIONSHIP: 'ap_document_relationships',
     AP_DUPLICATE_DOCUMENT: 'ap_duplicate_documents',
     AP_INVOICE: 'ap_invoices',
     AP_OTHER_DOCUMENT: 'ap_other_documents',

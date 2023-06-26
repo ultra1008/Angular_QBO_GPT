@@ -576,4 +576,7 @@ let apOtherDocumentValidation = require('./ap_other_document/apOtherDocumentVali
 router.post('/webapi/v1/portal/getapotherdocument', common.checkTokenExistOrNot, apOtherDocumentController.getAPOtherDocument);
 router.post('/webapi/v1/portal/getoneapotherdocument', common.checkTokenExistOrNot, apOtherDocumentValidation.getOneAPOtherDocument, apOtherDocumentController.getOneAPOtherDocument);
 
+let apDocumentRelationshipController = require('./ap_document_relationship/apDocumentRelationshipController');
+router.post('/webapi/v1/portal/makeapdocumentrelationship', common.checkTokenExistOrNot, apDocumentRelationshipController.makeAPDocumentRelationship);
+
 module.exports = router;
