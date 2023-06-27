@@ -78,7 +78,7 @@ var quickBookValidation = require('./quickbook/quickbookValidation');
 router.post('/webapi/v1/savequickbookinfo', common.checkTokenExistOrNot, quickBookValidation.savequickBookValidation, quickBookController.savequickBookInfo);
 router.post('/webapi/v1/quickbookslogout', common.checkTokenExistOrNot, quickBookValidation.logoutValidation, quickBookController.logout);
 router.post('/webapi/v1/isConnecttoQBO', common.checkTokenExistOrNot, quickBookValidation.isConnecttoQBOValidation, quickBookController.isConnectToQBO);
-router.get('/webapi/v1/callback/', quickBookController.callback);
+router.post('/webapi/v1/callback/', quickBookController.callback);
 
 var signatureUpload = require("./../../../../controller/common/signatureUpload");
 router.post('/webapi/v1/savesignaturewasabiv2', signatureUpload.saveSignatureWasabiv2);
