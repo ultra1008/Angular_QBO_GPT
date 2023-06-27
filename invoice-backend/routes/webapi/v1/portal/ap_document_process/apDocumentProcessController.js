@@ -3,6 +3,7 @@ var ObjectID = require('mongodb').ObjectID;
 let db_connection = require('./../../../../../controller/common/connectiondb');
 let common = require('./../../../../../controller/common/common');
 let collectionConstant = require('./../../../../../config/collectionConstant');
+var config = require('./../../../../../config/config');
 
 module.exports.getAPDocumentProcess = async function (req, res) {
     var decodedToken = common.decodedJWT(req.headers.authorization);
@@ -124,9 +125,17 @@ module.exports.mailBoxSaveAPDocumentProcess = async function (connection_db_api,
             for (let i = 0; i < insert_data.length; i++) {
                 documentIds.push(insert_data[i]._id);
             }
+            console.log("api data: ", {
+                pdf_urls: documentIds,
+                company: companycode,
+                // authorization: req.headers.authorization,
+                api_base_url: config.API_URL,
+            });
             var data = await common.sendInvoiceForProcess({
                 pdf_urls: documentIds,
                 company: companycode,
+                // authorization: req.headers.authorization,
+                api_base_url: config.API_URL,
             });
             console.log("process document response: ", data);
         }

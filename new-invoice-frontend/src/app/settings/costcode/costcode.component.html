@@ -158,14 +158,14 @@
               </table>
             </div>
             <!-- Loading spinner -->
-            <div *ngIf="!SettingsService?.isCostCodeTblLoading" class="tbl-spinner">
+            <div *ngIf="costcodeService?.isCostCodeTblLoading" class="tbl-spinner">
               <app-loading></app-loading>
             </div>
-            <div *ngIf="!SettingsService?.isCostCodeTblLoading" class="no-results"
+            <div *ngIf="!costcodeService?.isCostCodeTblLoading" class="no-results"
               [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
               {{'COMMON.LISTING.EMPTY' | translate}}
             </div>
-            <mat-paginator #paginator [length]="dataSource.filteredData1.length" [pageIndex]="0" [pageSize]="10"
+            <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="10"
               [pageSizeOptions]="[5, 10, 25, 100]">
             </mat-paginator>
           </div>

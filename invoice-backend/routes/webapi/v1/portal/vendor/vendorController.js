@@ -1387,7 +1387,7 @@ module.exports.checkImportVendor = async function (req, res) {
                         }
                         var allowImport = true;
                         for (let m = 0; m < data.length; m++) {
-                            var get_one = await vendorConnection.findOne({ vendor_email: data[m].vendor_email });
+                            var get_one = await vendorConnection.findOne({ vendor_email: data[m].vendor_email, is_delete: 0 });
                             if (get_one != null) {
                                 allowImport = false;
                                 exitdata.push({ message: 'Already exist', valid: false, data: data[m], vendor_email: data[m].vendor_email });
@@ -1419,7 +1419,7 @@ module.exports.importVendor = async function (req, res) {
             var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
             let reqObject = [];
             for (let i = 0; i < requestObject.length; i++) {
-                let one_client = await vendorConnection.findOne({ vendor_email: requestObject[i].data.vendor_email });
+                let one_client = await vendorConnection.findOne({ vendor_email: requestObject[i].data.vendor_email, is_delete: 0 });
                 if (one_client) { } else {
                     reqObject.push({
                         vendor_name: requestObject[i].data.vendor_name,

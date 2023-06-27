@@ -23,7 +23,7 @@ export class ImportCostcodeSettingsComponent {
   variablesRoleList: any = [];
 
   roleList: any = this.variablesRoleList.slice();
-  titleMessage: string = '';
+  titleMessage = '';
   userList: any = [];
   isDelete = 0;
   invoice_logo = icon.INVOICE_LOGO;

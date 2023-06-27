@@ -595,7 +595,7 @@ module.exports.checkImportClient = async function (req, res) {
                         }
                         var allowImport = true;
                         for (let m = 0; m < data.length; m++) {
-                            var get_one = await clientConnection.findOne({ client_name: data[m].client_name }, { name: 1, number: 1 });
+                            var get_one = await clientConnection.findOne({ client_name: data[m].client_name, is_delete: 0 });
                             if (get_one != null) {
                                 allowImport = false;
                                 exitdata.push({ message: 'Already exist', valid: false, data: data[m], name: data[m].client_name });
@@ -627,7 +627,7 @@ module.exports.importClient = async function (req, res) {
             var clientConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientSchema);
             let reqObject = [];
             for (let i = 0; i < requestObject.length; i++) {
-                let one_client = await clientConnection.findOne({ client_name: requestObject[i].data.client_name });
+                let one_client = await clientConnection.findOne({ client_name: requestObject[i].data.client_name, is_delete: 0 });
                 if (one_client) { } else {
                     reqObject.push({
                         client_name: requestObject[i].data.client_name,

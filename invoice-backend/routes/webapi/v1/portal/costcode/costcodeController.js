@@ -375,7 +375,7 @@ module.exports.checkImportCostCode = async function (req, res) {
                         let exitdata = [];
                         var allowImport = true;
                         for (let m = 0; m < data.length; m++) {
-                            var get_one = await costcodeCollection.findOne({ cost_code: data[m].cost_code, division: data[m].division });
+                            var get_one = await costcodeCollection.findOne({ cost_code: data[m].cost_code, division: data[m].division, is_delete: 0 });
                             if (get_one != null) {
                                 allowImport = false;
                                 exitdata.push({ message: 'Already exist', valid: false, data: data[m], name: data[m].name });
@@ -410,7 +410,7 @@ module.exports.importCostCode = async function (req, res) {
 
             let reqObject = [];
             for (let i = 0; i < requestObject.length; i++) {
-                let one_data = await costcodeCollection.findOne({ cost_code: requestObject[i].data.cost_code });
+                let one_data = await costcodeCollection.findOne({ cost_code: requestObject[i].data.cost_code, is_delete: 0 });
                 console.log("one_data", one_data);
                 if (one_data) { } else {
                     reqObject.push({

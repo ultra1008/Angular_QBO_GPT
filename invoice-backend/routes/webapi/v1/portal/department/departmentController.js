@@ -175,7 +175,7 @@ module.exports.checkImportDepartment = async function (req, res) {
                         }
                         var allowImport = true;
                         for (let m = 0; m < data.length; m++) {
-                            var get_one = await departmentCollection.findOne({ department_name: data[m].department_name });
+                            var get_one = await departmentCollection.findOne({ department_name: data[m].department_name, is_delete: 0 });
                             if (get_one != null) {
                                 allowImport = false;
                                 exitdata.push({ message: 'Already exist', valid: false, data: data[m], name: data[m].department_name });
@@ -208,7 +208,7 @@ module.exports.importDepartment = async function (req, res) {
 
             let reqObject = [];
             for (let i = 0; i < requestObject.length; i++) {
-                let one_client = await departmentCollection.findOne({ department_name: requestObject[i].data.department_name });
+                let one_client = await departmentCollection.findOne({ department_name: requestObject[i].data.department_name, is_delete: 0 });
                 if (one_client) { } else {
                     reqObject.push({
                         department_name: requestObject[i].data.department_name,

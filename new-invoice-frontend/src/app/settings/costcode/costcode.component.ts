@@ -57,7 +57,7 @@ export class CostcodeComponent
   role_permission!: RolePermission;
   exitData!: any[];
 
-  constructor(
+  constructor (
     public dialog: MatDialog,
     private snackBar: MatSnackBar,
     public router: Router,
@@ -277,7 +277,7 @@ export class CostcodeComponent
             });
 
             dialogRef.afterClosed().subscribe((result: any) => {
-              this.loadData();
+              that.refresh();
             });
             // that.openErrorDataDialog(params);
 
@@ -325,9 +325,9 @@ export class CostCodeDataSource extends DataSource<CostCodeModel> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData1: CostCodeModel[] = [];
+  filteredData: CostCodeModel[] = [];
   renderedData: CostCodeModel[] = [];
-  constructor(
+  constructor (
     public costcodeTableService: SettingsService,
     public paginator: MatPaginator,
     public _sort: MatSort,
@@ -352,7 +352,7 @@ export class CostCodeDataSource extends DataSource<CostCodeModel> {
       map(() => {
         // Filter data
 
-        this.filteredData1 = this.costcodeTableService.costCodeData
+        this.filteredData = this.costcodeTableService.costCodeData
           .slice()
           .filter((costcodeTable: CostCodeModel) => {
             const searchStr = (
@@ -363,7 +363,7 @@ export class CostCodeDataSource extends DataSource<CostCodeModel> {
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
         // Sort filtered data
-        const sortedData = this.sortData(this.filteredData1.slice());
+        const sortedData = this.sortData(this.filteredData.slice());
         // Grab the page's slice of the filtered sorted data.
         const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
         this.renderedData = sortedData.splice(

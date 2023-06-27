@@ -188,8 +188,8 @@ export class SettingsService extends UnsubscribeOnDestroyAdapter {
 
   async getCostCodeTable(is_delete: number): Promise<void> {
     const data = await this.httpCall.httpPostCall(httpversion.PORTAL_V1 + httproutes.COSTCODE_DATA_TABLE, { is_delete: is_delete, module: 'Invoice' }).toPromise();
-    this.costCodeDataChange.next(data);
     this.isCostCodeTblLoading = false;
+    this.costCodeDataChange.next(data);
   }
 
   // Mail Box Datatable Service
