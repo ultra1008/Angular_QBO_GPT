@@ -4,6 +4,8 @@ import { HttpCall } from 'src/app/services/httpcall.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { showNotification } from 'src/consts/utils';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-rolesettings',
@@ -13,34 +15,26 @@ import { showNotification } from 'src/consts/utils';
 export class RolesettingsComponent {
   allRoles: any = [];
   roleName: any;
-  constructor (private router: Router, public httpCall: HttpCall) { }
+  constructor (private router: Router, public httpCall: HttpCall, private snackBar: MatSnackBar, private commonService: CommonService) { }
 
   ngOnInit() {
     this.getAllRoles();
   }
 
-  getAllRoles() {
-    let that = this;
-    this.httpCall
-      .httpGetCall(httpversion.PORTAL_V1 + httproutes.PORTAL_SETTING_ROLES_ALL)
-      .subscribe(function (params) {
-        if (params.status) {
-          that.allRoles = params.data;
-        }
-      });
+  async getAllRoles() {
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_SETTING_ROLES_ALL);
+    if (data.status) {
+      this.allRoles = data.data;
+    }
   }
 
-  saveData(role: any) {
-    let that = this;
-    this.httpCall
-      .httpPostCall(httpversion.PORTAL_V1 + httproutes.SETTING_ROLES_SAVE, role)
-      .subscribe(function (params) {
-        if (params.status) {
-          showNotification(this.snackBar, params.message, 'success');
-        } else {
-          showNotification(this.snackBar, params.message, 'error');
-        }
-      });
+  async saveData(role: any) {
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SETTING_ROLES_SAVE, role);
+    if (data.status) {
+      showNotification(this.snackBar, data.message, 'success');
+    } else {
+      showNotification(this.snackBar, data.message, 'error');
+    }
   }
 
   onTabNameChanged(rName: any) {
