@@ -27,20 +27,12 @@
                     </div>
                     <div class="body overflow-auto">
                         <div class="main-cust-setting-div">
-
                             <div class="row">
-                                <div class="card col-xl-4" style="margin: 5px;" (click)="clickOnCard('qbo')"
-                                    *ngIf="!desktopLoggedIn">
+                                <div class="card col-xl-4 my-1 mx-2 integration"
+                                    *ngFor="let integration of integrationList" (click)="integration.click.apply(this)">
                                     <div class="card-body">
-                                        <img src="{{qboIcon}}" alt="" style="width:90%; object-fit: cover;" />
-                                        <h5 class="card-title mt-3 custom-card-title">QBO</h5>
-                                    </div>
-                                </div>
-                                <div class="card col-xl-4" style="margin: 5px;" (click)="clickOnCard('qbd')"
-                                    *ngIf="!onlineLoggedIn">
-                                    <div class="card-body">
-                                        <img src="{{qbdIcon}}" alt="" style="width:90%; object-fit: cover;" />
-                                        <h5 class="card-title mt-3 custom-card-title">QuickBooks Desktop</h5>
+                                        <img src="{{integration.image}}" alt="" style="width:90%; object-fit: cover;" />
+                                        <h5 class="card-title mt-3 custom-card-title">{{integration.title}}</h5>
                                     </div>
                                 </div>
                                 <!-- <div class="card col-xl-4" style="margin: 5px;" (click)="clickOnCalculator()">

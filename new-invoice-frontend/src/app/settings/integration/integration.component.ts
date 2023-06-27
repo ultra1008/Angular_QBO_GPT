@@ -16,6 +16,19 @@ export class IntegrationComponent {
   onlineLoggedIn = true;
   desktopLoggedIn = true;
 
+  integrationList: any = [
+    {
+      title: 'QBO',
+      image: icon.QUICKBOOKS_ONLINE_LOGO,
+      click: this.openQuickbookOnline,
+    },
+    {
+      title: 'QuickBooks Desktop',
+      image: icon.QUICKBOOKS_DESKTOP_LOGO,
+      click: this.openQuickbookDesktop,
+    },
+  ];
+
   constructor (private router: Router, private commonService: CommonService) {
     this.getCompanyTenants();
   }
@@ -28,12 +41,12 @@ export class IntegrationComponent {
     }
   }
 
-  clickOnCard(type: any) {
-    if (type == "qbo") {
-      this.router.navigate([WEB_ROUTES.QBO_INTEGRATION_SETTING]);
-    } else if (type == "qbd") {
-      this.router.navigate([WEB_ROUTES.QBD_INTEGRATION_SETTING]);
-    }
+  openQuickbookOnline() {
+    this.router.navigate([WEB_ROUTES.QBO_INTEGRATION_SETTING]);
+  }
+
+  openQuickbookDesktop() {
+    this.router.navigate([WEB_ROUTES.QBD_INTEGRATION_SETTING]);
   }
 
   clickOnCalculator() {
