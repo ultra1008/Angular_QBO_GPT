@@ -21,6 +21,7 @@ import { Invoice } from 'src/app/invoice/invoice.model';
 import { notificationRoutes, numberWithCommas } from 'src/consts/utils';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { AuthenticationService } from '../../authentication/authentication.service';
+import { RolePermission } from 'src/consts/common.model';
 interface Notifications {
   _id: string;
   notification_title: string;
@@ -55,11 +56,14 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
 
   companyList: any = [];
   isLoading = true;
+  public role_permission!: RolePermission;
+
   constructor (@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, public elementRef: ElementRef,
     public uiSpinner: UiSpinnerService, private configService: ConfigService, private authService: AuthService,
     private AuthenticationService: AuthenticationService,
     private router: Router, public translate: TranslateService, public dialog: MatDialog, private commonService: CommonService,) {
     super();
+    this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
   }
   notificationList: Notifications[] = [];
   notificationCount = 0;

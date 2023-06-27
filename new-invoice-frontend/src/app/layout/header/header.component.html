@@ -158,7 +158,7 @@
                     <app-feather-icons [icon]="'repeat'" [class]="'user-menu-icons'"></app-feather-icons>Switch
                     Company
                   </button>
-                  <button mat-menu-item (click)="gotoSettings()">
+                  <button mat-menu-item (click)="gotoSettings()" *ngIf="role_permission.settings.View">
                     <app-feather-icons [icon]="'settings'" [class]="'user-menu-icons'"></app-feather-icons>Settings
                   </button>
                   <div mat-menu-item class="user-menu__item-title">
