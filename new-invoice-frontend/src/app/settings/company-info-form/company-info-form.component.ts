@@ -50,7 +50,7 @@ export class CompanyInfoFormComponent {
   termsList: Array<TermModel> = this.variablestermList.slice();
   countryList: Array<CountryModel> = [{ _id: 'USA', name: 'USA' }];
   id = '';
-  company_logo: any;
+  companyLogo: any;
   imageError: any;
   isImageSaved: any;
   defalut_image = '../assets/images/placeholder_logo.png';
@@ -156,9 +156,9 @@ export class CompanyInfoFormComponent {
         CompanyInfoData.companylogo == null ||
         CompanyInfoData.companylogo == ''
       ) {
-        that.company_logo = '../assets/images/placeholder_logo.png';
+        that.companyLogo = '../assets/images/placeholder_logo.png';
       } else {
-        that.company_logo = CompanyInfoData.companylogo;
+        that.companyLogo = CompanyInfoData.companylogo;
       }
       this.companyinfoForm = this.fb.group({
         companyname: [CompanyInfoData.companyname, Validators.required],

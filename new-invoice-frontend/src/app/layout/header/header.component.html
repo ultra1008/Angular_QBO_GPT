@@ -148,7 +148,7 @@
             <div class="noti-list">
               <div class="menu ">
                 <div class="user_dw_menu">
-                  <button mat-menu-item (click)="goUserProfile()">
+                  <button mat-menu-item (click)="goUserProfile()" *ngIf="role_permission.users.View">
                     <app-feather-icons [icon]="'user'" [class]="'user-menu-icons'"></app-feather-icons>Account
                   </button>
                   <button (click)="goChangePassword()" mat-menu-item>

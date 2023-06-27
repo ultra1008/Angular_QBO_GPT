@@ -36,7 +36,7 @@
                                                 (change)="filechangeEvent($event)" class="fileInputProfile">
                                             <div class="inner-image-cust" (click)="openfilebox()">
                                                 <ng-container *ngIf="!isImageSaved">
-                                                    <img src="{{company_logo}}" class="flux-brand-logo" alt="" />
+                                                    <img src="{{companyLogo}}" class="flux-brand-logo" alt="" />
                                                 </ng-container>
                                                 <ng-container *ngIf="isImageSaved">
                                                     <img class="flux-brand-logo" [src]="cardImageBase64" alt="logo" />

@@ -678,22 +678,7 @@ module.exports.getProfile = async function (req, res) {
                     var settings_tmp = await settingConnection.findOne({});
                     var resLast = {
                         UserData: one_user,
-                        CompanyData: {
-                            company_id: one_Compnay._id,
-                            company_code: one_Compnay.companycode,
-                            company_logo: one_Compnay.companylogo,
-                            company_name: one_Compnay.companyname,
-                            company_email: one_Compnay.companyemail,
-                            company_phone: one_Compnay.companyphone,
-                            company_address: one_Compnay.companyaddress,
-                            company_address_city: one_Compnay.companyaddresscity,
-                            company_address_state: one_Compnay.companyaddressstate,
-                            company_address_zip: one_Compnay.companyaddresszip,
-                            conatact_person_name: one_Compnay.conatactpersonname,
-                            conatact_person_title: one_Compnay.conatactpersontitle,
-                            conatact_person_email: one_Compnay.conatactpersonemail,
-                            conatact_person_phone1: one_Compnay.conatactpersonphone1,
-                        },
+                        CompanyData: one_Compnay,
                         settings: {},
                         role_permission: [],
                         questions: []
