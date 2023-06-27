@@ -32,8 +32,7 @@
                                     </mat-form-field>
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.REFRESH' |
-                                    translate}}">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.REFRESH' | translate}}">
                                         <button mat-mini-fab color="primary" (click)="refresh()">
                                             <mat-icon class="col-white">refresh</mat-icon>
                                         </button>
@@ -48,8 +47,7 @@
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0 && role_permission.users.Add">
-                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.IMPORT' |
-                                    translate}}">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.IMPORT' | translate}}">
                                         <input id="file-upload" class="mr-2" type="file" style="display: none"
                                             (change)="onFileChange($event)" #OpenFilebox />
                                         <button mat-mini-fab color="primary" (click)="importFileAction()">
@@ -66,16 +64,14 @@
                                     </div>
                                 </li> -->
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.HISTORY' |
-                                    translate}}">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.HISTORY' | translate}}">
                                         <button mat-mini-fab color="primary" (click)="openHistory()">
                                             <mat-icon class="col-white">history</mat-icon>
                                         </button>
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
-                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.GRID_TO_LIST' |
-                                    translate}}">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.GRID_TO_LIST' | translate}}">
                                         <button mat-mini-fab color="primary" (click)="gotoUser()">
                                             <mat-icon class="col-white">view_list </mat-icon>
                                         </button>
@@ -90,16 +86,14 @@
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 1">
-                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' |
-                                    translate}}">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.BACK' | translate}}">
                                         <button mat-mini-fab color="warn" (click)="gotoArchiveUnarchive()">
                                             <mat-icon class="col-white">close </mat-icon>
                                         </button>
                                     </div>
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0 && role_permission.users.Add">
-                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ADD' |
-                                    translate}}">
+                                    <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.ADD' | translate}}">
                                         <button mat-mini-fab color="primary" (click)="addNewUser()">
                                             <mat-icon class="col-white">add</mat-icon>
                                         </button>
@@ -146,7 +140,7 @@
                                             <div class="m-1 text-a" *ngIf="user.userphone !== 0">
                                                 <div class="d-flex font-s font-white">
                                                     <i class="material-icons my-auto font-s">phone</i>
-                                                    <span class="font-sp"> {{user.userphone}}</span>
+                                                    <span class="font-sp"> {{user.userphone | phoneFormatPipe}}</span>
                                                 </div>
                                             </div>
                                             <div class="m-1 text-a" *ngIf="user.userstartdate !== 0">

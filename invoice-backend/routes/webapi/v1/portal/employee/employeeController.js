@@ -69,10 +69,232 @@ module.exports.getSpecificUsers = async function (req, res) {
     var translator = new common.Language(req.headers.language);
     if (decodedToken) {
         try {
-            req.body.is_delete = 0;
             let connection_db_api = await db_connection.connection_db_api(decodedToken);
             let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
-            let all_user = await userConnection.find(req.body);
+            let all_user = await userConnection.aggregate([
+                { $match: req.body },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_ROLES,
+                        localField: "userroleId",
+                        foreignField: "role_id",
+                        as: "role"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.JOB_TITLE,
+                        localField: "userjob_title_id",
+                        foreignField: "_id",
+                        as: "jobtitle"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.DEPARTMENTS,
+                        localField: "userdepartment_id",
+                        foreignField: "_id",
+                        as: "department"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.PAYROLL_GROUP,
+                        localField: "user_id_payroll_group",
+                        foreignField: "_id",
+                        as: "payrollgroup"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.JOB_TYPE,
+                        localField: "userjob_type_id",
+                        foreignField: "_id",
+                        as: "jobtype"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "usersupervisor_id",
+                        foreignField: "_id",
+                        as: "supervisor"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.LOCATIONS,
+                        localField: "userlocation_id",
+                        foreignField: "_id",
+                        as: "location"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collectionConstant.INVOICE_USER,
+                        localField: "usermanager_id",
+                        foreignField: "_id",
+                        as: "manager"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "costcodes",
+                        localField: "usercostcode",
+                        foreignField: "_id",
+                        as: "costcode"
+                    }
+                },
+                {
+                    $project: {
+                        role_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$role.role_name" },
+                                        {
+                                            $arrayElemAt: ["$role.role_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        supervisor_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$supervisor.userfullname" },
+                                        {
+                                            $arrayElemAt: ["$supervisor.userfullname", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        manager_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$manager.userfullname" },
+                                        {
+                                            $arrayElemAt: ["$manager.userfullname", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        location_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$location.location_name" },
+                                        {
+                                            $arrayElemAt: ["$location.location_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        userjob_type_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$jobtype.job_type_name" },
+                                        {
+                                            $arrayElemAt: ["$jobtype.job_type_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        userjob_title_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$jobtitle.job_title_name" },
+                                        {
+                                            $arrayElemAt: ["$jobtitle.job_title_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        department_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$department.department_name" },
+                                        {
+                                            $arrayElemAt: ["$department.department_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        user_payroll_group_name: {
+                            $ifNull: [
+                                {
+                                    $cond: [
+                                        { $isArray: "$payrollgroup.payroll_group_name" },
+                                        {
+                                            $arrayElemAt: ["$payrollgroup.payroll_group_name", 0]
+                                        }, ""
+                                    ]
+                                }, ""
+                            ]
+                        },
+                        userroleId: 1,
+                        useremail: 1,
+                        username: 1,
+                        usermiddlename: 1,
+                        userlastname: 1,
+                        userfullname: 1,
+                        userssn: 1,
+                        userdevice_pin: 1,
+                        userphone: 1,
+                        usersecondary_email: 1,
+                        usergender: 1,
+                        userdob: 1,
+                        userstatus: 1,
+                        userpicture: 1,
+                        usermobile_picture: 1,
+                        userfulladdress: 1,
+                        userstreet1: 1,
+                        userstreet2: 1,
+                        usercity: 1,
+                        user_state: 1,
+                        userzipcode: 1,
+                        usercountry: 1,
+                        userstartdate: 1,
+                        usersalary: 1,
+                        usermanager_id: 1,
+                        usersupervisor_id: 1,
+                        userlocation_id: 1,
+                        userjob_title_id: 1,
+                        userdepartment_id: 1,
+                        userjob_type_id: 1,
+                        usernon_exempt: 1,
+                        usermedicalBenifits: 1,
+                        useradditionalBenifits: 1,
+                        useris_password_temp: 1,
+                        userterm_conditions: 1,
+                        userweb_security_code: 1,
+                        user_payroll_rules: 1,
+                        user_id_payroll_group: 1,
+                        usercostcode: 1,
+                        costcode: { $ifNull: [{ $arrayElemAt: ["$costcode.value", 0] }, ""] },
+                        userqrcode: 1,
+                        userfirebase_id: 1,
+                        user_no: 1,
+                        card_no: 1,
+                        card_type: 1,
+                        is_first: 1,
+                        allow_for_projects: 1,
+                        user_languages: 1,
+                        compliance_officer: 1,
+                    }
+                },
+            ]).collation({ locale: "en_US" });
             res.send({ message: translator.getStr('EmployeeListing'), data: all_user, status: true });
         } catch (e) {
             console.log(e);

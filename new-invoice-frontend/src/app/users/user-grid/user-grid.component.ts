@@ -79,16 +79,18 @@ export class UserGridComponent
 
   async getUser() {
     const data = await this.commonService.postRequestAPI(
-      httpversion.PORTAL_V1 + httproutes.PORTAL_USER_GET_FOR_TABLE,
+      httpversion.PORTAL_V1 + httproutes.GET_SPECIFIC_USERS,
       { is_delete: this.isDelete }
     );
-    this.userList = data;
-    this.activeUserList = this.userList.filter((obj: any) => {
-      return obj.userstatus == 1;
-    });
-    this.inactiveUserList = this.userList.filter((obj: any) => {
-      return obj.userstatus == 2;
-    });
+    if (data.status) {
+      this.userList = data.data;
+      this.activeUserList = this.userList.filter((obj: any) => {
+        return obj.userstatus == 1;
+      });
+      this.inactiveUserList = this.userList.filter((obj: any) => {
+        return obj.userstatus == 2;
+      });
+    }
     this.cardLoading = false;
   }
 

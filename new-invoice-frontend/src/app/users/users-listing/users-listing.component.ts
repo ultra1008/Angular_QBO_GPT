@@ -326,9 +326,6 @@ export class UsersListingComponent
       this.contextMenu.openMenu();
     }
   }
-  phonenoFormat(data: any) {
-    return formatPhoneNumber(data);
-  }
 
   gotoArchiveUnarchive() {
     this.isDelete = this.isDelete == 1 ? 0 : 1;
@@ -506,7 +503,7 @@ export class UsersListingComponent
       this.userList.map((x: UserModel) => ({
         'User Name': x.userfullname || '',
         'Email': x.useremail || '',
-        'Phone': this.phonenoFormat(x.userphone) || '',
+        'Phone': formatPhoneNumber(x.userphone) || '',
         'Role': x.role_name || '',
         'Job Title': x.userjob_title_name || '',
         'Department': x.department_name || '',
