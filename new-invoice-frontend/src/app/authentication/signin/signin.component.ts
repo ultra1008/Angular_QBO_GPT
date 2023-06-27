@@ -50,7 +50,7 @@ export class SigninComponent implements OnInit {
   showForm = false;
   companyList: Array<CompanyModel> = [];
 
-  constructor(private formBuilder: UntypedFormBuilder, private router: Router, private authService: AuthService,
+  constructor (private formBuilder: UntypedFormBuilder, private router: Router, private authService: AuthService,
     private AuthenticationService: AuthenticationService, private snackBar: MatSnackBar, public uiSpinner: UiSpinnerService,
     private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private commonService: CommonService,
   ) {
@@ -142,6 +142,13 @@ export class SigninComponent implements OnInit {
       } else if (data.data.length === 1) {
         // only one compant so direct login
         showNotification(this.snackBar, data.message, 'success');
+        this.AuthenticationService.changeTokenValue(data.user_data.token);
+        localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.user_data.token);
+        localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.user_data));
+        localStorage.setItem(localstorageconstants.COMPANYID, data.user_data.companydata._id);
+        localStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
+        sessionStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
+
         if (data.user_data.UserData.useris_password_temp == true) {
           this.router.navigate([WEB_ROUTES.FORCEFULLY_CHANGE_PASSWORD]);
         } else {
@@ -152,13 +159,6 @@ export class SigninComponent implements OnInit {
             location.reload();
           }, 500);
         }
-        this.AuthenticationService.changeTokenValue(data.user_data.token);
-        localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.user_data.token);
-        localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.user_data));
-        localStorage.setItem(localstorageconstants.COMPANYID, data.user_data.companydata._id);
-
-        sessionStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
-        localStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
       } else {
         this.useremail = formValues.useremail;
         this.companyList = data.data;
@@ -234,6 +234,14 @@ export class SigninComponent implements OnInit {
     this.uiSpinner.spin$.next(false);
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
+      this.AuthenticationService.changeTokenValue(data.data.token);
+      localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.data.token);
+      localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.data));
+      localStorage.setItem(localstorageconstants.COMPANYID, data.data.companydata._id);
+      localStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
+
+      sessionStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
+
       if (data.data.UserData.useris_password_temp == true) {
         this.router.navigate([WEB_ROUTES.FORCEFULLY_CHANGE_PASSWORD]);
       } else {
@@ -244,13 +252,6 @@ export class SigninComponent implements OnInit {
           location.reload();
         }, 500);
       }
-      this.AuthenticationService.changeTokenValue(data.data.token);
-      localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.data.token);
-      localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.data));
-      localStorage.setItem(localstorageconstants.COMPANYID, data.data.companydata._id);
-
-      sessionStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
-      localStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
     } else {
       showNotification(this.snackBar, data.message, 'error');
     }

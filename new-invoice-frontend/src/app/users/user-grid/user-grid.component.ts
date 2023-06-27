@@ -143,6 +143,10 @@ export class UserGridComponent
   }
 
   refresh() {
+    this.userList = [];
+    this.activeUserList = [];
+    this.inactiveUserList = [];
+    this.cardLoading = true;
     this.getUser();
   }
 
@@ -273,7 +277,6 @@ export class UserGridComponent
 
 
   downloadImport() {
-
     const dialogRef = this.dialog.open(ImportUserComponent, {
       width: '500px',
       data: {},

@@ -3,6 +3,7 @@ import { FormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { AuthenticationService } from 'src/app/authentication/authentication.service';
 import { CommonService } from 'src/app/services/common.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { DialogData } from 'src/app/vendors/vendor-report/vendor-report.component';
@@ -28,9 +29,9 @@ export class SwitchCompanyComponent implements OnInit {
   removable = true;
   title = 'Choose Organization';
 
-  constructor(public dialogRef: MatDialogRef<SwitchCompanyComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData,
+  constructor (public dialogRef: MatDialogRef<SwitchCompanyComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private commonService: CommonService, private snackBar: MatSnackBar, private router: Router, public uiSpinner: UiSpinnerService,
-    private formBuilder: FormBuilder) {
+    private formBuilder: FormBuilder, private authenticationService: AuthenticationService) {
     this.form = this.formBuilder.group({
       password: ["", Validators.required],
     });
@@ -82,6 +83,7 @@ export class SwitchCompanyComponent implements OnInit {
       if (data.status) {
         this.dialogRef.close();
         showNotification(this.snackBar, data.message, 'success');
+        this.authenticationService.changeTokenValue(data.data.token);
         localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.data.token);
         localStorage.setItem(localstorageconstants.COMPANYID, data.data.companydata._id);
         localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.data));
@@ -95,9 +97,7 @@ export class SwitchCompanyComponent implements OnInit {
         } else {
           console.log("sagar: ", window.location.pathname, "and", WEB_ROUTES.DASHBOARD, "====", window.location.pathname === WEB_ROUTES.DASHBOARD);
           if (window.location.pathname === WEB_ROUTES.DASHBOARD) {
-
             location.reload();
-
           } else {
 
             this.router.navigate([WEB_ROUTES.DASHBOARD]);

@@ -737,6 +737,7 @@ module.exports.changepassword = async function (req, res) {
                     connection_db_api = await db_connection.connection_db_api(result);
                     let userConnection = connection_db_api.model(collectionConstant.INVOICE_USER, userSchema);
                     let userOne = await userConnection.findOne({ _id: ObjectID(decodedToken.UserData._id), is_delete: 0, userstatus: 1 });
+                    console.log("userOne: .", userOne);
                     if (userOne == null) {
                         res.send({ message: translator.getStr('UserNotFound'), status: false });
                     } else {

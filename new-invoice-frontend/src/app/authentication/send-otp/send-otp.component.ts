@@ -82,6 +82,14 @@ export class SendOtpComponent {
         } else if (data.data.length === 1) {
           // only one compant so direct login
           showNotification(that.snackBar, data.message, 'success');
+          that.authenticationService.changeTokenValue(data.user_data.token);
+          localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.user_data.token);
+          localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.user_data));
+          localStorage.setItem(localstorageconstants.COMPANYID, data.user_data.companydata._id);
+          localStorage.setItem(localstorageconstants.LOGOUT, 'false');
+          localStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
+          sessionStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
+
           if (data.user_data.UserData.useris_password_temp == true) {
             that.router.navigate([WEB_ROUTES.FORCEFULLY_CHANGE_PASSWORD]);
           } else {
@@ -92,14 +100,6 @@ export class SendOtpComponent {
               location.reload();
             }, 500);
           }
-          that.authenticationService.changeTokenValue(data.user_data.token);
-          localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.user_data.token);
-          localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.user_data));
-          localStorage.setItem(localstorageconstants.COMPANYID, data.user_data.companydata._id);
-          localStorage.setItem(localstorageconstants.LOGOUT, 'false');
-
-          sessionStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
-          localStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
         } else {
           that.useremail = reqObject.useremail;
           that.companyList = data.data;
@@ -118,6 +118,14 @@ export class SendOtpComponent {
     const data = await this.commonService.postRequestAPI(httpversion.V1 + httproutes.LOGIN_WITH_OTP, formValues);
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
+      this.authenticationService.changeTokenValue(data.user_data.token);
+      localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.user_data.token);
+      localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.user_data));
+      localStorage.setItem(localstorageconstants.COMPANYID, data.user_data.companydata._id);
+      localStorage.setItem(localstorageconstants.LOGOUT, 'false');
+      localStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
+      sessionStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
+
       if (data.user_data.UserData.useris_password_temp == true) {
         this.router.navigate([WEB_ROUTES.FORCEFULLY_CHANGE_PASSWORD]);
       } else {
@@ -128,13 +136,6 @@ export class SendOtpComponent {
           location.reload();
         }, 500);
       }
-      localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.user_data.token);
-      localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.user_data));
-      localStorage.setItem(localstorageconstants.COMPANYID, data.user_data.companydata._id);
-      localStorage.setItem(localstorageconstants.LOGOUT, 'false');
-
-      sessionStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
-      localStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
     } else {
       showNotification(this.snackBar, data.message, 'error');
     }

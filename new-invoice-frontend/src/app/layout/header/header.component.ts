@@ -60,7 +60,7 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
 
   constructor (@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, public elementRef: ElementRef,
     public uiSpinner: UiSpinnerService, private configService: ConfigService, private authService: AuthService,
-    private AuthenticationService: AuthenticationService,
+    private authenticationService: AuthenticationService,
     private router: Router, public translate: TranslateService, public dialog: MatDialog, private commonService: CommonService,) {
     super();
     this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
@@ -336,7 +336,8 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
   logout() {
     // this.authService.logout().subscribe((res) => {
     //   if (!res.success) {
-    this.AuthenticationService.changeLoginValue(true);
+    this.authenticationService.changeLoginValue(true);
+    this.authenticationService.changeTokenValue('');
     localStorage.removeItem(localstorageconstants.DARKMODE);
     localStorage.removeItem(localstorageconstants.USERDATA);
     localStorage.removeItem(localstorageconstants.COMPANYDATA);
