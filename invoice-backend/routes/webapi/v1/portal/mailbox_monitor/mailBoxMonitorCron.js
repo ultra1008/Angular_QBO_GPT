@@ -53,7 +53,7 @@ async function mailboxMonitorCronFunction(query) {
 function readMail(imapConfig, connection_db_api, companycode) {
     return new Promise(function (resolve, reject) {
         console.log("imapConfig: ", imapConfig);
-        let email = imapConfig.email;
+        let email = imapConfig.user;
         const imap = new Imap(imapConfig);
         imap.once('ready', function () {
             imap.openBox('INBOX', true, function () {
@@ -103,7 +103,6 @@ function readMail(imapConfig, connection_db_api, companycode) {
 
 function checkAttachment(connection_db_api, companycode, parsed, email) {
     return new Promise(function (resolve, reject) {
-        // console.log(parsed);
         const { from, subject, textAsHtml, text, attachments } = parsed;
         console.log("attachments: ", attachments.length);
         if (attachments.length == 0) {
@@ -113,7 +112,6 @@ function checkAttachment(connection_db_api, companycode, parsed, email) {
                 let filenamesss = attachments[m].filename.split(".");
                 var extension = filenamesss[filenamesss.length - 1];
                 if (extension.toLocaleLowerCase() == 'pdf') {
-                    // companycode = 'tempinvoice';
                     let key_url = "email_file/" + moment().format('D_MMM_YYYY_hh_mm_ss_SSS_A') + "." + extension;
                     let PARAMS = {
                         Bucket: companycode.toLowerCase(),
@@ -127,7 +125,7 @@ function checkAttachment(connection_db_api, companycode, parsed, email) {
                             resolve();
                             console.log("upload err", err);
                         } else {
-                            var fileUrl = config.wasabisys_url + "/" + companycode + "/" + key_url;
+                            var fileUrl = config.wasabisys_url + "/" + companycode.toLowerCase() + "/" + key_url;
                             console.log("fileUrl: ", fileUrl);
                             apDocumentProcessController.mailBoxSaveAPDocumentProcess(connection_db_api, companycode, [fileUrl], email);
                             resolve();

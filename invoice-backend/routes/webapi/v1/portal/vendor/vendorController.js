@@ -386,8 +386,31 @@ module.exports.getVendorForTable = async function (req, res) {
         try {
             var requestObject = req.body;
             var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
-            var getdata = await vendorConnection.aggregate([
-                { $match: { is_delete: requestObject.is_delete } },
+
+            let start = parseInt(requestObject.start);
+            var perpage = parseInt(requestObject.length);
+
+            var columnName = (requestObject.sort != undefined && requestObject.sort != '') ? requestObject.sort.field : '';
+            var columnOrder = (requestObject.sort != undefined && requestObject.sort != '') ? requestObject.sort.order : '';
+            var sort = {};
+            sort[columnName] = (columnOrder == 'asc') ? 1 : -1;
+
+            let match = { is_delete: requestObject.is_delete };
+            var query = {
+                $or: [
+                    { "vendor_name": new RegExp(requestObject.search, 'i') },
+                    { "invoices": new RegExp(requestObject.search, 'i') },
+                    { "open_invoices": new RegExp(requestObject.search, 'i') },
+                    { "invoices_total": new RegExp(requestObject.search, 'i') },
+                    { "open_invoices_total": new RegExp(requestObject.search, 'i') },
+                    { "vendor_phone": new RegExp(requestObject.search, 'i') },
+                    { "vendor_email": new RegExp(requestObject.search, 'i') },
+                    { "vendor_address": new RegExp(requestObject.search, 'i') },
+                ]
+            };
+
+            var get_data = await vendorConnection.aggregate([
+                { $match: match },
                 {
                     $lookup: {
                         from: collectionConstant.AP_INVOICE,
@@ -466,16 +489,21 @@ module.exports.getVendorForTable = async function (req, res) {
                         open_invoices_total: { $sum: "$open_invoices.invoice_total_amount" },
                     }
                 },
-                { $sort: { vendor_created_at: -1 } },
+                { $sort: sort },
+                { $match: query },
+                { $limit: perpage + start },
+                { $skip: start },
             ]);
-            if (getdata) {
-                res.send(getdata);
-            } else {
-                res.send([]);
-            }
+            let total_count = await vendorConnection.find(match).countDocuments();
+            let pager = {
+                start: start,
+                length: perpage,
+                total: total_count
+            };
+            res.send({ status: true, data: get_data, pager });
         } catch (e) {
             console.log(e);
-            res.send([]);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false, error: e });
         } finally {
             connection_db_api.close();
         }
@@ -1359,7 +1387,7 @@ module.exports.checkImportVendor = async function (req, res) {
                         }
                         var allowImport = true;
                         for (let m = 0; m < data.length; m++) {
-                            var get_one = await vendorConnection.findOne({ vendor_email: data[m].vendor_email });
+                            var get_one = await vendorConnection.findOne({ vendor_email: data[m].vendor_email, is_delete: 0 });
                             if (get_one != null) {
                                 allowImport = false;
                                 exitdata.push({ message: 'Already exist', valid: false, data: data[m], vendor_email: data[m].vendor_email });
@@ -1391,7 +1419,7 @@ module.exports.importVendor = async function (req, res) {
             var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
             let reqObject = [];
             for (let i = 0; i < requestObject.length; i++) {
-                let one_client = await vendorConnection.findOne({ vendor_email: requestObject[i].data.vendor_email });
+                let one_client = await vendorConnection.findOne({ vendor_email: requestObject[i].data.vendor_email, is_delete: 0 });
                 if (one_client) { } else {
                     reqObject.push({
                         vendor_name: requestObject[i].data.vendor_name,

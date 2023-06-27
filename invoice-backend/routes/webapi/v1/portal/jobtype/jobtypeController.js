@@ -180,7 +180,7 @@ module.exports.checkImportJobType = async function (req, res) {
                         }
                         var allowImport = true;
                         for (let m = 0; m < data.length; m++) {
-                            var get_one = await jobtypeCollection.findOne({ job_type_name: data[m].job_type_name });
+                            var get_one = await jobtypeCollection.findOne({ job_type_name: data[m].job_type_name, is_delete: 0 });
                             if (get_one != null) {
                                 allowImport = false;
                                 exitdata.push({ message: 'Already exist', valid: false, data: data[m], name: data[m].job_type_name });
@@ -213,7 +213,7 @@ module.exports.importJobType = async function (req, res) {
 
             let reqObject = [];
             for (let i = 0; i < requestObject.length; i++) {
-                let one_client = await jobtypeCollection.findOne({ job_type_name: requestObject[i].data.job_type_name });
+                let one_client = await jobtypeCollection.findOne({ job_type_name: requestObject[i].data.job_type_name, is_delete: 0 });
                 if (one_client) { } else {
                     reqObject.push({
                         job_type_name: requestObject[i].data.job_type_name,

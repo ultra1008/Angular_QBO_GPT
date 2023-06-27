@@ -68,7 +68,7 @@
             "NAME": "Name"
         },
         "LISTING": {
-            "EPMTY": "No matching records found"
+            "EMPTY": "No matching records found"
         }
     },
     "VENDOR": {
@@ -466,6 +466,10 @@
             "SUBMIT": "Please complete the document form before submitting.",
             "SAVING": "Are you sure you want to close this window without saving changes?",
             "DELETE": "Are you sure you want to delete this document?"
+        },
+        "CHANGE_TYPE": {
+            "CONFIRM_1": "Your current document type is #old. Are you sure you want to change the document type to #new?",
+            "CONFIRM_2": "As you have changed the #old document type to #new, your data is now replaced with new document data."
         }
     },
     "INVOICE": {

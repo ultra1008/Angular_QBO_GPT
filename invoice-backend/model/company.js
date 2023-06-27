@@ -93,6 +93,13 @@ var companySchema = new Schema({
         userstatus: { type: Number, default: 1 },
         is_delete: { type: Number, default: 0 },
     }],
+    grid_user: [{
+        user_id: { type: mongoose.ObjectId, default: "" },
+        useremail: { type: String, default: "" },
+        password: { type: String, default: "" },
+        userstatus: { type: Number, default: 1 },
+        is_delete: { type: Number, default: 0 },
+    }],
 }, { collection: collectionConstant.SUPER_ADMIN_COMPANY, timestamps: true });
 
 module.exports = companySchema;

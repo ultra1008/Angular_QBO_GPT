@@ -8,7 +8,6 @@ import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroy
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { UserService } from '../user.service';
-import { UserDataSource } from '../users-listing/users-listing.component';
 import {
   showNotification,
   swalWithBootstrapTwoButtons,
@@ -43,7 +42,6 @@ export class UserGridComponent
   userList: Array<UserModel> = [];
   activeUserList: Array<UserModel> = [];
   inactiveUserList: Array<UserModel> = [];
-  dataSource!: UserDataSource;
   @ViewChild('filter', { static: true }) filter!: ElementRef;
   active_word = 'Active';
   inactive_word = 'Inactive';

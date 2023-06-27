@@ -16,11 +16,7 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { map } from 'rxjs/operators';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
-import {
-  formatPhoneNumber,
-  showNotification,
-  swalWithBootstrapTwoButtons,
-} from 'src/consts/utils';
+import { formatPhoneNumber, showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { UserRestoreFormComponent } from '../user-restore-form/user-restore-form.component';
 import { UserReportComponent } from '../user-report/user-report.component';
@@ -44,20 +40,9 @@ import { RolePermission } from 'src/consts/common.model';
 export class UsersListingComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
-  displayedColumns = [
-    'select',
-    'img',
-    'userfullname',
-    'useremail',
-    'userphone',
-    'role_name',
-    'userjob_title_name',
-    'department_name',
-    'userstatus',
-    'actions',
-  ];
+  displayedColumns = ['select', 'img', 'userfullname', 'useremail', 'userphone', 'role_name', 'userjob_title_name', 'department_name', 'userstatus', 'actions'];
   userService?: UserService;
-  dataSource!: UserDataSource;
+  dataSource!: any;
   selection = new SelectionModel<UserModel>(true, []);
   isDelete = 0;
   advanceTable?: UserModel;
@@ -74,6 +59,22 @@ export class UsersListingComponent
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
   @ViewChild('OpenFilebox') OpenFilebox!: ElementRef<HTMLElement>;
+  tableRequest = {
+    pageIndex: 0,
+    pageSize: 10,
+    search: '',
+    sort: {
+      field: 'userstartdate',
+      order: 'desc'
+    }
+  };
+  pager: any = {
+    first: 0,
+    last: 0,
+    total: 10,
+  };
+  userList!: UserModel[];
+
   constructor (
     public httpClient: HttpClient,
     private httpCall: HttpCall,
@@ -91,7 +92,6 @@ export class UsersListingComponent
   }
 
   ngOnInit() {
-
     this.userSelectForm = this.fb.group({
       userstatus: [''],
     });
@@ -109,9 +109,11 @@ export class UsersListingComponent
   private refreshTable() {
     this.paginator._changePageSize(this.paginator.pageSize);
   }
+
   openHistory() {
     this.router.navigate([WEB_ROUTES.USER_HISTORY]);
   }
+
   // TOOLTIP
   getEmailTooltip(row: UserModel) {
     return row.useremail;
@@ -131,6 +133,7 @@ export class UsersListingComponent
   getDepartmentTooltip(row: UserModel) {
     return row.department_name;
   }
+
   onBookChange(ob: any) {
     const selectedBook = ob.value;
     if (selectedBook == 1) {
@@ -144,7 +147,7 @@ export class UsersListingComponent
         })
         .then((result) => {
           if (result.isConfirmed) {
-            this.allUserActive();
+            this.allUserActiveInactve(1);
           }
         });
     } else if (selectedBook == 2) {
@@ -158,7 +161,7 @@ export class UsersListingComponent
         })
         .then((result) => {
           if (result.isConfirmed) {
-            this.allUserInactive();
+            this.allUserActiveInactve(2);
           }
         });
     } else if (selectedBook == 3) {
@@ -177,6 +180,7 @@ export class UsersListingComponent
         });
     }
   }
+
   async allArchiveUser() {
     const tmp_ids = [];
     for (let i = 0; i < this.selection.selected.length; i++) {
@@ -188,40 +192,27 @@ export class UsersListingComponent
     );
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
+      this.selection.clear();
+      this.selectedValue = '';
       this.refresh();
     } else {
       showNotification(this.snackBar, data.message, 'error');
     }
   }
 
-  async allUserActive() {
+  async allUserActiveInactve(status: number) {
     const tmp_ids = [];
     for (let i = 0; i < this.selection.selected.length; i++) {
       tmp_ids.push(this.selection.selected[i]._id);
     }
     const data = await this.commonService.postRequestAPI(
       httpversion.PORTAL_V1 + httproutes.PORTAL_ALL_USER_STATUS_CHANGE,
-      { _id: tmp_ids, userstatus: 1 }
+      { _id: tmp_ids, userstatus: status }
     );
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
-      this.refresh();
-    } else {
-      showNotification(this.snackBar, data.message, 'error');
-    }
-  }
-
-  async allUserInactive() {
-    const tmp_ids = [];
-    for (let i = 0; i < this.selection.selected.length; i++) {
-      tmp_ids.push(this.selection.selected[i]._id);
-    }
-    const data = await this.commonService.postRequestAPI(
-      httpversion.PORTAL_V1 + httproutes.PORTAL_ALL_USER_STATUS_CHANGE,
-      { _id: tmp_ids, userstatus: 2 }
-    );
-    if (data.status) {
-      showNotification(this.snackBar, data.message, 'success');
+      this.selection.clear();
+      this.selectedValue = '';
       this.refresh();
     } else {
       showNotification(this.snackBar, data.message, 'error');
@@ -253,16 +244,14 @@ export class UsersListingComponent
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.renderedData.length;
+    const numRows = this.userList?.length;
     return numSelected === numRows;
   }
 
   masterToggle() {
     this.isAllSelected()
       ? this.selection.clear()
-      : this.dataSource.renderedData.forEach((row) =>
-        this.selection.select(row)
-      );
+      : this.userList?.forEach((row: UserModel) => this.selection.select(row));
   }
 
   userReport() {
@@ -281,21 +270,47 @@ export class UsersListingComponent
   refresh() {
     this.loadData();
   }
-  public loadData() {
+
+  public changePage(e: any) {
+    this.tableRequest.pageIndex = e.pageIndex;
+    this.tableRequest.pageSize = e.pageSize;
+    this.loadData();
+  }
+
+  onSearchChange(event: any) {
+    this.tableRequest.search = event.target.value;
+    this.tableRequest.pageIndex = 0;
+    this.loadData();
+  }
+
+  sortData(event: any) {
+    if (event.direction == '') {
+      this.tableRequest.sort.field = 'userstartdate';
+      this.tableRequest.sort.order = 'desc';
+    } else {
+      this.tableRequest.sort.field = event.active;
+      this.tableRequest.sort.order = event.direction;
+    }
+    this.loadData();
+  }
+
+  public async loadData() {
     this.userService = new UserService(this.httpCall);
-    this.dataSource = new UserDataSource(
-      this.userService,
-      this.paginator,
-      this.sort,
-      this.isDelete
-    );
-    this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
-      () => {
-        if (!this.dataSource) {
-          return;
-        }
-        this.dataSource.filter = this.filter.nativeElement.value;
-      }
+    const displayDataChanges = [
+      this.userService.dataChange,
+      this.userService.userPager,
+      this.sort.sortChange,
+      // this.filterChange,
+      this.paginator.page,
+    ];
+    this.userService.getUserForTable({ is_delete: this.isDelete, start: this.tableRequest.pageIndex * 10, length: this.tableRequest.pageSize, search: this.tableRequest.search, sort: this.tableRequest.sort });
+
+    this.dataSource = merge(...displayDataChanges).pipe(
+      map(() => {
+        this.userList = this.userService?.data || [];
+        this.pager = this.userService?.pagerData;
+        return this.userService?.data.slice();
+      })
     );
     this.selection.clear();
   }
@@ -318,30 +333,9 @@ export class UsersListingComponent
   gotoArchiveUnarchive() {
     this.isDelete = this.isDelete == 1 ? 0 : 1;
     if (this.isDelete === 0) {
-      this.displayedColumns = [
-        'select',
-        'img',
-        'userfullname',
-        'useremail',
-        'userphone',
-        'role_name',
-        'userjob_title_name',
-        'department_name',
-        'userstatus',
-        'actions',
-      ];
+      this.displayedColumns = ['select', 'img', 'userfullname', 'useremail', 'userphone', 'role_name', 'userjob_title_name', 'department_name', 'userstatus', 'actions'];
     } else {
-      this.displayedColumns = [
-        'img',
-        'userfullname',
-        'useremail',
-        'userphone',
-        'role_name',
-        'userjob_title_name',
-        'department_name',
-        'userstatus',
-        'actions',
-      ];
+      this.displayedColumns = ['img', 'userfullname', 'useremail', 'userphone', 'role_name', 'userjob_title_name', 'department_name', 'userstatus', 'actions'];
     }
     this.loadData();
   }
@@ -409,8 +403,7 @@ export class UsersListingComponent
       data: _id,
     });
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-      if (result === 1) {
-      }
+      //
     });
   }
   addNewUser() {
@@ -494,10 +487,7 @@ export class UsersListingComponent
     reader.readAsBinaryString(file);
   }
 
-
-
   downloadImport() {
-
     const dialogRef = this.dialog.open(ImportUserComponent, {
       width: '500px',
       data: {},
@@ -513,7 +503,7 @@ export class UsersListingComponent
   exportExcel() {
     // key name with space add in brackets
     const exportData: Partial<TableElement>[] =
-      this.dataSource.filteredData.map((x) => ({
+      this.dataSource.filteredData.map((x: UserModel) => ({
         'User Name': x.userfullname || '',
         'Email': x.useremail || '',
         'Phone': this.phonenoFormat(x.userphone) || '',
@@ -528,7 +518,7 @@ export class UsersListingComponent
 }
 
 // This class is used for datatable sorting and searching
-export class UserDataSource extends DataSource<UserModel> {
+/* export class UserDataSource extends DataSource<UserModel> {
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;
@@ -538,50 +528,41 @@ export class UserDataSource extends DataSource<UserModel> {
   }
   filteredData: UserModel[] = [];
   renderedData: UserModel[] = [];
+  pager: Pager = {
+    first: 0,
+    last: 0,
+    total: 10,
+  };
+
   constructor (
     public userService: UserService,
     public paginator: MatPaginator,
     public _sort: MatSort,
+    public tableRequest: any,
     public isDelete: number
   ) {
     super();
     // Reset to the first page when the user changes the filter.
-    this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
+    this.filterChange.subscribe(() => (this.paginator.pageIndex = 0, this.paginator.pageSize = 10));
   }
-  /** Connect function called by the table to retrieve one stream containing the data to render. */
+    // Connect function called by the table to retrieve one stream containing the data to render. 
   connect(): Observable<UserModel[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this.userService.dataChange,
+      this.userService.userPager,
       this._sort.sortChange,
       this.filterChange,
       this.paginator.page,
     ];
-    this.userService.getUserForTable(this.isDelete);
+    this.userService.getUserForTable({ is_delete: this.isDelete, start: this.tableRequest.pageIndex * 10, length: this.tableRequest.pageSize, search: this.tableRequest.search, sort: this.tableRequest.sort });
+
     return merge(...displayDataChanges).pipe(
       map(() => {
-        // Filter data
-        this.filteredData = this.userService.data
-          .slice()
-          .filter((advanceTable: UserModel) => {
-            const searchStr = (
-              advanceTable.userfullname +
-              advanceTable.useremail +
-              advanceTable.role_name +
-              advanceTable.userphone +
-              advanceTable.userjob_title_name +
-              advanceTable.department_name
-            ).toLowerCase();
-            return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
-          });
+        this.pager = this.userService.pagerData;
+        this.filteredData = this.userService.data.slice();
         // Sort filtered data
-        const sortedData = this.sortData(this.filteredData.slice());
-        // Grab the page's slice of the filtered sorted data.
-        const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
-        this.renderedData = sortedData.splice(
-          startIndex,
-          this.paginator.pageSize
-        );
+        this.renderedData = this.filteredData;
         return this.renderedData;
       })
     );
@@ -589,46 +570,5 @@ export class UserDataSource extends DataSource<UserModel> {
   disconnect() {
     //disconnect
   }
-
-  /** Returns a sorted copy of the database data. */
-  sortData(data: UserModel[]): UserModel[] {
-    if (!this._sort.active || this._sort.direction === '') {
-      return data;
-    }
-    return data.sort((a, b) => {
-      let propertyA: number | string = '';
-      let propertyB: number | string = '';
-      switch (this._sort.active) {
-        case '_id':
-          [propertyA, propertyB] = [a._id, b._id];
-          break;
-        case 'userfullname':
-          [propertyA, propertyB] = [a.userfullname, b.userfullname];
-          break;
-        case 'useremail':
-          [propertyA, propertyB] = [a.useremail, b.useremail];
-          break;
-        case 'role_name':
-          [propertyA, propertyB] = [a.role_name, b.role_name];
-          break;
-        case 'userphone':
-          [propertyA, propertyB] = [a.userphone, b.userphone];
-          break;
-        case 'userjob_title_name':
-          [propertyA, propertyB] = [a.userjob_title_name, b.userjob_title_name];
-          break;
-        case 'department_name':
-          [propertyA, propertyB] = [a.department_name, b.department_name];
-          break;
-        case 'userstatus':
-          [propertyA, propertyB] = [a.userstatus, b.userstatus];
-          break;
-      }
-      const valueA = isNaN(+propertyA) ? propertyA : +propertyA;
-      const valueB = isNaN(+propertyB) ? propertyB : +propertyB;
-      return (
-        (valueA < valueB ? -1 : 1) * (this._sort.direction === 'asc' ? 1 : -1)
-      );
-    });
-  }
 }
+ */

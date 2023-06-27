@@ -13,8 +13,9 @@
                                         <li class="tbl-search-box">
                                              <label for="search-input"><i
                                                        class="material-icons search-icon">search</i></label>
-                                             <input placeholder="Search" type="text" #filter
-                                                  class="browser-default search-field" aria-label="Search box">
+                                             <input placeholder="{{'COMMON.TOOL_TIP.SEARCH' |  translate}}" type="text"
+                                                  class="browser-default search-field" aria-label="Search box"
+                                                  (input)="onSearchChange($event)">
                                         </li>
                                    </ul>
                               </div>
@@ -55,7 +56,8 @@
                          </div>
                          <div class="body overflow-auto">
                               <div class="table-responsive">
-                                   <table mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
+                                   <table mat-table #table [dataSource]="dataSource" matSort
+                                        (matSortChange)="sortData($event)" class="mat-cell">
                                         <ng-container matColumnDef="invoice_date">
                                              <mat-header-cell *matHeaderCellDef mat-sort-header
                                                   class="tbl-col-width-per-max">Invoice Date
@@ -169,11 +171,12 @@
                                    </mat-progress-spinner>
                               </div>
                               <div *ngIf="!reportService?.isReportTblLoading" class="no-results"
-                                   [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-                                   {{'COMMON.LISTING.EPMTY' | translate}}
+                                   [style.display]="invoiceList.length === 0 ? '' : 'none'">
+                                   {{'COMMON.LISTING.EMPTY' | translate}}
                               </div>
-                              <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0"
-                                   [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
+                              <mat-paginator #paginator [length]="pager!.total" [pageIndex]="tableRequest.pageIndex"
+                                   [pageSize]="tableRequest.pageSize" [pageSizeOptions]="[5, 10, 25, 100]"
+                                   (page)="changePage($event)">
                               </mat-paginator>
                          </div>
                     </div>

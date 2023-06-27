@@ -184,7 +184,7 @@ module.exports.checkImportRelationship = async function (req, res) {
                         }
                         var allowImport = true;
                         for (let m = 0; m < data.length; m++) {
-                            var get_one = await relationshipsCollection.findOne({ relationship_name: data[m].relationship_name });
+                            var get_one = await relationshipsCollection.findOne({ relationship_name: data[m].relationship_name, is_delete: 0 });
                             if (get_one != null) {
                                 allowImport = false;
                                 exitdata.push({ message: 'Already exist', valid: false, data: data[m], name: data[m].relationship_name });
@@ -217,7 +217,7 @@ module.exports.importRelationship = async function (req, res) {
 
             let reqObject = [];
             for (let i = 0; i < requestObject.length; i++) {
-                let one_client = await relationshipsCollection.findOne({ relationship_name: requestObject[i].data.relationship_name });
+                let one_client = await relationshipsCollection.findOne({ relationship_name: requestObject[i].data.relationship_name, is_delete: 0 });
                 if (one_client) { } else {
                     reqObject.push({
                         relationship_name: requestObject[i].data.relationship_name,

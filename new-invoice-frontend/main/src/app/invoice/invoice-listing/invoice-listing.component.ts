@@ -35,8 +35,7 @@ import { icon } from 'src/consts/icon';
 export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter implements OnInit {
   displayedColumns = ['invoice_date', 'due_date', 'vendor', 'invoice_no', 'total_amount', 'sub_total', 'approver', 'status', 'is_quickbooks', 'actions'];
   invoiceService?: InvoiceService;
-  dataSource!: ExampleDataSource;
-  selection = new SelectionModel<Invoice>(true, []);
+  dataSource!: any;
   id?: number;
   invoiceTable?: Invoice;
   isDelete = 0;
@@ -45,8 +44,23 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
   is_quickbooks = false;
   quickbooksGreyIcon = icon.QUICKBOOKS_GREY;
   quickbooksGreenIcon = icon.QUICKBOOKS_GREEN;
+  tableRequest = {
+    pageIndex: 0,
+    pageSize: 10,
+    search: '',
+    sort: {
+      field: 'created_at',
+      order: 'desc'
+    }
+  };
+  pager: any = {
+    first: 0,
+    last: 0,
+    total: 10,
+  };
+  invoiceList!: Invoice[];
 
-  constructor(public httpClient: HttpClient, public dialog: MatDialog, public settingService: InvoiceService,
+  constructor (public httpClient: HttpClient, public dialog: MatDialog, public settingService: InvoiceService,
     private snackBar: MatSnackBar, public route: ActivatedRoute, private router: Router, private httpCall: HttpCall,
     private commonService: CommonService, public translate: TranslateService) {
     super();
@@ -135,41 +149,48 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
   private refreshTable() {
     this.paginator._changePageSize(this.paginator.pageSize);
   }
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.renderedData.length;
-    return numSelected === numRows;
+
+  public changePage(e: any) {
+    this.tableRequest.pageIndex = e.pageIndex;
+    this.tableRequest.pageSize = e.pageSize;
+    this.loadData();
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-    this.isAllSelected()
-      ? this.selection.clear()
-      : this.dataSource.renderedData.forEach((row) =>
-        this.selection.select(row)
-      );
+  onSearchChange(event: any) {
+    this.tableRequest.search = event.target.value;
+    this.tableRequest.pageIndex = 0;
+    this.loadData();
   }
+
+  sortData(event: any) {
+    if (event.direction == '') {
+      this.tableRequest.sort.field = 'created_at';
+      this.tableRequest.sort.order = 'desc';
+    } else {
+      this.tableRequest.sort.field = event.active;
+      this.tableRequest.sort.order = event.direction;
+    }
+    this.loadData();
+  }
+
   public loadData() {
     this.invoiceService = new InvoiceService(this.httpCall);
-    this.dataSource = new ExampleDataSource(
-      this.invoiceService,
-      this.paginator,
-      this.sort,
-      this.isDelete,
-      this.type,
+    const displayDataChanges = [
+      this.invoiceService.dataChange,
+      this.invoiceService.invoicePager,
+      this.sort.sortChange,
+      // this.filterChange,
+      this.paginator.page,
+    ];
+    this.invoiceService.getInvoiceTable({ is_delete: this.isDelete, start: this.tableRequest.pageIndex * 10, length: this.tableRequest.pageSize, search: this.tableRequest.search, type: this.type, sort: this.tableRequest.sort });
+
+    this.dataSource = merge(...displayDataChanges).pipe(
+      map(() => {
+        this.invoiceList = this.invoiceService?.data || [];
+        this.pager = this.invoiceService?.pagerData;
+        return this.invoiceService?.data.slice();
+      })
     );
-    this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
-      () => {
-        if (!this.dataSource) {
-          return;
-        }
-        this.dataSource.filter = this.filter.nativeElement.value;
-      }
-    );
-    setTimeout(() => {
-      this.router.navigate([WEB_ROUTES.INVOICE]).then();
-    }, 1000);
   }
 
   // context menu
@@ -197,7 +218,7 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
 
   exportExcel() {
     const exportData: Partial<TableElement>[] =
-      this.dataSource.filteredData.map((x) => ({
+      this.dataSource.filteredData.map((x: Invoice) => ({
         'Invoice Date': x.invoice_date_epoch === 0 ? '' : formatDate(new Date(Number(x.invoice_date_epoch.toString()) * 1000), 'MM/dd/yyyy', 'en'),
         'Due Date': x.due_date_epoch === 0 ? '' : formatDate(new Date(Number(x.due_date_epoch.toString()) * 1000), 'MM/dd/yyyy', 'en'),
         'Vendor': x.vendor_data?.vendor_name,
@@ -214,110 +235,4 @@ export class InvoiceListingComponent extends UnsubscribeOnDestroyAdapter impleme
   numberWithCommas(amount: number) {
     return numberWithCommas(amount.toFixed(2));
   }
-}
-export class ExampleDataSource extends DataSource<Invoice> {
-  filterChange = new BehaviorSubject('');
-  get filter(): string {
-    return this.filterChange.value;
-  }
-  set filter(filter: string) {
-    this.filterChange.next(filter);
-  }
-  filteredData: Invoice[] = [];
-  renderedData: Invoice[] = [];
-  constructor(
-    public exampleDatabase: InvoiceService,
-    public paginator: MatPaginator,
-    public _sort: MatSort,
-    public isDelete: number,
-    public type: string,
-  ) {
-    super();
-    // Reset to the first page when the user changes the filter.
-    this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
-  }
-  /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<Invoice[]> {
-    // Listen for any changes in the base data, sorting, filtering, or pagination
-    const displayDataChanges = [
-      this.exampleDatabase.dataChange,
-      this._sort.sortChange,
-      this.filterChange,
-      this.paginator.page,
-    ];
-    this.exampleDatabase.getInvoiceTable(this.isDelete, this.type);
-    return merge(...displayDataChanges).pipe(
-      map(() => {
-        // Filter data
-        this.filteredData = this.exampleDatabase.data
-          .slice()
-          .filter((invoice: Invoice) => {
-            const searchStr = (
-              invoice.invoice_date_epoch +
-              invoice.due_date_epoch +
-              invoice.vendor_data?.vendor_name +
-              invoice.invoice_no +
-              invoice.invoice_total_amount +
-              invoice.sub_total +
-              invoice.assign_to_data?.userfullname +
-              invoice.status
-            ).toLowerCase();
-            return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
-          });
-        // Sort filtered data
-        const sortedData = this.sortData(this.filteredData.slice());
-        // Grab the page's slice of the filtered sorted data.
-        const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
-        this.renderedData = sortedData.splice(
-          startIndex,
-          this.paginator.pageSize
-        );
-        return this.renderedData;
-      })
-    );
-  }
-  disconnect() {
-    //disconnect
-  }
-  /** Returns a sorted copy of the database data. */
-  sortData(data: Invoice[]): Invoice[] {
-    if (!this._sort.active || this._sort.direction === '') {
-      return data;
-    }
-    return data.sort((a, b) => {
-      let propertyA: number | string = '';
-      let propertyB: number | string = '';
-      switch (this._sort.active) {
-        case 'invoice_date_epoch':
-          [propertyA, propertyB] = [a.invoice_date_epoch, b.invoice_date_epoch];
-          break;
-        case 'due_date_epoch':
-          [propertyA, propertyB] = [a.due_date_epoch, b.due_date_epoch];
-          break;
-        case 'vendor':
-          [propertyA, propertyB] = [a.vendor_data?.vendor_name, b.vendor_data?.vendor_name];
-          break;
-        case 'invoice_no':
-          [propertyA, propertyB] = [a.invoice_no, b.invoice_no];
-          break;
-        case 'invoice_total_amount':
-          [propertyA, propertyB] = [a.invoice_total_amount, b.invoice_total_amount];
-          break;
-        case 'sub_total':
-          [propertyA, propertyB] = [a.sub_total, b.sub_total];
-          break;
-        case 'approver':
-          [propertyA, propertyB] = [a.assign_to_data?.userfullname, b.assign_to_data?.userfullname];
-          break;
-        case 'status':
-          [propertyA, propertyB] = [a.status, b.status];
-          break;
-      }
-      const valueA = isNaN(+propertyA) ? propertyA : +propertyA;
-      const valueB = isNaN(+propertyB) ? propertyB : +propertyB;
-      return (
-        (valueA < valueB ? -1 : 1) * (this._sort.direction === 'asc' ? 1 : -1)
-      );
-    });
-  }
-}
+} 

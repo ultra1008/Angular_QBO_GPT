@@ -36,6 +36,14 @@ module.exports.getAPInvoiceForTable = async function (req, res) {
         try {
             var requestObject = req.body;
             var apInvoiceConnection = connection_db_api.model(collectionConstant.AP_INVOICE, apInvoiceSchema);
+            let start = parseInt(requestObject.start);
+            var perpage = parseInt(requestObject.length);
+
+            var columnName = (requestObject.sort != undefined && requestObject.sort != '') ? requestObject.sort.field : '';
+            var columnOrder = (requestObject.sort != undefined && requestObject.sort != '') ? requestObject.sort.order : '';
+            var sort = {};
+            sort[columnName] = (columnOrder == 'asc') ? 1 : -1;
+
             let match = { is_delete: requestObject.is_delete };
             if (requestObject.type != '' && requestObject.type != undefined && requestObject.type != null) {
                 match = {
@@ -43,6 +51,17 @@ module.exports.getAPInvoiceForTable = async function (req, res) {
                     status: requestObject.type,
                 };
             }
+            var query = {
+                $or: [
+                    { "vendor_name": new RegExp(requestObject.search, 'i') },
+                    { "invoice_no": new RegExp(requestObject.search, 'i') },
+                    { "invoice_total_amount": new RegExp(requestObject.search, 'i') },
+                    { "sub_total": new RegExp(requestObject.search, 'i') },
+                    { "userfullname": new RegExp(requestObject.search, 'i') },
+                    { "status": new RegExp(requestObject.search, 'i') },
+                ]
+            };
+
             var get_data = await apInvoiceConnection.aggregate([
                 { $match: match },
                 {
@@ -129,16 +148,76 @@ module.exports.getAPInvoiceForTable = async function (req, res) {
                         preserveNullAndEmptyArrays: true
                     },
                 },
-                { $sort: { created_at: -1 } },
+                {
+                    $project: {
+                        assign_to: 1,
+                        vendor: 1,
+                        // vendor_name:1, 
+                        is_quickbooks: 1,
+                        vendor_id: 1,
+                        customer_id: 1,
+                        invoice_no: 1,
+                        po_no: 1,
+                        packing_slip_no: 1,
+                        receiving_slip_no: 1,
+                        invoice_date_epoch: 1,
+                        due_date_epoch: 1,
+                        order_date_epoch: 1,
+                        ship_date_epoch: 1,
+                        terms: 1,
+                        invoice_total_amount: 1,
+                        tax_amount: 1,
+                        tax_id: 1,
+                        sub_total: 1,
+                        amount_due: 1,
+                        gl_account: 1,
+                        receiving_date_epoch: 1,
+                        status: 1,
+                        reject_reason: 1,
+                        job_client_name: 1,
+                        class_name: 1,
+                        delivery_address: 1,
+                        contract_number: 1,
+                        account_number: 1,
+                        discount: 1,
+                        pdf_url: 1,
+                        items: 1,
+                        notes: 1,
+                        invoice_notes: 1,
+                        invoice_info: 1,
+                        document_type: 1,
+                        created_by: 1,
+                        created_at: 1,
+                        updated_by: 1,
+                        updated_at: 1,
+                        is_delete: 1,
+
+                        assign_to_data: "$assign_to_data",
+                        vendor_data: "$vendor_data",
+                        terms_data: "$terms_data",
+                        gl_account_data: "$gl_account_data",
+                        job_client_data: "$job_client_data",
+                        class_name_data: "$class_name_data",
+                        vendor_name: "$vendor_data.vendor_name",
+                        // userfullname: { $ifNull: [{ $arrayElemAt: ["$assign_to_data.userfullname", 0] }, ""] },
+                        userfullname: "$assign_to_data.userfullname",
+                    }
+                },
+                { $sort: sort },
+                { $match: query },
+                { $limit: perpage + start },
+                { $skip: start },
             ]);
-            if (get_data) {
-                res.send(get_data);
-            } else {
-                res.send([]);
-            }
+            let total_count = await apInvoiceConnection.find(match).countDocuments();
+            let pager = {
+                start: start,
+                length: perpage,
+                total: total_count
+            };
+            res.send({ status: true, data: get_data, pager });
         } catch (e) {
             console.log(e);
-            res.send([]);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false, error: e });
         } finally {
             connection_db_api.close();
         }
@@ -390,6 +469,9 @@ module.exports.getOneAPInvoice = async function (req, res) {
 
                         invoice_messages: "$invoice_messages",
                         accounting_info: "$accounting_info",
+
+                        vendor_name: "$vendor_data.vendor_name",
+                        userfullname: { $ifNull: [{ $arrayElemAt: ["$assign_to_data.userfullname", 0] }, ""] },
                     }
                 }
             ]);
@@ -1135,6 +1217,14 @@ module.exports.getAPInvoiceForReports = async function (req, res) {
         try {
             var requestObject = req.body;
             var apInvoiceConnection = connection_db_api.model(collectionConstant.AP_INVOICE, apInvoiceSchema);
+            let start = parseInt(requestObject.start);
+            var perpage = parseInt(requestObject.length);
+
+            var columnName = (requestObject.sort != undefined && requestObject.sort != '') ? requestObject.sort.field : '';
+            var columnOrder = (requestObject.sort != undefined && requestObject.sort != '') ? requestObject.sort.order : '';
+            var sort = {};
+            sort[columnName] = (columnOrder == 'asc') ? 1 : -1;
+
             let match = { is_delete: 0 };
             if (requestObject.vendor_ids != undefined && requestObject.vendor_ids != null) {
                 let data_Query = [];
@@ -1184,6 +1274,18 @@ module.exports.getAPInvoiceForReports = async function (req, res) {
                     status: { $ne: 'Paid' },
                 };
             }
+
+            var query = {
+                $or: [
+                    { "vendor_name": new RegExp(requestObject.search, 'i') },
+                    { "invoice_no": new RegExp(requestObject.search, 'i') },
+                    { "invoice_total_amount": new RegExp(requestObject.search, 'i') },
+                    { "sub_total": new RegExp(requestObject.search, 'i') },
+                    { "userfullname": new RegExp(requestObject.search, 'i') },
+                    { "status": new RegExp(requestObject.search, 'i') },
+                ]
+            };
+
             let date_query = {};
             if (requestObject.start_date != 0 && requestObject.end_date != 0) {
                 date_query = { invoice_date_epoch: { $gte: requestObject.start_date, $lt: requestObject.end_date } };
@@ -1275,16 +1377,76 @@ module.exports.getAPInvoiceForReports = async function (req, res) {
                         preserveNullAndEmptyArrays: true
                     },
                 },
-                { $sort: { created_at: -1 } },
+                {
+                    $project: {
+                        assign_to: 1,
+                        vendor: 1,
+                        // vendor_name:1, 
+                        is_quickbooks: 1,
+                        vendor_id: 1,
+                        customer_id: 1,
+                        invoice_no: 1,
+                        po_no: 1,
+                        packing_slip_no: 1,
+                        receiving_slip_no: 1,
+                        invoice_date_epoch: 1,
+                        due_date_epoch: 1,
+                        order_date_epoch: 1,
+                        ship_date_epoch: 1,
+                        terms: 1,
+                        invoice_total_amount: 1,
+                        tax_amount: 1,
+                        tax_id: 1,
+                        sub_total: 1,
+                        amount_due: 1,
+                        gl_account: 1,
+                        receiving_date_epoch: 1,
+                        status: 1,
+                        reject_reason: 1,
+                        job_client_name: 1,
+                        class_name: 1,
+                        delivery_address: 1,
+                        contract_number: 1,
+                        account_number: 1,
+                        discount: 1,
+                        pdf_url: 1,
+                        items: 1,
+                        notes: 1,
+                        invoice_notes: 1,
+                        invoice_info: 1,
+                        document_type: 1,
+                        created_by: 1,
+                        created_at: 1,
+                        updated_by: 1,
+                        updated_at: 1,
+                        is_delete: 1,
+
+                        assign_to_data: "$assign_to_data",
+                        vendor_data: "$vendor_data",
+                        terms_data: "$terms_data",
+                        gl_account_data: "$gl_account_data",
+                        job_client_data: "$job_client_data",
+                        class_name_data: "$class_name_data",
+                        vendor_name: "$vendor_data.vendor_name",
+                        // userfullname: { $ifNull: [{ $arrayElemAt: ["$assign_to_data.userfullname", 0] }, ""] },
+                        userfullname: "$assign_to_data.userfullname",
+                    }
+                },
+                { $sort: sort },
+                { $match: query },
+                { $limit: perpage + start },
+                { $skip: start },
             ]);
-            if (get_data) {
-                res.send(get_data);
-            } else {
-                res.send([]);
-            }
+            let total_count = await apInvoiceConnection.find(match).countDocuments();
+            let pager = {
+                start: start,
+                length: perpage,
+                total: total_count
+            };
+            res.send({ status: true, data: get_data, pager });
         } catch (e) {
             console.log(e);
-            res.send([]);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
         } finally {
             connection_db_api.close();
         }

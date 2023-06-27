@@ -204,7 +204,7 @@ module.exports.checkImportClassName = async function (req, res) {
                         let exitdata = [];
                         var allowImport = true;
                         for (let m = 0; m < data.length; m++) {
-                            var get_one = await classNameConnection.findOne({ name: data[m].name });
+                            var get_one = await classNameConnection.findOne({ name: data[m].name, is_delete: 0 });
                             if (get_one != null) {
                                 allowImport = false;
                                 exitdata.push({ message: 'Already exist', valid: false, data: data[m], name: data[m].name });
@@ -237,7 +237,7 @@ module.exports.importClassName = async function (req, res) {
 
             let reqObject = [];
             for (let i = 0; i < requestObject.length; i++) {
-                let one_data = await classNameConnection.findOne({ name: requestObject[i].data.name });
+                let one_data = await classNameConnection.findOne({ name: requestObject[i].data.name, is_delete: 0 });
                 if (one_data) { } else {
                     reqObject.push({
                         name: requestObject[i].data.name,

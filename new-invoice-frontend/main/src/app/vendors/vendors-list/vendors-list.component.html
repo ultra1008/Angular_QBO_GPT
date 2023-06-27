@@ -15,9 +15,9 @@
                                 </li>
                                 <li class="tbl-search-box">
                                     <label for="search-input"><i class="material-icons search-icon">search</i></label>
-                                    <input placeholder="{{'COMMON.TOOL_TIP.SEARCH' |
-                                        translate}}" type="text" #filter class="browser-default search-field"
-                                        aria-label="Search box">
+                                    <input placeholder="{{'COMMON.TOOL_TIP.SEARCH' |  translate}}" type="text"
+                                        class="browser-default search-field" aria-label="Search box"
+                                        (input)="onSearchChange($event)">
                                 </li>
                             </ul>
                         </div>
@@ -43,14 +43,6 @@
                                             </mat-select>
                                         </mat-form-field>
                                     </form>
-                                    <!-- <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="{{'COMMON.TOOL_TIP.MULTI_ARCHIVE' |
-                                        translate}}">
-                                        <button mat-mini-fab color="warn" (click)="removeSelectedRows()">
-                                            <mat-icon class="col-white">archive</mat-icon>
-                                        </button>
-                                    </div> -->
-
-
                                 </li>
                                 <li class="tbl-header-btn" *ngIf="isDelete === 0">
                                     <div class="m-l-10" matTooltip="{{'COMMON.TOOL_TIP.REFRESH' |
@@ -138,7 +130,8 @@
                     </div>
                     <div class="body overflow-auto">
                         <div class="table-responsive">
-                            <table mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
+                            <table mat-table #table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)"
+                                class="mat-cell">
                                 <ng-container matColumnDef="select">
                                     <mat-header-cell *matHeaderCellDef class="psl-1"
                                         [ngClass]="'tbl-col-width-per-selected'">
@@ -276,17 +269,19 @@
                                     </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="vendor_attachment">
-                                    <mat-header-cell class="psl-1" [ngClass]="'tbl-col-width-per-selected'"
+                                    <mat-header-cell class="psl-1" [ngClass]="'tbl-col-width-per-attachment'"
                                         *matHeaderCellDef> <i class="fas fa-paperclip"
                                             style="color:grey;padding-left: 19px !important;"></i>
                                     </mat-header-cell>
-                                    <mat-cell class=" tbl-col-width-per-selected" *matCellDef="let row"
+                                    <mat-cell class=" tbl-col-width-per-attachment" *matCellDef="let row"
                                         (contextmenu)="onContextMenu($event, row)">
                                         <span class="truncate-text"><span class="mobile-label"
                                                 style="padding-left: 14px;">Attachment:</span>
-                                            <div *ngIf="row.vendor_attachment.length > 0">
-                                                <i class="fas fa-paperclip" style="color:grey; padding-left: 14px;"
-                                                    (click)="viewAttachment(row)"></i>
+                                            <div *ngIf="row.vendor_attachment">
+                                                <div class="row.vendor_attachment.length > 0">
+                                                    <i class="fas fa-paperclip" style="color:grey; padding-left: 14px;"
+                                                        (click)="viewAttachment(row)"></i>
+                                                </div>
                                             </div>
                                         </span>
                                     </mat-cell>
@@ -339,11 +334,12 @@
                             <app-loading></app-loading>
                         </div>
                         <div *ngIf="!vendorService?.isTblLoading" class="no-results"
-                            [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-                            {{'COMMON.LISTING.EPMTY' | translate}}
+                            [style.display]="vendorList.length === 0 ? '' : 'none'">
+                            {{'COMMON.LISTING.EMPTY' | translate}}
                         </div>
-                        <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0"
-                            [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
+                        <mat-paginator #paginator [length]="pager!.total" [pageIndex]="tableRequest.pageIndex"
+                            [pageSize]="tableRequest.pageSize" [pageSizeOptions]="[5, 10, 25, 100]"
+                            (page)="changePage($event)">
                         </mat-paginator>
                     </div>
                 </div>

@@ -1,4 +1,7 @@
+var apPOSchema = require('./../../../../../model/ap_pos');
 var apQuoteSchema = require('./../../../../../model/ap_quotes');
+var apPackingSlipSchema = require('./../../../../../model/ap_packagingslips');
+var apReceivingSlipSchema = require('./../../../../../model/ap_receivingslips');
 var apOtherDocumentSchema = require('./../../../../../model/ap_other_documents');
 let db_connection = require('./../../../../../controller/common/connectiondb');
 let collectionConstant = require('./../../../../../config/collectionConstant');
@@ -33,10 +36,30 @@ module.exports.getOrphanAPQuote = async function (req, res) {
     if (decodedToken) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
+            var requestObject = req.body;
             var apQuoteConnection = connection_db_api.model(collectionConstant.AP_QUOUTE, apQuoteSchema);
-            // var get_data = await apQuoteConnection.find({ is_delete: 0, is_orphan: true });
+
+            let start = parseInt(requestObject.start);
+            var perpage = parseInt(requestObject.length);
+
+            var columnName = (requestObject.sort != undefined && requestObject.sort != '') ? requestObject.sort.field : '';
+            var columnOrder = (requestObject.sort != undefined && requestObject.sort != '') ? requestObject.sort.order : '';
+            var sort = {};
+            sort[columnName] = (columnOrder == 'asc') ? 1 : -1;
+
+            let match = { is_delete: 0, is_orphan: true };
+            var query = {
+                $or: [
+                    { "document_type": new RegExp(requestObject.search, 'i') },
+                    { "po_no": new RegExp(requestObject.search, 'i') },
+                    { "invoice_no": new RegExp(requestObject.search, 'i') },
+                    { "vendor_name": new RegExp(requestObject.search, 'i') },
+                    { "userfullname": new RegExp(requestObject.search, 'i') },
+                ]
+            };
+
             var get_data = await apQuoteConnection.aggregate([
-                { $match: { is_delete: 0, is_orphan: true } },
+                { $match: match },
                 {
                     $lookup: {
                         from: collectionConstant.INVOICE_USER,
@@ -60,16 +83,55 @@ module.exports.getOrphanAPQuote = async function (req, res) {
                         preserveNullAndEmptyArrays: true
                     },
                 },
-            ]);
-            res.send(get_data);
+                {
+                    $project: {
+                        invoice_id: 1,
+                        pdf_url: 1,
+                        document_id: 1,
+                        document_type: 1,
+                        date_epoch: 1,
+                        invoice_no: 1,
+                        po_no: 1,
+                        quote_no: 1,
+                        terms: 1,
+                        address: 1,
+                        vendor: 1,
+                        shipping_method: 1,
+                        sub_total: 1,
+                        tax: 1,
+                        quote_total: 1,
+                        receiver_phone: 1,
+                        items: 1,
+                        is_delete: 1,
+                        is_orphan: 1,
+                        created_by: 1,
+                        created_at: 1,
+                        updated_by: 1,
+
+                        vendor_name: "$vendor_data.vendor_name",
+                        userfullname: "$updated_by.userfullname",
+                    }
+                },
+                { $sort: sort },
+                { $match: query },
+                { $limit: perpage + start },
+                { $skip: start },
+            ]).collation({ locale: "en_US" });
+            let total_count = await apQuoteConnection.find(match).countDocuments();
+            let pager = {
+                start: start,
+                length: perpage,
+                total: total_count
+            };
+            res.send({ status: true, data: get_data, pager });
         } catch (e) {
             console.log(e);
-            res.send([]);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false, error: e });
         } finally {
             connection_db_api.close();
         }
     } else {
-        res.send([]);
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
 
@@ -139,7 +201,11 @@ module.exports.saveAPQuote = async function (req, res) {
         let connection_db_api = await db_connection.connection_db_api(decodedToken);
         try {
             var requestObject = req.body;
+            var apPOConnection = connection_db_api.model(collectionConstant.AP_PO, apPOSchema);
             var apQuoteConnection = connection_db_api.model(collectionConstant.AP_QUOUTE, apQuoteSchema);
+            var apPackingSlipConnection = connection_db_api.model(collectionConstant.AP_PACKING_SLIP, apPackingSlipSchema);
+            var apReceivingSlipConnection = connection_db_api.model(collectionConstant.AP_RECEIVING_SLIP, apReceivingSlipSchema);
+
             var id = requestObject._id;
             delete requestObject._id;
             if (id) {
@@ -161,7 +227,18 @@ module.exports.saveAPQuote = async function (req, res) {
                 let add_ap_quote = new apQuoteConnection(requestObject);
                 let save_ap_quote = await add_ap_quote.save();
                 if (save_ap_quote) {
-                    apInvoiceController.sendInvoiceUpdateAlerts(decodedToken, save_ap_quote._id, save_ap_quote.invoice_id, config.DOCUMENT_TYPES.quote.name, translator);
+                    if (requestObject.old_id) {
+                        if (requestObject.old_type == config.DOCUMENT_TYPES.po.key) {
+                            await apPOConnection.updateOne({ _id: ObjectID(requestObject.old_id) }, { is_delete: 1 });
+                        } else if (requestObject.old_type == config.DOCUMENT_TYPES.packingSlip.key) {
+                            await apPackingSlipConnection.updateOne({ _id: ObjectID(requestObject.old_id) }, { is_delete: 1 });
+                        } else if (requestObject.old_type == config.DOCUMENT_TYPES.receivingSlip.key) {
+                            await apReceivingSlipConnection.updateOne({ _id: ObjectID(requestObject.old_id) }, { is_delete: 1 });
+                        }
+                    }
+                    if (save_ap_quote.invoice_id != null && save_ap_quote.invoice_id != undefined && save_ap_quote.invoice_id != '') {
+                        apInvoiceController.sendInvoiceUpdateAlerts(decodedToken, save_ap_quote._id, save_ap_quote.invoice_id, config.DOCUMENT_TYPES.quote.name, translator);
+                    }
                     res.send({ status: true, message: "Quote added successfully.", data: save_ap_quote });
                 } else {
                     res.send({ message: translator.getStr('SomethingWrong'), status: false });

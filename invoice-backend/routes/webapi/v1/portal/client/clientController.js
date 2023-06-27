@@ -457,25 +457,40 @@ module.exports.getClientForTable = async function (req, res) {
         try {
             var requestObject = req.body;
             var clientConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientSchema);
-            let query_where = {
-                is_delete: requestObject.is_delete,
+
+            let start = parseInt(requestObject.start);
+            var perpage = parseInt(requestObject.length);
+
+            var columnName = (requestObject.sort != undefined && requestObject.sort != '') ? requestObject.sort.field : '';
+            var columnOrder = (requestObject.sort != undefined && requestObject.sort != '') ? requestObject.sort.order : '';
+            var sort = {};
+            sort[columnName] = (columnOrder == 'asc') ? 1 : -1;
+
+            let match = { is_delete: requestObject.is_delete };
+            var query = {
+                $or: [
+                    { "client_name": new RegExp(requestObject.search, 'i') },
+                    { "client_number": new RegExp(requestObject.search, 'i') },
+                    { "client_email": new RegExp(requestObject.search, 'i') },
+                    { "approver.userfullname": new RegExp(requestObject.search, 'i') },
+                    { "client_cost_cost.value": new RegExp(requestObject.search, 'i') },
+                    { "department_name": new RegExp(requestObject.search, 'i') },
+                ]
             };
-            var getdata = await clientConnection.aggregate([
-                {
-                    $match: query_where
-                },
+            var get_data = await clientConnection.aggregate([
+                { $match: match },
                 {
                     $lookup: {
                         from: collectionConstant.INVOICE_USER,
                         localField: "approver_id",
                         foreignField: "_id",
-                        as: "invoice_user"
+                        as: "approver"
                     }
                 },
                 {
                     $unwind: {
                         preserveNullAndEmptyArrays: true,
-                        path: "$invoice_user"
+                        path: "$approver"
                     }
                 },
                 {
@@ -483,26 +498,30 @@ module.exports.getClientForTable = async function (req, res) {
                         from: collectionConstant.COSTCODES,
                         localField: "client_cost_cost_id",
                         foreignField: "_id",
-                        as: "costcode"
+                        as: "client_cost_cost"
                     }
                 },
                 {
                     $unwind: {
                         preserveNullAndEmptyArrays: true,
-                        path: "$costcode"
+                        path: "$client_cost_cost"
                     }
                 },
-                { $sort: { created_at: -1 } }
-            ]);
-            // var getdata = await clientConnection.find({ is_delete: requestObject.is_delete });
-            if (getdata) {
-                res.send(getdata);
-            } else {
-                res.send([]);
-            }
+                { $sort: sort },
+                { $match: query },
+                { $limit: perpage + start },
+                { $skip: start },
+            ]).collation({ locale: "en_US" });
+            let total_count = await clientConnection.find(match).countDocuments();
+            let pager = {
+                start: start,
+                length: perpage,
+                total: total_count
+            };
+            res.send({ status: true, data: get_data, pager });
         } catch (e) {
             console.log(e);
-            res.send([]);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false, error: e });
         } finally {
             connection_db_api.close();
         }
@@ -576,7 +595,7 @@ module.exports.checkImportClient = async function (req, res) {
                         }
                         var allowImport = true;
                         for (let m = 0; m < data.length; m++) {
-                            var get_one = await clientConnection.findOne({ client_name: data[m].client_name }, { name: 1, number: 1 });
+                            var get_one = await clientConnection.findOne({ client_name: data[m].client_name, is_delete: 0 });
                             if (get_one != null) {
                                 allowImport = false;
                                 exitdata.push({ message: 'Already exist', valid: false, data: data[m], name: data[m].client_name });
@@ -608,7 +627,7 @@ module.exports.importClient = async function (req, res) {
             var clientConnection = connection_db_api.model(collectionConstant.INVOICE_CLIENT, clientSchema);
             let reqObject = [];
             for (let i = 0; i < requestObject.length; i++) {
-                let one_client = await clientConnection.findOne({ client_name: requestObject[i].data.client_name });
+                let one_client = await clientConnection.findOne({ client_name: requestObject[i].data.client_name, is_delete: 0 });
                 if (one_client) { } else {
                     reqObject.push({
                         client_name: requestObject[i].data.client_name,

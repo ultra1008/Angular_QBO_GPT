@@ -110,11 +110,12 @@
                                             <app-loading></app-loading>
                                         </div>
                                         <div *ngIf="!documentsServices?.isTblLoading" class="no-results"
-                                            [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-                                            {{'COMMON.LISTING.EPMTY' | translate}}
+                                            [style.display]="documentList.length === 0 ? '' : 'none'">
+                                            {{'COMMON.LISTING.EMPTY' | translate}}
                                         </div>
-                                        <mat-paginator #paginator [length]="dataSource.filteredData.length"
-                                            [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
+                                        <mat-paginator #paginator [length]="pager!.total"
+                                            [pageIndex]="tableRequest.pageIndex" [pageSize]="tableRequest.pageSize"
+                                            [pageSizeOptions]="[5, 10, 25, 100]" (page)="changePage($event)">
                                         </mat-paginator>
                                     </div>
                                 </mat-tab>
@@ -205,11 +206,12 @@
                                             <app-loading></app-loading>
                                         </div>
                                         <div *ngIf="!documentsServices?.isTblLoading" class="no-results"
-                                            [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-                                            {{'COMMON.LISTING.EPMTY' | translate}}
+                                            [style.display]="documentList.length === 0 ? '' : 'none'">
+                                            {{'COMMON.LISTING.EMPTY' | translate}}
                                         </div>
-                                        <mat-paginator #paginator [length]="dataSource.filteredData.length"
-                                            [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
+                                        <mat-paginator #paginator [length]="pager!.total"
+                                            [pageIndex]="tableRequest.pageIndex" [pageSize]="tableRequest.pageSize"
+                                            [pageSizeOptions]="[5, 10, 25, 100]" (page)="changePage($event)">
                                         </mat-paginator>
                                     </div>
 
@@ -301,11 +303,12 @@
                                             <app-loading></app-loading>
                                         </div>
                                         <div *ngIf="!documentsServices?.isTblLoading" class="no-results"
-                                            [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-                                            {{'COMMON.LISTING.EPMTY' | translate}}
+                                            [style.display]="documentList.length === 0 ? '' : 'none'">
+                                            {{'COMMON.LISTING.EMPTY' | translate}}
                                         </div>
-                                        <mat-paginator #paginator [length]="dataSource.filteredData.length"
-                                            [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
+                                        <mat-paginator #paginator [length]="pager!.total"
+                                            [pageIndex]="tableRequest.pageIndex" [pageSize]="tableRequest.pageSize"
+                                            [pageSizeOptions]="[5, 10, 25, 100]" (page)="changePage($event)">
                                         </mat-paginator>
                                     </div>
                                 </mat-tab>
@@ -396,11 +399,12 @@
                                             <app-loading></app-loading>
                                         </div>
                                         <div *ngIf="!documentsServices?.isTblLoading" class="no-results"
-                                            [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-                                            {{'COMMON.LISTING.EPMTY' | translate}}
+                                            [style.display]="documentList.length === 0 ? '' : 'none'">
+                                            {{'COMMON.LISTING.EMPTY' | translate}}
                                         </div>
-                                        <mat-paginator #paginator [length]="dataSource.filteredData.length"
-                                            [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
+                                        <mat-paginator #paginator [length]="pager!.total"
+                                            [pageIndex]="tableRequest.pageIndex" [pageSize]="tableRequest.pageSize"
+                                            [pageSizeOptions]="[5, 10, 25, 100]" (page)="changePage($event)">
                                         </mat-paginator>
                                     </div>
                                 </mat-tab>
@@ -491,11 +495,12 @@
                                             <app-loading></app-loading>
                                         </div>
                                         <div *ngIf="!documentsServices?.isTblLoading" class="no-results"
-                                            [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
-                                            {{'COMMON.LISTING.EPMTY' | translate}}
+                                            [style.display]="documentList.length === 0 ? '' : 'none'">
+                                            {{'COMMON.LISTING.EMPTY' | translate}}
                                         </div>
-                                        <mat-paginator #paginator [length]="dataSource.filteredData.length"
-                                            [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
+                                        <mat-paginator #paginator [length]="pager!.total"
+                                            [pageIndex]="tableRequest.pageIndex" [pageSize]="tableRequest.pageSize"
+                                            [pageSizeOptions]="[5, 10, 25, 100]" (page)="changePage($event)">
                                         </mat-paginator>
                                     </div>
                                 </mat-tab>

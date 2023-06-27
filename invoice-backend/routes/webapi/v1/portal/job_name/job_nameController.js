@@ -172,7 +172,7 @@ module.exports.importjobname = async function (req, res) {
                         }
                         for (let m = 0; m < data.length; m++) {
                             requestObject = {};
-                            let onecategory_main = await jobnameConnection.findOne({ name: data[m].name, email_contact: data[m].email_contact, });
+                            let onecategory_main = await jobnameConnection.findOne({ name: data[m].name, email_contact: data[m].email_contact, is_delete: 0 });
                             if (onecategory_main == null) {
                                 requestObject.name = data[m].name;
                                 requestObject.email_contact = data[m].email_contact;

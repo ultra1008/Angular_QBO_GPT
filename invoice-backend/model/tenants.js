@@ -45,6 +45,15 @@ var tenantsSchema = new Schema({
         tenant_smtp_timeout: { type: Number, default: 0 },
         tenant_smtp_reply_to_mail: { type: String, default: "" }
     },
+    quickbook_online: {
+        client_id: { type: String, default: "" },
+        client_secret: { type: String, default: "" },
+        access_token: { type: String, default: "" },
+        realmId: { type: String, default: "" },
+        refresh_token: { type: String, default: "" },
+        access_token_expires_in: { type: Number, default: 0 },
+        refresh_token_expires_in: { type: Number, default: 0 },
+    },
     is_delete: { type: Number, default: 0 },
 }, { timestamps: true });
 
