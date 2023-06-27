@@ -20,6 +20,7 @@ import { JobTitleFormComponent } from './job-title-list/job-title-form/job-title
 import { JobTypeFormComponent } from './job-type-list/job-type-form/job-type-form.component';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { configData } from 'src/environments/configData';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-employeesettings',
@@ -60,7 +61,8 @@ export class EmployeesettingsComponent {
     private snackBar: MatSnackBar,
     public dialog: MatDialog,
     public httpCall: HttpCall,
-    public uiSpinner: UiSpinnerService
+    public uiSpinner: UiSpinnerService,
+    public commonService: CommonService,
   ) { }
 
   ngOnInit() {
@@ -445,7 +447,7 @@ export class EmployeesettingsComponent {
     setTimeout(() => {
       ev.target.value = null;
     }, 200);
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       const data = reader.result;
       workBook = XLSX.read(data, { type: 'binary' }) || '';
       jsonData = workBook.SheetNames.reduce((initial: any, name: any) => {
@@ -485,62 +487,59 @@ export class EmployeesettingsComponent {
         formData_profle.append('file', file);
 
         that.uiSpinner.spin$.next(true);
-        that.httpCall
-          .httpPostCall(apiurl, formData_profle)
-          .subscribe(function (params) {
-            if (params.status) {
-              that.uiSpinner.spin$.next(false);
-              that.exitData = params;
-              const dialogRef = that.dialog.open(ExistListingComponent, {
-                width: '750px',
-                // height: '500px', 
-                data: { data: that.exitData, tab: that.currrent_tab },
-                disableClose: true,
-              });
+        const data = await this.commonService.postRequestAPI(apiurl, formData_profle);
+        if (data.status) {
+          that.uiSpinner.spin$.next(false);
+          that.exitData = data;
+          const dialogRef = that.dialog.open(ExistListingComponent, {
+            width: '750px',
+            // height: '500px', 
+            data: { data: that.exitData, tab: that.currrent_tab },
+            disableClose: true,
+          });
 
-              dialogRef.afterClosed().subscribe((result: any) => {
-                if (result) {
-                  if (result.module) {
-                    if (result.module == 'document') {
-                      that.showDocType = false;
-                      setTimeout(() => {
-                        that.showDocType = true;
-                      }, 100);
-                    } else if (result.module == 'department') {
-                      that.showDepartmentType = false;
-                      setTimeout(() => {
-                        that.showDepartmentType = true;
-                      }, 100);
-                    } else if (result.module == 'jobtitle') {
-                      that.showJobtitle = false;
-                      setTimeout(() => {
-                        that.showJobtitle = true;
-                      }, 100);
-                    } else if (result.module == 'jobtype') {
-                      that.showJobtype = false;
-                      setTimeout(() => {
-                        that.showJobtype = true;
-                      }, 100);
-                    } else if (result.module == 'relationship') {
-                      that.showrelationship = false;
-                      setTimeout(() => {
-                        that.showrelationship = true;
-                      }, 100);
-                    } else if (result.module == 'language') {
-                      that.showlanguage = false;
-                      setTimeout(() => {
-                        that.showlanguage = true;
-                      }, 100);
-                    }
-                  }
+          dialogRef.afterClosed().subscribe((result: any) => {
+            if (result) {
+              if (result.module) {
+                if (result.module == 'document') {
+                  that.showDocType = false;
+                  setTimeout(() => {
+                    that.showDocType = true;
+                  }, 100);
+                } else if (result.module == 'department') {
+                  that.showDepartmentType = false;
+                  setTimeout(() => {
+                    that.showDepartmentType = true;
+                  }, 100);
+                } else if (result.module == 'jobtitle') {
+                  that.showJobtitle = false;
+                  setTimeout(() => {
+                    that.showJobtitle = true;
+                  }, 100);
+                } else if (result.module == 'jobtype') {
+                  that.showJobtype = false;
+                  setTimeout(() => {
+                    that.showJobtype = true;
+                  }, 100);
+                } else if (result.module == 'relationship') {
+                  that.showrelationship = false;
+                  setTimeout(() => {
+                    that.showrelationship = true;
+                  }, 100);
+                } else if (result.module == 'language') {
+                  that.showlanguage = false;
+                  setTimeout(() => {
+                    that.showlanguage = true;
+                  }, 100);
                 }
-              });
-            } else {
-              that.uiSpinner.spin$.next(false);
-              showNotification(that.snackBar, params.message, 'error');
-
+              }
             }
           });
+        } else {
+          that.uiSpinner.spin$.next(false);
+          showNotification(that.snackBar, data.message, 'error');
+
+        }
       }
     };
     reader.readAsBinaryString(file);

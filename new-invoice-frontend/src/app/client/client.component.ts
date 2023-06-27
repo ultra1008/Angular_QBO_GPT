@@ -440,7 +440,7 @@ export class ClientComponent
     let header: any;
     const reader = new FileReader();
     const file = ev.target.files[0];
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       const data = reader.result;
       workBook = XLSX.read(data, { type: 'binary' }) || '';
       jsonData = workBook.SheetNames.reduce((initial: any, name: any) => {
@@ -458,34 +458,25 @@ export class ClientComponent
       } else {
         const formData_profle = new FormData();
         formData_profle.append('file', file);
-        let apiurl = '';
-
-        apiurl = httpversion.PORTAL_V1 + httproutes.CHECK_IMPORT_CLIENT;
-
-
         that.uiSpinner.spin$.next(true);
-        that.httpCall
-          .httpPostCall(apiurl, formData_profle)
-          .subscribe(function (params) {
-            that.uiSpinner.spin$.next(false);
-            if (params.status) {
-
-              const dialogRef = that.dialog.open(ExitsDataListComponent, {
-                width: '750px',
-                height: '500px',
-                data: params,
-                disableClose: true,
-              });
-
-              dialogRef.afterClosed().subscribe((result: any) => {
-                // this.getDataTerms();
-                that.loadData();
-              });
-            } else {
-              showNotification(that.snackBar, params.message, 'error');
-              that.uiSpinner.spin$.next(false);
-            }
+        const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.CHECK_IMPORT_CLIENT, formData_profle);
+        that.uiSpinner.spin$.next(false);
+        if (data.status) {
+          const dialogRef = that.dialog.open(ExitsDataListComponent, {
+            width: '750px',
+            height: '500px',
+            data: data,
+            disableClose: true,
           });
+
+          dialogRef.afterClosed().subscribe((result: any) => {
+            // this.getDataTerms();
+            that.loadData();
+          });
+        } else {
+          showNotification(that.snackBar, data.message, 'error');
+          that.uiSpinner.spin$.next(false);
+        }
       }
     };
     reader.readAsBinaryString(file);

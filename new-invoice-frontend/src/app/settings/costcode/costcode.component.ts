@@ -240,7 +240,7 @@ export class CostcodeComponent
     let header: any;
     const reader = new FileReader();
     const file = ev.target.files[0];
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       const data = reader.result;
       workBook = XLSX.read(data, { type: 'binary' }) || '';
       jsonData = workBook.SheetNames.reduce((initial: any, name: any) => {
@@ -258,32 +258,26 @@ export class CostcodeComponent
       } else {
         const formData_profle = new FormData();
         formData_profle.append('file', file);
-        let apiurl = '';
-
-        apiurl = httpversion.PORTAL_V1 + httproutes.SETTINGS_CHECk_IMPORT_COSTCODE_DATA;
         that.uiSpinner.spin$.next(true);
-        that.httpCall
-          .httpPostCall(apiurl, formData_profle)
-          .subscribe(function (params) {
-            if (params.status) {
-              that.uiSpinner.spin$.next(false);
-              that.exitData = params;
-              const dialogRef = that.dialog.open(CostcodeExistListComponent, {
-                width: '750px',
-                height: '500px',
-                // data: that.exitData,
-                data: { data: that.exitData },
-                disableClose: true,
-              });
-
-              dialogRef.afterClosed().subscribe((result: any) => {
-                that.refresh();
-              });
-            } else {
-              showNotification(that.snackBar, params.message, 'error');
-              that.uiSpinner.spin$.next(false);
-            }
+        const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.SETTINGS_CHECk_IMPORT_COSTCODE_DATA, formData_profle);
+        that.uiSpinner.spin$.next(false);
+        if (data.status) {
+          that.exitData = data;
+          const dialogRef = that.dialog.open(CostcodeExistListComponent, {
+            width: '750px',
+            height: '500px',
+            // data: that.exitData,
+            data: { data: that.exitData },
+            disableClose: true,
           });
+
+          dialogRef.afterClosed().subscribe((result: any) => {
+            that.refresh();
+          });
+        } else {
+          showNotification(that.snackBar, data.message, 'error');
+          that.uiSpinner.spin$.next(false);
+        }
       }
     };
     reader.readAsBinaryString(file);

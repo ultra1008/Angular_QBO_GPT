@@ -8,6 +8,7 @@ import { showNotification, swalWithBootstrapButtons } from 'src/consts/utils';
 import { SettingsService } from '../settings.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-documentview',
@@ -27,7 +28,7 @@ export class DocumentviewComponent {
   Compnay_Equipment_Delete_No = "";
 
   constructor (private router: Router, private formBuilder: FormBuilder, public httpCall: HttpCall, private snackBar: MatSnackBar,
-    public SettingsServices: SettingsService, public translate: TranslateService) {
+    public SettingsServices: SettingsService, public translate: TranslateService, public commonService: CommonService) {
 
   }
 
@@ -66,10 +67,7 @@ export class DocumentviewComponent {
           }
         }
       });
-
-
   }
-
 
   back() {
     this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
@@ -135,18 +133,15 @@ export class DocumentviewComponent {
 
   }
 
-  updateSetting(objectForEdit: any) {
+  async updateSetting(objectForEdit: any) {
     let that = this;
     objectForEdit._id = that.setting_id;
-    this.httpCall
-      .httpPostCall(httpversion.PORTAL_V1 + httproutes.INVOICE_OTHER_SETTING_UPDATE_ALERTS, objectForEdit)
-      .subscribe(function (data) {
-        if (data.status) {
-          showNotification(this.snackBar, data.message, 'success');
-        } else {
-          showNotification(this.snackBar, data.message, 'error');
-        }
-      });
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.INVOICE_OTHER_SETTING_UPDATE_ALERTS, objectForEdit);
+    if (data.status) {
+      showNotification(this.snackBar, data.message, 'success');
+    } else {
+      showNotification(this.snackBar, data.message, 'error');
+    }
   }
 
   numberOnly(event: any): boolean {

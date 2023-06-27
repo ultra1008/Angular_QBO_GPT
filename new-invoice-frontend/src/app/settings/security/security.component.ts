@@ -10,6 +10,7 @@ import { SettingsService } from '../settings.service';
 import { configData } from 'src/environments/configData';
 import { AppComponent } from 'src/app/app.component';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-security',
@@ -36,7 +37,8 @@ export class SecurityComponent {
     private snackBar: MatSnackBar,
     public SettingsServices: SettingsService,
     public translate: TranslateService,
-    public myapp: AppComponent
+    public myapp: AppComponent,
+    private commonService: CommonService,
   ) { }
 
   ngOnInit(): void {
@@ -133,22 +135,16 @@ export class SecurityComponent {
       });
   }
 
-  updateSetting(objectForEdit: any) {
+  async updateSetting(objectForEdit: any) {
     let that = this;
     objectForEdit._id = that.setting_id;
-    that.httpCall
-      .httpPostCall(
-        httpversion.PORTAL_V1 + httproutes.PORTAL_SETTING_UPDATE,
-        objectForEdit
-      )
-      .subscribe(function (data) {
-        if (data.status) {
-          showNotification(that.snackBar, data.message, 'success');
-          that.myapp.updateIdealTimeout();
-        } else {
-          showNotification(that.snackBar, data.message, 'error');
-        }
-      });
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.CHECK_IMPORT_USER, objectForEdit);
+    if (data.status) {
+      showNotification(that.snackBar, data.message, 'success');
+      that.myapp.updateIdealTimeout();
+    } else {
+      showNotification(that.snackBar, data.message, 'error');
+    }
   }
 
   modelChangeOtp(event: any) {

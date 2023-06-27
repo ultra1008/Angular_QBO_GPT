@@ -10,6 +10,7 @@ import { swalWithBootstrapButtons, showNotification } from 'src/consts/utils';
 import { configData } from 'src/environments/configData';
 import { SettingsService } from '../settings.service';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-alerts',
@@ -74,15 +75,11 @@ export class AlertsComponent implements OnInit {
     private router: Router,
     private snackBar: MatSnackBar,
     public SettingsServices: SettingsService,
-    public myapp: AppComponent
-  ) {
+    public commonService: CommonService,
+    public myapp: AppComponent) {
     this.translate.stream(['']).subscribe((textarray) => {
-      this.Project_Settings_Alert_Sure_Want_Change = this.translate.instant(
-        'SETTINGS.SETTINGS_OTHER_OPTION.ALERTS_MODULE.ALL_PROJECT'
-      );
-      this.Document_Settings_Alert_Sure_Want_Change = this.translate.instant(
-        'SETTINGS.SETTINGS_OTHER_OPTION.ALERTS_MODULE.ALL_DOCUMENT'
-      );
+      this.Project_Settings_Alert_Sure_Want_Change = this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.ALERTS_MODULE.ALL_PROJECT');
+      this.Document_Settings_Alert_Sure_Want_Change = this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.ALERTS_MODULE.ALL_DOCUMENT');
     });
   }
 
@@ -359,25 +356,18 @@ export class AlertsComponent implements OnInit {
       });
   }
 
-  updateSetting(objectForEdit: any) {
+  async updateSetting(objectForEdit: any) {
     let that = this;
     objectForEdit._id = that.setting_id;
-    this.httpCall
-      .httpPostCall(
-        httpversion.PORTAL_V1 +
-        httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTING_UPDATE_ALERTS,
-        objectForEdit
-      )
-      .subscribe(function (data) {
-        if (data.status) {
-          showNotification(that.snackBar, data.message, 'success');
-        } else {
-          showNotification(that.snackBar, data.message, 'error');
-        }
-      });
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTING_UPDATE_ALERTS, objectForEdit);
+    if (data.status) {
+      showNotification(that.snackBar, data.message, 'success');
+    } else {
+      showNotification(that.snackBar, data.message, 'error');
+    }
   }
 
-  saveSettings() {
+  async saveSettings() {
     let that = this;
     let tempSettings = this.settingObject;
     tempSettings.Pending_items.setting_value = that.Pending_items_value;
@@ -401,21 +391,14 @@ export class AlertsComponent implements OnInit {
       _id: that.setting_id,
       settings: tempSettings,
     };
-    this.httpCall
-      .httpPostCall(
-        httpversion.PORTAL_V1 +
-        httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTING_UPDATE_ALERTS,
-        reqObject
-      )
-      .subscribe(function (data) {
-        if (data.status) {
-          showNotification(that.snackBar, data.message, 'success');
-          that.settingObject = tempSettings;
-        } else {
-          tempSettings = that.settingObject;
-          showNotification(that.snackBar, data.message, 'error');
-        }
-      });
+    const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.PORTAL_ROVUK_INVOICE_OTHER_SETTING_UPDATE_ALERTS, reqObject);
+    if (data.status) {
+      showNotification(that.snackBar, data.message, 'success');
+      that.settingObject = tempSettings;
+    } else {
+      tempSettings = that.settingObject;
+      showNotification(that.snackBar, data.message, 'error');
+    }
   }
 
   back() {

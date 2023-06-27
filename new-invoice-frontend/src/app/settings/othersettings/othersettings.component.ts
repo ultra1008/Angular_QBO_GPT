@@ -451,7 +451,7 @@ export class OthersettingsComponent implements OnInit {
     setTimeout(() => {
       ev.target.value = null;
     }, 200);
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       const data = reader.result;
       workBook = XLSX.read(data, { type: 'binary' }) || '';
       jsonData = workBook.SheetNames.reduce((initial: any, name: any) => {
@@ -481,53 +481,50 @@ export class OthersettingsComponent implements OnInit {
         formData_profle.append('file', file);
 
         that.uiSpinner.spin$.next(true);
-        that.httpCall
-          .httpPostCall(apiurl, formData_profle)
-          .subscribe(function (params) {
-            if (params.status) {
-              that.uiSpinner.spin$.next(false);
-              const dialogRef = that.dialog.open(OtherExistsListingComponent, {
-                width: '750px',
-                height: '500px',
-                data: { data: params, tab: that.currrent_tab },
-                disableClose: true,
-              });
+        const data = await this.commonService.postRequestAPI(apiurl, formData_profle);
+        that.uiSpinner.spin$.next(false);
+        if (data.status) {
+          const dialogRef = that.dialog.open(OtherExistsListingComponent, {
+            width: '750px',
+            height: '500px',
+            data: { data: data, tab: that.currrent_tab },
+            disableClose: true,
+          });
 
-              dialogRef.afterClosed().subscribe((result: any) => {
-                if (result.module) {
-                  if (result.module == 'Terms') {
-                    that.showTerms = false;
-                    setTimeout(() => {
-                      that.showTerms = true;
-                    }, 100);
-                  } else if (result.module == 'Tax rate') {
-                    that.showTaxRate = false;
-                    setTimeout(() => {
-                      that.showTaxRate = true;
-                    }, 100);
-                  } else if (result.module == 'Documents') {
-                    that.showDocument = false;
-                    setTimeout(() => {
-                      that.showDocument = true;
-                    }, 100);
-                  } else if (result.module == 'Vendor type') {
-                    that.showVendorType = false;
-                    setTimeout(() => {
-                      that.showVendorType = true;
-                    }, 100);
-                  } else if (result.module == 'Class name') {
-                    that.showClassName = false;
-                    setTimeout(() => {
-                      that.showClassName = true;
-                    }, 100);
-                  }
-                }
-              });
-            } else {
-              showNotification(that.snackBar, params.message, 'error');
-              that.uiSpinner.spin$.next(false);
+          dialogRef.afterClosed().subscribe((result: any) => {
+            if (result.module) {
+              if (result.module == 'Terms') {
+                that.showTerms = false;
+                setTimeout(() => {
+                  that.showTerms = true;
+                }, 100);
+              } else if (result.module == 'Tax rate') {
+                that.showTaxRate = false;
+                setTimeout(() => {
+                  that.showTaxRate = true;
+                }, 100);
+              } else if (result.module == 'Documents') {
+                that.showDocument = false;
+                setTimeout(() => {
+                  that.showDocument = true;
+                }, 100);
+              } else if (result.module == 'Vendor type') {
+                that.showVendorType = false;
+                setTimeout(() => {
+                  that.showVendorType = true;
+                }, 100);
+              } else if (result.module == 'Class name') {
+                that.showClassName = false;
+                setTimeout(() => {
+                  that.showClassName = true;
+                }, 100);
+              }
             }
           });
+        } else {
+          showNotification(that.snackBar, data.message, 'error');
+          that.uiSpinner.spin$.next(false);
+        }
       }
     };
     reader.readAsBinaryString(file);
