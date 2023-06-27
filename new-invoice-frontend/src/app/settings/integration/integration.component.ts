@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { CommonService } from 'src/app/services/common.service';
+import { httproutes, httpversion } from 'src/consts/httproutes';
 import { icon } from 'src/consts/icon';
 import { WEB_ROUTES } from 'src/consts/routes';
 
@@ -9,12 +11,21 @@ import { WEB_ROUTES } from 'src/consts/routes';
   styleUrls: ['./integration.component.scss']
 })
 export class IntegrationComponent {
-
   qboIcon: any = icon.QUICKBOOKS_ONLINE_LOGO;
   qbdIcon: any = icon.QUICKBOOKS_DESKTOP_LOGO;
+  onlineLoggedIn = true;
+  desktopLoggedIn = true;
 
-  constructor(private router: Router) {
+  constructor (private router: Router, private commonService: CommonService) {
+    this.getCompanyTenants();
+  }
 
+  async getCompanyTenants() {
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_COMPNAY_SMTP);
+    if (data.status) {
+      this.onlineLoggedIn = data.data.is_quickbooks_online == true;
+      this.desktopLoggedIn = data.data.is_quickbooks_desktop == true;
+    }
   }
 
   clickOnCard(type: any) {

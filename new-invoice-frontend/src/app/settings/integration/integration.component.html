@@ -29,13 +29,15 @@
                         <div class="main-cust-setting-div">
 
                             <div class="row">
-                                <div class="card col-xl-4" style="margin: 5px;" (click)="clickOnCard('qbo')">
+                                <div class="card col-xl-4" style="margin: 5px;" (click)="clickOnCard('qbo')"
+                                    *ngIf="!desktopLoggedIn">
                                     <div class="card-body">
                                         <img src="{{qboIcon}}" alt="" style="width:90%; object-fit: cover;" />
                                         <h5 class="card-title mt-3 custom-card-title">QBO</h5>
                                     </div>
                                 </div>
-                                <div class="card col-xl-4" style="margin: 5px;" (click)="clickOnCard('qbd')">
+                                <div class="card col-xl-4" style="margin: 5px;" (click)="clickOnCard('qbd')"
+                                    *ngIf="!onlineLoggedIn">
                                     <div class="card-body">
                                         <img src="{{qbdIcon}}" alt="" style="width:90%; object-fit: cover;" />
                                         <h5 class="card-title mt-3 custom-card-title">QuickBooks Desktop</h5>

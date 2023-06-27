@@ -282,7 +282,7 @@ export enum httproutes {
 
   //QuickBook Module
   QUICKBOOK_SAVE_INFO = "savequickbookinfo",
-  QUICKBOOK_LOGOUT = "/webapi/v1/quickbookslogout",
+  QUICKBOOK_LOGOUT = "quickbookslogout",
   QUICKBOOK_ISCONNECT = "/webapi/v1/isConnecttoQBO",
   QUICKBOOK_CALLBACK = "callback",
 

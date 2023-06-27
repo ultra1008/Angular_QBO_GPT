@@ -142,43 +142,49 @@ module.exports.isConnectToQBO = async function (req, res) {
 };
 
 module.exports.logout = async function (req, res) {
-    console.log('~~~~~~~~ logout');
-    var translator = new common.Language('en');
-    let admin_connection_db_api = await db_connection.connection_db_api(config.ADMIN_CONFIG);
-    try {
-        let requestObject = req.body;
-        oauthClient = new OAuthClient({
-            clientId: requestObject.client_id,
-            clientSecret: requestObject.client_secret,
-            environment: requestObject.environment,
-            redirectUri: requestObject.redirectUri,
-        });
-        let tenantsConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_TENANTS, tenantsSchema);
-        var updateObject = {
-            is_quickbooks_online: false,
-            'quickbook_online.client_id': '',
-            'quickbook_online.client_secret': '',
-            'quickbook_online.access_token': '',
-            'quickbook_online.realmId': '',
-            'quickbook_online.refresh_token': '',
-            'quickbook_online.access_token_expires_in': 0,
-            'quickbook_online.refresh_token_expires_in': 0,
-        };
-        if (oauthClient !== null && oauthClient.isAccessTokenValid()) {
-            oauthClient.revoke()
-                .then(async function (response) {
-                    oauthClient = null;
-                    await tenantsConnection.updateOne({ companycode: requestObject.companycode }, updateObject);
-                });
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.language);
+    if (decodedToken) {
+        let admin_connection_db_api = await db_connection.connection_db_api(config.ADMIN_CONFIG);
+        try {
+            let requestObject = req.body;
+            oauthClient = new OAuthClient({
+                clientId: requestObject.client_id,
+                clientSecret: requestObject.client_secret,
+                environment: requestObject.environment,
+                redirectUri: requestObject.redirectUri,
+            });
+            let tenantsConnection = admin_connection_db_api.model(collectionConstant.SUPER_ADMIN_TENANTS, tenantsSchema);
+            var updateObject = {
+                is_quickbooks_online: false,
+                'quickbook_online.client_id': '',
+                'quickbook_online.client_secret': '',
+                'quickbook_online.access_token': '',
+                'quickbook_online.realmId': '',
+                'quickbook_online.refresh_token': '',
+                'quickbook_online.access_token_expires_in': 0,
+                'quickbook_online.refresh_token_expires_in': 0,
+            };
+            console.log("sagar: ", oauthClient.isAccessTokenValid());
+            if (oauthClient.isAccessTokenValid()) {
+                oauthClient.revoke()
+                    .then(async function (response) {
+                        oauthClient = null;
+                        await tenantsConnection.updateOne({ companycode: decodedToken.companycode }, updateObject);
+                    });
+            }
+            if (!oauthClient.isAccessTokenValid()) {
+                oauthClient = null;
+                await tenantsConnection.updateOne({ companycode: decodedToken.companycode }, updateObject);
+            }
+            res.send({ message: 'Quickbook Online logout successfully.', status: true });
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
+        } finally {
+            admin_connection_db_api.close();
         }
-        if (oauthClient !== null && !oauthClient.isAccessTokenValid()) {
-            oauthClient = null;
-            await tenantsConnection.updateOne({ companycode: requestObject.companycode }, updateObject);
-        }
-    } catch (e) {
-        console.log(e);
-        res.send({ message: translator.getStr('SomethingWrong'), error: e, status: false });
-    } finally {
-        admin_connection_db_api.close();
+    } else {
+        res.send({ message: translator.getStr('InvalidUser'), status: false });
     }
 };

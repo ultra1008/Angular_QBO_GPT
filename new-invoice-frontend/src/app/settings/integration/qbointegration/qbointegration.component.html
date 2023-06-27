@@ -69,12 +69,12 @@
                                                 </div>
 
                                                 <div>
-                                                    <button mat-raised-button (click)="saveData()" id="blogin_id"
-                                                        color="primary">
+                                                    <button mat-raised-button (click)="login()"
+                                                        *ngIf="onlineLoggedIn === false" color="primary">
                                                         <i class="fas fa-sign-in-alt button-icon-position"></i>
                                                         {{'Login' | translate }}</button>
                                                     <button mat-raised-button (click)="logout()" color="warn"
-                                                        id="blogout_id" style="background-color: red;display: none;">
+                                                        *ngIf="onlineLoggedIn">
                                                         <i class="fas fa-sign-out-alt button-icon-position"></i>
                                                         {{'Logout' | translate }}</button>
                                                 </div>
