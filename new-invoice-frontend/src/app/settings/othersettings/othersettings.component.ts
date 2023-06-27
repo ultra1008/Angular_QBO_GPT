@@ -19,6 +19,7 @@ import { ClassNameFormComponent } from './class-name-listing/class-name-form/cla
 import { OtherExistsListingComponent } from './other-exists-listing/other-exists-listing.component';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { CommonService } from 'src/app/services/common.service';
+import { configData } from 'src/environments/configData';
 
 @Component({
   selector: 'app-othersettings',
@@ -50,7 +51,7 @@ export class OthersettingsComponent implements OnInit {
   isHideAddActionQBD = false;
   isHideArchiveActionQBD = false;
 
-  constructor(
+  constructor (
     private router: Router,
     public SettingsServices: SettingsService,
     private snackBar: MatSnackBar,
@@ -444,7 +445,7 @@ export class OthersettingsComponent implements OnInit {
     let that = this;
     let workBook: any;
     let jsonData = null;
-    let header_;
+    let header: any;
     const reader = new FileReader();
     const file = ev.target.files[0];
     setTimeout(() => {
@@ -456,89 +457,78 @@ export class OthersettingsComponent implements OnInit {
       jsonData = workBook.SheetNames.reduce((initial: any, name: any) => {
         const sheet = workBook.Sheets[name];
         initial[name] = XLSX.utils.sheet_to_json(sheet);
-        let data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-        header_ = data.shift();
-
+        const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        header = data.shift();
         return initial;
       }, {});
-      // const dataString = JSON.stringify(jsonData);
-      // const keys_OLD = ["item_type_name", "packaging_name", "terms_name"];
-      // if (JSON.stringify(keys_OLD.sort()) != JSON.stringify(header_.sort())) {
-      //   that.sb.openSnackBar(that.Company_Equipment_File_Not_Match, "error");
-      //   return;
-      // } else {
-      const formData_profle = new FormData();
-      formData_profle.append('file', file);
       let apiurl = '';
-
+      let keys_OLD;
       if (that.currrent_tab == 'Terms') {
         apiurl = httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_CHECK_IMPORT_TERMS;
-      } else if (that.currrent_tab == 'Tax rate') {
-        apiurl =
-          httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_CHECK_IMPORT_TEXT_RATE;
-      } else if (that.currrent_tab == 'Documents') {
-        apiurl =
-          httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_CHECK_IMPORT_DOCUMENT;
+        keys_OLD = configData.EXCEL_HEADER.TERMS;
       } else if (that.currrent_tab == 'Vendor type') {
-        apiurl =
-          httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_CHECK_IMPORT_VENDOR_TYPE;
-      } else if (that.currrent_tab == 'Job name') {
-        apiurl = httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_IMPORT;
+        apiurl = httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_CHECK_IMPORT_VENDOR_TYPE;
+        keys_OLD = configData.EXCEL_HEADER.VENDOR_TYPE;
       } else if (that.currrent_tab == 'Class name') {
         apiurl = httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_CHECK_IMPORT_CLASS;
+        keys_OLD = configData.EXCEL_HEADER.CLASS_NAME;
       }
+      if (JSON.stringify(keys_OLD?.sort()) != JSON.stringify(header.sort())) {
+        showNotification(that.snackBar, this.translate.instant('COMMON.IMPORT.INVALID_EXCEL'), 'error');
+        return;
+      } else {
+        const formData_profle = new FormData();
+        formData_profle.append('file', file);
 
-      that.uiSpinner.spin$.next(true);
-      that.httpCall
-        .httpPostCall(apiurl, formData_profle)
-        .subscribe(function (params) {
-          if (params.status) {
-            that.uiSpinner.spin$.next(false);
-            const dialogRef = that.dialog.open(OtherExistsListingComponent, {
-              width: '750px',
-              height: '500px',
-              data: { data: params, tab: that.currrent_tab },
-              disableClose: true,
-            });
+        that.uiSpinner.spin$.next(true);
+        that.httpCall
+          .httpPostCall(apiurl, formData_profle)
+          .subscribe(function (params) {
+            if (params.status) {
+              that.uiSpinner.spin$.next(false);
+              const dialogRef = that.dialog.open(OtherExistsListingComponent, {
+                width: '750px',
+                height: '500px',
+                data: { data: params, tab: that.currrent_tab },
+                disableClose: true,
+              });
 
-            dialogRef.afterClosed().subscribe((result: any) => {
-              if (result.module) {
-                if (result.module == 'Terms') {
-                  that.showTerms = false;
-                  setTimeout(() => {
-                    that.showTerms = true;
-                  }, 100);
-                } else if (result.module == 'Tax rate') {
-                  that.showTaxRate = false;
-                  setTimeout(() => {
-                    that.showTaxRate = true;
-                  }, 100);
-                } else if (result.module == 'Documents') {
-                  that.showDocument = false;
-                  setTimeout(() => {
-                    that.showDocument = true;
-                  }, 100);
-                } else if (result.module == 'Vendor type') {
-                  that.showVendorType = false;
-                  setTimeout(() => {
-                    that.showVendorType = true;
-                  }, 100);
-                } else if (result.module == 'Class name') {
-                  that.showClassName = false;
-                  setTimeout(() => {
-                    that.showClassName = true;
-                  }, 100);
+              dialogRef.afterClosed().subscribe((result: any) => {
+                if (result.module) {
+                  if (result.module == 'Terms') {
+                    that.showTerms = false;
+                    setTimeout(() => {
+                      that.showTerms = true;
+                    }, 100);
+                  } else if (result.module == 'Tax rate') {
+                    that.showTaxRate = false;
+                    setTimeout(() => {
+                      that.showTaxRate = true;
+                    }, 100);
+                  } else if (result.module == 'Documents') {
+                    that.showDocument = false;
+                    setTimeout(() => {
+                      that.showDocument = true;
+                    }, 100);
+                  } else if (result.module == 'Vendor type') {
+                    that.showVendorType = false;
+                    setTimeout(() => {
+                      that.showVendorType = true;
+                    }, 100);
+                  } else if (result.module == 'Class name') {
+                    that.showClassName = false;
+                    setTimeout(() => {
+                      that.showClassName = true;
+                    }, 100);
+                  }
                 }
-              }
-            });
-            // that.openErrorDataDialog(params);
-
-          } else {
-            showNotification(that.snackBar, params.message, 'error');
-            that.uiSpinner.spin$.next(false);
-          }
-        });
-      // }
+              });
+            } else {
+              showNotification(that.snackBar, params.message, 'error');
+              that.uiSpinner.spin$.next(false);
+            }
+          });
+      }
     };
     reader.readAsBinaryString(file);
   }

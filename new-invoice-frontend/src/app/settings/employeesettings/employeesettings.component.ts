@@ -19,6 +19,7 @@ import { DepartmentFormComponent } from './department-list/department-form/depar
 import { JobTitleFormComponent } from './job-title-list/job-title-form/job-title-form.component';
 import { JobTypeFormComponent } from './job-type-list/job-type-form/job-type-form.component';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { configData } from 'src/environments/configData';
 
 @Component({
   selector: 'app-employeesettings',
@@ -438,7 +439,7 @@ export class EmployeesettingsComponent {
     let that = this;
     let workBook: any;
     let jsonData = null;
-    let header_;
+    let header: any;
     const reader = new FileReader();
     const file = ev.target.files[0];
     setTimeout(() => {
@@ -451,94 +452,96 @@ export class EmployeesettingsComponent {
         const sheet = workBook.Sheets[name];
         initial[name] = XLSX.utils.sheet_to_json(sheet);
         let data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-        header_ = data.shift();
-
+        header = data.shift();
         return initial;
       }, {});
-      // const dataString = JSON.stringify(jsonData);
-      // const keys_OLD = ["item_type_name", "packaging_name", "terms_name"];
-      // if (JSON.stringify(keys_OLD.sort()) != JSON.stringify(header_.sort())) {
-      //   that.sb.openSnackBar(that.Company_Equipment_File_Not_Match, "error");
-      //   return;
-      // } else {
-      const formData_profle = new FormData();
-      formData_profle.append('file', file);
-      let apiurl = '';
       let that = this;
-
+      let apiurl = '';
+      let keys_OLD;
       if (that.currrent_tab == 'document') {
-        apiurl =
-          httpversion.PORTAL_V1 + httproutes.SETTINGS_CHECK_IMPORT__DOCUMENT_TYPE;
+        apiurl = httpversion.PORTAL_V1 + httproutes.SETTINGS_CHECK_IMPORT__DOCUMENT_TYPE;
+        keys_OLD = configData.EXCEL_HEADER.DOCUMENT_TYPE;
       } else if (that.currrent_tab == 'department') {
-        apiurl =
-          httpversion.PORTAL_V1 + httproutes.SETTINGS_CHECK_IMPORT_DEPARTMENTS;
+        apiurl = httpversion.PORTAL_V1 + httproutes.SETTINGS_CHECK_IMPORT_DEPARTMENTS;
+        keys_OLD = configData.EXCEL_HEADER.DEPARTMENT;
       } else if (that.currrent_tab == 'jobtitle') {
         apiurl = httpversion.PORTAL_V1 + httproutes.SETTINGS_CHECK_IMPORT_JOB_TITLE;
+        keys_OLD = configData.EXCEL_HEADER.JOB_TITLE;
       } else if (that.currrent_tab == 'jobtype') {
         apiurl = httpversion.PORTAL_V1 + httproutes.SETTINGS_CHECK_IMPORT_JOB_TYPE;
+        keys_OLD = configData.EXCEL_HEADER.JOB_TYPE;
       } else if (that.currrent_tab == 'relationship') {
-        apiurl =
-          httpversion.PORTAL_V1 + httproutes.SETTINGS_CHECK_IMPORT_RELATIONSHIP;
+        apiurl = httpversion.PORTAL_V1 + httproutes.SETTINGS_CHECK_IMPORT_RELATIONSHIP;
+        keys_OLD = configData.EXCEL_HEADER.RELATIONSHIP;
       } else if (that.currrent_tab == 'language') {
         apiurl = httpversion.PORTAL_V1 + httproutes.SETTINGS_CHECK_IMPORT_LANGUAGE;
+        keys_OLD = configData.EXCEL_HEADER.LANGUAGE;
       }
+      if (JSON.stringify(keys_OLD?.sort()) != JSON.stringify(header.sort())) {
+        showNotification(that.snackBar, this.translate.instant('COMMON.IMPORT.INVALID_EXCEL'), 'error');
+        return;
+      } else {
+        const formData_profle = new FormData();
+        formData_profle.append('file', file);
 
-      that.uiSpinner.spin$.next(true);
-      that.httpCall
-        .httpPostCall(apiurl, formData_profle)
-        .subscribe(function (params) {
-          if (params.status) {
-            that.uiSpinner.spin$.next(false);
-            that.exitData = params;
-            const dialogRef = that.dialog.open(ExistListingComponent, {
-              width: '750px',
-              // height: '500px', 
-              data: { data: that.exitData, tab: that.currrent_tab },
-              disableClose: true,
-            });
+        that.uiSpinner.spin$.next(true);
+        that.httpCall
+          .httpPostCall(apiurl, formData_profle)
+          .subscribe(function (params) {
+            if (params.status) {
+              that.uiSpinner.spin$.next(false);
+              that.exitData = params;
+              const dialogRef = that.dialog.open(ExistListingComponent, {
+                width: '750px',
+                // height: '500px', 
+                data: { data: that.exitData, tab: that.currrent_tab },
+                disableClose: true,
+              });
 
-            dialogRef.afterClosed().subscribe((result: any) => {
-              if (result.module) {
-                if (result.module == 'document') {
-                  that.showDocType = false;
-                  setTimeout(() => {
-                    that.showDocType = true;
-                  }, 100);
-                } else if (result.module == 'department') {
-                  that.showDepartmentType = false;
-                  setTimeout(() => {
-                    that.showDepartmentType = true;
-                  }, 100);
-                } else if (result.module == 'jobtitle') {
-                  that.showJobtitle = false;
-                  setTimeout(() => {
-                    that.showJobtitle = true;
-                  }, 100);
-                } else if (result.module == 'jobtype') {
-                  that.showJobtype = false;
-                  setTimeout(() => {
-                    that.showJobtype = true;
-                  }, 100);
-                } else if (result.module == 'relationship') {
-                  that.showrelationship = false;
-                  setTimeout(() => {
-                    that.showrelationship = true;
-                  }, 100);
-                } else if (result.module == 'language') {
-                  that.showlanguage = false;
-                  setTimeout(() => {
-                    that.showlanguage = true;
-                  }, 100);
+              dialogRef.afterClosed().subscribe((result: any) => {
+                if (result) {
+                  if (result.module) {
+                    if (result.module == 'document') {
+                      that.showDocType = false;
+                      setTimeout(() => {
+                        that.showDocType = true;
+                      }, 100);
+                    } else if (result.module == 'department') {
+                      that.showDepartmentType = false;
+                      setTimeout(() => {
+                        that.showDepartmentType = true;
+                      }, 100);
+                    } else if (result.module == 'jobtitle') {
+                      that.showJobtitle = false;
+                      setTimeout(() => {
+                        that.showJobtitle = true;
+                      }, 100);
+                    } else if (result.module == 'jobtype') {
+                      that.showJobtype = false;
+                      setTimeout(() => {
+                        that.showJobtype = true;
+                      }, 100);
+                    } else if (result.module == 'relationship') {
+                      that.showrelationship = false;
+                      setTimeout(() => {
+                        that.showrelationship = true;
+                      }, 100);
+                    } else if (result.module == 'language') {
+                      that.showlanguage = false;
+                      setTimeout(() => {
+                        that.showlanguage = true;
+                      }, 100);
+                    }
+                  }
                 }
-              }
-            });
-          } else {
-            that.uiSpinner.spin$.next(false);
-            showNotification(that.snackBar, params.message, 'error');
+              });
+            } else {
+              that.uiSpinner.spin$.next(false);
+              showNotification(that.snackBar, params.message, 'error');
 
-          }
-        });
-      // }
+            }
+          });
+      }
     };
     reader.readAsBinaryString(file);
   }

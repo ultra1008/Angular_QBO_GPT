@@ -14,7 +14,7 @@ import { CommonService } from 'src/app/services/common.service';
 })
 export class RolesettingsComponent {
   allRoles: any = [];
-  roleName: any;
+  roleName = '';
   constructor (private router: Router, public httpCall: HttpCall, private snackBar: MatSnackBar, private commonService: CommonService) { }
 
   ngOnInit() {

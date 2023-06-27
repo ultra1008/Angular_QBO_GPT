@@ -33,6 +33,7 @@ import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import * as XLSX from 'xlsx';
 import { RolePermission } from 'src/consts/common.model';
 import { TermModel } from 'src/app/settings/settings.model';
+import { configData } from 'src/environments/configData';
 @Component({
   selector: 'app-vendors-list',
   templateUrl: './vendors-list.component.html',
@@ -356,7 +357,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
     let that = this;
     let workBook: any;
     let jsonData = null;
-    let header_;
+    let header: any;
     const reader = new FileReader();
     const file = ev.target.files[0];
     setTimeout(() => {
@@ -368,45 +369,49 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
       jsonData = workBook.SheetNames.reduce((initial: any, name: any) => {
         const sheet = workBook.Sheets[name];
         initial[name] = XLSX.utils.sheet_to_json(sheet);
-        let data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-        header_ = data.shift();
-
+        const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        header = data.shift();
         return initial;
       }, {});
-      const formData_profle = new FormData();
-      formData_profle.append('file', file);
-      let apiurl = '';
+      const keys_OLD = configData.EXCEL_HEADER.VENDOR;
+      if (JSON.stringify(keys_OLD.sort()) != JSON.stringify(header.sort())) {
+        showNotification(that.snackBar, this.translate.instant('COMMON.IMPORT.INVALID_EXCEL'), 'error');
+        return;
+      } else {
+        const formData_profle = new FormData();
+        formData_profle.append('file', file);
+        let apiurl = '';
 
 
-      apiurl = httpversion.PORTAL_V1 + httproutes.IMPORT_CHECK_VENDOR;
+        apiurl = httpversion.PORTAL_V1 + httproutes.IMPORT_CHECK_VENDOR;
 
 
-      that.uiSpinner.spin$.next(true);
-      that.httpCall
-        .httpPostCall(apiurl, formData_profle)
-        .subscribe(function (params) {
-          if (params.status) {
-            that.uiSpinner.spin$.next(false);
-            that.exitData = params;
-            const dialogRef = that.dialog.open(VendorExistListComponent, {
-              width: '750px',
-              height: '500px',
-              // data: that.exitData,
-              data: { data: that.exitData },
-              disableClose: true,
-            });
+        that.uiSpinner.spin$.next(true);
+        that.httpCall
+          .httpPostCall(apiurl, formData_profle)
+          .subscribe(function (params) {
+            if (params.status) {
+              that.uiSpinner.spin$.next(false);
+              that.exitData = params;
+              const dialogRef = that.dialog.open(VendorExistListComponent, {
+                width: '750px',
+                height: '500px',
+                // data: that.exitData,
+                data: { data: that.exitData },
+                disableClose: true,
+              });
 
-            dialogRef.afterClosed().subscribe((result: any) => {
-              this.loadData();
-            });
-            // that.openErrorDataDialog(params);
+              dialogRef.afterClosed().subscribe((result: any) => {
+                this.loadData();
+              });
+              // that.openErrorDataDialog(params);
 
-          } else {
-            showNotification(that.snackBar, params.message, 'error');
-            that.uiSpinner.spin$.next(false);
-          }
-        });
-      // }
+            } else {
+              showNotification(that.snackBar, params.message, 'error');
+              that.uiSpinner.spin$.next(false);
+            }
+          });
+      }
     };
     reader.readAsBinaryString(file);
   }

@@ -65,7 +65,8 @@
         },
         "IMPORT": {
             "STATUS": "Status",
-            "NAME": "Name"
+            "NAME": "Name",
+            "INVALID_EXCEL": "Please upload correct excel file."
         },
         "LISTING": {
             "EMPTY": "No matching records found"
