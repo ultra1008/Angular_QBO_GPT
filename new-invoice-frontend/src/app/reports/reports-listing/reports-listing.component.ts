@@ -175,7 +175,7 @@ export class ReportsListingComponent extends UnsubscribeOnDestroyAdapter impleme
 
   exportExcel() {
     const exportData: Partial<TableElement>[] =
-      this.dataSource.filteredData.map((x: Report) => ({
+      this.invoiceList.map((x: Report) => ({
         'Invoice Date': x.invoice_date_epoch === 0 ? '' : formatDate(new Date(Number(x.invoice_date_epoch.toString()) * 1000), 'MM/dd/yyyy', 'en'),
         'Due Date': x.due_date_epoch === 0 ? '' : formatDate(new Date(Number(x.due_date_epoch.toString()) * 1000), 'MM/dd/yyyy', 'en'),
         'Vendor': x.vendor_data?.vendor_name,

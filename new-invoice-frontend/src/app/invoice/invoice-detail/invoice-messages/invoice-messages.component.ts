@@ -43,7 +43,7 @@ export class InvoiceMessagesComponent extends UnsubscribeOnDestroyAdapter implem
 
   type = '';
 
-  constructor(public httpClient: HttpClient, public dialog: MatDialog, public invoiceService: InvoiceService,
+  constructor (public httpClient: HttpClient, public dialog: MatDialog, public invoiceService: InvoiceService,
     private snackBar: MatSnackBar, public route: ActivatedRoute, private router: Router, private httpCall: HttpCall,
     private commonService: CommonService) {
     super();
@@ -151,8 +151,7 @@ export class InvoiceMessagesComponent extends UnsubscribeOnDestroyAdapter implem
 
   exportExcel() {
     const exportData: Partial<TableElement>[] =
-      this.dataSource.filteredData.map((x: any) =>
-      ({
+      this.dataSource.filteredData.map((x: any) => ({
         'Date & Time': MMDDYYYY_HH_MM_A(x.created_at),
         'Sender': x.last_message_sender.userfullname,
         'Last Message': x.message,
@@ -160,8 +159,7 @@ export class InvoiceMessagesComponent extends UnsubscribeOnDestroyAdapter implem
         'Due Date': MMDDYYYY_HH_MM_A(x.invoice.due_date_epoch),
         'Vendor': x.invoice.vendor.vendor_name,
         'Total Amount': formateAmount(x.invoice.invoice_total_amount),
-      })
-      );
+      }));
 
     TableExportUtil.exportToExcel(exportData, 'excel');
   }
@@ -180,7 +178,7 @@ export class ExampleDataSource extends DataSource<InvoiceMessage> {
   }
   filteredData: InvoiceMessage[] = [];
   renderedData: InvoiceMessage[] = [];
-  constructor(
+  constructor (
     public exampleDatabase: InvoiceService,
     public paginator: MatPaginator,
     public _sort: MatSort

@@ -503,7 +503,7 @@ export class UsersListingComponent
   exportExcel() {
     // key name with space add in brackets
     const exportData: Partial<TableElement>[] =
-      this.dataSource.filteredData.map((x: UserModel) => ({
+      this.userList.map((x: UserModel) => ({
         'User Name': x.userfullname || '',
         'Email': x.useremail || '',
         'Phone': this.phonenoFormat(x.userphone) || '',

@@ -431,7 +431,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   exportExcel() {
     // key name with space add in brackets
     const exportData: Partial<TableElement>[] =
-      this.dataSource.filteredData.map((x: VendorModel) => ({
+      this.vendorList.map((x: VendorModel) => ({
         'Vendor Name': x.vendor_name || '',
         'Vendor ID': x.vendor_id || '',
         'Customer ID': x.customer_id || '',

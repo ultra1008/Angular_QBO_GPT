@@ -324,7 +324,7 @@ export class ClientComponent
   exportExcel() {
     // key name with space add in brackets
     const exportData: Partial<TableElement>[] =
-      this.dataSource.filteredData.map((x: ClientJobModel) => ({
+      this.clientJobList.map((x: ClientJobModel) => ({
         'Client/Job Name': x.client_name || '',
         'Client Number': x.client_number || '',
         'Job Contact Email': x.client_email || '',
