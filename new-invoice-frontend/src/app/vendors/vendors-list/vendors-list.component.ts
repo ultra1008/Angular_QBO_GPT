@@ -470,7 +470,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
       );
       if (foundIndex != null && this.vendorService) {
         this.vendorService.dataChange.value[foundIndex].vendor_status = status;
-        this.refreshTable();
+        // this.refreshTable();
       }
     } else {
       showNotification(this.snackBar, data.message, 'error');

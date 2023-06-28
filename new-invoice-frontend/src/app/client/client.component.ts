@@ -367,9 +367,8 @@ export class ClientComponent
         (x) => x._id === client._id
       );
       if (foundIndex != null && this.clientService) {
-        this.clientService.dataChange.value[foundIndex].client_status =
-          status;
-        this.refreshTable();
+        this.clientService.dataChange.value[foundIndex].client_status = status;
+        // this.refreshTable();
       }
     } else {
       showNotification(this.snackBar, data.message, 'error');

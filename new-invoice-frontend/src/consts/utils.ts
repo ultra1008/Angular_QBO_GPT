@@ -15,7 +15,7 @@ export const swalWithBootstrapButtons = Swal.mixin({
   allowOutsideClick: false,
   imageUrl: './assets/images/rovukinvoice.png',
   imageHeight: 50,
-  imageAlt: 'SmartAccuPay'
+  imageAlt: 'SmartAccuPay',
 });
 
 export const swalWithBootstrapTwoButtons = Swal.mixin({

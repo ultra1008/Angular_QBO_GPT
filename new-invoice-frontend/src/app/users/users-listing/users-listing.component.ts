@@ -243,7 +243,7 @@ export class UsersListingComponent
       );
       if (foundIndex != null && this.userService) {
         this.userService.dataChange.value[foundIndex].userstatus = status;
-        this.refreshTable();
+        // this.refreshTable();
       }
     } else {
       showNotification(this.snackBar, data.message, 'error');
