@@ -83,23 +83,20 @@
                                     </ng-scrollbar>
                                     <div class="chat-message clearfix">
                                         <div class="form-group">
-                                            <form [formGroup]="form">
-                                                <mat-form-field class="example-full-width font-white-placeholder"
-                                                    appearance="outline">
+                                            <form [formGroup]="form" class="row">
+                                                <mat-form-field class="font-white-placeholder col" appearance="outline">
+                                                    <i matPrefix class="material-icons mat-prefix mx-1"
+                                                        (click)="handleAttachment()">attach_file</i>
+                                                    <i matPrefix class="material-icons mat-prefix mx-1"
+                                                        (click)="toggled = !toggled" [(emojiPickerIf)]="toggled"
+                                                        [emojiPickerDirection]="emojiPickerDirection"
+                                                        (emojiPickerSelect)="handleSelection($event)">insert_emoticon</i>
                                                     <input matInput formControlName="message"
                                                         placeholder="Enter message here.."
                                                         [mentionConfig]="{items:userList, labelKey:'userfullname'}"
                                                         [mentionListTemplate]="mentionListTemplate"
-                                                        (itemSelected)="onMentionSelected($event)">
-                                                    <button mat-icon-button matPrefix (click)="handleAttachment()">
-                                                        <i class="material-icons">attach_file</i>
-                                                    </button>
-                                                    <button mat-icon-button matPrefix (click)="toggled = !toggled"
-                                                        [(emojiPickerIf)]="toggled"
-                                                        [emojiPickerDirection]="emojiPickerDirection"
-                                                        (emojiPickerSelect)="handleSelection($event)">
-                                                        <i class="material-icons">insert_emoticon</i>
-                                                    </button>
+                                                        (itemSelected)="onMentionSelected($event)"
+                                                        (keyup.enter)="sendMessage()">
                                                     <button mat-icon-button matSuffix (click)="sendMessage()">
                                                         <mat-icon>send</mat-icon>
                                                     </button>
