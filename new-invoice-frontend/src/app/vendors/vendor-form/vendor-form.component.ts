@@ -15,7 +15,7 @@ import { httproutes, httpversion } from 'src/consts/httproutes';
 import { commonFileChangeEvent } from 'src/app/services/utils';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { RolePermission } from 'src/consts/common.model';
-import { CountryModel, TermModel } from 'src/app/settings/settings.model';
+import { CostCodeModel, CountryModel, TermModel } from 'src/app/settings/settings.model';
 
 @Component({
   selector: 'app-vendor-form',
@@ -33,6 +33,8 @@ export class VendorFormComponent {
   hide = true;
   agree = false;
   customForm?: UntypedFormGroup;
+  variablecostcodeList: Array<CostCodeModel> = [];
+  costcodeList: Array<CostCodeModel> = this.variablecostcodeList.slice();
   variablestermList: any = [];
   termsList: Array<TermModel> = this.variablestermList.slice();
   variablesVendorTypeList: any = [];
@@ -56,7 +58,7 @@ export class VendorFormComponent {
   isHideEditActionQBD = false;
   isHideArchiveActionQBD = false;
 
-  constructor(
+  constructor (
     private fb: UntypedFormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
@@ -98,6 +100,7 @@ export class VendorFormComponent {
     ];
     this.galleryOptions = [this.tmp_gallery];
     this.getVendorType();
+    this.getcostcode();
     this.getCompanyTenants();
     this.getTerms();
     if (this.id) {
@@ -169,6 +172,14 @@ export class VendorFormComponent {
     if (data.status) {
       this.variablestermList = data.data;
       this.termsList = this.variablestermList.slice();
+    }
+  }
+
+  async getcostcode() {
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ALL_COSTCODE);
+    if (data.status) {
+      this.variablecostcodeList = data.data;
+      this.costcodeList = this.variablecostcodeList.slice();
     }
   }
 

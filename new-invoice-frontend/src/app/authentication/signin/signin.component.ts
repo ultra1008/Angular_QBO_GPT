@@ -135,8 +135,8 @@ export class SigninComponent implements OnInit {
     this.uiSpinner.spin$.next(true);
     // formValues.companycode = 'R-' + formValues.companycode;
     const data = await this.commonService.postRequestAPI(httpversion.V1 + httproutes.GET_USER_COMPANY, formValues);
+    this.uiSpinner.spin$.next(false);
     if (data.status) {
-      this.uiSpinner.spin$.next(false);
       if (data.data.length === 0) {
         showNotification(this.snackBar, 'Invalid email or password!', 'error');
       } else if (data.data.length === 1) {

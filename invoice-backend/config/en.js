@@ -865,7 +865,7 @@ module.exports = {
         vendor_name: 'Name',
         vendor_phone: 'Phone',
         vendor_email: 'Email',
-        gl_account: 'GCL Account',
+        gl_account: 'GL Account',
         vendor_address: 'Address',
         vendor_address2: 'Address 2',
         vendor_city: 'City',

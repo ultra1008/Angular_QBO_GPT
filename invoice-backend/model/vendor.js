@@ -9,7 +9,7 @@ var vendorSchema = new Schema({
     vendor_phone: { type: String },
     vendor_email: { type: String },
     vendor_image: { type: String, default: "" },
-    vendor_cost_cost_id: { type: mongoose.ObjectId, default: '' },
+    gl_account: { type: mongoose.ObjectId, default: '' },
     vendor_address: { type: String },
     vendor_address2: { type: String, default: "" },
     vendor_city: { type: String },
@@ -33,7 +33,6 @@ var vendorSchema = new Schema({
     vendor_id: { type: String, default: "" },
     customer_id: { type: String, default: "" },
     vendor_type_id: { type: mongoose.ObjectId },
-    gl_account: { type: String, default: "" },
     isVendorfromQBO: { type: Boolean },
     is_quickbooks: { type: Boolean, default: false },
 }, { timestamps: false });
