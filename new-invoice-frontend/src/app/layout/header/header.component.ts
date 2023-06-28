@@ -478,7 +478,15 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
   }
 
   openInvoiceDetail(invoice: Invoice) {
+    this.searchControl.setValue('');
+    this.invoiceLoader = false;
+    this.openSearchDialog = false;
     this.router.navigate([WEB_ROUTES.INVOICE_DETAILS], { queryParams: { _id: invoice._id } });
+    if (window.location.pathname === WEB_ROUTES.INVOICE_DETAILS) {
+      setTimeout(() => {
+        location.reload();
+      }, 100);
+    }
   }
 
   numberWithCommas(amount: any) {
