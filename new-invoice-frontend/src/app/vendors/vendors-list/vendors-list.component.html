@@ -278,7 +278,7 @@
                                         <span class="truncate-text"><span class="mobile-label"
                                                 style="padding-left: 14px;">Attachment:</span>
                                             <div *ngIf="row.vendor_attachment">
-                                                <div class="row.vendor_attachment.length > 0">
+                                                <div *ngIf="row.vendor_attachment.length > 0">
                                                     <i class="fas fa-paperclip" style="color:grey; padding-left: 14px;"
                                                         (click)="viewAttachment(row)"></i>
                                                 </div>
