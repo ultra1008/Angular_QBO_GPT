@@ -87,23 +87,23 @@ export class SwitchCompanyComponent implements OnInit {
         localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.data.token);
         localStorage.setItem(localstorageconstants.COMPANYID, data.data.companydata._id);
         localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.data));
-        localStorage.setItem(localstorageconstants.LOGOUT, 'false');
 
-        sessionStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
-        localStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
-
-        setTimeout(() => {
-          if (data.data.UserData.useris_password_temp == true) {
-            this.router.navigate([WEB_ROUTES.FORCEFULLY_CHANGE_PASSWORD]);
-          } else {
-            console.log("sagar: ", window.location.pathname, "and", WEB_ROUTES.DASHBOARD, "====", window.location.pathname === WEB_ROUTES.DASHBOARD);
-            if (window.location.pathname === WEB_ROUTES.DASHBOARD) {
+        if (data.data.UserData.useris_password_temp == true) {
+          this.router.navigate([WEB_ROUTES.FORCEFULLY_CHANGE_PASSWORD]);
+        } else {
+          console.log("sagar: ", window.location.pathname, "and", WEB_ROUTES.DASHBOARD, "====", window.location.pathname === WEB_ROUTES.DASHBOARD);
+          if (window.location.pathname === WEB_ROUTES.DASHBOARD) {
+            setTimeout(() => {
               location.reload();
-            } else {
-              this.router.navigate([WEB_ROUTES.DASHBOARD]);
-            }
+            }, 200);
+          } else {
+            this.router.navigate([WEB_ROUTES.DASHBOARD]);
+            setTimeout(() => {
+              location.reload();
+            }, 200);
           }
-        }, 200);
+        }
+
       } else {
         showNotification(this.snackBar, data.message, 'error');
       }
