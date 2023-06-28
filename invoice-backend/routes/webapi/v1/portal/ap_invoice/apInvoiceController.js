@@ -471,7 +471,7 @@ module.exports.getOneAPInvoice = async function (req, res) {
                         accounting_info: "$accounting_info",
 
                         vendor_name: "$vendor_data.vendor_name",
-                        userfullname: { $ifNull: [{ $arrayElemAt: ["$assign_to_data.userfullname", 0] }, ""] },
+                        userfullname: "$assign_to_data.userfullname",
                     }
                 }
             ]);

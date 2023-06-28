@@ -63,10 +63,10 @@ export class MailFormComponent {
       cc: [[], [Validators.required]],
     });
     const userData = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!);
-    this.mailInfo.get("message")!.setValue(`
+    this.mailInfo.get("message")?.setValue(`
 -----------------------------------------------------------------------------\n
 ${userData.companydata.companyname}\n
-Vendor: ${data.vendor_data.vendor_name}\n
+Vendor: ${data.vendor_data?.vendor_name ?? ''}\n
 Invoice Number: ${data.invoice_no}\n
 Total Amount: $${numberWithCommas(data.invoice_total_amount.toFixed(2))}`);
 
