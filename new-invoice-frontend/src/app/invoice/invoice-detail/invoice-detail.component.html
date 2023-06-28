@@ -610,7 +610,7 @@
                                                   <div class="body">
                                                        <div *ngIf="role_permission.invoice.Edit" class="row mx-4">
                                                             <button mat-raised-button color="primary"
-                                                                 (click)="uploadInvoice()">
+                                                                 (click)="uploadSupportingDocument()">
                                                                  {{'DOCUMENT.ADD'| translate}}
                                                             </button>
                                                        </div>
@@ -620,7 +620,7 @@
                                                                  <div class="doc-file-type mx-4"
                                                                       [ngClass]="i !== 0 ? 'mt-2' : ''">
                                                                       <div class="list-unstyled">
-                                                                           <div (click)="gotoEdit(document)"
+                                                                           <div
                                                                                 class="m-1 d-flex justify-content-between">
                                                                                 <div class="d-flex">
                                                                                      <span
@@ -650,20 +650,29 @@
                                                                                 </span>
                                                                                 <div>
                                                                                      <td>
+                                                                                          <button mat-mini-fab
+                                                                                               color="primary"
+                                                                                               (click)="viewSupportingDocument(document)"
+                                                                                               class="mx-2">
+                                                                                               <mat-icon
+                                                                                                    class="col-white">
+                                                                                                    remove_red_eye</mat-icon>
+                                                                                          </button>
+                                                                                          <button mat-mini-fab
+                                                                                               color="primary"
+                                                                                               (click)="downloadDocument(document)">
+                                                                                               <mat-icon
+                                                                                                    class="col-white">
+                                                                                                    download</mat-icon>
+                                                                                          </button>
                                                                                           <button
                                                                                                *ngIf="role_permission.invoice.Delete"
                                                                                                mat-mini-fab color="warn"
+                                                                                               (click)="deleteSupportingDocument(document)"
                                                                                                class="mx-2">
                                                                                                <mat-icon
                                                                                                     class="col-white">
                                                                                                     delete</mat-icon>
-                                                                                          </button>
-                                                                                          <button mat-mini-fab
-                                                                                               color="primary"
-                                                                                               (click)="documentDocument(document)">
-                                                                                               <mat-icon
-                                                                                                    class="col-white">
-                                                                                                    download</mat-icon>
                                                                                           </button>
                                                                                      </td>
                                                                                 </div>

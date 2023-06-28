@@ -283,10 +283,6 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
     }
   }
 
-  gotoEdit(document: any) {
-    this.router.navigate([WEB_ROUTES.INVOICE_VIEW_DOCUMENT], { queryParams: { document: document.document_type, _id: document._id } });
-  }
-
   goToDashboard() {
     this.router.navigate([WEB_ROUTES.DASHBOARD]);
   }
@@ -304,9 +300,11 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
         dueDate = epochToDateTime(this.invoiceData.due_date_epoch);
       }
       let document_type = '';
-      const foundIndex = configData.DOCUMENT_TYPE_LIST.findIndex((x: any) => x.key === this.invoiceData.document_type);
-      if (foundIndex != null) {
-        document_type = configData.DOCUMENT_TYPE_LIST[foundIndex].name;
+      console.log("this.documentList: ", this.documentList);
+      const foundIndex = this.documentList.findIndex((x: any) => x.key === this.invoiceData.document_type);
+      console.log("foundIndex", foundIndex);
+      if (foundIndex != null && foundIndex != -1) {
+        document_type = this.documentList[foundIndex].name;
       }
 
       this.invoiceForm = this.fb.group({
@@ -632,7 +630,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
       });
   }
 
-  documentDocument(document: any) {
+  downloadDocument(document: any) {
     window.location.href = document.pdf_url;
   }
 
@@ -954,7 +952,7 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
     });
   }
 
-  uploadInvoice() {
+  uploadSupportingDocument() {
     const dialogRef = this.dialog.open(UploadInvoiceFormComponent, {
       width: '80%',
       data: {
@@ -964,8 +962,35 @@ export class InvoiceDetailComponent extends UnsubscribeOnDestroyAdapter {
     });
     this.subs.sink = dialogRef.afterClosed().subscribe((result: any) => {
       if (result.status) {
+        this.uiSpinner.spin$.next(true);
         this.getOneInvoice();
       }
     });
+  }
+
+  viewSupportingDocument(document: any) {
+    this.router.navigate([WEB_ROUTES.INVOICE_VIEW_DOCUMENT], { queryParams: { document: document.document_type, _id: document._id } });
+  }
+
+  async deleteSupportingDocument(document: any) {
+    this.uiSpinner.spin$.next(true);
+    let apiUrl = '';
+    if (document.document_type == configData.DOCUMENT_TYPES.po) {
+      apiUrl = httpversion.PORTAL_V1 + httproutes.DELETE_AP_PO;
+    } else if (document.document_type == configData.DOCUMENT_TYPES.quote) {
+      apiUrl = httpversion.PORTAL_V1 + httproutes.DELETE_AP_QUOTE;
+    } else if (document.document_type == configData.DOCUMENT_TYPES.packingSlip) {
+      apiUrl = httpversion.PORTAL_V1 + httproutes.DELETE_AP_PACKLING_SLIP;
+    } else if (document.document_type == configData.DOCUMENT_TYPES.receivingSlip) {
+      apiUrl = httpversion.PORTAL_V1 + httproutes.DELETE_AP_RECEVING_SLIP;
+    }
+    const data = await this.commonService.postRequestAPI(apiUrl, { _id: document._id, is_delete: 1 });
+    if (data.status) {
+      showNotification(this.snackBar, data.message, 'success');
+      this.getOneInvoice();
+    } else {
+      this.uiSpinner.spin$.next(false);
+      showNotification(this.snackBar, data.message, 'error');
+    }
   }
 }

@@ -13,6 +13,20 @@ const getOneAPQuote = (req, res, next) => {
     });
 };
 
+const deleteAPQuote = (req, res, next) => {
+    const validationRule = {
+        "is_delete": "required|integer",
+    };
+    validator(req.body, validationRule, {}, (err, status) => {
+        if (!status) {
+            res.send({ status: false, message: err });
+        } else {
+            next();
+        }
+    });
+};
+
 module.exports = {
     getOneAPQuote,
+    deleteAPQuote,
 };

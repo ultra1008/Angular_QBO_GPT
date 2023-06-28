@@ -324,32 +324,76 @@ module.exports.getOneAPInvoice = async function (req, res) {
                 {
                     $lookup: {
                         from: collectionConstant.AP_PO,
-                        localField: "_id",
-                        foreignField: "invoice_id",
+                        let: { id: "$_id" },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $and: [
+                                            { $eq: ["$invoice_id", "$$id"] },
+                                            { $eq: ["$is_delete", 0] }
+                                        ]
+                                    }
+                                },
+                            },
+                        ],
                         as: "po"
                     }
                 },
                 {
                     $lookup: {
                         from: collectionConstant.AP_QUOUTE,
-                        localField: "_id",
-                        foreignField: "invoice_id",
+                        let: { id: "$_id" },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $and: [
+                                            { $eq: ["$invoice_id", "$$id"] },
+                                            { $eq: ["$is_delete", 0] }
+                                        ]
+                                    }
+                                },
+                            },
+                        ],
                         as: "quote"
                     }
                 },
                 {
                     $lookup: {
                         from: collectionConstant.AP_PACKING_SLIP,
-                        localField: "_id",
-                        foreignField: "invoice_id",
+                        let: { id: "$_id" },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $and: [
+                                            { $eq: ["$invoice_id", "$$id"] },
+                                            { $eq: ["$is_delete", 0] }
+                                        ]
+                                    }
+                                },
+                            },
+                        ],
                         as: "packing_slip"
                     }
                 },
                 {
                     $lookup: {
                         from: collectionConstant.AP_RECEIVING_SLIP,
-                        localField: "_id",
-                        foreignField: "invoice_id",
+                        let: { id: "$_id" },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $and: [
+                                            { $eq: ["$invoice_id", "$$id"] },
+                                            { $eq: ["$is_delete", 0] }
+                                        ]
+                                    }
+                                },
+                            },
+                        ],
                         as: "receiving_slip"
                     }
                 },

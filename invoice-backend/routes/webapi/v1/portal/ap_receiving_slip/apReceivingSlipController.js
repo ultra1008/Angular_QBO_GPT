@@ -287,3 +287,34 @@ module.exports.saveAPOtherDocumentReceivingSlip = async function (req, res) {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
+
+module.exports.deleteAPReceivingSlip = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    var local_offset = Number(req.headers.local_offset);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var apReceivingSlipConnection = connection_db_api.model(collectionConstant.AP_RECEIVING_SLIP, apReceivingSlipSchema);
+            var id = requestObject._id;
+            delete requestObject._id;
+
+            requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+            requestObject.updated_by = decodedToken.UserData._id;
+            let update_ap_receiving_slip = await apReceivingSlipConnection.updateOne({ _id: ObjectID(id) }, requestObject);
+            if (update_ap_receiving_slip) {
+                res.send({ status: true, message: "Receiving Slip deleted successfully.", data: update_ap_receiving_slip });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};

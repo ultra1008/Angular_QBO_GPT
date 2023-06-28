@@ -295,3 +295,34 @@ module.exports.saveAPOtherDocumentPO = async function (req, res) {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
+
+module.exports.deleteAPPO = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    var local_offset = Number(req.headers.local_offset);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var apPOConnection = connection_db_api.model(collectionConstant.AP_PO, apPOSchema);
+            var id = requestObject._id;
+            delete requestObject._id;
+
+            requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+            requestObject.updated_by = decodedToken.UserData._id;
+            let update_ap_po = await apPOConnection.updateOne({ _id: ObjectID(id) }, requestObject);
+            if (update_ap_po) {
+                res.send({ status: true, message: "PO deleted successfully.", data: update_ap_po });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
