@@ -23,6 +23,7 @@ import { formatDate } from '@angular/common';
 import { TableExportUtil } from 'src/app/shared/tableExportUtil';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { RolePermission } from 'src/consts/common.model';
+import { sweetAlert } from 'src/consts/sweet_alert';
 
 @Component({
   selector: 'app-user-document',
@@ -116,6 +117,8 @@ export class UserDocumentComponent extends UnsubscribeOnDestroyAdapter implement
         confirmButtonText: "Yes",
         denyButtonText: "No",
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then(async (result: any) => {
         if (result.isConfirmed) {

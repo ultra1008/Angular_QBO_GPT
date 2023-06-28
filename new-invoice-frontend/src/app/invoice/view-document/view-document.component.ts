@@ -12,6 +12,8 @@ import { amountChange, epochToDateTime, numberWithCommas, showNotification, swal
 import { configData } from 'src/environments/configData';
 import * as  moment from "moment";
 import { TranslateService } from '@ngx-translate/core';
+import { sweetAlert } from 'src/consts/sweet_alert';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
 
 @Component({
   selector: 'app-view-document',
@@ -271,6 +273,8 @@ export class ViewDocumentComponent {
             confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
             denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
             allowOutsideClick: false,
+            background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+            color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
           })
           .then(async (result) => {
             if (result.isConfirmed) {
@@ -394,6 +398,8 @@ export class ViewDocumentComponent {
             confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
             denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
             allowOutsideClick: false,
+            background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+            color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
           })
           .then(async (result) => {
             if (result.isConfirmed) {
@@ -509,6 +515,8 @@ export class ViewDocumentComponent {
             confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
             denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
             allowOutsideClick: false,
+            background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+            color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
           })
           .then(async (result) => {
             if (result.isConfirmed) {
@@ -618,6 +626,8 @@ export class ViewDocumentComponent {
             confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
             denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
             allowOutsideClick: false,
+            background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+            color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
           })
           .then(async (result) => {
             if (result.isConfirmed) {
@@ -834,6 +844,8 @@ export class ViewDocumentComponent {
         confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
         denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then(async (result) => {
         if (result.isConfirmed) {

@@ -9,6 +9,8 @@ import { CommonService } from './services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { swalWithBootstrapButtons } from 'src/consts/utils';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { sweetAlert } from 'src/consts/sweet_alert';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +24,7 @@ export class AppComponent {
   lastPing?: Date;
   title = 'angular-idle-timeout';
 
-  constructor(public translate: TranslateService, public _router: Router, private idle: Idle, private keepalive: Keepalive,
+  constructor (public translate: TranslateService, public _router: Router, private idle: Idle, private keepalive: Keepalive,
     public commonService: CommonService) {
     this.translate.addLangs(['en', 'es']);
     this.translate.setDefaultLang('en');
@@ -81,7 +83,9 @@ export class AppComponent {
             confirmButtonText: 'Logout',
             denyButtonText: "Lock screen",
             showDenyButton: true,
-            allowOutsideClick: false
+            allowOutsideClick: false,
+            background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+            color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
           }).then((result) => {
             this.reset();
             if (result.value) {

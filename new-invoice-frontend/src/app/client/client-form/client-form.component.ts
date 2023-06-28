@@ -14,6 +14,7 @@ import { RolePermission } from 'src/consts/common.model';
 import { CostCodeModel, CountryModel, TermModel } from 'src/app/settings/settings.model';
 import { UserModel } from 'src/app/users/user.model';
 import { httproutes, httpversion } from 'src/consts/httproutes';
+import { sweetAlert } from 'src/consts/sweet_alert';
 
 @Component({
   selector: 'app-client-form',
@@ -158,6 +159,8 @@ export class ClientFormComponent {
           cancelButtonText: this.translate.instant('COMMON.ACTIONS.DONT_SAVE'),
           denyButtonText: this.translate.instant('COMMON.ACTIONS.CANCEL'),
           allowOutsideClick: false,
+          background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+          color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
         })
         .then((result) => {
           if (result.isConfirmed) {
@@ -191,6 +194,8 @@ export class ClientFormComponent {
         confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
         denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then(async (result) => {
         if (result.isConfirmed) {

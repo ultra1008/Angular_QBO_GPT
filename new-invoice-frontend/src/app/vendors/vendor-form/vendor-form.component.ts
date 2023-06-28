@@ -16,6 +16,7 @@ import { commonFileChangeEvent } from 'src/app/services/utils';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { RolePermission } from 'src/consts/common.model';
 import { CostCodeModel, CountryModel, TermModel } from 'src/app/settings/settings.model';
+import { sweetAlert } from 'src/consts/sweet_alert';
 
 @Component({
   selector: 'app-vendor-form',
@@ -224,6 +225,8 @@ export class VendorFormComponent {
         confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
         denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then((result) => {
         if (result.isConfirmed) {
@@ -305,6 +308,8 @@ export class VendorFormComponent {
           cancelButtonText: this.translate.instant('COMMON.ACTIONS.DONT_SAVE'),
           denyButtonText: this.translate.instant('COMMON.ACTIONS.CANCEL'),
           allowOutsideClick: false,
+          background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+          color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
         })
         .then((result) => {
           if (result.isConfirmed) {

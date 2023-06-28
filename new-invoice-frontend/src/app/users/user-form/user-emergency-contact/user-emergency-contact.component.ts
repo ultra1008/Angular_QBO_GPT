@@ -24,6 +24,7 @@ import { TableElement } from 'src/app/shared/TableElement';
 import { TableExportUtil } from 'src/app/shared/tableExportUtil';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { RolePermission } from 'src/consts/common.model';
+import { sweetAlert } from 'src/consts/sweet_alert';
 
 @Component({
   selector: 'app-user-emergency-contact',
@@ -121,6 +122,8 @@ export class UserEmergencyContactComponent extends UnsubscribeOnDestroyAdapter i
         confirmButtonText: "Yes",
         denyButtonText: "No",
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then(async (result) => {
         if (result.isConfirmed) {

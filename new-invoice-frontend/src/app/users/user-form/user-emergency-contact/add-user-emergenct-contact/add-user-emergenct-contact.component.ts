@@ -10,6 +10,7 @@ import { RolePermission } from 'src/consts/common.model';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { sweetAlert } from 'src/consts/sweet_alert';
 import { showNotification, swalWithBootstrapButtons } from 'src/consts/utils';
 
 @Component({
@@ -110,6 +111,8 @@ export class AddUserEmergenctContactComponent implements OnInit {
         cancelButtonText: this.translate.instant('COMMON.ACTIONS.DONT_SAVE'),
         denyButtonText: this.translate.instant('COMMON.ACTIONS.CANCEL'),
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then((result) => {
         if (result.isConfirmed) {

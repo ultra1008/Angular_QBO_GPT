@@ -14,13 +14,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { commonFileChangeEvent } from 'src/app/services/utils';
 import { WEB_ROUTES } from 'src/consts/routes';
-import {
-  amountChange,
-  numberWithCommas,
-  showNotification,
-  swalWithBootstrapTwoButtons,
-  timeDateToepoch,
-} from 'src/consts/utils';
+import { amountChange, numberWithCommas, showNotification, swalWithBootstrapTwoButtons, timeDateToepoch } from 'src/consts/utils';
 import { UserService } from '../user.service';
 import { configData } from 'src/environments/configData';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
@@ -34,6 +28,7 @@ import { UserRestoreFormComponent } from '../user-restore-form/user-restore-form
 import { MatDialog } from '@angular/material/dialog';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { RolePermission } from 'src/consts/common.model';
+import { sweetAlert } from 'src/consts/sweet_alert';
 @Component({
   selector: 'app-user-form',
   templateUrl: './user-form.component.html',
@@ -369,6 +364,8 @@ export class UserFormComponent
         confirmButtonText: 'Yes',
         denyButtonText: 'No',
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then((result) => {
         if (result.isConfirmed) {
