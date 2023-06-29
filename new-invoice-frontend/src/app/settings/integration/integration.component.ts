@@ -49,10 +49,6 @@ export class IntegrationComponent {
     this.router.navigate([WEB_ROUTES.QBD_INTEGRATION_SETTING]);
   }
 
-  clickOnCalculator() {
-    this.router.navigate(["settings/calculator"]);
-  }
-
   back() {
     this.router.navigate([WEB_ROUTES.SIDEMENU_SETTINGS]);
   }

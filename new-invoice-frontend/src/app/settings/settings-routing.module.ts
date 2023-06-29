@@ -18,7 +18,6 @@ import { MailboxFormComponent } from './mailbox/mailbox-form/mailbox-form.compon
 import { QbointegrationComponent } from './integration/qbointegration/qbointegration.component';
 import { QbdintegrationComponent } from './integration/qbdintegration/qbdintegration.component';
 import { QuickbooksAuthorizationComponent } from './integration/qbointegration/quickbooks-authorization/quickbooks-authorization.component';
-import { CalculatorComponent } from './integration/calculator/calculator.component';
 
 const routes: Routes = [
   {
@@ -90,8 +89,8 @@ const routes: Routes = [
     component: QbdintegrationComponent,
   },
   {
-    path: 'calculator',
-    component: CalculatorComponent,
+    path: 'view-integration',
+    component: QuickbooksAuthorizationComponent,
   },
 ];
 
