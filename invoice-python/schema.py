@@ -273,9 +273,8 @@ def schema_generator(mydb, schema_param):
 
 def find_relationship(inserted_info, token, api_base_url):
 
-    url = 'https://{}/webapi/v1/portal/makeapdocumentrelationship'.format(api_base_url)
+    url = '{}/webapi/v1/portal/makeapdocumentrelationship'.format(api_base_url)
     body = inserted_info
-
     headers = {'Authorization': token}
     x = requests.post(url, json = body, headers=headers, verify=False)
 

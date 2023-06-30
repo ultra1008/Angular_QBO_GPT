@@ -356,7 +356,35 @@ def process_invoice():
         if os.path.exists("./JSON/vector-{}.json".format(filepath)):
             os.remove("./JSON/vector-{}.json".format(filepath))
 
+        dup_col = mydb[company_collections[result["document_type"]]]
+        dup = dup_col.find({"vendor": result["vendor"], "invoice_no": result["invoice_no"]})
+        list_col.update_one({"_id" : ObjectId(id)}, {"$set" :{"status": "PROCESS_COMPLETE"}})
+
+        if(len(list(dup)) >0):
+            duplicate_document = {
+                "pdf_url": pdf_url,
+                "invoice_no": result["invoice_no"],
+                "po_no": "",
+                "status": "Pending",
+                "vendor": result["vendor"],
+                "document_type": result["document_type"],
+                "created_by": result["created_by"],
+                "created_at": result["created_at"],
+                "updated_by": result["updated_by"],
+                "updated_at": result["updated_at"],
+                "is_delete": 0
+            }
+
+            if("po_no" in result):
+                duplicate_document["po_no"] = result["po_no"]
+
+            mydb[company_collections["DUPLICATED"]].insert_one(duplicate_document)
+
+            count["DUPLICATED"] = count["DUPLICATED"] + 1
+            continue
+
         inserted_id = schema_generator(mydb,result)
+        
         if(result["document_type"] in main_document_type):
             inserted_obj = {"id": str(inserted_id)}
             inserted_obj["document_type"] = result["document_type"]
@@ -422,32 +450,6 @@ def process_invoice():
                     "message": text[message_item],
                     "is_system": True
                 })
-
-        dup_col = mydb[company_collections[result["document_type"]]]
-        dup = dup_col.find({"vendor": result["vendor"], "invoice_no": result["invoice_no"]})
-        list_col.update_one({"_id" : ObjectId(id)}, {"$set" :{"status": "PROCESS_COMPLETE"}})
-
-        if(len(list(dup)) >1):
-            duplicate_document = {
-                "pdf_url": pdf_url,
-                "invoice_no": result["invoice_no"],
-                "po_no": "",
-                "status": "Pending",
-                "vendor": result["vendor"],
-                "document_type": result["document_type"],
-                "created_by": result["created_by"],
-                "created_at": result["created_at"],
-                "updated_by": result["updated_by"],
-                "updated_at": result["updated_at"],
-                "is_delete": 0
-            }
-
-            if("po_no" in result):
-                duplicate_document["po_no"] = result["po_no"]
-
-            mydb[company_collections["DUPLICATED"]].insert_one(duplicate_document)
-
-            count["DUPLICATED"] = count["DUPLICATED"] + 1
         
     count_col = mydb[company_collections["API_COUNT"]]
     x = count_col.find_one({"year": datetime.now().year, "month": datetime.now().month})
