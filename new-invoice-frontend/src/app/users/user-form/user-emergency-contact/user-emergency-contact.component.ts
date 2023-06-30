@@ -165,7 +165,6 @@ export class UserEmergencyContactComponent extends UnsubscribeOnDestroyAdapter i
         'Address': `${x.emergency_contact_street1 === '' ? '' : x.emergency_contact_street1 + ","} 
         ${x.emergency_contact_city === "" ? "" : x.emergency_contact_city + ","} 
         ${x.emergency_contact_state === "" ? "" : x.emergency_contact_state}`,
-        'Last Validation Date': x.is_validated ? this.temp_MMDDYYYY(Number(x.validated_at.toString())) : '',
       }));
     TableExportUtil.exportToExcel(exportData, 'excel');
   }
