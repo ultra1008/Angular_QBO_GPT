@@ -188,3 +188,7 @@ $val in $colors {
 .width-30p {
   width: 30%;
 }
+
+.disableDiv {
+  pointer-events: none;
+}

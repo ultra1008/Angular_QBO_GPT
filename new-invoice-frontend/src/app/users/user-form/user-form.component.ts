@@ -385,8 +385,7 @@ export class UserFormComponent
       data: this.id,
     });
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-      if (result === 0) {
-      }
+      this.back();
     });
   }
   amountChange(params: any) {

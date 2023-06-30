@@ -340,7 +340,7 @@ export class UsersListingComponent
     if (this.isDelete === 0) {
       this.displayedColumns = ['select', 'img', 'userfullname', 'useremail', 'userphone', 'role_name', 'userjob_title_name', 'department_name', 'userstatus', 'actions'];
     } else {
-      this.displayedColumns = ['img', 'userfullname', 'useremail', 'userphone', 'role_name', 'userjob_title_name', 'department_name', 'userstatus', 'actions'];
+      this.displayedColumns = ['img', 'userfullname', 'useremail', 'userphone', 'userjob_title_name', 'department_name', 'userstatus', 'actions'];
     }
     this.loadData();
   }
@@ -410,7 +410,7 @@ export class UsersListingComponent
       data: _id,
     });
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-      //
+      this.refreshTable();
     });
   }
   addNewUser() {

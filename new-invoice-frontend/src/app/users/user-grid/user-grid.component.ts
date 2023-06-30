@@ -200,8 +200,7 @@ export class UserGridComponent
             data: user._id,
           });
           this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-            if (result === 1) {
-            }
+            this.getUser();
           });
         }
       });

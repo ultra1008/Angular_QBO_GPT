@@ -16,6 +16,7 @@ import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { icon } from 'src/consts/icon';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { NgxGalleryThumbnailsComponent } from 'ngx-gallery-9/public-api';
 
 export interface DialogData {
   user: any;
@@ -106,7 +107,7 @@ export class UserRestoreFormComponent {
     );
     if (data.status) {
       showNotification(this.snackBar, data.message, 'success');
-      this.router.navigate([WEB_ROUTES.USER_GRID]);
+      this.dialogRef.close();
     } else {
       showNotification(this.snackBar, data.message, 'error');
     }
