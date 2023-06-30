@@ -22,19 +22,20 @@ import { TranslateService } from '@ngx-translate/core';
 export class UploadInvoiceFormComponent {
   files: File[] = [];
   supporting = false;
-  documentList: any = configData.DOCUMENT_TYPE_LIST;
+  documentList: any[] = [];
   selectedDocument = '';
   id: any;
   title = 'Upload Document';
 
-  constructor(public dialogRef: MatDialogRef<SwitchCompanyComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
+  constructor (public dialogRef: MatDialogRef<SwitchCompanyComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
     private commonService: CommonService, private snackBar: MatSnackBar, public route: ActivatedRoute, public uiSpinner: UiSpinnerService,
     private formBuilder: FormBuilder, private sanitiser: DomSanitizer, public translate: TranslateService) {
     this.id = this.route.snapshot.queryParamMap.get('_id');
     this.supporting = data.supporting;
-    const foundIndex = this.documentList.findIndex((x: any) => x.key === 'INVOICE');
-    if (foundIndex != null && foundIndex != -1) {
-      this.documentList.splice(foundIndex, 1);
+    for (let m = 0; m < configData.DOCUMENT_TYPE_LIST.length; m++) {
+      if (configData.DOCUMENT_TYPE_LIST[m].key !== 'INVOICE') {
+        this.documentList.push(configData.DOCUMENT_TYPE_LIST[m]);
+      }
     }
   }
 

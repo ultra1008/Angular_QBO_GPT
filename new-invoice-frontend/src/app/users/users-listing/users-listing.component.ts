@@ -2,8 +2,8 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { RoleModel, UserModel } from './../user.model';
 import { UserService } from '../user.service';
-import { BehaviorSubject, Observable, fromEvent, merge } from 'rxjs';
-import { DataSource, SelectionModel } from '@angular/cdk/collections';
+import { merge } from 'rxjs';
+import { SelectionModel } from '@angular/cdk/collections';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatMenuTrigger } from '@angular/material/menu';
@@ -31,6 +31,7 @@ import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import * as XLSX from 'xlsx';
 import { RolePermission } from 'src/consts/common.model';
 import { configData } from 'src/environments/configData';
+import { sweetAlert } from 'src/consts/sweet_alert';
 
 @Component({
   selector: 'app-users-listing',
@@ -145,6 +146,8 @@ export class UsersListingComponent
           confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
           denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
           allowOutsideClick: false,
+          background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+          color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
         })
         .then((result) => {
           if (result.isConfirmed) {
@@ -159,6 +162,8 @@ export class UsersListingComponent
           confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
           denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
           allowOutsideClick: false,
+          background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+          color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
         })
         .then((result) => {
           if (result.isConfirmed) {
@@ -173,6 +178,8 @@ export class UsersListingComponent
           confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
           denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
           allowOutsideClick: false,
+          background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+          color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
         })
         .then((result) => {
           if (result.isConfirmed) {
@@ -236,7 +243,7 @@ export class UsersListingComponent
       );
       if (foundIndex != null && this.userService) {
         this.userService.dataChange.value[foundIndex].userstatus = status;
-        this.refreshTable();
+        // this.refreshTable();
       }
     } else {
       showNotification(this.snackBar, data.message, 'error');
@@ -333,7 +340,7 @@ export class UsersListingComponent
     if (this.isDelete === 0) {
       this.displayedColumns = ['select', 'img', 'userfullname', 'useremail', 'userphone', 'role_name', 'userjob_title_name', 'department_name', 'userstatus', 'actions'];
     } else {
-      this.displayedColumns = ['img', 'userfullname', 'useremail', 'userphone', 'role_name', 'userjob_title_name', 'department_name', 'userstatus', 'actions'];
+      this.displayedColumns = ['img', 'userfullname', 'useremail', 'userphone', 'userjob_title_name', 'department_name', 'userstatus', 'actions'];
     }
     this.loadData();
   }
@@ -383,6 +390,8 @@ export class UsersListingComponent
         confirmButtonText: 'Yes',
         denyButtonText: 'No',
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then((result) => {
         if (result.isConfirmed) {
@@ -401,7 +410,7 @@ export class UsersListingComponent
       data: _id,
     });
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-      //
+      this.refreshTable();
     });
   }
   addNewUser() {

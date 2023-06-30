@@ -21,6 +21,8 @@ import { JobTypeFormComponent } from './job-type-list/job-type-form/job-type-for
 import { WEB_ROUTES } from 'src/consts/routes';
 import { configData } from 'src/environments/configData';
 import { CommonService } from 'src/app/services/common.service';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { sweetAlert } from 'src/consts/sweet_alert';
 
 @Component({
   selector: 'app-employeesettings',
@@ -274,14 +276,14 @@ export class EmployeesettingsComponent {
     let that = this;
     swalWithBootstrapButtons
       .fire({
-        title: this.translate.instant(
-          'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.CONFIRMATION_DIALOG.DOCUMENT'
-        ),
+        title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.CONFIRMATION_DIALOG.DOCUMENT'),
         showDenyButton: true,
         showCancelButton: false,
         confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
         denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then(async (result) => {
         if (result.isConfirmed) {
@@ -302,14 +304,14 @@ export class EmployeesettingsComponent {
     let that = this;
     swalWithBootstrapButtons
       .fire({
-        title: this.translate.instant(
-          'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.CONFIRMATION_DIALOG.DEPARTMENT'
-        ),
+        title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.CONFIRMATION_DIALOG.DEPARTMENT'),
         showDenyButton: true,
         showCancelButton: false,
         confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
         denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then(async (result) => {
         if (result.isConfirmed) {
@@ -330,14 +332,14 @@ export class EmployeesettingsComponent {
     let that = this;
     swalWithBootstrapButtons
       .fire({
-        title: this.translate.instant(
-          'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.CONFIRMATION_DIALOG.JOBTYPE'
-        ),
+        title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.CONFIRMATION_DIALOG.JOBTYPE'),
         showDenyButton: true,
         showCancelButton: false,
         confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
         denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then(async (result) => {
         if (result.isConfirmed) {
@@ -356,14 +358,14 @@ export class EmployeesettingsComponent {
     let that = this;
     swalWithBootstrapButtons
       .fire({
-        title: this.translate.instant(
-          'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.CONFIRMATION_DIALOG.JOBTITLE'
-        ),
+        title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.CONFIRMATION_DIALOG.JOBTITLE'),
         showDenyButton: true,
         showCancelButton: false,
         confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
         denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then(async (result) => {
         if (result.isConfirmed) {
@@ -382,14 +384,14 @@ export class EmployeesettingsComponent {
     let that = this;
     swalWithBootstrapButtons
       .fire({
-        title: this.translate.instant(
-          'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.CONFIRMATION_DIALOG.RELATIONSHIP'
-        ),
+        title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.CONFIRMATION_DIALOG.RELATIONSHIP'),
         showDenyButton: true,
         showCancelButton: false,
         confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
         denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then(async (result) => {
         if (result.isConfirmed) {
@@ -410,14 +412,14 @@ export class EmployeesettingsComponent {
     let that = this;
     swalWithBootstrapButtons
       .fire({
-        title: this.translate.instant(
-          'SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.CONFIRMATION_DIALOG.LANGUAGE'
-        ),
+        title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.EMPLOYEE_MODULE.CONFIRMATION_DIALOG.LANGUAGE'),
         showDenyButton: true,
         showCancelButton: false,
         confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
         denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then(async (result) => {
         if (result.isConfirmed) {

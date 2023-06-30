@@ -115,15 +115,18 @@
     margin-bottom: 0px !important;
 }
 
+.table-responsive {
+    height: 390px;
+}
+
 .job-cost-table {
-    display: block;
     height: 390px;
 
-    tbody {
-        height: 330px;
+    th:first-child {
+        width: 75%;
     }
 
-    .amount {
-        width: 100px;
+    td:first-child {
+        width: 75%;
     }
 }

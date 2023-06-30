@@ -3,9 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { DataSource } from '@angular/cdk/collections';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BehaviorSubject, fromEvent, merge, Observable } from 'rxjs';
+import { merge } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatMenuTrigger } from '@angular/material/menu';
@@ -34,6 +33,7 @@ import * as XLSX from 'xlsx';
 import { RolePermission } from 'src/consts/common.model';
 import { TermModel } from 'src/app/settings/settings.model';
 import { configData } from 'src/environments/configData';
+import { sweetAlert } from 'src/consts/sweet_alert';
 @Component({
   selector: 'app-vendors-list',
   templateUrl: './vendors-list.component.html',
@@ -44,7 +44,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   @ViewChild('gallery') gallery!: NgxGalleryComponent;
   galleryOptions!: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[] = [];
-  imageObject = [];
+  imageObject: Array<string> = [];
   tmp_gallery: any;
   displayedColumns = ['select', 'vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'invoices_total', 'open_invoices_total', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions',];
   vendorService?: VendorsService;
@@ -198,6 +198,8 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
           confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
           denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
           allowOutsideClick: false,
+          background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+          color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
         })
         .then((result) => {
           if (result.isConfirmed) {
@@ -212,6 +214,8 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
           confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
           denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
           allowOutsideClick: false,
+          background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+          color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
         })
         .then((result) => {
           if (result.isConfirmed) {
@@ -226,6 +230,8 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
           confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
           denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
           allowOutsideClick: false,
+          background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+          color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
         })
         .then((result) => {
           if (result.isConfirmed) {
@@ -407,7 +413,6 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
 
 
   downloadImport() {
-
     const dialogRef = this.dialog.open(ImportVendorComponent, {
       width: '500px',
       data: {},
@@ -465,7 +470,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
       );
       if (foundIndex != null && this.vendorService) {
         this.vendorService.dataChange.value[foundIndex].vendor_status = status;
-        this.refreshTable();
+        // this.refreshTable();
       }
     } else {
       showNotification(this.snackBar, data.message, 'error');
@@ -505,6 +510,8 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
         confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
         denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then((result) => {
         if (result.isConfirmed) {
@@ -537,9 +544,8 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
 
   // View Network Attachment
   viewAttachment(vendor: VendorModel) {
-    this.galleryImages = commonNewtworkAttachmentViewer(
-      vendor.vendor_attachment
-    );
+    this.imageObject = vendor.vendor_attachment;
+    this.galleryImages = commonNewtworkAttachmentViewer(this.imageObject);
     setTimeout(() => {
       this.gallery.openPreview(0);
     }, 0);

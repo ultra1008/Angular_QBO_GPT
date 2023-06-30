@@ -84,9 +84,22 @@
                                     </mat-form-field>
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                                    <mat-form-field class="example-full-width" appearance="outline">
+                                    <!-- <mat-form-field class="example-full-width" appearance="outline">
                                         <mat-label>{{'VENDOR.ADD_EDIT.GL_ACCOUNTS' | translate}}</mat-label>
                                         <input matInput formControlName="gl_account">
+                                    </mat-form-field> -->
+                                    <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>{{'VENDOR.ADD_EDIT.GL_ACCOUNTS' | translate}}</mat-label>
+                                        <mat-select formControlName="gl_account" #costCodeSelect
+                                            style="font-size: 12px;">
+                                            <mat-select-filter [placeholder]="'Filter'" [displayMember]="'value'"
+                                                [array]="variablecostcodeList" (filteredReturn)="costcodeList =$event"
+                                                *ngIf="costCodeSelect.focused">
+                                            </mat-select-filter>
+                                            <mat-option *ngFor="let costcode of costcodeList" [value]="costcode._id">
+                                                {{costcode.cost_code}}
+                                            </mat-option>
+                                        </mat-select>
                                     </mat-form-field>
                                 </div>
                             </div>

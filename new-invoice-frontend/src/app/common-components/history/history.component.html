@@ -6,11 +6,11 @@
             src="assets/images/rovukinvoice.png">
         <div class="set-flex my-auto">
             <div *ngIf="history.is_system === undefined" class="media-title font-16">
-                <b>{{history.history_created_by.userfullname}}</b> {{history.action}} Invoice number
+                <b>{{history.history_created_by.userfullname}}</b> {{history.action}}
                 <b>{{title}}</b> at <b>{{history.history_created_at * 1000 | date: 'MM/dd/yyyy hh:mm a' }}</b> from
                 <b>{{history.taken_device}}</b>.
             </div>
-            <div *ngIf="history.is_system"><b>System</b> {{history.action}} Invoice Number
+            <div *ngIf="history.is_system"><b>System</b> {{history.action}}
                 <b>{{title}}</b> at <b>{{history.history_created_at * 1000 | date: 'MM/dd/yyyy hh:mm a' }}</b> from
                 <b>{{history.taken_device}}</b>.
             </div>

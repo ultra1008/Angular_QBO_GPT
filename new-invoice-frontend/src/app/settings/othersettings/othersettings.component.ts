@@ -20,6 +20,8 @@ import { OtherExistsListingComponent } from './other-exists-listing/other-exists
 import { WEB_ROUTES } from 'src/consts/routes';
 import { CommonService } from 'src/app/services/common.service';
 import { configData } from 'src/environments/configData';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { sweetAlert } from 'src/consts/sweet_alert';
 
 @Component({
   selector: 'app-othersettings',
@@ -276,14 +278,14 @@ export class OthersettingsComponent implements OnInit {
     let that = this;
     swalWithBootstrapButtons
       .fire({
-        title: this.translate.instant(
-          'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CONFIRMATION_DIALOG.TERMS'
-        ),
+        title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CONFIRMATION_DIALOG.TERMS'),
         showDenyButton: true,
         showCancelButton: false,
         confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
         denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then(async (result) => {
         if (result.isConfirmed) {
@@ -302,14 +304,14 @@ export class OthersettingsComponent implements OnInit {
     let that = this;
     swalWithBootstrapButtons
       .fire({
-        title: this.translate.instant(
-          'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CONFIRMATION_DIALOG.TAX_RATE'
-        ),
+        title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CONFIRMATION_DIALOG.TAX_RATE'),
         showDenyButton: true,
         showCancelButton: false,
         confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
         denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then(async (result) => {
         if (result.isConfirmed) {
@@ -328,14 +330,14 @@ export class OthersettingsComponent implements OnInit {
     let that = this;
     swalWithBootstrapButtons
       .fire({
-        title: this.translate.instant(
-          'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CONFIRMATION_DIALOG.DOCUMENT'
-        ),
+        title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CONFIRMATION_DIALOG.DOCUMENT'),
         showDenyButton: true,
         showCancelButton: false,
         confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
         denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then(async (result) => {
         if (result.isConfirmed) {
@@ -356,14 +358,14 @@ export class OthersettingsComponent implements OnInit {
     let that = this;
     swalWithBootstrapButtons
       .fire({
-        title: this.translate.instant(
-          'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CONFIRMATION_DIALOG.VENDOR_TYPE'
-        ),
+        title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CONFIRMATION_DIALOG.VENDOR_TYPE'),
         showDenyButton: true,
         showCancelButton: false,
         confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
         denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then(async (result) => {
         if (result.isConfirmed) {
@@ -384,14 +386,14 @@ export class OthersettingsComponent implements OnInit {
     let that = this;
     swalWithBootstrapButtons
       .fire({
-        title: this.translate.instant(
-          'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CONFIRMATION_DIALOG.JOB_NAME'
-        ),
+        title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CONFIRMATION_DIALOG.JOB_NAME'),
         showDenyButton: true,
         showCancelButton: false,
         confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
         denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then(async (result) => {
         if (result.isConfirmed) {
@@ -410,14 +412,14 @@ export class OthersettingsComponent implements OnInit {
     let that = this;
     swalWithBootstrapButtons
       .fire({
-        title: this.translate.instant(
-          'SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CONFIRMATION_DIALOG.JOB_NAME'
-        ),
+        title: this.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.OTHER_SETTINGS_MODULE.CONFIRMATION_DIALOG.JOB_NAME'),
         showDenyButton: true,
         showCancelButton: false,
         confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
         denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then(async (result) => {
         if (result.isConfirmed) {

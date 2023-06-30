@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,14 +11,16 @@ import { RolePermission } from 'src/consts/common.model';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { WEB_ROUTES } from 'src/consts/routes';
-import { showNotification, swalWithBootstrapButtons, timeDateToepoch } from 'src/consts/utils';
-
+import { sweetAlert } from 'src/consts/sweet_alert';
+import { commonLocalThumbImage, commonNetworkThumbImage, showNotification, swalWithBootstrapButtons, timeDateToepoch } from 'src/consts/utils';
+import { DomSanitizer } from '@angular/platform-browser';
 @Component({
   selector: 'app-user-document-form',
   templateUrl: './user-document-form.component.html',
   styleUrls: ['./user-document-form.component.scss']
 })
 export class UserDocumentFormComponent implements OnInit {
+  @ViewChild('inputFile') inputFile!: ElementRef;
   form!: UntypedFormGroup;
   id: any;
   userId: any;
@@ -28,12 +30,13 @@ export class UserDocumentFormComponent implements OnInit {
   documentTypeList: any = this.variablesDocumentTypeList.slice();
   role_permission!: RolePermission;
   isImageSaved = false;
-  cardImageBase64: any;
   filepath: any;
+  documentData: any;
+  loadData = false;
 
   constructor (public uiSpinner: UiSpinnerService, public userService: UserService, private fb: UntypedFormBuilder,
     public route: ActivatedRoute, private router: Router, private formBuilder: FormBuilder, private snackBar: MatSnackBar,
-    public translate: TranslateService, private commonService: CommonService) {
+    public translate: TranslateService, private commonService: CommonService, private sanitiser: DomSanitizer) {
     this.id = this.route.snapshot.queryParamMap.get("_id");
     this.userId = this.route.snapshot.queryParamMap.get("user_id");
     this.role_permission = JSON.parse(localStorage.getItem(localstorageconstants.USERDATA)!).role_permission;
@@ -50,11 +53,21 @@ export class UserDocumentFormComponent implements OnInit {
 
   async getOneUserDocument() {
     const data = await this.commonService.postRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ONE_USER_DOCUMENT, { _id: this.id });
-    this.form = this.formBuilder.group({
-      userdocument_type_id: [data.data.userdocument_type_id, Validators.required],
-      userdocument_expire_date: [new Date(data.data.userdocument_expire_date * 1000)],
-    });
-    this.selectDocumentType(data.data.userdocument_type_id);
+    if (data.status) {
+      this.documentData = data.data;
+      let expiryDate;
+      if (this.documentData.userdocument_expire_date == 0) {
+        expiryDate = new Date();
+      } else {
+        expiryDate = new Date(this.documentData.userdocument_expire_date * 1000);
+      }
+      this.form = this.formBuilder.group({
+        userdocument_type_id: [this.documentData.userdocument_type_id, Validators.required],
+        userdocument_expire_date: [expiryDate],
+      });
+      this.selectDocumentType(this.documentData.userdocument_type_id);
+      this.loadData = true;
+    }
   }
 
   async getDocumentType() {
@@ -66,6 +79,20 @@ export class UserDocumentFormComponent implements OnInit {
     if (this.id) {
       this.getOneUserDocument();
     }
+  }
+
+  thumbImage() {
+    return commonLocalThumbImage(this.sanitiser, this.filepath);
+  }
+
+  thumbNetworkImage() {
+    return commonNetworkThumbImage(this.documentData.userdocument_url);
+  }
+
+  deleteFile() {
+    this.inputFile.nativeElement.value = '';
+    this.filepath = null;
+    this.isImageSaved = false;
   }
 
   async saveUserDocument() {
@@ -85,7 +112,9 @@ export class UserDocumentFormComponent implements OnInit {
       }
 
       const formData = new FormData();
-      formData.append("file", this.filepath);
+      if (this.isImageSaved) {
+        formData.append("file", this.filepath);
+      }
       formData.append("reqObject", JSON.stringify(reqObject));
       formData.append("user_id", this.userId);
       if (this.id) {
@@ -114,6 +143,8 @@ export class UserDocumentFormComponent implements OnInit {
         cancelButtonText: this.translate.instant('COMMON.ACTIONS.DONT_SAVE'),
         denyButtonText: this.translate.instant('COMMON.ACTIONS.CANCEL'),
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then((result) => {
         if (result.isConfirmed) {
@@ -139,6 +170,9 @@ export class UserDocumentFormComponent implements OnInit {
   selectDocumentType(event: Event) {
     const found = this.documentTypeList.find((element: any) => element._id == event);
     this.showHideDate = found.is_expiration;
+    if (this.id == null || this.id == undefined) {
+      this.form.get("userdocument_expire_date")?.setValue(new Date());
+    }
     if (this.showHideDate) {
       this.form.get("userdocument_expire_date")?.setValidators([Validators.required]);
       this.form.get("userdocument_expire_date")?.updateValueAndValidity();
@@ -152,7 +186,6 @@ export class UserDocumentFormComponent implements OnInit {
     commonFileChangeEvent(fileInput, 'all').then((result: any) => {
       if (result.status) {
         this.filepath = result.filepath;
-        this.cardImageBase64 = result.base64;
         this.isImageSaved = true;
       } else {
         showNotification(this.snackBar, result.message, 'error');

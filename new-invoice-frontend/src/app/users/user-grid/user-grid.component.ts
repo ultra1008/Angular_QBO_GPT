@@ -8,19 +8,12 @@ import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroy
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { UserService } from '../user.service';
-import {
-  showNotification,
-  swalWithBootstrapTwoButtons,
-  timeDateToepoch,
-} from 'src/consts/utils';
+import { showNotification, swalWithBootstrapTwoButtons, timeDateToepoch } from 'src/consts/utils';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AdvanceTable, RoleModel, UserModel } from '../user.model';
 import { UserRestoreFormComponent } from '../user-restore-form/user-restore-form.component';
 import { UserReportComponent } from '../user-report/user-report.component';
-import {
-  FormateDateDDMMYYPipe,
-  FormateDateStringPipe,
-} from '../users-filter.pipe';
+import { FormateDateStringPipe } from '../users-filter.pipe';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { CommonService } from 'src/app/services/common.service';
 import { ImportUserComponent } from '../import-user/import-user.component';
@@ -30,6 +23,7 @@ import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { RolePermission } from 'src/consts/common.model';
 import { configData } from 'src/environments/configData';
 import { TranslateService } from '@ngx-translate/core';
+import { sweetAlert } from 'src/consts/sweet_alert';
 @Component({
   selector: 'app-user-grid',
   templateUrl: './user-grid.component.html',
@@ -178,6 +172,8 @@ export class UserGridComponent
         confirmButtonText: 'Yes',
         denyButtonText: 'No',
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then((result) => {
         if (result.isConfirmed) {
@@ -195,6 +191,8 @@ export class UserGridComponent
         confirmButtonText: 'Yes',
         denyButtonText: 'No',
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then(async (result) => {
         if (result.isConfirmed) {
@@ -202,8 +200,7 @@ export class UserGridComponent
             data: user._id,
           });
           this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-            if (result === 1) {
-            }
+            this.getUser();
           });
         }
       });

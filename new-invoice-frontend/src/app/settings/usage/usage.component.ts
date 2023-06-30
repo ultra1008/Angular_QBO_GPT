@@ -1,40 +1,23 @@
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { SettingsService } from '../settings.service';
 import { TranslateService } from '@ngx-translate/core';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
-import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import {
-  BehaviorSubject,
-  Observable,
-  async,
-  fromEvent,
-  map,
-  merge,
-} from 'rxjs';
+import { BehaviorSubject, Observable, map, merge } from 'rxjs';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { DataSource, SelectionModel } from '@angular/cdk/collections';
 import { UsageModel } from '../settings.model';
-import { MailboxDataSource } from '../mailbox/mailbox.component';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
-import {
-  showNotification,
-  swalWithBootstrapTwoButtons,
-} from 'src/consts/utils';
+import { showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { sweetAlert } from 'src/consts/sweet_alert';
 
 @Component({
   selector: 'app-usage',
@@ -146,6 +129,8 @@ export class UsageComponent extends UnsubscribeOnDestroyAdapter implements OnIni
         confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
         denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then((result) => {
         if (result.isConfirmed) {

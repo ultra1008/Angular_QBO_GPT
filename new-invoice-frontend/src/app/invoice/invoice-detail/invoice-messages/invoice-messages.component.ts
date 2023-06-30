@@ -18,6 +18,8 @@ import { CommonService } from 'src/app/services/common.service';
 import { httproutes, httpversion } from 'src/consts/httproutes';
 import { TableElement } from 'src/app/shared/TableElement';
 import { TableExportUtil } from 'src/app/shared/tableExportUtil';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { sweetAlert } from 'src/consts/sweet_alert';
 
 @Component({
   selector: 'app-invoice-messages',
@@ -125,6 +127,8 @@ export class InvoiceMessagesComponent extends UnsubscribeOnDestroyAdapter implem
         confirmButtonText: 'Yes',
         denyButtonText: 'No',
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then(async (result) => {
         if (result.isConfirmed) {

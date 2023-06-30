@@ -1,4 +1,3 @@
-import { RightSidebarService } from 'src/app/core/service/rightsidebar.service';
 import { AuthService } from 'src/app/core/service/auth.service';
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject, ElementRef, OnInit, Renderer2, AfterViewInit, ViewChild } from '@angular/core';
@@ -22,6 +21,7 @@ import { notificationRoutes, numberWithCommas } from 'src/consts/utils';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { AuthenticationService } from '../../authentication/authentication.service';
 import { RolePermission } from 'src/consts/common.model';
+
 interface Notifications {
   _id: string;
   notification_title: string;
@@ -91,7 +91,6 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
     let tmp_locallanguage = localStorage.getItem(localstorageconstants.LANGUAGE);
     tmp_locallanguage = tmp_locallanguage == '' || tmp_locallanguage == undefined || tmp_locallanguage == null ? configData.INITIALLANGUAGE : tmp_locallanguage;
     this.translate.use(tmp_locallanguage);
-    this.translate.stream(['']).subscribe((textarray) => { });
     this.getNotification();
     this.getInvoiceMessageCount();
   }
@@ -174,9 +173,6 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
   }
 
   ngAfterViewInit() {
-
-
-
     // if (
     //   window.matchMedia &&
     //   window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -470,15 +466,21 @@ export class HeaderComponent extends UnsubscribeOnDestroyAdapter implements OnIn
         this.invoiceList = data.data;
         this.invoiceLoader = false;
       }
-      // document.getElementById('search')?.blur();
-      // this.searchControl.setValue('');
     } else {
       this.invoiceLoader = false;
     }
   }
 
   openInvoiceDetail(invoice: Invoice) {
+    this.searchControl.setValue('');
+    this.invoiceLoader = false;
+    this.openSearchDialog = false;
     this.router.navigate([WEB_ROUTES.INVOICE_DETAILS], { queryParams: { _id: invoice._id } });
+    if (window.location.pathname === WEB_ROUTES.INVOICE_DETAILS) {
+      setTimeout(() => {
+        location.reload();
+      }, 100);
+    }
   }
 
   numberWithCommas(amount: any) {

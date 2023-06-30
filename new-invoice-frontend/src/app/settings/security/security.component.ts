@@ -11,6 +11,8 @@ import { configData } from 'src/environments/configData';
 import { AppComponent } from 'src/app/app.component';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { CommonService } from 'src/app/services/common.service';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { sweetAlert } from 'src/consts/sweet_alert';
 
 @Component({
   selector: 'app-security',
@@ -84,13 +86,13 @@ export class SecurityComponent {
     let that = this;
     swalWithBootstrapButtons
       .fire({
-        title: that.translate.instant(
-          'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.ALERT_SURE_WANT_CHANGE'
-        ),
+        title: that.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.ALERT_SURE_WANT_CHANGE'),
         showDenyButton: true,
         showCancelButton: false,
         confirmButtonText: that.translate.instant('COMMON.ACTIONS.YES'),
         denyButtonText: that.translate.instant('COMMON.ACTIONS.NO'),
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then((result) => {
         if (result.isConfirmed) {
@@ -117,13 +119,13 @@ export class SecurityComponent {
     let that = this;
     swalWithBootstrapButtons
       .fire({
-        title: that.translate.instant(
-          'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.ALERT_SURE_WANT_CHANGE'
-        ),
+        title: that.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.ALERT_SURE_WANT_CHANGE'),
         showDenyButton: true,
         showCancelButton: false,
         confirmButtonText: that.translate.instant('COMMON.ACTIONS.YES'),
         denyButtonText: that.translate.instant('COMMON.ACTIONS.NO'),
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then((result) => {
         if (result.isConfirmed) {
@@ -158,13 +160,13 @@ export class SecurityComponent {
     let that = this;
     swalWithBootstrapButtons
       .fire({
-        title: that.translate.instant(
-          'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.ALERT_SURE_WANT_CHANGE'
-        ),
+        title: that.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.ALERT_SURE_WANT_CHANGE'),
         showDenyButton: true,
         showCancelButton: false,
         confirmButtonText: that.translate.instant('COMMON.ACTIONS.YES'),
         denyButtonText: that.translate.instant('COMMON.ACTIONS.NO'),
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then((result) => {
         if (result.isConfirmed) {
@@ -186,13 +188,13 @@ export class SecurityComponent {
     let that = this;
     swalWithBootstrapButtons
       .fire({
-        title: that.translate.instant(
-          'SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.ALERT_SURE_WANT_CHANGE'
-        ),
+        title: that.translate.instant('SETTINGS.SETTINGS_OTHER_OPTION.SECURITY_MODULE.ALERT_SURE_WANT_CHANGE'),
         showDenyButton: true,
         showCancelButton: false,
         confirmButtonText: that.translate.instant('COMMON.ACTIONS.YES'),
         denyButtonText: that.translate.instant('COMMON.ACTIONS.NO'),
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then((result) => {
         if (result.isConfirmed) {

@@ -51,7 +51,8 @@
                          <mat-horizontal-stepper #stepper [selectedIndex]="step_index"
                               (selectionChange)="selectionChange($event)">
                               <mat-step state="person" [completed]="false" [stepControl]="HFormGroup1!">
-                                   <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                   <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12"
+                                        [ngClass]="{'disableDiv': is_delete === 1}">
                                         <div class="card">
                                              <div class="header">
                                                   <h2>{{'USERS.TABS.PERSONAL_INFORMATION' | translate}}</h2>
@@ -245,7 +246,7 @@
                                                             </div>
                                                        </div>
                                                   </form>
-                                                  <div class="row">
+                                                  <div class="row" *ngIf="is_delete !== 1">
                                                        <div class=" col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2 ">
                                                             <button class="btn-space back-clr" mat-raised-button
                                                                  (click)="back()">{{'COMMON.ACTIONS.BACK'| translate}}</button>
@@ -269,8 +270,8 @@
                                    </div>
                               </mat-step>
                               <mat-step state="contact" [completed]="false" [stepControl]="HFormGroup2!">
-
-                                   <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                   <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12"
+                                        [ngClass]="{'disableDiv': is_delete === 1}">
                                         <div class="card">
                                              <div class="header">
                                                   <h2>{{'USERS.TABS.CONTACT_INFORMATION' | translate}}</h2>
@@ -354,7 +355,7 @@
                                                                  </mat-form-field>
                                                             </div>
                                                        </div>
-                                                       <div class="row">
+                                                       <div class="row" *ngIf="is_delete !== 1">
                                                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                                                  <button matStepperPrevious class="btn-space back-clr"
                                                                       mat-raised-button>{{'COMMON.ACTIONS.BACK'| translate}}</button>
@@ -380,7 +381,8 @@
 
                               </mat-step>
                               <mat-step state="employee" [completed]="false" [stepControl]="HFormGroup3!">
-                                   <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                   <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12"
+                                        [ngClass]="{'disableDiv': is_delete === 1}">
                                         <div class="card">
                                              <div class="header">
                                                   <h2>{{'USERS.TABS.EMPLOYEE_INFORMATION' | translate}}</h2>
@@ -562,10 +564,7 @@
                                                                  </mat-form-field>
                                                             </div>
                                                        </div>
-                                                       <div class="row">
-
-                                                       </div>
-                                                       <div class="row">
+                                                       <div class="row" *ngIf="is_delete !== 1">
                                                             <div class=" col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2 ">
                                                                  <button class="btn-space back-clr" mat-raised-button
                                                                       matStepperPrevious>{{'COMMON.ACTIONS.BACK'| translate}}</button>
@@ -597,7 +596,8 @@
                               </mat-step>
                               <mat-step state="emergency_contact" [completed]="false" [stepControl]="HFormGroup4!"
                                    *ngIf="id !== null">
-                                   <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                   <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12"
+                                        [ngClass]="{'disableDiv': is_delete === 1}">
                                         <div class="card">
                                              <div class="header">
                                                   <h2>{{'USERS.TABS.EMERGENCY_CONTACT' | translate}}</h2>
@@ -613,12 +613,11 @@
                                              </div>
                                         </div>
                                    </div>
-
-
                               </mat-step>
                               <mat-step state="document" [completed]="false" [stepControl]="HFormGroup5!"
                                    *ngIf="id !== null">
-                                   <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                   <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12"
+                                        [ngClass]="{'disableDiv': is_delete === 1}">
                                         <div class="card">
                                              <div class="header">
                                                   <h2>{{'USERS.TABS.DOCUMENT' | translate}}</h2>

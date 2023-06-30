@@ -10,18 +10,13 @@ import { MatSort } from '@angular/material/sort';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, fromEvent, map, merge } from 'rxjs';
-import { UploadInvoiceFormComponent } from 'src/app/invoice/upload-invoice-form/upload-invoice-form.component';
 import { CommonService } from 'src/app/services/common.service';
 import { HttpCall } from 'src/app/services/httpcall.service';
-import { TableElement } from 'src/app/shared/TableElement';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
-import { TableExportUtil } from 'src/app/shared/tableExportUtil';
 import { ProcessDocument, RolePermission } from 'src/consts/common.model';
-import { httproutes, httpversion } from 'src/consts/httproutes';
 import { icon } from 'src/consts/icon';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { WEB_ROUTES } from 'src/consts/routes';
-import { numberWithCommas, showNotification, swalWithBootstrapTwoButtons } from 'src/consts/utils';
 
 @Component({
   selector: 'app-duplidate-documents',

@@ -28,12 +28,13 @@ import {
 import { wasabiImagePath } from 'src/consts/wasabiImagePath';
 import { SettingsService } from '../settings.service';
 import { MatDatepicker } from '@angular/material/datepicker';
-import { httproutes } from 'src/consts/httproutes';
+import { httproutes, httpversion } from 'src/consts/httproutes';
 import { configData } from 'src/environments/configData';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { TranslateService } from '@ngx-translate/core';
 import { CountryModel, TermModel } from '../settings.model';
+import { sweetAlert } from 'src/consts/sweet_alert';
 
 @Component({
   selector: 'app-company-info-form',
@@ -181,15 +182,13 @@ export class CompanyInfoFormComponent {
         companyaddressstate: [CompanyInfoData.companyaddressstate],
         companyaddresszip: [CompanyInfoData.companyaddresszip],
       });
-      const found = that.CompnayTypes_data.find(
-        (element: any) => element._id == CompanyInfoData.companytype
-      );
-      that.selectedVendorType = found.name
-        ? found.name
-        : configData.PRIME_VENDOR_TYPE;
-      that.getCISDivision(
-        that.selectedVendorType == configData.PRIME_VENDOR_TYPE
-      );
+      const found = that.CompnayTypes_data.find((element: any) => element._id == CompanyInfoData.companytype);
+      if (found) {
+        that.selectedVendorType = found.name
+          ? found.name
+          : configData.PRIME_VENDOR_TYPE;
+      }
+      that.getCISDivision(that.selectedVendorType == configData.PRIME_VENDOR_TYPE);
     }
 
     // async getTerms() {
@@ -248,13 +247,11 @@ export class CompanyInfoFormComponent {
   }
 
   onVendorTypeSelect(event: any) {
-    let found = this.CompnayTypes_data.find(
-      (element: any) => element._id == event
-    );
+    const found = this.CompnayTypes_data.find((element: any) => element._id == event);
     this.selectedVendorType = found.name
       ? found.name
       : configData.PRIME_VENDOR_TYPE;
-    this.companyinfoForm.get('companydivision')!.setValue([]);
+    this.companyinfoForm.get('companydivision')?.setValue([]);
     this.getCISDivision(
       this.selectedVendorType == configData.PRIME_VENDOR_TYPE
     );
@@ -263,9 +260,9 @@ export class CompanyInfoFormComponent {
   async getCISDivision(isPrimeVendor: any) {
     let url = '';
     if (isPrimeVendor) {
-      url = httproutes.PORTAL_ROVUK_SPONSOR_GET_PRIME_WORK_PERFORMED;
+      url = httpversion.V1 + httproutes.PORTAL_ROVUK_SPONSOR_GET_PRIME_WORK_PERFORMED;
     } else {
-      url = httproutes.PORTAL_ROVUK_SPONSOR_GET_CSIDIVISION_WORK_PERFORMED;
+      url = httpversion.V1 + httproutes.PORTAL_ROVUK_SPONSOR_GET_CSIDIVISION_WORK_PERFORMED;
     }
     const data = await this.httpCall.httpGetCall(url).toPromise();
     if (data.status) {
@@ -285,6 +282,8 @@ export class CompanyInfoFormComponent {
         cancelButtonText: this.translate.instant('COMMON.ACTIONS.DONT_SAVE'),
         denyButtonText: this.translate.instant('COMMON.ACTIONS.CANCEL'),
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then((result) => {
         if (result.isConfirmed) {

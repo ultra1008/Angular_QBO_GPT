@@ -15,7 +15,8 @@ import { httproutes, httpversion } from 'src/consts/httproutes';
 import { commonFileChangeEvent } from 'src/app/services/utils';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { RolePermission } from 'src/consts/common.model';
-import { CountryModel, TermModel } from 'src/app/settings/settings.model';
+import { CostCodeModel, CountryModel, TermModel } from 'src/app/settings/settings.model';
+import { sweetAlert } from 'src/consts/sweet_alert';
 
 @Component({
   selector: 'app-vendor-form',
@@ -33,6 +34,8 @@ export class VendorFormComponent {
   hide = true;
   agree = false;
   customForm?: UntypedFormGroup;
+  variablecostcodeList: Array<CostCodeModel> = [];
+  costcodeList: Array<CostCodeModel> = this.variablecostcodeList.slice();
   variablestermList: any = [];
   termsList: Array<TermModel> = this.variablestermList.slice();
   variablesVendorTypeList: any = [];
@@ -56,7 +59,7 @@ export class VendorFormComponent {
   isHideEditActionQBD = false;
   isHideArchiveActionQBD = false;
 
-  constructor(
+  constructor (
     private fb: UntypedFormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
@@ -98,6 +101,7 @@ export class VendorFormComponent {
     ];
     this.galleryOptions = [this.tmp_gallery];
     this.getVendorType();
+    this.getcostcode();
     this.getCompanyTenants();
     this.getTerms();
     if (this.id) {
@@ -172,6 +176,14 @@ export class VendorFormComponent {
     }
   }
 
+  async getcostcode() {
+    const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.GET_ALL_COSTCODE);
+    if (data.status) {
+      this.variablecostcodeList = data.data;
+      this.costcodeList = this.variablecostcodeList.slice();
+    }
+  }
+
   async getVendorType() {
     const data = await this.commonService.getRequestAPI(httpversion.PORTAL_V1 + httproutes.OTHER_SETTINGS_GET_VENDOR_TYPE);
     if (data.status) {
@@ -213,6 +225,8 @@ export class VendorFormComponent {
         confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
         denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then((result) => {
         if (result.isConfirmed) {
@@ -294,6 +308,8 @@ export class VendorFormComponent {
           cancelButtonText: this.translate.instant('COMMON.ACTIONS.DONT_SAVE'),
           denyButtonText: this.translate.instant('COMMON.ACTIONS.CANCEL'),
           allowOutsideClick: false,
+          background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+          color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
         })
         .then((result) => {
           if (result.isConfirmed) {

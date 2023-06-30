@@ -7,8 +7,8 @@ import { AuthenticationService } from 'src/app/authentication/authentication.ser
 import { CommonService } from 'src/app/services/common.service';
 import { UiSpinnerService } from 'src/app/services/ui-spinner.service';
 import { DialogData } from 'src/app/vendors/vendor-report/vendor-report.component';
+import { CompanyModel } from 'src/consts/common.model';
 import { httproutes, httpversion } from 'src/consts/httproutes';
-import { icon } from 'src/consts/icon';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { WEB_ROUTES } from 'src/consts/routes';
 import { showNotification } from 'src/consts/utils';
@@ -19,13 +19,13 @@ import { showNotification } from 'src/consts/utils';
   styleUrls: ['./switch-company.component.scss']
 })
 export class SwitchCompanyComponent implements OnInit {
-  companyList: any = [];
+  companyList: Array<CompanyModel> = [];
   companyCode = '';
   isLoading = true;
   form!: UntypedFormGroup;
   hide = true;
   showCompanyList = true;
-  selectedCompany: any;
+  selectedCompany!: CompanyModel;
   removable = true;
   title = 'Choose Organization';
 
@@ -56,7 +56,7 @@ export class SwitchCompanyComponent implements OnInit {
     }
   }
 
-  selectCompany(company: any) {
+  selectCompany(company: CompanyModel) {
     if (this.companyCode === company.companycode) {
       showNotification(this.snackBar, 'You are already logged-in company.', 'error');
     } else {
@@ -87,23 +87,23 @@ export class SwitchCompanyComponent implements OnInit {
         localStorage.setItem(localstorageconstants.INVOICE_TOKEN, data.data.token);
         localStorage.setItem(localstorageconstants.COMPANYID, data.data.companydata._id);
         localStorage.setItem(localstorageconstants.USERDATA, JSON.stringify(data.data));
-        localStorage.setItem(localstorageconstants.LOGOUT, 'false');
-
-        sessionStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
-        localStorage.setItem(localstorageconstants.USERTYPE, 'invoice-portal');
 
         if (data.data.UserData.useris_password_temp == true) {
           this.router.navigate([WEB_ROUTES.FORCEFULLY_CHANGE_PASSWORD]);
         } else {
           console.log("sagar: ", window.location.pathname, "and", WEB_ROUTES.DASHBOARD, "====", window.location.pathname === WEB_ROUTES.DASHBOARD);
           if (window.location.pathname === WEB_ROUTES.DASHBOARD) {
-            location.reload();
+            setTimeout(() => {
+              location.reload();
+            }, 200);
           } else {
-
             this.router.navigate([WEB_ROUTES.DASHBOARD]);
-
+            setTimeout(() => {
+              location.reload();
+            }, 200);
           }
         }
+
       } else {
         showNotification(this.snackBar, data.message, 'error');
       }

@@ -1,6 +1,7 @@
 var vendorSchema = require('../../../../../model/vendor');
 var vendorTypeSchema = require('../../../../../model/vendor_type');
 var termSchema = require('../../../../../model/invoice_term');
+var costCodeSchema = require('../../../../../model/costcode');
 var vendor_history_Schema = require('../../../../../model/history/vendor_history');
 let db_connection = require('../../../../../controller/common/connectiondb');
 let collectionConstant = require('../../../../../config/collectionConstant');
@@ -40,6 +41,7 @@ module.exports.saveVendor = async function (req, res) {
             var vendorConnection = connection_db_api.model(collectionConstant.INVOICE_VENDOR, vendorSchema);
             var vendorTypeConnection = connection_db_api.model(collectionConstant.VENDOR_TYPE, vendorTypeSchema);
             var termConnection = connection_db_api.model(collectionConstant.INVOICE_TERM, termSchema);
+            var costCodeConnection = connection_db_api.model(collectionConstant.COSTCODES, costCodeSchema);
             var id = requestObject._id;
             delete requestObject._id;
             if (id) {
@@ -66,6 +68,9 @@ module.exports.saveVendor = async function (req, res) {
                         if (requestObject.vendor_type_id) {
                             requestObject.vendor_type_id = ObjectID(requestObject.vendor_type_id);
                         }
+                        if (requestObject.gl_account) {
+                            requestObject.gl_account = ObjectID(requestObject.gl_account);
+                        }
 
                         // find difference of object 
                         let updatedData = await common.findUpdatedFieldHistory(requestObject, one_vendor._doc);
@@ -83,6 +88,16 @@ module.exports.saveVendor = async function (req, res) {
                                 updatedData[found_vendor_type].value = one_vendor_type.name;
                             } else {
                                 updatedData[found_vendor_type].value = '';
+                            }
+                        }
+
+                        let found_gl_account = _.findIndex(updatedData, function (tmp_data) { return tmp_data.key == 'gl_account'; });
+                        if (found_gl_account != -1) {
+                            if (requestObject.gl_account != '') {
+                                let one_gl_account = await costCodeConnection.findOne({ _id: ObjectID(updatedData[found_gl_account].value) });
+                                updatedData[found_gl_account].value = one_gl_account.cost_code;
+                            } else {
+                                updatedData[found_gl_account].value = '';
                             }
                         }
 
@@ -179,6 +194,16 @@ module.exports.saveVendor = async function (req, res) {
                                 insertedData[found_vendor_type].value = one_vendor_type.name;
                             } else {
                                 insertedData[found_vendor_type].value = '';
+                            }
+                        }
+
+                        let found_gl_account = _.findIndex(insertedData, function (tmp_data) { return tmp_data.key == 'gl_account'; });
+                        if (found_gl_account != -1) {
+                            if (requestObject.gl_account != '') {
+                                let one_gl_account = await costCodeConnection.findOne({ _id: ObjectID(insertedData[found_gl_account].value) });
+                                insertedData[found_gl_account].value = one_gl_account.cost_code;
+                            } else {
+                                insertedData[found_gl_account].value = '';
                             }
                         }
 
@@ -326,7 +351,6 @@ module.exports.getVendor = async function (req, res) {
                         vendor_phone: 1,
                         vendor_email: 1,
                         vendor_image: 1,
-                        vendor_cost_cost_id: 1,
                         vendor_address: 1,
                         vendor_address2: 1,
                         vendor_city: 1,
@@ -456,7 +480,6 @@ module.exports.getVendorForTable = async function (req, res) {
                         vendor_phone: 1,
                         vendor_email: 1,
                         vendor_image: 1,
-                        vendor_cost_cost_id: 1,
                         vendor_address: 1,
                         vendor_address2: 1,
                         vendor_city: 1,

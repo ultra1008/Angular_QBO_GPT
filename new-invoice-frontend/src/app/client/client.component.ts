@@ -31,6 +31,7 @@ import { localstorageconstants } from 'src/consts/localstorageconstants';
 import { RolePermission } from 'src/consts/common.model';
 import { TermModel } from '../settings/settings.model';
 import { configData } from 'src/environments/configData';
+import { sweetAlert } from 'src/consts/sweet_alert';
 
 
 @Component({
@@ -180,6 +181,8 @@ export class ClientComponent
           confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
           denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
           allowOutsideClick: false,
+          background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+          color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
         })
         .then((result) => {
           if (result.isConfirmed) {
@@ -194,6 +197,8 @@ export class ClientComponent
           confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
           denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
           allowOutsideClick: false,
+          background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+          color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
         })
         .then((result) => {
           if (result.isConfirmed) {
@@ -208,6 +213,8 @@ export class ClientComponent
           confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
           denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
           allowOutsideClick: false,
+          background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+          color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
         })
         .then((result) => {
           if (result.isConfirmed) {
@@ -360,9 +367,8 @@ export class ClientComponent
         (x) => x._id === client._id
       );
       if (foundIndex != null && this.clientService) {
-        this.clientService.dataChange.value[foundIndex].client_status =
-          status;
-        this.refreshTable();
+        this.clientService.dataChange.value[foundIndex].client_status = status;
+        // this.refreshTable();
       }
     } else {
       showNotification(this.snackBar, data.message, 'error');
@@ -399,6 +405,8 @@ export class ClientComponent
         confirmButtonText: this.translate.instant('COMMON.ACTIONS.YES'),
         denyButtonText: this.translate.instant('COMMON.ACTIONS.NO'),
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then((result) => {
         if (result.isConfirmed) {

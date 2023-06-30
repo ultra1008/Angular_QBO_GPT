@@ -10,6 +10,8 @@ import { SettingsService } from '../../settings.service';
 import { configData } from 'src/environments/configData';
 import { TranslateService } from '@ngx-translate/core';
 import { WEB_ROUTES } from 'src/consts/routes';
+import { localstorageconstants } from 'src/consts/localstorageconstants';
+import { sweetAlert } from 'src/consts/sweet_alert';
 
 @Component({
   selector: 'app-mailbox-form',
@@ -27,7 +29,7 @@ export class MailboxFormComponent {
   frequency = configData.MAILBOX_MONITOR_TIME;
   cronTime: any;
 
-  constructor(
+  constructor (
     private fb: UntypedFormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
@@ -83,6 +85,8 @@ export class MailboxFormComponent {
         cancelButtonText: this.translate.instant('COMMON.ACTIONS.DONT_SAVE'),
         denyButtonText: this.translate.instant('COMMON.ACTIONS.CANCEL'),
         allowOutsideClick: false,
+        background: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_BACKGROUND : sweetAlert.WHITE_BACKGROUND,
+        color: localStorage.getItem(localstorageconstants.DARKMODE) === 'dark' ? sweetAlert.DARK_COLOR : sweetAlert.WHITE_COLOR,
       })
       .then((result) => {
         if (result.isConfirmed) {

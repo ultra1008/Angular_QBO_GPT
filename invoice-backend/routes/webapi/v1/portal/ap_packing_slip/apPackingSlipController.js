@@ -284,3 +284,34 @@ module.exports.saveAPOtherDocumentPackingSlip = async function (req, res) {
         res.send({ status: false, message: translator.getStr('InvalidUser') });
     }
 };
+
+module.exports.deleteAPPackingSlip = async function (req, res) {
+    var decodedToken = common.decodedJWT(req.headers.authorization);
+    var translator = new common.Language(req.headers.Language);
+    var local_offset = Number(req.headers.local_offset);
+    if (decodedToken) {
+        let connection_db_api = await db_connection.connection_db_api(decodedToken);
+        try {
+            var requestObject = req.body;
+            var apPackingSlipConnection = connection_db_api.model(collectionConstant.AP_PACKING_SLIP, apPackingSlipSchema);
+            var id = requestObject._id;
+            delete requestObject._id;
+
+            requestObject.updated_at = Math.round(new Date().getTime() / 1000);
+            requestObject.updated_by = decodedToken.UserData._id;
+            let update_ap_packing_slip = await apPackingSlipConnection.updateOne({ _id: ObjectID(id) }, requestObject);
+            if (update_ap_packing_slip) {
+                res.send({ status: true, message: "Packing Slip deleted successfully.", data: update_ap_packing_slip });
+            } else {
+                res.send({ message: translator.getStr('SomethingWrong'), status: false });
+            }
+        } catch (e) {
+            console.log(e);
+            res.send({ message: translator.getStr('SomethingWrong'), status: false });
+        } finally {
+            connection_db_api.close();
+        }
+    } else {
+        res.send({ status: false, message: translator.getStr('InvalidUser') });
+    }
+};
