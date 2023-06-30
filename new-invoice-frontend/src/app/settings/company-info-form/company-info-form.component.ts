@@ -28,7 +28,7 @@ import {
 import { wasabiImagePath } from 'src/consts/wasabiImagePath';
 import { SettingsService } from '../settings.service';
 import { MatDatepicker } from '@angular/material/datepicker';
-import { httproutes } from 'src/consts/httproutes';
+import { httproutes, httpversion } from 'src/consts/httproutes';
 import { configData } from 'src/environments/configData';
 import { HttpCall } from 'src/app/services/httpcall.service';
 import { localstorageconstants } from 'src/consts/localstorageconstants';
@@ -182,15 +182,13 @@ export class CompanyInfoFormComponent {
         companyaddressstate: [CompanyInfoData.companyaddressstate],
         companyaddresszip: [CompanyInfoData.companyaddresszip],
       });
-      const found = that.CompnayTypes_data.find(
-        (element: any) => element._id == CompanyInfoData.companytype
-      );
-      that.selectedVendorType = found.name
-        ? found.name
-        : configData.PRIME_VENDOR_TYPE;
-      that.getCISDivision(
-        that.selectedVendorType == configData.PRIME_VENDOR_TYPE
-      );
+      const found = that.CompnayTypes_data.find((element: any) => element._id == CompanyInfoData.companytype);
+      if (found) {
+        that.selectedVendorType = found.name
+          ? found.name
+          : configData.PRIME_VENDOR_TYPE;
+      }
+      that.getCISDivision(that.selectedVendorType == configData.PRIME_VENDOR_TYPE);
     }
 
     // async getTerms() {
@@ -249,13 +247,11 @@ export class CompanyInfoFormComponent {
   }
 
   onVendorTypeSelect(event: any) {
-    let found = this.CompnayTypes_data.find(
-      (element: any) => element._id == event
-    );
+    const found = this.CompnayTypes_data.find((element: any) => element._id == event);
     this.selectedVendorType = found.name
       ? found.name
       : configData.PRIME_VENDOR_TYPE;
-    this.companyinfoForm.get('companydivision')!.setValue([]);
+    this.companyinfoForm.get('companydivision')?.setValue([]);
     this.getCISDivision(
       this.selectedVendorType == configData.PRIME_VENDOR_TYPE
     );
@@ -264,9 +260,9 @@ export class CompanyInfoFormComponent {
   async getCISDivision(isPrimeVendor: any) {
     let url = '';
     if (isPrimeVendor) {
-      url = httproutes.PORTAL_ROVUK_SPONSOR_GET_PRIME_WORK_PERFORMED;
+      url = httpversion.V1 + httproutes.PORTAL_ROVUK_SPONSOR_GET_PRIME_WORK_PERFORMED;
     } else {
-      url = httproutes.PORTAL_ROVUK_SPONSOR_GET_CSIDIVISION_WORK_PERFORMED;
+      url = httpversion.V1 + httproutes.PORTAL_ROVUK_SPONSOR_GET_CSIDIVISION_WORK_PERFORMED;
     }
     const data = await this.httpCall.httpGetCall(url).toPromise();
     if (data.status) {
