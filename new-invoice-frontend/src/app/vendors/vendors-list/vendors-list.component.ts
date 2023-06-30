@@ -44,7 +44,7 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
   @ViewChild('gallery') gallery!: NgxGalleryComponent;
   galleryOptions!: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[] = [];
-  imageObject = [];
+  imageObject: Array<string> = [];
   tmp_gallery: any;
   displayedColumns = ['select', 'vendor_image', 'vendor_name', 'invoice', 'open_invoice', 'invoices_total', 'open_invoices_total', 'vendor_phone', 'vendor_email', 'vendor_address', 'vendor_status', 'vendor_attachment', 'actions',];
   vendorService?: VendorsService;
@@ -544,9 +544,8 @@ export class VendorsListComponent extends UnsubscribeOnDestroyAdapter implements
 
   // View Network Attachment
   viewAttachment(vendor: VendorModel) {
-    this.galleryImages = commonNewtworkAttachmentViewer(
-      vendor.vendor_attachment
-    );
+    this.imageObject = vendor.vendor_attachment;
+    this.galleryImages = commonNewtworkAttachmentViewer(this.imageObject);
     setTimeout(() => {
       this.gallery.openPreview(0);
     }, 0);
